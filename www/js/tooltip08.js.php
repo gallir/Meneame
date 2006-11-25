@@ -29,8 +29,8 @@ tooltip.id="tooltip";
 tooltip.main=null;
 tooltip.offsetx = 10;
 tooltip.offsety = 10;
-tooltip.shoffsetx = 6;
-tooltip.shoffsety = 6;
+tooltip.shoffsetx = 8;
+tooltip.shoffsety = 8;
 tooltip.x = 0;
 tooltip.y = 0;
 tooltip.tooltipShadow=null;
@@ -84,14 +84,16 @@ tooltip.show = function (event, text) {
 
 
 tooltip.setText = function (text) {
+	tooltip.tooltipShadow.style.width = 0+"px";
+	tooltip.tooltipShadow.style.height = 0+"px";
 	this.tooltipText.innerHTML=text;
 	setTimeout('tooltip.setShadow()', 1);
 	return false;
 }
 
 tooltip.setShadow = function () {
-	tooltip.tooltipShadow.style.width = tooltip.tooltipText.scrollWidth+"px";
-	tooltip.tooltipShadow.style.height = tooltip.tooltipText.scrollHeight+"px";
+	tooltip.tooltipShadow.style.width = tooltip.tooltipText.clientWidth+"px";
+	tooltip.tooltipShadow.style.height = tooltip.tooltipText.clientHeight+"px";
 }
 
 
@@ -131,7 +133,7 @@ tooltip.mouseMove = function (e) {
 
 // Move the tooltip element
 tooltip.moveTo = function (xL,yL) {
-	if (false && this.ie) {
+	if (this.ie) {
 		xL +=  document.documentElement.scrollLeft;
 		yL +=  document.documentElement.scrollTop;
 	}

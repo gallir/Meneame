@@ -48,6 +48,7 @@ body, td, th, h3 { /* browser differencs workaround  */
 	font-size: 90%;
 	overflow: hidden;
 	width: 30em;
+	max-height: 40ex;
 }
 
 

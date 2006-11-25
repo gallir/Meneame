@@ -103,7 +103,7 @@ foreach($users as $dbuser) {
 		$negative_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id"));
 
 		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*2)/$max_positive_received), $points_received), -$points_received);
-		print "$user->username (votes received):  votes received: $positive_votes_received, negatives: $negative_votes_received, karma1 $karma1\n";
+		print "$user->username (votes received):  karma received: $positive_votes_received, negative: $negative_votes_received, karma1: $karma1\n";
 
 /////
 
