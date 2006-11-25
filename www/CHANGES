@@ -1,3 +1,7 @@
+25/11/2006
+	- Por fin creo que está: http://blog.meneame.net/2006/11/25/la-dura-travesia-para-que-funcione-en-ie7/
+	- Agregado tooltips también a los votos en la fisgona, a pedido del lurker mahamara.
+
 24/11/2006
 	- Agregado el modificado "s" a link.php en el preg_match para el título del html.
 	- CAMBIO GORDO: css y javascript para soportar bien los toolstips con

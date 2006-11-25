@@ -202,7 +202,7 @@ function get_votes($dbtime) {
 		}
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':votes:'.$id;
-		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.$event->link_votes.'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.$event->link_votes.'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }

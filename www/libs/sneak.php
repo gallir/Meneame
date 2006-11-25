@@ -1,5 +1,5 @@
 <?
-$sneak_version = 7.7;
+$sneak_version = 7.8;
 $max_items = 25;
 header('Connection: close');
 

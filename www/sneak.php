@@ -116,12 +116,14 @@ function to_html(data) {
 			return html;
 			break;
 		case 'vote':
+			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
 			if (data.status == '<? echo _('publicada');?>')
 				html += '<img src="img/common/sneak-vote-published01.png" width="20" height="16" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
 			else
 				html += '<img src="img/common/sneak-vote01.png" width="20" height="16" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'problem':
+			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
 			html += '<img src="img/common/sneak-problem01.png" width="20" height="16" alt="<?echo _('problema');?>" title="<?echo _('problema');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'comment':
