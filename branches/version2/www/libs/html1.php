@@ -418,7 +418,7 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 
 	echo '</ul>';
 	echo '<br style="clear: both;" />' . "\n";
-	echo '</div></li><!--html1:do_categories-->' . "\n";
+	echo '</div></li><!--html1:do_mnu_categories-->' . "\n";
 
 }
 
