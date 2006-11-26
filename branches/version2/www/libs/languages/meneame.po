@@ -1,0 +1,1538 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-03 16:17+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: blogscloud.php:20 cloud.php:21 topstories.php:15 topusers-big.php:17
+#: topusers.php:17
+msgid "última semana"
+msgstr ""
+
+#: blogscloud.php:20 cloud.php:21 topstories.php:15 topusers-big.php:17
+#: topusers.php:17
+msgid "último mes"
+msgstr ""
+
+#: blogscloud.php:20 cloud.php:21 topstories.php:15 topusers-big.php:17
+#: topusers.php:17
+msgid "último año"
+msgstr ""
+
+#: blogscloud.php:20 cloud.php:21 shakeit.php:49 shakeit.php:64 shakeit.php:76
+#: topstories.php:15 topusers-big.php:17 topusers.php:17 libs/html1.php:44
+#: libs/html1.php:174
+msgid "todas"
+msgstr ""
+
+#: blogscloud.php:41
+msgid "nube de blogs"
+msgstr ""
+
+#: blogscloud.php:42 libs/html1.php:139
+msgid "blogs"
+msgstr ""
+
+#: cabal.php:34 cabal.php:177
+msgid "cabal"
+msgstr ""
+
+#: cabal.php:102 cabal.php:189 cabal.php:194 sneak.php:119 sneak.php:210
+#: sneak.php:216 telnet.php:142
+msgid "mensaje"
+msgstr ""
+
+#: cabal.php:114 cabal.php:184 sneak.php:131
+msgid "voto"
+msgstr ""
+
+#: cabal.php:116 cabal.php:185 sneak.php:133 sneak.php:203
+msgid "problema"
+msgstr ""
+
+#: cabal.php:118 cabal.php:186 sneak.php:135 sneak.php:204
+msgid "comentario"
+msgstr ""
+
+#: cabal.php:120 cabal.php:187 sneak.php:137 sneak.php:205
+msgid "nueva"
+msgstr ""
+
+#: cabal.php:122 cabal.php:138 cabal.php:188 sneak.php:139 sneak.php:155
+#: sneak.php:206 telnet.php:111 backend/caballier.php:248
+#: backend/sneaker.php:227
+msgid "publicada"
+msgstr ""
+
+#: cabal.php:140 editlink.php:80 sneak.php:157 telnet.php:113
+#: backend/caballier.php:254 backend/sneaker.php:233
+msgid "descartada"
+msgstr ""
+
+#: cabal.php:184 telnet.php:129
+msgid "voto: "
+msgstr ""
+
+#: cabal.php:185 telnet.php:130
+msgid "problema: "
+msgstr ""
+
+#: cabal.php:186 telnet.php:131
+msgid "comentario: "
+msgstr ""
+
+#: cabal.php:187 telnet.php:132
+msgid "nueva: "
+msgstr ""
+
+#: cabal.php:188 telnet.php:133
+msgid "publicada: "
+msgstr ""
+
+#: cabal.php:189 telnet.php:137
+msgid "mensaje: "
+msgstr ""
+
+#: cabal.php:190
+msgid "luchadores"
+msgstr ""
+
+#: cabal.php:194 sneak.php:216 telnet.php:142
+msgid "enviar"
+msgstr ""
+
+#: cabal.php:199 sneak.php:222 telnet.php:147 libs/utils.php:63
+msgid "hora"
+msgstr ""
+
+#: cabal.php:200 sneak.php:223 telnet.php:148
+msgid "acción"
+msgstr ""
+
+#: cabal.php:201 sneak.php:202 sneak.php:224 telnet.php:149 libs/link.php:304
+#: backend/votes_img.php:13
+msgid "meneos"
+msgstr ""
+
+#: cabal.php:202 sneak.php:225 telnet.php:150
+msgid "noticia"
+msgstr ""
+
+#: cabal.php:203 sneak.php:226 telnet.php:151
+msgid "quién/qué"
+msgstr ""
+
+#: cabal.php:204 profile.php:127 sneak.php:227 telnet.php:152
+msgid "estado"
+msgstr ""
+
+#: cloud.php:21
+msgid "48 horas"
+msgstr ""
+
+#: cloud.php:40
+msgid "nube de etiquetas"
+msgstr ""
+
+#: cloud.php:41 editlink.php:89 submit.php:198 libs/html1.php:137
+#: libs/link.php:236
+msgid "etiquetas"
+msgstr ""
+
+#: comments_rss2.php:27 comments_rss2.php:41
+msgid "Menéame: comentarios"
+msgstr ""
+
+#: comments_rss2.php:34
+msgid "Menéame: comentarios mis noticias"
+msgstr ""
+
+#: comments_rss2.php:83
+msgid "autor"
+msgstr ""
+
+#: comments_rss2.php:108 rss2.php:171
+msgid "Sitio colaborativo de publicación y comunicación entre blogs"
+msgstr ""
+
+#: editlink.php:17 editlink.php:18 editlink.php:53
+msgid "editar noticia"
+msgstr ""
+
+#: editlink.php:28
+msgid "noticia no modificable"
+msgstr ""
+
+#: editlink.php:36
+msgid "¿duh?"
+msgstr ""
+
+#: editlink.php:62 submit.php:191 submit.php:259
+msgid "detalles de la noticia"
+msgstr ""
+
+#: editlink.php:65
+msgid "url de la noticia"
+msgstr ""
+
+#: editlink.php:66
+msgid "url de la noticia."
+msgstr ""
+
+#: editlink.php:70 submit.php:193
+msgid "título de la noticia"
+msgstr ""
+
+#: editlink.php:71 submit.php:194
+msgid "título de la noticia. máximo: 120 caracteres"
+msgstr ""
+
+#: editlink.php:83 backend/caballier.php:251 backend/sneaker.php:230
+msgid "pendiente"
+msgstr ""
+
+#: editlink.php:90 submit.php:199
+msgid "pocas palabras, genéricas, cortas y separadas por \",\" (coma)"
+msgstr ""
+
+#: editlink.php:93 submit.php:202
+msgid "descripción de la noticia"
+msgstr ""
+
+#: editlink.php:94 submit.php:203
+msgid ""
+"describe la noticia con tus palabras. entre dos y cinco frases es "
+"suficiente. sé cuidadoso."
+msgstr ""
+
+#: editlink.php:96 submit.php:205 libs/html1.php:160 libs/link.php:264
+msgid "categoría"
+msgstr ""
+
+#: editlink.php:97 submit.php:206
+msgid "selecciona la categoría más apropiada"
+msgstr ""
+
+#: editlink.php:117
+msgid "guardar &#187;"
+msgstr ""
+
+#: editlink.php:140
+msgid "noticia actualizada"
+msgstr ""
+
+#: editlink.php:151
+msgid "&#171; modificar"
+msgstr ""
+
+#: editlink.php:152
+msgid "ir a la noticia"
+msgstr ""
+
+#: editlink.php:161 submit.php:318
+msgid "Clave incorrecta"
+msgstr ""
+
+#: editlink.php:165
+msgid "Tiempo excedido"
+msgstr ""
+
+#: editlink.php:170 submit.php:327
+msgid "Título o texto incompletos"
+msgstr ""
+
+#: editlink.php:174 submit.php:331
+msgid "Título o texto demasiado largos"
+msgstr ""
+
+#: editlink.php:178 submit.php:335
+msgid "No has puesto etiquetas"
+msgstr ""
+
+#: editlink.php:183 submit.php:341
+msgid "Por favor, no pongas URLs en el título, no ofrece información"
+msgstr ""
+
+#: editlink.php:188 submit.php:346
+msgid "Categoría no seleccionada"
+msgstr ""
+
+#: faq-es.php:5
+msgid "FAQ"
+msgstr ""
+
+#: faq-es.php:6
+msgid "qué es menéame"
+msgstr ""
+
+#: index.php:34 shakeit.php:23
+msgid "búsqueda de"
+msgstr ""
+
+#: index.php:35 shakeit.php:24 libs/html1.php:153
+msgid "búsqueda"
+msgstr ""
+
+#: index.php:37
+msgid "resultados de la búsqueda"
+msgstr ""
+
+#: index.php:45
+msgid "últimas publicadas"
+msgstr ""
+
+#: index.php:48
+msgid "últimas noticias"
+msgstr ""
+
+#: login.php:40 register.php:40
+msgid "¿Has olvidado la contraseña?"
+msgstr ""
+
+#: login.php:45 libs/html1.php:68
+msgid "login"
+msgstr ""
+
+#: login.php:52
+msgid "usuario inexistente, sin validar, o clave incorrecta"
+msgstr ""
+
+#: login.php:64 login.php:104 profile.php:88 topusers-big.php:22
+#: topusers.php:22 user.php:161
+msgid "usuario"
+msgstr ""
+
+#: login.php:66 profile.php:120 register.php:57
+msgid "clave"
+msgstr ""
+
+#: login.php:68
+msgid "recuérdame"
+msgstr ""
+
+#: login.php:81
+msgid "recuperación de contraseñas"
+msgstr ""
+
+#: login.php:85
+msgid "El código de seguridad no es correcto!"
+msgstr ""
+
+#: login.php:91
+msgid "el usuario no existe"
+msgstr ""
+
+#: login.php:95
+msgid "cuenta deshabilitada"
+msgstr ""
+
+#: login.php:106
+msgid "(recibirás un e-mail para cambiar la contraseña)"
+msgstr ""
+
+#: login.php:110
+msgid "recibir e-mail"
+msgstr ""
+
+#: profile.php:61
+msgid "edición del perfil del usuario"
+msgstr ""
+
+#: profile.php:62 topusers-big.php:64 topusers-big.php:65 topusers.php:64
+#: topusers.php:65 user.php:36 libs/html1.php:140 backend/sneaker-stats.php:24
+msgid "usuarios"
+msgstr ""
+
+#: profile.php:62 libs/comment.php:83 libs/link.php:272
+msgid "editar"
+msgstr ""
+
+#: profile.php:76
+msgid "modifica tu perfil"
+msgstr ""
+
+#: profile.php:90 profile.php:100 register.php:48 register.php:54
+msgid "verificar"
+msgstr ""
+
+#: profile.php:94
+msgid "nombre real"
+msgstr ""
+
+#: profile.php:98
+msgid "correo electrónico"
+msgstr ""
+
+#: profile.php:104
+msgid "página web"
+msgstr ""
+
+#: profile.php:111
+msgid "avatar"
+msgstr ""
+
+#: profile.php:112
+msgid ""
+"El avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 "
+"KB, sin transparencias"
+msgstr ""
+
+#: profile.php:118
+msgid ""
+"Introduce la nueva clave para cambiarla -no se cambiará si la dejas en "
+"blanco-:"
+msgstr ""
+
+#: profile.php:123
+msgid "repite la clave"
+msgstr ""
+
+#: profile.php:136 topusers.php:22 user.php:178 backend/sneaker-stats.php:63
+msgid "karma"
+msgstr ""
+
+#: profile.php:142
+msgid "actualizar"
+msgstr ""
+
+#: profile.php:157 backend/checkfield.php:17
+msgid "nombre demasiado corto"
+msgstr ""
+
+#: profile.php:162 register.php:83
+msgid "Nombre de usuario erróneo, caracteres no admitidos"
+msgstr ""
+
+#: profile.php:165 register.php:87 register.php:179
+msgid "El usuario ya existe"
+msgstr ""
+
+#: profile.php:173 register.php:91
+msgid "El correo electrónico no es correcto"
+msgstr ""
+
+#: profile.php:176 backend/checkfield.php:40
+msgid "ya existe otro usuario con esa dirección de correo"
+msgstr ""
+
+#: profile.php:185
+msgid "Las claves no son iguales, no se ha modificado"
+msgstr ""
+
+#: profile.php:189
+msgid "La clave se ha cambiado"
+msgstr ""
+
+#: profile.php:203
+msgid "Error guardando la imagen"
+msgstr ""
+
+#: profile.php:210
+msgid "El tamaño de la imagen excede el límite"
+msgstr ""
+
+#: profile.php:224
+msgid "Datos actualizados"
+msgstr ""
+
+#: register.php:13 register.php:14 register.php:44 user.php:165 user.php:180
+msgid "registro"
+msgstr ""
+
+#: register.php:45
+msgid "nombre de usuario"
+msgstr ""
+
+#: register.php:52
+msgid ""
+"es importante que sea correcta, recibirás un correo para validar la cuenta"
+msgstr ""
+
+#: register.php:58
+msgid "al menos cinco caracteres"
+msgstr ""
+
+#: register.php:61
+msgid "verificación de clave"
+msgstr ""
+
+#: register.php:65
+msgid "crear usuario"
+msgstr ""
+
+#: register.php:79
+msgid "Nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos"
+msgstr ""
+
+#: register.php:95
+msgid "Ya existe otro usuario con esa dirección de correo"
+msgstr ""
+
+#: register.php:99
+msgid "Caracteres inválidos en la clave"
+msgstr ""
+
+#: register.php:103
+msgid "Clave demasiado corta, debe ser de 5 o más caracteres"
+msgstr ""
+
+#: register.php:107
+msgid "Las claves no coinciden"
+msgstr ""
+
+#: register.php:114
+msgid ""
+"Para registrar otro usuario desde la misma dirección debes esperar 48 horas."
+msgstr ""
+
+#: register.php:134
+msgid "continuar"
+msgstr ""
+
+#: register.php:147
+msgid "El código de seguridad no es correcto."
+msgstr ""
+
+#: register.php:163
+msgid "registro de usuario"
+msgstr ""
+
+#: register.php:168 register.php:176
+msgid "Error insertando usuario en la base de datos"
+msgstr ""
+
+#: rss2.php:30
+msgid "Menéame: más votadas en"
+msgstr ""
+
+#: rss2.php:60
+msgid "Menéame: publicadas"
+msgstr ""
+
+#: rss2.php:63
+msgid "Menéame: en cola"
+msgstr ""
+
+#: rss2.php:69
+msgid "Menéame: todas"
+msgstr ""
+
+#: rss2.php:89 api/show_banner_ben.php:53 api/show_banner.php:71
+#: api/show_banner.php:79
+msgid "Menéame"
+msgstr ""
+
+#: rss2.php:143
+msgid "noticia original"
+msgstr ""
+
+#: shakeit.php:24 shakeit.php:30
+msgid "noticias en la cola"
+msgstr ""
+
+#: shakeit.php:26
+msgid "búsqueda en pendientes"
+msgstr ""
+
+#: shakeit.php:29 shakeit.php:32
+msgid "noticias pendientes"
+msgstr ""
+
+#: shakeit.php:51 shakeit.php:65 shakeit.php:78
+msgid "recomendadas"
+msgstr ""
+
+#: shakeit.php:52 shakeit.php:66 shakeit.php:79
+msgid "descartadas"
+msgstr ""
+
+#: shakeit.php:143 libs/html1.php:130
+msgid "reportar un bug"
+msgstr ""
+
+#: sneak.php:34 sneak.php:194 telnet.php:41 libs/html1.php:123
+msgid "fisgona"
+msgstr ""
+
+#: sneak.php:212 telnet.php:138
+msgid "fisgonas"
+msgstr ""
+
+#: sneak.php:224 story.php:66 story.php:96 telnet.php:149 topusers-big.php:22
+#: topusers.php:22 user.php:198 libs/html1.php:45 libs/link.php:253
+#: backend/comments_img.php:13 backend/sneaker-stats.php:30
+#: backend/sneaker-stats.php:41 backend/sneaker-stats.php:72
+msgid "comentarios"
+msgstr ""
+
+#: story.php:85
+msgid "comentarios cerrados"
+msgstr ""
+
+#: story.php:93
+msgid "No tienes el mínimo karma requerido"
+msgstr ""
+
+#: story.php:93
+msgid "para comentar"
+msgstr ""
+
+#: story.php:96
+msgid "Autentifícate si deseas escribir"
+msgstr ""
+
+#: story.php:96
+msgid "O regístrate"
+msgstr ""
+
+#: story.php:119
+msgid "¿Quién ha meneado esto?"
+msgstr ""
+
+#: story.php:139
+msgid "envía un comentario"
+msgstr ""
+
+#: story.php:141
+msgid ""
+"Insultos, difamaciones y frases racistas podrían causar la anulación de la "
+"cuenta."
+msgstr ""
+
+#: story.php:142
+msgid "texto del comentario / no se admiten etiquetas HTML"
+msgstr ""
+
+#: story.php:146
+msgid "enviar el comentario"
+msgstr ""
+
+#: submit.php:21 submit.php:25 submit.php:33 submit.php:61 submit.php:356
+msgid "enviar noticia"
+msgstr ""
+
+#: submit.php:47
+msgid "dirección de la noticia"
+msgstr ""
+
+#: submit.php:49
+msgid "url"
+msgstr ""
+
+#: submit.php:54 submit.php:221
+msgid "continuar &#187;"
+msgstr ""
+
+#: submit.php:61
+msgid "paso 1: la dirección"
+msgstr ""
+
+#: submit.php:63
+msgid "envío de una nueva noticia: paso 1 de 3"
+msgstr ""
+
+#: submit.php:65
+msgid "por favor, respeta estas las instrucciones para mejorar la calidad:"
+msgstr ""
+
+#: submit.php:67
+msgid "Contenido interesante"
+msgstr ""
+
+#: submit.php:67
+msgid "¿Está relacionado con la tecnología, Internet, o la cultura digital?"
+msgstr ""
+
+#: submit.php:68
+msgid "Enlaza la fuente original"
+msgstr ""
+
+#: submit.php:68
+msgid "No hagas perder tiempo a los lectores."
+msgstr ""
+
+#: submit.php:69
+msgid "Busca antes"
+msgstr ""
+
+#: submit.php:69
+msgid "Evita duplicar noticias."
+msgstr ""
+
+#: submit.php:70
+msgid "Sé descriptivo"
+msgstr ""
+
+#: submit.php:70
+msgid "Explica la noticia lo mejor que puedas y porqué es interesante"
+msgstr ""
+
+#: submit.php:71
+msgid "Repetimos, por las dudas... ¡enlaza la fuente original!"
+msgstr ""
+
+#: submit.php:72
+msgid "Respeta el voto de los demás"
+msgstr ""
+
+#: submit.php:72
+msgid ""
+"Si los votos o la falta de ellos te pueden afectar personalmente, mejor no "
+"envíes la noticia."
+msgstr ""
+
+#: submit.php:81 submit.php:253
+msgid "enviar noticia "
+msgstr ""
+
+#: submit.php:81
+msgid " paso 2: detalles"
+msgstr ""
+
+#: submit.php:85
+msgid "no tienes el mínimo de karma para enviar una nueva historia"
+msgstr ""
+
+#: submit.php:96 submit.php:122
+msgid "debes esperar"
+msgstr ""
+
+#: submit.php:110
+msgid "url no válido"
+msgstr ""
+
+#: submit.php:111
+msgid "prueba con otra dirección"
+msgstr ""
+
+#: submit.php:121
+msgid "ya has enviado un enlace al mismo sitio hace poco tiempo"
+msgstr ""
+
+#: submit.php:122
+msgid ""
+" horas entre cada envío al mismo sitio. Es para evitar \"spams\" y "
+"\"autobombo\""
+msgstr ""
+
+#: submit.php:123
+msgid "lee el FAQ"
+msgstr ""
+
+#: submit.php:138
+msgid "no tienes el mínimo de votos necesarios para enviar una nueva historia"
+msgstr ""
+
+#: submit.php:139
+msgid "necesitas votar como mínimo a"
+msgstr ""
+
+#: submit.php:139 topstories.php:38 topusers-big.php:22 topusers.php:22
+msgid "noticias"
+msgstr ""
+
+#: submit.php:140
+msgid "haz clic aquí para ir a votar"
+msgstr ""
+
+#: submit.php:148
+msgid "noticia repetida!"
+msgstr ""
+
+#: submit.php:149
+msgid "lo sentimos"
+msgstr ""
+
+#: submit.php:150
+msgid "haz clic aquí para votar o comentar la noticia que enviaron antes"
+msgstr ""
+
+#: submit.php:153 submit.php:220 submit.php:241 submit.php:273
+msgid "&#171; retroceder"
+msgstr ""
+
+#: submit.php:170
+msgid "envío de una nueva noticia: paso 2 de 3"
+msgstr ""
+
+#: submit.php:181
+msgid "info de la noticia"
+msgstr ""
+
+#: submit.php:182
+msgid "título de la página"
+msgstr ""
+
+#: submit.php:185
+msgid "parece ser un blog"
+msgstr ""
+
+#: submit.php:217
+msgid "trackback"
+msgstr ""
+
+#: submit.php:218
+msgid ""
+"puedes agregar o cambiar el trackback si ha sido detectado automáticamente"
+msgstr ""
+
+#: submit.php:253
+msgid " paso 3: control final"
+msgstr ""
+
+#: submit.php:256
+msgid "envío de una nueva noticia: paso 3 de 3"
+msgstr ""
+
+#: submit.php:261
+msgid "ATENCIÓN: esto es sólo es una muestra!"
+msgstr ""
+
+#: submit.php:261
+msgid "Ahora puedes 1) "
+msgstr ""
+
+#: submit.php:261
+msgid "retroceder"
+msgstr ""
+
+#: submit.php:261
+msgid " o 2)  "
+msgstr ""
+
+#: submit.php:261
+msgid "enviar a la cola y finalizar"
+msgstr ""
+
+#: submit.php:261
+msgid ""
+". Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> "
+"elefantes (o no)."
+msgstr ""
+
+#: submit.php:274
+msgid "enviar a la cola y finalizar &#187;"
+msgstr ""
+
+#: submit.php:323
+msgid "La historia ya está en cola"
+msgstr ""
+
+#: submit.php:356 submit.php:358
+msgid "ooops!"
+msgstr ""
+
+#: topstories.php:15 topusers-big.php:17 topusers.php:17
+msgid "24 horas"
+msgstr ""
+
+#: topstories.php:37
+msgid "más votadas"
+msgstr ""
+
+#: topstories.php:38 topusers-big.php:65 topusers-big.php:66 topusers.php:65
+#: topusers.php:66
+msgid "estadísticas"
+msgstr ""
+
+#: topstories.php:40
+msgid "noticias más votadas"
+msgstr ""
+
+#: topstories.php:95
+msgid "suscripciones a las más meneadas"
+msgstr ""
+
+#: topusers-big.php:22 topusers.php:22 user.php:197 user.php:248
+msgid "noticias publicadas"
+msgstr ""
+
+#: topusers-big.php:22 topusers.php:22
+msgid "votos totales"
+msgstr ""
+
+#: topusers-big.php:22 user.php:200
+msgid "votos de publicadas"
+msgstr ""
+
+#: user.php:35
+msgid "perfil de usuario"
+msgstr ""
+
+#: user.php:53 user.php:65 user.php:77 user.php:89 user.php:101 user.php:112
+#: user.php:124
+msgid "datos personales"
+msgstr ""
+
+#: user.php:54 user.php:66 user.php:78 user.php:90 user.php:102 user.php:113
+#: user.php:125
+msgid "enviadas"
+msgstr ""
+
+#: user.php:55 user.php:67 user.php:79 user.php:91 user.php:103 user.php:114
+#: user.php:126 libs/html1.php:42 libs/html1.php:166
+msgid "publicadas"
+msgstr ""
+
+#: user.php:56 user.php:68 user.php:80 user.php:92 user.php:104 user.php:115
+#: user.php:127
+msgid "comentadas"
+msgstr ""
+
+#: user.php:57 user.php:69 user.php:81 user.php:93 user.php:105 user.php:116
+#: user.php:128
+msgid "votadas"
+msgstr ""
+
+#: user.php:58 user.php:70 user.php:82 user.php:94 user.php:106 user.php:117
+#: user.php:129 user.php:206 user.php:297
+msgid "autores preferidos"
+msgstr ""
+
+#: user.php:59 user.php:71 user.php:83 user.php:95 user.php:107 user.php:118
+#: user.php:130 user.php:217
+msgid "votado por"
+msgstr ""
+
+#: user.php:150
+msgid "información personal"
+msgstr ""
+
+#: user.php:152 user.php:154
+msgid "modificar"
+msgstr ""
+
+#: user.php:170
+msgid "nombre"
+msgstr ""
+
+#: user.php:174
+msgid "sitio web"
+msgstr ""
+
+#: user.php:176
+msgid "desde"
+msgstr ""
+
+#: user.php:180
+msgid "email"
+msgstr ""
+
+#: user.php:184
+msgid "estadísticas de meneos"
+msgstr ""
+
+#: user.php:186 user.php:232
+msgid "noticias enviadas"
+msgstr ""
+
+#: user.php:195 backend/sneaker-stats.php:65
+msgid "entropía"
+msgstr ""
+
+#: user.php:199
+msgid "número de votos"
+msgstr ""
+
+#: user.php:264
+msgid "noticias votadas"
+msgstr ""
+
+#: user.php:281
+msgid "noticias comentadas"
+msgstr ""
+
+#: user.php:312
+msgid "los que votan"
+msgstr ""
+
+#: libs/ads-credits-functions.php:83
+msgid "información legal y condiciones de uso"
+msgstr ""
+
+#: libs/ads-credits-functions.php:87
+msgid "quiénes somos"
+msgstr ""
+
+#: libs/ads-credits-functions.php:89
+msgid "wiki"
+msgstr ""
+
+#: libs/ads-credits-functions.php:90
+msgid "código: "
+msgstr ""
+
+#: libs/ads-credits-functions.php:90
+msgid "licencia"
+msgstr ""
+
+#: libs/ads-credits-functions.php:90
+msgid "descargar"
+msgstr ""
+
+#: libs/ads-credits-functions.php:91
+msgid "licencia de los gráficos"
+msgstr ""
+
+#: libs/comment.php:72
+msgid "escrito por"
+msgstr ""
+
+#: libs/comment.php:72 libs/link.php:226
+msgid "hace"
+msgstr ""
+
+#: libs/comment.php:83 backend/comment_edit.php:50
+msgid "editar comentario"
+msgstr ""
+
+#: libs/comment.php:88
+msgid "resto del comentario"
+msgstr ""
+
+#: libs/comment.php:88
+msgid "ver todo el comentario"
+msgstr ""
+
+#: libs/html1.php:43 backend/sneaker-stats.php:28 backend/sneaker-stats.php:70
+msgid "pendientes"
+msgstr ""
+
+#: libs/html1.php:60
+msgid "¡la jefa!"
+msgstr ""
+
+#: libs/html1.php:61
+msgid "acerca de menéame"
+msgstr ""
+
+#: libs/html1.php:64
+msgid "cerrar sesión"
+msgstr ""
+
+#: libs/html1.php:65
+msgid "perfil de"
+msgstr ""
+
+#: libs/html1.php:67
+msgid "registrarse"
+msgstr ""
+
+#: libs/html1.php:73
+msgid "buscar"
+msgstr ""
+
+#: libs/html1.php:78
+msgid "buscar..."
+msgstr ""
+
+#: libs/html1.php:107
+msgid "menéame"
+msgstr ""
+
+#: libs/html1.php:108
+msgid "es un sistema de promoción de noticias..."
+msgstr ""
+
+#: libs/html1.php:108
+msgid "leer más"
+msgstr ""
+
+#: libs/html1.php:115
+msgid "menear pendientes"
+msgstr ""
+
+#: libs/html1.php:117
+msgid "menear pendientes de la categoría"
+msgstr ""
+
+#: libs/html1.php:122
+msgid "enviar una historia"
+msgstr ""
+
+#: libs/html1.php:138
+msgid "más meneadas"
+msgstr ""
+
+#: libs/html1.php:148
+msgid "suscripciones"
+msgstr ""
+
+#: libs/html1.php:170
+msgid "en cola"
+msgstr ""
+
+#: libs/html1.php:179
+msgid "comentarios noticia"
+msgstr ""
+
+#: libs/html1.php:185
+msgid "comentarios (mis noticias)"
+msgstr ""
+
+#: libs/html1.php:190
+msgid "comentarios (todos)"
+msgstr ""
+
+#: libs/html1.php:230 libs/html1.php:233
+msgid "anterior"
+msgstr ""
+
+#: libs/html1.php:238 libs/html1.php:245 libs/html1.php:251
+#: backend/pager.php:23 backend/pager.php:28 backend/pager.php:34
+msgid "ir a página"
+msgstr ""
+
+#: libs/html1.php:255 libs/html1.php:257
+msgid "siguiente"
+msgstr ""
+
+#: libs/html1.php:267
+msgid "URI para trackbacks"
+msgstr ""
+
+#: libs/html1.php:281
+msgid "(sin trackbacks)"
+msgstr ""
+
+#: libs/html1.php:283
+msgid "enlaces technorati"
+msgstr ""
+
+#: libs/html1.php:283
+msgid "según Technorati"
+msgstr ""
+
+#: libs/html1.php:327
+msgid "_todas"
+msgstr ""
+
+#: libs/link.php:226
+msgid "enviado por"
+msgstr ""
+
+#: libs/link.php:228
+msgid "publicado hace"
+msgstr ""
+
+#: libs/link.php:236
+msgid "nube"
+msgstr ""
+
+#: libs/link.php:256
+msgid "sin comentarios"
+msgstr ""
+
+#: libs/link.php:308
+msgid "cerrado"
+msgstr ""
+
+#: libs/link.php:314
+msgid "vota si te agrada"
+msgstr ""
+
+#: libs/link.php:314
+msgid "menéalo"
+msgstr ""
+
+#: libs/link.php:316
+msgid "&#161;chachi!"
+msgstr ""
+
+#: libs/link.php:327
+msgid "Aviso automático"
+msgstr ""
+
+#: libs/link.php:331
+msgid "Esta noticia podría ser <strong>"
+msgstr ""
+
+#: libs/link.php:333
+msgid "Esta noticia tiene varios votos negativos."
+msgstr ""
+
+#: libs/link.php:336
+msgid "Asegúrate"
+msgstr ""
+
+#: libs/link.php:336
+msgid "antes de menear"
+msgstr ""
+
+#: libs/mail.php:19
+msgid "Recuperación o verificación de la contraseña de "
+msgstr ""
+
+#: libs/mail.php:20
+msgid ""
+": para poder acceder sin la clave, conéctate a la siguiente dirección en "
+"menos de dos horas:"
+msgstr ""
+
+#: libs/mail.php:21
+msgid "Pasado este tiempo puedes volver a solicitar acceso en: "
+msgstr ""
+
+#: libs/mail.php:22
+msgid "Una vez en tu perfil, puedes cambiar la clave de acceso."
+msgstr ""
+
+#: libs/mail.php:23
+msgid "Este mensaje ha sido enviado a solicitud de la dirección: "
+msgstr ""
+
+#: libs/mail.php:24
+msgid "el equipo de menéame"
+msgstr ""
+
+#: libs/mail.php:29
+msgid ""
+"Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en "
+"la carpeta de spam."
+msgstr ""
+
+#: libs/ts.php:66
+msgid "introduce el código de la imagen:"
+msgstr ""
+
+#: libs/uri.php:136
+msgid "a"
+msgstr ""
+
+#: libs/uri.php:136
+msgid "e"
+msgstr ""
+
+#: libs/uri.php:136
+msgid "o"
+msgstr ""
+
+#: libs/uri.php:136
+msgid "u"
+msgstr ""
+
+#: libs/uri.php:136
+msgid "y"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "el"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "la"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "lo"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "un"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "una"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "en"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "de"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "al"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "se"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "es"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "su"
+msgstr ""
+
+#: libs/uri.php:137
+msgid "te"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "los"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "las"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "por"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "con"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "que"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "del"
+msgstr ""
+
+#: libs/uri.php:138
+msgid "sus"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "irrelevante"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "antigua"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "spam"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "duplicada"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "provocación"
+msgstr ""
+
+#: libs/utils.php:14
+msgid "errónea"
+msgstr ""
+
+#: libs/utils.php:59
+msgid "días"
+msgstr ""
+
+#: libs/utils.php:60
+msgid "día"
+msgstr ""
+
+#: libs/utils.php:62
+msgid "horas"
+msgstr ""
+
+#: libs/utils.php:65
+msgid "minutos"
+msgstr ""
+
+#: libs/utils.php:66
+msgid "minuto"
+msgstr ""
+
+#: libs/utils.php:68
+msgid "pocos segundos"
+msgstr ""
+
+#: api/check_url.php:38 api/show_banner_ben.php:38 api/show_banner_ben.php:44
+#: api/show_banner.php:40 api/show_banner.php:46 api/show_banner.php:61
+#: backend/sneaker-stats.php:25 backend/sneaker-stats.php:37
+#: backend/sneaker-stats.php:67
+msgid "votos"
+msgstr ""
+
+#: api/check_url.php:40
+msgid "enviar esta historia"
+msgstr ""
+
+#: api/show_banner_ben.php:32 api/show_banner.php:34
+msgid "votos/hora"
+msgstr ""
+
+#: api/show_banner_ben.php:60
+msgid "A public disservice spam by Menéaaaaaame"
+msgstr ""
+
+#: api/show_banner_ben.php:67 api/show_banner.php:86
+msgid "Última publicada"
+msgstr ""
+
+#: api/show_banner_ben.php:71 api/show_banner.php:90
+msgid "Última enviada"
+msgstr ""
+
+#: api/show_banner_ben.php:75
+msgid "Más menéada recientemente"
+msgstr ""
+
+#: api/show_banner.php:94
+msgid "Menéandose"
+msgstr ""
+
+#: api/show_banner.php:98
+msgid "Última comentada"
+msgstr ""
+
+#: backend/caballier.php:150 backend/sneaker.php:114
+msgid "chat"
+msgstr ""
+
+#: backend/checkfield.php:21
+msgid "nombre demasiado largo"
+msgstr ""
+
+#: backend/checkfield.php:25
+msgid "caracteres inválidos"
+msgstr ""
+
+#: backend/checkfield.php:29
+msgid "el usuario ya existe"
+msgstr ""
+
+#: backend/checkfield.php:36
+msgid "dirección de correo no válida"
+msgstr ""
+
+#: backend/comment_edit.php:52
+msgid "modificar comentario"
+msgstr ""
+
+#: backend/comment_edit.php:81
+msgid "el cabal te castigará"
+msgstr ""
+
+#: backend/menealo.php:15
+msgid "Falta el ID del artículo"
+msgstr ""
+
+#: backend/menealo.php:19
+msgid "Falta el código de usuario"
+msgstr ""
+
+#: backend/menealo.php:23
+msgid "Falta la clave de control"
+msgstr ""
+
+#: backend/menealo.php:29
+msgid "Artículo inexistente"
+msgstr ""
+
+#: backend/menealo.php:33 backend/menealo.php:82 backend/problem.php:26
+msgid "¡tranquilo cowboy!"
+msgstr ""
+
+#: backend/menealo.php:39 backend/problem.php:34
+msgid "Los votos anónimos están temporalmente deshabilitados"
+msgstr ""
+
+#: backend/menealo.php:48
+msgid "Demasiados votos anónimos para esta noticia, inténtelo más tarde"
+msgstr ""
+
+#: backend/menealo.php:55 backend/problem.php:38
+msgid "Usuario incorrecto"
+msgstr ""
+
+#: backend/menealo.php:60
+msgid "clave de control incorrecta"
+msgstr ""
+
+#: backend/menealo.php:80 backend/problem.php:62
+msgid "¡tranquilo cowboy!, tu karma ha bajado: "
+msgstr ""
+
+#: backend/menealo.php:94
+msgid "ya ha votado antes"
+msgstr ""
+
+#: backend/meneos.php:43
+msgid "votos usuarios"
+msgstr ""
+
+#: backend/meneos.php:44
+msgid "votos anónimos"
+msgstr ""
+
+#: backend/meneos.php:56
+msgid "quiénes han votado"
+msgstr ""
+
+#: backend/meneos.php:56
+msgid "ver quiénes han votado"
+msgstr ""
+
+#: backend/problem.php:20
+msgid "Voto incorrecto"
+msgstr ""
+
+#: backend/problem.php:30
+msgid "no se puede votar negativo a las publicadas"
+msgstr ""
+
+#: backend/problem.php:43
+msgid "Clave de control incorrecta"
+msgstr ""
+
+#: backend/problem.php:47
+msgid "No tiene el karma suficiente para votar negativo"
+msgstr ""
+
+#: backend/problem.php:66
+msgid "error insertando voto"
+msgstr ""
+
+#: backend/problem.php:69
+msgid "será tomado en cuenta, gracias"
+msgstr ""
+
+#: backend/sneaker-stats.php:14
+msgid "comandos"
+msgstr ""
+
+#: backend/sneaker-stats.php:23
+msgid "Estadísticas globales"
+msgstr ""
+
+#: backend/sneaker-stats.php:26 backend/sneaker-stats.php:38
+#: backend/sneaker-stats.php:68
+msgid "artículos"
+msgstr ""
+
+#: backend/sneaker-stats.php:27 backend/sneaker-stats.php:39
+#: backend/sneaker-stats.php:69
+msgid "publicados"
+msgstr ""
+
+#: backend/sneaker-stats.php:29 backend/sneaker-stats.php:40
+#: backend/sneaker-stats.php:71
+msgid "descartados"
+msgstr ""
+
+#: backend/sneaker-stats.php:36
+msgid "Estadísticas 24 horas"
+msgstr ""
+
+#: backend/sneaker-stats.php:62
+msgid "Estadísticas de"
+msgstr ""
+
+#: backend/sneaker-stats.php:79
+msgid "el cabal dice"
+msgstr ""
