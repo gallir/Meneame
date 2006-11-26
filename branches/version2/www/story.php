@@ -61,6 +61,7 @@ switch ($url_args[1]) {
 	case 'sneak':
 		$tab_option = 5;
 		$globals['body-args'] = 'onload="start()"'; // To start the micro sneaker
+		// $globals['do_websnapr'] = false; // If websnapr is slow, quite common, dont wait 
 		break;
 	default:
 		$tab_option = 1;	
