@@ -100,8 +100,8 @@ function do_credits() {
         do_legal (_('información legal y condiciones de uso'));
         echo '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;';
 
-	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a>';
-	echo '&nbsp;&nbsp;|&nbsp;&nbsp;'._('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="'.$globals['base_url'].'archives/meneame-src.tgz">'._('descargar').'</a>';
+	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a><br />';
+	echo _('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="'.$globals['base_url'].'archives/meneame-src.tgz">'._('descargar').'</a>';
 	echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a>' . "\n";
 	echo '</span>' . "\n";
 	echo '<span class="credits-strip-buttons">' . "\n";
