@@ -180,7 +180,7 @@ tooltip.ajax_delayed = function (event, script, id, maxcache) {
 	if ((object = this.cache.get(script+id)) != undefined) {
 		tooltip.show(event, object[script+id]);
 	} else {
-		this.show(event, "<?echo _('¡quieto, parao!');?>");
+		this.show(event, "<?echo _('cargando...');?>");
 		this.timeout = setTimeout("tooltip.ajax_request('"+script+"', "+id+", "+maxcache+")", 200);
 	}
 }
