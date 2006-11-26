@@ -716,6 +716,7 @@ td.count {
 .news-body-text {
 	padding: 2px 0 1px 0;
 	text-align: left;
+	overflow: hidden;
 }
 
 .news-submitted {
@@ -1659,7 +1660,7 @@ fieldset.labels div {
 }
 
 /* Beldar: CSS para 'temita' meneos */
-.voters {
+.voters, .mini-sneaker {
 	margin: 25px 0 0 25px;
 	clear: left;
 }
@@ -1832,15 +1833,16 @@ fieldset.labels div {
 	vertical-align: bottom;
 }
 
-/* Mini sneaker */
-.mini-sneaker {
-	margin: 20px 40px 0 35px;
+/* mini sneaker */
+
+/*.mini-sneaker {  ---moved to .voters---
+	margin: 25px 0 0 25px;
 	clear: left;
-}
+}*/
 
 .mini-sneaker-item {
 	margin: 0 5px 0 5px;
-	width: 100%;
+	width: 99%;
 	clear: both;
 	border-bottom: 1px solid #FFE2C5;
 	padding: 2px 0 2px 0;
@@ -1878,7 +1880,6 @@ fieldset.labels div {
 }
 
 .mini-sneaker-who img {
-	border: 0px solid #FFE2C5;
 	float: right;
 	margin-right: 2px;
 	margin-left: 4px;
@@ -1889,4 +1890,3 @@ fieldset.labels div {
 	width: 18%;
 	text-align: right;
 }
-
