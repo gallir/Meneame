@@ -18,66 +18,60 @@ if (!empty($globals['lounge'])) {
 header("Content-type: text/html; charset=utf-8");
 
 function do_tabs($tab_name, $tab_selected) {
-
-if ($tab_name == "main" ) {
-
 	global $globals;
 
-	// posar-hi title a tots els a; passar-ho tot per _()
-	// smooth end echo '<div class="tabmain-right-end">';
-	echo '<ul class="tabmain">' . "\n";
-	$reload_text = _("recargar");
+	$reload_text = _('recargar');
 	$reload_icon = '<img src="'.$globals['base_url'].'img/common/reload-tab-01.png" alt="'.$reload_text.'" />';
 
-	// url with parameters?
-	if (!empty($_SERVER['QUERY_STRING']))
-		$query = "?".$_SERVER['QUERY_STRING'];
-	else $query = "";
+	if ($tab_name == "main" ) {
+		// posar-hi title a tots els a; passar-ho tot per _()
+		// smooth end echo '<div class="tabmain-right-end">';
+		echo '<ul class="tabmain">' . "\n";
+	
+		// url with parameters?
+		if (!empty($_SERVER['QUERY_STRING']))
+			$query = "?".$_SERVER['QUERY_STRING'];
 
 
-	// published tab
-	$cl = "";
-	if ($tab_selected == "published") {
-		$cl = ' class="tabmain-this"';
-		$ln1 = "";
-		$ln2 = "";
-		$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
-	}
-	else {
-		$ln1 = '<a href="'.$globals['base_url'].'">';
-		$ln2 = '</a>';
-		$ln3 = '';
-	}
-	echo '<li'.$cl.'>'.$ln1._('portada').$ln2.$ln3.'</li>' . "\n";
+		// published tab
+		$cl = '';
+		if ($tab_selected == "published") {
+			$cl = ' class="tabmain-this"';
+			$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
+		}
+		else {
+			$ln1 = '<a href="'.$globals['base_url'].'">';
+			$ln2 = '</a>';
+		}
+		echo '<li'.$cl.'>'.$ln1._('portada').$ln2.$ln3.'</li>' . "\n";
 
 
-	// shakeit tab
-	$cl = "";
-	if ($tab_selected == "shakeit") {
-		$cl = ' class="tabmain-this"';
-		$ln1 = "";
-		$ln2 = "";
-		$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].'shakeit.php'.$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
-	}
-	else {
-		$ln1 = '<a href="'.$globals['base_url'].'shakeit.php">';
-		$ln2 = '</a>';
-		$ln3 = '';
-	}
-	echo '<li'.$cl.'>'.$ln1._('menear pendientes').$ln2.$ln3.'</li>' . "\n";
+		// shakeit tab
+		$cl = "";
+		if ($tab_selected == "shakeit") {
+			$cl = ' class="tabmain-this"';
+			$ln1 = '';
+			$ln2 = '';
+			$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].'shakeit.php'.$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
+		} else {
+			$ln1 = '<a href="'.$globals['base_url'].'shakeit.php">';
+			$ln2 = '</a>';
+			$ln3 = '';
+		}
+		echo '<li'.$cl.'>'.$ln1._('menear pendientes').$ln2.$ln3.'</li>' . "\n";
 
-	// story tab
-	$cl = "";
-	if ($tab_selected == "story") {
-		$cl = ' class="tabmain-this"';
-		$ln1 = "";
-		$ln2 = "";
-		$ln3 = '&nbsp;&nbsp;<a href="'.htmlspecialchars($_SERVER['PHP_SELF']).'" title="'.$reload_text.'">'.$reload_icon.'</a>';
-		echo '<li'.$cl.'>'.$ln1._('noticia').$ln2.$ln3.'</li>' . "\n";
-	}
+		// story tab
+		$cl = '';
+		if ($tab_selected == "story") {
+			$cl = ' class="tabmain-this"';
+			$ln1 = '';
+			$ln2 = '';
+			$ln3 = '&nbsp;&nbsp;<a href="'.htmlspecialchars($_SERVER['PHP_SELF']).'" title="'.$reload_text.'">'.$reload_icon.'</a>';
+			echo '<li'.$cl.'>'.$ln1._('noticia').$ln2.$ln3.'</li>' . "\n";
+		}
 
-	echo '</ul>' . "\n";
-	// smooth end echo '</div>';
+		echo '</ul>' . "\n";
+		// smooth end echo '</div>';
 	}
 }
 
@@ -184,8 +178,8 @@ function do_sidebar() {
 		do_mnu_faq('home');
 	}
 
-		do_mnu_submit();
-		do_mnu_sneak();
+	do_mnu_submit();
+	do_mnu_sneak();
 
 	if(empty($globals['link_id'])) {
 		do_mnu_categories('index', $_REQUEST['category']);
@@ -250,27 +244,27 @@ function do_mnu_menedising() {
 }
 
 function do_mnu_meneria () {
-		global $globals;
-		echo '<li>' . "\n";
-		echo '<ul class="mnu-meneria">' . "\n";
-		echo '<li><a href="'.$globals['base_url'].'cloud.php">'._("nube de etiquetas").'</a></li>' . "\n";
-		echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
-		echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
-		echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
-		echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("webs").'</a></li>' . "\n";
-		echo '</ul>' . "\n";
-		echo '</li>' . "\n";
+	global $globals;
+	echo '<li>' . "\n";
+	echo '<ul class="mnu-meneria">' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'cloud.php">'._("nube de etiquetas").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("webs").'</a></li>' . "\n";
+	echo '</ul>' . "\n";
+	echo '</li>' . "\n";
 }
 
 function do_mnu_tools () {
-		echo '<li>' . "\n";
-		echo '<ul class="mnu-tools">' . "\n";
-		echo '<li><a href="http://meneame.wikispaces.com/FAQ">'._("faq").'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
-		echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
-		echo '</ul>' . "\n";
-		echo '</li>' . "\n";
+	echo '<li>' . "\n";
+	echo '<ul class="mnu-tools">' . "\n";
+	echo '<li><a href="http://meneame.wikispaces.com/FAQ">'._("faq").'</a></li>' . "\n";
+	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
+	echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
+	echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
+	echo '</ul>' . "\n";
+	echo '</li>' . "\n";
 }
 
 function do_mnu_rss() {
@@ -322,7 +316,6 @@ function do_mnu_rss() {
 	echo '</li>' . "\n";
 
 	echo '</ul>' . "\n";
-// 	echo '<br style="clear: both;" />' . "\n";
 	echo '</li> <!--html1:do_mnu_rss()-->' . "\n";
 
 }
@@ -376,22 +369,14 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	echo '<li>' . "\n"; // It was class="side-boxed"
 
 	// change class id for shakeit page
-	if ($what_cat_type == 'shakeit') $categorylist_class = 'column-one-list';
-		else $categorylist_class = 'column-list';
+	if ($what_cat_type == 'shakeit') 
+		$categorylist_class = 'column-one-list';
+	else 
+		$categorylist_class = 'column-list';
 	echo '<div class="'.$categorylist_class.'">' . "\n";
 	
 	echo '<ul>' . "\n";
 
-	// database slow query
-	/*
-	if ($what_cat_type == 'shakeit') {
-		$queued_count = $db->get_var("SELECT count(*) FROM links WHERE link_status = 'queued'");
-		$categories = $db->get_results("select category_id, category_name,  count(*) as count from links, categories where category_lang='$dblang' and category_id=link_category AND link_status = 'queued' group by link_category ORDER BY category_name ASC");
-	}
-	else {
-		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
-	}
-    */
 	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
 
 	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
@@ -404,8 +389,10 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	}
 
 	// draw first category: all categories
-	if (empty($what_cat_id)) $thiscat = ' class="thiscat"';
-		else $thiscat = '';
+	if (empty($what_cat_id)) 
+		$thiscat = ' class="thiscat"';
+	else 
+		$thiscat = '';
 	if (preg_match('/index\.php/', $_SERVER['PHP_SELF'])) $base_url = $globals['base_url'];
 	else $base_url = htmlspecialchars($_SERVER[PHP_SELF]);
 	echo '<li'.$thiscat.'><a href="'.$base_url.'?'.$query.'">'._('_todas');
@@ -414,23 +401,20 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 
 	// draw categories
 	foreach ($categories as $category) {
-
 		if($category->category_id == $what_cat_id) {
 			$globals['category_id'] = $category->category_id;
 			$globals['category_name'] = $category->category_name;
 			$thiscat = ' class="thiscat"';
-		}
-		else {
+		} else {
 			$thiscat = '';
 		}
-
 
 		echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
 		echo _($category->category_name);
 		//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$category->count.')';
 		echo "</a></li>\n";
 
-		}
+	}
 
 	echo '</ul>';
 	echo '<br style="clear: both;" />' . "\n";
@@ -442,7 +426,6 @@ function force_authentication() {
 	global $current_user;
 
 	if(!$current_user->authenticated) {
-		//echo '<div class="instruction"><h2>'._('ERROR: debes autentificarte antes').'. <a href="login.php">'._('Login').'</a>.</h2></div>'."\n";
 		header('Location: '.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI']);
 		die;
 	}
@@ -525,79 +508,5 @@ function do_trackbacks() {
 	echo '<li><img src="'.$globals['base_url'].'img/favicons/technorati.png" alt="'._('enlaces technorati').'" width="16" height="16"/>&nbsp;<a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('según Technorati').'</a></li>';
 	echo "</ul>\n";
 	echo '</div><!--html1:do_trackbacks-->';
-}
-
-function do_categories($what_cat_type, $what_cat_id) {
-	
-	// $what_cat_type:
-	//	index: from index.php
-	// 	shakeit: from shakeit.php
-
-	global $db, $dblang, $globals;
-
-	// Categories Box
-	echo '<li>' . "\n"; // It was class="side-boxed"
-
-	// change class id for shakeit page
-	if ($what_cat_type == 'shakeit') $categorylist_class = 'column-one-list';
-	else $categorylist_class = 'column-list';
-	echo '<div class="'.$categorylist_class.'">' . "\n";
-	
-	echo '<ul>' . "\n";
-
-	// database slow query
-	/*
-	if ($what_cat_type == 'shakeit') {
-		$queued_count = $db->get_var("SELECT count(*) FROM links WHERE link_status = 'queued'");
-		$categories = $db->get_results("select category_id, category_name,  count(*) as count from links, categories where category_lang='$dblang' and category_id=link_category AND link_status = 'queued' group by link_category ORDER BY category_name ASC");
-	}
-	else {
-		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
-	}
-    */
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
-
-	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
-	// Always return to page 1
-	$query=preg_replace('/page=[0-9]*/', '', $query);
-	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
-	if(!empty($query)) {
-		$query = htmlspecialchars($query);
-		$query = "&amp;$query";
-	}
-
-	// draw first category: all categories
-	if (empty($what_cat_id)) $thiscat = ' class="thiscat"';
-		else $thiscat = '';
-	if (preg_match('/index\.php/', $_SERVER[PHP_SELF])) $base_url = $globals['base_url'];
-	else $base_url = htmlspecialchars($_SERVER[PHP_SELF]);
-	echo '<li'.$thiscat.'><a href="'.$base_url.'?'.$query.'">'._('_todas');
-	//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$queued_count.')';
-	echo '</a></li>' . "\n";
-
-	// draw categories
-	foreach ($categories as $category) {
-
-		if($category->category_id == $what_cat_id) {
-			$globals['category_id'] = $category->category_id;
-			$globals['category_name'] = $category->category_name;
-			$thiscat = ' class="thiscat"';
-		}
-		else {
-			$thiscat = '';
-		}
-
-
-		echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
-		echo _($category->category_name);
-		//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$category->count.')';
-		echo "</a></li>\n";
-
-		}
-
-	echo '</ul>';
-	echo '<br style="clear: both;" />' . "\n";
-	echo '</div></li><!--html1:do_categories-->' . "\n";
-
 }
 ?>
