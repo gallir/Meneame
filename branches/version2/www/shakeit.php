@@ -36,7 +36,7 @@ if($search) {
 // dropdown
 
 echo '<div class="dropdown-01"><em>';
-$ul_pintat = 0;
+$ul_drawn = false;
 
 $view = clean_input_string($_REQUEST['view']);
 $cat = check_integer('category');
@@ -46,9 +46,9 @@ switch ($view) {
 
 		// benjami
 		echo _('descartadas').'</em>'."\n";
-		if ($ul_pintat == 0) {
+		if (!$ul_drawn) {
 			echo '<ul>'."\n";
-			$ul_pintat = 1;
+			$ul_drawn = true;
 		}
 
 		// Show only discarded in four days
@@ -62,9 +62,9 @@ switch ($view) {
 
 		// benjami
 		echo _('recomendadas').'</em>'."\n";
-		if ($ul_pintat == 0) {
+		if (!$ul_drawn) {
 			echo '<ul>'."\n";
-			$ul_pintat = 1;
+			$ul_drawn = true;
 		}
 
 		if ($current_user->user_id > 0 && !$search) {
@@ -90,9 +90,9 @@ switch ($view) {
 
 			// benjami
 			echo _('todas').'</em>'."\n";
-			if ($ul_pintat == 0) {
+			if (!$ul_drawn) {
 				echo '<ul>'."\n";
-				$ul_pintat = 1;
+				$ul_drawn = true;
 			}
 
 		if ($current_user->user_id > 0)
