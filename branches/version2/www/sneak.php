@@ -252,7 +252,6 @@ for ($i=0; $i<$max_items;$i++) {
 }
 
 echo '</div>';
-echo '</div>';
 
-do_footer(false);
+do_footer();
 ?>

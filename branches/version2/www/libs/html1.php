@@ -170,12 +170,10 @@ function do_sidebar() {
 	
 	if(!empty($globals['link_id'])) {
 		$doing_story=true;
-		echo '<ul class="mnu-main">' . "\n";
 		do_mnu_faq('story');
 		do_mnu_trackbacks();
 	} else {
 		$doing_story=false;
-		echo '<ul class="mnu-main">' . "\n";
 		do_mnu_faq('home');
 	}
 
@@ -190,14 +188,14 @@ function do_sidebar() {
 	do_mnu_tools();
 	do_mnu_bugs();
 	do_mnu_rss();
-	echo '</ul></div><!--html1:do_sidebar-->' . "\n";
+	echo '</div><!--html1:do_sidebar-->' . "\n";
 }
 
 // menu items
 
 function do_mnu_faq($whichpage) {
 	global $dblang;
-	echo '<li class="mnu-faq">' . "\n";
+	echo '<div class="mnu-faq">' . "\n";
 	switch ($whichpage) {
 		case 'home':
 			echo '<strong>' . _("menéame"). '</strong>' . "\n";
@@ -223,31 +221,30 @@ function do_mnu_faq($whichpage) {
 			echo 'estos son los comentarios más valorados durante las ultimas 24 horas';
 			break;
 	}
-	echo '</li>' . "\n";
+	echo '</div>' . "\n";
 	
 }
 
 function do_mnu_submit() {
 	global $globals;
-	echo '<li class="mnu-submit"><a href="'.$globals['base_url'].'submit.php">'._("enviar noticia").'</a></li>' . "\n";
+	echo '<div class="mnu-submit"><a href="'.$globals['base_url'].'submit.php">'._("enviar noticia").'</a></div>' . "\n";
 }
 
 function do_mnu_sneak() {
 	global $globals;
-	echo '<li class="mnu-sneak"><a href="'.$globals['base_url'].'sneak.php">'._("fisgona").'</a></li>' . "\n";
+	echo '<div class="mnu-sneak"><a href="'.$globals['base_url'].'sneak.php">'._("fisgona").'</a></div>' . "\n";
 }
 
 function do_mnu_bugs() {
-	echo '<li class="mnu-bugs"><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></li>' . "\n";
+	echo '<div class="mnu-bugs"><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></div>' . "\n";
 }
 
 function do_mnu_menedising() {
-	echo '<li class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></li>' . "\n";
+	echo '<div class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></div>' . "\n";
 }
 
 function do_mnu_meneria () {
 	global $globals;
-	echo '<li>' . "\n";
 	echo '<ul class="mnu-meneria">' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'cloud.php">'._("nube de etiquetas").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
@@ -255,24 +252,20 @@ function do_mnu_meneria () {
 	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("webs").'</a></li>' . "\n";
 	echo '</ul>' . "\n";
-	echo '</li>' . "\n";
 }
 
 function do_mnu_tools () {
-	echo '<li>' . "\n";
 	echo '<ul class="mnu-tools">' . "\n";
 	echo '<li><a href="http://meneame.wikispaces.com/FAQ">'._("faq").'</a></li>' . "\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
 	echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
 	echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
 	echo '</ul>' . "\n";
-	echo '</li>' . "\n";
 }
 
 function do_mnu_rss() {
 	global $globals, $current_user;
 
-	echo '<li>' . "\n"; // It was class="side-boxed"
 	echo '<ul class="mnu-rss">' . "\n";
 
 	if(!empty($_REQUEST['search'])) {
@@ -318,14 +311,11 @@ function do_mnu_rss() {
 	echo '</li>' . "\n";
 
 	echo '</ul>' . "\n";
-	echo '</li> <!--html1:do_mnu_rss()-->' . "\n";
-
 }
 
 function do_mnu_trackbacks() {
 	global $db, $globals;
 
-	echo '<li>' . "\n";
 	echo '<ul class="mnu-trackback">' . "\n";
 
 	echo '<li><a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'">trackback <img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/></a></li>' . "\n";
@@ -356,7 +346,6 @@ function do_mnu_trackbacks() {
 	echo "</ul></li>\n";
 
 	echo "</ul>\n";
-	echo '</li><!--html1:do_mnu_trackbacks-->' . "\n";
 }
 
 function do_mnu_categories($what_cat_type, $what_cat_id) {
@@ -368,7 +357,6 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	global $db, $dblang, $globals;
 
 	// Categories Box
-	echo '<li>' . "\n"; // It was class="side-boxed"
 
 	// change class id for shakeit page
 	if ($what_cat_type == 'shakeit') 
@@ -420,7 +408,7 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 
 	echo '</ul>';
 	echo '<br style="clear: both;" />' . "\n";
-	echo '</div></li><!--html1:do_mnu_categories-->' . "\n";
+	echo '</div><!--html1:do_mnu_categories-->' . "\n";
 
 }
 

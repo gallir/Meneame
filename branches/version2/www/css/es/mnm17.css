@@ -738,10 +738,17 @@ td.count {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+	display: block;
+	color: #FF6400;
+	margin: 0 0 10px 0;
+}
+
+.mnu-main li {
+	width: 100%;
+	padding: 0;
 }
 
 .mnu-main a, .mnu-main {
-	display: block;
 	color: #FF6400;
 	/*font-weight: bolder;*/
 }
@@ -756,13 +763,11 @@ td.count {
 	border-bottom: 1px solid #FFE2C5;
 	font-size: 90%;
 	color: #FF6400;
-	padding: 10px 0 10px 10px;
+	padding: 10px 4px 10px 4px;
+	margin: 0 0 10px 0;
 }
 
 .mnu-faq a {
-	display: inline;
-	border: none;
-	padding: 0;
 	font-size: 100%;
 	color: #FF9400;
 	text-decoration: underline;
@@ -770,64 +775,122 @@ td.count {
 
 /* general attributes */
 
-.mnu-bugs, .mnu-submit, .mnu-sneak, .mnu-meneria, .mnu-tools, .mnu-menedising, .mnu-rss, .mnu-trackback {
+.mnu-submit {
 	text-align: left;
 	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 5px 5px 5px 3px;
+	padding: 10px 0 5px 0px;
+	margin: 0 0 10px 0;
+	font-weight: bolder;
+	background-repeat: no-repeat;
+	background-position: top right;
+	background-image: url(../../img/common/mnu-submit01.png);
+}
+
+.mnu-submit a, .mnu-sneak a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a {
+	color: #FF6400;
+	background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
+	padding-left: 15px;
+}
+
+.mnu-sneak {
+	text-align: left;
+	font-size: 110%;
+	color: #FF6400;
+	border-bottom: 1px solid #FFE2C5;
+	padding: 10px 0 5px 0px;
+	margin: 0 0 10px 0;
+	font-weight: bolder;
+	background-repeat: no-repeat;
+	background-position: top right;
+	background-image: url(../../img/common/elmnm-sneak01.png);
+}
+
+
+.mnu-bugs, .mnu-menedising {
+	text-align: left;
+	font-size: 110%;
+	color: #FF6400;
+	border-bottom: 1px solid #FFE2C5;
+	padding: 15px 0 2px 0px;
+	margin: 0 0 10px 0;
+	background-repeat: repeat-x;
+	background-position: bottom left;
+	background-image: url(../../img/common/mnu-bkgsoft02.png);
+}
+
+.mnu-meneria, .mnu-tools, .mnu-trackback {
+	list-style: none;
+	text-align: left;
+	font-size: 110%;
+	color: #FF6400;
+	border-bottom: 1px solid #FFE2C5;
+	padding: 15px 0 5px 0px;
+	margin: 0 0 10px 0;
 	background: #FFF;
-}
-
-.mnu-meneria {
+	width: 100%;
 	white-space: nowrap;
+	background-repeat: repeat-x;
+	background-position: bottom left;
+	background-image: url(../../img/common/mnu-bkgsoft01.png);
 }
 
-.mnu-rss { /* too much text in rss: smaller fonts and line-height in order to see rss icons */
+.mnu-rss {
+	list-style: none;
+	text-align: left;
 	font-size: 100%;
-	line-height: 18px;
+	color: #FF6400;
+	border-bottom: 1px solid #FFE2C5;
+	padding: 10px 0 5px 0px;
+	margin: 0 0 10px 0;
+	background: #FFF;
+	width: 100%;
+	background-repeat: repeat-x;
+	background-position: bottom left;
+	background-image: url(../../img/common/mnu-bkgsoft01.png);
 }
+
+.mnu-rss a {
+	color: #FF6400;
+	background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 4px;
+	padding-left: 16px;
+}
+
+#sidebar ul, .mnu-meneria li, .mnu-tools li, .mnu-rss li,  .mnu-trackback li {
+	margin: 0;
+	padding: 0;
+}
+
+
 
 /* backgrounds */
 
-.mnu-submit, .mnu-sneak {
-	background-repeat: no-repeat;
-	background-position: top right;
-}
 
-.mnu-meneria, .mnu-bugs, .mnu-tools, .mnu-menedising, .mnu-rss, .mnu-trackback {
+.mnu-trackback {
 	background-repeat: repeat-x;
 	background-position: bottom left;
 }
 
-.mnu-submit { background-image: url(../../img/common/mnu-submit01.png); }
-.mnu-sneak { background-image: url(../../img/common/elmnm-sneak01.png); }
-.mnu-meneria, .mnu-tools, .mnu-rss, .mnu-trackback { background-image: url(../../img/common/mnu-bkgsoft01.png); }
-.mnu-menedising, .mnu-bugs { background-image: url(../../img/common/mnu-bkgsoft02.png); }
+.mnu-trackback { background-image: url(../../img/common/mnu-bkgsoft01.png); }
 
 /* bolder font to principal functions */
 
-.mnu-submit, .mnu-sneak, .mnu-trackback {
+.mnu-trackback {
 	font-weight: bolder;
 }
 
-/* list-images */
 
-.mnu-bugs a, .mnu-submit a, .mnu-sneak a, .mnu-meneria a, .mnu-tools a, .mnu-menedising a, .mnu-trackback a {
-	background: url(../../img/common/mnu-list-image01.png) no-repeat 0px 4px;
-	padding-left: 13px;
+/* list-images */
+.mnu-trackback a {
+	background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
+	padding-left: 15px;
 }
 
-.mnu-rss, .mnu-meneria, .mnu-tools, .mnu-trackback li { list-style: none; }
 
 .mnu-trackback-entry a, .mnu-trackback-no {
 	background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
 	padding-left: 13px;
-}
-
-.mnu-rss a {
-	background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 4px;
-	padding-left: 16px;
 }
 
 /* list-images for blog search engine trackbacks */
@@ -861,9 +924,6 @@ td.count {
 
 /* _multiple option entries_ modifications */
 
-.mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-trackback li { /* space between lines */
-	margin: 0;
-}
 
 /* categories */
 
@@ -872,18 +932,25 @@ td.count {
 /* benjami, 09-2006: categories and categories css needs a _in depth_ reform */
 
 .column-list {
+	width: 100%;
+	margin: 0 0 15px 0;
+	display: block;
 	border: none;
 	border-bottom: 1px solid #FFE2C5;
 	background: url(../../img/common/mnu-cat01.png) 50% 50% no-repeat;
-	padding: 10px 0 15px 0; /* list top & bottom */
+	padding: 10px 0 0 0; /* list top & bottom */
 }
 
 .column-one-list, .column-one-list-short {
+	width: 100%;
+	margin: 0 0 15px 0;
+	display: block;
 	background: url(../../img/common/mnu-bkgsoft03.png) repeat-x bottom left;
 	padding: 10px 0 0 0; /* list top & bottom */
 }
 
 .column-one-list-short { /* short list (for clouds, etc. page) */
+	width: 100%;
 	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 }
 
@@ -897,22 +964,16 @@ td.count {
 
 .column-list ul, .column-one-list ul, .column-one-list-short ul, .column-select-us ul {
 	list-style: none;
-	padding: 0 0 0 0; /* from box border */
-}
-
-.column-one-list ul, .column-one-list-short ul { /* benjami: differences with column-list */
+	margin: 0;
 	padding: 0; /* from box border */
 }
 
-.column-select-us ul { /* benjami: differences with column-list */
-	padding-left: 5px; /* from box border */
-}
 
 .column-list li {
 	float: left;
-	width: 50%;
+	width: 49%;
 	margin: 0;
-	padding-bottom: 5px;
+	padding: 0 0 5px 0;
 	font-size: 80%;
 	border: none;
 	background: none;
@@ -920,17 +981,10 @@ td.count {
 }
 
 .column-one-list li, .column-one-list-short li, .column-select-us li {
-	font-size: 85%;
-	/*border: 1px solid #000; test*/
+	font-size: 95%;
 	border: none;
-	padding: 5px 0 5px 20px;
-	margin: 0 0 0 0;
-}
-
-.column-list li a, .column-list li span, .column-one-list li a, .column-one-list li span, .column-one-list-short li a, .column-one-list-short li span, .column-select-us li a, .column-select-us li span {
-	border: none;
-	background: none;
-	display: inline;
+	padding: 5px 0 5px 0;
+	margin: 0;
 }
 
 .column-list li a, .column-one-list li a, .column-one-list-short li a {
@@ -951,24 +1005,12 @@ td.count {
 	background-position: center right;
 }
 
-/*.column-select-us li.thiscat {
-	font-weight: bold;
-	font-size: 115%;
-	background: #FF9400;
-	background-repeat: no-repeat;
-	background-position: center right;
-}*/
-
 .column-one-list li.thiscat a:hover, .column-one-list li.thiscat a, .column-one-list-short li.thiscat a:hover, .column-one-list-short li.thiscat a { /* 1col selected item */
 	color: #FFF;
 }
 
 .column-list li.thiscat { /* 2col selected category in bold */
 	font-weight: bold;
-}
-
-.column-list li {
-	clear: none;
 }
 
 .categorylist li {
@@ -1371,10 +1413,16 @@ fieldset.labels div {
 }
 
 #genericform .genericsubmit {
-	background: #FF6400;
+	background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
+	border: 1px solid #FF6400;
+	color: #FF6400;
+	font-weight: bold;
+}
+
+#genericform .genericsubmit:hover {
+	background: #FFBE94;
 	color: #FFF;
 	font-weight: bold;
-	border: 1px dotted #FFF;
 }
 
 #genericform input {
@@ -1533,7 +1581,7 @@ fieldset.labels div {
 	text-align: center;
 	padding: 0 0 5px 0;
 	margin: 0px;
-	background: #FFE2C5;
+	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 	border-bottom: 1px solid #FFF;
 }
 
@@ -1646,8 +1694,9 @@ fieldset.labels div {
 
 .sneaker input.sendmessage {
 	color: #FF6400;
-	border: 1px dotted #FF6400;
+	border: 1px solid #FF6400;
 	font-size: 90%;
+	background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 }
 
 /* Beldar: CSS para 'temita' meneos */
