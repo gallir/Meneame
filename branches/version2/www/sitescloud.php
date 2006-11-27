@@ -82,7 +82,7 @@ function do_sidebar_top() {
 		if($i == $current_range)  {
 			echo '<li class="thiscat">' .$range_names[$i]. '</li>'."\n";
 		} else {
-			echo '<li><a href="blogscloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+			echo '<li><a href="sitescloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 		}
 		
 	}

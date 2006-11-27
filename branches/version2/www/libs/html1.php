@@ -212,6 +212,7 @@ function do_mnu_faq($whichpage) {
 			break;
 		case 'cloud':
 			echo 'las etiquetas <strong>más populares</strong> aparecen a la derecha <strong>con mayor tamaño</strong>';
+			break;
 		case 'sitescloud':
 			echo 'los webs <strong>más populares</strong> aparecen a la derecha <strong>con mayor tamaño</strong>';
 			break;
