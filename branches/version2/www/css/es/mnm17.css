@@ -32,7 +32,6 @@ body, td, th, h3 { /* browser differences workaround  */
 */
 }
 
-
 /* footer workaround */
 html, body {
     height: 100%;
@@ -838,19 +837,19 @@ td.count {
 .mnu-trackback-technorati a {
 	background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
 	padding-left: 20px;
-	padding-top: 3px;
+	padding-top: 6px;
 }
 
 .mnu-trackback-google a {
 	background: url(../../img/favicons/google.png) no-repeat 0px 4px;
 	padding-left: 18px;
-	padding-top: 3px;
+	padding-top: 6px;
 }
 
 .mnu-trackback-askcom a {
 	background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
 	padding-left: 18px;
-	padding-top: 3px;
+	padding-top: 6px;
 }
 
 
