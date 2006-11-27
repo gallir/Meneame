@@ -133,39 +133,13 @@ function do_sidebar_shake() {
 	echo '<ul class="mnu-main">';
 
 	do_mnu_faq('shakeit');
-	do_mnu_sneak();
 	do_mnu_submit();
-
-/******* Disabled temporarely
-	echo '<li>' . "\n";
-	echo '<div class="note-temp">' . "\n";
-	echo '<strong>'._('¡Tu voto es importante!').'</strong><br/><br/>';
-	//echo _('Menea las noticias que te parecen m&aacute;s interesantes. Cuando reciba suficientes votos será promovida a la página principal. ') . '<br/><br/>';
-	echo '<strong>'._('Usa las categorías para conseguir que la lista sea más corta. ').'</strong>'._(' Así no te perderás entradas interesantes de tus temas preferidos.')."\n";
-	echo '</div>' . "\n";
-	echo '</li>' . "\n";
-********/
-
-// 	echo '<li><div class="boxed"><div>';
+	do_mnu_sneak();
 
 	// Categories box
 
 	do_mnu_categories ('shakeit', check_integer('category'));
 
-	/*** This search is never used 
-	*******************************
-	echo '<li>'. "\n";
-	echo '<div class="shakeit-form">'. "\n";
-	echo '<label for="search">'._('búsqueda en pendientes').'</label>'; "\n";
-	echo '<form class="shakeit-form" action="">'; "\n";
-	echo '<input class="shakeit-form-input" type="text" id="search2" name="search" value="'; "\n";
-	if (!empty($_REQUEST['search'])) echo htmlspecialchars(strip_tags($_REQUEST['search']));
-	echo '"/>'; "\n";
-	echo '<input class="shakeit-form-submit" type="submit" id="search-button" value="'._('buscar').'" />'; "\n";
-	echo '</form>'. "\n";
-	echo '</div>'. "\n";
-	echo '</li>'. "\n";
-	******/
 	//do_banner_right_a(); // right side banner
 	do_mnu_tools();
 	do_mnu_bugs();
