@@ -13,7 +13,7 @@ include(mnminclude.'sneak.php');
 
 #$globals['ads'] = true;
 $globals['body-args'] = 'onload="start()"';
-$globals['favicon'] = 'img/common/sneaker.ico';
+$globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();
 

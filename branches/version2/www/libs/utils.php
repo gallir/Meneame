@@ -271,7 +271,7 @@ function not_found() {
     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
     echo "<title>". _('error') . "</title>\n";
     echo '<meta name="generator" content="meneame" />' . "\n";
-    echo '<link rel="icon" href="'.$globals['base_url'].'favicon.ico" type="image/x-icon" />' . "\n";
+    echo '<link rel="icon" href="'.$globals['base_url'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
     echo '</head>' . "\n";
     echo "<body>\n";
 	echo '<h1>' . _('error') . ' 3.1415926536</h1><p>' . _('no encontrado') . '</p>';

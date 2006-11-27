@@ -104,7 +104,7 @@ function do_header($title, $id='home') {
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('todas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=all" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('comentarios').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php" />'."\n";
 
-	if (empty($globals['favicon'])) $globals['favicon'] = 'favicon.ico';
+	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
 	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon" />' . "\n";
 
 	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>';
