@@ -593,13 +593,11 @@ td.count {
 }
 
 .news-details .comments_yes {
-/* background: url(../../img/common/comments.png) no-repeat; */
 	padding: 0 4px 0 0;
 	border-left: none;
 }
 
 .news-details .comments_no {
-/*	background: url(../../img/common/comments_no.png) no-repeat;*/
 	padding: 0 4px 0 0;
 	border-left: none;
 }
