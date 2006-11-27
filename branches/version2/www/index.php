@@ -57,7 +57,8 @@ if($search) {
 	do_navbar(_('búsqueda'));
 	do_sidebar();
 	echo '<div id="contents">'; // benjami: repetit, no m'agrada, arreglar despres
-	echo '<h2>'._('resultados de la búsqueda'). ' "'.$search_txt.'" </h2>';
+	do_tabs("main","");
+	echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 	$from_where .= $search;
 	if ($_REQUEST['tag'] == 'true' || $_REQUEST['date']  == 'true' ) {
 		$order_by = ' ORDER BY link_date DESC ';
