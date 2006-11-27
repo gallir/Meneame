@@ -915,7 +915,7 @@ td.count {
 	width: 50%;
 	margin: 0;
 	padding-bottom: 5px;
-	font-size: 75%;
+	font-size: 80%;
 	border: none;
 	background: none;
 }
@@ -935,7 +935,7 @@ td.count {
 }
 
 .column-list li a, .column-one-list li a, .column-one-list-short li a {
-	padding: 0 0 0 15px;
+	padding: 0 0 0 10px;
 	color: #FF6400;
 }
 
