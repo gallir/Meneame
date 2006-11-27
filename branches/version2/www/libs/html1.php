@@ -83,6 +83,7 @@ function do_navbar($where) {
 	echo '<div id="nav-string"><div>&#187; <a href="'.$globals['base_url'].'"><strong>'.$_SERVER['SERVER_NAME'].$globals['base_url'].'</strong></a>' . $where . '</div></div>' . "\n";
 */
 	do_banner_top();
+	echo '<div id="container">' . "\n";
 }
 
 function do_header($title, $id='home') {
@@ -114,7 +115,6 @@ function do_header($title, $id='home') {
 	echo '<script src="'.$globals['base_url'].'js/simpleformat01.js" type="text/javascript"></script>' . "\n";
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
-	echo '<div id="container">' . "\n";
 	echo '<div id="logo">'  . "\n";
 	echo '<a href="'.$globals['base_url'].'"><img src="'.$globals['base_url'].'img/es/logo01.png" alt="meneame, noticias colaborativas" /></a>';
 	echo '</div>'  . "\n";

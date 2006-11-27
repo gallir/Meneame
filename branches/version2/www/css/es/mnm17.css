@@ -24,13 +24,14 @@ body, td, th, h3 { /* browser differences workaround  */
 }
 
 #container {
-	margin: 0 0 0 0;
+	margin: 0 auto;
 	min-width: 750px;
-
-/* footer workaround */
 	position: relative;
+/* footer workaround 
 	min-height: 100%;
+*/
 }
+
 
 /* footer workaround */
 html, body {
@@ -54,16 +55,15 @@ abbr { cursor: help; }
 }
 
 #contents {
-	/*background: #D6D6D6;*/
-	margin: 25px 20px 0 16em;
+	margin: 25px 20px 0 15.5em;
 	padding: 0 0 55px 0;
 	border-left: 1px solid #FF6400;
 }
 
 #sidebar {
 	float: left;
-	width: 14em;
-	margin: 58px 0 50px 20px;
+	width: 13em;
+	margin: 28px 0 50px 20px;
 	padding: 0 0 0 0;
 }
 
@@ -73,13 +73,6 @@ abbr { cursor: help; }
 .tt {
 	text-decoration: underline;
 	color: #C85000;
-}
-
-#container {
-	margin: 0 auto;
-	min-width: 750px;
-	 /* footer at bottom workaround */
-	/*position:absolute;*/
 }
 
 /* dropdown
@@ -482,6 +475,7 @@ td.count {
 	background-image: url(../../img/common/tri01.png);
 	background-repeat: no-repeat;
 	background-position: left bottom;
+	white-space: nowrap;
 }
 
 #header ul {
@@ -557,6 +551,7 @@ td.count {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	overflow: hidden;
 }
 
 .news-shakeit li {
@@ -569,6 +564,8 @@ td.count {
 	color: #FF6400;
 	display: block;
 	margin: 0 0 0 0;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .news-details a:link, .news-details a:visited {
@@ -712,6 +709,7 @@ td.count {
 	color: #666;
 	font-size: 85%;
 	margin: 0 0 0 0;
+	white-space: nowrap;
 }
 
 .news-tags {
@@ -744,7 +742,7 @@ td.count {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	}
+}
 
 .mnu-main a, .mnu-main {
 	display: block;
@@ -781,8 +779,12 @@ td.count {
 	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 5px 5px 5px 5px;
+	padding: 5px 5px 5px 3px;
 	background: #FFF;
+}
+
+.mnu-meneria {
+	white-space: nowrap;
 }
 
 .mnu-rss { /* too much text in rss: smaller fonts and line-height in order to see rss icons */
@@ -817,19 +819,19 @@ td.count {
 
 .mnu-bugs a, .mnu-submit a, .mnu-sneak a, .mnu-meneria a, .mnu-tools a, .mnu-menedising a, .mnu-trackback a {
 	background: url(../../img/common/mnu-list-image01.png) no-repeat 0px 4px;
-	padding-left: 15px;
+	padding-left: 13px;
 }
 
 .mnu-rss, .mnu-meneria, .mnu-tools, .mnu-trackback li { list-style: none; }
 
 .mnu-trackback-entry a, .mnu-trackback-no {
 	background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
-	padding-left: 15px;
+	padding-left: 13px;
 }
 
 .mnu-rss a {
 	background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 4px;
-	padding-left: 18px;
+	padding-left: 16px;
 }
 
 /* list-images for blog search engine trackbacks */
@@ -842,13 +844,13 @@ td.count {
 
 .mnu-trackback-google a {
 	background: url(../../img/favicons/google.png) no-repeat 0px 4px;
-	padding-left: 20px;
+	padding-left: 18px;
 	padding-top: 3px;
 }
 
 .mnu-trackback-askcom a {
 	background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
-	padding-left: 20px;
+	padding-left: 18px;
 	padding-top: 3px;
 }
 
@@ -918,6 +920,7 @@ td.count {
 	font-size: 80%;
 	border: none;
 	background: none;
+	white-space: nowrap;
 }
 
 .column-one-list li, .column-one-list-short li, .column-select-us li {
