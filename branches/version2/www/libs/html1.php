@@ -434,7 +434,11 @@ function force_authentication() {
 	return true;
 }
 
-function do_pages($total, $page_size=25) {
+function do_pages($total, $page_size=25, $pager_style) {
+
+	// pager style == "margin": notices. with margin for meneos box.
+	//             == ''      : rest of pages. no margin.
+
 	global $db;
 
 	$index_limit = 10;
@@ -451,7 +455,11 @@ function do_pages($total, $page_size=25) {
 	$start=max($current-intval($index_limit/2), 1);
 	$end=$start+$index_limit-1;
 	
-	echo '<div class="pages">';
+	if ($pager_style == "margin") {
+		echo '<div class="pages-margin">';
+	} else {
+		echo '<div class="pages">';
+	}
 
 	if($current==1) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';

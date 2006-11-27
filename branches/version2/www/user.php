@@ -74,17 +74,17 @@ switch ($view) {
 	case 'history':
 		do_user_tabs(2, $login);
 		do_history();
-		do_pages($rows, $page_size);
+		do_pages($rows, $page_size, 'margin');
 		break;
 	case 'commented':
 		do_user_tabs(3, $login);
 		do_commented();
-		do_pages($rows, $page_size);
+		do_pages($rows, $page_size, '');
 		break;
 	case 'shaken':
 		do_user_tabs(4, $login);
 		do_shaken();
-		do_pages($rows, $page_size);
+		do_pages($rows, $page_size, 'margin');
 		break;
 	case 'preferred':
 		do_user_tabs(5, $login);
@@ -244,7 +244,6 @@ function do_history () {
 	global $db, $rows, $user, $offset, $page_size;
 
 	$link = new Link;
-	echo '<h2>'._('noticias enviadas').'</h2>';
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
@@ -260,7 +259,6 @@ function do_shaken () {
 	global $db, $rows, $user, $offset, $page_size;
 
 	$link = new Link;
-	echo '<h2>'._('noticias votadas').'</h2>';
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
 	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
@@ -278,7 +276,6 @@ function do_commented () {
 
 	$link = new Link;
 	$comment = new Comment;
-	echo '<h2>'._('comentarios').'</h2><br />';
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {

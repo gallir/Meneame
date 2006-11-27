@@ -85,7 +85,7 @@ if ($links) {
 	}
 }
 
-do_pages($rows, $page_size);
+do_pages($rows, $page_size, 'margin');
 echo '</div> <!--index.php-->';
 do_footer();
 ?>

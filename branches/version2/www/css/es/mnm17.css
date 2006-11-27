@@ -1238,15 +1238,19 @@ fieldset.labels div {
 
 /* pagination */
 
-.pages {
+.pages, .pages-margin {
 	padding: 10px 0 0 0;
 	border-top: 1px dotted #FF6400;
-	margin: 20px 20px 50px 100px;
+	margin: 20px 0 50px 0;
 	clear: left;
 	font-size: 90%;
 }
 
-.pages a, .pages span {
+.pages-margin {
+	margin-left: 100px;
+}
+
+.pages a, .pages span, .pages-margin a, .pages-margin span {
 	display: block;
 	float: left;
 	color: #FF6400;
@@ -1256,41 +1260,41 @@ fieldset.labels div {
 	background: #FFF;
 }
 
-.pages span.current  {
+.pages span.current, .pages-margin span.current  {
 	border: 1px solid #FF6400;
 	font-weight: bold;
 	background: #FFBE94;
 	color: #FF6400;
 }
 
-.pages span.current a {
+.pages span.current a, .pages-margin span.current a {
 	padding: 0;
 	background: #FF6400;
 	color: #FF6400;
 	border: 0px;
 }
 
-.pages a {
+.pages a, .pages-margin a {
 	border: 1px solid #FF6400;
 	text-decoration: none;
 	background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
 }
 
-.pages a:hover {
+.pages a:hover, .pages-margin a:hover {
 	border-color: #FF9400;
 	background: #FFBE94;
 	color: #FF6400;
 }
 
-.pages a.nextprev {
+.pages a.nextprev, .pages-margin a.nextprev {
 	font-weight: bold;
 }
 
-.pages span.nextprev {
+.pages span.nextprev, .pages-margin span.nextprev {
 	color: #FFE2C5;
 }
 
-.pages span.nextprev {
+.pages span.nextprev, .pages-margin span.nextprev {
 	border: 1px solid #FFE2C5;
 	color: #FFE2C5;
 }

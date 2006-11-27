@@ -121,7 +121,7 @@ if ($links) {
 		$link->print_summary();
 	}
 }
-do_pages($rows, $page_size);
+do_pages($rows, $page_size, 'margin');
 echo '</div>'."\n";
 do_footer();
 

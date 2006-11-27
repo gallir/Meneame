@@ -105,7 +105,7 @@ if ($users) {
 	}
 }
 echo "</table>\n\n";
-do_pages($rows, $page_size);
+do_pages($rows, $page_size, '');
 do_footer();
 
 
