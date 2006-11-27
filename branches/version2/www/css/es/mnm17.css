@@ -714,6 +714,11 @@ td.count {
 	white-space: nowrap;
 }
 
+.news-submitted a:link {
+	color: #666;
+	font-weight: bold;
+}
+
 .news-tags {
 	color: #666;
 	font-size: 90%;
