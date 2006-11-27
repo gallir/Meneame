@@ -212,7 +212,6 @@ case 5:
 
 }
 
-echo '<br clear="left">';
 echo '</div>';
 
 echo '<!--'."\n".'<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
