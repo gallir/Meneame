@@ -720,14 +720,6 @@ td.count {
 	margin: 0 0 0 0;
 }
 
-.news-submitted a:link, .news-submitted a:visited, .news-tags a:link, .news-tags a:visited {
-	color: #666;
-	font-weight: bold;
-}
-
-.news-submitted a:hover {
-	color: #333;
-}
 
 /* gravatar */
 

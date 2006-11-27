@@ -312,9 +312,13 @@ class Link {
 		echo '<h3>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		echo '</h3>';
+		if ($type=='full'  && $globals['do_websnapr'] && $type == 'full' && $globals['link_id'] > 0 && !empty($this->url_title)) {
+			echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
+		}
 		echo '<div class="news-submitted">';
-		if ($type != 'short')
+		if ($type != 'short') {
 			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
+		}
 		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
 		echo _('enviado por').' <a href="'.get_user_uri($this->username, 'history').'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		// Print dates
@@ -330,11 +334,7 @@ class Link {
 		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
-			echo '<p>';
-			if ($globals['do_websnapr'] && $type == 'full' && $globals['link_id'] > 0 && !empty($this->url_title)) {
-				echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
-			}
-			echo text_to_html($this->content).'</p>';
+			echo '<p>'.text_to_html($this->content).'</p>';
 		}
 		if (!empty($this->tags)) {
 			echo '<div class="news-tags">';
