@@ -22,56 +22,43 @@ function do_tabs($tab_name, $tab_selected) {
 
 	$reload_text = _('recargar');
 	$reload_icon = '<img src="'.$globals['base_url'].'img/common/reload-tab-01.png" alt="'.$reload_text.'" />';
+	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {
 		// posar-hi title a tots els a; passar-ho tot per _()
 		// smooth end echo '<div class="tabmain-right-end">';
 		echo '<ul class="tabmain">' . "\n";
-	
-		// url with parameters?
-		if (!empty($_SERVER['QUERY_STRING']))
-			$query = "?".$_SERVER['QUERY_STRING'];
-
 
 		// published tab
-		$cl = '';
-		if ($tab_selected == "published") {
-			$cl = ' class="tabmain-this"';
-			$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
+		if ($tab_selected == 'published') {
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
 		else {
-			$ln1 = '<a href="'.$globals['base_url'].'">';
-			$ln2 = '</a>';
+			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
-		echo '<li'.$cl.'>'.$ln1._('portada').$ln2.$ln3.'</li>' . "\n";
 
-
-		// shakeit tab
-		$cl = "";
-		if ($tab_selected == "shakeit") {
-			$cl = ' class="tabmain-this"';
-			$ln1 = '';
-			$ln2 = '';
-			$ln3 = '&nbsp;&nbsp;<a href="'.$globals['base_url'].'shakeit.php'.$query.'" title="'.$reload_text.'">'.$reload_icon.'</a>';
+		// shake it
+		if ($tab_selected == 'shakeit') {
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
-			$ln1 = '<a href="'.$globals['base_url'].'shakeit.php">';
-			$ln2 = '</a>';
-			$ln3 = '';
+			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
-		echo '<li'.$cl.'>'.$ln1._('menear pendientes').$ln2.$ln3.'</li>' . "\n";
 
 		// story tab
-		$cl = '';
-		if ($tab_selected == "story") {
-			$cl = ' class="tabmain-this"';
-			$ln1 = '';
-			$ln2 = '';
-			$ln3 = '&nbsp;&nbsp;<a href="'.htmlspecialchars($_SERVER['PHP_SELF']).'" title="'.$reload_text.'">'.$reload_icon.'</a>';
-			echo '<li'.$cl.'>'.$ln1._('noticia').$ln2.$ln3.'</li>' . "\n";
+		if ($tab_selected == 'story') {
+			echo '<li><a '.$active.' href="'.$globals['link']->get_permalink().'" title="'.$reload_text.'">'._('noticia').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		}
+
+		// Search
+		if ($tab_selected == 'search') {
+			htmlspecialchars($_REQUEST['search']);
+			// url with parameters?
+			if (!empty($_SERVER['QUERY_STRING']))
+				$query = "?".htmlentities($_SERVER['QUERY_STRING']);
+			echo '<li><a '.$active.' href="'.$query.'" title="'.$reload_text.'">'._('búsqueda').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
 
 		echo '</ul>' . "\n";
-		echo '<br/>'; // Added to avoud problems with the first news title due to the left alignment and margins
 		// smooth end echo '</div>';
 	}
 }

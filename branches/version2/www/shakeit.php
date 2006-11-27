@@ -130,7 +130,6 @@ function do_sidebar_shake() {
 	global $db, $dblang, $globals;
 
 	echo '<div id="sidebar">';
-	echo '<ul class="mnu-main">';
 
 	do_mnu_faq('shakeit');
 	do_mnu_submit();
@@ -144,7 +143,6 @@ function do_sidebar_shake() {
 	do_mnu_tools();
 	do_mnu_bugs();
 	do_mnu_rss();
-	echo '</ul>'. "\n";
 	echo '</div>'. "\n";
 
 }

@@ -34,6 +34,8 @@ body, td, th, h3 { /* browser differences workaround  */
 
 /* footer workaround */
 html, body {
+	margin : 0;
+	padding : 0;
     height: 100%;
 }
 
@@ -142,7 +144,48 @@ abbr { cursor: help; }
 
 /* tabs */
 
-.tabmain { /* tabs space */
+.tabmain {
+	height: 28px !important;
+	padding: 0 0 0 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
+	margin: 0 0 0 -1px; /* makes left corner */
+	width: 97%;
+	background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
+	overflow: hidden;
+}
+
+.tabmain li {
+	margin: 0; 
+	padding: 0;
+ 	display: inline;
+ 	list-style-type: none;
+}
+	
+.tabmain a:link, .tabmain a:visited {
+	float: left;
+	font-size: 125%;
+	font-weight: bold;
+	line-height: 22px !important;
+	font-weight: bold;
+	padding: 2px 10px 2px 10px;
+	margin-right: 4px;
+	border: 1px solid #ff6400;
+	text-decoration: none;
+	background: #FFF url(../../img/common/tabs/tabmain-background.png) bottom left repeat-x; /* gradient background */
+	color: #FF6400;
+}
+
+.tabmain a:link.tabmain-this, .tabmain a:visited.tabmain-this {
+	border-bottom: 1px solid #fff;
+	color: #FF6400;
+	background: #fff;
+}
+
+.tabmain a:hover
+{
+	background: #fff;
+}
+
+.xtabmain { /* tabs space */
 	list-style-type: none;
 	padding: 0 0 30px 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
 	margin: 0 0 0 -1px; /* makes left corner */
@@ -150,7 +193,7 @@ abbr { cursor: help; }
 	background: #FFF url(../../img/common/pixel-ff6400.png) 0 29px repeat-x; /* line below tabs. put it padding-bottom -1 */
 }
 
-.tabmain li { /* tab details */
+.xtabmain li { /* tab details */
 	font-size: 125%;
 	font-weight: bold;
 	height: 18px !important; /* diferent font size can change tab height defined in .tabmain */
@@ -192,21 +235,21 @@ abbr { cursor: help; }
 
 /* tabs tabmain & tabsub common */
 
-.tabmain a, .tabsub-story a, .tabsub-user a {
+.xtabmain a, .tabsub-story a, .tabsub-user a {
 	text-decoration: none;
 	color: #FF6400;
 }
 
-.tabmain a:hover, .tabsub-story a:hover, .tabsub-user a:hover {
+.xtabmain a:hover, .tabsub-story a:hover, .tabsub-user a:hover {
 	text-decoration: none;
 }
 
-.tabmain li:hover, .tabsub-story li:hover, .tabsub-user li:hover {
+.xtabmain li:hover, .tabsub-story li:hover, .tabsub-user li:hover {
 	background: #FFF;
 	border-bottom: 1px solid #FFF;
 }
 
-li.tabmain-this, li.tabsub-this {
+li.xtabmain-this, li.tabsub-this {
 	color: #FF6400;
 	background: #FFF;
 	border-bottom: 1px solid #FFF;
@@ -532,7 +575,7 @@ td.count {
 /* news */
 
 .news-summary {
-	padding: 15px 0 10px 0;
+	padding: 20px 0 5px 0;
 	position: relative;
 }
 
@@ -542,7 +585,7 @@ td.count {
 
 .news-shakeit {
 	position: absolute;
-	top: 15px;
+	top: 22px;
 	left: 15px;
 	width: 65px;
 	text-align: center;
