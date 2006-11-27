@@ -145,7 +145,7 @@ function text_to_html($string) {
 
 	$string = preg_replace('/(^|[\s\.,¿\(¡;])_([^\s]+)_([\s:\)\.,;&\?!]|$)/', "$1<em>$2</em>$3", $string);
 	$string = preg_replace('/(^|[\s\.,¿\(¡;])\*([^\s]+)\*([\s:\)\.,;&\?!]|$)/', "$1<strong>$2</strong>$3", $string);
-	$string = preg_replace('/([ \n\r\(:;]|^)([hf][tps]{2,4}:\/\/)([^ \t\n\r\]\(\)]+[^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3" rel="nofollow" title="$2$3">$3</a>', $string);
+	$string = preg_replace('/([ \n\r\(:;]|^)([hf][tps]{2,4}:\/\/)([^ \t\n\r\]\(\)]+[^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3" rel="nofollow">$3</a>', $string);
 	return $string;
 }
 
