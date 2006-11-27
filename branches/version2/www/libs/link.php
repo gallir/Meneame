@@ -297,7 +297,7 @@ class Link {
 
 		$url = htmlentities($this->url);
 
-		echo '<div class="news-summary" id="news-'.$this->id.'">';
+		echo '<div class="news-summary">';
 		echo '<div class="news-body">';
 		if ($type != 'preview' && !empty($this->title) && !empty($this->content)) {
 			$this->print_shake_box($votes_enabled);
