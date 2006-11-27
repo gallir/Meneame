@@ -1262,26 +1262,27 @@ fieldset.labels div {
 .pages span.current  {
 	border: 1px solid #FF6400;
 	font-weight: bold;
-	background: #FF6400;
-	color: #FFF;
+	background: #FFBE94;
+	color: #FF6400;
 }
 
 .pages span.current a {
 	padding: 0;
 	background: #FF6400;
-	color: #FFF;
+	color: #FF6400;
 	border: 0px;
 }
 
 .pages a {
 	border: 1px solid #FF6400;
 	text-decoration: none;
+	background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
 }
 
 .pages a:hover {
 	border-color: #FF9400;
-	background: #FF9400;
-	color: #FFF;
+	background: #FFBE94;
+	color: #FF6400;
 }
 
 .pages a.nextprev {
@@ -1704,20 +1705,20 @@ fieldset.labels div {
 	padding: 3px 5px 3px 5px;
 	margin-right: 3px;
 	border: 1px solid #FFF;
-	background: #FFF;
+	background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
 }
 
 .mini-pages span.current  {
 	border: 1px solid #FF6400;
 	font-weight: bold;
-	background: #FF6400;
-	color: #FFF;
+	background: #FFBE94;
+	color: #FF6400;
 }
 
 .mini-pages span.current a {
 	padding: 0;
-	background: #FF6400;
-	color: #FFF;
+	background: #FFBE94;
+	color: #FF6400;
 	border: 0px;
 }
 
@@ -1728,8 +1729,8 @@ fieldset.labels div {
 
 .mini-pages a:hover {
 	border-color: #FF9400;
-	background: #FF9400;
-	color: #FFF;
+	background: #FFBE94;
+	color: #FF6400;
 }
 
 
