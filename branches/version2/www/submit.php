@@ -32,7 +32,6 @@ if(isset($_POST["phase"])) {
 	check_already_sent();
 	do_header(_("enviar noticia"), "post");
 	do_submit0();
-//	do_sidebar();
 }
 do_footer();
 exit;

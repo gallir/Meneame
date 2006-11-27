@@ -71,6 +71,7 @@ function do_tabs($tab_name, $tab_selected) {
 		}
 
 		echo '</ul>' . "\n";
+		echo '<br/>'; // Added to avoud problems with the first news title due to the left alignment and margins
 		// smooth end echo '</div>';
 	}
 }

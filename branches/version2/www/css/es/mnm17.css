@@ -54,19 +54,15 @@ abbr { cursor: help; }
 }
 
 #contents {
-	float: right;
-	width: 76%;
 	/*background: #D6D6D6;*/
-	margin: 25px 20px 0 0;
+	margin: 25px 20px 0 16em;
 	padding: 0 0 55px 0;
 	border-left: 1px solid #FF6400;
 }
 
 #sidebar {
-	float:left;
-	position: relative;
-	width: 18%;
-	/*background: #FFE2C5;*/
+	float: left;
+	width: 14em;
 	margin: 58px 0 50px 20px;
 	padding: 0 0 0 0;
 }
@@ -232,7 +228,6 @@ li.tabmain-this, li.tabsub-this {
 	font-size: 160%;
 	font-weight: normal;
 	color: #FF6400;
-	clear: left;
 	border: none;
 }
 
@@ -312,7 +307,6 @@ h2 {
 	font-size: 160%;
 	font-weight: normal;
 	color: #FF6400;
-	clear: left;
 	border-bottom-width: 1px;
 	border-bottom-style: dotted;
 	border-bottom-color: #FF6400;
@@ -327,7 +321,6 @@ h3 {
 	margin-bottom: 3px;
 	font-size: 140%;
 	font-weight: normal;
-	clear: left;
 }
 
 h4 {
@@ -546,19 +539,18 @@ td.count {
 /* news */
 
 .news-summary {
-	padding: 15px 0 22px 0;
+	padding: 15px 0 10px 0;
 	position: relative;
-	clear: left;
 }
 
 .news-body {
-	padding-left: 95px;
+	padding-left: 90px;
 }
 
 .news-shakeit {
 	position: absolute;
-	top: 20px;
-	left: 20px;
+	top: 15px;
+	left: 15px;
 	width: 65px;
 	text-align: center;
 	font-size: 85%;
@@ -574,8 +566,8 @@ td.count {
 }
 
 .news-details {
-	float: left;
 	color: #FF6400;
+	display: block;
 	margin: 0 0 0 0;
 }
 
@@ -595,14 +587,11 @@ td.count {
 }
 
 .news-details .tool {
-	display: block;
-	float: left;
+	display: inline;
 	border-left: 1px solid #FF6400;
 	padding: 0 4px 0 4px;
 }
 .news-details .tool-right {
-	display: block;
-	float: left;
 	padding: 0 4px 0 4px;
 }
 
@@ -789,7 +778,7 @@ td.count {
 
 .mnu-bugs, .mnu-submit, .mnu-sneak, .mnu-meneria, .mnu-tools, .mnu-menedising, .mnu-rss, .mnu-trackback {
 	text-align: left;
-	font-size: 125%;
+	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	padding: 5px 5px 5px 5px;
@@ -1017,7 +1006,6 @@ td.count {
 
 .comments {
 	margin: 25px 0 0 25px;
-	clear: left;
 }
 
 .comments h2 {
@@ -1079,7 +1067,6 @@ td.count {
 }
 
 .comments-list li {
-	clear: left;
 	margin-bottom: 10px;
 }
 
@@ -1662,7 +1649,6 @@ fieldset.labels div {
 /* Beldar: CSS para 'temita' meneos */
 .voters, .mini-sneaker {
 	margin: 25px 0 0 25px;
-	clear: left;
 }
 
 .voters h2 {

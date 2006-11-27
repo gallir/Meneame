@@ -22,12 +22,14 @@ $search_txt = htmlspecialchars(strip_tags($_REQUEST['search']));
 if($search) {
 	do_header(_('búsqueda de'). ' "'.$search_txt.'"');
 	do_navbar(_('noticias en la cola') . ' &#187; ' . _('búsqueda'));
+	do_sidebar_shake();
 	echo '<div id="contents">'."\n";
 	echo '<h2>'._('búsqueda en pendientes'). ': "'.$search_txt.'" </h2>';
 	$order_by = '';
 } else {
 	do_header(_('noticias pendientes'));
 	do_navbar(_('noticias en la cola'));
+	do_sidebar_shake();
 	echo '<div id="contents">'."\n";
 	do_tabs("main","shakeit");
 	$order_by = " ORDER BY link_date DESC ";
@@ -121,7 +123,6 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>'."\n";
-do_sidebar_shake();
 do_footer();
 
 

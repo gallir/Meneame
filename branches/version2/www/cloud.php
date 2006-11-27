@@ -39,6 +39,7 @@ $coef = ($max_pts - $min_pts)/($max-1);
 
 do_header(_('nube de etiquetas'));
 do_navbar(_('etiquetas'));
+do_sidebar_top();
 echo '<div id="contents">';
 do_tabs("main","");
 echo '<div class="topheading"><h2>+ '.$words_limit.'</h2></div>';
@@ -58,7 +59,6 @@ if ($res) {
 
 echo '</div>';
 echo '</div>';
-do_sidebar_top();
 do_footer();
 
 

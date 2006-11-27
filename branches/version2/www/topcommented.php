@@ -32,6 +32,7 @@ if ($range_values[$from] > 0) {
 
 do_header(_('más comentadas'));
 do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
+do_sidebar_top();
 echo '<div id="contents">';
 echo '<h2>'._('noticias más comentadas').'</h2>';
 
@@ -49,7 +50,6 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>';
-do_sidebar_top();
 do_footer();
 
 

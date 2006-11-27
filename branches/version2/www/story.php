@@ -94,6 +94,7 @@ if ($_POST['process']=='newcomment') {
 do_header($link->title, 'post');
 
 do_navbar('<a href="'.$globals['base_url'].'?category='.$link->category.'">'. $globals['category_name'] . '</a> &#187; '. $link->title);
+do_sidebar();
 echo '<div id="contents">';
 do_tabs("main","story");
 $link->print_summary();
@@ -211,6 +212,7 @@ case 5:
 
 }
 
+echo '<br clear="left">';
 echo '</div>';
 
 echo '<!--'."\n".'<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
@@ -223,7 +225,6 @@ echo '	trackback:ping="'.$link->get_trackback().'" />'."\n";
 echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
-do_sidebar();
 do_footer();
 
 function print_comment_form() {

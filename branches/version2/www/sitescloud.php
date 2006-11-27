@@ -40,6 +40,7 @@ $coef = ($max_pts - $min_pts)/($max-1);
 
 do_header(_('nube de lugares web'));
 do_navbar(_('sites'));
+do_sidebar_top();
 echo '<div id="contents">';
 do_tabs("main","");
 echo '<div class="topheading"><h2>Los +</h2></div>';
@@ -61,7 +62,6 @@ if ($res) {
 
 echo '</div>';
 echo '</div>';
-do_sidebar_top();
 do_footer();
 
 

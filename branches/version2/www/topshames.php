@@ -17,6 +17,7 @@ $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 2
 
 do_header(_('las peores :-)'));
 do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
+do_sidebar_top();
 echo '<div id="contents">';
 echo '<div class="air-with-footer">'."\n";
 echo '<h2>'._('¿noticias?').' :-) </h2>';
@@ -33,7 +34,6 @@ if ($links) {
 }
 echo '</div>';
 echo '</div>';
-do_sidebar_top();
 echo '<br clear="all">';
 do_footer();
 
