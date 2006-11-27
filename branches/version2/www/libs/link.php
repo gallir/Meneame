@@ -330,11 +330,11 @@ class Link {
 		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
-			echo '<div class="news-body-text">';
+			echo '<p>';
 			if ($globals['do_websnapr'] && $type == 'full' && $globals['link_id'] > 0 && !empty($this->url_title)) {
 				echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
 			}
-			echo text_to_html($this->content).'</div>';
+			echo text_to_html($this->content).'</p>';
 		}
 		if (!empty($this->tags)) {
 			echo '<div class="news-tags">';

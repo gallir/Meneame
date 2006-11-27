@@ -564,6 +564,7 @@ td.count {
 	color: #FF6400;
 	display: block;
 	margin: 0 0 0 0;
+	height: 3ex;
 	white-space: nowrap;
 	overflow: hidden;
 }
@@ -699,10 +700,11 @@ td.count {
 	margin: 0 0 0 0;
 }
 
-.news-body-text {
+.news-body p {
 	padding: 2px 0 1px 0;
 	text-align: left;
 	overflow: hidden;
+	margin: 0 0 0 0;
 }
 
 .news-submitted {
