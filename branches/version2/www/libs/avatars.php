@@ -22,6 +22,7 @@ function avatars_manage_upload($user, $name) {
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
 	$file_base = $subdir . '/' . $user;
 	@mkdir($subdir);
+	if (!is_writable($subdir)) return false;
 	avatars_remove_user_files($user);
 	move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
 	$size = @getimagesize("$file_base-orig.img");
@@ -95,6 +96,7 @@ function avatar_get_from_db($user, $size=0) {
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
 	$file_base = $subdir . '/' . $user;
 	@mkdir($subdir);
+	if (!is_writable($subdir)) return false;
 	file_put_contents ($file_base . '-80.jpg', $img);
 	if ($size > 0 && $size != 80 && in_array($size, $globals['avatars_allowed_sizes'])) {
 		system("convert -quality 85  -resize ${size}x$size $file_base-80.jpg $file_base-$size.jpg");
