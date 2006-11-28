@@ -809,10 +809,10 @@ td.count {
 
 .mnu-submit {
 	text-align: left;
-	font-size: 110%;
+	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 10px 0 5px 0px;
+	padding: 15px 0 10px 0px;
 	font-weight: bolder;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -827,10 +827,10 @@ td.count {
 
 .mnu-sneak {
 	text-align: left;
-	font-size: 110%;
+	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 10px 0 5px 0px;
+	padding: 15px 0 10px 0px;
 	font-weight: bolder;
 	background-repeat: no-repeat;
 	background-position: top right;
