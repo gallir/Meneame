@@ -83,7 +83,7 @@ abbr { cursor: help; }
 	position: relative;
 	height: 16px;
 	width: 142px;
-	margin: 15px 0 10px 20px;
+	margin: 15px 0 20px 50px;
 	padding: 5px 0 4px 3px;
 	background: url(../../img/common/dropdown/dropdown-01-button.png) bottom right no-repeat;
 	font-weight: bolder;
@@ -104,7 +104,7 @@ abbr { cursor: help; }
 	display: none; /* fa que no es pinti */
 	position: absolute;
 	list-style: none;
-	z-index: 3;
+	z-index: 100;
 	top: 10px; /* posició en relació al botó */
 	left: 5px;
 	margin: 0;
@@ -585,6 +585,7 @@ td.count {
 
 .news-shakeit {
 	position: absolute;
+	z-index: 1;
 	top: 22px;
 	left: 15px;
 	width: 65px;
@@ -780,6 +781,10 @@ td.count {
 
 /* general attributes */
 
+#sidebar ul {
+	margin-left: 0; /* Freaking IE bug */
+}
+
 .mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-trackback li  {
 	margin: 1px 0 1px  0;
 	padding: 0;
@@ -973,7 +978,7 @@ td.count {
 	width: 49%;
 	margin: 0;
 	padding: 0 0 5px 0;
-	font-size: 80%;
+	font-size: 85%;
 	border: none;
 	background: none;
 	white-space: nowrap;
@@ -982,12 +987,12 @@ td.count {
 .column-one-list li, .column-one-list-short li, .column-select-us li {
 	font-size: 95%;
 	border: none;
-	padding: 5px 0 5px 0;
+	padding: 5px 0 5px 30px;
 	margin: 0;
 }
 
 .column-list li a, .column-one-list li a, .column-one-list-short li a {
-	padding: 0 0 0 10px;
+	padding: 0 0 0 0;
 	color: #FF6400;
 }
 
