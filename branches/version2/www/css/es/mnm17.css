@@ -776,27 +776,14 @@ td.count {
 }
 
 /* side menu */
-
-.mnu-main {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: block;
-	color: #FF6400;
-	margin: 0 0 10px 0;
-}
-
-.mnu-main li {
-	width: 100%;
-	padding: 0;
-}
-
-.mnu-main a, .mnu-main {
-	color: #FF6400;
-	/*font-weight: bolder;*/
-}
-
 /* menu elements */
+
+/* general attributes */
+
+.mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-trackback li  {
+	margin: 1px 0 1px  0;
+	padding: 0;
+}
 
 /* faq entry is different */
 
@@ -806,8 +793,7 @@ td.count {
 	border-bottom: 1px solid #FFE2C5;
 	font-size: 90%;
 	color: #FF6400;
-	padding: 10px 4px 10px 4px;
-	margin: 0 0 10px 0;
+	padding: 10px 4px 5px 4px;
 }
 
 .mnu-faq a {
@@ -816,22 +802,19 @@ td.count {
 	text-decoration: underline;
 }
 
-/* general attributes */
-
 .mnu-submit {
 	text-align: left;
 	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	padding: 10px 0 5px 0px;
-	margin: 0 0 10px 0;
 	font-weight: bolder;
 	background-repeat: no-repeat;
 	background-position: top right;
 	background-image: url(../../img/common/mnu-submit01.png);
 }
 
-.mnu-submit a, .mnu-sneak a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a {
+.mnu-submit a, .mnu-sneak a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .mnu-trackback a {
 	color: #FF6400;
 	background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
 	padding-left: 15px;
@@ -843,7 +826,6 @@ td.count {
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	padding: 10px 0 5px 0px;
-	margin: 0 0 10px 0;
 	font-weight: bolder;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -856,8 +838,7 @@ td.count {
 	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 15px 0 2px 0px;
-	margin: 0 0 10px 0;
+	padding: 10px 0 5px 0px;
 	background-repeat: repeat-x;
 	background-position: bottom left;
 	background-image: url(../../img/common/mnu-bkgsoft02.png);
@@ -869,8 +850,7 @@ td.count {
 	font-size: 110%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 15px 0 5px 0px;
-	margin: 0 0 10px 0;
+	padding: 10px 0 5px 0;
 	background: #FFF;
 	width: 100%;
 	white-space: nowrap;
@@ -886,7 +866,6 @@ td.count {
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	padding: 10px 0 5px 0px;
-	margin: 0 0 10px 0;
 	background: #FFF;
 	width: 100%;
 	background-repeat: repeat-x;
@@ -900,60 +879,40 @@ td.count {
 	padding-left: 16px;
 }
 
-#sidebar ul, .mnu-meneria li, .mnu-tools li, .mnu-rss li,  .mnu-trackback li {
+.mnu-trackback li {
+	list-style: none;
+	text-align: left;
+	font-weight: bold;
+	padding: 0 0 5px 5px;
 	margin: 0;
-	padding: 0;
 }
+
 
 
 
 /* backgrounds */
 
 
-.mnu-trackback {
-	background-repeat: repeat-x;
-	background-position: bottom left;
-}
-
-.mnu-trackback { background-image: url(../../img/common/mnu-bkgsoft01.png); }
-
-/* bolder font to principal functions */
-
-.mnu-trackback {
-	font-weight: bolder;
-}
-
-
-/* list-images */
-.mnu-trackback a {
-	background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
-	padding-left: 15px;
-}
-
-
-.mnu-trackback-entry a, .mnu-trackback-no {
+.mnu-trackback-entry a, {
 	background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
-	padding-left: 13px;
+	padding: 0 0 0 16px;
 }
 
 /* list-images for blog search engine trackbacks */
 
 .mnu-trackback-technorati a {
 	background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
-	padding-left: 20px;
-	padding-top: 6px;
+	padding: 5px 0 0 20px;
 }
 
 .mnu-trackback-google a {
 	background: url(../../img/favicons/google.png) no-repeat 0px 4px;
-	padding-left: 20px;
-	padding-top: 6px;
+	padding: 5px 0 0 20px;
 }
 
 .mnu-trackback-askcom a {
 	background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
-	padding-left: 20px;
-	padding-top: 6px;
+	padding: 5px 0 0 20px;
 }
 
 
@@ -964,9 +923,6 @@ td.count {
 	font-size: 90%;
 	font-weight: normal;
 }
-
-/* _multiple option entries_ modifications */
-
 
 /* categories */
 

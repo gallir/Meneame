@@ -319,9 +319,6 @@ function do_mnu_trackbacks() {
 			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->url.'" title="'.$trackback->content.'">'.$trackback->title.'</a></li>' . "\n";
 		}
 	}
-	else {
-		echo '<li class="mnu-trackback-no">'._('(sin trackbacks)').'</li>' . "\n";
-	}
 // 	echo '<li class="mnu-trackback-entry"><a href="#">prova</a></li>';
 
 	echo '<li class="mnu-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('según Technorati').'</a></li>' . "\n";
@@ -468,30 +465,5 @@ function do_pages($total, $page_size=25, $pager_style) {
 	}
 	echo "</div><!--html1:do_pages-->\n";
 
-}
-
-function do_trackbacks() {
-	global $db, $globals;
-
-	echo '<div id="trackback">';
-	echo '<h2><a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'">trackbacks</a></h2>';
-	$id=$globals['link_id'];
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' ORDER BY trackback_date DESC");
-	echo '<ul>';
-	if ($trackbacks) {
-		require_once(mnminclude.'trackback.php');
-		$trackback = new Trackback;
-		foreach($trackbacks as $trackback_id) {
-			$trackback->id=$trackback_id;
-			$trackback->read();
-			echo '<li><a href="'.$trackback->url.'" title="'.$trackback->content.'">'.$trackback->title.'</a></li>';
-		}
-	}
-	else {
-		echo '<li>'._('(sin trackbacks)').'</li>';
-	}
-	echo '<li><img src="'.$globals['base_url'].'img/favicons/technorati.png" alt="'._('enlaces technorati').'" width="16" height="16"/>&nbsp;<a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('según Technorati').'</a></li>';
-	echo "</ul>\n";
-	echo '</div><!--html1:do_trackbacks-->';
 }
 ?>
