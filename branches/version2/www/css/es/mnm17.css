@@ -134,7 +134,7 @@ abbr { cursor: help; }
 }
 
 .tabsub-shakeit { /* shakeit tabsub variant */
-	margin: 30px 0 0 90px;
+	margin: 30px 20px 0 90px;
 }
 
 .tabsub li, .tabsub-shakeit li {
