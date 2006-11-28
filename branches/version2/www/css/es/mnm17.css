@@ -515,7 +515,7 @@ td.count {
 	color: #FF6400;
 	display: block;
 	margin: 0;
-	max-height: 3ex;
+	height: 3ex;
 	white-space: nowrap;
 	overflow: hidden;
 }
