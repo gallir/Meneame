@@ -623,11 +623,12 @@ td.count {
 /* vote box */
 .menealo {
 	/*background: #FFC8AF 0 0;*/
-	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
+	background-color: #fff;
 }
 
-* html .menealo {
-	background: #FFE2C5 1px 1px;
+
+.menealo a {
+	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
 }
 
 .menealo a, .menealo span {
@@ -640,8 +641,6 @@ td.count {
 }
 
 .menealo span {
-	background: #FFF;
-	color: #FF6400;
 }
 
 .news-body h3 {

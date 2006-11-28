@@ -28,7 +28,6 @@ function myXMLHttpRequest ()
 
 var mnmxmlhttp = Array ();
 var mnmString = Array ();
-var mnmPrevColor = Array ();
 var responsestring = Array ();
 var myxmlhttp = Array ();
 var responseString = new String;
@@ -57,10 +56,8 @@ function menealo (user, id, htmlid, md5)
 			warnmatch = new RegExp ("^WARN:");
 			errormatch = new RegExp ("^ERROR:");
 			target = document.getElementById ('a-va-' + htmlid);
-			mnmPrevColor[htmlid] = target.style.backgroundColor;
 			/* Too away the text also because it gives a weird effect */
-			target.innerHtml = '...';
-			target.style.backgroundColor = '#FFBE94';
+			disable_vote_link(id, "...", '#FFC8AF');
 			mnmxmlhttp[htmlid].onreadystatechange = function () {
 				if (mnmxmlhttp[htmlid].readyState == 4) {
 					mnmString[htmlid] = mnmxmlhttp[htmlid].responseText;
@@ -139,11 +136,11 @@ function disable_problem_form(id) {
 	}
 }
 
-function disable_vote_link(id, mess) {
+function disable_vote_link(id, mess, background) {
 	target = document.getElementById ('a-va-' + id);
 	if (target) {
-		target.style.backgroundColor = mnmPrevColor[id];
-		target.innerHTML = "<span>"+mess+"</span>";
+		target.innerHTML = '<span>'+mess+'</span>';
+		target.style.background = background;
 	}
 }
 
@@ -153,7 +150,7 @@ function parseAnswer (id, error, server_answer)
 	linkid = answer[0];
 	if (error || answer.length  != 5  || id != linkid) {
 		alert(server_answer);
-		disable_vote_link(id, "grr...");
+		disable_vote_link(id, "grr...", '#FFCBAA');
 		disable_problem_form(id);
 		return false;
 	}
@@ -173,10 +170,10 @@ function updateLinkValues (id, votes, negatives, karma, value) {
 	target = document.getElementById ('a-karma-' + id);
 	if (target) target.innerHTML = karma;
 	if (value > 0) {
-		disable_vote_link(id, "¡chachi!");
+		disable_vote_link(id, "¡chachi!", '#FFFFFF');
 		disable_problem_form(id);
 	} else if (value < 0) {
-		disable_vote_link(id, ":-(");
+		disable_vote_link(id, ":-(", '#FFFFFF');
 		disable_problem_form(id);
 	}
 	return false;
