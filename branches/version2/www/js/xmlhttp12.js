@@ -58,6 +58,8 @@ function menealo (user, id, htmlid, md5)
 			errormatch = new RegExp ("^ERROR:");
 			target = document.getElementById ('a-va-' + htmlid);
 			mnmPrevColor[htmlid] = target.style.backgroundColor;
+			/* Too away the text also because it gives a weird effect */
+			target.innerHtml = '...';
 			target.style.backgroundColor = '#FFBE94';
 			mnmxmlhttp[htmlid].onreadystatechange = function () {
 				if (mnmxmlhttp[htmlid].readyState == 4) {
