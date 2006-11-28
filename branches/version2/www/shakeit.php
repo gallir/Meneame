@@ -37,8 +37,8 @@ if($search) {
 
 // dropdown
 
-echo '<div class="dropdown-01"><em>';
-$ul_drawn = false;
+// echo '<div class="dropdown-01"><em>';
+// $ul_drawn = false;
 
 $view = clean_input_string($_REQUEST['view']);
 $cat = check_integer('category');
@@ -46,28 +46,29 @@ $cat = check_integer('category');
 switch ($view) {
 	case 'discarded':
 
-		// benjami
-		echo _('descartadas').'</em>'."\n";
-		if (!$ul_drawn) {
-			echo '<ul>'."\n";
-			$ul_drawn = true;
-		}
+// 		// benjami
+// 		echo _('descartadas').'</em>'."\n";
+// 		if (!$ul_drawn) {
+// 			echo '<ul>'."\n";
+// 			$ul_drawn = true;
+// 		}
 
 		// Show only discarded in four days
 		$from_where = "FROM links WHERE link_date > date_sub(now(), interval 4 day) and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
-		echo '<li><a href="shakeit.php">'._('todas'). '</a></li>'."\n";
+/*		echo '<li><a href="shakeit.php">'._('todas'). '</a></li>'."\n";
 		if ($current_user->user_id > 0)
 			echo '<li><a href="shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
-		echo '</ul></div>'."\n";
+		echo '</ul></div>'."\n";*/
+		print_sakeit_tabs('2');
 	break;
 	case 'recommended':
 
-		// benjami
-		echo _('recomendadas').'</em>'."\n";
-		if (!$ul_drawn) {
-			echo '<ul>'."\n";
-			$ul_drawn = true;
-		}
+// 		// benjami
+// 		echo _('recomendadas').'</em>'."\n";
+// 		if (!$ul_drawn) {
+// 			echo '<ul>'."\n";
+// 			$ul_drawn = true;
+// 		}
 
 		if ($current_user->user_id > 0 && !$search) {
 			$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
@@ -77,9 +78,10 @@ switch ($view) {
 			// Show last in four days
 			$from_where = "FROM links, friends WHERE link_date > date_sub(now(), interval 4 day) and link_status='queued' and friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > $threshold";
 			$order_by = " ORDER BY link_date DESC ";	
-			echo '<li><a href="shakeit.php">'._('todas'). '</a></li>'."\n";
+/*			echo '<li><a href="shakeit.php">'._('todas'). '</a></li>'."\n";
 			echo '<li><a href="shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
-			echo '</ul></div>'."\n";
+			echo '</ul></div>'."\n";*/
+			print_sakeit_tabs('3');
 			break;
 		}
 	case 'all':
@@ -90,17 +92,18 @@ switch ($view) {
 			// Show last in seven days
 			$from_where = "FROM links WHERE link_date > date_sub(now(), interval 7 day) and link_status='queued'";
 
-			// benjami
-			echo _('todas').'</em>'."\n";
-			if (!$ul_drawn) {
-				echo '<ul>'."\n";
-				$ul_drawn = true;
-			}
+// 			// benjami
+// 			echo _('todas').'</em>'."\n";
+// 			if (!$ul_drawn) {
+// 				echo '<ul>'."\n";
+// 				$ul_drawn = true;
+// 			}
 
-		if ($current_user->user_id > 0)
+/*		if ($current_user->user_id > 0)
 			echo '<li><a href="shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
 		echo '<li><a href="shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
-		echo '</ul></div>'."\n";
+		echo '</ul></div>'."\n";*/
+		print_sakeit_tabs('1');
 	break;
 }
 
@@ -145,6 +148,20 @@ function do_sidebar_shake() {
 	do_mnu_rss();
 	echo '</div>'. "\n";
 
+}
+
+function print_sakeit_tabs($option) {
+	global $globals, $current_user;
+
+	$active = array();
+	$active[$option] = 'class="tabsub-this"';
+
+	echo '<br /><ul class="tabsub">'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'/shakeit.php?view=all">'._('todas'). '</a></li>'."\n";
+	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
+		if ($current_user->user_id > 0)
+			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
+	echo '</ul>'."\n";
 }
 
 ?>
