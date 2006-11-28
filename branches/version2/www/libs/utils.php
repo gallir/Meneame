@@ -242,7 +242,8 @@ function get_avatar_url($user, $avatar, $size) {
 		} else {
 			return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size";
 		}
-	} return get_no_avatar_url($size);
+	} 
+	return get_no_avatar_url($size);
 }
 
 function get_no_avatar_url($size) {

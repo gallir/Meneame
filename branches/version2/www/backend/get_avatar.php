@@ -10,9 +10,14 @@ if (!$size > 0) $size = 80;
 if (!($img=avatar_get_from_file($id, $size))) {
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {
-		$user=$db->get_row("select user_avatar, user_email from users where user_id=$id");
-		if ($user)
-			header('Location: ' . get_avatar_url($id, $user->user_avatar, $size));
+		if (is_writable($globals['avatars_dir'])) {
+			$user=$db->get_row("select user_avatar, user_email from users where user_id=$id");
+			if ($user) {
+				header('Location: ' . get_avatar_url($id, $user->user_avatar, $size));
+			}
+		} else {
+				header('Location: ' . get_no_avatar_url($size));
+		}
 		die;
 	}  
 }
