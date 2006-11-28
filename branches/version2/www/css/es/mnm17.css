@@ -1147,6 +1147,7 @@ td.count {
 
 .comment-votes-info {
 	float: left;
+	display: inline;
 }
 
 .comment-votes-info img {
