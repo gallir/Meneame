@@ -235,9 +235,10 @@ function do_mnu_meneria () {
 	echo '<ul class="mnu-meneria">' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'cloud.php">'._("nube de etiquetas").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'topcommented.php">'._("más comentadas").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("webs").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
 	echo '</ul>' . "\n";
 }
 
