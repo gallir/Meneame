@@ -29,32 +29,32 @@ function do_tabs($tab_name, $tab_selected) {
 		// smooth end echo '<div class="tabmain-right-end">';
 		echo '<ul class="tabmain">' . "\n";
 
+		// url with parameters?
+		if (!empty($_SERVER['QUERY_STRING']))
+			$query = "?".htmlentities($_SERVER['QUERY_STRING']);
+
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
-		}
-		else {
+			echo '<li><a '.$active.' href="'.$globals['base_url'].$query.'" title="'.$reload_text.'">'._('portada').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php'.$query.'" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
 
 		// story tab
 		if ($tab_selected == 'story') {
-			echo '<li><a '.$active.' href="'.$globals['link']->get_permalink().'" title="'.$reload_text.'">'._('noticia').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['link']->get_permalink().$query.'" title="'.$reload_text.'">'._('noticia').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
 
 		// Search
 		if ($tab_selected == 'search') {
 			htmlspecialchars($_REQUEST['search']);
-			// url with parameters?
-			if (!empty($_SERVER['QUERY_STRING']))
-				$query = "?".htmlentities($_SERVER['QUERY_STRING']);
 			echo '<li><a '.$active.' href="'.$query.'" title="'.$reload_text.'">'._('búsqueda').'&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
 
