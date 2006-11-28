@@ -69,7 +69,7 @@ abbr { cursor: help; }
 	display: inline;
 	width: 13em;
 	margin: 28px 0 50px 15px;
-	padding: 0 0 0 0;
+	padding: 0;
 }
 
 abbr { cursor: help; }
@@ -380,7 +380,7 @@ td.count {
 	color: #FF5900;
 	font-size: 120%;
 	font-weight: bold;
-	padding: 0 0 0 0;
+	padding: 0;
 	margin: 40px 0 0 150px;
 }
 
@@ -483,7 +483,7 @@ td.count {
 /* news */
 
 .news-summary {
-	padding: 20px 0 5px 0;
+	padding: 15px 0 0px 0;
 	position: relative;
 }
 
@@ -514,8 +514,8 @@ td.count {
 .news-details {
 	color: #FF6400;
 	display: block;
-	margin: 0 0 0 0;
-	height: 3ex;
+	margin: 0;
+	max-height: 3ex;
 	white-space: nowrap;
 	overflow: hidden;
 }
@@ -646,20 +646,19 @@ td.count {
 	font-size: 140%;
 	font-weight: normal;
 	background: none;
-	margin: 0 0 0 0;
 }
 
 .news-body p {
 	padding: 2px 0 1px 0;
 	text-align: left;
 	overflow: hidden;
-	margin: 0 0 0 0;
+	margin: 0;
 }
 
 .news-submitted {
 	color: #666;
 	font-size: 85%;
-	margin: 0 0 0 0;
+	margin: 0;
 	white-space: nowrap;
 }
 
@@ -671,7 +670,7 @@ td.count {
 .news-tags {
 	color: #666;
 	font-size: 90%;
-	margin: 0 0 0 0;
+	margin: 0;
 }
 
 
@@ -948,7 +947,7 @@ td.count {
 }
 
 .comments h2 {
-	margin: 0 0 0 0;
+	margin: 0;
 }
 
 
@@ -1001,7 +1000,7 @@ td.count {
 
 .comments-list {
 	list-style: none;
-	margin: 0 0 0 0;
+	margin: 0;
 	padding: 0;
 }
 
@@ -1282,14 +1281,6 @@ fieldset.labels div {
 	margin: 10px 0 0 0;
 }
 
-/*
-#genericform-contents .pages {
-	margin-left: 0px;
-	margin-top: 30px;
-	margin-bottom: 100px;
-}
-*/
-
 #genericform fieldset, #genericform-contents fieldset {
 	background: #FFF;
 	border: 1px solid #FF6400;
@@ -1298,7 +1289,7 @@ fieldset.labels div {
 
 #genericform {
 	border: 0;
-	margin: 0 0 0 0;
+	margin: 0;
 	padding: 0 0 20px 0;
 	background: #FFF;
 	color: #FF6400;
@@ -1419,10 +1410,6 @@ fieldset.labels div {
 
 .banner-01 {
 	margin: 0 0 10px 150px;
-	/**
-	padding: 5px;
-	background: #FFE2C5;
-	**/
 	width: 730px;
 	height: 90px;
 }
@@ -1485,15 +1472,12 @@ fieldset.labels div {
 }
 
 .sneaker-legend img  {
-/*
-	padding: 0 20px 0 5px;
-	*/
 	margin: 0 25px 0 3px;
 	vertical-align: middle;
 }
 
 .sneaker-control {
-	margin: 0 0 0 0;
+	margin: 0;
 }
 
 .sneaker-item {
@@ -1504,12 +1488,6 @@ fieldset.labels div {
 	text-align: center;
 	overflow: hidden;
 }
-
-/*
-.sneaker-item:hover {
-	background-color: #FFE2C5;
-}
-*/
 
 .sneaker-ts, .sneaker-type, .sneaker-votes, .sneaker-story, .sneaker-chat, .sneaker-who, .sneaker-status {
 	float: left;
@@ -1527,7 +1505,7 @@ fieldset.labels div {
 
 .sneaker-type img {
 	border: none;
-	margin: 0 0 0 0;
+	margin: 0;
 	vertical-align: middle;
 }
 
@@ -1641,7 +1619,7 @@ fieldset.labels div {
 /* mini pagination */
 
 .mini-pages {
-	padding: 0 0 0 0;
+	padding: 0;
 	margin: 10px 0 10px 0;
 	clear: left;
 	font-size: 80%;
@@ -1734,10 +1712,6 @@ fieldset.labels div {
 
 /* tooltip styles */
 
-
-/* tooltip styles */
-
-
 #tooltip-shadow {
 	position:absolute;
 	visibility:hidden;
@@ -1804,7 +1778,7 @@ fieldset.labels div {
 
 .mini-sneaker-type img {
 	border: none;
-	margin: 0 0 0 0;
+	margin: 0;
 	vertical-align: middle;
 }
 
