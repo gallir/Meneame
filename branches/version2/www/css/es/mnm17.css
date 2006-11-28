@@ -114,11 +114,10 @@ abbr { cursor: help; }
 .tabmain a:link.tabmain-this, .tabmain a:visited.tabmain-this {
 	border-bottom: 1px solid #fff;
 	color: #FF6400;
-	background: #fff  url(../../img/common/reload-tab-margin-01.png) right bottom no-repeat;
+	background: #fff url(../../img/common/reload-tab-margin-01.png) right  center  no-repeat;
 }
 
-.tabmain a:hover
-{
+.tabmain a:hover {
 	background: #fff;
 }
 
@@ -486,12 +485,13 @@ td.count {
 /* news */
 
 .news-summary {
-	padding: 15px 0 0px 0;
+	padding: 15px 0 0 0;
 	position: relative;
 }
 
 .news-body {
 	padding-left: 90px;
+	padding-top: 10px;
 }
 
 .news-shakeit {
@@ -502,7 +502,7 @@ td.count {
 	width: 65px;
 	text-align: center;
 	font-size: 85%;
-	margin: 0;
+	margin: 5px 0 0 0;
 	padding: 0;
 	list-style: none;
 	overflow: hidden;
@@ -518,7 +518,7 @@ td.count {
 	color: #FF6400;
 	display: block;
 	margin: 0;
-	height: 3ex;
+	/*height: 3ex;*/
 	white-space: nowrap;
 	overflow: hidden;
 }
