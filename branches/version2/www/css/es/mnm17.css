@@ -880,7 +880,7 @@ td.count {
 
 .mnu-rss a {
 	color: #FF6400;
-	background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 4px;
+	background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 2px;
 	padding-left: 16px;
 }
 
@@ -891,8 +891,6 @@ td.count {
 	padding: 0 0 5px 5px;
 	margin: 0;
 }
-
-
 
 
 /* backgrounds */
