@@ -63,12 +63,10 @@ function do_sidebar_top() {
 	global $db, $dblang, $range_values, $range_names;
 
 	echo '<div id="sidebar">'."\n";
-	echo '<ul class="mnu-main">'."\n";
 	do_mnu_faq('cloud');
 	do_mnu_submit();
 	do_mnu_sneak();
 
-	echo '<li>'."\n";
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
@@ -83,27 +81,11 @@ function do_sidebar_top() {
 	}
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
-	echo '</li>'."\n";
 
 	do_mnu_meneria();
-	do_top_rss_box();
+	do_mnu_rss();
 
-	echo '</ul>';
 	echo '</div>';
 
-}
-
-function do_top_rss_box() {
-	global $globals, $range_values, $range_names;
-
-	echo '<li>' . "\n";
-	echo '<ul class="mnu-rss">' . "\n";
-
-	for($i=0; $i<count($range_values); $i++) {	
-		echo '<li><a href="'.$globals['base_url'].'rss2.php?time='.$range_values[$i].'" rel="rss">' .$range_names[$i]. '</a></li>'."\n";
-	}
-	echo '</ul>' . "\n";
-	echo '<br style="clear: both;" />' . "\n";
-	echo '</li> <!--topstories:do_top_rss_box()-->' . "\n";
 }
 ?>

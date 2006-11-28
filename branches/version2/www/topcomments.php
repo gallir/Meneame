@@ -63,13 +63,10 @@ function do_sidebar_top() {
 	global $db, $dblang, $range_values, $range_names;
 
 	echo '<div id="sidebar">'."\n";
-	echo '<ul class="mnu-main">'."\n";
 	do_mnu_faq('topcomments');
 	do_mnu_submit();
 	do_mnu_sneak();
 	do_mnu_meneria();
-
-	echo '</ul>';
 	echo '</div>';
 
 }

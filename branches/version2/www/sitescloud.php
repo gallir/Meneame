@@ -69,11 +69,9 @@ function do_sidebar_top() {
 	global $db, $dblang, $range_values, $range_names;
 
 	echo '<div id="sidebar">'."\n";
-	echo '<ul class="mnu-main">'."\n";
 	do_mnu_faq('sitescloud');
 	do_mnu_submit();
 	do_mnu_sneak();
-	echo '<li>'."\n";
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
@@ -88,12 +86,9 @@ function do_sidebar_top() {
 	}
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
-	echo '</li>'."\n";
 
 	do_mnu_meneria();
-	echo '</ul>';
 	echo '</div>';
-
 }
 
 ?>
