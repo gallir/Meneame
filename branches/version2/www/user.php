@@ -332,13 +332,13 @@ function do_user_tabs($option, $user) {
 		$active = array();
 		$active[$option] = 'class="tabsub-this"';
 
-		echo '<ul class="tabsub-user">'."\n";
-		echo '<li '.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
-		echo '<li '.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
-		echo '<li '.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
-		echo '<li '.$active[4].'><a href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
-		echo '<li '.$active[5].'><a href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
-		echo '<li '.$active[6].'><a href="'.get_user_uri($user, 'voters').'">'._('votado por'). '</a></li>';
+		echo '<ul class="tabsub">'."\n";
+		echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+		echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
+		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
+		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
+		echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
+		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'voters').'">'._('votado por'). '</a></li>';
 		echo '</ul>';
 
 }

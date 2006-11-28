@@ -255,7 +255,7 @@ abbr { cursor: help; }
 /* h2 without underline */
 
 .topheading h2 {
-	padding: 20px 0 20px 0;
+	padding: 10px 0 20px 0;
 	margin: 0 0 0 20px;
 	font-size: 160%;
 	font-weight: normal;
