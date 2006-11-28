@@ -61,7 +61,7 @@ $globals['do_websnapr'] = true;
 // http://en.wikipedia.org/wiki/Disposable_e-mail_address
 // See http://c2.com/cgi/wiki?ThrowawayEmailAndRidYourselfOfSpam
 // Comment it out if you don't care
-$globals['forbidden_email_domains'] = 'mailinator.com spamgourmet.com sneakemail.com e4ward.com spammotel.com jetable.org maileater.com dodgeit.com ipoo.org tempinbox.com shortmail.net spamday.com bigfoot.com fakeinformation.com sogetthis.com mailinater.com klassmaster.com mailtic.com pookmail.com spambob.com spambob.net spambob.org temporaryinbox.com spam.la afrobacon.com senseless-entertainment.com temporaryinbox.com put2.net golfilla.info trashmail.net';
+$globals['forbidden_email_domains'] = 'mailinator.com spamgourmet.com sneakemail.com e4ward.com spammotel.com jetable.org maileater.com dodgeit.com ipoo.org tempinbox.com shortmail.net spamday.com bigfoot.com fakeinformation.com sogetthis.com mailinater.com klassmaster.com mailtic.com pookmail.com spambob.com spambob.net spambob.org temporaryinbox.com spam.la afrobacon.com senseless-entertainment.com temporaryinbox.com put2.net golfilla.info trashmail.net 10minutemail.com';
 
 // Anti spams
 // check http://meneame.net/story/aviso-spam-programado-contra-meneame
