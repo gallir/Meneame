@@ -213,47 +213,43 @@ abbr { cursor: help; }
 
 /* tabsub specials */
 
-.tabsub-story, .tabsub-user {
-	list-style-type: none;
-	padding: 0 0 26px 70px; /* distance from tabs boxes:  bottom: underline; left: indent   */
-	margin: 0 0 16px 0;
-	background: #FFF url(../../img/common/pixel-ff6400.png) left bottom repeat-x;
+.tabsub {
+	height: 20px !important;
+	padding: 0 0 0 17px; /* distance from tabs boxes:  bottom: underline; left: indent   */
+	margin: 0 0 20px 0; /* makes left corner */
+/*	width: 97%;*/
+	background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
+	overflow: hidden;
 }
 
-.tabsub-story li, .tabsub-user li { /* tab details */
+.tabsub li {
+	margin: 0; 
+	padding: 0;
+ 	display: inline;
+ 	list-style-type: none;
+}
+	
+.tabsub a:link, .tabsub a:visited {
 	float: left;
 	font-size: 100%;
-	height: 14px !important; /* diferent font size can change tab height defined in .tabsub-* */
-	margin-right: 5px; /* space between tabs */
-	padding: 5px 10px 5px 10px; /* space between inside text and tab borders */
-	border: 1px solid #FF6400;
-	color: #FF9400;
+	line-height: 14px !important;
+	padding: 2px 10px 2px 10px;
+	margin-right: 4px;
+	border: 1px solid #ff6400;
+	text-decoration: none;
 	background: #FFF url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x; /* gradient background */
-}
-.tabsub-user li {
-	background: #FFF url(../../img/common/tabs/tabmain-background.png) bottom left repeat-x; /* gradient background */
-}
-
-/* tabs tabmain & tabsub common */
-
-.xtabmain a, .tabsub-story a, .tabsub-user a {
-	text-decoration: none;
 	color: #FF6400;
 }
 
-.xtabmain a:hover, .tabsub-story a:hover, .tabsub-user a:hover {
-	text-decoration: none;
-}
-
-.xtabmain li:hover, .tabsub-story li:hover, .tabsub-user li:hover {
-	background: #FFF;
-	border-bottom: 1px solid #FFF;
-}
-
-li.xtabmain-this, li.tabsub-this {
+.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this {
+	border-bottom: 1px solid #fff;
 	color: #FF6400;
-	background: #FFF;
-	border-bottom: 1px solid #FFF;
+	background: #fff;
+}
+
+.tabsub a:hover
+{
+	background: #fff;
 }
 
 /* h2 without underline */

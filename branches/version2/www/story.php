@@ -298,13 +298,13 @@ function print_story_tabs($option) {
 	$active = array();
 	$active[$option] = 'class="tabsub-this"';
 
-	echo '<ul class="tabsub-story">'."\n";
-	echo '<li '.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
-	echo '<li '.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li '.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('quiénes votaron'). '</a></li>'."\n";
+	echo '<ul class="tabsub">'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
+	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
+	echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('quiénes votaron'). '</a></li>'."\n";
 	if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
-		echo '<li '.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
-		echo '<li '.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
+		echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+		echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }
