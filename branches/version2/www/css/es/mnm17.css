@@ -964,7 +964,7 @@ td.count {
 .column-one-list li.thiscat, .column-one-list-short li.thiscat {
 	font-weight: bold;
 	/*background: #FF6400;*/
-	background-image: url(../../img/common/arrow-r-01.png); /*.gif also available for IEsucks */
+	background-image: url(../../img/common/arrow-r-01.gif); /*.gif also available for IEsucks */
 	background-repeat: no-repeat;
 	background-position: center right;
 }
