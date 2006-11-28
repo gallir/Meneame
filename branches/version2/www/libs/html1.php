@@ -55,7 +55,7 @@ function do_tabs($tab_name, $tab_selected) {
 		// Search
 		if ($tab_selected == 'search') {
 			htmlspecialchars($_REQUEST['search']);
-			echo '<li><a '.$active.' href="'.$query.'" title="'.$reload_text.'">'._('búsqueda').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.htmlentities($_SERVER['REQUEST_URI']).'" title="'.$reload_text.'">'._('búsqueda').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
 
 		echo '</ul>' . "\n";
