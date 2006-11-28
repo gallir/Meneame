@@ -81,9 +81,9 @@ function do_sidebar_top() {
 		}
 		echo '<li '.$classornotclass.'><a href="cloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
+	echo '</ul>';
 	echo '</div>'."\n";
 	do_mnu_meneria();
-	echo '</ul>';
 	echo '</div>';
 
 }

@@ -34,7 +34,8 @@ do_header(_('más comentadas'));
 do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
 do_sidebar_top();
 echo '<div id="contents">';
-echo '<h2>'._('noticias más comentadas').'</h2>';
+do_tabs('main');
+echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 
 $link = new Link;
 
@@ -57,8 +58,6 @@ function do_sidebar_top() {
 	global $db, $dblang, $range_values, $range_names;
 
 	echo '<div id="sidebar">'."\n";
-	echo '<ul class="main-menu">'."\n";
-	echo '<li>'."\n";
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
@@ -73,8 +72,9 @@ function do_sidebar_top() {
 	}
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
-	echo '</li>'."\n";
-	echo '</ul>';
+	do_mnu_meneria();
+	do_mnu_rss();
+
 	echo '</div>';
 
 }
