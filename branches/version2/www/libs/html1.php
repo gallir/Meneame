@@ -95,11 +95,9 @@ function do_header($title, $id='home') {
 	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon" />' . "\n";
 
 	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>';
-	echo '<script src="'.$globals['base_url'].'js/xmlhttp12.js" type="text/javascript"></script>' . "\n";
-	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.11.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/tooltip08.js.php" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/simpleformat01.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general01.js" type="text/javascript"></script>' . "\n";
+	// Cache for Ajax
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
 	echo '<div id="logo">'  . "\n";

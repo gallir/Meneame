@@ -28,7 +28,7 @@ echo "<title>"._('fisgona')." // men&eacute;ame</title>\n";
 echo '<meta name="generator" content="meneame" />' . "\n";
 echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/telnet.css";</style>' . "\n";
 echo '<link rel="icon" href="img/common/konsole.png" type="image/x-icon" />' . "\n";
-echo '<script src="./js/xmlhttp12.js" type="text/javascript"></script>' . "\n";
+echo '<script src="./js/general01.js" type="text/javascript"></script>' . "\n";
 echo '</head>' . "\n";
 echo "<body onload=\"start()\">\n";
 
