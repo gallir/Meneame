@@ -56,15 +56,16 @@ abbr { cursor: help; }
 }
 
 #contents {
-	margin: 25px 20px 0 15.5em;
+	margin: 25px 20px 0 15em;
 	padding: 0 0 55px 0;
 	border-left: 1px solid #FF6400;
 }
 
 #sidebar {
 	float: left;
+	display: inline;
 	width: 13em;
-	margin: 28px 0 50px 20px;
+	margin: 28px 0 50px 15px;
 	padding: 0 0 0 0;
 }
 
@@ -148,7 +149,7 @@ abbr { cursor: help; }
 	height: 28px !important;
 	padding: 0 0 0 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
 	margin: 0 0 0 -1px; /* makes left corner */
-	width: 97%;
+/*	width: 97%;*/
 	background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 	overflow: hidden;
 }
