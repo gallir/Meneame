@@ -125,7 +125,7 @@ abbr { cursor: help; }
 
 /* tabsub specials */
 
-.tabsub {
+.tabsub, .tabsub-shakeit {
 	height: 20px !important;
 	padding: 0 0 0 17px; /* distance from tabs boxes:  bottom: underline; left: indent   */
 	margin: 0 0 20px 0; /* makes left corner */
@@ -133,14 +133,20 @@ abbr { cursor: help; }
 	overflow: hidden;
 }
 
-.tabsub li {
+/* shakeit tabsub variants */
+
+.tabsub-shakeit {
+	margin: 30px 0 0 90px;
+}
+
+.tabsub li, .tabsub-shakeit li {
 	margin: 0; 
 	padding: 0;
  	display: inline;
  	list-style-type: none;
 }
-	
-.tabsub a:link, .tabsub a:visited {
+
+.tabsub a:link, .tabsub a:visited, .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 	float: left;
 	font-size: 100%;
 	line-height: 14px !important;
@@ -152,14 +158,13 @@ abbr { cursor: help; }
 	color: #FF6400;
 }
 
-.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this {
+.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this, .tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
 	border-bottom: 1px solid #fff;
 	color: #FF6400;
 	background: #fff;
 }
 
-.tabsub a:hover
-{
+.tabsub a:hover, .tabsub-shakeit a:hover {
 	background: #fff;
 }
 
