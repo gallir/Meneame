@@ -21,7 +21,7 @@ function do_tabs($tab_name, $tab_selected) {
 	global $globals;
 
 	$reload_text = _('recargar');
-	$reload_icon = '<img src="'.$globals['base_url'].'img/common/reload-tab-01.png" alt="'.$reload_text.'" />';
+	//$reload_icon = '<img src="'.$globals['base_url'].'img/common/reload-tab-01.png" alt="'.$reload_text.'" />';
 	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {

@@ -58,7 +58,10 @@ abbr { cursor: help; }
 #contents {
 	margin: 25px 20px 0 15em;
 	padding: 0 0 55px 0;
-	border-left: 1px solid #FF6400;
+	/*border-left: 1px solid #FF6400;*/
+	background-image: url(../../img/common/pixel-ff6400.png);
+	background-position: top left;
+	background-repeat: repeat-y;
 }
 
 #sidebar {
@@ -148,8 +151,7 @@ abbr { cursor: help; }
 .tabmain {
 	height: 28px !important;
 	padding: 0 0 0 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
-	margin: 0 0 0 -1px; /* makes left corner */
-/*	width: 97%;*/
+	margin: 0;
 	background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 	overflow: hidden;
 }
@@ -178,7 +180,7 @@ abbr { cursor: help; }
 .tabmain a:link.tabmain-this, .tabmain a:visited.tabmain-this {
 	border-bottom: 1px solid #fff;
 	color: #FF6400;
-	background: #fff;
+	background: #fff  url(../../img/common/reload-tab-01.png) right  center  no-repeat;
 }
 
 .tabmain a:hover
@@ -186,30 +188,6 @@ abbr { cursor: help; }
 	background: #fff;
 }
 
-.xtabmain { /* tabs space */
-	list-style-type: none;
-	padding: 0 0 30px 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
-	margin: 0 0 0 -1px; /* makes left corner */
-	width: 97%;
-	background: #FFF url(../../img/common/pixel-ff6400.png) 0 29px repeat-x; /* line below tabs. put it padding-bottom -1 */
-}
-
-.xtabmain li { /* tab details */
-	font-size: 125%;
-	font-weight: bold;
-	height: 18px !important; /* diferent font size can change tab height defined in .tabmain */
-	float: left;
-	margin-right: 5px; /* space between tabs */
-	padding: 5px 10px 5px 10px; /* space between inside text and tab borders */
-	border: 1px solid #FF6400;
-	color: #FF6400;
-	background: #FFF url(../../img/common/tabs/tabmain-background.png) bottom left repeat-x; /* gradient background */
-}
-
-/* unused */
-.tabmain-right-end { /* bottom line smooth right end */
-	background: #FFF url(../../img/common/tabs/tabmain-smooth-right.png) bottom right no-repeat;
-}
 
 /* tabsub specials */
 
@@ -217,7 +195,6 @@ abbr { cursor: help; }
 	height: 20px !important;
 	padding: 0 0 0 17px; /* distance from tabs boxes:  bottom: underline; left: indent   */
 	margin: 0 0 20px 0; /* makes left corner */
-/*	width: 97%;*/
 	background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 	overflow: hidden;
 }
