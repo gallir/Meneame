@@ -948,24 +948,16 @@ td.count {
 	width: 100%;
 	margin: 0 0 15px 0;
 	display: block;
+	border: none;
 	background: url(../../img/common/mnu-bkgsoft03.png) repeat-x bottom left;
 	padding: 10px 0 0 0; /* list top & bottom */
 }
 
 .column-one-list-short { /* short list (for clouds, etc. page) */
-	width: 100%;
 	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 }
 
-.column-select-us {
-	border: 1px solid #FFE2C5;
-	background-image: url(../../img/es/mnu-us.png);
-	background-repeat: no-repeat;
-	background-position: right bottom;
-	padding: 10px 0 40px 0; /* list top & bottom */
-}
-
-.column-list ul, .column-one-list ul, .column-one-list-short ul, .column-select-us ul {
+.column-list ul, .column-one-list ul, .column-one-list-short ul {
 	list-style: none;
 	margin: 0;
 	padding: 0; /* from box border */
@@ -983,21 +975,17 @@ td.count {
 	white-space: nowrap;
 }
 
-.column-one-list li, .column-one-list-short li, .column-select-us li {
+.column-one-list li, .column-one-list-short li {
 	font-size: 95%;
-	border: none;
 	padding: 5px 0 5px 30px;
 	margin: 0;
+	white-space: nowrap;
 }
 
 .column-list li a, .column-one-list li a, .column-one-list-short li a {
-	padding: 0 0 0 0;
 	color: #FF6400;
 }
 
-.column-select-us li a {
-	padding: 0 0 0 0;
-}
 
 /* benjami: thiscat: selected category */
 .column-one-list li.thiscat, .column-one-list-short li.thiscat {

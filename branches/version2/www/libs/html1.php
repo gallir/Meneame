@@ -368,7 +368,7 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	else 
 		$thiscat = '';
 	if (preg_match('/index\.php/', $_SERVER['PHP_SELF'])) $base_url = $globals['base_url'];
-	else $base_url = htmlspecialchars($_SERVER[PHP_SELF]);
+	else $base_url = htmlspecialchars($_SERVER['PHP_SELF']);
 	echo '<li'.$thiscat.'><a href="'.$base_url.'?'.$query.'">'._('_todas');
 	//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$queued_count.')';
 	echo '</a></li>' . "\n";

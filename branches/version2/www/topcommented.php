@@ -59,7 +59,7 @@ function do_sidebar_top() {
 	echo '<div id="sidebar">'."\n";
 	echo '<ul class="main-menu">'."\n";
 	echo '<li>'."\n";
-	echo '<div class="column-select-us">'."\n";
+	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
