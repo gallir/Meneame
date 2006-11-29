@@ -43,7 +43,7 @@ function do_sidebar_top() {
 
 	echo '<div id="sidebar">'."\n";
 	echo '<ul class="main-menu">'."\n";
-	do_standard_links();
+// 	do_standard_links();
 	echo '</ul>';
 	echo '</div>';
 }
