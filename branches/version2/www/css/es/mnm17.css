@@ -631,18 +631,21 @@ td.count {
 
 .menealo a {
 	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #FFCBAA;
 }
 
 .menealo a, .menealo span {
 	display: block;
 	padding: 4px 0 4px 0;
-	border-width: 1px;
-	border-style: dotted;
-	border-color: #FF6400;
 	color: #FF6400;
 }
 
 .menealo span {
+	border-width: 1px;
+	border-color: #FF6400;
+	border-style: dotted;
 }
 
 .news-body h3 {
