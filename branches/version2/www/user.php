@@ -142,7 +142,7 @@ function do_profile() {
 	if(!empty($user->url)) {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
-		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'">'.$url.'</a></dd>';
+		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'"  rel="nofollow">'.$url.'</a></dd>';
 	}
 	echo '<dt>'._('desde').':</dt><dd>'.get_date($user->date).'</dd>';
 
