@@ -184,7 +184,7 @@ abbr { cursor: help; }
 	width: 100%;
 	border-top: 1px dotted #FF6400;
 	min-height: 55px;
-	background: #FFE2C5;
+	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 }
 
 .credits-strip-buttons {
