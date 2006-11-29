@@ -527,10 +527,11 @@ td.count {
 .news-details a:link, .news-details a:visited {
 	color: #FF9400;
 }
-
+/*
 * html .news-details {
 	padding-right: 136px;
 }
+*/
 
 .news-details select {
 	background: #FFF;
@@ -665,7 +666,7 @@ td.count {
 	white-space: nowrap;
 }
 
-.news-submitted a:link {
+.news-submitted a:link, .news-submitted a:visited {
 	color: #666;
 	font-weight: bold;
 }
