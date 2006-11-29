@@ -1,17 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!-- by Miguel Angel Pedregosa Pareja -->
-<!-- VersiÃ³n 1.0 adaptado para Firefox 2-->
-<generator xmlns="http://www.mozilla.org/microsummaries/0.1" name="MenÃ©ame Last Post">
-  <template>
-    <transform xmlns="http://www.w3.org/1999/XSL/Transform" version="1.0">
-      <output method="text"/>      
-	    
-	   <template match="/">
-	   <text>MenÃ©ame: </text>
-        <value-of select="/html/body/div/div[4]/div[@class='news-summary']/div[@class='news-body']/h3/a"/>
-        </template>	  	 
-	 
-    </transform>
-
-  </template>
- </generator>
+<!-- Versión 2.0 adaptado para Meneame 2-->
+-
+<generator name="Meneame Last Post">
+-<template>
+<transform version="1.0">
+<output method="text"/>
+<template match="/">
+<text>Menéame: </text>
+<value-of select="/html/body[@id='home']/div[@id='container']/div[@id='contents']/div[1]/div/h3/a"/>
+</template>
+</transform>
+</template>
+</generator>
