@@ -179,7 +179,8 @@ function do_sidebar() {
 // menu items
 
 function do_mnu_faq($whichpage) {
-	global $dblang;
+	global $dblang, $globals;
+
 	echo '<div class="mnu-faq">' . "\n";
 	switch ($whichpage) {
 		case 'home':
