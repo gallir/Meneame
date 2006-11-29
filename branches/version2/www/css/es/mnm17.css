@@ -1029,7 +1029,6 @@ td.count {
 }
 
 .comment-body-hidden {
-	background: #fff;
 	border: 1px dotted #aaa;
 	padding: 3px 50px 3px 10px;
 	font-size: 90%;
@@ -1056,29 +1055,20 @@ td.count {
 	border: 0px;
 }
 
-.comment-meta {
+.comment-meta, .comment-meta-hidden {
 	font-size: 85%;
 	line-height: 160%;
-	background: #FFF;
 	color: #FF6400;
 	padding: 0 0px 5px 0;
 }
 
 .comment-meta-hidden {
-	font-size: 85%;
-	line-height: 160%;
-	background: #FFF;
 	color: #aaa;
-	padding: 1px 0px 5px 0;
 }
 
 .comment-meta a {
 	color: #FF9400;
 	font-weight: bold;
-}
-
-.comment-meta-hidden a {
-	color: #aaa;
 }
 
 .comment-info {
