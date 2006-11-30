@@ -74,17 +74,17 @@ switch ($view) {
 	case 'history':
 		do_user_tabs(2, $login);
 		do_history();
-		do_pages($rows, $page_size, 'margin');
+		do_pages($rows, $page_size);
 		break;
 	case 'commented':
 		do_user_tabs(3, $login);
 		do_commented();
-		do_pages($rows, $page_size, '');
+		do_pages($rows, $page_size, false);
 		break;
 	case 'shaken':
 		do_user_tabs(4, $login);
 		do_shaken();
-		do_pages($rows, $page_size, 'margin');
+		do_pages($rows, $page_size);
 		break;
 	case 'preferred':
 		do_user_tabs(5, $login);

@@ -412,7 +412,7 @@ function force_authentication() {
 	return true;
 }
 
-function do_pages($total, $page_size=25, $pager_style) {
+function do_pages($total, $page_size=25, $margin = true) {
 
 	// pager style == "margin": notices. with margin for meneos box.
 	//             == ''      : rest of pages. no margin.
@@ -433,7 +433,7 @@ function do_pages($total, $page_size=25, $pager_style) {
 	$start=max($current-intval($index_limit/2), 1);
 	$end=$start+$index_limit-1;
 	
-	if ($pager_style == "margin") {
+	if ($margin) {
 		echo '<div class="pages-margin">';
 	} else {
 		echo '<div class="pages">';

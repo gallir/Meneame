@@ -49,7 +49,7 @@ if ($links) {
 		$link->print_summary('short');
 	}
 }
-do_pages($rows, $page_size, '');
+do_pages($rows, $page_size);
 echo '</div>';
 do_footer();
 

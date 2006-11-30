@@ -89,7 +89,7 @@ if ($links) {
 		$link->print_summary();
 	}
 }
-do_pages($rows, $page_size, 'margin');
+do_pages($rows, $page_size);
 echo '</div>'."\n";
 do_footer();
 
