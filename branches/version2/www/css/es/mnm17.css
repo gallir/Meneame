@@ -701,7 +701,7 @@ td.count {
 }
 
 .mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-trackback li  {
-	margin: 1px 0 1px  0;
+	margin: 0;
 	padding: 0;
 }
 
@@ -722,15 +722,22 @@ td.count {
 	text-decoration: underline;
 }
 
+/*
+All boxes:
+- margin top: 15; margen bottom: 5
+- padding bottom: 5; padding left 3
+*/
+
 .mnu-submit {
+	margin: 15px 0 5px 0;
+	padding: 0 0 5px 0;
 	text-align: left;
 	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 15px 0 10px 0px;
 	font-weight: bolder;
 	background-repeat: no-repeat;
-	background-position: top right;
+	background-position: right -5px;
 	background-image: url(../../img/common/mnu-submit01.png);
 }
 
@@ -741,38 +748,38 @@ td.count {
 }
 
 .mnu-sneak {
+	margin: 15px 0 5px 0;
+	padding: 0 0 5px 0;
 	text-align: left;
 	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 15px 0 10px 0px;
 	font-weight: bolder;
 	background-repeat: no-repeat;
-	background-position: top right;
+	background-position: right -5px;
 	background-image: url(../../img/common/elmnm-sneak01.png);
 }
 
-
 .mnu-bugs, .mnu-menedising {
+	/* padding top instead of margin top in order to avoid background cut */
+	margin: 0 0 5px 0;
+	padding: 15px 0 5px 3px;
 	text-align: left;
 	font-size: 110%;
 	color: #FF6400;
-	border-bottom: 1px solid #FFE2C5;
-	padding: 10px 0 5px 0px;
 	background-repeat: repeat-x;
 	background-position: bottom left;
 	background-image: url(../../img/common/mnu-bkgsoft02.png);
 }
 
 .mnu-meneria, .mnu-tools, .mnu-trackback {
+	margin: 15px 0 5px 0;
+	padding: 0 0 5px 3px;
 	list-style: none;
 	text-align: left;
 	font-size: 110%;
 	color: #FF6400;
-	border-bottom: 1px solid #FFE2C5;
-	padding: 10px 0 5px 0;
 	background: #FFF;
-	width: 100%;
 	white-space: nowrap;
 	background-repeat: repeat-x;
 	background-position: bottom left;
@@ -784,14 +791,14 @@ td.count {
 }
 
 .mnu-rss {
+	margin: 15px 0 5px 0;
+	padding: 0 0 5px 5px;
 	list-style: none;
 	text-align: left;
 	font-size: 100%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
-	padding: 10px 0 5px 0px;
 	background: #FFF;
-	width: 100%;
 	background-repeat: repeat-x;
 	background-position: bottom left;
 	background-image: url(../../img/common/mnu-bkgsoft01.png);
@@ -851,13 +858,13 @@ td.count {
 /* benjami, 09-2006: categories and categories css needs a _in depth_ reform */
 
 .column-list {
+	margin: 15px 0 5px 0;
 	width: 100%;
-	margin: 0 0 15px 0;
 	display: block;
 	border: none;
 	border-bottom: 1px solid #FFE2C5;
 	background: url(../../img/common/mnu-cat01.png) 50% 50% no-repeat;
-	padding: 10px 0 0 0; /* list top & bottom */
+	padding: 0 0 5px 0; /* list top & bottom */
 }
 
 .column-one-list, .column-one-list-short {
@@ -878,7 +885,6 @@ td.count {
 	margin: 0;
 	padding: 0; /* from box border */
 }
-
 
 .column-list li {
 	float: left;
