@@ -11,9 +11,6 @@ include(mnminclude.'html1.php');
 include(mnminclude.'sneak.php');
 
 
-#$globals['ads'] = true;
-$globals['body-args'] = 'onload="start()"';
-
 init_sneak();
 
 // Start html
@@ -28,9 +25,9 @@ echo "<title>"._('fisgona')." // men&eacute;ame</title>\n";
 echo '<meta name="generator" content="meneame" />' . "\n";
 echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/telnet.css";</style>' . "\n";
 echo '<link rel="icon" href="img/common/konsole.png" type="image/x-icon" />' . "\n";
-echo '<script src="./js/general01.js" type="text/javascript"></script>' . "\n";
+do_js_includes();
 echo '</head>' . "\n";
-echo "<body onload=\"start()\">\n";
+echo "<body>\n";
 
 ?>
 <script type="text/javascript">
@@ -112,7 +109,7 @@ function to_html(data) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak05.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
 <?
 
 echo '<div class="sneaker">';
@@ -154,5 +151,6 @@ for ($i=0; $i<$max_items;$i++) {
 }
 
 echo '</div>';
+echo '<script type="text/javascript">fastLoad("sneaker-0",start_sneak);</script>' . "\n";
 echo "</body></html>\n";
 ?>

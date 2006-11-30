@@ -12,7 +12,7 @@ include(mnminclude.'sneak.php');
 
 
 #$globals['ads'] = true;
-$globals['body-args'] = 'onload="start()"';
+//$globals['body-args'] = 'onload="start()"';
 $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();
@@ -202,7 +202,7 @@ function put_smiley(str) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak05.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
 <?
 
 do_navbar(_('fisgona'));
@@ -252,6 +252,7 @@ for ($i=0; $i<$max_items;$i++) {
 }
 
 echo '</div>';
+echo '<script type="text/javascript">fastLoad("sneaker-0",start_sneak);</script>' . "\n";
 
 do_footer();
 ?>

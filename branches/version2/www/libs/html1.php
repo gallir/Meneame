@@ -94,10 +94,8 @@ function do_header($title, $id='home') {
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
 	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon" />' . "\n";
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>';
-	echo '<script src="'.$globals['base_url'].'js/jsoc-0.11.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general01.js" type="text/javascript"></script>' . "\n";
-	// Cache for Ajax
+	do_js_includes();
+
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
 	echo '<div id="logo">'  . "\n";
@@ -135,6 +133,15 @@ function do_header($title, $id='home') {
 
 	echo '</ul>' . "\n";
 	echo '</div>' . "\n";
+}
+
+function do_js_includes() {
+	global $globals;
+
+	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>';
+	// Cache for Ajax
+	echo '<script src="'.$globals['base_url'].'js/jsoc-0.11.0.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general02.js" type="text/javascript"></script>' . "\n";
 }
 
 function do_footer($credits = true) {

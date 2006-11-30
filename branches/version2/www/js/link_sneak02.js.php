@@ -31,7 +31,7 @@ var max_requests = 500;
 var play = true;
 
 
-function start() {
+function start_link_sneak() {
 	sneak_xmlhttp = new myXMLHttpRequest ();
 	for (i=0; i<max_items; i++) {
 		items[i] = document.getElementById('sneaker-'+i);

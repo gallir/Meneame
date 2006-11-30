@@ -30,7 +30,7 @@ var show_chat = true;
 var show_pubvotes = true;
 
 
-function start() {
+function start_sneak() {
 	xmlhttp = new myXMLHttpRequest ();
 	if (!get_options_cookie()) {
 		check_control('vote');

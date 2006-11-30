@@ -60,8 +60,6 @@ switch ($url_args[1]) {
 		break;
 	case 'sneak':
 		$tab_option = 5;
-		$globals['body-args'] = 'onload="start()"'; // To start the micro sneaker
-		// $globals['do_websnapr'] = false; // If websnapr is slow, quite common, dont wait 
 		break;
 	default:
 		$tab_option = 1;	
@@ -206,10 +204,8 @@ case 5:
 	include(mnmpath.'/libs/link_sneak.php');
 	echo '</fieldset>';
 	echo '</div>';
+	echo '<script type="text/javascript">fastLoad("sneaker-9",start_link_sneak);</script>' . "\n";
 	break;
-
-	
-
 }
 
 echo '</div>';

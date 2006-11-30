@@ -88,7 +88,7 @@ echo "]);";
 function get_votes($dbtime, $link_id) {
 	global $db, $events, $last_timestamp, $max_items, $current_user;
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_date, link_votes, link_status, link_comments from votes, links where vote_type='links' and vote_link_id = $link_id and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_date, link_votes, link_status, link_comments from votes, links where vote_type='links' and vote_link_id = $link_id and vote_date > $dbtime and link_id = vote_link_id order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$id=$event->vote_id;

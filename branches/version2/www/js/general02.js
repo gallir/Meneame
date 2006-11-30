@@ -40,7 +40,27 @@ var myxmlhttp = Array ();
 var responseString = new String;
 var xmlhttp = new myXMLHttpRequest ();
 var update_voters = false;
+var fastLoadDone= false;
+var fastLoadCounter = false;
 
+function fastLoad(i, f) {
+	// Security check
+	if (fastLoadDone || fastLoadCounter > 100) return;
+	if (fastLoadCounter == 0) {
+		// Initial timeout
+		fastLoadCounter++;
+		setTimeout('fastLoad(\''+i+'\','+f+')', 500);
+		return;
+	}
+	if (document.getElementById && document.getElementById(i) != null) {
+		window.status = 'FastLoad finished';
+		fastLoadDone = true;
+		f();
+	} 
+	window.status =  'Waiting for: ' + i;
+	fastLoadCounter++;
+	setTimeout('fastLoad(\''+i+'\','+f+')', 1000);
+}
 
 function menealo (user, id, htmlid, md5)
 {

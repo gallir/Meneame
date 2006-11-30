@@ -11,9 +11,6 @@ include(mnminclude.'html1.php');
 include(mnminclude.'sneak.php');
 
 
-#$globals['ads'] = true;
-$globals['body-args'] = 'onload="start()"';
-
 init_sneak();
 
 
@@ -226,7 +223,7 @@ function put_smiley(str) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak04.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
 <?
 
 do_navbar(_('¡HOYGAN!'));
@@ -276,6 +273,7 @@ for ($i=0; $i<$max_items;$i++) {
 }
 
 echo '</div>';
-//echo "</div>\n"; // air-with-footer
+echo '<script type="text/javascript">fastLoad("sneaker-0",start_sneak);</script>' . "\n";
+
 do_footer(false);
 ?>
