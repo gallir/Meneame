@@ -729,15 +729,16 @@ All boxes:
 */
 
 .mnu-submit {
-	margin: 15px 0 5px 0;
-	padding: 0 0 5px 0;
+	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
+	margin: 0 0 5px 0;
+	padding: 15px 0 5px 0;
 	text-align: left;
 	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	font-weight: bolder;
 	background-repeat: no-repeat;
-	background-position: right -5px;
+	background-position: right 10px;
 	background-image: url(../../img/common/mnu-submit01.png);
 }
 
@@ -748,20 +749,21 @@ All boxes:
 }
 
 .mnu-sneak {
-	margin: 15px 0 5px 0;
-	padding: 0 0 5px 0;
+	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
+	margin: 0 0 5px 0;
+	padding: 15px 0 5px 0;
 	text-align: left;
 	font-size: 120%;
 	color: #FF6400;
 	border-bottom: 1px solid #FFE2C5;
 	font-weight: bolder;
 	background-repeat: no-repeat;
-	background-position: right -5px;
+	background-position: right 10px;
 	background-image: url(../../img/common/elmnm-sneak01.png);
 }
 
 .mnu-bugs, .mnu-menedising {
-	/* padding top instead of margin top in order to avoid background cut */
+	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
 	margin: 0 0 5px 0;
 	padding: 15px 0 5px 3px;
 	text-align: left;
