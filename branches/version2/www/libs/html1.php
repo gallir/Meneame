@@ -99,7 +99,7 @@ function do_header($title, $id='home') {
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
 	echo '<div id="logo">'  . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="La L azul  es de aprendiz. En casi todo Europa se debe llevar en los coches de autoescuelas, luego durante el primer año de carnet hay que llevar una L verde"><img src="'.$globals['base_url'].'img/es/logo01-learning.png" alt="meneame, noticias colaborativas" /></a>';
+	echo '<a href="'.$globals['base_url'].'" title="La L azul  es de aprendiz. En casi todo Europa se debe llevar en los coches de autoescuelas, luego durante el primer año de carnet hay que llevar una L verde"><img src="'.$globals['base_url'].'img/es/logo01-learning-01.png" alt="meneame, noticias colaborativas" /></a>';
 	echo '</div>'  . "\n";
 
 	echo '<div id="header">' . "\n";
