@@ -35,14 +35,14 @@ function do_tabs($tab_name, $tab_selected = false) {
 
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].$query.'" title="'.$reload_text.'">'._('portada').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php'.$query.'" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
