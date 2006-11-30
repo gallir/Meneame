@@ -34,7 +34,7 @@ do_header(_('más comentadas'));
 do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
 do_sidebar_top();
 echo '<div id="contents">';
-do_tabs('main','');
+do_tabs('main');
 echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 
 $link = new Link;

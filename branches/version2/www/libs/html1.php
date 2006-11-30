@@ -17,7 +17,7 @@ if (!empty($globals['lounge'])) {
 
 header("Content-type: text/html; charset=utf-8");
 
-function do_tabs($tab_name, $tab_selected) {
+function do_tabs($tab_name, $tab_selected = false) {
 	global $globals;
 
 	$reload_text = _('recargar');

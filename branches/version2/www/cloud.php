@@ -41,7 +41,7 @@ do_header(_('nube de etiquetas'));
 do_navbar(_('etiquetas'));
 do_sidebar_top();
 echo '<div id="contents">';
-do_tabs("main","");
+do_tabs('main');
 echo '<div class="topheading"><h2>+ '.$words_limit.'</h2></div>';
 echo '<div style="margin: 0px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 25px;">';
 $res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit $words_limit");

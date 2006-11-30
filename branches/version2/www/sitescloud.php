@@ -42,7 +42,7 @@ do_header(_('nube de lugares web'));
 do_navbar(_('sites'));
 do_sidebar_top();
 echo '<div id="contents">';
-do_tabs("main","");
+do_tabs("main");
 echo '<div class="topheading"><h2>Los +</h2></div>';
 echo '<div style="margin: 20px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 50px;">';
 $res = $db->get_results("select blog_url, count(*) as count $from_where order by count desc limit $limit");
