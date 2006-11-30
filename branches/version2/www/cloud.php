@@ -84,6 +84,7 @@ function do_sidebar_top() {
 	echo '</ul>';
 	echo '</div>'."\n";
 	do_mnu_meneria();
+	do_mnu_rss();
 	echo '</div>';
 
 }

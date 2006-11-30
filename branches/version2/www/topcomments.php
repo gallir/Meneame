@@ -67,6 +67,7 @@ function do_sidebar_top() {
 	do_mnu_submit();
 	do_mnu_sneak();
 	do_mnu_meneria();
+	do_mnu_rss();
 	echo '</div>';
 
 }

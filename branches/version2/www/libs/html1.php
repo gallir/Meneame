@@ -212,6 +212,10 @@ function do_mnu_faq($whichpage) {
 		case 'topcomments':
 			echo 'estos son los comentarios más valorados durante las ultimas 24 horas';
 			break;
+		case 'topcommented':
+			echo 'estos son los artículos con más comentarios. en el menú, debajo esta nota, puedes seleccionar el período que quieres ver.';
+			break;
+
 	}
 	echo '</div>' . "\n";
 	

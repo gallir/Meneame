@@ -58,23 +58,26 @@ function do_sidebar_top() {
 	global $db, $dblang, $range_values, $range_names;
 
 	echo '<div id="sidebar">'."\n";
+	do_mnu_faq('topcommented');
+	do_mnu_submit();
+	do_mnu_sneak();
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
-	for($i=0; $i<count($range_values); $i++) {	
+
+	for($i=0; $i<count($range_values); $i++) {
 		if($i == $current_range)  {
-			echo '<li class="thiscat">' .$range_names[$i]. '</li>'."\n";
+			$classornotclass = ' class="thiscat"';
 		} else {
-			echo '<li><a href="topcommented.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+			$classornotclass = "";
 		}
-		
+		echo '<li '.$classornotclass.'><a href="topcommented.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
 	do_mnu_meneria();
 	do_mnu_rss();
-
 	echo '</div>';
 
 }

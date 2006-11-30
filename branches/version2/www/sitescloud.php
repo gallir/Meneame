@@ -76,18 +76,20 @@ function do_sidebar_top() {
 	echo '<ul>'."\n";
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
-	for($i=0; $i<count($range_values); $i++) {	
+
+	for($i=0; $i<count($range_values); $i++) {
 		if($i == $current_range)  {
-			echo '<li class="thiscat">' .$range_names[$i]. '</li>'."\n";
+			$classornotclass = ' class="thiscat"';
 		} else {
-			echo '<li><a href="sitescloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+			$classornotclass = "";
 		}
-		
+		echo '<li '.$classornotclass.'><a href="sitescloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
+
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
-
 	do_mnu_meneria();
+	do_mnu_rss();
 	echo '</div>';
 }
 
