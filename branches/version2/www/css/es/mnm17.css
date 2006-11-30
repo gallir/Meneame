@@ -368,7 +368,8 @@ td.count {
 	color: #FF5900;
 	font-size: 120%;
 	font-weight: bold;
-	padding: 20px 0 0 30px;
+	margin: 20px 0 0 20px;
+	padding: 5px 0 0 30px;
 	background: url(../../img/common/error.png) left 50% no-repeat;
 }
 
