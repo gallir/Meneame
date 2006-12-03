@@ -21,4 +21,9 @@ $link->id=$id;
 $link->read();
 if(!$link->read) die;
 echo '<strong>' . $link->title . '</strong><br/>' . text_to_html($link->content)
+if ($link->avatar) {
+	echo '<img hspace="2" src="'.get_avatar_url($link->author, $link->avatar, 20).'" width="20" height="20" alt="avatar"/>';
+}
+echo '<strong>' . $link->username . '</strong><br/>';
+echo 'text_to_html($link->content)
 ?>
