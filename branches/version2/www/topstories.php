@@ -13,7 +13,7 @@ include(mnminclude.'link.php');
 $globals['ads'] = true;
 
 $range_names  = array(_('24 horas'), _('última semana'), _('último mes'), _('último año'), _('todas'));
-$range_values = array(86400, 604800, 2592000, 31536000, 0);
+$range_values = array(1, 7, 30, 365, 0);
 
 $offset=(get_current_page()-1)*$page_size;
 
@@ -22,13 +22,13 @@ if ($from >= count($range_values) || $from < 0 ) $from = 0;
 
 
 if($from == 0 ) {
-	$from_time = time() - $range_values[$from];
-	$sql = "SELECT link_id, count(*) as votes  FROM votes, links WHERE  vote_type='links' and vote_date > FROM_UNIXTIME($from_time) AND vote_link_id=link_id AND link_status != 'discard' GROUP BY vote_link_id ORDER BY votes DESC ";
-	$time_link = "link_modified > FROM_UNIXTIME($from_time) AND";
+	$from_time = "date_sub(now(), interval $range_values[$from] day)";
+	$sql = "SELECT link_id, count(*) as votes  FROM votes, links WHERE  vote_type='links' and vote_date > $from_time AND vote_link_id=link_id AND link_status != 'discard' GROUP BY vote_link_id ORDER BY votes DESC ";
+	$time_link = "link_modified > $from_time AND";
 } elseif ($range_values[$from] > 0) {
-	$from_time = time() - $range_values[$from];
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_date > FROM_UNIXTIME($from_time) AND  link_status != 'discard' ORDER BY link_votes DESC ";
-	$time_link = "link_date > FROM_UNIXTIME($from_time) AND";
+	$from_time = "date_sub(now(), interval $range_values[$from] day)";
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_date > $from_time AND  link_status != 'discard' ORDER BY link_votes DESC ";
+	$time_link = "link_date > $from_time AND";
 } else {
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_status != 'discard' ORDER BY link_votes DESC ";
 	$time_link = '';
