@@ -6,22 +6,22 @@ $user_id = intval($_GET['user_id']);
 $option = $_GET['option'];
 
 switch ($option) {
-	case 'voted':
+	case 'shaken':
 		$sql = "SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user_id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('votadas'));
-		do_voted($sql);
+		do_link_item($sql);
 		do_footer();
 		break;
 	case 'commented':
 		$sql = "SELECT distinct(link_id) FROM links, comments WHERE comment_user_id=$user_id and link_id=comment_link_id ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('comentadas'));
-		do_voted($sql);
+		do_link_item($sql);
 		do_footer();
 		break;
-	case 'sent':
+	case 'history':
 		$sql = "SELECT link_id FROM links WHERE link_author=$user_id ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('envíadas'));
-		do_voted($sql);
+		do_link_item($sql);
 		do_footer();
 		break;
 	default:
@@ -43,7 +43,7 @@ function do_footer() {
 	echo '</DL>' . "\n";
 }
 
-function do_voted($sql) {
+function do_link_item($sql) {
 	global $db;
 
 	$link = new Link;
