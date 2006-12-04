@@ -293,13 +293,13 @@ function do_mnu_rss() {
 
 	if(!empty($globals['link_id'])) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('rss comentarios noticia').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('rss comentarios <strong>de esta noticia</strong>').'</a>';
 		echo '</li>' . "\n";
 	}
 
 	if($current_user->user_id > 0) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('rss comentarios (mis noticias)').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('rss comentarios (de mis noticias)').'</a>';
 		echo '</li>' . "\n";
 	}
 
