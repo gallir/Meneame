@@ -88,11 +88,7 @@ switch ($view) {
 		break;
 	case 'preferred':
 		do_user_tabs(5, $login);
-		do_preferred();
-		break;
-	case 'voters':
-		do_user_tabs(6, $login);
-		do_voters();
+		do_voters_preferred();
 		break;
 	case 'profile':
 	default:
@@ -181,62 +177,6 @@ function do_profile() {
         echo '<dt>'._('votos de publicadas').':</dt><dd>'.$user->published_votes.'</dd>';
 
 	echo '</dl></fieldset>';
-
-	
-	// Only show voters to registered users
-	if ($current_user->user_id == 0) return;
-	
-
-	echo '<fieldset style="width: 45%; display: block; float: left;"><legend>';
-	echo _('autores preferidos');
-	echo '</legend>';
-	$prefered_id = $user->id;
-	$prefered_type = 'friends';
-	echo '<div id="friends-container">'. "\n";
-	require('backend/get_prefered_bars.php');
-	echo '</div>'. "\n";
-	echo '</fieldset>'. "\n";
-
-
-	echo '<fieldset style="width: 45%; display: block; float: right;"><legend>';
-	echo _('votado por');
-	echo '</legend>';
-	$prefered_id = $user->id;
-	$prefered_type = 'voters';
-	echo '<div id="voters-container">'. "\n";
-	require('backend/get_prefered_bars.php');
-	echo '</div>'. "\n";
-	echo '</fieldset>'. "\n";
-
-	echo '<br clear="all" />';
-
-	// Show first numbers of the addresss if the user has god privileges
-	if ($current_user->user_level == 'god' &&
-			$user->level != 'god' && $user->level != 'admin' ) { // tops and admins know each other for sure, keep privacy
-		$addresses = $db->get_results("select distinct INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id and vote_date > date_sub(now(), interval 60 day) order by vote_date desc limit 20");
-
-		// Try with comments
-		if (! $addresses) {
-			$addresses = $db->get_results("select distinct comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 60 day) order by comment_date desc limit 20");
-		}
-
-		// Not addresses to show
-		if (! $addresses) {
-			return;
-		}
-
-		$clone_counter = 0;
-		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
-		echo '<ol>';
-		foreach ($addresses as $dbaddress) {
-			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
-			echo '<li>'. $ip_pattern . ': <span id="clone-container-'.$clone_counter.'"><!--<a href="javascript:get_votes(\'ip_clones.php\',\''.$ip_pattern.'\',\'clone-container-'.$clone_counter.'\',0,'.$user->id.')" title="'._('clones').'">&#187;&#187;</a>--></span></li>';
-			$clone_counter++;
-		}
-		echo '</ol>';
-		echo '</fieldset>';
-	}
-
 }
 
 
@@ -298,33 +238,60 @@ function do_commented () {
 	}
 }
 
-function do_preferred () {
+function do_voters_preferred() {
 	global $db, $user;
 
-	echo '<fieldset><legend>';
+	echo '<fieldset style="width: 45%; display: block; float: left;"><legend>';
 	echo _('autores preferidos');
 	echo '</legend>';
 	$prefered_id = $user->id;
 	$prefered_type = 'friends';
 	echo '<div id="friends-container">'. "\n";
-	require('backend/get_prefered.php');
+	require('backend/get_prefered_bars.php');
 	echo '</div>'. "\n";
-	echo '</fieldset>';
-}
+	echo '</fieldset>'. "\n";
 
 
-function do_voters () {
-	global $db, $user;
-
-	echo '<fieldset><legend>';
-	echo _('los que votan');
+	echo '<fieldset style="width: 45%; display: block; float: right;"><legend>';
+	echo _('votado por');
 	echo '</legend>';
 	$prefered_id = $user->id;
 	$prefered_type = 'voters';
 	echo '<div id="voters-container">'. "\n";
-	require('backend/get_prefered.php');
+	require('backend/get_prefered_bars.php');
 	echo '</div>'. "\n";
-	echo '</fieldset>';
+	echo '</fieldset>'. "\n";
+
+	echo '<br clear="all" />';
+
+	// Show first numbers of the addresss if the user has god privileges
+	if ($current_user->user_level == 'god' &&
+			$user->level != 'god' && $user->level != 'admin' ) { // tops and admins know each other for sure, keep privacy
+		$addresses = $db->get_results("select distinct INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id and vote_date > date_sub(now(), interval 60 day) order by vote_date desc limit 20");
+
+		// Try with comments
+		if (! $addresses) {
+			$addresses = $db->get_results("select distinct comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 60 day) order by comment_date desc limit 20");
+		}
+
+		// Not addresses to show
+		if (! $addresses) {
+			return;
+		}
+
+		$clone_counter = 0;
+		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
+		echo '<ol>';
+		foreach ($addresses as $dbaddress) {
+			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
+			echo '<li>'. $ip_pattern . ': <span id="clone-container-'.$clone_counter.'"><!--<a href="javascript:get_votes(\'ip_clones.php\',\''.$ip_pattern.'\',\'clone-container-'.$clone_counter.'\',0,'.$user->id.')" title="'._('clones').'">&#187;&#187;</a>--></span></li>';
+			$clone_counter++;
+		}
+		echo '</ol>';
+		echo '</fieldset>';
+	}
+
+
 }
 
 function do_user_tabs($option, $user) {
@@ -338,7 +305,6 @@ function do_user_tabs($option, $user) {
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 		echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
-		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'voters').'">'._('votado por'). '</a></li>';
 		echo '</ul>';
 
 }

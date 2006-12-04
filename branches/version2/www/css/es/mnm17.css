@@ -1684,9 +1684,8 @@ fieldset.labels div {
 	padding: 2px 2px 2px 2px;
 	float: left;
 	width: 99%;
-	overflow: hidden;
-	border: 1px solid #FFE2C5;
-	margin: 0 0 5px 0;
+	/*border: 1px solid #FFE2C5;*/
+	margin: 0 0 5px 8px;
 	font-size: 80%;
 }
 
