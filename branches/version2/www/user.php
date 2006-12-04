@@ -181,12 +181,13 @@ function do_profile() {
 
 
 function do_history () {
-	global $db, $rows, $user, $offset, $page_size;
+	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=sent">'._('exportar').'</a>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
@@ -196,12 +197,13 @@ function do_history () {
 }
 
 function do_shaken () {
-	global $db, $rows, $user, $offset, $page_size;
+	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
 	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=voted">'._('exportar').'</a>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
@@ -212,13 +214,14 @@ function do_shaken () {
 
 
 function do_commented () {
-	global $db, $rows, $user, $offset, $page_size;
+	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	$link = new Link;
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented">'._('exportar').'</a>';
 		foreach ($comments as $dbcomment) {
 			$link->id=$dbcomment->link_id;
 			$comment->id = $dbcomment->comment_id;
