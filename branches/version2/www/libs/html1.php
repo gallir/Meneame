@@ -257,6 +257,7 @@ function do_mnu_tools () {
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
 	echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
 	echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
+	echo '<li><a href="http://mueveme.net">'._("para móviles").'</a></li>' . "\n";
 	echo '</ul>' . "\n";
 }
 
