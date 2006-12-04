@@ -1817,3 +1817,7 @@ fieldset.labels div {
 .bookmarks-export-user-commented {
 	margin-left: 0px;
 }
+
+.story-vertical-completion { /* workaround in order to close vertical menu separation line in short story pages */
+	clear: left;
+}

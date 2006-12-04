@@ -207,7 +207,7 @@ case 5:
 	echo '<script type="text/javascript">fastLoad("sneaker-9",start_link_sneak);</script>' . "\n";
 	break;
 }
-
+echo '<div class="story-vertical-completion">&nbsp</div>';
 echo '</div>';
 
 echo '<!--'."\n".'<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
