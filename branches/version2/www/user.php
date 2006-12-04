@@ -216,7 +216,7 @@ function do_history () {
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('formato Mozilla bookmarks').'">'._('exportar').'</a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
@@ -232,7 +232,7 @@ function do_shaken () {
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
 	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('formato Mozilla bookmarks').'">'._('exportar').'</a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
@@ -250,7 +250,7 @@ function do_commented () {
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('formato Mozilla bookmarks').'">'._('exportar').'</a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
 		foreach ($comments as $dbcomment) {
 			$link->id=$dbcomment->link_id;
 			$comment->id = $dbcomment->comment_id;
