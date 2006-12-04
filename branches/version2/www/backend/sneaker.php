@@ -73,7 +73,7 @@ if ($logs) {
 				if (empty($_GET['noedit'])) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
-				if (empty($_GET['nocedit'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_GET['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 		}
 	}
