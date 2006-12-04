@@ -1809,3 +1809,11 @@ fieldset.labels div {
 	width: 18%;
 	text-align: right;
 }
+
+.bookmarks-export-user-stories {
+	margin-left: 30px;
+}
+
+.bookmarks-export-user-commented {
+	margin-left: 0px;
+}
