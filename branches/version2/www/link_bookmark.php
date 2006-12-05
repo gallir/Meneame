@@ -12,6 +12,12 @@ switch ($option) {
 		do_link_item($sql);
 		do_footer();
 		break;
+	case 'favorites':
+		$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_link_id=link_id  ORDER BY link_id DESC LIMIT 1000";
+		do_header(_('favoritos'));
+		do_link_item($sql);
+		do_footer();
+		break;
 	case 'commented':
 		$sql = "SELECT distinct(link_id) FROM links, comments WHERE comment_user_id=$user_id and link_id=comment_link_id ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('comentadas'));
@@ -52,7 +58,12 @@ function do_link_item($sql) {
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
-			echo '<DT><A HREF="'.$link->get_permalink().'">'.$link->title.'</A>' . "\n";
+			if ($_REQUEST['url'] == 'source') {
+				$url = htmlentities($link->url);
+			} else {
+				$url = $link->get_permalink();
+			}
+			echo '<DT><A HREF="'.$url.'" REL="nofollow">'.$link->title.'</A>' . "\n";
 		}
 	}
 }

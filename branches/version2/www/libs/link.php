@@ -7,6 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 require_once(mnminclude.'log.php');
+require_once(mnminclude.'favorites.php');
 
 class Link {
 	var $id = 0;
@@ -412,6 +413,12 @@ class Link {
 			echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
 		}
 		echo '</li>'."\n";
+
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '<li class="favorite"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></li>';
+		}
+
 		echo '</ul>'."\n";
 	}
 

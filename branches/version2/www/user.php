@@ -90,6 +90,10 @@ switch ($view) {
 		do_user_tabs(5, $login);
 		do_voters_preferred();
 		break;
+	case 'favorites':
+		do_user_tabs(6, $login);
+		do_favorites();
+		break;
 	case 'profile':
 	default:
 		do_user_tabs(1, $login);
@@ -223,6 +227,22 @@ function do_history () {
 	}
 }
 
+function do_favorites () {
+	global $db, $rows, $user, $offset, $page_size, $globals;
+
+	$link = new Link;
+	$rows = $db->get_var("SELECT count(*) FROM links, favorites WHERE favorite_user_id=$user->id");
+	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
+	if ($links) {
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=favorites&amp;url=source" title="'._('formato Mozilla bookmarks').'" class="bookmarks-export-user-stories"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
+		foreach($links as $link_id) {
+			$link->id=$link_id;
+			$link->read();
+			$link->print_summary();
+		}
+	}
+}
+
 function do_shaken () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
@@ -332,6 +352,7 @@ function do_user_tabs($option, $user) {
 		echo '<ul class="tabsub">'."\n";
 		echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
 		echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
+		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">'._('favoritos'). '</a></li>';
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 		echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
