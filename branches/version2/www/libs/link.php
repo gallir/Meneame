@@ -416,7 +416,7 @@ class Link {
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '<li class="favorite"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></li>';
+			echo '<li class="favorite"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a></li>';
 		}
 
 		echo '</ul>'."\n";

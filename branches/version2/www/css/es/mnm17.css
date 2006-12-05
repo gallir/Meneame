@@ -654,6 +654,12 @@ td.count {
 	text-align: right;
 }
 
+.favorite img {
+	border: 0;
+	margin: 0;
+	vertical-align: bottom;
+}
+
 .news-body h3 {
 	margin: 0;
 	font-size: 140%;
