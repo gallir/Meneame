@@ -310,12 +310,6 @@ class Link {
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
 		echo '<h3>';
-
-		// If the user is authenticated, show favorite box
-		if ($current_user->user_id > 0)  {
-			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
-		}
-
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		echo '</h3>';
 		// In order not to overload websnapr, display the image only if votes are enabled
@@ -360,6 +354,12 @@ class Link {
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '<div class="news-details">';
+
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
+		}
+
 		if($this->comments > 0) {
 			$comments_mess = $this->comments . ' ' . _('comentarios');
 			$comment_class = "comments_yes";

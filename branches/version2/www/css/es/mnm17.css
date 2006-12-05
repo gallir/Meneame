@@ -656,8 +656,9 @@ td.count {
 	background: none;
 }
 
-.news-body h3 img {
+.news-details img {
 	margin: 0 1px 0 0;
+	vertical-align: text-bottom;
 }
 
 .news-body p {
