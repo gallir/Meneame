@@ -41,7 +41,7 @@ CREATE TABLE `blogs` (
   `blog_url` varchar(64) collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`blog_id`),
   UNIQUE KEY `key` (`blog_key`)
-) ENGINE=MyISAM AUTO_INCREMENT=19647 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=20477 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Table structure for table `categories`
@@ -93,7 +93,21 @@ CREATE TABLE `comments` (
   KEY `comment_link_id_2` (`comment_link_id`,`comment_date`),
   KEY `comment_date` (`comment_date`),
   KEY `comment_user_id` (`comment_user_id`,`comment_date`)
-) ENGINE=MyISAM AUTO_INCREMENT=244611 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=259586 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Table structure for table `favorites`
+--
+
+DROP TABLE IF EXISTS `favorites`;
+CREATE TABLE `favorites` (
+  `favorite_id` int(10) unsigned NOT NULL auto_increment,
+  `favorite_user_id` int(10) unsigned NOT NULL,
+  `favorite_link_id` int(10) unsigned NOT NULL,
+  `favorite_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`favorite_id`),
+  UNIQUE KEY `favorite_user_id` (`favorite_user_id`,`favorite_link_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `friends`
@@ -155,7 +169,7 @@ CREATE TABLE `links` (
   KEY `status_i` (`link_status`),
   FULLTEXT KEY `link_url_2` (`link_url`,`link_url_title`,`link_title`,`link_content`,`link_tags`),
   FULLTEXT KEY `link_tags` (`link_tags`)
-) ENGINE=MyISAM AUTO_INCREMENT=59099 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=62622 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Table structure for table `logs`
@@ -172,7 +186,7 @@ CREATE TABLE `logs` (
   PRIMARY KEY  (`log_id`),
   KEY `log_date` (`log_date`),
   KEY `log_type` (`log_type`,`log_ref_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=112641 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=135531 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sneakers`
@@ -221,7 +235,7 @@ CREATE TABLE `trackbacks` (
   KEY `trackback_link_id` (`trackback_link_id`),
   KEY `trackback_url` (`trackback_url`),
   KEY `trackback_date` (`trackback_date`)
-) ENGINE=MyISAM AUTO_INCREMENT=13150 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13798 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Table structure for table `users`
@@ -251,7 +265,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `user_login` (`user_login`),
   KEY `user_email` (`user_email`),
   KEY `user_karma` (`user_karma`)
-) ENGINE=MyISAM AUTO_INCREMENT=16739 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=17725 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Table structure for table `votes`
@@ -270,7 +284,7 @@ CREATE TABLE `votes` (
   UNIQUE KEY `vote_type` (`vote_type`,`vote_link_id`,`vote_user_id`,`vote_ip_int`),
   KEY `vote_type_2` (`vote_type`,`vote_user_id`),
   KEY `vote_type_4` (`vote_type`,`vote_date`,`vote_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2416118 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci PACK_KEYS=0;
+) ENGINE=MyISAM AUTO_INCREMENT=2597222 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci PACK_KEYS=0;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
