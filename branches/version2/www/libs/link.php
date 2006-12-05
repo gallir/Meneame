@@ -310,6 +310,12 @@ class Link {
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
 		echo '<h3>';
+
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
+		}
+
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		echo '</h3>';
 		// In order not to overload websnapr, display the image only if votes are enabled
@@ -413,12 +419,6 @@ class Link {
 			echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
 		}
 		echo '</li>'."\n";
-
-		// If the user is authenticated, show favorite box
-		if ($current_user->user_id > 0)  {
-			echo '<li class="favorite"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a></li>';
-		}
-
 		echo '</ul>'."\n";
 	}
 

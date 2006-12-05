@@ -649,17 +649,15 @@ td.count {
 	border-style: dotted;
 }
 
-.favorite a {
-	margin-top: -2px;
-	display: block;
-	text-align: right;
-}
-
 .news-body h3 {
 	margin: 0;
 	font-size: 140%;
 	font-weight: normal;
 	background: none;
+}
+
+.news-body h3 img {
+	margin: 0 3px 0 0;
 }
 
 .news-body p {

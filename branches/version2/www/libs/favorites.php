@@ -25,18 +25,18 @@ function favorite_add_delete($user, $link) {
 	global $globals;
 	if(favorite_exists($user, $link)) {
 		favorite_delete($user, $link);
-		return '<img src="'.$globals['base_url'].'img/common/medal_silver_add.png" alt="add" width="16" height="16" />';
+		return '<img src="'.$globals['base_url'].'img/common/icon_favourites_no.gif" alt="add" width="16" height="16" />';
 	} else {
 		favorite_insert($user, $link);
-		return '<img src="'.$globals['base_url'].'img/common/medal_gold_delete.png" alt="del" width="16" height="16" />';
+		return '<img src="'.$globals['base_url'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" />';
 	}
 }
 
 function favorite_teaser($user, $link) {
 	global $globals;
 	if (favorite_exists($user, $link)) {
-		return '<img src="'.$globals['base_url'].'img/common/medal_gold_delete.png" alt="del" width="16" height="16" />';
+		return '<img src="'.$globals['base_url'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" />';
 	} else {
-		return '<img src="'.$globals['base_url'].'img/common/medal_silver_add.png" alt="add" width="16" height="16" />';
+		return '<img src="'.$globals['base_url'].'img/common/icon_favourites_no.gif" alt="add" width="16" height="16" />';
 	}
 }
