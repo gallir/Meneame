@@ -354,12 +354,6 @@ class Link {
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '<div class="news-details">';
-
-		// If the user is authenticated, show favorite box
-		if ($current_user->user_id > 0)  {
-			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
-		}
-
 		if($this->comments > 0) {
 			$comments_mess = $this->comments . ' ' . _('comentarios');
 			$comment_class = "comments_yes";
@@ -368,6 +362,11 @@ class Link {
 			$comment_class = "comments_no";
 		}
 		echo '<a href="'.$this->get_relative_permalink().'" class="tool '.$comment_class.'">'.$comments_mess. '</a>';
+
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '<a class="tool" id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')" title="'._('favoritos').'">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
+		}
 
 		echo '<span class="tool">'._('categoría'). ': <a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name().'</a></span>';
 
