@@ -61,6 +61,9 @@ switch ($url_args[1]) {
 	case 'sneak':
 		$tab_option = 5;
 		break;
+	case 'favorites':
+		$tab_option = 6;
+		break;
 	default:
 		$tab_option = 1;	
 		$order_field = 'comment_id';
@@ -154,6 +157,22 @@ case 3:
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
 	include(mnmpath.'/backend/meneos.php');
+	echo '</div><br />';
+	echo '</fieldset>';
+	echo '</div>';
+	break;
+
+case 6:
+	// Show favorited by
+	echo '<div class="voters" id="voters">';
+
+	print_story_tabs($tab_option);
+	// AdSense
+	do_banner_story();
+
+	echo '<fieldset>';
+	echo '<div id="voters-container">';
+	include(mnmpath.'/backend/get_link_favorites.php');
 	echo '</div><br />';
 	echo '</fieldset>';
 	echo '</div>';
@@ -297,7 +316,8 @@ function print_story_tabs($option) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('quiénes votaron'). '</a></li>'."\n";
+	echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+	echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">'.FAV_YES.'</a></li>'."\n";
 	if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
 		echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 		echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";

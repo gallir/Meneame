@@ -125,7 +125,7 @@ abbr { cursor: help; }
 /* tabsub specials */
 
 .tabsub, .tabsub-shakeit {
-	height: 20px !important;
+	height: 22px !important;
 	padding: 0 0 0 17px; /* distance from tabs boxes:  bottom: underline; left: indent   */
 	margin: 0 0 20px 0; /* makes left corner */
 	background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
@@ -134,6 +134,11 @@ abbr { cursor: help; }
 
 .tabsub-shakeit { /* shakeit tabsub variant */
 	margin: 30px 20px 0 90px;
+}
+
+.tabsub img {
+	margin: 0;
+	vertical-align: bottom;
 }
 
 .tabsub li, .tabsub-shakeit li {
@@ -146,7 +151,7 @@ abbr { cursor: help; }
 .tabsub a:link, .tabsub a:visited, .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 	float: left;
 	font-size: 100%;
-	line-height: 14px !important;
+	line-height: 16px !important;
 	padding: 2px 10px 2px 10px;
 	margin-right: 4px;
 	border: 1px solid #ff6400;
