@@ -22,19 +22,21 @@ function favorite_delete($user, $link) {
 }
 
 function favorite_add_delete($user, $link) {
+	global $globals;
 	if(favorite_exists($user, $link)) {
 		favorite_delete($user, $link);
-		return _('marcar');
+		return '<img src="'.$globals['base_url'].'img/common/heart_add.png" alt="add" width="16" height="16" />';
 	} else {
 		favorite_insert($user, $link);
-		return _('quitar');
+		return '<img src="'.$globals['base_url'].'img/common/heart_delete.png" alt="del" width="16" height="16" />';
 	}
 }
 
 function favorite_teaser($user, $link) {
+	global $globals;
 	if (favorite_exists($user, $link)) {
-		return _('quitar');
+		return '<img src="'.$globals['base_url'].'img/common/heart_delete.png" alt="del" width="16" height="16" />';
 	} else {
-		return _('marcar');
+		return '<img src="'.$globals['base_url'].'img/common/heart_add.png" alt="add" width="16" height="16" />';
 	}
 }

@@ -651,12 +651,7 @@ td.count {
 
 .favorite a {
 	display: block;
-	margin: 2px 5px 0 5px;
-	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #FFCBAA;
-	color: #FF6400;
+	text-align: right;
 }
 
 .news-body h3 {
