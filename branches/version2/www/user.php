@@ -238,7 +238,7 @@ function do_favorites () {
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
-			$link->print_summary();
+			$link->print_summary('short');
 		}
 	}
 }

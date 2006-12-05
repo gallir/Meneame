@@ -499,7 +499,7 @@ td.count {
 .news-shakeit {
 	position: absolute;
 	z-index: 1;
-	top: 22px;
+	top: 24px;
 	left: 15px;
 	width: 65px;
 	text-align: center;
@@ -651,7 +651,7 @@ td.count {
 
 .favorite a {
 	display: block;
-	margin: 5px 5px 0 5px;
+	margin: 2px 5px 0 5px;
 	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
 	border-width: 1px;
 	border-style: solid;
