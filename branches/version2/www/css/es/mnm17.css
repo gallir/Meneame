@@ -525,6 +525,11 @@ td.count {
 	overflow: hidden;
 }
 
+.news-details img {
+	margin: 0 2px 0 0;
+	vertical-align: text-bottom;
+}
+
 .news-details a:link, .news-details a:visited {
 	color: #FF9400;
 }
@@ -654,11 +659,6 @@ td.count {
 	font-size: 140%;
 	font-weight: normal;
 	background: none;
-}
-
-.news-details img {
-	margin: 0 1px 0 0;
-	vertical-align: text-bottom;
 }
 
 .news-body p {
