@@ -37,7 +37,7 @@ if (!$favorites) die;
 echo '<div class="voters-list">';
 foreach ( $favorites as $vote ){
 	echo '<div class="item">';
-	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->date.'">';
+	echo '<a href="'.get_user_uri($vote->user_login, 'favorites').'" title="'.$vote->date.'">';
 	echo '<img src="'.get_avatar_url($vote->favorite_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt="'.$vote->user_login.'"/>';
 	echo $vote->user_login.'</a>';
 	echo '</div>';
