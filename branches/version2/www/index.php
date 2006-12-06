@@ -19,8 +19,9 @@ if (!empty($globals['base_search_url'])) {
 		}
 	} elseif (!empty($_REQUEST['search'])) {
 		$_REQUEST['search'] = substr(trim(strip_tags($_REQUEST['search'])), 0, 300);
-		if (!preg_match('/\/\//', $_REQUEST['search']) ) {  // Freaking Apache rewrite that translate //+ to just one /
-															// for example "http://" is converted to http:/
+		if (!preg_match('/\//', $_REQUEST['search']) ) {  // Freaking Apache rewrite that translate //+ to just one /
+														// for example "http://" is converted to http:/
+														// also it cheats the paht_info and redirections, so don't redirect
 			header('Location: http://'. get_server_name().$globals['base_url'].$globals['base_search_url'].urlencode($_REQUEST['search']));
 			die;
 		}
