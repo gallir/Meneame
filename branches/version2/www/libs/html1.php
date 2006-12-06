@@ -130,9 +130,10 @@ function do_header($title, $id='home') {
 	echo '</form>' . "\n";
 	echo '</li>' . "\n";
 	// form
-
 	echo '</ul>' . "\n";
+	echo '<span class="header-left">&nbsp;</span>' . "\n";
 	echo '</div>' . "\n";
+
 }
 
 function do_js_includes() {

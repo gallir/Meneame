@@ -437,12 +437,20 @@ td.count {
 	margin: 0 0 10px 0;
 	height: 37px;
 	color: #FFF;
-	background-color: #FF6400;
 	margin-left: 150px;
+	background: url(../../img/common/heading-background-01.png) repeat-x bottom;
+	white-space: nowrap;
+}
+
+.header-left {
+	margin: 0 0 0 0;
+	padding-top: 17px;
+	height: 20px;
+	width: 16px;
+	float: left;
 	background-image: url(../../img/common/tri01.png);
 	background-repeat: no-repeat;
 	background-position: left bottom;
-	white-space: nowrap;
 }
 
 #header ul {
@@ -460,7 +468,7 @@ td.count {
 	color: #FFF;
 	float: left;
 	font-size: 100%;
-	background: #FF6400;
+	/*background: #FF6400;*/
 	border-left: 3px solid #FF9400;
 	padding: 2px 10px 2px 10px;
 }
