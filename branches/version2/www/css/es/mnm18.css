@@ -64,6 +64,14 @@ abbr { cursor: help; }
 	background-repeat: repeat-y;
 }
 
+#contents:after { /* workaround in order to close vertical menu separation line in short story pages */
+	content: ' ';
+	display: block;
+	width: 1px;
+	height: 1px;
+	clear: left;
+}
+
 #sidebar {
 	float: left;
 	display: inline;
@@ -1826,8 +1834,4 @@ fieldset.labels div {
 
 .bookmarks-export-user-commented {
 	margin-left: 0px;
-}
-
-.story-vertical-completion { /* workaround in order to close vertical menu separation line in short story pages */
-	clear: left;
 }
