@@ -192,12 +192,15 @@ abbr { cursor: help; }
 /* credits */
 
 .credits-strip {
-/*	position: absolute;*/
+/*	position: absolute;
 	bottom: 0;
+*/
 	width: 100%;
 	border-top: 1px dotted #FF6400;
 	min-height: 55px;
 	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .credits-strip-buttons {
@@ -440,6 +443,7 @@ td.count {
 	margin-left: 150px;
 	background: url(../../img/common/heading-background-01.png) repeat-x bottom;
 	white-space: nowrap;
+	overflow: hidden;
 }
 
 .header-left {
