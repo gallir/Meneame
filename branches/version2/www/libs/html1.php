@@ -99,7 +99,7 @@ function do_header($title, $id='home') {
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
 	echo '<div id="logo">'  . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="¡cumplimos un año! (7-12-2006). ¿le has tirado de la oreja?"><img src="'.$globals['base_url'].'img/es/logo01-anys-01.gif" alt="menéame, noticias colaborativas" /></a>';
+	echo '<a href="'.$globals['base_url'].'" title="¡cumplimos un año! (7-12-2006). ¿le has tirado de la oreja?"><img src="'.$globals['base_url'].'img/es/logo01.png" alt="menéame, noticias colaborativas" /></a>';
 	echo '</div>'  . "\n";
 
 	echo '<div id="header">' . "\n";
