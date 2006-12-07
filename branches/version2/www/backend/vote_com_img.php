@@ -13,7 +13,7 @@ $textcolor = imagecolorallocate($im, 255, 100, 0);
 imagestring($im, 3, 2, 1, "$votes_comments->link_votes " . _('meneos') . ", $votes_comments->link_comments ". _('comentarios'), $textcolor);
 		  
 header("Content-type: image/png");
-header('Cache-Control: max-age=30, must-revalidate');
-header('Expires: ' . date('r', time()+30));
+header('Cache-Control: max-age=120, must-revalidate');
+header('Expires: ' . date('r', time()+120));
 imagepng($im);
 ?>
