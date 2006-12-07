@@ -96,13 +96,16 @@ function do_credits() {
 	echo '<div class="credits-strip">' . "\n";
 	echo '<span class="credits-strip-text">' . "\n";
 
-        echo '<strong>';
-        do_legal (_('información legal y condiciones de uso'));
-        echo '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;';
+	echo '<strong>';
+	do_legal (_('información legal y condiciones de uso'));
+	echo '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;';
+
 
 	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a><br />';
 	echo _('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="http://svn.meneame.net/index.cgi/branches/version2/">'._('descargar').'</a>';
 	echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a>' . "\n";
+	echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
+	echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('licencia del contenido').'</a>';
 	echo '</span>' . "\n";
 	echo '<span class="credits-strip-buttons">' . "\n";
 	echo '<a href="http://validator.w3.org/check?uri=referer"><img src="'.$globals['base_url'].'img/common/valid-xhtml10.png" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>' . "\n";
