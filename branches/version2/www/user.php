@@ -185,11 +185,11 @@ function do_profile() {
 	// Show first numbers of the address if the user has god privileges
 	if ($current_user->user_level == 'god' &&
 			$user->level != 'god' && $user->level != 'admin' ) { // tops and admins know each other for sure, keep privacy
-		$addresses = $db->get_results("select distinct INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id and vote_date > date_sub(now(), interval 30 day) order by vote_date desc limit 20");
+		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id and vote_date > date_sub(now(), interval 30 day) order by vote_date desc limit 1000");
 
 		// Try with comments
 		if (! $addresses) {
-			$addresses = $db->get_results("select distinct comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 20");
+			$addresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 1000");
 		}
 
 		// Not addresses to show
@@ -200,10 +200,15 @@ function do_profile() {
 		$clone_counter = 0;
 		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
 		echo '<ol>';
+		$prev_address = '';
 		foreach ($addresses as $dbaddress) {
 			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
-			echo '<li>'. $ip_pattern . ': <span id="clone-container-'.$clone_counter.'"><!--<a href="javascript:get_votes(\'ip_clones.php\',\''.$ip_pattern.'\',\'clone-container-'.$clone_counter.'\',0,'.$user->id.')" title="'._('clones').'">&#187;&#187;</a>--></span></li>';
-			$clone_counter++;
+			if($ip_pattern != $prev_address) {
+				echo '<li>'. $ip_pattern . ': <span id="clone-container-'.$clone_counter.'"><!--<a href="javascript:get_votes(\'ip_clones.php\',\''.$ip_pattern.'\',\'clone-container-'.$clone_counter.'\',0,'.$user->id.')" title="'._('clones').'">&#187;&#187;</a>--></span></li>';
+				$clone_counter++;
+				$prev_address = $ip_pattern;
+				if ($clone_counter >= 30) break;
+			}
 		}
 		echo '</ol>';
 		echo '</fieldset>';
