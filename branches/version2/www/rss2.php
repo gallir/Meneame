@@ -193,13 +193,10 @@ function check_redirect_to_feedburner($status) {
 			header("Location: http://feeds.feedburner.com/meneame/published");
 			exit();
 			break;
-		/****
-			FeedBurner is not enough fast updating it
 		case 'queued':
 			header("Location: http://feeds.feedburner.com/meneame/queued");
 			exit();
 			break;
-		****/
 		case 'all':
 			header("Location: http://feeds.feedburner.com/meneame/all");
 			exit();

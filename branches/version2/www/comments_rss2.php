@@ -84,9 +84,9 @@ if ($comments) {
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";
 		echo "		<guid>".$link->get_permalink()."#comment-".$comment->order."</guid>\n";
-		echo "		<description><![CDATA[<p>$content";
+		echo "		<description><![CDATA[<p><strong>#$comment->order</strong>&nbsp;&nbsp;$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$comment->username.'</strong></p>';
-		echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
+//		echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
 		echo "]]></description>\n";
 		echo "	</item>\n\n";
 	}
