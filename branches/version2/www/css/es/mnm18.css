@@ -517,7 +517,7 @@ td.count {
 }
 
 .news-body {
-	padding-left: 90px;
+	padding-left: 85px;
 	padding-top: 10px;
 }
 
@@ -525,7 +525,7 @@ td.count {
 	position: absolute;
 	z-index: 1;
 	top: 24px;
-	left: 15px;
+	left: 12px;
 	width: 65px;
 	text-align: center;
 	font-size: 85%;
@@ -546,7 +546,6 @@ td.count {
 	display: block;
 	margin: 0;
 	/*height: 3ex;*/
-	white-space: nowrap;
 	overflow: hidden;
 }
 

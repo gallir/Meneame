@@ -368,7 +368,7 @@ class Link {
 			echo '<a class="tool" id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
 		}
 
-		echo '<span class="tool">'._('categoría'). ': <a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name().'</a></span>';
+		echo '<span class="tool">'._('en'). ': <a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name().'</a></span>';
 
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
