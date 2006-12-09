@@ -22,7 +22,9 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 }
 
 if(!empty($_REQUEST['time'])) {
+	/////
 	// Prepare for times
+	/////
 	if(!($time = check_integer('time')))
 		die;
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";	
@@ -35,8 +37,21 @@ if(!empty($_REQUEST['time'])) {
 	$title = _('Menéame: más votadas en') . ' ' . txt_time_diff($from);
 	//$link_date = "modified";
 	$link_date = "";
+} elseif (!empty($_REQUEST['favorites'])) {
+	/////
+	// RSS for users' favorites
+	/////
+	$user_id = intval($_REQUEST['favorites']);
+	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id");
+	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
+	$title = _('Menéame: favoritas de') . ' ' . $user_login;
+	$globals['show_original_link'] = true;
+	$globals['redirect_feedburner'] = false;
 } else {
+	/////
 	// All the others
+	/////
 	$search = get_search_clause('boolean');
 	// The link_status to search
 	if(!empty($_REQUEST['status'])) {
@@ -144,7 +159,7 @@ if ($links) {
 		echo '<p>'.$content.'</p>';
 		echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
 		
-		if ($link->status == 'published') {
+		if ($link->status == 'published' || $globals['show_original_link']) {
 			echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."'>"._('noticia original')."</a></p>";
 		}
 		echo "]]></description>\n";
