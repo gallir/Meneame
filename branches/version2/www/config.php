@@ -37,8 +37,8 @@ $globals['base_user_url'] = 'user/';
 $globals['comment_edit_time'] = 240;
 
 $globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
-$globals['time_enabled_comments'] = 432000; // 5 days
-$globals['time_enabled_votes'] = 432000; // 5 days
+$globals['time_enabled_comments'] = 604800; // 7 days
+$globals['time_enabled_votes'] = 345600; // 4 days
 $globals['mysql_persistent'] = true;
 // Enable or disable the detecttion of real IP behind transparents proxies
 $globals['check_behind_proxy'] = false;
