@@ -35,10 +35,6 @@ BASIC FUNCTIONS
 ************************************/
 var mnmxmlhttp = Array ();
 var mnmString = Array ();
-var responsestring = Array ();
-var myxmlhttp = Array ();
-var responseString = new String;
-var xmlhttp = new myXMLHttpRequest ();
 var update_voters = false;
 var fastLoadDone= false;
 var fastLoadCounter = false;
@@ -64,93 +60,85 @@ function fastLoad(i, f) {
 
 function menealo (user, id, htmlid, md5)
 {
-  	if (xmlhttp) {
-		url = base_url + "backend/menealo.php";
-		content = "id=" + id + "&user=" + user + "&md5=" + md5;
-		mnmxmlhttp[htmlid] = new myXMLHttpRequest ();
-		if (mnmxmlhttp[htmlid]) {
+	url = base_url + "backend/menealo.php";
+	content = "id=" + id + "&user=" + user + "&md5=" + md5;
+	mnmxmlhttp[htmlid] = new myXMLHttpRequest ();
+	if (mnmxmlhttp[htmlid]) {
 		/*
 			mnmxmlhttp[htmlid].open ("POST", url, true);
 			mnmxmlhttp[htmlid].setRequestHeader ('Content-Type',
 					   'application/x-www-form-urlencoded');
 			mnmxmlhttp[htmlid].send (content);
 		*/
-			url = url + "?" + content;
-			mnmxmlhttp[htmlid].open ("GET", url, true);
-			mnmxmlhttp[htmlid].send (null);
+		url = url + "?" + content;
+		mnmxmlhttp[htmlid].open ("GET", url, true);
+		mnmxmlhttp[htmlid].send (null);
 
 
-			warnmatch = new RegExp ("^WARN:");
-			errormatch = new RegExp ("^ERROR:");
-			target = document.getElementById ('a-va-' + htmlid);
-			/* Too away the text also because it gives a weird effect */
-			disable_vote_link(id, "...", '#FFC8AF');
-			mnmxmlhttp[htmlid].onreadystatechange = function () {
-				if (mnmxmlhttp[htmlid].readyState == 4) {
-					mnmString[htmlid] = mnmxmlhttp[htmlid].responseText;
-					if (mnmString[htmlid].match (errormatch)) {
-						mnmString[htmlid] = mnmString[htmlid].substring (6, mnmString[htmlid].length);
-						// myclearTimeout(row);
-						// resetrowfull(row);
-						parseAnswer (htmlid, true, mnmString[htmlid]);
-						updateVoters(id);
+		warnmatch = new RegExp ("^WARN:");
+		errormatch = new RegExp ("^ERROR:");
+		target = document.getElementById ('a-va-' + htmlid);
+		/* Too away the text also because it gives a weird effect */
+		disable_vote_link(id, "...", '#FFC8AF');
+		mnmxmlhttp[htmlid].onreadystatechange = function () {
+			if (mnmxmlhttp[htmlid].readyState == 4) {
+				mnmString[htmlid] = mnmxmlhttp[htmlid].responseText;
+				if (mnmString[htmlid].match (errormatch)) {
+					mnmString[htmlid] = mnmString[htmlid].substring (6, mnmString[htmlid].length);
+					parseAnswer (htmlid, true, mnmString[htmlid]);
+					updateVoters(id);
+				} else {
+					// Just a warning, do nothing
+					if (mnmString[htmlid].match (warnmatch)) {
+						alert(mnmString[htmlid]);
 					} else {
-						// Just a warning, do nothing
-						if (mnmString[htmlid].match (warnmatch)) {
-							alert(mnmString[htmlid]);
-						} else {
-							parseAnswer (htmlid, false, mnmString[htmlid]);
-							updateVoters(id);
-						}
+						parseAnswer (htmlid, false, mnmString[htmlid]);
+						updateVoters(id);
 					}
 				}
 			}
-		} else {
-			alert('Couldn\'t create XmlHttpRequest');
 		}
+	} else {
+		alert('Couldn\'t create XmlHttpRequest');
 	}
 }
 
 function menealo_comment (user, id, value)
 {
-  	if (xmlhttp) {
-		url = base_url + "backend/menealo_comment.php";
-		content = "id=" + id + "&user=" + user + "&value=" + value;
-		myid = 'comment-'+id;
-		mnmxmlhttp[myid] = new myXMLHttpRequest ();
-		if (mnmxmlhttp[myid]) {
-			url = url + "?" + content;
-			mnmxmlhttp[myid].open ("GET", url, true);
-			mnmxmlhttp[myid].send (null);
-
-
-			warnmatch = new RegExp ("^WARN:");
-			errormatch = new RegExp ("^ERROR:");
-			mnmxmlhttp[myid].onreadystatechange = function () {
-				if (mnmxmlhttp[myid].readyState == 4) {
-					mnmString[myid] = mnmxmlhttp[myid].responseText;
-					if (mnmString[myid].match (errormatch) || mnmString[myid].match (warnmatch)) {
-						mnmString[myid] = mnmString[myid].substring (6, mnmString[myid].length);
-						alert (mnmString[myid]);
-					} else {
-						vote_karma_image = mnmString[myid].split(",");
-						votes = parseInt(vote_karma_image[0]);
-						karma = parseInt(vote_karma_image[1]);
-						image = vote_karma_image[2];
-						target1 = document.getElementById ('vc-'+id);
-						if(target1) target1.innerHTML = votes;
-						target1 = document.getElementById ('vk-'+id);
-						if(target1) target1.innerHTML = karma;
-						if (image.length > 0) {
-							target1 = document.getElementById ('c-votes-' + id);
-							if (target1) target1.innerHTML = '<img src="'+image+'"/>';
-						}
+	url = base_url + "backend/menealo_comment.php";
+	content = "id=" + id + "&user=" + user + "&value=" + value;
+	myid = 'comment-'+id;
+	mnmxmlhttp[myid] = new myXMLHttpRequest ();
+	if (mnmxmlhttp[myid]) {
+		url = url + "?" + content;
+		mnmxmlhttp[myid].open ("GET", url, true);
+		mnmxmlhttp[myid].send (null);
+		warnmatch = new RegExp ("^WARN:");
+		errormatch = new RegExp ("^ERROR:");
+		mnmxmlhttp[myid].onreadystatechange = function () {
+			if (mnmxmlhttp[myid].readyState == 4) {
+				mnmString[myid] = mnmxmlhttp[myid].responseText;
+				if (mnmString[myid].match (errormatch) || mnmString[myid].match (warnmatch)) {
+					mnmString[myid] = mnmString[myid].substring (6, mnmString[myid].length);
+					alert (mnmString[myid]);
+				} else {
+					vote_karma_image = mnmString[myid].split(",");
+					votes = parseInt(vote_karma_image[0]);
+					karma = parseInt(vote_karma_image[1]);
+					image = vote_karma_image[2];
+					target1 = document.getElementById ('vc-'+id);
+					if(target1) target1.innerHTML = votes;
+					target1 = document.getElementById ('vk-'+id);
+					if(target1) target1.innerHTML = karma;
+					if (image.length > 0) {
+						target1 = document.getElementById ('c-votes-' + id);
+						if (target1) target1.innerHTML = '<img src="'+image+'"/>';
 					}
 				}
 			}
-		} else {
-			alert('Couldn\'t create XmlHttpRequest');
 		}
+	} else {
+		alert('Couldn\'t create XmlHttpRequest');
 	}
 }
 
@@ -226,7 +214,7 @@ function checkfield (type, form, field)
 	checkitxmlhttp.open ("GET", url, true);
 	checkitxmlhttp.onreadystatechange = function () {
 		if (checkitxmlhttp.readyState == 4) {
-		responsestring = checkitxmlhttp.responseText;
+			responsestring = checkitxmlhttp.responseText;
 			if (responsestring == 'OK') {
 				document.getElementById (type+'checkitvalue').innerHTML = '<span style="color:black">"' + field.value + 
 						'": ' + responsestring + '</span>';
@@ -261,11 +249,12 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 	}
 	content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
 	url=base_url + "backend/problem.php?" + content;
-	xmlhttp.open("GET",url,true);
-	xmlhttp.onreadystatechange=function() {
-		if (xmlhttp.readyState==4) {
+	var myxmlhttp = new myXMLHttpRequest ();
+	myxmlhttp.open("GET",url,true);
+	myxmlhttp.onreadystatechange=function() {
+		if (myxmlhttp.readyState==4) {
 			errormatch = new RegExp ("^ERROR:");
-			response = xmlhttp.responseText;
+			response = myxmlhttp.responseText;
 			if (response.match(errormatch)) {
 				response = response.substring (6, response.length);
 				parseAnswer(id, true, response);
@@ -275,7 +264,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 			}
 		}
   	}
-	xmlhttp.send(null);
+	myxmlhttp.send(null);
 	return false;
 }
 
@@ -289,16 +278,17 @@ function updateVoters(id) {
 // Generalized for other uses (gallir at gmail dot com)
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
-	xmlhttp.open('get', url, true);
-	xmlhttp.onreadystatechange = function () {
-		if(xmlhttp.readyState == 4){
-			response = xmlhttp.responseText;
+	var myxmlhttp = new myXMLHttpRequest ();
+	myxmlhttp.open('get', url, true);
+	myxmlhttp.onreadystatechange = function () {
+		if(myxmlhttp.readyState == 4){
+			response = myxmlhttp.responseText;
 			if (response.length > 1) {
 				document.getElementById(container).innerHTML = response;
 			}
 		}
 	}
-	xmlhttp.send(null);
+	myxmlhttp.send(null);
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
