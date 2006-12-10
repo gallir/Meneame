@@ -30,6 +30,7 @@ if(!empty($_GET['id'])) {
 	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(comment_date)) FROM comments WHERE comment_link_id=$id");
 	$title = _('Menéame: comentarios') . " [$id]";
+	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['author_id'])) {
 	$id = intval($_GET['author_id']);
 	if ($if_modified > 0) 
@@ -37,6 +38,7 @@ if(!empty($_GET['id'])) {
 	$sql = "SELECT comment_id FROM comments, links  WHERE link_author=$id and comment_link_id=link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(comment_date)) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ");
 	$title = _('Menéame: comentarios mis noticias');
+	$globals['redirect_feedburner'] = false;
 } else {
 	$id = 0;
 	if ($if_modified > 0) 
@@ -50,11 +52,13 @@ if(!empty($_GET['id'])) {
 		this function is to redirect to feed burner
 		comment it out
 		You have been warned 
+	***/
 
 	if (!$search && empty($_REQUEST['category'])) {
-		check_redirect_to_feedburner($status);
+		check_redirect_to_feedburner();
 	}
 	
+	/****
 	END WARNING ******/
 
 if ($last_modified <= $if_modified) {
@@ -119,28 +123,12 @@ function do_footer() {
 	echo "</channel>\n</rss>\n";
 }
 
-function check_redirect_to_feedburner($status) {
+function check_redirect_to_feedburner() {
 	global $globals; 
 
 	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) return;
 
-	switch ($status) {
-		/****
-		case 'published':
-			header("Location: http://feeds.feedburner.com/meneame/published");
-			exit();
-			break;
-			FeedBurner is not enough fast updating it
-		case 'queued':
-			header("Location: http://feeds.feedburner.com/meneame/queued");
-			exit();
-			break;
-		case 'all':
-			header("Location: http://feeds.feedburner.com/meneame/all");
-			exit();
-			break;
-		****/
-	}
-	
+	header("Location: http://feeds.feedburner.com/meneame/comments");
+	exit();
 }
 ?>
