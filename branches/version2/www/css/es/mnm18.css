@@ -8,7 +8,6 @@
 	under the Affero GPL License (http://meneame.net/COPYING) unless
 	stated otherwise in individual files.
 ***/
-
 /* main */
 
 body {
@@ -27,9 +26,6 @@ body, td, th, h3 { /* browser differences workaround  */
 	margin: 0 auto;
 	min-width: 750px;
 	position: relative;
-/* footer workaround 
-	min-height: 100%;
-*/
 }
 
 /* footer workaround */
@@ -58,7 +54,6 @@ abbr { cursor: help; }
 #contents {
 	margin: 25px 20px 0 15em;
 	padding: 0 0 55px 0;
-	/*border-left: 1px solid #FF6400;*/
 	background-image: url(../../img/common/pixel-ff6400.png);
 	background-position: top left;
 	background-repeat: repeat-y;
@@ -81,15 +76,14 @@ abbr { cursor: help; }
 }
 
 abbr { cursor: help; }
-.tt { cursor: pointer; }
 
 .tt {
+	cursor: pointer;
 	text-decoration: underline;
 	color: #C85000;
 }
 
 /* tabs */
-
 .tabmain {
 	height: 28px !important;
 	padding: 0 0 0 25px; /* distance from tabs boxes:  bottom: underline; left: indent   */
@@ -192,9 +186,6 @@ abbr { cursor: help; }
 /* credits */
 
 .credits-strip {
-/*	position: absolute;
-	bottom: 0;
-*/
 	width: 100%;
 	border-top: 1px dotted #FF6400;
 	min-height: 55px;
@@ -354,7 +345,6 @@ td.count {
 	text-align: right;
 }
 
-/* gallir: agregado */
 .warn {
 	position: relative;
 	background: #FFFFF0 url(../../img/common/error_s.png) 5px 50% no-repeat;
@@ -433,14 +423,11 @@ td.count {
 	padding: 5px 0 5px 25px;
 }
 
-/* header */
-
 #header {
 	padding: 0px;
-	margin: 0 0 10px 0;
+	margin: 0 0 10px 150px;
 	height: 37px;
 	color: #FFF;
-	margin-left: 150px;
 	background: url(../../img/common/heading-background-01.png) repeat-x bottom;
 	white-space: nowrap;
 	overflow: hidden;
@@ -472,13 +459,12 @@ td.count {
 	color: #FFF;
 	float: left;
 	font-size: 100%;
-	/*background: #FF6400;*/
 	border-left: 3px solid #FF9400;
 	padding: 2px 10px 2px 10px;
 }
 
 #header form {
-	margin: 0px;
+	margin: 0;
 	border-left: 0px solid #FF9400;
 	padding: 2px 10px 0 0px;
 }
@@ -490,8 +476,7 @@ td.count {
 	padding: 0 3px 0 0;
 	background: #FF9400;
 	border: 1px solid #FFF;
-	margin: 0;
-	margin-top: -1px;
+	margin: -1px 0 0 0;
 }
 
 #header form input:hover {
@@ -545,7 +530,6 @@ td.count {
 	color: #FF6400;
 	display: block;
 	margin: 0;
-	/*height: 3ex;*/
 	overflow: hidden;
 }
 
@@ -557,11 +541,6 @@ td.count {
 .news-details a:link, .news-details a:visited {
 	color: #FF9400;
 }
-/*
-* html .news-details {
-	padding-right: 136px;
-}
-*/
 
 .news-details select {
 	background: #FFF;
@@ -590,9 +569,6 @@ td.count {
 }
 
 /* Counter box */
-
-/* common */
-
 .mnm-published strong, .mnm-queued strong, .mnm-discarded strong {
 	font-size: 190%;
 	font-weight: normal;
@@ -611,7 +587,6 @@ td.count {
 	color: #03A;
 }
 
-/* published */
 .mnm-published a {
 	background: #FF6400;
 	color: #FFF;
@@ -624,7 +599,6 @@ td.count {
 	background-position: top left;
 }
 
-/* queued */
 .mnm-queued a {
 	background: #FFF;
 	color: #FF6400;
@@ -638,7 +612,6 @@ td.count {
 	border: 1px solid #FF6400;
 }
 
-/* discarded */
 .mnm-discarded a {
 	background: #D9AA95;
 	color: #FFF;
@@ -654,16 +627,12 @@ td.count {
 
 /* vote box */
 .menealo {
-	/*background: #FFC8AF 0 0;*/
 	background-color: #fff;
 }
 
-
 .menealo a {
 	background: url(../../img/common/menealo-background.png) bottom left repeat-x;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #FFCBAA;
+	border: 1px solid #FFCBAA;
 }
 
 .menealo a, .menealo span {
@@ -673,9 +642,7 @@ td.count {
 }
 
 .menealo span {
-	border-width: 1px;
-	border-color: #FF6400;
-	border-style: dotted;
+	border: 1px dotted #FF6400;
 }
 
 .news-body h3 {
@@ -721,20 +688,14 @@ td.count {
 }
 
 /* side menu */
-/* menu elements */
-
-/* general attributes */
-
 #sidebar ul {
-	margin-left: 0; /* Freaking IE bug */
+	margin-left: 0; /* IE bug */
 }
 
 .mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-trackback li  {
 	margin: 0;
 	padding: 0;
 }
-
-/* faq entry is different */
 
 .mnu-faq {
 	border: none;
@@ -758,7 +719,6 @@ All boxes:
 */
 
 .mnu-submit {
-	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
 	margin: 0 0 5px 0;
 	padding: 15px 0 5px 0;
 	text-align: left;
@@ -778,7 +738,6 @@ All boxes:
 }
 
 .mnu-sneak {
-	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
 	margin: 0 0 5px 0;
 	padding: 15px 0 5px 0;
 	text-align: left;
@@ -792,7 +751,6 @@ All boxes:
 }
 
 .mnu-bugs, .mnu-menedising {
-	/* little boxes exception: padding top instead of margin top in order to avoid background cut */
 	margin: 0 0 5px 0;
 	padding: 15px 0 5px 3px;
 	text-align: left;
@@ -856,8 +814,6 @@ All boxes:
 	padding: 0 0 0 16px;
 }
 
-/* list-images for blog search engine trackbacks */
-
 .mnu-trackback-technorati a {
 	background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
 	padding: 5px 0 2px 20px;
@@ -874,8 +830,6 @@ All boxes:
 }
 
 
-/* trackbacks list indent */
-
 .mnu-trackback-list {
 	padding-left: 10px;
 	font-size: 90%;
@@ -884,10 +838,6 @@ All boxes:
 
 /* categories */
 
-/* benjami: column-list = 2 columns; column-one-list = 1 column */
-/* benjami: column-select-*: 1 column for options select */
-/* benjami, 09-2006: categories and categories css needs a _in depth_ reform */
-
 .column-list {
 	margin: 15px 0 5px 0;
 	width: 100%;
@@ -895,7 +845,7 @@ All boxes:
 	border: none;
 	border-bottom: 1px solid #FFE2C5;
 	background: url(../../img/common/mnu-cat01.png) 50% 50% no-repeat;
-	padding: 0 0 5px 0; /* list top & bottom */
+	padding: 0 0 5px 0;
 }
 
 .column-one-list, .column-one-list-short {
@@ -904,17 +854,17 @@ All boxes:
 	display: block;
 	border: none;
 	background: url(../../img/common/mnu-bkgsoft03.png) repeat-x bottom left;
-	padding: 10px 0 0 0; /* list top & bottom */
+	padding: 10px 0 0 0;
 }
 
-.column-one-list-short { /* short list (for clouds, etc. page) */
+.column-one-list-short {
 	background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 }
 
 .column-list ul, .column-one-list ul, .column-one-list-short ul {
 	list-style: none;
 	margin: 0;
-	padding: 0; /* from box border */
+	padding: 0; 
 }
 
 .column-list li {
@@ -940,20 +890,18 @@ All boxes:
 }
 
 
-/* benjami: thiscat: selected category */
 .column-one-list li.thiscat, .column-one-list-short li.thiscat {
 	font-weight: bold;
-	/*background: #FF6400;*/
 	background-image: url(../../img/common/arrow-r-01.gif); /*.gif also available for IEsucks */
 	background-repeat: no-repeat;
 	background-position: center right;
 }
 
-.column-one-list li.thiscat a:hover, .column-one-list li.thiscat a, .column-one-list-short li.thiscat a:hover, .column-one-list-short li.thiscat a { /* 1col selected item */
+.column-one-list li.thiscat a:hover, .column-one-list li.thiscat a, .column-one-list-short li.thiscat a:hover, .column-one-list-short li.thiscat a { 
 	color: #FFF;
 }
 
-.column-list li.thiscat { /* 2col selected category in bold */
+.column-list li.thiscat { 
 	font-weight: bold;
 }
 
@@ -967,8 +915,6 @@ All boxes:
 	background: none;
 }
 
-
-/* end of column-list? */
 
 /* submit form */
 
@@ -1029,7 +975,6 @@ All boxes:
 
 .comments textarea {
 	width: 100%;
-	/*height: 128px;*/
 	background: #FFE2C5;
 	border: 1px dotted #FF9400;
 	background-image: url(../../img/common/comment-input.png);
@@ -1126,7 +1071,6 @@ All boxes:
 	vertical-align: middle;
 }
 
-/* gravatar */
 .comment-info img {
 	border: none;
 	margin: 1px 0 0 4px;
@@ -1442,7 +1386,6 @@ fieldset.labels div {
 	font-size: 140%;
 }
 
-/* BANNERS */
 /* top banner */
 
 .banner-01 {
@@ -1451,41 +1394,36 @@ fieldset.labels div {
 	height: 90px;
 }
 
-.banner-01-c { /* banner centered */
+.banner-01-c { 
 	width: 728px;
 	margin: 0 auto;
 }
 
 .banner-02 {
-	/*
-	background: #FFE2C5;
-	*/
 	margin: 10px 0 10px 0;
 	padding: 0 10px 0 10px;
 }
 
-.banner-02-c { /* banner centered */
+.banner-02-c {
 	width: 120px;
-	height: 240px; /* the banner size */
+	height: 240px;
 	margin: 0 auto;
 }
 
-.banner-story { /* banner in stories */
+.banner-story {
 	width: 468px;
-	height: 60px; /* the banner size */
+	height: 60px;
 	padding-bottom: 16px;
 	margin: 0 auto;
 }
 
-.banner-story-2 { /* banner in stories */
+.banner-story-2 {
 	width: 336px;
-	height: 280px; /* the banner size */
+	height: 280px;
 	padding-top: 30px;
 	padding-bottom: 0;
 	margin: 0 auto;
 }
-
-/* sneaker */
 
 .sneaker {
 	margin: 20px 20px 60px 50px;
@@ -1571,7 +1509,6 @@ fieldset.labels div {
 	text-align: left;
 }
 
-/* gravatar */
 .sneaker-who img {
 	border: 0px solid #FFE2C5;
 	float: right;
@@ -1613,7 +1550,6 @@ fieldset.labels div {
 	background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 }
 
-/* Beldar: CSS para 'temita' meneos */
 .voters, .mini-sneaker {
 	margin: 25px 0 0 25px;
 }
@@ -1651,9 +1587,6 @@ fieldset.labels div {
 	margin-left: 4px;
 	vertical-align: bottom;
 }
-
-
-/* mini pagination */
 
 .mini-pages {
 	padding: 0;
@@ -1699,7 +1632,6 @@ fieldset.labels div {
 
 
 /* classes for bar diagrams */ 
-
 .bars {
 	margin: 25px 0 0 25px;
 	clear: left;
@@ -1713,7 +1645,6 @@ fieldset.labels div {
 	padding: 2px 2px 2px 2px;
 	float: left;
 	width: 99%;
-	/*border: 1px solid #FFE2C5;*/
 	margin: 0 0 5px 8px;
 	font-size: 80%;
 }
@@ -1746,8 +1677,6 @@ fieldset.labels div {
 	text-decoration: none;
 }
 
-/* tooltip styles */
-
 #tooltip-shadow {
 	position:absolute;
 	visibility:hidden;
@@ -1772,21 +1701,12 @@ fieldset.labels div {
 	max-height: 40ex;
 }
 
-/* websnapr */
-
 .news-websnapr {
 	border: 1px solid #FFE2C5;
 	float: right;
 	margin: 0 0 5px 5px;
 	vertical-align: bottom;
 }
-
-/* mini sneaker */
-
-/*.mini-sneaker {  ---moved to .voters---
-	margin: 25px 0 0 25px;
-	clear: left;
-}*/
 
 .mini-sneaker-item {
 	margin: 0 5px 0 5px;
