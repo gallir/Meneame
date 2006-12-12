@@ -8,6 +8,7 @@ var items = Array();
 var new_items = 0;
 var max_items = <? echo $max_items; ?>;
 var request_timer;
+var data_timer;
 var min_update = 20000;
 var next_update = 5000;
 var xmlhttp;
@@ -64,7 +65,7 @@ function is_busy() {
 }
 
 function abort_request () {
-	clearTimeout(timer);
+	clearTimeout(data_timer);
 	clearTimeout(request_timer);
 	if (is_busy()) {
 		xmlhttp.abort();
@@ -77,7 +78,7 @@ function abort_request () {
 function handle_timeout () {
 	abort_request();
 	//alert("handle_timeout");
-	timer = setTimeout('get_data()', next_update/2);
+	data_timer = setTimeout('get_data()', next_update/2);
 }
 
 function get_data() {
@@ -140,7 +141,7 @@ function received_data() {
 		total_requests = 0;
 		next_update = 100;
 	}
-	timer = setTimeout('get_data()', next_update);
+	data_timer = setTimeout('get_data()', next_update);
 }
 
 function shift_items(n) {
@@ -183,7 +184,7 @@ function send_chat(form) {
 	last_comment_sent = currentTime.getTime();
 	form.comment.value='';
 	if (do_animation && animating) {
-		timer = setTimeout('get_data()', 500)
+		data_timer = setTimeout('get_data()', 500)
 	} else {
 		get_data();
 	}
@@ -229,7 +230,7 @@ function toggle_control(what) {
 	ts-=3600;
 	set_options_cookie();
 	if (is_playing()) {
-		timer = setTimeout('get_data()', 100)
+		data_timer = setTimeout('get_data()', 100)
 		clear_items();
 	}
 	requests = 0;
@@ -326,7 +327,7 @@ function is_playing () {
 
 function do_pause() {
 	abort_request();
-	//clearTimeout(timer);
+	//clearTimeout(data_timer);
 	play = false;
 }
 
