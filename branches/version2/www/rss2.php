@@ -48,6 +48,17 @@ if(!empty($_REQUEST['time'])) {
 	$title = _('Menéame: favoritas de') . ' ' . $user_login;
 	$globals['show_original_link'] = true;
 	$globals['redirect_feedburner'] = false;
+} elseif (!empty($_REQUEST['sent_by'])) {
+	/////
+	// RSS for users' favorites
+	/////
+	$user_id = intval($_REQUEST['sent_by']);
+	$sql = "SELECT link_id FROM links WHERE link_author=$user_id  ORDER BY link_id DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id");
+	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
+	$title = _('Menéame: noticias de') . ' ' . $user_login;
+	$globals['show_original_link'] = false;
+	$globals['redirect_feedburner'] = false;
 } else {
 	/////
 	// All the others
@@ -157,7 +168,10 @@ if ($links) {
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
 		echo '<p>'.$content.'</p>';
-		echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
+
+		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
+			echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
+		}
 		
 		if ($link->status == 'published' || $globals['show_original_link']) {
 			echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."'>"._('noticia original')."</a></p>";

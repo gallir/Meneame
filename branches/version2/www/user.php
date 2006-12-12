@@ -223,7 +223,10 @@ function do_history () {
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('exportar bookmarks en formato Mozilla').'" class="bookmarks-export-user-stories"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
+		echo '<div class="bookmarks-export-user-stories">';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?sent_by='.$user->id.'" title="'._('obtener historial en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
+		echo '</div>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
