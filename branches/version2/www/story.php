@@ -223,7 +223,8 @@ case 5:
 	include(mnmpath.'/libs/link_sneak.php');
 	echo '</fieldset>';
 	echo '</div>';
-	echo '<script type="text/javascript">fastLoad("sneaker-9",start_link_sneak);</script>' . "\n";
+	echo '<script type="text/javascript">setTimeout("start_link_sneak()", 500);</script>' . "\n";
+
 	break;
 }
 // echo '<div class="story-vertical-completion">&nbsp</div>';

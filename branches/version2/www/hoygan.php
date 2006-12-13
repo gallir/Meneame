@@ -273,7 +273,7 @@ for ($i=0; $i<$max_items;$i++) {
 }
 
 echo '</div>';
-echo '<script type="text/javascript">fastLoad("sneaker-0",start_sneak);</script>' . "\n";
+echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";
 
 do_footer(false);
 ?>

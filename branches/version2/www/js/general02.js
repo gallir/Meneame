@@ -36,27 +36,6 @@ BASIC FUNCTIONS
 var mnmxmlhttp = Array ();
 var mnmString = Array ();
 var update_voters = false;
-var fastLoadDone= false;
-var fastLoadCounter = false;
-
-function fastLoad(i, f) {
-	// Security check
-	if (fastLoadDone || fastLoadCounter > 100) return;
-	if (fastLoadCounter == 0) {
-		// Initial timeout
-		fastLoadCounter++;
-		setTimeout('fastLoad(\''+i+'\','+f+')', 500);
-		return;
-	}
-	if (document.getElementById && document.getElementById(i) != null) {
-		window.status = 'FastLoad finished';
-		fastLoadDone = true;
-		f();
-	} 
-	window.status =  'Waiting for: ' + i;
-	fastLoadCounter++;
-	setTimeout('fastLoad(\''+i+'\','+f+')', 1000);
-}
 
 function menealo (user, id, htmlid, md5)
 {
@@ -249,12 +228,12 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 	}
 	content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
 	url=base_url + "backend/problem.php?" + content;
-	var myxmlhttp = new myXMLHttpRequest ();
-	myxmlhttp.open("GET",url,true);
-	myxmlhttp.onreadystatechange=function() {
-		if (myxmlhttp.readyState==4) {
+	mnmxmlhttp[id] = new myXMLHttpRequest ();
+	mnmxmlhttp[id].open("GET",url,true);
+	mnmxmlhttp[id].onreadystatechange=function() {
+		if (mnmxmlhttp[id].readyState==4) {
 			errormatch = new RegExp ("^ERROR:");
-			response = myxmlhttp.responseText;
+			response = mnmxmlhttp[id].responseText;
 			if (response.match(errormatch)) {
 				response = response.substring (6, response.length);
 				parseAnswer(id, true, response);
@@ -264,7 +243,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 			}
 		}
   	}
-	myxmlhttp.send(null);
+	mnmxmlhttp[id].send(null);
 	return false;
 }
 
