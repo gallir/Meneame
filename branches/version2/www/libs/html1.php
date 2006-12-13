@@ -301,7 +301,10 @@ function do_mnu_rss() {
 
 	if($current_user->user_id > 0) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('rss comentarios (de mis noticias)').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('rss mis conversaciones').'</a>';
+		echo '</li>' . "\n";
+		echo '<li>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('rss comentarios (mis noticias)').'</a>';
 		echo '</li>' . "\n";
 	}
 

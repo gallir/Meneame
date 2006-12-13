@@ -24,27 +24,49 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 
 
 if(!empty($_GET['id'])) {
+	//
+	// Link comments
+	//
 	$id = intval($_GET['id']);
 	if ($if_modified > 0) 
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(comment_date)) FROM comments WHERE comment_link_id=$id");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_link_id=$id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios') . " [$id]";
 	$globals['redirect_feedburner'] = false;
+} elseif(!empty($_GET['conversation_id'])) {
+	// 
+	// Comments in news where the user has commented
+	//
+	$id = intval($_GET['conversation_id']);
+	if ($if_modified > 0 && $if_modified > time() - 86400 ) 
+		$from_time = "FROM_UNIXTIME($if_modified)";
+	else 
+		$from_time = "date_sub(now(), interval 24 hour)";
+	$sql = "SELECT DISTINCT comments1.comment_id FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comments1.comment_date) FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT 1");
+	$title = _('Menéame: conversación');
+	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['author_id'])) {
+	//
+	// User's comments
+	//
 	$id = intval($_GET['author_id']);
 	if ($if_modified > 0) 
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments, links  WHERE link_author=$id and comment_link_id=link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(comment_date)) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios mis noticias');
 	$globals['redirect_feedburner'] = false;
 } else {
+	//
+	// All comments
+	//
 	$id = 0;
 	if ($if_modified > 0) 
 		$from_time = "WHERE comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments $from_time ORDER BY comment_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(comment_date)) FROM comments");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios');
 }
 
