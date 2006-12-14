@@ -72,17 +72,6 @@ if(!empty($_REQUEST['time'])) {
 		if($search) $status = 'all';
 		else $status = 'published';
 	}
-	/*****  WARNING
-		this function is to redirect to feed burner
-		comment it out
-		You have been warned ******/
-
-	if (!$search && empty($_REQUEST['category'])) {
-		check_redirect_to_feedburner($status);
-	}
-	
-	/*****  END WARNING ******/
-	
 	
 	switch ($status) {
 		case 'published':
@@ -95,6 +84,8 @@ if(!empty($_REQUEST['time'])) {
 			$order_field = 'link_date';
 			$link_date = "date";
 			$home = "/shakeit.php";
+			// disable feedburner for queued
+			$globals['redirect_feedburner'] = false;
 			break;
 		case 'all':
 			$title = _('Menéame: todas');
@@ -102,6 +93,17 @@ if(!empty($_REQUEST['time'])) {
 			$link_date = "date";
 			break;
 	}
+	/*****  WARNING
+		this function is to redirect to feed burner
+		comment it out
+		You have been warned ******/
+
+	if (!$search && empty($_REQUEST['category'])) {
+		check_redirect_to_feedburner($status);
+	}
+	
+	/*****  END WARNING ******/
+	
 	
 	
 	if($status == 'all') {
