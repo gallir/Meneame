@@ -8,6 +8,10 @@
 
 
 function tags_normalize_string($string) {
+	if (!preg_match('/,/', $string)) {
+	// The user didn't put any comma, we add them
+		$string = preg_replace('/ +/', ',', $string);
+	}
 	$string = preg_replace('/[\.\,] *$/', "", $string);
 	return mb_substr(mb_strtolower($string, 'UTF-8'), 0, 80);
 }
