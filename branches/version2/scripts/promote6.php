@@ -74,7 +74,7 @@ $diff = $now - $last_published;
 $d = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $d = max($min_karma_coef, $d);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "Queued: $links_queue, Estimated to publish: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
+echo "Queued: $links_queue, Published goal: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
 
 $continue = true;
 $published=0;
