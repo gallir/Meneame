@@ -47,10 +47,17 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.85;
+$min_karma_coef = 0.9;
 define(MAX, 1.20);
 define (MIN, 1.0);
+define (PUB_MIN, 30);
+define (PUB_MAX, 50);
 
+
+$links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
+
+$pub_estimation = intval(max(min($links_queue * 0.15, PUB_MAX), PUB_MIN));
+$interval = intval(86400 / $pub_estimation);
 
 $now = time();
 echo "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
@@ -64,14 +71,13 @@ if (!$last_published) $last_published = $now - 24*3600*30;
 
 $diff = $now - $last_published;
 
-$d = min(MAX, MAX - ($diff/2400)*(MAX-MIN) );
+$d = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $d = max($min_karma_coef, $d);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "Decay: $d<br>\n";
+echo "Queued: $links_queue, Estimated to publish: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
 
 $continue = true;
 $published=0;
-
 
 $past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 7 day) and link_status='published'"));
 $past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
