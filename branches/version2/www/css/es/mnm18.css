@@ -712,7 +712,7 @@ font-size: 120%;
 color: #FF6400;
 border-bottom: 1px solid #FFE2C5;
 font-weight: bolder;
-background: url(../../img/common/mnu-submit01.png) right top no-repeat;
+background: url(../../img/common/mnu-submit01.png) right bottom no-repeat;
 }
 
 .mnu-submit a, .mnu-sneak a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .mnu-trackback a {
@@ -729,7 +729,7 @@ font-size: 120%;
 color: #FF6400;
 border-bottom: 1px solid #FFE2C5;
 font-weight: bolder;
-background: url(../../img/common/elmnm-sneak01.png) right top no-repeat;
+background: url(../../img/common/elmnm-sneak01.png) right bottom no-repeat;
 }
 
 .mnu-bugs, .mnu-menedising {
