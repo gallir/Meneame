@@ -14,8 +14,18 @@ if (! defined('mnmpath')) {
 include_once(mnminclude.'comment.php');
 
 
-if (empty($_GET['id'])) die;
-$id = intval($_GET['id']);
+if (!empty($_GET['id'])) {
+	if (!empty($_GET['link'])) {
+		$link = intval($_GET['link']);
+		$order = intval($_GET['id']);
+		$id = $db->get_var("select comment_id from comments where comment_link_id=$link and comment_order=$order");
+		if (! $id > 0) die;
+	} else {
+		$id = intval($_GET['id']);
+	}
+} else {
+	die;
+}
 $comment = new Comment;
 $comment->id=$id;
 $comment->read();

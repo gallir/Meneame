@@ -99,8 +99,9 @@ class Comment {
 			$comment_meta_class = 'comment-meta';
 			$comment_class = 'comment-body';
 		}
+		$this->permalink =  $link->get_relative_permalink().'#comment-'.$this->order;
 		echo '<div class="'.$comment_class.'">';
-		echo '<a href="'.$link->get_relative_permalink().'#comment-'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
+		echo '<a href="'.$this->permalink.'"><strong>#'.$this->order.'</strong></a>';
 
 		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
@@ -203,10 +204,7 @@ class Comment {
 				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">'._('ver todo el comentario').'</a>';
 		}
 
-		if ($single_link)
-			echo $this->put_smileys($this->put_comment_tooltips(save_text_to_html($this->content))) . $expand;
-		else
-			echo $this->put_smileys(save_text_to_html($this->content)) . $expand;
+		echo $this->put_smileys($this->put_comment_tooltips(save_text_to_html($this->content), $single_link)) . $expand;
 		echo "\n";
 	}
 
@@ -218,8 +216,12 @@ class Comment {
 	}
 
 	// Add calls for tooltip javascript functions
-	function put_comment_tooltips($str) {
-		return preg_replace('/(^|[\s\(,])#([1-9][0-9]*)([\s:\.,;\)\-\?]|$)/', "$1<a class='tt' href=\"".$globals['link_permalink']."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
+	function put_comment_tooltips($str, $single_link) {
+		if ($single_link) {
+			return preg_replace('/(^|[\s\(,])#([1-9][0-9]*)([\s:\.,;\)\-\?]|$)/', "$1<a class='tt' href=\"".$this->permalink."\" onmouseover=\"return tooltip.c_show(event, 'id', '$2');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
+		} else {
+			return preg_replace('/(^|[\s\(,])#([1-9][0-9]*)([\s:\.,;\)\-\?]|$)/', "$1<a class='tt' href=\"".$this->permalink."\" onmouseover=\"return tooltip.c_show(event, 'order', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
+		}
 	}
 
 	function put_smileys($str) {
