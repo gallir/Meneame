@@ -13,6 +13,7 @@ function check_stats($string) {
 	if (preg_match('/^!stats2/', $string)) return do_stats2($string);
 	if (preg_match('/^!stats3/', $string)) return do_stats3($string);
 	if (preg_match('/^!stats1{0,1}/', $string)) return do_stats1($string);
+	if (preg_match('/^!time/', $string)) return date(" d-m-Y H:i:s"). ', ' . _('una hora menos en Canarias');
 	if (preg_match('/^!help/', $string)) return _('comandos') . ': <a href="http://meneame.wikispaces.com/Comandos">meneame.wikispaces.com/Comandos</a>';
 	if (preg_match('/^!cabal/', $string)) return do_cabal($string);
 	if (preg_match('/^!dariaunojo/', $string)) return do_ojo($string);
