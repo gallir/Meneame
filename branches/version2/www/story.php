@@ -250,7 +250,7 @@ function print_comment_form() {
 	echo '<form action="" method="post" id="thisform" style="display:inline;">'."\n";
 	echo '<fieldset><legend><span class="sign">'._('envía un comentario').'</span></legend>'."\n";
 	//echo '<p>'."\n";
-	echo _('insultos, difamaciones y frases racistas podrían causar la anulación de la cuenta.');
+	echo _('insultos, difamaciones y frases racistas causarán la anulación de la cuenta.');
 	echo '<label for="comment" accesskey="2" style="float:left">'._('texto del comentario / no se admiten etiquetas HTML').'</label>'."\n";
 	//echo '</p>';
 	echo '<div style="float: right;">';
