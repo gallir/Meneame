@@ -299,9 +299,13 @@ function insert_comment () {
 				$user->store();
 
 			}
-			$comment->store();
-			$comment->insert_vote();
-			$link->update_comments();
+			// Check the comment wasn't already stored
+			$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
+			if (!$already_stored) {
+				$comment->store();
+				$comment->insert_vote();
+				$link->update_comments();
+			}
 		}
 		header('Location: '.$link->get_permalink());
 		die;
