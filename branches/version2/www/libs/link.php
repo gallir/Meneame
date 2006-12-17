@@ -152,8 +152,8 @@ class Link {
 		}  elseif (preg_match('/(http:\/\/[^\s]+\/trackback\/*)/i', $this->html, $matches)) {
 			$this->trackback=trim($matches[0]);
 		}  
+		$this->trackback = clean_input_url($this->trackback);
 		return true;
-		
 	}
 
 	function create_blog_entry() {

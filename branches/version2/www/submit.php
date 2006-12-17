@@ -148,7 +148,7 @@ function do_submit1() {
 		return;
 	}
 
-	$trackback=$linkres->trackback;
+	$trackback=htmlspecialchars($linkres->trackback);
 	$linkres->randkey = intval($_POST['randkey']);
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
