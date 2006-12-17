@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.24a-Debian_9-log
+-- Server version	5.0.30-Debian_1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -89,10 +89,10 @@ CREATE TABLE `comments` (
   `comment_karma` smallint(6) NOT NULL default '0',
   `comment_content` text collate utf8_spanish_ci NOT NULL,
   PRIMARY KEY  (`comment_id`),
-  UNIQUE KEY `comments_randkey` (`comment_randkey`,`comment_link_id`,`comment_user_id`),
   KEY `comment_link_id_2` (`comment_link_id`,`comment_date`),
   KEY `comment_date` (`comment_date`),
-  KEY `comment_user_id` (`comment_user_id`,`comment_date`)
+  KEY `comment_user_id` (`comment_user_id`,`comment_date`),
+  KEY `comment_link_id` (`comment_link_id`,`comment_order`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -294,3 +294,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2006-12-17 11:57:28
