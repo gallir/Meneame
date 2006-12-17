@@ -55,6 +55,7 @@ define (PUB_MAX, 50);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
+$links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
 $pub_estimation = intval(max(min($links_queue * 0.15, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
@@ -74,7 +75,7 @@ $diff = $now - $last_published;
 $d = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $d = max($min_karma_coef, $d);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "Queued: $links_queue, Published goal: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
+echo "24hs queue: $links_queue/$links_queue_all, Published goal: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
 
 $continue = true;
 $published=0;
@@ -176,7 +177,7 @@ if ($links) {
 			
 		if ($link->votes >= $min_votes && $dblink->karma >= $min_karma && $published < $max_to_publish) {
 			$published++;
-			$link->karma = $dblink->karma;
+			$link->karma = round($dblink->karma);
 			$link->status = 'published';
 			$link->published_date=time();
 			$link->store_basic();
