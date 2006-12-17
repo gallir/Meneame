@@ -66,7 +66,7 @@ switch ($url_args[1]) {
 		break;
 	default:
 		$tab_option = 1;	
-		$order_field = 'comment_id';
+		$order_field = 'comment_order';
 }
 
 // Set globals
