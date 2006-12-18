@@ -62,9 +62,9 @@ if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/'
 if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	header('Content-Type: text/xml; charset=UTF-8');
 
-	$title     = clean_text($_POST['title']);
-	$excerpt   = clean_text($_POST['excerpt']);
-	$blog_name = clean_text($_POST['blog_name']);
+	$title     = clean_text($title);
+	$excerpt   = clean_text($excerpt);
+	$blog_name = clean_text($blog_name);
 	$title = (strlen($title) > 150) ? substr($title, 0, 150) . '...' : $title;
 	$excerpt = (strlen($excerpt) > 200) ? substr($excerpt, 0, 200) . '...' : $excerpt;
 
