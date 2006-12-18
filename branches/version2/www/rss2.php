@@ -130,13 +130,6 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id $from_where $order_by LIMIT $rows";
 }
 
-if ($last_modified <= $if_modified) {
-	header('HTTP/1.1 304 Not Modified');
-	exit();
-}
-
-
-
 do_header($title);
 
 $link = new Link;
@@ -190,7 +183,18 @@ if ($links) {
 do_footer();
 
 function do_header($title) {
-	global $last_modified, $dblang, $home, $globals;
+	global $if_modified, $last_modified, $dblang, $home, $globals;
+
+	if (!$last_modified > 0) {
+		if ($if_modified > 0)
+			$last_modified = $if_modified;
+		else
+			$last_modified = time();
+	}
+	if ($last_modified <= $if_modified) {
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	}
 
 	header('Last-Modified: ' .  gmdate('D, d M Y H:i:s', $last_modified) . ' GMT');
 	header('Content-type: text/xml; charset=UTF-8', true);
