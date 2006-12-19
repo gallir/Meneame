@@ -241,10 +241,11 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
+		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->username=$link->user_login;
+			$this->user_level=$link->user_level;
 			$this->user_karma=$link->user_karma;
 			$this->user_adcode=$link->user_adcode;
 			$this->avatar=$link->user_avatar;
