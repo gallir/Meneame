@@ -469,8 +469,9 @@ width: 120px;
 font-size: 100%;
 color: #FF6400;
 padding: 0 3px 0 3px;
-/*background: #FF9400;*/
-background: url(../../img/common/search-bckg-01.png) repeat-x;
+background-color: #ffd6bb; /* konqui */
+background-image: url(../../img/common/search-bckg-01.png);
+background-position: bottom left repeat-x;
 border: 1px solid #FFF;
 margin: -1px 0 0 0;
 }
