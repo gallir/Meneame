@@ -467,17 +467,17 @@ padding: 2px 10px 0 0px;
 #header form input {
 width: 120px;
 font-size: 100%;
-color: #FFF;
-padding: 0 3px 0 0;
-background: #FF9400;
+color: #FF6400;
+padding: 0 3px 0 3px;
+/*background: #FF9400;*/
+background: url(../../img/common/search-bckg-01.png) repeat-x;
 border: 1px solid #FFF;
 margin: -1px 0 0 0;
 }
 
 #header form input:hover {
 background: #FFF;
-color: #FF9400;
-border: 1px solid #FF9400;
+color: #FF6400;
 }
 
 #header label.inside {
