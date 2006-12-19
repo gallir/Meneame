@@ -47,7 +47,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.9;
+$min_karma_coef = 0.85;
 define(MAX, 1.20);
 define (MIN, 1.0);
 define (PUB_MIN, 30);
@@ -72,10 +72,10 @@ if (!$last_published) $last_published = $now - 24*3600*30;
 
 $diff = $now - $last_published;
 
-$d = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
-$d = max($min_karma_coef, $d);
+$decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
+$decay = max($min_karma_coef, $decay);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "24hs queue: $links_queue/$links_queue_all, Published goal: $pub_estimation, Interval: $interval secs, Decay: $d<br>\n";
+echo "24hs queue: $links_queue/$links_queue_all, Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
 
 $continue = true;
 $published=0;
@@ -87,9 +87,9 @@ $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, 
 
 echo "Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
 //////////////
-$min_karma = round(max($past_karma * $d, 20));
+$min_karma = round(max($past_karma * $decay, 20));
 
-if ($d >= 1) $max_to_publish = 3;
+if ($decay >= 1) $max_to_publish = 3;
 else $max_to_publish = 1;
 
 $min_votes = 5;
@@ -97,7 +97,7 @@ $min_votes = 5;
 
 echo "Current MIN karma: <b>$min_karma</b>    MIN votes: $min_votes<br></p>\n";
 $limit_karma = round(min($past_karma,$min_karma) * 0.70);
-$where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $limit_karma/2)) and user_id = link_author and user_level != 'disabled'";
+$where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $limit_karma/2)) and user_id = link_author";
 $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from links, users where $where $sort LIMIT 20");
@@ -153,7 +153,17 @@ if ($links) {
 		// Give more karma to news voted very fast during the first two hours (ish)
 		if ($now - $link->date < 7200 && $now - $link->date > 900) {
 			$new_coef = 2 - ($now-$link->date)/7200;
-		} else $new_coef = 1;
+			// if it's has bonus and therefore time-related, use the base min_karma
+			if ($decay > 1) 
+				$karma_threshold = $past_karma;
+			else
+				$karma_threshold = $min_karma;
+
+		} else {
+			// Otherwise use normal decayed min_karma
+			$karma_threshold = $min_karma;
+			$new_coef = 1;
+		}
 
 		$aged_karma =  $karma_new * $oldd * $new_coef;
 		$dblink->karma=$aged_karma;
@@ -175,7 +185,7 @@ if ($links) {
 		echo "<td class='tdata$imod'><a href='".$link->get_permalink()."'>$link->title</a>\n";
 		echo "$karma_mess</td>\n";
 			
-		if ($link->votes >= $min_votes && $dblink->karma >= $min_karma && $published < $max_to_publish) {
+		if ($link->user_level != 'disabled' && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
 			$link->status = 'published';
