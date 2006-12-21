@@ -14,13 +14,13 @@ function check_stats($string) {
 	if (preg_match('/^!stats3/', $string)) return do_stats3($string);
 	if (preg_match('/^!stats1{0,1}/', $string)) return do_stats1($string);
 	if (preg_match('/^!time/', $string)) return date(" d-m-Y H:i:s"). ', ' . _('una hora menos en Canarias');
-	if (preg_match('/^!help/', $string)) return _('comandos') . ': <a href="http://meneame.wikispaces.com/Comandos">meneame.wikispaces.com/Comandos</a>';
+	if (preg_match('/^!help/', $string)) return _('comandos') . ': http://meneame.wikispaces.com/Comandos';
 	if (preg_match('/^!cabal/', $string)) return do_cabal($string);
 	if (preg_match('/^!dariaunojo/', $string)) return do_ojo($string);
-	if (preg_match('/^!wiki/', $string)) return 'wiki: <a href="http://meneame.wikispaces.com/">meneame.wikispaces.com</a>';
-	if (preg_match('/^!promote/', $string)) return '<a href="http://' . get_server_name().$globals['base_url']. 'archives/promote.html">promote.html</a>';
+	if (preg_match('/^!wiki/', $string)) return 'wiki: http://meneame.wikispaces.com/';
+	if (preg_match('/^!promote/', $string)) return 'http://' . get_server_name().$globals['base_url']. 'archives/promote.html';
 	if (preg_match('/^!hoygan/', $string)) return '¡HOYGAN! BISITEN http://' . get_server_name().$globals['base_url']. 'hoygan.php GRASIAS DE HANTEMANO';
-	if (preg_match('/^!webstats/', $string)) return '<a href="http://' . get_server_name().'/statcounter">Statcounter</a>, <a href="http://' . get_server_name().'/webalizer/">Webalizer</a>';
+	if (preg_match('/^!webstats/', $string)) return 'http://' . get_server_name().'/statcounter, http://' . get_server_name().'/webalizer/';
 	return '';
 }
 
