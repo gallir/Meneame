@@ -218,9 +218,9 @@ class Comment {
 	// Add calls for tooltip javascript functions
 	function put_comment_tooltips($str, $single_link) {
 		if ($single_link) {
-			return preg_replace('/(^|[\s\(,])#([1-9][0-9]*)([\s:\.,;\)\-\?]|$)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
+			return preg_replace('/(^|[\s\W])#([1-9][0-9]*)([\s\W]|$)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
 		} else {
-			return preg_replace('/(^|[\s\(,])#([1-9][0-9]*)([\s:\.,;\)\-\?]|$)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'order', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
+			return preg_replace('/(^|[\s\W])#([1-9][0-9]*)([\s\W]|$)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'order', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>$3", $str);
 		}
 	}
 
