@@ -79,7 +79,7 @@ function do_banner_story() { // side banner A
 function do_legal($legal_name, $target = '') {
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<a href="http://bitassa.com/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
+		echo '<a href="libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
 	} else {
 		echo _('condiciones legales');
 	}

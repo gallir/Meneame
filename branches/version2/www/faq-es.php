@@ -87,7 +87,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 
 <li><h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
-<p>Es un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://weblog.bitassa.net">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Meneame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal de los sitios web <a href="http://meneame.net/">meneame.net</a> y <a href="http://mueveme.net/">mueveme.net</a>.
+<p>Es un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://weblog.bitassa.net">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal de los sitios web <a href="http://meneame.net/">meneame.net</a> y <a href="http://mueveme.net/">mueveme.net</a>.
 </p>
 </li>
 
