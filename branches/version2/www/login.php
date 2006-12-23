@@ -43,45 +43,6 @@ do_footer();
 function do_login() {
 	global $current_user;
 
-	/* Start Galli code
-
-	echo '<div style="width: 42%; display: block; float: left;">';
-	echo '<fieldset>';
-	//echo '<legend>';
-	//echo _('¿no conoces menéame?');
-	//echo '</legend>';
-	echo '<div  id="faq-contents" style="margin: 0 0 0 0; font-size: 90%">';
-
-	// Spanish-meneame mini-FAQ
-	// Adapt the rest to you site
-	echo '<h4>¿Qué es menéame?</h4>';
-	echo '<p>Es un web que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una noticia ésta queda en la <a href="shakeit.php"><em>cola de pendientes</em></a> hasta que reúne los votos suficientes para ser promovida a la página principal.';
-	echo 'Tienes más información en el <a href="faq-es.php">FAQ</a>, ';
-	echo 'también encontrarás más información, dudas, recomendaciones en el <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>';
-	echo '<h4>¿No eres usuario todavía?</h4>';
-	echo '<p><a href="register.php">Regístrate</a> y podrás:</p>';
-	echo '<ul>';
-	echo '<li>enviar noticias</li>';
-	echo '<li>escribir comentarios</li>';
-	echo '<li>votar noticias y comentarios</li>';
-	echo '<li>participar y mejorar tu karma y así incrementar el valor de tu voto</li>';
-	echo '<li>chatear en la <a href="sneak.php">fisgona</a> al mismo tiempo que observas todo lo que pasa... <strong>en tiempo real</strong></li>';
-	echo '</ul>';
-	///////////
-
-	echo '</div>';
-	echo '</fieldset>'. "\n";
-	echo '</div>';
-
-
-
-	echo '<div style="width: 55%; display: block; float: right;">';
-	echo '<fieldset><legend>';
-	echo _('login');
-	echo '</legend>';
-	*/
-	//End Galli code 
-	
 	// Start posavasos & ashacz code
 	
 	echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
@@ -121,7 +82,7 @@ function do_login() {
 	
 	
 	if($_POST["processlogin"] == 1) {
-		$username = trim($_POST['username']);
+		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
 		if($current_user->Authenticate($username, $password, $persistent) == false) {
@@ -139,7 +100,7 @@ function do_login() {
 	echo '<fieldset>'."\n";
 	echo '<legend><span class="sign">login</span></legend>'."\n";
 	echo '<p class="l-top"><label for="name">'._('usuario').':</label><br />'."\n";
-	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.$username.'" /></p>'."\n";
+	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.htmlentities($username).'" /></p>'."\n";
 	echo '<p class="l-mid"><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p class="l-mid"><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
