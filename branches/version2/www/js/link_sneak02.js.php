@@ -128,6 +128,7 @@ function received_data() {
 		next_update = 100;
 	}
 	timer = setTimeout('get_data()', next_update);
+	reportAjaxStats('/mini_sneaker_request');
 }
 
 function shift_items(n) {

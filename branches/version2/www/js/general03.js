@@ -75,6 +75,7 @@ function menealo (user, id, htmlid, md5)
 						updateVoters(id);
 					}
 				}
+				reportAjaxStats('/vote');
 			}
 		}
 	} else {
@@ -114,6 +115,7 @@ function menealo_comment (user, id, value)
 						if (target1) target1.innerHTML = '<img src="'+image+'"/>';
 					}
 				}
+				reportAjaxStats('/comment_vote');
 			}
 		}
 	} else {
@@ -203,6 +205,7 @@ function checkfield (type, form, field)
 				responsestring + '</span>';
 				form.submit.disabled = 'disabled';
 			}
+			reportAjaxStats('/check_field');
 		}
 	}
   //  xmlhttp.setRequestHeader('Accept','message/x-formresult');
@@ -241,6 +244,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 				parseAnswer(id, false, response);
 				updateVoters(id);
 			}
+			reportAjaxStats('/problem');
 		}
   	}
 	mnmxmlhttp[id].send(null);
@@ -265,6 +269,7 @@ function get_votes(program,type,container,page,id) {
 			if (response.length > 1) {
 				document.getElementById(container).innerHTML = response;
 			}
+			reportAjaxStats('/get_html');
 		}
 	}
 	myxmlhttp.send(null);
@@ -487,6 +492,7 @@ tooltip.ajax_request = function(script, id, maxcache) {
 				//tooltip.cache.set(script+id, response, {'ttl':'60000'});
 				tooltip.setText(response);
 			}
+			reportAjaxStats('/tooltip');
 		}
 	}
 	myxmlhttp.send(null);
@@ -540,3 +546,12 @@ function wrapText(obj, beginTag, endTag)
 	else
 		obj.value += text;
 };
+
+// This function report the ajax request to stats trackers
+// Only known how to do it with urchin/Google Analytics
+// See http://www.google.com/support/analytics/bin/answer.py?answer=33985&topic=7292
+function reportAjaxStats(page) {
+	if (window.urchinTracker) {
+		urchinTracker(page); 
+	}
+}
