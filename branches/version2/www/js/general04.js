@@ -552,6 +552,6 @@ function wrapText(obj, beginTag, endTag)
 // See http://www.google.com/support/analytics/bin/answer.py?answer=33985&topic=7292
 function reportAjaxStats(page) {
 	if (window.urchinTracker) {
-		urchinTracker(page); 
+		urchinTracker(page+'.ajax'); 
 	}
 }
