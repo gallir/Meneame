@@ -113,7 +113,7 @@ function do_top($string) {
 function do_cabal($string) {
 	require_once('../libs/cabal.php');
 	$i = rand(0, count($cabal_messages) -1);
-	$comment = '<b>'. _('el cabal dice'). '</b>: <i>' . text_to_html($cabal_messages[$i]) . '</i>';
+	$comment = '<b>'. _('el cabal dice'). '</b>: <i>' . $cabal_messages[$i] . '</i>';
 	return $comment;
 }
 
