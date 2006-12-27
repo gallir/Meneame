@@ -465,7 +465,8 @@ function do_pages($total, $page_size=25, $margin = true) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			//echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.rand(0,$i*3).'</a>';
 		}
 	}
 	if($total_pages>$end) {
