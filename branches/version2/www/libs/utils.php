@@ -18,7 +18,8 @@ if ($globals['check_behind_proxy']) {
 // Warn, we shoud printf "%u" because PHP on 32 bits systems fails with high unsigned numbers
 $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 
-$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('provocación'), -8 => _('errónea') );
+//$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('provocación'), -8 => _('errónea') );
+$globals['negative_votes_values'] = Array ( -1 => _('chévere'), -2 => _('botijo'), -3 => _('tomate'), -4 => _('petarda'), -5 => _('empanadilla'), -6 => _('casposa'), -7 => _('pr0n'), -8 => _('pedorra') );
 
 mb_internal_encoding('UTF-8');
 
