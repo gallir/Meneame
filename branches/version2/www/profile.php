@@ -74,7 +74,7 @@ do_footer();
 
 
 function show_profile() {
-	global $user, $admin_mode, $user_levels, $globals;
+	global $user, $admin_mode, $user_levels, $globals, $site_key;
 
 
 	save_profile();
@@ -90,6 +90,7 @@ function show_profile() {
 	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<input type="hidden" name="process" value="1" />';
 	echo '<input type="hidden" name="user_id" value="'.$user->id.'" />';
+	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.$globals['user_ip']) .'" />';
 	if ($admin_mode)
 		echo '<input type="hidden" name="login" value="'.$user->username.'" />';
 
@@ -174,12 +175,17 @@ function show_profile() {
 
 
 function save_profile() {
-	global $db, $user, $current_user, $globals, $admin_mode;
+	global $db, $user, $current_user, $globals, $admin_mode, $site_key;
 	$errors = 0; // benjami: control added (2005-12-22)
 	$pass_changed=false;
 	
 	if(!isset($_POST['save_profile']) || !isset($_POST['process']) || 
 		($_POST['user_id'] != $current_user->user_id && !$admin_mode) ) return;
+		
+	if ( empty($_POST['form_hash']) || $_POST['form_hash'] != md5($site_key.$user->id.$globals['user_ip']) ) {
+		echo '<p class="form-error">'._('Falta la clave de control').'</p>';
+		$errors++;
+	}
 
 	if(!empty($_POST['username']) && trim($_POST['username']) != $user->username) {
 		if (strlen(trim($_POST['username']))<3) {
@@ -229,7 +235,7 @@ function save_profile() {
 		$user->adcode = $_POST['adcode'];
 	}
 
-	$user->names=trim($_POST['names']);
+	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
 		if($_POST['password'] !== $_POST['password2']) {
 			echo '<p class="form-error">'._('Las claves no son iguales, no se ha modificado').'</p>';
