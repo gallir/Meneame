@@ -278,7 +278,7 @@ function insert_comment () {
 			intval($_POST['user_id']) == $current_user->user_id &&
 			($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author) &&
 			intval($_POST['randkey']) > 0 && 
-			strlen(trim($_POST['comment_content'])) > 2 ) {
+			mb_strlen(trim($_POST['comment_content'])) > 2 ) {
 
 		require_once(mnminclude.'comment.php');
 		$comment = new Comment;
@@ -287,7 +287,7 @@ function insert_comment () {
 		$comment->author=intval($_POST['user_id']);
 		$comment->karma=intval($current_user->user_karma);
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
-		if (strlen($comment->content) > 0 ) {
+		if (mb_strlen($comment->content) > 0 && preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			// Lower karma to comments' spammers
 			$comment_count = $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id && comment_date > date_sub(now(), interval 3 minute)");
 			if ($comment_count > 3) {
