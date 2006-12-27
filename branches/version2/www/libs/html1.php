@@ -253,7 +253,7 @@ function do_mnu_meneria () {
 }
 
 function do_mnu_tools () {
-	global $dblang;
+	global $dblang, $globals;
 	echo '<ul class="mnu-tools">' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('faq').'</a></li>' . "\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
