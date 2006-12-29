@@ -412,7 +412,7 @@ class Link {
 		if ($this->votes_enabled == false) {
 			echo '<span>'._('cerrado').'</span>';
 		} elseif( !$this->voted) {
-			echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('no toques').'</a>';
+			echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
 		} else {
 			if ($this->voted > 0) $mess = _('&#161;chachi!');
 			else $mess = ':-(';
