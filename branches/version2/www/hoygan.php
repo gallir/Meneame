@@ -20,7 +20,7 @@ do_header(_('¡HOYGAN!'));
 ?>
 <script type="text/javascript">
 //<![CDATA[
-var my_version = <? echo $sneak_version; ?>;
+var my_version = '<? echo $sneak_version; ?>';
 var ts=<? echo (time()-3600); ?>; // just due a freaking IE cache problem
 var server_name = '<? echo get_server_name(); ?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'/backend/sneaker.php';

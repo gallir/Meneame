@@ -23,7 +23,7 @@ do_header(_('fisgona'));
 ?>
 <script type="text/javascript">
 //<![CDATA[
-var my_version = <? echo $sneak_version; ?>;
+var my_version = '<? echo $sneak_version; ?>';
 var ts=<? echo (time()-3600); ?>; // just due a freaking IE cache problem
 var server_name = '<? echo get_server_name(); ?>';
 var base_url = '<? echo $globals['base_url'];?>';
