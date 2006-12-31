@@ -105,9 +105,9 @@ function do_submit1() {
 
 
 	// avoid spams, an extra security check
-	$from = time() - 7200;
-	$same_user = $db->get_var("select count(*) from links where link_date > from_unixtime($from) and link_author=$current_user->user_id");
-	$same_ip = $db->get_var("select count(*) from links, votes where link_date > from_unixtime($from) and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int = ".$globals['user_ip_int']);
+	// it counts the numbers of links in the last 2 hours
+	$same_user = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_author=$current_user->user_id and link_votes > 0");
+	$same_ip = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 2 hour) and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int = ".$globals['user_ip_int']);
 	echo "<!-- Same user: $same_user -->\n";
 	echo "<!-- Same IP: $same_ip -->\n";
 	if ($same_user > 4 || $same_ip > 4 ) {
@@ -115,6 +115,21 @@ function do_submit1() {
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
 		return;
+	}
+
+	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
+	// it takes in account the number of positive votes in the last six hours
+	if ($same_user > 1 && $current_user->user_karma < 12) {
+		$positives_received = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id and vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value > 0");
+		$negatives_received = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id and vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value < 0");
+		echo "<!-- Positives: $positives_received -->\n";
+		echo "<!-- Negatives: $negatives_received -->\n";
+		if ($negatives_received > $positives_received * 1.5) {
+			echo '<p class="error"><strong>'._('debes esperar, has tenido demasiados votos negativos en tus últimos envíos').  '</strong></p>';
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
 	}
 	
 	$url = clean_input_url($_POST['url']);
