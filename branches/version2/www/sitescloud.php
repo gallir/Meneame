@@ -13,8 +13,8 @@ include(mnminclude.'link.php');
 $globals['ads'] = true;
 
 $min_pts = 10;
-$max_pts = 32;
-$limit = 50;
+$max_pts = 44;
+$limit = 100;
 $line_height = $max_pts * 0.75;
 
 $range_names  = array(_('última semana'), _('último mes'), _('último año'), _('todas'));

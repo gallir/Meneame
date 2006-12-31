@@ -13,7 +13,7 @@ include(mnminclude.'link.php');
 $globals['ads'] = true;
 
 $min_pts = 10;
-$max_pts = 36;
+$max_pts = 44;
 $words_limit = 100;
 
 $line_height = $max_pts * 0.75;
