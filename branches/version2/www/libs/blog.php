@@ -82,7 +82,7 @@ class Blog {
 			$rss_url['path'] = preg_replace('/\/$/', '', $rss_url['path']);
 			if($url_url['host'] == $rss_url['host']) {
 				$len = min(strlen($url_url['path']), strlen($rss_url['path']));
-				for($i=0;$i<$len;$i++) {
+				for($i=1;$i<=$len;$i++) {
 					if(substr($url_url['path'], 0, $i) != substr($rss_url['path'], 0, $i) ) {
 						break;
 					}
