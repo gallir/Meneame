@@ -63,16 +63,6 @@ function do_tabs($tab_name, $tab_selected = false) {
 	}
 }
 
-function do_navbar($where) {
-/*
-	global $globals;
-	if ($where != '') $where = '&#187; '.$where; // benjami: change &#187 order
-	echo '<div id="nav-string"><div>&#187; <a href="'.$globals['base_url'].'"><strong>'.$_SERVER['SERVER_NAME'].$globals['base_url'].'</strong></a>' . $where . '</div></div>' . "\n";
-*/
-	do_banner_top();
-	echo '<div id="container">' . "\n";
-}
-
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
@@ -160,7 +150,7 @@ function do_footer($credits = true) {
 function do_sidebar() {
 	global $db, $dblang, $globals;
 	echo '<div id="sidebar">';
-	
+
 	if(!empty($globals['link_id'])) {
 		$doing_story=true;
 		do_mnu_faq('story');
@@ -182,6 +172,12 @@ function do_sidebar() {
 	do_mnu_bugs();
 	do_mnu_rss();
 	echo '</div><!--html1:do_sidebar-->' . "\n";
+}
+
+function do_rightbar() {
+	echo "<div id='rightbar'>\n";
+	echo "texto <br /> texto <br /> texto ";
+	echo "</div>";
 }
 
 // menu items

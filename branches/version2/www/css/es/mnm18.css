@@ -16,31 +16,18 @@ color: #303030;
 margin: 0;
 padding: 0;
 background: #FFF;
+min-width: 750px;
 }
 
 body, td, th, h3 { /* browser differences workaround */
 font-size: small;
 }
 
-#container {
-margin: 0 auto;
-min-width: 750px;
-position: relative;
-}
-
-/* footer workaround */
-html, body {
-margin : 0;
-padding : 0;
-height: 100%;
+* html body {
+overflow: hidden;
 }
 
 abbr { cursor: help; }
-
-#footer-floater {
-clear: both;
-height: 0px;
-}
 
 #logo {
 margin: 0;
@@ -51,26 +38,57 @@ left: 0px;
 top: 0px;
 }
 
-#contents {
-margin: 25px 20px 0 15em;
-padding: 0 0 55px 0;
-background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
+#container-wide {
+padding: 0;
+overflow: hidden;
 }
 
-#contents:after { /* workaround in order to close vertical menu separation line in short story pages */
-content: ' ';
-display: block;
-width: 1px;
-height: 1px;
-clear: left;
+#container {
+padding-left: 14em;      /* LC width */
+padding-right: 120px;	/* RC width */
+position: relative;
+overflow: hidden;
+}
+
+#contents {
+float: left;
+position: relative;
+width: 100%;
+margin-top: 10px;
+padding-bottom: 55px;
+background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
+padding-bottom: 20040px;  /* X + padding-bottom */
+margin-bottom: -20000px;  /* X */
+}
+
+
+#rightbar {
+float: left;
+position: relative;
+width: 120px;
+padding: 0 10px;
+margin-right: -140px;
+margin-top: 30px;
+padding-bottom: 20040px;  /* X + padding-bottom */
+margin-bottom: -20000px;  /* X */
+}
+
+* html #sidebar {
+left: 120px;  /* RC width */
 }
 
 #sidebar {
 float: left;
-display: inline;
+position: relative;
 width: 13em;
-margin: 28px 0 50px 15px;
-padding: 0;
+right: 14em;
+margin-top: 30px;
+padding-bottom: 50px;
+padding-left: 0.5em;
+padding-right: 0.5em;
+margin-left: -100%;
+padding-bottom: 20040px;  /* X + padding-bottom */
+margin-bottom: -20000px;  /* X */
 }
 
 abbr { cursor: help; }
@@ -183,6 +201,14 @@ border: none;
 
 /* credits */
 
+* html .credits-wrapper { /* IE6 hack for the footer */
+float: left;
+position: relative;
+width: 100%;
+padding-bottom: 10000px;
+margin-bottom: -10000px;
+}
+
 .credits-strip {
 width: 100%;
 border-top: 1px dotted #FF6400;
@@ -190,6 +216,7 @@ min-height: 55px;
 background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 white-space: nowrap;
 overflow: hidden;
+clear: both;
 }
 
 .credits-strip-buttons {
@@ -1219,7 +1246,7 @@ font-weight: normal;
 /* generic form and wide page */
 
 #genericform-contents {
-margin: 0 60px 75px 95px;
+margin: 0 10px 0 10px;
 }
 
 

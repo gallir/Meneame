@@ -15,7 +15,8 @@ force_authentication();
 
 
 do_header(_("editar noticia"), "post");
-do_navbar(_('editar noticia'));
+do_banner_top();
+echo '<div id="container">' . "\n";
 
 
 echo '<div id="genericform-contents">'."\n";

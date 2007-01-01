@@ -16,11 +16,10 @@ $globals['ads'] = true;
 $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 24 hour) and link_negatives > 0  and link_karma < 0 ORDER BY link_negatives DESC LIMIT 25 ";
 
 do_header(_('las peores :-)'));
-do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
-do_sidebar_top();
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div id="contents">';
-echo '<div class="air-with-footer">'."\n";
-echo '<h2>'._('¿noticias?').' :-) </h2>';
+echo '<div class="topheading"><h2>'._('¿noticias?').' :-) </h2></div>';
 
 $link = new Link;
 
@@ -33,18 +32,7 @@ if ($links) {
 	}
 }
 echo '</div>';
-echo '</div>';
-echo '<br clear="all">';
+do_sidebar();
+do_rightbar();
 do_footer();
-
-
-function do_sidebar_top() {
-	global $db, $dblang, $range_values, $range_names;
-
-	echo '<div id="sidebar">'."\n";
-	echo '<ul class="main-menu">'."\n";
-// 	do_standard_links();
-	echo '</ul>';
-	echo '</div>';
-}
 ?>

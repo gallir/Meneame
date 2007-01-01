@@ -11,7 +11,8 @@ include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 
 do_header(_("registro"), "post");
-do_navbar(_("registro"));
+do_banner_top();
+echo '<div id="container">' . "\n";
 
 echo '<div id="genericform-contents">'."\n";
 echo '<div id="genericform">'."\n";

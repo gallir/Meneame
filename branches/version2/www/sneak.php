@@ -205,7 +205,8 @@ function put_smiley(str) {
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
 <?
 
-do_navbar(_('fisgona'));
+do_banner_top();
+echo '<div id="container-wide">' . "\n";
 
 echo '<div class="sneaker">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';

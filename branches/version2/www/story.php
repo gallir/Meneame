@@ -94,8 +94,8 @@ if ($_POST['process']=='newcomment') {
 
 do_header($link->title, 'post');
 
-do_navbar('<a href="'.$globals['base_url'].'?category='.$link->category.'">'. $globals['category_name'] . '</a> &#187; '. $link->title);
-do_sidebar();
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div id="contents">';
 do_tabs("main","story");
 $link->print_summary();
@@ -240,6 +240,8 @@ echo '	trackback:ping="'.$link->get_trackback().'" />'."\n";
 echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
+do_sidebar();
+do_rightbar();
 do_footer();
 
 function print_comment_form() {

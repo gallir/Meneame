@@ -3,7 +3,8 @@
 	include(mnminclude.'html1.php');
 	include(mnminclude.'link.php');
 	do_header(_('FAQ'));
-	do_navbar(_('qué es menéame'));
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
 <div id="faq-contents">

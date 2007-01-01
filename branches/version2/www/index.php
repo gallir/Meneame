@@ -55,8 +55,8 @@ if($search)  {
 
 if($search) {
 	do_header(_('búsqueda de'). '"'.$search_txt.'"');
-	do_navbar(_('búsqueda'));
-	do_sidebar();
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 	echo '<div id="contents">'; // benjami: repetit, no m'agrada, arreglar despres
 	do_tabs('main','search');
 	echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
@@ -68,8 +68,8 @@ if($search) {
 	}
 } else {
 	do_header(_('últimas publicadas'));
-	do_navbar('');
-	do_sidebar();
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 	echo '<div id="contents">'."\n"; // benjami: repetit, no m'agrada, arreglar despres
 	do_tabs('main','published');
 	$order_by = " ORDER BY link_published_date DESC ";
@@ -88,5 +88,7 @@ if ($links) {
 
 do_pages($rows, $page_size);
 echo '</div> <!--index.php-->';
+do_sidebar();
+do_rightbar();
 do_footer();
 ?>

@@ -57,7 +57,8 @@ if($globals['external_user_ads'] && !empty($user->adcode)) {
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 do_header(_('perfil de usuario'). ': ' . $login);
-do_navbar('<a href="'.$globals['base_url'].'topusers.php">'._('usuarios') . '</a> &#187; ' . $user->username);
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div id="genericform-contents">'."\n";
 
 // Tabbed navigation

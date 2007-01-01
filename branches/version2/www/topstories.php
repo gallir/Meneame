@@ -35,8 +35,8 @@ if($from == 0 ) {
 }
 
 do_header(_('más votadas'));
-do_navbar(_('noticias') . ' &#187; ' . _('estadísticas'));
-do_sidebar_top();
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div id="contents">';
 do_tabs('main');
 echo '<div class="topheading"><h2>'._('noticias más votadas').'</h2></div>';
@@ -56,6 +56,8 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>';
+do_sidebar_top();
+do_rightbar();
 do_footer();
 
 

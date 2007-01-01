@@ -89,10 +89,10 @@ function do_legal($legal_name, $target = '') {
 function do_credits() {
 	global $dblang, $globals;
 
-	echo '<div id="footer-floater">&nbsp;</div>'."\n";
 	echo "</div><!--#container closed-->\n";
 
 // 	echo '<br style="clear: both;" />' . "\n";
+	echo '<div class="credits-wrapper">' . "\n";
 	echo '<div class="credits-strip">' . "\n";
 	echo '<span class="credits-strip-text">' . "\n";
 
@@ -113,6 +113,7 @@ function do_credits() {
 	echo '<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:88px;height:31px" src="'.$globals['base_url'].'img/common/vcss.png" alt="Valid CSS!" /></a>&nbsp;&nbsp;' . "\n";
 	echo '<a href="http://feedvalidator.org/check.cgi?url=http://meneame.net/rss2.php"><img src="'.$globals['base_url'].'img/common/valid-rss.png" alt="[Valid RSS]" title="Validate my RSS feed" /></a>' . "\n";
 	echo '</span>' . "\n";
+	echo '</div>' . "\n";
 	echo '</div>' . "\n";
 	echo "<!--ben-tmp-functions:do_credits-->\n";
 }

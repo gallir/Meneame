@@ -23,7 +23,8 @@ if($_GET["op"] === 'logout') {
 ob_start();
 
 do_header("login");
-do_navbar("login");
+do_banner_top();
+echo '<div id="container">' . "\n";
 
 echo '<div id="genericform-contents">'."\n";
 //echo '<div id="genericform">'."\n";

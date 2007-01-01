@@ -72,7 +72,8 @@ function print_empty_submit_form() {
 }
 
 function do_submit0() {
-	do_navbar(_('enviar noticia') . ' &#187; '. _('paso 1: la dirección'));
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	echo '<h2>'._('envío de una nueva noticia: paso 1 de 3').'</h2>';
 	echo '<div class="instruction">';
@@ -93,7 +94,8 @@ function do_submit0() {
 function do_submit1() {
 	global $db, $dblang, $current_user, $globals;
 
-	do_navbar(_('enviar noticia ') . '&#187;'. _(' paso 2: detalles'));
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 
 	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
@@ -310,7 +312,8 @@ function do_submit2() {
 	$edit = true;
 	$link_title = $linkres->title;
 	$link_content = $linkres->content;
-	do_navbar(_('enviar noticia ') . '&#187;'. _(' paso 3: control final'));
+	do_banner_top();
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 3 de 3').'</h2>'."\n";
@@ -422,7 +425,8 @@ function print_form_submit_error($mess) {
 	static $previous_error=false;
 	
 	if (!$previous_error) {
-		do_navbar(_('enviar noticia') . ' &#187; '. _('ooops!'));
+		do_banner_top();
+		echo '<div id="container">' . "\n";
 		echo '<div id="genericform-contents">'."\n"; // this div MUST be closed after function call!
 		echo '<h2>'._('ooops!').'</h2>'."\n";
 		$previous_error = true;

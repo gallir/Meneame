@@ -62,7 +62,8 @@ switch ($sortby) {
 // Sort by votes
 
 do_header(_('usuarios'));
-do_navbar('<a href="'.$globals['base_url'].'topusers.php">'._('usuarios') . '</a> &#187; ' . _('estadísticas'));
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>';
 
 echo '<table><tr>';

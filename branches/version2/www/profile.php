@@ -67,7 +67,8 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
-do_navbar('<a href="/topusers.php">'._('usuarios') . '</a> &#187; <a href="'.get_user_uri($user->username).'">' . $user->username .'</a> &#187; ' . _('editar'));
+do_banner_top();
+echo '<div id="container">' . "\n";
 show_profile();
 
 do_footer();

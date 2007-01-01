@@ -14,8 +14,8 @@ include(mnminclude.'comment.php');
 $globals['ads'] = true;
 
 do_header(_('mejores comentarios en 24 horas'));
-do_navbar(_('comentarios más valorados') . ' &#187; ' . _('estadísticas'));
-do_sidebar_top();
+do_banner_top();
+echo '<div id="container">' . "\n";
 echo '<div id="contents">';
 do_tabs('main');
 echo '<div class="topheading"><h2>'._('comentarios más valorados 24 horas').'</h2></div>';
@@ -55,7 +55,8 @@ if ($comments) {
 
 echo '</div>';
 echo '</div>';
-
+do_sidebar_top();
+do_rightbar();
 do_footer();
 
 

@@ -226,7 +226,8 @@ function put_smiley(str) {
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
 <?
 
-do_navbar(_('¡HOYGAN!'));
+do_banner_top();
+echo '<div id="container-wide">' . "\n";
 
 //echo '<div class="air-with-footer">';
 
