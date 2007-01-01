@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- by Miguel Angel Pedregosa Pareja -->
+<!-- Versión 2.0 adaptado para Meneame 2-->
+<generator xmlns="http://www.mozilla.org/microsummaries/0.1" name="Meneame Last Post">
+  <template>
+    <transform xmlns="http://www.w3.org/1999/XSL/Transform" version="1.0">
+      <output method="text"/>
+      <template match="/">
+            <text>Menéame: </text>
+			<value-of select="/html/body/div[4]/div[2]/div[@class='news-summary' and position()=1]/div[@class='news-body']/h3/a"/>
+	  </template>
+    </transform>
+  </template>
+</generator>
