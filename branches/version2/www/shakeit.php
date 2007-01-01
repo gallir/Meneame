@@ -48,7 +48,8 @@ switch ($view) {
 		// Show only discarded in four days
 		$from_where = "FROM links WHERE link_date > date_sub(now(), interval 4 day) and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
 		print_sakeit_tabs('2');
-	break;
+		$globals['tag_status'] = 'discard';
+		break;
 	case 'recommended':
 		if ($current_user->user_id > 0 && !$search) {
 			$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
@@ -59,8 +60,9 @@ switch ($view) {
 			$from_where = "FROM links, friends WHERE link_date > date_sub(now(), interval 4 day) and link_status='queued' and friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > $threshold";
 			$order_by = " ORDER BY link_date DESC ";	
 			print_sakeit_tabs('3');
-			break;
 		}
+		$globals['tag_status'] = 'queued';
+		break;
 	case 'all':
 	default:
 		if ($search)
@@ -69,7 +71,8 @@ switch ($view) {
 			// Show last in seven days
 			$from_where = "FROM links WHERE link_date > date_sub(now(), interval 7 day) and link_status='queued'";
 		print_sakeit_tabs('1');
-	break;
+		$globals['tag_status'] = 'queued';
+		break;
 }
 
 // fora en posar dropdown echo '</div>';  // Left margin

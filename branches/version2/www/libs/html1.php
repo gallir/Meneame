@@ -176,7 +176,7 @@ function do_sidebar() {
 
 function do_rightbar() {
 	echo "<div id='rightbar'>\n";
-	include_once(mnminclude.'html-utils.php');
+	require_once(mnminclude.'html-utils.php');
 	do_vertical_tags();
 	echo "</div>";
 }

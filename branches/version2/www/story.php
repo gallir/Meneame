@@ -241,6 +241,7 @@ echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
 do_sidebar();
+$globals['tag_status'] = $globals['link']->status;
 do_rightbar();
 do_footer();
 

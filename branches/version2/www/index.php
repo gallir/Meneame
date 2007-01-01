@@ -89,6 +89,7 @@ if ($links) {
 do_pages($rows, $page_size);
 echo '</div> <!--index.php-->';
 do_sidebar();
+$globals['tag_status'] = 'published';
 do_rightbar();
 do_footer();
 ?>
