@@ -23,7 +23,8 @@ class Blog {
 	}
 
 	function calculate_key() {
-		$this->key = md5($this->url.$this->rss.$this->rss2.$this->atom);
+		$normalised_url = preg_replace('/\/\/www\./', '//', $this->url);
+		$this->key = md5($normalised_url);
 	}
 
 	function has_key() {
@@ -31,7 +32,6 @@ class Blog {
 	}
 
 	function analyze_html($url, $html) {
-		$rss=false;
 		$rss_candidates = array();
 
 		if(preg_match_all('/<link[^>]+text\/xml[^>]+href=[^>]+>/i', $html, $matches)) {
@@ -41,7 +41,7 @@ class Blog {
 					$this->type='blog';
 				}
 			}
-			$rss=$this->rss=$this->shortest_text($rss_candidates);
+			$this->rss=$this->shortest_text($rss_candidates);
 		}
 
 		$rss_candidates = array();
@@ -52,7 +52,7 @@ class Blog {
 					$this->type='blog';
 				}
 			}
-			$rss=$this->atom=$this->shortest_text($rss_candidates);
+			$this->atom=$this->shortest_text($rss_candidates);
 		}
 
 		$rss_candidates = array();
@@ -64,7 +64,7 @@ class Blog {
 					$this->type='blog';
 				}
 			}
-			$rss=$this->rss2=$this->shortest_text($rss_candidates);
+			$this->rss2=$this->shortest_text($rss_candidates);
 		}
 		// Last try to find a rss
 		if($this->type!='blog' && preg_match('/<a[^>]+href="(http[^>]+\.rdf)"/i', $html, $matches2)) {
@@ -72,32 +72,58 @@ class Blog {
 				$this->type='blog';
 		}
 
+		$this->find_base_url($url);
+		$this->calculate_key();
+		return $this->type;
+	}
 
+	function find_base_url($url) {
 		// Try to find the base url
+		$feeds = array($this->rss, $this->rss2, $this->atom);
 		$path='';
 		$url_url = parse_url($url);
 		$url_url['path'] = preg_replace('/\/$/', '', $url_url['path']);
+		$host = $url_url['host'];
 		if($this->type=='blog') {
-			$rss_url = parse_url($rss);
-			$rss_url['path'] = preg_replace('/\/$/', '', $rss_url['path']);
-			if($url_url['host'] == $rss_url['host']) {
-				$len = min(strlen($url_url['path']), strlen($rss_url['path']));
-				if ($len > 0) {
-					for($i=1;$i<=$len;$i++) {
-						if(substr($url_url['path'], 0, $i) != substr($rss_url['path'], 0, $i) ) {
-							break;
+			$host_quoted = preg_quote($host);
+			foreach ($feeds as $feed) {
+				$rss_url = parse_url($feed);
+				$rss_quoted = preg_quote($rss_url['host']);
+				if ($host == $rss_url['host']) {
+					// Same hostname, keep it
+					$rss_found = true;
+					break;
+				} elseif (preg_match("/^www\.$rss_quoted$/", $host)) {
+					// hostname from url is the shortest
+					$rss_found = true;
+					break;
+				} elseif (preg_match("/^www\.$host_quoted$/", $rss_url['host']))  {
+					// RSS hostname is the shortest
+					$host = $rss_url['host'];
+					$rss_found = true;
+					break;
+				}
+			}
+			if ($rss_found) {
+				$rss_url['path'] = preg_replace('/(index\.(.){3,4})*\/+$/', '', $rss_url['path']);
+				if (preg_match('/\//', $rss_url['path'])) {  // Still has at least a /, that is a "sub blog"
+					$dir_path = dirname($rss_url['path']);
+					$len = min(strlen($url_url['path']), strlen($dir_path));
+					if ($len > 0) {
+						for($i=1;$i<=$len;$i++) {
+							if(substr($url_url['path'], 0, $i) != substr($dir_path, 0, $i) ) {
+								break;
+							}
+							$path = substr($dir_path, 0, $i);
 						}
-						$path = substr($url_url['path'], 0, $i);
 					}
 				}
 			}
 		}
-		$path = preg_replace('/\/$/', '', $path);
+		$path = preg_replace('/(index\.(.){3,4})*\/+$/', '', $path);
 		if(empty($url_url['scheme'])) $scheme="http";
 		else $scheme=$url_url['scheme'];
-		$this->url=$scheme.'://'.$url_url['host'].$path;
-		$this->calculate_key();
-		return $this->type;
+		$this->url=$scheme.'://'.$host.$path;
 	}
 
 	function shortest_text($array) {
