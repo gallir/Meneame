@@ -16,7 +16,7 @@ color: #303030;
 margin: 0;
 padding: 0;
 background: #FFF;
-min-width: 750px;
+min-width: 850px;
 }
 
 body, td, th, h3 { /* browser differences workaround */
@@ -44,8 +44,8 @@ overflow: hidden;
 }
 
 #container {
-padding-left: 14em;      /* LC width */
-padding-right: 120px;	/* RC width */
+padding-left: 13em;      /* LC width */
+padding-right: 160px;	/* RC width */
 position: relative;
 overflow: hidden;
 }
@@ -65,9 +65,9 @@ margin-bottom: -20000px;  /* X */
 #rightbar {
 float: left;
 position: relative;
-width: 120px;
+width: 140px;
 padding: 0 10px;
-margin-right: -140px;
+margin-right: -160px;
 margin-top: 30px;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
@@ -80,8 +80,8 @@ left: 120px;  /* RC width */
 #sidebar {
 float: left;
 position: relative;
-width: 13em;
-right: 14em;
+width: 12em;
+right: 13em;
 margin-top: 30px;
 padding-bottom: 50px;
 padding-left: 0.5em;
@@ -719,7 +719,6 @@ padding: 10px 4px 5px 4px;
 }
 
 .mnu-faq a {
-font-size: 100%;
 color: #FF9400;
 text-decoration: underline;
 }
@@ -762,7 +761,7 @@ background: url(../../img/common/elmnm-sneak01.png) right bottom no-repeat;
 margin: 0 0 5px 0;
 padding: 15px 0 5px 3px;
 text-align: left;
-font-size: 110%;
+font-size: 100%;
 color: #FF6400;
 background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;
 }
@@ -772,9 +771,9 @@ margin: 15px 0 5px 0;
 padding: 0 0 5px 3px;
 list-style: none;
 text-align: left;
-font-size: 110%;
+font-size: 100%;
 color: #FF6400;
-white-space: nowrap;
+/*white-space: nowrap;*/
 background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
 }
 
@@ -913,6 +912,14 @@ border: none;
 background: none;
 }
 
+
+/* Right column boxes */
+.right-box {
+width: 100%;
+padding: 5px 5px;
+text-align: center;
+background: #FFF url(../../img/common/mnu-bkgsoft03.png) bottom left repeat-x;
+}
 
 /* submit form */
 
