@@ -44,7 +44,7 @@ overflow: hidden;
 }
 
 #container {
-padding-left: 13em;      /* LC width */
+padding-left: 13.5em;      /* LC width */
 padding-right: 160px;	/* RC width */
 position: relative;
 overflow: hidden;
@@ -74,14 +74,14 @@ margin-bottom: -20000px;  /* X */
 }
 
 * html #sidebar {
-left: 120px;  /* RC width */
+left: 160px;  /* ALERT!!!!!!!!!! RC full width  for IE6*/
 }
 
 #sidebar {
 float: left;
 position: relative;
-width: 12em;
-right: 13em;
+width: 12.5em;
+right: 13.5em;
 margin-top: 30px;
 padding-bottom: 50px;
 padding-left: 0.5em;

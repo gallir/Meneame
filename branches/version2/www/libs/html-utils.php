@@ -18,7 +18,7 @@ function do_vertical_tags() {
 	$max_pts = 16;
 	$line_height = $max_pts * 0.75;
 
-	$min_date = $db->get_var("select min(link_date) from links where link_date > date_sub(now(), interval 96 hour)");
+	$min_date = $db->get_var("select min(link_date) from links where link_date > date_sub(now(), interval 72 hour)");
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 2);
 	$coef = ($max_pts - $min_pts)/($max-1);
