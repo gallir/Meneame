@@ -4,7 +4,7 @@
 	include(mnminclude.'link.php');
 	do_header(_('FAQ'));
 	do_banner_top();
-	echo '<div id="container">' . "\n";
+	echo '<div id="container-wide">' . "\n";
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
 <div id="faq-contents">

@@ -40,11 +40,18 @@ function do_tabs($tab_name, $tab_selected = false) {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
+		// Most voted
+		if ($tab_selected == 'popular') {
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('más votadas').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		} else {
+			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('más votadas').'</a></li>' . "\n";
+		}
+
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('votar pendientes').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
-			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
+			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('votar pendientes').'</a></li>' . "\n";
 		}
 
 		// story tab
@@ -89,7 +96,7 @@ function do_header($title, $id='home') {
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body-args']. ">\n";
 	echo '<div id="logo">'  . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="¡cabales fiestas y feliz año nuevo!"><img src="'.$globals['base_url'].'img/es/logo01-nadal-01.gif" alt="¡cabales fiestas y feliz año nuevo!" /></a>';
+	echo '<a href="'.$globals['base_url'].'" title="la elefanta Eli"><img src="'.$globals['base_url'].'img/es/logo01.png" alt="logo menéame" /></a>';
 	echo '</div>'  . "\n";
 
 	echo '<div id="header">' . "\n";
@@ -175,9 +182,10 @@ function do_sidebar() {
 }
 
 function do_rightbar() {
-	echo "<div id='rightbar'>\n";
 	require_once(mnminclude.'html-utils.php');
+	echo "<div id='rightbar'>\n";
 	do_vertical_tags();
+	do_last_comments();
 	echo "</div>";
 }
 

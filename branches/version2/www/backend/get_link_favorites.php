@@ -19,7 +19,6 @@ global $db, $globals;
 if (!isset($globals['link_id']) && !empty($_GET['id'])) {
 	$globals['link_id'] = intval($_GET['id']);
 } 
-
 if (! $globals['link_id'] > 0 ) die;
 
 if (!isset($_GET['p']))  {
@@ -33,7 +32,7 @@ $favorites_offset=($favorites_page-1)*$favorites_page_size;
 $favorites_users = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_link_id=".$globals['link_id']);
 
 $favorites = $db->get_results("SELECT favorite_user_id, user_avatar, user_login, date_format(favorite_date,'%d/%m %T') as date FROM favorites, users WHERE favorite_link_id=".$globals['link_id']." AND user_id = favorite_user_id LIMIT $favorites_offset,$favorites_page_size");
-if (!$favorites) die;
+if (!$favorites) return;
 echo '<div class="voters-list">';
 foreach ( $favorites as $vote ){
 	echo '<div class="item">';

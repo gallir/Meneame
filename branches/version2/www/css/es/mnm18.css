@@ -16,7 +16,7 @@ color: #303030;
 margin: 0;
 padding: 0;
 background: #FFF;
-min-width: 850px;
+min-width: 890px;
 }
 
 body, td, th, h3 { /* browser differences workaround */
@@ -41,27 +41,28 @@ overflow: hidden;
 
 /* From: http://alistapart.com/articles/holygrail */
 
-* html body {
-overflow: hidden;
-}
-
 #container {
+margin-top: 40px;
 padding-left: 13.5em;      /* LC width */
 padding-right: 160px;      /* RC width */
 position: relative;
 overflow: hidden;
+background: url(../../img/common/pixel-ff6400.png) 13.5em top repeat-y;
+padding-bottom: 50px;
 }
 
 #contents {
 float: left;
 position: relative;
 width: 100%;
-margin-top: 10px;
-background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
+margin-top: 0;
 padding-left: 0;
 padding-right: 0;
-padding-bottom: 20040px;  /* X + padding-bottom */
-margin-bottom: -20000px;  /* X */
+}
+
+/* we repeat here because IE6 dont draw the previous border */
+* html #contents {
+background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
 }
 
 #rightbar {
@@ -69,11 +70,9 @@ float: left;
 position: relative;
 width: 140px; 
 margin-right: -150px; /* RC full width */
-margin-top: 37px;
+margin-top: 27px;
 padding-left: 5px;
 padding-right: 5px;
-padding-bottom: 20040px;  /* X + padding-bottom */
-margin-bottom: -20000px;  /* X */
 }
 
 * html #sidebar {
@@ -85,13 +84,10 @@ float: left;
 position: relative;
 width: 12.5em;
 right: 13.5em;
-margin-top: 37px;
-padding-bottom: 50px;
+margin-top: 27px;
 padding-left: 0.5em;
 padding-right: 0.5em;
 margin-left: -100%;
-padding-bottom: 20040px;  /* X + padding-bottom */
-margin-bottom: -20000px;  /* X */
 }
 
 /* End holygrail */
@@ -534,7 +530,6 @@ padding-top: 10px;
 
 .news-shakeit {
 position: absolute;
-z-index: 1;
 top: 24px;
 left: 12px;
 width: 65px;
@@ -920,16 +915,26 @@ background: none;
 /* Right column boxes */
 .right-box {
 width: 100%;
+font-size: 8.5pt;
 padding: 5px;
-text-align: center;
 border-left: 1px solid #FFE2C5;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
+margin-bottom: 20px;
 }
 
-.right-box h2 {
+.right-box ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+.right-box ul li{
+margin-bottom: 5px;
+}
+
+.right-box h2, .right-box h2 a {
 margin: 0 0 10px 0;
 text-align: center;
-font-size: 120%;
+font-size: 10pt;
 color: #FF6400;
 font-weight: bolder;
 border-bottom: none;

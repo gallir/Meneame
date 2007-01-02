@@ -105,11 +105,11 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
-	// Print tabs
-	print_story_tabs($tab_option);
-
 	// AdSense
 	do_banner_story();
+
+	// Print tabs
+	print_story_tabs($tab_option);
 
 	$comments = $db->get_col("SELECT comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field");
 	if ($comments) {
@@ -150,10 +150,10 @@ case 3:
 	// Show voters
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	// AdSense
 	do_banner_story();
 
+	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
 	include(mnmpath.'/backend/meneos.php');
@@ -166,9 +166,10 @@ case 6:
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	// AdSense
 	do_banner_story();
+
+	print_story_tabs($tab_option);
 
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
@@ -181,10 +182,10 @@ case 6:
 case 4:
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	// AdSense
 	do_banner_story();
 
+	print_story_tabs($tab_option);
 	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
 
 	echo '<div id="voters-container">';
@@ -215,10 +216,10 @@ case 4:
 case 5:
 	// Micro sneaker
 	echo '<div class="mini-sneaker">';
-	print_story_tabs($tab_option);
 	// AdSense
 	do_banner_story();
 
+	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	include(mnmpath.'/libs/link_sneak.php');
 	echo '</fieldset>';
