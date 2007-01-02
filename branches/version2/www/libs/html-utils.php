@@ -18,7 +18,7 @@ function do_vertical_tags() {
 	$max_pts = 16;
 	$line_height = $max_pts * 0.75;
 
-	$min_date = $db->get_var("select min(link_date) from links where link_date > date_sub(now(), interval 48 hour)");
+	$min_date = date("Y-m-d H:00:00", time() - 172800); // 48 hours
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
@@ -30,7 +30,6 @@ function do_vertical_tags() {
 		foreach ($res as $item) {
 			$size = round($min_pts + ($item->count-1)*$coef, 1);
 			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($item->tag_words).'">'.$item->tag_words.'</a> ';
-			//echo "$item->tag_words ($item->count) ";
 		}
 		echo '</div>';
 	}

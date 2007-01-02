@@ -22,11 +22,10 @@ $offset=(get_current_page()-1)*$page_size;
 $from = intval($_GET['range']);
 if ($from >= count($range_values) || $from < 0 ) $from = 0;
 
-// we use this to allow sql caching
-$current_hour = date("Y-m-d H:00:00");
 
 if ($range_values[$from] > 0) {
-	$from_time = "date_sub('$current_hour', interval $range_values[$from] day)";
+	// we use this to allow sql caching
+	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
 	$time_link = "link_published_date > $from_time AND";
 } else {
