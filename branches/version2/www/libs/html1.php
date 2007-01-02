@@ -184,6 +184,7 @@ function do_sidebar() {
 function do_rightbar() {
 	require_once(mnminclude.'html-utils.php');
 	echo "<div id='rightbar'>\n";
+	do_banner_right();
 	do_vertical_tags();
 	do_last_comments();
 	echo "</div>";

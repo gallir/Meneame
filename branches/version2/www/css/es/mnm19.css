@@ -1408,7 +1408,7 @@ font-size: 140%;
 /* top banner */
 
 .banner-01 {
-margin: 0 0 10px 150px;
+margin: 0 0 10px 160px;
 width: 730px;
 height: 90px;
 }
@@ -1418,30 +1418,27 @@ width: 728px;
 margin: 0 auto;
 }
 
-.banner-02 {
-margin: 10px 0 10px 0;
-padding: 0 10px 0 10px;
-}
-
-.banner-02-c {
-width: 120px;
-height: 240px;
-margin: 0 auto;
-}
-
 .banner-story {
 width: 468px;
 height: 60px;
-padding-bottom: 16px;
 margin: 0 auto;
+margin-bottom: 15px;
 }
 
-.banner-story-2 {
+.banner-story-2 { /* used when coming from search */
 width: 336px;
 height: 280px;
-padding-top: 30px;
-padding-bottom: 0;
 margin: 0 auto;
+margin-bottom: 15px;
+}
+
+.banner-right {
+width: 100%;
+height: 125px;
+border-top: 1px solid #FFE2C5;
+border-left: 1px solid #FFE2C5;
+margin-bottom: 15px;
+padding-left: 5px;
 }
 
 .sneaker {

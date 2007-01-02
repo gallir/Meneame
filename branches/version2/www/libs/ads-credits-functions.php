@@ -27,6 +27,8 @@ function do_banner_top () { // top banner
 		// do_user_ad: 0 = dont show user banner, 1 = show standard, 2 = show all user ads
 		if ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
 			@include('ads/adsense-top-user01.inc');
+		} elseif ($globals['referer'] == 'search') {
+			@include('ads/adsense-top-from-search.inc');
 		} else {
 			@include('ads/adsense-top-02.inc');
 		}
@@ -40,26 +42,18 @@ function do_banner_top () { // top banner
 
 
 
-function do_banner_right_a() { // side banner A
+function do_banner_right() {
 	global $globals;
 //
 // WARNING!
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
-	if($globals['external_ads'] && $globals['ads']) {
-		echo '<li>' . "\n";
-		echo '<div class="banner-02">' . "\n";
-		echo '<div class="banner-02-c">'."\n";
-		@include('ads/adsense-right-02.inc');
-		echo '</div>' . "\n";
-		echo '</div>' . "\n";
-		echo '</li>' . "\n";
-		echo "<!--ben_tmp-functions:do_banner_right_a-->\n";
+	if($globals['external_ads'] && $globals['ads'] && $globals['referer'] == 'search') {
+			echo '<div class="banner-right">' . "\n";
+			@include('ads/adsense-right-from-search.inc');
+			echo '</div>' . "\n";
 	}
-/******
-	if($globals['ads']) @include('ads/bidvertiser-side-01.inc');
-*******/
 }
 
 function do_banner_story() { // side banner A
@@ -69,10 +63,16 @@ function do_banner_story() { // side banner A
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
-	if($current_user->user_id == 0 && $globals['external_ads'] && $globals['ads']) {
-		echo '<div class="banner-story">' . "\n";
-		@include('ads/adsense-story-01.inc');
-		echo '</div>' . "\n";
+	if($globals['external_ads'] && $globals['ads']) {
+		if ($globals['referer'] == 'search') {
+			echo '<div class="banner-story-2">' . "\n";
+			@include('ads/adsense-story-from-search.inc');
+			echo '</div>' . "\n";
+		} elseif($globals['referer'] != 'local') {
+			echo '<div class="banner-story">' . "\n";
+			@include('ads/adsense-story-01.inc');
+			echo '</div>' . "\n";
+		}
 	}
 }
 

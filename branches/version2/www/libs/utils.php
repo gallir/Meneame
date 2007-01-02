@@ -29,6 +29,20 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 	}
 }
 
+
+// Check the user's referer.
+if( !empty($_SERVER['HTTP_REFERER'])) {
+	if (preg_match('/http:\/\/'.preg_quote($_SERVER['SERVER_NAME']).'/', $_SERVER['HTTP_REFERER'])) {
+		$globals['referer'] = 'local';
+	} elseif (preg_match('/q=|search/', $_SERVER['HTTP_REFERER']) ) {
+		$globals['referer'] = 'search';
+	} else {
+		$globals['referer'] = 'remote';
+	}
+} else {
+	$globals['referer'] = 'unknown';
+}
+
 function clean_input_url($string) {
 	$string = preg_replace('/ /', '+', trim(stripslashes($string)));
 	return preg_replace('/[<>\r\n\t]/', '', $string);
