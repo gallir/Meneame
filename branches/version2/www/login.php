@@ -24,7 +24,7 @@ ob_start();
 
 do_header("login");
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="container-wide">' . "\n";
 
 echo '<div id="genericform-contents">'."\n";
 //echo '<div id="genericform">'."\n";

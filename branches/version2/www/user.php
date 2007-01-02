@@ -58,7 +58,7 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 do_header(_('perfil de usuario'). ': ' . $login);
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="container-wide">' . "\n";
 echo '<div id="genericform-contents">'."\n";
 
 // Tabbed navigation

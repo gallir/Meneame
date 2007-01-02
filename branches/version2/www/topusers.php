@@ -63,7 +63,7 @@ switch ($sortby) {
 
 do_header(_('usuarios'));
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="container-wide">' . "\n";
 echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>';
 
 echo '<table><tr>';

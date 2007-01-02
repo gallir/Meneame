@@ -76,7 +76,7 @@ if($search) {
 }
 
 $link = new Link;
-$rows = $db->get_var("SELECT count(*) $from_where $order_by");
+$rows = $db->get_var("SELECT count(*) $from_where");
 $links = $db->get_col("SELECT link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {

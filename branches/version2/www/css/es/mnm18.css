@@ -35,7 +35,7 @@ top: 0px;
 }
 
 #container-wide {
-padding: 0;
+padding: 0 15px 50px 15px;
 overflow: hidden;
 }
 
@@ -1272,7 +1272,7 @@ font-weight: normal;
 /* generic form and wide page */
 
 #genericform-contents {
-margin: 0 10px 0 10px;
+margin: 0 60px 60px 100px;
 }
 
 
@@ -1444,7 +1444,7 @@ margin: 0 auto;
 }
 
 .sneaker {
-margin: 20px 20px 60px 50px;
+margin: 20px 0 0 0;
 background: url(../../img/common/elmnm-sneak-reverse02.png) 97% 95% no-repeat;
 }
 

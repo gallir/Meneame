@@ -34,7 +34,7 @@ if($from == 0 ) {
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
 	$time_link = "link_date > $from_time AND";
 } else {
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_status = 'published' ORDER BY link_votes DESC ";
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE link_status = 'published' ORDER BY link_votes DESC ";
 	$time_link = '';
 }
 

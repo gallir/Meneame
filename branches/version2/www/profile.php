@@ -68,7 +68,7 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="container-wide">' . "\n";
 show_profile();
 
 do_footer();
