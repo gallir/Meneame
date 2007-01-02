@@ -58,6 +58,8 @@ position: relative;
 width: 100%;
 margin-top: 10px;
 background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
+padding-left: 0;
+padding-right: 0;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
@@ -65,16 +67,17 @@ margin-bottom: -20000px;  /* X */
 #rightbar {
 float: left;
 position: relative;
-width: 138px; /* was 140px but then margin is lower than page left side; is the padding-right, that doesn't works (because margin-right?) */
-margin-right: -160px; /* RC full width */
+width: 140px; 
+margin-right: -150px; /* RC full width */
 margin-top: 37px;
 padding-left: 5px;
+padding-right: 5px;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
 
 * html #sidebar {
-left: 160px;  /* ALERT!!!!!!!!!! RC full width  for IE6*/
+left: 160px;  /* ALERT!!! RC full width  for IE6, should be the same as padding-right in #container*/
 }
 
 #sidebar {
