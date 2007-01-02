@@ -21,7 +21,7 @@ function tags_insert_string($link, $lang, $string, $date = 0) {
 
 	$string = tags_normalize_string($string);
 	if ($date == 0) $date=time();
-	$words = preg_split('/[,;]+/', $string);
+	$words = preg_split('/[,]+/', $string);
 	if ($words) {
 		$db->query("delete from tags where tag_link_id = $link");
 		foreach ($words as $word) {
