@@ -322,7 +322,7 @@ class Link {
 			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
 		}
 		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
-		echo _('enviado por').' <a href="'.get_user_uri($this->username, 'history').'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
+		echo _('por').' <a href="'.get_user_uri($this->username, 'history').'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		// Print dates
 		if (time() - $this->date > 604800) { // 7 days
 			echo _('el').get_date_time($this->date);
