@@ -23,7 +23,7 @@ function do_vertical_tags() {
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
 
-	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 40");
+	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
 		echo '<div class="right-box">';
 		echo '<h2><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h2>'."\n";

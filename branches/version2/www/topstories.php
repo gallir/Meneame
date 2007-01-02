@@ -25,14 +25,10 @@ if ($from >= count($range_values) || $from < 0 ) $from = 0;
 // we use this to allow sql caching
 $current_hour = date("Y-m-d H:00:00");
 
-if($from == 0 ) {
+if ($range_values[$from] > 0) {
 	$from_time = "date_sub('$current_hour', interval $range_values[$from] day)";
-	$sql = "SELECT link_id, count(*) as votes  FROM votes, links WHERE  vote_type='links' and vote_date > $from_time AND vote_link_id=link_id AND link_status = 'published' GROUP BY vote_link_id ORDER BY votes DESC ";
-	$time_link = "link_modified > $from_time AND";
-} elseif ($range_values[$from] > 0) {
-	$from_time = "date_sub('$current_hour', interval $range_values[$from] day)";
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
-	$time_link = "link_date > $from_time AND";
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
+	$time_link = "link_published_date > $from_time AND";
 } else {
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE link_status = 'published' ORDER BY link_votes DESC ";
 	$time_link = '';
