@@ -65,9 +65,10 @@ margin-bottom: -20000px;  /* X */
 #rightbar {
 float: left;
 position: relative;
-width: 138px; /* was 140px but then margin is lower than page left side */
+width: 138px; /* was 140px but then margin is lower than page left side; is the padding-right, that doesn't works (because margin-right?) */
 margin-right: -160px; /* RC full width */
 margin-top: 37px;
+padding-left: 5px;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
@@ -917,7 +918,6 @@ background: none;
 .right-box {
 width: 100%;
 padding: 5px;
-margin: 0 5px 0 5px;
 text-align: center;
 border-left: 1px solid #FFE2C5;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
