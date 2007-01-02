@@ -928,8 +928,14 @@ list-style: none;
 padding: 0;
 margin: 0;
 }
+
+.right-box ul a {
+color: #666;
+}
+
 .right-box ul li{
-margin-bottom: 5px;
+line-height: 9pt;
+margin-bottom: 7px;
 }
 
 .right-box h2, .right-box h2 a {
