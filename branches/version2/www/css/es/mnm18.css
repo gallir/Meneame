@@ -47,7 +47,7 @@ overflow: hidden;
 
 #container {
 padding-left: 13.5em;      /* LC width */
-padding-right: 160px;	/* RC width */
+padding-right: 160px;      /* RC width */
 position: relative;
 overflow: hidden;
 }
@@ -62,14 +62,12 @@ padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
 
-
 #rightbar {
 float: left;
 position: relative;
-width: 140px;
-padding: 0 10px;
+width: 138px; /* was 140px but then margin is lower than page left side */
 margin-right: -160px; /* RC full width */
-margin-top: 30px;
+margin-top: 37px;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
@@ -83,7 +81,7 @@ float: left;
 position: relative;
 width: 12.5em;
 right: 13.5em;
-margin-top: 30px;
+margin-top: 37px;
 padding-bottom: 50px;
 padding-left: 0.5em;
 padding-right: 0.5em;
@@ -526,6 +524,7 @@ position: relative;
 
 .news-body {
 padding-left: 85px;
+padding-right: 5px;
 padding-top: 10px;
 }
 
@@ -914,13 +913,23 @@ border: none;
 background: none;
 }
 
-
 /* Right column boxes */
 .right-box {
 width: 100%;
-padding: 5px 5px;
+padding: 5px;
+margin: 0 5px 0 5px;
 text-align: center;
-/*background: #FFF url(../../img/common/mnu-bkgsoft03.png) bottom left repeat-x;*/
+border-left: 1px solid #FFE2C5;
+background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
+}
+
+.right-box h2 {
+margin: 0 0 10px 0;
+text-align: center;
+font-size: 120%;
+color: #FF6400;
+font-weight: bolder;
+border-bottom: none;
 }
 
 /* submit form */
