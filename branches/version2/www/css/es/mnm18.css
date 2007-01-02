@@ -23,10 +23,6 @@ body, td, th, h3 { /* browser differences workaround */
 font-size: small;
 }
 
-* html body {
-overflow: hidden;
-}
-
 abbr { cursor: help; }
 
 #logo {
@@ -43,6 +39,12 @@ padding: 0;
 overflow: hidden;
 }
 
+/* From: http://alistapart.com/articles/holygrail */
+
+* html body {
+overflow: hidden;
+}
+
 #container {
 padding-left: 13.5em;      /* LC width */
 padding-right: 160px;	/* RC width */
@@ -55,7 +57,6 @@ float: left;
 position: relative;
 width: 100%;
 margin-top: 10px;
-padding-bottom: 55px;
 background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
@@ -67,7 +68,7 @@ float: left;
 position: relative;
 width: 140px;
 padding: 0 10px;
-margin-right: -160px;
+margin-right: -160px; /* RC full width */
 margin-top: 30px;
 padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
@@ -91,7 +92,8 @@ padding-bottom: 20040px;  /* X + padding-bottom */
 margin-bottom: -20000px;  /* X */
 }
 
-abbr { cursor: help; }
+/* End holygrail */
+
 
 .tt {
 cursor: pointer;
@@ -918,7 +920,7 @@ background: none;
 width: 100%;
 padding: 5px 5px;
 text-align: center;
-background: #FFF url(../../img/common/mnu-bkgsoft03.png) bottom left repeat-x;
+/*background: #FFF url(../../img/common/mnu-bkgsoft03.png) bottom left repeat-x;*/
 }
 
 /* submit form */
