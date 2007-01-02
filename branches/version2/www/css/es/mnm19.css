@@ -68,11 +68,11 @@ background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
 #rightbar {
 float: left;
 position: relative;
-width: 140px; 
+width: 138px;
 margin-right: -150px; /* RC full width */
 margin-top: 27px;
 padding-left: 5px;
-padding-right: 5px;
+padding-right: 7px;
 }
 
 * html #sidebar {
@@ -967,7 +967,7 @@ margin: 0px;
 /* comments */
 
 .comments {
-margin: 25px 0 0 25px;
+margin: 25px 5px 0 10px;
 }
 
 .comments h2 {
