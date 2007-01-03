@@ -42,9 +42,9 @@ function do_tabs($tab_name, $tab_selected = false) {
 
 		// Most voted
 		if ($tab_selected == 'popular') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('más votadas').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
-			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('más votadas').'</a></li>' . "\n";
+			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('popular').'</a></li>' . "\n";
 		}
 
 		// shake it
