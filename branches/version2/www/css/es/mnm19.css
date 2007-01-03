@@ -916,7 +916,7 @@ background: none;
 .right-box {
 width: 100%;
 font-size: 8.5pt;
-padding: 5px;
+padding: 1px 5px;
 border-left: 1px solid #FFE2C5;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
 margin-bottom: 20px;
