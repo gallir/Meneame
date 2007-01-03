@@ -50,7 +50,7 @@ if(!empty($_REQUEST['time'])) {
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['sent_by'])) {
 	/////
-	// RSS for users' favorites
+	// RSS for users' sent links
 	/////
 	$user_id = intval($_REQUEST['sent_by']);
 	$sql = "SELECT link_id FROM links WHERE link_author=$user_id  ORDER BY link_id DESC limit $rows";

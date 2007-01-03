@@ -280,7 +280,10 @@ function do_commented () {
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
+		echo '<div class="bookmarks-export-user-stories">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" class="bookmarks-export-user-commented"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
+		echo '</div>';
 		foreach ($comments as $dbcomment) {
 			$link->id=$dbcomment->link_id;
 			$comment->id = $dbcomment->comment_id;

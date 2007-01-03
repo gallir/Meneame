@@ -39,24 +39,26 @@ if(!empty($_GET['id'])) {
 	// Comments in news where the user has commented
 	//
 	$id = intval($_GET['conversation_id']);
+	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0 && $if_modified > time() - 86400*3 ) 
 		$from_time = "FROM_UNIXTIME($if_modified)";
 	else 
 		$from_time = "date_sub(now(), interval 48 hour)";
 	$sql = "SELECT DISTINCT comments1.comment_id FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comments1.comment_date) FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT 1");
-	$title = _('Menéame: conversación');
+	$title = _('Menéame: conversación de ') . $username;
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['author_id'])) {
 	//
 	// User's comments
 	//
 	$id = intval($_GET['author_id']);
+	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0) 
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments, links  WHERE link_author=$id and comment_link_id=link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ORDER BY comment_date DESC LIMIT 1");
-	$title = _('Menéame: comentarios mis noticias');
+	$title = _('Menéame: comentarios de') . $username;
 	$globals['redirect_feedburner'] = false;
 } else {
 	//
