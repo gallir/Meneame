@@ -507,45 +507,38 @@ Simple format functions
   2006/10/01, jotape @ http://jplopez.net
 */
 
-function applyTag(id, tag)
-{
+function applyTag(id, tag) {
 	obj = document.getElementById(id);
 	if (obj) wrapText(obj, tag, tag);
-};
+}
 
-function wrapText(obj, beginTag, endTag)
-{
-	if(typeof obj.selectionStart == 'number')
-	{
+function wrapText(obj, tag) {
+	if(typeof obj.selectionStart == 'number') {
 		// Mozilla, Opera and any other true browser
 		var start = obj.selectionStart;
 		var end   = obj.selectionEnd;
 
 		if (start == end || end < start) return false;
-
-		while (obj.value.charAt(start) == ' ') start++;
-		while (obj.value.charAt(end-1) == ' ') end--;
-
-		if (start == end || end < start) return false;
-
-		obj.value = obj.value.substring(0, start) + beginTag + obj.value.substring(start, end).replace(/\s+/gm, beginTag+" "+endTag) + endTag + obj.value.substring(end, obj.value.length);
-	}
-	else if(document.selection)
-	{
+		obj.value = obj.value.substring(0, start) +  replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
+	} else if(document.selection) {
 		// Damn Explorer
 		// Checking we are processing textarea value
 		obj.focus();
 		var range = document.selection.createRange();
 		if(range.parentElement() != obj) return false;
-
 		if (range.text == "") return false;
-
 		if(typeof range.text == 'string')
-	        document.selection.createRange().text = beginTag + range.text.replace(/\s+/gm, beginTag+" "+endTag) + endTag;
-	}
-	else
+	        document.selection.createRange().text =  replaceText(range.text, tag);
+	} else
 		obj.value += text;
-};
+}
+
+function replaceText(text, tag) {
+		text = text.replace(/(^|\s)[\*_]([^\s]+)[\*_]/gm, '$1$2')
+		text = text.replace(/([^\s]+)/gm, tag+"$1"+tag)
+		return text;
+}
+
 
 // This function report the ajax request to stats trackers
 // Only known how to do it with urchin/Google Analytics

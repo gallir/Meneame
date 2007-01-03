@@ -155,11 +155,11 @@ function save_text_to_html($string) {
 
 function text_to_html($string) {
 	// Dirty trick to allow tagging consecutives words 
-	$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
+	//$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
 
 	$string = preg_replace('/([\W\s]|^)(https*:\/\/)([^ \t\n\r\]\(\)]+[^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3" rel="nofollow">$3</a>', $string);
-	$string = preg_replace('/(^|[\W\s])_([^\s<>]+)_([\W\s]|$)/', "$1<em>$2</em>$3", $string);
-	$string = preg_replace('/(^|[\W\s])\*([^\s<>]+)\*([\W\s]|$)/', "$1<strong>$2</strong>$3", $string);
+	$string = preg_replace('/(^|[\W\s])_([^\s<>]+)_/', "$1<em>$2</em>", $string);
+	$string = preg_replace('/(^|[\W\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $string);
 	return $string;
 }
 
