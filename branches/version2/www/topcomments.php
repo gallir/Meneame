@@ -28,7 +28,8 @@ $link = new Link;
 
 echo '<div class="comments">';
 
-$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_date > date_sub(now(), interval 24 hour) and link_id=comment_link_id ORDER BY comment_karma desc, link_id asc limit 25");
+$min_date = date("Y-m-d H:00:00", time() - 86000); //  about 24 hours
+$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_date > '$min_date' and link_id=comment_link_id ORDER BY comment_karma desc, link_id asc limit 25");
 if ($comments) {
 	foreach ($comments as $dbcomment) {
 		$link->id=$dbcomment->link_id;
