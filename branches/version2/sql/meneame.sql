@@ -33,7 +33,7 @@ CREATE TABLE `avatars` (
 DROP TABLE IF EXISTS `blogs`;
 CREATE TABLE `blogs` (
   `blog_id` int(20) NOT NULL auto_increment,
-  `blog_key` varchar(35) collate utf8_spanish_ci default NULL,
+  `blog_key` char(35) collate utf8_spanish_ci default NULL,
   `blog_type` enum('normal','blog') collate utf8_spanish_ci NOT NULL default 'normal',
   `blog_rss` varchar(64) collate utf8_spanish_ci NOT NULL default '',
   `blog_rss2` varchar(64) collate utf8_spanish_ci NOT NULL default '',
@@ -50,7 +50,7 @@ CREATE TABLE `blogs` (
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `category__auto_id` int(11) NOT NULL auto_increment,
-  `category_lang` varchar(4) collate utf8_spanish_ci NOT NULL default 'es',
+  `category_lang` char(4) collate utf8_spanish_ci NOT NULL default 'es',
   `category_id` int(11) NOT NULL default '0',
   `category_parent` int(11) NOT NULL default '0',
   `category_name` char(64) collate utf8_spanish_ci NOT NULL,
@@ -207,9 +207,9 @@ CREATE TABLE `sneakers` (
 DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `tag_link_id` int(11) NOT NULL default '0',
-  `tag_lang` varchar(4) collate utf8_spanish_ci NOT NULL default 'es',
+  `tag_lang` char(4) collate utf8_spanish_ci NOT NULL default 'es',
   `tag_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `tag_words` varchar(64) collate utf8_spanish_ci NOT NULL default '',
+  `tag_words` char(40) collate utf8_spanish_ci NOT NULL,
   UNIQUE KEY `tag_link_id` (`tag_link_id`,`tag_lang`,`tag_words`),
   KEY `tag_lang` (`tag_lang`,`tag_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -295,4 +295,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-01-01 12:47:15
+-- Dump completed on 2007-01-03 11:22:45
