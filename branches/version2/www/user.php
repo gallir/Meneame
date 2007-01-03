@@ -282,7 +282,7 @@ function do_commented () {
 	if ($comments) {
 		echo '<div class="bookmarks-export-user-stories">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" class="bookmarks-export-user-commented"><img src="'.$globals['base_url'].'img/es/bookmarks-export-01.png" alt="mozilla bookmark"/></a>';
-		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
 		echo '</div>';
 		foreach ($comments as $dbcomment) {
 			$link->id=$dbcomment->link_id;
