@@ -42,7 +42,7 @@ overflow: hidden;
 /* From: http://alistapart.com/articles/holygrail */
 
 #container {
-margin-top: 40px;
+margin-top: 30px;
 padding-left: 13.5em;      /* LC width */
 padding-right: 160px;      /* RC width */
 position: relative;
@@ -919,7 +919,7 @@ font-size: 8.5pt;
 padding: 1px 4px;
 border-left: 1px solid #FFE2C5;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
-margin-bottom: 20px;
+margin-bottom: 30px;
 overflow: hidden;
 letter-spacing: 0px;
 }

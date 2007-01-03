@@ -70,7 +70,6 @@ function do_sidebar_top() {
 	do_mnu_submit();
 	do_mnu_sneak();
 
-	/*
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
@@ -87,7 +86,6 @@ function do_sidebar_top() {
 
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
-	*/
 
 	do_mnu_meneria();
 	do_mnu_rss();
@@ -101,7 +99,7 @@ function print_period_tabs() {
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
 	echo '<ul class="tabsub-shakeit">'."\n";
-	for($i=0; $i<count($range_values); $i++) {
+	for($i=0; $i<count($range_values) && $range_values[$i] < 60; $i++) {
 		if($i == $current_range)  {
 			$active = ' class="tabsub-this"';
 		} else {
@@ -110,18 +108,5 @@ function print_period_tabs() {
 		echo '<li><a '.$active.'href="topstories.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
-
-
-	/*
-	$active = array();
-	$active[$option] = 'class="tabsub-this"';
-
-	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php?view=all">'._('todas'). '</a></li>'."\n";
-	echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
-	if ($current_user->user_id > 0)
-		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
-	echo '</ul>'."\n";
-	*/
 }
 ?>
