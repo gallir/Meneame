@@ -51,4 +51,22 @@ function do_last_comments() {
 		echo '</ul></div>';
 	}
 }
+
+function do_best_comments() {
+	global $db, $globals, $dblang;
+	$foo_link = new Link();
+
+	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 3");
+	if ($res) {
+		echo '<div class="right-box">';
+		echo '<h2><a href="'.$globals['base_url'].'topcomments.php" title="'._('con más karma de las últimas 6 horas').'">'._('¿mejores? comentarios').'</a></h2><ul>'."\n";
+		foreach ($res as $comment) {
+			$foo_link->uri = $comment->link_uri;
+			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
+			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+		}
+		echo '</ul></div>';
+	}
+}
 ?>

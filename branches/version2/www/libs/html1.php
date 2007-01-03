@@ -186,6 +186,7 @@ function do_rightbar() {
 	echo "<div id='rightbar'>\n";
 	do_banner_right();
 	do_vertical_tags();
+	do_best_comments();
 	do_last_comments();
 	echo "</div>";
 }
