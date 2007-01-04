@@ -187,7 +187,7 @@ function do_rightbar() {
 	do_banner_right();
 	do_vertical_tags();
 	do_best_comments();
-	do_last_comments();
+	//do_last_comments();
 	echo "</div>";
 }
 

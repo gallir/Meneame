@@ -57,7 +57,7 @@ function do_best_comments() {
 	$foo_link = new Link();
 
 	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 5");
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
 		echo '<div class="right-box">';
 		echo '<h2><a href="'.$globals['base_url'].'topcomments.php" title="'._('con más karma de las últimas 6 horas').'">'._('¿mejores? comentarios').'</a></h2><ul>'."\n";
