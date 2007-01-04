@@ -22,19 +22,21 @@ function do_banner_top () { // top banner
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		if ($current_user->user_id > 0) {
-			echo '<div class="banner-block">' . "\n";
-			@include('ads/adsense-top-bloque.inc');
-		} elseif ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
+		if ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
 		// do_user_ad: 0 = dont show user banner, 1 = show standard, 2 = show all user ads
 			echo '<div class="banner-01">' . "\n";
-			@include('ads/adsense-top-user01.inc');
 		} elseif ($globals['referer'] == 'search') {
 			echo '<div class="banner-01">' . "\n";
 			@include('ads/adsense-top-from-search.inc');
+		/* 
+		// If the user is authenticated show a small block
+		} elseif ($current_user->user_id > 0) {
+			echo '<div class="banner-block">' . "\n";
+			@include('ads/adsense-top-bloque.inc');
+		*/
 		} else {
 			echo '<div class="banner-01">' . "\n";
-			@include('ads/adsense-top-02.inc');
+			@include('ads/adsense-top.inc');
 		}
 		echo '<!--Adsense Info: do_user_ad: '.$globals['do_user_ad']." - Random: $r -->\n";
 	} else {
@@ -72,7 +74,7 @@ function do_banner_story() { // side banner A
 			echo '<div class="banner-story-2">' . "\n";
 			@include('ads/adsense-story-from-search.inc');
 			echo '</div>' . "\n";
-		} elseif($globals['referer'] != 'local') {
+		} elseif($current_user->user_id == 0) {
 			echo '<div class="banner-story">' . "\n";
 			@include('ads/adsense-story-01.inc');
 			echo '</div>' . "\n";

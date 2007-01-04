@@ -35,6 +35,7 @@ top: 0px;
 }
 
 #container-wide {
+margin-top: 20px;
 padding: 0 15px 50px 15px;
 overflow: hidden;
 }
@@ -42,7 +43,7 @@ overflow: hidden;
 /* From: http://alistapart.com/articles/holygrail */
 
 #container {
-margin-top: 30px;
+margin-top: 20px;
 padding-left: 13.5em;      /* LC width */
 padding-right: 160px;      /* RC width */
 position: relative;
@@ -144,13 +145,13 @@ background: #fff;
 
 .tabsub, .tabsub-shakeit {
 height: 22px !important;
-padding: 0 0 0 17px; /* distance from tabs boxes: bottom: underline; left: indent  */
-margin: 0 0 20px 0; /* makes left corner */
+padding: 0 0 0 30px;/
+margin: 0 0 20px 0; 
 background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 overflow: hidden;
 }
 
-.tabsub-shakeit { /* shakeit tabsub variant */
+.tabsub-shakeit {
 margin: 30px 20px 0 90px;
 }
 
@@ -1406,7 +1407,7 @@ font-size: 140%;
 /* top banner */
 
 .banner-01 {
-margin: 0 0 10px 130px;
+margin: 0 0 0 130px;
 width: 730px;
 height: 90px;
 }
@@ -1421,14 +1422,14 @@ height: 15px;
 width: 468px;
 height: 60px;
 margin: 0 auto;
-margin-bottom: 15px;
+margin-bottom: 30px;
 }
 
 .banner-story-2 { /* used when coming from search */
 width: 336px;
 height: 280px;
 margin: 0 auto;
-margin-bottom: 15px;
+margin-bottom: 25px;
 }
 
 .banner-right {
@@ -1563,7 +1564,7 @@ background: #fff url(../../img/common/menealo-background.png) bottom left repeat
 }
 
 .voters, .mini-sneaker {
-margin: 25px 0 0 25px;
+margin: 25px 0 0 10px;
 }
 
 .voters h2 {
