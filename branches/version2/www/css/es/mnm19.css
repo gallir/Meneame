@@ -449,7 +449,7 @@ padding: 5px 0 5px 25px;
 
 #header {
 padding: 0px;
-margin: 0 0 10px 110px;
+margin: 0 0 10px 120px;
 height: 37px;
 color: #FFF;
 background: url(../../img/common/heading-background-01.png) repeat-x bottom;
@@ -1415,14 +1415,9 @@ font-size: 140%;
 /* top banner */
 
 .banner-01 {
-margin: 0 0 10px 120px;
+margin: 0 0 10px 130px;
 width: 730px;
 height: 90px;
-}
-
-.banner-01-c { 
-width: 728px;
-margin: 0 auto;
 }
 
 .banner-story {
