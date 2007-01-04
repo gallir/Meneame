@@ -15,26 +15,32 @@
 
 
 function do_banner_top () { // top banner
-	global $globals, $dblang;
+	global $globals, $dblang, $current_user;
 //
 // WARNING!
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
-	echo '<div class="banner-01">' . "\n";
 	if($globals['external_ads'] && $globals['ads']) {
+		if ($current_user->user_id > 0) {
+			echo '<div class="banner-block">' . "\n";
+			@include('ads/adsense-top-bloque.inc');
+		} elseif ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
 		// do_user_ad: 0 = dont show user banner, 1 = show standard, 2 = show all user ads
-		if ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
+			echo '<div class="banner-01">' . "\n";
 			@include('ads/adsense-top-user01.inc');
 		} elseif ($globals['referer'] == 'search') {
+			echo '<div class="banner-01">' . "\n";
 			@include('ads/adsense-top-from-search.inc');
 		} else {
+			echo '<div class="banner-01">' . "\n";
 			@include('ads/adsense-top-02.inc');
 		}
 		echo '<!--Adsense Info: do_user_ad: '.$globals['do_user_ad']." - Random: $r -->\n";
-	} else
+	} else {
+		echo '<div class="banner-01">' . "\n";
 		@include('ads/meneame-01.inc');
-		//echo '<br /><br /><strong>'. _('recuerda: ').'</strong>'._('encontrar&aacute;s ayuda en la secci&oacute;n').' "<a href="faq-'.$dblang.'.php">'._('acerca de men&eacute;ame').'</a>".'."\n";
+	}
 	echo '</div>' . "\n";
 }
 

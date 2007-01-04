@@ -21,12 +21,9 @@ function do_tabs($tab_name, $tab_selected = false) {
 	global $globals;
 
 	$reload_text = _('recargar');
-	//$reload_icon = '<img src="'.$globals['base_url'].'img/common/reload-tab-01.png" alt="'.$reload_text.'" />';
 	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {
-		// posar-hi title a tots els a; passar-ho tot per _()
-		// smooth end echo '<div class="tabmain-right-end">';
 		echo '<ul class="tabmain">' . "\n";
 
 		// url with parameters?
@@ -100,7 +97,6 @@ function do_header($title, $id='home') {
 	echo '</div>'  . "\n";
 
 	echo '<div id="header">' . "\n";
-	// benjami: later - echo '<h1><a href="/">men&eacute;ame</a></h1>' . "\n";
 	echo '<ul>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'telnet.php"  title="'._('es la fisgona, pero más segura para el trabajo').'">'. _('¡la jefa!') . '</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
@@ -116,13 +112,11 @@ function do_header($title, $id='home') {
 
 	// Main search form
 	echo '<li>' . "\n";
-	echo '<form action="'.$globals['base_url'].'" method="get" id="thisform-search">' . "\n";
-	echo '<label for="search" accesskey="100" class="inside">'._('buscar').'</label>' . "\n";
+	echo '<form action="'.$globals['base_url'].'" method="get">' . "\n";
 	if (!empty($_REQUEST['search'])) {
-		echo '<input type="text" name="search" id="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
+		echo '<input type="text" name="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
 	} else {
-	// benjami: onblur and onfocus to this	
-		echo '<input name="search" id="search" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
+		echo '<input name="search" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
 	}
 	echo '</form>' . "\n";
 	echo '</li>' . "\n";
@@ -130,7 +124,6 @@ function do_header($title, $id='home') {
 	echo '</ul>' . "\n";
 	echo '<span class="header-left">&nbsp;</span>' . "\n";
 	echo '</div>' . "\n";
-
 }
 
 function do_js_includes() {
@@ -144,7 +137,6 @@ function do_js_includes() {
 
 function do_footer($credits = true) {
 	if($credits) @do_credits();
-// 	echo "</div><!--#container closed-->\n";
 
 	// warn warn warn 
 	// dont do stats of password recovering pages

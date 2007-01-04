@@ -492,7 +492,7 @@ padding: 2px 10px 0 0px;
 }
 
 #header form input {
-width: 120px;
+width: 140px;
 font-size: 100%;
 color: #FF6400;
 padding: 1px 3px 0 3px;
@@ -504,15 +504,6 @@ margin: -1px 0 0 0;
 #header form input:hover {
 background: #FFF;
 color: #FF6400;
-}
-
-#header label.inside {
-position:absolute;
-visibility:hidden;
-}
-
-* html #header h1 a, * html #header h1 span {
-bottom: -1px;
 }
 
 /* news */
@@ -1418,6 +1409,12 @@ font-size: 140%;
 margin: 0 0 10px 130px;
 width: 730px;
 height: 90px;
+}
+
+.banner-block {
+margin: 20px 0 15px 130px;
+width: 730px;
+height: 15px;
 }
 
 .banner-story {
