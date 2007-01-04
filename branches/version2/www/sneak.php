@@ -91,6 +91,7 @@ function animate_background() {
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);
 	var timeStr;
+	var text_style = '';
 
 	var hours = tstamp.getHours();
 	var minutes = tstamp.getMinutes();
@@ -108,7 +109,10 @@ function to_html(data) {
 		case 'chat':
 			html += '<img src="img/common/sneak-chat01.png" width="20" height="16" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
-			html += '<div class="sneaker-chat">'+put_smiley(data.title)+'<\/div>';
+			if (check_user_ping(data.title)) {
+				text_style = 'style="font-weight: bold;"';
+			}
+			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			html += '<a href="'+base_url+'user.php?login='+data.who.substring(0,15)+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
 			html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
@@ -175,6 +179,17 @@ function to_html(data) {
 	return html;
 }
 
+
+function check_user_ping(str) {
+	myuser = readCookie('mnm_user');
+	if (myuser != null) {
+		re = new RegExp('(^|\\W)'+myuser+'(\\W|$)');
+		if (str.match(re)) {
+			return true;
+		}
+	}
+	return false;
+}
 
 function put_smiley(str) {
 	str=str.replace(/:-{0,1}\)/gi, ' <img src="img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
