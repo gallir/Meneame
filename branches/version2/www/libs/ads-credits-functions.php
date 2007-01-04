@@ -51,9 +51,9 @@ function do_banner_right() {
 //
 	if($globals['external_ads'] && $globals['ads'] && $globals['referer'] == 'search') {
 			echo '<div class="banner-right">' . "\n";
-			@include('ads/adsense-right-from-search.inc');
+			@include('ads/adsense-block-right.inc');
 			echo '</div>' . "\n";
-	}
+	} 
 }
 
 function do_banner_story() { // side banner A
