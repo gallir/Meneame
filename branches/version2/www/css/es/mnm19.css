@@ -27,8 +27,8 @@ abbr { cursor: help; }
 
 #logo {
 margin: 0;
-width: 132px;
-height: 132px;
+width: 99px;
+height: 100px;
 position: absolute;
 left: 0px;
 top: 0px;
@@ -449,7 +449,7 @@ padding: 5px 0 5px 25px;
 
 #header {
 padding: 0px;
-margin: 0 0 10px 150px;
+margin: 0 0 10px 110px;
 height: 37px;
 color: #FFF;
 background: url(../../img/common/heading-background-01.png) repeat-x bottom;
@@ -1415,7 +1415,7 @@ font-size: 140%;
 /* top banner */
 
 .banner-01 {
-margin: 0 0 10px 160px;
+margin: 0 0 10px 120px;
 width: 730px;
 height: 90px;
 }
