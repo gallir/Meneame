@@ -39,6 +39,8 @@ var colors_max = animation_colors.length - 1;
 var current_colors = Array();
 var animation_timer;
 
+var do_hoygan = <? if (!empty($_REQUEST['hoygan']))  echo 'true'; else echo 'false'; ?>;
+
 
 
 // Reload the mnm banner each 5 minutes
@@ -112,6 +114,7 @@ function to_html(data) {
 			if (check_user_ping(data.title)) {
 				text_style = 'style="color: #006600;font-weight: bold;"';
 			}
+			if (do_hoygan) data.title = to_hoygan(data.title);
 			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			html += '<a href="'+base_url+'user.php?login='+data.who.substring(0,15)+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
@@ -161,6 +164,7 @@ function to_html(data) {
 	html += '<div class="sneaker-votes" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">'+data.votes+'/'+data.com+'<\/div>';
 	if ("undefined" != typeof(data.cid) && data.cid > 0) anchor='#c-'+data.cid;
 	else anchor='';
+	if (do_hoygan) data.title = to_hoygan(data.title);
 	html += '<div class="sneaker-story"><a href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem')
 		html += '<div class="sneaker-who"><span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
@@ -213,6 +217,54 @@ function put_smiley(str) {
 	str=str.replace(/:-{0,1}\*/gi, ' <img src="img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
 
 	return str;
+}
+
+function to_hoygan(str) 
+{
+	str=str.replace(/á/gi, 'a');
+	str=str.replace(/é/gi, 'e');
+	str=str.replace(/í/gi, 'i');
+	str=str.replace(/ó/gi, 'o');
+	str=str.replace(/ú/gi, 'u');
+
+	str=str.replace(/yo/gi, 'io');
+	str=str.replace(/m([pb])/gi, 'n$1');
+	str=str.replace(/qu([ei])/gi, 'k$1');
+	str=str.replace(/ct/gi, 'st');
+	str=str.replace(/cc/gi, 'cs');
+	str=str.replace(/ll([aeou])/gi, 'y$1');
+	str=str.replace(/ya/gi, 'ia');
+	str=str.replace(/yo/gi, 'io');
+	str=str.replace(/g([ei])/gi, 'j$1');
+	str=str.replace(/^([aeiou][a-z]{3,})/gi, 'h$1');
+	str=str.replace(/ ([aeiou][a-z]{3,})/gi, ' h$1');
+	str=str.replace(/[zc]([ei])/gi, 's$1');
+	str=str.replace(/z([aou])/gi, 's$1');
+	str=str.replace(/c([aou])/gi, 'k$1');
+
+	str=str.replace(/b([aeio])/gi, 'vvv;$1');
+	str=str.replace(/v([aeio])/gi, 'bbb;$1');
+	str=str.replace(/vvv;/gi, 'v');
+	str=str.replace(/bbb;/gi, 'b');
+
+	str=str.replace(/oi/gi, 'oy');
+	str=str.replace(/xp([re])/gi, 'sp$1');
+	str=str.replace(/es un/gi, 'esun');
+	str=str.replace(/(^| )h([ae]) /gi, '$1$2 ');
+	str=str.replace(/aho/gi, 'ao');
+	str=str.replace(/a ver /gi, 'haber ');
+	str=str.replace(/ por /gi, ' x ');
+	str=str.replace(/ñ/gi, 'ny');
+	str=str.replace(/buen/gi, 'GÜEN');
+
+        // benjami
+	str=str.replace(/windows/gi, 'güindous');
+	str=str.replace(/we/gi, 'güe');
+	// str=str.replace(/'. '/gi, '');
+	str=str.replace(/,/gi, ' ');
+	str=str.replace(/hola/gi, 'ola');
+	str=str.replace(/ r([aeiou])/gi, ' rr$1'); // cal l'expressio regular per a principi de paraula? :)
+	return str.toUpperCase();
 }
 
 //]]>
