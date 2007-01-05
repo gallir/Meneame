@@ -208,8 +208,9 @@ function get_search_clause($option='') {
 		if (!empty($_REQUEST['from'])) {
 			$where .=  " AND link_date > from_unixtime(".intval($_REQUEST['from']).") ";
 		}
-		// To aovid showing news still in "limbo"
-		$where .=  " AND link_votes > 0 ";
+		// To avoid showing news still in "limbo"
+		// it also avoid to show old discarded news
+		$where .=  " AND (link_status != 'discard' OR (link_status = 'discard' AND link_date > date_sub(now(), interval 7 day) AND link_votes > 0)) ";
 		return $where;
 	} else {
 		return false;
