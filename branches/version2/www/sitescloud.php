@@ -38,12 +38,12 @@ $max = max($db->get_var("select count(*) as count $from_where order by count des
 $coef = ($max_pts - $min_pts)/($max-1);
 
 
-do_header(_('nube de lugares web'));
+do_header(_('nube de sitios web'));
 do_banner_top();
 echo '<div id="container">' . "\n";
 echo '<div id="contents">';
-do_tabs("main");
-echo '<div class="topheading"><h2>Los +</h2></div>';
+do_tabs("main", _('+ webs'), true);
+echo '<div class="topheading"><h2>Los sitios más enlazados</h2></div>';
 echo '<div style="margin: 20px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 50px;">';
 $res = $db->get_results("select blog_url, count(*) as count $from_where order by count desc limit $limit");
 if ($res) {

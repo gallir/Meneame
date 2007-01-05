@@ -17,7 +17,7 @@ if (!empty($globals['lounge'])) {
 
 header("Content-type: text/html; charset=utf-8");
 
-function do_tabs($tab_name, $tab_selected = false) {
+function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
 
 	$reload_text = _('recargar');
@@ -30,40 +30,35 @@ function do_tabs($tab_name, $tab_selected = false) {
 		if (!empty($_SERVER['QUERY_STRING']))
 			$query = "?".htmlentities($_SERVER['QUERY_STRING']);
 
+		// START STANDARD TABS
+		// First the standard and always present tabs
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// Most voted
 		if ($tab_selected == 'popular') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('popular').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
+		// END STANDARD TABS
 
-		// story tab
-		if ($tab_selected == 'story') {
-			echo '<li><a '.$active.' href="'.$globals['link']->get_permalink().$query.'" title="'.$reload_text.'">'._('noticia').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		//Extra tab
+		if ($extra_tab) {
+			echo '<li><a '.$active.' href="'.htmlentities($_SERVER['REQUEST_URI']).'" title="'.$reload_text.'">'.$tab_selected.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		}
-
-		// Search
-		if ($tab_selected == 'search') {
-			htmlspecialchars($_REQUEST['search']);
-			echo '<li><a '.$active.' href="'.htmlentities($_SERVER['REQUEST_URI']).'" title="'.$reload_text.'">'._('búsqueda').'&nbsp;&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
-		}
-
 		echo '</ul>' . "\n";
-		// smooth end echo '</div>';
 	}
 }
 

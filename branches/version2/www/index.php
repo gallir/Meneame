@@ -58,7 +58,7 @@ if($search) {
 	do_banner_top();
 	echo '<div id="container">' . "\n";
 	echo '<div id="contents">'; // benjami: repetit, no m'agrada, arreglar despres
-	do_tabs('main','search');
+	do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 	echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 	$from_where .= $search;
 	if ($_REQUEST['tag'] == 'true' || $_REQUEST['date']  == 'true' ) {

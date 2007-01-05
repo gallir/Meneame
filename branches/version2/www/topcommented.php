@@ -34,7 +34,7 @@ do_header(_('más comentadas'));
 do_banner_top();
 echo '<div id="container">' . "\n";
 echo '<div id="contents">';
-do_tabs('main');
+do_tabs('main', _('más comentadas'), true);
 echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 
 $link = new Link;
