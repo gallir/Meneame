@@ -36,13 +36,15 @@ $votes_page_size = 20;
 $votes_offset=($votes_page-1)*$votes_page_size;
 
 
-$votes_users = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id!=0 AND vote_value > 0");
-$votes_anon = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id=0 AND vote_value > 0");
+$votes_users = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id!=0");
+$votes_users_positive = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id!=0 and vote_value > 0");
+$votes_anon = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id=0");
+
+$negatives = $db->get_results("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=".$globals['link_id']." and vote_value < 0 group by vote_value order by count desc");
 
 echo '<div class="news-details">';
-echo _('votos usuarios'). ': '.$votes_users.',&nbsp;&nbsp;';
+echo _('votos usuarios'). ': '.$votes_users_positive.',&nbsp;&nbsp;';
 echo _('votos anónimos'). ': '.$votes_anon;
-$negatives = $db->get_results("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=".$globals['link_id']." and vote_value < 0 group by vote_value order by count desc");
 if ($negatives) {
 	foreach ($negatives as $negative) {
 		echo ',&nbsp; ';
@@ -55,15 +57,20 @@ if ($no_show_voters) {
 	// don't show voters if the user votes the link
 	echo '<br /><br />&#187;&nbsp;' . '<a href="javascript:get_votes(\'meneos.php\',\'voters\',\'voters-container\',1,'.$globals['link_id'].')" title="'._('quiénes han votado').'">'._('ver quiénes han votado').'</a>';
 } else {
-	//echo '<script type="text/javascript">var update_voters=true;</script>';
-	$votes = $db->get_results("SELECT vote_user_id, user_avatar, user_login, date_format(vote_date,'%d/%m %T') as date FROM votes, users WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id > 0 AND vote_value > 0 AND user_id = vote_user_id ORDER BY vote_date ASC LIMIT $votes_offset,$votes_page_size");
+	$votes = $db->get_results("SELECT vote_user_id, vote_value, user_avatar, user_login, date_format(vote_date,'%d/%m %T') as date FROM votes, users WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id > 0 AND user_id = vote_user_id ORDER BY vote_date ASC LIMIT $votes_offset,$votes_page_size");
 	if (!$votes) die;
 	echo '<div class="voters-list">';
 	foreach ( $votes as $vote ){
 		echo '<div class="item">';
-		echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->date.'">';
-		echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt="'.$vote->user_login.'"/>';
-		echo $vote->user_login.'</a>';
+		if ($vote->vote_value>0) {
+			echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->date.'">';
+			echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt="'.$vote->user_login.'"/>';
+			echo $vote->user_login.'</a>';
+		} else {
+			echo '<span>';
+			echo '<img src="'.$globals['base_url'].'img/common/sneak-problem01.png" width="20" height="16" alt="'._('anónimo').'" title="'.$vote->date.'"/>';
+			echo get_negative_vote($vote->vote_value).'</span>';
+		}
 		echo '</div>';
 	}
 	echo "</div>\n";
