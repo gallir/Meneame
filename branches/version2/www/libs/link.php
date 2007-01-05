@@ -357,16 +357,14 @@ class Link {
 		echo '<div class="news-details">';
 		if($this->comments > 0) {
 			$comments_mess = $this->comments . ' ' . _('comentarios');
-			$comment_class = "comments_yes";
 		} else  {
 			$comments_mess = _('sin comentarios');
-			$comment_class = "comments_no";
 		}
-		echo '<a href="'.$this->get_relative_permalink().'" class="tool '.$comment_class.'">'.$comments_mess. '</a>';
+		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '<a class="tool" id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a>';
+			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
 		echo '<span class="tool">'._('en'). ': <a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name().'</a></span>';
@@ -446,12 +444,11 @@ class Link {
 
 		if(!$anonnymous_vote && $current_user->user_id == 0) return;
 
-		//echo '<span class="tool-right">';
-		echo '<form class="tool" action="" id="problem-'.$this->id.'">';
+		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
 		echo '<select '.$status.' name="ratings"  onchange="';
 		echo 'report_problem(this.form,'."$current_user->user_id, $this->id, "."'".$this->md5."'".')';
 		echo '">';
-		echo '<option value="0" selected="selected">¿problema?</option>';
+		echo '<option value="0" selected="selected">'._('problema').'</option>';
 		foreach (array_keys($globals['negative_votes_values']) as $pvalue) {
 			echo '<option value="'.$pvalue.'">'.$globals['negative_votes_values'][$pvalue].'</option>';
 		}

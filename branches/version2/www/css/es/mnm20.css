@@ -145,7 +145,7 @@ background: #fff;
 
 .tabsub, .tabsub-shakeit {
 height: 22px !important;
-padding: 0 0 0 30px;/
+padding: 0 0 0 30px;
 margin: 0 0 20px 0; 
 background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 overflow: hidden;
@@ -510,19 +510,19 @@ color: #FF6400;
 /* news */
 
 .news-summary {
-padding: 15px 0 0 0;
+margin: 0;
+padding: 20px 0 0 0;
 position: relative;
 }
 
 .news-body {
 padding-left: 85px;
 padding-right: 5px;
-padding-top: 10px;
 }
 
 .news-shakeit {
 position: absolute;
-top: 24px;
+top: 20px;
 left: 12px;
 width: 65px;
 text-align: center;
@@ -542,8 +542,15 @@ padding: 0;
 .news-details {
 color: #FF6400;
 display: block;
-margin: 0;
+margin: 1px 0 0 0;
+padding: 0;
 overflow: hidden;
+min-height: 3.5ex;
+}
+
+.news-details span {
+margin: 0;
+vertical-align: top;
 }
 
 .news-details img {
@@ -560,6 +567,9 @@ background: #FFF;
 border: none;
 color: #FF9400;
 font-size: 90%;
+letter-spacing: 0px;
+max-width: 7.5em;
+vertical-align: top;
 }
 
 .news-details .tool {
@@ -567,16 +577,8 @@ display: inline;
 border-left: 1px solid #FF6400;
 padding: 0 4px 0 4px;
 }
-.news-details .tool-right {
-padding: 0 4px 0 4px;
-}
 
-.news-details .comments_yes {
-padding: 0 4px 0 0;
-border-left: none;
-}
-
-.news-details .comments_no {
+.news-details .comments {
 padding: 0 4px 0 0;
 border-left: none;
 }
