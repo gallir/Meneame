@@ -661,10 +661,10 @@ background: none;
 }
 
 .news-body p {
-padding: 2px 0 1px 0;
+margin: 2px 0 1px 0;
+padding: 0;
 text-align: left;
 overflow: hidden;
-margin: 0;
 }
 
 .news-submitted {
@@ -672,6 +672,7 @@ color: #666;
 font-size: 85%;
 margin: 0;
 white-space: nowrap;
+min-height: 25px;
 }
 
 .news-submitted a:link, .news-submitted a:visited {
