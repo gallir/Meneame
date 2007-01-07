@@ -82,6 +82,7 @@ if(!empty($_GET['id'])) {
 	$sql = "SELECT comment_id FROM comments $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios');
+	$globals['redirect_feedburner'] = false;
 }
 
 	/*****  WARNING
@@ -113,7 +114,7 @@ if ($comments) {
 		$link->read();
 		$link_title = $db->get_var("select link_title from links where link_id = $link_id");
 		// Title must not carry htmlentities
-		echo "		<title><![CDATA[".html_entity_decode($link_title)."]]></title>\n";
+		echo "		<title><![CDATA[".html_entity_decode($link_title)." ]]></title>\n";
 		echo "		<link>".$link->get_permalink()."#comment-".$comment->order."</link>\n";
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";

@@ -16,7 +16,7 @@ color: #303030;
 margin: 0;
 padding: 0;
 background: #FFF;
-min-width: 890px;
+min-width: 920px;
 }
 
 body, td, th, h3 { /* browser differences workaround */

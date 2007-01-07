@@ -142,7 +142,7 @@ if ($links) {
 		$content = text_to_html($link->content);
 		echo "	<item>\n";
 		// Title must not carry htmlentities
-		echo "		<title><![CDATA[".html_entity_decode($link->title)."]]></title>\n";
+		echo "		<title><![CDATA[".html_entity_decode($link->title)." ]]></title>\n";
 		echo "		<link>".$link->get_permalink()."</link>\n";
 		echo "		<comments>".$link->get_permalink()."</comments>\n";
 		if (!empty($link_date))
@@ -155,7 +155,7 @@ if ($links) {
 			$tags_array = explode(",", $link->tags);
 			foreach ($tags_array as $tag_item) {
 				$tag_item=trim($tag_item);
-				echo "		<category>$tag_item</category>\n";
+				echo "		<category>".html_entity_decode($tag_item)."</category>\n";
 			}
 		}
 		echo "		<guid>".$link->get_permalink()."</guid>\n";
