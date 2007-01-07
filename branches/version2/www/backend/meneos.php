@@ -68,7 +68,7 @@ if ($no_show_voters) {
 			echo $vote->user_login.'</a>';
 		} else {
 			echo '<span>';
-			echo '<img src="'.$globals['base_url'].'img/common/sneak-problem01.png" width="20" height="16" alt="'._('anónimo').'" title="'.$vote->date.'"/>';
+			echo '<img src="'.$globals['base_url'].'img/common/mnm-anonym-vote-01.png" width="20" height="20" alt="'._('anónimo').'" title="'.$vote->date.'"/>';
 			echo get_negative_vote($vote->vote_value).'</span>';
 		}
 		echo '</div>';
