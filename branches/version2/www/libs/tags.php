@@ -8,12 +8,15 @@
 
 
 function tags_normalize_string($string) {
+	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
 	if (!preg_match('/,/', $string)) {
 	// The user didn't put any comma, we add them
 		$string = preg_replace('/ +/', ',', $string);
 	}
 	$string = preg_replace('/[\.\,] *$/', "", $string);
-	return mb_substr(mb_strtolower($string, 'UTF-8'), 0, 80);
+	// Clean strange characteres, there are feed reader (including feedburner) that are just too strict and complain loudly
+	$string = preg_replace('/[<>;"\'\]\[&]/', "", $string);
+	return htmlspecialchars(mb_substr(mb_strtolower($string, 'UTF-8'), 0, 80), ENT_COMPAT, 'UTF-8');
 }
 
 function tags_insert_string($link, $lang, $string, $date = 0) {
