@@ -117,11 +117,16 @@ class Link {
 
 		// Now we analyse the html to find links to banned domains
 		// It avoids the trick of using google or technorati
-		preg_match_all('/<a[^>]+href=[\'"]*(https*:\/\/[^\s \/"\'>]+)/i', $this->html, $matches);
-		foreach ($matches[1] as $embeded_link) {
-			if (! $checked_links[$embeded_link]) {
-				$checked_links[$embeded_link] = true;
-				if (!$this->check_url($embeded_link, false) && $this->banned) return false;
+		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
+		preg_match_all('/<a[^>]+href=[\'"]https*:\/\/[^\s "\'>]+[\'"][^>]*>/i', $this->html, $matches);
+		foreach ($matches[0] as $match) {
+			if (!preg_match('/rel=["\']nofollow["\']/', $match)) {
+				preg_match('/href=[\'"](https*:\/\/[^\s "\'>]+)[\'"]/i', $match, $url_a);
+				$embeded_link  = $url_a[1];
+				if (! empty($embeded_link) && ! $checked_links[$embeded_link]) {
+					$checked_links[$embeded_link] = true;
+					if (!$this->check_url($embeded_link, false) && $this->banned) return false;
+				}
 			}
 		}
 
