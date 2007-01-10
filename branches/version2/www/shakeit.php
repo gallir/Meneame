@@ -138,7 +138,7 @@ function print_shakeit_tabs($option) {
 	$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php">'._('todas'). '</a></li>'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php"><strong>'._('todas'). '</strong></a></li>'."\n";
 	if ($current_user->user_id > 0) {
 		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
 		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
