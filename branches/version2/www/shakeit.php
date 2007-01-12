@@ -44,34 +44,40 @@ $view = clean_input_string($_REQUEST['view']);
 $cat = check_integer('category');
 
 switch ($view) {
-	case 'discarded':
-		// Show only discarded in four days
+	case 'friends':
+		// Show last in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
-		print_shakeit_tabs('4');
-		$globals['tag_status'] = 'discard';
+			$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
+		$order_by = " ORDER BY link_date DESC ";	
+		print_shakeit_tabs(2);
+		$globals['tag_status'] = 'queued';
 		break;
 	case 'popular':
 		// Show  the hihgher karma first
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*2).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
 		$order_by = " ORDER BY link_karma DESC ";	
-		print_shakeit_tabs('2');
+		print_shakeit_tabs(3);
 		$globals['tag_status'] = 'queued';
 		break;
 	case 'recommended':
-		if ($current_user->user_id > 0 && !$search) {
-			$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
-			if(!$threshold) $threshold = 0;
-			else $threshold = $threshold * 0.95;
+		$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
+		if(!$threshold) $threshold = 0;
+		else $threshold = $threshold * 0.95;
 			
-			// Show last in four days
-			$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
-			$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > $threshold";
-			$order_by = " ORDER BY link_date DESC ";	
-			print_shakeit_tabs('3');
-		}
+		// Show last in four days
+		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
+		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > $threshold";
+		$order_by = " ORDER BY link_date DESC ";	
+		print_shakeit_tabs(4);
 		$globals['tag_status'] = 'queued';
+		break;
+	case 'discarded':
+		// Show only discarded in four days
+		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
+		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
+		print_shakeit_tabs(5);
+		$globals['tag_status'] = 'discard';
 		break;
 	case 'all':
 	default:
@@ -81,7 +87,7 @@ switch ($view) {
 			// Show last in seven days
 			$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*7).'"';
 			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-		print_shakeit_tabs('1');
+		print_shakeit_tabs(1);
 		$globals['tag_status'] = 'queued';
 		break;
 }
@@ -140,10 +146,11 @@ function print_shakeit_tabs($option) {
 	echo '<ul class="tabsub-shakeit">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php"><strong>'._('todas'). '</strong></a></li>'."\n";
 	if ($current_user->user_id > 0) {
-		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
-		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
+		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
+		echo '<li><a '.$active[4].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
 	}
-	echo '<li><a '.$active[4].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
+	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
 	echo '</ul>'."\n";
 }
 

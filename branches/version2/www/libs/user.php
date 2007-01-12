@@ -119,7 +119,6 @@ class User {
 		$this->total_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
 		$this->published_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
 		$this->total_comments = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
-
 	}
 
 	function blogs() {
@@ -128,3 +127,43 @@ class User {
 	}
 
 }
+
+// Following functions are related to users but not done as a class so can be easily used with User and UserAuth
+define('FRIEND_YES', '<img src="'.$globals['base_url'].'img/common/icon_heart.png" alt="del" width="16" height="16" title="'._('amigo').'"/>');
+define('FRIEND_NO', '<img src="'.$globals['base_url'].'img/common/icon_heart_no.png" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
+
+
+function friend_exists($from, $to) {
+	global $db;
+	return intval($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
+}
+
+function friend_insert($from, $to, $value = 1) {
+	global $db;
+	return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
+}
+
+function friend_delete($from, $to) {
+	global $db;
+	return $db->query("DELETE FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to");
+}
+
+function friend_add_delete($from, $to) {
+	if(friend_exists($from, $to)) {
+		friend_delete($from, $to);
+		return FRIEND_NO;
+	} else {
+		friend_insert($from, $to);
+		return FRIEND_YES;
+	}
+}
+
+
+function friend_teaser($from, $to) {
+	if (friend_exists($from, $to)) {
+		return FRIEND_YES;
+	} else {
+		return FRIEND_NO;
+	}
+}
+

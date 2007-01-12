@@ -25,6 +25,8 @@ font-size: small;
 
 abbr { cursor: help; }
 
+img { vertical-align: middle;}
+
 #logo {
 margin: 0;
 width: 99px;
@@ -1677,19 +1679,24 @@ font-size: 8pt;
 color: #000;
 }
 
-.bars-list .item {
+.bars-list .item, .bars-list .item-wider {
 float: left;
 display: block;
 overflow: hidden;
 width: 35%;
 height: 25px;
+white-space: nowrap;
+}
+
+.bars-list .item-wider {
+width: 48%;
+height: 30px;
 }
 
 .bars-list img {
 border: 0px;
 margin-right: 5px;
 margin-left: 8px;
-vertical-align: top;
 }
 
 .item a {

@@ -51,9 +51,7 @@ if ($current_user->user_id > 0 && $current_user->authenticated && empty($_REQUES
 $user=new User();
 $user->username = $login;
 if(!$user->read()) {
-	echo $login;
-	echo "error 2";
-	die;
+	not_found();
 }
 
 $globals['ads'] = true;

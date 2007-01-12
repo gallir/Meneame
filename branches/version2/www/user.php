@@ -91,6 +91,10 @@ switch ($view) {
 		do_user_tabs(5, $login);
 		do_voters_preferred();
 		break;
+	case 'friends':
+		do_user_tabs(6, $login);
+		do_friends();
+		break;
 	case 'favorites':
 		do_user_tabs(6, $login);
 		do_favorites();
@@ -128,6 +132,11 @@ function do_profile() {
 	echo '<dl>';	
 	if(!empty($user->username)) {
 		echo '<dt>'._('usuario').':</dt><dd>'.$user->username;
+		// Print friend icon
+		if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
+			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.friend_teaser($current_user->user_id, $user->id).'</a>';
+		}
+		// Print user detailed info
 		if ($login===$current_user->user_login || $current_user->user_level == 'god') {
 			echo " (" . _('id'). ": <em>$user->id</em>)";
 			echo " (<em>$user->level</em>)";
@@ -138,6 +147,7 @@ function do_profile() {
 
 		echo '</dd>';
 	}
+
 	if(!empty($user->names))
 		echo '<dt>'._('nombre').':</dt><dd>'.$user->names.'</dd>';
 	if(!empty($user->url)) {
@@ -359,6 +369,33 @@ function do_voters_preferred() {
 
 }
 
+function do_friends() {
+	global $db, $user;
+
+	echo '<fieldset style="width: 45%; display: block; float: left;"><legend>';
+	echo _('amigos');
+	echo '</legend>';
+	$prefered_id = $user->id;
+	$prefered_type = 'from';
+	echo '<div id="friends-container">'. "\n";
+	require('backend/get_friends_bars.php');
+	echo '</div>'. "\n";
+	echo '</fieldset>'. "\n";
+
+
+	echo '<fieldset style="width: 45%; display: block; float: right;"><legend>';
+	echo _('elegido por');
+	echo '</legend>';
+	$prefered_id = $user->id;
+	$prefered_type = 'to';
+	echo '<div id="voters-container">'. "\n";
+	require('backend/get_friends_bars.php');
+	echo '</div>'. "\n";
+	echo '</fieldset>'. "\n";
+
+	echo '<br clear="all" />';
+}
+
 function do_user_tabs($option, $user) {
 
 		$active = array();
@@ -366,6 +403,7 @@ function do_user_tabs($option, $user) {
 
 		echo '<ul class="tabsub">'."\n";
 		echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+		echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">'.FRIEND_YES. '</a></li>';
 		echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">'.FAV_YES. '</a></li>';
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';

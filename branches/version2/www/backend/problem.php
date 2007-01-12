@@ -9,6 +9,8 @@
 include('../config.php');
 include(mnminclude.'link.php');
 
+header('Content-Type: text/plain; charset=UTF-8');
+
 $link = new Link;
 $id=intval($_REQUEST['id']);
 $user_id=intval($_REQUEST['user']);
@@ -34,8 +36,8 @@ if ($current_user->user_id == 0 && ! $anonnymous_vote) {
 	error(_('Los votos anónimos están temporalmente deshabilitados'));
 }
 
-if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto'). $current_user->user_id . '-'. $_REQUEST['user']);
+if($current_user->user_id != $user_id) {
+	error(_('Usuario incorrecto'). $current_user->user_id . '-'. $user_id);
 }
 
 $md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);

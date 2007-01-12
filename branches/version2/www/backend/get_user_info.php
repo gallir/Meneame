@@ -21,7 +21,11 @@ $user->id=$id;
 if (! $user->read()) die;
 if ($user->avatar) 
 	echo '<img align="left" hspace="4" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'"/>';
-echo '<strong>' . _('usuario') . ':</strong>&nbsp;' . $user->username . '<br/>';
+echo '<strong>' . _('usuario') . ':</strong>&nbsp;' . $user->username;
+if ($current_user->user_id > 0 && $current_user->user_id  != $user->id)  {
+	echo '&nbsp;' . friend_teaser($current_user->user_id, $user->id);
+}
+echo '<br/>';
 echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
 echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
 echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
