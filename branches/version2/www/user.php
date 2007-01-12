@@ -375,7 +375,11 @@ function do_voters_preferred() {
 ***************/
 
 function do_friends() {
-	global $db, $user;
+	global $db, $user, $globals;
+
+	echo '<div class="bookmarks-export-user-stories">';
+	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('obtener amigos en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
+	echo '</div>';
 
 	echo '<fieldset style="width: 45%; display: block; float: left;"><legend>';
 	echo _('amigos');
