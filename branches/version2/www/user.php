@@ -377,7 +377,7 @@ function do_friends() {
 	echo '</legend>';
 	$prefered_id = $user->id;
 	$prefered_type = 'from';
-	echo '<div id="friends-container">'. "\n";
+	echo '<div id="from-container">'. "\n";
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
 	echo '</fieldset>'. "\n";
@@ -388,7 +388,7 @@ function do_friends() {
 	echo '</legend>';
 	$prefered_id = $user->id;
 	$prefered_type = 'to';
-	echo '<div id="voters-container">'. "\n";
+	echo '<div id="to-container">'. "\n";
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
 	echo '</fieldset>'. "\n";
