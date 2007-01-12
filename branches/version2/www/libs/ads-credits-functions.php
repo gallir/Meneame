@@ -25,6 +25,7 @@ function do_banner_top () { // top banner
 		if ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
 		// do_user_ad: 0 = dont show user banner, 1 = show standard, 2 = show all user ads
 			echo '<div class="banner-01">' . "\n";
+			@include('ads/adsense-top-user01.inc');
 		} elseif ($globals['referer'] == 'search') {
 			echo '<div class="banner-01">' . "\n";
 			@include('ads/adsense-top-from-search.inc');
