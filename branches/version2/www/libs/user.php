@@ -142,6 +142,7 @@ function friend_exists($from, $to) {
 function friend_insert($from, $to, $value = 1) {
 	global $db;
 	if ($from == $to) return 0;
+	if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) return false;
 	return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
 }
 
