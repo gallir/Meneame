@@ -33,7 +33,7 @@ switch ($prefered_type) {
 		break;
 	case 'to':
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_to=$prefered_id AND friend_from !=0");
-		$dbusers = $db->get_results("SELECT friend_from as who FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_to order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		$dbusers = $db->get_results("SELECT friend_from as who FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 }
 if ($dbusers) {
