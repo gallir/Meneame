@@ -135,11 +135,13 @@ define('FRIEND_NO', '<img src="'.$globals['base_url'].'img/common/icon_heart_no.
 
 function friend_exists($from, $to) {
 	global $db;
+	if ($from == $to) return 0;
 	return intval($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
 }
 
 function friend_insert($from, $to, $value = 1) {
 	global $db;
+	if ($from == $to) return 0;
 	return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
 }
 
@@ -149,6 +151,7 @@ function friend_delete($from, $to) {
 }
 
 function friend_add_delete($from, $to) {
+	if ($from == $to) return '';
 	if(friend_exists($from, $to)) {
 		friend_delete($from, $to);
 		return FRIEND_NO;
@@ -160,6 +163,7 @@ function friend_add_delete($from, $to) {
 
 
 function friend_teaser($from, $to) {
+	if ($from == $to) return '';
 	if (friend_exists($from, $to)) {
 		return FRIEND_YES;
 	} else {
