@@ -92,7 +92,7 @@ switch ($view) {
 		do_voters_preferred();
 		break;
 	case 'friends':
-		do_user_tabs(6, $login);
+		do_user_tabs(7, $login);
 		do_friends();
 		break;
 	case 'favorites':
