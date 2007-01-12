@@ -87,10 +87,13 @@ switch ($view) {
 		do_shaken();
 		do_pages($rows, $page_size);
 		break;
+	// Disabls becuase affiliation was also disabled
+	/**********
 	case 'preferred':
 		do_user_tabs(5, $login);
 		do_voters_preferred();
 		break;
+	***********/
 	case 'friends':
 		do_user_tabs(7, $login);
 		do_friends();
@@ -313,6 +316,7 @@ function do_commented () {
 	}
 }
 
+/************
 function do_voters_preferred() {
 	global $db, $user;
 
@@ -368,6 +372,7 @@ function do_voters_preferred() {
 
 
 }
+***************/
 
 function do_friends() {
 	global $db, $user;
@@ -408,7 +413,7 @@ function do_user_tabs($option, $user) {
 		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">'.FAV_YES. '</a></li>';
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
-		echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
+		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
 		echo '</ul>';
 
 }
