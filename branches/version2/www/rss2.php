@@ -35,8 +35,6 @@ if(!empty($_REQUEST['time'])) {
 	$sql .= "link_status != 'discard' ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
 	$title = _('Menéame: más votadas en') . ' ' . txt_time_diff($from);
-	//$link_date = "modified";
-	$link_date = "";
 } elseif (!empty($_REQUEST['favorites'])) {
 	/////
 	// RSS for users' favorites
@@ -53,8 +51,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' friends
 	/////
 	$user_id = intval($_REQUEST['friends_of']);
-	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author ORDER BY link_date DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author ORDER BY link_date DESC limit 1");
+	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and link_status != 'discard' ORDER BY link_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and link_status != 'discard' ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: amigos de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
@@ -158,7 +156,7 @@ if ($links) {
 		echo "		<comments>".$link->get_permalink()."</comments>\n";
 		if (!empty($link_date))
 			echo "		<pubDate>".date("r", $link->$link_date)."</pubDate>\n";
-		else echo "      <pubDate>".date("r", time())."</pubDate>\n";
+		else echo "      <pubDate>".date("r", $link->date)."</pubDate>\n";
 		echo "		<dc:creator>$link->username</dc:creator>\n";
 		echo "		<category>$category_name</category>\n";
 		// Add tags as categories
