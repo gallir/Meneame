@@ -60,6 +60,8 @@ switch ($view) {
 		print_shakeit_tabs(3);
 		$globals['tag_status'] = 'queued';
 		break;
+	// Commented out, although consuming not used almost, there is now "friends"
+	/***************
 	case 'recommended':
 		$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
 		if(!$threshold) $threshold = 0;
@@ -72,6 +74,7 @@ switch ($view) {
 		print_shakeit_tabs(4);
 		$globals['tag_status'] = 'queued';
 		break;
+	***************/
 	case 'discarded':
 		// Show only discarded in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
@@ -148,7 +151,7 @@ function print_shakeit_tabs($option) {
 	if ($current_user->user_id > 0) {
 		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=friends">'._('amigos'). '</a></li>'."\n";
 		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
-		echo '<li><a '.$active[4].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
+		//echo '<li><a '.$active[4].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
 	}
 	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
 	echo '</ul>'."\n";
