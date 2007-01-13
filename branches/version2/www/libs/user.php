@@ -129,8 +129,8 @@ class User {
 }
 
 // Following functions are related to users but not done as a class so can be easily used with User and UserAuth
-define('FRIEND_YES', '<img src="'.$globals['base_url'].'img/common/icon_heart.png" alt="del" width="16" height="16" title="'._('amigo').'"/>');
-define('FRIEND_NO', '<img src="'.$globals['base_url'].'img/common/icon_heart_no.png" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
+define('FRIEND_YES', '<img src="'.$globals['base_url'].'img/common/icon_heart.gif" alt="del" width="13" height="16" title="'._('amigo').'"/>');
+define('FRIEND_NO', '<img src="'.$globals['base_url'].'img/common/icon_heart_no.gif" alt="add" width="13" height="16" title="'._('agregar lista amigos').'"/>');
 
 
 function friend_exists($from, $to) {
