@@ -255,9 +255,7 @@ function do_submit1() {
 	echo '<p><span class="genericformnote"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
-    echo '<div style="float: right;">';
-    print_simpleformat_buttons('bodytext');
-    echo '</div>';
+	print_simpleformat_buttons('bodytext');
 
 	echo '<p><label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
 	echo '<br /><span class="genericformnote">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";

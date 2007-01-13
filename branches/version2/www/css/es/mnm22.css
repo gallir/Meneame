@@ -971,7 +971,7 @@ margin: 0px;
 margin: 25px 5px 0 10px;
 }
 
-.comments h2 {
+.comments h3 {
 margin: 0;
 }
 
@@ -1017,6 +1017,12 @@ margin-bottom: 10px;
 color: #FF6400;
 font-weight: bold;
 font-size: 100%;
+}
+
+.comments-warning {
+font-size: 100%;
+margin: 0;
+color: #F00;
 }
 
 .comments-list {
@@ -1284,7 +1290,7 @@ margin: 0 60px 60px 100px;
 }
 
 
-#genericform-contents h2/*, #contents-wide h2*/ {
+#genericform-contents h2 /*, #contents-wide h2*/ {
 margin: 10px 0 0 0;
 }
 
@@ -1572,7 +1578,7 @@ background: #fff url(../../img/common/menealo-background.png) bottom left repeat
 }
 
 .voters, .mini-sneaker {
-margin: 25px 0 0 10px;
+margin: 25px 5px 0 10px;
 }
 
 .voters h2 {
@@ -1791,4 +1797,10 @@ margin-left: 30px;
 
 .bookmarks-export-user-commented {
 margin-left: 0px;
+}
+
+.rich-edit-key {
+margin-left: 3px;
+margin-bottom: 3px;
+float: right;
 }
