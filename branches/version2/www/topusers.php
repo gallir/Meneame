@@ -14,18 +14,19 @@ include(mnminclude.'user.php');
 $globals['ads'] = true;
 $page_size = 20;
 
-$range_names  = array( _('todas'), _('24 horas'), _('última semana'), _('último mes'), _('último año'));
-$range_values = array(0, 86400, 604800, 2592000, 31536000);
-
 $offset=(get_current_page()-1)*$page_size;
 
 $items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos totales'));
 
-$sortby = preg_replace('/ /', '_', $_GET['sortby']);
-if(intval($sortby) < 0 || intval($sortby) > 5) 
-	$sortby = 4;
-else $sortby = intval($sortby); // Be safe, always!!!!
 
+// Warn, empty() return true even if sortby=0
+if ( !strlen($_GET['sortby']) > 0) {
+	$sortby = 1;
+} else {
+	$sortby = intval($_GET['sortby']);
+	if($sortby < 0 || $sortby > 5) 
+		$sortby = 1;
+}
 
 switch ($sortby) {
 	case 0:
