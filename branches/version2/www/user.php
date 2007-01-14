@@ -158,7 +158,7 @@ function do_profile() {
 		else $url = $user->url;
 		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'"  rel="nofollow">'.$url.'</a></dd>';
 	}
-	echo '<dt>'._('desde').':</dt><dd>'.get_date($user->date).'</dd>';
+	echo '<dt>'._('desde').':</dt><dd>'.get_date_time($user->date).'</dd>';
 
 	if($current_user->user_level=='god') {
 		echo '<dt>'._('email').':</dt><dd>'.$user->email. ' (' .  _('registro'). ": <em>$user->email_register</em>)</dd>";
