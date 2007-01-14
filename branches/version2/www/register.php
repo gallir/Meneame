@@ -82,7 +82,7 @@ function do_register1() {
 
 
 	echo '<form action="register.php" method="post" id="thisform">' . "\n";
-	echo '<fieldset><legend><span class="sign">'._(validación).'</span></legend>'."\n";
+	echo '<fieldset><legend><span class="sign">'._('validación').'</span></legend>'."\n";
 	ts_print_form();
 	echo '<input type="submit" name="submit" value="'._('continuar').'" />';
 	echo '<input type="hidden" name="process" value="2" />';
@@ -179,7 +179,7 @@ function check_user_fields() {
 	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.%';
 	$from = time() - 3600;
 	$registered = intval($db->get_var("select count(*) from users where user_date > from_unixtime($from) and user_ip like '$ip_class'"));
-	if($registered > 3) {
+	if($registered > 2) {
 		register_error(_("Para registrar otro usuario desde la misma red debes esperar unos minutos.") . " ($ip_class)");
 		$error=true;
 	}
