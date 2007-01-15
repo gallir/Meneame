@@ -266,7 +266,7 @@ function to_hoygan(str)
 	// str=str.replace(/'. '/gi, '');
 	str=str.replace(/,/gi, ' ');
 	str=str.replace(/hola/gi, 'ola');
-	str=str.replace(/ r([aeiou])/gi, ' rr$1'); // cal l'expressio regular per a principi de paraula? :)
+	str=str.replace(/ r([aeiou])/gi, ' rr$1');
 	return str.toUpperCase();
 }
 
@@ -277,6 +277,20 @@ function to_hoygan(str)
 
 do_banner_top();
 echo '<div id="container-wide">' . "\n";
+
+// Check the tab options and set corresponging JS variables
+if ($current_user->user_id > 0) {
+	if (!empty($_REQUEST['friends'])) {
+		$taboption = 2;
+		echo '<script type="text/javascript">var show_friends = true;</script>';
+	} else {
+		$taboption = 1;
+		echo '<script type="text/javascript">var show_friends = false;</script>';
+	}
+print_sneak_tabs($taboption);
+}
+//////
+
 
 echo '<div class="sneaker">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
@@ -326,4 +340,16 @@ echo '</div>';
 echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";
 
 do_footer();
+
+function print_sneak_tabs($option) {
+$active = array();
+$active[$option] = ' class="tabmain-this"';
+echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
+
+echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+
+echo '</ul>' . "\n";
+}
+
 ?>

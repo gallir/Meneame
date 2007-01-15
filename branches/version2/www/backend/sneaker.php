@@ -52,7 +52,12 @@ if (empty($_GET['novote']) || empty($_GET['noproblem'])) get_votes($dbtime);
 
 
 // Get the logs
-$logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > $dbtime order by log_date desc limit $max_items");
+if (!empty($_GET['friends']) && $current_user->user_id > 0 ) {
+	$sql = "select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs, friends where log_date > $dbtime and friend_type = 'manual'  and friend_from = $current_user->user_id and friend_to = log_user_id order by log_date desc limit $max_items";
+} else {
+	$sql = "select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > $dbtime order by log_date desc limit $max_items";
+}
+$logs = $db->get_results($sql);
 
 if ($logs) {
 	foreach ($logs as $log) {
@@ -146,10 +151,16 @@ function send_chat_warn($mess) {
 
 function get_chat($time) {
 	global $db, $events, $last_timestamp, $max_items, $current_user;
+
 	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$uid = $id = $event->chat_uid;
+		if ($uid != $current_user->user_id && !empty($_GET['friends'])) {
+			// Check the user is a friend
+			if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $uid") > 0)
+				continue;
+		}
 		$who = $event->chat_user;
 		$timestamp = $event->chat_time;
 		$key = $timestamp . ':chat:'.$id;
@@ -170,7 +181,13 @@ function get_votes($dbtime) {
 		$pvotes = "and link_status != 'published'";
 	else $pvotes = '';
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id $pvotes and vote_user_id != link_author order by vote_date desc limit $max_items");
+	if (!empty($_GET['friends']) && $current_user->user_id > 0 ) {
+		$sql = "select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, friends, links where vote_type='links' and vote_date > $dbtime and friend_type = 'manual'  and friend_from = $current_user->user_id and friend_to = vote_user_id and link_id = vote_link_id $pvotes and vote_user_id != link_author order by vote_date desc limit $max_items";
+	} else {
+		$sql = "select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id $pvotes and vote_user_id != link_author order by vote_date desc limit $max_items";
+	}
+
+	$res = $db->get_results($sql);
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($event->vote_value >= 0 && !empty($_GET['novote'])) continue;

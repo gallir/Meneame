@@ -247,6 +247,7 @@ function get_options_string() {
 	if (show_new == false) options += '&nonew=1';
 	if (show_published == false) options += '&nopublished=1';
 	if (show_pubvotes == false) options += '&nopubvotes=1';
+	if (show_friends == true) options += '&friends=1';
 	return options;
 }
 
