@@ -26,7 +26,7 @@ function do_vertical_tags() {
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
 		echo '<div class="right-box">';
-		echo '<h2><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h2>'."\n";
+		echo '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
 		foreach ($res as $item) {
 			$size = round($min_pts + ($item->count-1)*$coef, 1);
 			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($item->tag_words).'">'.$item->tag_words.'</a>  ';
@@ -42,7 +42,7 @@ function do_last_comments() {
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users where comment_link_id = link_id and comment_user_id = user_id order by comment_date desc limit 10");
 	if ($res) {
 		echo '<div class="right-box">';
-		echo '<h2>' . _('últimos comentarios'). '</h2><ul>';
+		echo '<h4>' . _('últimos comentarios'). '</h4><ul>';
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
@@ -60,7 +60,7 @@ function do_best_comments() {
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
 		echo '<div class="right-box">';
-		echo '<h2><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h2><ul>'."\n";
+		echo '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
