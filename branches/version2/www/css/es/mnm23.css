@@ -293,7 +293,7 @@ border-bottom-style: dotted;
 border-bottom-color: #FF6400;
 }
 
-h2 + p, h3 + p, h4 + p, h5 + p, div > p, fieldset p {
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, div > p, fieldset p {
 margin-top: 0;
 }
 
@@ -655,7 +655,7 @@ color: #FF6400;
 border: 1px dotted #FF6400;
 }
 
-.news-body h3 {
+.news-body h1 {
 margin: 0;
 padding: 0 5px 0 0;
 font-size: 140%;

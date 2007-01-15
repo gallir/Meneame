@@ -60,7 +60,7 @@ function do_best_comments() {
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
 		echo '<div class="right-box">';
-		echo '<h2><a href="'.$globals['base_url'].'topcomments.php" title="'._('con más karma de las últimas 6 horas').'">'._('¿mejores? comentarios').'</a></h2><ul>'."\n";
+		echo '<h2><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h2><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
