@@ -109,7 +109,7 @@ function to_html(data) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak07.js.php"></script>
 <?
 
 echo '<div class="sneaker">';

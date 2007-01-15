@@ -272,7 +272,7 @@ function to_hoygan(str)
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak06.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak07.js.php"></script>
 <?
 
 do_banner_top();
@@ -346,8 +346,8 @@ $active = array();
 $active[$option] = ' class="tabmain-this"';
 echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
 
-echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
-echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
 
 echo '</ul>' . "\n";
 }
