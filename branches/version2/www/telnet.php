@@ -39,6 +39,7 @@ var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?
 var mykey = <? echo rand(100,999); ?>;
 
 var do_animation=false;
+var show_friends = false;
 
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);
