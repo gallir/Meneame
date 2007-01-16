@@ -315,9 +315,9 @@ class Link {
 		
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
-		echo '<h1>';
+		echo '<h2>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
-		echo '</h1>';
+		echo '</h2>';
 		// In order not to overload websnapr, display the image only if votes are enabled
 		if ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 			echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';

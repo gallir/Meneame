@@ -655,12 +655,13 @@ color: #FF6400;
 border: 1px dotted #FF6400;
 }
 
-.news-body h1 {
+.news-body h2 {
 margin: 0;
 padding: 0 5px 0 0;
 font-size: 140%;
 font-weight: normal;
 background: none;
+border: none;
 }
 
 .news-body p {
@@ -1290,7 +1291,7 @@ margin: 0 60px 60px 100px;
 }
 
 
-#genericform-contents h2 /*, #contents-wide h2*/ {
+#genericform-contents h2 {
 margin: 10px 0 0 0;
 }
 
