@@ -86,7 +86,7 @@ function check_ban_list($what, $list) {
 
 function check_email($email) {
 	global $globals;
-	if (! preg_match('/^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $email)) 
+	if (! preg_match('/^[a-zA-Z0-9_\-\.]+(\+[a-zA-Z0-9_\-\.]+)*@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $email)) 
 		return false;
 	if(check_ban_list($email, $globals['forbidden_email_domains'])) return false;
 	return true;

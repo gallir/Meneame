@@ -9,20 +9,20 @@
 	include('../config.php');
 	header('Content-Type: text/plain; charset=UTF-8');
 	$type=clean_input_string($_REQUEST['type']);
-	$name=clean_input_string($_GET["name"]);
+	$name=clean_input_string($_GET['name']);
 	#echo "$type, $name...";
 	switch ($type) {
 		case 'username':
+			if (!check_username(trim($_GET['name']))) {
+				echo _('caracteres inválidos');
+				return;
+			}
 			if (strlen($name)<3) {
 				echo _('nombre demasiado corto');
 				return;
 			}
 			if (strlen($name)>24) {
 				echo _('nombre demasiado largo');
-				return;
-			}
-			if (!check_username($name)) {
-				echo _('caracteres inválidos');
 				return;
 			}
 			if(!($current_user->user_id > 0 && $current_user->user_login == $name) && user_exists($name)) {
