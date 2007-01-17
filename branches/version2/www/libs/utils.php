@@ -43,6 +43,16 @@ if( !empty($_SERVER['HTTP_REFERER'])) {
 	$globals['referer'] = 'unknown';
 }
 
+function htmlentities2unicodeentities ($input) {
+	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
+	$entitiesDecoded = array_keys  (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
+	$num = count ($entitiesDecoded);
+	for ($u = 0; $u < $num; $u++) {
+		$utf8Entities[$u] = '&#'.ord($entitiesDecoded[$u]).';';
+	}
+	return str_replace ($htmlEntities, $utf8Entities, $input);
+}
+
 function clean_input_url($string) {
 	$string = preg_replace('/ /', '+', trim(stripslashes($string)));
 	return preg_replace('/[<>\r\n\t]/', '', $string);

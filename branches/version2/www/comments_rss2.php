@@ -114,7 +114,7 @@ if ($comments) {
 		$link->read();
 		$link_title = $db->get_var("select link_title from links where link_id = $link_id");
 		// Title must not carry htmlentities
-		echo "		<title><![CDATA[".html_entity_decode($link_title)." ]]></title>\n";
+		echo "		<title>".htmlentities2unicodeentities($link_title)."</title>\n";
 		echo "		<link>".$link->get_permalink()."#comment-".$comment->order."</link>\n";
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";

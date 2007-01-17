@@ -151,14 +151,13 @@ if ($links) {
 		$content = text_to_html($link->content);
 		echo "	<item>\n";
 		// Title must not carry htmlentities
-		echo "		<title><![CDATA[".html_entity_decode($link->title)." ]]></title>\n";
+		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
 		echo "		<link>".$link->get_permalink()."</link>\n";
 		echo "		<comments>".$link->get_permalink()."</comments>\n";
 		if (!empty($link_date))
 			echo "		<pubDate>".date("r", $link->$link_date)."</pubDate>\n";
 		else echo "      <pubDate>".date("r", $link->date)."</pubDate>\n";
 		echo "		<dc:creator>$link->username</dc:creator>\n";
-		/***********
 		echo "		<category><![CDATA[$category_name]]></category>\n";
 		// Add tags as categories
 		if (!empty($link->tags)) {
@@ -168,7 +167,6 @@ if ($links) {
 				echo "		<category><![CDATA[".$tag_item."]]></category>\n";
 			}
 		}
-		************/
 		echo "		<guid>".$link->get_permalink()."</guid>\n";
 		echo '		<description><![CDATA[';
 		// In case of meta, only sends votes and karma
@@ -230,7 +228,7 @@ function do_footer() {
 }
 
 function check_redirect_to_feedburner($status) {
-	global $globals; 
+	global $globals;
 
 	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) || preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT'])) return;
 
