@@ -230,7 +230,8 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) || preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT'])) return;
+	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
 	switch ($status) {
 		case 'published':

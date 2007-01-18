@@ -41,6 +41,7 @@ var animation_timer;
 
 var do_hoygan = <? if (!empty($_REQUEST['hoygan']))  echo 'true'; else echo 'false'; ?>;
 
+var show_friends = false;
 
 
 // Reload the mnm banner each 5 minutes
@@ -282,12 +283,11 @@ echo '<div id="container-wide">' . "\n";
 if ($current_user->user_id > 0) {
 	if (!empty($_REQUEST['friends'])) {
 		$taboption = 2;
-		echo '<script type="text/javascript">var show_friends = true;</script>';
+		echo '<script type="text/javascript">show_friends = true;</script>';
 	} else {
 		$taboption = 1;
-		echo '<script type="text/javascript">var show_friends = false;</script>';
 	}
-print_sneak_tabs($taboption);
+	print_sneak_tabs($taboption);
 }
 //////
 

@@ -127,7 +127,7 @@ case 2:
 
 	
 	if($link->date < time()-$globals['time_enabled_comments']) { 
-		echo '<div class="commentform" align="center" >'."\n";
+		echo '<div class="commentform" align="center">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
 	} elseif ($current_user->authenticated && ($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
@@ -250,7 +250,7 @@ function print_comment_form() {
 	global $link, $current_user, $globals;
 
 	if (!$link->votes > 0) return; 
-	echo '<div id="commentform" align="left">'."\n";
+	echo '<div id="commentform">'."\n";
 	echo '<form action="" method="post" id="thisform" style="display:inline;">'."\n";
 	echo '<fieldset><legend><span class="sign">'._('envía un comentario').'</span></legend>'."\n";
 	print_simpleformat_buttons('comment');
@@ -320,7 +320,7 @@ function print_story_tabs($option) {
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
 	echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
-	echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">'.FAV_YES.'</a></li>'."\n";
+	echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
 	if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
 		echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 		echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";

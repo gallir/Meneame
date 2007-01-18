@@ -412,9 +412,9 @@ function do_user_tabs($option, $user) {
 
 		echo '<ul class="tabsub">'."\n";
 		echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
-		echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">'.FRIEND_YES. '</a></li>';
+		echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;'.FRIEND_YES. '&nbsp;</a></li>';
 		echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
-		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">'.FAV_YES. '</a></li>';
+		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
