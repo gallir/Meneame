@@ -147,7 +147,7 @@ background: #fff;
 /* tabsub specials */
 
 .tabsub, .tabsub-shakeit {
-height: 24px !important;
+height: 22px !important;
 padding: 0 0 0 30px;
 margin: 0 0 20px 0; 
 background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
@@ -160,7 +160,7 @@ margin: 30px 20px 0 90px;
 
 .tabsub img {
 margin: 0;
-vertical-align: middle;
+vertical-align: top;
 }
 
 .tabsub li, .tabsub-shakeit li {
@@ -173,7 +173,7 @@ list-style-type: none;
 .tabsub a:link, .tabsub a:visited, .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 float: left;
 font-size: 100%;
-line-height: 18px !important;
+line-height: 16px !important;
 padding: 2px 10px 2px 10px;
 margin-right: 4px;
 border: 1px solid #ff6400;
@@ -1466,7 +1466,7 @@ color: #FF6400;
 text-align: center;
 padding: 0 0 5px 0;
 margin: 0px;
-background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
+background: url(../../img/common/mnu-bkgsoft01.png) repeat-x bottom left;
 border-bottom: 1px solid #FFF;
 }
 
