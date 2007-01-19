@@ -103,18 +103,18 @@ function show_profile() {
 	echo '<input type="text" autocomplete="off" name="names" id="names" tabindex="2" value="'.$user->names.'" />';
 	echo '</p>';
 
-	echo '<p class="l-mid"><label for="name">'._('correo electrónico').':</label><br/>';
+	echo '<p><label for="name">'._('correo electrónico').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="email" id="email" tabindex="3" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
 	echo '&nbsp;&nbsp;<input type="button"  id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
 	echo '<br/><span id="emailcheckitvalue"></span>';
 	echo '</p>';
 
-	echo '<p class="l-mid"><label for="name">'._('página web').':</label><br/>';
+	echo '<p><label for="name">'._('página web').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="url" id="url" tabindex="4" value="'.$user->url.'" />';
 	echo '</p>';
 
 	if ($globals['external_user_ads']) {
-		echo '<p class="l-mid"><label for="adcode">'._('codigo AdSense').':</label><br/>';
+		echo '<p><label for="adcode">'._('codigo AdSense').':</label><br/>';
 		echo '<span class="genericformnote">' . _('tu código de usuario de adsense, del tipo pub-123456789') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="adcode" id="adcode" tabindex="5" value="'.$user->adcode.'" />';
 		echo '</p>';
@@ -123,36 +123,40 @@ function show_profile() {
 
 	if (is_avatars_enabled()) {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
-		echo '<p class="l-mid"><label for="name">'._('avatar').':</label><br/>';
+		echo '<p><label for="name">'._('avatar').':</label><br/>';
 		echo '<span class="genericformnote">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
 		echo '<input type="file" autocomplete="off" name="image" tabindex="5" />';
 		echo '</p>';
 	}
 
-	echo '<p class="l-mid"><label for="name">'._('preferencia comentarios').':</label>';
-	echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-	echo '<select name="comment_pref">';
-	echo '<option value="0"';
-	if ($user->comment_pref == 0) echo ' selected="selected"';
-	echo '>'._('por defecto, ocultar').'</option>';
-	echo '<option value="1"';
-	if ($user->comment_pref == 1) echo ' selected="selected"';
-	echo '>'._('mostrar todos').'</option>';
-	echo '</select>';
+	echo '<fieldset><legend>'._('opciones de visualización') . '</legend>';
+	echo '<p>'._('ocultar comentarios karma bajo').':&nbsp;';
+	print_checkbox('comment_pref', $user->comment_pref);
 	echo '</p>';
+
+
+	echo '<p>'._('mostrar sólo noticias amigos').':&nbsp;';
+	print_checkbox('show_friends', $user->comment_pref & 2);
+	echo '</p>';
+
+	echo '<p>'._('mostrar sólo 2 columnas').':&nbsp;';
+	print_checkbox('show_2cols', $user->comment_pref & 4);
+	echo '</p>';
+
+	echo '</fieldset>';
 
 
 	
 	echo '<p>'._('Introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:').'</p>';
 
-	echo '<p class="l-mid"><label for="password">' . _("clave") . ':</label><br />' . "\n";
+	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
 	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" tabindex="6"/></p>' . "\n";
 
-	echo '<p class="l-mid"><label for="verify">' . _("repite la clave") . ': </label><br />' . "\n";
+	echo '<p><label for="verify">' . _("repite la clave") . ': </label><br />' . "\n";
 	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" tabindex="7"/></p>' . "\n";
 
 	if ($admin_mode) {
-		echo '<p class="l-mid"><label for="verify">' . _("estado") . ': </label><br />' . "\n";
+		echo '<p><label for="verify">' . _("estado") . ': </label><br />' . "\n";
 		echo '<select name="user_level">';
 		foreach ($user_levels as $level) {
 			echo '<option value="'.$level.'"';
@@ -161,7 +165,7 @@ function show_profile() {
 		}
 		echo '</select>';
 
-		echo '<p class="l-mid"><label for="karma">'._('karma').':</label><br/>';
+		echo '<p><label for="karma">'._('karma').':</label><br/>';
 		echo '<input type="text" autocomplete="off" name="karma" id="karma" tabindex="8" value="'.$user->karma.'" />';
 		echo '</p>';
 
@@ -252,7 +256,7 @@ function save_profile() {
 		$user->karma=$_POST['karma'];
 	}
 
-	$user->comment_pref=intval($_POST['comment_pref']);
+	$user->comment_pref=intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
 
 	// Manage avatars upload
 	if (!empty($_FILES['image']['tmp_name']) ) {
@@ -283,6 +287,12 @@ function save_profile() {
 		}
 		echo '<p class="form-act">'._('Datos actualizados').'</p>';
 	}
+}
+
+function print_checkbox($name, $current_value) {
+	echo '<input  name="'.$name.'" type="checkbox" value="1"'; 
+	if ($current_value > 0) echo '  checked="true"';
+	echo '/>';
 }
 
 ?>

@@ -17,37 +17,29 @@ $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
 
-$search = get_search_clause();
-$search_txt = htmlspecialchars(strip_tags($_REQUEST['search']));
-if($search) {
-	do_header(_('búsqueda de'). ' "'.$search_txt.'"');
-	do_banner_top();
-	echo '<div id="container">' . "\n";
-	echo '<div id="contents">'."\n";
-	echo '<h2>'._('búsqueda en pendientes'). ': "'.$search_txt.'" </h2>';
-	$order_by = '';
-} else {
-	do_header(_('noticias pendientes'));
-	do_banner_top();
-	echo '<div id="container">' . "\n";
-	echo '<div id="contents">'."\n";
-	do_tabs("main","shakeit");
-	$order_by = " ORDER BY link_date DESC ";
-}
+do_header(_('noticias pendientes'));
+do_banner_top();
+echo '<div id="'.$globals['css_container'].'">'."\n";
+echo '<div id="contents">'."\n";
+do_tabs("main","shakeit");
+$order_by = " ORDER BY link_date DESC ";
 
-// dropdown
-
-// echo '<div class="dropdown-01"><em>';
-// $ul_drawn = false;
 
 $view = clean_input_string($_REQUEST['view']);
 $cat = check_integer('category');
+
+// Select friends if it's the default for the user and there is no extra arguments
+if ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
+	$globals['link_to_all'] = '?view=all';
+	if (empty($view)) 
+		$view = 'friends';
+}
 
 switch ($view) {
 	case 'friends':
 		// Show last in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
-			$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
+		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
 		$order_by = " ORDER BY link_date DESC ";	
 		print_shakeit_tabs(2);
 		$globals['tag_status'] = 'queued';
@@ -60,21 +52,6 @@ switch ($view) {
 		print_shakeit_tabs(3);
 		$globals['tag_status'] = 'queued';
 		break;
-	// Commented out, although consuming not used almost, there is now "friends"
-	/***************
-	case 'recommended':
-		$threshold = $db->get_var("select friend_value from friends where friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=0");
-		if(!$threshold) $threshold = 0;
-		else $threshold = $threshold * 0.95;
-			
-		// Show last in four days
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
-		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='affiliate' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > $threshold";
-		$order_by = " ORDER BY link_date DESC ";	
-		print_shakeit_tabs(4);
-		$globals['tag_status'] = 'queued';
-		break;
-	***************/
 	case 'discarded':
 		// Show only discarded in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
@@ -84,12 +61,9 @@ switch ($view) {
 		break;
 	case 'all':
 	default:
-		if ($search)
-			$from_where = "FROM links WHERE link_status!='published' AND $search";
-		else
-			// Show last in seven days
-			$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*7).'"';
-			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
+		// Show last in seven days
+		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*7).'"';
+		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
 		print_shakeit_tabs(1);
 		$globals['tag_status'] = 'queued';
 		break;
@@ -147,7 +121,7 @@ function print_shakeit_tabs($option) {
 	$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php"><strong>'._('todas'). '</strong></a></li>'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
 	if ($current_user->user_id > 0) {
 		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=friends">'._('amigos'). '</a></li>'."\n";
 		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";

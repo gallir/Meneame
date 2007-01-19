@@ -40,24 +40,18 @@ $globals['ads'] = true;
 $search = get_search_clause();
 // Search all if it's a search
 $cat=check_integer('category');
-if($search)  {
+$view = clean_input_string($_REQUEST['view']);
+
+if($search) {
 	$search_txt = htmlspecialchars($_REQUEST['search']);
 	$from_where = "FROM links WHERE ";
 	if($cat) {
 		$from_where .= " link_category=$cat AND ";
 	}
-} else {
-	$from_where = "FROM links WHERE link_status='published' ";
-	if($cat) {
-		$from_where .= " AND link_category=$cat ";
-	}
-}
-
-if($search) {
 	do_header(_('búsqueda de'). '"'.$search_txt.'"');
 	do_banner_top();
-	echo '<div id="container">' . "\n";
-	echo '<div id="contents">'; // benjami: repetit, no m'agrada, arreglar despres
+	echo '<div id="'.$globals['css_container'].'">'."\n";
+	echo '<div id="contents">';
 	do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 	echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 	$from_where .= $search;
@@ -67,11 +61,39 @@ if($search) {
 		$order_by = '';
 	}
 } else {
+	$view = clean_input_string($_REQUEST['view']);
 	do_header(_('últimas publicadas'));
 	do_banner_top();
-	echo '<div id="container">' . "\n";
-	echo '<div id="contents">'."\n"; // benjami: repetit, no m'agrada, arreglar despres
+	echo '<div id="'.$globals['css_container'].'">'."\n";
+	echo '<div id="contents">'."\n";
 	do_tabs('main','published');
+
+	// Check authenticated users
+	if ($current_user->user_id > 0) {
+	// check if the default is "show friends"
+		if (($current_user->user_comment_pref & 2) > 0) {
+    		$globals['link_to_all'] = '?view=all';
+    		if (empty($view))
+        		$view = 'friends';
+		}
+		// Check the current view
+		switch ($view) {
+			case 'friends':
+				$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
+				$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
+				print_index_tabs(2);
+			break;
+			default:
+				print_index_tabs(1);
+				$from_where = "FROM links WHERE link_status='published' ";
+		}
+	} else {
+		$from_where = "FROM links WHERE link_status='published' ";
+	}
+
+	if($cat) {
+		$from_where .= " AND link_category=$cat ";
+	}
 	$order_by = " ORDER BY link_published_date DESC ";
 }
 
@@ -92,4 +114,19 @@ do_sidebar();
 $globals['tag_status'] = 'published';
 do_rightbar();
 do_footer();
+
+function print_index_tabs($option) {
+	global $globals, $current_user;
+
+	$active = array();
+	$active[$option] = 'class="tabsub-this"';
+
+	echo '<ul class="tabsub-shakeit">'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['base_url'].$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	if ($current_user->user_id > 0) {
+		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'?view=friends">'._('amigos'). '</a></li>'."\n";
+	}
+	echo '</ul>'."\n";
+}
+
 ?>

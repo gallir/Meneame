@@ -106,7 +106,7 @@ class Comment {
 		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
-		if ($this->hidden && $current_user->user_comment_pref == 0) {
+		if ($this->hidden && $current_user->user_comment_pref & 0 == 0) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
 		} else {
 			$this->print_text($length, $single_link);

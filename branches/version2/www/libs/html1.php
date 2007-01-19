@@ -65,6 +65,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
+	$globals['css_container'] = 'container';
+
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
@@ -99,6 +101,11 @@ function do_header($title, $id='home') {
 		if($current_user->authenticated) {
 	  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('cerrar sesión') . '</a></li>' . "\n";
   			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' . _('perfil de') . ' ' . $current_user->user_login . '</a></li>' . "\n";
+			// Select the wider container if the user has selected to view just two columns
+			if (($current_user->user_comment_pref & 4) > 0) {
+				$globals['css_container'] = 'container-2cols';
+				$globals['css_no_extra_col'] = true;
+			}
 		} else {
   			echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
   			echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('login') . '</a></li>' . "\n";
@@ -169,6 +176,9 @@ function do_sidebar() {
 }
 
 function do_rightbar() {
+	global $globals;
+	if ($globals['css_no_extra_col']) return;
+
 	require_once(mnminclude.'html-utils.php');
 	echo "<div id='rightbar'>\n";
 	do_banner_right();

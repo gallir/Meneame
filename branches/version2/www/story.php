@@ -95,7 +95,7 @@ if ($_POST['process']=='newcomment') {
 do_header($link->title, 'post');
 
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="'.$globals['css_container'].'">'."\n";
 echo '<div id="contents">';
 do_tabs("main",_('noticia'), true);
 $link->print_summary();

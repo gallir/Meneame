@@ -15,7 +15,7 @@ $globals['ads'] = true;
 
 do_header(_('mejores comentarios en 24 horas'));
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="'.$globals['css_container'].'">'."\n";
 echo '<div id="contents">';
 do_tabs('main', _('+ comentarios'), true);
 echo '<div class="topheading"><h2>'._('comentarios más valorados 24 horas').'</h2></div>';

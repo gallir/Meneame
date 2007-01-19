@@ -44,7 +44,7 @@ overflow: hidden;
 
 /* From: http://alistapart.com/articles/holygrail */
 
-#container {
+#container, #container-2cols { 
 margin-top: 20px;
 padding-left: 13.5em;      /* LC width */
 padding-right: 160px;      /* RC width */
@@ -52,6 +52,10 @@ position: relative;
 overflow: hidden;
 background: url(../../img/common/pixel-ff6400.png) 13.5em top repeat-y;
 padding-bottom: 50px;
+}
+
+#container-2cols {
+padding-right: 20px;
 }
 
 #contents {
@@ -1294,7 +1298,6 @@ margin: 10px 0 0 0;
 #genericform fieldset, #genericform-contents fieldset {
 background: #FFF;
 border: 1px solid #FF6400;
-font-size: 110%;
 }
 
 #genericform {

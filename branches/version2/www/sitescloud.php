@@ -40,7 +40,7 @@ $coef = ($max_pts - $min_pts)/($max-1);
 
 do_header(_('nube de sitios web'));
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="'.$globals['css_container'].'">'."\n";
 echo '<div id="contents">';
 do_tabs("main", _('+ webs'), true);
 echo '<div class="topheading"><h2>Los sitios más enlazados</h2></div>';

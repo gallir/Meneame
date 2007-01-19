@@ -17,7 +17,7 @@ $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 2
 
 do_header(_('las peores :-)'));
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="'.$globals['css_container'].'">'."\n";
 echo '<div id="contents">';
 echo '<div class="topheading"><h2>'._('¿noticias?').' :-) </h2></div>';
 

@@ -35,7 +35,7 @@ if ($range_values[$from] > 0) {
 
 do_header(_('más votadas'));
 do_banner_top();
-echo '<div id="container">' . "\n";
+echo '<div id="'.$globals['css_container'].'">'."\n";
 echo '<div id="contents">';
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
