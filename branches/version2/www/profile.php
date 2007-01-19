@@ -130,12 +130,12 @@ function show_profile() {
 	}
 
 	echo '<fieldset><legend>'._('opciones de visualización') . '</legend>';
-	echo '<p>'._('ocultar comentarios karma bajo').':&nbsp;';
-	print_checkbox('comment_pref', $user->comment_pref);
+	echo '<p>'._('mostrar todos los comentarios').':&nbsp;';
+	print_checkbox('comment_pref', $user->comment_pref & 1);
 	echo '</p>';
 
 
-	echo '<p>'._('mostrar sólo noticias amigos').':&nbsp;';
+	echo '<p>'._('mostrar sólo noticias amigos por defecto').':&nbsp;';
 	print_checkbox('show_friends', $user->comment_pref & 2);
 	echo '</p>';
 
