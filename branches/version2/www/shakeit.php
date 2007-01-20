@@ -37,8 +37,7 @@ if ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
 
 switch ($view) {
 	case 'friends':
-		// Show last in four days
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
 		$order_by = " ORDER BY link_date DESC ";	
 		print_shakeit_tabs(2);
@@ -62,7 +61,7 @@ switch ($view) {
 	case 'all':
 	default:
 		// Show last in seven days
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*7).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
 		print_shakeit_tabs(1);
 		$globals['tag_status'] = 'queued';
