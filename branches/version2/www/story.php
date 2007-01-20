@@ -81,6 +81,7 @@ $globals['link_permalink'] = $globals['link']->get_permalink();
 if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_adcode)) {
 	$globals['do_user_ad'] = $link->user_karma * 2;
 	$globals['user_adcode'] = $link->user_adcode;
+	$globals['user_adchannel'] = $user->adchannel;
 }
 
 if ($link->status != 'published') 

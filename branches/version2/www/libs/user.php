@@ -61,14 +61,16 @@ class User {
 		$user_lang = $this->lang;
 		$user_email = $db->escape($this->email);
 		$user_names = $db->escape($this->names);
+		$user_public_info = $db->escape(htmlentities($this->public_info));
 		$user_url = $db->escape(htmlentities($this->url));
 		$user_adcode = $db->escape($this->adcode);
+		$user_adchannel = $db->escape($this->adchannel);
 		if($this->id===0) {
-			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_names,  user_url, user_adcode) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$usr_names',  '$user_url', '$user_adcode'");
+			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_names, user_public_info, user_url, user_adcode, user_adchannel) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$usr_names',  '$user_url', '$user_adcode'");
 			$this->id = $db->insert_id;
 		} else {
 			if ($full_save) $modification = ', user_modification = now() ' ;
-			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_names='$user_names', user_url='$user_url', user_adcode='$user_adcode' $modification  WHERE user_id=$this->id");
+			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel' $modification  WHERE user_id=$this->id");
 		}
 	}
 	
@@ -96,8 +98,10 @@ class User {
 			$this->lang = $user->user_lang;
 			$this->karma = $user->user_karma;
 			$this->avatar = $user->user_avatar;
+			$this->public_info = $user->user_public_info;
 			$this->url = $user->user_url;
 			$this->adcode = $user->user_adcode;
+			$this->adchannel = $user->user_adchannel;
 			$this->read = true;
 			if (strlen($this->pass) != 32) { //migrate to md5
 				$this->pass = md5($this->pass); 

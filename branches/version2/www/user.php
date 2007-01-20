@@ -50,6 +50,7 @@ if(!$user->read()) {
 // 100 if the user is the current one
 if($globals['external_user_ads'] && !empty($user->adcode)) {
     $globals['user_adcode'] = $user->adcode;
+    $globals['user_adchannel'] = $user->adchannel;
 	if ($current_user->user_id == $user->id || $current_user->user_level=='god') $globals['do_user_ad']  = 100; 
 	else $globals['do_user_ad'] = $user->karma * 2;
 }
@@ -113,10 +114,6 @@ echo '</div>'."\n";
 
 do_footer();
 
-//echo '<div id="contents">';
-//echo '</div>';
-
-
 
 function do_profile() {
 	global $user, $current_user, $login, $db, $globals;
@@ -151,19 +148,31 @@ function do_profile() {
 		echo '</dd>';
 	}
 
-	if(!empty($user->names))
+	if(!empty($user->names)) {
 		echo '<dt>'._('nombre').':</dt><dd>'.$user->names.'</dd>';
+	}
+
+	// Show public info is it's a friend or god
+	if($current_user->user_id > 0 && !empty($user->public_info) && (
+			$current_user->user_id == $user->id
+			|| $current_user->user_level=='god' 
+			|| friend_exists($user->id, $current_user->user_id) )) {
+		echo '<dt>'._('IM/email').':</dt><dd> '.$user->public_info.'</dd>';
+	}
+
 	if(!empty($user->url)) {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'"  rel="nofollow">'.$url.'</a></dd>';
 	}
+
 	echo '<dt>'._('desde').':</dt><dd>'.get_date_time($user->date).'</dd>';
 
 	if($current_user->user_level=='god') {
 		echo '<dt>'._('email').':</dt><dd>'.$user->email. ' (' .  _('registro'). ": <em>$user->email_register</em>)</dd>";
 		if(!empty($user->adcode)) {
-			echo '<dt>'._('AdSense').':</dt><dd>'.$user->adcode.'</dd>';
+			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
+			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
 		}
 	}
 

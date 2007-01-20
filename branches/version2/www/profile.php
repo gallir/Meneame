@@ -60,6 +60,7 @@ $globals['ads'] = true;
 // 100 if the user is the current one
 if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empty($user->adcode)) {
 	$globals['user_adcode'] = $user->adcode;
+	$globals['user_adchannel'] = $user->adchannel;
 	$globals['do_user_ad']  = 100;
 }
 
@@ -79,11 +80,7 @@ function show_profile() {
 	save_profile();
 	
 	echo '<div id="genericform-contents"><div id="genericform"><fieldset><legend>';
-	if (!$admin_mode)
-		echo '<span class="sign">'._('modifica tu perfil')." ($user->username: $user->level)</span></legend>";
-	else 
-		echo '<span class="sign">'."<a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
-
+	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
 
 	echo '<img class="gravatar-sub" src="'.$globals['base_url'] . 'backend/get_avatar.php?id='.$user->id.'&amp;size=80&amp;t='.time().'" width="80" height="80" alt="'.$user->username.'" />';
 	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
@@ -94,29 +91,35 @@ function show_profile() {
 		echo '<input type="hidden" name="login" value="'.$user->username.'" />';
 
 	echo '<p class="l-top"><label for="name">'._('usuario').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="username" id="username" tabindex="1" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
+	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
 	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
 	echo '<br/><span id="usernamecheckitvalue"></span>' . "\n";
 	echo '</p>';
 
 	echo '<p class="l-top"><label for="name">'._('nombre real').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="names" id="names" tabindex="2" value="'.$user->names.'" />';
+	echo '<input type="text" autocomplete="off" name="names" id="names" value="'.$user->names.'" />';
 	echo '</p>';
 
 	echo '<p><label for="name">'._('correo electrónico').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="email" id="email" tabindex="3" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
+	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
 	echo '&nbsp;&nbsp;<input type="button"  id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
 	echo '<br/><span id="emailcheckitvalue"></span>';
 	echo '</p>';
 
+	echo '<p><label for="name">'._('IM/email público visible por los amigos').':</label><br/>';
+	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
+	echo '</p>';
+
 	echo '<p><label for="name">'._('página web').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="url" id="url" tabindex="4" value="'.$user->url.'" />';
+	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
 	echo '</p>';
 
 	if ($globals['external_user_ads']) {
 		echo '<p><label for="adcode">'._('codigo AdSense').':</label><br/>';
 		echo '<span class="genericformnote">' . _('tu código de usuario de adsense, del tipo pub-123456789') . '</span><br/>';
-		echo '<input type="text" autocomplete="off" name="adcode" id="adcode" tabindex="5" value="'.$user->adcode.'" />';
+		echo '<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="20" value="'.$user->adcode.'" /><br />';
+		echo '<span class="genericformnote">' . _('canal AdSense (opcional), del tipo 1234567890') . '</span><br/>';
+		echo '<input type="text" autocomplete="off" name="adchannel" id="adchannel" maxlength="12" value="'.$user->adchannel.'" />';
 		echo '</p>';
 	}
 
@@ -125,7 +128,7 @@ function show_profile() {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
 		echo '<p><label for="name">'._('avatar').':</label><br/>';
 		echo '<span class="genericformnote">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
-		echo '<input type="file" autocomplete="off" name="image" tabindex="5" />';
+		echo '<input type="file" autocomplete="off" name="image" />';
 		echo '</p>';
 	}
 
@@ -150,10 +153,10 @@ function show_profile() {
 	echo '<p>'._('Introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:').'</p>';
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
-	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" tabindex="6"/></p>' . "\n";
+	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" /></p>' . "\n";
 
 	echo '<p><label for="verify">' . _("repite la clave") . ': </label><br />' . "\n";
-	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" tabindex="7"/></p>' . "\n";
+	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" /></p>' . "\n";
 
 	if ($admin_mode) {
 		echo '<p><label for="verify">' . _("estado") . ': </label><br />' . "\n";
@@ -166,7 +169,7 @@ function show_profile() {
 		echo '</select>';
 
 		echo '<p><label for="karma">'._('karma').':</label><br/>';
-		echo '<input type="text" autocomplete="off" name="karma" id="karma" tabindex="8" value="'.$user->karma.'" />';
+		echo '<input type="text" autocomplete="off" name="karma" id="karma" value="'.$user->karma.'" />';
 		echo '</p>';
 
 	}
@@ -217,10 +220,12 @@ function save_profile() {
 		$user->email=trim($_POST['email']);
 	}
 	$user->url=htmlspecialchars(clean_input_url($_POST['url']));
+	$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
 
 	// Verifies adsense code
 	if ($globals['external_user_ads']) {
 		$_POST['adcode'] = trim($_POST['adcode']);
+		$_POST['adchannel'] = trim($_POST['adchannel']);
 		if (!empty($_POST['adcode']) && $user->adcode != $_POST['adcode']) {
 			if ( !preg_match('/^pub-[0-9]{16}$/', $_POST['adcode'])) {
 				echo '<p class="form-error">'. _('código AdSense incorrecto, no se ha grabado'). '</p>';
@@ -235,7 +240,15 @@ function save_profile() {
 				}
 			}
 		}
+		if (!empty($_POST['adcode']) && !empty($_POST['adchannel']) && $user->adchannel != $_POST['adchannel']) {
+			if ( !preg_match('/^[0-9]{10,12}$/', $_POST['adchannel'])) {
+				echo '<p class="form-error">'. _('canal AdSense incorrecto, no se ha grabado'). '</p>';
+				$_POST['adchannel'] = '';
+				$errors++;
+			}
+		}
 		$user->adcode = $_POST['adcode'];
+		$user->adchannel = $_POST['adchannel'];
 	}
 
 	$user->names=clean_text($_POST['names']);
