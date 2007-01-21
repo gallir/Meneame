@@ -112,6 +112,9 @@ function to_html(data) {
 		case 'chat':
 			html += '<img src="img/common/sneak-chat01.png" width="20" height="16" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
+			if (data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
+				text_style = 'style="color: #225322;"';
+			}
 			if (check_user_ping(data.title)) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
 			}

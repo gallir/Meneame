@@ -129,8 +129,12 @@ function check_chat() {
 		$from = $now - 900;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
+		if (!empty($_GET['friends'])) 
+			$room = 'friends';
+		else
+			$room = 'all';
 		if (strlen($comment)>0) {
-			$db->query("insert into chats (chat_time, chat_uid, chat_user, chat_text) values ($now, $current_user->user_id, '$current_user->user_login', '$comment')");
+			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
 		}
 
 	}
@@ -155,17 +159,26 @@ function get_chat($time) {
 	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
-		$uid = $id = $event->chat_uid;
-		if ($uid != $current_user->user_id && !empty($_GET['friends'])) {
-			// Check the user is a friend
-			if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $uid") > 0)
-				continue;
+		$uid = $event->chat_uid;
+		$type = 'chat';
+		$status = _('chat');
+		if ($uid != $current_user->user_id) {
+			if ($event->chat_room == 'friends') {
+				// Check the user is a friend of the sender
+				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $uid and friend_to = $current_user->user_id") > 0) {
+					continue;
+				}
+				$status = _('amigo');
+			}
+			// Check the sender is a friend of the receiver
+			if (!empty($_GET['friends'])) {
+				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $uid") > 0)
+					continue;
+			}
 		}
 		$who = $event->chat_user;
 		$timestamp = $event->chat_time;
-		$key = $timestamp . ':chat:'.$id;
-		$type = 'chat';
-		$status = _('chat');
+		$key = $timestamp . ':chat:'.$uid;
 		$comment = text_to_html($event->chat_text);
 		$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 		if($timestamp > $last_timestamp) $last_timestamp = $timestamp;
