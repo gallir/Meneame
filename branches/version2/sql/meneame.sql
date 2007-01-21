@@ -66,6 +66,7 @@ DROP TABLE IF EXISTS `chats`;
 CREATE TABLE `chats` (
   `chat_time` int(10) unsigned NOT NULL default '0',
   `chat_uid` int(10) unsigned NOT NULL default '0',
+  `chat_room` enum('all','friends') NOT NULL default 'all',
   `chat_user` char(32) NOT NULL,
   `chat_text` char(255) NOT NULL,
   KEY `chat_time` USING BTREE (`chat_time`)
@@ -118,7 +119,8 @@ CREATE TABLE `friends` (
   `friend_from` int(10) NOT NULL default '0',
   `friend_to` int(10) NOT NULL default '0',
   `friend_value` decimal(10,6) NOT NULL default '0.000000',
-  UNIQUE KEY `friend_type_2` (`friend_type`,`friend_from`,`friend_to`,`friend_value`)
+  UNIQUE KEY `friend_type` (`friend_type`,`friend_from`,`friend_to`),
+  KEY `friend_type_2` (`friend_type`,`friend_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -259,8 +261,10 @@ CREATE TABLE `users` (
   `user_lang` tinyint(2) unsigned NOT NULL default '1',
   `user_comment_pref` tinyint(2) unsigned NOT NULL default '0',
   `user_karma` decimal(10,2) default '6.00',
+  `user_public_info` char(64) collate utf8_spanish_ci default NULL,
   `user_url` char(128) collate utf8_spanish_ci NOT NULL,
   `user_adcode` char(24) collate utf8_spanish_ci default NULL,
+  `user_adchannel` char(12) collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`user_id`),
   UNIQUE KEY `user_login` (`user_login`),
   KEY `user_email` (`user_email`),
@@ -295,4 +299,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-01-03 11:22:45
+-- Dump completed on 2007-01-21 16:14:22
