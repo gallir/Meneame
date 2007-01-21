@@ -102,6 +102,7 @@ switch ($view) {
 	case 'favorites':
 		do_user_tabs(6, $login);
 		do_favorites();
+		do_pages($rows, $page_size);
 		break;
 	case 'profile':
 	default:
@@ -262,7 +263,7 @@ function do_favorites () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM links, favorites WHERE favorite_user_id=$user->id");
+	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id");
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div class="bookmarks-export-user-stories">';
