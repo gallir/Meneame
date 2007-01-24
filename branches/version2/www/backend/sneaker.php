@@ -109,7 +109,7 @@ echo "]);";
 
 function check_chat() {
 	global $db, $current_user, $now, $globals, $events;
-	if(empty($_REQUEST['chat'])) return;
+	if(empty($_POST['chat'])) return;
 	$comment = trim(preg_replace("/[\r\n\t]/", ' ', $_REQUEST['chat']));
 	if ($current_user->user_id > 0 && strlen($comment) > 2) {
 		// Sends a message back if the user has a very low karma

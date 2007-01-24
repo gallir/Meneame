@@ -84,9 +84,10 @@ function do_banner_story() { // side banner A
 }
 
 function do_legal($legal_name, $target = '') {
+	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<a href="libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
+		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
 	} else {
 		echo _('condiciones legales');
 	}

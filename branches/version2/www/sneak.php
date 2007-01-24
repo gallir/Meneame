@@ -113,7 +113,7 @@ function to_html(data) {
 			html += '<img src="img/common/sneak-chat01.png" width="20" height="16" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
-				text_style = 'style="color: #153415;"';
+				text_style = 'style="color: #255c25;"';
 			}
 			if (check_user_ping(data.title)) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
