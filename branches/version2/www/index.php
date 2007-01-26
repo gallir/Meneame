@@ -132,6 +132,14 @@ function print_index_tabs($option=-1) {
 		echo '<li><a '.$active[1].' href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	}
 	meta_teaser_item();
+
+	// Print RSS teasers
+	if ($option==0) { // All published
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>'; 
+	} elseif ($globals['meta_current'] > 0) { // A meta rss
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>'; 
+	}
+
 	echo '</ul>'."\n";
 }
 

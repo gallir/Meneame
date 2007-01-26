@@ -136,6 +136,15 @@ function print_shakeit_tabs($option=-1) {
 	echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a></li>'."\n";
 	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
 	meta_teaser_item();
+
+	// Print RSS teasers
+	if ($option==1) { // All published
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>';
+	} elseif ($globals['meta_current'] > 0) { // A meta rss
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>';
+	}
+
+
 	echo '</ul>'."\n";
 }
 

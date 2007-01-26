@@ -120,7 +120,13 @@ if(!empty($_REQUEST['time'])) {
 	} else {
 		$from_where = "FROM links WHERE link_status='$status' ";
 	}
-	if(($cat=check_integer('category'))) {
+
+	if(($meta=check_integer('meta'))) {
+		$cat_list = meta_get_categories_list($meta);
+		$from_where .= " AND link_category in ($cat_list)";
+		$meta_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $meta AND category_parent=0");
+		$title .= " -$meta_name-";
+	} elseif(($cat=check_integer('category'))) {
 		$from_where .= " AND link_category=$cat ";
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $cat AND category_lang='$dblang'");
 		$title .= " -$category_name-";
