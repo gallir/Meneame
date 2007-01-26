@@ -382,15 +382,6 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 		$query = "&amp;$query";
 	}
 
-	// draw first category: all categories
-	if (empty($what_cat_id)) 
-		$thiscat = ' class="thiscat"';
-	else 
-		$thiscat = '';
-	if (preg_match('/index\.php/', $_SERVER['PHP_SELF'])) $base_url = $globals['base_url'];
-	else $base_url = htmlspecialchars($_SERVER['PHP_SELF']);
-	echo '</a></li>' . "\n";
-
 	// draw categories
 	if (!empty($globals['meta_categories'])) {
 		$category_condition = "category_id in (".$globals['meta_categories'].")";
