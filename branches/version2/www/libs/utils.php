@@ -404,7 +404,7 @@ function meta_teaser($current, $default) {
 
 function meta_teaser_item() {
 	global $globals, $current_user;
-	if ($globals['meta'][0] != '_' ) { // Ignore special metas
+	if ($globals['meta'][0] != '_' || $globals['meta'] == '_all') { // Ignore special metas
 		echo '<li><a class="teaser" id="meta-'.$globals['meta_current'].'" href="javascript:get_votes(\'set_meta.php\',\''.$current_user->user_id.'\',\'meta-'.$globals['meta_current'].'\',0,\''.$globals['meta_current'].'\')">'.meta_teaser($globals['meta_current'], $globals['meta_user_default']).'</a>';
 	}
 }
