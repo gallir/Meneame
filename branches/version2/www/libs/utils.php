@@ -336,22 +336,48 @@ function print_simpleformat_buttons($textarea_id) {
 }
 
 
-// Meta categorires helpers
+// Meta categories helpers
+define('META_YES', '<img src="'.$globals['base_url'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" title="'._('tema por defecto').'"/>');
+define('META_NO', '<img src="'.$globals['base_url'].'img/common/icon_favourites_no.gif" alt="del" width="16" height="16" title="'._('seleccionar como tema por defecto').'"/>');
 
 function meta_get_current() {
-	global $globals, $db;
-	if (!empty($_REQUEST['meta'])) {
-		$meta = $db->escape(clean_input_string($_REQUEST['meta']));
-		$meta_id = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
-		if ($meta_id > 0) {
-			$globals['meta_categories'] = meta_get_categories_list($meta_id);
-			if (!empty($globals['meta_categories'])) {
-				$globals['meta_current'] = $meta_id;
-				return $globals['meta_current'];
-			}
-		}
+	global $globals, $db, $current_user;
+
+	$globals['meta_current'] = 0;
+	if (!empty($_COOKIE['mnm_user_meta'])) {
+		$meta = $db->escape(clean_input_string($_COOKIE['mnm_user_meta']));
+		$globals['meta_user_default'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
 	}
-	return 0;
+
+	if (!empty($_REQUEST['meta'])) {
+		$globals['meta']  = clean_input_string($_REQUEST['meta']);
+		// Special metas begin with _
+		if ($globals['meta'][0] == '_') {
+			if ($globals['meta_user_default'] > 0) {
+				$globals['meta_skip'] = '?meta=_all';
+			}
+			return 0;
+		}
+		$meta = $db->escape($globals['meta']);
+		$globals['meta_current'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
+	} elseif ($globals['meta_user_default'] > 0) {
+		// Select user default
+		$globals['meta_current'] = $globals['meta_user_default'];
+	} elseif ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
+		$globals['meta']= '_friends';
+		$globals['meta_skip'] = '?meta=_all';
+		return 0;
+	}
+
+	if ($globals['meta_current'] > 0) {
+		$globals['meta_categories'] = meta_get_categories_list($globals['meta_current']);
+		if (empty($globals['meta_categories'])) {
+			$globals['meta_current'] = 0;
+		}
+		$globals['meta_skip'] = '?meta=_all';
+	}
+	//echo "meta_current: " . $globals['meta_current'] . "<br/>\n";
+	return $globals['meta_current'];
 }
 
 function meta_get_categories_list($id) {
@@ -366,5 +392,20 @@ function meta_get_categories_list($id) {
 		$list .= $category->category_id;
 	}
 	return $list;
+}
+
+function meta_teaser($current, $default) {
+	global $globals;
+	if ($current == $default)
+		return META_YES;
+	else 
+		return META_NO;
+}
+
+function meta_teaser_item() {
+	global $globals, $current_user;
+	if ($globals['meta'][0] != '_' ) { // Ignore special metas
+		echo '<li><a class="teaser" id="meta-'.$globals['meta_current'].'" href="javascript:get_votes(\'set_meta.php\',\''.$current_user->user_id.'\',\'meta-'.$globals['meta_current'].'\',0,\''.$globals['meta_current'].'\')">'.meta_teaser($globals['meta_current'], $globals['meta_user_default']).'</a>';
+	}
 }
 ?>

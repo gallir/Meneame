@@ -25,25 +25,17 @@ do_tabs("main","shakeit");
 $order_by = " ORDER BY link_date DESC ";
 
 
-$view = clean_input_string($_REQUEST['view']);
-$cat = check_integer('category');
+$cat = intval('category');
 
-// Select friends if it's the default for the user and there is no extra arguments
-if ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
-	$globals['link_to_all'] = '?view=all';
-	if (empty($view)) 
-		$view = 'friends';
-}
-
-switch ($view) {
-	case 'friends':
+switch ($globals['meta']) {
+	case '_friends':
 		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
 		$order_by = " ORDER BY link_date DESC ";	
 		print_shakeit_tabs(2);
 		$globals['tag_status'] = 'queued';
 		break;
-	case 'popular':
+	case '_popular':
 		// Show  the hihgher karma first
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*2).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
@@ -51,14 +43,14 @@ switch ($view) {
 		print_shakeit_tabs(3);
 		$globals['tag_status'] = 'queued';
 		break;
-	case 'discarded':
+	case '_discarded':
 		// Show only discarded in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
 		print_shakeit_tabs(5);
 		$globals['tag_status'] = 'discard';
 		break;
-	case 'all':
+	case '_all':
 	default:
 		$globals['tag_status'] = 'queued';
 		// Show last in seven days
@@ -127,7 +119,7 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['link_to_all'].'">'._('todas'). '</a></li>'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
 	// Do metas' list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
@@ -139,10 +131,11 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	if ($current_user->user_id > 0) {
-		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	}
-	echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
-	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
+	echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a></li>'."\n";
+	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
+	meta_teaser_item();
 	echo '</ul>'."\n";
 }
 

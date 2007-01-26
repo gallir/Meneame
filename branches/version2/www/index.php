@@ -60,7 +60,6 @@ if($search) {
 		$order_by = '';
 	}
 } else {
-	$view = clean_input_string($_REQUEST['view']);
 	do_header(_('últimas publicadas'));
 	do_banner_top();
 	echo '<div id="'.$globals['css_container'].'">'."\n";
@@ -71,15 +70,9 @@ if($search) {
 		$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 		print_index_tabs(); // No other view
 	} elseif ($current_user->user_id > 0) { // Check authenticated users
-	// check if the default is "show friends"
-		if (($current_user->user_comment_pref & 2) > 0) {
-    		$globals['link_to_all'] = '?view=all';
-    		if (empty($view))
-        		$view = 'friends';
-		}
-		// Check the current view
-		switch ($view) {
-			case 'friends':
+		// Check the personalized views
+		switch ($globals['meta']) {
+			case '_friends':
 				$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
 				$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
 				print_index_tabs(1); // Friends
@@ -125,7 +118,7 @@ function print_index_tabs($option=-1) {
 		$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['link_to_all'].'">'._('todas'). '</a></li>'."\n";
+	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
 	// Do metacategories list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
@@ -136,8 +129,9 @@ function print_index_tabs($option=-1) {
 		}
 	}
 	if ($current_user->user_id > 0) {
-		echo '<li><a '.$active[1].' href="'.$globals['base_url'].'?view=friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li><a '.$active[1].' href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	}
+	meta_teaser_item();
 	echo '</ul>'."\n";
 }
 

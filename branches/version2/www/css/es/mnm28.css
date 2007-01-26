@@ -173,6 +173,12 @@ background: #fff;
 font-weight: bold;
 }
 
+.tabsub-shakeit a:link.teaser, .tabsub-shakeit a:visited.teaser {
+background: #fff;
+border: none;
+margin-left: 5px;
+}
+
 .tabsub-shakeit a:hover {
 background: #eee;
 color: #FF6400;
