@@ -246,7 +246,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users, categories, categories as meta WHERE $cond AND user_id=link_author AND categories.category_id = link_category AND meta.category_id = categories.category_parent"))) {
+		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->username=$link->user_login;
@@ -272,9 +272,12 @@ class Link {
 			$this->date=$link->link_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
-			$this->category_name=$link->category_name;
-			$this->meta_name=$link->meta_name;
-			$this->meta_uri=$link->meta_uri;
+			if ($this->category > 0) {
+				$meta_info = $db->get_row("SELECT categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
+				$this->category_name=$meta_info->category_name;
+				$this->meta_name=$meta_info->meta_name;
+				$this->meta_uri=$meta_info->meta_uri;
+			}
 			$this->read = true;
 			return true;
 		}
