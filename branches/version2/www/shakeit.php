@@ -25,7 +25,7 @@ do_tabs("main","shakeit");
 $order_by = " ORDER BY link_date DESC ";
 
 
-$cat = intval('category');
+$cat = intval($_REQUEST['category']);
 
 switch ($globals['meta']) {
 	case '_friends':
