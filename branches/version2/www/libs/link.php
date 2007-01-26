@@ -246,7 +246,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
+		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users, categories, categories as meta WHERE $cond AND user_id=link_author AND categories.category_id = link_category AND meta.category_id = categories.category_parent"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->username=$link->user_login;
@@ -272,6 +272,9 @@ class Link {
 			$this->date=$link->link_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
+			$this->category_name=$link->category_name;
+			$this->meta_name=$link->meta_name;
+			$this->meta_uri=$link->meta_uri;
 			$this->read = true;
 			return true;
 		}
@@ -341,7 +344,11 @@ class Link {
 		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
-			echo '<p>'.text_to_html($this->content).'</p>';
+			echo '<p>'.text_to_html($this->content);
+			if ($type != 'preview' && $this->is_editable()) {
+				echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'">&#187;&nbsp;'._('editar').'</a>';
+			}
+			echo '</p>';
 		}
 		if (!empty($this->tags)) {
 			echo '<div class="news-tags">';
@@ -372,15 +379,14 @@ class Link {
 			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
-		echo '<span class="tool">'._('en'). ': <a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name().'</a></span>';
+		// Print meta and category
+		echo '<span class="tool">'._('en'). ': ';
+		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a> ';
+		echo '<a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
+		echo '</span>';
 
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
-
-		// Allow to modify it
-		if ($type != 'preview' && $this->is_editable()) {
-			echo ' <span  class="tool"><a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'">'._('editar').'</a></span> ';
-		}
 
 		if(!$this->voted && $current_user->user_id > 0 && $this->status!='published' && $this->votes > 0 && $type != 'preview' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] && $this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
@@ -511,11 +517,6 @@ class Link {
 			return true;
 		}
 		return false;
-	}
-
-	function category_name() {
-		global $db, $dblang;
-		return $db->get_var("SELECT category_name FROM categories WHERE category_lang='$dblang' AND category_id=$this->category");
 	}
 
 	function publish() {

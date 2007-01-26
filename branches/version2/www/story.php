@@ -73,7 +73,7 @@ switch ($url_args[1]) {
 $globals['link']=$link;
 $globals['link_id']=$link->id;
 $globals['category_id']=$link->category;
-$globals['category_name']=$link->category_name();
+$globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
 // Enable user AdSense
