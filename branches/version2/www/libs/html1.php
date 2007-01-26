@@ -373,13 +373,6 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	echo '<ul>' . "\n";
 
 
-	if (!empty($globals['meta_categories'])) {
-		$category_condition = "category_id in (".$globals['meta_categories'].")";
-	} else {
-		$category_condition = "category_parent > 0";
-	}
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
-
 	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
 	// Always return to page 1
 	$query=preg_replace('/page=[0-9]*/', '', $query);
@@ -399,19 +392,26 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	echo '</a></li>' . "\n";
 
 	// draw categories
-	foreach ($categories as $category) {
-		if($category->category_id == $what_cat_id) {
-			$globals['category_id'] = $category->category_id;
-			$globals['category_name'] = $category->category_name;
-			$thiscat = ' class="thiscat"';
-		} else {
-			$thiscat = '';
+	if (!empty($globals['meta_categories'])) {
+		$category_condition = "category_id in (".$globals['meta_categories'].")";
+	} else {
+		$category_condition = "category_parent > 0";
+	}
+	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
+	if ($categories) {
+		foreach ($categories as $category) {
+			if($category->category_id == $what_cat_id) {
+				$globals['category_id'] = $category->category_id;
+				$globals['category_name'] = $category->category_name;
+				$thiscat = ' class="thiscat"';
+			} else {
+				$thiscat = '';
+			}
+
+			echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
+			echo _($category->category_name);
+			echo "</a></li>\n";
 		}
-
-		echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
-		echo _($category->category_name);
-		echo "</a></li>\n";
-
 	}
 
 	echo '</ul>';
