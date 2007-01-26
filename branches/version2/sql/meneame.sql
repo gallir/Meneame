@@ -53,7 +53,8 @@ CREATE TABLE `categories` (
   `category_lang` char(4) collate utf8_spanish_ci NOT NULL default 'es',
   `category_id` int(11) NOT NULL default '0',
   `category_parent` int(11) NOT NULL default '0',
-  `category_name` char(64) collate utf8_spanish_ci NOT NULL,
+  `category_name` char(32) collate utf8_spanish_ci NOT NULL,
+  `category_uri` char(32) collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`category__auto_id`),
   UNIQUE KEY `category_lang` (`category_lang`,`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -164,11 +165,10 @@ CREATE TABLE `links` (
   PRIMARY KEY  (`link_id`),
   KEY `link_author` (`link_author`),
   KEY `link_url` (`link_url`),
-  KEY `link_date` (`link_date`),
-  KEY `link_published_date` (`link_published_date`),
   KEY `link_uri` (`link_uri`),
-  KEY `status_i` (`link_status`),
   KEY `link_blog` (`link_blog`),
+  KEY `link_status` (`link_status`,`link_published_date`),
+  KEY `link_status_2` (`link_status`,`link_date`),
   FULLTEXT KEY `link_url_2` (`link_url`,`link_url_title`,`link_title`,`link_content`,`link_tags`),
   FULLTEXT KEY `link_tags` (`link_tags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -299,4 +299,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-01-21 16:14:22
+-- Dump completed on 2007-01-26 11:46:30
