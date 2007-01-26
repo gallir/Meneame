@@ -153,13 +153,12 @@ background: #fff;
 .tabsub-shakeit {
 margin: 3px 20px 5px 0;
 overflow: hidden;
-letter-spacing: 0.05em
 }  * html .tabsub-shakeit {margin: 3px 20px 30px 20px;} /* Mind the bottom margin, bug in IE6 */
 
 .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 float: left;
-font-size: 100%;
-padding: 2px 10px 1px 10px;
+font-size: 9pt;
+padding: 2px 8px 1px 8px;
 margin-right: 2px;
 text-decoration: none;
 color: #ff8e42;
