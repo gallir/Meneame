@@ -125,14 +125,14 @@ function print_index_tabs($option=-1) {
 		$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['link_to_all'].'">'._('todas'). '</a></li>'."\n";
 	// Do metacategories list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
 			else $active_meta = '';
-			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'?meta='.$meta->category_uri.'"><strong>'.$meta->category_name. '</strong></a></li>'."\n";
+			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
 		}
 	}
 	if ($current_user->user_id > 0) {

@@ -127,14 +127,14 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['link_to_all'].'">'._('todas'). '</a></li>'."\n";
 	// Do metas' list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
 			else $active_meta = '';
-			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'"><strong>'.$meta->category_name. '</strong></a></li>'."\n";
+			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
 		}
 	}
 
