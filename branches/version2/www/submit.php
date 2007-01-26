@@ -262,18 +262,9 @@ function do_submit1() {
 	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"></textarea>'."\n";
 	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
-	echo '<p><label accesskey="5">'._('categoría').':</label><br />'."\n";
-	echo '<span class="genericformnote">'._('selecciona la categoría más apropiada').'</span></p>'."\n";
-	echo '<div class="column-list">'."\n";
-	echo '<div class="categorylist">'."\n";
-	echo '<ul>'."\n";
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
-	foreach ($categories as $category) {
-	 	echo '<li><input name="category" type="radio" value="'.$category->category_id.'"/>'._($category->category_name).'</li>'."\n";
-	}
-	// TODO: no standard
-	echo '<br style="clear: both;" />' . "\n";
-	echo '</ul></div></div>'."\n";
+
+	print_categories_form();
+
 	echo '<p><label for="trackback">'._('trackback').':</label><br />'."\n";
 	echo '<span class="genericformnote">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
 	echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";

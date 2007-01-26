@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-@include('ads-credits-functions.php');
+@include mnminclude.'ads-credits-functions.php';
 
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
@@ -16,6 +16,7 @@ if (!empty($globals['lounge'])) {
 }
 
 header("Content-type: text/html; charset=utf-8");
+meta_get_current();
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -371,7 +372,13 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 	
 	echo '<ul>' . "\n";
 
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
+
+	if (!empty($globals['meta_categories'])) {
+		$category_condition = "category_id in (".$globals['meta_categories'].")";
+	} else {
+		$category_condition = "category_parent > 0";
+	}
+	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
 
 	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
 	// Always return to page 1
@@ -389,8 +396,6 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 		$thiscat = '';
 	if (preg_match('/index\.php/', $_SERVER['PHP_SELF'])) $base_url = $globals['base_url'];
 	else $base_url = htmlspecialchars($_SERVER['PHP_SELF']);
-	echo '<li'.$thiscat.'><a href="'.$base_url.'?'.$query.'">'._('_todas');
-	//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$queued_count.')';
 	echo '</a></li>' . "\n";
 
 	// draw categories
@@ -405,7 +410,6 @@ function do_mnu_categories($what_cat_type, $what_cat_id) {
 
 		echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
 		echo _($category->category_name);
-		//if ($what_cat_type == 'shakeit') echo '&nbsp;('.$category->count.')';
 		echo "</a></li>\n";
 
 	}
@@ -485,5 +489,25 @@ function do_pages($total, $page_size=25, $margin = true) {
 	}
 	echo "</div><!--html1:do_pages-->\n";
 
+}
+
+//Used in editlink.php and submit.php
+function print_categories_form($selected = 0) {
+	global $db, $dblang;
+	echo '<fieldset style="clear: both;">';
+	echo '<legend>'._('selecciona la categoría más apropiada').'</legend>'."\n";
+	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	foreach ($metas as $meta) {
+	echo '<dl class="categorylist"><dt>'.$meta->category_name.'</dt>'."\n";
+	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
+	foreach ($categories as $category) {
+	echo '<dd><input name="category" type="radio" ';
+	if ($selected == $category->category_id) echo '  checked="true" ';
+	echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
+	}
+	echo '</dl>'."\n";
+	}
+	echo '<br style="clear: both;"/>' . "\n";
+	echo '</fieldset>';
 }
 ?>

@@ -60,11 +60,16 @@ switch ($view) {
 		break;
 	case 'all':
 	default:
+		$globals['tag_status'] = 'queued';
 		// Show last in seven days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-		print_shakeit_tabs(1);
-		$globals['tag_status'] = 'queued';
+		if ($globals['meta_current'] > 0) {
+			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+			print_shakeit_tabs();
+		} else {
+			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
+			print_shakeit_tabs(1);
+		}
 		break;
 }
 
@@ -113,18 +118,29 @@ function do_sidebar_shake() {
 
 }
 
-function print_shakeit_tabs($option) {
-	global $globals, $current_user;
+function print_shakeit_tabs($option=-1) {
+	global $globals, $current_user, $db;
 
 	$active = array();
-	$active[$option] = 'class="tabsub-this"';
+	if ($option > 0) {
+		$active[$option] = 'class="tabsub-this"';
+	}
 
 	echo '<ul class="tabsub-shakeit">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	// Do metas' list
+	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	if ($metas) {
+		foreach ($metas as $meta) {
+			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
+			else $active_meta = '';
+			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'"><strong>'.$meta->category_name. '</strong></a></li>'."\n";
+		}
+	}
+
 	if ($current_user->user_id > 0) {
 		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?view=friends">'._('amigos'). '</a></li>'."\n";
 		echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?view=popular">'._('popular'). '</a></li>'."\n";
-		//echo '<li><a '.$active[4].' href="'.$globals['base_url'].'shakeit.php?view=recommended">'._('recomendadas'). '</a></li>'."\n";
 	}
 	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?view=discarded">'._('descartadas'). '</a></li>'."\n";
 	echo '</ul>'."\n";

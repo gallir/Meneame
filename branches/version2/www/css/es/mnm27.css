@@ -150,16 +150,42 @@ background: #fff;
 
 /* tabsub specials */
 
-.tabsub, .tabsub-shakeit {
+.tabsub-shakeit {
+margin: 3px 20px 5px 0;
+overflow: hidden;
+letter-spacing: 0.05em
+}  * html .tabsub-shakeit {margin: 3px 20px 30px 20px;} /* Mind the bottom margin, bug in IE6 */
+
+.tabsub-shakeit a:link, .tabsub-shakeit a:visited {
+float: left;
+font-size: 100%;
+padding: 2px 10px 1px 10px;
+margin-right: 2px;
+text-decoration: none;
+color: #ff8e42;
+background: #e3e3e3;
+border-right: 1px solid #f0f0f0;
+border-bottom: 1px solid #f0f0f0;
+}
+
+.tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
+color: #FF6400;
+background: #fff;
+font-weight: bold;
+}
+
+.tabsub-shakeit a:hover {
+background: #eee;
+color: #FF6400;
+}
+
+
+.tabsub {
 height: 22px !important;
 padding: 0 0 0 30px;
 margin: 0 0 20px 0; 
 background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
 overflow: hidden;
-}
-
-.tabsub-shakeit {
-margin: 30px 20px 0 90px;
 }
 
 .tabsub img {
@@ -174,7 +200,7 @@ display: inline;
 list-style-type: none;
 }
 
-.tabsub a:link, .tabsub a:visited, .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
+.tabsub a:link, .tabsub a:visited {
 float: left;
 font-size: 100%;
 line-height: 16px !important;
@@ -186,13 +212,13 @@ background: #FFF url(../../img/common/tabs/tabsub-background.png) bottom left re
 color: #FF6400;
 }
 
-.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this, .tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
+.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this {
 border-bottom: 1px solid #fff;
 color: #FF6400;
 background: #fff;
 }
 
-.tabsub a:hover, .tabsub-shakeit a:hover {
+.tabsub a:hover {
 background: #fff;
 }
 
@@ -907,14 +933,21 @@ color: #FFF;
 font-weight: bold;
 }
 
-.categorylist li {
+dl.categorylist {
 float: left;
-width: 25%;
-margin: 0;
+width: auto;
+min-width: 20%;
+margin-right: 8px;
 padding-bottom: 5px;
-font-size: 75%;
-border: none;
-background: none;
+font-size: 85%;
+}
+
+dl.categorylist dt {
+	float: none;
+	width: auto;
+	text-align: left;
+	font-size: 120%;
+	font-weight: bold;
 }
 
 /* Right column boxes */

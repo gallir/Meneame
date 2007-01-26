@@ -334,4 +334,37 @@ function print_simpleformat_buttons($textarea_id) {
 	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'*\');" src="'.$globals['base_url'].'img/common/richeditor-bold-01.png" alt="bold" class="rich-edit-key" />';
 	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['base_url'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
 }
+
+
+// Meta categorires helpers
+
+function meta_get_current() {
+	global $globals, $db;
+	if (!empty($_REQUEST['meta'])) {
+		$meta = $db->escape(clean_input_string($_REQUEST['meta']));
+		$meta_id = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
+		if ($meta_id > 0) {
+			$globals['meta_categories'] = meta_get_categories_list($meta_id);
+			if (!empty($globals['meta_categories'])) {
+				$globals['meta_current'] = $meta_id;
+				return $globals['meta_current'];
+			}
+		}
+	}
+	return 0;
+}
+
+function meta_get_categories_list($id) {
+	global $db;
+	$list = ''; $i = 0;
+
+	$categories = $db->get_results("SELECT category_id FROM categories WHERE category_parent = $id");
+	if (!$categories) return false;
+	foreach ($categories as $category) {
+		if ($i>0)  $list .= ',';
+		$i++;
+		$list .= $category->category_id;
+	}
+	return $list;
+}
 ?>

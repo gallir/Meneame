@@ -40,7 +40,6 @@ $globals['ads'] = true;
 $search = get_search_clause();
 // Search all if it's a search
 $cat=check_integer('category');
-$view = clean_input_string($_REQUEST['view']);
 
 if($search) {
 	$search_txt = htmlspecialchars($_REQUEST['search']);
@@ -68,8 +67,10 @@ if($search) {
 	echo '<div id="contents">'."\n";
 	do_tabs('main','published');
 
-	// Check authenticated users
-	if ($current_user->user_id > 0) {
+	if ($globals['meta_current'] > 0) {
+		$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+		print_index_tabs(); // No other view
+	} elseif ($current_user->user_id > 0) { // Check authenticated users
 	// check if the default is "show friends"
 		if (($current_user->user_comment_pref & 2) > 0) {
     		$globals['link_to_all'] = '?view=all';
@@ -81,13 +82,14 @@ if($search) {
 			case 'friends':
 				$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
 				$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
-				print_index_tabs(2);
+				print_index_tabs(1); // Friends
 			break;
 			default:
-				print_index_tabs(1);
+				print_index_tabs(0); // All
 				$from_where = "FROM links WHERE link_status='published' ";
 		}
 	} else {
+		print_index_tabs(0); // No other view
 		$from_where = "FROM links WHERE link_status='published' ";
 	}
 
@@ -115,16 +117,26 @@ $globals['tag_status'] = 'published';
 do_rightbar();
 do_footer();
 
-function print_index_tabs($option) {
-	global $globals, $current_user;
+function print_index_tabs($option=-1) {
+	global $globals, $db, $current_user;
 
 	$active = array();
-	$active[$option] = 'class="tabsub-this"';
+	if ($option >= 0)
+		$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['link_to_all'].'"><strong>'._('todas'). '</strong></a></li>'."\n";
+	// Do metacategories list
+	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	if ($metas) {
+		foreach ($metas as $meta) {
+			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
+			else $active_meta = '';
+			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'?meta='.$meta->category_uri.'"><strong>'.$meta->category_name. '</strong></a></li>'."\n";
+		}
+	}
 	if ($current_user->user_id > 0) {
-		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'?view=friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li><a '.$active[1].' href="'.$globals['base_url'].'?view=friends">'._('amigos'). '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

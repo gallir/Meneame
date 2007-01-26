@@ -103,26 +103,8 @@ function do_edit() {
 	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
-	echo '<p><label accesskey="4">'._('categoría').':</label><br />'."\n";
-	echo '<span class="genericformnote">'._('selecciona la categoría más apropiada').'</span></p>'."\n";
-	echo '<div class="column-list categorylist">'."\n";
-	echo '<ul>'."\n";
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_lang='$dblang' ORDER BY category_name ASC");
-	foreach ($categories as $category) {
-	 	echo '<li><input name="category" type="radio" '; 
-//		echo "\n<!-- category: $linkres->category, $category->category_id -->\n";
-		if ($linkres->category == $category->category_id) echo '  checked="true" ';
-		echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</li>'."\n";
-	}
-	// TODO: no standard
-	echo '<br style="clear: both;" /></ul>' . "\n";
-	echo '</div>'."\n";
 
-	/* TODO
-	echo '<p><label for="trackback">'._('trackback').':</label><br />'."\n";
-	echo '<span class="genericformnote">'._('puedes agregar un trackback').'</span>'."\n";
-	echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";
-	*/
+	print_categories_form($linkres->category);
 
 	echo '<input class="genericsubmit" type="submit" value="'._('guardar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
