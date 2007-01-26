@@ -19,7 +19,10 @@ function do_vertical_tags() {
 	$line_height = $max_pts * 0.75;
 
 	$min_date = date("Y-m-d H:00:00", time() - 172800); // 48 hours
-	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status GROUP BY tag_words";
+	if(!empty($globals['meta_categories'])) {
+		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
+	}
+	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
 
