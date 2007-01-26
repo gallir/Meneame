@@ -107,7 +107,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$search && empty($_REQUEST['category'])) {
+	if (!$search && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
 		check_redirect_to_feedburner($status);
 	}
 	
