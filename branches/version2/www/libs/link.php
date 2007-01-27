@@ -385,7 +385,7 @@ class Link {
 		// Print meta and category
 		echo '<span class="tool">'._('en'). ': ';
 		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a> ';
-		echo '<a href="'.$globals['base_url'].'?category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
+		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
 		echo '</span>';
 
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';

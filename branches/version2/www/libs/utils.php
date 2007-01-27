@@ -360,9 +360,13 @@ function meta_get_current() {
 		}
 		$meta = $db->escape($globals['meta']);
 		$globals['meta_current'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
+		if (empty($globals['meta_current'])) {
+			$globals['meta'] = '';  // Security measure
+		}
 	} elseif ($globals['meta_user_default'] > 0) {
-		// Select user default
-		$globals['meta_current'] = $globals['meta_user_default'];
+		// Select user default only if no category has been selected
+		if(empty($_REQUEST['category']))
+			$globals['meta_current'] = $globals['meta_user_default'];
 	} elseif ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
 		$globals['meta']= '_friends';
 		$globals['meta_skip'] = '?meta=_all';
