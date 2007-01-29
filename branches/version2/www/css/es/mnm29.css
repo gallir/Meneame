@@ -151,9 +151,10 @@ background: #fff;
 /* tabsub specials */
 
 .tabsub-shakeit {
-margin: 3px 20px 5px 0;
+margin: 3px 20px 5px 25px;
 overflow: hidden;
-}  * html .tabsub-shakeit {margin: 3px 20px 30px 20px;} /* Mind the bottom margin, bug in IE6 */
+padding: 0;
+}  * html .tabsub-shakeit {margin-bottom: 30px;} /* Mind the bottom margin, bug in IE6 */
 
 .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 float: left;
