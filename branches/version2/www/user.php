@@ -281,6 +281,8 @@ function do_favorites () {
 function do_shaken () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
+	if ($globals['bot']) return;
+
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
 	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -297,6 +299,8 @@ function do_shaken () {
 
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
+
+	if ($globals['bot']) return;
 
 	$link = new Link;
 	$comment = new Comment;
@@ -416,19 +420,22 @@ function do_friends() {
 }
 
 function do_user_tabs($option, $user) {
+	global $globals;
 
-		$active = array();
-		$active[$option] = 'class="tabsub-this"';
+	$active = array();
+	$active[$option] = 'class="tabsub-this"';
 
-		echo '<ul class="tabsub">'."\n";
-		echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
-		echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;'.FRIEND_YES. '&nbsp;</a></li>';
-		echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
+	echo '<ul class="tabsub">'."\n";
+	echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+	echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;'.FRIEND_YES. '&nbsp;</a></li>';
+	echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
+	if (! $globals['bot']) {
 		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
 		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
-		echo '</ul>';
+	}
+	echo '</ul>';
 
 }
 
