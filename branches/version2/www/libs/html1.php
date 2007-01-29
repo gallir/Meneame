@@ -185,6 +185,8 @@ function do_rightbar() {
 	do_banner_right();
 	do_vertical_tags();
 	do_best_comments();
+	// ads 
+	do_banner_right_low();
 	//do_last_comments();
 	echo "</div>";
 }

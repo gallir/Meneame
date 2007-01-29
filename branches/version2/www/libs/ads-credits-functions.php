@@ -125,4 +125,17 @@ function do_credits() {
 	echo '</div>' . "\n";
 	echo "<!--ben-tmp-functions:do_credits-->\n";
 }
+
+function do_banner_right_low() {
+	global $globals, $current_user;
+//
+// WARNING!
+//
+// IMPORTANT! adapt this section to your contracted banners!!
+//
+	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
+		@include('ads/codigobarras.inc');
+	}
+}
+
 ?>
