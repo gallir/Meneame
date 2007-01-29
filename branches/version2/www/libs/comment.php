@@ -226,6 +226,9 @@ class Comment {
 
 	function put_smileys($str) {
 		global $globals;
+
+		if ($globals['bot']) return $str;
+
 		$str=preg_replace('/:-{0,1}\)/i', ' <img src="'.$globals['base_url'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />', $str);
 		$str=preg_replace('/[^t];-{0,1}\)/i', ' <img src="'.$globals['base_url'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />', $str);
 		$str=preg_replace('/:-{0,1}&gt;/i', ' <img src="'.$globals['base_url'].'img/smileys/cheesy.gif" alt=":->" title=":->"  width="15" height="15" />', $str);
