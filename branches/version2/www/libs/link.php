@@ -550,7 +550,7 @@ class Link {
 	function is_votable() {
 		global $globals;
 
-		if($globals['time_enabled_votes'] > 0 && $this->date < time() - $globals['time_enabled_votes'])  {
+		if($globals['time_enabled_votes'] > 0 && !$globals['bot'] && $this->date < time() - $globals['time_enabled_votes'])  {
 			$this->votes_enabled = false;
 		} else {
 			$this->votes_enabled = true;

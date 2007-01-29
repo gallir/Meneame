@@ -43,6 +43,11 @@ if( !empty($_SERVER['HTTP_REFERER'])) {
 	$globals['referer'] = 'unknown';
 }
 
+// Check bots
+if (preg_match('/(bot|slurp|wget)\W/i', $_SERVER['HTTP_USER_AGENT'])) {
+	$globals['bot'] = true;
+}
+
 function htmlentities2unicodeentities ($input) {
 	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
 	$entitiesDecoded = array_keys  (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));

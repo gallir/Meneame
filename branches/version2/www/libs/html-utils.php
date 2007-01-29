@@ -59,6 +59,8 @@ function do_best_comments() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
 
+	if ($globals['bot']) return; // We wont spend lot of CPU for another CPU :-)
+	
 	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
