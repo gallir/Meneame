@@ -307,7 +307,7 @@ class Link {
 			if (!$this->voted) $this->md5 = md5($current_user->user_id.$this->id.$this->randkey.$globals['user_ip']);
 		}
 
-		$url = htmlentities($this->url);
+		$url = htmlspecialchars($this->url);
 
 		echo '<div class="news-summary">';
 		echo '<div class="news-body">';

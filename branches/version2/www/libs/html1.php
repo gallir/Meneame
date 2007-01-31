@@ -73,7 +73,7 @@ function do_header($title, $id='home') {
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
 	echo '<head>' . "\n";
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-	echo "<title>"._($title)." // men&eacute;ame</title>\n";
+	echo "<title>$title // men&eacute;ame</title>\n";
 	echo '<meta name="generator" content="meneame" />' . "\n";
 	echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
