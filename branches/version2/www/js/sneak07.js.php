@@ -4,10 +4,9 @@ header('Content-Type: text/javascript; charset=UTF-8');
 header('Cache-Control: max-age=3600');
 ?>
 
-var items = Array();
+
 var new_items = 0;
 var max_items = <? echo $max_items; ?>;
-var request_timer;
 var data_timer;
 var min_update = 20000;
 var next_update = 5000;
@@ -30,9 +29,26 @@ var show_published = true;
 var show_chat = true;
 var show_pubvotes = true;
 
+var ajax_busy = false;
 
 function start_sneak() {
-	xmlhttp = new myXMLHttpRequest ();
+	//xmlhttp = new myXMLHttpRequest ();
+	$.ajaxSetup({timeout: 10000, async: true});
+
+	$(document).ajaxError(function (request, settings) {
+		data_timer = setTimeout('get_data()', next_update/2);
+		xmlhttp = undefined;
+	});
+
+	$(document).ajaxSend(function (request, settings) {
+		ajax_busy = true;
+	});
+
+	$(document).ajaxStop(function (request, settings) {
+		ajax_busy = false;
+		xmlhttp = undefined;
+	});
+
 	if (!get_options_cookie()) {
 		check_control('vote');
 		check_control('problem');
@@ -42,94 +58,52 @@ function start_sneak() {
 		check_control('chat');
 		check_control('pubvotes');
 	}
-	for (i=0; i<max_items; i++) {
-		items[i] = document.getElementById('sneaker-'+i);
-	}
 	do_play();
 	return false;
 }
 
-
-function is_busy() {
-    switch (xmlhttp.readyState) {
-        case 1:
-        case 2:
-        case 3:
-            return true;
-        break;
-        // Case 4 and 0
-        default:
-            return false;
-        break;
-    }
-}
-
 function abort_request () {
 	clearTimeout(data_timer);
-	clearTimeout(request_timer);
-	if (is_busy()) {
+	if ("object" == typeof(xmlhttp)) {
 		xmlhttp.abort();
-		// Bug in konqueror, it forces to create a new object after the abort
-		xmlhttp = new myXMLHttpRequest();
-		//alert("timeout");
 	}
-}
-
-function handle_timeout () {
-	abort_request();
-	//alert("handle_timeout");
-	data_timer = setTimeout('get_data()', next_update/2);
 }
 
 function get_data() {
-	if (is_busy()) {
-		handle_timeout();
-		return false;
-	}
+	abort_request();
 	url=sneak_base_url+'?k='+mykey+'&time='+ts+'&v='+my_version+'&r='+total_requests;
 	url = url + get_options_string();
 	if(comment.length > 0) {
-		var content = 'chat='+encodeURIComponent(comment);
-		xmlhttp.open ("POST", url, true);
-		xmlhttp.setRequestHeader ('Content-Type', 'application/x-www-form-urlencoded');
-		xmlhttp.onreadystatechange=received_data;
-		xmlhttp.send (content);
+		xmlhttp=$.post(url, {'chat': comment}, received_data);
 		comment = '';
 	} else {
-		xmlhttp.open("GET",url,true);
-		xmlhttp.onreadystatechange=received_data;
-		xmlhttp.send(null);
+		xmlhttp=$.get(url, {}, received_data);
 	}
-	request_timer = setTimeout('handle_timeout()', 10000);  // wait for 10 seconds
 	requests++;
 	total_requests++;
 	return false;
 }
 
-function received_data() {
-	if (xmlhttp.readyState != 4) return;
-	if (xmlhttp.status == 200 && xmlhttp.responseText.length > 10) {
-		clearTimeout(request_timer);
-		// We get new_data array
-		var new_data = Array();
-		eval (xmlhttp.responseText);
-		target=document.getElementById("ccnt");
-		if(target) target.innerHTML = ccnt;
-		new_items= new_data.length;
-		if(new_items > 0) {
-			if (do_animation) clearInterval(animation_timer);
-			next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
-			shift_items(new_items);
-			for (i=0; i<new_items && i<max_items; i++) {
-				items[i].innerHTML = to_html(new_data[i]);
-				if (do_animation) set_initial_color(i);
-			}
-			if (do_animation) {
-				animation_timer = setInterval('animate_background()', 100);
-				animating = true;
-			}
-		} else next_update = Math.round(next_update*1.25);
-	}
+function received_data(data) {
+	// We get new_data array
+	var new_data = Array();
+	eval (data);
+	$('#ccnt').html(ccnt);
+	new_items= new_data.length;
+	if(new_items > 0) {
+		if (do_animation) clearInterval(animation_timer);
+		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
+		shift_items(new_items);
+		for (i=0; i<new_items && i<max_items; i++) {
+			html = to_html(new_data[i]);
+			$('#sneaker-'+i).html(html);
+			if (do_animation) set_initial_color(i);
+		}
+		if (do_animation) {
+			animation_timer = setInterval('animate_background()', 100);
+			animating = true;
+		}
+	} else next_update = Math.round(next_update*1.25);
 	if (next_update < 5000) next_update = 5000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
@@ -146,16 +120,15 @@ function received_data() {
 }
 
 function shift_items(n) {
-	//for (i=n;i<max_items;i++) {
 	for (i=max_items-1;i>=n;i--) {
-		items[i].innerHTML = items[i-n].innerHTML;
-		//items.shift();
+		j = i - n;
+		$('#sneaker-'+i).html($('#sneaker-'+j).html());
 	}
 }
 
 function clear_items() {
 	for (i=0;i<max_items;i++) {
-		items[i].innerHTML = '&nbsp;';
+		$('#sneaker-'+i).html('&nbsp;');
 	}
 }
 
@@ -194,7 +167,6 @@ function send_chat(form) {
 }
 
 function check_command(comment) {
-	
 	if (!comment.match(/^!/)) return false;
 	if (comment.match(/^!jefa/)) {
 		window.location = 'telnet.php';
@@ -329,7 +301,6 @@ function is_playing () {
 
 function do_pause() {
 	abort_request();
-	//clearTimeout(data_timer);
 	play = false;
 }
 

@@ -416,10 +416,10 @@ class Link {
 				$box_class = 'mnm-published';
 				break;
 		}
-		echo '<ul class="news-shakeit">';
-		echo '<li class="'.$box_class.'">';
-		echo '<a id="mnms-'.$this->id.'" href="'.$this->get_relative_permalink().'"><strong id="a-votes-'.$this->id.'">'.$this->votes.'</strong><br />'._('meneos').'</a></li>';
-		echo '<li class="menealo" id="a-va-'.$this->id.'">';
+		echo '<div class="news-shakeit">';
+		echo '<div class="'.$box_class.'">';
+		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.$this->votes.'</a>'._('meneos').'</div>';
+		echo '<div class="menealo" id="a-va-'.$this->id.'">';
 
 		if ($this->votes_enabled == false) {
 			echo '<span>'._('cerrado').'</span>';
@@ -430,8 +430,8 @@ class Link {
 			else $mess = ':-(';
 			echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
 		}
-		echo '</li>'."\n";
-		echo '</ul>'."\n";
+		echo '</div>'."\n";
+		echo '</div>'."\n";
 	}
 
 	function print_warn() {

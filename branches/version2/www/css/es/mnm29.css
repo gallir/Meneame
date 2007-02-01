@@ -560,25 +560,6 @@ padding-left: 85px;
 padding-right: 5px;
 }
 
-.news-shakeit {
-position: absolute;
-top: 20px;
-left: 12px;
-width: 65px;
-text-align: center;
-font-size: 85%;
-margin: 5px 0 0 0;
-padding: 0;
-list-style: none;
-overflow: hidden;
-}
-
-.news-shakeit li {
-border: 1px solid #FFF;
-margin: 0;
-padding: 0;
-}
-
 .news-details {
 color: #FF6400;
 display: block;
@@ -625,51 +606,62 @@ border-left: none;
 }
 
 /* Counter box */
-.mnm-published strong, .mnm-queued strong, .mnm-discarded strong {
-font-size: 190%;
-font-weight: normal;
-line-height: 90%;
-letter-spacing: -1px;
+.news-shakeit {
+position: absolute;
+top: 20px;
+left: 12px;
+width: 65px;
+text-align: center;
+font-size: 8.2pt;
+margin: 5px 0 0 0;
+padding: 0;
+overflow: hidden;
 }
 
-.mnm-published img, .mnm-queued img, .mnm-discarded img {
-position: absolute;
-top: 0;
-left: 0;
-border: none;
+.mnm-published a, .mnm-queued a, .mnm-discarded a {
+display: block;
+font-size: 16pt;
+font-weight: normal;
+height: 19pt !important;
+letter-spacing: -1px;
+text-decoration: none;
+vertical-align: bottom;
 }
 
 .mnm-published a:hover, .mnm-queued a:hover, .mnm-discarded a:hover {
 color: #03A;
 }
 
-.mnm-published a {
+.mnm-published, .mnm-published a {
 color: #FFF;
-display: block;
-padding: 6px 0 6px 0;
-text-decoration: none;
-margin-bottom: 0;
-background: #FF6400 url(../../img/common/elmnm-p03.png) top left no-repeat;
 }
 
-.mnm-queued a {
-color: #FF6400;
+.mnm-published {
 display: block;
-padding: 6px 0 6px 0;
-text-decoration: none;
-margin-bottom: 0;
+background: #FF6400 url(../../img/common/elmnm-p03.png) top left no-repeat;
+padding: 4px 0 4px 0;
+}
+
+.mnm-queued, .mnm-queued a {
+color: #FF6400;
+}
+
+.mnm-queued {
+display: block;
 background: #FFF url(../../img/common/elmnm-p03a.png) top left no-repeat;
 border: 1px solid #FF6400;
+padding: 4px 0 4px 0;
 }
 
-.mnm-discarded a {
+.mnm-discarded, .mnm-discarded a {
 color: #FFF;
+}
+
+.mnm-discarded {
 display: block;
-padding: 6px 0 6px 0;
-text-decoration: none;
-margin-bottom: 0;
 background: #D9AA95 url(../../img/common/elmnm-p03b.png) top left no-repeat;
 border: 1px solid #D9AA95;
+padding: 4px 0 4px 0;
 }
 
 /* vote box */
@@ -683,6 +675,7 @@ border: 1px solid #FFCBAA;
 }
 
 .menealo a, .menealo span {
+margin-top: 2px;
 display: block;
 padding: 4px 0 4px 0;
 color: #FF6400;

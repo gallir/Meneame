@@ -17,7 +17,6 @@ if (!empty($_GET['getv'])) {
 	echo $sneak_version;
 	die;
 }
-
 $now = time();
 if(!($time=check_integer('time')) > 0) {
 	$time = 0;

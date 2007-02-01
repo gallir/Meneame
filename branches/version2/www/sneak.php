@@ -72,7 +72,7 @@ function set_initial_color(i) {
 		j = colors_max - 1;
 	else j = i;
 	current_colors[i] = j;
-	items[i].style.backgroundColor = animation_colors[j];
+	$('#sneaker-'+i).css('background', animation_colors[j]);
 }
 
 function animate_background() {
@@ -84,7 +84,7 @@ function animate_background() {
 	for (i=new_items-1; i>=0; i--) {
 		if (current_colors[i] < colors_max) {
 			current_colors[i]++;
-			items[i].style.backgroundColor = animation_colors[current_colors[i]];
+			$('#sneaker-'+i).css('background', animation_colors[current_colors[i]]);
 		} else 
 			new_items--;
 	}

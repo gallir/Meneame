@@ -1,143 +1,72 @@
-/**********
-Basic AJAX
-**************/
-function myXMLHttpRequest ()
-{
-	var xmlhttplocal = false;
-	if (typeof XMLHttpRequest != 'undefined') {
-		try {
-			xmlhttplocal = new XMLHttpRequest ();
-		}
-		catch (e) {
-  			xmlhttplocal = false;
-		}
-	}
-	if (!xmlhttplocal) {
-		try {
-			xmlhttplocal = new ActiveXObject ("Msxml2.XMLHTTP")
-		}
-		catch (e) {
-			try {
-				xmlhttplocal = new ActiveXObject ("Microsoft.XMLHTTP")
-			}
-			catch (E) {
-				xmlhttplocal = false;
-				alert ('couldn\'t create xmlhttp object');
-			}
-  		}
-	}
-	return (xmlhttplocal);
-}
-
 /*******************
 VOTES FUNCTIONS
 BASIC FUNCTIONS
 ************************************/
-var mnmxmlhttp = Array ();
-var mnmString = Array ();
 var update_voters = false;
 
-function menealo (user, id, htmlid, md5)
+function menealo(user, id, htmlid, md5)
 {
-	url = base_url + "backend/menealo.php";
-	content = "id=" + id + "&user=" + user + "&md5=" + md5;
-	mnmxmlhttp[htmlid] = new myXMLHttpRequest ();
-	if (mnmxmlhttp[htmlid]) {
-		/*
-			mnmxmlhttp[htmlid].open ("POST", url, true);
-			mnmxmlhttp[htmlid].setRequestHeader ('Content-Type',
-					   'application/x-www-form-urlencoded');
-			mnmxmlhttp[htmlid].send (content);
-		*/
-		url = url + "?" + content;
-		mnmxmlhttp[htmlid].open ("GET", url, true);
-		mnmxmlhttp[htmlid].send (null);
-
-
-		warnmatch = new RegExp ("^WARN:");
-		errormatch = new RegExp ("^ERROR:");
-		target = document.getElementById ('a-va-' + htmlid);
-		/* Too away the text also because it gives a weird effect */
-		disable_vote_link(id, "...", '#FFC8AF');
-		mnmxmlhttp[htmlid].onreadystatechange = function () {
-			if (mnmxmlhttp[htmlid].readyState == 4) {
-				mnmString[htmlid] = mnmxmlhttp[htmlid].responseText;
-				if (mnmString[htmlid].match (errormatch)) {
-					mnmString[htmlid] = mnmString[htmlid].substring (6, mnmString[htmlid].length);
-					parseAnswer (htmlid, true, mnmString[htmlid]);
-					updateVoters(id);
+	var url = base_url + "backend/menealo.php";
+	var content = "id=" + id + "&user=" + user + "&md5=" + md5;
+	url = url + "?" + content;
+	disable_vote_link(id, "...", '#FFC8AF');
+	$.get(url, {},  
+		 function(html) {
+			if (/^ERROR:/.test(html)) {
+				html = html.substring(6, html.length);
+				parseAnswer(htmlid, true, html);
+				updateVoters(id);
+			} else {
+				// Just a warning, do nothing
+				if (/^WARN:/.test(html)) {
+					alert(html);
 				} else {
-					// Just a warning, do nothing
-					if (mnmString[htmlid].match (warnmatch)) {
-						alert(mnmString[htmlid]);
-					} else {
-						parseAnswer (htmlid, false, mnmString[htmlid]);
-						updateVoters(id);
-					}
+					parseAnswer (htmlid, false, html);
+					updateVoters(id);
 				}
-				reportAjaxStats('/vote');
 			}
+			reportAjaxStats('/vote');
 		}
-	} else {
-		alert('Couldn\'t create XmlHttpRequest');
-	}
+	);
 }
 
-function menealo_comment (user, id, value)
+function menealo_comment(user, id, value)
 {
-	url = base_url + "backend/menealo_comment.php";
-	content = "id=" + id + "&user=" + user + "&value=" + value;
-	myid = 'comment-'+id;
-	mnmxmlhttp[myid] = new myXMLHttpRequest ();
-	if (mnmxmlhttp[myid]) {
-		url = url + "?" + content;
-		mnmxmlhttp[myid].open ("GET", url, true);
-		mnmxmlhttp[myid].send (null);
-		warnmatch = new RegExp ("^WARN:");
-		errormatch = new RegExp ("^ERROR:");
-		mnmxmlhttp[myid].onreadystatechange = function () {
-			if (mnmxmlhttp[myid].readyState == 4) {
-				mnmString[myid] = mnmxmlhttp[myid].responseText;
-				if (mnmString[myid].match (errormatch) || mnmString[myid].match (warnmatch)) {
-					mnmString[myid] = mnmString[myid].substring (6, mnmString[myid].length);
-					alert (mnmString[myid]);
-				} else {
-					vote_karma_image = mnmString[myid].split(",");
-					votes = parseInt(vote_karma_image[0]);
-					karma = parseInt(vote_karma_image[1]);
-					image = vote_karma_image[2];
-					target1 = document.getElementById ('vc-'+id);
-					if(target1) target1.innerHTML = votes;
-					target1 = document.getElementById ('vk-'+id);
-					if(target1) target1.innerHTML = karma;
-					if (image.length > 0) {
-						target1 = document.getElementById ('c-votes-' + id);
-						if (target1) target1.innerHTML = '<img src="'+image+'"/>';
-					}
+	var url = base_url + "backend/menealo_comment.php";
+	var content = "id=" + id + "&user=" + user + "&value=" + value;
+	var myid = 'comment-'+id;
+	url = url + "?" + content;
+	$.get(url, {}, 
+		 function(html) {
+			if (/^ERROR:/.test(html) || /^WARN:/.test(html)) {
+				html = html.substring(6, html.length);
+				alert(html);
+			} else {
+				vote_karma_image = html.split(",");
+				votes = parseInt(vote_karma_image[0]);
+				karma = parseInt(vote_karma_image[1]);
+				image = vote_karma_image[2];
+				$('#vc-'+id).html(votes);
+				$('#vk-'+id).html(karma);
+				if (image.length > 0) {
+					$('#c-votes-'+id).html('<img src="'+image+'"/>');
 				}
-				reportAjaxStats('/comment_vote');
 			}
+			reportAjaxStats('/comment_vote');
 		}
-	} else {
-		alert('Couldn\'t create XmlHttpRequest');
-	}
+	);
 }
 
 
 function disable_problem_form(id) {
-	target = document.getElementById ('problem-' + id);
-	if (target) {
-		target.ratings.disabled=true;
-		target.innerHTML = "";
-	}
+	$('#problem-' + id).hide();
 }
 
 function disable_vote_link(id, mess, background) {
-	target = document.getElementById ('a-va-' + id);
-	if (target) {
-		target.innerHTML = '<span>'+mess+'</span>';
-		target.style.background = background;
-	}
+	//$('#a-va-' + id).hide();
+	$('#a-va-' + id).html('<span>'+mess+'</span>');
+	$('#a-va-' + id).css('background', background);
+	//$('#a-va-' + id).show('fast');
 }
 
 function parseAnswer (id, error, server_answer)
@@ -159,12 +88,18 @@ function parseAnswer (id, error, server_answer)
 }
 
 function updateLinkValues (id, votes, negatives, karma, value) {
-	target = document.getElementById ('a-votes-' + id);
-	if (target) target.innerHTML = votes;
-	target = document.getElementById ('a-neg-' + id);
-	if (target) target.innerHTML = negatives;
-	target = document.getElementById ('a-karma-' + id);
-	if (target) target.innerHTML = karma;
+	if ($('#a-votes-' + id).html() != votes) {
+		$('#a-votes-' + id).fadeOut('fast', 
+			function () {
+				$('#a-votes-' + id).html(votes);
+				$('#a-votes-' + id).fadeIn('slow');
+			}
+		);
+	} else {
+		$('#a-votes-' + id).html(votes);
+	}
+	$('#a-neg-' + id).html(negatives);
+	$('#a-karma-' + id).html(karma);
 	if (value > 0) {
 		disable_vote_link(id, "¡chachi!", '#FFFFFF');
 		disable_problem_form(id);
@@ -190,27 +125,20 @@ function enablebutton (button, button2, target)
 
 function checkfield (type, form, field)
 {
-	url = base_url + 'backend/checkfield.php?type='+type+'&name=' + field.value;
-	checkitxmlhttp = new myXMLHttpRequest ();
-	checkitxmlhttp.open ("GET", url, true);
-	checkitxmlhttp.onreadystatechange = function () {
-		if (checkitxmlhttp.readyState == 4) {
-			responsestring = checkitxmlhttp.responseText;
-			if (responsestring == 'OK') {
-				document.getElementById (type+'checkitvalue').innerHTML = '<span style="color:black">"' + field.value + 
-						'": ' + responsestring + '</span>';
+	var url = base_url + 'backend/checkfield.php?type='+type+'&name=' + field.value;
+	$.get(url, {}, 
+		 function(html) {
+			if (html == 'OK') {
+				$('#'+type+'checkitvalue').html('<span style="color:black">"' + field.value + '": ' + html + '</span>');
 				form.submit.disabled = '';
 			} else {
-				document.getElementById (type+'checkitvalue').innerHTML = '<span style="color:red">"' + field.value + '": ' +
-				responsestring + '</span>';
+				$('#'+type+'checkitvalue').html('<span style="color:red">"' + field.value + '": ' + html + '</span>');
 				form.submit.disabled = 'disabled';
 			}
 			reportAjaxStats('/check_field');
 		}
-	}
-  //  xmlhttp.setRequestHeader('Accept','message/x-formresult');
-  checkitxmlhttp.send (null);
-  return false;
+	);
+	return false;
 }
 
 function check_checkfield(fieldname, mess) {
@@ -229,25 +157,20 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 		frm.ratings.selectedIndex=0;
 		return false;
 	}
-	content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
-	url=base_url + "backend/problem.php?" + content;
-	mnmxmlhttp[id] = new myXMLHttpRequest ();
-	mnmxmlhttp[id].open("GET",url,true);
-	mnmxmlhttp[id].onreadystatechange=function() {
-		if (mnmxmlhttp[id].readyState==4) {
-			errormatch = new RegExp ("^ERROR:");
-			response = mnmxmlhttp[id].responseText;
-			if (response.match(errormatch)) {
-				response = response.substring (6, response.length);
-				parseAnswer(id, true, response);
+	var content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
+	var url=base_url + "backend/problem.php?" + content;
+	$.get(url, {}, 
+		 function(html) {
+			if (/^ERROR:/.test(html)) {
+				html = html.substring(6, html.length);
+				parseAnswer(id, true, html);
 			} else {
-				parseAnswer(id, false, response);
+				parseAnswer(id, false, html);
 				updateVoters(id);
 			}
 			reportAjaxStats('/problem');
 		}
-  	}
-	mnmxmlhttp[id].send(null);
+	);
 	return false;
 }
 
@@ -261,18 +184,8 @@ function updateVoters(id) {
 // Generalized for other uses (gallir at gmail dot com)
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
-	var myxmlhttp = new myXMLHttpRequest ();
-	myxmlhttp.open('get', url, true);
-	myxmlhttp.onreadystatechange = function () {
-		if(myxmlhttp.readyState == 4){
-			response = myxmlhttp.responseText;
-			if (response.length > 1) {
-				document.getElementById(container).innerHTML = response;
-			}
-			reportAjaxStats('/get_html');
-		}
-	}
-	myxmlhttp.send(null);
+	$('#'+container).load(url);
+	reportAjaxStats('/get_html');
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
@@ -480,22 +393,17 @@ tooltip.ajax_delayed = function (event, script, id, maxcache) {
 }
 
 tooltip.ajax_request = function(script, id, maxcache) {
-	tooltip.timeout = null;
-	var myxmlhttp = new myXMLHttpRequest ();
 	var url = base_url + 'backend/'+script+'?id='+id;
-	myxmlhttp.open('get', url, true);
-	myxmlhttp.onreadystatechange = function () {
-		if(myxmlhttp.readyState == 4){
-			response = myxmlhttp.responseText;
-			if (response.length > 1) {
-				tooltip.cache.set(script+id, response, {'ttl':maxcache});
-				//tooltip.cache.set(script+id, response, {'ttl':'60000'});
-				tooltip.setText(response);
-			}
+	tooltip.timeout = null;
+	$.ajax({
+		url: url,
+		dataType: "html",
+		success: function(html) {
+			tooltip.cache.set(script+id, html, {'ttl':maxcache});
+			tooltip.setText(html);
 			reportAjaxStats('/tooltip');
 		}
-	}
-	myxmlhttp.send(null);
+	});
 }
 
 /************************
