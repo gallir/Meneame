@@ -77,7 +77,7 @@ function do_header($title, $id='home') {
 	echo '<meta name="generator" content="meneame" />' . "\n";
 	echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm29.css";</style>' . "\n";
+	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm30.css";</style>' . "\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('todas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=all" />'."\n";
@@ -136,7 +136,7 @@ function do_js_includes() {
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.11.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general04.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general05.js" type="text/javascript"></script>' . "\n";
 }
 
 function do_footer($credits = true) {
