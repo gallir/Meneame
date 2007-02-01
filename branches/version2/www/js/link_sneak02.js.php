@@ -18,7 +18,6 @@ var colors_max = animation_colors.length - 1;
 var current_colors = Array();
 var animation_timer;
 
-var items = Array();
 var new_items = 0;
 var max_items = 10;
 var request_timer;
@@ -32,92 +31,46 @@ var play = true;
 
 
 function start_link_sneak() {
-	sneak_xmlhttp = new myXMLHttpRequest ();
-	for (i=0; i<max_items; i++) {
-		items[i] = document.getElementById('sneaker-'+i);
-	}
 	get_data();
 	return false;
 }
 
-
-function is_busy() {
-    switch (sneak_xmlhttp.readyState) {
-        case 1:
-        case 2:
-        case 3:
-            return true;
-        break;
-        // Case 4 and 0
-        default:
-            return false;
-        break;
-    }
-}
-
-function abort_request () {
-	clearTimeout(timer);
-	clearTimeout(request_timer);
-	if (is_busy()) {
-		sneak_xmlhttp.abort();
-		// Bug in konqueror, it forces to create a new object after the abort
-		sneak_xmlhttp = new myXMLHttpRequest();
-		//alert("timeout");
-	}
-}
-
-function handle_timeout () {
-	abort_request();
-	//alert("handle_timeout");
-	timer = setTimeout('get_data()', next_update/2);
-}
-
 function get_data() {
-	if (is_busy()) {
-		handle_timeout();
-		return false;
-	}
 	url=sneak_base_url+'?time='+ts+'&v=-1&r='+requests+'&link='+link_id;
-	sneak_xmlhttp.open("GET",url,true);
-	sneak_xmlhttp.onreadystatechange=received_data;
-	sneak_xmlhttp.send(null);
-	request_timer = setTimeout('handle_timeout()', 10000);  // wait for 10 seconds
+	xmlhttp=$.get(url, {}, received_data);
 	requests++;
 	return false;
 }
 
-function received_data() {
-	if (sneak_xmlhttp.readyState != 4) return;
-	if (sneak_xmlhttp.status == 200 && sneak_xmlhttp.responseText.length > 10) {
-		clearTimeout(request_timer);
-		// We get new_data array
-		var new_data = Array();
-		if (sneak_xmlhttp.responseText.match(/^ERROR/)) {
-			alert(sneak_xmlhttp.responseText);
-			return false;
-		}
-		eval (sneak_xmlhttp.responseText);
-		if (link_votes_0 != link_votes || link_negatives_0 != link_negatives || link_karma_0 != link_karma) {
-			updateLinkValues (link_id, link_votes, link_negatives, link_karma, 0);
-			link_votes_0 = link_votes;
-			link_negatives_0 = link_negatives;
-			link_karma_0 = link_karma;
-		}
-		new_items= new_data.length;
-		if(new_items > 0) {
-			if (do_animation) clearInterval(animation_timer);
-			next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
-			shift_items(new_items);
-			for (i=0; i<new_items && i<max_items; i++) {
-				items[i].innerHTML = to_html(new_data[i]);
-				if (do_animation) set_initial_color(i);
-			}
-			if (do_animation) {
-				animation_timer = setInterval('animate_background()', 100);
-				animating = true;
-			}
-		} else next_update = Math.round(next_update*1.25);
+function received_data(data) {
+	// We get new_data array
+	var new_data = Array();
+	if (data.match(/^ERROR/)) {
+		alert(data);
+		return false;
 	}
+	eval (data);
+	if (link_votes_0 != link_votes || link_negatives_0 != link_negatives || link_karma_0 != link_karma) {
+		updateLinkValues (link_id, link_votes, link_negatives, link_karma, 0);
+		link_votes_0 = link_votes;
+		link_negatives_0 = link_negatives;
+		link_karma_0 = link_karma;
+	}
+	new_items= new_data.length;
+	if(new_items > 0) {
+		if (do_animation) clearInterval(animation_timer);
+		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
+		shift_items(new_items);
+		for (i=0; i<new_items && i<max_items; i++) {
+			$('#sneaker-'+i).html(to_html(new_data[i]));
+			if (do_animation) set_initial_color(i);
+		}
+		if (do_animation) {
+			animation_timer = setInterval('animate_background()', 100);
+			animating = true;
+		}
+	} else next_update = Math.round(next_update*1.25);
+
 	if (next_update < 10000) next_update = 10000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
@@ -132,16 +85,15 @@ function received_data() {
 }
 
 function shift_items(n) {
-	//for (i=n;i<max_items;i++) {
 	for (i=max_items-1;i>=n;i--) {
-		items[i].innerHTML = items[i-n].innerHTML;
-		//items.shift();
+		j = i - n;
+		$('#sneaker-'+i).html($('#sneaker-'+j).html());
 	}
 }
 
 function clear_items() {
 	for (i=0;i<max_items;i++) {
-		items[i].innerHTML = '&nbsp;';
+		$('#sneaker-'+i).html('&nbsp;');
 	}
 }
 
@@ -155,7 +107,7 @@ function set_initial_color(i) {
 		j = colors_max - 1;
 	else j = i;
 	current_colors[i] = j;
-	items[i].style.backgroundColor = animation_colors[j];
+	$('#sneaker-'+i).css('background', animation_colors[j]);
 }
 
 function animate_background() {
@@ -167,7 +119,7 @@ function animate_background() {
 	for (i=new_items-1; i>=0; i--) {
 		if (current_colors[i] < colors_max) {
 			current_colors[i]++;
-			items[i].style.backgroundColor = animation_colors[current_colors[i]];
+			$('#sneaker-'+i).css('background', animation_colors[current_colors[i]]);
 		} else 
 			new_items--;
 	}

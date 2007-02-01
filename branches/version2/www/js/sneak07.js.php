@@ -95,8 +95,7 @@ function received_data(data) {
 		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
 		shift_items(new_items);
 		for (i=0; i<new_items && i<max_items; i++) {
-			html = to_html(new_data[i]);
-			$('#sneaker-'+i).html(html);
+			$('#sneaker-'+i).html(to_html(new_data[i]));
 			if (do_animation) set_initial_color(i);
 		}
 		if (do_animation) {
