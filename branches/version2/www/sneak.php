@@ -305,7 +305,7 @@ if ($current_user->user_id > 0) {
 echo '<div class="sneaker">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
 echo '<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">';
-echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
 echo '<input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control(\'pubvotes\')" /><img src="img/common/sneak-vote-published01.png" width="20" height="16" title="'._('votos de publicadas').'" alt="'._('votos de publicadas').'" />';
 echo '<input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control(\'vote\')" /><img src="img/common/sneak-vote01.png" width="20" height="16" title="'._('meneos').'" alt="'._('meneos').'" />';
 echo '<input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control(\'problem\')" /><img src="img/common/sneak-problem01.png" width="20" height="16" alt="'._('problema').'" title="'._('problema').'"/>';
@@ -319,14 +319,15 @@ if ($current_user->user_id > 0) {
 	echo '<input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /><img src="img/common/sneak-chat01.png" width="20" height="16" alt="'._('mensaje').'" title="'._('mensaje').'"/>';
 }
 
-echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span style="font-size: 120%;" id="ccnt"> </span></strong>';
+echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span id="ccnt"> </span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ms">---</span>';
 echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" action="" onsubmit="return send_chat(this);">';
 	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
-	echo '&nbsp;&nbsp;&nbsp;<span class="genericformnote"><abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ms">-</span></span>';
 	echo '</form>';
 }
+
 echo '</div>' . "\n";
 echo '<div class="sneaker-item">';
 echo '<div class="sneaker-title">';

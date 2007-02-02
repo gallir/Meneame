@@ -1500,7 +1500,7 @@ color: #FF9400;
 .sneaker-legend {
 color: #FF6400;
 text-align: center;
-padding: 0 0 5px 0;
+padding: 3px 0 5px 0;
 margin: 0px;
 background: url(../../img/common/mnu-bkgsoft01.png) repeat-x bottom left;
 border-bottom: 1px solid #FFF;
@@ -1508,7 +1508,7 @@ border-bottom: 1px solid #FFF;
 
 .sneaker-legend img {
 margin: 0 25px 0 3px;
-vertical-align: middle;
+vertical-align: baseline;
 }
 
 .sneaker-control {
