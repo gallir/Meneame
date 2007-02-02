@@ -324,7 +324,7 @@ echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" action="" onsubmit="return send_chat(this);">';
 	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
-	echo '&nbsp;&nbsp;&nbsp;<span class="genericformnote"><abbr title="'._('tiempo en milisegundos para procesar las peticiones al servidor').'">ping (ms)</abbr>: <span id="ms">-</span></span>';
+	echo '&nbsp;&nbsp;&nbsp;<span class="genericformnote"><abbr title="'._('tiempo en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ms">-</span></span>';
 	echo '</form>';
 }
 echo '</div>' . "\n";

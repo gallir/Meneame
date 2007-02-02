@@ -109,7 +109,7 @@ function received_data(data) {
 			animation_timer = setInterval('animate_background()', 100);
 			animating = true;
 		}
-	} else next_update = Math.round(next_update*1.25);
+	} else next_update = Math.round(next_update*1.10);
 	if (next_update < 5000) next_update = 5000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
