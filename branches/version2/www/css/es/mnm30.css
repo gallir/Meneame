@@ -955,8 +955,8 @@ dl.categorylist dt {
 width: 100%;
 font-size: 8.5pt;
 padding: 1px 4px;
-border-left: 1px solid #9CCE2E;
-background: url(../../img/common/mnu-bkggreensoft02.png) top left repeat-x;
+border-left: 1px solid #FFE2C5;
+background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
 margin-bottom: 30px;
 overflow: hidden;
 letter-spacing: 0px;
@@ -974,7 +974,6 @@ text-align: center;
 list-style: none;
 padding: 0;
 margin: 0;
-color: #09460F;
 }
 
 .right-box ul a {
@@ -987,11 +986,10 @@ margin-bottom: 7px;
 }
 
 .right-box h4, .right-box h4 a {
-margin: 2px 0 15px 0;
+margin: 0 0 10px 0;
 text-align: center;
-line-height: 1;
-font-size: 9pt;
-color: #09460f;
+font-size: 10pt;
+color: #FF6400;
 font-weight: bolder;
 border-bottom: none;
 }
