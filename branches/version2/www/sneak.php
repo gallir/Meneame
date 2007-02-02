@@ -274,16 +274,9 @@ function to_hoygan(str)
 	return str.toUpperCase();
 }
 
-function updatePing() {
-	if (!is_playing()) return;
-	$('#ms').html(ping_time);
-}
-
-setInterval(updatePing, 5000);
-
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak07.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak08.js.php"></script>
 <?
 
 do_banner_top();
@@ -320,7 +313,7 @@ if ($current_user->user_id > 0) {
 }
 
 echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span id="ccnt"> </span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ms">---</span>';
+echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ping">---</span>';
 echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" action="" onsubmit="return send_chat(this);">';

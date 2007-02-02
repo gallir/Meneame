@@ -110,7 +110,7 @@ function to_html(data) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak07.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak08.js.php"></script>
 <?
 
 echo '<div class="sneaker">';
@@ -127,6 +127,8 @@ if ($current_user->user_id > 0) $chat_checked = 'checked="checked"';
 else $chat_checked = '';
 echo _('mensaje: ').'<input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /> [T]&nbsp;';
 echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span style="font-size: 120%;" id="ccnt"> </span></strong>';
+echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ping">---</span>';
 echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" onsubmit="return send_chat(this);">';

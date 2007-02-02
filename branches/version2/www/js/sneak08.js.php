@@ -93,6 +93,8 @@ function received_data(data) {
 	else
 		ping_time = parseInt(0.6 * ping_time + 0.4 * (date_object.getTime() - ping_start));
 
+	$('#ping').html(ping_time);
+
 	var new_data = Array();
 	eval (data);
 	$('#ccnt').html(ccnt);
