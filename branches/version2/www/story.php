@@ -225,8 +225,7 @@ case 5:
 	include(mnmpath.'/libs/link_sneak.php');
 	echo '</fieldset>';
 	echo '</div>';
-	echo '<script type="text/javascript">$(function(){start_link_sneak()});</script>' . "\n"
-
+	echo '<script type="text/javascript">$(function(){start_link_sneak()});</script>' . "\n";
 	break;
 }
 // echo '<div class="story-vertical-completion">&nbsp</div>';
