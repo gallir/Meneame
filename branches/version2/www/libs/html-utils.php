@@ -31,8 +31,12 @@ function do_vertical_tags() {
 		echo '<div class="right-box center">';
 		echo '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
 		foreach ($res as $item) {
-			$size = round($min_pts + ($item->count-1)*$coef, 1);
-			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($item->tag_words).'">'.$item->tag_words.'</a>  ';
+			$words[$item->tag_words] = $item->count;
+		}
+		ksort($words);
+		foreach ($words as $word => $count) {
+			$size = round($min_pts + ($count-1)*$coef, 1);
+			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a>  ';
 		}
 		echo '</div>';
 	}
