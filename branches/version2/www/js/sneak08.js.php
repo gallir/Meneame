@@ -100,12 +100,16 @@ function received_data(data) {
 	$('#ccnt').html(ccnt);
 	new_items= new_data.length;
 	if(new_items > 0) {
-		if (do_animation) clearInterval(animation_timer);
+		if (do_animation) clear_animation();
 		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
-		shift_items(new_items);
-		for (i=0; i<new_items && i<max_items; i++) {
-			$('#sneaker-'+i).html(to_html(new_data[i]));
-			if (do_animation) set_initial_color(i);
+
+		//Remove old items
+		$('#items').children().gt(max_items-new_items-1).remove();
+
+		for (i=new_items-1; i>=0 ; i--) {
+			html = $('<div class="sneaker-item">'+to_html(new_data[i])+'</div>');
+			set_initial_display(html, i);
+			$('#items').prepend(html);
 		}
 		if (do_animation) {
 			animation_timer = setInterval('animate_background()', 100);
@@ -125,19 +129,6 @@ function received_data(data) {
 	}
 	data_timer = setTimeout('get_data()', next_update);
 	reportAjaxStats('/sneaker_request');
-}
-
-function shift_items(n) {
-	for (i=max_items-1;i>=n;i--) {
-		j = i - n;
-		$('#sneaker-'+i).html($('#sneaker-'+j).html());
-	}
-}
-
-function clear_items() {
-	for (i=0;i<max_items;i++) {
-		$('#sneaker-'+i).html('&nbsp;');
-	}
 }
 
 function send_chat(form) {
@@ -212,7 +203,7 @@ function toggle_control(what) {
 	set_options_cookie();
 	if (is_playing()) {
 		data_timer = setTimeout('get_data()', 100)
-		clear_items();
+		$('#items').children().html('&nbsp;');
 	}
 	requests = 0;
 	return false;

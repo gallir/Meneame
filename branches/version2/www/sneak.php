@@ -66,13 +66,19 @@ function play_pause() {
 
 }
 
-function set_initial_color(i) {
+function set_initial_display(item, i) {
 	var j;
 	if (i >= colors_max)
 		j = colors_max - 1;
 	else j = i;
 	current_colors[i] = j;
-	$('#sneaker-'+i).css('background', animation_colors[j]);
+	item.css('background', animation_colors[j]);
+}
+
+function clear_animation() {
+	clearInterval(animation_timer);
+	animating = false;
+	$('#items').children().css('background', 'transparent');
 }
 
 function animate_background() {
@@ -81,10 +87,12 @@ function animate_background() {
 		animating = false;
 		return;
 	}
+	var items = new Object; // For IE6
+	items = $('#items').children();
 	for (i=new_items-1; i>=0; i--) {
 		if (current_colors[i] < colors_max) {
 			current_colors[i]++;
-			$('#sneaker-'+i).css('background', animation_colors[current_colors[i]]);
+			items.eq(i).css('background', animation_colors[current_colors[i]]);
 		} else 
 			new_items--;
 	}
@@ -334,12 +342,11 @@ echo "</div>\n";
 echo "</div>\n";
 
 
+echo '<div id="items'.$i.'">';
 for ($i=0; $i<$max_items;$i++) {
-	echo '<div id="sneaker-'.$i.'" class="sneaker-item">&nbsp;';
-	echo "</div>\n";
-
-
+	echo '<div class="sneaker-item">&nbsp;</div>';
 }
+echo "</div>\n";
 
 echo '</div>';
 echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";

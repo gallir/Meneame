@@ -38,8 +38,13 @@ var server_name = '<? echo get_server_name(); ?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
 var mykey = <? echo rand(100,999); ?>;
 
-var do_animation=false;
 var show_friends = false;
+var do_animation = false;
+
+function set_initial_display(item, i) {
+	item.children().hide();
+	item.children().fadeIn('normal');
+}
 
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);
@@ -146,12 +151,11 @@ echo '<div class="sneaker-status"><strong>'._('estado').'</strong></div>';
 echo "</div>\n";
 
 
+echo '<div id="items'.$i.'">';
 for ($i=0; $i<$max_items;$i++) {
-	echo '<div id="sneaker-'.$i.'" class="sneaker-item">&nbsp;';
-	echo "</div>\n";
-
-
+	echo '<div class="sneaker-item">&nbsp;</div>';
 }
+echo "</div>\n";
 
 echo '</div>';
 echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";
