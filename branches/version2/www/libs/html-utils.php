@@ -28,7 +28,7 @@ function do_vertical_tags() {
 
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
-		echo '<div class="right-box">';
+		echo '<div class="right-box center">';
 		echo '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
 		foreach ($res as $item) {
 			$size = round($min_pts + ($item->count-1)*$coef, 1);
