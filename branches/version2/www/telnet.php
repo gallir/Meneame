@@ -41,6 +41,7 @@ var mykey = <? echo rand(100,999); ?>;
 var show_friends = false;
 var do_animation = false;
 
+$(function(){start_sneak()});
 function set_initial_display(item, i) {
 	item.children().hide();
 	item.children().fadeIn('normal');
@@ -158,6 +159,5 @@ for ($i=0; $i<$max_items;$i++) {
 echo "</div>\n";
 
 echo '</div>';
-echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";
 echo "</body></html>\n";
 ?>

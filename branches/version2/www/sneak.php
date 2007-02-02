@@ -12,7 +12,6 @@ include(mnminclude.'sneak.php');
 
 
 #$globals['ads'] = true;
-//$globals['body-args'] = 'onload="start()"';
 $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();
@@ -46,6 +45,8 @@ var show_friends = false;
 
 // Reload the mnm banner each 5 minutes
 var mnm_banner_reload = 180000;
+
+$(function(){start_sneak()});
 
 function play_pause() {
 	if (is_playing()) {
@@ -349,7 +350,6 @@ for ($i=0; $i<$max_items;$i++) {
 echo "</div>\n";
 
 echo '</div>';
-echo '<script type="text/javascript">setTimeout("start_sneak()", 500);</script>' . "\n";
 
 do_footer();
 
