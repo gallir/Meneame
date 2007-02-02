@@ -46,12 +46,6 @@ function start_sneak() {
 		ping_start = date_object.getTime();
 	});
 
-	$(document).ajaxSuccess(function (request, settings) {
-		xmlhttp = undefined;
-		var date_object = new Date();
-		ping_time = parseInt(0.5 * ping_time + 0.5 * (date_object.getTime() - ping_start));
-	});
-
 	$(document).ajaxStop(function (request, settings) {
 		xmlhttp = undefined;
 	});
@@ -92,7 +86,10 @@ function get_data() {
 }
 
 function received_data(data) {
-	// We get new_data array
+	// Update ping time
+	var date_object = new Date();
+	ping_time = parseInt(0.5 * ping_time + 0.5 * (date_object.getTime() - ping_start));
+
 	var new_data = Array();
 	eval (data);
 	$('#ccnt').html(ccnt);
