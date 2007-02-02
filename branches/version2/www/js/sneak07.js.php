@@ -88,7 +88,10 @@ function get_data() {
 function received_data(data) {
 	// Update ping time
 	var date_object = new Date();
-	ping_time = parseInt(0.5 * ping_time + 0.5 * (date_object.getTime() - ping_start));
+	if (ping_time == 0) 
+		ping_time = date_object.getTime() - ping_start;
+	else
+		ping_time = parseInt(0.6 * ping_time + 0.4 * (date_object.getTime() - ping_start));
 
 	var new_data = Array();
 	eval (data);
