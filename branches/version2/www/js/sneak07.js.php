@@ -12,6 +12,8 @@ var min_update = 20000;
 var next_update = 5000;
 var xmlhttp;
 var requests = 0;
+var ping_time = 0;
+var ping_start;
 var total_requests = 0;
 var max_requests = 2000;
 var comment = '';
@@ -29,7 +31,6 @@ var show_published = true;
 var show_chat = true;
 var show_pubvotes = true;
 
-var ajax_busy = false;
 
 function start_sneak() {
 	//xmlhttp = new myXMLHttpRequest ();
@@ -41,11 +42,17 @@ function start_sneak() {
 	});
 
 	$(document).ajaxSend(function (request, settings) {
-		ajax_busy = true;
+		var date_object = new Date();
+		ping_start = date_object.getTime();
+	});
+
+	$(document).ajaxSuccess(function (request, settings) {
+		xmlhttp = undefined;
+		var date_object = new Date();
+		ping_time = parseInt(0.5 * ping_time + 0.5 * (date_object.getTime() - ping_start));
 	});
 
 	$(document).ajaxStop(function (request, settings) {
-		ajax_busy = false;
 		xmlhttp = undefined;
 	});
 

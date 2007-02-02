@@ -274,6 +274,13 @@ function to_hoygan(str)
 	return str.toUpperCase();
 }
 
+function updatePing() {
+	if (!is_playing()) return;
+	$('#ms').html(ping_time);
+}
+
+setInterval(updatePing, 5000);
+
 //]]>
 </script>
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak07.js.php"></script>
@@ -317,6 +324,7 @@ echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" action="" onsubmit="return send_chat(this);">';
 	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
+	echo '&nbsp;&nbsp;&nbsp;<span class="genericformnote"><abbr title="'._('tiempo en milisegundos para procesar las peticiones al servidor').'">ping (ms)</abbr>: <span id="ms">-</span></span>';
 	echo '</form>';
 }
 echo '</div>' . "\n";
