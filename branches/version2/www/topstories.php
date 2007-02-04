@@ -70,6 +70,7 @@ function do_sidebar_top() {
 	do_mnu_submit();
 	do_mnu_sneak();
 
+	/*
 	echo '<div class="column-one-list-short">'."\n";
 	echo '<ul>'."\n";
 
@@ -86,6 +87,7 @@ function do_sidebar_top() {
 
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
+	*/
 
 	do_mnu_meneria();
 	do_mnu_rss();
