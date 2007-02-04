@@ -162,28 +162,28 @@ font-size: 9pt;
 padding: 2px 8px 1px 8px;
 margin-right: 2px;
 text-decoration: none;
-color: #FF6400;
-background: #dadada;
+color: #FFF;
+background: #8397DA;
 border-right: 1px solid #f0f0f0;
 border-bottom: 1px solid #f0f0f0;
 }
 
 .tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
-color: #FF6400;
-background: #fff;
+color: #8397DA;
+background: #FFF;
 font-weight: bold;
 }
 
 .tabsub-shakeit a:link.teaser, .tabsub-shakeit a:visited.teaser {
-background: #fff;
+background: #FFF;
 border: none;
 padding: 1px 3px 0 3px;
 margin-left: 5px;
 }
 
 .tabsub-shakeit a:hover {
-background: #c4c9da;
-color: #FF6400;
+background: #C4C9DA;
+color: #FFF;
 }
 
 
@@ -916,7 +916,7 @@ white-space: nowrap;
 }
 
 .column-list li a, .column-one-list li a, .column-one-list-short li a {
-color: #FF6400;
+color: #8397DA;
 }
 
 
