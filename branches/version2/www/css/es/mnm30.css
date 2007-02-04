@@ -151,7 +151,7 @@ background: #fff;
 /* tabsub specials */
 
 .tabsub-shakeit {
-margin: 3px 20px 5px 25px;
+margin: 5px 20px 5px 25px;
 overflow: hidden;
 padding: 0;
 }  * html .tabsub-shakeit {margin-bottom: 30px;} /* Mind the bottom margin, bug in IE6 */
