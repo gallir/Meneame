@@ -163,7 +163,8 @@ padding: 2px 8px 1px 8px;
 margin-right: 2px;
 text-decoration: none;
 color: #FFF;
-background: #8397DA;
+/*background: #8397DA;*/
+background: #aeb8da;
 border-right: 1px solid #f0f0f0;
 border-bottom: 1px solid #f0f0f0;
 }
