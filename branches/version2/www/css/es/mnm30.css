@@ -162,8 +162,8 @@ font-size: 9pt;
 padding: 2px 8px 1px 8px;
 margin-right: 2px;
 text-decoration: none;
-color: #c14d00;
-background: #e3e3e3;
+color: #FF6400;
+background: #dadada;
 border-right: 1px solid #f0f0f0;
 border-bottom: 1px solid #f0f0f0;
 }
@@ -182,7 +182,7 @@ margin-left: 5px;
 }
 
 .tabsub-shakeit a:hover {
-background: #eee;
+background: #c4c9da;
 color: #FF6400;
 }
 
