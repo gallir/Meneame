@@ -89,14 +89,9 @@ function parseAnswer (id, error, server_answer)
 
 function updateLinkValues (id, votes, negatives, karma, value) {
 	if ($('#a-votes-' + id).html() != votes) {
-		$('#a-votes-' + id).fadeOut('fast', 
-			function () {
-				$('#a-votes-' + id).html(votes);
-				$('#a-votes-' + id).fadeIn('slow');
-			}
-		);
-	} else {
+		$('#a-votes-' + id).hide();
 		$('#a-votes-' + id).html(votes);
+		$('#a-votes-' + id).fadeIn('slow');
 	}
 	$('#a-neg-' + id).html(negatives);
 	$('#a-karma-' + id).html(karma);

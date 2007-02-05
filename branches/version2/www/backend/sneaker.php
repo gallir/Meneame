@@ -31,6 +31,10 @@ if(!empty($_GET['items']) && intval($_GET['items']) > 0) {
 	$max_items = intval($_GET['items']);
 }
 
+if ($max_items < 1 || $max_items > 50) {
+	$max_items = 50; // Avoid abuse
+}
+
 header('Content-Type: text/html; charset=utf-8');
 
 $client_version = $_GET['v'];
@@ -117,6 +121,14 @@ function check_chat() {
 			send_chat_warn($comment);
 			return;
 		}
+		$period = $now - 9;
+		$counter = intval($db->get_var("select count(*) from chats where chat_time > $period and chat_uid = $current_user->user_id"));
+		if ($counter > 0) {
+			$comment = _('tranquilo charlatán').' ;-)';
+			send_chat_warn($comment);
+			return;
+		}
+
 		if (preg_match('/^!/', $comment)) {
 			require_once('sneaker-stats.php');
 			$comment = check_stats($comment);

@@ -14,8 +14,8 @@ $globals['ads'] = true;
 
 $page_size = 20;
 
-$range_names  = array(_('24 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
-$range_values = array(1, 7, 30, 365, 0);
+$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
+$range_values = array(1, 2, 7, 30, 365, 0);
 
 $offset=(get_current_page()-1)*$page_size;
 
