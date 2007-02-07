@@ -322,6 +322,11 @@ function get_uppercase_ratio($str) {
 	return 0;
 }
 
+function do_modified_headers($time, $tag) {
+	header('Last-Modified: ' . date('r', $time));
+	header('ETag: "'.$tag.'"');
+}
+
 function get_if_modified() {
 	// Get client headers - Apache only
 	$request = apache_request_headers();

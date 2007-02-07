@@ -34,18 +34,6 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 		not_found();
 	}
 }
-/*
-// Check if the browser sent if-modified-since and act accordingly
-// Reverted: firefox get fooked
-//           it shows the old page if the user just authenticated
-$if_modified = get_if_modified();
-if ($if_modified > 0 && $if_modified == $link->modified) {
-	header("HTTP/1.1 304 Not Modified");
-	exit;
-}
-header('Last-Modified: ' . date('r', $link->modified));
-*/
-
 
 switch ($url_args[1]) {
 	case 'best-comments':
@@ -81,6 +69,9 @@ if ($globals['bot'] && $tab_option > 2) {
 	header('Location: ' . $globals['link_permalink']);
 	die;
 }
+
+
+do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->modified);
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
