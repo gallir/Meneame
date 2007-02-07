@@ -172,7 +172,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li>
 <h4>¿Cómo pensáis pagar los gastos?</h4>
-<p>Por ahora hay poco tráfico, y con el servicio contratado por Guillem tenemos suficiente, así que no hay apuro. Seguramente acabaremos poniendo AdSense de Google. Si eso no da para cubrir los gastos, cerramos y a otra cosa, el viaje habrá sido divertido.</p>
+<p>Ya hay mucho tráfico, AdSense cubre los gastos y nos alcanzó para comprarnos varios Ferraris y un Panda de los nuevos, así que por ahora no hay peligro.</p>
 </li>
 
 <li>

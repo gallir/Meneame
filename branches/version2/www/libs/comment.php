@@ -194,7 +194,7 @@ class Comment {
 
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < $globals['comment_edit_time']) ||
-			 ($current_user->user_level == 'god' && time() - $this->date < 10800)) { // Admins can edit up to 3 hours
+			 ($current_user->user_level == 'god' && time() - $this->date < 86400)) { // Admins can edit up to 24 hs hours
 			$expand = '<br /><br />&#187;&nbsp;' . 
 				'<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar comentario').'</a>';
 

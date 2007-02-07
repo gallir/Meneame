@@ -76,6 +76,12 @@ $globals['category_id']=$link->category;
 $globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
+// If it's a bot or crawler, redirect to the canonical URL to avoid penalisations and overload
+if ($globals['bot'] && $tab_option > 2) {
+	header('Location: ' . $globals['link_permalink']);
+	die;
+}
+
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
 if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_adcode)) {
@@ -319,11 +325,13 @@ function print_story_tabs($option) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
-	echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
-	if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
-		echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
-		echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
+	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
+		echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+		echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
+		if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
+			echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+			echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
+		}
 	}
 	echo '</ul>'."\n";
 }
