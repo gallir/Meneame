@@ -36,6 +36,10 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 }
 
 switch ($url_args[1]) {
+	case '':
+		$tab_option = 1;	
+		$order_field = 'comment_order';
+		break;
 	case 'best-comments':
 		$tab_option = 2;
 		$order_field = 'comment_karma desc, comment_id asc';
@@ -53,8 +57,7 @@ switch ($url_args[1]) {
 		$tab_option = 6;
 		break;
 	default:
-		$tab_option = 1;	
-		$order_field = 'comment_order';
+		not_found();
 }
 
 // Set globals
