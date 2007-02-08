@@ -73,8 +73,11 @@ if ($globals['bot'] && $tab_option > 2) {
 	die;
 }
 
+if ($_POST['process']=='newcomment') {
+	insert_comment();
+}
 
-do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->modified);
+do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->comments.'-'.$link->modified);
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
@@ -88,10 +91,6 @@ if ($link->status != 'published')
 	$globals['do_vote_queue']=true;
 if (!empty($link->tags))
 	$globals['tags']=$link->tags;
-
-if ($_POST['process']=='newcomment') {
-	insert_comment();
-}
 
 do_header($link->title, 'post');
 
