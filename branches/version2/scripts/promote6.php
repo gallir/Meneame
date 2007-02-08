@@ -50,14 +50,14 @@ td {
 $min_karma_coef = 0.85;
 define(MAX, 1.20);
 define (MIN, 1.0);
-define (PUB_MIN, 30);
-define (PUB_MAX, 50);
+define (PUB_MIN, 25);
+define (PUB_MAX, 55);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
-$pub_estimation = intval(max(min($links_queue * 0.15, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * 0.18, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();

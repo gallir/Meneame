@@ -10,7 +10,7 @@ $max_date = "date_sub(now(), interval 15 minute)";
 $min_date = "date_sub(now(), interval 20 hour)"; 
 
 // Delete old bad links
-$from = $now - 900;
+$from = $now - 1200;
 $db->query("delete from links where link_status='discard' and link_date < from_unixtime($from) and link_votes = 0");
 
 
