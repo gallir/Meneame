@@ -437,17 +437,21 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status == 'queued' &&  $this->negatives > 3 && $this->negatives > $this->votes/8 ) {
+		if ( $this->status != 'discard' &&  $this->negatives > 3 && $this->negatives > $this->votes/8 ) {
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
-			// Only says "what" if most votes are "wrong" or "duplicated" 
-			$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
-			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-				echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
+			if ($this->status == 'published') {
+				echo _('noticia controvertida');
 			} else {
-				echo _('Esta noticia tiene varios votos negativos.');
-			}
-			if( $this->votes_enabled && !$this->voted ) {
-				echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
+				// Only says "what" if most votes are "wrong" or "duplicated" 
+				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
+				if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
+					echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
+				} else {
+					echo _('Esta noticia tiene varios votos negativos.');
+				}
+				if( $this->votes_enabled && !$this->voted ) {
+					echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
+				}
 			}
 			echo "</div>\n";
 		}
