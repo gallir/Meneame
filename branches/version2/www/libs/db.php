@@ -1,5 +1,5 @@
 <?php
-include_once(mnminclude.'ezdb1.php');
+include_once(mnminclude.'ezdb1-simple.php');
 
 global $globals;
 $db = new db($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
