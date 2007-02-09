@@ -34,7 +34,6 @@
 
 		var $show_errors = true;
 		var $num_queries = 0;	
-		var $last_query;
 		var $col_info;
 		var $dbuser;
 		var $dbpassword;
@@ -104,7 +103,6 @@
 			// Log this error to the global array..
 			$EZSQL_ERROR[] = array 
 							(
-								"query"      => $this->last_query,
 								"error_str"  => $str,
 								"error_no"   => $error_no
 							);
@@ -140,7 +138,6 @@
 			// Get rid of these
 			$this->last_result = null;
 			$this->col_info = null;
-			$this->last_query = null;
 
 		}
 
