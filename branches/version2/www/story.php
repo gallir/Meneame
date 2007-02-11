@@ -302,10 +302,13 @@ function insert_comment () {
 				$comment->store();
 				$comment->insert_vote();
 				$link->update_comments();
+				// Re read link data
+				$link->read();
 			}
 		}
-		header('Location: '.$link->get_permalink());
-		die;
+		// We don't redirect, Firefox show cache data instead of the new data since we send lastmodification time.
+		//header('Location: '.$link->get_permalink());
+		//die;
 	}
 }
 
