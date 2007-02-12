@@ -15,7 +15,8 @@ $globals['ads'] = true;
 
 do_header(_('mejores comentarios en 24 horas'));
 do_banner_top();
-echo '<div id="'.$globals['css_container'].'">'."\n";
+echo '<div id="container">'."\n";
+do_sidebar();
 echo '<div id="contents">';
 do_tabs('main', _('+ comentarios'), true);
 echo '<div class="topheading"><h2>'._('comentarios más valorados 24 horas').'</h2></div>';
@@ -56,22 +57,6 @@ if ($comments) {
 
 echo '</div>';
 echo '</div>';
-do_sidebar_top();
-do_rightbar();
 do_footer();
-
-
-function do_sidebar_top() {
-	global $db, $dblang, $range_values, $range_names;
-
-	echo '<div id="sidebar">'."\n";
-	do_mnu_faq('topcomments');
-	do_mnu_submit();
-	do_mnu_sneak();
-	do_mnu_meneria();
-	do_mnu_rss();
-	echo '</div>';
-
-}
 
 ?>

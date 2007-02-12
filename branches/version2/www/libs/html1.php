@@ -66,8 +66,6 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
-	$globals['css_container'] = 'container';
-
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
@@ -102,11 +100,6 @@ function do_header($title, $id='home') {
 		if($current_user->authenticated) {
 	  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('cerrar sesión') . '</a></li>' . "\n";
   			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' . _('perfil de') . ' ' . $current_user->user_login . '</a></li>' . "\n";
-			// Select the wider container if the user has selected to view just two columns
-			if (($current_user->user_comment_pref & 4) > 0) {
-				$globals['css_container'] = 'container-2cols';
-				$globals['css_no_extra_col'] = true;
-			}
 		} else {
   			echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
   			echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('login') . '</a></li>' . "\n";
@@ -165,6 +158,8 @@ function do_sidebar() {
 
 	do_mnu_submit();
 	do_mnu_sneak();
+	do_vertical_tags();
+	do_best_comments();
 
 // moved to subtabs (benjami 02-2007)
 // 	if(empty($globals['link_id'])) {
@@ -180,19 +175,10 @@ function do_sidebar() {
 	echo '</div><!--html1:do_sidebar-->' . "\n";
 }
 
-function do_rightbar() {
+function do_tags_comments() {
 	global $globals;
-	if ($globals['css_no_extra_col']) return;
-
-	require_once(mnminclude.'html-utils.php');
-	echo "<div id='rightbar'>\n";
-	do_banner_right();
 	do_vertical_tags();
 	do_best_comments();
-	// ads 
-	//do_banner_right_low();
-	//do_last_comments();
-	echo "</div>";
 }
 
 // menu items
@@ -566,5 +552,78 @@ function print_categories_form($selected = 0) {
 	}
 	echo '<br style="clear: both;"/>' . "\n";
 	echo '</fieldset>';
+}
+
+function do_vertical_tags() {
+	global $db, $globals, $dblang;
+
+	if (!empty($globals['tag_status'])) {
+		$status = '= "'. $globals['tag_status']. '"';
+	} else {
+		$status = "!= 'discarded'";
+	}
+	$min_pts = 8;
+	$max_pts = 17;
+	$line_height = $max_pts * 0.75;
+
+	$min_date = date("Y-m-d H:00:00", time() - 172800); // 48 hours
+	if(!empty($globals['meta_categories'])) {
+		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
+	}
+	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
+	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
+	$coef = ($max_pts - $min_pts)/($max-1);
+
+	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
+	if ($res) {
+		echo '<div class="vertical-box center">';
+		echo '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
+		foreach ($res as $item) {
+			$words[$item->tag_words] = $item->count;
+		}
+		ksort($words);
+		foreach ($words as $word => $count) {
+			$size = round($min_pts + ($count-1)*$coef, 1);
+			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a>  ';
+		}
+		echo '</div>';
+	}
+}
+
+function do_last_comments() {
+	global $db, $globals, $dblang;
+	$foo_link = new Link();
+
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users where comment_link_id = link_id and comment_user_id = user_id order by comment_date desc limit 10");
+	if ($res) {
+		echo '<div class="vertical-box">';
+		echo '<h4>' . _('últimos comentarios'). '</h4><ul>';
+		foreach ($res as $comment) {
+			$foo_link->uri = $comment->link_uri;
+			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
+			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+		}
+		echo '</ul></div>';
+	}
+}
+
+function do_best_comments() {
+	global $db, $globals, $dblang;
+	$foo_link = new Link();
+
+	if ($globals['bot']) return; // We wont spend lot of CPU for another CPU :-)
+	
+	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
+	if ($res) {
+		echo '<div class="vertical-box">';
+		echo '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
+		foreach ($res as $comment) {
+			$foo_link->uri = $comment->link_uri;
+			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
+			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+		}
+		echo '</ul></div>';
+	}
 }
 ?>

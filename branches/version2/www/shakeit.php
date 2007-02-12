@@ -17,13 +17,6 @@ $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
 
-do_header(_('noticias pendientes'));
-do_banner_top();
-echo '<div id="'.$globals['css_container'].'">'."\n";
-echo '<div id="contents">'."\n";
-do_tabs("main","shakeit");
-$order_by = " ORDER BY link_date DESC ";
-
 
 $cat = intval($_REQUEST['category']);
 
@@ -31,8 +24,8 @@ switch ($globals['meta']) {
 	case '_friends':
 		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
-		$order_by = " ORDER BY link_date DESC ";	
-		print_shakeit_tabs(2);
+		$order_by = " ORDER BY link_date DESC ";
+		$tab = 2;
 		$globals['tag_status'] = 'queued';
 		break;
 	case '_popular':
@@ -40,13 +33,14 @@ switch ($globals['meta']) {
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*2).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
 		$order_by = " ORDER BY link_karma DESC ";	
-		print_shakeit_tabs(3);
+		$tab = 3;
 		$globals['tag_status'] = 'queued';
 		break;
 	case '_discarded':
 		// Show only discarded in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
+		$tab = 5;
 		print_shakeit_tabs(5);
 		$globals['tag_status'] = 'discard';
 		break;
@@ -57,13 +51,22 @@ switch ($globals['meta']) {
 		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
 		if ($globals['meta_current'] > 0) {
 			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
-			print_shakeit_tabs();
+			$tab = false;
 		} else {
 			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-			print_shakeit_tabs(1);
+			$tab = 1;
 		}
 		break;
 }
+
+do_header(_('noticias pendientes'));
+do_banner_top();
+echo '<div id="container">'."\n";
+do_sidebar();
+echo '<div id="contents">'."\n";
+do_tabs("main","shakeit");
+print_shakeit_tabs($tab);
+$order_by = " ORDER BY link_date DESC ";
 
 do_mnu_categories_horizontal($_REQUEST['category']);
 
@@ -86,32 +89,7 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>'."\n";
-do_sidebar_shake();
-do_rightbar();
 do_footer();
-
-
-function do_sidebar_shake() {
-	global $db, $dblang, $globals;
-
-	echo '<div id="sidebar">';
-
-	do_mnu_faq('shakeit');
-	do_mnu_submit();
-	do_mnu_sneak();
-
-	// Categories box
-
-// moved to subtabs (benjami 02-2007)
-// 	do_mnu_categories ('shakeit', check_integer('category'));
-
-	//do_banner_right_a(); // right side banner
-	do_mnu_tools();
-	do_mnu_bugs();
-	do_mnu_rss();
-	echo '</div>'. "\n";
-
-}
 
 function print_shakeit_tabs($option=-1) {
 	global $globals, $current_user, $db;

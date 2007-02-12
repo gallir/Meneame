@@ -49,7 +49,8 @@ if($search) {
 	}
 	do_header(_('búsqueda de'). '"'.$search_txt.'"');
 	do_banner_top();
-	echo '<div id="'.$globals['css_container'].'">'."\n";
+	echo '<div id="container">'."\n";
+	do_sidebar();
 	echo '<div id="contents">';
 	do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 	echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
@@ -62,7 +63,8 @@ if($search) {
 } else {
 	do_header(_('últimas publicadas'));
 	do_banner_top();
-	echo '<div id="'.$globals['css_container'].'">'."\n";
+	echo '<div id="container">'."\n";
+	do_sidebar();
 	echo '<div id="contents">'."\n";
 	do_tabs('main','published');
 	if ($globals['meta_current'] > 0) {
@@ -106,9 +108,7 @@ if ($links) {
 
 do_pages($rows, $page_size);
 echo '</div> <!--index.php-->';
-do_sidebar();
 $globals['tag_status'] = 'published';
-do_rightbar();
 do_footer();
 
 function print_index_tabs($option=-1) {

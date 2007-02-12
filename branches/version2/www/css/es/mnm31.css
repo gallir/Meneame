@@ -42,59 +42,25 @@ padding: 0 15px 50px 15px;
 overflow: hidden;
 }
 
-/* From: http://alistapart.com/articles/holygrail */
-
-#container, #container-2cols { 
-margin-top: 20px;
-padding-left: 13.5em;      /* LC width */
-padding-right: 160px;      /* RC width */
+#container { 
+margin: 20px 15px 0 15px;
 position: relative;
 overflow: hidden;
-background: url(../../img/common/pixel-ff6400.png) 13.5em top repeat-y;
+background: url(../../img/common/pixel-ff6400.png) 14.5em top repeat-y;
 padding-bottom: 50px;
 }
 
-#container-2cols {
-padding-right: 20px;
-}
-
 #contents {
-float: left;
 position: relative;
-width: 100%;
-margin-top: 0;
+margin-left: 14.5em;
 padding-left: 0;
 padding-right: 0;
-}
-
-/* we repeat here because IE6 dont draw the previous border */
-* html #contents {
-background: url(../../img/common/pixel-ff6400.png) top left repeat-y;
-}
-
-#rightbar {
-float: left;
-position: relative;
-width: 138px;
-margin-right: -150px; /* RC full width */
-margin-top: 27px;
-padding-left: 5px;
-padding-right: 7px;
-}
-
-* html #sidebar {
-left: 160px;  /* ALERT!!! RC full width  for IE6, should be the same as padding-right in #container*/
-}
+} * html #contents {margin-left: 14.25em;}
 
 #sidebar {
 float: left;
-position: relative;
-width: 12.5em;
-right: 13.5em;
+width: 13.5em;
 margin-top: 27px;
-padding-left: 0.5em;
-padding-right: 0.5em;
-margin-left: -100%;
 }
 
 /* End holygrail */
@@ -903,71 +869,6 @@ font-weight: bold;
 font-size: 95%;
 }
 
-.column-list {
-margin: 15px 0 5px 0;
-width: 100%;
-display: block;
-border: none;
-border-bottom: 1px solid #FFE2C5;
-background: url(../../img/common/mnu-cat01.png) 50% 50% no-repeat;
-padding: 0 0 5px 0;
-}
-
-.column-one-list, .column-one-list-short {
-width: 100%;
-margin: 0 0 15px 0;
-display: block;
-border: none;
-background: url(../../img/common/mnu-bkgsoft03.png) repeat-x bottom left;
-padding: 10px 0 0 0;
-}
-
-.column-one-list-short {
-background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
-}
-
-.column-list ul, .column-one-list ul, .column-one-list-short ul {
-list-style: none;
-margin: 0;
-padding: 0; 
-}
-
-.column-list li {
-float: left;
-width: 49%;
-margin: 0;
-padding: 0 0 5px 0;
-font-size: 85%;
-border: none;
-background: none;
-white-space: nowrap;
-}
-
-.column-one-list li, .column-one-list-short li {
-font-size: 95%;
-padding: 5px 0 5px 30px;
-margin: 0;
-white-space: nowrap;
-}
-
-.column-list li a, .column-one-list li a, .column-one-list-short li a {
-color: #8397DA;
-}
-
-
-.column-one-list li.thiscat, .column-one-list-short li.thiscat {
-font-weight: bold;
-background: url(../../img/common/arrow-r-01.gif) center right no-repeat; /*.gif also available for IEsucks */
-}
-
-.column-one-list li.thiscat a:hover, .column-one-list li.thiscat a, .column-one-list-short li.thiscat a:hover, .column-one-list-short li.thiscat a { 
-color: #FFF;
-}
-
-.column-list li.thiscat { 
-font-weight: bold;
-}
-
 dl.categorylist {
 float: left;
 width: auto;
@@ -986,41 +887,39 @@ dl.categorylist dt {
 }
 
 /* Right column boxes */
-.right-box {
+.vertical-box {
 width: 100%;
 font-size: 8.5pt;
-padding: 1px 4px;
-border-left: 1px solid #FFE2C5;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
 margin-bottom: 30px;
 overflow: hidden;
 letter-spacing: 0px;
 }
 
-.right-box a {
+.vertical-box a {
 color: #8397DA;
 }
 
-.right-box.center {
+.vertical-box.center {
 text-align: center;
 }
 
-.right-box ul {
+.vertical-box ul {
 list-style: none;
 padding: 0;
 margin: 0;
 }
 
-.right-box ul a {
+.vertical-box ul a {
 color: #666;
 }
 
-.right-box ul li{
+.vertical-box ul li{
 line-height: 9pt;
 margin-bottom: 7px;
 }
 
-.right-box h4, .right-box h4 a {
+.vertical-box h4, .vertical-box h4 a {
 margin: 0 0 10px 0;
 text-align: center;
 font-size: 10pt;

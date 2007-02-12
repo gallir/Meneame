@@ -95,7 +95,8 @@ if (!empty($link->tags))
 do_header($link->title, 'post');
 
 do_banner_top();
-echo '<div id="'.$globals['css_container'].'">'."\n";
+echo '<div id="container">'."\n";
+do_sidebar();
 echo '<div id="contents">';
 do_tabs("main",_('noticia'), true);
 $link->print_summary();
@@ -240,9 +241,7 @@ echo '	trackback:ping="'.$link->get_trackback().'" />'."\n";
 echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
-do_sidebar();
 $globals['tag_status'] = $globals['link']->status;
-do_rightbar();
 do_footer();
 
 function print_comment_form() {

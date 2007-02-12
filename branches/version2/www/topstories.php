@@ -35,7 +35,8 @@ if ($range_values[$from] > 0) {
 
 do_header(_('más votadas'));
 do_banner_top();
-echo '<div id="'.$globals['css_container'].'">'."\n";
+echo '<div id="container">'."\n";
+do_sidebar();
 echo '<div id="contents">';
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
@@ -57,44 +58,7 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>';
-do_sidebar_top();
-do_rightbar();
 do_footer();
-
-
-function do_sidebar_top() {
-	global $db, $dblang, $range_values, $range_names;
-
-	echo '<div id="sidebar">'."\n";
-	do_mnu_faq('cloud');
-	do_mnu_submit();
-	do_mnu_sneak();
-
-	/*
-	echo '<div class="column-one-list-short">'."\n";
-	echo '<ul>'."\n";
-
-	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
-
-	for($i=0; $i<count($range_values); $i++) {
-		if($i == $current_range)  {
-			$classornotclass = ' class="thiscat"';
-		} else {
-			$classornotclass = "";
-		}
-		echo '<li '.$classornotclass.'><a href="topstories.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
-	}
-
-	echo '</ul>'."\n";
-	echo '</div>'."\n";
-	*/
-
-	do_mnu_meneria();
-	do_mnu_rss();
-
-	echo '</div>';
-
-}
 
 function print_period_tabs() {
 	global $globals, $current_user, $range_values, $range_names;
