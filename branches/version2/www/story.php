@@ -249,13 +249,13 @@ function print_comment_form() {
 
 	if (!$link->votes > 0) return; 
 	echo '<div id="commentform">'."\n";
-	echo '<form action="" method="post" id="thisform">'."\n";
+	echo '<form action="" method="post">'."\n";
 	echo '<fieldset>'."\n";
-	echo '<legend><span class="sign">'._('envía un comentario').'</span></legend>'."\n";
+	echo '<legend>'._('envía un comentario').'</legend>'."\n";
 	print_simpleformat_buttons('comment');
-	echo '<label for="comment" accesskey="2" style="float:left">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-	echo '<div><textarea name="comment_content" id="comment" rows="6" cols="75"></textarea>'."\n";
-	echo '<input class="submitcomment" type="submit" name="submit" value="'._('enviar el comentario').'" /></div>'."\n";
+	echo '<label for="comment">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
+	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="8"></textarea></div>'."\n";
+	echo '<input class="submitcomment" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
 	echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";

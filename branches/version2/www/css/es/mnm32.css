@@ -981,7 +981,8 @@ text-decoration: none;
 }
 
 .comments textarea {
-width: 100%;
+display: block;
+width: 90%;
 border: 1px dotted #FF9400;
 background: #FFE2C5 url(../../img/common/comment-input.png) left bottom no-repeat;
 color: #303030;
