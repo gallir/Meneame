@@ -40,6 +40,7 @@ switch ($globals['meta']) {
 		// Show only discarded in four days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
+		$order_by = " ORDER BY link_date DESC ";
 		$tab = 5;
 		print_shakeit_tabs(5);
 		$globals['tag_status'] = 'discard';
@@ -49,6 +50,7 @@ switch ($globals['meta']) {
 		$globals['tag_status'] = 'queued';
 		// Show last in seven days
 		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
+		$order_by = " ORDER BY link_date DESC ";
 		if ($globals['meta_current'] > 0) {
 			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
@@ -66,7 +68,6 @@ do_sidebar();
 echo '<div id="contents">'."\n";
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
-$order_by = " ORDER BY link_date DESC ";
 
 do_mnu_categories_horizontal($_REQUEST['category']);
 

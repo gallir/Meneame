@@ -27,10 +27,9 @@ $font_pt = clean_input_string($_GET['font_pt']);
 echo '<html><head><title>banner</title></head><body>';
 
 
-$from = time() - 1800;
-$res = $db->get_row("select link_id, link_title, count(*) as votes from links, votes where vote_type='links' and vote_date > FROM_UNIXTIME($from) and vote_value > 0 and link_id = vote_link_id group by link_id order by votes desc limit 1");
+$res = $db->get_row("select link_id, link_title, count(*) as votes from links, votes where vote_type='links' and vote_date > date_sub(now(), interval 10 minute) and vote_value > 0 and link_id = vote_link_id group by link_id order by votes desc limit 1");
 if ($res) {
-	$votes_hour = $res->votes*2;
+	$votes_hour = $res->votes*6;
 	$title['most'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$votes_hour."&nbsp;"._('votos/hora')."]</span>";
 	$url['most'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
