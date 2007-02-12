@@ -138,4 +138,16 @@ function do_banner_right_low() {
 	}
 }
 
+function do_banner_left_down() {
+	global $globals, $current_user;
+//
+// WARNING!
+//
+// IMPORTANT! adapt this section to your contracted banners!!
+//
+	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
+		@include('ads/codigobarras.inc');
+	}
+}
+
 ?>

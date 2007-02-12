@@ -176,6 +176,7 @@ function do_sidebar() {
 	do_mnu_tools();
 	do_mnu_bugs();
 	do_mnu_rss();
+	do_banner_left_down();
 	echo '</div><!--html1:do_sidebar-->' . "\n";
 }
 
@@ -189,7 +190,7 @@ function do_rightbar() {
 	do_vertical_tags();
 	do_best_comments();
 	// ads 
-	do_banner_right_low();
+	//do_banner_right_low();
 	//do_last_comments();
 	echo "</div>";
 }
