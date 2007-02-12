@@ -369,7 +369,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 	/*
 	if (!$globals['meta_current'] > 0) 
 		return;
-		*/
+	*/
 
 	echo '<div class="catsub-block">' . "\n";
 	echo '<ul>' . "\n";

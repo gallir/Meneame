@@ -184,10 +184,9 @@ border-bottom: 1px solid #FFF;
 }
 
 .tabsub-shakeit a:link.teaser, .tabsub-shakeit a:visited.teaser {
-border: 1px solid #FF9400;
-border-bottom: 1px solid #FFF;
-padding: 3px 3px 3px 3px;
-margin: 0 0 0 3px;
+border: none;
+padding: 2px 0 0 0;
+margin: 0 0 0 7px;
 float: right;
 }
 
