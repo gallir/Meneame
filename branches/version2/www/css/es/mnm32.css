@@ -955,7 +955,6 @@ margin: 25px 5px 0 10px;
 margin: 0;
 }
 
-
 .comments .commentform {
 border: 0;
 padding: 5px 0px 5px 0px;
@@ -982,11 +981,11 @@ text-decoration: none;
 }
 
 .comments textarea {
-width: 98%;
+width: 100%;
 border: 1px dotted #FF9400;
 background: #FFE2C5 url(../../img/common/comment-input.png) left bottom no-repeat;
 color: #303030;
-margin-bottom: 10px;
+margin: 0 0 10px 0;
 }
 
 .comments label {
@@ -997,7 +996,7 @@ font-size: 100%;
 
 .comments-warning {
 font-size: 100%;
-margin: 0;
+margin-bottom: 0;
 color: #9B0000;
 }
 
@@ -1264,7 +1263,6 @@ font-weight: normal;
 #genericform-contents {
 margin: 0 60px 60px 100px;
 }
-
 
 #genericform-contents h2 {
 margin: 10px 0 0 0;

@@ -249,12 +249,12 @@ function print_comment_form() {
 
 	if (!$link->votes > 0) return; 
 	echo '<div id="commentform">'."\n";
-	echo '<form action="" method="post" id="thisform" style="display:inline;">'."\n";
-	echo '<fieldset><legend><span class="sign">'._('envía un comentario').'</span></legend>'."\n";
+	echo '<form action="" method="post" id="thisform">'."\n";
+	echo '<fieldset>'."\n";
+	echo '<legend><span class="sign">'._('envía un comentario').'</span></legend>'."\n";
 	print_simpleformat_buttons('comment');
 	echo '<label for="comment" accesskey="2" style="float:left">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-	echo '<br/>'."\n";
-	echo '<textarea name="comment_content" id="comment" rows="6" cols="75"></textarea><br/>'."\n";
+	echo '<div><textarea name="comment_content" id="comment" rows="6" cols="75"></textarea></div>'."\n";
 	echo '<input class="submitcomment" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
