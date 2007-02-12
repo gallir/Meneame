@@ -120,6 +120,12 @@ function do_profile() {
 	global $user, $current_user, $login, $db, $globals;
 
 
+	if(!empty($user->url)) {
+		if ($user->karma < 10) $nofollow = 'REL="nofollow"';
+		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
+		else $url = $user->url;
+	}
+
 	echo '<fieldset><legend>';
 	echo _('información personal');
 	if($login===$current_user->user_login) {
@@ -132,7 +138,12 @@ function do_profile() {
 
 	echo '<dl>';	
 	if(!empty($user->username)) {
-		echo '<dt>'._('usuario').':</dt><dd>'.$user->username;
+		echo '<dt>'._('usuario').':</dt><dd>';
+		if (!empty($url)) {
+			echo '<a href="'.$url.'" '.$nofollow.'>'.$user->username.'</a>';
+		} else {
+			echo $user->username;
+		}
 		// Print friend icon
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
 			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.friend_teaser($current_user->user_id, $user->id).'</a>';
@@ -161,10 +172,8 @@ function do_profile() {
 		echo '<dt>'._('IM/email').':</dt><dd> '.$user->public_info.'</dd>';
 	}
 
-	if(!empty($user->url)) {
-		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
-		else $url = $user->url;
-		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'"  rel="nofollow">'.$url.'</a></dd>';
+	if(!empty($url)) {
+		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'" '.$nofollow.'>'.$url.'</a></dd>';
 	}
 
 	echo '<dt>'._('desde').':</dt><dd>'.get_date_time($user->date).'</dd>';
