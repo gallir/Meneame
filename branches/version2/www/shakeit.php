@@ -64,6 +64,7 @@ switch ($globals['meta']) {
 		}
 		break;
 }
+	do_mnu_categories_hor($_REQUEST['category']);
 
 // fora en posar dropdown echo '</div>';  // Left margin
 // end of tabs
@@ -100,7 +101,8 @@ function do_sidebar_shake() {
 
 	// Categories box
 
-	do_mnu_categories ('shakeit', check_integer('category'));
+// moved to subtabs (benjami 02-2007)
+// 	do_mnu_categories ('shakeit', check_integer('category'));
 
 	//do_banner_right_a(); // right side banner
 	do_mnu_tools();
@@ -139,9 +141,9 @@ function print_shakeit_tabs($option=-1) {
 
 	// Print RSS teasers
 	if ($option==1) { // All published
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>';
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	} elseif ($globals['meta_current'] > 0) { // A meta rss
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" width="16" height="16" alt="rss2"/></a></li>';
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	}
 
 

@@ -77,7 +77,7 @@ function do_header($title, $id='home') {
 	echo '<meta name="generator" content="meneame" />' . "\n";
 	echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm30.css";</style>' . "\n";
+	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm31.css";</style>' . "\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('todas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=all" />'."\n";
@@ -166,9 +166,11 @@ function do_sidebar() {
 	do_mnu_submit();
 	do_mnu_sneak();
 
-	if(empty($globals['link_id'])) {
-		do_mnu_categories('index', $_REQUEST['category']);
-	}
+// moved to subtabs (benjami 02-2007)
+// 	if(empty($globals['link_id'])) {
+// 		do_mnu_categories('index', $_REQUEST['category']);
+// 	}
+
 	do_mnu_meneria();
 	do_mnu_menedising();
 	do_mnu_tools();
@@ -354,6 +356,57 @@ function do_mnu_trackbacks() {
 	echo "</ul></li>\n";
 
 	echo "</ul>\n";
+}
+
+function do_mnu_categories_hor($what_cat_id) {
+	
+	// $what_cat_type:
+	//	index: from index.php
+	// 	shakeit: from shakeit.php
+
+	global $db, $dblang, $globals;
+
+	// Categories Box
+
+	echo '<div class="catsub-block">' . "\n";
+	echo '<ul>' . "\n";
+
+	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
+	// Always return to page 1
+	$query=preg_replace('/page=[0-9]*/', '', $query);
+	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
+	if(!empty($query)) {
+		$query = htmlspecialchars($query);
+		$query = "&amp;$query";
+	}
+
+	// draw categories
+	if (!empty($globals['meta_categories'])) {
+		$category_condition = "category_id in (".$globals['meta_categories'].")";
+	} else {
+		$category_condition = "category_parent > 0";
+	}
+	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
+	if ($categories) {
+		foreach ($categories as $category) {
+			if($category->category_id == $what_cat_id) {
+				$globals['category_id'] = $category->category_id;
+				$globals['category_name'] = $category->category_name;
+				$thiscat = ' class="thiscat"';
+			} else {
+				$thiscat = '';
+			}
+
+			echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
+			echo _($category->category_name);
+			echo "</a></li>\n";
+		}
+	}
+
+	echo '</ul>';
+// 	echo '<br style="clear: both;" />' . "\n";
+	echo '</div><!--html1:do_mnu_categories_hor-->' . "\n";
+
 }
 
 function do_mnu_categories($what_cat_type, $what_cat_id) {

@@ -347,8 +347,8 @@ function print_simpleformat_buttons($textarea_id) {
 
 
 // Meta categories helpers
-define('META_YES', '<img src="'.$globals['base_url'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" title="'._('tema por defecto').'"/>');
-define('META_NO', '<img src="'.$globals['base_url'].'img/common/icon_favourites_no.gif" alt="del" width="16" height="16" title="'._('seleccionar como tema por defecto').'"/>');
+define('META_YES', '<img src="'.$globals['base_url'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('tema por defecto').'"/>');
+define('META_NO', '<img src="'.$globals['base_url'].'img/common/fix-02.png" alt="del" width="12" height="12" title="'._('seleccionar como tema por defecto').'"/>');
 
 function meta_get_current() {
 	global $globals, $db, $current_user;
