@@ -136,9 +136,9 @@ function print_index_tabs($option=-1) {
 
 	// Print RSS teasers
 	if ($option==0) { // All published
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>'; 
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	} elseif ($globals['meta_current'] > 0) { // A meta rss
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>'; 
+		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

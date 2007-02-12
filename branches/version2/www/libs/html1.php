@@ -401,7 +401,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 	echo '</ul>';
 // 	echo '<br style="clear: both;" />' . "\n";
-	echo '</div><!--html1:do_mnu_categories_hor-->' . "\n";
+	echo '</div><!--html1:do_mnu_categories_horizontal-->' . "\n";
 
 }
 
