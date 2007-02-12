@@ -117,7 +117,7 @@ white-space: nowrap;
 }
 
 .tabmain li {
-margin: 0; 
+margin: 0;
 padding: 0;
 display: inline;
 list-style-type: none;
@@ -151,42 +151,49 @@ background: #fff;
 /* tabsub specials */
 
 .tabsub-shakeit {
-margin: 5px 20px 5px 25px;
+height: 18px !important;
+padding: 0px;
+margin: 15px 15px 0px 15px;
+background: #fff url(../../img/common/pixel-ff9400.png) repeat-x bottom;
 overflow: hidden;
-padding: 0;
-}  * html .tabsub-shakeit {margin-bottom: 30px;} /* Mind the bottom margin, bug in IE6 */
+white-space: nowrap;
+}
+/** html .tabsub-shakeit {margin-bottom: 30px;}*/ /* Mind the bottom margin, bug in IE6 */
 
 .tabsub-shakeit a:link, .tabsub-shakeit a:visited {
 float: left;
 font-size: 9pt;
 padding: 2px 8px 1px 8px;
-margin-right: 2px;
+margin-right: 3px;
 text-decoration: none;
-color: #FFF;
-/*background: #8397DA;*/
-background: #aeb8da;
-border-right: 1px solid #f0f0f0;
-border-bottom: 1px solid #f0f0f0;
+color: #FF9400;
+border: 1px solid #FF9400;
+}
+
+.tabsub li, .tabsub-shakeit li {
+margin: 0;
+padding: 0;
+display: inline;
+list-style-type: none;
 }
 
 .tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
-color: #8397DA;
-background: #FFF;
 font-weight: bold;
+border-bottom: 1px solid #FFF;
 }
 
 .tabsub-shakeit a:link.teaser, .tabsub-shakeit a:visited.teaser {
-background: #FFF;
-border: none;
-padding: 1px 3px 0 3px;
-margin-left: 5px;
+border: 1px solid #FF9400;
+border-bottom: 1px solid #FFF;
+padding: 2px 3px 2px 3px;
+margin: 0 0 0 3px;
+float: right;
 }
 
 .tabsub-shakeit a:hover {
-background: #C4C9DA;
+background: #FF9400;
 color: #FFF;
 }
-
 
 .tabsub {
 height: 22px !important;
@@ -199,13 +206,6 @@ overflow: hidden;
 .tabsub img {
 margin: 0;
 vertical-align: top;
-}
-
-.tabsub li, .tabsub-shakeit li {
-margin: 0;
-padding: 0;
-display: inline;
-list-style-type: none;
 }
 
 .tabsub a:link, .tabsub a:visited {
@@ -868,6 +868,34 @@ font-weight: normal;
 }
 
 /* categories */
+
+.catsub-block {
+margin: 0px 15px 0px 15px;
+padding: 0px;
+border-bottom: 1px solid #FF9400;
+border-right: 1px solid #FF9400;
+border-left: 1px solid #FF9400;
+}
+
+.catsub-block ul {
+padding: 5px;
+margin: 0px;
+}
+
+.catsub-block li {
+font-size: 85%;
+display: inline;
+list-style-type: none;
+}
+
+.catsub-block a:link, .catsub-block a:visited {
+color: #FF9400;
+}
+
+.catsub-block .thiscat {
+font-weight: bold;
+font-size: 95%;
+}
 
 .column-list {
 margin: 15px 0 5px 0;
