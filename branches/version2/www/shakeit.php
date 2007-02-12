@@ -64,7 +64,8 @@ switch ($globals['meta']) {
 		}
 		break;
 }
-	do_mnu_categories_hor($_REQUEST['category']);
+
+do_mnu_categories_horizontal($_REQUEST['category']);
 
 // fora en posar dropdown echo '</div>';  // Left margin
 // end of tabs

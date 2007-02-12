@@ -84,7 +84,8 @@ if($search) {
 		print_index_tabs(0); // No other view
 		$from_where = "FROM links WHERE link_status='published' ";
 	}
-	do_mnu_categories_hor($_REQUEST['category']);
+
+	do_mnu_categories_horizontal($_REQUEST['category']);
 
 	if($cat) {
 		$from_where .= " AND link_category=$cat ";

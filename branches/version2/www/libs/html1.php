@@ -358,7 +358,7 @@ function do_mnu_trackbacks() {
 	echo "</ul>\n";
 }
 
-function do_mnu_categories_hor($what_cat_id) {
+function do_mnu_categories_horizontal($what_cat_id) {
 	
 	// $what_cat_type:
 	//	index: from index.php
@@ -366,7 +366,10 @@ function do_mnu_categories_hor($what_cat_id) {
 
 	global $db, $dblang, $globals;
 
-	// Categories Box
+	/*
+	if (!$globals['meta_current'] > 0) 
+		return;
+		*/
 
 	echo '<div class="catsub-block">' . "\n";
 	echo '<ul>' . "\n";
@@ -388,6 +391,7 @@ function do_mnu_categories_hor($what_cat_id) {
 	}
 	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
 	if ($categories) {
+		$i = 0;
 		foreach ($categories as $category) {
 			if($category->category_id == $what_cat_id) {
 				$globals['category_id'] = $category->category_id;
@@ -397,7 +401,12 @@ function do_mnu_categories_hor($what_cat_id) {
 				$thiscat = '';
 			}
 
-			echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
+			echo '<li'.$thiscat.'>';
+			if ($i > 0) {
+				echo '&bull; '; 
+			}
+			$i++;
+			echo '<a href="'.$base_url.'?category='.$category->category_id.$query.'">';
 			echo _($category->category_name);
 			echo "</a></li>\n";
 		}
