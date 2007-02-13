@@ -148,18 +148,19 @@ function do_sidebar() {
 	echo '<div id="sidebar">';
 
 	if(!empty($globals['link_id'])) {
-		$doing_story=true;
 		do_mnu_faq('story');
 		do_mnu_trackbacks();
 	} else {
-		$doing_story=false;
 		do_mnu_faq('home');
 	}
 
 	do_mnu_submit();
 	do_mnu_sneak();
-	do_vertical_tags();
-	do_best_comments();
+
+	if(empty($globals['link_id'])) {
+		do_vertical_tags();
+		do_best_comments();
+	}
 
 // moved to subtabs (benjami 02-2007)
 // 	if(empty($globals['link_id'])) {
@@ -184,7 +185,10 @@ function do_tags_comments() {
 // menu items
 
 function do_mnu_faq($whichpage) {
-	global $dblang, $globals;
+	global $dblang, $globals, $current_user;
+
+	if ($current_user->user_id > 0) return; // Don't shpw FAQ if it's a registered user
+
 	echo '<div class="mnu-faq">' . "\n";
 	switch ($whichpage) {
 		case 'home':

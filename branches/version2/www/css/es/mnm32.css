@@ -714,7 +714,6 @@ padding: 0;
 .mnu-faq {
 border: none;
 border-top: 1px solid #FFE2C5;
-border-bottom: 1px solid #FFE2C5;
 font-size: 90%;
 color: #FF6400;
 padding: 10px 4px 5px 4px;
@@ -737,6 +736,7 @@ padding: 15px 0 5px 0;
 text-align: left;
 font-size: 120%;
 color: #FF6400;
+border-top: 1px solid #FFE2C5;
 border-bottom: 1px solid #FFE2C5;
 font-weight: bolder;
 background: url(../../img/common/mnu-submit01.png) right bottom no-repeat;
@@ -891,7 +891,7 @@ dl.categorylist dt {
 width: 100%;
 font-size: 8.5pt;
 background: url(../../img/common/mnu-bkgsoft02-inv.png) top left repeat-x;
-margin-bottom: 30px;
+margin: 15px 0 20px 0;
 overflow: hidden;
 letter-spacing: 0px;
 }
