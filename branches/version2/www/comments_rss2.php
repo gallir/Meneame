@@ -108,7 +108,7 @@ if ($comments) {
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
 		$comment->read();
-		$content = save_text_to_html($comment->content);
+		$content = $comment->put_smileys(save_text_to_html($comment->content));
 		echo "	<item>\n";
 		$link_id = $link->id = $comment->link;
 		$link->read();
