@@ -121,7 +121,7 @@ function do_profile() {
 
 
 	if(!empty($user->url)) {
-		if ($user->karma < 10) $nofollow = 'REL="nofollow"';
+		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
