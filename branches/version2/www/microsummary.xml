@@ -9,7 +9,7 @@
 	
       <template match="/">
             <text>Menéame: </text>
-			<value-of select="/html/body[@id='home']/div[@id='container']/div[@id='contents']/div[1]/div/h1/a"/>
+			<value-of select="/html/body[@id='home']/div[@id='container']/div[@id='contents']/div[2]/div/h1/a"/>
 	  </template>
 	  
 	  
