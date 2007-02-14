@@ -17,7 +17,11 @@ $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 init_sneak();
 
 // Start html
-do_header(_('fisgona'));
+if (!empty($_REQUEST['friends'])) {
+	do_header(_('amigos en la fisgona'));
+} else {
+	do_header(_('fisgona'));
+}
 
 ?>
 <script type="text/javascript">
