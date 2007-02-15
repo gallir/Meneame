@@ -15,14 +15,14 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www
 
 $maxlen = 70;
 
-$width = clean_input_string($_GET['width']);
-$height = clean_input_string($_GET['height']);
+$width = intval($_GET['width']);
+$height = intval($_GET['height']);
 $format = clean_input_string($_GET['format']);
-$color_border = clean_input_string($_GET['color_border']);
-$color_bg = clean_input_string($_GET['color_bg']);
-$color_link = clean_input_string($_GET['color_link']);
-$color_text = clean_input_string($_GET['color_text']);
-$font_pt = clean_input_string($_GET['font_pt']);
+$color_border = get_hex_color($_GET['color_border']);
+$color_bg = get_hex_color($_GET['color_bg']);
+$color_link = get_hex_color($_GET['color_link']);
+$color_text = get_hex_color($_GET['color_text']);
+$font_pt = is_numeric($_GET['font_pt']) ? floatval($_GET['font_pt']) : 10;
 
 echo '<html><head><title>banner</title></head><body>';
 

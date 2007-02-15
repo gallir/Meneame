@@ -67,6 +67,10 @@ function clean_input_string($string) {
 	return preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', stripslashes($string));
 }
 
+function get_hex_color($color, $prefix = '') {
+	return $prefix . substr(preg_replace('/[^a-f\d]/i', '', $color), 0, 6);	
+}
+
 function get_negative_vote($value) {
 	global $globals;
 	return $globals['negative_votes_values'][$value];
