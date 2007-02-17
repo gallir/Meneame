@@ -149,7 +149,6 @@ function do_sidebar() {
 
 	if(!empty($globals['link_id'])) {
 		do_mnu_faq('story');
-		do_mnu_trackbacks();
 	} else {
 		do_mnu_faq('home');
 	}
@@ -160,6 +159,8 @@ function do_sidebar() {
 	if(empty($globals['link_id'])) {
 		do_vertical_tags();
 		do_best_comments();
+	} else {
+		do_mnu_trackbacks();
 	}
 
 // moved to subtabs (benjami 02-2007)
