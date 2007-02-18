@@ -64,11 +64,11 @@ class UserAuth {
 
 
 	function SetIDCookie($what, $remember) {
-		global $site_key;
+		global $site_key, $globals;
 		switch ($what) {
 			case 0:	// Borra cookie, logout
-				setcookie ("mnm_user", "", time()-3600); // Expiramos el cookie
-				setcookie ("mnm_key", "", time()-3600); // Expiramos el cookie
+				setcookie ("mnm_user", "", time()-3600, $globals['base_url']); // Expiramos el cookie
+				setcookie ("mnm_key", "", time()-3600, $globals['base_url']); // Expiramos el cookie
 				break;
 			case 1: //Usuario logeado, actualiza el cookie
 				// Atencion, cambiar aquí cuando se cambie el password de base de datos a MD5
@@ -82,8 +82,8 @@ class UserAuth {
 				);
 				if($remember) $time = time() + 3600000; // Valid for 1000 hours
 				else $time = 0;
-				setcookie("mnm_user", $this->user_login, $time);
-				setcookie("mnm_key", $strCookie, $time);
+				setcookie("mnm_user", $this->user_login, $time, $globals['base_url']);
+				setcookie("mnm_key", $strCookie, $time, $globals['base_url'].'; HttpOnly');
 				break;
 		}
 	}
@@ -125,7 +125,7 @@ class UserAuth {
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Location: $url");
 		header("Expires: " . gmdate("r", time()-3600));
-		header("ETag: \"logingout" . time(). "\"");
+		header('ETag: "logingout' . time(). '"');
 		die;
 	}
 
