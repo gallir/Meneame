@@ -5,12 +5,12 @@ Code licensed under the BSD License:
 
 http://dev.webframeworks.com/dist/JSOC-license.txt
 
-version: 0.11.0
+version: 0.12.0
 */
 
 /*/  
  *  JSOC - An object Cache framework for JavaScript
- *  version 0.11.0 [beta]
+ *  version 0.12.0 [beta]
 /*/
 
 
@@ -67,9 +67,8 @@ JSOC = function(){
             return (!Cache[n])?1:0;
         },
         "flush_all":function(){
-            for(k in Cache) delete(Cache[k]);
+            for(var k in Cache) delete(Cache[k]);
             return 1;
         }
     }
 }
-
