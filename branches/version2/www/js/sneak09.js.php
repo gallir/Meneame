@@ -9,7 +9,7 @@ var new_items = 0;
 var max_items = <? echo $max_items; ?>;
 var data_timer;
 var min_update = 20000;
-var next_update = 5000;
+var next_update = 3000;
 var xmlhttp;
 var requests = 0;
 var ping_time = 0;
@@ -116,7 +116,7 @@ function received_data(data) {
 			animating = true;
 		}
 	} else next_update = Math.round(next_update*1.10);
-	if (next_update < 5000) next_update = 5000;
+	if (next_update < 3000) next_update = 3000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
 		if ( !confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>') ) {

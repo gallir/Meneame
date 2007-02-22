@@ -16,7 +16,7 @@ color: #303030;
 margin: 0;
 padding: 0;
 background: #FFF;
-min-width: 920px;
+min-width: 780px;
 }
 
 body, td, th, h3 { /* browser differences workaround */
@@ -43,7 +43,7 @@ overflow: hidden;
 }
 
 #container { 
-margin: 20px 15px 0 15px;
+margin: 20px 15px 0 10px;
 position: relative;
 overflow: hidden;
 background: url(../../img/common/pixel-ff6400.png) 14.5em top repeat-y;
