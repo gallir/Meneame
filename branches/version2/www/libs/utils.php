@@ -350,6 +350,33 @@ function print_simpleformat_buttons($textarea_id) {
 	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['base_url'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
 }
 
+function put_smileys($str) {
+	global $globals;
+
+	if ($globals['bot']) return $str;
+
+	$str=preg_replace('/:-{0,1}\)/i', ' <img src="'.$globals['base_url'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />', $str);
+	$str=preg_replace('/[^t];-{0,1}\)/i', ' <img src="'.$globals['base_url'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />', $str);
+	$str=preg_replace('/:-{0,1}&gt;/i', ' <img src="'.$globals['base_url'].'img/smileys/cheesy.gif" alt=":->" title=":->"  width="15" height="15" />', $str);
+	$str=preg_replace('/:-D|:grin:/i', ' <img src="'.$globals['base_url'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" />', $str);
+	$str=preg_replace('/:oops:|&lt;:\(/i', ' <img src="'.$globals['base_url'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15" />', $str);
+	$str=preg_replace('/&gt;:-{0,1}\(/i', ' <img src="'.$globals['base_url'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("  width="15" height="15" />', $str);
+	$str=preg_replace('/\?(:-){0,1}\(/i', ' <img src="'.$globals['base_url'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" />', $str);
+	$str=preg_replace('/:-{0,1}\(/i', ' <img src="'.$globals['base_url'].'img/smileys/sad.gif" alt=":-(" title=":-("  width="15" height="15" />', $str);
+	$str=preg_replace('/:-O/', ' <img src="'.$globals['base_url'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />', $str);
+	$str=preg_replace('/ 8-{0,1}[D\)]|:cool:/', ' <img src="'.$globals['base_url'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
+	$str=preg_replace('/:roll:/i', ' <img src="'.$globals['base_url'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15" />', $str);
+	$str=preg_replace('/:-P/i', ' <img src="'.$globals['base_url'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
+	$str=preg_replace('/:-x/i', ' <img src="'.$globals['base_url'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15" />', $str);
+	$str=preg_replace('/([^ps]):-{0,1}\//i', '$1 <img src="'.$globals['base_url'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15" />', $str);
+	$str=preg_replace('/:\'\(|:cry:/i', ' <img src="'.$globals['base_url'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("  width="15" height="15" />', $str);
+	$str=preg_replace('/([^a-zA-Z]|^)[xX]D+|:lol:/', ' <img src="'.$globals['base_url'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15" />', $str);
+	$str=preg_replace('/ :-{0,1}S/i', ' <img src="'.$globals['base_url'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15" />', $str);
+	$str=preg_replace('/:-{0,1}\|/i', ' <img src="'.$globals['base_url'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15" />', $str);
+	$str=preg_replace('/:-{0,1}\*/i', ' <img src="'.$globals['base_url'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" />', $str);
+	return $str;
+}
+
 
 // Meta categories helpers
 define('META_YES', '<img src="'.$globals['base_url'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('tema por defecto').'"/>');
