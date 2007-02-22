@@ -33,5 +33,5 @@ if(!$comment->read) die;
 if ($comment->avatar)
     echo '<img hspace="2" src="'.get_avatar_url($comment->author, $comment->avatar, 20).'" width="20" height="20" alt="avatar"/>';
 echo '<strong>' . $comment->username . '</strong><br/>';
-echo $comment->put_smileys(save_text_to_html(mb_substr($comment->content, 0, 1000)));
+echo put_smileys(save_text_to_html(mb_substr($comment->content, 0, 1000)));
 ?>
