@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.11
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.30-Debian_1-log
+-- Server version	5.0.32-Debian_3-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -181,7 +181,7 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL auto_increment,
   `log_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit') character set utf8 collate utf8_spanish_ci NOT NULL,
+  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit') NOT NULL,
   `log_ref_id` int(11) NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip` char(24) character set utf8 collate utf8_spanish_ci default NULL,
@@ -189,6 +189,27 @@ CREATE TABLE `logs` (
   KEY `log_date` (`log_date`),
   KEY `log_type` (`log_type`,`log_ref_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `posts`
+--
+
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE `posts` (
+  `post_id` int(11) unsigned NOT NULL auto_increment,
+  `post_randkey` int(11) NOT NULL default '0',
+  `post_src` enum('web','im','mobile','phone') collate utf8_spanish_ci NOT NULL default 'web',
+  `post_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `post_user_id` int(11) unsigned NOT NULL,
+  `post_visible` enum('all','friends') collate utf8_spanish_ci NOT NULL default 'all',
+  `post_ip_int` int(11) unsigned NOT NULL,
+  `post_votes` smallint(4) NOT NULL default '0',
+  `post_karma` smallint(6) NOT NULL default '0',
+  `post_content` text collate utf8_spanish_ci NOT NULL,
+  PRIMARY KEY  (`post_id`),
+  KEY `post_date` (`post_date`),
+  KEY `post_user_id` (`post_user_id`,`post_date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Table structure for table `sneakers`
@@ -299,4 +320,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-01-26 11:46:30
+-- Dump completed on 2007-02-22 22:01:00
