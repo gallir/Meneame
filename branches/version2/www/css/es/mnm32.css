@@ -955,44 +955,46 @@ margin: 25px 5px 0 10px;
 margin: 0;
 }
 
-.comments .commentform {
-border: 0;
-padding: 5px 0px 5px 0px;
-background: #FF6400;
-color: #FFF;
-font-weight: bold;
-}
 
-.comments .commentform a:link, .commentform a:visited {
+.commentform a:link, .commentform a:visited {
 color: #FFF;
 border-bottom-width: 1px;
 border-bottom-style: dotted;
 }
 
-.comments .submitcomment {
+.commentform .submit {
 background: #FF6400;
 color: #FFF;
 font-weight: bold;
 border: 1px dotted #FFF;
 }
 
-.comments .commentform a:hover {
+.commentform a:hover {
 text-decoration: none;
 }
 
-.comments textarea {
+.commentform textarea {
 display: block;
 width: 90%;
 border: 1px dotted #FF9400;
-background: #FFE2C5 url(../../img/common/comment-input.png) left bottom no-repeat;
+background: #FFE2C5;
 color: #303030;
 margin: 0 0 10px 0;
 }
 
-.comments label {
+.commentform label {
 color: #FF6400;
 font-weight: bold;
 font-size: 100%;
+}
+
+.commentform.warn {
+border: 0;
+padding: 5px 0px 5px 0px;
+background: #FF6400;
+color: #FFF;
+font-weight: bold;
+text-align: center;
 }
 
 .comments-warning {

@@ -47,12 +47,12 @@ function print_edit_form() {
 		die;
 
 	$rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
-	echo '<div id="commentform">'."\n";
+	echo '<div class="commentform">'."\n";
 	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" method="post">'."\n";
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('comment');
 	echo '<div><textarea name="comment_content" id="comment" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
-	echo '<input class="submitcomment" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
+	echo '<input class="submit" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
 	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$comment->id.'" />'."\n";

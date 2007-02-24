@@ -128,14 +128,14 @@ case 2:
 
 	
 	if($link->date < time()-$globals['time_enabled_comments']) { 
-		echo '<div class="commentform" align="center">'."\n";
+		echo '<div class="commentform warn">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
 	} elseif ($current_user->authenticated && ($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
 		print_comment_form();
 	} else {
 		echo '<br/>'."\n";
-		echo '<div class="commentform" align="center" >'."\n";
+		echo '<div class="commentform warn">'."\n";
 		if ($current_user->authenticated && $current_user->user_karma <= $globals['min_karma_for_comments']) 
 			echo _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma ."\n";
 
@@ -248,14 +248,14 @@ function print_comment_form() {
 	global $link, $current_user, $globals;
 
 	if (!$link->votes > 0) return; 
-	echo '<div id="commentform">'."\n";
+	echo '<div class="commentform">'."\n";
 	echo '<form action="" method="post">'."\n";
 	echo '<fieldset>'."\n";
 	echo '<legend>'._('envía un comentario').'</legend>'."\n";
 	print_simpleformat_buttons('comment');
 	echo '<label for="comment">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="8"></textarea></div>'."\n";
-	echo '<input class="submitcomment" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
+	echo '<input class="submit" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
 	echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";

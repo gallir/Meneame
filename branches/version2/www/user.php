@@ -10,6 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'comment.php');
+include(mnminclude.'post.php');
 include(mnminclude.'user.php');
 
 $offset=(get_current_page()-1)*$page_size;
@@ -57,7 +58,10 @@ if($globals['external_user_ads'] && !empty($user->adcode)) {
 
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
+
+array_push($globals['extra_js'], 'jquery-form.pack.js');
 do_header(_('perfil de usuario'). ': ' . $login);
+
 do_banner_top();
 echo '<div id="container-wide">' . "\n";
 echo '<div id="genericform-contents">'."\n";
@@ -125,6 +129,22 @@ function do_profile() {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
+
+	$post = new Post;
+	if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
+		echo '<div id="newpost">';
+		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'newpost\',0,0)" title="'._('insertar un apunte').'">&#187;&nbsp;'._('nuevo apunte').'</a><br />&nbsp;';
+		echo '</div>'."\n";
+		/*
+		$post->author=$current_user->user_id;
+		$post->print_edit_form();
+		*/
+	}
+	echo '<ol class="comments-list" id="last_post">';
+	if ($post->read_last($user->id)) {
+		$post->print_summary();
+	}
+	echo "</ol>\n";
 
 	echo '<fieldset><legend>';
 	echo _('información personal');

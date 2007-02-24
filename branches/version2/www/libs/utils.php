@@ -22,6 +22,9 @@ $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('ant
 
 mb_internal_encoding('UTF-8');
 
+$globals['extra_js'] = Array();
+$globals['extra_css'] = Array();
+
 // For PHP < 5
 if ( !function_exists('htmlspecialchars_decode') ) {
 	function htmlspecialchars_decode($text) {

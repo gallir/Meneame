@@ -12,6 +12,7 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 }
 include_once(mnminclude.'user.php');
+include_once(mnminclude.'post.php');
 
 
 if (empty($_GET['id'])) die;
@@ -30,4 +31,9 @@ echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
 echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
 echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
 echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br/>';
+$post = new Post;
+if ($post->read_last($user->id)) {
+	echo '<br clear="left"><strong>'._('lo último que dijo').'</strong>: ';
+	$post->print_text();
+}
 ?>

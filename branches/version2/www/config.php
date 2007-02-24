@@ -52,7 +52,7 @@ $globals['min_karma_for_negatives'] = 5.5;
 $globals['avatars_dir'] = 'avatars-local';
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_files_per_dir'] = 1000;
-$globals['avatars_allowed_sizes'] = Array (80, 25, 20);
+$globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 // Websnapr.com previews
 $globals['do_websnapr'] = true;
