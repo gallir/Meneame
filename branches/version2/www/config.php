@@ -29,10 +29,18 @@ $globals['db_password'] = '';
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
 // leave empty if you don't have the rewrite rule in apache
+
+//RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
 $globals['base_story_url'] = 'story/';
+
+//RewriteRule ^/search(/.*)$ /index.php$1 [L,NS,NE,PT]
 $globals['base_search_url'] = 'search/';
+
+//RewriteRule ^/user/(.+)$ /user.php/$1  [L,NS]
 $globals['base_user_url'] = 'user/';
-//$globals['base_sneakme_url'] = 'notame/';
+
+//RewriteRule ^/notame(/.*)$ /sneakme/index.php$1 [L,NS]
+$globals['base_sneakme_url'] = 'notame/';
 
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
