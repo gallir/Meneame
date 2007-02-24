@@ -6,6 +6,19 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+function post_get_base_url($option='') {
+	global $globals;
+	if (empty($globals['base_sneakme_url'])) {
+		if (empty($option)) {
+			return $globals['base_url'].'sneakme/';
+		} else {
+			return $globals['base_url'].'sneakme/?id='.$option;
+		}
+	} else {
+		return $globals['base_url'].$globals['base_sneakme_url'].$option;
+	}
+}
+
 class Post {
 	var $id = 0;
 	var $randkey = 0;
@@ -78,7 +91,7 @@ class Post {
 		return false;
 	}
 
-	function print_summary($length = 0, $single_post=true) {
+	function print_summary($length = 0) {
 		global $current_user, $globals;
 
 		if(!$this->read) $this->read(); 
@@ -89,12 +102,10 @@ class Post {
 		$post_class = 'comment-body';
 		echo '<div class="'.$post_class.'">';
 
-		if ($single_post) echo '<span id="comment-'.$this->id.'">';
-		echo '<img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" style="float: left; margin: 2px 10px 2px 0;" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/>';
+		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" style="float: left; margin: 2px 10px 2px 0;" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
 		echo '<span  id="cid-'.$this->id.'">';
 
-		$this->print_text($length, $single_post);
-		if ($single_post) echo '</span>';
+		$this->print_text($length);
 		echo '</span></div>';
 
 
@@ -103,12 +114,9 @@ class Post {
 
 		// Print comment info (right)
 		echo '<div class="comment-info">';
-		echo _('por'). ' ';
-
-		if ($single_post)
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->id.'">'.$this->username.'</a> ';
-		else
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
+		echo '<a href="'.post_get_base_url($this->username).'">'. _('notame de') . ' ' . $this->username.'</a> ';
+		
+		//echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 
 		// Print dates
 		if (time() - $this->date > 604800) { // 7 days
@@ -121,7 +129,7 @@ class Post {
 	}
 
 
-	function print_text($length = 0, $single_post=true) {
+	function print_text($length = 0) {
 		global $current_user, $globals;
 
 		if (($this->author == $current_user->user_id &&
@@ -132,7 +140,7 @@ class Post {
 
 		}
 
-		echo put_smileys(save_text_to_html($this->content), $single_post) . $expand;
+		echo put_smileys(save_text_to_html($this->content)) . $expand;
 		echo "\n";
 	}
 

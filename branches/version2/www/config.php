@@ -32,7 +32,7 @@ $globals['base_url'] = '/';
 $globals['base_story_url'] = 'story/';
 $globals['base_search_url'] = 'search/';
 $globals['base_user_url'] = 'user/';
-$globals['base_sneakme_url'] = 'sneakme/';
+//$globals['base_sneakme_url'] = 'notame/';
 
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;

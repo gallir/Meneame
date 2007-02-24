@@ -82,23 +82,23 @@ function do_posts_tabs($tab_selected, $username) {
 
 	// All
 	if ($tab_selected == 1) {
-		echo '<li><a '.$active.' href="'.$globals['base_url'].$globals['base_sneakme_url'].'" title="'.$reload_text.'">'._('todos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url().'" title="'.$reload_text.'">'._('todos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} else {
-		echo '<li><a  href="'.$globals['base_url'].$globals['base_sneakme_url'].'">'._('todos').'</a></li>' . "\n";
+		echo '<li><a  href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
 	}
 
 	// Friends
 	if ($tab_selected == 2) {
-		echo '<li><a '.$active.' href="'.$globals['base_url'].$globals['base_sneakme_url'].'?id=_friends" title="'.$reload_text.'">'._('amigos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url('_friends').'" title="'.$reload_text.'">'._('amigos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
-		echo '<li><a href="'.$globals['base_url'].$globals['base_sneakme_url'].'?id=_friends">'._('amigos').'</a></li>' . "\n";
+		echo '<li><a href="'.post_get_base_url('_friends').'">'._('amigos').'</a></li>' . "\n";
 	}
 
 	// User
 	if ($tab_selected == 3) {
-		echo '<li><a '.$active.' href="'.$globals['base_url'].$globals['base_sneakme_url'].'?id='.$username.'" title="'.$reload_text.'">'.$username.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url($username).'" title="'.$reload_text.'">'.$username.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
-		echo '<li><a href="'.$globals['base_url'].$globals['base_sneakme_url'].'?id='.$current_user->user_login.'">'.$current_user->user_login.'</a></li>' . "\n";
+		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
 	}
 	// END STANDARD TABS
 
