@@ -96,7 +96,7 @@ do_header($link->title, 'post');
 
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
+do_sidebar(false);
 echo '<div id="contents">';
 do_tabs("main",_('noticia'), true);
 $link->print_summary();

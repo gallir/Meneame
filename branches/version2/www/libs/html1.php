@@ -146,7 +146,7 @@ function do_footer($credits = true) {
 	echo "</body></html><!--html1:do_footer-->\n";
 }
 
-function do_sidebar() {
+function do_sidebar($do_vert_bars = true) {
 	global $db, $dblang, $globals;
 	echo '<div id="sidebar">';
 
@@ -159,10 +159,11 @@ function do_sidebar() {
 	do_mnu_submit();
 	do_mnu_sneak();
 
-	if(empty($globals['link_id'])) {
+	if($do_vert_bars) {
 		do_vertical_tags();
 		do_best_comments();
-	} else {
+	}
+	if(!empty($globals['link_id'])) {
 		do_mnu_trackbacks();
 	}
 
