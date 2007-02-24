@@ -96,7 +96,7 @@ class Post {
 
 		if(!$this->read) $this->read(); 
 
-		echo '<li id="ccontainer-'.$this->id.'">';
+		echo '<li id="pcontainer-'.$this->id.'">';
 
 		$post_meta_class = 'comment-meta';
 		$post_class = 'comment-body';
@@ -136,7 +136,7 @@ class Post {
 			time() - $this->date < 3600 ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < 86400)) { // Admins can edit up to 24 hs hours
 			$expand = '<br /><br />&#187;&nbsp;' . 
-				'<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar').'</a>';
+				'<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar').'</a>';
 
 		}
 
@@ -170,7 +170,11 @@ class Post {
 
 		echo'<script type="text/javascript">'."\n";
 		// prepare Options Object 
-		echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#last_post").html(response); $("#edit-form").hide("fast"); } } }; ';
+		if ($this->id == 0) {
+			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#last_post").html(response); $("#edit-form").hide("fast"); } } }; ';
+		} else {
+			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
+		}
 		// wait for the DOM to be loaded 
 		echo'$(document).ready(function() { $(\'#thisform'.$this->id.'\').ajaxForm(options); });' ."\n";
 		echo '</script>'."\n";

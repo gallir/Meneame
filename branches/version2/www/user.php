@@ -135,10 +135,6 @@ function do_profile() {
 		echo '<div id="newpost">';
 		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'newpost\',0,0)" title="'._('insertar un apunte').'">&#187;&nbsp;'._('nuevo apunte').'</a><br />&nbsp;';
 		echo '</div>'."\n";
-		/*
-		$post->author=$current_user->user_id;
-		$post->print_edit_form();
-		*/
 	}
 	echo '<ol class="comments-list" id="last_post">';
 	if ($post->read_last($user->id)) {

@@ -11,6 +11,8 @@ include(mnminclude.'user.php');
 include(mnminclude.'post.php');
 include(mnminclude.'html1.php');
 
+array_push($globals['extra_js'], 'jquery-form.pack.js');
+
 $user=new User();
 
 if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
@@ -56,7 +58,17 @@ echo '<div id="contents">';
 do_posts_tabs($tab_option, $user->username);
 
 $post = new Post;
+
 echo '<div class="comments">';
+
+/*
+if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
+	echo '<div id="newpost">';
+	echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'newpost\',0,0)" title="'._('insertar un apunte').'">&#187;&nbsp;'._('nuevo apunte').'</a><br />&nbsp;';
+	echo '</div>'."\n";
+}
+*/
+
 $posts = $db->get_results($sql);
 if ($posts) {
 	echo '<ol class="comments-list">';
