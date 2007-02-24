@@ -65,6 +65,11 @@ function save_post ($post_id) {
 
 		if ($current_user->user_id != intval($_POST['user_id'])) die;
 
+		if ($current_user->user_karma < 6) {
+			echo 'ERROR: ' . _('el karma es muy bajo');
+			die;
+		}
+
 		// Check the post wasn't already stored
 		$post->randkey=intval($_POST['key']);
 		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 24 hour) and post_randkey = $post->randkey"));

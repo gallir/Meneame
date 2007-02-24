@@ -11,10 +11,10 @@ include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'tags.php');
 
-force_authentication();
 $globals['ads'] = true;
 
 if(isset($_POST["phase"])) {
+	force_authentication();
 	switch ($_POST["phase"]) {
 		case 1:
 			do_header(_("enviar noticia"), "post");
@@ -30,6 +30,7 @@ if(isset($_POST["phase"])) {
 	}
 } else {
 	check_already_sent();
+	force_authentication();
 	do_header(_("enviar noticia"), "post");
 	do_submit0();
 }
