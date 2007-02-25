@@ -15,6 +15,11 @@ if(!empty($_REQUEST['rows'])) {
 } else $rows = 100;
 	
 $if_modified = get_if_modified();
+if ($if_modified < time() - 250000) { // Last 3 days at most
+	$if_modified = time() - 250000;
+}
+$from_time = "post_date > FROM_UNIXTIME($if_modified)";
+
 
 
 if(!empty($_GET['user_id'])) {
@@ -23,9 +28,7 @@ if(!empty($_GET['user_id'])) {
 	//
 	$id = intval($_GET['user_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0) 
-		$from_time = "AND post_date > FROM_UNIXTIME($if_modified)";
-	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id $from_time ORDER BY post_date DESC LIMIT $rows";
+	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_user_id=$id ORDER BY post_date DESC LIMIT 1");
 	$title = _('Nótame: notas de ') . $username;
 } elseif(!empty($_REQUEST['friends_of'])) {
@@ -34,19 +37,15 @@ if(!empty($_GET['user_id'])) {
 	//
 	$id = intval($_GET['friends_of']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0) 
-		$from_time = "AND post_date > FROM_UNIXTIME($if_modified)";
-	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id  $from_time ORDER BY post_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id  $from_time ORDER BY post_date DESC LIMIT 1");
+	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and $from_time ORDER BY post_date DESC LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id ORDER BY post_date DESC LIMIT 1");
 	$title = _('Nótame: notas amigos de ') . $username;
 } else {
 	//
 	// All posts
 	//
 	$id = 0;
-	if ($if_modified > 0) 
-		$from_time = "WHERE post_date > FROM_UNIXTIME($if_modified)";
-	$sql = "SELECT post_id FROM posts $from_time ORDER BY post_date DESC LIMIT $rows";
+	$sql = "SELECT post_id FROM posts WHERE $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts ORDER BY post_date DESC LIMIT 1");
 	$title = _('Nótame: notas');
 }
@@ -60,9 +59,12 @@ if ($posts) {
 	foreach($posts as $post_id) {
 		$post->id=$post_id;
 		$post->read();
+		$title = preg_replace('/[\n\r\t]/', ' ', $post->content);
+		$title = mb_substr(preg_replace('/^(.{1,30})([\s].*$|$)/', '$1 ...', $title), 0, 30);
+		$title = $post->username.': ' . htmlentities2unicodeentities($title);
 		$content = put_smileys(save_text_to_html($post->content));
 		echo "	<item>\n";
-		echo "		<title>".$post->username.' (#'.$post->id.")</title>\n";
+		echo "		<title>$title</title>\n";
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username)."</link>\n";
 		echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
 		echo "		<dc:creator>$post->username</dc:creator>\n";
