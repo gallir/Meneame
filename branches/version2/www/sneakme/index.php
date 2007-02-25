@@ -52,7 +52,7 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('Notame'));
+do_header(_('Nótame'));
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar(false);

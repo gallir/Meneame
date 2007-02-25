@@ -27,7 +27,7 @@ if(!empty($_GET['user_id'])) {
 		$from_time = "AND post_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_user_id=$id ORDER BY post_date DESC LIMIT 1");
-	$title = _('Anótame: notas de ') . $username;
+	$title = _('Nótame: notas de ') . $username;
 } elseif(!empty($_REQUEST['friends_of'])) {
 	//
 	// User's friend posts
@@ -38,7 +38,7 @@ if(!empty($_GET['user_id'])) {
 		$from_time = "AND post_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id  $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id  $from_time ORDER BY post_date DESC LIMIT 1");
-	$title = _('Anótame: notas amigos de ') . $username;
+	$title = _('Nótame: notas amigos de ') . $username;
 } else {
 	//
 	// All posts
@@ -48,7 +48,7 @@ if(!empty($_GET['user_id'])) {
 		$from_time = "WHERE post_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT post_id FROM posts $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts ORDER BY post_date DESC LIMIT 1");
-	$title = _('Anótame: notas');
+	$title = _('Nótame: notas');
 }
 
 

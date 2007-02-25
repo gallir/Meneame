@@ -114,7 +114,7 @@ class Post {
 
 		// Print comment info (right)
 		echo '<div class="comment-info">';
-		echo '<a href="'.post_get_base_url($this->username).'">'. _('notame de') . ' ' . $this->username.'</a> ';
+		echo '<a href="'.post_get_base_url($this->username).'">'. _('nota de') . ' ' . $this->username.'</a> ';
 		
 		//echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 
