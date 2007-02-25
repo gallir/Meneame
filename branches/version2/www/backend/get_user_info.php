@@ -33,7 +33,7 @@ echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
 echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br/>';
 $post = new Post;
 if ($post->read_last($user->id)) {
-	echo '<br clear="left"><strong>'._('lo último que dijo').'</strong>: ';
+	echo '<br clear="left"><strong>'._('última nota').'</strong>: ';
 	$post->print_text();
 }
 ?>
