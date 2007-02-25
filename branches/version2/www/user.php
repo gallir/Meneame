@@ -131,11 +131,11 @@ function do_profile() {
 	}
 
 	$post = new Post;
+
 	if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
-		echo '<div id="newpost">';
-		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'newpost\',0,0)" title="'._('insertar un apunte').'">&#187;&nbsp;'._('nuevo apunte').'</a><br />&nbsp;';
-		echo '</div>'."\n";
+		$post->print_new_form();
 	}
+
 	echo '<ol class="comments-list" id="last_post">';
 	if ($post->read_last($user->id)) {
 		$post->print_summary();

@@ -149,9 +149,9 @@ class Post {
 		echo '<div class="commentform" id="edit-form">'."\n";
 		echo '<fieldset><legend><span class="sign">';
 		if ($this->id > 0) {
-			echo _('edición apunte');
+			echo _('edición nota');
 		} else {
-			echo _('nuevo apunte');
+			echo _('nueva nota');
 			$this->randkey = rand(1000000,100000000);
 		}
 		echo '</span></legend>';
@@ -171,13 +171,20 @@ class Post {
 		echo'<script type="text/javascript">'."\n";
 		// prepare Options Object 
 		if ($this->id == 0) {
-			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#last_post").html(response); $("#edit-form").hide("fast"); } } }; ';
+			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#newpost").html(response); $("#addpost").hide("fast"); } } }; ';
 		} else {
 			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
 		}
 		// wait for the DOM to be loaded 
 		echo'$(document).ready(function() { $(\'#thisform'.$this->id.'\').ajaxForm(options); });' ."\n";
 		echo '</script>'."\n";
+	}
+
+	function print_new_form() {
+		echo '<div id="addpost">';
+		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'">&#187;&nbsp;'._('nueva nota').'</a><br />&nbsp;';
+		echo '</div>'."\n";
+		echo '<ol class="comments-list" id="newpost"></ol>'."\n";
 	}
 
 
