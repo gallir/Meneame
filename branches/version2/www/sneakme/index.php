@@ -38,12 +38,14 @@ switch ($option) {
 			$tab_option = 1;	
 			$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' ORDER BY post_id desc limit 100";
 		}
+		$rss_option="?friends_of=$current_user->user_id";
 		break;
 	default:
 		$user->username = $db->escape($option);
 		if(!$user->read()) {
 			not_found();
 		}
+		$rss_option="?user_id=$user->id";
 		$tab_option = 3;
 		$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' and post_user_id=$user->id ORDER BY post_id desc limit 100";
 }
@@ -60,6 +62,11 @@ do_posts_tabs($tab_option, $user->username);
 $post = new Post;
 
 echo '<div class="comments">';
+
+
+echo '<div style="margin-bottom: 10px; text-align: right;">';
+echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
+echo '</div>';
 
 if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
 	$post->print_new_form();

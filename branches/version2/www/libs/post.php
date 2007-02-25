@@ -187,12 +187,4 @@ class Post {
 		echo '<ol class="comments-list" id="newpost"></ol>'."\n";
 	}
 
-
-	function username() {
-		global $db;
-//TODO
-		$this->username = $db->get_var("SELECT user_login FROM users WHERE user_id = $this->author");
-		return $this->username;
-	}
-
 }

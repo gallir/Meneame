@@ -130,7 +130,7 @@ if ($comments) {
 do_footer();
 
 function do_header($title) {
-	global $if_modified, $last_modified, $dblang, $home, $globals;
+	global $if_modified, $last_modified, $dblang, $globals;
 
 	if (!$last_modified > 0) { 
 		if ($if_modified > 0)
@@ -154,8 +154,8 @@ function do_header($title) {
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
-	echo'	<link>http://'.get_server_name().$home.'</link>'."\n";
-	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name().$home."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
+	echo'	<link>http://'.get_server_name().'</link>'."\n";
+	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
 	echo'	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo'	<generator>http://blog.meneame.net/</generator>'."\n";
