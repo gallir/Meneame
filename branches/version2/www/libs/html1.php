@@ -158,6 +158,7 @@ function do_sidebar($do_vert_bars = true) {
 
 	do_mnu_submit();
 	do_mnu_sneak();
+	do_mnu_notame();
 
 	if($do_vert_bars) {
 		do_vertical_tags();
@@ -236,6 +237,11 @@ function do_mnu_submit() {
 function do_mnu_sneak() {
 	global $globals;
 	echo '<div class="mnu-sneak"><a href="'.$globals['base_url'].'sneak.php">'._("fisgona").'</a></div>' . "\n";
+}
+
+function do_mnu_notame() {
+	global $globals;
+	echo '<div class="mnu-notame"><a href="'.$globals['base_url'].'notame/">'._("nótame").'</a></div>' . "\n";
 }
 
 function do_mnu_bugs() {
