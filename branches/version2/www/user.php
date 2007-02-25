@@ -227,7 +227,6 @@ function do_profile() {
         echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
         echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
         echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
-        echo '<dt>'._('votos de publicadas').':</dt><dd>'.$user->published_votes.'</dd>';
 
 	echo '</dl></fieldset>';
 

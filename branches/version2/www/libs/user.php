@@ -119,7 +119,6 @@ class User {
 		if(!$this->read) $this->read();
 
 		$this->total_votes = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
-		$this->published_votes = $db->get_var("SELECT count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $this->id AND link_id = vote_link_id AND link_status = 'published' AND vote_date < link_published_date");
 		$this->total_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
 		$this->published_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
 		$this->total_comments = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
