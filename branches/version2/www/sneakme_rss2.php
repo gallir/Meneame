@@ -62,7 +62,7 @@ if ($posts) {
 		$post->read();
 		$content = put_smileys(save_text_to_html($post->content));
 		echo "	<item>\n";
-		echo "		<title>"._('nota').' #'.$post->id."</title>\n";
+		echo "		<title>".$post->username.' (#'.$post->id.")</title>\n";
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username)."</link>\n";
 		echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
 		echo "		<dc:creator>$post->username</dc:creator>\n";
