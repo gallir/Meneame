@@ -241,7 +241,7 @@ function do_mnu_sneak() {
 
 function do_mnu_notame() {
 	global $globals;
-	echo '<div class="mnu-notame"><a href="'.$globals['base_url'].'notame/">'._("nótame").'</a></div>' . "\n";
+	echo '<div class="mnu-notame"><a href="'.post_get_base_url().'">'._("nótame").'</a></div>' . "\n";
 }
 
 function do_mnu_bugs() {

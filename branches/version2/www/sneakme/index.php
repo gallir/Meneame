@@ -68,7 +68,7 @@ echo '<div style="margin-bottom: 10px; text-align: right;">';
 echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-32x32.jpg" alt="rss2"/></a>';
 echo '</div>';
 
-if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
+if ((($tab_option == 1 && $current_user->user_id) || $current_user->user_id == $user->id) && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
 	$post->print_new_form();
 }
 

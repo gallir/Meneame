@@ -271,6 +271,19 @@ function get_user_uri($user, $view='') {
 	return $uri;
 }
 
+function post_get_base_url($option='') {
+	global $globals;
+	if (empty($globals['base_sneakme_url'])) {
+		if (empty($option)) {
+		return $globals['base_url'].'sneakme/';
+		} else {
+		return $globals['base_url'].'sneakme/?id='.$option;
+		}
+	} else {
+		return $globals['base_url'].$globals['base_sneakme_url'].$option;
+	}
+}
+
 function get_avatar_url($user, $avatar, $size) {
 	global $globals; 
 	if ($avatar > 0 && !empty($globals['avatars_dir'])) {

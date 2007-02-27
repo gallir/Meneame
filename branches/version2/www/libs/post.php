@@ -6,19 +6,6 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function post_get_base_url($option='') {
-	global $globals;
-	if (empty($globals['base_sneakme_url'])) {
-		if (empty($option)) {
-			return $globals['base_url'].'sneakme/';
-		} else {
-			return $globals['base_url'].'sneakme/?id='.$option;
-		}
-	} else {
-		return $globals['base_url'].$globals['base_sneakme_url'].$option;
-	}
-}
-
 class Post {
 	var $id = 0;
 	var $randkey = 0;
