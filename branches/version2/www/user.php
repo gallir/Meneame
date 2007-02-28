@@ -132,7 +132,7 @@ function do_profile() {
 
 	$post = new Post;
 
-	if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 900)) {
+	if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 600)) {
 		$post->print_new_form();
 	}
 

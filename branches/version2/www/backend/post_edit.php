@@ -75,7 +75,7 @@ function save_post ($post_id) {
 		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 24 hour) and post_randkey = $post->randkey"));
 		if (!$already_stored) {
 			// Verify that there are a period of 15 minutes between posts.
-			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 15 minute)"))> 0) {
+			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 10 minute)"))> 0) {
 				echo 'ERROR: ' . _('debe esperar 15 minutos entre apuntes');
 				die;
 			};

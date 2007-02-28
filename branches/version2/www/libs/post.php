@@ -23,13 +23,14 @@ class Post {
 
 		if(!$this->date) $this->date=time();
 		$post_author = $this->author;
+		$post_src = $this->src;
 		$post_karma = $this->karma;
 		$post_date = $this->date;
 		$post_randkey = $this->randkey;
 		$post_content = $db->escape(clean_lines($this->content));
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
-			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_content')");
+			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
 			$this->id = $db->insert_id;
 
 			// Insert post_new event into logs
@@ -51,6 +52,7 @@ class Post {
 			$this->randkey=$link->post_randkey;
 			$this->votes=$link->post_votes;
 			$this->karma=$link->post_karma;
+			$this->src=$link->post_src;
 			$this->ip=$link->post_ip_int;
 			$this->avatar=$link->user_avatar;
 			$this->content=$link->post_content;
@@ -102,6 +104,10 @@ class Post {
 		// Print comment info (right)
 		echo '<div class="comment-info">';
 		echo '<a href="'.post_get_base_url($this->username).'">'. _('nota de') . ' ' . $this->username.'</a> ';
+		if ($this->src == 'im') {
+			$this->src = 'jabber';
+		}
+		echo '('.$this->src.') ';
 		
 		//echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 
