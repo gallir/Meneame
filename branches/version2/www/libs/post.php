@@ -15,6 +15,7 @@ class Post {
 	var $voted = false;
 	var $karma = 0;
 	var $content = '';
+	var $src = 'web';
 	var $read = false;
 
 	function store() {
