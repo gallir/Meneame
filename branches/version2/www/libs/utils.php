@@ -89,8 +89,14 @@ function user_exists($username) {
 
 function email_exists($email) {
 	global $db;
-	$email = $db->escape($email);
-	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email='$email'");
+
+	$parts = explode('@', $email);
+	$domain = $parts[1];
+	$subparts = explode('+', $parts[0]); // Because we allow user+extension@gmail.com
+	$user = $subparts[0];
+	$user = $db->escape($user);
+	$domain = $db->escape($domain);
+	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email LIKE '$user%@$domain'");
 	if ($res>0) return $res;
 	return false;
 }

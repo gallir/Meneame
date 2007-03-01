@@ -120,7 +120,7 @@ function enablebutton (button, button2, target)
 
 function checkfield (type, form, field)
 {
-	var url = base_url + 'backend/checkfield.php?type='+type+'&name=' + field.value;
+	var url = base_url + 'backend/checkfield.php?type='+type+'&name=' + encodeURIComponent(field.value);
 	$.get(url, {}, 
 		 function(html) {
 			if (html == 'OK') {
