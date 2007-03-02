@@ -9,7 +9,7 @@
 if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
-	include(mnminclude.'post.php');
+	include_once(mnminclude.'post.php');
 } 
 
 $post = new Post;
