@@ -10,8 +10,8 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'comment.php');
-include(mnminclude.'post.php');
 include(mnminclude.'user.php');
+
 
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
