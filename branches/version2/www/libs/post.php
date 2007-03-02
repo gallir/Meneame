@@ -96,10 +96,9 @@ class Post {
 		echo '<div class="'.$post_class.'">';
 
 		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" style="float: left; margin: 2px 10px 2px 0;" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
-		echo '<span  id="cid-'.$this->id.'">';
 
 		$this->print_text($length);
-		echo '</span></div>';
+		echo '</div>';
 
 
 		// The comments info bar
@@ -111,8 +110,6 @@ class Post {
 		echo '('.$this->src.') ';
 		echo '(<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink">#</a>) ';
 		
-		//echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
-
 		// Print dates
 		if (time() - $this->date > 604800) { // 7 days
 			echo _('el').get_date_time($this->date);
