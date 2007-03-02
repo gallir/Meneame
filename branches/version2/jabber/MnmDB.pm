@@ -92,7 +92,8 @@ sub clean_text {
 	chomp;
 	$_ = decode_entities($_);
 	# Replace two "-" by a single longer one, to avoid problems with xhtml comments
-	s/--/–/;
+	my $c = decode_entities('&ndash;'); # Trick the f*cking utf8 problems in Perl.
+	s/--/$c/g;
 	return encode_entities($_);
 }
 
