@@ -281,9 +281,9 @@ function post_get_base_url($option='') {
 	global $globals;
 	if (empty($globals['base_sneakme_url'])) {
 		if (empty($option)) {
-		return $globals['base_url'].'sneakme/';
+			return $globals['base_url'].'sneakme/';
 		} else {
-		return $globals['base_url'].'sneakme/?id='.$option;
+			return $globals['base_url'].'sneakme/?id='.$option;
 		}
 	} else {
 		return $globals['base_url'].$globals['base_sneakme_url'].$option;

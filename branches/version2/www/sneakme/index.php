@@ -18,9 +18,11 @@ $user=new User();
 if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	$option = $url_args[1]; // The first element is always a "/"
+	$post_id = $url_args[2];
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);
 	$option = $url_args[0];
+	$post_id = $url_args[1];
 }
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
@@ -41,13 +43,17 @@ switch ($option) {
 		$rss_option="?friends_of=$current_user->user_id";
 		break;
 	default:
+		$tab_option = 3;
 		$user->username = $db->escape($option);
 		if(!$user->read()) {
 			not_found();
 		}
 		$rss_option="?user_id=$user->id";
-		$tab_option = 3;
-		$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' and post_user_id=$user->id ORDER BY post_id desc limit 100";
+		if ( $post_id > 0 ) {
+			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
+		} else {
+			$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' and post_user_id=$user->id ORDER BY post_id desc limit 100";
+		}
 }
 
 $globals['ads'] = true;

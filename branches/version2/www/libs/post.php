@@ -109,6 +109,7 @@ class Post {
 			$this->src = 'jabber';
 		}
 		echo '('.$this->src.') ';
+		echo '<a href="'.post_get_base_url($this->username).'/'.$this->id.'">(#)</a> ';
 		
 		//echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 
