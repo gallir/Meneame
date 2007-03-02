@@ -65,7 +65,7 @@ if ($posts) {
 		$content = put_smileys(save_text_to_html($post->content));
 		echo "	<item>\n";
 		echo "		<title>$title</title>\n";
-		echo "		<link>http://".get_server_name().post_get_base_url($post->username)."</link>\n";
+		echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";
 		echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
 		echo "		<dc:creator>$post->username</dc:creator>\n";
 		echo "		<description><![CDATA[$content";
