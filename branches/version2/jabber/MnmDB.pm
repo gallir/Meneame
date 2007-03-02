@@ -19,18 +19,27 @@ our $dbh;
 our $ops = 0; 
 our $max_ops = 1000000;
 
-reconnect();
-$dbh->do("set character set utf8");
-$dbh->do("set names utf8");
+our ($dsn, $dbuser, $dbpassword);
+
 
 sub reconnect {
-	if($ops) {
+	if($ops > 0 ) {
 		$dbh->disconnect;
 		undef $dbh;
 		print "* Re-connecting to database\n";
 	}
-	$dbh = DBI->connect('DBI:mysql:meneame','meneame','');
+	$dbh = DBI->connect($dsn, $dbuser, $dbpassword);
+	$dbh->do("set character set utf8");
+	$dbh->do("set names utf8");
 	$ops = 0;
+}
+
+sub init {
+	my %conf = @_;
+	$dsn = "DBI:mysql:database=$conf{dbname};host=$conf{dbhost}";
+	$dbuser  = $conf{dbuser};
+	$dbpassword  = $conf{dbpassword};
+	reconnect;
 }
 
 sub prepare {
@@ -99,6 +108,7 @@ sub read_configuration {
 		next unless length;     # anything left?
 		my ($var, $value) = split(/\s*=\s*/, $_, 2);
 		$hash->{$var} = $value;
+		#print "Conf: $var->$value\n";
 	}
 	close(CONFIG);
 	return 1;

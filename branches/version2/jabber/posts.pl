@@ -47,7 +47,6 @@ if ($ARGV[0] eq "-d") {
 	open STDIN, '/dev/null'   or die "Can't read /dev/null: $!";
 	open STDOUT, ">$outfile" or die "Can't write to $outfile: $!";
 	open STDERR, ">$outfile" or die "Can't write to $outfile: $!";
-	MnmDB::reconnect;
 }
 
 my $server = $AccountConfig{server};
@@ -66,6 +65,8 @@ $SIG{INT} = \&Stop;
 my $Connection;
 my $Users;
 my $timestamp;
+
+MnmDB::init(%AccountConfig);
 
 while (1) {
 	$Users = new MnmUsers;
@@ -87,7 +88,6 @@ while (1) {
 		print "        ($!)\n";
 		next;
 		sleep(15);
-    	#exit(0);
 	}
 
 	# Change hostname
@@ -101,13 +101,14 @@ while (1) {
 
 	if ($result[0] ne "ok") {
     	print "ERROR: Authorization failed: $result[0] - $result[1]\n";
-    	exit(0);
+		next;
+		sleep(60);
 	}
 
 	print "Logged in to $server:$port...\n";
 
 	#print "Getting Roster to tell server to send presence info...\n";
-	my %roster = $Connection->RosterGet();
+	$Connection->RosterGet();
 
 	print "Sending presence to tell world that we are logged in...\n";
 	$Connection->PresenceSend();
@@ -128,7 +129,6 @@ while (1) {
 	print "ERROR: The connection was killed...\n";
 	$Connection->Disconnect();
 	sleep(15);
-	#exit(0);
 }
 
 sub ReadPosts {
@@ -138,10 +138,10 @@ sub ReadPosts {
 	if ($timestamp == 0) {
 		$timestamp = time - 60;
 	}
-	$sql = qq{SELECT user_login, UNIX_TIMESTAMP(post_date), post_content, post_src from users, posts WHERE post_date > FROM_UNIXTIME($timestamp) and user_id = post_user_id ORDER BY post_date asc limit 50};
+	$sql = qq{SELECT user_login, UNIX_TIMESTAMP(post_date), post_content, post_src, post_id from users, posts WHERE post_date > FROM_UNIXTIME($timestamp) and user_id = post_user_id ORDER BY post_date asc limit 50};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
-	while (my ($username, $date, $content, $src) = $sth->fetchrow_array) {
+	while (my ($username, $date, $content, $src, $postid) = $sth->fetchrow_array) {
 		$content = MnmDB::utf8($content);
 		$content = decode_entities($content);
 		$src = 'jabber' if ($src eq 'im');
@@ -150,7 +150,7 @@ sub ReadPosts {
 		$timestamp = $date;
 		foreach my $u ($Users->users()) {
 			if ($u->is_friend($poster) || $u == $poster) {
-				SendMessage($u, $poster->{user}." ($src): $content -- http://meneame.net/notame/".$poster->{user}." ");
+				SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
 			}
 		}
 		#BroadCast($poster->{user}.": $content -- http://meneame.net/notame/".$poster->{user}." ");
