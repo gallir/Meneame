@@ -25,13 +25,6 @@ use MnmUser;
 use strict;
 use utf8;
 
-
-#if ($#ARGV < 4)
-#{
-    #print "\nperl client.pl <server> <port> <username> <password> <resource> \n\n";
-    #exit(0);
-#}
-
 my %AccountConfig;
 
 if (!MnmDB::read_configuration("$FindBin::Bin/posts.conf", \%AccountConfig)) {
@@ -79,19 +72,19 @@ while (1) {
 	$Connection =  new Net::XMPP::Client(debuglevel=>0);
 
 	$Connection->SetCallBacks(message=>\&InMessage,
-                          presence=>\&InPresence,
-                          iq=>\&InIQ);
+							presence=>\&InPresence,
+							iq=>\&InIQ);
 
 	$timestamp=0;
 	my $status = $Connection->Connect(hostname=>$server,
-                                  port=>$port,
-								  componentname=>$componentname,
-								  tls=>1
-                                 );
+									port=>$port,
+									componentname=>$componentname,
+									tls=>1
+								);
 
 	if (!(defined($status))) {
-    	print "ERROR:  Jabber server is down or connection was not allowed.\n";
-    	print "        ($!)\n";
+		print "ERROR:  Jabber server is down or connection was not allowed.\n";
+		print "        ($!)\n";
 		next;
 		sleep(15);
     	#exit(0);
@@ -102,12 +95,11 @@ while (1) {
 	$Connection->{STREAM}->{SIDS}->{$sid}->{hostname} = $componentname;
 
 	my @result = $Connection->AuthSend(username=>$username,
-                                   password=>$password,
-                                   resource=>$resource,
-								   );
+										password=>$password,
+										resource=>$resource,
+									);
 
-	if ($result[0] ne "ok")
-	{
+	if ($result[0] ne "ok") {
     	print "ERROR: Authorization failed: $result[0] - $result[1]\n";
     	exit(0);
 	}
@@ -202,25 +194,22 @@ sub StorePost {
 
 sub Stop
 {
-    print "Exiting...\n";
-    $Connection->Disconnect();
-    exit(0);
+	print "Exiting...\n";
+	$Connection->Disconnect();
+	exit(0);
 }
 
 
 sub InMessage
 {
-    my $sid = shift;
-    my $message = shift;
+	my $sid = shift;
+	my $message = shift;
     
-    my $type = $message->GetType();
-    my $from = $message->GetFrom();
+	my $type = $message->GetType();
+	my $from = $message->GetFrom();
     
-    my $subject = $message->GetSubject();
-    my $body = $message->GetBody();
-    #print "===\n";
-    #print $message->GetXML(),"\n";
-    #print "===\n";
+	my $subject = $message->GetSubject();
+	my $body = $message->GetBody();
 	my $user;
 	if(!($user = $Users->get($from))) {
 		print "ERROR: $from -- $user\n";
@@ -249,32 +238,17 @@ sub InIQ
 {
 
 	return;
-    my $sid = shift;
-    my $iq = shift;
-    
-    my $from = $iq->GetFrom();
-    my $type = $iq->GetType();
-    my $query = $iq->GetQuery();
-    my $xmlns = $query->GetXMLNS();
-    print "===\n";
-    print "IQ\n";
-    print "  From $from\n";
-    print "  Type: $type\n";
-    print "  XMLNS: $xmlns";
-    print "===\n";
-    print $iq->GetXML(),"\n";
-    print "===\n";
 }
 
 sub InPresence
 {
-    my $sid = shift;
-    my $presence = shift;
-    
-    my $from = $presence->GetFrom();
-    my $to = $presence->GetTo();
-    my $type = $presence->GetType();
-    my $status = $presence->GetStatus();
+	my $sid = shift;
+	my $presence = shift;
+
+	my $from = $presence->GetFrom();
+	my $to = $presence->GetTo();
+	my $type = $presence->GetType();
+	my $status = $presence->GetStatus();
 
 	return if !defined($from) || $from eq $myJid;
 
