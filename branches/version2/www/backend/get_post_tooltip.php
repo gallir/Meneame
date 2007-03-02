@@ -25,6 +25,6 @@ $post->read();
 if(!$post->read) die;
 if ($post->avatar)
     echo '<img src="'.get_avatar_url($post->author, $post->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 5px 0;"/>';
-echo '<strong>' . $post->username . '</strong><br/>';
+echo '<strong>' . $post->username . '</strong> ('.$post->src.')<br/>';
 echo put_smileys(save_text_to_html($post->content));
 ?>

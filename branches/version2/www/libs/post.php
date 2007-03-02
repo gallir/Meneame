@@ -58,6 +58,9 @@ class Post {
 			$this->avatar=$link->user_avatar;
 			$this->content=$link->post_content;
 			$this->date=$link->date;
+			if ($this->src == 'im') {
+				$this->src = 'jabber';
+			}
 			$this->read = true;
 			return true;
 		}
@@ -105,9 +108,6 @@ class Post {
 		// Print comment info (right)
 		echo '<div class="comment-info">';
 		echo '<a href="'.post_get_base_url($this->username).'">'. _('nota de') . ' ' . $this->username.'</a> ';
-		if ($this->src == 'im') {
-			$this->src = 'jabber';
-		}
 		echo '('.$this->src.') ';
 		echo '(<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink">#</a>) ';
 		
