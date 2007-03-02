@@ -26,19 +26,24 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 }
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
+$page_size = 25;
+$offset=(get_current_page()-1)*$page_size;
 switch ($option) {
 	case '':
 	case '_all':
 		$tab_option = 1;
-		$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' ORDER BY post_id desc limit 100";
+		$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+		$rows = $db->get_var("SELECT count(*) FROM posts");
 		break;
 	case '_friends':
 		if ($current_user->user_id > 0) {
 			$tab_option = 2;
-			$sql = "SELECT post_id FROM posts, friends WHERE post_date > '$min_date' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id ORDER BY post_id desc limit 100";
+			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id");
 		} else {
 			$tab_option = 1;	
-			$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' ORDER BY post_id desc limit 100";
+			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts");
 		}
 		$rss_option="?friends_of=$current_user->user_id";
 		break;
@@ -51,8 +56,10 @@ switch ($option) {
 		$rss_option="?user_id=$user->id";
 		if ( $post_id > 0 ) {
 			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
+			$rows = 1;
 		} else {
-			$sql = "SELECT post_id FROM posts WHERE post_date > '$min_date' and post_user_id=$user->id ORDER BY post_id desc limit 100";
+			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
 		}
 }
 
@@ -90,6 +97,7 @@ if ($posts) {
 }
 
 echo '</div>';
+do_pages($rows, $page_size);
 echo '</div>';
 do_footer();
 
