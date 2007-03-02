@@ -14,7 +14,7 @@ $globals['ads'] = true;
 
 $min_pts = 10;
 $max_pts = 44;
-$limit = 100;
+$limit = 200;
 $line_height = $max_pts * 0.75;
 
 $range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));

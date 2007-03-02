@@ -61,6 +61,7 @@ function do_stats3($string) {
 	$comment .= _('publicados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="published" and link_published_date > date_sub(now(), interval 1 hour)') . ', ';
 	$comment .= _('descartados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_date > date_sub(now(), interval 1 hour)') . ', ';
 	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments where  comment_date > date_sub(now(), interval 1 hour)')  . ', ';
+	$comment .= _('notas') . ':&nbsp;' . $db->get_var('select count(*) from posts where  post_date > date_sub(now(), interval 1 hour)')  . ', ';
 	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var('select count(*) from users where  user_date > date_sub(now(), interval 1 hour) and user_validated_date is not null');
 	return $comment;
 }
