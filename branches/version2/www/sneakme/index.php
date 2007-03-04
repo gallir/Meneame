@@ -26,7 +26,7 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 }
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
-$page_size = 25;
+$page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 switch ($option) {
 	case '':
