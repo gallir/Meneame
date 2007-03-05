@@ -12,11 +12,7 @@ if (! defined('mnmpath')) {
 	include_once(mnminclude.'user.php');
 }
 
-///////////
-
-$globals['allowed_gsm_clients'] = 'localhost sofi.gallimedina.net gallir.homeip.net';
-
-///////////
+//$globals['allowed_gsm_clients'] must be defined;
 
 $remote = $_SERVER["REMOTE_ADDR"];
 
