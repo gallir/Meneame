@@ -187,8 +187,10 @@ sub StorePost {
 	}
 	$body = MnmDB::clean_text($body);
 	$sth = MnmDB::prepare(qq{INSERT INTO posts (post_user_id, post_src, post_ip_int, post_randkey, post_content) VALUES (?, ?, ?, ?, ?) });
-	$sth->execute($poster->id, 'im', '0', int(rand(1000000)), $body);
-
+	$sth->execute($poster->id, 'im', 0, int(rand(1000000)), $body);
+	my $last_id = MnmDB::last_insert_id;
+	$sth = MnmDB::prepare(qq{insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) VALUES (FROM_UNIXTIME(?), ?, ?, ?, ?) });
+	$sth->execute(time, 'post_new', $last_id, $poster->id, 0);
 }
 
 
