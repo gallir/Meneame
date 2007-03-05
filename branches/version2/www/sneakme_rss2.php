@@ -68,6 +68,7 @@ if ($posts) {
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";
 		echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
 		echo "		<dc:creator>$post->username</dc:creator>\n";
+		echo "		<guid>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</guid>\n";
 		echo "		<description><![CDATA[$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$post->username.'</strong></p>';
 		echo "]]></description>\n";

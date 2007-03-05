@@ -74,7 +74,7 @@ do_footer();
 
 
 function show_profile() {
-	global $user, $admin_mode, $user_levels, $globals, $site_key;
+	global $user, $admin_mode, $user_levels, $globals, $site_key, $current_user;
 
 
 	save_profile();
@@ -110,16 +110,18 @@ function show_profile() {
 	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
 	echo '</p>';
 
-	echo '<p><label>'._('MI público, visible sólo por los amigos').':</label><br/>';
-	echo '<span class="genericformnote">' . _('necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
-	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
-	echo '</p>';
+	if ($user->id  == $current_user->user_id) {
+		echo '<p><label>'._('MI público, visible sólo por los amigos').':</label><br/>';
+		echo '<span class="genericformnote">' . _('necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
+		echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
+		echo '</p>';
 
-	echo '<p><label>'._('Teléfono móvil').':</label><br/>';
-	echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía SMS') . '</span><br/>';
-	echo '<span class="genericformnote">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
-	echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
-	echo '</p>';
+		echo '<p><label>'._('Teléfono móvil').':</label><br/>';
+		echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía SMS') . '</span><br/>';
+		echo '<span class="genericformnote">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
+		echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
+		echo '</p>';
+	}
 
 
 
@@ -232,40 +234,42 @@ function save_profile() {
 	}
 	$user->url=htmlspecialchars(clean_input_url($_POST['url']));
 
-	// Check IM address
-	if (!empty($_POST['public_info'])) {
-		$_POST['public_info']  = htmlspecialchars(clean_input_url($_POST['public_info']));
-		$public = $db->escape($_POST['public_info']);
-		$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_public_info='$public'"));
-		if ($im_count > 0) {
-			echo '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
-			$_POST['public_info'] = '';
-			$errors++;
-		}
-	}
-	$user->phone = $_POST['phone'];
-	$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
-	// End check IM address
 
-
-	// Check phone number
-	if (!empty($_POST['phone'])) {
-		if ( !preg_match('/^\+{0,1}[0-9]{9,16}$/', $_POST['phone'])) {
-			echo '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
-			$_POST['phone'] = '';
-			$errors++;
-		} else {
-			$phone = $db->escape($_POST['phone']);
-			$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_phone='$phone'"));
-			if ($phone_count > 0) {
-				echo '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
-				$_POST['phone'] = '';
+	if ($user->id  == $current_user->user_id) {
+		// Check IM address
+		if (!empty($_POST['public_info'])) {
+			$_POST['public_info']  = htmlspecialchars(clean_input_url($_POST['public_info']));
+			$public = $db->escape($_POST['public_info']);
+			$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_public_info='$public'"));
+			if ($im_count > 0) {
+				echo '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
+				$_POST['public_info'] = '';
 				$errors++;
 			}
 		}
+		$user->phone = $_POST['phone'];
+		$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
+		// End check IM address
+
+		// Check phone number
+		if (!empty($_POST['phone'])) {
+			if ( !preg_match('/^\+{0,1}[0-9]{9,16}$/', $_POST['phone'])) {
+				echo '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
+				$_POST['phone'] = '';
+				$errors++;
+			} else {
+				$phone = $db->escape($_POST['phone']);
+				$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_phone='$phone'"));
+				if ($phone_count > 0) {
+					echo '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
+					$_POST['phone'] = '';
+					$errors++;
+				}
+			}
+		}
+		$user->phone = $_POST['phone'];
+		// End check phone number
 	}
-	$user->phone = $_POST['phone'];
-	// End check phone number
 
 	// Verifies adsense code
 	if ($globals['external_user_ads']) {

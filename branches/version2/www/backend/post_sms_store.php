@@ -22,7 +22,11 @@ $remote = $_SERVER["REMOTE_ADDR"];
 
 $ips = array();
 foreach (explode(" ", $globals['allowed_gsm_clients']) as $hostname) {
-	$ips = array_merge($ips, gethostbynamel($hostname));
+	if(($res = gethostbynamel($hostname))) {
+		foreach ($res as $ip) {
+			array_push($ips, $ip);
+		}
+	}
 }
 
 if (!in_array($remote, $ips)) {
@@ -53,6 +57,7 @@ $user->id = $user_id;
 
 if (!$user_id > 0 || !($user->read())) {
 	echo "ERROR: phone/user not found: $phone-$user_id\n";
+	die;
 }
 
 if ($user->karma < 6) {
