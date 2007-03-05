@@ -111,13 +111,13 @@ function show_profile() {
 	echo '</p>';
 
 	if ($user->id  == $current_user->user_id) {
-		echo '<p><label>'._('MI público, visible sólo por los amigos').':</label><br/>';
-		echo '<span class="genericformnote">' . _('necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
+		echo '<p><label>'._('mensajero instantáneo público, visible sólo por los amigos').':</label><br/>';
+		echo '<span class="genericformnote">' . _('necesario si enviarás notas al nótame vía Jabber/Google Talk') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
 		echo '</p>';
 
-		echo '<p><label>'._('Teléfono móvil').':</label><br/>';
-		echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía SMS') . '</span><br/>';
+		echo '<p><label>'._('teléfono móvil').':</label><br/>';
+		echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al nótame vía SMS') . '</span><br/>';
 		echo '<span class="genericformnote">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
 		echo '</p>';
@@ -127,7 +127,7 @@ function show_profile() {
 
 	if ($globals['external_user_ads']) {
 		echo '<p><label for="adcode">'._('codigo AdSense').':</label><br/>';
-		echo '<span class="genericformnote">' . _('tu código de usuario de adsense, del tipo pub-123456789') . '</span><br/>';
+		echo '<span class="genericformnote">' . _('tu código de usuario de AdSense, del tipo pub-123456789') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="20" value="'.$user->adcode.'" /><br />';
 		echo '<span class="genericformnote">' . _('canal AdSense (opcional), del tipo 1234567890') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="adchannel" id="adchannel" maxlength="12" value="'.$user->adchannel.'" />';
@@ -163,7 +163,7 @@ function show_profile() {
 
 
 	
-	echo '<p>'._('Introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:').'</p>';
+	echo '<p>'._('introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:').'</p>';
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
 	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" /></p>' . "\n";
@@ -213,10 +213,10 @@ function save_profile() {
 		}
 
 		if(!check_username($_POST['username'])) {
-			echo '<p class="form-error">'._('Nombre de usuario erróneo, caracteres no admitidos').'</p>';
+			echo '<p class="form-error">'._('nombre de usuario erróneo, caracteres no admitidos').'</p>';
 			$errors++;
 		} elseif (user_exists(trim($_POST['username'])) ) {
-			echo '<p class="form-error">'._('El usuario ya existe').'</p>';
+			echo '<p class="form-error">'._('el usuario ya existe').'</p>';
 			$errors++;
 		} else {
 			$user->username=trim($_POST['username']);
@@ -224,7 +224,7 @@ function save_profile() {
 	}
 	
 	if($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
-		echo '<p class="form-error">'._('El correo electrónico no es correcto').'</p>';
+		echo '<p class="form-error">'._('el correo electrónico no es correcto').'</p>';
 		$errors++;
 	} elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']))) {
 		echo '<p class="form-error">'. _('ya existe otro usuario con esa dirección de correo'). '</p>';
@@ -303,7 +303,7 @@ function save_profile() {
 	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
 		if($_POST['password'] !== $_POST['password2']) {
-			echo '<p class="form-error">'._('Las claves no son iguales, no se ha modificado').'</p>';
+			echo '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
 			$errors = 1;
 		} else {
 			$user->pass=trim($_POST['password']);
@@ -324,14 +324,14 @@ function save_profile() {
 	if (!empty($_FILES['image']['tmp_name']) ) {
 		if(avatars_check_upload_size($user->id, 'image')) {
 			if (!avatars_manage_upload($user->id, 'image')) {
-				echo '<p class="form-error">'._('Error guardando la imagen').'</p>';
+				echo '<p class="form-error">'._('error guardando la imagen').'</p>';
 				$errors = 1;
 				$user->avatar = 0;
 			} else {
 				$user->avatar = 1;
 			}
 		} else {
-			echo '<p class="form-error">'._('El tamaño de la imagen excede el límite').'</p>';
+			echo '<p class="form-error">'._('el tamaño de la imagen excede el límite').'</p>';
 			$errors = 1;
 			$user->avatar = 0;
 		}
@@ -347,7 +347,7 @@ function save_profile() {
 					$current_user->user_email != $user->email || $pass_changed)) {
 			$current_user->Authenticate($user->username, $user->pass);
 		}
-		echo '<p class="form-act">'._('Datos actualizados').'</p>';
+		echo '<p class="form-act">'._('datos actualizados').'</p>';
 	}
 }
 

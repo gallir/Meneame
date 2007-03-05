@@ -54,14 +54,14 @@ $(function(){start_sneak()});
 
 function play_pause() {
 	if (is_playing()) {
-		document.images['play-pause-img'].src = "img/common/sneak-play01.png";
+		document.images['play-pause-img'].src = "img/common/sneak-play01.gif";
 		//document.getElementById('play-pause').innerHTML = '<img src="img/common/play.png">';
 		if( document.getElementById('comment-input'))
 			document.getElementById('comment-input').disabled=true;
 		do_pause();
 		
 	} else {
-		document.images['play-pause-img'].src = "img/common/sneak-pause01.png";
+		document.images['play-pause-img'].src = "img/common/sneak-pause01.gif";
 		//document.getElementById('play-pause').innerHTML = '<img src="img/common/pause.png">';
 		if (document.getElementById('comment-input'))
 			document.getElementById('comment-input').disabled=false;
@@ -123,7 +123,7 @@ function to_html(data) {
 	html += '<div class="sneaker-type"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 	switch (data.type) {
 		case 'chat':
-			html += '<img src="img/common/sneak-chat01.png" width="20" height="16" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-chat01.gif" width="20" height="16" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
 				text_style = 'style="color: #255c25;"';
@@ -142,37 +142,37 @@ function to_html(data) {
 		case 'vote':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
 			if (data.status == '<? echo _('publicada');?>')
-				html += '<img src="img/common/sneak-vote-published01.png" width="20" height="16" alt="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="img/common/sneak-vote-published01.gif" width="20" height="16" alt="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
 			else
-				html += '<img src="img/common/sneak-vote01.png" width="20" height="16" alt="<?echo _('voto');?>"  '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="img/common/sneak-vote01.gif" width="20" height="16" alt="<?echo _('voto');?>"  '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'problem':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-problem01.png" width="20" height="16" alt="<?echo _('problema');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-problem01.gif" width="20" height="16" alt="<?echo _('problema');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'comment':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-comment01.png" width="20" height="16" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-comment01.gif" width="20" height="16" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'new':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-new01.png" width="20" height="16" alt="<?echo _('nueva');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-new01.gif" width="20" height="16" alt="<?echo _('nueva');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'published':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-published01.png" width="20" height="16" alt="<?echo _('publicada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-published01.gif" width="20" height="16" alt="<?echo _('publicada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'discarded':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-reject01.png" width="20" height="16" alt="<?echo _('descartada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-reject01.gif" width="20" height="16" alt="<?echo _('descartada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'edited':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-edit-notice01.png" width="20" height="16" alt="<?echo _('editada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-edit-notice01.gif" width="20" height="16" alt="<?echo _('editada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'cedited':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-edit-comment01.png" width="20" height="16" alt="<?echo _('comentario editado');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="img/common/sneak-edit-comment01.gif" width="20" height="16" alt="<?echo _('comentario editado');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		default:
 			html += data.type+'<\/div>';
@@ -311,18 +311,18 @@ if ($current_user->user_id > 0) {
 echo '<div class="sneaker">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
 echo '<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">';
-echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
-echo '<input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control(\'pubvotes\')" /><img src="img/common/sneak-vote-published01.png" width="20" height="16" title="'._('votos de publicadas').'" alt="'._('votos de publicadas').'" />';
-echo '<input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control(\'vote\')" /><img src="img/common/sneak-vote01.png" width="20" height="16" title="'._('meneos').'" alt="'._('meneos').'" />';
-echo '<input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control(\'problem\')" /><img src="img/common/sneak-problem01.png" width="20" height="16" alt="'._('problema').'" title="'._('problema').'"/>';
-echo '<input type="checkbox" checked="checked" name="sneak-comment" id="comment-status" onclick="toggle_control(\'comment\')" /><img src="img/common/sneak-comment01.png" width="20" height="16" alt="'._('comentario').'" title="'._('comentario').'"/>';
-echo '<input type="checkbox" checked="checked" name="sneak-new" id="new-status" onclick="toggle_control(\'new\')" /><img src="img/common/sneak-new01.png" width="20" height="16" alt="'._('nueva').'" title="'._('nueva').'"/>';
-echo '<input type="checkbox" checked="checked" name="sneak-published" id="published-status" onclick="toggle_control(\'published\')" /><img src="img/common/sneak-published01.png" width="20" height="16" alt="'._('publicada').'" title="'._('publicada').'"/>';
+echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.gif" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
+echo '<input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control(\'pubvotes\')" /><img src="img/common/sneak-vote-published01.gif" width="20" height="16" title="'._('votos de publicadas').'" alt="'._('votos de publicadas').'" />';
+echo '<input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control(\'vote\')" /><img src="img/common/sneak-vote01.gif" width="20" height="16" title="'._('meneos').'" alt="'._('meneos').'" />';
+echo '<input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control(\'problem\')" /><img src="img/common/sneak-problem01.gif" width="20" height="16" alt="'._('problema').'" title="'._('problema').'"/>';
+echo '<input type="checkbox" checked="checked" name="sneak-comment" id="comment-status" onclick="toggle_control(\'comment\')" /><img src="img/common/sneak-comment01.gif" width="20" height="16" alt="'._('comentario').'" title="'._('comentario').'"/>';
+echo '<input type="checkbox" checked="checked" name="sneak-new" id="new-status" onclick="toggle_control(\'new\')" /><img src="img/common/sneak-new01.gif" width="20" height="16" alt="'._('nueva').'" title="'._('nueva').'"/>';
+echo '<input type="checkbox" checked="checked" name="sneak-published" id="published-status" onclick="toggle_control(\'published\')" /><img src="img/common/sneak-published01.gif" width="20" height="16" alt="'._('publicada').'" title="'._('publicada').'"/>';
 
 // Only registered users can see the chat messages
 if ($current_user->user_id > 0) {
 	$chat_checked = 'checked="checked"';
-	echo '<input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /><img src="img/common/sneak-chat01.png" width="20" height="16" alt="'._('mensaje').'" title="'._('mensaje').'"/>';
+	echo '<input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /><img src="img/common/sneak-chat01.gif" width="20" height="16" alt="'._('mensaje').'" title="'._('mensaje').'"/>';
 }
 
 echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span id="ccnt"> </span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
