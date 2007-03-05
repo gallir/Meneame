@@ -83,6 +83,9 @@ if ($logs) {
 			case 'comment_edit':
 				if (empty($_GET['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
+			case 'post_new':
+				if (empty($_GET['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
+				break;
 		}
 	}
 }
@@ -278,6 +281,19 @@ function get_comment($time, $type, $commentid, $userid) {
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$commentid;
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.$event->link_votes.'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
+	if($time > $last_timestamp) $last_timestamp = $time;
+}
+
+function get_post($time, $type, $postid, $userid) {
+	global $db, $events, $last_timestamp, $foo_link, $max_items;
+	$event = $db->get_row("select user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
+	if (!$event) return;
+	$link = post_get_base_url($event->user_login) . "/$postid";
+	$who = $event->user_login;
+	$key = $time . ':'.$type.':'.$commentid;
+	$status = _('nótame');
+	$title = mb_substr(preg_replace('/^(.{1,120})([\s].*$|$)/', '$1 ...', $event->post_content), 0, 120);
+	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 

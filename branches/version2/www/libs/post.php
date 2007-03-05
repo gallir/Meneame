@@ -35,11 +35,11 @@ class Post {
 			$this->id = $db->insert_id;
 
 			// Insert post_new event into logs
-			log_insert('post_new', $this->id, $current_user->user_id);
+			log_insert('post_new', $this->id, $post_author);
 		} else {
 			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_ip_int = '$this->ip', post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			// Insert post_new event into logs
-			log_conditional_insert('post_edit', $this->id, $current_user->user_id, 30);
+			log_conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
 	}
 
