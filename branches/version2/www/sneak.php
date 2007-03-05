@@ -304,7 +304,7 @@ function to_hoygan(str)
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak09.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak10.js.php"></script>
 <?
 
 do_banner_top();
