@@ -110,14 +110,14 @@ function show_profile() {
 	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
 	echo '</p>';
 
-	echo '<p><label>'._('IM público, visible sólo por los amigos').':</label><br/>';
+	echo '<p><label>'._('MI público, visible sólo por los amigos').':</label><br/>';
 	echo '<span class="genericformnote">' . _('necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
 	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
 	echo '</p>';
 
 	echo '<p><label>'._('Teléfono móvil').':</label><br/>';
-	echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
-	echo '<span class="genericformnote">' . _('válidos: +34123456789 ó 123456789') . '</span><br/>';
+	echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía SMS') . '</span><br/>';
+	echo '<span class="genericformnote">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
 	echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
 	echo '</p>';
 
