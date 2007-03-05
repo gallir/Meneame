@@ -29,6 +29,7 @@ var show_comment = true;
 var show_new = true;
 var show_published = true;
 var show_chat = true;
+var show_post = true;
 var show_pubvotes = true;
 
 
@@ -57,6 +58,7 @@ function start_sneak() {
 		check_control('new');
 		check_control('published');
 		check_control('chat');
+		check_control('post');
 		check_control('pubvotes');
 	}
 	do_play();
@@ -212,6 +214,7 @@ function toggle_control(what) {
 function get_options_string() {
 	var options = '';
 	if (show_chat == false) options += '&nochat=1';
+	if (show_post == false) options += '&nopost=1';
 	if (show_vote == false) options += '&novote=1';
 	if (show_problem == false) options += '&noproblem=1';
 	if (show_comment == false) options += '&nocomment=1';
@@ -227,6 +230,10 @@ function set_options_from_string(string) {
 		show_chat = false; 
 	}
 	set_control('chat');
+	if (string.match(/&nopost=1/)) {
+		show_post = false; 
+	}
+	set_control('post');
 	if (string.match(/&novote=1/)) {
 		show_vote = false;
 	}
