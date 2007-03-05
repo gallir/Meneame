@@ -1,5 +1,5 @@
 <?
-// The source code packaged with this file is Free Software, Copyright (C) 2005 by
+// The source code packaged with this file is Free Software, Copyright (C) 2007 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -64,9 +64,9 @@ if ($user->karma < 6) {
 $post = new Post;
 $post->src = 'phone';
 $post->author = $user_id;
-$post->date = strtotime($date);
+$post->date = time();
 $post->content = $text;
-$post->randkey=$post->date;
+$post->randkey=strtotime($date);
 
 
 if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date = from_unixtime($post->date) and post_randkey = $post->randkey")) > 0 ) {
@@ -74,8 +74,8 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 		die;
 }
 
-if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 5 minute)"))> 0) {
-	echo 'ERROR: ' . _('debe esperar 5 minutos entre apuntes vía SMS');
+if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 3 minute)"))> 0) {
+	echo 'ERROR: ' . _('debe esperar 3 minutos entre apuntes vía SMS');
 	die;
 };
 
