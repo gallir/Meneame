@@ -90,29 +90,38 @@ function show_profile() {
 	if ($admin_mode)
 		echo '<input type="hidden" name="login" value="'.$user->username.'" />';
 
-	echo '<p class="l-top"><label for="name">'._('usuario').':</label><br/>';
+	echo '<p class="l-top"><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
 	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
 	echo '<br/><span id="usernamecheckitvalue"></span>' . "\n";
 	echo '</p>';
 
-	echo '<p class="l-top"><label for="name">'._('nombre real').':</label><br/>';
+	echo '<p class="l-top"><label>'._('nombre real').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="names" id="names" value="'.$user->names.'" />';
 	echo '</p>';
 
-	echo '<p><label for="name">'._('correo electrónico').':</label><br/>';
+	echo '<p><label>'._('correo electrónico').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
 	echo '&nbsp;&nbsp;<input type="button"  id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
 	echo '<br/><span id="emailcheckitvalue"></span>';
 	echo '</p>';
 
-	echo '<p><label for="name">'._('IM/email público visible por los amigos').':</label><br/>';
+	echo '<p><label>'._('página web').':</label><br/>';
+	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
+	echo '</p>';
+
+	echo '<p><label>'._('IM público, visible sólo por los amigos').':</label><br/>';
+	echo '<span class="genericformnote">' . _('necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
 	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
 	echo '</p>';
 
-	echo '<p><label for="name">'._('página web').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
+	echo '<p><label>'._('Teléfono móvil').':</label><br/>';
+	echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al Nótame vía Jabber/Google Talk') . '</span><br/>';
+	echo '<span class="genericformnote">' . _('válidos: +34123456789 ó 123456789') . '</span><br/>';
+	echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
 	echo '</p>';
+
+
 
 	if ($globals['external_user_ads']) {
 		echo '<p><label for="adcode">'._('codigo AdSense').':</label><br/>';
@@ -126,7 +135,7 @@ function show_profile() {
 
 	if (is_avatars_enabled()) {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
-		echo '<p><label for="name">'._('avatar').':</label><br/>';
+		echo '<p><label>'._('avatar').':</label><br/>';
 		echo '<span class="genericformnote">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
 		echo '<input type="file" autocomplete="off" name="image" />';
 		echo '</p>';
@@ -222,7 +231,41 @@ function save_profile() {
 		$user->email=trim($_POST['email']);
 	}
 	$user->url=htmlspecialchars(clean_input_url($_POST['url']));
+
+	// Check IM address
+	if (!empty($_POST['public_info'])) {
+		$_POST['public_info']  = htmlspecialchars(clean_input_url($_POST['public_info']));
+		$public = $db->escape($_POST['public_info']);
+		$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_public_info='$public'"));
+		if ($im_count > 0) {
+			echo '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
+			$_POST['public_info'] = '';
+			$errors++;
+		}
+	}
+	$user->phone = $_POST['phone'];
 	$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
+	// End check IM address
+
+
+	// Check phone number
+	if (!empty($_POST['phone'])) {
+		if ( !preg_match('/^\+{0,1}[0-9]{9,16}$/', $_POST['phone'])) {
+			echo '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
+			$_POST['phone'] = '';
+			$errors++;
+		} else {
+			$phone = $db->escape($_POST['phone']);
+			$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_phone='$phone'"));
+			if ($phone_count > 0) {
+				echo '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
+				$_POST['phone'] = '';
+				$errors++;
+			}
+		}
+	}
+	$user->phone = $_POST['phone'];
+	// End check phone number
 
 	// Verifies adsense code
 	if ($globals['external_user_ads']) {
@@ -234,7 +277,7 @@ function save_profile() {
 				$_POST['adcode'] = '';
 				$errors++;
 			} else {
-				$adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_adcode='".$_POST['adcode']."'"));
+				$adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_adcode='".$_POST['adcode']."'"));
 				if ($adcode_count > 0) {
 					echo '<p class="form-error">'. _('ya hay otro usuario con la misma cuenta, no se ha grabado'). '</p>';
 					$_POST['adcode'] = '';

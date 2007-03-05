@@ -79,6 +79,10 @@ $globals['forbiden_domains'] = 'foo.domain.foo another.foo.domain';
 // Put here the pathname of the file where you store your karma.log file
 $globals['karma_log'] = mnmpath . '/../../karma.log';
 
+// This is for SMS messages
+// Put your authorised addresses
+#$globals['allowed_gsm_clients'] = 'localhost 192.168.0.1';
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $anon_to_user_votes = 2;

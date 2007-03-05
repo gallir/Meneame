@@ -24,7 +24,6 @@ class User {
 	var $url = '';
 	// For stats
 	var $total_votes = 0;
-	var $published_votes = 0;
 	var $total_links = 0;
 	var $published_links = 0;
 	var $positive_votes_received = 0;
@@ -55,9 +54,6 @@ class User {
 		$user_date = $this->date;
 		$user_ip = $this->ip;
 		$user_pass = $db->escape($this->pass);
-		if (strlen($user_pass) != 32) { //migrate to md5
-			$user_pass = $this->pass = md5($user_pass);
-		}
 		$user_lang = $this->lang;
 		$user_email = $db->escape($this->email);
 		$user_names = $db->escape($this->names);
@@ -65,12 +61,13 @@ class User {
 		$user_url = $db->escape(htmlentities($this->url));
 		$user_adcode = $db->escape($this->adcode);
 		$user_adchannel = $db->escape($this->adchannel);
+		$user_phone = $db->escape($this->phone);
 		if($this->id===0) {
-			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_names, user_public_info, user_url, user_adcode, user_adchannel) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$usr_names',  '$user_url', '$user_adcode'");
+			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_names, user_public_info, user_url, user_adcode, user_adchannel, user_phone) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$usr_names',  '$user_url', '$user_adcode', '$user_phone'");
 			$this->id = $db->insert_id;
 		} else {
 			if ($full_save) $modification = ', user_modification = now() ' ;
-			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel' $modification  WHERE user_id=$this->id");
+			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel', user_phone='$user_phone' $modification  WHERE user_id=$this->id");
 		}
 	}
 	
@@ -102,11 +99,8 @@ class User {
 			$this->url = $user->user_url;
 			$this->adcode = $user->user_adcode;
 			$this->adchannel = $user->user_adchannel;
+			$this->phone = $user->user_phone;
 			$this->read = true;
-			if (strlen($this->pass) != 32) { //migrate to md5
-				$this->pass = md5($this->pass); 
-				$this->store();
-			}
 			return true;
 		}
 		$this->read = false;
