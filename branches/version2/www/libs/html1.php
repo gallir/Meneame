@@ -633,7 +633,7 @@ function do_last_posts() {
 		echo '<div class="vertical-box">';
 		echo '<h4><a href="'.post_get_base_url().'">' . _('últimos nótame'). '</a></h4><ul>';
 		foreach ($res as $post) {
-			echo '<li>'.$post->user_login.': <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.mb_substr(preg_replace('/^(.{1,50})([\s].*$|$)/', '$1', $post->post_content), 0, 50).'</a></li>'."\n";
+			echo '<li>'.$post->user_login.': <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_html(mb_substr(preg_replace('/^(.{1,50})([\s].*$|$)/', '$1', $post->post_content), 0, 50)).'</a></li>'."\n";
 		}
 		echo '</ul></div>';
 	}
