@@ -95,7 +95,7 @@ class Post {
 		$post_class = 'comment-body';
 		echo '<div class="'.$post_class.'">';
 
-		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" style="float: left; margin: 2px 10px 2px 0;" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
+		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
 
 		$this->print_text($length);
 		echo '</div>';
