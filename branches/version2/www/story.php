@@ -157,7 +157,11 @@ case 3:
 	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
-	include(mnmpath.'/backend/meneos.php');
+	if ($globals['link']->date < time() - 7776000) { // older than 90 days
+		echo _('Noticia antigua, datos de votos archivados');
+	} else {
+		include(mnmpath.'/backend/meneos.php');
+	}
 	echo '</div><br />';
 	echo '</fieldset>';
 	echo '</div>';
@@ -321,7 +325,9 @@ function print_story_tabs($option) {
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
-		echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+		if ($globals['link']->date > time() - 7776000) { // newer than 90 days
+			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+		}
 		echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
 		if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
 			echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
