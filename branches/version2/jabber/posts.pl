@@ -180,8 +180,8 @@ sub StorePost {
 		$timestamp = $array->[0];
 	}
 
-	my $remaining = int((600 - (time-$timestamp))/60);
-	if ($remaining > 0) { # 10 minutes
+	my $remaining = int((300 - (time-$timestamp))/60);
+	if ($remaining > 0) { # 5 minutes
 		SendMessage($poster, "ya has enviado una nota hace pocos minutos, debes esperar $remaining minutos");
 		return;
 	}
