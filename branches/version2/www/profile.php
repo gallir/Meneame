@@ -253,7 +253,7 @@ function save_profile() {
 
 		// Check phone number
 		if (!empty($_POST['phone'])) {
-			if ( !preg_match('/^\+{0,1}[0-9]{9,16}$/', $_POST['phone'])) {
+			if ( !preg_match('/^\+[0-9]{9,16}$/', $_POST['phone'])) {
 				echo '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
 				$_POST['phone'] = '';
 				$errors++;

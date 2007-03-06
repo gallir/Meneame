@@ -52,7 +52,7 @@ $user = new User;
 $user->id = $user_id;
 
 if (!$user_id > 0 || !($user->read())) {
-	echo "ERROR: phone/user not found: $phone-$user_id\n";
+	echo "ERROR: phone/user not found: $phone\n";
 	die;
 }
 
@@ -81,6 +81,6 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 
 $post->store();
 
-echo "OK: stored, $post->id\n";
+echo "OK: stored, $post->id ($user->username)\n";
 
 ?>
