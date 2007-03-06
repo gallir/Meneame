@@ -118,7 +118,7 @@ if ($links) {
 	foreach($links as $dblink) {
 		$link = new Link;
 		$link->id=$dblink->link_id;
-		$link->read();
+		$link->read_basic();
 		$karma_pos_user = 0;
 		$karma_neg_user = 0;
 		$karma_pos_ano = 0;
