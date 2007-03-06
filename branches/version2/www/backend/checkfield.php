@@ -14,7 +14,7 @@
 	switch ($type) {
 		case 'username':
 			if (!check_username(trim($_GET['name']))) {
-				echo _('caracteres inválidos');
+				echo _('caracteres inválidos o no comienzan con una letra');
 				return;
 			}
 			if (strlen($name)<3) {

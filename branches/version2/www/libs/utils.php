@@ -126,7 +126,7 @@ function url_clean($url) {
 }
 
 function check_username($name) {
-	return (preg_match('/^[a-z0-9_\-\.çÇñÑ·]+$/i', $name) && strlen($name) <= 24);
+	return (preg_match('/^[a-zçÇñÑ][a-z0-9_\-\.çÇñÑ·]+$/i', $name) && strlen($name) <= 24);
 }
 
 

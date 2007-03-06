@@ -91,7 +91,11 @@ if ($posts) {
 	foreach ($posts as $dbpost) {
 		$post->id = $dbpost->post_id;
 		$post->read();
-		$post->print_summary();
+		if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
+			echo '<li>'. _('Error: nota no existente') . '</li>';
+		} else {
+			$post->print_summary();
+		}
 	}
 	echo "</ol>\n";
 }

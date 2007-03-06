@@ -139,7 +139,7 @@ function check_user_fields() {
 		$error=true;
 	}
 	if(!check_username($_POST["username"])) {
-		register_error(_("Nombre de usuario erróneo, caracteres no admitidos"));
+		register_error(_("Nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra"));
 		$error=true;
 	}
 	if(user_exists(trim($_POST["username"])) ) {
