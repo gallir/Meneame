@@ -25,7 +25,7 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 $link = new Link;
 $link->id = $comment->link;
-if (! $link->read() ) {
+if (! $link->read_basic() ) {
 	header('Location: http://'.get_server_name().$globals['base_url']);
 	die;
 }

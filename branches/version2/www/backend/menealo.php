@@ -25,7 +25,7 @@ if (empty($_REQUEST['md5'])) {
 
 $link = new Link;
 $link->id=$id;
-if(!$link->read()) {
+if(!$link->read_basic()) {
 	error(_('Artículo inexistente'). $current_user->user_id . '-'. $_REQUEST['user']);
 }
 
@@ -98,7 +98,7 @@ if (!$link->insert_vote($current_user->user_id, $value)) {
 
 
 if ($link->status == 'discard' && $current_user->user_id>0 && $link->karma > $link->votes * 2  && $link->votes > $link->negatives) {
-	$link->read();
+	$link->read_basic();
 	$link->status = 'queued';
 	$link->store_basic();
 }

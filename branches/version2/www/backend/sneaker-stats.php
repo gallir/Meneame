@@ -106,7 +106,7 @@ function do_top($string) {
 	foreach ($result as $linkid) {
 		$link = new Link();
 		$link->id = $linkid->link_id;
-		$link->read();
+		$link->read_basic();
 		$rank .= '<br/> ' . $link->get_permalink() . " ($link->karma)";
 	}
 	return $rank;

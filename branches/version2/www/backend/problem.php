@@ -22,7 +22,7 @@ if ($value < -count($globals['negative_votes_values']) || $value > -1)
 	error(_('Voto incorrecto') . " $value");
 
 $link->id=$id;
-$link->read();
+$link->read_basic();
 
 if(!$link->is_votable()) {
 	error(_('¡tranquilo cowboy!'));
