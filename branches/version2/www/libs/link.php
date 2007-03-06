@@ -231,6 +231,40 @@ class Link {
 		} 
 	}
 	
+	function read_basic($key='id') {
+		global $db, $current_user;
+		switch ($key)  {
+			case 'id':
+				$cond = "link_id = $this->id";
+				break;
+			case 'uri':
+				$cond = "link_uri = '$this->uri'";
+				break;
+			case 'url':
+				$cond = "link_url = '$this->url'";
+				break;
+			default:
+				$cond = "link_id = $this->id";
+		}
+		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_comments, link_karma, link_randkey, link_category, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts  FROM links WHERE $cond"))) {
+			$this->id=$link->link_id;
+			$this->author=$link->link_author;
+			$this->blog=$link->link_blog;
+			$this->status=$link->link_status;
+			$this->votes=$link->link_votes;
+			$this->negatives=$link->link_negatives;
+			$this->comments=$link->link_comments;
+			$this->karma=$link->link_karma;
+			$this->randkey=$link->link_randkey;
+			$this->category=$link->link_category;
+			$this->date=$link->link_ts;
+			$this->published_date=$link->published_ts;
+			$this->modified=$link->modified_ts;
+			return true;
+		}
+		return false;
+	}
+
 	function read($key='id') {
 		global $db, $current_user;
 		switch ($key)  {
