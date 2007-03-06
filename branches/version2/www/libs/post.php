@@ -174,7 +174,7 @@ class Post {
 
 	function print_new_form() {
 		echo '<div id="addpost">';
-		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'">&#187;&nbsp;'._('nueva nota').'</a><br />&nbsp;';
+		echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_url'].'../img/common/add-notame01.png" alt="insertar una nota"/></a><br />&nbsp;';
 		echo '</div>'."\n";
 		echo '<ol class="comments-list" id="newpost"></ol>'."\n";
 	}
