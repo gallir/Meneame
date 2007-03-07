@@ -216,7 +216,7 @@ function get_search_clause($option='') {
 		$mode = 'IN BOOLEAN MODE';
 	}
 	if(!empty($_REQUEST['search'])) {
-		$_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250));
+		$_REQUEST['search'] = preg_replace('/\*/', '', trim(substr(strip_tags($_REQUEST['search']), 0, 250))); // to avoid overload in search
 		$words_count = count(explode(" ", $_REQUEST['search']));
 		$words = $db->escape($_REQUEST['search']);
 		if (preg_match('/^tag:/', $words)) {

@@ -97,6 +97,10 @@ if($search) {
 
 $link = new Link;
 $rows = $db->get_var("SELECT count(*) $from_where");
+if($search) {
+	$rows = min(10*$page_size, $rows); // To avoid overloading the mysql server
+	$offset = min(10*$page_size, $offset);
+}
 $links = $db->get_col("SELECT link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {
