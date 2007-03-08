@@ -65,7 +65,7 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('Nótame'));
+do_header(_('nótame'));
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar(false);
@@ -74,15 +74,10 @@ do_posts_tabs($tab_option, $user->username);
 
 $post = new Post;
 
-echo '<div class="comments">';
+echo '<div class="notes">';
 
-
-echo '<div style="margin-bottom: 10px; text-align: right;">';
-echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'img/common/feed-icon-16x16.png" alt="rss2"/></a>&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_url'].'img/common/jabber-icon-16x16.png" alt="jabber"/></a>';
-echo '</div>';
-
-if ($current_user->user_id > 0 && ($tab_option == 1 && $current_user->user_id > 0 || $current_user->user_id == $user->id) && (!$post->read_last($current_user->user_id) || time() - $post->date > 600)) {
-	$post->print_new_form();
+if ($current_user->user_id > 0 && ($tab_option == 1 && $current_user->user_id > 0 || $current_user->user_id == $user->id) && (!$post->read_last($current_user->user_id) || time() - $post->date > 0)) {
+	$post->print_new_form(time() - $post->date, $rss_option);
 }
 
 $posts = $db->get_results($sql);

@@ -815,10 +815,14 @@ padding-left: 15px;
 margin: 0px;
 }
 
-/* comments */
+/* comments [& incipient notes] */
 
 .comments {
 margin: 25px 5px 0 10px;
+}
+
+.notes {
+margin: 15px 5px 0 15px;
 }
 
 .comments h3 {
@@ -1538,4 +1542,10 @@ margin-left: 0px;
 margin-left: 3px;
 margin-bottom: 3px;
 float: right;
+}
+
+#addpost {
+padding: 0;
+margin-top: 0px;
+margin-bottom: 10px;
 }
