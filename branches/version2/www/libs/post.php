@@ -179,7 +179,7 @@ class Post {
 		echo '<div id="addpost">';
 		// Print "new note" is the user is authenticated
 		if ($current_user->user_id > 0) {
-			if (!$this->read_last($current_user->user_id) || time() - $post->date > 300) {
+			if (!$this->read_last($current_user->user_id) || time() - $this->date > 300) {
 				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_url'].'../img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			} else {
 				echo '<img src="'.$globals['base_url'].'../img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
