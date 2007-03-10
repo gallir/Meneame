@@ -50,7 +50,6 @@ var show_friends = false;
 // Reload the mnm banner each 5 minutes
 var mnm_banner_reload = 180000;
 
-$(function(){start_sneak()});
 
 function play_pause() {
 	if (is_playing()) {
@@ -301,6 +300,8 @@ function to_hoygan(str)
 	str=str.replace(/ r([aeiou])/gi, ' rr$1');
 	return str.toUpperCase();
 }
+
+$(function(){start_sneak()});
 
 //]]>
 </script>

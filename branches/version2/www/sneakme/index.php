@@ -75,10 +75,7 @@ do_posts_tabs($tab_option, $user->username);
 $post = new Post;
 
 echo '<div class="notes">';
-
-if ($current_user->user_id > 0 && ($tab_option == 1 && $current_user->user_id > 0 || $current_user->user_id == $user->id) && (!$post->read_last($current_user->user_id) || time() - $post->date > 0)) {
-	$post->print_new_form(time() - $post->date, $rss_option);
-}
+$post->print_post_teaser($rss_option);
 
 $posts = $db->get_results($sql);
 if ($posts) {

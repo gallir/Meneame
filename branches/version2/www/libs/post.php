@@ -172,14 +172,20 @@ class Post {
 		echo '</script>'."\n";
 	}
 
-	function print_new_form($date_last_post, $rss_option) {
-		global $globals;
+	function print_post_teaser($rss_option) {
+		global $globals, $current_user;
+
+
 		echo '<div id="addpost">';
-		if ($date_last_post > 600) {
-			echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_url'].'../img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		} else {
-			echo '<img src="'.$globals['base_url'].'../img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		// Print "new note" is the user is authenticated
+		if ($current_user->user_id > 0) {
+			if (!$this->read_last($current_user->user_id) || time() - $post->date > 300) {
+				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_url'].'../img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			} else {
+				echo '<img src="'.$globals['base_url'].'../img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+			}
 		}
+
 		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'../img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_url'].'../img/common/jabber-button01.png" alt="jabber"/></a>';
 		echo '</div>'."\n";

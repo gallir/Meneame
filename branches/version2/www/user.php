@@ -130,17 +130,6 @@ function do_profile() {
 		else $url = $user->url;
 	}
 
-	$post = new Post;
-	if ($current_user->user_id == $user->id && (!$post->read_last($current_user->user_id) || time() - $post->date > 0)) {
-		$post->print_new_form(time() - $post->date, '');
-	}
-
-	echo '<ol class="comments-list" id="last_post">';
-	if ($post->read_last($user->id)) {
-		$post->print_summary();
-	}
-	echo "</ol>\n";
-
 	echo '<fieldset><legend>';
 	echo _('información personal');
 	if($login===$current_user->user_login) {
