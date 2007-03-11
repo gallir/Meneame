@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_3-log
+-- Server version	5.0.32-Debian_7-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -286,10 +286,13 @@ CREATE TABLE `users` (
   `user_url` char(128) collate utf8_spanish_ci NOT NULL,
   `user_adcode` char(24) collate utf8_spanish_ci default NULL,
   `user_adchannel` char(12) collate utf8_spanish_ci default NULL,
+  `user_phone` char(16) collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`user_id`),
   UNIQUE KEY `user_login` (`user_login`),
   KEY `user_email` (`user_email`),
-  KEY `user_karma` (`user_karma`)
+  KEY `user_karma` (`user_karma`),
+  KEY `user_public_info` (`user_public_info`),
+  KEY `user_phone` (`user_phone`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -299,7 +302,7 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `votes`;
 CREATE TABLE `votes` (
   `vote_id` int(20) NOT NULL auto_increment,
-  `vote_type` enum('links','comments') collate utf8_spanish_ci NOT NULL default 'links',
+  `vote_type` enum('links','comments','posts') character set utf8 NOT NULL default 'links',
   `vote_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `vote_link_id` int(20) NOT NULL default '0',
   `vote_user_id` int(20) NOT NULL default '0',
@@ -320,4 +323,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-02-22 22:01:00
+-- Dump completed on 2007-03-11 11:57:45
