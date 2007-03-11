@@ -41,7 +41,7 @@ var mykey = <? echo rand(100,999); ?>;
 var show_friends = false;
 var do_animation = false;
 
-$(function(){start_sneak()});
+jQuery(function($){start_sneak()});
 function set_initial_display(item, i) {
 	item.children().hide();
 	item.children().fadeIn('normal');
