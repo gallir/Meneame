@@ -59,8 +59,7 @@ if ($posts) {
 	foreach($posts as $post_id) {
 		$post->id=$post_id;
 		$post->read();
-		$title = preg_replace('/[\n\r\t]/', ' ', $post->content);
-		$title = mb_substr(preg_replace('/^(.{1,30}[^\&;])([\s].*$|$)/', '$1 ...', $title), 0, 35);
+		$title = text_to_summary($post->content, 40);
 		$title = $post->username.': ' . htmlentities2unicodeentities($title);
 		$content = put_smileys(save_text_to_html($post->content));
 		echo "	<item>\n";

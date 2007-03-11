@@ -120,7 +120,6 @@ class Post {
 		echo "</li>\n";
 	}
 
-
 	function print_text($length = 0) {
 		global $current_user, $globals;
 

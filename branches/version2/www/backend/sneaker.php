@@ -292,7 +292,7 @@ function get_post($time, $type, $postid, $userid) {
 	$who = $event->user_login;
 	$key = $time . ':'.$type.':'.$commentid;
 	$status = _('nótame');
-	$title = text_to_html(mb_substr(preg_replace('/^(.{1,120}[^\&;])([\s].*$|$)/', '$1 ...', preg_replace("/[\r\n\t]/", ' ', $event->post_content)), 0, 130));
+	$title = text_to_summary($event->post_content,130);
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }

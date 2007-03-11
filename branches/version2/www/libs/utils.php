@@ -183,6 +183,10 @@ function save_text_to_html($string) {
 	return $string;
 }
 
+function text_to_summary($string, $length=50) {
+	return text_to_html(mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1 ...', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length+5));
+}
+
 function text_to_html($string) {
 	// Dirty trick to allow tagging consecutives words 
 	//$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
