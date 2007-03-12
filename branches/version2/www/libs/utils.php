@@ -184,14 +184,16 @@ function save_text_to_html($string) {
 }
 
 function text_to_summary($string, $length=50) {
-	return text_to_html(mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1 ...', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length+5));
+	return text_to_html(mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1 ...', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length+5), false);
 }
 
-function text_to_html($string) {
+function text_to_html($string, $do_links = true) {
 	// Dirty trick to allow tagging consecutives words 
 	//$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
 
-	$string = preg_replace('/([\(\[:\.\s]|^)(https*:\/\/)([^ \t\n\r\]\(\)\&]{5,70})([^ \t\n\r\]\(\)]*)([^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $string);
+	if ($do_links) {
+		$string = preg_replace('/([\(\[:\.\s]|^)(https*:\/\/)([^ \t\n\r\]\(\)\&]{5,70})([^ \t\n\r\]\(\)]*)([^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $string);
+	}
 	$string = preg_replace('/(^|[\W\s])_([^\s<>]+)_/', "$1<em>$2</em>", $string);
 	$string = preg_replace('/(^|[\W\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $string);
 	return $string;
