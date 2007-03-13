@@ -51,6 +51,8 @@ var show_friends = false;
 var mnm_banner_reload = 180000;
 
 
+$(function(){start_sneak()});
+
 function play_pause() {
 	if (is_playing()) {
 		document.images['play-pause-img'].src = "img/common/sneak-play01.gif";
@@ -301,7 +303,6 @@ function to_hoygan(str)
 	return str.toUpperCase();
 }
 
-jQuery(function($){start_sneak()});
 
 //]]>
 </script>
