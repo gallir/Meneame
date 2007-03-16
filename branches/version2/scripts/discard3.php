@@ -46,5 +46,4 @@ foreach ($negatives as $negative) {
 
 }
 
-
 ?>

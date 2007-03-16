@@ -137,22 +137,22 @@ if ($links) {
 
 		$karma_new = $karma_pos_user + $karma_neg_user;
 		// To void votes spamming
-		// Do not allow annonimous users to give more karma than registered users
-		// The ratio up to 40% anonymous
+		// Do not allow annonymous users to give more karma than registered users
+		// The ratio up to 25% anonymous
 		if ($karma_new > 0) 
-			$karma_new += min($karma_new*0.4, $karma_pos_ano + $karma_neg_ano);
+			$karma_new += min($karma_new*0.33, $karma_pos_ano + $karma_neg_ano);
 
 
 		// Aged karma
-		$diff = max(0, $now - ($link->date + 18*3600)); // 1 hour without decreasing
+		$diff = max(0, $now - ($link->date + 18*3600)); // 18 hours without decreasing
 		$oldd = 1 - $diff/(3600*144);
 		$oldd = max(0.5, $oldd);
 		$oldd = min(1, $oldd);
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($now - $link->date < 7200 && $now - $link->date > 900) {
-			$new_coef = 2 - ($now-$link->date)/7200;
+		if ($now - $link->date < 6300 && $now - $link->date > 900) { // 6300 === 1 hs, 45 min
+			$new_coef = 2 - ($now-$link->date)/6300;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
@@ -182,7 +182,7 @@ if ($links) {
 			$link->store_basic();
 		} else $karma_mess = '';
 		print "<tr><td class='tnumber$imod'>$link->id</td><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
-		echo "<td class='tdata$imod'><a href='".$link->get_permalink()."'>$link->title</a>\n";
+		echo "<td class='tdata$imod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 		echo "$karma_mess</td>\n";
 			
 		if ($link->user_level != 'disabled' && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
