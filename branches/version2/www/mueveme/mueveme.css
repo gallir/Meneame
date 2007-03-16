@@ -14,6 +14,11 @@ padding: 2px 2px 2px 0.25em;
 margin: 0 0 0.5em 0;
 }
 
+.links a {
+background: #FF6400;
+color: #fff;
+}
+
 ul, li {
 list-style: none;
 margin: 0;

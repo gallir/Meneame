@@ -26,6 +26,10 @@ echo '<body>';
 
 echo '<div class="header">Muéveme</div>'."\n";
 
+echo '<div class="links">';
+echo '<a href="notame/">Nótame</a>';
+echo '</div>';
+
 echo "<ul>\n";
 $links = $db->get_col("SELECT link_id from links where link_status='published' order by link_published_date desc LIMIT $page_size");
 if ($links) {
