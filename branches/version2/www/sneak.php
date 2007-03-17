@@ -232,25 +232,25 @@ function check_user_ping(str) {
 }
 
 function put_smiley(str) {
-	str=str.replace(/:-{0,1}\)/gi, ' <img src="img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
-	str=str.replace(/^;-{0,1}\)|[^t];-{0,1}\)/gi, ' <img src="img/smileys/wink.gif" alt=";)" title=";)" />');
-	str=str.replace(/:-{0,1}&gt;/gi, ' <img src="img/smileys/cheesy.gif" alt=":->" title=":->" />');
-	str=str.replace(/:-{0,1}D|:grin:/gi, '<img src="img/smileys/grin.gif" alt=":-D" title=":-D"/>');
+	str=str.replace(/(\s|^):-{0,1}\)/gi, ' <img src="img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
+	str=str.replace(/(\s|^);-{0,1}\)/gi, ' <img src="img/smileys/wink.gif" alt=";)" title=";)" />');
+	str=str.replace(/(\s|^):-{0,1}&gt;/gi, ' <img src="img/smileys/cheesy.gif" alt=":->" title=":->" />');
+	str=str.replace(/(\s|^):-{0,1}D|:grin:/gi, '<img src="img/smileys/grin.gif" alt=":-D" title=":-D"/>');
 	str=str.replace(/:oops:|&lt;:\(/gi, ' <img src="img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" />');
-	str=str.replace(/&gt;:-{0,1}\(/gi, ' <img src="img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-(" />');
-	str=str.replace(/\?(:-){0,1}\(/gi, ' <img src="img/smileys/huh.gif" alt="?(" title="?(" />');
-	str=str.replace(/:-{0,1}\(/gi, ' <img src="img/smileys/sad.gif" alt=":-(" title=":-(" />');
-	str=str.replace(/:-{0,1}O/g, ' <img src="img/smileys/shocked.gif" alt=":-O" title=":-O" />');
-	str=str.replace(/8-{0,1}[D\)]|:cool:/g, ' <img src="img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/>');
+	str=str.replace(/(\s|^)&gt;:-{0,1}\(/gi, ' <img src="img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-(" />');
+	str=str.replace(/(\s|^)\?(:-){0,1}\(/gi, ' <img src="img/smileys/huh.gif" alt="?(" title="?(" />');
+	str=str.replace(/(\s|^):-{0,1}\(/gi, ' <img src="img/smileys/sad.gif" alt=":-(" title=":-(" />');
+	str=str.replace(/(\s|^):-{0,1}O/g, ' <img src="img/smileys/shocked.gif" alt=":-O" title=":-O" />');
+	str=str.replace(/(\s|^)8-{0,1}[D\)]|:cool:/g, ' <img src="img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/>');
 	str=str.replace(/:roll:/gi, ' <img src="img/smileys/rolleyes.gif" alt=":roll:" title=":roll:" />');
-	str=str.replace(/^:-{0,1}P| :-{0,1}P/gi, ' <img src="img/smileys/tongue.gif" alt=":-P" title=":-P" />');
-	str=str.replace(/:-{0,1}x/gi, ' <img src="img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" />');
-	str=str.replace(/([^ps]|^):-{0,1}\//gi, '$1 <img src="img/smileys/undecided.gif" alt=":-/" title=":-/ :/" />');
-	str=str.replace(/:'\(|:cry:/gi, ' <img src="img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" />');
-	str=str.replace(/( |^)[xX]D+|:lol:/g, ' <img src="img/smileys/laugh.gif" alt="xD" title=":lol: xD" />');
-	str=str.replace(/ :-{0,1}S/gi, ' <img src="img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
-	str=str.replace(/:-{0,1}\|/gi, ' <img src="img/smileys/blank.gif" alt=":-|" title=":-| :|"/>');
-	str=str.replace(/:-{0,1}\*/gi, ' <img src="img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
+	str=str.replace(/(\s|^):-{0,1}P/gi, ' <img src="img/smileys/tongue.gif" alt=":-P" title=":-P" />');
+	str=str.replace(/(\s|^):-{0,1}x/gi, ' <img src="img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" />');
+	str=str.replace(/(\s|^):-{0,1}\//gi, '$1 <img src="img/smileys/undecided.gif" alt=":-/" title=":-/ :/" />');
+	str=str.replace(/(\s|^):'\(|:cry:/gi, ' <img src="img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" />');
+	str=str.replace(/(\s|^)[xX]D+|:lol:/g, ' <img src="img/smileys/laugh.gif" alt="xD" title=":lol: xD" />');
+	str=str.replace(/(\s|^):-{0,1}S/gi, ' <img src="img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
+	str=str.replace(/(\s|^):-{0,1}\|/gi, ' <img src="img/smileys/blank.gif" alt=":-|" title=":-| :|"/>');
+	str=str.replace(/(\s|^):-{0,1}\*/gi, ' <img src="img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
 
 	return str;
 }
