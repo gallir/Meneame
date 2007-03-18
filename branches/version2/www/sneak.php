@@ -213,7 +213,7 @@ function to_html(data) {
 	if (data.status == '<? echo _('publicada');?>')
 		html += '<div class="sneaker-status"><a href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
 	else if (data.status == '<? echo _('descartada');?>')
-		html += '<div class="sneaker-status"><a href="'+base_url+'shakeit.php?view=discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
+		html += '<div class="sneaker-status"><a href="'+base_url+'shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
 	else 
 		html += '<div class="sneaker-status"><a href="'+base_url+'shakeit.php">'+data.status+'<\/a><\/div>';
 	return html;
