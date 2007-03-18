@@ -322,7 +322,7 @@ function save_profile() {
 
 	// Manage avatars upload
 	if (!empty($_FILES['image']['tmp_name']) ) {
-		if(avatars_check_upload_size($user->id, 'image')) {
+		if(avatars_check_upload_size('image')) {
 			if (!avatars_manage_upload($user->id, 'image')) {
 				echo '<p class="form-error">'._('error guardando la imagen').'</p>';
 				$errors = 1;
