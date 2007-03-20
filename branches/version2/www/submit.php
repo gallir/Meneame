@@ -214,8 +214,7 @@ function do_submit1() {
 
 	// avoid auto-promotion (autobombo)
 	$hours = 2;
-	$from = time() - 3600*$hours;
-	$same_blog = $db->get_var("select count(*) from links where link_date > from_unixtime($from) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
+	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
 		echo '<p class="error-text">'._('debes esperar'). " $hours " . _(' horas entre cada envío al mismo sitio. Es para evitar "spams" y "autobombo"') . ', ';
@@ -224,6 +223,20 @@ function do_submit1() {
 		echo '</div>'. "\n";
 		return;
 	}
+
+	// check there is no an "overflow" from the same site
+	if ($current_user->user_karma < 16) {
+		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
+		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
+		if ($site_links > 5 && $site_links > $total_links * 0.03) { // Only 3% from the same site
+			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio').'</strong></p> ';
+			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.03). '</p>';
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+	}
+
 	
 	// Now stores new draft
 	$linkres->store();
