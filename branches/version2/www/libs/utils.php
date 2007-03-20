@@ -232,6 +232,13 @@ function get_search_clause($option='') {
 			$_REQUEST['date'] = 'true';
 			$mode = 'IN BOOLEAN MODE';
 			$words=preg_replace('/^date: */', '', $words);
+			// Mysql is very slow for words with chars like "=" in BOOLEAN, don't have any idea, it's not documented
+			if ($words_count == 1) {
+				// clean '\"' from the middle of the word
+				$words=preg_replace('/\\\"/', '', $words);
+				$_REQUEST['search']=preg_replace('/\\\"/', '', $_REQUEST['search']);
+				$words = "\"$words\"";
+			}
 		}
 		if ($_REQUEST['tag'] == 'true') {
 			$where .= "MATCH (link_tags) AGAINST ('$words' $mode) ";
