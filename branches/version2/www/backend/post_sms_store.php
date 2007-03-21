@@ -74,8 +74,8 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 		die;
 }
 
-if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 3 minute)"))> 0) {
-	echo 'ERROR: ' . _('debe esperar 3 minutos entre apuntes vía SMS');
+if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 1 minute)"))> 0) {
+	echo 'ERROR: ' . _('debe esperar 1 minuto entre apuntes vía SMS');
 	die;
 };
 

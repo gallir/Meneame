@@ -185,8 +185,8 @@ class Post {
 			}
 		}
 
-		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'../img/common/rss-button01.png" alt="rss2"/></a>';
-		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_url'].'../img/common/jabber-button01.png" alt="jabber"/></a>';
+		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_url'].'img/common/jabber-button01.png" alt="jabber"/></a>';
 		echo '</div>'."\n";
 		echo '<ol class="comments-list" id="newpost"></ol>'."\n";
 	}
