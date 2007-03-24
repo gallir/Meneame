@@ -61,7 +61,7 @@
 			}
 
 			if ( ! $this->dbh ) {
-				echo _('Error conectando a la BBDD, el Cabal nos castigará, pero nosotros ya nos estamos flagelando'). "\n";
+				echo _('Error conectando a la BBDD, el Cabal nos castigará, pero ya volvemos en unos segundos, seguramente una actualización de seguridad de la BBDD'). "\n";
 				die;
 			}
 			if (!empty($this->dbname)) $this->select($this->dbname);

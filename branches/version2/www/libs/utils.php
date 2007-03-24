@@ -399,7 +399,7 @@ function put_smileys($str) {
 	$str=preg_replace('/\?(:-){0,1}\(/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" />', $str);
 	$str=preg_replace('/:-{0,1}\(/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/sad.gif" alt=":-(" title=":-("  width="15" height="15" />', $str);
 	$str=preg_replace('/:-O/', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />', $str);
-	$str=preg_replace('/ 8-{0,1}[D\)]|:cool:/', ' <img src="'.get_server_name().$globals['base_url'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
+	$str=preg_replace('/ 8-{0,1}[D\)]|:cool:/', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
 	$str=preg_replace('/:roll:/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15" />', $str);
 	$str=preg_replace('/:-P/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
 	$str=preg_replace('/:-x/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15" />', $str);
