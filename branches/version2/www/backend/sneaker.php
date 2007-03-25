@@ -18,12 +18,11 @@ if (!empty($_GET['getv'])) {
 	die;
 }
 $now = time();
-if(!($time=check_integer('time')) > 0) {
+if(!($time=check_integer('time')) > 0 || $now-$time > 900) {
 	$time = $now-900;
-	$dbtime = date("YmdHis", $time-3600);
-}  else {
-	$dbtime = date("YmdHis", $time);
 }
+
+$dbtime = date("YmdHis", $time);
 
 $last_timestamp = $time;
 
