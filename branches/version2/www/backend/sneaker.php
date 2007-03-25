@@ -19,7 +19,7 @@ if (!empty($_GET['getv'])) {
 }
 $now = time();
 if(!($time=check_integer('time')) > 0) {
-	$time = 0;
+	$time = $now-900;
 	$dbtime = date("YmdHis", $time-3600);
 }  else {
 	$dbtime = date("YmdHis", $time);
