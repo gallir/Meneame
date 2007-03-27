@@ -180,8 +180,8 @@ sub StorePost {
 		$timestamp = $array->[0];
 	}
 
-	my $remaining = int((300 - (time-$timestamp))/60);
-	if ($remaining > 0) { # 5 minutes
+	my $remaining = int((120 - (time-$timestamp))/60);
+	if ($remaining > 0) { # 2 minutes
 		SendMessage($poster, "ya has enviado una nota hace pocos minutos, debes esperar $remaining minutos");
 		return;
 	}
@@ -210,6 +210,10 @@ sub InMessage
 	my $type = $message->GetType();
 	my $from = $message->GetFrom();
     
+	if (! $type eq 'chat' ) {
+		print "Error type '$type' from $from\n";
+		return;
+	}
 	my $subject = $message->GetSubject();
 	my $body = $message->GetBody();
 	my $user;
