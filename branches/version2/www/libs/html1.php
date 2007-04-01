@@ -114,11 +114,10 @@ function do_header($title, $id='home') {
 	echo '<form action="'.$globals['base_url'].'" method="get">' . "\n";
 	if (!empty($_REQUEST['search'])) {
 		echo '<input type="text" name="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
-		echo '<input class="searchIcon" type="image" align="top" value="buscar" alt="buscar" src="../img/common/search-01.gif"' . "\n";
 	} else {
 		echo '<input name="search" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
-		echo '<input class="searchIcon" type="image" align="top" value="buscar" alt="buscar" src="img/common/search-01.gif"' . "\n";
 	}
+	echo '<input class="searchIcon" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_url'].'img/common/search-01.gif" />' . "\n";
 	echo '</form>' . "\n";
 	echo '</li>' . "\n";
 	// form
