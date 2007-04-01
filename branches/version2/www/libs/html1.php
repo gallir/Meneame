@@ -116,6 +116,7 @@ function do_header($title, $id='home') {
 		echo '<input type="text" name="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
 	} else {
 		echo '<input name="search" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
+		echo '<input class="searchIcon" type="image" align="top" value="buscar" alt="buscar" src="img/common/search-01.gif"' . "\n";
 	}
 	echo '</form>' . "\n";
 	echo '</li>' . "\n";
