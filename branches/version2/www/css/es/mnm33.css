@@ -447,6 +447,7 @@ margin: -1px 0 0 0;
 }
 
 #header .searchIcon, #header .searchIcon:hover {
+vertical-align: bottom;
 padding: 3px;
 height: 12px;
 width: 12px;
