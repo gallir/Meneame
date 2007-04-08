@@ -150,7 +150,7 @@ class Link {
 			if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
 				$this->trackback=trim($matches2[1]);
 			}
-		} elseif (preg_match('/<a[^>]+href=[^>]+>trackback<\/a>/i', $this->html, $matches)) {
+		} elseif (preg_match('/<a[^>]+href=[^>]+>[^>]*trackback[^>]*<\/a>/i', $this->html, $matches)) {
 			if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
 				$this->trackback=trim($matches2[1]);
 			}
