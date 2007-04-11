@@ -229,7 +229,7 @@ function do_submit1() {
 		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
 		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
 		if ($site_links > 5 && $site_links > $total_links * 0.03) { // Only 3% from the same site
-			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio').'</strong></p> ';
+			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
 			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.03). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";

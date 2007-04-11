@@ -51,7 +51,7 @@ class Link {
 		$url_components = @parse_url($url);
 		if (!$url_components) return false;
 		$quoted_domain = preg_quote(get_server_name());
-		if($check_local && preg_match("/$quoted_domain$/", $url_components['host'])) {
+		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
 			syslog(LOG_NOTICE, "Meneame, server name is local name: $url");
 			return false;
 		}
