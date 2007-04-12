@@ -27,8 +27,8 @@ use utf8;
 
 my %AccountConfig;
 
-if (!MnmDB::read_configuration("$FindBin::Bin/posts.conf", \%AccountConfig)) {
-	print "Configuration file posts.conf was not found\n";
+if (!MnmDB::read_configuration("$FindBin::Bin/sneaker.conf", \%AccountConfig)) {
+	print "Configuration file sneaker.conf was not found\n";
 	exit(1);
 }
 
@@ -64,7 +64,11 @@ $SIG{INT} = \&Stop;
 
 my $Connection;
 my $Users;
-my $timestamp;
+my $event_timestamp;
+my $chat_timestamp;
+my $counter_timestamp;
+
+my %link_status = qw(link_new Nueva link_publish Publicada link_edit Editada link_discard Descartada);
 
 MnmDB::init(%AccountConfig);
 
@@ -76,7 +80,8 @@ while (1) {
 							presence=>\&InPresence,
 							iq=>\&InIQ);
 
-	$timestamp=0;
+	$chat_timestamp = time;
+	$event_timestamp = time - 60;
 	my $status = $Connection->Connect(hostname=>$server,
 									port=>$port,
 									componentname=>$componentname,
@@ -114,14 +119,10 @@ while (1) {
 	$Connection->PresenceSend();
 	print "presence sent...\n";
 
-	#$Connection->SetPresenceCallBacks(subscribe=>\&InPresence, 
-					#unsubscribe=>\&InPresence,
-					#available=>\&InPresence,
-					#unavailable=>\&InPresence,
-					#);
-	while(defined($status = $Connection->Process(10))) { 
+	while(defined($status = $Connection->Process(5))) { 
 		if(defined($status) && $status == 0)  {
-			ReadPosts();
+			UpdateCounters();
+			ReadEvents();
 		}
 
 	}
@@ -131,66 +132,103 @@ while (1) {
 	sleep(15);
 }
 
-sub ReadPosts {
-	my ($sql, $sth, $hash);
-	my $poster;
+sub UpdateCounters {
+	my $now = time;
+	my $key;
+	my $sth;
 
-	if ($timestamp == 0) {
-		$timestamp = time - 60;
+	if ($now - $counter_timestamp < 15) {
+		return;
 	}
-	$sql = qq{SELECT user_login, UNIX_TIMESTAMP(post_date), post_content, post_src, post_id from users, posts WHERE post_date > FROM_UNIXTIME($timestamp) and user_id = post_user_id ORDER BY post_date asc limit 50};
-	$sth = MnmDB::prepare($sql);
-	$sth->execute ||  die "Could not execute SQL statement: $sql";
-	while (my ($username, $date, $content, $src, $postid) = $sth->fetchrow_array) {
-		$content = MnmDB::utf8($content);
-		$content = MnmDB::clean_pseudotags(decode_entities($content));
-		$src = 'jabber' if ($src eq 'im');
-		#print "Post -> $username: $content\n";
-		$poster = new MnmUser(user=>$username);
-		$timestamp = $date;
-		foreach my $u ($Users->users()) {
-			if ($u->is_friend($poster) || $u == $poster) {
-				SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
-			}
-		}
-		#BroadCast($poster->{user}.": $content -- http://meneame.net/notame/".$poster->{user}." ");
+	$counter_timestamp = $now;
+	#replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', $now, $current_user->user_id)"
+	foreach my $u ($Users->users()) {
+		$sth = MnmDB::prepare(qq{replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values (?, ?, ?)});
+		$key = "jabber/" . scalar($u->id);
+		$sth->execute($key, $now, $u->id);
 	}
 }
 
-sub StorePost {
+sub ReadEvents {
+	my ($sql, $sth, $hash);
+	my $poster;
+	my $content;
+	my $status;
+
+	########### Link events
+	my @time = localtime($event_timestamp);
+	my $dbtime = sprintf("%4d%02d%02d%02d%02d%02d", $time[5] + 1900, $time[4]+1, $time[3],     $time[2], $time[1], $time[0]);
+	$sql = qq{select UNIX_TIMESTAMP(log_date) as time, log_type, link_uri, link_title, link_content, user_login from logs, links, users where log_date > '$dbtime' and log_type in ('link_new','link_publish','link_discard') and link_id = log_ref_id and user_id = log_user_id order by log_date asc limit 10};
+	$sth = MnmDB::prepare($sql);
+	$sth->execute ||  die "Could not execute SQL statement: $sql";
+	while ($hash = $sth->fetchrow_hashref) {
+		$event_timestamp = $hash->{time};
+		$hash->{user_login} = MnmDB::utf8($hash->{user_login});
+		$hash->{link_title} = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_title})));
+		$status = $link_status{$hash->{log_type}};
+		if($hash->{log_type} eq 'link_publish') {
+			$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_content})));
+			$content .= "\n";
+		} else {
+			$content = '';
+		}
+		foreach my $u ($Users->users()) {
+			SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n$content http://meneame.net/story/$hash->{link_uri}\n");
+		}
+	}
+
+	########## Chats
+	$sql = qq{select * from chats where chat_time > $chat_timestamp order by chat_time asc limit 20};
+	$sth = MnmDB::prepare($sql);
+	$sth->execute ||  die "Could not execute SQL statement: $sql";
+	while ($hash = $sth->fetchrow_hashref) {
+		$content = MnmDB::utf8($hash->{chat_text});
+		$content = MnmDB::clean_pseudotags(decode_entities($content));
+		$poster = new MnmUser(user=>$hash->{chat_user});
+		$chat_timestamp = $hash->{chat_time};
+		foreach my $u ($Users->users()) {
+			if ($u != $poster && ($hash->{chat_room} eq 'all' || $poster->is_friend($u))) {
+				SendMessage($u, "$poster->{user}: $content");
+			}
+		}
+	}
+	#print "$dbtime-$chat_timestamp\n";
+}
+
+sub StoreChat {
 	my $poster = shift;
 	my $body = shift;
 	my ($sql, $sth, $array);
 
 	my $id = $poster->id;
 
-	if (length($body) < 10) {
+	if (length($body) < 3) {
 		SendMessage($poster, "mensaje muy corto");
 		return;
 	}
-	if (length($body) > 300) {
-		SendMessage($poster, "mensaje demsiado largo (long max: 300)");
+	if (length($body) > 250) {
+		SendMessage($poster, "mensaje demasiado largo (long max: 250)");
 		return;
 	}
 
-	$sql = qq{SELECT UNIX_TIMESTAMP(post_date) from posts where post_user_id = $id order by post_date desc limit 1};
-	my $timestamp=0;
-	$array = MnmDB::row_array($sql);
-	if ($array) {
-		$timestamp = $array->[0];
-	}
-
-	my $remaining = int((120 - (time-$timestamp))/60);
-	if ($remaining > 0) { # 2 minutes
-		SendMessage($poster, "ya has enviado una nota hace pocos minutos, debes esperar $remaining minutos");
+	if ($poster->karma < 5.5) {
+		SendMessage($poster, "no tienes suficiente karma");
 		return;
 	}
+
+	my $period = time - 9;
+	$sql = qq{select count(*) from chats where chat_time > $period and chat_uid = $id};
+	my $array = MnmDB::row_array($sql);
+	if ($array->[0] > 0) {
+		SendMessage($poster, "tranquilo charlatán :-)");
+		return;
+	}
+	my $now = time;
+	my $room = 'all';
 	$body = MnmDB::clean_text($body);
-	$sth = MnmDB::prepare(qq{INSERT INTO posts (post_user_id, post_src, post_ip_int, post_randkey, post_content) VALUES (?, ?, ?, ?, ?) });
-	$sth->execute($poster->id, 'im', 0, int(rand(1000000)), $body);
+	$sth = MnmDB::prepare(qq{insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values (?, ?, ?, ?, ?)});
+	$sth->execute($now, $poster->id, $room, $poster->user, $body);
 	my $last_id = MnmDB::last_insert_id;
-	$sth = MnmDB::prepare(qq{insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) VALUES (FROM_UNIXTIME(?), ?, ?, ?, ?) });
-	$sth->execute(time, 'post_new', $last_id, $poster->id, 0);
 }
 
 
@@ -228,8 +266,8 @@ sub InMessage
 			return;
 		}
 	}
-	StorePost($user, $body);
-	ReadPosts();
+	StoreChat($user, $body);
+	ReadEvents();
 }
 
 sub BroadCast {
@@ -269,13 +307,13 @@ sub InPresence
 		} elsif ($type eq 'unsubscribe') {
 			$Users->delete($user);
 			JidReject($user);
-			print "Sent: $user->user:$type\n";
+			#print "Sent: $user->user:$type\n";
 		} elsif ($type eq 'unavailable') {
 			$Users->delete($user);
-			print "Sent: $user->user:$type\n";
+			#print "Sent: $user->user:$type\n";
 		} elsif ($type eq '') {
 			$Users->add($user);
-			print "Presence: ";
+			#print "Presence: ";
 			foreach my $active ($Users->users()) {
 				print "$active, ";
 			}
@@ -290,7 +328,7 @@ sub InPresence
 sub JidReject {
 	(my $jid, my $rs) = split /\//, shift;
 	$Connection->Subscription(to=>$jid, type=>"unsubscribed");
-	#print "Sent ---> unsuscribed $jid\n";
+	print "Sent ---> unsuscribed $jid\n";
 }
 
 sub SendMessage {

@@ -97,6 +97,12 @@ sub clean_text {
 	return encode_entities($_);
 }
 
+sub clean_pseudotags {
+	$_ = shift;
+	$_ =~ s/(^|[\W\s])([\*_])([^\s<>]+)\2/$1$3/g;
+	return $_;
+}
+
 sub read_configuration {
 	my $file = shift;
 	my $hash = shift;

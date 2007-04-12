@@ -20,6 +20,13 @@ use overload '==' => sub {
 	return $first->{jid} eq $second->{jid};
 };
 
+use overload '!=' => sub { 
+	my $first = shift; 
+	my $second = shift;
+	return $first->{jid} ne $second->{jid};
+};
+
+
 sub DESTROY {
 	my $self = shift;
 	$Count--;
@@ -33,11 +40,11 @@ sub new {
 
 	if (defined($arg{jid})) {
 		(my $jid, my $rs) = split /\//, $arg{jid};
-		$self =  {jid => $jid, timestamp => 0};
+		$self =  {jid => $jid, timestamp => 0, karma => 0};
 		bless $self, $class;
 		$self->read('jid');
 	} elsif (defined($arg{user})){
-		$self =  {user => $arg{user}, timestamp => 0};
+		$self =  {user => $arg{user}, timestamp => 0, karma => 0};
 		bless $self, $class;
 		$self->read('user');
 	}
@@ -72,6 +79,7 @@ sub read {
 		if (!defined($self->{jid})) {
 			$self->{jid} = $hash->{user_public_info};
 		}
+		$self->{karma} = $hash->{user_karma};
 		$self->{timestamp} = time;
 	} else {
 		$self->{id} = 0;
@@ -106,6 +114,12 @@ sub user {
 	my $self = shift;
 	return $self->{user};
 }
+
+sub karma {
+	my $self = shift;
+	return $self->{karma};
+}
+
 
 sub is_friend {
 	my $self = shift;
