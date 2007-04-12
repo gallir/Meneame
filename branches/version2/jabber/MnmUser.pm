@@ -85,7 +85,44 @@ sub read {
 		$self->{id} = 0;
 		$self->{user} = undef;
 	}
+	$self->read_prefs;
 	return $self->{id};
+}
+
+sub read_prefs {
+	my $self = shift;
+	my ($sql, $sth, $key, $value);
+	$sql = qq{SELECT pref_key, pref_value from prefs WHERE pref_user_id = $self->{id} and pref_key like 'jabber%'};
+	$sth = MnmDB::prepare($sql);
+	$sth->execute ||  die "Could not execute SQL statement: $sql";
+	while ( ($key, $value) = $sth->fetchrow_array) {
+		$self->{prefs}{$key} = $value;
+	}
+}
+
+sub store_prefs {
+	my $self = shift;
+	my $key = shift;
+	my $value = shift;
+	my ($sql, $sth);
+	if ($value =~ /[^0]+/) {
+		$sql = qq{replace into prefs (pref_user_id, pref_key, pref_value) values (?, ?, ?)};
+		$sth = MnmDB::prepare($sql);
+		$sth->execute($self->{id}, $key, $value);
+		$self->{prefs}{$key} = $value;
+	} else {
+		$sql = qq{delete from prefs where pref_user_id = $self->{id} and pref_key = '$key'};
+		$sth = MnmDB::prepare($sql);
+		$sth->execute;
+		delete($self->{prefs}{$key});
+	}
+}
+
+sub get_pref {
+	my $self = shift;
+	my $key = shift;
+
+	return $self->{prefs}{$key};
 }
 
 sub check {

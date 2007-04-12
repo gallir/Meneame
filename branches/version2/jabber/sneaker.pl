@@ -166,14 +166,14 @@ sub ReadEvents {
 		$hash->{user_login} = MnmDB::utf8($hash->{user_login});
 		$hash->{link_title} = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_title})));
 		$status = $link_status{$hash->{log_type}};
-		if($hash->{log_type} eq 'link_publish') {
-			$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_content})));
-			$content .= "\n";
-		} else {
-			$content = '';
-		}
+		$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_content})));
+		$content .= "\n";
 		foreach my $u ($Users->users()) {
-			SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n$content http://meneame.net/story/$hash->{link_uri}\n");
+			if ($u->get_pref('jabber-text')) {
+				SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n$content http://meneame.net/story/$hash->{link_uri}\n");
+			} else {
+				SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n http://meneame.net/story/$hash->{link_uri}\n");
+			}
 		}
 	}
 
@@ -187,12 +187,43 @@ sub ReadEvents {
 		$poster = new MnmUser(user=>$hash->{chat_user});
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($Users->users()) {
-			if ($u != $poster && ($hash->{chat_room} eq 'all' || $poster->is_friend($u))) {
+			if ($u->get_pref('jabber-chat') && $u != $poster && ($hash->{chat_room} eq 'all' || $poster->is_friend($u))) {
 				SendMessage($u, "$poster->{user}: $content");
 			}
 		}
 	}
 	#print "$dbtime-$chat_timestamp\n";
+}
+
+sub ExecuteCommand {
+	my $poster = shift;
+	$_ = shift;
+
+	if (/^!time/) {
+		SendMessage($poster, time);
+	} elsif (/^!help/) {
+		SendMessage($poster, "Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias");
+	} elsif (/^!prefs/) {
+		my $key;
+		my $mess;
+		foreach $key (keys %{$poster->{prefs}}) {
+			$mess .= "$key -> $poster->{prefs}{$key}\n";
+		}
+		SendMessage($poster, $mess);
+	} elsif (/^!chat/) {
+		$poster->store_prefs('jabber-chat', 1);
+		SendMessage($poster, 'chat habilitado');
+	} elsif (/^!nochat/) {
+		$poster->store_prefs('jabber-chat', '');
+		SendMessage($poster, 'chat deshabilitado');
+	} elsif (/^!text/) {
+		$poster->store_prefs('jabber-text', 1);
+		SendMessage($poster, 'mostrará el texto de las noticias');
+	} elsif (/^!notext/) {
+		$poster->store_prefs('jabber-text', '');
+		SendMessage($poster, 'no mostrará el texto de las noticias');
+	}
+
 }
 
 sub StoreChat {
@@ -202,6 +233,10 @@ sub StoreChat {
 
 	my $id = $poster->id;
 
+	if (! $poster->get_pref('jabber-chat')) {
+		SendMessage($poster, "tiene deshabilitado el chat");
+		return;
+	}
 	if (length($body) < 3) {
 		SendMessage($poster, "mensaje muy corto");
 		return;
@@ -266,8 +301,12 @@ sub InMessage
 			return;
 		}
 	}
-	StoreChat($user, $body);
-	ReadEvents();
+	if ($body =~ /^!/) {
+		ExecuteCommand($user, $body)
+	} else {
+		StoreChat($user, $body);
+		ReadEvents();
+	}
 }
 
 sub BroadCast {
