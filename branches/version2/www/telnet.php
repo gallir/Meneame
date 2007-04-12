@@ -133,7 +133,7 @@ echo _('publicada: ').'<input type="checkbox" checked="checked" name="sneak-publ
 if ($current_user->user_id > 0) $chat_checked = 'checked="checked"';
 else $chat_checked = '';
 echo _('mensaje: ').'<input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /> [T]&nbsp;';
-echo '<abbr title="'._('total&nbsp;(registrados+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span style="font-size: 120%;" id="ccnt"> </span></strong>';
+echo '<abbr title="'._('total&nbsp;(registrados+jabber+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span style="font-size: 120%;" id="ccnt"> </span></strong>';
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petición al servidor').'">ping</abbr>: <span id="ping">---</span>';
 echo "</form>\n";

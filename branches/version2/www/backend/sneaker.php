@@ -91,9 +91,10 @@ if ($logs) {
 
 if($last_timestamp == 0) $last_timestamp = $now;
 
-$ccntu .= $db->get_var("select count(*) from sneakers where sneaker_user > 0");
+$ccntu .= $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
+$ccntj .= $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
 $ccnta .= $db->get_var("select count(*) from sneakers where sneaker_user = 0");
-$ccnt = $ccntu+$ccnta . " ($ccntu+$ccnta)";
+$ccnt = $ccntu+$ccnta+$ccntj . " ($ccntu+$ccntj+$ccnta)";
 echo "ts=$last_timestamp;ccnt='$ccnt';\n";
 if(count($events) < 1) exit;
 krsort($events);
