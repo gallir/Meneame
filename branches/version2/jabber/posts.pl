@@ -210,15 +210,11 @@ sub InMessage
 	my $type = $message->GetType();
 	my $from = $message->GetFrom();
     
-	if ( $type ne 'chat' ) {
-		print "Error type '$type' from $from\n";
-		return;
-	}
 	my $subject = $message->GetSubject();
 	my $body = $message->GetBody();
 	my $user;
 	if(!($user = $Users->get($from))) {
-		print "ERROR: $from -- $user\n";
+		print "ERROR: user not found $from -- $user\n";
 		$user = new MnmUser(jid=>$from);
 		if ( $user->id > 0) {
 			$Users->add($user);
@@ -227,6 +223,11 @@ sub InMessage
 			JidReject($from);
 			return;
 		}
+	}
+	if ( $type ne 'chat' ) {
+		print "Error type '$type' from $from\n";
+		$Users->delete($user);
+		return;
 	}
 	StorePost($user, $body);
 	ReadPosts();
@@ -269,17 +270,17 @@ sub InPresence
 		} elsif ($type eq 'unsubscribe') {
 			$Users->delete($user);
 			JidReject($user);
-			print "Sent: $user->user:$type\n";
+			#rint "Sent: $user->user:$type\n";
 		} elsif ($type eq 'unavailable') {
 			$Users->delete($user);
-			print "Sent: $user->user:$type\n";
+			#print "Sent: $user->user:$type\n";
 		} elsif ($type eq '') {
 			$Users->add($user);
-			print "Presence: ";
-			foreach my $active ($Users->users()) {
-				print "$active, ";
-			}
-			print "\n";
+			#print "Presence: ";
+			#foreach my $active ($Users->users()) {
+			#	print "$active, ";
+			#}
+			#print "\n";
 		}
 	} else {
 		$Users->delete($user);

@@ -150,7 +150,7 @@ sub UpdateCounters {
 }
 
 sub ReadEvents {
-	my ($sql, $sth, $hash);
+	my ($sql, $sth, $sth2, $log, $link, $hash);
 	my $poster;
 	my $content;
 	my $status;
@@ -158,21 +158,25 @@ sub ReadEvents {
 	########### Link events
 	my @time = localtime($event_timestamp);
 	my $dbtime = sprintf("%4d%02d%02d%02d%02d%02d", $time[5] + 1900, $time[4]+1, $time[3],     $time[2], $time[1], $time[0]);
-	$sql = qq{select UNIX_TIMESTAMP(log_date) as time, log_type, link_uri, link_title, link_content, user_login from logs, links, users where log_date > '$dbtime' and log_type in ('link_new','link_publish','link_discard') and link_id = log_ref_id and user_id = log_user_id order by log_date asc limit 10};
+	$sql = qq{select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > '$dbtime' and log_type in ('link_new','link_publish','link_discard') order by log_date asc limit 10};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
-	while ($hash = $sth->fetchrow_hashref) {
-		$event_timestamp = $hash->{time};
-		$hash->{user_login} = MnmDB::utf8($hash->{user_login});
-		$hash->{link_title} = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_title})));
-		$status = $link_status{$hash->{log_type}};
-		$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($hash->{link_content})));
-		$content .= "\n";
-		foreach my $u ($Users->users()) {
-			if ($u->get_pref('jabber-text')) {
-				SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n$content http://meneame.net/story/$hash->{link_uri}\n");
-			} else {
-				SendMessage($u, "$status ($hash->{user_login}): $hash->{link_title}\n http://meneame.net/story/$hash->{link_uri}\n");
+	while ($log = $sth->fetchrow_hashref) {
+		## Get the link
+		$sql = qq(select link_uri, link_title, link_content, user_login from links, users where link_id = $log->{log_ref_id} and user_id = $log->{log_user_id});
+		if (($link = MnmDB::row_hash($sql))) {
+			$event_timestamp = $log->{time};
+			$link->{user_login} = MnmDB::utf8($link->{user_login});
+			$link->{link_title} = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($link->{link_title})));
+			$status = $link_status{$log->{log_type}};
+			$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($link->{link_content})));
+			$content .= "\n";
+			foreach my $u ($Users->users()) {
+				if ($u->get_pref('jabber-text')) {
+					SendMessage($u, "$status ($link->{user_login}): $link->{link_title}\n$content http://meneame.net/story/$link->{link_uri}\n");
+				} else {
+					SendMessage($u, "$status ($link->{user_login}): $link->{link_title}\n http://meneame.net/story/$link->{link_uri}\n");
+				}
 			}
 		}
 	}
@@ -283,15 +287,11 @@ sub InMessage
 	my $type = $message->GetType();
 	my $from = $message->GetFrom();
     
-	if ( $type ne 'chat' ) {
-		print "Error type '$type' from $from\n";
-		return;
-	}
 	my $subject = $message->GetSubject();
 	my $body = $message->GetBody();
 	my $user;
 	if(!($user = $Users->get($from))) {
-		print "ERROR: $from -- $user\n";
+		print "ERROR: user not found $from -- $user\n";
 		$user = new MnmUser(jid=>$from);
 		if ( $user->id > 0) {
 			$Users->add($user);
@@ -300,6 +300,11 @@ sub InMessage
 			JidReject($from);
 			return;
 		}
+	}
+	if ( $type ne 'chat' ) {
+		print "Error type '$type' from $from\n";
+		$Users->delete($user);
+		return;
 	}
 	if ($body =~ /^!/) {
 		ExecuteCommand($user, $body)
@@ -317,14 +322,12 @@ sub BroadCast {
 	}
 }
 
-sub InIQ
-{
+sub InIQ {
 
 	return;
 }
 
-sub InPresence
-{
+sub InPresence {
 	my $sid = shift;
 	my $presence = shift;
 
@@ -353,10 +356,10 @@ sub InPresence
 		} elsif ($type eq '') {
 			$Users->add($user);
 			#print "Presence: ";
-			foreach my $active ($Users->users()) {
-				print "$active, ";
-			}
-			print "\n";
+			#foreach my $active ($Users->users()) {
+			#	print "$active, ";
+			#}
+			#print "\n";
 		}
 	} else {
 		$Users->delete($user);
