@@ -122,12 +122,9 @@ function do_submit1() {
 
 	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
 	// it takes in account the number of positive votes in the last six hours
-	/* VERY SLOW!!!!!!!!!! To SOLVE  the server overload
-	/// SLOW
-	/// SLOW
 	if ($same_user > 1 && $current_user->user_karma < 12) {
-		$positives_received = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id and vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value > 0");
-		$negatives_received = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id and vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value < 0");
+		$positives_received = $db->get_var("select count(*) from votes left join links on link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id where vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value > 0");
+		$negatives_received = $db->get_var("select count(*) from votes left join links on link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id where vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value < 0");
 		echo "<!-- Positives: $positives_received -->\n";
 		echo "<!-- Negatives: $negatives_received -->\n";
 		if ($negatives_received > $positives_received * 1.5) {
@@ -137,7 +134,6 @@ function do_submit1() {
 			return;
 		}
 	}
-	*/
 	
 	$url = clean_input_url($_POST['url']);
 	$linkres=new Link;
