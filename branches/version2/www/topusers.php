@@ -24,7 +24,7 @@ if ( !strlen($_GET['sortby']) > 0) {
 	$sortby = 1;
 } else {
 	$sortby = intval($_GET['sortby']);
-	if($sortby < 0 || $sortby > 5) 
+	if($sortby < 0 || $sortby > 3) 
 		$sortby = 1;
 }
 

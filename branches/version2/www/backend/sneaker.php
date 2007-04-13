@@ -193,7 +193,7 @@ function get_chat($time) {
 		$who = $event->chat_user;
 		$timestamp = $event->chat_time;
 		$key = $timestamp . ':chat:'.$uid;
-		$comment = text_to_html(preg_replace("/[\r\n\t]+/", ' ¬ ', $event->chat_text));
+		$comment = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', $event->chat_text));
 		$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 		if($timestamp > $last_timestamp) $last_timestamp = $timestamp;
 	}
