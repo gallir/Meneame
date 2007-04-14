@@ -226,7 +226,9 @@ sub InMessage
 	}
 	if ( $type ne 'chat' ) {
 		print "Error type '$type' from $from\n";
-		$Users->delete($user);
+		if ( $type eq 'error' ) {
+			$Users->delete($user);
+		}
 		return;
 	}
 	StorePost($user, $body);

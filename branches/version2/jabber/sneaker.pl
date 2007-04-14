@@ -158,7 +158,7 @@ sub ReadEvents {
 	########### Link events
 	my @time = localtime($event_timestamp);
 	my $dbtime = sprintf("%4d%02d%02d%02d%02d%02d", $time[5] + 1900, $time[4]+1, $time[3],     $time[2], $time[1], $time[0]);
-	$sql = qq{select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > '$dbtime' and log_type in ('link_new','link_publish','link_discard') order by log_date asc limit 10};
+	$sql = qq{select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > '$dbtime' and log_type in ('link_new','link_publish') order by log_date asc limit 10};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
 	while ($log = $sth->fetchrow_hashref) {
@@ -202,30 +202,53 @@ sub ReadEvents {
 sub ExecuteCommand {
 	my $poster = shift;
 	$_ = shift;
+	my $mess;
 
 	if (/^!time/) {
 		SendMessage($poster, time);
 	} elsif (/^!help/) {
-		SendMessage($poster, "Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias");
+		SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
 	} elsif (/^!prefs/) {
 		my $key;
-		my $mess;
+		$mess = '»» ';
 		foreach $key (keys %{$poster->{prefs}}) {
 			$mess .= "$key -> $poster->{prefs}{$key}\n";
 		}
 		SendMessage($poster, $mess);
 	} elsif (/^!chat/) {
 		$poster->store_prefs('jabber-chat', 1);
-		SendMessage($poster, 'chat habilitado');
+		SendMessage($poster, '»» chat habilitado');
 	} elsif (/^!nochat/) {
 		$poster->store_prefs('jabber-chat', '');
-		SendMessage($poster, 'chat deshabilitado');
+		SendMessage($poster, '»» chat deshabilitado');
 	} elsif (/^!text/) {
 		$poster->store_prefs('jabber-text', 1);
-		SendMessage($poster, 'mostrará el texto de las noticias');
+		SendMessage($poster, '»» mostrará el texto de las noticias');
 	} elsif (/^!notext/) {
 		$poster->store_prefs('jabber-text', '');
-		SendMessage($poster, 'no mostrará el texto de las noticias');
+		SendMessage($poster, '»» no mostrará el texto de las noticias');
+	} elsif (/^!who/) {
+		## List total of connected users
+		my ($ccntu) = $MnmDB::dbh->selectrow_array("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
+		my ($ccntj) = $MnmDB::dbh->selectrow_array("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
+		my ($ccnta) = $MnmDB::dbh->selectrow_array("select count(*) from sneakers where sneaker_user = 0");
+		my $total_users = $ccntu + $ccntj + $ccnta;
+		$mess = "»» Conectados: $total_users, usuarios en web: $ccntu, usuarios en jabber: $ccntj, anónimos: $ccnta\n";
+
+		## List connected friends
+		# The relationshipt must be bi-directional
+		my ($sql, $sth, $hash, $user);
+		$sql = qq{select distinct user_login from sneakers, users where sneaker_user > 0 and user_id = sneaker_user};
+		$sth = MnmDB::prepare($sql);
+		$sth->execute ||  die "Could not execute SQL statement: $sql";
+		$mess .= '»» Amigos conectados: ';
+		while (my $hash = $sth->fetchrow_hashref) {
+			$user = new MnmUser(user=>$hash->{user_login});
+			if($poster->is_friend($user) && $user->is_friend($poster)) {
+				$mess .= " ".$user->user." ";
+			}
+		}
+		SendMessage($poster, $mess);
 	}
 
 }
@@ -238,7 +261,7 @@ sub StoreChat {
 	my $id = $poster->id;
 
 	if (! $poster->get_pref('jabber-chat')) {
-		SendMessage($poster, "tiene deshabilitado el chat");
+		SendMessage($poster, "tiene deshabilitado el chat, puedes habilitarlo con el comando !chat");
 		return;
 	}
 	if (length($body) < 3) {
@@ -303,7 +326,9 @@ sub InMessage
 	}
 	if ( $type ne 'chat' ) {
 		print "Error type '$type' from $from\n";
-		$Users->delete($user);
+		if ( $type eq 'error' ) {
+			$Users->delete($user);
+		}
 		return;
 	}
 	if ($body =~ /^!/) {
