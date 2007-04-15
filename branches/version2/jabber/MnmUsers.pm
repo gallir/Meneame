@@ -26,7 +26,9 @@ sub add {
 
 	$self->{'jid'}{$user->{jid}} = $user;
 	$self->{'jid_counter'}{$user->{jid}} ++;
-	#print "Adding: " . $user->{jid} . ": " . $self->{'jid_counter'}{$user->{jid}} . "\n";
+	if ($self->{'jid_counter'}{$user->{jid}} > 1) {
+		print "Adding: " . $user->{jid} . ": " . $self->{'jid_counter'}{$user->{jid}} . "\n";
+	}
 }
 
 sub delete {
@@ -34,10 +36,11 @@ sub delete {
 	my $user = shift;
 
 	$self->{'jid_counter'}{$user->{jid}} --;
-	#print "Deleting: " . $user->{jid} . ": " . $self->{'jid_counter'}{$user->{jid}} . "\n";
 	if ($self->{'jid_counter'}{$user->{jid}} <= 0 ) {
 		delete $self->{'jid'}{$user->{jid}};
 		delete $self->{'jid_counter'}{$user->{jid}};
+	} else {
+		print "Deleting: " . $user->{jid} . ": " . $self->{'jid_counter'}{$user->{jid}} . "\n";
 	}
 }
 
