@@ -61,11 +61,12 @@ if(!$post->read) die;
 echo 'document.write(\'';
 echo '<a href="http://'.get_server_name().post_get_base_url($user).'" style="text-decoration: none; border: none">';
 echo '<div style="overflow: hidden; background: #fff; width: '.$width.'px; max-height: '.$height.'px; border: 1px solid; border-color: '.$border.'; ">';
-echo '<div style="overflow: hidden; color: #666; font-family: sans-serif; font-size: 8pt; padding: 4px 4px 4px 4px; line-height: 1.1">';
+echo '<div style="padding: 4px 4px 4px 4px;">';
+echo '<div style="overflow: hidden; color: #666; font-family: sans-serif; font-size: 8pt; padding: 0; line-height: 1.1">';
 echo '<img src="http://'.get_server_name().get_avatar_url($post->author, $post->avatar, $avatar).'" width="'.$avatar.'" height="'.$avatar.'" alt="avatar" style="float:left; margin: 0 5px 4px 0;" border: none/>';
 echo '<div>';
 echo '<span style="color: #111;">'.$post->username.'</span><br/>';
 echo text_to_summary($post->content, $text_length);
-echo '</div></div></div></a>';
+echo '</div></div></div></div></a>';
 echo '\');';
 ?>
