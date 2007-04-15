@@ -40,7 +40,7 @@ sub new {
 
 	if (defined($arg{jid})) {
 		(my $jid, my $rs) = split /\//, $arg{jid};
-		$self =  {jid => $jid, timestamp => 0, karma => 0};
+		$self =  {jid => $jid, fulljid => "$jid/$rs", timestamp => 0, karma => 0};
 		bless $self, $class;
 		$self->read('jid');
 	} elsif (defined($arg{user})){

@@ -24,21 +24,21 @@ sub add {
 	my $self = shift;
 	my $user = shift;
 
-	$self->{'jid'}{$user->{jid}} = $user;
-	#print "Adding: " . $user->{jid} . "\n";
+	$self->{'jid'}{$user->{fulljid}} = $user;
+	#print "Adding: " . $user->{fulljid} . "\n";
 }
 
 sub delete {
 	my $self = shift;
 	my $user = shift;
 
-	delete $self->{'jid'}{$user->{jid}};
-	#print "Deleting: " . $user->{jid} . ": " . $self->{'jid_counter'}{$user->{jid}} . "\n";
+	delete $self->{'jid'}{$user->{fulljid}};
+	#print "Deleting: " . $user->{fulljid} .  "\n";
 }
 
 sub get {
 	my $self = shift;
-	(my $jid, my $rs) = split /\//, shift;
+	my $jid = shift;
 
 	if ($self->{'jid'}{$jid}) {
 		if( ! $self->{'jid'}{$jid}->check()) {
@@ -55,7 +55,14 @@ sub jids {
 
 sub users {
 	my $self = shift;
-	return values %{$self->{'jid'}};
+	my %users;
+	foreach my $user (values %{$self->{'jid'}}) {
+		if (!defined($users{$user->{jid}})) {
+			$users{$user->{jid}} = $user;
+		}
+	}
+	return values %users;
+	#return values %{$self->{'jid'}};
 }
 
 1;
