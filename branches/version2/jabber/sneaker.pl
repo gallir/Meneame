@@ -172,6 +172,7 @@ sub ReadEvents {
 			$content = MnmDB::clean_pseudotags(decode_entities(MnmDB::utf8($link->{link_content})));
 			$content .= "\n";
 			foreach my $u ($Users->users()) {
+				next if $u->get_pref('jabber-off');
 				if ($u->get_pref('jabber-text')) {
 					SendMessage($u, "$status ($link->{user_login}): $link->{link_title}\n$content http://meneame.net/story/$link->{link_uri}\n");
 				} else {
@@ -191,7 +192,7 @@ sub ReadEvents {
 		$poster = new MnmUser(user=>$hash->{chat_user});
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($Users->users()) {
-			if ($u->get_pref('jabber-chat') && $u != $poster && ($hash->{chat_room} eq 'all' || $poster->is_friend($u))) {
+			if (!$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster && ($hash->{chat_room} eq 'all' || $poster->is_friend($u))) {
 				SendMessage($u, "$poster->{user}: $content");
 			}
 		}
@@ -204,10 +205,11 @@ sub ExecuteCommand {
 	$_ = shift;
 	my $mess;
 
+	$_ =~ s/^ +//;
 	if (/^!time/) {
 		SendMessage($poster, time);
 	} elsif (/^!help/) {
-		SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
+		SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!off: deshabilita la recepción de todos los mensajes\n!on: vuelve a habilitar la recepción de mensajes!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
 	} elsif (/^!prefs/) {
 		my $key;
 		$mess = '»» ';
@@ -215,6 +217,12 @@ sub ExecuteCommand {
 			$mess .= "$key -> $poster->{prefs}{$key}\n";
 		}
 		SendMessage($poster, $mess);
+	} elsif (/^!off/) {
+		$poster->store_prefs('jabber-off', 1);
+		SendMessage($poster, '»» recepción de mensajes deshabilitados');
+	} elsif (/^!on/) {
+		$poster->store_prefs('jabber-off', '');
+		SendMessage($poster, '»» recepción de mensajes habilitados');
 	} elsif (/^!chat/) {
 		$poster->store_prefs('jabber-chat', 1);
 		SendMessage($poster, '»» chat habilitado');
@@ -262,6 +270,10 @@ sub StoreChat {
 
 	if (! $poster->get_pref('jabber-chat')) {
 		SendMessage($poster, "tiene deshabilitado el chat, puedes habilitarlo con el comando !chat");
+		return;
+	}
+	if ($poster->get_pref('jabber-off')) {
+		SendMessage($poster, "tiene deshabilitado recepción de mensajes, puedes habilitarlo con el comando !on");
 		return;
 	}
 	if (length($body) < 3) {
@@ -331,7 +343,7 @@ sub InMessage
 		}
 		return;
 	}
-	if ($body =~ /^!/) {
+	if ($body =~ /^ *!/) {
 		ExecuteCommand($user, $body)
 	} else {
 		StoreChat($user, $body);
