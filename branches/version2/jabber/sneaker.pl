@@ -380,9 +380,8 @@ sub InPresence {
 		if ($type eq 'subscribe' || $type eq 'subscribed') {
 			print "Subscription: $user\n";
 			$Connection->Subscription(to=>$user, type=>"subscribed");
-			$Users->add($user);
+			#$Users->add($user);
 			print "Sent: $user->user:$type\n";
-
 		} elsif ($type eq 'unsubscribe') {
 			$Users->delete($user);
 			JidReject($user);
@@ -397,6 +396,8 @@ sub InPresence {
 			#	print "$active, ";
 			#}
 			#print "\n";
+		} else {
+			print "Presence: received $type from $user\n";
 		}
 	} else {
 		$Users->delete($user);

@@ -266,7 +266,7 @@ sub InPresence
 		if ($type eq 'subscribe' || $type eq 'subscribed') {
 			print "Subscription: $user\n";
 			$Connection->Subscription(to=>$user, type=>"subscribed");
-			$Users->add($user);
+			#$Users->add($user);
 			print "Sent: $user->user:$type\n";
 
 		} elsif ($type eq 'unsubscribe') {
