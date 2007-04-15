@@ -252,7 +252,7 @@ sub ExecuteCommand {
 		$mess .= '»» Amigos conectados: ';
 		while (my $hash = $sth->fetchrow_hashref) {
 			$user = new MnmUser(user=>$hash->{user_login});
-			if($poster->is_friend($user) && $user->is_friend($poster)) {
+			if(!$user->get_pref('jabber-off') && $poster->is_friend($user) && $user->is_friend($poster)) {
 				$mess .= " ".$user->user." ";
 			}
 		}
