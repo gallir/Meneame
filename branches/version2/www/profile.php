@@ -110,8 +110,8 @@ function show_profile() {
 	echo '<input type="text" autocomplete="off" name="url" id="url" value="'.$user->url.'" />';
 	echo '</p>';
 
-	echo '<p><label>'._('mensajero instantáneo público, visible sólo por los amigos').':</label><br/>';
-	echo '<span class="genericformnote">' . _('necesario si enviarás notas al nótame vía Jabber/Google Talk') . '</span><br/>';
+	echo '<p><label>'._('mensajero instantáneo público, invisible para los demás').':</label><br/>';
+	echo '<span class="genericformnote">' . _('necesario si te conectarás vía Jabber/Google Talk') . '</span><br/>';
 	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
 	echo '</p>';
 

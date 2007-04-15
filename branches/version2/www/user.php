@@ -172,7 +172,7 @@ function do_profile() {
 	if($current_user->user_id > 0 && !empty($user->public_info) && (
 			$current_user->user_id == $user->id
 			|| $current_user->user_level=='god' 
-			|| friend_exists($user->id, $current_user->user_id) )) {
+			/*|| friend_exists($user->id, $current_user->user_id)*/ )) {  //friends cannot see the IM address (it was public before)
 		echo '<dt>'._('IM/email').':</dt><dd> '.$user->public_info.'</dd>';
 	}
 
