@@ -75,7 +75,7 @@ if (!$user_id > 0 || !($user->read())) {
 	die;
 }
 
-if ($user->karma < 6) {
+if ($user->karma < 5) {
 	echo 'OK ' . _('el karma es muy bajo, nota no insertada');
 	die;
 }
