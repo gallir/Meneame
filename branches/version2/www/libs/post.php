@@ -131,8 +131,12 @@ class Post {
 
 		}
 
-		echo put_smileys(save_text_to_html($this->content)) . $expand;
+		echo put_smileys($this->put_tooltips(save_text_to_html($this->content))) . $expand;
 		echo "\n";
+	}
+
+	function put_tooltips ($str) {
+		return preg_replace('/^(\s*)@(\w+)/', "$1<a class='tt' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">@$2</a>", $str);
 	}
 
 	function print_edit_form() {
@@ -188,6 +192,8 @@ class Post {
 		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_url'].'img/common/jabber-button01.png" alt="jabber"/></a>';
 		echo '</div>'."\n";
-		echo '<ol class="comments-list" id="newpost"></ol>'."\n";
+		if ($current_user->user_id > 0) {
+			echo '<ol class="comments-list" id="newpost"></ol>'."\n";
+		}
 	}
 }
