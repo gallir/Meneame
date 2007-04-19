@@ -75,7 +75,7 @@ class User {
 		global $db, $current_user;
 		$id = $this->id;
 		if($this->id>0) $where = "user_id = $id";
-		else if(!empty($this->username)) $where = "user_login='".$db->escape($this->username)."'";
+		else if(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
 
 		if(!empty($where) && ($user = $db->get_row("SELECT * FROM users WHERE $where"))) {
 			$this->id =$user->user_id;
@@ -123,6 +123,13 @@ class User {
 		return $db->get_var("select  count(distinct link_blog) from links where link_author=$this->id");
 	}
 
+	function get_api_key() {
+		global $site_key;
+
+		return substr(md5($this->user.$this->date.$this->pass.$site_key), 0, 6);
+	}
+
+
 }
 
 // Following functions are related to users but not done as a class so can be easily used with User and UserAuth
@@ -168,4 +175,4 @@ function friend_teaser($from, $to) {
 		return FRIEND_NO;
 	}
 }
-
+?>

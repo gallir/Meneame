@@ -160,7 +160,6 @@ function do_profile() {
 		if($current_user->user_level=='god') {
 			echo " (" . _('registro'). ": <em>$user->username_register</em>)";
 		}
-
 		echo '</dd>';
 	}
 
@@ -184,15 +183,19 @@ function do_profile() {
 
 	if($current_user->user_level=='god') {
 		echo '<dt>'._('email').':</dt><dd>'.$user->email. ' (' .  _('registro'). ": <em>$user->email_register</em>)</dd>";
-		if(!empty($user->adcode)) {
-			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
-			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
+		if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
+			echo '<dt>'._('Clave API').':</dt><dd id="api-key"><a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a></dd>';
+			if(!empty($user->adcode)) {
+				echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
+				echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
+			}
 		}
 	}
 
 	echo '<dt>'._('karma').':</dt><dd>'.$user->karma.'</dd>';
 	echo '</dl>';
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
+		echo '( ' . $user->get_api_key() . ' )';
 		echo '<div id="karma-details">(<a href="javascript:get_votes(\'get_karma_numbers.php\',\''.$user->id.'\',\'karma-details\',0,\''.$user->username.'\')" title="'._('detalles').'">'._('detalle cálculo karma').'</a>)</div>';
 	}
 	echo '</fieldset>';
