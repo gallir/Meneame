@@ -209,7 +209,7 @@ sub StoreChat {
 		return;
 	}
 
-	if ($poster->karma < 5.5) {
+	if ($poster->karma < 5) {
 		$jabber->SendMessage($poster, "no tienes suficiente karma");
 		return;
 	}
