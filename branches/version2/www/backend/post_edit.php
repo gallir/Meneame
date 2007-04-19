@@ -74,9 +74,9 @@ function save_post ($post_id) {
 		$post->randkey=intval($_POST['key']);
 		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 24 hour) and post_randkey = $post->randkey"));
 		if (!$already_stored) {
-			// Verify that there are a period of 15 minutes between posts.
-			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 2 minute)"))> 0) {
-				echo 'ERROR: ' . _('debe esperar 2 minutos entre notas');
+			// Verify that there are a period of 1 minute between posts.
+			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 1 minute)"))> 0) {
+				echo 'ERROR: ' . _('debe esperar 1 minuto entre notas');
 				die;
 			};
 
