@@ -10,6 +10,8 @@ include('../config.php');
 include_once(mnminclude.'post.php');
 include_once(mnminclude.'user.php');
 
+header('Content-Type: text/plain; charset=UTF-8');
+
 $user = new User;
 $post = new Post;
 if (empty($_REQUEST['user'])) {
@@ -35,13 +37,26 @@ if ($user->get_api_key() != $_REQUEST['key']) {
 
 
 $post = new Post;
+
+if(!empty($_REQUEST['charset']) && ! preg_match('/utf-*8/i', $_REQUEST['charset'])) {
+    $_REQUEST['text'] = @iconv($_REQUEST['charset'], 'UTF-8//IGNORE', $_REQUEST['text']);
+}
+
 $text = clean_text($_REQUEST['text'], 0, false, 300);
+
 if (mb_strlen($text) < 5) {
 	echo 'KO: ' . _('texto muy corto') . $text;
 	die;
 }
 
 $dbtext = $db->escape($text);
+
+// Testinf mode print message an die
+if (isset($_REQUEST['test'])) {
+	echo 'OK: ' . $text; 
+	die;
+}
+
 if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 1 hour) and post_content = '$dbtext'"))> 0) {
 		echo 'KO: ' . _('nota previamente grabada');
 		die;
