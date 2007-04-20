@@ -18,11 +18,11 @@ $user=new User();
 if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	$option = $url_args[1]; // The first element is always a "/"
-	$post_id = $url_args[2];
+	$post_id = intval($url_args[2]);
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);
 	$option = $url_args[0];
-	$post_id = $url_args[1];
+	$post_id = intval($url_args[1]);
 }
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours

@@ -183,12 +183,13 @@ function do_profile() {
 
 	if($current_user->user_level=='god') {
 		echo '<dt>'._('email').':</dt><dd>'.$user->email. ' (' .  _('registro'). ": <em>$user->email_register</em>)</dd>";
-		if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-			echo '<dt>'._('Clave API').':</dt><dd id="api-key"><a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a></dd>';
-			if(!empty($user->adcode)) {
-				echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
-				echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
-			}
+	}
+
+	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
+		echo '<dt>'._('Clave API').':</dt><dd id="api-key"><a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a></dd>';
+		if(!empty($user->adcode)) {
+			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
+			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
 		}
 	}
 

@@ -53,7 +53,8 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 		die;
 };
 
-$post->author=$user->id ;
+$post->author=$user->id;
+$post->src='api';
 $post->content=$text;
 $post->store();
 echo 'OK: ' . _('nota grabada');
