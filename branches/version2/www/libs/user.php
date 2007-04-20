@@ -126,7 +126,7 @@ class User {
 	function get_api_key() {
 		global $site_key;
 
-		return substr(md5($this->user.$this->date.$this->pass.$site_key), 0, 6);
+		return substr(md5($this->user.$this->date.$this->pass.$site_key), 0, 10);
 	}
 
 
