@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_7-log
+-- Server version	5.0.32-Debian_7etch1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -163,12 +163,12 @@ CREATE TABLE `links` (
   `link_content` text collate utf8_spanish_ci NOT NULL,
   `link_tags` text collate utf8_spanish_ci,
   PRIMARY KEY  (`link_id`),
-  KEY `link_author` (`link_author`),
   KEY `link_url` (`link_url`),
   KEY `link_uri` (`link_uri`),
   KEY `link_blog` (`link_blog`),
   KEY `link_status` (`link_status`,`link_published_date`),
   KEY `link_status_2` (`link_status`,`link_date`),
+  KEY `link_author` (`link_author`,`link_date`),
   FULLTEXT KEY `link_url_2` (`link_url`,`link_url_title`,`link_title`,`link_content`,`link_tags`),
   FULLTEXT KEY `link_tags` (`link_tags`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -198,7 +198,7 @@ DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post_id` int(11) unsigned NOT NULL auto_increment,
   `post_randkey` int(11) NOT NULL default '0',
-  `post_src` enum('web','im','mobile','phone') collate utf8_spanish_ci NOT NULL default 'web',
+  `post_src` enum('web','api','im','mobile','phone') character set utf8 NOT NULL default 'web',
   `post_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `post_user_id` int(11) unsigned NOT NULL,
   `post_visible` enum('all','friends') collate utf8_spanish_ci NOT NULL default 'all',
@@ -210,6 +210,18 @@ CREATE TABLE `posts` (
   KEY `post_date` (`post_date`),
   KEY `post_user_id` (`post_user_id`,`post_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Table structure for table `prefs`
+--
+
+DROP TABLE IF EXISTS `prefs`;
+CREATE TABLE `prefs` (
+  `pref_user_id` int(11) NOT NULL,
+  `pref_key` char(16) character set utf8 collate utf8_spanish_ci NOT NULL,
+  `pref_value` char(6) character set utf8 collate utf8_spanish_ci NOT NULL,
+  UNIQUE KEY `pref_user_id` (`pref_user_id`,`pref_key`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sneakers`
@@ -323,4 +335,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-03-11 11:57:45
+-- Dump completed on 2007-04-20 13:15:40
