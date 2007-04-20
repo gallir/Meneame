@@ -45,11 +45,12 @@ sub ReadPosts {
 		$poster = new MnmUser(user=>$username);
 		$timestamp = $date;
 		foreach my $u ($jabber->users()) {
-			if ($u->is_friend($poster) || $u == $poster) {
+			my $username = $u->{user};
+			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
+			if ($u->is_friend($poster) || $u == $poster || $content =~ /^ *\@$username/) {
 				$jabber->SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
 			}
 		}
-		#BroadCast($poster->{user}.": $content -- http://meneame.net/notame/".$poster->{user}." ");
 	}
 }
 
