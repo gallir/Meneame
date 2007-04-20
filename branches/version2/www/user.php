@@ -195,7 +195,6 @@ function do_profile() {
 	echo '<dt>'._('karma').':</dt><dd>'.$user->karma.'</dd>';
 	echo '</dl>';
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-		echo '( ' . $user->get_api_key() . ' )';
 		echo '<div id="karma-details">(<a href="javascript:get_votes(\'get_karma_numbers.php\',\''.$user->id.'\',\'karma-details\',0,\''.$user->username.'\')" title="'._('detalles').'">'._('detalle cálculo karma').'</a>)</div>';
 	}
 	echo '</fieldset>';
