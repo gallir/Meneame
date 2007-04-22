@@ -25,8 +25,13 @@ if (!$user->read()) {
 	die;
 }
 
-if ($user->karma < 5) {
-	echo 'KO: ' . _('el karma es muy bajo');
+if ($user->level == 'disabled') {
+	echo 'KO: ' . _('usuario deshabilitado');
+	die;
+}
+
+if ($user->karma < 6.1 && $user->level == 'normal') {
+	echo 'KO: ' . _('el karma es muy bajo, necesitas 6.1');
 	die;
 }
 
