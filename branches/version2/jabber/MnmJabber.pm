@@ -192,6 +192,8 @@ sub InMessage {
 		}
 		return;
 	}
+	# If the user send a message, allow her to receive messages
+	$user->show('normal');
 	if (exists($self->{CB}->{message})) {
 		&{$self->{CB}->{message}}($user,$body);
 	}
@@ -238,6 +240,7 @@ sub InPresence {
 			$Users->delete($user);
 			#print "Sent: $user->user:$type\n";
 		} elsif ($type eq '') {
+			$user->show($presence->GetShow() || 'normal');
 			$Users->add($user);
 			#print "Presence: ";
 			#foreach my $active ($Users->users()) {

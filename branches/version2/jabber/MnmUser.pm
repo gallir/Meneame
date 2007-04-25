@@ -142,6 +142,15 @@ sub id {
 	return $self->{id};
 }
 
+sub show {
+	my $self = shift;
+	my $show = shift;
+	if ($show) { 
+		$self->{show} = $show;
+	}
+	return $self->{show};
+}
+
 sub jid {
 	my $self = shift;
 	return $self->{jid};

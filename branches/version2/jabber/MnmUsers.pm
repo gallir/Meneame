@@ -24,8 +24,14 @@ sub add {
 	my $self = shift;
 	my $user = shift;
 
-	$self->{'jid'}{$user->{fulljid}} = $user;
-	#print "Adding: " . $user->{fulljid} . "\n";
+	if (!defined($self->{'jid'}{$user->{fulljid}})) {
+		$self->{'jid'}{$user->{fulljid}} = $user;
+		#print "Adding: " . $user->{fulljid} . "\n";
+	} else {
+		# Only change the presence "show"
+		$self->{'jid'}{$user->{fulljid}}->show($user->show);
+		#print "Reusing: " . $user->{fulljid} . "\n";
+	}
 }
 
 sub delete {
@@ -57,7 +63,7 @@ sub users {
 	my $self = shift;
 	my %users;
 	foreach my $user (values %{$self->{'jid'}}) {
-		if (!defined($users{$user->{jid}})) {
+		if ( ($user->show eq 'normal' || $user->show eq 'chat') && !defined($users{$user->{jid}})) {
 			$users{$user->{jid}} = $user;
 		}
 	}
