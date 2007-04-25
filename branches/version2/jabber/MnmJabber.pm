@@ -135,7 +135,7 @@ sub connect {
 		$Connection->RosterGet();
 
 		print "Sending presence to tell world that we are logged in...\n";
-		$Connection->PresenceSend();
+		$Connection->PresenceSend(show=>"chat");
 		print "presence sent...\n";
 
 		while(defined($status = $Connection->Process(5))) { 
@@ -225,34 +225,26 @@ sub InPresence {
 
 	return if !defined($from) || $from eq $self->{myJid};
 
+	#print "Received presence: $from ($type, $status, " . $presence->GetShow(). ")\n";
 	my $user = new MnmUser(jid=>$from);
 	if ( $user->id > 0) {
 		if ($type eq 'subscribe' || $type eq 'subscribed') {
 			print "Subscription: $user\n";
-			$Connection->Subscription(to=>$user, type=>"subscribed");
-			#$Users->add($user);
-			print "Sent: $user->user:$type\n";
+			$Connection->Subscription(to=>$from, type=>"subscribed");
 		} elsif ($type eq 'unsubscribe') {
-			$Users->delete($user);
-			JidReject($user);
-			#print "Sent: $user->user:$type\n";
+			$Users->delete_all($user);
+			$self->JidReject($from);
 		} elsif ($type eq 'unavailable') {
 			$Users->delete($user);
-			#print "Sent: $user->user:$type\n";
 		} elsif ($type eq '') {
 			$user->show($presence->GetShow() || 'normal');
 			$Users->add($user);
-			#print "Presence: ";
-			#foreach my $active ($Users->users()) {
-			#	print "$active, ";
-			#}
-			#print "\n";
 		} else {
 			print "Presence: received $type from $user\n";
 		}
 	} else {
 		$Users->delete($user);
-		$self->JidReject($user);
+		$self->JidReject($from);
 	}
 }
 
@@ -260,7 +252,7 @@ sub JidReject {
 	my $self = shift;
 	(my $jid, my $rs) = split /\//, shift;
 	$Connection->Subscription(to=>$jid, type=>"unsubscribed");
-	print "Sent ---> unsuscribed $jid\n";
+	#print "Sent ---> unsuscribed $jid\n";
 }
 
 sub SendMessage {

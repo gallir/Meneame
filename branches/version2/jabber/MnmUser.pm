@@ -17,13 +17,13 @@ use overload q("") => \&as_string;
 use overload '==' => sub { 
 	my $first = shift; 
 	my $second = shift;
-	return $first->{jid} eq $second->{jid};
+	return $first->jid_clean eq $second->jid_clean;
 };
 
 use overload '!=' => sub { 
 	my $first = shift; 
 	my $second = shift;
-	return $first->{jid} ne $second->{jid};
+	return $first->jid_clean ne $second->jid_clean;
 };
 
 
@@ -39,8 +39,7 @@ sub new {
 
 
 	if (defined($arg{jid})) {
-		(my $jid, my $rs) = split /\//, $arg{jid};
-		$self =  {jid => $jid, fulljid => "$jid/$rs", timestamp => 0, karma => 0};
+		$self =  {jid => $arg{jid}, timestamp => 0, karma => 0};
 		bless $self, $class;
 		$self->read('jid');
 	} elsif (defined($arg{user})){
@@ -66,7 +65,7 @@ sub read {
 	} else {
 		$what = 'user_public_info';
 		$constraint = 'user_public_info is not null AND';
-		$key = MnmDB::escape($self->{jid});
+		$key = MnmDB::escape($self->jid_clean);
 	}
 	my ($sql, $sth, $hash);
 	$sql = qq{SELECT * from users WHERE $constraint $what = $key AND user_level != 'disabled' ORDER BY user_id DESC LIMIT 1};
@@ -149,6 +148,13 @@ sub show {
 		$self->{show} = $show;
 	}
 	return $self->{show};
+}
+
+sub jid_clean {
+	my $self = shift;
+	my $clean_jid;
+	($clean_jid) = $self->{jid} =~ /^([^\/]+)/;
+	return $clean_jid;
 }
 
 sub jid {
