@@ -67,10 +67,9 @@ $globals['category_id']=$link->category;
 $globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
-// If it's a bot or crawler, redirect to the canonical URL to avoid penalisations and overload
-if ($globals['bot'] && $tab_option > 2) {
-	header('Location: ' . $globals['link_permalink']);
-	die;
+// to avoid penalisation
+if ($tab_option != 1 || $link->status == 'discard') {
+	$globals['noindex'] = true;
 }
 
 if ($_POST['process']=='newcomment') {

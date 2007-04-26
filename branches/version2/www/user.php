@@ -60,7 +60,17 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
 array_push($globals['extra_js'], 'jquery-form.pack.js');
-do_header(_('perfil de usuario'). ': ' . $login);
+
+switch ($view) {
+	case 'history':
+	case 'commented':
+	case 'shaken':
+	case 'friends':
+	case 'favorites':
+		$globals['noindex'] = true;
+}
+
+do_header($login);
 
 do_banner_top();
 echo '<div id="container-wide">' . "\n";

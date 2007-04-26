@@ -42,6 +42,7 @@ $search = get_search_clause();
 $cat=check_integer('category');
 
 if($search) {
+	$globals['noindex'] = true;
 	$search_txt = htmlspecialchars($_REQUEST['search']);
 	$from_where = "FROM links WHERE ";
 	if($cat) {

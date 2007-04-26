@@ -45,7 +45,7 @@ $globals['base_sneakme_url'] = 'notame/';
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
 
-$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
+//$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
 $globals['time_enabled_comments'] = 604800; // 7 days
 $globals['time_enabled_votes'] = 345600; // 4 days
 $globals['mysql_persistent'] = true;

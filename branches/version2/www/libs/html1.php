@@ -75,7 +75,12 @@ function do_header($title, $id='home') {
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
 	echo "<title>$title // men&eacute;ame</title>\n";
 	echo '<meta name="generator" content="meneame" />' . "\n";
-	echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
+	if (!empty($globals['noindex'])) {
+		echo '<meta name="robots" content="noindex,follow">' . "\n";
+	}
+	if (!empty($globals['tags'])) {
+		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
+	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
 	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm33.css";</style>' . "\n";
 	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnmcol.css";</style>' . "\n";
