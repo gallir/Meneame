@@ -81,7 +81,20 @@ sub users {
 		}
 	}
 	return values %users;
-	#return values %{$self->{'jid'}};
+}
+
+sub unique_users {
+	my $self = shift;
+	my %users;
+	my %unique;
+
+	foreach my $user (values %{$self->{'jid'}}) {
+		if (!defined($unique{$user->{user}}) && ($user->show eq 'normal' || $user->show eq 'chat')) {
+			$users{$user->{jid}} = $user;
+			$unique{$user->{user}} = 1;
+		}
+	}
+	return values %users;
 }
 
 1;

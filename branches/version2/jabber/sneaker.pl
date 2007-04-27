@@ -133,7 +133,7 @@ sub ExecuteCommand {
 	if (/^!time/) {
 		$jabber->SendMessage($poster, time);
 	} elsif (/^!help/) {
-		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!prefs: muestra las preferencias\n!off: deshabilita la recepción de todos los mensajes\n!on: vuelve a habilitar la recepción de mensajes!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!prefs: muestra las preferencias\n!off: deshabilita la recepción de todos los mensajes\n!on: vuelve a habilitar la recepción de mensajes\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
 	} elsif (/^!prefs/) {
 		my $key;
 		$mess = '»» ';
@@ -159,6 +159,8 @@ sub ExecuteCommand {
 	} elsif (/^!notext/) {
 		$poster->store_prefs('jabber-text', '');
 		$jabber->SendMessage($poster, '»» no mostrará el texto de las noticias');
+	} elsif (/^!whoami/) {
+		$jabber->SendMessage($poster, "»» " . $poster->{user});
 	} elsif (/^!who/) {
 		## List total of connected users
 		my ($ccntu) = $MnmDB::dbh->selectrow_array("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");

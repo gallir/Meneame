@@ -270,5 +270,10 @@ sub users {
 	return $Users->users();
 }
 
+sub unique_users {
+	my $self = shift;
+	return $Users->unique_users();
+}
+
 1;
 

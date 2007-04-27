@@ -47,7 +47,7 @@ sub ReadPosts {
 		foreach my $u ($jabber->users()) {
 			my $username = $u->{user};
 			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
-			if ($u->is_friend($poster) || $u == $poster || $content =~ /^ *\@$username/) {
+			if ($u->is_friend($poster) || $u == $poster || $content =~ /(^|\W)\@$username\W/) {
 				$jabber->SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
 			}
 		}
@@ -60,6 +60,11 @@ sub InMessage {
 	my ($sql, $sth, $array);
 
 	my $id = $poster->id;
+
+	if ($body =~ /^ *!/) {
+		ExecuteCommand($poster, $body);
+		return;
+	}
 
 	if (length($body) < 10) {
 		$jabber->SendMessage($poster, "mensaje muy corto");
@@ -88,5 +93,29 @@ sub InMessage {
 	my $last_id = MnmDB::last_insert_id;
 	$sth = MnmDB::prepare(qq{insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) VALUES (FROM_UNIXTIME(?), ?, ?, ?, ?) });
 	$sth->execute(time, 'post_new', $last_id, $poster->id, 0);
+}
+
+sub ExecuteCommand {
+	my $poster = shift;
+	$_ = shift;
+	my $mess;
+
+	$_ =~ s/^ +//;
+
+	if (/^!help/) {
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)");
+	} elsif (/^!whoami/) {
+		$jabber->SendMessage($poster, "»» " . $poster->{user});
+	} elsif (/^!who/) {
+		$mess .= '»» Amigos conectados: ';
+		foreach my $u ($jabber->unique_users()) {
+			my $username = $u->{user};
+			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
+			if ($u->is_friend($poster) && $poster->is_friend($u)) {
+				$mess .= $u->user." ";
+			}
+		}
+		$jabber->SendMessage($poster, $mess);
+	}
 }
 
