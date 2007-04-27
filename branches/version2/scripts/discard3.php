@@ -33,7 +33,7 @@ foreach ($negatives as $negative) {
 	
 	//if ($negative_users_count > 2 && ($negative_users_count + $negative_annonymous_count) > $positive_count &&
 //		$positive < abs($negative_annonymous) + abs($negative_users) ) {
-	if ($negative_users_count > 2 && $negative_users_count > $positive_users_count &&
+	if ($negative_users_count > 3 && $negative_users_count > $positive_users_count &&
 		$positive_users < /*abs($negative_annonymous) +*/ abs($negative_users) ) {
 			$status = "DISCARD";
 			$db->query("update links set link_status='discard' where link_id = $linkid");
