@@ -80,7 +80,7 @@ class Link {
 					if (substr(strtolower($response), 0, 10) == 'location: ') {
 						/* update $url with where we were redirected to */
 						$answer = split(' ', $response);
-						$new_url = trim($answer[1]);
+						$new_url = clean_input_url($answer[1]);
 					}
 				}
 				if (!empty($new_url) && $new_url != $url) {
@@ -92,7 +92,14 @@ class Link {
 						$new_url = $url . $new_url;
 					}
 					if (!$this->check_url($new_url)) return false;
-					//if (strlen($new_url) < 250) $url = $new_url;
+					// Change the url if we were directed to another host
+					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
+						$url_components = @parse_url($url);
+						if ($url_components['host'] != $new_url_components['host']) {
+							syslog(LOG_NOTICE, "Meneame, change source URL: $url -> $new_url");
+							$url = $new_url;
+						}
+					}
 				}
 				$url_ok = $this->html = @stream_get_contents($stream, 200000);
 				fclose($stream);

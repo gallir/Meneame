@@ -140,17 +140,7 @@ function do_submit1() {
 
 	$edit = false;
 
-	if(($found = $linkres->duplicates($url))) {
-		echo '<p class="error"><strong>'._('noticia repetida!').'</strong></p> ';
-		echo '<p class="error-text">'._('lo sentimos').'</p>';
-		echo '<p class="error-text"><a href="'.$globals['base_url'].'?search='.htmlspecialchars($found).'">'._('haz clic aquí para votar o comentar la noticia que enviaron antes').'</a>';
-		echo '<br style="clear: both;" /><br style="clear: both;" />' . "\n";
-		echo '<form id="genericform">';
-		echo '<input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
-		echo '</form>'. "\n";
-		echo '</div>'. "\n";
-		return;
-	}
+	if(report_dupe($url)) return;
 
 	if(!$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
@@ -165,6 +155,9 @@ function do_submit1() {
 		echo '</div>'. "\n";
 		return;
 	}
+
+	// If the URL has changed, check again is not dupe
+	if($linkres->url != $url && report_dupe($linkres->url)) return;
 
 	$trackback=htmlspecialchars($linkres->trackback);
 	$linkres->randkey = intval($_POST['randkey']);
@@ -209,11 +202,11 @@ function do_submit1() {
 	$linkres->create_blog_entry();
 
 	// avoid auto-promotion (autobombo)
-	$hours = 2;
-	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
+	$minutes = 60;
+	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
-		echo '<p class="error-text">'._('debes esperar'). " $hours " . _(' horas entre cada envío al mismo sitio. Es para evitar "spams" y "autobombo"') . ', ';
+		echo '<p class="error-text">'._('debes esperar'). " $minutes " . _(' minutos entre cada envío al mismo sitio. Es para evitar "spams" y "autobombo"') . ', ';
 		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
@@ -436,6 +429,23 @@ function print_form_submit_error($mess) {
 	}
 	echo '<div class="form-error-submit">&nbsp;&nbsp;'._($mess).'</div>'."\n";
 }
-	
+
+function report_dupe($url) {
+	global $globals;
+
+	$link = new Link;
+	if(($found = $link->duplicates($url))) {
+		echo '<p class="error"><strong>'._('noticia repetida!').'</strong></p> ';
+		echo '<p class="error-text">'._('lo sentimos').'</p>';
+		echo '<p class="error-text"><a href="'.$globals['base_url'].'?search='.htmlspecialchars($found).'">'._('haz clic aquí para votar o comentar la noticia que enviaron antes').'</a>';
+		echo '<br style="clear: both;" /><br style="clear: both;" />' . "\n";
+		echo '<form id="genericform">';
+		echo '<input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
+		echo '</form>'. "\n";
+		echo '</div>'. "\n";
+		return true;
+	}
+	return false;
+}
 
 ?>
