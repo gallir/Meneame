@@ -301,7 +301,6 @@ function do_mnu_rss() {
 		echo '<li>';
 		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("rss categoría").': <strong>'.$globals['category_name']."</strong></a>\n";
 		echo '</li>';
-
 	}
 
 	echo '<li>';
@@ -335,7 +334,14 @@ function do_mnu_rss() {
 	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('rss comentarios (todos)').'</a>';
 	echo '</li>' . "\n";
 
+	if(empty($globals['link_id'])) { // Netvibes. In homepage only.
+		echo '<li class="mnu-rss-external">';
+		echo '<a href="http://www.netvibes.com/subscribe.php?preconfig=7cec38e5bac4adc3608f68e8603bb3c3" title="Añadir a Netvibes"><img src="http://www.netvibes.com/img/add2netvibes.gif" width="91" height="17" border="0" alt="Añadir a Netvibes"/></a>';
+		echo '</li>';
+	}
+
 	echo '</ul>' . "\n";
+
 }
 
 function do_mnu_trackbacks() {

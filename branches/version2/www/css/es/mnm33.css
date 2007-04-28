@@ -697,6 +697,16 @@ border-bottom: 1px solid;
 padding-left: 16px;
 }
 
+li.mnu-rss-external {
+padding-top:7px;
+padding-bottom: 3px;
+text-align: center;
+}
+
+li.mnu-rss-external a {
+padding-left: 0px;
+}
+
 .mnu-trackback li {
 list-style: none;
 text-align: left;

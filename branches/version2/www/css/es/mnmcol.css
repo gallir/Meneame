@@ -361,6 +361,10 @@ color: #FF6400;
 background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 2px;
 }
 
+li.mnu-rss-external a {
+background: none;
+}
+
 /* backgrounds */
 
 .mnu-trackback-entry a {
