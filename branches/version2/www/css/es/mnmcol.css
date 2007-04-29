@@ -345,14 +345,8 @@ color: #FF6400;
 background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;
 }
 
-.mnu-meneria, .mnu-tools, .mnu-trackback {
+.mnu-meneria, .mnu-tools, .mnu-trackback, .mnu-rss {
 color: #FF6400;
-background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
-}
-
-.mnu-rss {
-color: #FF6400;
-border-bottom-color: #FFE2C5;
 background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
 }
 
