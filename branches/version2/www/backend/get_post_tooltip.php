@@ -15,7 +15,7 @@ include_once(mnminclude.'post.php');
 
 
 if (!empty($_GET['id'])) {
-	if (preg_match('/(\w+)-(\d+)/', $_GET['id'], $matches) > 0) {
+	if (preg_match('/([\w\.\-_]+)-(\d+)/', $_GET['id'], $matches) > 0) {
 		$user = $db->escape($matches[1]);
 		$date = $matches[2];
 		$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_date < FROM_UNIXTIME($date) order by post_date desc limit 1");

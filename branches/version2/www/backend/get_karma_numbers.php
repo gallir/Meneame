@@ -12,15 +12,16 @@ if (! $fd) {
 }
 
 if (!empty($_GET['id']) && $current_user->user_level == 'god') {
-	$user = preg_quote(clean_input_string($_GET['id']));
+	$user = intval($_GET['id']);
 } else {
-	$user = preg_quote($current_user->user_login);
+	$user = $current_user->user_id;
 }
 
 $found = false;
 while (($line = fgets($fd))) {
-	if (preg_match("/^$user /i", $line)) {
+	if (preg_match("/^0*$user /i", $line)) {
 		$found = true;
+		$line = preg_replace('/^\d+ /', '', $line);
 		echo "$line<br />\n";
 	} elseif ($found) {
 		break;

@@ -136,7 +136,7 @@ class Post {
 	}
 
 	function put_tooltips ($str) {
-		return preg_replace('/(^|\s*)@(\w+)/u', "$1<a class='tt' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">@$2</a>", $str);
+		return preg_replace('/(^|\s*)@([^\s:,]+)/u', "$1<a class='tt' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">@$2</a>", $str);
 	}
 
 	function print_edit_form() {
