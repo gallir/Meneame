@@ -11,11 +11,17 @@ include_once('../config.php');
 include_once(mnminclude.'post.php');
 header('Content-Type: text/javascript; charset=UTF-8');
 header('Cache-Control: max-age=30');
+
 if (!empty($_GET['user'])) {
 	$user = $db->escape($_GET['user']);
+	$sql = "SELECT post_id FROM users, posts WHERE user_login='$user' and post_user_id=user_id ORDER BY post_date desc limit 1";
+} elseif (!empty($_GET['id']))  {
+	$id = intval($_GET['id']);
+	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id ORDER BY post_date desc limit 1";
 } else {
 	die;
 }
+
 switch ($_GET['size']) {
 	case 'small':
 		$width = 110;
@@ -50,8 +56,6 @@ if (!empty($_GET['border'])) {
 }
 
 
-
-$sql = "SELECT post_id FROM users, posts WHERE user_login='$user' and post_user_id=user_id ORDER BY post_date desc limit 1";
 $id = $db->get_var($sql);
 if(! $id > 0) die;
 $post = new Post;
