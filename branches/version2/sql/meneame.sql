@@ -27,6 +27,22 @@ CREATE TABLE `avatars` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `bans`
+--
+
+DROP TABLE IF EXISTS `bans`;
+CREATE TABLE `bans` (
+  `ban_id` int(10) unsigned NOT NULL auto_increment,
+  `ban_type` enum('email','hostname','ip','words') NOT NULL,
+  `ban_text` char(32) NOT NULL,
+  `ban_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `ban_expire` timestamp NULL default NULL,
+  `ban_comment` char(64) default NULL,
+  PRIMARY KEY  (`ban_id`),
+  UNIQUE KEY `ban_type` (`ban_type`,`ban_text`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `blogs`
 --
 
@@ -335,4 +351,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-04-20 13:15:40
+-- Dump completed on 2007-05-03 15:58:29
