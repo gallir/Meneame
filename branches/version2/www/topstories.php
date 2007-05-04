@@ -19,19 +19,31 @@ $range_values = array(1, 2, 7, 30, 365, 0);
 
 $offset=(get_current_page()-1)*$page_size;
 
-$from = intval($_GET['range']);
-if ($from >= count($range_values) || $from < 0 ) $from = 0;
-
-
-if ($range_values[$from] > 0) {
-	// we use this to allow sql caching
-	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
-	$time_link = "link_published_date > $from_time AND";
+// Select a month and year
+if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE YEAR(link_published_date) = $year AND MONTH(link_published_date) = $month AND link_status = 'published' ORDER BY link_votes DESC ";
+	$time_link = "YEAR(link_published_date) = $year AND MONTH(link_published_date) = $month AND";
 } else {
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE link_status = 'published' ORDER BY link_votes DESC ";
-	$time_link = '';
+	// Select from a start date
+	$from = intval($_GET['range']);
+	if ($from >= count($range_values) || $from < 0 ) $from = 0;
+	if ($range_values[$from] > 0) {
+		// we use this to allow sql caching
+		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
+		$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
+		$time_link = "link_published_date > $from_time AND";
+	} else {
+		// Default
+		$sql = "SELECT link_id, link_votes as votes FROM links WHERE link_status = 'published' ORDER BY link_votes DESC ";
+		$time_link = '';
+	}
 }
+
+$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
+if ($rows == 0) {
+	not_found();
+}
+
 
 do_header(_('más votadas'));
 do_banner_top();
@@ -44,9 +56,6 @@ print_period_tabs();
 
 
 $link = new Link;
-
-//$rows = $db->get_var("SELECT count(*) as votes $from_where $order_by");
-$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
 
 $links = $db->get_results("$sql LIMIT $offset,$page_size");
 if ($links) {
@@ -61,10 +70,17 @@ echo '</div>';
 do_footer();
 
 function print_period_tabs() {
-	global $globals, $current_user, $range_values, $range_names;
+	global $globals, $current_user, $range_values, $range_names, $month, $year;
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
 	echo '<ul class="tabsub-shakeit">'."\n";
+	if ($month> 0 && $year > 0) {
+		echo '<li><a class="tabsub-this" href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
+		$current_range = -1;
+	} elseif(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) {
+		$current_range = 0;
+	}
+
 	for($i=0; $i<count($range_values) && $range_values[$i] < 10; $i++) {
 		if($i == $current_range)  {
 			$active = ' class="tabsub-this"';
