@@ -341,6 +341,20 @@ CREATE TABLE `votes` (
   KEY `vote_type_2` (`vote_type`,`vote_user_id`),
   KEY `vote_type_4` (`vote_type`,`vote_date`,`vote_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci PACK_KEYS=0;
+
+--
+-- Table structure for table `votes_summary`
+--
+
+DROP TABLE IF EXISTS `votes_summary`;
+CREATE TABLE `votes_summary` (
+  `votes_year` smallint(4) NOT NULL,
+  `votes_month` tinyint(2) NOT NULL,
+  `votes_type` char(10) NOT NULL,
+  `votes_maxid` int(11) NOT NULL,
+  `votes_count` int(11) NOT NULL,
+  UNIQUE KEY `votes_year` (`votes_year`,`votes_month`,`votes_type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -351,4 +365,4 @@ CREATE TABLE `votes` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-05-03 15:58:29
+-- Dump completed on 2007-05-04 23:15:35
