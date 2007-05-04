@@ -28,7 +28,8 @@ function do_stats1($string) {
 	global $db;
 	$comment = '<strong>'._('Estadísticas globales'). '</strong>. ';
 	$comment .= _('usuarios validados') . ':&nbsp;' . $db->get_var('select count(*) from users') . ', ';
-	$comment .= _('votos') . ':&nbsp;' . $db->get_var('select count(*) from votes') . ', ';
+	$votes = (int) $db->get_var('select count(*) from votes') + (int) $db->get_var('select sum(votes_count) from votes_summary');
+	$comment .= _('votos') . ':&nbsp;' . $votes . ', ';
 	$comment .= _('artículos') . ':&nbsp;' . $db->get_var('select count(*) from links') . ', ';
 	$comment .= _('publicados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="published"') . ', ';
 	$comment .= _('pendientes') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="queued"') . ', ';
