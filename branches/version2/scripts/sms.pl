@@ -16,10 +16,11 @@ my $date = shift;
 my $text;
 
 while (<>) {
-	Encode::from_to($_, "iso-8859-1", "utf8");
+#	Encode::from_to($_, "iso-8859-1", "utf8");
 	$text .= $_;
 }
 
+$text = decode("iso-8859-1", $text);
 $number =~ s/^\+00//;
 $number =~ s/-\d+$//;
 
