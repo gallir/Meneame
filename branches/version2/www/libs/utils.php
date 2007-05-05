@@ -225,7 +225,11 @@ function get_search_clause($option='') {
 		$_REQUEST['search'] = preg_replace('/\*/', '', trim(substr(strip_tags($_REQUEST['search']), 0, 250))); // to avoid overload in search
 		$words_count = count(explode(" ", $_REQUEST['search']));
 		$words = $db->escape($_REQUEST['search']);
-		if (preg_match('/^tag:/', $words)) {
+		// A joke, just try to find flames :-)
+		if (preg_match('/^givemeflames/i', $words)) {
+			$where = "link_date > date_sub(now(), interval 48 hour) and link_comments > 5 and link_comments > link_votes order by link_comments desc";
+			return $where;
+		} elseif (preg_match('/^tag:/', $words)) {
 			$_REQUEST['tag'] = 'true';
 			$words=preg_replace('/^tag: */', '', $words);
 		} elseif (preg_match('/^date:/', $words) || $words_count == 1) {
