@@ -28,7 +28,8 @@ function do_banner_top () { // top banner
 			@include('ads/adsense-top-user01.inc');
 		} elseif ($globals['referer'] == 'search') {
 			echo '<div class="banner-01">' . "\n";
-			@include('ads/adsense-top-from-search.inc');
+			//@include('ads/adsense-top-from-search.inc');
+			@include('ads/advertising-728.inc');
 		/* 
 		// If the user is authenticated show a small block
 		} elseif ($current_user->user_id > 0) {
@@ -73,7 +74,8 @@ function do_banner_story() { // side banner A
 	if($globals['external_ads'] && $globals['ads']) {
 		if ($globals['referer'] == 'search') {
 			echo '<div class="banner-story-2">' . "\n";
-			@include('ads/adsense-story-from-search.inc');
+			//@include('ads/adsense-story-from-search.inc');
+			@include('ads/advertising-300.inc');
 			echo '</div>' . "\n";
 		} elseif($current_user->user_id == 0) {
 			echo '<div class="banner-story">' . "\n";

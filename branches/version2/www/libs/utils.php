@@ -226,7 +226,7 @@ function get_search_clause($option='') {
 		$words_count = count(explode(" ", $_REQUEST['search']));
 		$words = $db->escape($_REQUEST['search']);
 		// A joke, just try to find flames :-)
-		if (preg_match('/^givemeflames/i', $words)) {
+		if (preg_match('/^givemeflame|^damecarnaza/i', $words)) {
 			$where = "link_date > date_sub(now(), interval 48 hour) and link_comments > 5 and link_comments > link_votes order by link_comments desc";
 			return $where;
 		} elseif (preg_match('/^tag:/', $words)) {
