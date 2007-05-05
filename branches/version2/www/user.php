@@ -11,6 +11,7 @@ include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'user.php');
+include(mnminclude.'post.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
@@ -139,6 +140,12 @@ function do_profile() {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
+	$post = new Post;
+	if ($post->read_last($user->id)) {   
+		echo '<ol class="comments-list" id="last_post">';   
+		$post->print_summary();   
+		echo "</ol>\n";
+	}   
 
 	echo '<fieldset><legend>';
 	echo _('información personal');
@@ -460,6 +467,7 @@ function do_user_tabs($option, $user) {
 		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
 	}
+	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '</a></li>';
 	echo '</ul>';
 
 }
