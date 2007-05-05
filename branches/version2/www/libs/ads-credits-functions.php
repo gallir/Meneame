@@ -22,25 +22,7 @@ function do_banner_top () { // top banner
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		if ($globals['external_user_ads'] && $globals['do_user_ad'] > 0 && ($r=rand(1, 100)) <= $globals['do_user_ad']) {
-		// do_user_ad: 0 = dont show user banner, 1 = show standard, 2 = show all user ads
-			echo '<div class="banner-01">' . "\n";
-			@include('ads/adsense-top-user01.inc');
-		} elseif ($globals['referer'] == 'search') {
-			echo '<div class="banner-01">' . "\n";
-			//@include('ads/adsense-top-from-search.inc');
-			@include('ads/advertising-728.inc');
-		/* 
-		// If the user is authenticated show a small block
-		} elseif ($current_user->user_id > 0) {
-			echo '<div class="banner-block">' . "\n";
-			@include('ads/adsense-top-bloque.inc');
-		*/
-		} else {
-			echo '<div class="banner-01">' . "\n";
-			@include('ads/adsense-top.inc');
-		}
-		echo '<!--Adsense Info: do_user_ad: '.$globals['do_user_ad']." - Random: $r -->\n";
+		@include('ads/top.inc');
 	} else {
 		echo '<div class="banner-01">' . "\n";
 		@include('ads/meneame-01.inc');
@@ -58,9 +40,7 @@ function do_banner_right() {
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads'] && $globals['referer'] == 'search') {
-			echo '<div class="banner-right">' . "\n";
-			@include('ads/adsense-block-right.inc');
-			echo '</div>' . "\n";
+			@include('ads/right.inc');
 	} 
 }
 
@@ -72,16 +52,7 @@ function do_banner_story() { // side banner A
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		if ($globals['referer'] == 'search') {
-			echo '<div class="banner-story-2">' . "\n";
-			//@include('ads/adsense-story-from-search.inc');
-			@include('ads/advertising-300.inc');
-			echo '</div>' . "\n";
-		} elseif($current_user->user_id == 0) {
-			echo '<div class="banner-story">' . "\n";
-			@include('ads/adsense-story-01.inc');
-			echo '</div>' . "\n";
-		}
+		@include('ads/story.inc');
 	}
 }
 
