@@ -11,7 +11,6 @@ include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'user.php');
-include(mnminclude.'post.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
@@ -325,6 +324,7 @@ function do_shaken () {
 			$link->read();
 			$link->print_summary('short');
 		}
+		echo '<br><span class="credits-strip-text"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 	}
 }
 

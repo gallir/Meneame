@@ -16,7 +16,7 @@ $page_size = 20;
 
 $offset=(get_current_page()-1)*$page_size;
 
-$items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos totales'));
+$items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos últimos 4 meses'));
 
 
 // Warn, empty() return true even if sortby=0
