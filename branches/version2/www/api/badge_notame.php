@@ -70,7 +70,7 @@ echo '<div style="overflow: hidden; color: #666; text-align: left; font-family: 
 echo '<img src="http://'.get_server_name().get_avatar_url($post->author, $post->avatar, $avatar).'" width="'.$avatar.'" height="'.$avatar.'" alt="avatar" style="float:left; margin: 0 5px 4px 0;" border: none/>';
 echo '<div>';
 echo '<span style="color: #111;">'.$post->username.'</span><br/>';
-echo text_to_summary($post->content, $text_length);
+echo addslashes(text_to_summary($post->content, $text_length));
 echo '</div></div></div></div></a>';
 echo '\');';
 ?>
