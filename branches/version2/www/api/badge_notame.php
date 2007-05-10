@@ -63,7 +63,7 @@ $post->id=$id;
 $post->read();
 if(!$post->read) die;
 echo 'document.write(\'';
-echo '<a href="http://'.get_server_name().post_get_base_url($user).'" style="text-decoration: none; border: none">';
+echo '<a href="http://'.get_server_name().post_get_base_url($post->username).'" style="text-decoration: none; border: none">';
 echo '<div style="overflow: hidden; background: #fff; width: '.$width.'px; max-height: '.$height.'px; border: 1px solid; border-color: '.$border.'; ">';
 echo '<div style="padding: 4px 4px 4px 4px;">';
 echo '<div style="overflow: hidden; color: #666; text-align: left; font-family: sans-serif; font-size: 8pt; padding: 0; line-height: 1.1">';

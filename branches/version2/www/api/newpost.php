@@ -62,7 +62,7 @@ if (isset($_REQUEST['test'])) {
 	die;
 }
 
-if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 1 hour) and post_content = '$dbtext'"))> 0) {
+if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 12 hour) and post_content = '$dbtext'"))> 0) {
 		echo 'KO: ' . _('nota previamente grabada');
 		die;
 };
