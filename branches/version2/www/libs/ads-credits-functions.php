@@ -26,8 +26,8 @@ function do_banner_top () { // top banner
 	} else {
 		echo '<div class="banner-01">' . "\n";
 		@include('ads/meneame-01.inc');
+		echo '</div>' . "\n";
 	}
-	echo '</div>' . "\n";
 }
 
 
@@ -120,6 +120,34 @@ function do_banner_left_down() {
 //
 	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
 		@include('ads/codigobarras.inc');
+	}
+}
+
+function do_banner_top_lower() { // side banner A
+	global $globals, $current_user;
+//
+// WARNING!
+//
+// IMPORTANT! adapt this section to your contracted banners!!
+//
+	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
+		echo '<div style="margin: 10px 0 10px 80px;">' . "\n";
+		@include('ads/adsense-top-lower.inc');
+		echo '</div>' . "\n";
+	}
+}
+
+function do_pager_ads() { // side banner A
+	global $globals, $current_user;
+//
+// WARNING!
+//
+// IMPORTANT! adapt this section to your contracted banners!!
+//
+	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
+		echo '<div style="margin: 0 0 10px 0">' . "\n";
+		@include('ads/adsense-block-5.inc');
+		echo '</div>' . "\n";
 	}
 }
 

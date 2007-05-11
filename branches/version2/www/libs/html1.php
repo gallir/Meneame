@@ -530,6 +530,8 @@ function do_pages($total, $page_size=25, $margin = true) {
 	} else {
 		echo '<div class="pages">';
 	}
+	// Adsense
+	do_pager_ads();
 
 	if($current==1) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
