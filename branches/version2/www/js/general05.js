@@ -124,10 +124,10 @@ function checkfield (type, form, field)
 	$.get(url, {}, 
 		 function(html) {
 			if (html == 'OK') {
-				$('#'+type+'checkitvalue').html('<span style="color:black">"' + field.value + '": ' + html + '</span>');
+				$('#'+type+'checkitvalue').html('<span style="color:black">"' + encodeURI(field.value) + '": ' + html + '</span>');
 				form.submit.disabled = '';
 			} else {
-				$('#'+type+'checkitvalue').html('<span style="color:red">"' + field.value + '": ' + html + '</span>');
+				$('#'+type+'checkitvalue').html('<span style="color:red">"' + encodeURI(field.value) + '": ' + html + '</span>');
 				form.submit.disabled = 'disabled';
 			}
 			reportAjaxStats('/check_field');
