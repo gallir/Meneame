@@ -28,8 +28,8 @@ if(!empty($_GET['id'])) {
 	// Link comments
 	//
 	$id = intval($_GET['id']);
-	if ($if_modified > 0) 
-		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
+	$mintime = max(time() - $globals['time_enabled_comments'], $if_modified);
+	$from_time = "AND comment_date > FROM_UNIXTIME($mintime)";
 	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_link_id=$id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios') . " [$id]";
@@ -99,12 +99,12 @@ if(!empty($_GET['id'])) {
 	END WARNING ******/
 
 
-do_header($title);
 
 $comment = new Comment;
 $link = new Link;
 $comments = $db->get_col($sql);
 if ($comments) {
+	do_header($title);
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
 		$comment->read();
@@ -125,6 +125,9 @@ if ($comments) {
 		echo "]]></description>\n";
 		echo "	</item>\n\n";
 	}
+} else {
+	header('HTTP/1.1 304 Not Modified');
+	exit();
 }
 
 do_footer();
