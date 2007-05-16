@@ -134,7 +134,7 @@ sub ExecuteCommand {
 	if (/^!time/) {
 		$jabber->SendMessage($poster, time);
 	} elsif (/^!help/) {
-		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!prefs: muestra las preferencias\n!off: deshabilita la recepción de todos los mensajes\n!on: vuelve a habilitar la recepción de mensajes\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)");
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!prefs: muestra las preferencias\n!off: deshabilita la recepción de todos los mensajes\n!on: vuelve a habilitar la recepción de mensajes\n!chat: muestra los mensajes de chat de la fisgona\n!nochat: no muestra los mensajes de chat de la fisgona\n!text: muestra el texto de las noticias\n!notext: no muestra el texto de las noticias\n!who: lista los totales de usuarios y los amigos conectados (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto");
 	} elsif (/^!prefs/) {
 		my $key;
 		$mess = '»» ';
