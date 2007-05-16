@@ -15,6 +15,7 @@
 
 use HTML::Entities;
 use MnmJabber;
+use Commands;
 use strict;
 use utf8;
 
@@ -106,6 +107,9 @@ sub ExecuteCommand {
 		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)");
 	} elsif (/^!whoami/) {
 		$jabber->SendMessage($poster, "»» " . $poster->{user});
+	} elsif (/^!gs/) {
+		my @args = split;
+		$jabber->SendMessage($poster, "»» " . Commands::fon_gs($args[1], $args[2]));
 	} elsif (/^!who/) {
 		$mess .= '»» Amigos conectados: ';
 		foreach my $u ($jabber->unique_users()) {

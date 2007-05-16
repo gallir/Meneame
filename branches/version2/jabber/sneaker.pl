@@ -16,6 +16,7 @@
 use HTML::Entities;
 
 use MnmJabber;
+use Commands;
 use strict;
 use utf8;
 
@@ -161,6 +162,9 @@ sub ExecuteCommand {
 		$jabber->SendMessage($poster, '»» no mostrará el texto de las noticias');
 	} elsif (/^!whoami/) {
 		$jabber->SendMessage($poster, "»» " . $poster->{user});
+	} elsif (/^!gs/) {
+		my @args = split;
+		$jabber->SendMessage($poster, "»» " . Commands::fon_gs($args[1], $args[2]));
 	} elsif (/^!who/) {
 		## List total of connected users
 		my ($ccntu) = $MnmDB::dbh->selectrow_array("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
