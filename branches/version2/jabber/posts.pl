@@ -104,7 +104,7 @@ sub ExecuteCommand {
 	$_ =~ s/^ +//;
 
 	if (/^!help/) {
-		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)");
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto (la etiqueta es opcional)");
 	} elsif (/^!whoami/) {
 		$jabber->SendMessage($poster, "»» " . $poster->{user});
 	} elsif (/^!gs/) {
