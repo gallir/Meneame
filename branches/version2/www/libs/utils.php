@@ -384,7 +384,10 @@ function get_if_modified() {
 }
 
 function print_simpleformat_buttons($textarea_id) {
-	global $globals;
+	global $globals, $current_user;
+
+	if ($current_user->user_karma < 7) return;
+
 	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'*\');" src="'.$globals['base_url'].'img/common/richeditor-bold-01.png" alt="bold" class="rich-edit-key" />';
 	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['base_url'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
 }
