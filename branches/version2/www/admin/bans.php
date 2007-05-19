@@ -15,7 +15,7 @@ $globals['ads'] = false;
 do_header(_('Administración de bans'));
 do_banner_top();
 
-$page_size = 20;
+$page_size = 40;
 $offset=(get_current_page()-1)*$page_size;
 $ban_text_length=64; // Cambiar también en checkfield.php
 $ban_comment_length=64;
@@ -194,30 +194,32 @@ function admin_bans($ban_type) {
 			echo '<input type="submit" name="edit_ban" value="'._('Editar ban').'" />';
 			echo '</td></tr>';
 			break;
-	} 
-	//listado de bans
-	if (empty($_REQUEST["orderby"])) {
-		$_REQUEST["orderby"]="ban_text";
-	} else {
-		$_REQUEST["orderby"] = clean_input_string($_REQUEST["orderby"]);
 	}
-	$where= "WHERE ban_type='".$ban_type."'";
-	if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
-	$bans = $db->get_results("SELECT * FROM `bans` ".$where." ORDER BY `".$_REQUEST["orderby"]."` LIMIT $offset,$page_size");
-	$rows = $db->get_var("SELECT count(*) FROM `bans` ".$where);
-	if ($bans) {
-		foreach($bans as $dbbans) {
-			echo '<tr>';
-			echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$dbbans->ban_id.');" onmouseout="tooltip.clear(event);" >'.$dbbans->ban_text.'</em></td>';
-			echo '<td>'.txt_shorter($dbbans->ban_comment, 30).'</td>';
-			echo '<td>'.$dbbans->ban_date.'</td>';
-			echo '<td>'.$dbbans->ban_expire.'</td>';
-			echo '<td>';
-			echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$dbbans->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.gif" alt="'.('Editar').'" /></a>';
-			echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$dbbans->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
-			echo '</td>';
-
-			echo '</tr>';
+	if (empty($_REQUEST["op"])) {
+	//listado de bans
+		if (empty($_REQUEST["orderby"])) {
+			$_REQUEST["orderby"]="ban_text";
+		} else {
+			$_REQUEST["orderby"] = clean_input_string($_REQUEST["orderby"]);
+		}
+		$where= "WHERE ban_type='".$ban_type."'";
+		if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
+		$bans = $db->get_results("SELECT * FROM `bans` ".$where." ORDER BY `".$_REQUEST["orderby"]."` LIMIT $offset,$page_size");
+		$rows = $db->get_var("SELECT count(*) FROM `bans` ".$where);
+		if ($bans) {
+			foreach($bans as $dbbans) {
+				echo '<tr>';
+				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$dbbans->ban_id.');" onmouseout="tooltip.clear(event);" >'.$dbbans->ban_text.'</em></td>';
+				echo '<td>'.txt_shorter($dbbans->ban_comment, 30).'</td>';
+				echo '<td>'.$dbbans->ban_date.'</td>';
+				echo '<td>'.$dbbans->ban_expire.'</td>';
+				echo '<td>';
+				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$dbbans->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.gif" alt="'.('Editar').'" /></a>';
+				echo '&nbsp;/&nbsp;';
+				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$dbbans->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+				echo '</td>';
+				echo '</tr>';
+			}
 		}
 	}
 	echo '</table>';
