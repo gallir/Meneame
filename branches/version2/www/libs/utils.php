@@ -117,7 +117,7 @@ function check_email($email) {
 	require_once(mnminclude.'ban.php');
 	if (! preg_match('/^[a-zA-Z0-9_\-\.]+(\+[a-zA-Z0-9_\-\.]+)*@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $email)) 
 		return false;
-	if(check_ban($email, 'email') || check_ban_list($email, $globals['forbidden_email_domains'])) return false;
+	if(check_ban(preg_replace('/^.*@/', '', $email), 'email') || check_ban_list($email, $globals['forbidden_email_domains'])) return false;
 	return true;
 }
 

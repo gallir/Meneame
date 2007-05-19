@@ -144,7 +144,7 @@ function do_submit1() {
 
 	if(!$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('URL inválido, incompleto o no permitido').'</p>';
+		echo '<p>'._('URL inválido, incompleto o no permitido'). ' ('. $globals['ban_message'].') </p>';
 
 		// If the domain is banned, decrease user's karma
 		if ($linkres->banned) {

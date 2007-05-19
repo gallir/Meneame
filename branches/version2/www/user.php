@@ -452,7 +452,7 @@ function do_friends() {
 }
 
 function do_user_tabs($option, $user) {
-	global $globals;
+	global $globals, $current_user;
 
 	$active = array();
 	$active[$option] = 'class="tabsub-this"';
@@ -468,6 +468,9 @@ function do_user_tabs($option, $user) {
 		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
 	}
 	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '</a></li>';
+	if ($current_user->user_level=='god') {
+		echo '<li><a href="'.$globals['base_url'].'admin/bans.php">'._('ADMIN'). '</a></li>';
+	}
 	echo '</ul>';
 
 }

@@ -50,8 +50,8 @@ switch ($type) {
 		}
 		require_once(mnminclude.'ban.php');
 
-		if($error=check_ban($name, 'hostname')) {
-			echo _($error);
+		if(check_ban($name, 'hostname')) {
+			echo $globals['ban_message'];
 			return;
 		}
 
@@ -62,13 +62,13 @@ switch ($type) {
 			echo _('nombre demasiado largo');
 			return;
 		}
-		if (!check_email($name)) {
+		if (check_email($name)) {
 			echo _('dirección de correo no válida');
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if($error=check_ban($name, 'email')) {
-			echo _($error);
+		if(check_ban($name, 'email')) {
+			echo $globals['ban_message'];
 			return;
 		}
 		echo "OK";
@@ -79,8 +79,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if($error=check_ban($name, 'ip')) {
-			echo _($error);
+		if(check_ban($name, 'ip')) {
+			echo $globals['ban_message'];
 			return;
 		}
 		echo "OK";
@@ -91,8 +91,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if($error=check_ban($name, 'words')) {
-			echo _($error);
+		if(check_ban($name, 'words')) {
+			echo $globals['ban_message'];
 			return;
 		}
 		echo "OK";
