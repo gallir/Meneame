@@ -67,7 +67,7 @@ function admin_bans($ban_type) {
 
 	if ($_REQUEST["new_bans"]) {
 		require_once(mnminclude.'ban.php');
-		$array = explode(' ', $_REQUEST["ban_text"]);
+		$array = preg_split ("/\s+/", $_REQUEST["ban_text"]);
 		$size = count($array);
 		for($i=0; $i < $size; $i++) {
 			insert_ban($ban_type, $array[$i], $_REQUEST["ban_comment"], $_REQUEST["ban_expire"]);

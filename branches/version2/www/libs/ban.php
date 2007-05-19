@@ -13,25 +13,28 @@ function check_ban($ban_text, $ban_type) {
 	$ban_type = $db->escape($ban_type);
 	
 	switch ($ban_type) {
+		case 'email':
 		case 'hostname':
 			if (! preg_match('/^[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $ban_text)) {
-				$error="No es un dominio correcto";
+				$error=_('No es un dominio correcto');
 				return $error;
 			}
-			$where= " ban_text IN (".subdomains_list($ban_text).") AND ban_type='".$ban_type."' AND (ban_expire IS null OR ban_expire > now()); ";
+			$where= " ban_text IN (".subdomains_list($ban_text).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
 			break;
 		case 'ip':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
 			if (! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}[1-9]\d{0,2}$/s', $ban_text)) {
-				$error="No es una IP válida";
+				$error=_('No es una IP válida');
 				return $error;
 			}
+			$where="ban_text='$ban_text' AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); "; 
 			break;
+		default:
+			return false;
 	}
 
-	if (!$where) { $where="ban_text='".$ban_text."' AND ban_type='".$ban_type."' AND (ban_expire IS null OR ban_expire > now()); "; }
-	$res=$db->get_var("SELECT count(*) FROM bans WHERE ".$where);
-	if ($res>0) return "El ".$ban_type." ya existe";
+	$res=$db->get_var("SELECT count(*) FROM bans WHERE $where");
+	if ($res>0) return $ban_type.' ' . _('ya existe');
 	return false;
 }
 
