@@ -67,6 +67,7 @@ class Link {
 	function get($url) {
 		global $globals;
 		$url=trim($url);
+		$url_components = @parse_url($url);
 		if (!$this->check_url($url)) return false;
 		if(version_compare(phpversion(), '5.0.0') >= 0) {
 			$opts = array(
@@ -95,7 +96,6 @@ class Link {
 					if (!$this->check_url($new_url)) return false;
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
-						$url_components = @parse_url($url);
 						if ($url_components['host'] != $new_url_components['host']) {
 							syslog(LOG_NOTICE, "Meneame, change source URL: $url -> $new_url");
 							$url = $new_url;
@@ -127,12 +127,15 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		preg_match_all('/<(a|meta +http-equiv)[^>]+(href|url)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+		$check_counter = 0;
 		foreach ($matches[0] as $match) {
 			if (!preg_match('/<a.+rel=.*nofollow.*>/', $match)) {
 				preg_match('/(href|url)=[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"]{0,1}/i', $match, $url_a);
 				$embeded_link  = $url_a[2];
-				if (! empty($embeded_link) && ! $checked_links[$embeded_link]) {
-					$checked_links[$embeded_link] = true;
+				$new_url_components = @parse_url($embeded_link);
+				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $checked_links[$new_url_components['host']] != true && $check_counter < 6) {
+					$checked_links[$new_url_components['host']] = true;
+					$check_counter++;
 					if (!$this->check_url($embeded_link, false) && $this->banned) return false;
 				}
 			}
