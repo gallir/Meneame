@@ -15,7 +15,7 @@ function check_ban($ban_text, $ban_type) {
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
-			if (! preg_match('/^[\w_\-\.]+\.[a-zA-Z]{2,4}$/', $ban_text)) {
+			if (! preg_match('/^[\w_\-\.]+\.[\w]{2,4}$/', $ban_text)) {
 				$globals['ban_message'] =_('No es un dominio correcto');
 				return true;
 			}

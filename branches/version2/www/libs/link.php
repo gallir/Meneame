@@ -70,8 +70,8 @@ class Link {
 		if (!$this->check_url($url)) return false;
 		if(version_compare(phpversion(), '5.0.0') >= 0) {
 			$opts = array(
-				'http' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7),
-				'https' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7)
+				'http' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7, 'timeout' => 10),
+				'https' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7, 'timeout' => 10)
 			);
 			$context = stream_context_create($opts);
 			if(($stream = @fopen($url, 'r', false, $context))) {

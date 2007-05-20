@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 function check_stats($string) {
-	global $globals;
+	global $globals, $current_user;
 	if (preg_match('/^!top/', $string)) return do_top($string);
 	if (preg_match('/^!statsu/', $string)) return do_statsu($string);
 	if (preg_match('/^!stats2/', $string)) return do_stats2($string);

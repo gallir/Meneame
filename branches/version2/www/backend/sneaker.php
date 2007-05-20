@@ -193,7 +193,7 @@ function get_chat($time) {
 		$who = $event->chat_user;
 		$timestamp = $event->chat_time;
 		$key = $timestamp . ':chat:'.$uid;
-		$comment = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', $event->chat_text));
+		$comment = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text)));
 		$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 		if($timestamp > $last_timestamp) $last_timestamp = $timestamp;
 	}
@@ -242,7 +242,7 @@ function get_votes($dbtime) {
 			$who = get_negative_vote($event->vote_value);
 			// Show user_login if she voted more than N negatives in one minute
 			if($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
-				$negatives_last_minute = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$uid and vote_date > date_sub(now(), interval 1 minute) and vote_value < 0");
+				$negatives_last_minute = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$uid and vote_date > date_sub(now(), interval 30 second) and vote_value < 0");
 				if($negatives_last_minute > 2 ) {
 					$who .= "<br>($user)";
 				}
