@@ -86,9 +86,27 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 </p>
 </li>
 
+<li>
+<h4>¿Qué es el nótame?</h4>
+<p>Una herramienta de comunicación entre los usuarios de menéame y se organiza en pequeños apuntes, como los mini-post de un blog colectivo --de todos los usuarios de nótame-- y a la vez individual.  Puedes usarlo para cuestiones relacionadas con menéame o para explicar lo que quieras.  Puedes escribir desde el web, mensajería instantánea o el movil.  Encontrarás <a href="http://meneame.wikispaces.com/N%C3%B3tame">más detalles en el wiki</a>.</p>
+</p>
+</li>
+
+<li>
+<h4>¿Qué es la fisgona?</h4>
+<p>Muestra lo que sucede en menéame en tiempo real.  Si eres usuario registrado también puedes usarla para chatear.</p>
+</p>
+</li>
+
+<li>
+<h4>¿No es machista, eso de llamarle «fisgona»?</h4>
+<p>Primero se llamó «el fisgón» (y «¡el jefe!» la pantalla de «la fisgona» para usar en el trabajo). Mujeres opinaban que era machista siempre poner nombres femeninos y les hicimos caso: cambiamos a «la fisgona» y «¡la jefa!».  Ahora hay quien piensa que esto es también machista.  Si no tiene solución ¿para qué solucionarlo?</p>
+</p>
+</li>
+
 
 <li><h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
-<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://weblog.bitassa.net">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a> y <a href="http://mueveme.net/">mueveme.net</a>.
+<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a> y <a href="http://mueveme.net/">mueveme.net</a>.
 </p>
 </li>
 
@@ -99,16 +117,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 </li>
 
 <li>
-<h4>¿Habéis puesto en marcha tan rápido para eliminar la competencia?</h4>
-<p>Que manías, que forma de ver el mundo como un <em>mercado</em> donde uno <em>tiene</em> que ganar a otro. Aunque haya competencia, no competimos <em>contra</em> nadie. Tampoco hay ninguna empresa por detrás de esta iniciativa, sólo tres personas.</p>
-
-<p>Ojalá a toda la "competencia" le vaya bien, hay buena gente, con ideas interesantes y muchas ganas. No pasará nada si el menéame desaparece, sólo habremos perdido horas de trabajo y demasiado poco dinero, pero el código quedará por si alguien lo mejora.</p>
-
-<p>En realidad, es un secreto, se trata de una perversión mental de Ricardo Galli y de exactamente dos incautos más que se han creído que esto es divertido. Aquí se <a href="http://mnm.uib.es/gallir/posts/2005/12/07/534/">relata exactamente</a> el momento que se <em>publicó</em> y era solamente para que <a href="http://llistes.bulma.net/pipermail/bulmailing/Week-of-Mon-20051205/074168.html">lo prueben sus amigotes de Bulma</a> porque el programador ya estaba agobiado de la nula entropía que ya duraba diez días. Lo demás son eventos que nos han sorprendido.</p>
-</li>
-
-<li>
-<h4>¿Entonces por qué es tan similar a Digg?</h4>
+<h4>¿Por qué es tan similar a Digg?</h4>
 
 <p>Porque era un buen punto de partida, la interfaz e interacción con el usuario era simple y efectiva. ¿Porqué reinventar la rueda desde cero si ya está bastante redonda?.</p>
 
@@ -157,7 +166,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li>
 <h4>¿Dónde podemos seguir la evolución de los cambios al menéame?</h4>
-<p>En la <a href="http://mnm.uib.es/gallir/posts/category/meneame/">sección menéame</a> del blog de Ricardo Galli.</p>
+<p>En <a href="http://svn.meneame.net">el SVN</a>.</p>
 </li>
 
 <li>
@@ -165,7 +174,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <p><strong>Nunca</strong>. Un programa nunca está acabado. A nosotros nos está resultando divertido hacer estos programas que nos ayuda a resolver un problema inherente de los blogs personales, y al mismo tiempo pasarnos pipas implementando chorradas que no tienen sentido o son impensables en la actual web donde predomina el <em>eBusiness</em>.
 </p>
 
-<p>Las funcionalidad básicas están acabadas, faltan detalles, como las características que <a href="http://mnm.uib.es/gallir/meneame">solicitan los usuarios</a>.</p>
+<p>Las funcionalidad básicas están acabadas, faltan detalles, como las características que <a href="http://meneame.wikispaces.com/Sugerencias" title="en el wiki">solicitan los usuarios</a>.</p>
 
 </li>
 
@@ -176,12 +185,12 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 </li>
 
 <li>
-<h4>Finalmente, ¿qué es esa ridícula asociación entre menéame y un elefante?</h4>
+<h4>¿Porqué una elefanta en el logo?</h4>
 <pre>
     Un elefante se <strike>balanceaba</strike> meneaba
     sobre la tela de una araña
     Como veía que no se caía
-    fue a buscar otro elefante. 
+    fue a buscar otro elefante.
 
     Dos elefantes se meneaban
     sobre la tela de una araña
