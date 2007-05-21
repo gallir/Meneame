@@ -57,6 +57,7 @@ $globals['min_karma_for_negatives'] = 5.5;
 //$globals['min_karma_for_links'] = 4.9;
 //$globals['min_karma_for_comments'] = 4.9;
 //$globals['min_karma_for_sneaker'] = 5.2;
+$globals['min_karma_for_comment_votes'] = 5.5;
 // Ensure you have a avar dir writeable by the web server
 $globals['avatars_dir'] = 'avatars-local';
 $globals['avatars_max_size'] = 200000;

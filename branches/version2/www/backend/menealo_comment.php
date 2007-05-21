@@ -27,6 +27,10 @@ if (empty($_REQUEST['value']) || ! is_numeric($_REQUEST['value'])) {
 	error(_('Falta valor del voto'));
 }
 
+if ($current_user->user_karma < $globals['min_karma_for_comment_votes']) {
+	error(_('Karma bajo para votar comentarios'));
+}
+
 $value = intval($_REQUEST['value']);
 
 if ($value != -1 && $value != 1) {
