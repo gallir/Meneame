@@ -185,7 +185,7 @@ function save_text_to_html($string) {
 }
 
 function text_to_summary($string, $length=50) {
-	return text_to_html(mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1 ...', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length+5), false);
+	return text_to_html(preg_replace('/&\w+$/', '', mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1 ...', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length+5)), false);
 }
 
 function text_to_html($string, $do_links = true) {

@@ -59,7 +59,7 @@ if ($posts) {
 	foreach($posts as $post_id) {
 		$post->id=$post_id;
 		$post->read();
-		$title = text_to_summary($post->content, 40);
+		$title = strip_tags(text_to_summary($post->content, 40));
 		$title = $post->username.': ' . htmlentities2unicodeentities($title);
 		$content = put_smileys(save_text_to_html($post->content));
 		echo "	<item>\n";
