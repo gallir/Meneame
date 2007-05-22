@@ -120,13 +120,13 @@ class Ban {
 		global $db;
 		$ban_id=intval($this->ban_id);
 		$ban_type=$db->escape($this->ban_type);
-		$ban_text=$db->escape($this->ban_text);
+		$ban_text=$db->escape(clean_text($this->ban_text));
 		$ban_comment=$db->escape(clean_text($this->ban_comment));
 
 		if($this->ban_id==0) {
 			if ($this->ban_expire!="UNDEFINED") { 
 				//$expire=", NOW() + INTERVAL ".$this->ban_expire." DAY ";
-				 $expire=", FROM_UNIXTIME(".$this->ban_expire.") ";
+				 $expire=", FROM_UNIXTIME(".intval($this->ban_expire).") ";
 			}
 			$sql="INSERT INTO bans (ban_type, ban_text, ban_comment ";
 			if ($expire) { $sql .=", ban_expire ";}

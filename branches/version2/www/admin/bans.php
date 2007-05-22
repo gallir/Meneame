@@ -200,7 +200,7 @@ function admin_bans($ban_type) {
 		if (empty($_REQUEST["orderby"])) {
 			$_REQUEST["orderby"]="ban_text";
 		} else {
-			$_REQUEST["orderby"] = clean_input_string($_REQUEST["orderby"]);
+			$_REQUEST["orderby"] = preg_replace('/[^a-z_]/i', '', $_REQUEST["orderby"]);
 		}
 		$where= "WHERE ban_type='".$ban_type."'";
 		if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
@@ -209,8 +209,8 @@ function admin_bans($ban_type) {
 		if ($bans) {
 			foreach($bans as $dbbans) {
 				echo '<tr>';
-				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$dbbans->ban_id.');" onmouseout="tooltip.clear(event);" >'.$dbbans->ban_text.'</em></td>';
-				echo '<td>'.txt_shorter($dbbans->ban_comment, 30).'</td>';
+				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$dbbans->ban_id.');" onmouseout="tooltip.clear(event);" >'.clean_text($dbbans->ban_text).'</em></td>';
+				echo '<td>'.clean_text(txt_shorter($dbbans->ban_comment, 30)).'</td>';
 				echo '<td>'.$dbbans->ban_date.'</td>';
 				echo '<td>'.$dbbans->ban_expire.'</td>';
 				echo '<td>';
