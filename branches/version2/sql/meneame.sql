@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS `bans`;
 CREATE TABLE `bans` (
   `ban_id` int(10) unsigned NOT NULL auto_increment,
   `ban_type` enum('email','hostname','ip','words') NOT NULL,
-  `ban_text` char(32) NOT NULL,
+  `ban_text` char(64) NOT NULL,
   `ban_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `ban_expire` timestamp NULL default NULL,
   `ban_comment` char(64) default NULL,
@@ -365,4 +365,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-05-04 23:15:35
+-- Dump completed on 2007-05-23  0:33:45
