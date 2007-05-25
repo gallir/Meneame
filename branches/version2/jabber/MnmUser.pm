@@ -173,15 +173,19 @@ sub karma {
 }
 
 
-sub is_friend {
+sub friend {
 	my $self = shift;
 	my $user = shift;
 	my ($sql, $sth);
 	my $from = $self->{id};
 	my $to = $user->{id};
-	$sql = qq{SELECT count(*) FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to};
+	$sql = qq{SELECT friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to};
 	my $res = MnmDB::row_array($sql);
-	return $res->[0];
+	if ($res) {
+		return $res->[0];
+	} else {
+		return 0;
+	}
 }
 
 sub as_string {

@@ -48,7 +48,7 @@ sub ReadPosts {
 		foreach my $u ($jabber->users()) {
 			my $username = $u->{user};
 			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
-			if ($u->is_friend($poster) || $u == $poster || $content =~ /(^|\W)\@$username\W/) {
+			if ($u->friend($poster) > 0 || $u == $poster || $content =~ /(^|\W)\@$username\W/) {
 				$jabber->SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
 			}
 		}
@@ -115,7 +115,7 @@ sub ExecuteCommand {
 		foreach my $u ($jabber->unique_users()) {
 			my $username = $u->{user};
 			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
-			if ($u->is_friend($poster) && $poster->is_friend($u)) {
+			if ($u->friend($poster) > 0 && $poster->friend($u) > 0) {
 				$mess .= $u->user." ";
 			}
 		}
