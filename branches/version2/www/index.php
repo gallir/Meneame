@@ -76,7 +76,7 @@ if($search) {
 		switch ($globals['meta']) {
 			case '_friends':
 				$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
-				$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author";
+				$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
 				print_index_tabs(1); // Friends
 			break;
 			default:

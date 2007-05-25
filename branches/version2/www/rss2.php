@@ -51,8 +51,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' friends
 	/////
 	$user_id = intval($_REQUEST['friends_of']);
-	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and link_status != 'discard' ORDER BY link_date DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and link_status != 'discard' ORDER BY link_date DESC limit 1");
+	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: amigos de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
