@@ -135,6 +135,7 @@ class User {
 // Following functions are related to users but not done as a class so can be easily used with User and UserAuth
 define('FRIEND_YES', '<img src="'.$globals['base_url'].'img/common/icon_heart.gif" alt="del" width="16" height="16" title="'._('amigo').'"/>');
 define('FRIEND_NO', '<img src="'.$globals['base_url'].'img/common/icon_heart_no.gif" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
+define('FRIEND_IGNORE', '<img src="'.$globals['base_url'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
 
 
 function friend_exists($from, $to) {
@@ -157,22 +158,29 @@ function friend_delete($from, $to) {
 
 function friend_add_delete($from, $to) {
 	if ($from == $to) return '';
-	if(friend_exists($from, $to)) {
-		friend_delete($from, $to);
-		return FRIEND_NO;
-	} else {
-		friend_insert($from, $to);
-		return FRIEND_YES;
+	switch (friend_exists($from, $to)) {
+		case 0:
+			friend_insert($from, $to);
+			return FRIEND_YES;
+		case 1:
+			friend_insert($from, $to, -1);
+			return FRIEND_IGNORE;
+		case -1:
+			friend_delete($from, $to);
+			return FRIEND_NO;
 	}
 }
 
 
 function friend_teaser($from, $to) {
 	if ($from == $to) return '';
-	if (friend_exists($from, $to)) {
-		return FRIEND_YES;
-	} else {
-		return FRIEND_NO;
+	switch (friend_exists($from, $to)) {
+		case 0:
+			return FRIEND_NO;
+		case 1:
+			return FRIEND_YES;
+		case -1:
+			return FRIEND_IGNORE;
 	}
 }
 ?>

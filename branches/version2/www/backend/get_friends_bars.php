@@ -28,8 +28,13 @@ $prefered_page_size = 20;
 $prefered_offset=($prefered_page-1)*$prefered_page_size;
 switch ($prefered_type) {
 	case 'from':
-		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id");
-		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		if ($prefered_id != $current_user->user_id) {
+			$friend_value = 'AND friend_value > 0';
+		} else {
+			$friend_value = '';
+		}
+		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
+		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 	case 'to':
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_to=$prefered_id AND friend_from !=0");

@@ -8,6 +8,7 @@
 
 include('../config.php');
 include(mnminclude.'link.php');
+include(mnminclude.'user.php');
 include(mnminclude.'sneak.php');
 
 $foo_link = new Link;
@@ -177,6 +178,11 @@ function get_chat($time) {
 		$type = 'chat';
 		$status = _('chat');
 		if ($uid != $current_user->user_id) {
+			$friendship = friend_exists($current_user->user_id, $uid);
+
+			// Ignore
+			if ($friendship < 0) continue;
+
 			if ($event->chat_room == 'friends') {
 				// Check the user is a friend of the sender
 				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $uid and friend_to = $current_user->user_id") > 0) {
@@ -185,8 +191,7 @@ function get_chat($time) {
 				$status = _('amigo');
 			}
 			// Check the sender is a friend of the receiver
-			if (!empty($_GET['friends'])) {
-				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $uid") > 0)
+			if (!empty($_GET['friends']) && $friendship <= 0) {
 					continue;
 			}
 		}
