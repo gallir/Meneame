@@ -135,7 +135,12 @@ function check_chat() {
 
 		if (preg_match('/^!/', $comment)) {
 			require_once('sneaker-stats.php');
-			$comment = check_stats($comment);
+			if(!($comment = check_stats($comment))) {
+				send_chat_warn(_('comando no reconocido'));
+			} else {
+				send_string($comment);
+			}
+			return;
 		} else {
 			$comment = htmlspecialchars($comment);
 			$comment = preg_replace('/(^|[\s\.,¿])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
@@ -155,17 +160,21 @@ function check_chat() {
 	}
 }
 
-function send_chat_warn($mess) {
+function send_string($mess) {
 	global $current_user, $now, $globals, $events;
 
-	$comment = text_to_html(_('*Aviso*: ').$mess);
 	$uid = $current_user->user_id;
 	$who = $current_user->user_login;
 	$timestamp = $now;
 	$key = $timestamp . ':chat:'.$id;
 	$type = 'chat';
 	$status = _('chat');
-	$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+	$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes(text_to_html($mess)).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+}
+
+function send_chat_warn($mess) {
+	$mess = '<strong>'._('Aviso').'</strong>: '.$mess;
+	send_string($mess);
 }
 
 function get_chat($time) {

@@ -21,7 +21,8 @@ function check_stats($string) {
 	if (preg_match('/^!promote/', $string)) return 'http://' . get_server_name().$globals['base_url']. 'archives/promote.html';
 	if (preg_match('/^!hoygan/', $string)) return '¡HOYGAN! BISITEN http://' . get_server_name().$globals['base_url']. 'sneak.php?hoygan=1 GRASIAS DE HANTEMANO';
 	if (preg_match('/^!webstats/', $string)) return 'http://' . get_server_name().'/statcounter, http://' . get_server_name().'/webalizer/';
-	return '';
+	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
+	return false;
 }
 
 function do_stats1($string) {
@@ -57,7 +58,7 @@ function do_stats3($string) {
 	global $db;
 	$comment = '<strong>'._('Estadísticas última hora'). '</strong>. ';
 	$comment .= _('votos') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="links" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('votos comentarios') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="comments" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
+	$comment .= _('votos comentarios') . ':&nbsp;' . (int) $db->get_var('select count(*) from votes where vote_type="comments" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
 	$comment .= _('artículos') . ':&nbsp;' . $db->get_var('select count(*) from links where link_date > date_sub(now(), interval 1 hour)') . ', ';
 	$comment .= _('publicados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="published" and link_published_date > date_sub(now(), interval 1 hour)') . ', ';
 	$comment .= _('descartados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_date > date_sub(now(), interval 1 hour)') . ', ';
@@ -101,8 +102,8 @@ function do_statsu($string) {
 function do_top($string) {
 	require_once(mnminclude.'link.php');
 	global $db, $globals;
-	$rank = "*Top* ";
-	$sql = "select link_id from links where link_date > date_sub(now(), interval 4 day) and link_status='queued' order by link_karma desc limit 2";
+	$rank = "<strong>Top</strong> ";
+	$sql = "select link_id from links where link_date > date_sub(now(), interval 4 day) and link_status='queued' order by link_karma desc limit 3";
 	$result = $db->get_results($sql);
 	foreach ($result as $linkid) {
 		$link = new Link();
@@ -124,6 +125,29 @@ function do_ojo($string) {
 	require_once('./ojo.php');
 	$i = rand(0, count($ojo_messages) -1);
 	$comment = '<i>'._('Daría un ojo por saber cuánto es de leyenda y cuanto de verdad '). ' ' . text_to_html($ojo_messages[$i]) . '. <b>En serio.</b></i>';
+	return $comment;
+}
+
+function do_ignore($string) {
+	global $db, $current_user;
+	require_once(mnminclude.'user.php');
+	$array = preg_split('/\s+/', $string);
+	if (count($array) >= 2) {
+		$user_login = $db->escape($array[1]);
+		$user_id = $db->get_var("select user_id from users where user_login='$user_login'");
+		if ($user_id > 0 && $user_id != $current_user->user_id) {
+			friend_insert($current_user->user_id, $user_id, -1);
+			$comment = _('Usuario') . ' <em>' . htmlentities($array[1]). '</em> ' . _('agregado a la lista de ignorados');
+		}
+	} else {
+		$users = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from=$current_user->user_id and friend_value < 0 and user_id = friend_to order by user_login asc");
+		$comment = '<strong>' . _('Usuarios ignorados') . '</strong>: ';
+		if ($users) {
+			foreach ($users as $user) {
+				$comment .= $user . ' ';
+			}
+		}
+	}
 	return $comment;
 }
 
