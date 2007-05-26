@@ -111,15 +111,13 @@ sub ReadEvents {
 	$sql = qq{select * from chats where chat_time > $chat_timestamp order by chat_time asc limit 20};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
-	my $friendship;
 	while ($hash = $sth->fetchrow_hashref) {
 		$content = MnmDB::utf8($hash->{chat_text});
 		$content = MnmDB::clean_pseudotags(decode_entities($content));
 		$poster = new MnmUser(user=>$hash->{chat_user});
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($jabber->users()) {
-			$friendship = $poster->friend($u);
-			if (!$friendship >= 0 && !$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster && ($hash->{chat_room} eq 'all' || $friendship > 0)) {
+			if (!$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster && $u->friend($poster) >= 0 && ($hash->{chat_room} eq 'all' || $poster->friend($u) > 0 )) {
 				$jabber->SendMessage($u, "$poster->{user}: $content");
 			}
 		}

@@ -181,7 +181,7 @@ sub friend {
 	my $to = $user->{id};
 	$sql = qq{SELECT friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to};
 	my $res = MnmDB::row_array($sql);
-	if ($res) {
+	if ($res->[0]) {
 		return $res->[0];
 	} else {
 		return 0;
