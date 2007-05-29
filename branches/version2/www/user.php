@@ -459,7 +459,7 @@ function do_user_tabs($option, $user) {
 
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
-	echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;'.FRIEND_YES. '&nbsp;</a></li>';
+	echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
 	echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 	if (! $globals['bot']) {
 		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
