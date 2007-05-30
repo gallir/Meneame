@@ -57,7 +57,7 @@ foreach ($types as $type) {
 	if ($count > 0 && $maxid > 0) {
 		echo "Maxid/count: $maxid, $count\n";
 		$db->query("REPLACE INTO votes_summary (votes_year, votes_month, votes_type, votes_maxid, votes_count) VALUES ($year, $month, '$type', $maxid, $total_count)");
-		$db->query("delete LOW_PRIORITY from votes where vote_type='$type' and vote_date < '$maxdate' and vote_id <= $maxid");
+		//$db->query("delete LOW_PRIORITY from votes where vote_type='$type' and vote_date < '$maxdate' and vote_id <= $maxid");
 		$absolute_maxid = max($absolute_maxid, $maxid);
 		if ($previous_maxid > 0 || $last_month_maxid > 0) {
 			if ($absolute_previous_maxid == 0) $absolute_previous_maxid = max($previous_maxid, $last_month_maxid);
@@ -68,7 +68,6 @@ foreach ($types as $type) {
 	}
 	flush();
 }
-/*
 
 if (!$absolute_maxid > 0) {
 	echo "Nothing to delete, bye\n";
@@ -85,6 +84,5 @@ if ($absolute_previous_maxid > 0) {
 	}
 }
 $db->query("delete LOW_PRIORITY from votes where vote_id <= $absolute_maxid");
-*/
 
 ?>

@@ -5,7 +5,7 @@ include(mnminclude.'user.php');
 header("Content-Type: text/plain");
 
 // Delete old logs
-$db->query("delete from logs where log_date < date_sub(now(), interval 7 day)");
+$db->query("delete from logs where log_date < date_sub(now(), interval 15 day)");
 
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_validated_date is null");
@@ -19,7 +19,7 @@ $karma_base=6;
 $min_karma=1;
 $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
-$history_from = "date_sub($now, interval 30 hour)";
+$history_from = "date_sub($now, interval 36 hour)";
 $ignored_nonpublished = "date_sub($now, interval 18 hour)";
 $points_received = 16;
 $points_given = 12;
@@ -109,7 +109,7 @@ foreach($users as $dbuser) {
 		$positive_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0"));
 		$negative_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id"));
 
-		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*3)/$max_positive_received), $points_received), -$points_received);
+		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*4)/$max_positive_received), $points_received), -$points_received);
 		if ($karma1 != 0) {
 			printf ("%07d ", $user->id);
 			print "Votes received:  karma received: $positive_votes_received, negative: $negative_votes_received, karma1: $karma1\n";
@@ -127,11 +127,11 @@ foreach($users as $dbuser) {
 
 		$nopublished_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $history_from and vote_date < $ignored_nonpublished and vote_value > 0 AND link_id = vote_link_id AND link_status != 'published'");
 
-		$karma2 = min($points_given, $points_given * $published_points/$max_published_given - $points_given * ($nopublished_given/$max_nopublished_given) / 20);
+		$karma2 = min($points_given, $points_given * $published_points/$max_published_given - $points_given * ($nopublished_given/$max_nopublished_given) / 10);
 		// Limit karma to users that does not send any link
 		// or "moderated" karma whores
 		if ($sent_links == 0 || $published_given > $nopublished_given * 1.5) {
-			$karma2 = min($karma2, $points_given * 0.6);
+			$karma2 = min($karma2, $points_given * 0.3);
 		}
 
 		// Bot and karmawhoring warning!!!

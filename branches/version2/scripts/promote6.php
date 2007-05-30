@@ -47,17 +47,17 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.85;
+$min_karma_coef = 0.9;
 define(MAX, 1.20);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
-define (PUB_MAX, 55);
+define (PUB_MAX, 50);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
-$pub_estimation = intval(max(min($links_queue * 0.18, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * 0.12, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
@@ -144,7 +144,7 @@ if ($links) {
 
 
 		// Aged karma
-		$diff = max(0, $now - ($link->date + 18*3600)); // 18 hours without decreasing
+		$diff = max(0, $now - ($link->date + 12*3600)); // 12 hours without decreasing
 		$oldd = 1 - $diff/(3600*144);
 		$oldd = max(0.5, $oldd);
 		$oldd = min(1, $oldd);
