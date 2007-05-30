@@ -180,7 +180,7 @@ if ($links) {
 		echo '<p>'.$content.'</p>';
 
 		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-			echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width=200, height=16 /></p>';
+			echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></p>';
 		}
 		
 		if ($link->status == 'published' || $globals['show_original_link']) {

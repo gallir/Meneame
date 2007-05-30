@@ -59,6 +59,11 @@ function subdomains_list($domain) {
 function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire="UNDEFINED", $ban_id=0) {
 	global $globals;
 
+	if (strlen($ban_text) < 4) {
+		recover_error(_('Texto del ban muy corto'));
+		return;
+	}
+
 	$ban=new Ban();
 	$ban->ban_type=$ban_type;
 	$ban->ban_text=$ban_text;

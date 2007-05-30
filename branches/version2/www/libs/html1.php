@@ -76,7 +76,7 @@ function do_header($title, $id='home') {
 	echo "<title>$title // men&eacute;ame</title>\n";
 	echo '<meta name="generator" content="meneame" />' . "\n";
 	if (!empty($globals['noindex'])) {
-		echo '<meta name="robots" content="noindex,follow">' . "\n";
+		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
 	}
 	if (!empty($globals['tags'])) {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
