@@ -56,7 +56,7 @@ class Link {
 			return false;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($url_components[host], 'hostname') || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
+		if(check_ban($url_components[host], 'hostname', false) || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
 			syslog(LOG_NOTICE, "Meneame, server name is banned: $url");
 			$this->banned = true;
 			return false;

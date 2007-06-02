@@ -241,24 +241,20 @@ function do_submit1() {
 	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
 
-	echo '<fieldset><legend><span class="sign">'._('info de la noticia').'</span></legend>'."\n";
-	echo '<p class="genericformtxt"><label for="url_title" accesskey="1">'._('título de la página').': </label> '."\n";
-	echo $linkres->url_title;
-	if($linkres->type() === 'blog') {
-		echo '<br /> ('._('parece ser un blog').')</p>'."\n";
-	} else {
-		echo "</p>\n";
-	}
+	echo '<fieldset><legend><span class="sign">'._('título de la noticia').'</span></legend>'."\n";
+	echo '<p class="genericformtxt"><strong>';
+	echo mb_substr($linkres->url_title, 0, 200);
+	echo '</strong></p> '."\n";
 	echo '</fieldset>'."\n";
 
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
-	echo '<label for="title" accesskey="2">'._('título de la noticia').':</label>'."\n";
+	echo '<label for="title" accesskey="1">'._('título de la noticia').':</label>'."\n";
 	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
 
 	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" /></p>'."\n";
 
-	echo '<label for="tags" accesskey="4">'._('etiquetas').':</label>'."\n";
+	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
 	echo '<p><span class="genericformnote"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 

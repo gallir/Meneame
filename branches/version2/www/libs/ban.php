@@ -6,16 +6,18 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function check_ban($ban_text, $ban_type) {
+function check_ban($ban_text, $ban_type, $check_valid = true) {
 	global $db, $globals;	
 	
 	$ban_text = $db->escape($ban_text);
 	$ban_type = $db->escape($ban_type);
 	
+	// If check_valid == false does not check for validity of the address
+	// in order to avoid problems with bad links in external pages
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
-			if (! preg_match('/^[\w_\-\.]+\.[\w]{2,4}$/', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^[\w_\-\.]+\.[\w]{2,4}$/', $ban_text)) {
 				$globals['ban_message'] =_('No es un dominio correcto');
 				return true;
 			}
@@ -23,7 +25,7 @@ function check_ban($ban_text, $ban_type) {
 			break;
 		case 'ip':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
-			if (! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}[1-9]\d{0,2}$/s', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}[1-9]\d{0,2}$/s', $ban_text)) {
 				$globals['ban_message'] =_('No es una IP válida');
 				return true;
 			}
