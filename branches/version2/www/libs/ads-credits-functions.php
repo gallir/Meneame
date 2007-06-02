@@ -131,7 +131,7 @@ function do_banner_top_lower() { // side banner A
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
-		echo '<div style="margin: 10px 0 10px 80px;">' . "\n";
+		echo '<div style="margin: 10px 0 10px 80px; height: 90px">' . "\n";
 		@include('ads/adsense-top-lower.inc');
 		echo '</div>' . "\n";
 	}
