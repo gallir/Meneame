@@ -61,8 +61,9 @@ if ($logs) {
 	foreach ($logs as $log) {
 		if ($current_user->user_id > 0 && !empty($_GET['friends']) && $log->log_user_id != $current_user->user_id) {
 			// Check the user is a friend
-			if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $log->log_user_id") > 0)
+			if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) {
 				continue;
+			}
 		}
 		switch ($log->log_type) {
 			case 'link_new':
@@ -194,7 +195,7 @@ function get_chat($time) {
 
 			if ($event->chat_room == 'friends') {
 				// Check the user is a friend of the sender
-				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $uid and friend_to = $current_user->user_id") > 0) {
+				if (friend_exists($uid, $current_user->user_id) <= 0) {
 					continue;
 				}
 				$status = _('amigo');
@@ -227,12 +228,13 @@ function get_votes($dbtime) {
 	foreach ($res as $event) {
 		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_GET['friends'])) {
 			// Check the user is a friend
-			if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_to = $event->vote_user_id") > 0) {
+			if (friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
 				continue;
 			} elseif ($event->vote_value < 0) {
-			// If the vote is negative, verify also the other user has selected as frind to the current one
-				if (! $db->get_var("select count(*) from friends where friend_type = 'manual' and friend_to = $current_user->user_id and friend_from = $event->vote_user_id") > 0) 
+			// If the vote is negative, verify also the other user has selected as friend to the current one
+				if (friend_exists($event->vote_user_id, $current_user->user_id) <= 0) {
 					continue;
+				}
 			}
 		}
 		if ($event->vote_value >= 0 && !empty($_GET['novote'])) continue;
