@@ -57,6 +57,33 @@ function menealo_comment(user, id, value)
 	);
 }
 
+function menealo_post(user, id, value)
+{
+	var url = base_url + "backend/menealo_post.php";
+	var content = "id=" + id + "&user=" + user + "&value=" + value;
+	var myid = 'comment-'+id;
+	url = url + "?" + content;
+	$.get(url, {}, 
+		 function(html) {
+			if (/^ERROR:/.test(html) || /^WARN:/.test(html)) {
+				html = html.substring(6, html.length);
+				alert(html);
+			} else {
+				vote_karma_image = html.split(",");
+				votes = parseInt(vote_karma_image[0]);
+				karma = parseInt(vote_karma_image[1]);
+				image = vote_karma_image[2];
+				$('#vc-'+id).html(votes);
+				$('#vk-'+id).html(karma);
+				if (image.length > 0) {
+					$('#c-votes-'+id).html('<img src="'+image+'"/>');
+				}
+			}
+			reportAjaxStats('/post_vote');
+		}
+	);
+}
+
 
 function disable_problem_form(id) {
 	$('#problem-' + id).hide();
