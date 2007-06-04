@@ -181,7 +181,7 @@ class Comment {
 		$vote->type='comments';
 		$vote->link=$this->id;
 		if ($vote->exists()) {
-    		return false;
+			return false;
 		}
 		$vote->value = $current_user->user_karma;
 		if($vote->insert()) return true;

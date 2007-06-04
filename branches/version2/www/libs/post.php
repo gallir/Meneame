@@ -101,8 +101,17 @@ class Post {
 		echo '</div>';
 
 
+
 		// The comments info bar
 		echo '<div class="'.$post_meta_class.'">';
+
+		// Print the votes info (left)
+		echo '<div class="comment-votes-info">';
+		// Check that the user can vote
+		if ($current_user->user_id > 0 && $this->author != $current_user->user_id)
+					$this->print_shake_icons();
+		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
+		echo '</div>';
 
 		// Print comment info (right)
 		echo '<div class="comment-info">';
@@ -196,4 +205,47 @@ class Post {
 			echo '<ol class="comments-list" id="newpost"></ol>'."\n";
 		}
 	}
+
+
+	function vote_exists() {
+		global $current_user;
+		require_once(mnminclude.'votes.php');
+		$vote = new Vote;
+		$vote->user=$current_user->user_id;
+		$vote->type='posts';
+		$vote->link=$this->id;
+		$this->voted = $vote->exists();
+		if ($this->voted) return $this->voted;
+	}
+
+	function insert_vote() {
+		global $current_user;
+		require_once(mnminclude.'votes.php');
+		$vote = new Vote;
+		$vote->user = $current_user->user_id;
+		$vote->type='posts';
+		$vote->link=$this->id;
+		if ($vote->exists()) {
+			return false;
+		}
+		$vote->value = $current_user->user_karma;
+		if($vote->insert()) return true;
+		return false;
+	}
+	function print_shake_icons() {
+		global $globals, $current_user;
+		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && $this->date > time() - $globals['time_enabled_votes'] && ! $this->vote_exists()) {  
+		 	echo '<span id="c-votes-'.$this->id.'">';
+			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
+		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_url'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
+		 	echo '</span>';
+		 } else {
+		 	if ($this->voted > 0) {
+				echo '<img src="'.$globals['base_url'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
+			} elseif ($this->voted<0 ) {
+				echo '<img src="'.$globals['base_url'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
+			}
+		}
+	}
+
 }

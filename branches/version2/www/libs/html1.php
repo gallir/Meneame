@@ -138,7 +138,7 @@ function do_js_includes() {
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general05.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general06.js" type="text/javascript"></script>' . "\n";
 	foreach ($globals['extra_js'] as $js) {
 		echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
 	}
