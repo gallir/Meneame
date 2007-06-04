@@ -172,7 +172,7 @@ function do_sidebar($do_vert_bars = true) {
 	if($do_vert_bars) {
 		do_vertical_tags();
 		do_best_comments();
-		do_last_posts();
+		do_best_posts();
 	}
 	if(!empty($globals['link_id'])) {
 		do_mnu_trackbacks();
@@ -673,4 +673,20 @@ function do_best_comments() {
 		echo '</ul></div>';
 	}
 }
+
+function do_best_posts() {
+	global $db, $globals, $dblang;
+
+	$min_date = date("Y-m-d H:00:00", time() - 43200); // about 12 hours
+	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id order by post_karma desc limit 10");
+	if ($res) {
+		echo '<div class="vertical-box">';
+		echo '<h4><a href="'.post_get_base_url('_best').'">' . _('¿mejores? notas'). '</a></h4><ul>';
+		foreach ($res as $post) {
+			echo '<li>'.$post->user_login.': <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_summary($post->post_content, 50).'</a></li>'."\n";
+		}
+		echo '</ul></div>';
+	}
+}
+
 ?>
