@@ -82,7 +82,7 @@ function do_credits() {
 	echo '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;';
 
 
-	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en Menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
+	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
 	echo _('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="http://svn.meneame.net/index.cgi/branches/version2/">'._('descargar').'</a>';
 	echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a>' . "\n";
 	echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
