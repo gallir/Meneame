@@ -35,9 +35,15 @@ switch ($option) {
 		$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts");
 		break;
+	case '_best':
+		$tab_option = 2;
+		$min_date = date("Y-m-d H:00:00", time() - 86000); //  about 24 hours
+		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
+		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
+		break;
 	case '_friends':
 		if ($current_user->user_id > 0) {
-			$tab_option = 2;
+			$tab_option = 3;
 			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id");
 		} else {
@@ -48,7 +54,7 @@ switch ($option) {
 		$rss_option="?friends_of=$current_user->user_id";
 		break;
 	default:
-		$tab_option = 3;
+		$tab_option = 4;
 		$user->username = $db->escape($option);
 		if(!$user->read()) {
 			not_found();
@@ -112,15 +118,21 @@ function do_posts_tabs($tab_selected, $username) {
 		echo '<li><a  href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
 	}
 
-	// Friends
+	// Best
 	if ($tab_selected == 2) {
+		echo '<li><a '.$active.' href="'.post_get_base_url('_best').'" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+	} else {
+		echo '<li><a  href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
+	}
+	// Friends
+	if ($tab_selected == 3) {
 		echo '<li><a '.$active.' href="'.post_get_base_url('_friends').'" title="'.$reload_text.'">'._('amigos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url('_friends').'">'._('amigos').'</a></li>' . "\n";
 	}
 
 	// User
-	if ($tab_selected == 3) {
+	if ($tab_selected == 4) {
 		echo '<li><a '.$active.' href="'.post_get_base_url($username).'" title="'.$reload_text.'">'.$username.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
