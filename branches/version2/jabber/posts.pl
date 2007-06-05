@@ -62,6 +62,10 @@ sub InMessage {
 
 	my $id = $poster->id;
 
+	if ($poster->karma < 5.5) {
+		$jabber->SendMessage($poster, "no tienes suficiente karma");
+		return;
+	}
 	if ($body =~ /^ *!/) {
 		ExecuteCommand($poster, $body);
 		return;

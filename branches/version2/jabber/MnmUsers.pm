@@ -76,7 +76,7 @@ sub users {
 	my $self = shift;
 	my %users;
 	foreach my $user (values %{$self->{'jid'}}) {
-		if ($user->show eq 'normal' || $user->show eq 'chat' || $user->show eq 'away') {
+		if ($user->show eq 'normal' || $user->show eq 'chat') {
 			$users{$user->{jid}} = $user;
 		}
 	}

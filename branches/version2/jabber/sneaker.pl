@@ -198,6 +198,10 @@ sub StoreChat {
 
 	my $id = $poster->id;
 
+	if ($poster->karma < 5.5) {
+		$jabber->SendMessage($poster, "no tienes suficiente karma");
+		return;
+	}
 	if (! $poster->get_pref('jabber-chat')) {
 		$jabber->SendMessage($poster, "tiene deshabilitado el chat, puedes habilitarlo con el comando !chat");
 		return;
@@ -215,10 +219,6 @@ sub StoreChat {
 		return;
 	}
 
-	if ($poster->karma < 5) {
-		$jabber->SendMessage($poster, "no tienes suficiente karma");
-		return;
-	}
 
 	my $period = time - 9;
 	$sql = qq{select count(*) from chats where chat_time > $period and chat_uid = $id};
