@@ -38,7 +38,7 @@ if(!empty($_GET['id'])) {
 	//
 	// Users comments
 	//
-	$id = intval($_GET['user_id']);
+	$id = guess_user_id($_GET['user_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0) 
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
@@ -50,7 +50,7 @@ if(!empty($_GET['id'])) {
 	// 
 	// Comments in news where the user has commented
 	//
-	$id = intval($_GET['conversation_id']);
+	$id = guess_user_id($_GET['conversation_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0 && $if_modified > time() - 86400*3 ) 
 		$from_time = "FROM_UNIXTIME($if_modified)";
@@ -64,7 +64,7 @@ if(!empty($_GET['id'])) {
 	//
 	// User's link comments
 	//
-	$id = intval($_GET['author_id']);
+	$id = guess_user_id($_GET['author_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0) 
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";

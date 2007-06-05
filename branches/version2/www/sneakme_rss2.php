@@ -26,7 +26,7 @@ if(!empty($_GET['user_id'])) {
 	//
 	// Users posts
 	//
-	$id = intval($_GET['user_id']);
+	$id = guess_user_id($_GET['user_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_user_id=$id ORDER BY post_date DESC LIMIT 1");
@@ -35,7 +35,7 @@ if(!empty($_GET['user_id'])) {
 	//
 	// User's friend posts
 	//
-	$id = intval($_GET['friends_of']);
+	$id = guess_user_id($_GET['friends_of']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 ORDER BY post_date DESC LIMIT 1");

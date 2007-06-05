@@ -39,7 +39,7 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// RSS for users' favorites
 	/////
-	$user_id = intval($_REQUEST['favorites']);
+	$user_id = guess_user_id($_REQUEST['favorites']);
 	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
@@ -50,7 +50,7 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// RSS for users' friends
 	/////
-	$user_id = intval($_REQUEST['friends_of']);
+	$user_id = guess_user_id($_REQUEST['friends_of']);
 	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
@@ -61,7 +61,7 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// RSS for users' sent links
 	/////
-	$user_id = intval($_REQUEST['sent_by']);
+	$user_id = guess_user_id($_REQUEST['sent_by']);
 	$sql = "SELECT link_id FROM links WHERE link_author=$user_id  ORDER BY link_id DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");

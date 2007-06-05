@@ -384,6 +384,19 @@ function get_if_modified() {
 	}
 }
 
+function guess_user_id ($str) {
+	global $db;
+
+	if (preg_match('/^[0-9]+$/', $str)) {
+		// It's a number, return it as id
+		return (int) $str;
+	} else {
+		$str = $db->escape($str);
+		$id = (int) $db->get_var("select user_id from users where user_login = '$str'");
+		return $id;
+	}
+}
+
 function print_simpleformat_buttons($textarea_id) {
 	global $globals, $current_user;
 
