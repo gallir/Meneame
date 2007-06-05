@@ -205,7 +205,7 @@ function do_submit1() {
 	$minutes = 60;
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
-		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same blog ($current_user->user_login): $linkres->url");
+		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $linkres->url");
 		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
 		echo '<p class="error-text">'._('debes esperar'). " $minutes " . _(' minutos entre cada envío al mismo sitio. Es para evitar "spams" y "autobombo"') . ', ';
 		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
@@ -234,7 +234,7 @@ function do_submit1() {
 		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
 		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
 		if ($site_links > 5 && $site_links > $total_links * 0.03) { // Only 3% from the same site
-			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same blog ($current_user->user_login): $linkres->url");
+			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
 			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.03). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
