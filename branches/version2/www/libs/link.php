@@ -46,18 +46,18 @@ class Link {
 	}
 
 	function check_url($url, $check_local = true) {
-		global $globals;
+		global $globals, $current_user;
 		if(!preg_match('/^http[s]*:/', $url)) return false;
 		$url_components = @parse_url($url);
 		if (!$url_components) return false;
 		$quoted_domain = preg_quote(get_server_name());
 		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
-			syslog(LOG_NOTICE, "Meneame, server name is local name: $url");
+			syslog(LOG_NOTICE, "Meneame, server name is local name ($current_user->user_login): $url");
 			return false;
 		}
 		require_once(mnminclude.'ban.php');
 		if(check_ban($url_components[host], 'hostname', false) || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
-			syslog(LOG_NOTICE, "Meneame, server name is banned: $url");
+			syslog(LOG_NOTICE, "Meneame, server name is banned ($current_user->user_login): $url");
 			$this->banned = true;
 			return false;
 		}
@@ -65,7 +65,7 @@ class Link {
 	}
 
 	function get($url) {
-		global $globals;
+		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
 		if (!$this->check_url($url)) return false;
@@ -86,7 +86,7 @@ class Link {
 					}
 				}
 				if (!empty($new_url) && $new_url != $url) {
-					syslog(LOG_NOTICE, "Meneame, redirected: $url -> $new_url");
+					syslog(LOG_NOTICE, "Meneame, redirected ($current_user->user_login): $url -> $new_url");
 					/* Check again the url */
 					// Warn: relative path can come in "Location:" headers, manage them
 					if(!preg_match('/^http[s]*:/', $new_url)) {
@@ -97,7 +97,7 @@ class Link {
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
 						if ($url_components['host'] != $new_url_components['host']) {
-							syslog(LOG_NOTICE, "Meneame, change source URL: $url -> $new_url");
+							syslog(LOG_NOTICE, "Meneame, change source URL ($current_user->user_login): $url -> $new_url");
 							$url = $new_url;
 						}
 					}
@@ -105,7 +105,7 @@ class Link {
 				$url_ok = $this->html = @stream_get_contents($stream, 200000);
 				fclose($stream);
 			} else {
-				syslog(LOG_NOTICE, "Meneame, error getting: $url");
+				syslog(LOG_NOTICE, "Meneame, error getting ($current_user->user_login): $url");
 				$url_ok = false;
 			}
 			//$url_ok = $this->html = @file_get_contents($url, false, $context, 0, 200000);
