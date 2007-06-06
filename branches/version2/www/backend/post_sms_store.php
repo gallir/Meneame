@@ -103,4 +103,8 @@ $post->store();
 syslog(LOG_NOTICE, "SMS: inserted Tel: $phone, User: $user->username");
 echo "OK " . _('nota insertada'). "($post->id): http://mueveme.net/notame/?id=$user->username";
 
+if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 24 hour) and post_src='phone'")) < 6) {
+	$user->karma = $user->karma + 0.1;
+	$user->store();
+}
 ?>

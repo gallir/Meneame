@@ -148,7 +148,7 @@ function do_submit1() {
 
 		// If the domain is banned, decrease user's karma
 		if ($linkres->banned) {
-			$db->query("update users set user_karma = user_karma - 0.1 where user_id = $current_user->user_id");
+			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
 		}
 
 		print_empty_submit_form();
@@ -202,7 +202,7 @@ function do_submit1() {
 	$linkres->create_blog_entry();
 
 	// avoid auto-promotion (autobombo)
-	$minutes = 60;
+	$minutes = 30;
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $linkres->url");
@@ -218,10 +218,10 @@ function do_submit1() {
 	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 	$ratio = $same_blog/$sents;
-	if ($sents > 5 && $same_blog > 0 && $ratio > 0.75) {
+	if ($sents > 3 && $same_blog > 0 && $ratio > 0.70) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to high ratio ($current_user->user_login): $linkres->url");
 		echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces al mismo sitio').'</strong></p> ';
-		echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos') . ', ';
+		echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
 		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
