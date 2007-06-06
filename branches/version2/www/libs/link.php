@@ -438,9 +438,12 @@ class Link {
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
-		if(!$this->voted && $current_user->user_id > 0 && $this->status!='published' && $this->votes > 0 && $type != 'preview' &&
-				$current_user->user_karma >= $globals['min_karma_for_negatives'] && $this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
-			$this->print_problem_form();
+		if(!$this->voted && $current_user->user_id > 0 && 
+				($this->status!='published' || $this->allow_negatives ) && 
+				$this->votes > 0 && $type != 'preview' &&
+				$current_user->user_karma >= $globals['min_karma_for_negatives'] && 
+				$this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
+				$this->print_problem_form();
 		}
 
 		echo '</div>'."\n";
@@ -488,6 +491,7 @@ class Link {
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
 				echo _('noticia controvertida');
+				$this->allow_negatives = true;
 			} else {
 				// Only says "what" if most votes are "wrong" or "duplicated" 
 				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
