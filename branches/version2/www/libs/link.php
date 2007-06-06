@@ -439,7 +439,7 @@ class Link {
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
 		if(!$this->voted && $current_user->user_id > 0 && 
-				($this->status!='published' || $this->allow_negatives ) && 
+				($this->status!='published' || $this->warned ) && 
 				$this->votes > 0 && $type != 'preview' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] && 
 				$this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
@@ -487,11 +487,11 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' &&  $this->negatives > 3 && $this->negatives > $this->votes/8 ) {
+		if ( $this->status != 'discard' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
 				echo _('noticia controvertida');
-				$this->allow_negatives = true;
 			} else {
 				// Only says "what" if most votes are "wrong" or "duplicated" 
 				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
@@ -505,6 +505,8 @@ class Link {
 				}
 			}
 			echo "</div>\n";
+		} else {
+			$this->warned = false;
 		}
 	}
 
