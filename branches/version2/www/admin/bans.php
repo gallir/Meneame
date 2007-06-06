@@ -65,25 +65,18 @@ function admin_tabs($tab_selected = false) {
 
 function admin_bans($ban_type) {
 	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length;
+	require_once(mnminclude.'ban.php');
 	if (!empty($_REQUEST["new_ban"])) {
-		require_once(mnminclude.'ban.php');
 		insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
-	}
-
-	if (!empty($_REQUEST["new_bans"])) {
-		require_once(mnminclude.'ban.php');
+	} elseif (!empty($_REQUEST["edit_ban"])) {
+		insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
+	} elseif (!empty($_REQUEST["new_bans"])) {
 		$array = preg_split ("/\s+/", $_POST["ban_text"]);
 		$size = count($array);
 		for($i=0; $i < $size; $i++) {
 			insert_ban($ban_type, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
 		}
-	}
-	if (!empty($_REQUEST["edit_ban"])) {
-		require_once(mnminclude.'ban.php');
-		insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
-	}
-	if (!empty($_REQUEST["del_ban"])) {
-		require_once(mnminclude.'ban.php');
+	} elseif (!empty($_REQUEST["del_ban"])) {
 		del_ban($_POST["ban_id"]);
 	}
 	
@@ -174,7 +167,9 @@ function admin_bans($ban_type) {
 			echo '</td></tr>';
 			break;
 		case 'edit':
-			$ban=$db->get_row("SELECT * FROM `bans` WHERE ban_id='".intval($_REQUEST["id"])."'");
+			$ban = new Ban;
+			$ban->ban_id = (int) $_REQUEST["id"];
+			$ban->read();
 			echo '<tr><td>';
 			echo '<input type="text" name="ban_text" id="ban_text" size="30" maxlength="'.$ban_text_length.'" value="'.$ban->ban_text.'" />';
 			echo '</td><td>';
@@ -183,7 +178,7 @@ function admin_bans($ban_type) {
 			echo $ban->ban_date;
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
-			echo '<option value="NOCHANGE">'.$ban->ban_expire.'</option>';
+			echo '<option value="'.$ban->ban_expire.'">'.$ban->ban_expire.'</option>';
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
@@ -206,19 +201,22 @@ function admin_bans($ban_type) {
 		}
 		$where= "WHERE ban_type='".$ban_type."'";
 		if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
-		$bans = $db->get_results("SELECT * FROM `bans` ".$where." ORDER BY `".$_REQUEST["orderby"]."` LIMIT $offset,$page_size");
-		$rows = $db->get_var("SELECT count(*) FROM `bans` ".$where);
+		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." LIMIT $offset,$page_size");
+		$rows = $db->get_var("SELECT count(*) FROM bans ".$where);
 		if ($bans) {
-			foreach($bans as $dbbans) {
+			$ban = new Ban;
+			foreach($bans as $ban_id) {
+				$ban->ban_id = $ban_id;
+				$ban->read();
 				echo '<tr>';
-				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$dbbans->ban_id.');" onmouseout="tooltip.clear(event);" >'.clean_text($dbbans->ban_text).'</em></td>';
-				echo '<td>'.clean_text(txt_shorter($dbbans->ban_comment, 30)).'</td>';
-				echo '<td>'.$dbbans->ban_date.'</td>';
-				echo '<td>'.$dbbans->ban_expire.'</td>';
+				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.clear(event);" >'.clean_text($ban->ban_text).'</em></td>';
+				echo '<td>'.clean_text(txt_shorter($ban->ban_comment, 30)).'</td>';
+				echo '<td>'.$ban->ban_date.'</td>';
+				echo '<td>'.$ban->ban_expire.'</td>';
 				echo '<td>';
-				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$dbbans->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.gif" alt="'.('Editar').'" /></a>';
+				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.gif" alt="'.('Editar').'" /></a>';
 				echo '&nbsp;/&nbsp;';
-				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$dbbans->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
 				echo '</td>';
 				echo '</tr>';
 			}

@@ -218,11 +218,45 @@ function do_submit1() {
 	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 	$ratio = $same_blog/$sents;
-	if ($sents > 3 && $same_blog > 0 && $ratio > 0.70) {
-		syslog(LOG_NOTICE, "Meneame, forbidden due to high ratio ($current_user->user_login): $linkres->url");
-		echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces al mismo sitio').'</strong></p> ';
+	if ($sents > 3 && $same_blog > 0 && $ratio > 0.7) {
+		require_once(mnminclude.'ban.php');
+		require_once(mnminclude.'blog.php');
+		$blog = new Blog;
+		$blog->id = $linkres->blog;
+		$blog->read();
+		echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
 		echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
 		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
+
+		// Check if the domain should be banned
+		// Calculate ban period according to previous karma
+		if ($ratio > 0.9 && 
+			($avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day)")) < 100) {
+			if ($avg_karma < 0) {
+				$period = 86400*30;
+				$period_txt = _('un mes');
+			} elseif ($avg_karma < 10) {
+				$period = 86400*7;
+				$period_txt = _('una semana');
+			} elseif ($avg_karma < 50) {
+				$period = 86400;
+				$period_txt = _('un día');
+			} else {
+				$period = 7200;
+				$period_txt = _('dos horas');
+			}
+			$url_components = @parse_url($blog->url);
+			if ($url_components) {
+				$ban = insert_ban('hostname', $url_components[host], _('envíos excesivos de'). " ($current_user->user_login)", time() + $period);
+				$banned_host = $ban->ban_text;
+				echo '<p class="error-text"><strong>'._('el dominio'). " $banned_host ". _('ha sido baneado por')." $period_txt</strong></p> ";
+				syslog(LOG_NOTICE, "Meneame, banned due to high ratio ($current_user->user_login): $banned_host  <- $linkres->url");
+			} else {
+				syslog(LOG_NOTICE, "Meneame, error parsing during ban: $blog->id, $blog->url ($current_user->user_login)");
+			}
+		} else {
+			syslog(LOG_NOTICE, "Meneame, forbidden due to high ratio ($current_user->user_login): $linkres->url");
+		}
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
 		return;

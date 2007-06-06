@@ -58,31 +58,32 @@ function subdomains_list($domain) {
 	return $list;
 }
 
-function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire="UNDEFINED", $ban_id=0) {
+function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINED', $ban_id=0) {
 	global $globals;
 
 	if (strlen($ban_text) < 4) {
 		recover_error(_('Texto del ban muy corto'));
 		return;
 	}
+	if (strlen($ban_text) > 8 && preg_match('/^www\..+\.[a-z]+$/i', $ban_text) ) {
+		$ban_text = preg_replace('/^www\./', '', $ban_text);
+	}
 
 	$ban=new Ban();
+	if ($ban_id > 0) {
+		$ban->ban_id = (int) $ban_id;
+		$ban->read();
+	}
 	$ban->ban_type=$ban_type;
 	$ban->ban_text=$ban_text;
-	$ban->ban_comment=$ban_comment;
-	$ban->ban_expire=$ban_expire;
-	if ($ban_id!=0) { $ban->ban_id=$ban_id; }		
-	if($ban_id==0 && $ban->read()) {
-		recover_error(_('El ban ya existe'));
-	} else {
-		/*
-		if(check_ban($ban_text, $ban_type)) {
-			recover_error($globals['ban_message']);
-			return;
-		}
-		*/
-		$ban->store();
+	if (!empty($ban_comment)) {
+		$ban->ban_comment=$ban_comment;
 	}
+	if ($ban_expire != 'UNDEFINED' && !empty($ban_expire)) {
+		$ban->ban_expire=$ban_expire;
+	}
+	$ban->store();
+	return $ban;
 }
 
 function del_ban($ban_id) {
@@ -113,48 +114,46 @@ class Ban {
 			$this->ban_id =$ban->ban_id;
 			$this->ban_text=$ban->ban_text;
 			$this->ban_type=$ban->ban_type;
-			$this->ban_expire=$ban->ban_expire;
+			if (empty($ban->ban_expire)) {
+				$this->ban_expire = 'NULL';
+			} else {
+				$this->ban_expire=$ban->ban_expire;
+			}
 			$this->ban_date=$ban->ban_date;
 			$this->ban_comment=$ban->ban_comment;
 			$this->read = true;
 			return true;
 		}
+		$this->id = 0;
 		$this->read = false;
 		return false;
 	}
 	
 	function store() {
 		global $db;
-		$ban_id=intval($this->ban_id);
-		$ban_type=$db->escape($this->ban_type);
-		$ban_text=$db->escape(clean_text($this->ban_text));
-		$ban_comment=$db->escape(clean_text($this->ban_comment));
+		$this->ban_id=intval($this->ban_id);
+		$this->ban_type=$db->escape($this->ban_type);
+		$this->ban_text=$db->escape(clean_text($this->ban_text));
+		$this->ban_comment=$db->escape(clean_text($this->ban_comment));
 
-		if($this->ban_id==0) {
-			if ($this->ban_expire!="UNDEFINED") { 
-				//$expire=", NOW() + INTERVAL ".$this->ban_expire." DAY ";
-				 $expire=", FROM_UNIXTIME(".intval($this->ban_expire).") ";
-			}
-			$sql="INSERT INTO bans (ban_type, ban_text, ban_comment ";
-			if ($expire) { $sql .=", ban_expire ";}
-			$sql .=") VALUES ('$ban_type', '$ban_text',  '$ban_comment' ";
-			if ($expire) { $sql .=$expire; }
-			$sql .=")";
-			$db->query($sql);
-		
+		if (empty($this->ban_expire) || $this->ban_expire=='UNDEFINED' || $this->ban_expire == 'NULL' || preg_match('/[^0-9 :-]/', $this->ban_expire)) {
+			$expire_value='NULL';
+		} elseif ($this->ban_expire != 'NOCHANGE' && preg_match('/^[0-9]+$/', $this->ban_expire)) {
+			$expire_value='FROM_UNIXTIME('.intval($this->ban_expire).')';
 		} else {
-		// update
-			if ($this->ban_expire=="UNDEFINED") { 
-				$expire=", ban_expire=NULL "; 
-			} else if ($this->ban_expire != "NOCHANGE") { 
-				$expire=", ban_expire=FROM_UNIXTIME($this->ban_expire) "; 
-			}
-			$sql="UPDATE bans SET ban_text='$ban_text', ban_comment = '$ban_comment'";
-			if ($expire) { $sql .=$expire; }
-			$sql .=" WHERE ban_id =$ban_id LIMIT 1 ;";
-			$db->query($sql);
+			$expire_value = "'".$db->escape($this->ban_expire)."'";
 		}
-		
+
+		if ($this->ban_id > 0) {
+			$sql="UPDATE bans SET ban_type='$this->ban_type', ban_text='$this->ban_text', ban_comment = '$this->ban_comment', ban_expire = $expire_value WHERE ban_id =$this->ban_id LIMIT 1";
+			//$sql = 'UPDATE bans SET (ban_id, ban_type, ban_text, ban_comment, ban_expire) ';
+			//$sql .= "VALUES ($this->ban_id, '$this->ban_type', '$this->ban_text',  '$this->ban_comment', $expire_value) ";
+		} else {
+			$sql = 'REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) ';
+			$sql .= "VALUES ('$this->ban_type', '$this->ban_text',  '$this->ban_comment', $expire_value) ";
+		}
+		//echo "<br>Executing: $sql<br>\n";
+		$db->query($sql);
 	}
 
 	function remove() {
