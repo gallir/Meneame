@@ -133,6 +133,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
 			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
@@ -154,6 +155,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
 			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
@@ -179,6 +181,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
 			echo '<option value="'.$ban->ban_expire.'">'.$ban->ban_expire.'</option>';
+			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
@@ -198,10 +201,13 @@ function admin_bans($ban_type) {
 			$_REQUEST["orderby"]="ban_text";
 		} else {
 			$_REQUEST["orderby"] = preg_replace('/[^a-z_]/i', '', $_REQUEST["orderby"]);
+			if ($_REQUEST["orderby"] == 'ban_date') {
+				$order = "DESC";
+			}
 		}
 		$where= "WHERE ban_type='".$ban_type."'";
 		if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
-		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." LIMIT $offset,$page_size");
+		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." $order LIMIT $offset,$page_size");
 		$rows = $db->get_var("SELECT count(*) FROM bans ".$where);
 		if ($bans) {
 			$ban = new Ban;

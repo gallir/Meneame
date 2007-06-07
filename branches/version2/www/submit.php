@@ -163,8 +163,9 @@ function do_submit1() {
 	$linkres->randkey = intval($_POST['randkey']);
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
+		syslog(LOG_NOTICE, "Meneame, error reading url ($current_user->user_login): $url");
 		// Dont allow new users with low karma to post wrong URLs
-		if ($current_user->user_karma < 7 && $current_user->user_level == 'normal') {
+		if ($current_user->user_karma < 6.5 && $current_user->user_level == 'normal') {
 			echo '<p>'._('URL inválido, incompleto o no permitido').'</p>';
 			print_empty_submit_form();
 			return;
@@ -215,8 +216,8 @@ function do_submit1() {
 	}
 
 	// Avoid spam, count links in last two months
-	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
-	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
+	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
+	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 day) and link_blog=$linkres->blog and link_votes > 0");
 	$ratio = $same_blog/$sents;
 	if ($sents > 3 && $same_blog > 0 && $ratio > 0.7) {
 		require_once(mnminclude.'ban.php');
@@ -224,27 +225,29 @@ function do_submit1() {
 		$blog = new Blog;
 		$blog->id = $linkres->blog;
 		$blog->read();
-		echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
-		echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
-		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 
 		// Check if the domain should be banned
 		// Calculate ban period according to previous karma
-		if ($ratio > 0.9 && 
-			($avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day)")) < 100) {
-			if ($avg_karma < 0) {
+		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
+		if ($avg_karma < 100) {
+			if ($avg_karma < -10) {
 				$period = 86400*30;
 				$period_txt = _('un mes');
-			} elseif ($avg_karma < 10) {
+			} elseif ($avg_karma < 5) {
 				$period = 86400*7;
 				$period_txt = _('una semana');
-			} elseif ($avg_karma < 50) {
+			} elseif ($avg_karma < 20) {
 				$period = 86400;
 				$period_txt = _('un día');
 			} else {
 				$period = 7200;
 				$period_txt = _('dos horas');
 			}
+
+			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
+			echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
+			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
+
 			$url_components = @parse_url($blog->url);
 			if ($url_components) {
 				$ban = insert_ban('hostname', $url_components[host], _('envíos excesivos de'). " ($current_user->user_login)", time() + $period);
@@ -254,12 +257,13 @@ function do_submit1() {
 			} else {
 				syslog(LOG_NOTICE, "Meneame, error parsing during ban: $blog->id, $blog->url ($current_user->user_login)");
 			}
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
 		} else {
-			syslog(LOG_NOTICE, "Meneame, forbidden due to high ratio ($current_user->user_login): $linkres->url");
+			echo '<p>'._('Continúa, pero ten cuidado. Estás enviando noticias del mismo web, podrías recibir muchos votos negativos y/o el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
+			syslog(LOG_NOTICE, "Meneame, warn, high ratio ($current_user->user_login): $linkres->url");
 		}
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
 	}
 
 
@@ -267,10 +271,10 @@ function do_submit1() {
 	if ($current_user->user_karma < 16) {
 		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
 		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
-		if ($site_links > 5 && $site_links > $total_links * 0.03) { // Only 3% from the same site
+		if ($site_links > 5 && $site_links > $total_links * 0.04) { // Only 4% from the same site
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
-			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.03). '</p>';
+			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.04). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
 			return;

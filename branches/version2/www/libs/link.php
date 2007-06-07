@@ -97,7 +97,7 @@ class Link {
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
 						if ($url_components['host'] != $new_url_components['host']) {
-							syslog(LOG_NOTICE, "Meneame, change source URL ($current_user->user_login): $url -> $new_url");
+							syslog(LOG_NOTICE, "Meneame, changed source URL ($current_user->user_login): $url -> $new_url");
 							$url = $new_url;
 						}
 					}
