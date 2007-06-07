@@ -216,10 +216,10 @@ function do_submit1() {
 	}
 
 	// Avoid spam, count links in last two months
-	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
-	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 day) and link_blog=$linkres->blog and link_votes > 0");
+	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
+	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 	$ratio = $same_blog/$sents;
-	if ($sents > 3 && $same_blog > 0 && $ratio > 0.7) {
+	if ($sents > 2 && $same_blog > 0 && $ratio > 0.7) {
 		require_once(mnminclude.'ban.php');
 		require_once(mnminclude.'blog.php');
 		$blog = new Blog;
@@ -229,31 +229,42 @@ function do_submit1() {
 		// Check if the domain should be banned
 		// Calculate ban period according to previous karma
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
-		if ($avg_karma < 100) {
-			if ($avg_karma < -10) {
-				$period = 86400*30;
-				$period_txt = _('un mes');
-			} elseif ($avg_karma < 5) {
-				$period = 86400*7;
-				$period_txt = _('una semana');
-			} elseif ($avg_karma < 20) {
-				$period = 86400;
-				$period_txt = _('un día');
-			} else {
-				$period = 7200;
-				$period_txt = _('dos horas');
+		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
+		// the condition is stricter, more links and higher ratio
+		if ($sents > 4 && $ratio > 0.9) {
+			$unique_users = (int) $db->get_var("select count(distinct link_author) from links where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day);");
+			if ($unique_users < 3) {
+				$ban_period = 86400*7;
+				$ban_period_txt = _('una semana');
+				syslog(LOG_NOTICE, "Meneame, high ratio and few users, going to ban $blog->url ($current_user->user_login)");
 			}
-
+		// Otherwise check previous karma
+		} elseif ($avg_karma < 100) {
+			if ($avg_karma < -10) {
+				$ban_period = 86400*30;
+				$ban_period_txt = _('un mes');
+			} elseif ($avg_karma < 5) {
+				$ban_period = 86400*7;
+				$ban_period_txt = _('una semana');
+			} elseif ($avg_karma < 20) {
+				$ban_period = 86400;
+				$ban_period_txt = _('un día');
+			} else {
+				$ban_period = 7200;
+				$ban_period_txt = _('dos horas');
+			}
+		}
+		if ($ban_period > 0) {
 			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
 			echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
 			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 
 			$url_components = @parse_url($blog->url);
 			if ($url_components) {
-				$ban = insert_ban('hostname', $url_components[host], _('envíos excesivos de'). " ($current_user->user_login)", time() + $period);
+				$ban = insert_ban('hostname', $url_components[host], _('envíos excesivos de'). " ($current_user->user_login)", time() + $ban_period);
 				$banned_host = $ban->ban_text;
-				echo '<p class="error-text"><strong>'._('el dominio'). " $banned_host ". _('ha sido baneado por')." $period_txt</strong></p> ";
-				syslog(LOG_NOTICE, "Meneame, banned due to high ratio ($current_user->user_login): $banned_host  <- $linkres->url");
+				echo '<p class="error-text"><strong>'._('el dominio'). " $banned_host ". _('ha sido baneado por')." $ban_period_txt</strong></p> ";
+				syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to high ratio ($current_user->user_login): $banned_host  <- $linkres->url");
 			} else {
 				syslog(LOG_NOTICE, "Meneame, error parsing during ban: $blog->id, $blog->url ($current_user->user_login)");
 			}
@@ -261,7 +272,7 @@ function do_submit1() {
 			echo '</div>'. "\n";
 			return;
 		} else {
-			echo '<p>'._('Continúa, pero ten cuidado. Estás enviando noticias del mismo web, podrías recibir muchos votos negativos y/o el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
+			echo '<p>'._('Aviso, estás enviando noticias del mismo web, podrías recibir muchos votos negativos y/o el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
 			syslog(LOG_NOTICE, "Meneame, warn, high ratio ($current_user->user_login): $linkres->url");
 		}
 	}
