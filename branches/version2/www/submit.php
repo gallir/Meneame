@@ -53,6 +53,7 @@ function check_already_sent() {
 }
 
 function print_empty_submit_form() {
+	global $globals;
 	if (!empty($_GET['url'])) {
 		$url = clean_input_url($_GET['url']);
 	} else {
@@ -66,7 +67,9 @@ function print_empty_submit_form() {
 	echo '<input type="hidden" name="phase" value="1" />';
 	echo '<input type="hidden" name="randkey" value="'.rand(10000,10000000).'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
-	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" /></p>';
+	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
+	echo 'onclick="isrc=\''.$globals['base_url'].'img/common/indicator_orange.gif\'; $(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+isrc+\'\\\'/>\')"';
+	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
 	echo '</div>';
@@ -136,6 +139,7 @@ function do_submit1() {
 	}
 	
 	$url = clean_input_url($_POST['url']);
+	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
 	$linkres=new Link;
 
 	$edit = false;
@@ -347,7 +351,7 @@ function do_submit1() {
 
 
 function do_submit2() {
-	global $db, $dblang;
+	global $db, $dblang, $globals;
 
 	$linkres=new Link;
 	$linkres->id=$link_id = intval($_POST['id']);
@@ -392,7 +396,9 @@ function do_submit2() {
 
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
 	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'">&nbsp;&nbsp;'."\n";
-	echo '<input class="genericsubmit" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" />'."\n";
+	echo '<input class="genericsubmit" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
+	echo 'onclick="isrc=\''.$globals['base_url'].'img/common/indicator_orange.gif\'; $(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+isrc+\'\\\'/>\')"';
+	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</form>'."\n";
 	echo '</fieldset>'."\n";
 	echo '</div>'."\n";
