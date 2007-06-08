@@ -10,6 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'tags.php');
+include(mnminclude.'ban.php');
 
 $globals['ads'] = true;
 
@@ -37,6 +38,15 @@ if(isset($_POST["phase"])) {
 do_footer();
 exit;
 
+function preload_indicators() {
+	echo '<SCRIPT type="text/javascript">'."\n";
+	echo '<!--'."\n";
+	echo 'var img_src1= new Image(); '."\n";
+	echo 'img_src1=\''.$globals['base_url'].'img/common/indicator_orange.gif\''."\n";;
+	echo '//-->'."\n";
+	echo '</SCRIPT>'."\n";
+}
+
 function check_already_sent() {
 	global $db;
 	// Check if the url has been sent already
@@ -54,6 +64,8 @@ function check_already_sent() {
 
 function print_empty_submit_form() {
 	global $globals;
+
+	preload_indicators();
 	if (!empty($_GET['url'])) {
 		$url = clean_input_url($_GET['url']);
 	} else {
@@ -68,7 +80,7 @@ function print_empty_submit_form() {
 	echo '<input type="hidden" name="randkey" value="'.rand(10000,10000000).'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
 	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
-	echo 'onclick="isrc=\''.$globals['base_url'].'img/common/indicator_orange.gif\'; $(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+isrc+\'\\\'/>\')"';
+	echo 'onclick="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\')"';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
@@ -109,6 +121,14 @@ function do_submit1() {
 		return;
 	}
 
+
+	if(check_ban($globals['user_ip'], 'ip')) {
+		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
+		echo '<p>'._('Dirección IP no permitida para enviar'). ' ('. $globals['ban_message'].') </p>';
+		print_empty_submit_form();
+		echo '</div>'. "\n";
+		return;
+	}
 
 	// avoid spams, an extra security check
 	// it counts the numbers of links in the last 2 hours
@@ -224,7 +244,6 @@ function do_submit1() {
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 	$ratio = $same_blog/$sents;
 	if ($sents > 2 && $same_blog > 0 && $ratio > 0.7) {
-		require_once(mnminclude.'ban.php');
 		require_once(mnminclude.'blog.php');
 		$blog = new Blog;
 		$blog->id = $linkres->blog;
@@ -362,7 +381,7 @@ function do_submit2() {
 	$linkres->content = clean_text($_POST['bodytext']);
 	if (link_errors($linkres)) {
 		echo '<form id="genericform">'."\n";
-		echo '<p><input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"></p>'."\n";
+		echo '<p><input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/></p>'."\n";
 		echo '</form>'."\n";
 		echo '</div>'."\n"; // opened in print_form_submit_error
 		return;
@@ -375,6 +394,7 @@ function do_submit2() {
 	$link_title = $linkres->title;
 	$link_content = $linkres->content;
 	do_banner_top();
+	preload_indicators();
 	echo '<div id="container-wide">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	
@@ -395,12 +415,12 @@ function do_submit2() {
 	echo '<input type="hidden" name="trackback" value="'.htmlspecialchars(trim($_POST['trackback'])).'" />'."\n";
 
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
-	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'">&nbsp;&nbsp;'."\n";
+	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/>&nbsp;&nbsp;'."\n";
 	echo '<input class="genericsubmit" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
-	echo 'onclick="isrc=\''.$globals['base_url'].'img/common/indicator_orange.gif\'; $(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+isrc+\'\\\'/>\')"';
+	echo 'onclick="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\')"';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
-	echo '</form>'."\n";
 	echo '</fieldset>'."\n";
+	echo '</form>'."\n";
 	echo '</div>'."\n";
 }
 
