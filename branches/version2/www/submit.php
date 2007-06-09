@@ -44,8 +44,9 @@ function preload_indicators() {
 
 	echo '<SCRIPT type="text/javascript">'."\n";
 	echo '<!--'."\n";
-	echo 'var img_src1= new Image(); '."\n";
-	echo 'img_src1=\''.$globals['base_url'].'img/common/indicator_orange.gif\''."\n";;
+	echo 'var img_src1=\''.$globals['base_url'].'img/common/indicator_orange.gif\''."\n";;
+	echo 'var img1= new Image(); '."\n";
+	echo 'img1.src = img_src1';
 	echo '//-->'."\n";
 	echo '</SCRIPT>'."\n";
 }
