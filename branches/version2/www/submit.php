@@ -11,6 +11,7 @@ include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'tags.php');
 include(mnminclude.'ban.php');
+include(mnminclude.'blog.php');
 
 $globals['ads'] = true;
 
@@ -39,6 +40,8 @@ do_footer();
 exit;
 
 function preload_indicators() {
+	global $globals;
+
 	echo '<SCRIPT type="text/javascript">'."\n";
 	echo '<!--'."\n";
 	echo 'var img_src1= new Image(); '."\n";
@@ -73,14 +76,13 @@ function print_empty_submit_form() {
 	}
 	echo '<div id="genericform">';
 	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
-	echo '<form action="submit.php" method="post" id="thisform">';
+	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
 	echo '<p class="l-top"><label for="url">'._('url').':</label><br />';
 	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" /></p>';
 	echo '<input type="hidden" name="phase" value="1" />';
 	echo '<input type="hidden" name="randkey" value="'.rand(10000,10000000).'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
 	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
-	echo 'onclick="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\')"';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
@@ -219,13 +221,24 @@ function do_submit1() {
 	$linkres->status='discard';
 	$linkres->author=$current_user->user_id;
 
-	/***** Currently commented out until we find if it makes sense here
-	// First delete last drafts, just in case to avoid triggering the anti spam measure
-	$from = time() - 1800;
-	$db->query("delete from links where link_date > from_unixtime($from) and link_author=$current_user->user_id and link_status='discard' and link_votes = 0");
-	*****/
-
 	$linkres->create_blog_entry();
+	$blog = new Blog;
+	$blog->id = $linkres->blog;
+	$blog->read();
+
+	$blog_url_components = @parse_url($blog->url);
+	$blog_url = $blog_url_components[host].$blog_url_components[path];
+	// Now we check against the blog table
+	// it's done because there could be banned blogs like http://lacotelera.com/something
+	if(check_ban($blog_url, 'hostname', false)) {
+		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
+		echo '<p>'._('El sitio') . " $blog->url ". _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
+		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
+		print_empty_submit_form();
+		echo '</div>'. "\n";
+		return;
+	}
+
 
 	// avoid auto-promotion (autobombo)
 	$minutes = 30;
@@ -244,10 +257,6 @@ function do_submit1() {
 	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 	if ($sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.7) {
-		require_once(mnminclude.'blog.php');
-		$blog = new Blog;
-		$blog->id = $linkres->blog;
-		$blog->read();
 
 		// Check if the domain should be banned
 		// Calculate ban period according to previous karma
@@ -282,11 +291,10 @@ function do_submit1() {
 			echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
 			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 
-			$url_components = @parse_url($blog->url);
-			if ($url_components) {
-				$ban = insert_ban('hostname', $url_components[host], _('envíos excesivos de'). " ($current_user->user_login)", time() + $ban_period);
+			if (!empty($blog_url)) {
+				$ban = insert_ban('hostname', $blog_url, _('envíos excesivos de'). " $current_user->user_login", time() + $ban_period);
 				$banned_host = $ban->ban_text;
-				echo '<p class="error-text"><strong>'._('el dominio'). " $banned_host ". _('ha sido baneado por')." $ban_period_txt</strong></p> ";
+				echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong></p> ";
 				syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to high ratio ($current_user->user_login): $banned_host  <- $linkres->url");
 			} else {
 				syslog(LOG_NOTICE, "Meneame, error parsing during ban: $blog->id, $blog->url ($current_user->user_login)");
@@ -402,7 +410,7 @@ function do_submit2() {
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 3 de 3').'</h2>'."\n";
 
-	echo '<form action="submit.php" method="post" id="genericform">'."\n";
+	echo '<form action="submit.php" method="post" id="genericform" onSubmit="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">'."\n";
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
 	echo '<div class="genericformtxt"><label>'._('ATENCIÓN: esto es sólo una muestra!').'</label>&nbsp;&nbsp;<br/>'._('Ahora puedes 1) ').'<label>'._('retroceder').'</label>'._(' o 2)  ').'<label>'._('enviar a la cola y finalizar').'</label>'._('. Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> elefantes (o no).').'</div>';	
@@ -419,7 +427,6 @@ function do_submit2() {
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
 	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/>&nbsp;&nbsp;'."\n";
 	echo '<input class="genericsubmit" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
-	echo 'onclick="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\')"';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
@@ -525,11 +532,14 @@ function report_dupe($url) {
 
 	$link = new Link;
 	if(($found = $link->duplicates($url))) {
+		$dupe = new Link;
+		$dupe->id = $found;
+		$dupe->read();
 		echo '<p class="error"><strong>'._('noticia repetida!').'</strong></p> ';
 		echo '<p class="error-text">'._('lo sentimos').'</p>';
-		echo '<p class="error-text"><a href="'.$globals['base_url'].'?search='.htmlspecialchars($found).'">'._('haz clic aquí para votar o comentar la noticia que enviaron antes').'</a>';
+		echo '<p class="error-text"><strong><a href="'.$dupe->get_permalink().'">'.$dupe->title.'</a></strong>';
 		echo '<br style="clear: both;" /><br style="clear: both;" />' . "\n";
-		echo '<form id="genericform">';
+		echo '<form id="genericform" action="">';
 		echo '<input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
 		echo '</form>'. "\n";
 		echo '</div>'. "\n";

@@ -17,7 +17,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
-			if ($check_valid  && ! preg_match('/^[\w_\-\.]+\.[\w]{2,4}$/', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^[\w_\-\.]+\.[\w]{2,4}(\/[a-z]+\/*){0,1}$/', $ban_text)) {
 				$globals['ban_message'] =_('No es un dominio correcto');
 				return true;
 			}
@@ -39,7 +39,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	if ($res) {
 		$globals['ban_message'] = '';
 		foreach ($res as $comment) {
-			$globals['ban_message'] .= "$comment - ";
+			$globals['ban_message'] .= "$comment ";
 		}
 		return true;
 	}
@@ -65,7 +65,7 @@ function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINE
 		recover_error(_('Texto del ban muy corto'));
 		return;
 	}
-	if (strlen($ban_text) > 8 && preg_match('/^www\..+\.[a-z]+$/i', $ban_text) ) {
+	if (strlen($ban_text) > 8 && preg_match('/^www\..+\.[a-z]+(\/[a-z]+\/*){0,1}$/i', $ban_text) ) {
 		$ban_text = preg_replace('/^www\./', '', $ban_text);
 	}
 

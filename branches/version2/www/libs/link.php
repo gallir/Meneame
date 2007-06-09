@@ -341,8 +341,8 @@ class Link {
 		}
 		$link_url=$db->escape($url);
 		$link_alternative=$db->escape($link_alternative);
-		$url_found = $db->get_var("SELECT link_url FROM links WHERE (link_url = '$link_url' OR link_url = '$link_alternative') AND (link_status != 'discard' OR link_votes>0) limit 1");
-		return $url_found;
+		$found = $db->get_var("SELECT link_id FROM links WHERE (link_url = '$link_url' OR link_url = '$link_alternative') AND (link_status != 'discard' OR link_votes>0) limit 1");
+		return $found;
 	}
 
 	function print_summary($type='full') {
