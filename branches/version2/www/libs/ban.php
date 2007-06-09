@@ -25,7 +25,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 			break;
 		case 'ip':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
-			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}[1-9]\d{0,2}$/s', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}\d{1,3}$/s', $ban_text)) {
 				$globals['ban_message'] =_('No es una IP válida');
 				return true;
 			}

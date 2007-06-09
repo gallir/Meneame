@@ -27,7 +27,7 @@ if ($current_user->user_level=="god") {
 		$_REQUEST["admin"] = clean_input_string($_REQUEST["admin"]);;
 	}
 	// Delete expired bans
-	$db->query("delete from bans where ban_expire is not null and ban_expire < date_sub(now(), interval 2 hour)");
+	$db->query("delete from bans where ban_expire is not null and ban_expire < date_sub(now(), interval 60 day)");
 	admin_tabs($_REQUEST["admin"]);
 	admin_bans($_REQUEST["admin"]);
 } else {

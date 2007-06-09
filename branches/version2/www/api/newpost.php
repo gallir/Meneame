@@ -31,7 +31,7 @@ if ($user->level == 'disabled') {
 }
 
 if ( !($user->karma > 6) && $user->level == 'normal') {
-	echo 'KO: ' . _('el karma es muy bajo, necesitas 6.1');
+	echo 'KO: ' . _('el karma es muy bajo, necesitas más de 6');
 	die;
 }
 

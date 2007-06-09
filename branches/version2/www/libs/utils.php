@@ -414,7 +414,7 @@ function put_smileys($str) {
 
 	$str=preg_replace('/:-{0,1}\)/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />', $str);
 	$str=preg_replace('/[^t];-{0,1}\)/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />', $str);
-	$str=preg_replace('/:-{0,1}&gt;/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/cheesy.gif" alt=":->" title=":->"  width="15" height="15" />', $str);
+	$str=preg_replace('/:-{0,1}&gt;/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"  width="15" height="15" />', $str);
 	$str=preg_replace('/:-D|:grin:/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" />', $str);
 	$str=preg_replace('/:oops:|&lt;:\(/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15" />', $str);
 	$str=preg_replace('/&gt;:-{0,1}\(/i', ' <img src="http://'.get_server_name().$globals['base_url'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("  width="15" height="15" />', $str);

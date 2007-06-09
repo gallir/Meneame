@@ -243,8 +243,7 @@ function do_submit1() {
 	// Avoid spam, count links in last two months
 	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
-	$ratio = $same_blog/$sents;
-	if ($sents > 2 && $same_blog > 0 && $ratio > 0.7) {
+	if ($sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.7) {
 		require_once(mnminclude.'blog.php');
 		$blog = new Blog;
 		$blog->id = $linkres->blog;
@@ -252,7 +251,7 @@ function do_submit1() {
 
 		// Check if the domain should be banned
 		// Calculate ban period according to previous karma
-		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
+		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
 		if ($sents > 4 && $ratio > 0.9) {
@@ -331,10 +330,12 @@ function do_submit1() {
 	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
 
-	echo '<fieldset><legend><span class="sign">'._('título de la noticia').'</span></legend>'."\n";
+	echo '<fieldset><legend><span class="sign">'._('información del enlace').'</span></legend>'."\n";
 	echo '<p class="genericformtxt"><strong>';
 	echo mb_substr($linkres->url_title, 0, 200);
-	echo '</strong></p> '."\n";
+	echo '</strong><br/>';
+	echo htmlentities($linkres->url);
+	echo '</p> '."\n";
 	echo '</fieldset>'."\n";
 
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
