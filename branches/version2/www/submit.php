@@ -369,8 +369,13 @@ function do_submit1() {
 	print_categories_form();
 
 	echo '<p><label for="trackback">'._('trackback').':</label><br />'."\n";
-	echo '<span class="genericformnote">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
-	echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";
+	if (empty($trackback)) {
+		echo '<span class="genericformnote">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
+		echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";
+	} else {
+		echo '<span class="genericformnote">'.$trackback.'</span>'."\n";
+		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
+	}
 	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />&nbsp;&nbsp;'."\n";
 	echo '<input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
@@ -459,9 +464,9 @@ function do_submit3() {
 			$trackres = new Trackback;
 			$trackres->url=clean_input_url($_POST['trackback']);
 			$trackres->link=$linkres->id;
-			$trackres->title=$linkres->title;
+			//$trackres->title=$linkres->title;
 			$trackres->author=$linkres->author;
-			$trackres->content=$linkres->content;
+			//$trackres->content=$linkres->content;
 			$res = $trackres->send($linkres);
 		}
 	}

@@ -74,9 +74,29 @@ class Trackback {
         if (empty($this->url))
                 return;
 
-        $title = urlencode($this->title);
+		$this->title = clean_input_url($link->url);
+		if (preg_match('/^ping:/', $this->url)) { // we got a pingback adress
+			require_once(mnminclude.'IXR_Library.inc.php');
+			$url = preg_replace('/^ping:/', '', $this->url);
+			$client = new IXR_Client($url);
+			$client->timeout = 3;
+			$client->useragent .= ' -- Meneame/2';
+			$client->debug = false;
+			if ($client->query('pingback.ping', $link->get_permalink(), $link->url )) {
+				$this->status='ok';
+				$this->store();
+				return true;
+			} else {
+				$this->status='error';
+				$this->store();
+				return false;
+			}
+		}
+
+		// Send standard old trackback
+        $title = urlencode($link->title);
 		// Convert everything to HTML and the strip all html tags.
-        $excerpt = urlencode(strip_tags(text_to_html($this->content)));
+        $excerpt = urlencode(strip_tags(text_to_html($link->content)));
 
         $blog_name = urlencode(get_server_name());
         $tb_url = $this->url;
@@ -111,6 +131,6 @@ class Trackback {
 		}
 		$this->status='error';	
 		$this->store();
-        return $false;
+        return false;
 	}
 }

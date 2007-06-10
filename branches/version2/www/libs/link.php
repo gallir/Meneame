@@ -33,7 +33,6 @@ class Link {
 	var $uri = '';
 	var $content = '';
 	var $html = false;
-	var $trackback = false;
 	var $read = false;
 	var $voted = false;
 	var $banned = false;
@@ -78,8 +77,15 @@ class Link {
 			if(($stream = @fopen($url, 'r', false, $context))) {
 				$meta_data = stream_get_meta_data($stream);
 				foreach($meta_data['wrapper_data'] as $response) {
+					// Check if it has pingbacks
+					if (preg_match('/^X-Pingback: /i', $response)) {
+						$answer = split(' ', $response);
+						if (!empty($answer[1])) {
+							$this->pingback = 'ping:'.trim($answer[1]);
+						}
+					}
 					/* Were we redirected? */
-					if (substr(strtolower($response), 0, 10) == 'location: ') {
+					if (preg_match('/^location: /i', $response)) {
 						/* update $url with where we were redirected to */
 						$answer = split(' ', $response);
 						$new_url = clean_input_url($answer[1]);
@@ -150,7 +156,9 @@ class Link {
 				$this->url_title=$url_title;
 			}
 		}
-		// Detect trackbacks
+
+
+		// Now detect trackbacks
 		if (!empty($_POST['trackback'])) {
 			$this->trackback=trim($_POST['trackback']);
 		} elseif (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
@@ -167,7 +175,18 @@ class Link {
 			}
 		}  elseif (preg_match('/(http:\/\/[^\s]+\/trackback\/*)/i', $this->html, $matches)) {
 			$this->trackback=trim($matches[0]);
-		}  
+		}
+
+		// Now we use previous pingback or detect it
+		if (empty($this->trackback)) {
+			if (!empty($this->pingback)) {
+				$this->trackback = $this->pingback;
+			} elseif (preg_match('/<link[^>]+rel="pingback"[^>]*>/i', $this->html, $matches)) {
+				if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
+					$this->trackback='ping:'.trim($matches2[1]);
+				}
+			}
+		}
 		$this->trackback = clean_input_url($this->trackback);
 		return true;
 	}
