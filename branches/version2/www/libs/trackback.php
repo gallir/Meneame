@@ -87,8 +87,9 @@ class Trackback {
 				$this->store();
 				return true;
 			} else {
-				$this->status='error';
-				$this->store();
+				// Be quiet for pingbacks
+				//$this->status='error';
+				//$this->store();
 				return false;
 			}
 		}

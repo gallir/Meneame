@@ -105,6 +105,7 @@ class Link {
 						if ($url_components['host'] != $new_url_components['host']) {
 							syslog(LOG_NOTICE, "Meneame, changed source URL ($current_user->user_login): $url -> $new_url");
 							$url = $new_url;
+							$url_components = $new_url_components;
 						}
 					}
 				}
@@ -152,6 +153,7 @@ class Link {
 
 		if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $this->html, $matches)) {
 			$url_title=clean_text($matches[1]);
+			$is_html = true;
 			if (mb_strlen($url_title) > 3) {
 				$this->url_title=$url_title;
 			}
@@ -178,7 +180,9 @@ class Link {
 		}
 
 		// Now we use previous pingback or detect it
-		if (empty($this->trackback)) {
+				// avoid to send pingback to global sites
+		if (empty($this->trackback) && $is_html &&
+				(!empty($url_components['query']) || preg_match('|^/.*[\.-/]+|', $url_components['path']))) {
 			if (!empty($this->pingback)) {
 				$this->trackback = $this->pingback;
 			} elseif (preg_match('/<link[^>]+rel="pingback"[^>]*>/i', $this->html, $matches)) {
