@@ -125,7 +125,7 @@ class Xmlrpc_server extends IXR_Server {
 		// Check is links back to us
 		$permalink=$link->get_permalink();
 		$permalink_q=preg_quote($permalink,'/');
-		$pattern="/<\s*a.*href\s*=[\"'\s]*".$permalink_q."[#\/0-9a-z\-]*[\"'\s]*.*>.*<\s*\/\s*a\s*>/i";
+		$pattern="/<\s*a[^>]+href=[\"']".$permalink_q."[#\/0-9a-z\-]*[\"'][^>]*>/i";
 		if(!preg_match($pattern,$contents)) {
 			syslog(LOG_NOTICE, "Meneame: pingback, the provided URL does not have a link back to us: $pagelinkedfrom - $pagelinkedto");
 			return new IXR_Error(17, 'The source URL does not contain a link to the target URL, and so cannot be used as a source.');
