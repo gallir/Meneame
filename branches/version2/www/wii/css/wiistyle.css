@@ -1,0 +1,140 @@
+@charset "utf-8";
+
+/* Styles layer CSS */
+
+* {
+margin: 0;
+}
+
+body {
+font-family: sans-serif;
+color: #323232;
+font-size: 1.5em;
+background: #e6e6e6 url(../images/headerbg.png) repeat-x left top;
+}
+
+a {
+color: #0cf;
+}
+
+#header {
+padding: 11px 40px 0 40px;
+height: 66px;
+}
+
+#header h1 {
+color: #fff;
+width: 388px;
+height: 42px;
+background: url(../images/headerlogo.png) no-repeat left top;
+text-indent: -9999px;
+}
+
+#navbar {
+height: 45px;
+background: #e6e6e6 url(../images/navbarbg.png) repeat-x left bottom;
+}
+
+#navbar ul {
+padding: 0 40px;
+}
+
+.tabsub-this {
+font-weight: bold;
+text-align: center;
+height: 38px;
+width: 134px;
+float: left;
+list-style: none;
+background: url(../images/navbartabiB.png) no-repeat left bottom;
+margin-right: 2px;
+vertical-align: middle;
+padding-top: 7px;
+}
+
+.tabsub-that {
+font-weight: bold;
+text-align: center;
+height: 37px;
+width: 134px;
+float: left;
+list-style: none;
+background: url(../images/navbartabaB.png) no-repeat left bottom;
+margin-right: 2px;
+vertical-align: middle;
+padding-top: 8px;
+}
+
+.tabsub-other {
+text-align: center;
+height: 37px;
+width: 100px;
+float: left;
+list-style: none;
+margin-right: 2px;
+vertical-align: middle;
+padding-top: 8px;
+}
+
+.linknota {
+color: #006a80;
+}
+
+#navbar a {
+color: #818181;
+text-decoration: none;
+}
+
+#container {
+clear: all;
+background: #fff;
+padding: 20px 40px;
+text-align: justify;
+color: #595959;
+}
+
+.news-shakeit {
+float: left;
+width: 83px;
+height: 110px;
+margin: 0 15px 0 0;
+background: url(../images/meneboxbgB.png) no-repeat center top;
+text-align: center;
+font-size: 20px;
+}
+
+.mnm-published {
+color: #fff;
+font-size: 30px;
+font-weight: bold;
+margin: 21px 0 25px 0;
+}
+
+.news-submitted {
+color: #939393;
+margin: 20px 0 15px 0;
+}
+
+.senderimg {
+float: left;
+margin: 0 15px 15px 0;
+}
+
+.separator {
+overflow: hidden;
+width: 100%;
+height: 4px;
+background: url(../images/separator.png) repeat-x left top;
+margin: 20px 0 30px 0;
+clear: all;
+}
+
+.gotop {
+margin: 1.5em 0 0 0;
+clear: all;
+}
+
+.title {
+text-align: left;
+margin: 0 0 10px 0;
+}
