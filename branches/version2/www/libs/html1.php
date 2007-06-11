@@ -68,6 +68,11 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
+	if(!empty($globals['link_id'])) {
+		// Pingback autodiscovery
+		// http://www.hixie.ch/specs/pingback/pingback
+		header('X-Pingback: http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php');
+	}
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
@@ -90,7 +95,13 @@ function do_header($title, $id='home') {
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('comentarios').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php" />'."\n";
 
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
-	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon" />' . "\n";
+	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
+
+	if(!empty($globals['link_id'])) {
+		// Pingback autodiscovery
+		// http://www.hixie.ch/specs/pingback/pingback
+		echo '<link rel="pingback" href="http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php"/>'."\n";
+	}
 
 	do_js_includes();
 
@@ -134,7 +145,7 @@ function do_header($title, $id='home') {
 function do_js_includes() {
 	global $globals;
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>';
+	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>'."\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
