@@ -12,6 +12,7 @@ include('config.php');
 include(mnminclude.'trackback.php');
 include(mnminclude.'IXR_Library.inc.php');
 include(mnminclude.'link.php');
+include(mnminclude.'ban.php');
 
 // Some browser-embedded clients send cookies. We don't want them.
 $_COOKIE = array();
@@ -54,7 +55,13 @@ class Xmlrpc_server extends IXR_Server {
 
 		$title = '';
 
+		$urlfrom = parse_url($pagelinkedfrom);
 		$urltest = parse_url($pagelinkedto);
+
+		if (!$urlfrom || !$urltest) {
+			return new IXR_Error(0, 'Is there no link to us?');
+		}
+
 		if ($urltest['host'] != get_server_name()) {
 			return new IXR_Error(0, 'Is there no link to us?');
 		}
@@ -65,6 +72,11 @@ class Xmlrpc_server extends IXR_Server {
 		// Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
 		if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $pagelinkedfrom)) {
 	  		return new IXR_Error(33, 'Host not allowed.');
+		}
+
+		if(check_ban($urlfrom[host], 'hostname', false)) {
+			syslog(LOG_NOTICE, "Meneame: pingback, site is banned: $pagelinkedfrom - $pagelinkedto");
+	  		return new IXR_Error(33, 'Site is banned.');
 		}
 
 		$link = new Link;
@@ -92,10 +104,22 @@ class Xmlrpc_server extends IXR_Server {
 		sleep(1);
 
 		// Let's check the remote site
-		$contents=@file_get_contents($pagelinkedfrom);
+		if(version_compare(phpversion(), '5.1.0') >= 0) {
+			$contents=@file_get_contents($pagelinkedfrom,FALSE,NULL,0,100000);
+		} else {
+			$contents=@file_get_contents($pagelinkedfrom);
+		}
+
 		if(!$contents) {
 			syslog(LOG_NOTICE, "Meneame: pingback, the provided URL does not seem to work: $pagelinkedfrom - $pagelinkedto");
 	  		return new IXR_Error(16, 'The source URL does not exist.');
+		}
+
+		if(preg_match('/charset=([a-zA-Z0-9-_]+)/i', $contents, $matches)) {
+			$this->encoding=trim($matches[1]);
+			if(strcasecmp($this->encoding, 'utf-8') != 0) {
+				$contents=iconv($this->encoding, 'UTF-8//IGNORE', $contents);
+			}
 		}
 
 		// Check is links back to us
