@@ -89,9 +89,9 @@ function do_header($title, $id='home') {
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
 
 	// css variable files: another alternate css files for some pages (such as notame) or no css files
-	// - pages with a different css files: after html1.php include you can change $css_main_file and $css_color_file variables with alternate filenames
+	// - pages with a different css files: after html1.php include you can change $css_main_file and $css_color_file variables with alternate filenames (empty variables = default files)
 	// - pages wit no css files: "nocolorcss" for no $css_color_file and "nomaincss" for no $css_main_file
-	// - config.php define default css files (empty variables = default files)
+	// - config.php define default css files
 	if ($css_main_file != "nomaincss") {
 		if ($css_main_file == "") // default css main file
 			$css_main_file = $globals['css_main'];
