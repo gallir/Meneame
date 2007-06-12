@@ -35,8 +35,8 @@ function avatars_manage_upload($user, $name) {
 		return false;
 	}
 	// Upload to DB and mark TRUE
-	system("convert -quality 85 -resize 20x20 $file_base-orig.img $file_base-20.jpg");
-	system("convert -quality 85 -resize 25x25 $file_base-orig.img $file_base-25.jpg");
+	avatar_resize("$file_base-orig.img", "$file_base-20.jpg", 20);
+	avatar_resize("$file_base-orig.img", "$file_base-25.jpg", 25);
 	unlink("$file_base-orig.img");
 	return true;
 }
@@ -99,8 +99,53 @@ function avatar_get_from_db($user, $size=0) {
 	if (!is_writable($subdir)) return false;
 	file_put_contents ($file_base . '-80.jpg', $img);
 	if ($size > 0 && $size != 80 && in_array($size, $globals['avatars_allowed_sizes'])) {
-		system("convert -quality 85  -resize ${size}x$size $file_base-80.jpg $file_base-$size.jpg");
+		avatar_resize("$file_base-80.jpg", "$file_base-$size.jpg", $size);
 		return file_get_contents("$file_base-$size.jpg");
 	}
 	return $img;
+}
+
+
+function avatar_resize($infile,$outfile,$size) {
+	$image_info = getImageSize($infile);
+	switch ($image_info['mime']) {
+		case 'image/gif':
+		if (imagetypes() & IMG_GIF)  {
+			$src_img = imageCreateFromGIF($infile) ;
+		} else {
+			$ermsg = 'GIF images are not supported<br />';
+		}
+		break;
+		case 'image/jpeg':
+		if (imagetypes() & IMG_JPG)  {
+			$src_img = imageCreateFromJPEG($infile) ;
+		} else {
+			$ermsg = 'JPEG images are not supported<br />';
+		}
+		break;
+		case 'image/png':
+		if (imagetypes() & IMG_PNG)  {
+			$src_img = imageCreateFromPNG($infile) ;
+		} else {
+			$ermsg = 'PNG images are not supported<br />';
+		}
+		break;
+		case 'image/wbmp':
+		if (imagetypes() & IMG_WBMP)  {
+			$src_img = imageCreateFromWBMP($infile) ;
+		} else {
+			$ermsg = 'WBMP images are not supported<br />';
+		}
+		break;
+		default:
+		$ermsg = $image_info['mime'].' images are not supported<br />';
+		break;
+	}
+	if (isset($ermsg)) {
+		echo "Error: $ermsg";
+		die;
+	}
+	$dst_img = ImageCreateTrueColor($size,$size);
+	imagecopyresampled($dst_img,$src_img,0,0,0,0,$size,$size,imagesx($src_img),imagesy($src_img));
+	imagejpeg($dst_img,$outfile,80);
 }
