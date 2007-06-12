@@ -126,8 +126,7 @@ function do_submit1() {
 
 
 	if(check_ban($globals['user_ip'], 'ip')) {
-		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('Dirección IP no permitida para enviar'). ' ('. $globals['ban_message'].') </p>';
+		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].'</p>';
 		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $_POST[url]");
 		print_empty_submit_form();
 		echo '</div>'. "\n";
@@ -343,7 +342,7 @@ function do_submit1() {
 	echo '<p class="genericformtxt"><strong>';
 	echo mb_substr($linkres->url_title, 0, 200);
 	echo '</strong><br/>';
-	echo htmlentities($linkres->url);
+	echo htmlspecialchars($linkres->url);
 	echo '</p> '."\n";
 	echo '</fieldset>'."\n";
 
