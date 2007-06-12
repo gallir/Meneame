@@ -105,7 +105,7 @@ function do_header($title, $id='home') {
 		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$css_color_file.'";</style>' . "\n";
 	}
 	$css_color_file = ""; // variable reset
-	// css open: end
+	// css variable files: end
 
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
