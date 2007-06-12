@@ -88,16 +88,17 @@ function do_header($title, $id='home') {
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
 
-	// css open: another alternate css files for some pages (such as notame)
-	// pages with a different css: after html1.php include you must charge $css_main_file and $css_color_file variables with filenames (or "nocolorcss" for $css_color_file and "nomaincss" for $css_main_file)
-	// main css file (empty = default file; "nocss" = no css file)
+	// css variable files: another alternate css files for some pages (such as notame) or no css files
+	// - pages with a different css files: after html1.php include you can change $css_main_file and $css_color_file variables with alternate filenames
+	// - pages wit no css files: "nocolorcss" for no $css_color_file and "nomaincss" for no $css_main_file
+	// - config.php define default css files (empty variables = default files)
 	if ($css_main_file != "nomaincss") {
 		if ($css_main_file == "") // default css main file
 			$css_main_file = $globals['css_main'];
 		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$css_main_file.'";</style>' . "\n";
 	}
 	$css_main_file = ""; // variable reset
-	// color css file ("nocolor" = no color file)
+	// color css file ("nocolorcss" = no color file)
 	if ($css_color_file != "nocolorcss") {
 		if ($css_color_file == "") // default css color file
 			$css_color_file = $globals['css_color'];
