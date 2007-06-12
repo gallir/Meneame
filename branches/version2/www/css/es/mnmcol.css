@@ -340,6 +340,10 @@ color: #FF6400;
 background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
 }
 
+.mnu-mnmadvertise a, .mnu-mnmadvertise a:visited {
+color: #FF9400;
+}
+
 .mnu-bugs, .mnu-menedising {
 color: #FF6400;
 background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;

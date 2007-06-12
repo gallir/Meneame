@@ -66,7 +66,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals;
+	global $current_user, $dblang, $globals, $css_main_file, $css_color_file;
 
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
@@ -87,8 +87,25 @@ function do_header($title, $id='home') {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnm33.css";</style>' . "\n";
-	echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/mnmcol.css";</style>' . "\n";
+
+	// css open: another alternate css files for some pages (such as notame)
+	// pages with a different css: after html1.php include you must charge $css_main_file and $css_color_file variables with filenames (or "nocolorcss" for $css_color_file and "nomaincss" for $css_main_file)
+	// main css file (empty = default file; "nocss" = no css file)
+	if ($css_main_file != "nomaincss") {
+		if ($css_main_file == "") // default css main file
+			$css_main_file = $globals['css_main'];
+		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$css_main_file.'";</style>' . "\n";
+	}
+	$css_main_file = ""; // variable reset
+	// color css file ("nocolor" = no color file)
+	if ($css_color_file != "nocolorcss") {
+		if ($css_color_file == "") // default css color file
+			$css_color_file = $globals['css_color'];
+		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$css_color_file.'";</style>' . "\n";
+	}
+	$css_color_file = ""; // variable reset
+	// css open: end
+
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('todas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=all" />'."\n";
@@ -217,6 +234,9 @@ function do_mnu_faq($whichpage) {
 	if ($current_user->user_id > 0) return; // Don't shpw FAQ if it's a registered user
 
 	echo '<div class="mnu-faq">' . "\n";
+
+	@include mnminclude.'ads/adhere.inc';
+
 	switch ($whichpage) {
 		case 'home':
 			echo '<strong>' . _("menéame"). '</strong>' . "\n";

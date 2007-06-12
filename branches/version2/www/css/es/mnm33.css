@@ -618,7 +618,7 @@ padding: 0;
 border: none;
 border-top: 1px solid;
 font-size: 90%;
-padding: 10px 4px 5px 4px;
+padding: 10px 4px 10px 4px;
 }
 
 .mnu-faq a {
@@ -639,6 +639,13 @@ font-size: 120%;
 border-top: 1px solid;
 border-bottom: 1px solid;
 font-weight: bolder;
+}
+
+.mnu-mnmadvertise {
+padding: 0 0 10px 0;
+text-align: center;
+font-weight: bold;
+size: 110%;
 }
 
 .mnu-sneak {
