@@ -73,7 +73,7 @@ function do_edit() {
 	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
 
 	// Allow to change the status
-	if ($linkres->status != 'published' && (($linkres->status != 'discard' && $current_user->user_id == $linkres->author) 
+	if ($linkres->votes > 0 && $linkres->status != 'published' && (($linkres->status != 'discard' && $current_user->user_id == $linkres->author) 
 							|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
