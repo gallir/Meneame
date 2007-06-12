@@ -251,7 +251,7 @@ function get_search_clause($option='') {
 			// With URLs, search with "like" because mysql (5.0) give erroneous results otherwise
 			$where = "link_url like '%$words%' ";
 		} else {
-			$where = "MATCH (link_url, link_url_title, link_title, link_content, link_tags) AGAINST ('$words' $mode) ";
+			$where = "MATCH (link_url, link_tags, link_title, link_content) AGAINST ('$words' $mode) ";
 		}
 		if (!empty($_REQUEST['from'])) {
 			$where .=  " AND link_date > from_unixtime(".intval($_REQUEST['from']).") ";
