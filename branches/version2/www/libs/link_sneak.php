@@ -12,7 +12,7 @@ var link_karma = 0;
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/link_sneak02.js.php"></script>
 <?
 echo '<div class="mini-sneaker-item">';
-echo '<div class="sneaker-title">';
+echo '<div class="mini-sneaker-title">';
 echo '<div class="mini-sneaker-ts"><strong>'._('hora').'</strong></div>';
 echo '<div class="mini-sneaker-type"><strong>'._('acción').'</strong></div>';
 echo '<div class="mini-sneaker-votes"><strong><abbr title="'._('meneos').'">me</abbr>/<abbr title="'._('comentarios').'">co</abbr></strong></div>';

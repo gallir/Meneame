@@ -1,0 +1,68 @@
+/* Menéame colors and images */
+
+/***
+All images referenced by the CSS and distributed in the tar file are 
+copyrighted by Benjamí Villoslada and published under a CC license: 
+http://creativecommons.org/licenses/by-sa/2.5/
+
+Source code was developed by Ricardo Galli, it's published 
+under the Affero GPL License (http://meneame.net/COPYING) unless
+stated otherwise in individual files.
+***/
+
+/* sneaker */
+
+.sneaker {
+background: url(../../img/common/elmnm-sneak-reverse02.png) 97% 95% no-repeat;
+}
+
+.sneaker-title strong {
+color: #FF9400;
+}
+
+.sneaker-legend {
+color: #FF6400;
+background: url(../../img/common/mnu-bkgsoft01.png) repeat-x bottom left;
+border-bottom-color: #FFF;
+}
+
+.sneaker-item {
+border-bottom-color: #FFE2C5;
+}
+
+.sneaker-chat {
+color: #9B0000;
+}
+
+.sneaker-chat a {
+color: #9B0000;
+}
+
+.sneaker-who img {
+border-color: #FFE2C5;
+}
+
+.sneaker-problem {
+color: #F00;
+}
+
+.sneaker-published {
+color: #FF6400;
+}
+
+.sneaker-discarded {
+color: #D9AA95;
+}
+
+.sneaker input {
+background: #FFE2C5;
+border-color: #FF6400;
+color: #303030;
+}
+
+.sneaker input.sendmessage {
+color: #FF6400;
+border-color: #FF6400;
+background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
+}
+

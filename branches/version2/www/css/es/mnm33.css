@@ -1259,7 +1259,7 @@ padding: 5px;
 margin: 0;
 }
 
-.sneaker-title strong {
+.mini-sneaker-title strong, .sneaker-title strong {
 font-size: 95%;
 }
 
