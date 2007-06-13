@@ -190,7 +190,6 @@ function do_submit1() {
 	$linkres->randkey = intval($_POST['randkey']);
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
-		syslog(LOG_NOTICE, "Meneame, error reading url ($current_user->user_login): $url");
 		// Dont allow new users with low karma to post wrong URLs
 		if ($current_user->user_karma < 6.5 && $current_user->user_level == 'normal') {
 			echo '<p>'._('URL inválido, incompleto o no permitido').'</p>';

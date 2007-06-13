@@ -196,25 +196,22 @@ function do_sidebar($do_vert_bars = true) {
 	do_mnu_sneak();
 	do_mnu_notame();
 
-	if($do_vert_bars) {
-		do_vertical_tags();
-		do_best_comments();
-		do_best_posts();
+	// don't show every box if it's a search
+	if (!isset($_REQUEST['search'])) {
+		do_mnu_meneria();
+		if($do_vert_bars) {
+			do_vertical_tags();
+			do_best_comments();
+			do_best_posts();
+		}
+		if(!empty($globals['link_id'])) {
+			do_mnu_trackbacks();
+		}
 	}
-	if(!empty($globals['link_id'])) {
-		do_mnu_trackbacks();
-	}
-
-// moved to subtabs (benjami 02-2007)
-// 	if(empty($globals['link_id'])) {
-// 		do_mnu_categories('index', $_REQUEST['category']);
-// 	}
-
-	do_mnu_meneria();
-	do_mnu_menedising();
-	do_mnu_tools();
-	do_mnu_bugs();
 	do_mnu_rss();
+	do_mnu_tools();
+	do_mnu_menedising();
+	do_mnu_bugs();
 	do_banner_left_down();
 	echo '</div><!--html1:do_sidebar-->' . "\n";
 }
@@ -299,8 +296,9 @@ function do_mnu_meneria () {
 	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topcommented.php">'._("más comentadas").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("webs").'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("nube de webs").'</a></li>' . "\n";
 	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
+	echo '<li><a href="http://mueveme.net" title="'._('para móviles').'">'._('muéveme').'</a></li>' . "\n";
 	echo '</ul>' . "\n";
 }
 
@@ -390,7 +388,7 @@ function do_mnu_trackbacks() {
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
 			$trackback->read();
-			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->url.'" title="'.$trackback->content.'">'.$trackback->title.'</a></li>' . "\n";
+			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
 		}
 	}
 // 	echo '<li class="mnu-trackback-entry"><a href="#">prova</a></li>';
@@ -707,7 +705,7 @@ function do_best_comments() {
 function do_best_posts() {
 	global $db, $globals, $dblang;
 
-	$min_date = date("Y-m-d H:00:00", time() - 43200); // about 12 hours
+	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
 	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id order by post_karma desc limit 10");
 	if ($res) {
 		echo '<div class="vertical-box">';
