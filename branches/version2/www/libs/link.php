@@ -63,7 +63,7 @@ class Link {
 		return true;
 	}
 
-	function get($url) {
+	function get($url, $maxlen = 100000) {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
@@ -109,7 +109,7 @@ class Link {
 						}
 					}
 				}
-				$url_ok = $this->html = @stream_get_contents($stream, 200000);
+				$url_ok = $this->html = @stream_get_contents($stream, $maxlen);
 				fclose($stream);
 			} else {
 				syslog(LOG_NOTICE, "Meneame, error getting ($current_user->user_login): $url");
@@ -153,46 +153,56 @@ class Link {
 
 		if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $this->html, $matches)) {
 			$url_title=clean_text($matches[1]);
-			$is_html = true;
 			if (mb_strlen($url_title) > 3) {
 				$this->url_title=$url_title;
 			}
 		}
+		return true;
+	}
 
 
+	function trackback() {
 		// Now detect trackbacks
-		if (!empty($_POST['trackback'])) {
-			$this->trackback=trim($_POST['trackback']);
-		} elseif (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
+		if (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
 			preg_match('/trackback:ping +rdf:resource="([^>]+)"/i', $this->html, $matches) || 
 			preg_match('/<trackback:ping>([^<>]+)/i', $this->html, $matches)) {
-			$this->trackback=trim($matches[1]);
+			$trackback=trim($matches[1]);
 		} elseif (preg_match('/<a[^>]+rel="trackback"[^>]*>/i', $this->html, $matches)) {
 			if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
-				$this->trackback=trim($matches2[1]);
+				$trackback=trim($matches2[1]);
 			}
 		} elseif (preg_match('/<a[^>]+href=[^>]+>[^>]*trackback[^>]*<\/a>/i', $this->html, $matches)) {
 			if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
-				$this->trackback=trim($matches2[1]);
+				$trackback=trim($matches2[1]);
 			}
 		}  elseif (preg_match('/(http:\/\/[^\s]+\/trackback\/*)/i', $this->html, $matches)) {
-			$this->trackback=trim($matches[0]);
+			$trackback=trim($matches[0]);
 		}
 
+		if (!empty($trackback)) {
+			$this->trackback = clean_input_url($trackback);
+			return true;
+		}
+		return false;
+	}
+
+	function pingback() {
+		$url_components = @parse_url($this->url);
 		// Now we use previous pingback or detect it
-				// avoid to send pingback to global sites
-		if (empty($this->trackback) && $is_html &&
-				(!empty($url_components['query']) || preg_match('|^/.*[\.-/]+|', $url_components['path']))) {
+		if ((!empty($url_components['query']) || preg_match('|^/.*[\.-/]+|', $url_components['path']))) {
 			if (!empty($this->pingback)) {
-				$this->trackback = $this->pingback;
+				$trackback = $this->pingback;
 			} elseif (preg_match('/<link[^>]+rel="pingback"[^>]*>/i', $this->html, $matches)) {
 				if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
-					$this->trackback='ping:'.trim($matches2[1]);
+					$trackback='ping:'.trim($matches2[1]);
 				}
 			}
 		}
-		$this->trackback = clean_input_url($this->trackback);
-		return true;
+		if (!empty($trackback)) {
+			$this->trackback = clean_input_url($trackback);
+			return true;
+		}
+		return false;
 	}
 
 	function create_blog_entry() {

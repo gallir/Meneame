@@ -92,8 +92,9 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		$trackres = new Trackback;
-		$trackres->link=$link->id;
+		$trackres->link_id=$link->id;
 		$trackres->type='in';
+		$trackres->link = $pagelinkedfrom;
 		$trackres->url = $pagelinkedfrom;
 		$dupe = $trackres->read();
 		if ( $dupe ) {

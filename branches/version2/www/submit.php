@@ -186,7 +186,6 @@ function do_submit1() {
 	// If the URL has changed, check again is not dupe
 	if($linkres->url != $url && report_dupe($linkres->url)) return;
 
-	$trackback=htmlspecialchars($linkres->trackback);
 	$linkres->randkey = intval($_POST['randkey']);
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
@@ -220,6 +219,10 @@ function do_submit1() {
 	$linkres->status='discard';
 	$linkres->author=$current_user->user_id;
 
+	if (!$linkres->trackback()) {
+		$linkres->pingback();
+	}
+	$trackback=htmlspecialchars($linkres->trackback);
 	$linkres->create_blog_entry();
 	$blog = new Blog;
 	$blog->id = $linkres->blog;
@@ -461,7 +464,8 @@ function do_submit3() {
 			require_once(mnminclude.'trackback.php');
 			$trackres = new Trackback;
 			$trackres->url=clean_input_url($_POST['trackback']);
-			$trackres->link=$linkres->id;
+			$trackres->link_id=$linkres->id;
+			$trackres->link=$linkres->url;
 			//$trackres->title=$linkres->title;
 			$trackres->author=$linkres->author;
 			//$trackres->content=$linkres->content;

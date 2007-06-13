@@ -10,13 +10,14 @@
 class Trackback {
 	var $id = 0;
 	var $author = 0;
-	var $link = 0;
+	var $link_id = 0;
 	var $type = 'out';
 	var $status = 'pendent';
 	var $date = false;
 	var $modified = false;
 	var $url  = '';
 	var $title = '';
+	var $link = '';
 	var $content = '';
 	var $read = false;
 
@@ -26,34 +27,36 @@ class Trackback {
 		if(!$this->date) $this->date=time();
 		$trackback_date=$this->date;
 		$trackback_author = $this->author;
-		$trackback_link = $this->link;
+		$trackback_link_id = $this->link_id;
 		$trackback_type = $this->type;
 		$trackback_status = $this->status;
 		$trackback_url = $db->escape(trim($this->url));
+		$trackback_link = $db->escape(trim($this->link));
 		$trackback_title = $db->escape(trim($this->title));
 		$trackback_content = $db->escape(trim($this->content));
 		if($this->id===0) {
-			$db->query("INSERT INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_status, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link, '$trackback_type', FROM_UNIXTIME($trackback_date), '$trackback_status', '$trackback_url', '$trackback_title', '$trackback_content')");
+			$db->query("INSERT INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_status, trackback_link, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link_id, '$trackback_type', FROM_UNIXTIME($trackback_date), '$trackback_status', '$trackback_link', '$trackback_url', '$trackback_title', '$trackback_content')");
 			$this->id = $db->insert_id;
 		} else {
-			$db->query("UPDATE trackbacks set trackback_user_id=$trackback_author, trackback_link_id=$trackback_link, trackback_type='$trackback_type', trackback_date=FROM_UNIXTIME($trackback_date), trackback_status='$trackback_status', trackback_url='$trackback_url', trackback_title='$trackback_title', trackback_content='$trackback_content' WHERE trackback_id=$this->id");
+			$db->query("UPDATE trackbacks set trackback_user_id=$trackback_author, trackback_link_id=$trackback_link_id, trackback_type='$trackback_type', trackback_date=FROM_UNIXTIME($trackback_date), trackback_status='$trackback_status', trackback_link='$trackback_link', trackback_url='$trackback_url', trackback_title='$trackback_title', trackback_content='$trackback_content' WHERE trackback_id=$this->id");
 		}
 	}
 	
 	function read() {
 		global $db, $current_user;
 
-		if($this->id == 0 && !empty($this->url) && $this->link > 0) 
-			$cond = "trackback_type = '$this->type' AND trackback_link_id = $this->link AND trackback_url = '$this->url'";
+		if($this->id == 0 && !empty($this->link)  && $this->link_id > 0) 
+			$cond = "trackback_type = '$this->type' AND trackback_link_id = $this->link_id AND trackback_link = '$this->link'";
 
 		else $cond = "trackback_id = $this->id";
 	
 		if(($link = $db->get_row("SELECT * FROM trackbacks WHERE $cond"))) {
 			$this->id=$link->trackback_id;
 			$this->author=$link->trackback_user_id;
-			$this->link=$link->trackback_link_id;
+			$this->link_id=$link->trackback_link_id;
 			$this->type=$link->trackback_type;
 			$this->status=$link->trackback_status;
+			$this->link=$link->trackback_link;
 			$this->url=$link->trackback_url;
 			$this->title=$link->trackback_title;
 			$this->content=$link->trackback_content;
@@ -75,6 +78,7 @@ class Trackback {
                 return;
 
 		$this->title = clean_input_url($link->url);
+
 		if (preg_match('/^ping:/', $this->url)) { // we got a pingback adress
 			require_once(mnminclude.'IXR_Library.inc.php');
 			$url = preg_replace('/^ping:/', '', $this->url);
@@ -82,7 +86,7 @@ class Trackback {
 			$client->timeout = 3;
 			$client->useragent .= ' -- Meneame/2';
 			$client->debug = false;
-			if ($client->query('pingback.ping', $link->get_permalink(), $link->url )) {
+			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();
 				return true;

@@ -388,7 +388,7 @@ function do_mnu_trackbacks() {
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
 			$trackback->read();
-			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
+			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->link.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
 		}
 	}
 // 	echo '<li class="mnu-trackback-entry"><a href="#">prova</a></li>';

@@ -29,10 +29,13 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia no modificable").'</div>'."\n";
 		return;
 	} 
-	if ($_POST['phase'] == "1") 
+	if ($_POST['phase'] == "1") {
+		require_once(mnminclude.'admin_utils.php');
+		fork('backend/send_pingbacks.php');
 		do_save();
-	else 
+	} else {
 		do_edit();
+	}
 } else {
 	echo '<div class="form-error-submit">&nbsp;&nbsp;'._("¿duh?").'</div>';
 }

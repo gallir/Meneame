@@ -69,18 +69,19 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	$excerpt = (strlen($excerpt) > 200) ? substr($excerpt, 0, 200) . '...' : $excerpt;
 
 	$trackres = new Trackback;
-	$trackres->link=$tb_id;
+	$trackres->link_id=$tb_id;
 	$trackres->type='in';
+	$trackres->link = $tb_url;
 	$trackres->url = $tb_url;
 	$dupe = $trackres->read();
 	if ( $dupe ) {
-		syslog(LOG_DEBUG, 'We already have a ping from that URI for this post.');
+		syslog(LOG_NOTICE, "We already have a ping from that URI for this post: $tb_url - $permalink");
 		trackback_response(1, 'We already have a ping from that URI for this post.');
 	}
   
 	$contents=@file_get_contents($tb_url);
 	if(!$contents) {
-		syslog(LOG_DEBUG, 'The provided URL does not seem to work.');
+		syslog(LOG_NOTICE, "The provided URL does not seem to work: $tb_url");
 		trackback_response(1, 'The provided URL does not seem to work.');
 	}
 	
@@ -89,14 +90,15 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
     $permalink_q=preg_quote($permalink,'/');
 	$pattern="/<\s*a.*href\s*=[\"'\s]*".$permalink_q."[#\/0-9a-z\-]*[\"'\s]*.*>.*<\s*\/\s*a\s*>/i";
 	if(!preg_match($pattern,$contents)) {
-		syslog(LOG_DEBUG, 'The provided URL does not have a link back to us.');
+		syslog(LOG_NOTICE, "The provided URL does not have a link back to us: $tb_url");
 		trackback_response(1, 'The provided URL does not have a link back to us.');
 	}
 	
 	$trackres->title=$title;
-	$trackres->content=$excerpt;
+	//$trackres->content=$excerpt;
 	$trackres->status='ok';
 	$trackres->store();
+	syslog(LOG_NOTICE, "Meneame: trackback ok: $tb_url - $permalink");
 
 	trackback_response(0);
 }
