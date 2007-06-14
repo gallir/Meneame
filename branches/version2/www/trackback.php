@@ -55,7 +55,10 @@ if (empty($title) && empty($tb_url) && empty($blog_name)) {
 }
 
 // Antispam, avoid trackbacks in old articles
-if ($link->date < (time() - 86400*7)) die;
+if ($link->date < (time() - 86400*15)) {
+	syslog(LOG_NOTICE, "Too old: " . $link->get_permalink());
+	die;
+}
 // Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
 if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $tb_url)) die;
 

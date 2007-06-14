@@ -169,7 +169,7 @@ function do_submit1() {
 
 	if(report_dupe($url)) return;
 
-	if(!$linkres->get($url)) {
+	if(!$linkres->check_url($url) || !$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
 		echo '<p>'._('URL inválido, incompleto o no permitido'). ' ('. $globals['ban_message'].') </p>';
 
@@ -177,7 +177,6 @@ function do_submit1() {
 		if ($linkres->banned) {
 			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
 		}
-
 		print_empty_submit_form();
 		echo '</div>'. "\n";
 		return;
@@ -471,6 +470,7 @@ function do_submit3() {
 			//$trackres->content=$linkres->content;
 			$res = $trackres->send($linkres);
 		}
+		fork("backend/send_pingbacks.php?id=$linkres->id");
 	}
 
 	header("Location: shakeit.php");

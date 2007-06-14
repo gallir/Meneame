@@ -30,9 +30,8 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 		return;
 	} 
 	if ($_POST['phase'] == "1") {
-		require_once(mnminclude.'admin_utils.php');
-		fork('backend/send_pingbacks.php');
 		do_save();
+		fork("backend/send_pingbacks.php?id=$linkres->id");
 	} else {
 		do_edit();
 	}

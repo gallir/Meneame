@@ -86,15 +86,16 @@ class Trackback {
 			$client->timeout = 3;
 			$client->useragent .= ' -- Meneame/2';
 			$client->debug = false;
+			echo "ENVIANDO: " . $link->get_permalink() ." $this->link\n";
 			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();
 				return true;
 			} else {
 				// Be quiet for pingbacks
-				//$this->status='error';
-				//$this->title = $client->getErrorMessage();
-				//$this->store();
+				$this->status='error';
+				$this->title = $client->getErrorMessage();
+				$this->store();
 				syslog(LOG_NOTICE, "Meneame, out pingback error: $url ".$link->get_permalink().': '.$client->getErrorCode().' '.$client->getErrorMessage());
 				return false;
 			}

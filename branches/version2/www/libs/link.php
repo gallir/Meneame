@@ -51,6 +51,7 @@ class Link {
 		if (!$url_components) return false;
 		$quoted_domain = preg_quote(get_server_name());
 		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
+			$globals['ban_message'] = _('el servidor es local');
 			syslog(LOG_NOTICE, "Meneame, server name is local name ($current_user->user_login): $url");
 			return false;
 		}
@@ -67,7 +68,6 @@ class Link {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
-		if (!$this->check_url($url)) return false;
 		if(version_compare(phpversion(), '5.0.0') >= 0) {
 			$opts = array(
 				'http' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7, 'timeout' => 10),
