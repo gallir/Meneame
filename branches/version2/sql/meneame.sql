@@ -135,7 +135,7 @@ CREATE TABLE `friends` (
   `friend_type` enum('affiliate','manual','hide') collate utf8_spanish_ci NOT NULL default 'affiliate',
   `friend_from` int(10) NOT NULL default '0',
   `friend_to` int(10) NOT NULL default '0',
-  `friend_value` decimal(10,6) NOT NULL default '0.000000',
+  `friend_value` smallint(3) NOT NULL default '0',
   UNIQUE KEY `friend_type` (`friend_type`,`friend_from`,`friend_to`),
   KEY `friend_type_2` (`friend_type`,`friend_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -185,8 +185,8 @@ CREATE TABLE `links` (
   KEY `link_status` (`link_status`,`link_published_date`),
   KEY `link_status_2` (`link_status`,`link_date`),
   KEY `link_author` (`link_author`,`link_date`),
-  FULLTEXT KEY `link_url_2` (`link_url`,`link_url_title`,`link_title`,`link_content`,`link_tags`),
-  FULLTEXT KEY `link_tags` (`link_tags`)
+  FULLTEXT KEY `link_tags` (`link_tags`),
+  FULLTEXT KEY `link_url_2` (`link_url`,`link_tags`,`link_title`,`link_content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -278,11 +278,12 @@ CREATE TABLE `trackbacks` (
   `trackback_status` enum('ok','pendent','error') collate utf8_spanish_ci NOT NULL default 'pendent',
   `trackback_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `trackback_date` timestamp NULL default NULL,
-  `trackback_url` varchar(200) collate utf8_spanish_ci NOT NULL default '',
+  `trackback_link` varchar(250) collate utf8_spanish_ci NOT NULL,
+  `trackback_url` varchar(250) collate utf8_spanish_ci default NULL,
   `trackback_title` text collate utf8_spanish_ci,
   `trackback_content` text collate utf8_spanish_ci,
   PRIMARY KEY  (`trackback_id`),
-  UNIQUE KEY `trackback_link_id_2` (`trackback_link_id`,`trackback_type`,`trackback_url`),
+  UNIQUE KEY `trackback_link_id_2` (`trackback_link_id`,`trackback_type`,`trackback_link`),
   KEY `trackback_link_id` (`trackback_link_id`),
   KEY `trackback_url` (`trackback_url`),
   KEY `trackback_date` (`trackback_date`)
@@ -365,4 +366,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-05-23  0:33:45
+-- Dump completed on 2007-06-14  1:33:29
