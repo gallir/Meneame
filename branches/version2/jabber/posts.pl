@@ -66,17 +66,21 @@ sub InMessage {
 		$jabber->SendMessage($poster, "no tienes suficiente karma");
 		return;
 	}
+	chomp($body);
 	if ($body =~ /^ *!/) {
 		ExecuteCommand($poster, $body);
 		return;
 	}
 
-	if (length($body) < 10) {
-		$jabber->SendMessage($poster, "mensaje muy corto");
+
+	my $ascii = $body;
+	$ascii =~ s/[^a-z]//ig;
+	if (length($ascii) < 8) {
+		$jabber->SendMessage($poster, "mensaje muy corto o sin caracteres válidos");
 		return;
 	}
 	if (length($body) > 300) {
-		$jabber->SendMessage($poster, "mensaje demsiado largo (long max: 300)");
+		$jabber->SendMessage($poster, "mensaje demasiado largo (long max: 300)");
 		return;
 	}
 
