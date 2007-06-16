@@ -134,7 +134,7 @@ class Post {
 
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < 3600 ) ||
-			 ($current_user->user_level == 'god' && time() - $this->date < 86400)) { // Admins can edit up to 24 hs hours
+			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
 			$expand = '<br /><br />&#187;&nbsp;' . 
 				'<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar').'</a>';
 

@@ -55,7 +55,7 @@ if (empty($title) && empty($tb_url) && empty($blog_name)) {
 }
 
 // Antispam, avoid trackbacks in old articles
-if ($link->date < (time() - 86400*15)) {
+if ($link->date < (time() - 86400*7)) {
 	syslog(LOG_NOTICE, "Too old: " . $link->get_permalink());
 	die;
 }

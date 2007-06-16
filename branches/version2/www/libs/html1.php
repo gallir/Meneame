@@ -381,7 +381,7 @@ function do_mnu_trackbacks() {
 
 	echo '<li><ul class="mnu-trackback-list">' . "\n";
 	$id=$globals['link_id'];
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' ORDER BY trackback_date DESC");	
+	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' ORDER BY trackback_date DESC limit 10");	
 	if ($trackbacks) {
 		require_once(mnminclude.'trackback.php');
 		$trackback = new Trackback;

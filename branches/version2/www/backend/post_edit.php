@@ -51,7 +51,7 @@ function save_post ($post_id) {
 			$current_user->user_id == $post->author &&
 			time() - $post->date < 3600) ||
 			// Allow the admin
-			($current_user->user_level == 'god' && time() - $post->date < 86400)) &&
+			($current_user->user_level == 'god' && time() - $post->date < 864000)) &&
 			$_POST['key']  == $post->randkey ) {
 			$post->content=$_POST['post'];
 			if (strlen($post->content) > 0 ) {
