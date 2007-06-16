@@ -288,13 +288,17 @@ function insert_comment () {
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
 		if (mb_strlen($comment->content) > 0 && preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			// Lower karma to comments' spammers
-			$comment_count = $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id && comment_date > date_sub(now(), interval 3 minute)");
-			if ($comment_count > 3) {
+			$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
+			// Check the text is not the same
+			// WARNING: $db->escape(clean_lines($comment->content)) should be the sama as in libs/comment.php (unify both!)
+			$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id  and comment_date > date_sub(now(), interval 24 hour) and comment_content = '".$db->escape(clean_lines($comment->content))."'");
+			if ($comment_count > 3 || $same_count > 0) {
 				require_once(mnminclude.'user.php');
+				$reduction = $comment_count * 0.1 + $same_count * 0.3;
 				$user = new User;
 				$user->id = $current_user->user_id;
 				$user->read();
-				$user->karma = $user->karma - 0.5;
+				$user->karma = $user->karma - $reduction;
 				$user->store();
 
 			}
