@@ -5,7 +5,7 @@ include(mnminclude.'trackback.php');
 
 
 if($_SERVER["SERVER_ADDR"] != $_SERVER["REMOTE_ADDR"]) {
-	syslog(LOG_NOTICE, "Remote address $_SERVER[REMOTE_ADDR] is no local address.");
+	syslog(LOG_NOTICE, "Menéame: Remote address $_SERVER[REMOTE_ADDR] is no local address ($_SERVER[SERVER_ADDR]).");
 	echo "ein? $_SERVER[REMOTE_ADDR]\n";
 	die;
 }

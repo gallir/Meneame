@@ -91,6 +91,7 @@ class Trackback {
 			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();
+				syslog(LOG_NOTICE, "Meneame, pingback sent: $this->link, $this->url");
 				return true;
 			} else {
 				// Be quiet for pingbacks
@@ -136,10 +137,26 @@ class Trackback {
         	@fclose($fs);
 			$this->status='ok';
 			$this->store();
+			syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
 			return true;	
 		}
 		$this->status='error';	
 		$this->store();
         return false;
+	}
+
+	function abuse() {
+		global $globals, $db;
+		if ($globals['user_ip'] !=  $_SERVER["SERVER_ADDR"]) {
+			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_date > date_sub(now(), interval 120 minute) and trackback_type='in' and trackback_ip_int = $globals[user_ip_int]");
+			if ($tbs > 2) {
+				syslog(LOG_NOTICE, "Meneame: trackback/pingback abuse from $globals[user_ip], $this->link, $this->url");
+				if (!empty($this->link) && $this->type == 'in') {
+					$this->status = 'error';
+					$this->store();
+				}
+				return true;
+			}
+		} 
 	}
 }

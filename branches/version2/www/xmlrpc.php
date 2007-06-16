@@ -103,6 +103,10 @@ class Xmlrpc_server extends IXR_Server {
 		$trackres->type='in';
 		$trackres->link = $pagelinkedfrom;
 		$trackres->url = $pagelinkedfrom;
+		if ($trackres->abuse()) {
+	  		return new IXR_Error(33, 'Don\'t send so many pings.');
+		}
+
 		$dupe = $trackres->read();
 		if ( $dupe ) {
 			syslog(LOG_NOTICE, "Meneame: pingback, we already have a ping from that URI for this post: $pagelinkedfrom - $pagelinkedto");
