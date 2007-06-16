@@ -14,7 +14,7 @@ class Trackback {
 	var $type = 'out';
 	var $status = 'pendent';
 	var $date = false;
-	var $modified = false;
+	var $ip = 0;
 	var $url  = '';
 	var $title = '';
 	var $link = '';
@@ -22,10 +22,12 @@ class Trackback {
 	var $read = false;
 
 	function store() {
-		global $db, $current_user;
+		global $db, $current_user, $globals;
 
 		if(!$this->date) $this->date=time();
+		if($this->ip == 0) $this->ip = $globals['user_ip_int'];
 		$trackback_date=$this->date;
+		$trackback_ip_int=$this->ip;
 		$trackback_author = $this->author;
 		$trackback_link_id = $this->link_id;
 		$trackback_type = $this->type;
@@ -35,10 +37,10 @@ class Trackback {
 		$trackback_title = $db->escape(trim($this->title));
 		$trackback_content = $db->escape(trim($this->content));
 		if($this->id===0) {
-			$db->query("INSERT INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_status, trackback_link, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link_id, '$trackback_type', FROM_UNIXTIME($trackback_date), '$trackback_status', '$trackback_link', '$trackback_url', '$trackback_title', '$trackback_content')");
+			$db->query("INSERT INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_ip_int, trackback_status, trackback_link, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link_id, '$trackback_type', FROM_UNIXTIME($trackback_date), $trackback_ip_int, '$trackback_status', '$trackback_link', '$trackback_url', '$trackback_title', '$trackback_content')");
 			$this->id = $db->insert_id;
 		} else {
-			$db->query("UPDATE trackbacks set trackback_user_id=$trackback_author, trackback_link_id=$trackback_link_id, trackback_type='$trackback_type', trackback_date=FROM_UNIXTIME($trackback_date), trackback_status='$trackback_status', trackback_link='$trackback_link', trackback_url='$trackback_url', trackback_title='$trackback_title', trackback_content='$trackback_content' WHERE trackback_id=$this->id");
+			$db->query("UPDATE trackbacks set trackback_user_id=$trackback_author, trackback_link_id=$trackback_link_id, trackback_type='$trackback_type', trackback_date=FROM_UNIXTIME($trackback_date), trackback_ip_int=$trackback_ip_int, trackback_status='$trackback_status', trackback_link='$trackback_link', trackback_url='$trackback_url', trackback_title='$trackback_title', trackback_content='$trackback_content' WHERE trackback_id=$this->id");
 		}
 	}
 	
@@ -60,10 +62,9 @@ class Trackback {
 			$this->url=$link->trackback_url;
 			$this->title=$link->trackback_title;
 			$this->content=$link->trackback_content;
+			$this->ip=$link->trackback_ip_int;
 			$date=$link->trackback_date;
 			$this->date=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");
-			$date=$link->trackback_modified;
-			$this->modified=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");
 			$this->read = true;
 			return true;
 		}
