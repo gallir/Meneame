@@ -299,6 +299,7 @@ function insert_comment () {
 				$user->id = $current_user->user_id;
 				$user->read();
 				$user->karma = $user->karma - $reduction;
+				syslog(LOG_NOTICE, "Meneame: decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
 				$user->store();
 
 			}
