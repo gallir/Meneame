@@ -49,6 +49,7 @@ class Link {
 		if(!preg_match('/^http[s]*:/', $url)) return false;
 		$url_components = @parse_url($url);
 		if (!$url_components) return false;
+		if (!preg_match('/[a-z]+/', $url_components['host'])) return false;
 		$quoted_domain = preg_quote(get_server_name());
 		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
 			$globals['ban_message'] = _('el servidor es local');
