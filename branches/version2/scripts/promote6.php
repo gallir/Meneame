@@ -1,6 +1,7 @@
 <?
 include('../config.php');
 include(mnminclude.'link.php');
+include(mnminclude.'user.php');
 include_once(mnminclude.'log.php');
 
 header("Content-Type: text/html");
@@ -47,7 +48,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.9;
+$min_karma_coef = 0.87;
 define(MAX, 1.20);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
@@ -96,11 +97,12 @@ $min_votes = 5;
 /////////////
 
 echo "Current MIN karma: <b>$min_karma</b>    MIN votes: $min_votes<br></p>\n";
-$limit_karma = round(min($past_karma,$min_karma) * 0.70);
-$where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $limit_karma/2)) and user_id = link_author";
+$limit_karma = round(min($past_karma,$min_karma) * 0.50);
+$bonus_karma = round(min($past_karma,$min_karma) * 0.50);
+$where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $bonus_karma)) and user_id = link_author";
 $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
-$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from links, users where $where $sort LIMIT 20");
+$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from links, users where $where $sort LIMIT 40");
 $rows = $db->num_rows;
 if (!$rows) {
 	echo "There are no articles<br>\n";
@@ -119,6 +121,9 @@ if ($links) {
 		$link = new Link;
 		$link->id=$dblink->link_id;
 		$link->read_basic();
+		$user = new User;
+		$user->id = $link->author;
+		$user->read();
 		$karma_pos_user = 0;
 		$karma_neg_user = 0;
 		$karma_pos_ano = 0;
@@ -132,8 +137,13 @@ if ($links) {
 		$karma_pos_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'"));
 		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
-		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
-		$karma_neg_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id = 0 and vote_value < 0"));
+		// If the user was disabled don't count anon. votes due to abuses
+		if ($user->level != 'disabled') {
+			$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
+			$karma_neg_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id = 0 and vote_value < 0"));
+		} else {
+			$karma_pos_ano = $karma_neg_ano = 0;
+		}
 
 		$karma_new = $karma_pos_user + $karma_neg_user;
 		// To void votes spamming
@@ -183,7 +193,11 @@ if ($links) {
 		} else $karma_mess = '';
 		print "<tr><td class='tnumber$imod'>$link->id</td><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
 		echo "<td class='tdata$imod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
-		echo "$karma_mess</td>\n";
+		echo $karma_mess;
+		if ($user->level == 'disabled') {
+			echo " $user->username disabled, probably due to abuses, anonymous votes ignored.";
+		}
+		echo "</td>\n";
 			
 		if ($link->user_level != 'disabled' && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
