@@ -290,16 +290,21 @@ function insert_comment () {
 			// Lower karma to comments' spammers
 			$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
 			// Check the text is not the same
-			// WARNING: $db->escape(clean_lines($comment->content)) should be the sama as in libs/comment.php (unify both!)
-			$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id  and comment_date > date_sub(now(), interval 24 hour) and comment_content = '".$db->escape(clean_lines($comment->content))."'");
-			if ($comment_count > 3 || $same_count > 0) {
+			$same_count = $comment->same_text_count() + $comment->same_links_count();
+			if ($comment_count > 3 || $same_count > 1) {
 				require_once(mnminclude.'user.php');
-				$reduction = $comment_count * 0.1 + $same_count * 0.3;
+				$reduction = 0;
+				if ($comment_count > 3) {
+					$reduction += ($comment_count-3) * 0.1;
+				}
+				if($same_count > 1) {
+					$reduction += $same_count * 0.25;
+				}
 				$user = new User;
 				$user->id = $current_user->user_id;
 				$user->read();
 				$user->karma = $user->karma - $reduction;
-				syslog(LOG_NOTICE, "Meneame: decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
+				syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
 				$user->store();
 
 			}

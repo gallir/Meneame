@@ -72,7 +72,9 @@ function save_post ($post_id) {
 
 		// Check the post wasn't already stored
 		$post->randkey=intval($_POST['key']);
-		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 24 hour) and post_randkey = $post->randkey"));
+		$post->author=$current_user->user_id ;
+		$post->content=$_POST['post'];
+		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 12 hour) and post_randkey = $post->randkey")) + $post->same_text_count();
 		if (!$already_stored) {
 			// Verify that there are a period of 1 minute between posts.
 			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 1 minute)"))> 0) {
@@ -80,8 +82,19 @@ function save_post ($post_id) {
 				die;
 			};
 
-			$post->author=$current_user->user_id ;
-			$post->content=$_POST['post'];
+			$same_links = $post->same_links_count();
+			if ($same_links > 2) {
+				require_once(mnminclude.'user.php');
+				$user = new User;
+				$user->id = $current_user->user_id;
+				$user->read();
+				$reduction = $same_links * 0.2;
+				$user->karma = $user->karma - $reduction;
+				syslog(LOG_NOTICE, "Meneame: post_edit decreasing $reduction of karma to $user->username (now $user->karma)");
+				$user->store();
+			}
+
+
 			$post->store();
 		} else {
 			echo 'ERROR: ' . _('comentario grabado previamente');

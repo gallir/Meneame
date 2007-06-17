@@ -54,15 +54,17 @@ if (mb_strlen($text) < 5) {
 	die;
 }
 
-$dbtext = $db->escape($text);
-
 // Testinf mode print message an die
 if (isset($_REQUEST['test'])) {
 	echo 'OK: ' . $text; 
 	die;
 }
 
-if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 12 hour) and post_content = '$dbtext'"))> 0) {
+$post->author=$user->id;
+$post->src='api';
+$post->content=$text;
+
+if($post->same_text_count(60) > 0) {
 		echo 'KO: ' . _('nota previamente grabada');
 		die;
 };
@@ -73,9 +75,15 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 		die;
 };
 
-$post->author=$user->id;
-$post->src='api';
-$post->content=$text;
+$same_links = $post->same_links_count();
+if ($same_links > 2) {
+	$reduction = $same_links * 0.2;
+	$user->karma = $user->karma - $reduction;
+	syslog(LOG_NOTICE, "Meneame: newpost decreasing $reduction of karma to $user->username (now $user->karma)");
+	$user->store();
+}
+
+
 $post->store();
 echo 'OK: ' . _('nota grabada');
 

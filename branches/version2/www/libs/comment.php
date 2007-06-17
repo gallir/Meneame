@@ -224,4 +224,28 @@ class Comment {
 		}
 	}
 
+	function same_text_count($min=30) {
+		global $db;
+		// WARNING: $db->escape(clean_lines($comment->content)) should be the sama as in libs/comment.php (unify both!)
+		return (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author  and comment_date > date_sub(now(), interval $min minute) and comment_content = '".$db->escape(clean_lines($this->content))."'");
+	}
+
+	function same_links_count($min=30) {
+		global $db;
+		$count = 0;
+		$localdomain = preg_quote(get_server_name(), '/');
+		preg_match_all('/([\(\[:\.\s]|^)(https*:\/\/[^ \t\n\r\]\(\)\&]{5,70}[^ \t\n\r\]\(\)]*[^ .\t,\n\r\(\)\"\'\]\?])/i', $this->content, $matches);
+		foreach ($matches[2] as $match) {
+			$link=clean_input_url($match);
+			$components = parse_url($link);
+			if (! preg_match("/.*$localdomain$/", $components[host])) {
+				$link = "//$components[host]$components[path]";
+				$link=preg_replace('/(_%)/', "\$1", $link);
+				$link=$db->escape($link);
+				$count += (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'");
+			}
+		}
+		return $count;
+	}
+
 }
