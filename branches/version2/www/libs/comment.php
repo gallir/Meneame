@@ -242,7 +242,7 @@ class Comment {
 				$link = "//$components[host]$components[path]";
 				$link=preg_replace('/(_%)/', "\$1", $link);
 				$link=$db->escape($link);
-				$count += (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'");
+				$count = max($count, (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'"));
 			}
 		}
 		return $count;

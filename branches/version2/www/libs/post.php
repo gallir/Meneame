@@ -266,7 +266,7 @@ class Post {
 				$link = "//$components[host]$components[path]";
 				$link=preg_replace('/(_%)/', "\$1", $link);
 				$link=$db->escape($link);
-				$count += (int) $db->get_var("select count(*) from posts where post_user_id = $this->author and post_date > date_sub(now(), interval $min minute) and post_content like '%$link%'");
+				$count = max($count, (int) $db->get_var("select count(*) from posts where post_user_id = $this->author and post_date > date_sub(now(), interval $min minute) and post_content like '%$link%'"));
 			}
 		}
 		return $count;
