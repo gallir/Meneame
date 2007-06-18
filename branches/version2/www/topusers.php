@@ -41,7 +41,7 @@ switch ($sortby) {
 		break;
 	case 2:
 		$select = "SELECT user_id, count(*) as count ";
-		$from_where = " FROM links, users WHERE  link_status != 'discard' AND link_author=user_id GROUP BY link_author";
+		$from_where = " FROM links, users WHERE  link_author=user_id GROUP BY link_author";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 3:

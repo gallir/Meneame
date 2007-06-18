@@ -30,7 +30,7 @@ if(!$link->is_votable()) {
 
 // Allows to vote negative to published with high ratio of negatives
 // WARNING: unify with libs/link.php
-if($link->status == 'published' && $this->negatives <= $this->votes/10) {
+if($link->status == 'published' && $link->negatives <= $link->votes/10) {
 	error(_('ya no se puede votar negativo'));
 }
 
