@@ -28,11 +28,11 @@ if(!$link->is_votable()) {
 	error(_('¡tranquilo cowboy!'));
 }
 
-/*
-if($link->status == 'published') {
-	error(_('no se puede votar negativo a las publicadas'));
+// Allows to vote negative to published with high ratio of negatives
+// WARNING: unify with libs/link.php
+if($link->status == 'published' && $this->negatives <= $this->votes/10) {
+	error(_('ya no se puede votar negativo'));
 }
-*/
 
 if ($current_user->user_id == 0 && ! $anonnymous_vote) {
 	error(_('Los votos anónimos están temporalmente deshabilitados'));

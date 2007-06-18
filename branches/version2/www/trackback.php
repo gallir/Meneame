@@ -30,6 +30,14 @@ $link->id= $tb_id;
 
 $urlfrom = parse_url($tb_url);
 
+// Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
+if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $tb_url)) die;
+
+if(check_ban($urlfrom[host], 'hostname', false)) {
+	syslog(LOG_NOTICE, "Meneame: trackback, server is banned: $urlfrom[host]");
+	trackback_response(1, 'Server banned.');
+}
+
 if (!$tb_id > 0 || !$link->read())
 	trackback_response(1, 'I really need an ID for this to work.');
 
@@ -41,15 +49,8 @@ if (empty($title) && empty($tb_url) && empty($blog_name)) {
 
 // Antispam, avoid trackbacks in old articles
 if ($link->date < (time() - 86400*7)) {
-	syslog(LOG_NOTICE, "Meneame: Too old: $tb_url -> " . $link->get_permalink());
+	//syslog(LOG_NOTICE, "Meneame: Too old: $tb_url -> " . $link->get_permalink());
 	die;
-}
-// Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
-if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $tb_url)) die;
-
-if(check_ban($urlfrom[host], 'hostname', false)) {
-	syslog(LOG_NOTICE, "Meneame: trackback, server is banned: $urlfrom[host]");
-	trackback_response(1, 'Server banned.');
 }
 
 if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {

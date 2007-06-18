@@ -287,30 +287,29 @@ function insert_comment () {
 		$comment->karma=intval($current_user->user_karma);
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
 		if (mb_strlen($comment->content) > 0 && preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
-			// Lower karma to comments' spammers
-			$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
-			// Check the text is not the same
-			$same_count = $comment->same_text_count() + $comment->same_links_count();
-			if ($comment_count > 3 || $same_count > 1) {
-				require_once(mnminclude.'user.php');
-				$reduction = 0;
-				if ($comment_count > 3) {
-					$reduction += ($comment_count-3) * 0.1;
-				}
-				if($same_count > 1) {
-					$reduction += $same_count * 0.25;
-				}
-				$user = new User;
-				$user->id = $current_user->user_id;
-				$user->read();
-				$user->karma = $user->karma - $reduction;
-				syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
-				$user->store();
-
-			}
-			// Check the comment wasn't already stored
 			$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
+			// Check the comment wasn't already stored
 			if (!$already_stored) {
+				// Lower karma to comments' spammers
+				$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
+				// Check the text is not the same
+				$same_count = $comment->same_text_count() + $comment->same_links_count();
+				if ($comment_count > 3 || $same_count > 1) {
+					require_once(mnminclude.'user.php');
+					$reduction = 0;
+					if ($comment_count > 3) {
+						$reduction += ($comment_count-3) * 0.1;
+					}
+					if($same_count > 1) {
+						$reduction += $same_count * 0.25;
+					}
+					$user = new User;
+					$user->id = $current_user->user_id;
+					$user->read();
+					$user->karma = $user->karma - $reduction;
+					syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
+					$user->store();
+				}
 				$comment->store();
 				$comment->insert_vote();
 				$link->update_comments();
