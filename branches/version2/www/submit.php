@@ -57,8 +57,8 @@ function check_already_sent() {
 	if (!empty($_GET['url'])) {
 		$linkres = new Link;
 		if (($found = $linkres->duplicates($_GET['url']))) {
-			$linkres->url = $db->escape($found);
-			if($linkres->read('url')) {
+			$linkres->id = $found;
+			if($linkres->read()) {
 				header('Location: ' . $linkres->get_permalink());
 				die;
 			}
