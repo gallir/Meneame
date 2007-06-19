@@ -54,7 +54,7 @@ $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 print_period_tabs();
 
-do_banner_top_lower();
+//do_banner_top_lower();
 
 
 $link = new Link;
