@@ -97,12 +97,12 @@ $min_votes = 5;
 /////////////
 
 echo "Current MIN karma: <b>$min_karma</b>    MIN votes: $min_votes<br></p>\n";
-$limit_karma = round(min($past_karma,$min_karma) * 0.50);
+$limit_karma = round(min($past_karma,$min_karma) * 0.60);
 $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 $where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $bonus_karma)) and user_id = link_author";
 $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
-$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from links, users where $where $sort LIMIT 40");
+$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from links, users where $where $sort LIMIT 30");
 $rows = $db->num_rows;
 if (!$rows) {
 	echo "There are no articles<br>\n";
