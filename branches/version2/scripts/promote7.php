@@ -58,25 +58,27 @@ define (PUB_MAX, 50);
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
+
 $pub_estimation = intval(max(min($links_queue * 0.12, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
 echo "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
 
-$from_time = "date_sub(now(), interval 4 day)";
+$from_time = "date_sub(now(), interval 3 day)";
 #$from_where = "FROM votes, links WHERE  
 
 
 $last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_published_date)) from links WHERE link_status='published'");
 if (!$last_published) $last_published = $now - 24*3600*30;
+$links_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 24 hour)");
 
 $diff = $now - $last_published;
 
 $decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $decay = max($min_karma_coef, $decay);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "24hs queue: $links_queue/$links_queue_all, Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
+echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
 
 $continue = true;
 $published=0;
@@ -101,23 +103,33 @@ $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
 /// Coeficients to even metacategories
-$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 48 hour)");
-$db_metas = $db->get_results("select category_id, category_name from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
+$days = 2;
+$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval $days day)");
+$db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
 	$meta = $dbmeta->category_id;
+	$meta_previous_coef[$meta] = $dbmeta->category_calculated_coef;
 	$meta_names[$meta] = $dbmeta->category_name;
-	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_published_date > date_sub(now(), interval 48 hour) and link_category = category_id and category_parent = $meta");
-	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval 48 hour) and link_category = category_id and category_parent = $meta");
+	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_published_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
-	echo "48 hs stats for <b>$meta_names[$meta]</b> (sent/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br>";
+	echo "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br>";
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
 	$meta_coef[$m] = max(min($meta_avg/$v, 1.15), 0.85);
-	echo "Coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br>";
+	if ($meta_previous_coef[$m]  > 0.8 && $meta_previous_coef[$m]  < 1.2) {
+		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
+		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
+	}
+	echo "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br>";
+	// Store current coef in DB
+	$db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
 }
+
+
 echo "Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
 echo "<b>Current MIN karma: $min_karma</b><br>\n";
 echo "</p>\n";
