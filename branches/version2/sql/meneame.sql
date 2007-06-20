@@ -71,8 +71,10 @@ CREATE TABLE `categories` (
   `category_parent` int(11) NOT NULL default '0',
   `category_name` char(32) collate utf8_spanish_ci NOT NULL,
   `category_uri` char(32) collate utf8_spanish_ci default NULL,
+  `category_calculated_coef` float NOT NULL default '0',
   PRIMARY KEY  (`category__auto_id`),
-  UNIQUE KEY `category_lang` (`category_lang`,`category_id`)
+  UNIQUE KEY `category_lang` (`category_lang`,`category_id`),
+  UNIQUE KEY `id` (`category_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -276,8 +278,8 @@ CREATE TABLE `trackbacks` (
   `trackback_user_id` int(11) NOT NULL default '0',
   `trackback_type` enum('in','out') collate utf8_spanish_ci NOT NULL default 'in',
   `trackback_status` enum('ok','pendent','error') collate utf8_spanish_ci NOT NULL default 'pendent',
-  `trackback_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `trackback_date` timestamp NULL default NULL,
+  `trackback_ip_int` int(10) unsigned NOT NULL default '0',
   `trackback_link` varchar(250) collate utf8_spanish_ci NOT NULL,
   `trackback_url` varchar(250) collate utf8_spanish_ci default NULL,
   `trackback_title` text collate utf8_spanish_ci,
@@ -366,4 +368,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-06-14  1:33:29
+-- Dump completed on 2007-06-20 23:45:40
