@@ -122,13 +122,14 @@ function ts_is_human() {
 function ts_print_form() {
 	global $globals;
 
-	echo _("introduce el texto de la imagen:")."<br/>\n";
 	if (empty($globals['recaptcha_public_key']) || empty($globals['recaptcha_private_key'])) {
+		echo _("introduce el texto de la imagen:")."<br/>\n";
 		echo '<div class="tc"><img src="ts_image.php" alt="code number"/></div>';
 		echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
 	} else {
 	// reCaptcha
-		echo recaptcha_get_html($globals['recaptcha_public_key'], _('las palabras no coinciden'));
+		echo _("escribe las dos palabras")."<br/>\n";
+		echo recaptcha_get_html($globals['recaptcha_public_key'],null);
 	}
 }
 ?>
