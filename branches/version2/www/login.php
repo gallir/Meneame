@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
+include(mnminclude.'ts.php');
 
 $globals['ads'] = true;
 
@@ -117,7 +118,6 @@ function do_login() {
 
 function do_recover() {
 	global $site_key, $globals;
-	require_once(mnminclude.'ts.php');
 
 	echo '<div id="genericform">'."\n";
 	echo '<fieldset>'."\n";

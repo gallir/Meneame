@@ -21,9 +21,13 @@
 *
 */
 
-session_cache_expire(15);
-session_name('mnm_captcha');
-session_start();
+if (empty($globals['recaptcha_public_key']) || empty($globals['recaptcha_private_key'])) {
+	session_cache_expire(15);
+	session_name('mnm_captcha');
+	session_start();
+} else {
+	require_once(mnminclude.'recaptchalib.php');
+}
 
 class CaptchaSecurityImages {
 
@@ -88,17 +92,43 @@ function ts_gfx() {
 
 
 function ts_is_human() {
-	$result = !empty($_SESSION['security_code']) && $_SESSION['security_code'] == $_POST['security_code'];
-	if ($result)  {
-		$_SESSION['security_code'] = '';
-		return true;
+	global $globals;
+
+	if (empty($globals['recaptcha_public_key']) || empty($globals['recaptcha_private_key'])) {
+		$result = !empty($_SESSION['security_code']) && $_SESSION['security_code'] == $_POST['security_code'];
+		if ($result)  {
+			$_SESSION['security_code'] = '';
+			return true;
+		}
+		return false;
+	} else {
+		if ($_POST["recaptcha_response_field"]) {
+			$resp = recaptcha_check_answer ($globals['recaptcha_private_key'],
+									$globals['user_ip'],
+									$_POST["recaptcha_challenge_field"],
+									$_POST["recaptcha_response_field"]);
+		
+			if ($resp->is_valid) {
+				return true;
+			} else {
+				# set the error code so that we can display it
+				$globals['error'] = $resp->error;
+			}
+		}
+		return false;
 	}
-	return false;
 }
 
 function ts_print_form() {
-	echo _("introduce el código de la imagen:")."<br/>\n";
-	echo '<div class="tc"><img src="ts_image.php" alt="code number"/></div>';
-	echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
+	global $globals;
+
+	echo _("introduce el texto de la imagen:")."<br/>\n";
+	if (empty($globals['recaptcha_public_key']) || empty($globals['recaptcha_private_key'])) {
+		echo '<div class="tc"><img src="ts_image.php" alt="code number"/></div>';
+		echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
+	} else {
+	// reCaptcha
+		echo recaptcha_get_html($globals['recaptcha_public_key'], _('las palabras no coinciden'));
+	}
 }
 ?>

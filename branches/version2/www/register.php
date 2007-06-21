@@ -167,10 +167,9 @@ function check_user_fields() {
 		$error=true;
 	}
 	$user_ip = $globals['user_ip'];
-	$from = time() - 86400*2;
-	$last_register = $db->get_var("select count(*) from users where user_date > from_unixtime($from) and user_ip = '$user_ip'");
+	$last_register = $db->get_var("select count(*) from users where user_date > date_sub(now(), interval 12 hour) and user_ip = '$user_ip'");
 	if($last_register > 0) {
-		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 48 horas."));
+		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 12 horas."));
 		$error=true;
 	}
 
