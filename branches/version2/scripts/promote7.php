@@ -119,8 +119,8 @@ foreach ($db_metas as $dbmeta) {
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
-	$meta_coef[$m] = max(min($meta_avg/$v, 1.15), 0.85);
-	if ($meta_previous_coef[$m]  > 0.8 && $meta_previous_coef[$m]  < 1.2) {
+	$meta_coef[$m] = max(min($meta_avg/$v, 1.2), 0.80);
+	if ($meta_previous_coef[$m]  > 0.75 && $meta_previous_coef[$m]  < 1.25) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
 	}
