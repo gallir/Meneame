@@ -95,6 +95,7 @@ function do_login() {
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
 		if ($previous_login_failed  && !ts_is_human()) {
+			log_conditional_insert('login_failed', $globals['user_ip_int'], 0, 60);
 			recover_error(_('El código de seguridad no es correcto!'));
 		} elseif ($current_user->Authenticate($username, $password, $persistent) == false) {
 			log_conditional_insert('login_failed', $globals['user_ip_int'], 0, 60);
