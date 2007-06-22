@@ -106,7 +106,9 @@ function do_edit() {
 	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
-	print_categories_form($linkres->category);
+	if ($linkres->author == $current_user->user_id || $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+		print_categories_form($linkres->category);
+	}
 
 	echo '<input class="genericsubmit" type="submit" value="'._('guardar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
@@ -117,7 +119,10 @@ function do_edit() {
 function do_save() {
 	global $linkres, $dblang, $current_user;
 
-	$linkres->category=intval($_POST['category']);
+	// Only the author, gods or admins can change the category
+	if ($linkres->author == $current_user->user_id || $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+		$linkres->category=intval($_POST['category']);
+	}
 	if (!empty($_POST['url']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		$linkres->url = clean_input_url($_POST['url']);
 	}
@@ -148,9 +153,9 @@ function do_save() {
 		}
 
 		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia actualizada").'</div>'."\n";
-	} else {
-		$linkres->read();
 	}
+
+	$linkres->read();
 
 	echo '<div class="formnotice">'."\n";
 	$linkres->print_summary('preview');
@@ -161,7 +166,6 @@ function do_save() {
 	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; modificar').'">&nbsp;&nbsp;'."\n";;
 	echo '<input class="genericsubmit" type="submit" value="'._('ir a la noticia').'" />'."\n";
 	echo '</form>'. "\n";
-
 }
 
 function link_edit_errors($linkres) {
