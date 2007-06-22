@@ -104,7 +104,7 @@ function ts_is_human() {
 	} else {
 		if ($_POST["recaptcha_response_field"]) {
 			$resp = recaptcha_check_answer ($globals['recaptcha_private_key'],
-									$globals['user_ip'],
+									$_SERVER["REMOTE_ADDR"],
 									$_POST["recaptcha_challenge_field"],
 									$_POST["recaptcha_response_field"]);
 		

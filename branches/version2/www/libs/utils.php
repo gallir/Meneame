@@ -258,7 +258,8 @@ function get_search_clause($option='') {
 		}
 		// To avoid showing news still in "limbo"
 		// it also avoid to show old discarded news
-		$where .=  " AND (link_status != 'discard' OR (link_status = 'discard' AND link_date > date_sub(now(), interval 7 day) AND link_votes > 0)) ";
+		//$where .=  " AND (link_status != 'discard' OR (link_status = 'discard' AND link_date > date_sub(now(), interval 7 day) AND link_votes > 0)) ";
+		$where .=  " AND link_votes > 0 ";
 		return $where;
 	} else {
 		return false;
