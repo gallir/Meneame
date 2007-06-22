@@ -28,6 +28,6 @@ function log_get_date($type, $ref_id, $user_id=0, $seconds=0) {
 	if ($seconds > 0) {
 		$interval = "and log_date > date_sub(now(), interval $seconds second)";
 	}
-	return $db->get_var("select UNIX_TIMESTAMP(log_date) from logs where log_type='$type' and log_ref_id = $ref_id $interval and log_user_id = $user_id");
+	return (int) $db->get_var("select UNIX_TIMESTAMP(log_date) from logs where log_type='$type' and log_ref_id = $ref_id $interval and log_user_id = $user_id limit 1");
 }
 ?>

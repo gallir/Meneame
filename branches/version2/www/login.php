@@ -9,6 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
+include(mnminclude.'log.php');
 
 $globals['ads'] = true;
 
@@ -43,53 +44,62 @@ do_footer();
 
 
 function do_login() {
-	global $current_user;
+	global $current_user, $globals;
 
 	// Start posavasos & ashacz code
 	
-	echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
-	// gallir: Only prints if the user was redirected from submit.php
-	if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
-		echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
+	$previous_login_failed =  log_get_date('login_failed', $globals['user_ip_int'], 0, 90);
+
+	if(!$previous_login_failed && empty($_POST["processlogin"])) {
+		echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
+		// gallir: Only prints if the user was redirected from submit.php
+		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
+			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
+		}
+		echo '<h3>¿Qué es menéame?</h3>'."\n";
+		echo '<p>Es un web que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="shakeit.php" title="Cola de historias pendientes">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal.</p>'."\n";
+			
+		echo '<h3>¿Todavía no eres usuario de menéame?</h3>'."\n";
+		echo '<p>Como usuario registrado podrás, entre otras cosas:</p>'."\n";
+		echo '<ul>'."\n";
+		echo '<li>'."\n";
+		echo '<strong>Enviar historias</strong><br />'."\n";
+		echo 'Una vez registrado puedes enviar las historias que consideres interesantes para la comunidad. Si tienes algún tipo de duda sobre que tipo de historias puedes enviar revisa nuestras <a href="faq-es.php" title="Acerca de meneame">preguntas frecuentes sobre menéame.</a>'."\n";
+		echo '</li>'."\n";
+		echo '<li>'."\n";
+		echo '<strong>Escribir comentarios</strong><br />'."\n";
+		echo 'Puedes escribir tu opinión sobre las historias enviadas a menéame mediante comentarios de texto. También puedes votar positivamente aquellos comentarios ingeniosos, divertidos o interesantes y negativamente aquellos que consideres inoportunos.'."\n";
+		echo '</li>'."\n";
+		echo '<li>'."\n";
+		echo '<strong>Perfil de usuario</strong><br />'."\n";
+		echo 'Toda tu información como usuario está disponible desde la página de tu perfil. También puedes subir una imagen que representará a tu usuario en menéame. Incluso es posible compartir los ingresos publicitarios de Menéame, solo tienes que introducir el código de tu cuenta Google Adsense desde tu perfil.'."\n";
+		echo '</li>'."\n";
+		echo '<li>'."\n";
+		echo '<strong>Chatear en tiempo real desde la fisgona</strong><br />'."\n";
+		echo 'Gracias a la <a href="sneak.php" title="Fisgona">fisgona</a> puedes ver en tiempo real toda la actividad de menéame. Además como usuario registrado podrás chatear con mucha más gente de la comunidad menéame'."\n";
+		echo '</li>'."\n";
+		echo '</ul>'."\n";
+		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
+		echo '</div>'."\n";
+		
+		echo '<div id="genericform" style="float:right; width:30%;">'."\n";	
+ 	//End posavasos & ashacz code
+	} else {
+		echo '<div id="genericform" style="float:auto;">'."\n";	
 	}
-	echo '<h3>¿Qué es menéame?</h3>'."\n";
-	echo '<p>Es un web que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="shakeit.php" title="Cola de historias pendientes">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal.</p>'."\n";
-		
-	echo '<h3>¿Todavía no eres usuario de menéame?</h3>'."\n";
-	echo '<p>Como usuario registrado podrás, entre otras cosas:</p>'."\n";
-	echo '<ul>'."\n";
-	echo '<li>'."\n";
-	echo '<strong>Enviar historias</strong><br />'."\n";
-	echo 'Una vez registrado puedes enviar las historias que consideres interesantes para la comunidad. Si tienes algún tipo de duda sobre que tipo de historias puedes enviar revisa nuestras <a href="faq-es.php" title="Acerca de meneame">preguntas frecuentes sobre menéame.</a>'."\n";
-	echo '</li>'."\n";
-	echo '<li>'."\n";
-	echo '<strong>Escribir comentarios</strong><br />'."\n";
-	echo 'Puedes escribir tu opinión sobre las historias enviadas a menéame mediante comentarios de texto. También puedes votar positivamente aquellos comentarios ingeniosos, divertidos o interesantes y negativamente aquellos que consideres inoportunos.'."\n";
-	echo '</li>'."\n";
-	echo '<li>'."\n";
-	echo '<strong>Perfil de usuario</strong><br />'."\n";
-	echo 'Toda tu información como usuario está disponible desde la página de tu perfil. También puedes subir una imagen que representará a tu usuario en menéame. Incluso es posible compartir los ingresos publicitarios de Menéame, solo tienes que introducir el código de tu cuenta Google Adsense desde tu perfil.'."\n";
-	echo '</li>'."\n";
-	echo '<li>'."\n";
-	echo '<strong>Chatear en tiempo real desde la fisgona</strong><br />'."\n";
-	echo 'Gracias a la <a href="sneak.php" title="Fisgona">fisgona</a> puedes ver en tiempo real toda la actividad de menéame. Además como usuario registrado podrás chatear con mucha más gente de la comunidad menéame'."\n";
-	echo '</li>'."\n";
-	echo '</ul>'."\n";
-	echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
-	echo '</div>'."\n";
-		
-	echo '<div id="genericform" style="float:right; width:30%;">'."\n";	
 	echo '<form action="login.php" id="thisform" method="post">'."\n";
- //End posavasos & ashacz code
 	
 	
 	if($_POST["processlogin"] == 1) {
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
-		if($current_user->Authenticate($username, $password, $persistent) == false) {
+		if ($previous_login_failed  && !ts_is_human()) {
+			recover_error(_('El código de seguridad no es correcto!'));
+		} elseif ($current_user->Authenticate($username, $password, $persistent) == false) {
+			log_conditional_insert('login_failed', $globals['user_ip_int'], 0, 60);
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
-			//echo '<p><span class="error">'._('ERROR - Usuario o clave incorrecta').'</span></p>';
+			$previous_login_failed = true;
 		} else {
 			if(!empty($_REQUEST['return'])) {
 				header('Location: '.$_REQUEST['return']);
@@ -106,6 +116,9 @@ function do_login() {
 	echo '<p class="l-mid"><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p class="l-mid"><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
+	if ($login_failed || $previous_login_failed) {
+		ts_print_form();
+	}
 	echo '<p class="l-bot"><input type="submit" value="login" class="genericsubmit" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
