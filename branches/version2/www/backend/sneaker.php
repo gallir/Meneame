@@ -193,6 +193,9 @@ function get_chat($time) {
 			// Ignore
 			if ($friendship < 0) continue;
 
+			// This uses is ignored by the writer
+			if (friend_exists($uid, $current_user->user_id) < 0) continue;
+
 			if ($event->chat_room == 'friends') {
 				// Check the user is a friend of the sender
 				if (friend_exists($uid, $current_user->user_id) <= 0) {
@@ -301,9 +304,11 @@ function get_comment($time, $type, $commentid, $userid) {
 }
 
 function get_post($time, $type, $postid, $userid) {
-	global $db, $events, $last_timestamp, $foo_link, $max_items;
+	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
 	$event = $db->get_row("select user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
+	// Dont show her notes if the user ignored
+	if ($type == 'post' && friend_exists($current_user->user_id, $userid) < 0) return;
 	$link = post_get_base_url($event->user_login) . "/$postid";
 	$who = $event->user_login;
 	$key = $time . ':'.$type.':'.$commentid;
