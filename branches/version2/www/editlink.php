@@ -106,9 +106,7 @@ function do_edit() {
 	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
-	if ($linkres->author == $current_user->user_id || $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
-		print_categories_form($linkres->category);
-	}
+	print_categories_form($linkres->category);
 
 	echo '<input class="genericsubmit" type="submit" value="'._('guardar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
@@ -119,10 +117,7 @@ function do_edit() {
 function do_save() {
 	global $linkres, $dblang, $current_user;
 
-	// Only the author, gods or admins can change the category
-	if ($linkres->author == $current_user->user_id || $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
-		$linkres->category=intval($_POST['category']);
-	}
+	$linkres->category=intval($_POST['category']);
 	if (!empty($_POST['url']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		$linkres->url = clean_input_url($_POST['url']);
 	}
