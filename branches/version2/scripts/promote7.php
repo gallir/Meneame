@@ -65,7 +65,7 @@ $interval = intval(86400 / $pub_estimation);
 $now = time();
 echo "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
 
-$from_time = "date_sub(now(), interval 3 day)";
+$from_time = "date_sub(now(), interval 5 day)";
 #$from_where = "FROM votes, links WHERE  
 
 
