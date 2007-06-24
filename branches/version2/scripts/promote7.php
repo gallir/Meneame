@@ -196,8 +196,8 @@ if ($links) {
 
 		// Aged karma
 		$diff = max(0, $now - ($link->date + 12*3600)); // 12 hours without decreasing
-		$oldd = 1 - $diff/(3600*144);
-		$oldd = max(0.5, $oldd);
+		$oldd = 1 - $diff/(3600*168);
+		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
 
 		// BONUS

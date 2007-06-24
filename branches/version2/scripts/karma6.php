@@ -12,7 +12,7 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 15 day)")
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_validated_date is null");
 
 // Delete email, names and url of invalidated users after three months
-$db->query("update users set user_email = concat(user_id, '@disabled'), user_url='', user_names='disabled'  where user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month) and user_email not like '%@disabled'");
+$db->query("update users set user_email = concat(user_id, '@disabled'), user_url=null, user_names='disabled', user_public_info=null, user_adcode=null, user_adchannel=null, user_phone=null  where user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month) and user_email not like '%@disabled'");
 
 
 // Lower karma of disabled users
