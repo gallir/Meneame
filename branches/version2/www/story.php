@@ -240,7 +240,7 @@ case 7:
 	// AdSense
 	do_banner_story();
 	print_story_tabs($tab_option);
-	echo '<a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> dirección de trackback</a>' . "\n";
+	echo '<a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
 
 	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
 	echo '<ul class="tab-trackback">';
@@ -367,7 +367,7 @@ function print_story_tabs($option) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackback">'._('trackback'). '</a></li>'."\n";
+	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackback">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->date > time() - 7776000) { // newer than 90 days
 			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
