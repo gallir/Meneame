@@ -204,9 +204,9 @@ function do_sidebar($do_vert_bars = true) {
 			do_best_comments();
 			do_best_posts();
 		}
-		if(!empty($globals['link_id'])) {
-			do_mnu_trackbacks();
-		}
+// 		if(!empty($globals['link_id'])) {
+// 			do_mnu_trackbacks();
+// 		}
 	}
 	do_mnu_rss();
 	do_mnu_tools();
@@ -369,39 +369,6 @@ function do_mnu_rss() {
 	}
 
 	echo '</ul>' . "\n";
-
-}
-
-function do_mnu_trackbacks() {
-	global $db, $globals;
-
-	echo '<ul class="mnu-trackback">' . "\n";
-
-	echo '<li><a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'">trackback <img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/></a></li>' . "\n";
-
-	echo '<li><ul class="mnu-trackback-list">' . "\n";
-	$id=$globals['link_id'];
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");	
-	if ($trackbacks) {
-		require_once(mnminclude.'trackback.php');
-		$trackback = new Trackback;
-		foreach($trackbacks as $trackback_id) {
-			$trackback->id=$trackback_id;
-			$trackback->read();
-			echo '<li class="mnu-trackback-entry"><a href="'.$trackback->link.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
-		}
-	}
-// 	echo '<li class="mnu-trackback-entry"><a href="#">prova</a></li>';
-
-	echo '<li class="mnu-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('según Technorati').'</a></li>' . "\n";
-	echo '<li class="mnu-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link']->get_permalink()).'">'._('según Google').'</a></li>' . "\n";
-
-	echo '<li class="mnu-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link']->get_permalink()).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">'._('según Ask.com').'</a></li>' . "\n";
-
-
-	echo "</ul></li>\n";
-
-	echo "</ul>\n";
 }
 
 function do_mnu_categories_horizontal($what_cat_id) {

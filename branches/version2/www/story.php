@@ -56,6 +56,9 @@ switch ($url_args[1]) {
 	case 'favorites':
 		$tab_option = 6;
 		break;
+	case 'trackback':
+		$tab_option = 7;
+		break;
 	default:
 		not_found();
 }
@@ -184,6 +187,7 @@ case 6:
 	break;
 
 case 4:
+	// Show logs
 	echo '<div class="voters" id="voters">';
 
 	// AdSense
@@ -229,6 +233,37 @@ case 5:
 	echo '</fieldset>';
 	echo '</div>';
 	echo '<script type="text/javascript">$(function(){start_link_sneak()});</script>' . "\n";
+	break;
+case 7:
+	// Show trackback
+	echo '<div class="voters" id="voters">';
+	// AdSense
+	do_banner_story();
+	print_story_tabs($tab_option);
+	echo '<a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> dirección de trackback</a>' . "\n";
+
+	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
+	echo '<ul class="tab-trackback">';
+
+	$id=$globals['link_id'];
+	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
+	if ($trackbacks) {
+		require_once(mnminclude.'trackback.php');
+		$trackback = new Trackback;
+		foreach($trackbacks as $trackback_id) {
+			$trackback->id=$trackback_id;
+			$trackback->read();
+			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
+		}
+	}
+	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('Technorati').'</a></li>' . "\n";
+	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link']->get_permalink()).'">'._('Google').'</a></li>' . "\n";
+
+	echo '<li class="tab-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link']->get_permalink()).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">'._('Ask.com').'</a></li>' . "\n";
+
+	echo '</ul>';
+	echo '</fieldset>';
+	echo '</div>';
 	break;
 }
 // echo '<div class="story-vertical-completion">&nbsp</div>';
@@ -332,6 +367,7 @@ function print_story_tabs($option) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
+	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackback">'._('trackback'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->date > time() - 7776000) { // newer than 90 days
 			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
