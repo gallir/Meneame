@@ -202,7 +202,7 @@ function do_sidebar($do_vert_bars = true) {
 		if($do_vert_bars) {
 			do_vertical_tags();
 			do_best_comments();
-			do_best_posts();
+			//do_best_posts();
 		}
 	}
 	do_mnu_rss();

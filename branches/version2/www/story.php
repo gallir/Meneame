@@ -56,7 +56,7 @@ switch ($url_args[1]) {
 	case 'favorites':
 		$tab_option = 6;
 		break;
-	case 'trackback':
+	case 'trackbacks':
 		$tab_option = 7;
 		break;
 	default:
@@ -367,7 +367,7 @@ function print_story_tabs($option) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackback">'._('trackbacks'). '</a></li>'."\n";
+	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->date > time() - 7776000) { // newer than 90 days
 			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";

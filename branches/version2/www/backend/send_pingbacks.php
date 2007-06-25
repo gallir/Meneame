@@ -32,7 +32,7 @@ foreach ($matches[2] as $match) {
 	if(!$tb->read()) {
 		echo "No está $match\n";
 		$tmp = new Link;
-		if(!$tmp->get($match, 2000)) {
+		if(!$tmp->get($match, 2000, false)) {
 			echo "couldn't get $match\n";
 			next;
 		}

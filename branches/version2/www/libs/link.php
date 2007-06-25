@@ -65,7 +65,7 @@ class Link {
 		return true;
 	}
 
-	function get($url, $maxlen = 100000) {
+	function get($url, $maxlen = 100000, $check_local = true) {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
@@ -100,7 +100,7 @@ class Link {
 						// It's relative
 						$new_url = $url . $new_url;
 					}
-					if (!$this->check_url($new_url)) return false;
+					if (!$this->check_url($new_url, $check_local)) return false;
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
 						if ($url_components['host'] != $new_url_components['host']) {
