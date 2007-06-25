@@ -631,8 +631,8 @@ class Link {
 
 		if($current_user->user_id ==  0) return false;
 		if($this->status != 'published' && 
-			(($this->author == $current_user->user_id && time() - $this->date < 1800) 
-					|| $current_user->user_level != 'normal')
+			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && time() - $this->date < 1800) 
+					|| ($current_user->user_level == 'special' && time() - $this->date < 10400))
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') 
 			return true;
 		return false;
