@@ -204,9 +204,6 @@ function do_sidebar($do_vert_bars = true) {
 			do_best_comments();
 			do_best_posts();
 		}
-// 		if(!empty($globals['link_id'])) {
-// 			do_mnu_trackbacks();
-// 		}
 	}
 	do_mnu_rss();
 	do_mnu_tools();
