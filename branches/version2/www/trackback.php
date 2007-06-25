@@ -59,8 +59,8 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	$title     = clean_text($title);
 	$excerpt   = clean_text($excerpt);
 	$blog_name = clean_text($blog_name);
-	$title = (strlen($title) > 150) ? substr($title, 0, 150) . '...' : $title;
-	$excerpt = (strlen($excerpt) > 200) ? substr($excerpt, 0, 200) . '...' : $excerpt;
+	$title = (mb_strlen($title) > 120) ? mb_substr($title, 0, 120) . '...' : $title;
+	$excerpt = (mb_strlen($excerpt) > 200) ? mb_substr($excerpt, 0, 200) . '...' : $excerpt;
 
 	$trackres = new Trackback;
 	$trackres->link_id=$tb_id;

@@ -114,6 +114,25 @@ case 2:
 	// Print tabs
 	print_story_tabs($tab_option);
 
+
+	// If iotion is "normal comments", show also last trackbakcs and pingbacks
+	if ($tab_option == 1) {
+		$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
+		if ($trackbacks) {
+			echo '<fieldset><legend><a href="'.$globals['link_permalink'].'/trackbacks">'._('últimas relacionadas').'</a></legend>';
+			echo '<ul class="tab-trackback">';
+			require_once(mnminclude.'trackback.php');
+			$trackback = new Trackback;
+			foreach($trackbacks as $trackback_id) {
+				$trackback->id=$trackback_id;
+				$trackback->read();
+				echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
+			}
+			echo '</ul>';
+			echo '</fieldset>';
+		}
+	}
+
 	$comments = $db->get_col("SELECT comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field");
 	if ($comments) {
 		echo '<ol class="comments-list">';
@@ -240,13 +259,12 @@ case 7:
 	// AdSense
 	do_banner_story();
 	print_story_tabs($tab_option);
-	echo '<a href="'.$globals['link']->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
+	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
 
 	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
 	echo '<ul class="tab-trackback">';
 
-	$id=$globals['link_id'];
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
+	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
 	if ($trackbacks) {
 		require_once(mnminclude.'trackback.php');
 		$trackback = new Trackback;
@@ -256,10 +274,9 @@ case 7:
 			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
 		}
 	}
-	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link']->get_permalink()).'">'._('Technorati').'</a></li>' . "\n";
-	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link']->get_permalink()).'">'._('Google').'</a></li>' . "\n";
-
-	echo '<li class="tab-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link']->get_permalink()).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">'._('Ask.com').'</a></li>' . "\n";
+	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link_permalink']).'">'._('Technorati').'</a></li>' . "\n";
+	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link_permalink']).'">'._('Google').'</a></li>' . "\n";
+	echo '<li class="tab-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link_permalink']).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">'._('Ask.com').'</a></li>' . "\n";
 
 	echo '</ul>';
 	echo '</fieldset>';

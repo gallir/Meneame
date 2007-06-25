@@ -365,6 +365,10 @@ background: none;
 color: #FF6400;
 }
 
+.tab-trackback-entry {
+color: #666;
+}
+
 .tab-trackback-entry a {
 background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
 }
@@ -491,8 +495,7 @@ fieldset {
 border-color: #FF9400;
 }
 
-legend {
-/* gallir color: #499722; */
+legend, legend a {
 color: #FF9400;
 }
 

@@ -722,6 +722,7 @@ list-style: none;
 text-align: left;
 padding: 0 0 5px 5px;
 margin: 2px;
+overflow: hidden;
 }
 
 .tab-trackback-entry a {
@@ -986,7 +987,6 @@ background: none;
 legend {
 font-weight: bold;
 padding: 0 5px;
-font-size: 125%;
 }
 
 fieldset dl {

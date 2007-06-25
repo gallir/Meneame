@@ -154,6 +154,7 @@ class Xmlrpc_server extends IXR_Server {
 			syslog(LOG_NOTICE, "Meneame: pingback, cannot find a title on that page: $pagelinkedfrom - $pagelinkedto");
 			return new IXR_Error(32, 'We cannot find a title on that page.');
 		}
+		$title = (mb_strlen($title) > 120) ? mb_substr($title, 0, 120) . '...' : $title;
 		$trackres->title=$title;
 		$trackres->status='ok';
 		$trackres->store();
