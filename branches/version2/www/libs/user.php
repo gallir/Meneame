@@ -37,6 +37,23 @@ class User {
 		}
 	}
 
+	function disable() {
+		include_once(mnminclude.'avatars.php');
+		avatars_db_remove($this->id);
+		avatars_remove_user_files($this->id);
+		$this->username = '__'.$this->id.'__';
+		$this->email = "$this->id@disabled";
+		$this->url = '';
+		$this->level = 'disabled';
+		$this->names = 'disabled';
+		$this->public_info = '';
+		$this->adcode = '';
+		$this->adchannel = '';
+		$this->phone = '';
+		$this->avatar = 0;
+		return $this->store();
+	}
+
 	function store($full_save = true) {
 		global $db, $current_user, $globals;
 

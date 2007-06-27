@@ -79,11 +79,12 @@ function show_profile() {
 
 	save_profile();
 	
-	echo '<div id="genericform-contents"><div id="genericform"><fieldset><legend>';
+	echo '<div id="genericform-contents"><div id="genericform">';
+	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
+	echo '<fieldset><legend>';
 	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
 
 	echo '<img class="gravatar-sub" src="'.$globals['base_url'] . 'backend/get_avatar.php?id='.$user->id.'&amp;size=80&amp;t='.time().'" width="80" height="80" alt="'.$user->username.'" />';
-	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<input type="hidden" name="process" value="1" />';
 	echo '<input type="hidden" name="user_id" value="'.$user->id.'" />';
 	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.$globals['user_ip']) .'" />';
@@ -188,7 +189,22 @@ function show_profile() {
 	}
 	
 	echo '<p class="l-bottom"><input type="submit" name="save_profile" value="'._('actualizar').'" class="genericsubmit" /></p>';
-	echo "</form></fieldset></div></div>\n";
+	echo '</fieldset>';
+
+	// Disable the account
+	if ($user->id  == $current_user->user_id) {
+		echo '<br/><fieldset><legend>'._('deshabilitar la cuenta') . '</legend>';
+		echo '<p>'._('Alerta: la cuenta será deshabilitada.').'</p>';
+		echo '<p class="genericformnote">'._('Se eliminarán automáticamente los datos personales.').'<br/>';
+		echo _('Las notas serán eliminadas. Los envíos y comentarios NO se eliminan.').'</p>';
+		echo '<p>'._('sí, quiero deshabilitarla').': <input  name="disable" type="checkbox" value="1"/>';
+		echo '</p>';
+		echo '<p class="l-bottom"><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="genericsubmit" /></p>';
+		echo '</fieldset>';
+	}
+
+
+	echo "</form></div></div>\n";
 	
 }
 
@@ -198,10 +214,22 @@ function save_profile() {
 	$errors = 0; // benjami: control added (2005-12-22)
 	$pass_changed=false;
 	
+	$form_hash = md5($site_key.$user->id.$globals['user_ip']);
+	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
+		$old_user_login = $user->username;
+		$old_user_id = $user->id;
+		$db->query("delete from posts where post_user_id = $old_user_id");
+		$user->disable();
+		syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ".time());
+		$current_user->Logout(get_user_uri($user->username));
+		die;
+	}
+
+
 	if(!isset($_POST['save_profile']) || !isset($_POST['process']) || 
 		($_POST['user_id'] != $current_user->user_id && !$admin_mode) ) return;
 		
-	if ( empty($_POST['form_hash']) || $_POST['form_hash'] != md5($site_key.$user->id.$globals['user_ip']) ) {
+	if ( empty($_POST['form_hash']) || $_POST['form_hash'] != $form_hash ) {
 		echo '<p class="form-error">'._('Falta la clave de control').'</p>';
 		$errors++;
 	}
