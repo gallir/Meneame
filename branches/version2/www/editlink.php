@@ -164,9 +164,11 @@ function do_save() {
 }
 
 function link_edit_errors($linkres) {
+	global $current_user;
 
 	$error = false;
-	if(!$linkres->check_url($linkres->url, false)) {
+	// only checks if the user is not special or god
+	if(!$linkres->check_url($linkres->url, false) && $current_user->user_level != 'admin' && $current_user->user_level != 'god') {
 		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('url incorrecto').'</div>';
 		$error = true;
 	}

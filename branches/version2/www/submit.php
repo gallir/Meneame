@@ -189,7 +189,7 @@ function do_submit1() {
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
 		// Dont allow new users with low karma to post wrong URLs
-		if ($current_user->user_karma < 6.5 && $current_user->user_level == 'normal') {
+		if ($current_user->user_karma < 8 && $current_user->user_level == 'normal') {
 			echo '<p>'._('URL inválido, incompleto o no permitido').'</p>';
 			print_empty_submit_form();
 			return;
@@ -264,12 +264,12 @@ function do_submit1() {
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
-		if ($sents > 4 && $ratio > 0.9) {
-			$unique_users = (int) $db->get_var("select count(distinct link_author) from links where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day);");
+		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 10 && $ratio > 0.7)) {
+			$unique_users = (int) $db->get_var("select count(distinct link_author) from links where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day);");
 			if ($unique_users < 3) {
 				$ban_period = 86400*7;
 				$ban_period_txt = _('una semana');
-				syslog(LOG_NOTICE, "Meneame, high ratio and few users, going to ban $blog->url ($current_user->user_login)");
+				syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and few users ($unique_users), going to ban $blog->url ($current_user->user_login)");
 			}
 		// Otherwise check previous karma
 		} elseif ($avg_karma < 100) {
