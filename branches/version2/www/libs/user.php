@@ -146,6 +146,11 @@ class User {
 		return substr(md5($this->user.$this->date.$this->pass.$site_key), 0, 10);
 	}
 
+	function get_latlng() {
+		require_once(mnminclude.'geo.php');
+		return geo_latlng('user', $this->id);
+	}
+
 
 }
 

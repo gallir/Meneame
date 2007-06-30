@@ -11,6 +11,7 @@ include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'user.php');
+include(mnminclude.'geo.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
@@ -61,6 +62,12 @@ if(empty($view)) $view = 'profile';
 
 array_push($globals['extra_js'], 'jquery-form.pack.js');
 
+// Load Google GEO
+if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
+	geo_init();
+	$globals['do_geo'] = true;
+}
+
 switch ($view) {
 	case 'history':
 	case 'commented':
@@ -73,6 +80,10 @@ switch ($view) {
 do_header($login);
 
 do_banner_top();
+
+// GEO
+if ($globals['latlng']) geo_start($globals['latlng']);
+
 echo '<div id="container-wide">' . "\n";
 echo '<div id="genericform-contents">'."\n";
 
@@ -133,7 +144,6 @@ do_footer();
 function do_profile() {
 	global $user, $current_user, $login, $db, $globals;
 
-
 	if(!empty($user->url)) {
 		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
@@ -154,8 +164,18 @@ function do_profile() {
 		echo ' (<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>)';
 	}
 	echo '</legend>';
-	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
 
+	// Geo div
+	if($globals['latlng']) {
+		echo '<div style="width:140px; float:left;">';
+		echo '<div id="map" class="gravatar-sub" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
+		echo '</div>';
+	}
+
+
+	echo '<div style="width:80%; float:left;">';
+	// Avatar
+	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
 	echo '<dl>';	
 	if(!empty($user->username)) {
 		echo '<dt>'._('usuario').':</dt><dd>';
@@ -210,32 +230,35 @@ function do_profile() {
 	}
 
 	echo '<dt>'._('karma').':</dt><dd>'.$user->karma.'</dd>';
+
+	$user->all_stats();
+	echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
+	if ($user->total_links > 0 && $user->published_links > 0) {
+		$percent = intval($user->published_links/$user->total_links*100);
+	} else {
+		$percent = 0;
+	}
+	if ($user->total_links > 1) {
+		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
+		echo '<dt><em>'._('entropía').'</em>:</dt><dd>'.$entropy.'%</dd>';
+	}
+	echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
+	echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
+	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
+
 	echo '</dl>';
+	// Karma details
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
 		echo '<div id="karma-details">(<a href="javascript:get_votes(\'get_karma_numbers.php\',\''.$user->id.'\',\'karma-details\',0,\''.$user->id.'\')" title="'._('detalles').'">'._('detalle cálculo karma').'</a>)</div>';
 	}
+
+	echo '</div>';
 	echo '</fieldset>';
 
-
-	$user->all_stats();
-	echo '<fieldset><legend>'._('estadísticas de meneos').'</legend><dl>';
-
-        echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
-		if ($user->total_links > 0 && $user->published_links > 0) {
-			$percent = intval($user->published_links/$user->total_links*100);
-
-		} else {
-			$percent = 0;
-		}
-		if ($user->total_links > 1) {
-			$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
-        	echo '<dt><em>'._('entropía').'</em>:</dt><dd>'.$entropy.'%</dd>';
-		}
-        echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
-        echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
-        echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
-
-	echo '</dl></fieldset>';
+	// Print GEO form
+	if($globals['latlng'] && $user->id == $current_user->user_id) {
+		geo_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
+	}
 
 	// Show first numbers of the address if the user has god privileges
 	if ($current_user->user_level == 'god' &&
