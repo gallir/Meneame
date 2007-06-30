@@ -17,6 +17,27 @@ function geo_latlng($type, $id) {
 	return $db->get_row("SELECT X(geo_pt) as lat, Y(geo_pt) as lng, geo_text as text FROM  $table where geo_id=$id");
 }
 
+function geo_distance($from, $to) {
+	$er = 6366.707;
+
+	$latFrom = deg2rad($from->lat);
+	$latTo   = deg2rad($to->lat);
+	$lngFrom = deg2rad($from->lng);
+	$lngTo   = deg2rad($to->lng);
+	
+	$x1 = $er * cos($lngFrom) * sin($latFrom);
+	$y1 = $er * sin($lngFrom) * sin($latFrom);
+	$z1 = $er * cos($latFrom);
+	
+	$x2 = $er * cos($lngTo) * sin($latTo);
+	$y2 = $er * sin($lngTo) * sin($latTo);
+	$z2 = $er * cos($latTo);
+	
+	$d = acos(sin($latFrom)*sin($latTo) + cos($latFrom)*cos($latTo)*cos($lngTo-$lngFrom)) * $er;
+	return $d;
+}
+
+
 function geo_insert($type, $id, $lat, $lng, $text) {
 	global $db;
 
