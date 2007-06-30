@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'post.php');
+include(mnminclude.'geo.php');
 	
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
@@ -68,6 +69,10 @@ if ($posts) {
 		echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
 		echo "		<dc:creator>$post->username</dc:creator>\n";
 		echo "		<guid>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</guid>\n";
+		// Insert GEO
+		if (($latlng = geo_latlng('user', $post->author))) {
+			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
+		}
 		echo "		<description><![CDATA[$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$post->username.'</strong></p>';
 		echo "]]></description>\n";
@@ -96,18 +101,19 @@ function do_header($title) {
 	header('Content-type: text/xml; charset=UTF-8', true);
 	echo '<?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	echo '<rss version="2.0" '."\n";
-	echo '     xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
-	echo '     xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
-	echo '     xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
+	echo '	xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
+	echo '	xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
+	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
+	echo '	xmlns:georss="http://www.georss.org/georss"'."\n";
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
-	echo'	<title>'.$title.'</title>'."\n";
-	echo'	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
-	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
-	echo'	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
-	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
-	echo'	<generator>http://blog.meneame.net/</generator>'."\n";
-	echo'	<language>'.$dblang.'</language>'."\n";
+	echo '	<title>'.$title.'</title>'."\n";
+	echo '	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
+	echo "	<image><title>".get_server_name()."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
+	echo '	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
+	echo '	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
+	echo '	<generator>http://blog.meneame.net/</generator>'."\n";
+	echo '	<language>'.$dblang.'</language>'."\n";
 }
 
 function do_footer() {
