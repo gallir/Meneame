@@ -64,7 +64,7 @@ if(empty($view)) $view = 'profile';
 
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
-	geo_init($globals['latlng']);
+	geo_init('geo_coder_load', $globals['latlng']);
 	$globals['do_geo'] = true;
 }
 
@@ -83,14 +83,6 @@ do_banner_top();
 
 echo '<div id="container-wide">' . "\n";
 echo '<div id="genericform-contents">'."\n";
-
-// Tabbed navigation
-if (strlen($user->names) > 0) {
-	$display_name = $user->names;
-} else {
-	$display_name = $user->username;
-}
-echo '<div class="topheading"><h2>'.$display_name.'</h2></div>'."\n";
 
 $url_login = urlencode($login);
 switch ($view) {
@@ -253,7 +245,7 @@ function do_profile() {
 
 	// Print GEO form
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
-		geo_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
+		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
 	}
 
 	// Show first numbers of the address if the user has god privileges

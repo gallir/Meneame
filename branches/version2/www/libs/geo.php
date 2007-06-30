@@ -42,25 +42,19 @@ function geo_delete($type, $id) {
 	return $db->query("DELETE FROM $table WHERE geo_id=$id");
 }
 
-function geo_init($latlng) {
+function geo_init($f='geo_basic_load', $latlng = false) {
 	global $globals;
+	if (! $globals['google_maps_api']) return false;
 	array_push($globals['extra_js'], 'http://maps.google.com/maps?file=api&amp;v=2.x&amp;key='.$globals['google_maps_api']);
 	array_push($globals['extra_js'], 'geo.js');
 	if ($latlng) 
-		$globals['body_args'] = 'onload="geo_load('.$latlng->lat.','.$latlng->lng.')" onunload="GUnload()"';
+		$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.')" onunload="GUnload()"';
 	else
-		$globals['body_args'] = 'onload="geo_load()" onunload="GUnload()"';
+		$globals['body_args'] = 'onload="'.$f.'()" onunload="GUnload()"';
+	return true;
 }
 
-function geo_start($latlng) {
-	if ($latlng) {
-		echo '<script type="text/javascript">$(function(){geo_load('.$latlng->lat.','.$latlng->lng.')})</script>';
-	} else {
-		echo '<script type="text/javascript">$(function(){geo_load()})</script>';
-	}
-}
-
-function geo_print_form($type, $id, $latlng, $label) {
+function geo_coder_print_form($type, $id, $latlng, $label) {
 	echo '<div id="genericform">';
 	echo '<form action="#" name="geoform" onsubmit="return geo_show_address(this)">';
 	echo '<label for="address">'.$label. '</label><br/>';

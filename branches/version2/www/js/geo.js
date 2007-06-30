@@ -4,16 +4,27 @@ var geo_mallorca = new GLatLng(39.574998,2.914124);
 var geo_last_point;
 var geo_last_address;
 
-function geo_load(lat, lng) {
+function geo_basic_load(lat, lng, zoom) {
 	if (GBrowserIsCompatible()) {
 		geo_map = new GMap2(document.getElementById("map"));
 		geo_map.enableDoubleClickZoom();
+		zoom = zoom || 7;
 		if (lat || lng) {
 			point = new GLatLng(lat, lng);
-			geo_map.setCenter(point, 7);
-			geo_map.addOverlay(new GMarker(point));
+			geo_map.setCenter(point, zoom);
 		} else {
-			geo_map.setCenter(geo_mallorca, 7);
+			geo_map.setCenter(geo_mallorca, zoom);
+		}
+		return true;
+	}
+	return false;
+}
+
+function geo_coder_load(lat, lng) {
+	if(geo_basic_load(lat, lng)) {
+		if (lat || lng) {
+			geo_map.addOverlay(new GMarker(point));
+			point = new GLatLng(lat, lng);
 		}
 		geocoder = new GClientGeocoder();
 		geocoder.setBaseCountryCode('ES')

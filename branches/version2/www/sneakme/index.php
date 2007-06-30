@@ -29,6 +29,11 @@ $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 switch ($option) {
+	case '_geo':
+		require_once(mnminclude.'geo.php');
+		$tab_option = 5;
+		geo_init('onLoad');
+		break;
 	case '':
 	case '_all':
 		$tab_option = 1;
@@ -78,28 +83,42 @@ do_sidebar(false);
 echo '<div id="contents">';
 do_posts_tabs($tab_option, $user->username);
 
-$post = new Post;
-
 echo '<div class="notes">';
+$post = new Post;
 $post->print_post_teaser($rss_option);
 
-$posts = $db->get_results($sql);
-if ($posts) {
-	echo '<ol class="comments-list">';
-	foreach ($posts as $dbpost) {
-		$post->id = $dbpost->post_id;
-		$post->read();
-		if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
-			echo '<li>'. _('Error: nota no existente') . '</li>';
-		} else {
-			$post->print_summary();
+if ($option == '_geo') {
+	echo '<div id="map" style="width: 720px; height: 600px;"></div></div>';
+?>
+	<script type="text/javascript">
+	function onLoad() {
+		if (geo_basic_load(false, false, 2)) {
+			geo_map.addControl(new GLargeMapControl());
+			var geoXml = new GGeoXml("http://<? echo get_server_name() . $globals['base_url'] ?>sneakme_rss2.php");
+			geo_map.addOverlay(geoXml);
 		}
 	}
-	echo "</ol>\n";
+	</script>
+<?
+} else {
+	$posts = $db->get_results($sql);
+	if ($posts) {
+		echo '<ol class="comments-list">';
+		foreach ($posts as $dbpost) {
+			$post->id = $dbpost->post_id;
+			$post->read();
+			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
+				echo '<li>'. _('Error: nota no existente') . '</li>';
+			} else {
+				$post->print_summary();
+			}
+		}
+		echo "</ol>\n";
+	}
+	echo '</div>';
+	do_pages($rows, $page_size);
 }
 
-echo '</div>';
-do_pages($rows, $page_size);
 echo '</div>';
 do_footer();
 
@@ -116,6 +135,15 @@ function do_posts_tabs($tab_selected, $username) {
 		echo '<li><a '.$active.' href="'.post_get_base_url().'" title="'.$reload_text.'">'._('todos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 	} else {
 		echo '<li><a  href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
+	}
+
+	// GEO
+	if ($globals['google_maps_api']) {
+		if ($tab_selected == 5) {
+			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('geo').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		} else {
+			echo '<li><a  href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('geo').'</a></li>' . "\n";
+		}
 	}
 
 	// Best
