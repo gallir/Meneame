@@ -156,18 +156,18 @@ function do_profile() {
 	// Avatar
 	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
 	// Geo div
+	echo '<div style="width:140px; float:left;">';
 	if($globals['do_geo']) {
-		echo '<div style="width:140px; float:left;">';
 		echo '<div id="map" class="gravatar-sub" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
 			$distance = (int) geo_distance($my_latlng, $globals['latlng']);
 			echo '<p style="color: #FF9400; font-size: 90%">'._('estás a')." <strong>$distance kms</strong> "._('de').' '.$user->username.'</p>';
 		}
-		echo '</div>';
 	}
+	echo '&nbsp;</div>';
 
 
-	echo '<div style="float:left;">';
+	echo '<div style="float:left;min-width:65%">';
 	echo '<dl>';	
 	if(!empty($user->username)) {
 		echo '<dt>'._('usuario').':</dt><dd>';
