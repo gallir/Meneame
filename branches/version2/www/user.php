@@ -60,11 +60,11 @@ if($globals['external_user_ads'] && !empty($user->adcode)) {
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
-array_push($globals['extra_js'], 'jquery-form.pack.js');
+//array_push($globals['extra_js'], 'jquery-form.pack.js');
 
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
-	geo_init();
+	geo_init($globals['latlng']);
 	$globals['do_geo'] = true;
 }
 
@@ -81,17 +81,13 @@ do_header($login);
 
 do_banner_top();
 
-// GEO
-if ($globals['latlng']) geo_start($globals['latlng']);
-
 echo '<div id="container-wide">' . "\n";
 echo '<div id="genericform-contents">'."\n";
 
 // Tabbed navigation
 if (strlen($user->names) > 0) {
 	$display_name = $user->names;
-}
-else {
+} else {
 	$display_name = $user->username;
 }
 echo '<div class="topheading"><h2>'.$display_name.'</h2></div>'."\n";
@@ -165,17 +161,17 @@ function do_profile() {
 	}
 	echo '</legend>';
 
+	// Avatar
+	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
 	// Geo div
-	if($globals['latlng']) {
+	if($globals['do_geo']) {
 		echo '<div style="width:140px; float:left;">';
 		echo '<div id="map" class="gravatar-sub" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
 		echo '</div>';
 	}
 
 
-	echo '<div style="width:80%; float:left;">';
-	// Avatar
-	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
+	echo '<div style="float:left;">';
 	echo '<dl>';	
 	if(!empty($user->username)) {
 		echo '<dt>'._('usuario').':</dt><dd>';
@@ -256,7 +252,7 @@ function do_profile() {
 	echo '</fieldset>';
 
 	// Print GEO form
-	if($globals['latlng'] && $user->id == $current_user->user_id) {
+	if($globals['do_geo'] && $current_user->user_id == $user->id) {
 		geo_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
 	}
 
