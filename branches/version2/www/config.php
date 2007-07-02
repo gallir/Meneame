@@ -87,7 +87,7 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm33.css';
+$globals['css_main'] = 'css/es/mnm34.css';
 $globals['css_color'] = 'css/es/mnmcol.css';
 
 // This is for SMS messages
