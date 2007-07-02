@@ -55,28 +55,37 @@ function geo_show_address() {
 	}
 	if (geocoder && document.geocoderform.address.value) {
 		var address = document.geocoderform.address.value;
-		geocoder.getLatLng(
-			address,
-			function(point) {
-				if (!point) {
-					geo_last_point = false;
-					geo_last_address = false;
-					document.geocoderform.geosave.disabled = true;
-					alert('"'+address+'"' + " not found");
-				} else {
-					geo_map.clearOverlays();
-					geo_last_point = point;
-					geo_last_address = document.geocoderform.address.value;
-					geo_map.setCenter(point);
-					var marker = new GMarker(point);
-					geo_map.addOverlay(marker);
-					document.geocoderform.geosave.disabled = false;
-					//marker.openInfoWindowHtml(address);
+		if (address.match(/^ *-*[0-9\.]+, *-*[0-9\.]+ *$/)) {
+			coords = address.split(/[, ]+/);
+			geo_found_point(new GLatLng(coords[0], coords[1]));
+		} else {
+			geocoder.getLatLng(
+				address,
+				function(point) {
+					if (!point) {
+						geo_last_point = false;
+						geo_last_address = false;
+						document.geocoderform.geosave.disabled = true;
+						alert('"'+address+'"' + " not found");
+					} else {
+						geo_found_point(point);
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 	return false;
+}
+
+function geo_found_point(point) {
+	geo_map.clearOverlays();
+	geo_last_point = point;
+	geo_last_address = document.geocoderform.address.value;
+	geo_map.setCenter(point);
+	var marker = new GMarker(point);
+	geo_map.addOverlay(marker);
+	document.geocoderform.geosave.disabled = false;
+	//marker.openInfoWindowHtml(address);
 }
 
 function geo_save_current(type, id) {

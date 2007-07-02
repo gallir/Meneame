@@ -91,6 +91,7 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 	}
 	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.')"/>';
 	echo '<br/>'._('puedes hacer clic en el mapa o buscar por "país", "ciudad, país" o "calle, ciudad, país"...')."\n";
+	echo '<br/>'._('también acepta coordenadas "lat, long", i.e. "1.234, -54.321"')."\n";
 	echo '</form>';
 ?>
 	<script type="text/javascript">
