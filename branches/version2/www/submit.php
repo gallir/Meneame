@@ -277,11 +277,11 @@ function do_submit1() {
 				syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and few users ($unique_users), going to ban $blog->url ($current_user->user_login)");
 			}
 		// Otherwise check previous karma
-		} elseif ($avg_karma < 100) {
-			if ($avg_karma < -10) {
+		} elseif ($sents > 4 && $avg_karma < 50) {
+			if ($avg_karma < -20) {
 				$ban_period = 86400*30;
 				$ban_period_txt = _('un mes');
-			} elseif ($avg_karma < 5) {
+			} elseif ($avg_karma < 0) {
 				$ban_period = 86400*7;
 				$ban_period_txt = _('una semana');
 			} elseif ($avg_karma < 20) {
@@ -291,6 +291,7 @@ function do_submit1() {
 				$ban_period = 7200;
 				$ban_period_txt = _('dos horas');
 			}
+			syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and low karma ($avg_karma), going to ban $blog->url ($current_user->user_login)");
 		}
 		if ($ban_period > 0) {
 			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';

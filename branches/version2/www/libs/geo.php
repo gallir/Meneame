@@ -97,7 +97,7 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 	//<![CDATA[
 		// Check if there is a map container, otherwise it creates a container
 		if ($('#map').length == 0 ) {
-			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:120px;height:120px">&nbsp;<\/div>');
+			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:150px;height:150px">&nbsp;<\/div>');
 			$('#geocoderform').after('<br clear="right"/>');;
 			$(function() {geo_coder_editor_load(false, false, 3)});
 		} else {
