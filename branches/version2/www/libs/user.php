@@ -38,9 +38,11 @@ class User {
 	}
 
 	function disable() {
-		include_once(mnminclude.'avatars.php');
+		require_once(mnminclude.'avatars.php');
+		require_once(mnminclude.'geo.php');
 		avatars_db_remove($this->id);
 		avatars_remove_user_files($this->id);
+		geo_delete('user', $this->id);
 		$this->username = '__'.$this->id.'__';
 		$this->email = "$this->id@disabled";
 		$this->url = '';
