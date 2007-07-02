@@ -408,7 +408,7 @@ class Link {
 
 		// GEO
 		if ($this->latlng) {
-			echo '<div class="thumbnail" id="map" style="width:85px;height:85px">&nbsp;</div>'."\n";
+			echo '<div class="thumbnail" id="map" style="width:95px;height:95px">&nbsp;</div>'."\n";
 		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 		// Websnapr
 		// In order not to overload websnapr, display the image only if votes are enabled
@@ -438,7 +438,7 @@ class Link {
 			if ($type != 'preview' && $this->is_editable()) {
 				echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit" title="'._('editar').'"/></a>';
 				if ($this->geo && !($current_user->user_id == $this->author && !$this->latlng)) {
-					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\')"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\'); return false;"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 					//echo '&nbsp;&nbsp;<a href="javascript:$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\')"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 				}
 			}
@@ -540,7 +540,7 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		if ( $this->status != 'discard' &&  $this->negatives > 4 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {

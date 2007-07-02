@@ -216,8 +216,8 @@ function do_profile() {
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
 		echo '<dt>'._('clave API').':</dt><dd id="api-key">('._('mantenla siempre en secreto').') <a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a></dd>';
 		if(!empty($user->adcode)) {
-			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'</dd>';
-			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'</dd>';
+			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'&nbsp;</dd>';
+			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'&nbsp;</dd>';
 		}
 	}
 

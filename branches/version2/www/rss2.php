@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'link.php');
+include(mnminclude.'geo.php');
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
@@ -97,6 +98,7 @@ if(!empty($_REQUEST['time'])) {
 			$globals['redirect_feedburner'] = false;
 			break;
 		case 'all':
+		case 'all_local':
 			$title = _('Menéame: todas');
 			$order_field = 'link_date';
 			$link_date = "date";
@@ -115,8 +117,8 @@ if(!empty($_REQUEST['time'])) {
 	
 	
 	
-	if($status == 'all') {
-		$from_where = "FROM links WHERE link_status!='discard' ";
+	if($status == 'all' || $status == 'all_local') {
+		$from_where = "FROM links WHERE link_status in ('published', 'queued') ";
 	} else {
 		$from_where = "FROM links WHERE link_status='$status' ";
 	}
@@ -174,6 +176,10 @@ if ($links) {
 			}
 		}
 		echo "		<guid>".$link->get_permalink()."</guid>\n";
+		// Insert GEO
+		if (($latlng = geo_latlng('link', $link->id))) {
+			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
+		}
 		echo '		<description><![CDATA[';
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
@@ -215,9 +221,10 @@ function do_header($title) {
 	header('Content-type: text/xml; charset=UTF-8', true);
 	echo '<?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	echo '<rss version="2.0" '."\n";
-	echo '     xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
-	echo '     xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
-	echo '     xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
+	echo '	xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
+	echo '	xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
+	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
+	echo '	xmlns:georss="http://www.georss.org/georss"'."\n";
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";

@@ -81,17 +81,6 @@ function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7) {
 
 function geo_coder_print_form($type, $id, $latlng, $label) {
 	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(this)">';
-?>
-	<script type="text/javascript">
-	//<![CDATA[
-		// Check if there is a map container, otherwise it creates a container
-		if ($('#map').length == 0 ) {
-			$('#geocoderform').before('<div class="thumbnail" id="map" style="border: solid 1px;margin-left: 10px;width:85px;height:85px">&nbsp;<\/div>');
-			$(function() {geo_coder_load(false, false, 3)});
-		}
-	//]]>
-	</script>
-<?
 	echo '<label for="address">'.$label. '</label><br/>';
 	echo '<input type="text" size="40" maxlength=80 name="address" id="address" value="'.$latlng->text.'" />';
 	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address(geocoderform);"/>';
@@ -102,7 +91,18 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 	}
 	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.', geocoderform)"/>';
 	echo '<br/>&nbsp;&nbsp;'._('"ciudad, país" o "calle, ciudad, país"...')."\n";
-	echo '<br clear="right"/>';
 	echo '</form>';
+?>
+	<script type="text/javascript">
+	//<![CDATA[
+		// Check if there is a map container, otherwise it creates a container
+		if ($('#map').length == 0 ) {
+			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:120px;height:120px">&nbsp;<\/div>');
+			$('#geocoderform').after('<br clear="right"/>');;
+			$(function() {geo_coder_load(false, false, 3)});
+		}
+	//]]>
+	</script>
+<?
 }
 ?>

@@ -7,7 +7,8 @@ var geo_last_address;
 function geo_basic_load(lat, lng, zoom) {
 	if (GBrowserIsCompatible()) {
 		geo_map = new GMap2(document.getElementById("map"));
-		geo_map.enableDoubleClickZoom();
+		//geo_map.enableDoubleClickZoom();
+		geo_map.addControl(new GSmallZoomControl());
 		zoom = zoom || 7;
 		if (lat || lng) {
 			point = new GLatLng(lat, lng);
@@ -32,7 +33,7 @@ function geo_coder_load(lat, lng, zoom) {
 function geo_show_address(form) {
 	if (! geocoder) {
 		geocoder = new GClientGeocoder();
-		//geocoder.setBaseCountryCode('ES')
+		geocoder.setBaseCountryCode('ES')
 	}
 	if (geocoder && form.address.value) {
 		var address = form.address.value;

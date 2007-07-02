@@ -13,6 +13,7 @@ if (! defined('mnmpath')) {
 }
 include_once(mnminclude.'user.php');
 include_once(mnminclude.'post.php');
+include_once(mnminclude.'geo.php');
 
 
 if (empty($_GET['id'])) die;
@@ -31,6 +32,11 @@ echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
 echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
 echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
 echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br/>';
+if ($current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_latlng = geo_latlng('user', $user->id)) && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
+	$distance = (int) geo_distance($my_latlng, $her_latlng);
+	echo '<strong>'._('distancia') . ':</strong>&nbsp;' . $distance . '&nbsp;kms<br/>';
+}
+
 $post = new Post;
 if ($post->read_last($user->id)) {
 	echo '<br clear="left"><strong>'._('última nota').'</strong>: ';
