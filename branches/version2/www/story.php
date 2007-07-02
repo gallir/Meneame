@@ -75,7 +75,7 @@ if($globals['google_maps_api']) {
 	$link->geo = true;
 	$link->latlng = $link->get_latlng();
 	if ($link->latlng) {
-		geo_init('geo_coder_load', $link->latlng);
+		geo_init('geo_coder_load', $link->latlng, 2);
 	} else {
 		geo_init(null, null);
 	}

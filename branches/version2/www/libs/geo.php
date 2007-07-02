@@ -63,16 +63,16 @@ function geo_delete($type, $id) {
 	return $db->query("DELETE FROM $table WHERE geo_id=$id");
 }
 
-function geo_init($f='geo_basic_load', $latlng = false) {
+function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7) {
 	global $globals;
 	if (! $globals['google_maps_api']) return false;
 	array_push($globals['extra_js'], 'http://maps.google.com/maps?file=api&amp;v=2.x&amp;key='.$globals['google_maps_api']);
 	array_push($globals['extra_js'], 'geo.js');
 	if ($f) {
 		if ($latlng) 
-			$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.')" onunload="GUnload()"';
+			$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.', '.$zoom.')" onunload="GUnload()"';
 		else
-			$globals['body_args'] = 'onload="'.$f.'()" onunload="GUnload()"';
+			$globals['body_args'] = 'onload="'.$f.'(false, false, '.$zoom.')" onunload="GUnload()"';
 	} else {
 			$globals['body_args'] = 'onunload="GUnload()"';
 	}
@@ -87,7 +87,7 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 		// Check if there is a map container, otherwise it creates a container
 		if ($('#map').length == 0 ) {
 			$('#geocoderform').before('<div class="thumbnail" id="map" style="border: solid 1px;margin-left: 10px;width:85px;height:85px">&nbsp;<\/div>');
-			$(function() {geo_coder_load()});
+			$(function() {geo_coder_load(false, false, 3)});
 		}
 	//]]>
 	</script>

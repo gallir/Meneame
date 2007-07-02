@@ -20,8 +20,8 @@ function geo_basic_load(lat, lng, zoom) {
 	return false;
 }
 
-function geo_coder_load(lat, lng) {
-	if(geo_basic_load(lat, lng)) {
+function geo_coder_load(lat, lng, zoom) {
+	if(geo_basic_load(lat, lng, zoom)) {
 		if (lat || lng) {
 			geo_map.addOverlay(new GMarker(point));
 			point = new GLatLng(lat, lng);
@@ -32,7 +32,7 @@ function geo_coder_load(lat, lng) {
 function geo_show_address(form) {
 	if (! geocoder) {
 		geocoder = new GClientGeocoder();
-		geocoder.setBaseCountryCode('ES')
+		//geocoder.setBaseCountryCode('ES')
 	}
 	if (geocoder && form.address.value) {
 		var address = form.address.value;
@@ -48,7 +48,7 @@ function geo_show_address(form) {
 					geo_map.clearOverlays();
 					geo_last_point = point;
 					geo_last_address = form.address.value;
-					geo_map.setCenter(point, 7);
+					geo_map.setCenter(point);
 					var marker = new GMarker(point);
 					geo_map.addOverlay(marker);
 					form.geosave.disabled = false;
