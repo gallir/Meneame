@@ -143,6 +143,32 @@ CREATE TABLE `friends` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
+-- Table structure for table `geo_links`
+--
+
+DROP TABLE IF EXISTS `geo_links`;
+CREATE TABLE `geo_links` (
+  `geo_id` int(11) NOT NULL,
+  `geo_text` char(80) default NULL,
+  `geo_pt` point NOT NULL,
+  UNIQUE KEY `geo_id` (`geo_id`),
+  SPATIAL KEY `geo_pt` (`geo_pt`(32))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `geo_users`
+--
+
+DROP TABLE IF EXISTS `geo_users`;
+CREATE TABLE `geo_users` (
+  `geo_id` int(11) NOT NULL,
+  `geo_text` char(80) default NULL,
+  `geo_pt` point NOT NULL,
+  UNIQUE KEY `geo_id` (`geo_id`),
+  SPATIAL KEY `geo_pt` (`geo_pt`(32))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `languages`
 --
 
@@ -199,7 +225,7 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL auto_increment,
   `log_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit') NOT NULL,
+  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn') NOT NULL,
   `log_ref_id` int(11) NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip` char(24) character set utf8 collate utf8_spanish_ci default NULL,
@@ -368,4 +394,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-06-20 23:45:40
+-- Dump completed on 2007-07-02 16:18:00
