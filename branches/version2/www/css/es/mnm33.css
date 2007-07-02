@@ -459,7 +459,7 @@ border: none;
 
 .news-summary {
 margin: 0;
-padding: 20px 0 0 0;
+padding: 10px 0 0 0;
 position: relative;
 }
 
@@ -509,7 +509,7 @@ border-left: none;
 /* Counter box */
 .news-shakeit {
 position: absolute;
-top: 20px;
+top: 10px;
 left: 12px;
 width: 65px;
 text-align: center;
@@ -1026,8 +1026,9 @@ clear: left
 
 /* gravatar */
 
-.gravatar-sub {
+.thumbnail {
 border: 1px solid;
+overflow: hidden;
 float: right;
 }
 
@@ -1160,6 +1161,11 @@ font-weight: normal;
 width: 100%;
 height: 128px;
 border: 1px solid;
+}
+
+.geoform {
+margin: 5px 0 5px 0;
+font-size: 8.5pt;
 }
 
 /* generic form: login page specials */

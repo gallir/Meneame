@@ -26,12 +26,14 @@ function geo_coder_load(lat, lng) {
 			geo_map.addOverlay(new GMarker(point));
 			point = new GLatLng(lat, lng);
 		}
-		geocoder = new GClientGeocoder();
-		geocoder.setBaseCountryCode('ES')
 	}
 }
 
 function geo_show_address(form) {
+	if (! geocoder) {
+		geocoder = new GClientGeocoder();
+		geocoder.setBaseCountryCode('ES')
+	}
 	if (geocoder && form.address.value) {
 		var address = form.address.value;
 		geocoder.getLatLng(
@@ -70,6 +72,7 @@ function geo_save_current(type, id, form) {
 				} else {
 					geo_map.setCenter(geo_last_point, 7);
 					form.geodelete.disabled = false;
+					form.geosave.disabled = true;
 				}
 			}
     	});

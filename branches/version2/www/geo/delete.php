@@ -21,6 +21,16 @@ if ($type == 'user') {
 	if ($id != $current_user->user_id) {
 		error(_('usuario incorrecto'));
 	}
+} elseif ($type == 'link') {
+	require_once(mnminclude.'link.php');
+	$link = new Link;
+	$link->id = $id;
+	if ( ! $link->read() ) {
+		error(_('Artículo inexistente'));
+	}
+	if (! $link->is_editable() ) {
+		error(_("noticia no modificable"));
+	}
 } else {
 	error(_('tipo incorrecto'));
 }

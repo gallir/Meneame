@@ -405,10 +405,16 @@ class Link {
 		echo '<h1>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		echo '</h1>';
+
+		// GEO
+		if ($this->latlng) {
+			echo '<div class="thumbnail" id="map" style="width:85px;height:85px">&nbsp;</div>'."\n";
+		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
+		// Websnapr
 		// In order not to overload websnapr, display the image only if votes are enabled
-		if ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 			echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
 		}
+
 		echo '<div class="news-submitted">';
 		if ($type != 'short') {
 			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
@@ -431,6 +437,10 @@ class Link {
 			echo '<p>'.text_to_html($this->content);
 			if ($type != 'preview' && $this->is_editable()) {
 				echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit" title="'._('editar').'"/></a>';
+				if ($this->geo && !($current_user->user_id == $this->author && !$this->latlng)) {
+					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\')"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+					//echo '&nbsp;&nbsp;<a href="javascript:$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\')"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+				}
 			}
 			echo '</p>';
 		}
@@ -480,8 +490,17 @@ class Link {
 				$this->print_problem_form();
 		}
 
-		echo '</div>'."\n";
 		echo '</div></div>'."\n";
+		echo '</div>'."\n";
+
+		// Geo edit form div
+		if ($this->geo && $this->is_editable())  {
+			echo '<div id="geoedit" class="geoform" style="margin-left:20px">';
+			if ($current_user->user_id == $this->author && !$this->latlng)  {
+				geo_coder_print_form('link', $this->id, $globals['latlng'], _('ubica la noticia (ciudad, país, u origen del sitio)'));
+			}
+			echo '</div>'."\n";
+		}
 
 	}
 	
@@ -630,11 +649,15 @@ class Link {
 		global $current_user, $db;
 
 		if($current_user->user_id ==  0) return false;
+		if (isset($this->editable)) return $this->editable;
 		if($this->status != 'published' && 
 			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && time() - $this->date < 1800) 
 					|| ($current_user->user_level == 'special' && time() - $this->date < 10400))
-			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') 
-			return true;
+			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+				$this->editable = true;
+				return true;
+			}
+		$this->editable = false;
 		return false;
 	}
 
@@ -681,4 +704,10 @@ class Link {
 		global $globals;
 		return "http://".get_server_name().$globals['base_url'].'trackback.php?id='.$this->id;
 	}
+
+	function get_latlng() {
+		require_once(mnminclude.'geo.php');
+		return geo_latlng('link', $this->id);
+	}
+
 }

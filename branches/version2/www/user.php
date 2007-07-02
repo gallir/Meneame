@@ -154,11 +154,11 @@ function do_profile() {
 	echo '</legend>';
 
 	// Avatar
-	echo '<img class="gravatar-sub" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
+	echo '<img class="thumbnail" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
 	// Geo div
 	echo '<div style="width:140px; float:left;">';
 	if($globals['do_geo']) {
-		echo '<div id="map" class="gravatar-sub" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
+		echo '<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
 			$distance = (int) geo_distance($my_latlng, $globals['latlng']);
 			echo '<p style="color: #FF9400; font-size: 90%">'._('estás a')." <strong>$distance kms</strong> "._('de').' '.$user->username.'</p>';
@@ -249,7 +249,9 @@ function do_profile() {
 
 	// Print GEO form
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
+		echo '<div class="geoform">';
 		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
+		echo '</div>';
 	}
 
 	// Show first numbers of the address if the user has god privileges

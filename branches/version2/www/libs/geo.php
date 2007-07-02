@@ -68,21 +68,41 @@ function geo_init($f='geo_basic_load', $latlng = false) {
 	if (! $globals['google_maps_api']) return false;
 	array_push($globals['extra_js'], 'http://maps.google.com/maps?file=api&amp;v=2.x&amp;key='.$globals['google_maps_api']);
 	array_push($globals['extra_js'], 'geo.js');
-	if ($latlng) 
-		$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.')" onunload="GUnload()"';
-	else
-		$globals['body_args'] = 'onload="'.$f.'()" onunload="GUnload()"';
+	if ($f) {
+		if ($latlng) 
+			$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.')" onunload="GUnload()"';
+		else
+			$globals['body_args'] = 'onload="'.$f.'()" onunload="GUnload()"';
+	} else {
+			$globals['body_args'] = 'onunload="GUnload()"';
+	}
 	return true;
 }
 
 function geo_coder_print_form($type, $id, $latlng, $label) {
-	echo '<div id="genericform">';
-	echo '<form action="#" name="geoform" onsubmit="return geo_show_address(this)">';
+	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(this)">';
+?>
+	<script type="text/javascript">
+	//<![CDATA[
+		// Check if there is a map container, otherwise it creates a container
+		if ($('#map').length == 0 ) {
+			$('#geocoderform').before('<div class="thumbnail" id="map" style="border: solid 1px;margin-left: 10px;width:85px;height:85px">&nbsp;<\/div>');
+			$(function() {geo_coder_load()});
+		}
+	//]]>
+	</script>
+<?
 	echo '<label for="address">'.$label. '</label><br/>';
-	echo '<input type="text" size="50" name="address" id="address" value="'.$latlng->text.'" />';
-	echo '&nbsp;<input type="button" value="'._('buscar').'" class="genericsubmit" onclick="return geo_show_address(geoform);"/>';
-	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" class="genericsubmit" onclick="return geo_save_current(\''.$type.'\', '.$id.', geoform)"/>';
-	echo '&nbsp;<input type="button" id="geodelete" value="'._('borrar').'" class="genericsubmit" onclick="return geo_delete(\''.$type.'\', '.$id.', geoform)"/>';
-	echo '<br/>&nbsp;&nbsp;<span class="genericformnote">'._('"ciudad, país" o "calle, ciudad, país"...').'</span>'."\n";
-	echo '</form></div>';
+	echo '<input type="text" size="40" maxlength=80 name="address" id="address" value="'.$latlng->text.'" />';
+	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address(geocoderform);"/>';
+	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.', geocoderform)"/>';
+	echo '&nbsp;<input type="button" id="geodelete" ';
+	if (!$latlng) {
+		echo 'disabled="disabled" ';
+	}
+	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.', geocoderform)"/>';
+	echo '<br/>&nbsp;&nbsp;'._('"ciudad, país" o "calle, ciudad, país"...')."\n";
+	echo '<br clear="right"/>';
+	echo '</form>';
 }
+?>

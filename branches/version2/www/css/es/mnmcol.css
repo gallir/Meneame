@@ -501,7 +501,7 @@ color: #FF9400;
 
 /* gravatar */
 
-.gravatar-sub {
+.thumbnail {
 border-color: #FFE2C5;
 }
 
@@ -573,7 +573,7 @@ background: #FFF;
 border-color: #FF6400;
 }
 
-#genericform {
+#genericform, .geoform {
 background: #FFF;
 color: #FF6400;
 }
@@ -593,7 +593,7 @@ background: #FFBE94;
 color: #FFF;
 }
 
-#genericform input {
+#genericform input, .geoform input  {
 background: #FFE2C5;
 border-color: #FF6400;
 color: #303030;

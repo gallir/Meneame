@@ -70,6 +70,17 @@ $globals['category_id']=$link->category;
 $globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
+// Geo check
+if($globals['google_maps_api']) {
+	$link->geo = true;
+	$link->latlng = $link->get_latlng();
+	if ($link->latlng) {
+		geo_init('geo_coder_load', $link->latlng);
+	} else {
+		geo_init(null, null);
+	}
+}
+
 // to avoid penalisation
 if ($tab_option != 1 || $link->status == 'discard') {
 	$globals['noindex'] = true;
