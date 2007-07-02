@@ -80,17 +80,17 @@ function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7) {
 }
 
 function geo_coder_print_form($type, $id, $latlng, $label) {
-	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(this)">';
+	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address()">';
 	echo '<label for="address">'.$label. '</label><br/>';
 	echo '<input type="text" size="40" maxlength=80 name="address" id="address" value="'.$latlng->text.'" />';
-	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address(geocoderform);"/>';
-	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.', geocoderform)"/>';
+	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address();"/>';
+	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.')"/>';
 	echo '&nbsp;<input type="button" id="geodelete" ';
 	if (!$latlng) {
 		echo 'disabled="disabled" ';
 	}
-	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.', geocoderform)"/>';
-	echo '<br/>&nbsp;&nbsp;'._('"ciudad, país" o "calle, ciudad, país"...')."\n";
+	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.')"/>';
+	echo '<br/>'._('puedes hacer clic en el mapa o buscar por "país", "ciudad, país" o "calle, ciudad, país"...')."\n";
 	echo '</form>';
 ?>
 	<script type="text/javascript">
@@ -99,7 +99,9 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 		if ($('#map').length == 0 ) {
 			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:120px;height:120px">&nbsp;<\/div>');
 			$('#geocoderform').after('<br clear="right"/>');;
-			$(function() {geo_coder_load(false, false, 3)});
+			$(function() {geo_coder_editor_load(false, false, 3)});
+		} else {
+			geo_add_click_listener();
 		}
 	//]]>
 	</script>

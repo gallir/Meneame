@@ -27,32 +27,50 @@ function geo_coder_load(lat, lng, zoom) {
 			geo_map.addOverlay(new GMarker(point));
 			point = new GLatLng(lat, lng);
 		}
+		return true;
 	}
+	return false;
 }
 
-function geo_show_address(form) {
+function geo_coder_editor_load(lat, lng, zoom) {
+	if (geo_coder_load(lat, lng, zoom))
+		geo_add_click_listener()
+}
+
+function geo_add_click_listener() {
+	GEvent.addListener(geo_map, "click", function(overlay, point) {
+		geo_last_point = point;
+		geo_last_address = point.toString().replace(/[\(\)]/g, '');
+		geo_map.clearOverlays();
+		geo_map.addOverlay(new GMarker(point));
+		document.geocoderform.geosave.disabled = false;
+		document.geocoderform.address.value = geo_last_address;
+	});
+}
+
+function geo_show_address() {
 	if (! geocoder) {
 		geocoder = new GClientGeocoder();
 		geocoder.setBaseCountryCode('ES')
 	}
-	if (geocoder && form.address.value) {
-		var address = form.address.value;
+	if (geocoder && document.geocoderform.address.value) {
+		var address = document.geocoderform.address.value;
 		geocoder.getLatLng(
 			address,
 			function(point) {
 				if (!point) {
 					geo_last_point = false;
 					geo_last_address = false;
-					form.geosave.disabled = true;
+					document.geocoderform.geosave.disabled = true;
 					alert('"'+address+'"' + " not found");
 				} else {
 					geo_map.clearOverlays();
 					geo_last_point = point;
-					geo_last_address = form.address.value;
+					geo_last_address = document.geocoderform.address.value;
 					geo_map.setCenter(point);
 					var marker = new GMarker(point);
 					geo_map.addOverlay(marker);
-					form.geosave.disabled = false;
+					document.geocoderform.geosave.disabled = false;
 					//marker.openInfoWindowHtml(address);
 				}
 			}
@@ -61,7 +79,7 @@ function geo_show_address(form) {
 	return false;
 }
 
-function geo_save_current(type, id, form) {
+function geo_save_current(type, id) {
 	if (geo_last_point && geo_last_address) {
 		var url = base_url + 'geo/save.php?type='+type+'&id='+id+'&lat='+geo_last_point.lat()+'&lng='+geo_last_point.lng()+'&text='+encodeURIComponent(geo_last_address);
 		$.ajax({
@@ -71,9 +89,9 @@ function geo_save_current(type, id, form) {
 				if (/^ERROR:/.test(html)) {
 					alert (html);
 				} else {
-					geo_map.setCenter(geo_last_point, 7);
-					form.geodelete.disabled = false;
-					form.geosave.disabled = true;
+					geo_map.setCenter(geo_last_point);
+					document.geocoderform.geodelete.disabled = false;
+					document.geocoderform.geosave.disabled = true;
 				}
 			}
     	});
@@ -82,14 +100,14 @@ function geo_save_current(type, id, form) {
 	}
 }
 
-function geo_delete(type, id, form) {
+function geo_delete(type, id) {
 	var url = base_url + 'geo/delete.php?type='+type+'&id='+id;
 	//alert(url);
 	$.ajax({
 		url: url,
 		dataType: "html",
 		success: function(html) {
-			form.geodelete.disabled = true;
+			document.geocoderform.geodelete.disabled = true;
 			if (/^ERROR:/.test(html)) {
 				alert (html);
 			} else {

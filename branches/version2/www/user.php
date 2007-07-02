@@ -64,7 +64,10 @@ if(empty($view)) $view = 'profile';
 
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
-	geo_init('geo_coder_load', $globals['latlng']);
+	if ($current_user->user_id == $user->id)
+		geo_init('geo_coder_editor_load', $globals['latlng']);
+	else
+		geo_init('geo_coder_load', $globals['latlng']);
 	$globals['do_geo'] = true;
 }
 

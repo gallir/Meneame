@@ -408,7 +408,7 @@ class Link {
 
 		// GEO
 		if ($this->latlng) {
-			echo '<div class="thumbnail" id="map" style="width:95px;height:95px">&nbsp;</div>'."\n";
+			echo '<div class="thumbnail" id="map" style="width:100px;height:100px">&nbsp;</div>'."\n";
 		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 		// Websnapr
 		// In order not to overload websnapr, display the image only if votes are enabled
