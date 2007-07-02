@@ -23,16 +23,29 @@ class UserAuth {
 	function UserAuth() {
 		global $db, $site_key;
 
+		$this->now = time();
 		if(!empty($_COOKIE['mnm_user']) && !empty($_COOKIE['mnm_key'])) {
 			$userInfo=explode(":", base64_decode($_REQUEST['mnm_key']));
 			if($_COOKIE['mnm_user'] === $userInfo[0]) {
+				$cookietime = (int) $userInfo[3];
 				$dbusername = $db->escape($_COOKIE['mnm_user']);
 				$dbuser=$db->get_row("SELECT user_id, user_pass, user_level, user_validated_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
 
 				// We have two versions from now
 				// The second is more strong agains brute force md5 attacks
-				if ($userInfo[2] == '2') $key = md5($dbuser->user_email.$site_key.$dbusername.$dbuser->user_id);
-				else $key = md5($site_key.$dbusername.$dbuser->user_id);
+				switch ($userInfo[2]) {
+					case '3':
+						if (($this->now - $cookietime) > 864000) $cookietime = 'expired'; // after 10 days expiration is forced
+						$key = md5($dbuser->user_email.$site_key.$dbusername.$dbuser->user_id.$cookietime);
+						break;
+					case '2':
+						$key = md5($dbuser->user_email.$site_key.$dbusername.$dbuser->user_id);
+						$cookietime = 0;
+						break;
+					default:
+						md5($site_key.$dbusername.$dbuser->user_id);
+						$cookietime = 0;
+				}
 
 				if ( !$dbuser || !$dbuser->user_id > 0 || $key !== $userInfo[1] || 
 					$dbuser->user_level == 'disabled' || 
@@ -40,15 +53,7 @@ class UserAuth {
 						$this->Logout();
 						return;
 				}
-				
-				/** Old code to migrate to md5
-				    Uncomment it if you have still plain keys
-				$pass = $dbuser->user_pass;
-				if (strlen($pass) != 32) { //migrate to md5
-					$pass = md5($pass);
-					$db->query("update users set user_pass='$pass' where user_login = '$dbusername'");
-				}
-				*/
+
 				$this->user_id = $dbuser->user_id;
 				$this->user_login  = $userInfo[0];
 				$this->md5_pass = $dbuser->user_pass;
@@ -58,6 +63,12 @@ class UserAuth {
 				$this->user_avatar = $dbuser->user_avatar;
 				$this->user_comment_pref = $dbuser->user_comment_pref;
 				$this->authenticated = TRUE;
+
+				if ($userInfo[2] != '3') { // Update the cookie to version 3
+					$this->SetIDCookie(2, true);
+				} elseif ($this->now - $cookietime > 3600) { // Update the time each hour
+					$this->SetIDCookie(2, $userInfo[4] > 0 ? true : false);
+				}
 			}
 		}
 	}
@@ -67,22 +78,21 @@ class UserAuth {
 		global $site_key, $globals;
 		switch ($what) {
 			case 0:	// Borra cookie, logout
-				setcookie ("mnm_user", "", time()-3600, $globals['base_url']); // Expiramos el cookie
-				setcookie ("mnm_key", "", time()-3600, $globals['base_url']); // Expiramos el cookie
+				setcookie ("mnm_user", "", $this->now - 3600, $globals['base_url']); // Expiramos el cookie
+				setcookie ("mnm_key", "", $this->now - 3600, $globals['base_url']); // Expiramos el cookie
 				break;
-			case 1: //Usuario logeado, actualiza el cookie
+			case 1: // Usuario logeado, actualiza el cookie
+			case 2: // Only update the key
 				// Atencion, cambiar aquí cuando se cambie el password de base de datos a MD5
-				$strCookie=base64_encode(join(':',
-					array(
-						$this->user_login,
-						md5($this->user_email.$site_key.$this->user_login.$this->user_id),
-						'2' // Version number
-						)
-					)
-				);
-				if($remember) $time = time() + 3600000; // Valid for 1000 hours
+				if($remember) $time = $this->now + 3600000; // Valid for 1000 hours
 				else $time = 0;
-				setcookie("mnm_user", $this->user_login, $time, $globals['base_url']);
+				$strCookie=base64_encode(
+						$this->user_login.':'
+						.md5($this->user_email.$site_key.$this->user_login.$this->user_id.$this->now).':'
+						.'3'.':' // Version number
+						.$this->now.':'
+						.$time);
+				if ($what == 1) setcookie("mnm_user", $this->user_login, $time, $globals['base_url']);
 				setcookie("mnm_key", $strCookie, $time, $globals['base_url'].'; HttpOnly');
 				break;
 		}
@@ -93,14 +103,10 @@ class UserAuth {
 		$dbusername=$db->escape($username);
 		$user=$db->get_row("SELECT user_id, user_pass, user_level, user_validated_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
 		if ($user->user_level == 'disabled' || empty($user->user_validated_date)) return false;
-		$pass = $user->user_pass;
 		if (strlen($password) != 32) { //migrate to md5
 			$password = md5($password);
 		}
-		if (strlen($pass) != 32) { //migrate to md5
-			$pass = md5($pass);
-			$db->query("update users set user_pass='$pass' where user_login = '$dbusername'");
-		}
+		$pass = $user->user_pass;
 		if ($user->user_id > 0 && $pass == $password) {
 			$this->user_login = $username;
 			$this->user_id = $user->user_id;
@@ -124,8 +130,8 @@ class UserAuth {
 		//header("Pragma: no-cache");
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Location: $url");
-		header("Expires: " . gmdate("r", time()-3600));
-		header('ETag: "logingout' . time(). '"');
+		header("Expires: " . gmdate("r", $this->now - 3600));
+		header('ETag: "logingout' . $this->now . '"');
 		die;
 	}
 
