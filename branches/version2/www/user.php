@@ -189,7 +189,7 @@ function do_profile() {
 			echo " (<em>$user->level</em>)";
 		}
 		if($current_user->user_level=='god') {
-			echo " (" . _('registro'). ": <em>$user->username_register</em>)";
+			echo " (<em>$user->username_register</em>)";
 		}
 		echo '</dd>';
 	}
@@ -213,7 +213,7 @@ function do_profile() {
 	echo '<dt>'._('desde').':</dt><dd>'.get_date_time($user->date).'</dd>';
 
 	if($current_user->user_level=='god') {
-		echo '<dt>'._('email').':</dt><dd>'.$user->email. ' (' .  _('registro'). ": <em>$user->email_register</em>)</dd>";
+		echo '<dt>'._('email').':</dt><dd>'.$user->email. " (<em>$user->email_register</em>)</dd>";
 	}
 
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {

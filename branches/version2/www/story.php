@@ -39,6 +39,17 @@ switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;	
 		$order_field = 'comment_order';
+
+		// Geo check
+		if($globals['google_maps_api']) {
+			$link->geo = true;
+			$link->latlng = $link->get_latlng();
+			if ($link->latlng) {
+				geo_init('geo_coder_load', $link->latlng, 5);
+			} else {
+				geo_init(null, null);
+			}
+		}
 		break;
 	case 'best-comments':
 		$tab_option = 2;
@@ -69,17 +80,6 @@ $globals['link_id']=$link->id;
 $globals['category_id']=$link->category;
 $globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
-
-// Geo check
-if($globals['google_maps_api']) {
-	$link->geo = true;
-	$link->latlng = $link->get_latlng();
-	if ($link->latlng) {
-		geo_init('geo_coder_load', $link->latlng, 5);
-	} else {
-		geo_init(null, null);
-	}
-}
 
 // to avoid penalisation
 if ($tab_option != 1 || $link->status == 'discard') {
