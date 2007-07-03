@@ -24,7 +24,10 @@ switch ($type) {
 	case 'link':
 		if ($id > 0) $cond = add_cond($cond, "link_id = $id");
 		else {
-			if ($from > 0) $cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
+			if ($from > 0) {
+				if ($status == 'published') $cond = add_cond($cond, "link_published_date > date_sub(now(), interval $from hour)");
+				else $cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
+			}
 			if ($status) $cond = add_cond($cond, "link_status = '$status'");
 		}
 		$res = $db->get_results("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_links where $cond and geo_id = link_id");
