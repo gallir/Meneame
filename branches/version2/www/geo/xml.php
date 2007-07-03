@@ -18,7 +18,7 @@ $type = $_REQUEST['type'];
 if ($type != 'link' && $type != 'comment' && $type != 'user' && $type != 'post') $type = 'link';
 
 $status = $_REQUEST['status'];
-if (!empty ($status) && $status != 'published' && $status != 'all' && $status != 'queued') $status = 'published';
+if (empty ($status) && $status != 'published' && $status != 'all' && $status != 'queued') $status = 'published';
 
 switch ($type) {
 	case 'link':

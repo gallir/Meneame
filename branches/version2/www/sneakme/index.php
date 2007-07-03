@@ -92,8 +92,8 @@ $post = new Post;
 $post->print_post_teaser($rss_option);
 
 if ($option == '_geo') {
-	echo '<div class="topheading"><h2>noticias de las últimas 24 horas</h2></div>';
-	echo '<div id="map" style="width: 100%; height: 500px;margin:20px 0 0 20px"></div></div>';
+	echo '<div class="topheading"><h2>notas de las últimas 24 horas</h2></div>';
+	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>';
 ?>
 	<script type="text/javascript">
 	function onLoad(lat, lng, zoom) {
