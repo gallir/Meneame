@@ -28,8 +28,8 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:20px 0 0 20px"></di
 			geo_map.addControl(new GLargeMapControl());
 			geo_marker_mgr = new GMarkerManager(geo_map);
 
-			geo_load_xml('link', 'published', 0);
 			geo_load_xml('link', 'queued', 2);
+			geo_load_xml('link', 'published', 0);
 			GEvent.addListener(geo_map, 'click', function (overlay, point) {
 				if (overlay && overlay.myId > 0) {
 					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {

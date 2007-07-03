@@ -277,14 +277,14 @@ function do_submit1() {
 				syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and few users ($unique_users), going to ban $blog->url ($current_user->user_login)");
 			}
 		// Otherwise check previous karma
-		} elseif ($sents > 4 && $avg_karma < 50) {
-			if ($avg_karma < -20) {
+		} elseif ($sents > 4 && $avg_karma < 30) {
+			if ($avg_karma < -40) {
 				$ban_period = 86400*30;
 				$ban_period_txt = _('un mes');
-			} elseif ($avg_karma < 0) {
+			} elseif ($avg_karma < -10) {
 				$ban_period = 86400*7;
 				$ban_period_txt = _('una semana');
-			} elseif ($avg_karma < 20) {
+			} elseif ($avg_karma < 10) {
 				$ban_period = 86400;
 				$ban_period_txt = _('un día');
 			} else {
