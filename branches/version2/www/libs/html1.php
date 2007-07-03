@@ -42,6 +42,13 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
+		// Google Map
+		if ($tab_selected == 'map') {
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'map.php" title="'.$reload_text.'">'._('mapa').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		} else {
+			echo '<li><a href="'.$globals['base_url'].'map.php">'._('mapa').'</a></li>' . "\n";
+		}
+
 		// Most voted
 		if ($tab_selected == 'popular') {
 			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
