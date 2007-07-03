@@ -7,8 +7,6 @@ var geo_last_address;
 function geo_basic_load(lat, lng, zoom) {
 	if (GBrowserIsCompatible()) {
 		geo_map = new GMap2(document.getElementById("map"));
-		//geo_map.enableDoubleClickZoom();
-		geo_map.addControl(new GSmallZoomControl());
 		zoom = zoom || 7;
 		if (lat || lng) {
 			point = new GLatLng(lat, lng);
@@ -23,6 +21,7 @@ function geo_basic_load(lat, lng, zoom) {
 
 function geo_coder_load(lat, lng, zoom) {
 	if(geo_basic_load(lat, lng, zoom)) {
+		geo_map.addControl(new GSmallZoomControl());
 		if (lat || lng) {
 			geo_map.addOverlay(new GMarker(point));
 			point = new GLatLng(lat, lng);
@@ -111,7 +110,6 @@ function geo_save_current(type, id) {
 
 function geo_delete(type, id) {
 	var url = base_url + 'geo/delete.php?type='+type+'&id='+id;
-	//alert(url);
 	$.ajax({
 		url: url,
 		dataType: "html",

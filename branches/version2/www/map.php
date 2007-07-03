@@ -28,7 +28,6 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:20px 0 0 20px"></di
 			geo_map.addControl(new GLargeMapControl());
 			geo_marker_mgr = new GMarkerManager(geo_map);
 
-			//if ( geo_marker_mgr.getMarkerCount(zoom) > 1) zoom=3;
 			geo_load_xml('link', 'published', 0);
 			geo_load_xml('link', 'queued', 2);
 			GEvent.addListener(geo_map, 'click', function (overlay, point) {
