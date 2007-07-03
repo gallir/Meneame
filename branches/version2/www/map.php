@@ -20,6 +20,7 @@ echo '<div id="container">'."\n";
 do_sidebar();
 echo '<div id="contents">';
 do_tabs('main', 'map');
+echo '<div class="topheading"><h2>noticias de las últimas 24 horas</h2></div>';
 echo '<div id="map" style="width: 100%; height: 500px;margin:20px 0 0 20px"></div></div>'
 ?>
 <script type="text/javascript">
