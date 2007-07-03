@@ -14,6 +14,8 @@ function geo_latlng($type, $id) {
 	elseif ($type == 'link') $table = 'geo_links';
 	else return false;
 
+	if (!$id > 0) return false;
+
 	return $db->get_row("SELECT X(geo_pt) as lat, Y(geo_pt) as lng, geo_text as text FROM  $table where geo_id=$id");
 }
 

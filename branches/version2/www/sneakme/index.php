@@ -32,7 +32,11 @@ switch ($option) {
 	case '_geo':
 		require_once(mnminclude.'geo.php');
 		$tab_option = 5;
-		geo_init('onLoad');
+		if ($current_user->user_id > 0 && ($latlng = geo_latlng('user', $current_user->user_id))) {
+			geo_init('onLoad', $latlng, 5);
+		} else {
+			geo_init('onLoad', false, 2);
+		}
 		break;
 	case '':
 	case '_all':
@@ -88,14 +92,21 @@ $post = new Post;
 $post->print_post_teaser($rss_option);
 
 if ($option == '_geo') {
-	echo '<div id="map" style="width: 720px; height: 600px;"></div></div>';
+	echo '<div id="map" style="width: 100%; height: 500px;margin:20px 0 0 20px"></div></div>'
 ?>
 	<script type="text/javascript">
-	function onLoad() {
-		if (geo_basic_load(false, false, 2)) {
+	function onLoad(lat, lng, zoom) {
+		if (geo_basic_load(lat||18, lng||15, zoom||2)) {
 			geo_map.addControl(new GLargeMapControl());
-			var geoXml = new GGeoXml("http://<? echo get_server_name() . $globals['base_url'] ?>sneakme_rss2.php");
-			geo_map.addOverlay(geoXml);
+			geo_marker_mgr = new GMarkerManager(geo_map);
+            geo_load_xml('post', '', 0, iconblue);
+			GEvent.addListener(geo_map, 'click', function (overlay, point) {
+				if (overlay && overlay.myId > 0) {
+					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
+					overlay.openInfoWindowHtml(data);
+					});
+				}
+			});
 		}
 	}
 	</script>
@@ -140,9 +151,9 @@ function do_posts_tabs($tab_selected, $username) {
 	// GEO
 	if ($globals['google_maps_api']) {
 		if ($tab_selected == 5) {
-			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('geo').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('mapa').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
-			echo '<li><a  href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('geo').'</a></li>' . "\n";
+			echo '<li><a  href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
 		}
 	}
 

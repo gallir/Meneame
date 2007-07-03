@@ -15,7 +15,7 @@ $from = (int) $_REQUEST['from'];
 if ($from <= 0 || $from > 240) $from = 24;
 
 $type = $_REQUEST['type'];
-if ($type != 'link' && $type != 'comment' && $type != 'user') $type = 'link';
+if ($type != 'link' && $type != 'comment' && $type != 'user' && $type != 'post') $type = 'link';
 
 $status = $_REQUEST['status'];
 if (!empty ($status) && $status != 'published' && $status != 'all' && $status != 'queued') $status = 'published';
@@ -32,6 +32,13 @@ switch ($type) {
 		}
 		$res = $db->get_results("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_links where $cond and geo_id = link_id");
 		break;
+
+	case 'post':
+		if ($id > 0) $cond = add_cond($cond, "post_id = $id");
+		if ($from > 0) $cond = add_cond($cond, "post_date > date_sub(now(), interval $from hour)");
+		$res = $db->get_results("select post_id as id, X(geo_pt) as lat, Y(geo_pt) as lng from posts, geo_users where $cond and geo_id = post_user_id");
+		break;
+
 }
 
 

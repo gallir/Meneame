@@ -141,7 +141,7 @@ var iconyellow = "http://labs.google.com/ridefinder/images/mm_20_yellow.png"
 
 var geo_marker_mgr;
 
-function geo_load_xml(type, status, zoom) {
+function geo_load_xml(type, status, zoom, iconimage) {
 	GDownloadUrl(base_url+"geo/xml.php?type="+type+"&status="+status, function(data, responseCode) {
 		var batch = [];
 		var xml = GXml.parse(data);
@@ -151,9 +151,7 @@ function geo_load_xml(type, status, zoom) {
 				parseFloat(markers[i].getAttribute("lng")));
 			var status = markers[i].getAttribute("status");
 			var icon = new GIcon(baseicon);
-			if (status == 'published') icon.image = iconred;
-			else if (status == 'queued') icon.image = iconyellow;
-			else if (status == 'discard') icon.image = iconpurple;
+			icon.image = iconimage;
 			marker = new GMarker(point, icon);
 			marker.myId = parseInt(markers[i].getAttribute("id"));
 			marker.myType = type;
