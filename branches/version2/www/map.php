@@ -36,7 +36,7 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
 						overlay.openInfoWindowHtml(data);
 					});
-				}
+				} else if (point) geo_map.panTo(point);
 			});
 		}
 	}
