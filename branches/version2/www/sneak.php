@@ -43,7 +43,8 @@ var colors_max = animation_colors.length - 1;
 var current_colors = Array();
 var animation_timer;
 
-var do_hoygan = <? if (!empty($_REQUEST['hoygan']))  echo 'true'; else echo 'false'; ?>;
+var do_hoygan = <? if (isset($_REQUEST['hoygan']))  echo 'true'; else echo 'false'; ?>;
+var do_flip = <? if (isset($_REQUEST['flip']))  echo 'true'; else echo 'false'; ?>;
 
 var show_friends = false;
 
@@ -132,6 +133,7 @@ function to_html(data) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
 			}
 			if (do_hoygan) data.title = to_hoygan(data.title);
+			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
@@ -149,6 +151,7 @@ function to_html(data) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
 			}
 			if (do_hoygan) data.title = to_hoygan(data.title);
+			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
@@ -199,6 +202,7 @@ function to_html(data) {
 	if ("undefined" != typeof(data.cid) && data.cid > 0) anchor='#c-'+data.cid;
 	else anchor='';
 	if (do_hoygan) data.title = to_hoygan(data.title);
+	if (do_flip) data.title = flipString(data.title);
 	html += '<div class="sneaker-story"><a href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';
@@ -304,6 +308,103 @@ function to_hoygan(str)
 	return str.toUpperCase();
 }
 
+// From http://www.revfad.com/flip.html
+function flipString(aString) {
+	aString = aString.toLowerCase();
+	var last = aString.length - 1;
+	var result = "";
+	for (var i = last; i >= 0; --i) {
+		result += flipChar(aString.charAt(i))
+	}
+	return result;
+}
+
+function flipChar(c) {
+	switch (c) {
+	case 'á':
+	case 'a':
+	case 'à':
+		return '\u0250';
+	case 'b':
+		return 'q';
+	case 'c':
+		return '\u0254'; //Open o -- copied from pne
+	case 'd':
+		return 'p';
+	case 'e':
+	case 'é':
+		return '\u01DD';
+	case 'f':
+		return '\u025F'; //Copied from pne -- 
+		//LATIN SMALL LETTER DOTLESS J WITH STROKE
+	case 'g':
+		return 'b';
+	case 'h':
+		return '\u0265';
+	case 'i':
+	case 'í':
+		return '\u0131'; //'\u0131\u0323' //copied from pne
+	case 'j':
+		return '\u0638';
+	case 'k':
+		return '\u029E';
+	case 'l':
+		return '1';
+	case 'm':
+		return '\u026F';
+	case 'n':
+	case 'ñ':
+		return 'u';
+	case 'ó':
+	case 'o':
+		return 'o';
+	case 'p':
+		return 'd';
+	case 'q':
+		return 'b';
+	case 'r':
+		return '\u0279';
+	case 's':
+		return 's';
+	case 't':
+		return '\u0287';
+	case 'u':
+		return 'n';
+	case 'v':
+		return '\u028C';
+	case 'w':
+		return '\u028D';
+	case 'x':
+		return 'x';
+	case 'y':
+		return '\u028E';
+	case 'z':
+		return 'z';
+	case '[':
+		return ']';
+	case ']':
+		return '[';
+	case '(':
+		return ')';
+	case ')':
+		return '(';
+	case '{':
+		return '}';
+	case '}':
+		return '{';
+	case '?':
+		return '\u00BF'; //From pne
+	case '\u00BF':
+		return '?';
+	case '!':
+		return '\u00A1';
+	case "\'":
+		return ',';
+	case ',':
+		return "\'";
+	}
+	return c;
+}
 
 //]]>
 </script>
