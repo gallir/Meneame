@@ -186,7 +186,7 @@ if ($links) {
 		echo '<p>'.$content.'</p>';
 
 		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-			echo '<p><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></p>';
+			echo '<p><a href="'.$link->get_permalink().'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
 		}
 		
 		if ($link->status == 'published' || $globals['show_original_link']) {
@@ -243,7 +243,7 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	if (isset($_REQUEST['local']) || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
 	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
 	switch ($status) {

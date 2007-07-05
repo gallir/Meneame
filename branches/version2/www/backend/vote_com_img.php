@@ -4,6 +4,10 @@ include_once('../config.php');
 $id = intval($_GET['id']);
 if (! $id > 0) die;
 
+// Example to change the image for a give domain
+//if (preg_match('/domain.com/', $_SERVER['HTTP_REFERER'])) {
+//}
+
 $votes_comments = $db->get_row("select link_votes, link_comments from links where link_id=$id");
 $im = imagecreate(200, 16);
    

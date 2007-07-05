@@ -330,11 +330,11 @@ function save_profile() {
 
 	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
-		if($_POST['password'] !== $_POST['password2']) {
+		if(trim($_POST['password']) !== trim($_POST['password2'])) {
 			echo '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
 			$errors = 1;
 		} else {
-			$user->pass=trim($_POST['password']);
+			$user->pass=md5(trim($_POST['password']));
 			echo '<p>'._('La clave se ha cambiado').'</p>';
 			$pass_changed = true;
 		}
