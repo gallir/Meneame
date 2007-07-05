@@ -12,6 +12,8 @@ include(mnminclude.'ts.php');
 include(mnminclude.'log.php');
 
 $globals['ads'] = true;
+// We use the original IP to avoid cheating by httheaders
+$globals['original_user_ip_int'] = sprintf("%u", ip2long($_SERVER["REMOTE_ADDR"]));
 
 // Clean return variable
 if(!empty($_REQUEST['return']))
@@ -48,7 +50,7 @@ function do_login() {
 
 	// Start posavasos & ashacz code
 	
-	$previous_login_failed =  log_get_date('login_failed', $globals['user_ip_int'], 0, 90);
+	$previous_login_failed =  log_get_date('login_failed', $globals['original_user_ip_int'], 0, 90);
 
 	if(!$previous_login_failed && empty($_POST["processlogin"])) {
 		echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
@@ -95,10 +97,10 @@ function do_login() {
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
 		if ($previous_login_failed  && !ts_is_human()) {
-			log_conditional_insert('login_failed', $globals['user_ip_int'], 0, 60);
+			log_conditional_insert('login_failed', $globals['original_user_ip_int'], 0, 60);
 			recover_error(_('El código de seguridad no es correcto!'));
 		} elseif ($current_user->Authenticate($username, $password, $persistent) == false) {
-			log_conditional_insert('login_failed', $globals['user_ip_int'], 0, 60);
+			log_conditional_insert('login_failed', $globals['original_user_ip_int'], 0, 60);
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed = true;
 		} else {

@@ -474,7 +474,9 @@ function replaceText(text, tag) {
 // Only known how to do it with urchin/Google Analytics
 // See http://www.google.com/support/analytics/bin/answer.py?answer=33985&topic=7292
 function reportAjaxStats(page) {
+	/* Commented out, might slow down some ajax requests
 	if (window.urchinTracker) {
 		urchinTracker(page+'.ajax'); 
 	}
+	*/
 }
