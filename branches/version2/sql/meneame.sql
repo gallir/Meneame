@@ -226,7 +226,7 @@ CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL auto_increment,
   `log_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn') NOT NULL,
-  `log_ref_id` int(11) NOT NULL,
+  `log_ref_id` int(11) unsigned NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip` char(24) character set utf8 collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`log_id`),
@@ -394,4 +394,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-07-02 16:18:00
+-- Dump completed on 2007-07-05 21:53:37
