@@ -18,7 +18,7 @@ if (!empty($_GET['getv'])) {
 	echo $sneak_version;
 	die;
 }
-$now = time();
+$now = $globals['now'];
 if(!($time=check_integer('time')) > 0 || $now-$time > 900) {
 	$time = $now-900;
 }

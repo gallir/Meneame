@@ -24,7 +24,7 @@ if ($type == 'link') {
 	if ( ! $link->read() ) {
 		error(_('Artículo inexistente'));
 	}
-	if (! $link->is_editable() ) {
+	if (! $link->is_map_editable() ) {
 		error(_("noticia no modificable"));
 	}
 	$latlng = $link->get_latlng();

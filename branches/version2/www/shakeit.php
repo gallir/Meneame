@@ -23,7 +23,7 @@ $cat = intval($_REQUEST['category']);
 switch ($globals['meta']) {
 	case '_friends':
 		$globals['noindex'] = true;
-		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 2;
@@ -32,7 +32,7 @@ switch ($globals['meta']) {
 	case '_popular':
 		// Show  the hihgher karma first
 		$globals['noindex'] = true;
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*2).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*2).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
 		$order_by = " ORDER BY link_karma DESC ";	
 		$tab = 3;
@@ -41,7 +41,7 @@ switch ($globals['meta']) {
 	case '_discarded':
 		// Show only discarded in four days
 		$globals['noindex'] = true;
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400*4).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 5;
@@ -52,7 +52,7 @@ switch ($globals['meta']) {
 	default:
 		$globals['tag_status'] = 'queued';
 		// Show last in seven days
-		$from_time = '"'.date("Y-m-d H:00:00", time() - $globals['time_enabled_votes']).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$order_by = " ORDER BY link_date DESC ";
 		if ($globals['meta_current'] > 0) {
 			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";

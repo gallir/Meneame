@@ -19,6 +19,8 @@ if ($globals['check_behind_proxy']) {
 // Warn, we shoud printf "%u" because PHP on 32 bits systems fails with high unsigned numbers
 $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 
+$globals['now'] = time();
+
 $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('provocación'), -8 => _('errónea') );
 
 
@@ -132,8 +134,9 @@ function check_username($name) {
 
 
 function txt_time_diff($from, $now=0){
+	global $globals;
 	$txt = '';
-	if($now==0) $now = time();
+	if($now==0) $now = $globals['now'];
 	$diff=$now-$from;
 	$days=intval($diff/86400);
 	$diff=$diff%86400;

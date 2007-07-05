@@ -602,7 +602,7 @@ function do_vertical_tags() {
 	$max_pts = 18;
 	$line_height = $max_pts * 0.75;
 
-	$min_date = date("Y-m-d H:00:00", time() - 172800); // 48 hours
+	$min_date = date("Y-m-d H:00:00", $globals['now'] - 172800); // 48 hours
 	if(!empty($globals['meta_categories'])) {
 		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
 	}
@@ -663,7 +663,7 @@ function do_best_comments() {
 
 	//if ($globals['bot']) return; // We wont spend lot of CPU for another CPU :-)
 	
-	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
+	$min_date = date("Y-m-d H:00:00", $globals['now'] - 22000); // about 6 hours
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 30 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
 		echo '<div class="vertical-box">';
@@ -680,7 +680,7 @@ function do_best_comments() {
 function do_best_posts() {
 	global $db, $globals, $dblang;
 
-	$min_date = date("Y-m-d H:00:00", time() - 22000); // about 6 hours
+	$min_date = date("Y-m-d H:00:00", $globals['now'] - 22000); // about 6 hours
 	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id order by post_karma desc limit 10");
 	if ($res) {
 		echo '<div class="vertical-box">';

@@ -24,7 +24,7 @@ class Comment {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
-		if(!$this->date) $this->date=time();
+		if(!$this->date) $this->date=$globals['now'];
 		$comment_author = $this->author;
 		$comment_link = $this->link;
 		$comment_karma = $this->karma;
@@ -136,7 +136,7 @@ class Comment {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 
 		// Print dates
-		if (time() - $this->date > 604800) { // 7 days
+		if ($globals['now'] - $this->date > 604800) { // 7 days
 			echo _('el').get_date_time($this->date);
 		} else {
 			echo _('hace').' '.txt_time_diff($this->date);
@@ -148,7 +148,7 @@ class Comment {
 
 	function print_shake_icons() {
 		global $globals, $current_user;
-		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && $this->date > time() - $globals['time_enabled_votes'] && ! $this->vote_exists()) {  
+		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && $this->date > $globals['now'] - $globals['time_enabled_votes'] && ! $this->vote_exists()) {  
 		 	echo '<span id="c-votes-'.$this->id.'">';
 			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
 		 	echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_url'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
@@ -193,8 +193,8 @@ class Comment {
 		global $current_user, $globals;
 
 		if (($this->author == $current_user->user_id &&
-			time() - $this->date < $globals['comment_edit_time']) ||
-			 ($current_user->user_level == 'god' && time() - $this->date < 259200)) { // Admins can edit up to 72 hours
+			$globals['now'] - $this->date < $globals['comment_edit_time']) ||
+			 ($current_user->user_level == 'god' && $globals['now'] - $this->date < 259200)) { // Admins can edit up to 72 hours
 			$expand = '<br /><br />&#187;&nbsp;' . 
 				'<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar comentario').'</a>';
 

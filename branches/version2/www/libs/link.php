@@ -248,9 +248,9 @@ class Link {
 	}
 
 	function store_basic() {
-		global $db, $current_user;
+		global $db, $current_user, $globals;
 
-		if(!$this->date) $this->date=time();
+		if(!$this->date) $this->date=$globals['now'];
 		$link_author = $this->author;
 		$link_blog = $this->blog;
 		$link_status = $db->escape($this->status);
@@ -422,7 +422,7 @@ class Link {
 		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
 		echo _('por').' <a href="'.get_user_uri($this->username, 'history').'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		// Print dates
-		if (time() - $this->date > 604800) { // 7 days
+		if ($globals['now'] - $this->date > 604800) { // 7 days
 			echo _('el').get_date_time($this->date);
 			if($this->status == 'published')
 				echo ', '  ._('publicado el').get_date_time($this->published_date);
@@ -435,11 +435,12 @@ class Link {
 
 		if($type=='full' || $type=='preview') {
 			echo '<p>'.text_to_html($this->content);
-			if ($type != 'preview' && $this->is_editable()) {
-				echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit" title="'._('editar').'"/></a>';
-				if ($this->geo && !($current_user->user_id == $this->author && !$this->latlng)) {
+			if ($type != 'preview' ) {
+				if ($this->is_editable()) {
+					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit" title="'._('editar').'"/></a>';
+				}
+				if ($this->geo && $this->is_map_editable()) {
 					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\'); return false;"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
-					//echo '&nbsp;&nbsp;<a href="javascript:$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\')"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 				}
 			}
 			echo '</p>';
@@ -494,7 +495,7 @@ class Link {
 		echo '</div>'."\n";
 
 		// Geo edit form div
-		if ($this->geo && $this->is_editable())  {
+		if ($this->geo && $this->is_map_editable())  {
 			echo '<div id="geoedit" class="geoform" style="margin-left:20px">';
 			if ($current_user->user_id == $this->author && !$this->latlng)  {
 				geo_coder_print_form('link', $this->id, $globals['latlng'], _('ubica la noticia (ciudad, país, u origen del sitio)'));
@@ -633,8 +634,9 @@ class Link {
 	}
 
 	function publish() {
+		global $globals;
 		if(!$this->read) $this->read_basic();
-		$this->published_date = time();
+		$this->published_date = $globals['now'];
 		$this->status = 'published';
 		$this->store_basic();
 	}
@@ -646,13 +648,13 @@ class Link {
 	}
 
 	function is_editable() {
-		global $current_user, $db;
+		global $current_user, $db, $globals;
 
 		if($current_user->user_id ==  0) return false;
 		if (isset($this->editable)) return $this->editable;
 		if($this->status != 'published' && 
-			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && time() - $this->date < 1800) 
-					|| ($current_user->user_level == 'special' && time() - $this->date < 10400))
+			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
+					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 				$this->editable = true;
 				return true;
@@ -661,10 +663,25 @@ class Link {
 		return false;
 	}
 
+	function is_map_editable() {
+		global $current_user, $db, $globals;
+
+		if($current_user->user_id ==  0) return false;
+		if (isset($this->map_editable)) return $this->map_editable;
+		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 7200) 
+					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 14400)
+			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+				$this->map_editable = true;
+				return true;
+			}
+		$this->map_editable = false;
+		return false;
+	}
+
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || ($globals['time_enabled_votes'] > 0 && $this->date < time() - $globals['time_enabled_votes']))  {
+		if($globals['bot'] || ($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
 			$this->votes_enabled = true;

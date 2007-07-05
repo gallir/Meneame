@@ -21,9 +21,9 @@ class UserAuth {
 
 
 	function UserAuth() {
-		global $db, $site_key;
+		global $db, $site_key, $globals;
 
-		$this->now = time();
+		$this->now = $globals['now'];
 		if(!empty($_COOKIE['mnm_user']) && !empty($_COOKIE['mnm_key'])) {
 			$userInfo=explode(":", base64_decode($_REQUEST['mnm_key']));
 			if($_COOKIE['mnm_user'] === $userInfo[0]) {

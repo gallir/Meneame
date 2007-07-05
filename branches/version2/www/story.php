@@ -159,7 +159,7 @@ case 2:
 	}
 
 	
-	if($link->date < time()-$globals['time_enabled_comments']) { 
+	if($link->date < $globals['now']-$globals['time_enabled_comments']) { 
 		echo '<div class="commentform warn">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
@@ -189,7 +189,7 @@ case 3:
 	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
-	if ($globals['link']->date < time() - 7776000) { // older than 90 days
+	if ($globals['link']->date < $globals['now'] - 7776000) { // older than 90 days
 		echo _('Noticia antigua, datos de votos archivados');
 	} else {
 		include(mnmpath.'/backend/meneos.php');
@@ -335,7 +335,7 @@ function print_comment_form() {
 function insert_comment () {
 	global $link, $db, $current_user, $globals;
 	// Check if is a POST of a comment
-	if($link->votes > 0 && $link->date > time()-$globals['time_enabled_comments'] && 
+	if($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 
 			intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
 			intval($_POST['user_id']) == $current_user->user_id &&
 			($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author) &&
@@ -397,11 +397,11 @@ function print_story_tabs($option) {
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
 	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
-		if ($globals['link']->date > time() - 7776000) { // newer than 90 days
+		if ($globals['link']->date > $globals['now'] - 7776000) { // newer than 90 days
 			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
 		echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
-		if ($globals['link']->date > time() - $globals['time_enabled_comments']) {
+		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
 			echo '<li><a '.$active[5].' href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 			echo '<li><a '.$active[4].' href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
 		}

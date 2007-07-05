@@ -80,7 +80,7 @@ function geo_found_point(point) {
 	geo_map.clearOverlays();
 	geo_last_point = point;
 	geo_last_address = document.geocoderform.address.value;
-	geo_map.setCenter(point);
+	geo_map.panTo(point);
 	var marker = new GMarker(point);
 	geo_map.addOverlay(marker);
 	document.geocoderform.geosave.disabled = false;

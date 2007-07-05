@@ -59,7 +59,7 @@ class User {
 	function store($full_save = true) {
 		global $db, $current_user, $globals;
 
-		if(!$this->date) $this->date=time();
+		if(!$this->date) $this->date=$globals['now'];
 	/*
 		if($full_save && empty($this->ip)) {
 			$this->ip=$globals['user_ip'];
