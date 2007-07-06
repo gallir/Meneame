@@ -5,7 +5,10 @@ echo 'google_ad_client = "'.$globals['user_adcode'].'";' . "\n";
 echo 'google_ad_width = 728;' . "\n";
 echo 'google_ad_height = 90;' . "\n";
 echo 'google_ad_format = "728x90_as";' . "\n";
-echo 'google_ad_type = "text_image";' . "\n";
+if ($current_user->user_id == 0) 
+	echo 'google_ad_type = "text_image";' . "\n";
+else
+	echo 'google_ad_type = "text";' . "\n";
 if (!empty($globals['user_adchannel'])) 
 	echo 'google_ad_channel ="'.$globals['user_adchannel'].'";' . "\n";
 echo 'google_color_border = "FFFFFF";' . "\n";

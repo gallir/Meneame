@@ -264,7 +264,7 @@ function do_submit1() {
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
-		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.5)) {
+		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
 			$unique_users = (int) $db->get_var("select count(distinct link_author) from links where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day);");
 			if ($unique_users < 3) {
 				if ($avg_karma < -10) {

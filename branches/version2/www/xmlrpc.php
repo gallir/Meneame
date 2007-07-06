@@ -69,6 +69,11 @@ class Xmlrpc_server extends IXR_Server {
 		$uri = preg_replace("/^$base_uri/", '', $urltest[path]);
 
 
+		if(check_ban($globals['user_ip'], 'ip')) {
+			syslog(LOG_NOTICE, "Meneame: pingback, IP is banned ($globals[user_ip]): $pagelinkedfrom - $pagelinkedto");
+	  		return new IXR_Error(33, 'IP is banned.');
+		}
+
 		// Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
 		if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $pagelinkedfrom)) {
 	  		return new IXR_Error(33, 'Host not allowed.');

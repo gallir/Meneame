@@ -33,6 +33,11 @@ $urlfrom = parse_url($tb_url);
 // Antispam of sites like xxx.yyy-zzz.info/archives/xxx.php
 if (preg_match('/http:\/\/[a-z0-9]\.[a-z0-9]+-[^\/]+\.info\/archives\/.+\.php$/', $tb_url)) die;
 
+if(check_ban($globals['user_ip'], 'ip')) {
+	syslog(LOG_NOTICE, "Meneame: trackback, IP is banned: $urlfrom[host], $globals[user_ip]");
+	trackback_response(1, 'Server banned.');
+}
+
 if(check_ban($urlfrom[host], 'hostname', false)) {
 	syslog(LOG_NOTICE, "Meneame: trackback, server is banned: $urlfrom[host]");
 	trackback_response(1, 'Server banned.');
