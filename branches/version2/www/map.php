@@ -21,25 +21,64 @@ do_sidebar();
 echo '<div id="contents">';
 do_tabs('main', 'map');
 echo '<div class="topheading"><h2>noticias de las últimas 24 horas</h2></div>';
+
+echo '<div style="margin:0 0 10px 20px; text-align:center">';
+
+echo '<form action="" id="map-control" name="map-control">';
+
+echo _('publicadas').'&nbsp;<img src="http://labs.google.com/ridefinder/images/mm_20_red.png" width="12" height="20" alt="'._('publicadas').'" title="'._('publicadas').'"/><input type="checkbox" checked="checked"  id="published" onclick="toggle(\'published\')" />';
+echo '&nbsp;&nbsp;&nbsp;';
+echo _('pendientes').'&nbsp;<img src="http://labs.google.com/ridefinder/images/mm_20_yellow.png" width="12" height="20" alt="'._('pendientes').'" title="'._('pendientes').'"/><input type="checkbox" checked="checked"  id="queued" onclick="toggle(\'queued\')" />';
+echo '&nbsp;&nbsp;&nbsp;';
+echo _('autores').'&nbsp;<img src="http://labs.google.com/ridefinder/images/mm_20_blue.png" width="12" height="20" alt="'._('autores').'" title="'._('authors').'"/><input type="checkbox"  id="author" onclick="toggle(\'author\')" />';
+
+
+echo '</form>';
+echo '</div>';
+
+
 echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>'
 ?>
 <script type="text/javascript">
-	function onLoad() {
-		if (geo_basic_load(18, 15, 2)) {
-			geo_map.addControl(new GLargeMapControl());
-			geo_marker_mgr = new GMarkerManager(geo_map);
+var published = true;
+var queued = true;
+var author = false;
 
-			geo_load_xml('link', 'published', 0, iconred);
-			setTimeout("geo_load_xml('link', 'queued', 0, iconorange)", 300);
-			GEvent.addListener(geo_map, 'click', function (overlay, point) {
-				if (overlay && overlay.myId > 0) {
-					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
-						overlay.openInfoWindowHtml(data);
-					});
-				} else if (point) geo_map.panTo(point);
-			});
-		}
+
+function toggle(what, field) {
+	eval(what +' = ! '+what);
+	load_xmls();
+	return false;
+}
+
+function load_xmls() {
+	geo_map.clearOverlays();
+	geo_marker_mgr = new GMarkerManager(geo_map);
+	if (published) {
+		geo_load_xml('link', 'published', 0, iconred);
 	}
+	if (queued) {
+		geo_load_xml('link', 'queued', 0, iconorange);
+	}
+	if (author) {
+		geo_load_xml('author', '', 0, iconblue);
+	}
+	//setTimeout("geo_load_xml('link', 'queued', 0, iconorange)", 300);
+}
+
+function onLoad() {
+	if (geo_basic_load(18, 15, 2)) {
+		geo_map.addControl(new GLargeMapControl());
+		load_xmls();
+		GEvent.addListener(geo_map, 'click', function (overlay, point) {
+			if (overlay && overlay.myId > 0) {
+				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
+					overlay.openInfoWindowHtml(data);
+				});
+			} else if (point) geo_map.panTo(point);
+		});
+	}
+}
 </script>
 <?
 

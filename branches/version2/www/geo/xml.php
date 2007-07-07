@@ -15,10 +15,10 @@ $from = (int) $_REQUEST['from'];
 if ($from <= 0 || $from > 240) $from = 24;
 
 $type = $_REQUEST['type'];
-if ($type != 'link' && $type != 'comment' && $type != 'user' && $type != 'post') $type = 'link';
+if ($type != 'link' && $type != 'comment' && $type != 'user' && $type != 'author' && $type != 'post') $type = 'link';
 
 $status = $_REQUEST['status'];
-if (empty ($status) && $status != 'published' && $status != 'all' && $status != 'queued') $status = 'published';
+if (empty ($status) && $status != 'published' && $status != 'all' && $status != 'queued') $status = false;
 
 switch ($type) {
 	case 'link':
@@ -31,6 +31,15 @@ switch ($type) {
 			if ($status) $cond = add_cond($cond, "link_status = '$status'");
 		}
 		$res = $db->get_results("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_links where $cond and geo_id = link_id");
+		break;
+
+	case 'author':
+		if ($id > 0) $cond = add_cond($cond, "link_id = $id");
+		else {
+			$cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
+			if ($status) $cond = add_cond($cond, "link_status = '$status'");
+		}
+		$res = $db->get_results("select distinct link_author as id,  X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_users where $cond and geo_id = link_author");
 		break;
 
 	case 'post':
@@ -49,7 +58,9 @@ echo "<markers>\n";
 
 if ($res) {
 	foreach ($res as $item) {
-		echo "<marker lat='$item->lat' lng='$item->lng' id='$item->id' status='$item->status'/>\n";
+		echo "<marker lat='$item->lat' lng='$item->lng' id='$item->id'";
+		if($item->status) echo " status='$item->status' ";
+		echo "/>\n";
 	}
 }
 echo "</markers>\n";
