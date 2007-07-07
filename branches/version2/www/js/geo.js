@@ -139,7 +139,7 @@ var iconorange = "http://labs.google.com/ridefinder/images/mm_20_orange.png"
 var iconpurple = "http://labs.google.com/ridefinder/images/mm_20_purple.png"
 var iconyellow = "http://labs.google.com/ridefinder/images/mm_20_yellow.png"
 
-var geo_marker_mgr;
+var geo_marker_mgr = null;
 
 function geo_load_xml(type, status, zoom, iconimage) {
 	GDownloadUrl(base_url+"geo/xml.php?type="+type+"&status="+status, function(data, responseCode) {

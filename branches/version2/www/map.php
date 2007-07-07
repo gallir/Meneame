@@ -13,6 +13,7 @@ include(mnminclude.'geo.php');
 
 $globals['ads'] = true;
 geo_init('onLoad', false, 2);
+array_push($globals['extra_js'], 'markermanager.js');
 
 do_header(_('mapa de publicadas'));
 do_banner_top();
@@ -39,6 +40,7 @@ echo '</div>';
 
 echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>'
 ?>
+
 <script type="text/javascript">
 var published = true;
 var queued = true;
@@ -52,8 +54,8 @@ function toggle(what, field) {
 }
 
 function load_xmls() {
-	geo_map.clearOverlays();
-	geo_marker_mgr = new GMarkerManager(geo_map);
+	if (geo_marker_mgr)
+		geo_marker_mgr.clearMarkers();
 	if (published) {
 		geo_load_xml('link', 'published', 0, iconred);
 	}
@@ -69,6 +71,8 @@ function load_xmls() {
 function onLoad() {
 	if (geo_basic_load(18, 15, 2)) {
 		geo_map.addControl(new GLargeMapControl());
+		// From http://gmaps-utility-library.googlecode.com/svn/trunk/markermanager/
+		geo_marker_mgr = new MarkerManager(geo_map, {trackMarkers:false});
 		load_xmls();
 		GEvent.addListener(geo_map, 'click', function (overlay, point) {
 			if (overlay && overlay.myId > 0) {
