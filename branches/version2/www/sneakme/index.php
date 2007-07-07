@@ -106,7 +106,7 @@ if ($option == '_geo') {
 					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
 					overlay.openInfoWindowHtml(data);
 					});
-				} else if (point) geo_map.panTo(point);
+				} //else if (point) geo_map.panTo(point);
 			});
 		}
 	}
