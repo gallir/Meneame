@@ -668,7 +668,7 @@ class Link {
 
 		if($current_user->user_id ==  0) return false;
 		if (isset($this->map_editable)) return $this->map_editable;
-		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 7200) 
+		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 9800) 
 					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 14400)
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 				$this->map_editable = true;

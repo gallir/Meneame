@@ -45,7 +45,7 @@ function do_stats2($string) {
 	if (count($array) >= 2 && ((int)$array[1] > 0)) {
 		$hours = min((int) $array[1], 72); // Up to 72 hours
 	} else {
-		$hours = 4;
+		$hours = 24;
 	}
 
 	$comment = '<strong>'._('Estadísticas')." $hours ";
