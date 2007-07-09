@@ -41,33 +41,32 @@ function do_stats1($string) {
 
 function do_stats2($string) {
 	global $db;
-	$comment = '<strong>'._('Estadísticas 24 horas'). '</strong>. ';
-	$comment .= _('votos') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="links" and vote_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('votos comentarios') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="comments" and vote_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('votos notas') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="posts" and vote_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . $db->get_var('select count(*) from links where link_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="published" and link_published_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_date > date_sub(now(), interval 24 hour)') . ', ';
-	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments where  comment_date > date_sub(now(), interval 24 hour)')  . ', ';
-	$comment .= _('notas') . ':&nbsp;' . $db->get_var('select count(*) from posts where  post_date > date_sub(now(), interval 24 hour)')  . ', ';
-	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var('select count(*) from users where  user_date > date_sub(now(), interval 24 hour) and user_validated_date is not null') . ', ';
-	$comment .= _('usuarios hoy') . ':&nbsp;' . $db->get_var('select count(*) from users where  user_date > CURDATE() and user_validated_date is not null');
+	$array = preg_split('/\s+/', $string);
+	if (count($array) >= 2 && ((int)$array[1] > 0)) {
+		$hours = min((int) $array[1], 72); // Up to 72 hours
+	} else {
+		$hours = 4;
+	}
+
+	$comment = '<strong>'._('Estadísticas')." $hours ";
+	if ($hours > 1) $comment .= _('horas');
+	else $comment .= _('hora');
+	$comment .= '</strong>. ';
+
+	$comment .= _('votos') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('votos comentarios') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='comments' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('votos notas') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='posts' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('artículos') . ':&nbsp;' . $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('publicados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_published_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('descartados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from comments where  comment_date > date_sub(now(), interval $hours hour)")  . ', ';
+	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from posts where  post_date > date_sub(now(), interval $hours hour)")  . ', ';
+	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from users where  user_date > date_sub(now(), interval $hours hour) and user_validated_date is not null");
 	return $comment;
 }
 
 function do_stats3($string) {
-	global $db;
-	$comment = '<strong>'._('Estadísticas última hora'). '</strong>. ';
-	$comment .= _('votos') . ':&nbsp;' . $db->get_var('select count(*) from votes where vote_type="links" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('votos comentarios') . ':&nbsp;' . (int) $db->get_var('select count(*) from votes where vote_type="comments" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('votos notas') . ':&nbsp;' . (int) $db->get_var('select count(*) from votes where vote_type="posts" and vote_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . $db->get_var('select count(*) from links where link_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="published" and link_published_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_date > date_sub(now(), interval 1 hour)') . ', ';
-	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments where  comment_date > date_sub(now(), interval 1 hour)')  . ', ';
-	$comment .= _('notas') . ':&nbsp;' . $db->get_var('select count(*) from posts where  post_date > date_sub(now(), interval 1 hour)')  . ', ';
-	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var('select count(*) from users where  user_date > date_sub(now(), interval 1 hour) and user_validated_date is not null');
-	return $comment;
+	return do_stats2('!stats3 1');
 }
 
 function do_statsu($string) {
