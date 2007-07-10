@@ -34,7 +34,7 @@ if ($logs) {
 		switch ($log->log_type) {
 			case 'link_new':
 			case 'link_publish':
-				$item = $db->get_row("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_links where link_id = $log->log_ref_id and geo_id = link_id");
+				$item = $db->get_row("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_users where link_id = $log->log_ref_id and geo_id = $log->log_user_id");
 				if ($item) write_event($item, $log->time, 'link');
 				break;
 			case 'comment_new':

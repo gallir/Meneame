@@ -35,7 +35,7 @@ baseicon.infoWindowAnchor = new GPoint(5, 1);
 
 var timestamp = 0;
 var period = 10000;
-var persistency = 180000;
+var persistency = 300000;
 
 function add_marker(item, center) {
 	var myicon;
