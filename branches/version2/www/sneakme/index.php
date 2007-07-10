@@ -95,22 +95,33 @@ if ($option == '_geo') {
 	echo '<div class="topheading"><h2>notas de las últimas 24 horas</h2></div>';
 	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>';
 ?>
-	<script type="text/javascript">
-	function onLoad(lat, lng, zoom) {
-		if (geo_basic_load(lat||18, lng||15, zoom||2)) {
-			geo_map.addControl(new GLargeMapControl());
-			geo_marker_mgr = new GMarkerManager(geo_map);
-            geo_load_xml('post', '', 0, iconblue);
-			GEvent.addListener(geo_map, 'click', function (overlay, point) {
-				if (overlay && overlay.myId > 0) {
-					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
-					overlay.openInfoWindowHtml(data);
-					});
-				} //else if (point) geo_map.panTo(point);
-			});
-		}
+<script type="text/javascript">
+
+var baseicon = new GIcon();
+//baseicon.shadow = "http://labs.google.com/ridefinder/images/mm_20_shadow.png";
+baseicon.iconSize = new GSize(12, 20);
+//baseicon.shadowSize = new GSize(22, 20);
+baseicon.iconAnchor = new GPoint(6, 20);
+baseicon.infoWindowAnchor = new GPoint(5, 1);
+var geo_marker_mgr = null;
+
+var iconblue = "http://labs.google.com/ridefinder/images/mm_20_blue.png";
+
+function onLoad(lat, lng, zoom) {
+	if (geo_basic_load(lat||18, lng||15, zoom||2)) {
+		geo_map.addControl(new GLargeMapControl());
+		geo_marker_mgr = new GMarkerManager(geo_map);
+		geo_load_xml('post', '', 0, iconblue);
+		GEvent.addListener(geo_map, 'click', function (overlay, point) {
+			if (overlay && overlay.myId > 0) {
+				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
+				overlay.openInfoWindowHtml(data);
+				});
+			} //else if (point) geo_map.panTo(point);
+		});
 	}
-	</script>
+}
+</script>
 <?
 } else {
 	$posts = $db->get_results($sql);
