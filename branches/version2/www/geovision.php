@@ -37,8 +37,9 @@ var timestamp = 0;
 var period = 10000;
 var persistency = 300000;
 
-function add_marker(item, center) {
+function add_marker(item, delay) {
 	var myicon;
+	var point = new GLatLng(item.lat, item.lng);
 	switch (item.type) {
 		case 'comment':
 			myicon = "img/common/sneak-comment01.gif";
@@ -53,24 +54,22 @@ function add_marker(item, center) {
 	}
 	var icon = new GIcon(baseicon);
 	icon.image = myicon;
-	var point = new GLatLng(item.lat, item.lng);
 	var marker = new GMarker(point, icon);
 	marker.myId = item.id;
 	marker.myType = item.type;
-	geo_map.addOverlay(marker);
+	setTimeout(function () {geo_map.panTo(point); setTimeout(function () {geo_map.addOverlay(marker)}, 500)}, delay);
 	setTimeout(function () {geo_map.removeOverlay(marker)}, persistency);
-	setTimeout(function () {geo_map.panTo(point)}, center);
 }
 
 function get_json() {
 	$.getJSON('geo/sneaker.php', {"time": timestamp}, function (json) {
 			var items = json.items.length;
 			timestamp = json.ts;
-			var center_time;
+			var delay_time;
+			var item;
 			for (i=items-1; i>=0; i--) {
-				center_time = parseInt(period - (period/items) * (i+1));
-				//alert(i + "--" + json[i].time + '--' + center_time);
-				add_marker(json.items[i], center_time);
+				delay_time = parseInt(period - (period/items) * (i+1));
+				add_marker(json.items[i], delay_time);
 			}
 		});
 	setTimeout(get_json, period);
