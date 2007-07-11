@@ -227,7 +227,7 @@ case 4:
 	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
 
 	echo '<div id="voters-container">';
-	$logs = $db->get_results("select logs.*, user_id, user_login, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit') and log_ref_id=$link->id and user_id= log_user_id order by log_date asc");
+	$logs = $db->get_results("select logs.*, user_id, user_login, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit') and log_ref_id=$link->id and user_id= log_user_id order by log_date asc");
 	if ($logs) {
 		//echo '<div class="voters-list">';
 		foreach ($logs as $log) {

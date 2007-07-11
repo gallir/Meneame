@@ -81,6 +81,9 @@ if ($logs) {
 			case 'link_edit':
 				if (empty($_GET['noedit'])) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
 				break;
+			case 'link_geo_edit':
+				if (empty($_GET['nogeoedit'])) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
+				break;
 			case 'comment_edit':
 				if (empty($_GET['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;

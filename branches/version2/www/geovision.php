@@ -50,6 +50,10 @@ function add_marker(item, delay) {
 		case 'link':
 			if (item.status == 'queued') myicon = "img/common/sneak-new01.gif";
 			else myicon = "img/common/sneak-published01.gif";
+		case 'link':
+			if (item.evt == 'geo_edit') myicon = "img/common/sneak-geo01.gif";
+			else if (item.status == 'queued') myicon = "img/common/sneak-new01.gif";
+			else myicon = "img/common/sneak-published01.gif";
 		break;
 	}
 	var icon = new GIcon(baseicon);

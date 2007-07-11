@@ -37,6 +37,10 @@ if ($logs) {
 				$item = $db->get_row("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_users where link_id = $log->log_ref_id and geo_id = $log->log_user_id");
 				if ($item) write_event($item, $log->time, 'link');
 				break;
+			case 'link_geo_edit':
+				$item = $db->get_row("select link_id as id, link_status as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_links where link_id = $log->log_ref_id and geo_id = $log->log_ref_id");
+				if ($item) write_event($item, $log->time, 'link','geo_edit');
+				break;
 			case 'comment_new':
 				$item = $db->get_row("select comment_id as id, X(geo_pt) as lat, Y(geo_pt) as lng from comments, geo_users where comment_id = $log->log_ref_id and geo_id = comment_user_id");
 				if ($item) write_event($item, $log->time, 'comment');
@@ -50,8 +54,8 @@ if ($logs) {
 }
 echo "],\n'ts': ". max($timestamp,$time) . "\n}";
 
-function write_event($item, $time, $type) {
-	echo "{time:$time,id:$item->id,status:'$item->status',type:'$type',lat:$item->lat,lng:$item->lng},\n";
+function write_event($item, $time, $type, $event='') {
+	echo "{time:$time,id:$item->id,status:'$item->status',type:'$type',lat:$item->lat,lng:$item->lng,evt:'$event'},\n";
 }
 
 ?>
