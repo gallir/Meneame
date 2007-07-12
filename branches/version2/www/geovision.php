@@ -29,7 +29,7 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 var baseicon = new GIcon();
 baseicon.iconSize = new GSize(20, 25);
 baseicon.iconAnchor = new GPoint(10, 25);
-baseicon.infoWindowAnchor = new GPoint(5, 1);
+baseicon.infoWindowAnchor = new GPoint(10, 12);
 
 var timestamp = 0;
 var period = 10000;
@@ -56,7 +56,12 @@ function add_marker(item, delay) {
 	var marker = new GMarker(point, icon);
 	marker.myId = item.id;
 	marker.myType = item.type;
-	setTimeout(function () {geo_map.panTo(point); setTimeout(function () {geo_map.addOverlay(marker)}, 500)}, delay);
+	setTimeout(function () {
+				geo_map.addOverlay(marker);
+				GDownloadUrl(base_url+"geo/"+marker.myType+".php?id="+marker.myId, function(data, responseCode) {
+					marker.openInfoWindowHtml(data);
+				});
+			}, delay);
 	setTimeout(function () {geo_map.removeOverlay(marker)}, persistency);
 }
 
