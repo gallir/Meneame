@@ -21,7 +21,7 @@ $id = intval($_GET['id']);
 $user = new User;
 $user->id=$id;
 if (! $user->read()) die;
-echo '<div style="width:280px; margin-right:15px; overflow:hidden">';
+echo '<div style="font-size:8.5pt;width:280px; margin-right:15px; overflow:hidden">';
 if ($user->avatar) 
 	echo '<div style="float: left;"><img hspace="4" src="'.get_avatar_url($user->id, $user->avatar, 40).'" width="40" height="40" alt="'.$user->username.'"/></div>';
 echo '<strong>' . _('usuario') . ':</strong>&nbsp;<a target="_blank" href="' . get_user_uri($user->username) .'">'. $user->username.'</a>';
