@@ -27,10 +27,8 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 
 <script type="text/javascript">
 var baseicon = new GIcon();
-//baseicon.shadow = "http://labs.google.com/ridefinder/images/mm_20_shadow.png";
-baseicon.iconSize = new GSize(20, 16);
-//baseicon.shadowSize = new GSize(22, 20);
-baseicon.iconAnchor = new GPoint(10, 8);
+baseicon.iconSize = new GSize(20, 25);
+baseicon.iconAnchor = new GPoint(10, 25);
 baseicon.infoWindowAnchor = new GPoint(5, 1);
 
 var timestamp = 0;
@@ -42,18 +40,15 @@ function add_marker(item, delay) {
 	var point = new GLatLng(item.lat, item.lng);
 	switch (item.type) {
 		case 'comment':
-			myicon = "img/common/sneak-comment01.gif";
+			myicon = "img/geo/common/geo-comment01.png";
 			break;
 		case 'post':
-			myicon = "img/common/sneak-newnotame01.gif";
+			myicon = "img/geo/common/geo-newnotame01.png";
 			break;
 		case 'link':
-			if (item.status == 'queued') myicon = "img/common/sneak-new01.gif";
-			else myicon = "img/common/sneak-published01.gif";
-		case 'link':
-			if (item.evt == 'geo_edit') myicon = "img/common/sneak-geo01.gif";
-			else if (item.status == 'queued') myicon = "img/common/sneak-new01.gif";
-			else myicon = "img/common/sneak-published01.gif";
+			if (item.evt == 'geo_edit') myicon = "img/geo/common/geo-geo01.png";
+			else if (item.status == 'queued') myicon = "img/geo/common/geo-new01.png";
+			else myicon = "img/geo/common/geo-published01.png";
 		break;
 	}
 	var icon = new GIcon(baseicon);
