@@ -37,7 +37,7 @@ if(!$post->read) die;
 echo '<div style="font-size:8.5pt;width:280px; margin-right:15px; overflow:hidden">';
 if ($post->avatar)
     echo '<img src="'.get_avatar_url($post->author, $post->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 5px 0;"/>';
-echo '<strong>' . $post->username . '</strong> ('.$post->src.')<br/>';
+echo '<a href="'.post_get_base_url($post->username).'" target="_blank"><strong>' . $post->username . '</strong></a> ('.$post->src.')<br/>';
 echo put_smileys(save_text_to_html($post->content));
 echo '</div>';
 ?>
