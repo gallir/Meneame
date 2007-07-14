@@ -9,6 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
+include(mnminclude.'ban.php');
 
 do_header(_("registro"), "post");
 do_banner_top();
@@ -134,6 +135,10 @@ function check_user_fields() {
 	global $globals, $db;
 	$error = false;
 
+	if(check_ban_proxy()) {
+		register_error(_("IP no permitida"));
+		$error=true;
+	}
 	if(!isset($_POST["username"]) || strlen($_POST["username"]) < 3) {
 		register_error(_("Nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos"));
 		$error=true;

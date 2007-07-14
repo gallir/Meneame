@@ -8,8 +8,13 @@
 
 include('../config.php');
 include(mnminclude.'link.php');
+include(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+
+if(check_ban_proxy()) {
+	error(_('IP no permitida'));
+}
 
 $link = new Link;
 $id=intval($_REQUEST['id']);

@@ -9,8 +9,14 @@
 include('../config.php');
 include_once(mnminclude.'post.php');
 include_once(mnminclude.'user.php');
+include_once(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+
+if (check_ban_proxy()) {
+	echo 'KO: ' . _('IP no permitida');
+	die;
+}
 
 $user = new User;
 $post = new Post;

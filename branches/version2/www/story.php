@@ -334,6 +334,11 @@ function print_comment_form() {
 
 function insert_comment () {
 	global $link, $db, $current_user, $globals;
+
+
+	require_once(mnminclude.'ban.php');
+	if(check_ban_proxy()) return;
+
 	// Check if is a POST of a comment
 	if($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 
 			intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
