@@ -15,7 +15,8 @@ if(!($id=intval($_REQUEST['id']))) {
 	error(_('falta el id'). " $link");
 }
 
-$type = $_REQUEST['type'];
+$type = clean_input_string($_REQUEST['type']);
+$icontype = clean_input_string($_REQUEST['icon']);
 
 if ($type == 'link') {
 	require_once(mnminclude.'link.php');
@@ -32,7 +33,7 @@ if ($type == 'link') {
 	error(_('tipo incorrecto'));
 }
 
-geo_coder_print_form($type, $id, $latlng, _('edición localización'));
+geo_coder_print_form($type, $id, $latlng, _('edición localización'), $icontype);
 
 function error($mess) {
 	echo "ERROR: $mess\n";

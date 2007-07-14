@@ -440,7 +440,7 @@ class Link {
 					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit" title="'._('editar').'"/></a>';
 				}
 				if ($this->geo && $this->is_map_editable()) {
-					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link".'\'); return false;"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 				}
 			}
 			echo '</p>';

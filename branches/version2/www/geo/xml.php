@@ -41,13 +41,13 @@ switch ($type) {
 			$cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
 			if ($status) $cond = add_cond($cond, "link_status = '$status'");
 		}
-		$res = $db->get_results("select distinct link_author as id,  X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_users where $cond and geo_id = link_author $limit");
+		$res = $db->get_results("select distinct link_author as id, 'user' as status, X(geo_pt) as lat, Y(geo_pt) as lng from links, geo_users where $cond and geo_id = link_author $limit");
 		break;
 
 	case 'post':
 		if ($id > 0) $cond = add_cond($cond, "post_id = $id");
 		if ($from > 0) $cond = add_cond($cond, "post_date > date_sub(now(), interval $from hour)");
-		$res = $db->get_results("select post_id as id, X(geo_pt) as lat, Y(geo_pt) as lng from posts, geo_users where $cond and geo_id = post_user_id $limit");
+		$res = $db->get_results("select post_id as id, 'post' as status, X(geo_pt) as lat, Y(geo_pt) as lng from posts, geo_users where $cond and geo_id = post_user_id $limit");
 		break;
 
 }
@@ -60,9 +60,7 @@ echo "<markers>\n";
 
 if ($res) {
 	foreach ($res as $item) {
-		echo "<marker lat='$item->lat' lng='$item->lng' id='$item->id'";
-		if($item->status) echo " status='$item->status' ";
-		echo "/>\n";
+		echo "<marker lat='$item->lat' lng='$item->lng' id='$item->id' status='$item->status'/>\n";
 	}
 }
 echo "</markers>\n";

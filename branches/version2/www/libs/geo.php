@@ -65,27 +65,27 @@ function geo_delete($type, $id) {
 	return $db->query("DELETE FROM $table WHERE geo_id=$id");
 }
 
-function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7) {
+function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7, $icontype = 'user') {
 	global $globals;
 	if (! $globals['google_maps_api']) return false;
 	array_push($globals['extra_js'], 'http://maps.google.com/maps?file=api&amp;v=2.x&amp;key='.$globals['google_maps_api']);
 	array_push($globals['extra_js'], 'geo.js');
 	if ($f) {
 		if ($latlng) 
-			$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.', '.$zoom.')" onunload="GUnload()"';
+			$globals['body_args'] = 'onload="'.$f.'('.$latlng->lat.','.$latlng->lng.', '.$zoom.', \''.$icontype.'\')" onunload="GUnload()"';
 		else
-			$globals['body_args'] = 'onload="'.$f.'(false, false, '.$zoom.')" onunload="GUnload()"';
+			$globals['body_args'] = 'onload="'.$f.'(false, false, '.$zoom.', \''.$icontype.'\')" onunload="GUnload()"';
 	} else {
 			$globals['body_args'] = 'onunload="GUnload()"';
 	}
 	return true;
 }
 
-function geo_coder_print_form($type, $id, $latlng, $label) {
-	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address()">';
+function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued') {
+	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(\''.$icontype.'\')">';
 	echo '<label for="address">'.$label. '</label><br/>';
 	echo '<input type="text" size="40" maxlength=80 name="address" id="address" value="'.$latlng->text.'" />';
-	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address();"/>';
+	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address(\''.$icontype.'\');"/>';
 	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.')"/>';
 	echo '&nbsp;<input type="button" id="geodelete" ';
 	if (!$latlng) {
@@ -102,7 +102,7 @@ function geo_coder_print_form($type, $id, $latlng, $label) {
 		if ($('#map').length == 0 ) {
 			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:150px;height:150px">&nbsp;<\/div>');
 			$('#geocoderform').after('<br clear="right"/>');;
-			$(function() {geo_coder_editor_load(false, false, 3)});
+			$(function() {geo_coder_editor_load(false, false, 3, "<?echo $icontype?>")});
 		}
 	//]]>
 	</script>

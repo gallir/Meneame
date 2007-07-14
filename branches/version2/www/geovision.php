@@ -26,11 +26,6 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 ?>
 
 <script type="text/javascript">
-var baseicon = new GIcon();
-baseicon.iconSize = new GSize(20, 25);
-baseicon.iconAnchor = new GPoint(10, 25);
-baseicon.infoWindowAnchor = new GPoint(10, 12);
-
 var timestamp = 0;
 var period = 10000;
 var persistency = 300000;
@@ -38,22 +33,15 @@ var persistency = 300000;
 function add_marker(item, delay) {
 	var myicon;
 	var point = new GLatLng(item.lat, item.lng);
+	var marker;
 	switch (item.type) {
-		case 'comment':
-			myicon = "img/geo/common/geo-comment01.png";
-			break;
-		case 'post':
-			myicon = "img/geo/common/geo-newnotame01.png";
-			break;
 		case 'link':
-			if (item.evt == 'geo_edit') myicon = "img/geo/common/geo-geo01.png";
-			else if (item.status == 'queued') myicon = "img/geo/common/geo-new01.png";
-			else myicon = "img/geo/common/geo-published01.png";
-		break;
+			if (item.evt == 'geo_edit') marker = geo_get_marker(point, 'geo');
+			else  marker = geo_get_marker(point, item.status);
+			break;
+		default:
+			marker = geo_get_marker(point, item.type);
 	}
-	var icon = new GIcon(baseicon);
-	icon.image = myicon;
-	var marker = new GMarker(point, icon);
 	marker.myId = item.id;
 	marker.myType = item.type;
 	setTimeout(function () {

@@ -45,8 +45,8 @@ switch ($url_args[1]) {
 			$link->geo = true;
 			$link->latlng = $link->get_latlng();
 			if ($link->latlng) {
-				geo_init('geo_coder_load', $link->latlng, 5);
-			} else {
+				geo_init('geo_coder_load', $link->latlng, 5, $link->status);
+			} elseif ($link->is_map_editable()) {
 				geo_init(null, null);
 			}
 		}

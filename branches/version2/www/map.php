@@ -65,15 +65,14 @@ function load_xmls() {
 	if (geo_marker_mgr)
 		geo_marker_mgr.clearMarkers();
 	if (published) {
-		geo_load_xml('link', 'published', 0, "img/geo/common/geo-published01.png");
+		geo_load_xml('link', 'published', 0);
 	}
 	if (queued) {
-		geo_load_xml('link', 'queued', 0, "img/geo/common/geo-new01.png");
+		geo_load_xml('link', 'queued', 0);
 	}
 	if (author) {
-		geo_load_xml('author', '', 0, "img/geo/common/geo-user01.png");
+		geo_load_xml('author', '', 0);
 	}
-	//setTimeout("geo_load_xml('link', 'queued', 0, iconorange)", 300);
 }
 
 function onLoad() {
@@ -87,7 +86,7 @@ function onLoad() {
 				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
 					overlay.openInfoWindowHtml(data);
 				});
-			} //else if (point) geo_map.panTo(point);
+			}
 		});
 	}
 }

@@ -65,9 +65,9 @@ if(empty($view)) $view = 'profile';
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
 	if ($current_user->user_id == $user->id)
-		geo_init('geo_coder_editor_load', $globals['latlng']);
+		geo_init('geo_coder_editor_load', $globals['latlng'], 7, 'user');
 	else
-		geo_init('geo_coder_load', $globals['latlng']);
+		geo_init('geo_coder_load', $globals['latlng'], 7, 'user');
 	$globals['do_geo'] = true;
 }
 
@@ -253,7 +253,7 @@ function do_profile() {
 	// Print GEO form
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
 		echo '<div class="geoform">';
-		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'));
+		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'), 'user');
 		echo '</div>';
 	}
 
