@@ -29,6 +29,7 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 var timestamp = 0;
 var period = 10000;
 var persistency = 300000;
+var counter=0;
 
 function add_marker(item, delay) {
 	var myicon;
@@ -64,6 +65,13 @@ function get_json() {
 				add_marker(json.items[i], delay_time);
 			}
 		});
+	counter++;
+	if (counter > 700) {
+		if ( !confirm('<? echo _('¿desea continuar conectado?');?>') ) {
+			return;
+		}
+		counter = 0;
+	}
 	setTimeout(get_json, period);
 }
 
