@@ -87,7 +87,6 @@ class Trackback {
 			$client->timeout = 3;
 			$client->useragent .= ' -- Meneame/2';
 			$client->debug = false;
-			echo "ENVIANDO: " . $link->get_permalink() ." $this->link\n";
 			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();

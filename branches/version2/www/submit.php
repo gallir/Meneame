@@ -451,7 +451,7 @@ function do_submit3() {
 	$linkres=new Link;
 
 	$linkres->id=$link_id = intval($_POST['id']);
-	$linkres->read();
+	if(!$linkres->read()) die;
 	// Check it is not in the queue already
 	if($linkres->votes == 0 && $linkres->status != 'queued') {
 		$linkres->status='queued';
@@ -479,7 +479,7 @@ function do_submit3() {
 		fork("backend/send_pingbacks.php?id=$linkres->id");
 	}
 
-	header("Location: shakeit.php");
+	header('Location: '. $linkres->get_permalink());
 	die;
 	
 }
