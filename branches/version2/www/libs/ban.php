@@ -6,6 +6,10 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+function check_ban_proxy() {
+	return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+}
+
 function check_ban($ban_text, $ban_type, $check_valid = true) {
 	global $db, $globals;	
 	
@@ -24,6 +28,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 			$where= " ban_text IN (".subdomains_list($ban_text).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
 			break;
 		case 'ip':
+		case 'proxy':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
 			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}\d{1,3}$/s', $ban_text)) {
 				$globals['ban_message'] =_('No es una IP válida');

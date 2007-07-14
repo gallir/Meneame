@@ -51,7 +51,7 @@ function admin_tabs($tab_selected = false) {
 
 	// START STANDARD TABS
 	// First the standard and always present tabs
-	$tabs=array("hostname", "email", "ip", "words");
+	$tabs=array("hostname", "email", "ip", "words", "proxy");
 		foreach($tabs as $tab) {
 		if ($tab_selected == $tab) {
 			echo '<li><a '.$active.' href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'" title="'.$reload_text.'">'._($tab).'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
