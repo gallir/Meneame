@@ -96,22 +96,17 @@ if ($option == '_geo') {
 	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>';
 ?>
 <script type="text/javascript">
-
 var baseicon = new GIcon();
-//baseicon.shadow = "http://labs.google.com/ridefinder/images/mm_20_shadow.png";
-baseicon.iconSize = new GSize(12, 20);
-//baseicon.shadowSize = new GSize(22, 20);
-baseicon.iconAnchor = new GPoint(6, 20);
-baseicon.infoWindowAnchor = new GPoint(5, 1);
+baseicon.iconSize = new GSize(20, 25);
+baseicon.iconAnchor = new GPoint(10, 25);
+baseicon.infoWindowAnchor = new GPoint(10, 10);
 var geo_marker_mgr = null;
-
-var iconblue = "http://labs.google.com/ridefinder/images/mm_20_blue.png";
 
 function onLoad(lat, lng, zoom) {
 	if (geo_basic_load(lat||18, lng||15, zoom||2)) {
 		geo_map.addControl(new GLargeMapControl());
 		geo_marker_mgr = new GMarkerManager(geo_map);
-		geo_load_xml('post', '', 0, iconblue);
+		geo_load_xml('post', '', 0, base_url+"img/geo/common/geo-newnotame01.png");
 		GEvent.addListener(geo_map, 'click', function (overlay, point) {
 			if (overlay && overlay.myId > 0) {
 				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {

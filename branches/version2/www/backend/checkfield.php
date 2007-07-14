@@ -85,6 +85,18 @@ switch ($type) {
 		}
 		echo "OK";
 		break;
+	case 'ban_proxy':
+		if (strlen($name)>64) {
+			echo _('nombre demasiado largo');
+			return;
+		}
+		require_once(mnminclude.'ban.php');
+		if(check_ban($name, 'proxy')) {
+			echo $globals['ban_message'];
+			return;
+		}
+		echo "OK";
+		break;
 	case 'ban_words':
 		if (strlen($name)>64) {
 			echo _('nombre demasiado largo');

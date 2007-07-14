@@ -13,7 +13,7 @@ include(mnminclude.'user.php');
 
 $time = (int) $_GET['time'];
 if($time <= 0 || $globals['now']-$time > 900) {
-	$time = $globals['now']-300;
+	$time = $globals['now']-180;
 }
 $dbtime = date("YmdHis", $time);
 $max_items = (int) $_GET['items'];

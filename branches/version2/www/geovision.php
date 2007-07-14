@@ -12,7 +12,7 @@ include(mnminclude.'link.php');
 include(mnminclude.'geo.php');
 
 $globals['ads'] = true;
-geo_init('onLoad', false, 2);
+geo_init('onLoad', false, 3);
 
 do_header(_('geo visión'));
 do_banner_top();
@@ -82,6 +82,7 @@ function get_json() {
 function onLoad() {
 	if (geo_basic_load(18, 15, 3)) {
 		geo_map.addControl(new GLargeMapControl());
+		geo_map.addControl(new GMapTypeControl());
 		GEvent.addListener(geo_map, 'click', function (overlay, point) {
 			if (overlay && overlay.myId > 0) {
 				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
