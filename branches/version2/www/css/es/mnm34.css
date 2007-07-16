@@ -34,13 +34,13 @@ top: 0px;
 }
 
 #container-wide {
-margin-top: 20px;
+margin-top: 15px;
 padding: 0 15px 50px 15px;
 overflow: hidden;
 }
 
 #container { 
-margin: 20px 15px 0 10px;
+margin: 15px 15px 0 10px;
 position: relative;
 overflow: hidden;
 padding-bottom: 50px;

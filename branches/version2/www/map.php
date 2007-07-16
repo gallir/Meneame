@@ -15,7 +15,7 @@ $globals['ads'] = true;
 geo_init('onLoad', false, 2);
 array_push($globals['extra_js'], 'markermanager.js');
 
-do_header(_('mapa de publicadas'));
+do_header(_('mapa de las últimas noticias'));
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar();
