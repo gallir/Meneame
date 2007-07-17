@@ -67,7 +67,9 @@ function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINE
 	global $globals;
 
 	if (strlen($ban_text) < 4) {
-		recover_error(_('Texto del ban muy corto'));
+		echo '<div class="form-error">';
+		echo '<p>'._('Texto del ban muy corto').'</p>';
+		echo "</div>\n";
 		return;
 	}
 	if (strlen($ban_text) > 8 && preg_match('/^www\..+\.[a-z]+(\/[a-z]+\/*){0,1}$/i', $ban_text) ) {

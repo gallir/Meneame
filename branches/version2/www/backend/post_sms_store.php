@@ -52,7 +52,7 @@ if (!empty($_GET['host']) && !empty($_GET['operadora']) && !empty($_GET['movil']
 }
 
 
-syslog(LOG_NOTICE, "SMS: from $remote, Tel: $phone");
+syslog(LOG_NOTICE, "Meneame SMS: from $remote, Tel: $phone");
 
 if (mb_strlen($text) < 5) {
 	echo 'OK ' . _('texto muy corto, nota no insertada');
@@ -100,7 +100,7 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 
 $post->store();
 
-syslog(LOG_NOTICE, "SMS: inserted Tel: $phone, User: $user->username");
+syslog(LOG_NOTICE, "Meneame SMS: inserted Tel: $phone, User: $user->username");
 echo "OK " . _('nota insertada'). "($post->id): http://mueveme.net/notame/?id=$user->username";
 
 if(intval($db->get_var("select count(*) from posts where post_user_id = $user->id and post_date > date_sub(now(), interval 24 hour) and post_src='phone'")) < 6) {

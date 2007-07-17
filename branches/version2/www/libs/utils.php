@@ -196,7 +196,7 @@ function text_to_html($string, $do_links = true) {
 	//$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
 
 	if ($do_links) {
-		$string = preg_replace('/([\(\[:\.\s]|^)(https*:\/\/)([^ \t\n\r\]\(\)\&]{5,70})([^ \t\n\r\]\(\)]*)([^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $string);
+		$string = preg_replace('/([\(\[:\.\s]|^)(https*:\/\/)([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ .\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $string);
 	}
 	$string = preg_replace('/(^|[\(;,\.:\s])_([^\s<>]+)_/', "$1<em>$2</em>", $string);
 	$string = preg_replace('/(^|[\(;,\.:\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $string);

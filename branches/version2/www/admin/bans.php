@@ -235,9 +235,4 @@ function admin_bans($ban_type) {
 	do_pages($rows, $page_size, false);
 }
 
-function recover_error($message) {
-	echo '<div class="form-error">';
-	echo "<p>$message</p>";
-	echo "</div>\n";
-}
 ?>
