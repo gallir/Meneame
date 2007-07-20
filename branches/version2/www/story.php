@@ -282,7 +282,7 @@ case 7:
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
 			$trackback->read();
-			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a></li>' . "\n";
+			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
 		}
 	}
 	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link_permalink']).'">'._('Technorati').'</a></li>' . "\n";
