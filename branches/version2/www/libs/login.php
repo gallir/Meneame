@@ -43,7 +43,7 @@ class UserAuth {
 						$cookietime = 0;
 						break;
 					default:
-						md5($site_key.$dbusername.$dbuser->user_id);
+						$key = md5($site_key.$dbusername.$dbuser->user_id);
 						$cookietime = 0;
 				}
 
