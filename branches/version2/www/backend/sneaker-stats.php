@@ -28,7 +28,7 @@ function check_stats($string) {
 function do_stats1($string) {
 	global $db;
 	$comment = '<strong>'._('Estadísticas globales'). '</strong>. ';
-	$comment .= _('usuarios validados') . ':&nbsp;' . $db->get_var('select count(*) from users') . ', ';
+	$comment .= _('usuarios validados') . ':&nbsp;' . $db->get_var("select count(*) from users where user_level <> 'disabled'") . ', ';
 	$votes = (int) $db->get_var('select count(*) from votes') + (int) $db->get_var('select sum(votes_count) from votes_summary');
 	$comment .= _('votos') . ':&nbsp;' . $votes . ', ';
 	$comment .= _('artículos') . ':&nbsp;' . $db->get_var('select count(*) from links') . ', ';
@@ -61,7 +61,7 @@ function do_stats2($string) {
 	$comment .= _('descartados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from comments where  comment_date > date_sub(now(), interval $hours hour)")  . ', ';
 	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from posts where  post_date > date_sub(now(), interval $hours hour)")  . ', ';
-	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from users where  user_date > date_sub(now(), interval $hours hour) and user_validated_date is not null");
+	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from users where  user_date > date_sub(now(), interval $hours hour) and user_validated_date is not null and user_level <> 'disabled'");
 	return $comment;
 }
 
