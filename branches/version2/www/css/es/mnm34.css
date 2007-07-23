@@ -631,17 +631,20 @@ All boxes:
 - padding bottom: 5; padding left 3
 */
 
-.mnu-submit {
+.mnu-submit, .mnu-sneak, .mnu-notame, .mnu-geovision {
 margin: 0 0 5px 0;
 padding: 10px 0 5px 0;
 text-align: left;
 font-size: 120%;
-border-top: 1px solid;
 border-bottom: 1px solid;
 font-weight: bolder;
 }
 
-.mnu-sneak {
+.mnu-submit {
+border-top: 1px solid;
+}
+
+/*.mnu-sneak {
 margin: 0 0 5px 0;
 padding: 10px 0 5px 0;
 text-align: left;
@@ -657,10 +660,10 @@ text-align: left;
 font-size: 120%;
 border-bottom: 1px solid;
 font-weight: bolder;
-}
+}*/
 
 
-.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a {
+.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-geovision a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a {
 padding-left: 15px;
 }
 

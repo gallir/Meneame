@@ -206,6 +206,7 @@ function do_sidebar($do_vert_bars = true) {
 	do_mnu_submit();
 	do_mnu_sneak();
 	do_mnu_notame();
+	do_mnu_geovision();
 
 	// don't show every box if it's a search
 	if (!isset($_REQUEST['search'])) {
@@ -287,6 +288,11 @@ function do_mnu_sneak() {
 function do_mnu_notame() {
 	global $globals;
 	echo '<div class="mnu-notame"><a href="'.post_get_base_url().'">'._("nótame").'</a></div>' . "\n";
+}
+
+function do_mnu_geovision() {
+	global $globals;
+	echo '<div class="mnu-geovision"><a href="'.$globals['base_url'].'geovision.php">'._("geovisión").'</a></div>' . "\n";
 }
 
 function do_mnu_bugs() {

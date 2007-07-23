@@ -335,7 +335,13 @@ border-bottom-color: #FFE2C5;
 background: url(../../img/common/mnu-notame01.png) right bottom no-repeat;
 }
 
-.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .tab-trackback a {
+.mnu-geovision {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-geovision01.png) right bottom no-repeat;
+}
+
+.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-geovision a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .tab-trackback a {
 color: #FF6400;
 background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
 }
