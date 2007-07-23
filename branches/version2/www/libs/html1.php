@@ -205,8 +205,8 @@ function do_sidebar($do_vert_bars = true) {
 
 	do_mnu_submit();
 	do_mnu_sneak();
-	do_mnu_notame();
 	do_mnu_geovision();
+	do_mnu_notame();
 
 	// don't show every box if it's a search
 	if (!isset($_REQUEST['search'])) {
