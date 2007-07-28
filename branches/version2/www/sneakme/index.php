@@ -53,8 +53,8 @@ switch ($option) {
 	case '_friends':
 		if ($current_user->user_id > 0) {
 			$tab_option = 3;
-			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id ORDER BY post_id desc limit $offset,$page_size";
-			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id");
+			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0 ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0");
 		} else {
 			$tab_option = 1;	
 			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
