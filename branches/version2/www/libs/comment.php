@@ -193,10 +193,8 @@ class Comment {
 		global $current_user, $globals;
 
 		if (($this->author == $current_user->user_id &&
-			$globals['now'] - $this->date < $globals['comment_edit_time']) ||
-			 ($current_user->user_level == 'god' && $globals['now'] - $this->date < 259200)) { // Admins can edit up to 72 hours
-			$expand = '<br /><br />&#187;&nbsp;' . 
-				'<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'">'._('editar comentario').'</a>';
+			$globals['now'] - $this->date < $globals['comment_edit_time']) || $current_user->user_level == 'god') { // gods can always edit 
+			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));

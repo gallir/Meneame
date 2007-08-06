@@ -42,9 +42,7 @@ if ($_POST['process']=='editcomment') {
 function print_edit_form() {
 	global $link, $comment, $current_user, $site_key, $globals;
 
-	if ( ($current_user->user_level != 'god' && time() - $comment->date > $globals['comment_edit_time']) || 
-		($current_user->user_level == 'god' && time() - $comment->date > 259200)) // Allow the admin up to 72 hs
-		die;
+	if ($current_user->user_level != 'god' && time() - $comment->date > $globals['comment_edit_time']) die;
 
 	$rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
 	echo '<div class="commentform">'."\n";
@@ -71,9 +69,7 @@ function save_comment () {
 		// Allow the author of the post
 		((intval($_POST['user_id']) == $current_user->user_id &&
 		$current_user->user_id == $comment->author &&
-		time() - $comment->date < $globals['comment_edit_time'] * 1.1) ||
-		// Allow the admin
-		($current_user->user_level == 'god' && time() - $comment->date < 259200)) && // up to 72 hs
+		time() - $comment->date < $globals['comment_edit_time'] * 1.1) || $current_user->user_level == 'god') &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  && 
 		strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
