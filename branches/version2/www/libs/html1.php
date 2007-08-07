@@ -173,7 +173,13 @@ function do_js_includes() {
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/general06.js" type="text/javascript"></script>' . "\n";
-	foreach ($globals['extra_js'] as $js) {
+	do_js_from_array($globals['extra_js']);
+}
+
+function do_js_from_array($array) {
+	global $globals;
+
+	foreach ($array as $js) {
 		if (preg_match('/^http/', $js)) {
 			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
 		} else {
@@ -183,7 +189,10 @@ function do_js_includes() {
 }
 
 function do_footer($credits = true) {
+	global $globals;
+
 	if($credits) @do_credits();
+	do_js_from_array($globals['post_js']);
 
 	// warn warn warn 
 	// dont do stats of password recovering pages

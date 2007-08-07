@@ -13,7 +13,7 @@ include(mnminclude.'geo.php');
 
 $globals['ads'] = true;
 geo_init('onLoad', false, 2);
-array_push($globals['extra_js'], 'markermanager.js');
+array_push($globals['post_js'], 'markermanager.js');
 
 do_header(_('mapa de las últimas noticias'));
 do_banner_top();
@@ -42,11 +42,7 @@ echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div><
 ?>
 
 <script type="text/javascript">
-var baseicon = new GIcon();
-baseicon.iconSize = new GSize(20, 25);
-baseicon.iconAnchor = new GPoint(10, 25);
-baseicon.infoWindowAnchor = new GPoint(5, 1);
-
+var baseicon;
 var geo_marker_mgr = null;
 
 
@@ -76,6 +72,10 @@ function load_xmls() {
 }
 
 function onLoad() {
+	baseicon = new GIcon();
+	baseicon.iconSize = new GSize(20, 25);
+	baseicon.iconAnchor = new GPoint(10, 25);
+	baseicon.infoWindowAnchor = new GPoint(5, 1);
 	if (geo_basic_load(18, 15, 2)) {
 		geo_map.addControl(new GLargeMapControl());
 		// From http://gmaps-utility-library.googlecode.com/svn/trunk/markermanager/

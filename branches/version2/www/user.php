@@ -60,8 +60,6 @@ if($globals['external_user_ads'] && !empty($user->adcode)) {
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
-//array_push($globals['extra_js'], 'jquery-form.pack.js');
-
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
 	if ($current_user->user_id == $user->id)

@@ -11,7 +11,7 @@ include(mnminclude.'user.php');
 include(mnminclude.'post.php');
 include(mnminclude.'html1.php');
 
-array_push($globals['extra_js'], 'jquery-form.pack.js');
+array_push($globals['post_js'], 'jquery-form.pack.js');
 
 $user=new User();
 
@@ -93,16 +93,17 @@ $post->print_post_teaser($rss_option);
 
 if ($option == '_geo') {
 	echo '<div class="topheading"><h2>notas de las últimas 24 horas</h2></div>';
-	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>';
+	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px;"></div></div>';
 ?>
 <script type="text/javascript">
-var baseicon = new GIcon();
-baseicon.iconSize = new GSize(20, 25);
-baseicon.iconAnchor = new GPoint(10, 25);
-baseicon.infoWindowAnchor = new GPoint(10, 10);
+var baseicon;
 var geo_marker_mgr = null;
 
 function onLoad(lat, lng, zoom) {
+	baseicon = new GIcon();
+	baseicon.iconSize = new GSize(20, 25);
+	baseicon.iconAnchor = new GPoint(10, 25);
+	baseicon.infoWindowAnchor = new GPoint(10, 10);
 	if (geo_basic_load(lat||18, lng||15, zoom||2)) {
 		geo_map.addControl(new GLargeMapControl());
 		geo_marker_mgr = new GMarkerManager(geo_map);
