@@ -265,7 +265,6 @@ tooltip.title_saved='';
 tooltip.saveonmouseover=null;
 tooltip.timeout = null;
 tooltip.active = false;
-tooltip.elementInitialWidth = 0;
 
 tooltip.cache = new JSOC();
 
@@ -297,10 +296,7 @@ tooltip.show = function (event, text) {
 	}
 	this.saveonmouseover=document.onmousemove;
 	document.onmousemove = this.mouseMove;
-	this.elementInitialWidth = this.tooltipText.scrollWidth;
 	this.mouseMove(event); // This already moves the div to the right position
-	//this.moveTo(this.x + this.offsetx , this.y + this.offsety);
-
 	this.setText(text);
 	this.tooltipText.style.visibility ="visible";
 	this.tooltipShadow.style.visibility ="visible";
@@ -363,8 +359,8 @@ tooltip.moveTo = function (xL,yL) {
 		xL +=  document.documentElement.scrollLeft;
 		yL +=  document.documentElement.scrollTop;
 	}
-	if (this.elementInitialWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.6) {
-		xL = xL  - this.elementInitialWidth - 2*this.offsetx;
+	if (this.tooltipText.clientWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.6) {
+		xL = xL - this.tooltipText.clientWidth - 2*this.offsetx;
 	}
 	this.tooltipText.style.left = xL +"px";
 	this.tooltipText.style.top = yL +"px";
