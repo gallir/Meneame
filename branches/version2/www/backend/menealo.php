@@ -43,15 +43,13 @@ if ($current_user->user_id == 0 && $link->status != 'published') {
 	if (! $anonnymous_vote) {
 		error(_('Los votos anónimos están temporalmente deshabilitados'));
 	} else {
-		// Check that there are not too much annonymous votes in 1 hour
-		$anon_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and vote_date > date_sub(now(), interval 30 minute) and vote_value > 0");
-		if ($anon_votes > $anon_to_user_votes) {
-			$user_votes = $anon_to_user_votes * $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id > 0 and vote_date > date_sub(now(), interval  30 minute) and vote_value > 0");
-			if ($anon_votes >  $user_votes) {
-				// start anti spam measure: assing 1 to previous anonnymous votes
-				$db->query("update votes set vote_value = 1 where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and vote_date > date_sub(now(), interval  30 minute) and vote_value > 0");
-				error(_('Demasiados votos anónimos para esta noticia, inténtelo más tarde'));
-			}
+		// Check that there are not too much annonymous votes
+		$anon_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and vote_value > 0");
+		$user_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id > 0 and vote_value > 0");
+		if ($anon_votes >  $user_votes * $anon_to_user_votes) {
+			// start anti spam measure: assing 1 to previous anonnymous votes
+			$db->query("update votes set vote_value = 1 where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and date_sub(now(), interval 30 minute) and vote_value > 0");
+			error(_('Demasiados votos anónimos para esta noticia, inténtelo más tarde'));
 		}
 	}
 }
