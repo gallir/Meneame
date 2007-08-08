@@ -44,8 +44,8 @@ if ($current_user->user_id == 0 && $link->status != 'published') {
 		error(_('Los votos anónimos están temporalmente deshabilitados'));
 	} else {
 		// Check that there are not too much annonymous votes
-		$anon_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and vote_value > 0");
-		$user_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id > 0 and vote_value > 0");
+		$anon_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0");
+		$user_votes = $db->get_var("select count(*) from votes where vote_type = 'links' and vote_link_id = $id and vote_user_id > 0");
 		if ($anon_votes >  $user_votes * $anon_to_user_votes) {
 			// start anti spam measure: assing 1 to previous anonnymous votes
 			$db->query("update votes set vote_value = 1 where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and date_sub(now(), interval 30 minute) and vote_value > 0");

@@ -96,7 +96,7 @@ $globals['css_color'] = 'css/es/mnmcol.css';
 
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
-$anon_to_user_votes = 2;
+$anon_to_user_votes = 0.5;
 $site_key = 12345679;
 // Check this
 $anon_karma	= 4;
