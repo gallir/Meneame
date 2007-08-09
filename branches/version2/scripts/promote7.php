@@ -49,10 +49,10 @@ td {
 <?
 
 $min_karma_coef = 0.87;
-define(MAX, 1.20);
+define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
-define (PUB_MAX, 50);
+define (PUB_MAX, 55);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
@@ -152,12 +152,12 @@ $best_link = 0;
 $best_karma = 0;
 echo "<table>\n";	
 if ($links) {
-	print "<tr class='thead'><th>id</th><th>votes</th><th>neg.</th><th>bonus</th><th>karma</th><th>title</th><th>changes</th></tr>\n";
+	print "<tr class='thead'><th>votes</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 	$i=0;
 	foreach($links as $dblink) {
 		$link = new Link;
 		$link->id=$dblink->link_id;
-		$link->read_basic();
+		$link->read();
 		$user = new User;
 		$user->id = $link->author;
 		$user->read();
@@ -185,9 +185,9 @@ if ($links) {
 		$karma_new = $karma_pos_user + $karma_neg_user;
 		// To void votes spamming
 		// Do not allow annonymous users to give more karma than registered users
-		// The ratio up to 25% anonymous
+		// The ratio up to 20% anonymous
 		if ($karma_new > 0) 
-			$karma_new += min($karma_new*0.33, $karma_pos_ano + $karma_neg_ano);
+			$karma_new += min($karma_new*0.20, $karma_pos_ano + $karma_neg_ano);
 
 		//echo "previous $dblink->parent: $karma_new -> ";
 		$karma_new = (int) ($karma_new * $meta_coef[$dblink->parent]);
@@ -232,15 +232,27 @@ if ($links) {
 			$link->negatives = $votes_neg;
 			$link->store_basic();
 		} else $karma_mess = '';
-		print "<tr><td class='tnumber$imod'>$link->id</td><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
+		print "<tr><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
+		echo "<td class='tdata$imod'>$link->meta_name</td>\n";
 		echo "<td class='tdata$imod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 		echo $karma_mess;
 		if ($user->level == 'disabled') {
-			echo " $user->username disabled, probably due to abuses, anonymous votes ignored.";
+			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
+				echo " $user->username disabled herself, penalized.";
+				$do_publish = true;
+			} else {
+				echo " $user->username disabled, probably due to abuses, penalized.";
+				$do_publish = false;
+			}
+			$link->karma = round($link->karma/2);
+			$link->store_basic();
+			$changes = 1;
+		} else {
+				$do_publish = true;
 		}
 		echo "</td>\n";
 			
-		if ($link->user_level != 'disabled' && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
+		if (/*$link->user_level != 'disabled' && */ $do_publish && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
 			$link->status = 'published';
@@ -248,6 +260,9 @@ if ($links) {
 			$link->store_basic();
 			// Add the publish event/log
 			log_insert('link_publish', $link->id, $link->author);
+			if ($globals['twitter_user'] && $globals['twitter_password']) {
+					twitter_post($link); 
+			}
 			$changes = 3; // to show a "published" later	
 		}
 		echo "<td class='tnumber$imod'>";
@@ -270,4 +285,28 @@ if ($links) {
 	//////////
 }  
 echo "</body></html>\n";
+
+function twitter_post($link) {
+	global $globals;
+
+	$t_status = urlencode($link->title. ' ' . $link->get_permalink());
+	syslog(LOG_NOTICE, "Menéame: twitter updater called, id=$link->id");
+	$t_url = "http://twitter.com/statuses/update.xml";
+
+	if (!function_exists('curl_init')) {
+		syslog(LOG_NOTICE, "Menéame: curl is not installed");
+		return;
+	}
+	$session = curl_init();
+	curl_setopt($session, CURLOPT_URL, $t_url);
+	curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+	curl_setopt($session, CURLOPT_HEADER, false);
+	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($session, CURLOPT_USERPWD, $globals['twitter_user'] . ":" . $globals['twitter_password']);
+	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($session, CURLOPT_POST, 1);
+	curl_setopt($session, CURLOPT_POSTFIELDS,"status=" . $t_status);
+	$result = curl_exec($session);
+	curl_close($session);
+}
 ?>

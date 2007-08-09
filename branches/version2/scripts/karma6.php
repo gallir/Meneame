@@ -12,14 +12,22 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 15 day)")
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_validated_date is null");
 
 // Delete email, names and url of invalidated users after three months
-$db->query("update users set user_email = concat(user_id, '@disabled'), user_url=null, user_names='disabled', user_public_info=null, user_adcode=null, user_adchannel=null, user_phone=null  where user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month) and user_email not like '%@disabled'");
-
-
-// Lower karma of disabled users
-$db->query("update users set user_karma=6 where user_date < date_sub(now(), interval 24 hour) and user_level='disabled' and user_karma>6");
+$dbusers = $db->get_col("select user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
+if ($dbusers) {
+	foreach ($dbusers as $id) {
+		$user = new User;
+		$user->id = $id;
+		$user->read();
+		if ($user->level == 'disabled') { // Double check
+			$user->disable();
+			echo "Disabling: $id - $user->username\n";
+		}
+	}
+}
 
 
 $karma_base=6;
+$karma_base_max=8; // Older users can get up to this value
 $min_karma=1;
 $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
@@ -97,11 +105,20 @@ foreach($users as $dbuser) {
 	$user->id=$dbuser->user_id;
 	$user->read();
 
+	//Base karma for the user
+	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
+	if ($user->karma >= $karma_base && $first_published > 0) {
+		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365));
+	} else {
+		$karma_base_user = $karma_base;
+	}
+	printf ("%07d ", $user->id); echo "$user->username Karma base: $karma_base_user\n";
+
 	$n = $db->get_var("SELECT SQL_NO_CACHE count(*) FROM  votes  WHERE vote_type in ('links', 'comments') and vote_user_id = $user->id and vote_date > $history_from");
 	$n_events = $db->get_var("select SQL_NO_CACHE count(*) from logs where log_date > $history_from and log_user_id=$user->id");
 	if ($n > 3 || $n_events > 0) {
 		printf ("%07d ", $user->id);
-		print "$user->username (events): votes: $n, logs: $n_events\n";
+		print "events: votes: $n, logs: $n_events\n";
 
 		// Count the numbers of link sent by the user in the last 30 days
 		$sent_links = intval($db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > date_sub(now(), interval 30 day) and link_status != 'discard' "));
@@ -113,7 +130,7 @@ foreach($users as $dbuser) {
 		$positive_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0"));
 		$negative_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id"));
 
-		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*4)/$max_positive_received), $points_received), -$points_received);
+		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*3)/$max_positive_received), $points_received), -$points_received);
 		if ($karma1 != 0) {
 			printf ("%07d ", $user->id);
 			print "Votes received:  karma received: $positive_votes_received, negative: $negative_votes_received, karma1: $karma1\n";
@@ -199,13 +216,13 @@ foreach($users as $dbuser) {
 		}
 
 	
-		$karma = max($karma_base+$karma1+$karma2+$karma3+$karma4+$karma5, $min_karma);
+		$karma = max($karma_base_user+$karma1+$karma2+$karma3+$karma4+$karma5, $min_karma);
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
 		if ($user->karma > 15) {
-			$karma = max($karma_base, $user->karma - 0.2);
-		} elseif ($user->karma < 6) {
+			$karma = max($karma_base_user, $user->karma - 0.2);
+		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
 		} else {
 			$karma = $user->karma;
