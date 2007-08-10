@@ -9,18 +9,19 @@
 
 function get_avatars_dir() {
 	global $globals;
-	return mnmpath.'/'.$globals['avatars_dir'];
+	return mnmpath.'/'.$globals['cache_dir'].'/avatars';
 }
 
 function is_avatars_enabled() {
 	global $globals;
-	return !empty($globals['avatars_dir']) && is_writable(get_avatars_dir());
+	return !empty($globals['cache_dir']) && is_writable(get_avatars_dir());
 }
 
 function avatars_manage_upload($user, $name) {
 	global $globals;
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
 	$file_base = $subdir . '/' . $user;
+	@mkdir(get_avatars_dir());
 	@mkdir($subdir);
 	if (!is_writable($subdir)) return false;
 	avatars_remove_user_files($user);
@@ -95,6 +96,7 @@ function avatar_get_from_db($user, $size=0) {
 	}
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
 	$file_base = $subdir . '/' . $user;
+	@mkdir(get_avatars_dir());
 	@mkdir($subdir);
 	if (!is_writable($subdir)) return false;
 	file_put_contents ($file_base . '-80.jpg', $img);

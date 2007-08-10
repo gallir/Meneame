@@ -316,8 +316,8 @@ function post_get_base_url($option='') {
 
 function get_avatar_url($user, $avatar, $size) {
 	global $globals; 
-	if ($avatar > 0 && !empty($globals['avatars_dir'])) {
-		$file = $globals['avatars_dir'] . '/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
+	if ($avatar > 0 && $globals['cache_dir']) {
+		$file = $globals['cache_dir'] . '/avatars/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
 		$file_path = mnmpath.'/'.$file;
 		if (is_readable($file_path)) {
 			return $globals['base_url'] . $file;

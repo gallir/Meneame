@@ -61,7 +61,9 @@ $globals['min_karma_for_negatives'] = 5.5;
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;
 // Ensure you have a avar dir writeable by the web server
-$globals['avatars_dir'] = 'avatars-local';
+//$globals['avatars_dir'] = 'avatars-local';
+// Changed to a global cache directory
+$globals['cache_dir'] = 'cache';
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_files_per_dir'] = 1000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
