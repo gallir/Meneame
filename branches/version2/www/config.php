@@ -9,8 +9,10 @@
 define("mnmpath", dirname(__FILE__));
 define("mnminclude", dirname(__FILE__).'/libs/');
 
-// Better to do local modification in hostname-local.php
-$server_name	= $_SERVER['SERVER_NAME'];
+// IMPORTANTE: Do local modification in "hostname-local.php"
+// and/or "local.php"
+// They are automatically included
+//$server_name	= $_SERVER['SERVER_NAME'];
 $dblang			= 'es';
 $page_size		= 30;
 $anonnymous_vote = true;
@@ -69,6 +71,14 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 //$globals['recaptcha_public_key'] = '';
 //$globals['recaptcha_private_key'] = '';
 
+// Twitter settings
+//$globals['twitter_user'] = '';
+//$globals['twitter_password'] = '';
+// Jaiku settings
+//$globals['jaiku_user'] = '';
+//$globals['jaiku_key'] = '';
+
+
 // Websnapr.com previews
 $globals['do_websnapr'] = true;
 
@@ -102,8 +112,8 @@ $site_key = 12345679;
 $anon_karma	= 4;
 
 // Don't touch behind this
-$local_configuration = $_SERVER['SERVER_NAME'].'-local.php';
-@include($local_configuration);
+@include('local.php');
+@include($_SERVER['SERVER_NAME'].'-local.php');
 
 //ob_start();
 include mnminclude.'db.php';

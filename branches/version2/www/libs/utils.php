@@ -281,10 +281,11 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $server_name;
-	if(empty($server_name)) 
-		return $_SERVER['SERVER_NAME'];
-	else
-		return $server_name;
+	if($_SERVER['SERVER_NAME']) return $_SERVER['SERVER_NAME'];
+	else {
+		if ($server_name) return $server_name;
+		else return 'meneame.net'; // Warn: did you put the right server name?
+	}
 }
 
 function get_user_uri($user, $view='') {
