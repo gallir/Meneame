@@ -609,7 +609,7 @@ vertical-align: bottom;
 margin-left: 0; /* IE bug */
 }
 
-.mnu-meneria li, .mnu-tools li, .mnu-rss li {
+.mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-seguiment-ext li {
 margin: 0;
 padding: 0;
 }
@@ -663,7 +663,7 @@ font-weight: bolder;
 }*/
 
 
-.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-geovision a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a {
+.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-geovision a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .mnu-seguiment-ext a {
 padding-left: 15px;
 }
 
@@ -674,7 +674,7 @@ text-align: left;
 font-size: 100%;
 }
 
-.mnu-meneria, .mnu-tools {
+.mnu-meneria, .mnu-tools, .mnu-seguiment-ext {
 margin: 15px 0 5px 0;
 padding: 0 0 5px 3px;
 list-style: none;

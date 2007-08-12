@@ -229,6 +229,7 @@ function do_sidebar($do_vert_bars = true) {
 	do_mnu_rss();
 	do_mnu_tools();
 	do_mnu_menedising();
+	do_mnu_seguiment_ext();
 	do_mnu_bugs();
 	do_banner_left_down();
 	echo '</div><!--html1:do_sidebar-->' . "\n";
@@ -310,6 +311,13 @@ function do_mnu_bugs() {
 
 function do_mnu_menedising() {
 	echo '<div class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></div>' . "\n";
+}
+
+function do_mnu_seguiment_ext() {
+	echo '<ul class="mnu-seguiment-ext">' . "\n";
+	echo '<li><a href="http://meneame.jaiku.com">'._("seguimiento en Jaiku").'</a></li>' . "\n";
+	echo '<li><a href="http://twitter.com/meneame_net">'._("seguimiento en Twitter").'</a></li>' . "\n";
+	echo '</ul>' . "\n";
 }
 
 function do_mnu_meneria () {
