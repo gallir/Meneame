@@ -143,14 +143,14 @@ function to_html(data) {
 	tooltip_ajax_call= "onmouseout=\"tooltip.clear(event);\"  onclick=\"tooltip.clear(this);\"";
 	if (data.type == 'vote')
 		if (data.status == '<? echo _('publicada');?>')
-			html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-vote-published01.gif" width="20" height="16" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" /><\/div>';
+			html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-vote-published01.png" width="21" height="17" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" /><\/div>';
 		else
-			html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-vote01.gif" width="20" height="16" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" /><\/div>';
+			html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-vote01.png" width="21" height="17" alt="<?echo _('voto');?>" title="<?echo _('voto');?>" /><\/div>';
 	else if (data.type == 'problem')
-		html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-problem01.gif" width="20" height="16" alt="<?echo _('problema');?>" title="<?echo _('problema');?>" /><\/div>';
+		html += '<div class="mini-sneaker-type" '+tooltip_ajax_call+'><img src="'+base_url+'img/common/sneak-problem01.png" width="21" height="17" alt="<?echo _('problema');?>" title="<?echo _('problema');?>" /><\/div>';
 	else if (data.type == 'comment') {
 		tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-		html += '<div class="mini-sneaker-type"><img src="'+base_url+'img/common/sneak-comment01.gif" width="20" height="16" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
+		html += '<div class="mini-sneaker-type"><img src="'+base_url+'img/common/sneak-comment01.png" width="21" height="17" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
 	} else
 		html += '<div class="mini-sneaker-type">'+data.type+'<\/div>';
 

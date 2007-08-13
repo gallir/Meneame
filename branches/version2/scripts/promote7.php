@@ -268,13 +268,13 @@ if ($links) {
 		echo "<td class='tnumber$imod'>";
 		switch ($changes) {
 			case 1:
-				echo '<img src="../img/common/sneak-problem01.png" width="20" height="16" alt="'. _('descenso') .'"/>';
+				echo '<img src="../img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
 				break;
 			case 2:
-				echo '<img src="../img/common/sneak-vote01.png" width="20" height="16" alt="'. _('ascenso') .'"/>';
+				echo '<img src="../img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
 				break;
 			case 3:
-				echo '<img src="../img/common/sneak-published01.png" width="20" height="16" alt="'. _('publicada') .'"/>';
+				echo '<img src="../img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
 				break;
 		}
 		echo "</td>";
