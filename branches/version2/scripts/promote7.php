@@ -171,8 +171,15 @@ if ($links) {
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
 
 		// Calculate the real karma for the link
-		$karma_pos_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'"));
+		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > 7"));
+		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value <= 7"));
 		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
+
+		if ($karma_pos_user_high > 7) {
+			$karma_pos_user = $karma_pos_user_high + (int) min( $karma_pos_user_high*0.7, $karma_pos_user_low);
+		} else {
+			$karma_pos_user = $karma_pos_user_high +  $karma_pos_user_low;
+		}
 
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
@@ -263,6 +270,10 @@ if ($links) {
 			if ($globals['twitter_user'] && $globals['twitter_password']) {
 					twitter_post($link); 
 			}
+			if ($globals['jaiku_user'] && $globals['jaiku_key']) {
+				jaiku_post($link); 
+			}
+
 			$changes = 3; // to show a "published" later	
 		}
 		echo "<td class='tnumber$imod'>";
@@ -290,17 +301,18 @@ function twitter_post($link) {
 	global $globals;
 
 	$t_status = urlencode($link->title. ' ' . $link->get_permalink());
-	syslog(LOG_NOTICE, "Menéame: twitter updater called, id=$link->id");
+	syslog(LOG_NOTICE, "Meneame: twitter updater called, id=$link->id");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
 	if (!function_exists('curl_init')) {
-		syslog(LOG_NOTICE, "Menéame: curl is not installed");
+		syslog(LOG_NOTICE, "Meneame: curl is not installed");
 		return;
 	}
 	$session = curl_init();
 	curl_setopt($session, CURLOPT_URL, $t_url);
 	curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 	curl_setopt($session, CURLOPT_HEADER, false);
+	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
 	curl_setopt($session, CURLOPT_USERPWD, $globals['twitter_user'] . ":" . $globals['twitter_password']);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
@@ -308,5 +320,53 @@ function twitter_post($link) {
 	curl_setopt($session, CURLOPT_POSTFIELDS,"status=" . $t_status);
 	$result = curl_exec($session);
 	curl_close($session);
+}
+
+
+function jaiku_post($link) {
+	global $globals;
+
+	syslog(LOG_NOTICE, "Meneame: jaiku updater called, id=$link->id");
+	$url = "http://api.jaiku.com/json";
+
+	if (!function_exists('curl_init')) {
+		syslog(LOG_NOTICE, "Meneame: curl is not installed");
+		return;
+	}
+
+	$short_url = fon_gs($link->get_permalink());
+
+	$postdata =  "method=presence.send";
+	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
+	$postdata .= "&personal_key=" . $globals['jaiku_key'];
+	$postdata .= "&icon=337"; // Event
+	$postdata .= "&message=" . urlencode(html_entity_decode($link->title). ' ' . $short_url);
+
+	$session = curl_init();
+	curl_setopt($session, CURLOPT_URL, $url);
+	curl_setopt($session, CURLOPT_HEADER, false);
+	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
+	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt ($session, CURLOPT_FOLLOWLOCATION,1); 
+	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($session, CURLOPT_POST, 1);
+	curl_setopt($session, CURLOPT_POSTFIELDS,$postdata);
+	$result = curl_exec($session);
+	curl_close($session);
+}
+
+function fon_gs($url) {
+	$url = 'http://fon.gs/create.php?url='.urlencode($url);
+	$session = curl_init();
+	curl_setopt($session, CURLOPT_URL, $url);
+	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
+	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+	$result = curl_exec($session);
+	curl_close($session);
+	if (preg_match('/^OK/', $result)) {
+		$array = explode(' ', $result);
+		return $array[1];
+	} else return $url;
 }
 ?>
