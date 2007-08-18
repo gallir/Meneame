@@ -150,6 +150,7 @@ function to_html(data) {
 			if (check_user_ping(data.title)) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
 			}
+			data.title = to_blank(data.title);
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
@@ -238,6 +239,11 @@ function check_user_ping(str) {
 		}
 	}
 	return false;
+}
+
+function to_blank(str) {
+	str = str.replace(/(href=")/gi, 'target="_blank" $1');
+	return str;
 }
 
 function put_smiley(str) {
