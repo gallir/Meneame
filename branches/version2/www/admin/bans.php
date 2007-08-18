@@ -220,7 +220,7 @@ function admin_bans($ban_type) {
 				echo '<td>'.$ban->ban_date.'</td>';
 				echo '<td>'.$ban->ban_expire.'</td>';
 				echo '<td>';
-				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.gif" alt="'.('Editar').'" /></a>';
+				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
 				echo '&nbsp;/&nbsp;';
 				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
 				echo '</td>';

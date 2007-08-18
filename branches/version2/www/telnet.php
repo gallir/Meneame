@@ -68,7 +68,7 @@ function to_html(data) {
 		html += '<div class="sneaker-votes">&nbsp;</div>';
 		html += '<div class="sneaker-chat">'+data.title+'</div>';
 		html += '<div class="sneaker-who">';
-		html += '<a href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
+		html += '<a target="_blank" href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
 		html += '<div class="sneaker-status">'+data.status+'</div>';
 		return html;
 	}
@@ -97,20 +97,20 @@ function to_html(data) {
 	if ("undefined" != typeof(data.cid) && data.cid > 0) anchor='#c-'+data.cid;
 	else anchor='';
 
-	html += '<div class="sneaker-story"><a href="'+data.link+anchor+'">'+data.title+'</a></div>';
+	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'</a></div>';
 	if (data.type == 'problem')
 		html += '<div class="sneaker-who"><span class="sneaker-problem">'+data.who+'</span></div>';
 	else if (data.uid > 0)  {
 		html += '<div class="sneaker-who">';
-		html += '<a href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
+		html += '<a target="_blank" href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
 	} else 
 		html += '<div class="sneaker-who">'+data.who.substring(0,15)+'</div>';
 	if (data.status == '<? echo _('publicada');?>')
-		html += '<div class="sneaker-status"><a href="./"><span class="sneaker-published">'+data.status+'</span></a></div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="./"><span class="sneaker-published">'+data.status+'</span></a></div>';
 	else if (data.status == '<? echo _('descartada');?>')
-		html += '<div class="sneaker-status"><a href="shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'</span></a></div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'</span></a></div>';
 	else 
-		html += '<div class="sneaker-status"><a href="shakeit.php">'+data.status+'</a></div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="shakeit.php">'+data.status+'</a></div>';
 	return html;
 }
 

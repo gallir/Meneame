@@ -134,10 +134,10 @@ function to_html(data) {
 			}
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
-			html += '<div class="sneaker-story" '+text_style+'><a href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
+			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
-			html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
 			break;
@@ -154,8 +154,8 @@ function to_html(data) {
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
-			html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
 			break;
@@ -207,24 +207,24 @@ function to_html(data) {
 	else anchor='';
 	if (do_hoygan) data.title = to_hoygan(data.title);
 	if (do_flip) data.title = flipString(data.title);
-	html += '<div class="sneaker-story"><a href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
+	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';
 		html += '<img src="'+base_url+'img/common/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
 		html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-		html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
-		html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+		html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
+		html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {
 		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';
 	}
 	if (data.status == '<? echo _('publicada');?>')
-		html += '<div class="sneaker-status"><a href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
 	else if (data.status == '<? echo _('descartada');?>')
-		html += '<div class="sneaker-status"><a href="'+base_url+'shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
 	else 
-		html += '<div class="sneaker-status"><a href="'+base_url+'shakeit.php">'+data.status+'<\/a><\/div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php">'+data.status+'<\/a><\/div>';
 	return html;
 }
 
