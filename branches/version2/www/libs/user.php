@@ -38,6 +38,8 @@ class User {
 	}
 
 	function disable() {
+		global $db;
+
 		require_once(mnminclude.'avatars.php');
 		require_once(mnminclude.'geo.php');
 		avatars_db_remove($this->id);
