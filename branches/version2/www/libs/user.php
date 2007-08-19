@@ -43,6 +43,10 @@ class User {
 		avatars_db_remove($this->id);
 		avatars_remove_user_files($this->id);
 		geo_delete('user', $this->id);
+
+		// Delete relationships
+		$db->query("DELETE FROM friends WHERE friend_type='manual' and (friend_from = $this->id or friend_to = $this->id)");
+
 		$this->username = '__'.$this->id.'__';
 		$this->email = "$this->id@disabled";
 		$this->url = '';
