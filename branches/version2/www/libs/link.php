@@ -141,10 +141,12 @@ class Link {
 				preg_match('/(href|url)=[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"]{0,1}/i', $match, $url_a);
 				$embeded_link  = $url_a[2];
 				$new_url_components = @parse_url($embeded_link);
-				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $checked_links[$new_url_components['host']] != true && $check_counter < 6) {
-					$checked_links[$new_url_components['host']] = true;
+				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $check_counter < 6) {
 					$check_counter++;
-					if (!$this->check_url($embeded_link, false) && $this->banned) return false;
+					if ($checked_links[$new_url_components['host']] != true) {
+						$checked_links[$new_url_components['host']] = true;
+						if (!$this->check_url($embeded_link, false) && $this->banned) return false;
+					}
 				}
 			}
 		}

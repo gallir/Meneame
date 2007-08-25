@@ -315,7 +315,7 @@ function do_submit1() {
 
 
 	// check there is no an "overflow" from the same site
-	if ($current_user->user_karma < 16) {
+	if ($current_user->user_karma < 15) {
 		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
 		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
 		if ($site_links > 5 && $site_links > $total_links * 0.04) { // Only 4% from the same site

@@ -25,7 +25,6 @@ function menealo(user, id, htmlid, md5)
 					updateVoters(id);
 				}
 			}
-			reportAjaxStats('/vote');
 		}
 	);
 }
@@ -52,7 +51,6 @@ function menealo_comment(user, id, value)
 					$('#c-votes-'+id).html('<img src="'+image+'"/>');
 				}
 			}
-			reportAjaxStats('/comment_vote');
 		}
 	);
 }
@@ -79,7 +77,6 @@ function menealo_post(user, id, value)
 					$('#c-votes-'+id).html('<img src="'+image+'"/>');
 				}
 			}
-			reportAjaxStats('/post_vote');
 		}
 	);
 }
@@ -157,7 +154,6 @@ function checkfield (type, form, field)
 				$('#'+type+'checkitvalue').html('<span style="color:red">"' + encodeURI(field.value) + '": ' + html + '</span>');
 				form.submit.disabled = 'disabled';
 			}
-			reportAjaxStats('/check_field');
 		}
 	);
 	return false;
@@ -190,7 +186,6 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 				parseAnswer(id, false, html);
 				updateVoters(id);
 			}
-			reportAjaxStats('/problem');
 		}
 	);
 	return false;
@@ -207,7 +202,6 @@ function updateVoters(id) {
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
 	$('#'+container).load(url);
-	reportAjaxStats('/get_html');
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
@@ -419,7 +413,6 @@ tooltip.ajax_request = function(script, id, maxcache) {
 		success: function(html) {
 			tooltip.cache.set(script+id, html, {'ttl':maxcache});
 			tooltip.setText(html);
-			reportAjaxStats('/tooltip');
 		}
 	});
 }
@@ -470,9 +463,8 @@ function replaceText(text, tag) {
 // Only known how to do it with urchin/Google Analytics
 // See http://www.google.com/support/analytics/bin/answer.py?answer=33985&topic=7292
 function reportAjaxStats(page) {
-	/* Commented out, might slow down some ajax requests
+	return; // Slow down
 	if (window.urchinTracker) {
 		urchinTracker(page+'.ajax'); 
 	}
-	*/
 }
