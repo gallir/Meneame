@@ -222,22 +222,6 @@ Tooltips functions
   Stronglky modified, onky works with DOM2 compatible browsers.
   	Ricardo Galli
   From http://ljouanneau.com/softs/javascript/tooltip.php
- *
- * Can show a tooltip over an element
- * Content of tooltip is the title attribute value of the element
- * copyright 2004 Laurent Jouanneau. http://ljouanneau.com/soft/javascript
- * release under LGPL Licence
- * works with dom2 compliance browser, and IE6. perhaps IE5 or IE4.. not Nestcape 4
- *
- * To use it :
- * 1.include this script on your page
- * 2.insert this element somewhere in your page
- *       <div id="tooltip"></div>
- * 3. style it in your CSS stylesheet (set color, background etc..). You must set
- * this two style too :
- *     div#tooltip { position:absolute; visibility:hidden; ... }
- * 4.the end. test it ! :-)
- *
  */
 
 

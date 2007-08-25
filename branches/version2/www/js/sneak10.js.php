@@ -8,7 +8,7 @@ header('Cache-Control: max-age=3600');
 var new_items = 0;
 var max_items = <? echo $max_items; ?>;
 var data_timer;
-var min_update = 20000;
+var min_update = 15000;
 var next_update = 3000;
 var xmlhttp;
 var requests = 0;
@@ -106,7 +106,7 @@ function received_data(data) {
 		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
 
 		//Remove old items
-		$('#items').children().gt(max_items-new_items-1).remove();
+		$('#items').children().slice(max_items-new_items).remove();
 
 		for (i=new_items-1; i>=0 ; i--) {
 			html = $('<div class="sneaker-item">'+to_html(new_data[i])+'</div>');
@@ -117,7 +117,7 @@ function received_data(data) {
 			animation_timer = setInterval('animate_background()', 100);
 			animating = true;
 		}
-	} else next_update = Math.round(next_update*1.10);
+	} else next_update = Math.round(next_update*1.05);
 	if (next_update < 3000) next_update = 3000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
@@ -130,7 +130,6 @@ function received_data(data) {
 		next_update = 100;
 	}
 	data_timer = setTimeout('get_data()', next_update);
-	reportAjaxStats('/sneaker_request');
 }
 
 function send_chat(form) {
