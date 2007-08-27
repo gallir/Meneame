@@ -396,7 +396,7 @@ function do_submit2() {
 	$linkres->id=$link_id = intval($_POST['id']);
 	$linkres->read();
 	$linkres->category=intval($_POST['category']);
-	$linkres->title = clean_text($_POST['title'], 40);
+	$linkres->title = clean_text(preg_replace('/[;., ]+$/', '', $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$linkres->tags = tags_normalize_string(clean_text($_POST['tags']));
 	$linkres->content = clean_text($_POST['bodytext']);
 	if (link_errors($linkres)) {
