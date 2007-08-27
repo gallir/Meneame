@@ -1,10 +1,7 @@
 /*
 Copyright (c) 2006, Webframeworks LLC. All rights reserved.
-
 Code licensed under the BSD License:
-
 http://dev.webframeworks.com/dist/JSOC-license.txt
-
 version: 0.12.0
 */
 

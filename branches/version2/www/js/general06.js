@@ -46,7 +46,7 @@ function menealo_comment(user, id, value)
 				karma = parseInt(vote_karma_image[1]);
 				image = vote_karma_image[2];
 				$('#vc-'+id).html(votes);
-				$('#vk-'+id).html(karma);
+				$('#vk-'+id).html(karma+" ");
 				if (image.length > 0) {
 					$('#c-votes-'+id).html('<img src="'+image+'"/>');
 				}
@@ -72,7 +72,7 @@ function menealo_post(user, id, value)
 				karma = parseInt(vote_karma_image[1]);
 				image = vote_karma_image[2];
 				$('#vc-'+id).html(votes);
-				$('#vk-'+id).html(karma);
+				$('#vk-'+id).html(karma+" ");
 				if (image.length > 0) {
 					$('#c-votes-'+id).html('<img src="'+image+'"/>');
 				}
@@ -118,7 +118,7 @@ function updateLinkValues (id, votes, negatives, karma, value) {
 		$('#a-votes-' + id).fadeIn('slow');
 	}
 	$('#a-neg-' + id).html(negatives);
-	$('#a-karma-' + id).html(karma);
+	$('#a-karma-' + id).html(karma+" ");
 	if (value > 0) {
 		disable_vote_link(id, "¡chachi!", '#FFFFFF');
 		disable_problem_form(id);
