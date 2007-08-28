@@ -357,7 +357,10 @@ tooltip.c_show = function (event, type, element, link) {
 		target_author = 'cauthor-'+element;
 		target = document.getElementById(target_text);
 		author_target = document.getElementById(target_author);
-		if (! target || ! author_target) return false;
+		if (! target || ! author_target)  {
+			this.ajax_delayed(event,'get_comment_tooltip.php',element+"&link="+link);
+			return;
+		}
 		text = '<strong>'+author_target.innerHTML+'</strong><br/>'+target.innerHTML;
 	} else if (type == 'order') {
 		this.ajax_delayed(event,'get_comment_tooltip.php',element+"&link="+link);
