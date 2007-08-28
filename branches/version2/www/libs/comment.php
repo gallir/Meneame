@@ -202,7 +202,7 @@ class Comment {
 				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
 		}
 
-		echo put_smileys($this->put_comment_tooltips(save_text_to_html($this->content), $single_link)) . $expand;
+		echo put_smileys($this->put_comment_tooltips(save_text_to_html($this->content))) . $expand;
 		echo "\n";
 	}
 
@@ -214,12 +214,8 @@ class Comment {
 	}
 
 	// Add calls for tooltip javascript functions
-	function put_comment_tooltips($str, $single_link) {
-		if ($single_link) {
-			return preg_replace('/(^|[\s\W])#([1-9][0-9]*)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>", $str);
-		} else {
-			return preg_replace('/(^|[\s\W])#([1-9][0-9]*)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'order', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>", $str);
-		}
+	function put_comment_tooltips($str) {
+		return preg_replace('/(^|[\s\W])#([1-9][0-9]*)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>", $str);
 	}
 
 	function same_text_count($min=30) {
