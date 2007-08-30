@@ -212,9 +212,12 @@ function check_integer($which) {
 	}
 }
 
-function get_page_number($page_size, $order) {
-	if ($page_size > 0) return ceil($order/$page_size);
-	else return '';
+function get_comment_page_suffix($page_size, $order, $total=0) {
+	if ($page_size > 0) {
+		if ($total && $total < $page_size) return '';
+		return '/'.ceil($order/$page_size);
+	}
+	return '';
 }
 
 function get_current_page() {

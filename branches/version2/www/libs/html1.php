@@ -655,13 +655,13 @@ function do_last_comments() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
 
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users where comment_link_id = link_id and comment_user_id = user_id order by comment_date desc limit 10");
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users where comment_link_id = link_id and comment_user_id = user_id order by comment_date desc limit 10");
 	if ($res) {
 		echo '<div class="vertical-box">';
 		echo '<h4>' . _('últimos comentarios'). '</h4><ul>';
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_permalink().'/'.get_page_number($globals['comments_page_size'], $comment->comment_order).'#comment-'.$comment->comment_order;
+			$link = $foo_link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
 			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		echo '</ul></div>';
@@ -689,13 +689,13 @@ function do_best_comments() {
 	//if ($globals['bot']) return; // We wont spend lot of CPU for another CPU :-)
 	
 	$min_date = date("Y-m-d H:00:00", $globals['now'] - 22000); // about 6 hours
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title from comments, links, users  where comment_date > '$min_date' and comment_karma > 30 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 30 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
 	if ($res) {
 		echo '<div class="vertical-box">';
 		echo '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_permalink().'/'.get_page_number($globals['comments_page_size'], $comment->comment_order).'#comment-'.$comment->comment_order;
+			$link = $foo_link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
 			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		echo '</ul></div>';

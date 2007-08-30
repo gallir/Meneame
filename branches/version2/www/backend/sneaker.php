@@ -298,7 +298,7 @@ function get_comment($time, $type, $commentid, $userid) {
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
-	$link = $foo_link->get_relative_permalink().'/'.get_page_number($globals['comments_page_size'], $event->comment_order)."#comment-$event->comment_order";
+	$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
 	$who = $event->user_login;
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$commentid;

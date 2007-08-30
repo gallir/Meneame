@@ -37,17 +37,13 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 }
 
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
-if(count($url_args) > 1 && ($last_arg = (int) $url_args[count($url_args)-1]) > 0) {
-	if ($last_arg > 10000) {
+if(count($url_args) > 1 && ($last_arg = $url_args[count($url_args)-1]) > 0) {
+	if (preg_match('/^000/', $last_arg)) {
 		// Dirty trick to redirect to a comment' page
-		$c_order = (int) preg_replace('/^1000/', '', $last_arg);
-		if ($globals['comments_page_size']>0) {
-			$extra_url = '/'.get_page_number($globals['comments_page_size'], $c_order);
-		}
-		header('Location: ' . $link->get_permalink(). $extra_url.'#comment-'.$c_order);
+		header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $last_arg, $link->comments).'#comment-'.(int) $last_arg);
 		die;
 	}
-	$current_page =  $last_arg;
+	$current_page =  (int) $last_arg;
 	array_pop($url_args);
 }
 
@@ -67,7 +63,7 @@ switch ($url_args[1]) {
 			}
 		}
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
-			if (!$current_page) $current_page = get_page_number($globals['comments_page_size'], $link->comments);
+			if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
 			$offset=($current_page-1)*$globals['comments_page_size'];
 			$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		} 
@@ -457,7 +453,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		}
 	}
 
-	$total_pages=get_page_number($globals['comments_page_size'], $total);
+	$total_pages=ceil($total/$globals['comments_page_size']);
 	if (! $current) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;
