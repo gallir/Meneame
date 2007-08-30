@@ -44,6 +44,11 @@ $globals['base_user_url'] = 'user/';
 //RewriteRule ^/notame(/.*)$ /sneakme/index.php$1 [L,NS]
 $globals['base_sneakme_url'] = 'notame/';
 
+// Comment pages
+$globals['comments_page_size'] = 100;
+$globals['comments_page_threshold'] = 1.10;
+
+
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
 

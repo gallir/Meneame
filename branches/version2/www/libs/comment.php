@@ -89,6 +89,7 @@ class Comment {
 
 		if(!$this->read) return;
 
+
 		echo '<li id="ccontainer-'.$this->id.'">';
 		$this->hidden = $this->karma < -50;
 
@@ -100,10 +101,13 @@ class Comment {
 			$comment_class = 'comment-body';
 		}
 		$this->link_permalink =  $link->get_relative_permalink();
+		if ($globals['comments_page_size']) {
+			$link_page .= '/'.ceil($this->order/$globals['comments_page_size']);
+		} 
 		echo '<div class="'.$comment_class.'">';
-		echo '<a href="'.$this->link_permalink.'#comment-'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
+		echo '<a href="'.$this->link_permalink.$link_page.'#'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
 
-		if ($single_link) echo '<span id="comment-'.$this->order.'">';
+		if ($single_link) echo '<span id="'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
 		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
@@ -215,7 +219,7 @@ class Comment {
 
 	// Add calls for tooltip javascript functions
 	function put_comment_tooltips($str) {
-		return preg_replace('/(^|[\s\W])#([1-9][0-9]*)/', "$1<a class='tt' href=\"".$this->link_permalink."#comment-$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>", $str);
+		return preg_replace('/(^|[\s\W])#([1-9][0-9]*)/', "$1<a class='tt' href=\"".$this->link_permalink."/1000$2\" onmouseover=\"return tooltip.c_show(event, 'id', '$2', '".$this->link."');\" onmouseout=\"tooltip.hide(event);\"  onclick=\"tooltip.hide(this);\">#$2</a>", $str);
 	}
 
 	function same_text_count($min=30) {

@@ -13,11 +13,6 @@ include(mnminclude.'html1.php');
 $globals['ads'] = true;
 $link = new Link;
 
-// Comment pages
-$current_page = (int) $_GET['page'];
-$page_size = 100;
-$page_threshold = 1.10;
-
 
 if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
@@ -41,6 +36,21 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
+// Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
+if(count($url_args) > 1 && ($last_arg = (int) $url_args[count($url_args)-1]) > 0) {
+	if ($last_arg > 10000) {
+		// Dirty trick to redirect to a comment' page
+		$c_order = (int) preg_replace('/^1000/', '', $last_arg);
+		if ($globals['comments_page_size']>0) {
+			$extra_url = '/'.ceil($c_order/$globals['comments_page_size']);
+		}
+		header('Location: ' . $link->get_permalink(). $extra_url.'#'.$c_order);
+		die;
+	}
+	$current_page =  $last_arg;
+	array_pop($url_args);
+}
+
 switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;	
@@ -57,11 +67,15 @@ switch ($url_args[1]) {
 				geo_init(null, null);
 			}
 		}
+		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
+			$offset=($current_page-1)*$globals['comments_page_size'];
+			$limit = "LIMIT $offset,".$globals['comments_page_size'];
+		} 
 		break;
 	case 'best-comments':
 		$tab_option = 2;
+		if ($globals['comments_page_size'] > 0 ) $limit = 'LIMIT ' . $globals['comments_page_size'];
 		$order_field = 'comment_karma desc, comment_id asc';
-		if (!$current_page) $current_page = 1;
 		break;
 	case 'voters':
 		$tab_option = 3;
@@ -133,10 +147,6 @@ case 2:
 	// Print tabs
 	print_story_tabs($tab_option);
 
-	if ($link->comments > $page_size*$page_threshold) {
-		$offset=($current_page-1)*$page_size;
-		$limit = "LIMIT $offset,$page_size";
-	} else $limit = '';
 
 
 	// If option is "normal comments", show also last trackbakcs and pingbacks
@@ -173,27 +183,21 @@ case 2:
 
 	
 	if($link->date < $globals['now']-$globals['time_enabled_comments']) {
-
-		// do comment pages
-		if ($link->comments > $page_size*$page_threshold) do_comment_pages($link->comments, $page_size, $tab_option == 1);
-
+		// Comments already closed
+		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 		echo '<div class="commentform warn">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
 	} elseif ($current_user->authenticated && ($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
+		// User can comment
 		print_comment_form();
-
-		// do comment pages
-		if ($link->comments > $page_size*$page_threshold) do_comment_pages($link->comments, $page_size, $tab_option == 1);
-
+		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 	} else {
-		// do comment pages
-		if ($link->comments > $page_size*$page_threshold) do_comment_pages($link->comments, $page_size, $tab_option == 1);
-
+		// Noit enough karma or anonymous user
+		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 		echo '<div class="commentform warn">'."\n";
 		if ($current_user->authenticated && $current_user->user_karma <= $globals['min_karma_for_comments']) 
 			echo _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma ."\n";
-
 		else
 			echo '<a href="'.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O regístrate'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>.'."\n";
 		echo '</div>'."\n";
@@ -436,20 +440,24 @@ function print_story_tabs($option) {
 	echo '</ul>'."\n";
 }
 
-function do_comment_pages($total, $page_size=50, $reverse = true) {
+function do_comment_pages($total, $current, $reverse = true) {
 	global $db, $globals;
 
+	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
+	
 	$index_limit = 10;
 
-	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
-	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
-	if(!empty($query)) {
-		$query = htmlspecialchars($query);
-		$query = "&amp;$query";
+	if ($globals['base_story_url'] = 'story/') {
+		$query = $globals['link_permalink'];
+	} else {
+		$query=preg_replace('/\/[0-9]+(#.*)$/', '', $_SERVER['QUERY_STRING']);
+		if(!empty($query)) {
+			$query = htmlspecialchars($query);
+			$query = "?$query";
+		}
 	}
 
-	$total_pages=ceil($total/$page_size);
-	$current = (int) $_GET['page'];
+	$total_pages=ceil($total/$globals['comments_page_size']);
 	if (! $current) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;
@@ -464,7 +472,7 @@ function do_comment_pages($total, $page_size=50, $reverse = true) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'">&#171; '._('anterior').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#171; '._('anterior').'</a>';
 	}
 
 
@@ -473,7 +481,7 @@ function do_comment_pages($total, $page_size=50, $reverse = true) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 		}
 	}
 	
@@ -481,7 +489,7 @@ function do_comment_pages($total, $page_size=50, $reverse = true) {
 
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'">&#187; '._('siguiente').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#187; '._('siguiente').'</a>';
 	} else {
 		echo '<span class="nextprev">&#187; '._('siguiente'). '</span>';
 	}
@@ -489,14 +497,9 @@ function do_comment_pages($total, $page_size=50, $reverse = true) {
 
 }
 
-function get_comment_page_url($i, $total, $query, $rev) {
+function get_comment_page_url($i, $total, $query) {
 	global $globals;
-	if ($rev) { 
-		if ($i == $total) return $globals['link_permalink'];
-		else return '?page='.$i.$query;
-	} else {
-		if ($i == 1) return $globals['link_permalink'];
-		else return '?page='.$i.$query;
-	}
+	if ($i == $total) return $query;
+	else return $query.'/'.$i;
 }
 ?>
