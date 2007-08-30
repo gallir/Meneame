@@ -661,7 +661,7 @@ function do_last_comments() {
 		echo '<h4>' . _('últimos comentarios'). '</h4><ul>';
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
+			$link = $foo_link->get_permalink().'/'.get_page_number($globals['comments_page_size'], $comment->comment_order).'#comment-'.$comment->comment_order;
 			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		echo '</ul></div>';
@@ -695,7 +695,7 @@ function do_best_comments() {
 		echo '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_permalink() . '#comment-'.$comment->comment_order;
+			$link = $foo_link->get_permalink().'/'.get_page_number($globals['comments_page_size'], $comment->comment_order).'#comment-'.$comment->comment_order;
 			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		echo '</ul></div>';

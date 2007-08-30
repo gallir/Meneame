@@ -212,6 +212,11 @@ function check_integer($which) {
 	}
 }
 
+function get_page_number($page_size, $order) {
+	if ($page_size > 0) return ceil($order/$page_size);
+	else return '';
+}
+
 function get_current_page() {
 	if(($var=check_integer('page'))) {
 		return $var;

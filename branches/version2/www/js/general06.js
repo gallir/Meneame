@@ -337,7 +337,7 @@ tooltip.moveTo = function (xL,yL) {
 		xL +=  document.documentElement.scrollLeft;
 		yL +=  document.documentElement.scrollTop;
 	}
-	if (this.tooltipText.clientWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.6) {
+	if (this.tooltipText.clientWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.55) {
 		xL = xL - this.tooltipText.clientWidth - 2*this.offsetx;
 	}
 	this.tooltipText.style.left = xL +"px";

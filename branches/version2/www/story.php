@@ -42,9 +42,9 @@ if(count($url_args) > 1 && ($last_arg = (int) $url_args[count($url_args)-1]) > 0
 		// Dirty trick to redirect to a comment' page
 		$c_order = (int) preg_replace('/^1000/', '', $last_arg);
 		if ($globals['comments_page_size']>0) {
-			$extra_url = '/'.ceil($c_order/$globals['comments_page_size']);
+			$extra_url = '/'.get_page_number($globals['comments_page_size'], $c_order);
 		}
-		header('Location: ' . $link->get_permalink(). $extra_url.'#'.$c_order);
+		header('Location: ' . $link->get_permalink(). $extra_url.'#comment-'.$c_order);
 		die;
 	}
 	$current_page =  $last_arg;
@@ -55,7 +55,6 @@ switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;	
 		$order_field = 'comment_order';
-		if (!$current_page) $current_page = ceil($link->comments/$page_size);
 
 		// Geo check
 		if($globals['google_maps_api']) {
@@ -68,6 +67,7 @@ switch ($url_args[1]) {
 			}
 		}
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
+			if (!$current_page) $current_page = get_page_number($globals['comments_page_size'], $link->comments);
 			$offset=($current_page-1)*$globals['comments_page_size'];
 			$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		} 
@@ -457,7 +457,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		}
 	}
 
-	$total_pages=ceil($total/$globals['comments_page_size']);
+	$total_pages=get_page_number($globals['comments_page_size'], $total);
 	if (! $current) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;

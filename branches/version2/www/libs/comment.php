@@ -102,12 +102,12 @@ class Comment {
 		}
 		$this->link_permalink =  $link->get_relative_permalink();
 		if ($globals['comments_page_size']) {
-			$link_page .= '/'.ceil($this->order/$globals['comments_page_size']);
+			$link_page .= '/'.get_page_number($globals['comments_page_size'], $this->order);
 		} 
 		echo '<div class="'.$comment_class.'">';
-		echo '<a href="'.$this->link_permalink.$link_page.'#'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
+		echo '<a href="'.$this->link_permalink.$link_page.'#comment-'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
 
-		if ($single_link) echo '<span id="'.$this->order.'">';
+		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
 		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
