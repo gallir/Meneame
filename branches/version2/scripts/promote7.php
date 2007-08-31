@@ -263,7 +263,7 @@ if ($links) {
 				echo " $user->username disabled, probably due to abuses, penalized.";
 				$do_publish = false;
 			}
-			$link->karma = round($link->karma/2);
+			$link->karma = round($link->karma*0.75);
 			$link->store_basic();
 			$changes = 1;
 		} else {
