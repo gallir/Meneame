@@ -52,14 +52,14 @@ $min_karma_coef = 0.87;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
-define (PUB_MAX, 55);
+define (PUB_MAX, 60);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
 
-$pub_estimation = intval(max(min($links_queue * 0.12, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * 0.14, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
@@ -72,13 +72,14 @@ $from_time = "date_sub(now(), interval 5 day)";
 $last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_published_date)) from links WHERE link_status='published'");
 if (!$last_published) $last_published = $now - 24*3600*30;
 $links_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 24 hour)");
+$links_published_projection = 4 * (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 6 hour)");
 
 $diff = $now - $last_published;
 
 $decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $decay = max($min_karma_coef, $decay);
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
+echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
 
 $continue = true;
 $published=0;
@@ -103,7 +104,7 @@ $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
 /// Coeficients to even metacategories
-$days = 2;
+$days = 3;
 $total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval $days day)");
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
@@ -130,9 +131,16 @@ foreach ($meta_coef as $m => $v) {
 }
 
 
-echo "Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
+// Karma average:  It's used for each link to check the balance of users' votes
+
+$users_karma_avg = (float) $db->get_var("select avg(vote_value) from votes, links where vote_type='links' and link_id = vote_link_id and link_status = 'published' and link_published_date > date_sub(now(), interval 48 hour) and vote_user_id > 0 and vote_date < link_published_date and vote_value > 0");
+$users_karma_avg_trunc = (int) $users_karma_avg;
+$users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
+
+echo "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
 echo "<b>Current MIN karma: $min_karma</b><br>\n";
 echo "</p>\n";
+
 
 
 
@@ -171,15 +179,19 @@ if ($links) {
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
 
 		// Calculate the real karma for the link
-		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > 7"));
-		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value <= 7"));
+		// high =~ users with higher karma greater than average * .95
+		// low =~ users with higher karma less-equal than average * .95
+		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
+		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
+		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
 		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
-		if ($karma_pos_user_high > 7) {
-			$karma_pos_user = $karma_pos_user_high + (int) min( $karma_pos_user_high*0.7, $karma_pos_user_low);
-		} else {
-			$karma_pos_user = $karma_pos_user_high +  $karma_pos_user_low;
-		}
+		// Now you distribute the "equal" among the two values
+		$karma_pos_user_high += $karma_pos_user_equal * (1 - $users_karma_avg_coef);
+		$karma_pos_user_low += $karma_pos_user_equal * $users_karma_avg_coef;
+
+		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
+		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.05, $karma_pos_user_low);
 
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
@@ -192,9 +204,9 @@ if ($links) {
 		$karma_new = $karma_pos_user + $karma_neg_user;
 		// To void votes spamming
 		// Do not allow annonymous users to give more karma than registered users
-		// The ratio up to 20% anonymous
+		// The ratio up to 10% anonymous
 		if ($karma_new > 0) 
-			$karma_new += min($karma_new*0.20, $karma_pos_ano + $karma_neg_ano);
+			$karma_new += min($karma_new*0.10, $karma_pos_ano + $karma_neg_ano);
 
 		//echo "previous $dblink->parent: $karma_new -> ";
 		$karma_new = (int) ($karma_new * $meta_coef[$dblink->parent]);
@@ -203,7 +215,7 @@ if ($links) {
 
 		// Aged karma
 		$diff = max(0, $now - ($link->date + 12*3600)); // 12 hours without decreasing
-		$oldd = 1 - $diff/(3600*168);
+		$oldd = 1 - $diff/(3600*120);
 		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
 
