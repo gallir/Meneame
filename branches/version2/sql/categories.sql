@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.11
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.30-Debian_1-log
+-- Server version	5.0.41-Debian_1~bpo.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,9 +27,11 @@ CREATE TABLE `categories` (
   `category_parent` int(11) NOT NULL default '0',
   `category_name` char(32) collate utf8_spanish_ci NOT NULL,
   `category_uri` char(32) collate utf8_spanish_ci default NULL,
+  `category_calculated_coef` float NOT NULL default '0',
   PRIMARY KEY  (`category__auto_id`),
-  UNIQUE KEY `category_lang` (`category_lang`,`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+  UNIQUE KEY `category_lang` (`category_lang`,`category_id`),
+  UNIQUE KEY `id` (`category_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
 -- Dumping data for table `categories`
@@ -37,7 +39,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'es',1,100,'software libre',NULL),(4,'es',4,100,'internet','internet'),(6,'es',6,101,'blogs',NULL),(38,'es',38,102,'sociedad','sociedad'),(14,'es',8,100,'hardware',NULL),(16,'es',22,100,'ciencia',NULL),(19,'es',13,100,'diseño',NULL),(22,'es',11,100,'software',NULL),(27,'es',19,100,'cacharros',NULL),(29,'es',23,100,'juegos',NULL),(33,'es',32,101,'friqui',NULL),(34,'es',33,100,'negocios',NULL),(35,'es',35,101,'curiosidades',NULL),(36,'es',36,101,'derechos',NULL),(37,'es',37,100,'seguridad',NULL),(39,'es',5,101,'cine/TV',NULL),(40,'es',100,0,'tecnología','tecnologia'),(41,'es',101,0,'cultura','cultura'),(42,'es',102,0,'actualidad','actualidad'),(43,'es',7,100,'empresas',NULL),(44,'es',9,101,'música',NULL),(45,'es',10,101,'vídeos','videos'),(46,'es',12,101,'espectáculos','espectaculos'),(47,'es',15,101,'historia','historia'),(48,'es',16,101,'literatura','literatura'),(49,'es',17,102,'américas','americas'),(50,'es',18,102,'europa','europa'),(51,'es',20,102,'internacional','internacional'),(53,'es',24,102,'política','politica'),(54,'es',25,102,'economía','economía'),(55,'es',26,102,'urgente','urgente'),(56,'es',27,102,'deportes','deportes');
+INSERT INTO `categories` VALUES (1,'es',1,100,'software libre',NULL,1.12088),(4,'es',4,100,'internet','internet',1.12088),(6,'es',6,101,'blogs',NULL,1.12318),(38,'es',38,102,'sociedad','sociedad',0.823064),(14,'es',8,100,'hardware',NULL,1.12088),(16,'es',22,100,'ciencia',NULL,1.12088),(19,'es',13,100,'diseño',NULL,1.12088),(22,'es',11,100,'software',NULL,1.12088),(27,'es',19,100,'cacharros',NULL,1.12088),(29,'es',23,100,'juegos',NULL,1.12088),(33,'es',32,101,'friqui',NULL,1.12318),(57,'es',28,101,'podcast','podcast',1.12318),(35,'es',35,101,'curiosidades',NULL,1.12318),(36,'es',36,101,'derechos',NULL,1.12318),(37,'es',37,100,'seguridad',NULL,1.12088),(39,'es',5,101,'cine/TV',NULL,1.12318),(40,'es',100,0,'tecnología','tecnologia',1.12088),(41,'es',101,0,'cultura','cultura',1.12318),(42,'es',102,0,'actualidad','actualidad',0.823064),(43,'es',7,100,'empresas',NULL,1.12088),(44,'es',9,101,'música',NULL,1.12318),(45,'es',10,101,'vídeos','videos',1.12318),(46,'es',12,101,'espectáculos','espectaculos',1.12318),(47,'es',15,101,'historia','historia',1.12318),(48,'es',16,101,'literatura','literatura',1.12318),(49,'es',17,102,'américas','americas',0.823064),(50,'es',18,102,'europa','europa',0.823064),(51,'es',20,102,'internacional','internacional',0.823064),(53,'es',24,102,'política','politica',0.823064),(54,'es',25,102,'economía','economía',0.823064),(55,'es',26,102,'última hora','ultima-hora',0.823064),(56,'es',27,102,'deportes','deportes',0.823064),(58,'es',29,101,'educación','educación',1.12318),(59,'es',39,100,'medicina','medicina',1.12088),(60,'es',40,100,'energía','energia',1.12088),(61,'es',41,101,'arte','arte',1.12318),(62,'es',42,100,'novedades','novedades-tec',1.12088),(63,'es',43,100,'medio ambiente','medio-ambiente',1.12088),(64,'es',44,102,'personalidades','personalidades',0.823064),(65,'es',45,102,'prensa','prensa',0.823064);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-01-26 11:46:05
+-- Dump completed on 2007-08-31 16:56:19
