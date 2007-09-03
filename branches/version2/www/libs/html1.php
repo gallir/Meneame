@@ -623,31 +623,36 @@ function do_vertical_tags() {
 	} else {
 		$status = "!= 'discarded'";
 	}
+	if(!empty($globals['meta_categories'])) {
+		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
+	}
+
+	if(memcache_mprint('tags'.$status.$meta_cond)) return;
+
 	$min_pts = 8;
 	$max_pts = 18;
 	$line_height = $max_pts * 0.75;
 
-	$min_date = date("Y-m-d H:00:00", $globals['now'] - 172800); // 48 hours
-	if(!empty($globals['meta_categories'])) {
-		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
-	}
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
 
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
-		echo '<div class="vertical-box center">';
-		echo '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
+		$output = '<div class="vertical-box center">';
+		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
 		foreach ($res as $item) {
 			$words[$item->tag_words] = $item->count;
 		}
 		ksort($words);
 		foreach ($words as $word => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
-			echo '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a>  ';
+			$output .= '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a>  ';
 		}
-		echo '</div>';
+		$output .= '</div>';
+		echo $output;
+		memcache_madd('tags'.$status.$meta_cond, $output, 600);
 	}
 }
 
@@ -686,19 +691,21 @@ function do_best_comments() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
 
-	//if ($globals['bot']) return; // We wont spend lot of CPU for another CPU :-)
-	
-	$min_date = date("Y-m-d H:00:00", $globals['now'] - 22000); // about 6 hours
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 30 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 10");
+	if(memcache_mprint('best_comments')) return;
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 10 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 12");
 	if ($res) {
-		echo '<div class="vertical-box">';
-		echo '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
+		$output = '<div class="vertical-box">';
+		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
-			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+			$output .= '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
-		echo '</ul></div>';
+		$output .= '</ul></div>';
+		echo $output;
+		memcache_madd('best_comments', $output, 600);
 	}
 }
 

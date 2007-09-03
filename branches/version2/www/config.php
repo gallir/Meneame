@@ -44,6 +44,9 @@ $globals['base_user_url'] = 'user/';
 //RewriteRule ^/notame(/.*)$ /sneakme/index.php$1 [L,NS]
 $globals['base_sneakme_url'] = 'notame/';
 
+// Memcache, set hostname if enabled
+//$globals['memcache_host'] = 'localhost';
+
 // Comment pages
 $globals['comments_page_size'] = 100;
 $globals['comments_page_threshold'] = 1.10;

@@ -537,4 +537,51 @@ function fork($uri) {
 	}
 	return false;
 }
+//
+// Memcache functions
+//
+
+if ($globals['memcache_host']) {
+	$memcache = new Memcache;
+	$memcache->pconnect($globals['memcache_host'], 11211);
+	if (!$memcache) {
+		syslog(LOG_INFO, "Meneame, memcache init failed");
+	}
+} else {
+	$memcache = false;
+}
+
+function memcache_mget ($key) {
+	global $memcache;
+	if ($memcache) {
+		return $memcache->get($key);
+	}
+	return false;
+}
+
+
+function memcache_madd ($key, $str, $expire=0) {
+	global $memcache;
+	if ($memcache) {
+		return $memcache->add($key, $str, false, $expire);
+	}
+	return false;
+}
+
+function memcache_mprint ($key) {
+	global $memcache;
+	if ($memcache && ($value = $memcache->get($key))) {
+		echo $value;
+		return true;
+	}
+	return false;
+}
+
+function memcache_mdelete ($key) {
+	global $memcache;
+	if ($memcache) {
+		return $memcache->delete($key);
+	}
+	return false;
+}
 ?>
