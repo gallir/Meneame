@@ -12,6 +12,7 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 }
 include_once(mnminclude.'comment.php');
+include_once(mnminclude.'link.php');
 
 
 if (empty($_GET['id'])) die;
@@ -20,5 +21,9 @@ $comment = new Comment;
 $comment->id=$id;
 $comment->read();
 if(!$comment->read) die;
+$link = new Link;
+$link->id = $comment->link;
+if(!$link->read_basic()) die;
+$comment->link_permalink =  $link->get_relative_permalink();
 $comment->print_text(0);
 ?>
