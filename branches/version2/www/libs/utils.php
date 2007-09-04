@@ -549,9 +549,10 @@ function memcache_minit () {
 	if ($memcache) return true;
 	if ($globals['memcache_host']) {
 		$memcache = new Memcache;
-		if ( ! @$memcache->pconnect($globals['memcache_host'], 11211) ) {
+		if (!$globals['memcache_port']) $globals['memcache_port'] = 11211;
+		if ( ! @$memcache->pconnect($globals['memcache_host'], $globals['memcache_port']) ) {
 			$memcache = false;
-			syslog(LOG_INFO, "Meneame, memcache init failed");
+			syslog(LOG_INFO, "Meneame: memcache init failed");
 			return false;
 		}
 		return true;

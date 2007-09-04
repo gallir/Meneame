@@ -45,7 +45,8 @@ $globals['base_user_url'] = 'user/';
 $globals['base_sneakme_url'] = 'notame/';
 
 // Memcache, set hostname if enabled
-//$globals['memcache_host'] = 'localhost';
+//$globals['memcache_host'] = 'localhost'; 
+$globals['memcache_port'] = 11211; // optional
 
 // Comment pages
 $globals['comments_page_size'] = 100;
