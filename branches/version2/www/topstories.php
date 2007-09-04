@@ -17,7 +17,8 @@ $page_size = 20;
 $range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
 $range_values = array(1, 2, 7, 30, 365, 0);
 
-$offset=(get_current_page()-1)*$page_size;
+$current_page = get_current_page();
+$offset=($current_page-1)*$page_size;
 
 // Select a month and year
 if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
@@ -27,9 +28,15 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	// Select from a start date
 	$from = intval($_GET['range']);
 	if ($from >= count($range_values) || $from < 0 ) $from = 0;
+
+	// Use memcache if available
+	if ($globals['memcache_host'] && $current_page < 3) {
+		$memcache_key = 'topstories_'.$from.'_'.$current_page;
+	}
+
 	if ($range_values[$from] > 0) {
 		// we use this to allow sql caching
-		$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
+		$from_time = '"'.date("Y-m-d H:i:00", time() - 86400 * $range_values[$from]).'"';
 		$sql = "SELECT link_id, link_votes as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY link_votes DESC ";
 		$time_link = "link_published_date > $from_time AND";
 	} else {
@@ -39,9 +46,15 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	}
 }
 
-$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
-if ($rows == 0) {
-	not_found();
+if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
+	// Itr's not in cache, or memcache is disabled
+	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
+	if ($rows == 0) {
+		not_found();
+	}
+	$links = $db->get_results("$sql LIMIT $offset,$page_size");
+	memcache_madd($memcache_key.'rows', $rows, 1800);
+	memcache_madd($memcache_key, $links, 1800);
 }
 
 
@@ -58,8 +71,6 @@ print_period_tabs();
 
 
 $link = new Link;
-
-$links = $db->get_results("$sql LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $dblink) {
 		$link->id=$dblink->link_id;
@@ -83,7 +94,7 @@ function print_period_tabs() {
 		$current_range = 0;
 	}
 
-	for($i=0; $i<count($range_values) && $range_values[$i] < 10; $i++) {
+	for($i=0; $i<count($range_values) && $range_values[$i] < 60; $i++) {
 		if($i == $current_range)  {
 			$active = ' class="tabsub-this"';
 		} else {
