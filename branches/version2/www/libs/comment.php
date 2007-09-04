@@ -61,11 +61,12 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT comments.*, users.user_login, users.user_avatar, users.user_email, user_karma FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+		if(($link = $db->get_row("SELECT comments.*, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
 			$this->author=$link->comment_user_id;
 			$this->username=$link->user_login;
 			$this->email=$link->user_email;
 			$this->user_karma=$link->user_karma;
+			$this->user_level=$link->user_level;
 			$this->randkey=$link->comment_randkey;
 			$this->link=$link->comment_link_id;
 			$this->order=$link->comment_order;
@@ -91,7 +92,8 @@ class Comment {
 
 
 		echo '<li id="ccontainer-'.$this->id.'">';
-		$this->hidden = $this->karma < -50;
+
+		$this->hidden = $this->karma < -50 || $this->user_level == 'disabled';
 
 		if ($this->hidden)  {
 			$comment_meta_class = 'comment-meta-hidden';
