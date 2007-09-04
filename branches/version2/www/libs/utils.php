@@ -543,8 +543,8 @@ function fork($uri) {
 
 if ($globals['memcache_host']) {
 	$memcache = new Memcache;
-	$memcache->pconnect($globals['memcache_host'], 11211);
-	if (!$memcache) {
+	if ( ! @$memcache->pconnect($globals['memcache_host'], 11211) ) {
+		$memcache = false;
 		syslog(LOG_INFO, "Meneame, memcache init failed");
 	}
 } else {
