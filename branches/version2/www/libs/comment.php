@@ -120,13 +120,15 @@ class Comment {
 
 		// The comments info bar
 		echo '<div class="'.$comment_meta_class.'">';
-		// Print the votes info (left)
-		echo '<div class="comment-votes-info">';
 		// Check that the user can vote
-		if ($current_user->user_id > 0 && $this->author != $current_user->user_id && $single_link)
-					$this->print_shake_icons();
-		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
-		echo '</div>';
+		if ($this->user_level != 'disabled') {
+			// Print the votes info (left)
+			echo '<div class="comment-votes-info">';
+			if ($current_user->user_id > 0 && $this->author != $current_user->user_id && $single_link)
+						$this->print_shake_icons();
+			echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
+			echo '</div>';
+		}
 
 
 		// Print comment info (right)

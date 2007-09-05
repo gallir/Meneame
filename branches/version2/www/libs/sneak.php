@@ -1,7 +1,7 @@
 <?
 $sneak_version = 7;
 $max_items = 25;
-//header('Connection: close');
+header('Connection: close');
 
 function init_sneak() {
 	global $globals, $db, $current_user;

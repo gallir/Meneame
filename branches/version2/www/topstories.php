@@ -30,7 +30,7 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	if ($from >= count($range_values) || $from < 0 ) $from = 0;
 
 	// Use memcache if available
-	if ($globals['memcache_host'] && $current_page < 3) {
+	if ($globals['memcache_host'] && $current_page < 4) {
 		$memcache_key = 'topstories_'.$from.'_'.$current_page;
 	}
 
@@ -53,8 +53,10 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 		not_found();
 	}
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
-	memcache_madd($memcache_key.'rows', $rows, 1800);
-	memcache_madd($memcache_key, $links, 1800);
+	if ($memcache_key) {
+		memcache_madd($memcache_key.'rows', $rows, 1800);
+		memcache_madd($memcache_key, $links, 1800);
+	}
 }
 
 
