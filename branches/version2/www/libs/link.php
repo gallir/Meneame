@@ -653,15 +653,12 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id ==  0) return false;
-		if (isset($this->editable)) return $this->editable;
 		if($this->status != 'published' && 
 			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
 					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
-				$this->editable = true;
 				return true;
 			}
-		$this->editable = false;
 		return false;
 	}
 
@@ -669,14 +666,11 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id ==  0) return false;
-		if (isset($this->map_editable)) return $this->map_editable;
 		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 9800) 
 					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 14400)
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
-				$this->map_editable = true;
 				return true;
 			}
-		$this->map_editable = false;
 		return false;
 	}
 
