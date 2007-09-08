@@ -187,7 +187,7 @@ function do_submit1() {
 	if(!$linkres->valid) {
 		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
 		// Dont allow new users with low karma to post wrong URLs
-		if ($current_user->user_karma < 8 && $current_user->user_level == 'normal') {
+		if ($current_user->user_karma < 12 && $current_user->user_level == 'normal') {
 			echo '<p>'._('URL inválido, incompleto o no permitido').'</p>';
 			print_empty_submit_form();
 			return;
