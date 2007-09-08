@@ -97,10 +97,17 @@ print "Max unfair comment votes: $max_negative_comment_votes\n";
 
 
 
-$users = $db->get_results("SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_login");
+//$users = $db->get_results("SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled'");
+//$users = $db->get_results("select distinct vote_user_id as user_id from votes where vote_type in ('links', 'comments', 'posts') and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0; ");
+echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
-foreach($users as $dbuser) {
+
+// We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select faila miserably with abpout 40.000 users.
+
+$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled'";
+$result = mysql_query($users) or die('Query failed: ' . mysql_error());
+while ($dbuser = mysql_fetch_object($result)) {
 	$user = new User;
 	$user->id=$dbuser->user_id;
 	$user->read();
@@ -186,7 +193,14 @@ foreach($users as $dbuser) {
 			print "Negative votes: negatives to discarded: $negative_discarded, no discarded: $negative_no_discarded, karma3: $karma3\n";
 		}
 
-
+		// Check the user don't abuse voting only negative
+		$max_allowed_negatives = round(($nopublished_given + $published_given) * $user->karma / 10);
+		if($negative_no_discarded > 2 && $negative_no_discarded > $max_allowed_negatives) {
+			$punishment = $karma3 - (1 + $negative_no_discarded/$max_allowed_negatives);
+			printf ("%07d ", $user->id);
+			print "$user->username Unfair negative votes to non discarded ($negative_no_discarded > $max_allowed_negatives), karma3 = $karma3 -> $punishment\n";
+			$karma3 = $punishment;
+		}
 
 		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
 		if ($comment_votes_count > 10)  {
@@ -206,13 +220,13 @@ foreach($users as $dbuser) {
 
 		// Penalize to unfair negative comments' votes
 		$karma5 = 0;
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 5");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) >= 6");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
 		}
 		if ($karma5 != 0) {
 			printf ("%07d ", $user->id);
-			print "Unfair negative comments votes: $negative_abused_comment_votes_count, karma5: $karma5\n";	
+			print "$user->username Unfair negative comments votes: $negative_abused_comment_votes_count, karma5: $karma5\n";	
 		}
 
 	
@@ -220,7 +234,7 @@ foreach($users as $dbuser) {
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
-		if ($user->karma > 15) {
+		if ($user->karma > 7) {
 			$karma = max($karma_base_user, $user->karma - 0.2);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
@@ -255,5 +269,6 @@ foreach($users as $dbuser) {
 		usleep(5000); // wait 1/200 seconds
 	}
 }
+mysql_free_result($result);
 echo "Calculated: $calculated, Ignored: $no_calculated\n";
 ?>
