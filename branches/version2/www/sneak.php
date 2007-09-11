@@ -46,7 +46,6 @@ var animation_timer;
 var do_hoygan = <? if (isset($_REQUEST['hoygan']))  echo 'true'; else echo 'false'; ?>;
 var do_flip = <? if (isset($_REQUEST['flip']))  echo 'true'; else echo 'false'; ?>;
 
-var show_friends = false;
 
 
 // Reload the mnm banner each 5 minutes
@@ -144,7 +143,7 @@ function to_html(data) {
 		case 'chat':
 			html += '<img src="img/common/sneak-chat01.png" width="21" height="17" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
-			if (show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
+			if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
 				text_style = 'style="color: #255c25;"';
 			}
 			if (check_user_ping(data.title)) {
@@ -428,7 +427,7 @@ echo '<div id="container-wide">' . "\n";
 if ($current_user->user_id > 0) {
 	if (!empty($_REQUEST['friends'])) {
 		$taboption = 2;
-		echo '<script type="text/javascript">show_friends = true;</script>';
+		echo '<script type="text/javascript">global_options.show_friends = true;</script>';
 	} else {
 		$taboption = 1;
 	}

@@ -32,6 +32,7 @@ global_options.show_published = true;
 global_options.show_chat = true;
 global_options.show_post = true;
 global_options.show_pubvotes = true;
+global_options.show_friends = false;
 
 
 function start_sneak() {
@@ -221,29 +222,29 @@ function toggle_control(what) {
 }
 function get_options_obj () {
 	var options = new Object;
-	if (global_options.show_chat == false) options.nochat=1;
-	if (global_options.show_post == false) options.nopost=1;
-	if (global_options.show_vote == false) options.novote=1;
-	if (global_options.show_problem == false) options.noproblem=1;
-	if (global_options.show_comment == false) options.nocomment=1;
-	if (global_options.show_new == false) options.nonew=1;
-	if (global_options.show_published == false) options.nopublished=1;
-	if (global_options.show_pubvotes == false) options.nopubvotes=1;
-	if (global_options.show_friends == true) options.friends=1;
+	if (! global_options.show_chat) options.nochat=1;
+	if (! global_options.show_post) options.nopost=1;
+	if (! global_options.show_vote) options.novote=1;
+	if (! global_options.show_problem) options.noproblem=1;
+	if (! global_options.show_comment) options.nocomment=1;
+	if (! global_options.show_new) options.nonew=1;
+	if (! global_options.show_published) options.nopublished=1;
+	if (! global_options.show_pubvotes) options.nopubvotes=1;
+	if (global_options.show_friends) options.friends=1;
 	return options;
 }
 
 function get_options_string() {
 	var options = '';
-	if (global_options.show_chat == false) options += '&nochat=1';
-	if (global_options.show_post == false) options += '&nopost=1';
-	if (global_options.show_vote == false) options += '&novote=1';
-	if (global_options.show_problem == false) options += '&noproblem=1';
-	if (global_options.show_comment == false) options += '&nocomment=1';
-	if (global_options.show_new == false) options += '&nonew=1';
-	if (global_options.show_published == false) options += '&nopublished=1';
-	if (global_options.show_pubvotes == false) options += '&nopubvotes=1';
-	if (global_options.show_friends == true) options += '&friends=1';
+	if (! global_options.show_chat) options += '&nochat=1';
+	if (! global_options.show_post) options += '&nopost=1';
+	if (! global_options.show_vote) options += '&novote=1';
+	if (! global_options.show_problem) options += '&noproblem=1';
+	if (! global_options.show_comment) options += '&nocomment=1';
+	if (! global_options.show_new) options += '&nonew=1';
+	if (! global_options.show_published) options += '&nopublished=1';
+	if (! global_options.show_pubvotes) options += '&nopubvotes=1';
+	if (global_options.show_friends) options += '&friends=1';
 	return options;
 }
 
@@ -296,8 +297,7 @@ function get_options_cookie() {
 	return false;
 }
 
-function createCookie(name,value,days)
-{
+function createCookie(name,value,days) {
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));

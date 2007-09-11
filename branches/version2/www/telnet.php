@@ -38,7 +38,6 @@ var server_name = '<? echo get_server_name(); ?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
 var mykey = <? echo rand(100,999); ?>;
 
-var show_friends = false;
 var do_animation = false;
 
 $(function(){start_sneak()});
