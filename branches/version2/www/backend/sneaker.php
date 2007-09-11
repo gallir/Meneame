@@ -14,7 +14,7 @@ include(mnminclude.'sneak.php');
 $foo_link = new Link;
 
 // The client requests version number
-if (!empty($_GET['getv'])) {
+if (!empty($_REQUEST['getv'])) {
 	echo $sneak_version;
 	die;
 }
@@ -27,8 +27,8 @@ $dbtime = date("YmdHis", $time);
 
 $last_timestamp = $time;
 
-if(!empty($_GET['items']) && intval($_GET['items']) > 0) {
-	$max_items = intval($_GET['items']);
+if(!empty($_REQUEST['items']) && intval($_REQUEST['items']) > 0) {
+	$max_items = intval($_REQUEST['items']);
 }
 
 if ($max_items < 1 || $max_items > 50) {
@@ -37,21 +37,21 @@ if ($max_items < 1 || $max_items > 50) {
 
 header('Content-Type: text/html; charset=utf-8');
 
-$client_version = $_GET['v'];
+$client_version = $_REQUEST['v'];
 if (empty($client_version) || ($client_version != -1 && $client_version != $sneak_version)) {
 	echo "window.location.reload(true);";
 	exit();
 }
 
 // Only registered users can see the chat messages
-if ($current_user->user_id > 0 && empty($_GET['nochat'])) {
+if ($current_user->user_id > 0 && empty($_REQUEST['nochat'])) {
 	check_chat();
 	get_chat($time);
 }
 
-if(intval($_GET['r']) % 5 == 0) update_sneakers();
+if(intval($_REQUEST['r']) % 5 == 0) update_sneakers();
 
-if (empty($_GET['novote']) || empty($_GET['noproblem'])) get_votes($dbtime);
+if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
 
 // Get the logs
@@ -59,7 +59,7 @@ $logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log
 
 if ($logs) {
 	foreach ($logs as $log) {
-		if ($current_user->user_id > 0 && !empty($_GET['friends']) && $log->log_user_id != $current_user->user_id) {
+		if ($current_user->user_id > 0 && !empty($_REQUEST['friends']) && $log->log_user_id != $current_user->user_id) {
 			// Check the user is a friend
 			if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) {
 				continue;
@@ -67,28 +67,28 @@ if ($logs) {
 		}
 		switch ($log->log_type) {
 			case 'link_new':
-				if (empty($_GET['nonew'])) get_story($log->time, 'new', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nonew'])) get_story($log->time, 'new', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_publish':
-				if (empty($_GET['nopublished'])) get_story($log->time, 'published', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nopublished'])) get_story($log->time, 'published', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_new':
-				if (empty($_GET['nocomment'])) get_comment($log->time, 'comment', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'comment', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_discard':
-				if (empty($_GET['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_edit':
-				if (empty($_GET['noedit'])) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['noedit'])) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_geo_edit':
-				if (empty($_GET['nogeoedit'])) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nogeoedit'])) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
-				if (empty($_GET['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'post_new':
-				if (empty($_GET['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
 				break;
 		}
 	}
@@ -153,7 +153,7 @@ function check_chat() {
 		$from = $now - 900;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
-		if (!empty($_GET['friends'])) 
+		if (!empty($_REQUEST['friends'])) 
 			$room = 'friends';
 		else
 			$room = 'all';
@@ -207,7 +207,7 @@ function get_chat($time) {
 				$status = _('amigo');
 			}
 			// Check the sender is a friend of the receiver
-			if (!empty($_GET['friends']) && $friendship <= 0) {
+			if (!empty($_REQUEST['friends']) && $friendship <= 0) {
 					continue;
 			}
 		}
@@ -225,14 +225,14 @@ function get_chat($time) {
 function get_votes($dbtime) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
 
-	if (!empty($_GET['nopubvotes'])) 
+	if (!empty($_REQUEST['nopubvotes'])) 
 		$pvotes = "and link_status != 'published'";
 	else $pvotes = '';
 
 	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id $pvotes and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
-		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_GET['friends'])) {
+		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_REQUEST['friends'])) {
 			// Check the user is a friend
 			if (friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
 				continue;
@@ -243,8 +243,8 @@ function get_votes($dbtime) {
 				}
 			}
 		}
-		if ($event->vote_value >= 0 && !empty($_GET['novote'])) continue;
-		if ($event->vote_value < 0 && !empty($_GET['noproblem'])) continue;
+		if ($event->vote_value >= 0 && !empty($_REQUEST['novote'])) continue;
+		if ($event->vote_value < 0 && !empty($_REQUEST['noproblem'])) continue;
 		$foo_link->id=$event->link_id;
 		$foo_link->uri=$event->link_uri;
 		$link = $foo_link->get_relative_permalink();
@@ -345,9 +345,9 @@ function error($mess) {
 
 function update_sneakers() {
 	global $db, $globals, $now, $current_user;
-	$key = $globals['user_ip'] . '-' . intval($_GET['k']);
+	$key = $globals['user_ip'] . '-' . intval($_REQUEST['k']);
 	$db->query("replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', $now, $current_user->user_id)");
-	if($_GET['r'] % 10 == 0) {
+	if($_REQUEST['r'] % 10 == 0) {
 		$from = $now-120;
 		$db->query("delete from sneakers where sneaker_time < $from");
 	}

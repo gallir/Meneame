@@ -23,18 +23,18 @@ var ccnt = 0; 	// Connected counter
 
 var play = true;
 
-var show_vote = true;
-var show_problem = true;
-var show_comment = true;
-var show_new = true;
-var show_published = true;
-var show_chat = true;
-var show_post = true;
-var show_pubvotes = true;
+var global_options = new Object;
+global_options.show_vote = true;
+global_options.show_problem = true;
+global_options.show_comment = true;
+global_options.show_new = true;
+global_options.show_published = true;
+global_options.show_chat = true;
+global_options.show_post = true;
+global_options.show_pubvotes = true;
 
 
 function start_sneak() {
-	//xmlhttp = new myXMLHttpRequest ();
 	$.ajaxSetup({timeout: 10000, async: true});
 
 	$(document).ajaxError(function (request, settings) {
@@ -42,6 +42,7 @@ function start_sneak() {
 		xmlhttp = undefined;
 	});
 
+	/*
 	$(document).ajaxSend(function (request, settings) {
 		var date_object = new Date();
 		ping_start = date_object.getTime();
@@ -50,6 +51,7 @@ function start_sneak() {
 	$(document).ajaxStop(function (request, settings) {
 		xmlhttp = undefined;
 	});
+	*/
 
 	if (!get_options_cookie()) {
 		check_control('vote');
@@ -69,18 +71,25 @@ function abort_request () {
 	clearTimeout(data_timer);
 	if ("object" == typeof(xmlhttp)) {
 		xmlhttp.abort();
+		xmlhttp = undefined;
 	}
 }
 
 function get_data() {
 	abort_request();
-	url=sneak_base_url+'?k='+mykey+'&time='+ts+'&v='+my_version+'&r='+total_requests;
-	url = url + get_options_string();
+	var options = get_options_obj();
+	options.k=mykey;
+	options.time=ts;
+	options.v=my_version;
+	options.r=total_requests;
+	var date_object = new Date();
+	ping_start = date_object.getTime();
 	if(comment.length > 0) {
-		xmlhttp=$.post(url, {'chat': comment}, received_data);
+		options.chat = comment;
+		xmlhttp=$.post(sneak_base_url, options, received_data);
 		comment = '';
 	} else {
-		xmlhttp=$.get(url, {}, received_data);
+		xmlhttp=$.get(sneak_base_url, options, received_data);
 	}
 	requests++;
 	total_requests++;
@@ -88,6 +97,7 @@ function get_data() {
 }
 
 function received_data(data) {
+	xmlhttp = undefined;
 	// Update ping time
 	var date_object = new Date();
 	if (ping_time == 0) 
@@ -141,7 +151,7 @@ function send_chat(form) {
 		alert("<? echo _('está en pausa'); ?>");
 		return false;
 	}
-	if(show_chat == false) {
+	if(global_options.show_chat == false) {
 		alert("<? echo _('tiene deshabilitado los comentarios'); ?>");
 		return false;
 	}
@@ -183,10 +193,10 @@ function check_control(what) {
 	var status = document.getElementById(what+'-status');
 	if (!status) return false;
 	if (status.checked) {
-		eval('show_'+what+' = true');
+		eval('global_options.show_'+what+' = true');
 		return true;
 	} else {
-		eval('show_'+what+' = false');
+		eval('global_options.show_'+what+' = undefined');
 		return false;
 	}
 }
@@ -194,7 +204,7 @@ function check_control(what) {
 function set_control(what) {
 	var status = document.getElementById(what+'-status');
 	if (!status) return false;
-	eval('status.checked = show_'+what);
+	eval('status.checked = global_options.show_'+what);
 }
 
 function toggle_control(what) {
@@ -209,52 +219,65 @@ function toggle_control(what) {
 	requests = 0;
 	return false;
 }
+function get_options_obj () {
+	var options = new Object;
+	if (global_options.show_chat == false) options.nochat=1;
+	if (global_options.show_post == false) options.nopost=1;
+	if (global_options.show_vote == false) options.novote=1;
+	if (global_options.show_problem == false) options.noproblem=1;
+	if (global_options.show_comment == false) options.nocomment=1;
+	if (global_options.show_new == false) options.nonew=1;
+	if (global_options.show_published == false) options.nopublished=1;
+	if (global_options.show_pubvotes == false) options.nopubvotes=1;
+	if (global_options.show_friends == true) options.friends=1;
+	return options;
+}
 
 function get_options_string() {
 	var options = '';
-	if (show_chat == false) options += '&nochat=1';
-	if (show_post == false) options += '&nopost=1';
-	if (show_vote == false) options += '&novote=1';
-	if (show_problem == false) options += '&noproblem=1';
-	if (show_comment == false) options += '&nocomment=1';
-	if (show_new == false) options += '&nonew=1';
-	if (show_published == false) options += '&nopublished=1';
-	if (show_pubvotes == false) options += '&nopubvotes=1';
-	if (show_friends == true) options += '&friends=1';
+	if (global_options.show_chat == false) options += '&nochat=1';
+	if (global_options.show_post == false) options += '&nopost=1';
+	if (global_options.show_vote == false) options += '&novote=1';
+	if (global_options.show_problem == false) options += '&noproblem=1';
+	if (global_options.show_comment == false) options += '&nocomment=1';
+	if (global_options.show_new == false) options += '&nonew=1';
+	if (global_options.show_published == false) options += '&nopublished=1';
+	if (global_options.show_pubvotes == false) options += '&nopubvotes=1';
+	if (global_options.show_friends == true) options += '&friends=1';
 	return options;
 }
 
 function set_options_from_string(string) {
 	if (string.match(/&nochat=1/)) {
-		show_chat = false; 
+		global_options.show_chat = false; 
 	}
 	set_control('chat');
 	if (string.match(/&nopost=1/)) {
-		show_post = false; 
+		global_options.show_post = false; 
 	}
 	set_control('post');
 	if (string.match(/&novote=1/)) {
-		show_vote = false;
+		global_options.show_vote = false;
 	}
 	set_control('vote');
 	if (string.match(/&noproblem=1/)) {
-		show_problem = false;
+		global_options.show_problem = false;
 	}
 	set_control('problem');
 	if (string.match(/&nocomment=1/)) {
-		show_comment = false;
+		global_options.show_comment = false;
 	}
 	set_control('comment');
 	if (string.match(/&nonew=1/)) {
-		show_new = false;
+		global_options.show_new = false;
 	}
 	set_control('new');
 	if (string.match(/&nopublished=1/)) {
-		show_published = false;
+		global_options.show_published = false;
 	}
 	set_control('published');
 	if (string.match(/&nopubvotes=1/)) {
-		show_pubvotes = false;
+		global_options.show_pubvotes = false;
 	}
 	set_control('pubvotes');
 }
