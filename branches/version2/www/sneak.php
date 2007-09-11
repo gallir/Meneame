@@ -100,7 +100,7 @@ function animate_background() {
 	for (i=new_items-1; i>=0; i--) {
 		if (current_colors[i] < colors_max) {
 			current_colors[i]++;
-			items.eq(i).css('background', animation_colors[current_colors[i]]);
+			items.slice(i,i+1).css('background', animation_colors[current_colors[i]]);
 		} else 
 			new_items--;
 	}
