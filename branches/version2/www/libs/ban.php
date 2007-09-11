@@ -44,7 +44,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	if ($res) {
 		$globals['ban_message'] = '';
 		foreach ($res as $comment) {
-			$globals['ban_message'] .= "$comment ";
+			$globals['ban_message'] .= "$ban_text: $comment ";
 		}
 		return true;
 	}

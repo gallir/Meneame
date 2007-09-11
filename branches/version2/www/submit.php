@@ -168,9 +168,9 @@ function do_submit1() {
 	if(report_dupe($url)) return;
 
 	if(!$linkres->check_url($url) || !$linkres->get($url)) {
-		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('URL inválido, incompleto o no permitido'). ' ('. $globals['ban_message'].') </p>';
 
+		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($url).'<br />';
+		echo '<br /><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
 		// If the domain is banned, decrease user's karma
 		if ($linkres->banned) {
 			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
