@@ -485,10 +485,9 @@ class Link {
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
-		if(!$this->voted && $current_user->user_id > 0 && 
-				($this->status!='published' || $this->warned ) && 
-				$this->votes > 0 && $type != 'preview' &&
-				$current_user->user_karma >= $globals['min_karma_for_negatives'] && 
+		if(!$this->voted &&  
+				$this->negatives_allowed() && 
+				$type != 'preview' &&
 				$this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
 				$this->print_problem_form();
 		}
@@ -568,8 +567,6 @@ class Link {
 
 	function print_problem_form() {
 		global $current_user, $db, $anon_karma, $anonnymous_vote, $globals, $site_key;
-
-		if(!$anonnymous_vote && $current_user->user_id == 0) return;
 
 		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
 		echo '<select '.$status.' name="ratings"  onchange="';
@@ -683,6 +680,20 @@ class Link {
 			$this->votes_enabled = true;
 		}
 		return $this->votes_enabled;
+	}
+
+	function negatives_allowed() {
+		global $globals, $current_user;
+
+
+		return  $current_user->user_id > 0  &&
+				$this->votes > 0 &&
+				$current_user->user_karma >= $globals['min_karma_for_negatives'] &&
+				($this->status != 'published' || 
+				// Allows to vote negative to published with high ratio of negatives
+				// or a link recently published
+					$this->status == 'published' && ($this->published_date > $globals['now'] - 1800 || $this->negatives > $this->votes/10) 
+					|| $this->warned);
 	}
 
 	function get_uri() {

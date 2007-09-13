@@ -225,11 +225,7 @@ function get_chat($time) {
 function get_votes($dbtime) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
 
-	if (!empty($_REQUEST['nopubvotes'])) 
-		$pvotes = "and link_status != 'published'";
-	else $pvotes = '';
-
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id $pvotes and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_REQUEST['friends'])) {
@@ -243,8 +239,12 @@ function get_votes($dbtime) {
 				}
 			}
 		}
-		if ($event->vote_value >= 0 && !empty($_REQUEST['novote'])) continue;
-		if ($event->vote_value < 0 && !empty($_REQUEST['noproblem'])) continue;
+		if ($event->vote_value >= 0) {
+			if ($_REQUEST['novote']) continue;
+			if ($event->link_status == 'published' && $_REQUEST['nopubvotes']) continue;
+		} else {
+			if ($_REQUEST['noproblem']) continue;
+		}
 		$foo_link->id=$event->link_id;
 		$foo_link->uri=$event->link_uri;
 		$link = $foo_link->get_relative_permalink();

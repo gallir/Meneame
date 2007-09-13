@@ -33,16 +33,6 @@ if(!$link->is_votable()) {
 	error(_('¡tranquilo cowboy!'));
 }
 
-// Allows to vote negative to published with high ratio of negatives
-// WARNING: unify with libs/link.php
-if($link->status == 'published' && $link->negatives <= $link->votes/10) {
-	error(_('ya no se puede votar negativo'));
-}
-
-if ($current_user->user_id == 0 && ! $anonnymous_vote) {
-	error(_('Los votos anónimos están temporalmente deshabilitados'));
-}
-
 if($current_user->user_id != $user_id) {
 	error(_('Usuario incorrecto'). $current_user->user_id . '-'. $user_id);
 }
@@ -52,14 +42,11 @@ if($md5 !== $_REQUEST['md5']){
 	error(_('Clave de control incorrecta'));
 }
 
-if ($current_user->user_karma < $globals['min_karma_for_negatives'] ) {
-	error(_('No tiene el karma suficiente para votar negativo'));
+if(! $link->negatives_allowed()) {
+	error(_('ya no se puede votar negativo'));
 }
 
-
-if ($current_user->user_id == 0) $ip_check = 'and vote_ip_int = '.$globals['user_ip_int'];
-else $ip_check = '';
-$votes_freq = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') $ip_check");
+$votes_freq = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30')");
 
 
 if ($current_user->user_id > 0) {
