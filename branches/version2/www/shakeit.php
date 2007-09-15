@@ -119,7 +119,9 @@ function print_shakeit_tabs($option=-1) {
 		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	}
 	echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a></li>'."\n";
-	echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
+	if (!$globals['bot']) {
+		echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
+	}
 	meta_teaser_item();
 
 	// Print RSS teasers
