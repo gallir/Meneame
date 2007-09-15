@@ -36,6 +36,9 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
+// Dont allow indexing of discarded links
+if ($globals['bot'] && $link->status == 'discard') not_found();
+
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
 if(count($url_args) > 1 && ($last_arg = $url_args[count($url_args)-1]) > 0) {
 	if (preg_match('/^000/', $last_arg)) {
