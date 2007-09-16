@@ -245,11 +245,12 @@ function get_search_clause($option='') {
 		} elseif (preg_match('/^tag:/', $words)) {
 			$_REQUEST['tag'] = 'true';
 			$words=preg_replace('/^tag: */', '', $words);
-		} elseif (preg_match('/^date:/', $words) || $words_count == 1) {
+		} elseif (preg_match('/^date:/', $words) || 
+				($words_count == 1 && ! preg_match('/^http[s]*:\/\/|^www\./', $words))) { // Don't change word if it searches for urls
 			$_REQUEST['date'] = 'true';
 			$mode = 'IN BOOLEAN MODE';
 			$words=preg_replace('/^date: */', '', $words);
-			$words=preg_replace('/(^|\s)(\w)/', "$1+$2", $words);
+			$words=preg_replace('/(^| )(\w+)/', "$1+$2", $words);
 			// Mysql is very slow for words with chars like "=" in BOOLEAN, don't have any idea, it's not documented
 			if ($words_count == 1 && preg_match('/=/', $words)) {
 				// clean '\"' from the middle of the word
@@ -262,7 +263,7 @@ function get_search_clause($option='') {
 			$where .= "MATCH (link_tags) AGAINST ('$words' $mode) ";
 		} elseif ($words_count == 1 && preg_match('/^http[s]*:\/\/|^www\./', $words)) {
 			// With URLs, search with "like" because mysql (5.0) give erroneous results otherwise
-			$where = "link_url like '%$words%' ";
+			$where = "link_url like '$words%' ";
 		} else {
 			$where = "MATCH (link_url, link_tags, link_title, link_content) AGAINST ('$words' $mode) ";
 		}
