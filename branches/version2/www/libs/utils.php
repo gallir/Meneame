@@ -249,6 +249,7 @@ function get_search_clause($option='') {
 			$_REQUEST['date'] = 'true';
 			$mode = 'IN BOOLEAN MODE';
 			$words=preg_replace('/^date: */', '', $words);
+			$words=preg_replace('/(^|\s)(\w)/', "$1+$2", $words);
 			// Mysql is very slow for words with chars like "=" in BOOLEAN, don't have any idea, it's not documented
 			if ($words_count == 1 && preg_match('/=/', $words)) {
 				// clean '\"' from the middle of the word

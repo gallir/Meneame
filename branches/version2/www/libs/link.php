@@ -546,7 +546,7 @@ class Link {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
-				echo _('noticia controvertida');
+				echo _('noticia controvertida, por favor lee los comentarios');
 			} else {
 				// Only says "what" if most votes are "wrong" or "duplicated" 
 				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
