@@ -264,6 +264,7 @@ function get_search_clause($option='') {
 		} elseif ($words_count == 1 && preg_match('/^http[s]*:\/\/|^www\./', $words)) {
 			// With URLs, search with "like" because mysql (5.0) give erroneous results otherwise
 			$where = "link_url like '$words%' ";
+			$_REQUEST['date'] = 'true';
 		} else {
 			$where = "MATCH (link_url, link_tags, link_title, link_content) AGAINST ('$words' $mode) ";
 		}
