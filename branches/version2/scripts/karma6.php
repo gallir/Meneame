@@ -105,7 +105,7 @@ $calculated = 0;
 
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select faila miserably with abpout 40.000 users.
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled'";
+$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_id desc";
 $result = mysql_query($users) or die('Query failed: ' . mysql_error());
 while ($dbuser = mysql_fetch_object($result)) {
 	$user = new User;
@@ -181,7 +181,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$negative_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status = 'discard' and TIMESTAMPDIFF(MINUTE, link_date, vote_date) < 15 ");
 
-		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status != 'discard'");
+		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status != 'discard' and link_negatives < link_votes/10");
 
 		if ($negative_no_discarded > $negative_discarded/4) { // To fight against karma whores and bots
 			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded);
@@ -196,10 +196,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 		// Check the user don't abuse voting only negative
 		$max_allowed_negatives = round(($nopublished_given + $published_given) * $user->karma / 10);
 		if($negative_no_discarded > 2 && $negative_no_discarded > $max_allowed_negatives) {
-			$punishment = $karma3 - (1 + $negative_no_discarded/$max_allowed_negatives);
+			$punishment = min(1 + $negative_no_discarded/$max_allowed_negatives, 6);
 			printf ("%07d ", $user->id);
-			print "$user->username Unfair negative votes to non discarded ($negative_no_discarded > $max_allowed_negatives), karma3 = $karma3 -> $punishment\n";
-			$karma3 = $punishment;
+			$karma3 -= $punishment;
+			print "$user->username Unfair negative votes to non discarded ($negative_no_discarded > $max_allowed_negatives), punishment: $punishment, karma3 = $karma3\n";
 		}
 
 		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
