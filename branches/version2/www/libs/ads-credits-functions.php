@@ -110,7 +110,7 @@ function do_credits() {
 	echo '<a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-xhtml10.gif" alt="Valid XHTML 1.0 Transitional" /></a>' . "\n";
 	echo '<br />' . "\n";
 
-	echo '<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/vcss.gif" alt="Valid CSS" /></a>' . "\n";
+	echo '<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-css.gif" alt="Valid CSS" /></a>' . "\n";
 	echo '<br />' . "\n";
 
 	echo '<a href="http://feedvalidator.org/check.cgi?url=http://meneame.net/rss2.php"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-rss.gif" alt="Valid RSS" title="Validate my RSS feed" /></a>' . "\n";
