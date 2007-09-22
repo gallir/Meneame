@@ -192,7 +192,7 @@ margin-bottom: -10000px;
 .credits-strip {
 width: 100%;
 border-top: 1px dotted;
-min-height: 55px;
+min-height: 75px;
 background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
 white-space: nowrap;
 overflow: hidden;
@@ -200,8 +200,12 @@ clear: both;
 }
 
 .credits-strip-buttons {
-margin: 10px 10px 10px 0px;
+margin: 10px 10px 0px 0px;
 float: right;
+}
+
+.credits-strip-buttons img {
+padding-bottom: 3px;
 }
 
 .credits-strip-text {
@@ -609,7 +613,7 @@ vertical-align: bottom;
 margin-left: 0; /* IE bug */
 }
 
-.mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-seguiment-ext li {
+.mnu-bugs li, .mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-seguiment-ext li {
 margin: 0;
 padding: 0;
 }
@@ -667,14 +671,14 @@ font-weight: bolder;
 padding-left: 15px;
 }
 
-.mnu-bugs, .mnu-menedising {
+.mnu-menedising {
 margin: 0 0 5px 0;
 padding: 15px 0 5px 3px;
 text-align: left;
 font-size: 100%;
 }
 
-.mnu-meneria, .mnu-tools, .mnu-seguiment-ext {
+.mnu-bugs, .mnu-meneria, .mnu-tools, .mnu-seguiment-ext {
 margin: 15px 0 5px 0;
 padding: 0 0 5px 3px;
 list-style: none;
@@ -1570,4 +1574,3 @@ padding: 0;
 margin-top: 0px;
 margin-bottom: 10px;
 }
-

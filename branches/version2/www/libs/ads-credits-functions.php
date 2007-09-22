@@ -61,8 +61,12 @@ function do_legal($legal_name, $target = '') {
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if (preg_match('/meneame.net$/', get_server_name())) {
 		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
+		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
+		echo '<a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("la dirección está la página de información legal").'">'._('reportar abusos').'</a>';
 	} else {
-		echo _('condiciones legales');
+		echo _('legal conditions link here');
+		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
+		echo _('abuse report email address here');
 	}
 	// IMPORTANT: read above
 }
@@ -81,19 +85,38 @@ function do_credits() {
 	do_legal (_('condiciones legales'));
 	echo '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;';
 
+	// IMPORTANT: links change in every installation, CHANGE IT!!
+	// contact info
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos, contacto').'</a><br><a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
+	} else {
+		echo _('why are you and contact link here').'<br />';
+	}
 
-	echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
-	echo _('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="http://svn.meneame.net/index.cgi/branches/version2/">'._('descargar').'</a>';
-	echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a>' . "\n";
-	echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
-	echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('licencia del contenido').'</a><br />';
+	// code link and licenses
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo _('código: ').'<a href="'.$globals['base_url'].'COPYING">'._('licencia').'</a>, <a href="http://svn.meneame.net/index.cgi/branches/version2/">'._('descargar').'</a>';
+		echo '&nbsp;&nbsp;|&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a>' . "\n";
+		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
+		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('licencia del contenido').'</a><br />';
+	} else {
+			echo _('link to code and licenses here (please respect the menéame Affero license and publish your own code!)').'<br />';
+	}
+	// IMPORTANT: read above
+
 	echo '</span>' . "\n";
+
 	echo '<span class="credits-strip-buttons">' . "\n";
-	echo '<a href="http://validator.w3.org/check?uri=referer"><img src="'.$globals['base_url'].'img/common/valid-xhtml10.png" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>' . "\n";
-	echo '&nbsp;&nbsp;' . "\n";
-	echo '<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:88px;height:31px" src="'.$globals['base_url'].'img/common/vcss.png" alt="Valid CSS!" /></a>&nbsp;&nbsp;' . "\n";
-	echo '<a href="http://feedvalidator.org/check.cgi?url=http://meneame.net/rss2.php"><img src="'.$globals['base_url'].'img/common/valid-rss.png" alt="[Valid RSS]" title="Validate my RSS feed" /></a>' . "\n";
+	echo '<a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-xhtml10.gif" alt="Valid XHTML 1.0 Transitional" /></a>' . "\n";
+	echo '<br />' . "\n";
+
+	echo '<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/vcss.gif" alt="Valid CSS" /></a>' . "\n";
+	echo '<br />' . "\n";
+
+	echo '<a href="http://feedvalidator.org/check.cgi?url=http://meneame.net/rss2.php"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-rss.gif" alt="Valid RSS" title="Validate my RSS feed" /></a>' . "\n";
+
 	echo '</span>' . "\n";
+
 	echo '</div>' . "\n";
 	echo '</div>' . "\n";
 	echo "<!--ben-tmp-functions:do_credits-->\n";

@@ -308,17 +308,34 @@ function do_mnu_geovision() {
 }
 
 function do_mnu_bugs() {
-	echo '<div class="mnu-bugs"><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></div>' . "\n";
+	echo '<ul class="mnu-bugs">' . "\n";
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo '<li"><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></li>' . "\n";
+		echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact">'._("reportar abusos").'</a></li>' . "\n";
+
+	} else {
+		echo '<li"><a href="#">'._("your bugs link here").'</a></li>' . "\n";
+		echo '<li><a href="#">'._("your abuse link here").'</a></li>' . "\n";
+	}
+	echo '</ul>' . "\n";
 }
 
 function do_mnu_menedising() {
-	echo '<div class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></div>' . "\n";
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo '<div class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></div>' . "\n";
+	} else {
+		echo '<div class="mnu-menedising"><a href="#">'._("merchandasing here").'</a></div>' . "\n";
+	}
 }
 
 function do_mnu_seguiment_ext() {
 	echo '<ul class="mnu-seguiment-ext">' . "\n";
-	echo '<li><a href="http://meneame.jaiku.com">'._("seguimiento en Jaiku").'</a></li>' . "\n";
-	echo '<li><a href="http://twitter.com/meneame_net">'._("seguimiento en Twitter").'</a></li>' . "\n";
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo '<li><a href="http://meneame.jaiku.com">'._("seguimiento en Jaiku").'</a></li>' . "\n";
+		echo '<li><a href="http://twitter.com/meneame_net">'._("seguimiento en Twitter").'</a></li>' . "\n";
+	} else {
+		echo '<li><a href="#">'._("here jaiku, twitter, etc").'</a></li>' . "\n";
+	}
 	echo '</ul>' . "\n";
 }
 
@@ -338,11 +355,15 @@ function do_mnu_meneria () {
 function do_mnu_tools () {
 	global $dblang, $globals;
 	echo '<ul class="mnu-tools">' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('faq').'</a></li>' . "\n";
-	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
-	echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
-	echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
-	echo '<li><a href="http://mueveme.net">'._("para móviles").'</a></li>' . "\n";
+	if (preg_match('/meneame.net$/', get_server_name())) {
+		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('faq').'</a></li>' . "\n";
+		echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
+		echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
+		echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
+		echo '<li><a href="http://mueveme.net">'._("para móviles").'</a></li>' . "\n";
+	} else {
+		echo '<li><a href="#">'._("your tools here").'</a></li>' . "\n";
+	}
 	echo '</ul>' . "\n";
 }
 
