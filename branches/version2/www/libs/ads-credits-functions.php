@@ -88,7 +88,7 @@ function do_credits() {
 	// IMPORTANT: links change in every installation, CHANGE IT!!
 	// contact info
 	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos, contacto').'</a><br><a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
+		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos, contacto').'</a><br /><a href="https://adwords.google.com/select/OnsiteSignupLandingPage?client=ca-pub-8059464308672801&amp;referringUrl=http://meneame.net">anunciarse en menéame</a>&nbsp;&nbsp;|&nbsp;&nbsp;alojamiento en <a href="http://www.ferca.com">Ferca Network</a><br />'; // delete this link, is a meneame.net sponsor!<br />';
 	} else {
 		echo _('why are you and contact link here').'<br />';
 	}
