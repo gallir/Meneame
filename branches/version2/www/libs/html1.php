@@ -311,7 +311,7 @@ function do_mnu_bugs() {
 	echo '<ul class="mnu-bugs">' . "\n";
 	if (preg_match('/meneame.net$/', get_server_name())) {
 		echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'>'._("reportar abusos").'</a></li>' . "\n";
+		echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._("reportar abusos").'</a></li>' . "\n";
 
 	} else {
 		echo '<li><a href="#">'._("your bugs link here").'</a></li>' . "\n";
