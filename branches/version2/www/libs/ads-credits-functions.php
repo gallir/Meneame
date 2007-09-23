@@ -62,7 +62,7 @@ function do_legal($legal_name, $target = '') {
 	if (preg_match('/meneame.net$/', get_server_name())) {
 		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
 		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
-		echo '<a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("la dirección está la página de información legal").'">'._('reportar abusos').'</a>';
+		echo '<a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a>';
 	} else {
 		echo _('legal conditions link here');
 		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
