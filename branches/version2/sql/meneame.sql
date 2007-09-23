@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_7etch1-log
+-- Server version	5.0.41-Debian_1~bpo.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,7 +33,7 @@ CREATE TABLE `avatars` (
 DROP TABLE IF EXISTS `bans`;
 CREATE TABLE `bans` (
   `ban_id` int(10) unsigned NOT NULL auto_increment,
-  `ban_type` enum('email','hostname','ip','words') NOT NULL,
+  `ban_type` enum('email','hostname','ip','words','proxy') NOT NULL,
   `ban_text` char(64) NOT NULL,
   `ban_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `ban_expire` timestamp NULL default NULL,
@@ -152,7 +152,7 @@ CREATE TABLE `geo_links` (
   `geo_text` char(80) default NULL,
   `geo_pt` point NOT NULL,
   UNIQUE KEY `geo_id` (`geo_id`),
-  SPATIAL KEY `geo_pt` (`geo_pt`(32))
+  SPATIAL KEY `geo_pt` (`geo_pt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `geo_users` (
   `geo_text` char(80) default NULL,
   `geo_pt` point NOT NULL,
   UNIQUE KEY `geo_id` (`geo_id`),
-  SPATIAL KEY `geo_pt` (`geo_pt`(32))
+  SPATIAL KEY `geo_pt` (`geo_pt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -193,6 +193,8 @@ CREATE TABLE `links` (
   `link_randkey` int(20) NOT NULL default '0',
   `link_votes` int(20) NOT NULL default '0',
   `link_negatives` int(11) NOT NULL default '0',
+  `link_anonymous` int(10) unsigned NOT NULL default '0',
+  `link_votes_avg` float NOT NULL default '0',
   `link_comments` int(11) unsigned NOT NULL default '0',
   `link_karma` decimal(10,2) NOT NULL default '0.00',
   `link_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
@@ -225,7 +227,7 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL auto_increment,
   `log_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn') NOT NULL,
+  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit') NOT NULL,
   `log_ref_id` int(11) unsigned NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip` char(24) character set utf8 collate utf8_spanish_ci default NULL,
@@ -394,4 +396,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-07-05 21:53:37
+-- Dump completed on 2007-09-23 23:53:13
