@@ -27,6 +27,7 @@ class Link {
 	var $type = '';
 	var $category = 0;
 	var $votes = 0;
+	var $anonymous = 0;
 	var $negatives = 0;
 	var $title = '';
 	var $tags = '';
@@ -258,18 +259,20 @@ class Link {
 		$link_status = $db->escape($this->status);
 		$link_votes = $this->votes;
 		$link_negatives = $this->negatives;
+		$link_anonymous = $this->anonymous;
 		$link_comments = $this->comments;
 		$link_karma = $this->karma;
+		$link_votes_avg = $this->votes_avg;
 		$link_randkey = $this->randkey;
 		$link_category = $this->category;
 		$link_date = $this->date;
 		$link_published_date = $this->published_date;
 		if($this->id===0) {
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_published_date, link_votes, link_negatives, link_karma) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma)");
+			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg)");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma WHERE link_id=$this->id");
+			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg WHERE link_id=$this->id");
 		}
 		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
 			// This is a new link, add it to the events, it an additional control
@@ -293,13 +296,15 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts  FROM links WHERE $cond"))) {
+		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts  FROM links WHERE $cond"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->blog=$link->link_blog;
 			$this->status=$link->link_status;
 			$this->votes=$link->link_votes;
 			$this->negatives=$link->link_negatives;
+			$this->anonymous=$link->link_anonymous;
+			$this->votes_avg=$link->link_votes_avg;
 			$this->comments=$link->link_comments;
 			$this->karma=$link->link_karma;
 			$this->randkey=$link->link_randkey;
@@ -335,6 +340,8 @@ class Link {
 			$this->username=$link->user_login;
 			$this->user_level=$link->user_level;
 			$this->user_karma=$link->user_karma;
+			$this->anonymous=$link->link_anonymous;
+			$this->votes_avg=$link->link_votes_avg;
 			$this->user_adcode=$link->user_adcode;
 			$this->avatar=$link->user_avatar;
 			$this->email=$link->user_email;
