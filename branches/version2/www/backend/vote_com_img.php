@@ -8,13 +8,13 @@ if (! $id > 0) die;
 //if (preg_match('/domain.com/', $_SERVER['HTTP_REFERER'])) {
 //}
 
-$votes_comments = $db->get_row("select link_votes, link_comments from links where link_id=$id");
+$votes_comments = $db->get_row("select link_votes, link_anonymous, link_comments from links where link_id=$id");
 $im = imagecreate(200, 16);
    
 $bg = imagecolorallocatealpha($im, 255, 255, 255, 0);
 $textcolor = imagecolorallocate($im, 255, 100, 0);
 
-imagestring($im, 3, 2, 1, "$votes_comments->link_votes " . _('meneos') . ", $votes_comments->link_comments ". _('comentarios'), $textcolor);
+imagestring($im, 3, 2, 1, ($votes_comments->link_votes+$votes_comments->link_anonymous). ' ' . _('meneos') . ", $votes_comments->link_comments ". _('comentarios'), $textcolor);
 		  
 header("Content-type: image/png");
 header('Cache-Control: max-age=120, must-revalidate');

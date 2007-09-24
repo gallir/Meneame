@@ -24,7 +24,7 @@ if (! $link_id > 0 ) {
 
 $now = time();
 
-$linkdb = $db->get_row("select link_votes, link_negatives, link_karma, link_comments, unix_timestamp(link_date) as date from links where link_id = $link_id");
+$linkdb = $db->get_row("select link_votes, link_anonymous, link_negatives, link_karma, link_comments, unix_timestamp(link_date) as date from links where link_id = $link_id");
 
 if (! $linkdb || $now - $linkdb->date > $globals['time_enabled_comments']) {
 	error(_('noticia antigua o no existente'));
@@ -66,7 +66,7 @@ if($last_timestamp == 0) $last_timestamp = $now;
 echo "ts=$last_timestamp;\n";
 
 if(count($events) < 1) exit;
-echo "link_votes=".$linkdb->link_votes.";link_negatives=".$linkdb->link_negatives.";link_karma=".intval($linkdb->link_karma).";\n";
+echo "link_votes=".($linkdb->link_votes+$linkdb->link_anonymous).";link_negatives=".$linkdb->link_negatives.";link_karma=".intval($linkdb->link_karma).";\n";
 
 krsort($events);
 
@@ -88,7 +88,7 @@ echo "]);";
 function get_votes($dbtime, $link_id) {
 	global $db, $events, $last_timestamp, $max_items, $current_user;
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_date, link_votes, link_status, link_comments from votes, links where vote_type='links' and vote_link_id = $link_id and vote_date > $dbtime and link_id = vote_link_id order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_date, link_votes, link_anonymous, link_status, link_comments from votes, links where vote_type='links' and vote_link_id = $link_id and vote_date > $dbtime and link_id = vote_link_id order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$id=$event->vote_id;
@@ -108,20 +108,20 @@ function get_votes($dbtime, $link_id) {
 		}
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':votes:'.$id;
-		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.$event->link_votes.'", com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$uid.'",status:"'.$status.'"';
+		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$uid.'",status:"'.$status.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
 
 function get_comment($dbtime, $linkid) {
 	global $db, $events, $last_timestamp, $max_items;
-	$res = $db->get_results("select unix_timestamp(comment_date) as timestamp, user_id, user_login, comment_user_id, comment_order, link_id, link_date, link_votes, link_status, link_comments, comment_id from comments, links, users where link_id = $linkid and comment_link_id =$linkid and user_id = comment_user_id and comment_date > $dbtime order by comment_date desc limit $max_items");
+	$res = $db->get_results("select unix_timestamp(comment_date) as timestamp, user_id, user_login, comment_user_id, comment_order, link_id, link_date, link_votes, link_anonymous, link_status, link_comments, comment_id from comments, links, users where link_id = $linkid and comment_link_id =$linkid and user_id = comment_user_id and comment_date > $dbtime order by comment_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$who = $event->user_login;
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':'.$type.':'.$commentid;
-		$events[$key] = 'ts:"'.$event->timestamp.'",type:"comment",votes:"'.$event->link_votes.'",com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$event->user_id.'", status:"'.$status.'",id:"'.$event->comment_id.'"';
+		$events[$key] = 'ts:"'.$event->timestamp.'",type:"comment",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$event->user_id.'", status:"'.$status.'",id:"'.$event->comment_id.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }

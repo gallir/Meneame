@@ -28,6 +28,7 @@ class Link {
 	var $category = 0;
 	var $votes = 0;
 	var $anonymous = 0;
+	var $votes_avg = 0;
 	var $negatives = 0;
 	var $title = '';
 	var $tags = '';

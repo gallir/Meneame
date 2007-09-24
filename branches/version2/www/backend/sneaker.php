@@ -225,7 +225,7 @@ function get_chat($time) {
 function get_votes($dbtime) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_anonymous, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_REQUEST['friends'])) {
@@ -272,7 +272,7 @@ function get_votes($dbtime) {
 		}
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':votes:'.$id;
-		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.$event->link_votes.'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
+		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -280,7 +280,7 @@ function get_votes($dbtime) {
 
 function get_story($time, $type, $linkid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link;
-	$event = $db->get_row("select user_login, link_title, link_uri, link_status, link_votes, link_comments from links, users where link_id = $linkid and user_id=$userid");
+	$event = $db->get_row("select user_login, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments from links, users where link_id = $linkid and user_id=$userid");
 	if (!$event) return;
 	$foo_link->id=$linkid;
 	$foo_link->uri=$event->link_uri;
@@ -288,13 +288,13 @@ function get_story($time, $type, $linkid, $userid) {
 	$id=$linkid;
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$id;
-	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.$event->link_votes.'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
+	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
 function get_comment($time, $type, $commentid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
-	$event = $db->get_row("select user_login, comment_user_id, comment_order, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
+	$event = $db->get_row("select user_login, comment_user_id, comment_order, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
@@ -302,7 +302,7 @@ function get_comment($time, $type, $commentid, $userid) {
 	$who = $event->user_login;
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$commentid;
-	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.$event->link_votes.'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
+	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
