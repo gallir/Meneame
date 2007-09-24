@@ -133,7 +133,7 @@ foreach ($meta_coef as $m => $v) {
 
 // Karma average:  It's used for each link to check the balance of users' votes
 
-$users_karma_avg = (float) $db->get_var("select avg(vote_value) from votes, links where vote_type='links' and link_id = vote_link_id and link_status = 'published' and link_published_date > date_sub(now(), interval 48 hour) and vote_user_id > 0 and vote_date < link_published_date and vote_value > 0");
+$users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 72 hour)");
 $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
@@ -160,7 +160,7 @@ $best_link = 0;
 $best_karma = 0;
 echo "<table>\n";	
 if ($links) {
-	print "<tr class='thead'><th>votes</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
+	print "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 	$i=0;
 	foreach($links as $dblink) {
 		$link = new Link;
@@ -174,27 +174,29 @@ if ($links) {
 		$karma_pos_ano = 0;
 
 		// Count number of votes
-		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value > 0"));
+		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0"));
+		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
 
 		// Calculate the real karma for the link
-		// high =~ users with higher karma greater than average * .95
-		// low =~ users with higher karma less-equal than average * .95
-		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
-		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
-		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
-		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
+		// high =~ users with higher karma greater than average
+		// low =~ users with higher karma less-equal than average
+		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
+		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
+		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
+		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
 		// Now you distribute the "equal" among the two values
 		$karma_pos_user_high += $karma_pos_user_equal * (1 - $users_karma_avg_coef);
 		$karma_pos_user_low += $karma_pos_user_equal * $users_karma_avg_coef;
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
+		// Allowed difference up to 3%
 		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.03, $karma_pos_user_low);
 
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
-			$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_date > $from_time AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
+			$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 		} else {
 			$karma_pos_ano = 0;
 		}
@@ -212,7 +214,7 @@ if ($links) {
 
 
 		// Aged karma
-		$diff = max(0, $now - ($link->date + 12*3600)); // 12 hours without decreasing
+		$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
 		$oldd = 1 - $diff/(3600*120);
 		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
@@ -239,17 +241,18 @@ if ($links) {
 		$imod = $i%2;
 		$changes = 0;
 		if (abs($link->karma - $dblink->karma) > 4 ||
-			$link->votes != $votes_pos || $link->negatives != $votes_neg ) {
-			$karma_mess = sprintf ("<br>updated karma: %6d (%d, %d) -> %-6d (%d, %d)\n", $link->karma, $link->votes, $link->negatives, round($dblink->karma), $votes_pos, $votes_neg);
+			$link->votes != $votes_pos || $link->anonymous != $votes_pos_anon || $link->negatives != $votes_neg ) {
+			$karma_mess = sprintf ("<br>updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg);
 			if ($link->karma > $dblink->karma) 
 				$changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			$link->karma = round($dblink->karma);
 			$link->votes = $votes_pos;
+			$link->anonymous = $votes_pos_anon;
 			$link->negatives = $votes_neg;
 			$link->store_basic();
 		} else $karma_mess = '';
-		print "<tr><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
+		print "<tr><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->anonymous."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
 		echo "<td class='tdata$imod'>$link->meta_name</td>\n";
 		echo "<td class='tdata$imod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 		echo $karma_mess;
@@ -274,6 +277,14 @@ if ($links) {
 			$link->karma = round($dblink->karma);
 			$link->status = 'published';
 			$link->published_date=time();
+
+			// Calculate votes average
+			// it's used to calculate and check future averages
+			$votes_avg = (float) $db->get_var("select SQL_NO_CACHE avg(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'");
+			if ($votes_avg < $users_karma_avg) $link->votes_avg = max($votes_avg, $users_karma_avg*0.97);
+			else $link->votes_avg = $votes_avg;
+			//echo "AVG: $link->id: $link->votes_avg\n";
+
 			$link->store_basic();
 			// Add the publish event/log
 			log_insert('link_publish', $link->id, $link->author);
