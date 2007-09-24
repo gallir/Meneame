@@ -530,7 +530,7 @@ class Link {
 		}
 		echo '<div class="news-shakeit">';
 		echo '<div class="'.$box_class.'">';
-		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.$this->votes.'</a>'._('meneos').'</div>';
+		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.($this->votes+$this->anonymous).'</a>'._('meneos').'</div>';
 		echo '<div class="menealo" id="a-va-'.$this->id.'">';
 
 		if ($this->votes_enabled == false) {
@@ -628,10 +628,12 @@ class Link {
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			} else {
-				$db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
+				if ($user > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
+				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
-			$new = $db->get_row("select link_votes, link_negatives, link_karma from links where link_id = $this->id");
+			$new = $db->get_row("select link_votes, link_anonymous, link_negatives, link_karma from links where link_id = $this->id");
 			$this->votes = $new->link_votes;
+			$this->anonymous = $new->link_anonymous;
 			$this->negatives = $new->link_negatives;
 			$this->karma = $new->link_karma;
 			return true;

@@ -110,7 +110,7 @@ if ($link->status == 'discard' && $current_user->user_id>0 && $link->karma > $li
 	$link->store_basic();
 }
 	
-echo "$link->id~$link->votes~$link->negatives~".intval($link->karma)."~".intval($value);
+echo "$link->id~".($link->votes+$link->anonymous)."~$link->negatives~".intval($link->karma)."~".intval($value);
 
 function error($mess) {
 	echo "ERROR: $mess";

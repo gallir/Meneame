@@ -69,7 +69,7 @@ if (!$link->insert_vote($current_user->user_id, $value)) {
 	error(_('ya ha votado antes'));
 }
 
-echo "$link->id~$link->votes~$link->negatives~".intval($link->karma)."~".intval($value);
+echo "$link->id~".($link->votes+$link->anonymous)."~$link->negatives~".intval($link->karma)."~".intval($value);
 
 
 function error($mess) {
