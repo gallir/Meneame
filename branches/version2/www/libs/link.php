@@ -485,7 +485,7 @@ class Link {
 		}
 
 		// Print meta and category
-		echo '<span class="tool">'._('en'). ': ';
+		echo '<span class="tool">';
 		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'"><strong>'.$this->meta_name.'</strong></a>, ';
 		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
 		echo '</span>';
