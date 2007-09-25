@@ -16,13 +16,13 @@ if(empty($_GET['url'])) {
 $url = $db->escape($_GET['url']);
 $all = intval($_GET['all']);
 if ($all == '1') {
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_status from links where link_url like '$url%' order by link_date DESC");
+    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url like '$url%' order by link_date DESC");
 } else {
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_status from links where link_url='$url'");
+    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url='$url'");
 }
 if ($links) {
 	foreach ($links as $dblink) {
-	    echo 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.$dblink->link_votes.' '.$dblink->link_status."\n";
+	    echo 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.($dblink->link_votes+$dblink->link_anonymous).' '.$dblink->link_status."\n";
 	}
 } else {
 	echo 'KO http://'.get_server_name().'/submit.php?url='.$url;

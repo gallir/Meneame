@@ -33,9 +33,9 @@ echo '</script>'."\n";
 echo '<body>'."\n";
 
 $url = $db->escape($_GET['url']);
-$res = $db->get_row("select link_id, link_votes from links where link_url='$url'");
+$res = $db->get_row("select link_id, link_votes, link_anonymous from links where link_url='$url'");
 if ($res) {
-	echo '<a href="/story.php?id='.$res->link_id.'" title="'.$res->link_votes.' '._('votos').'" target="_parent" onmouseover="changebutton(\'mnm_vote\',\'mnm_yesover\')" onmouseout="changebutton(\'mnm_vote\',\'mnm_vote_notover\')"><img style="border: 0" src="'.$mnm_vote.'" target="_parent" name="mnm_vote"/></a>';
+	echo '<a href="/story.php?id='.$res->link_id.'" title="'.($res->link_votes+$res->link_anonymous).' '._('votos').'" target="_parent" onmouseover="changebutton(\'mnm_vote\',\'mnm_yesover\')" onmouseout="changebutton(\'mnm_vote\',\'mnm_vote_notover\')"><img style="border: 0" src="'.$mnm_vote.'" target="_parent" name="mnm_vote"/></a>';
 } else {
 	echo '<a href="/submit.php?url='.urlencode($url).'" title="'._('enviar esta historia').'" target="_parent" onmouseover="changebutton(\'mnm_add\',\'mnm_yesover\')" onmouseout="changebutton(\'mnm_add\',\'mnm_add_notover\')"><img style="border: 0" src="'.$mnm_add.'" name="mnm_add"/></a>';
 }

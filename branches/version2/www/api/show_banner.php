@@ -13,8 +13,6 @@ header('Pragma: no-cache');
 header('Cache-Control: max-age=10, must-revalidate');
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 
-$maxlen = 70;
-
 $width = intval($_GET['width']);
 $height = intval($_GET['height']);
 $format = clean_input_string($_GET['format']);
@@ -30,34 +28,26 @@ echo '<html><head><title>banner</title></head><body>';
 $res = $db->get_row("select link_id, link_title, count(*) as votes from links, votes where vote_type='links' and vote_date > date_sub(now(), interval 10 minute) and vote_value > 0 and link_id = vote_link_id group by link_id order by votes desc limit 1");
 if ($res) {
 	$votes_hour = $res->votes*6;
-	$title['most'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$votes_hour."&nbsp;"._('votos/hora')."]</span>";
+	$title['most'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.$votes_hour."&nbsp;"._('votos/hora')."]</span>";
 	$url['most'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
 
-$res = $db->get_row("select link_id, link_title, link_votes from links where link_status = 'published' order by link_published_date desc limit 1");
+$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links where link_status = 'published' order by link_published_date desc limit 1");
 if ($res) {
-	$title['published'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$res->link_votes."&nbsp;"._('votos')."]</span>";
+	$title['published'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
 	$url['published'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
 
-$res = $db->get_row("select link_id, link_title, link_votes from links where link_status = 'queued' order by link_date desc limit 1");
+$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links where link_status = 'queued' order by link_date desc limit 1");
 if ($res) {
-	$title['sent'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$res->link_votes."&nbsp;"._('votos')."]</span>";
+	$title['sent'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
 	$url['sent'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
 
-/**
-$res = $db->get_row("select link_id, link_title, link_votes from links, votes where vote_type='links' and link_id = vote_link_id  and vote_value > 0 order by vote_date desc limit 1");
-if ($res) {
-	$title['voted'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$res->link_votes."&nbsp;"._('votos')."]</span>";
-	$url['voted'] = "http://".get_server_name()."/story.php?id=$res->link_id";
-}
-*****/
-
-$res = $db->get_row("select link_id, link_title, link_votes from links, comments where link_id = comment_link_id  order by comment_id desc limit 1");
+$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links, comments where link_id = comment_link_id  order by comment_id desc limit 1");
 
 if ($res) {
-	$title['commented'] = cut($res->link_title) . ' <span style="font-size: 90%;">['.$res->link_votes."&nbsp;"._('votos')."]</span>";
+	$title['commented'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
 	$url['commented'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
 
@@ -105,13 +95,4 @@ switch ($format) {
 
 <?
 echo '</body></html>';
-
-function cut($string) {
-	global $maxlen;
-
-	if (strlen($string) > $maxlen) {
-		$string = utf8_substr($string, 0, $maxlen) . "...";
-	}
-	return $string;
-}
 ?>
