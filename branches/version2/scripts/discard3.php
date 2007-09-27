@@ -25,11 +25,11 @@ if( !$negatives) {
 foreach ($negatives as $negative) {
 	$linkid = $negative->link_id;
 
-	$positive_users_count = $db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value > 0");	
-	$positive_users = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value > 0"));	
+	$positive_users_count = $db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value > 0 and user_id = vote_user_id and user_level != 'disabled'");	
+	$positive_users = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value > 0 and user_id = vote_user_id and user_level != 'disabled'"));	
 
-	$negative_users_count = $db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value < 0 and user_id = vote_user_id");	
-	$negative_users = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value < 0 and user_id = vote_user_id"));	
+	$negative_users_count = $db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value < 0 and user_id = vote_user_id and user_level != 'disabled' and user_karma > 6");	
+	$negative_users = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' and vote_link_id = $linkid and vote_user_id > 0 and vote_value < 0 and user_id = vote_user_id and user_level != 'disabled' and user_karma > 6"));	
 	
 	//if ($negative_users_count > 2 && ($negative_users_count + $negative_annonymous_count) > $positive_count &&
 //		$positive < abs($negative_annonymous) + abs($negative_users) ) {

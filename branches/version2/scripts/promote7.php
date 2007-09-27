@@ -52,7 +52,7 @@ $min_karma_coef = 0.87;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
-define (PUB_MAX, 60);
+define (PUB_MAX, 65);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
@@ -174,9 +174,11 @@ if ($links) {
 		$karma_pos_ano = 0;
 
 		// Count number of votes
-		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0"));
-		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
+		//$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level != 'disabled'"));
+		//$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_value < 0 and vote_user_id = user_id and user_level != 'disabled'"));
+		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0"));
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
+		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 
 		// Calculate the real karma for the link
 		// high =~ users with higher karma greater than average
