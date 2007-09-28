@@ -26,7 +26,7 @@ function get_uri($title) {
 	$title = remove_shorts($title);
 	$title = trim($title, '-');
 
-   	return substr($title, 0, 90);
+   	return substr($title, 0, 70);
 }
 
 function remove_accents($string) {
@@ -134,8 +134,8 @@ function remove_accents($string) {
 
 function remove_shorts($string) {
 	$shorts = array( _('a'), _('e'), _('o'), _('u'), _('y'),
-						_('el'), _('la'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('es'), _('su'), _('te'),
-						_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus')
+						_('el'), _('la'), _('le'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('es'), _('su'), _('te'),
+						_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus'), _('me'), _('mi')
 					);
 
 	$size = count($shorts);

@@ -702,7 +702,7 @@ class Link {
 				($this->status != 'published' || 
 				// Allows to vote negative to published with high ratio of negatives
 				// or a link recently published
-					$this->status == 'published' && ($this->published_date > $globals['now'] - 1800 || $this->negatives > $this->votes/10) 
+					$this->status == 'published' && ($this->published_date > $globals['now'] - 3600 || $this->negatives > $this->votes/10) 
 					|| $this->warned);
 	}
 

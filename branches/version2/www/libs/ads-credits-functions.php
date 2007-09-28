@@ -167,11 +167,13 @@ function do_pager_ads() { // side banner A
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
+	/* It's a good ads
 	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0) {
 		echo '<div style="margin: 0 0 10px 0">' . "\n";
 		@include('ads/adsense-block-5.inc');
 		echo '</div>' . "\n";
 	}
+	*/
 }
 
 ?>
