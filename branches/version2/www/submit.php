@@ -133,6 +133,40 @@ function do_submit1() {
 		return;
 	}
 
+	// check that the user also votes, not only sends links
+	// if is a new user requires at least 10 votes
+	if ($current_user->user_karma < 6.5) {
+		$user_votes_total = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id");
+		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 24 hour) and vote_user_id=$current_user->user_id");
+		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
+		$total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
+		echo "<!-- $user_votes_total, $user_links, $total_links -->\n";
+		if ($user_votes_total < 10 && $total_links > 50) {
+			// If is a new user, requires more votes, to avoid spam
+			$min_votes = 10;
+			$new_user = true;
+		} else {
+			$min_votes = min(4, intval($total_links/20)) * $user_links;
+			$new_user = false;
+		}
+		if ($user_votes < $min_votes) {
+			$needed = $min_votes - $user_votes;
+			echo '<p class="error">';
+			if ($new_user) {
+				echo '<strong>'._('¿es la primera vez que envías una noticia?').'</strong></p> ';
+				echo '<p class="error-text">'._('necesitas como mínimo'). " <strong>$needed " . _('votos') . '</strong><br/>';
+			} else {
+				echo '<strong>'._('no tienes el mínimo de votos necesarios para enviar una nueva historia').'</strong></p> ';
+				echo '<p class="error-text">'._('necesitas votar como mínimo a'). " <strong>$needed " . _('noticias') . '</strong><br/>';
+			}
+			echo '<strong>'._('no votes de forma apresurada, penaliza el karma').'</strong><br/>';
+			echo '<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a></p>';
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+	}
+
 	// avoid spams, an extra security check
 	// it counts the numbers of links in the last 2 hours
 	$same_user = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_author=$current_user->user_id and link_votes > 0");
@@ -167,7 +201,8 @@ function do_submit1() {
 
 	if(report_dupe($url)) return;
 
-	if(!$linkres->check_url($url) || !$linkres->get($url)) {
+
+if(!$linkres->check_url($url) || !$linkres->get($url)) {
 
 		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($url).'<br />';
 		echo '<br /><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
@@ -195,24 +230,6 @@ function do_submit1() {
 		echo '<p>'._('no es válido, está fuera de línea, o tiene mecanismos antibots, <strong>continúa</strong>, pero asegúrate que sea correcto').'</p>';
 	}
 
-	// check that the user also votes, not only sends links
-	if ($current_user->user_karma < 7) {
-		$from = time() - 3600*24;
-		$user_votes = $db->get_var("select count(*) from votes where vote_type='links' and vote_date > from_unixtime($from) and vote_user_id=$current_user->user_id");
-		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > from_unixtime($from) and link_status != 'discard'");
-		$total_links = $db->get_var("select count(*) from links where  link_date > from_unixtime($from) and link_status = 'queued'");
-		$min_votes = min(4, intval($total_links/20)) * $user_links;
-		if ($user_votes < $min_votes) {
-			$needed = $min_votes - $user_votes;
-			echo '<p class="error"><strong>'._('no tienes el mínimo de votos necesarios para enviar una nueva historia').'</strong></p> ';
-			echo '<p class="error-text">'._('necesitas votar como mínimo a'). " $needed " . _('noticias') . ', ';
-			echo '<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a></p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
-		}
-	}
-	
 	$linkres->status='discard';
 	$linkres->author=$current_user->user_id;
 
