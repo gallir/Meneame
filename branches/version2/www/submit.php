@@ -202,8 +202,7 @@ function do_submit1() {
 	if(report_dupe($url)) return;
 
 
-if(!$linkres->check_url($url) || !$linkres->get($url)) {
-
+	if(!$linkres->check_url($url) || !$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($url).'<br />';
 		echo '<br /><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
 		// If the domain is banned, decrease user's karma
@@ -272,9 +271,27 @@ if(!$linkres->check_url($url) || !$linkres->get($url)) {
 	// Avoid spam, count links in last two months
 	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
+
+	// Check if the domain should be banned
 	if ($sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5) {
 
-		// Check if the domain should be banned
+		// Check for user clones
+		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
+		if ($clones > 0) {
+			// we detected that another user has sent to the same URL from the same IP
+			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
+			$ban_period_txt = _('un mes');
+			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*30);
+			$banned_host = $ban->ban_text;
+			echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong>, ";
+			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a></p>';
+			syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to user clones ($current_user->user_login): $banned_host  <- $linkres->url");
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+		// end clones
+
 		// Calculate ban period according to previous karma
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
