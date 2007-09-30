@@ -280,7 +280,7 @@ if(!$linkres->check_url($url) || !$linkres->get($url)) {
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
 		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
-			$unique_users = (int) $db->get_var("select count(distinct link_author) from links where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day);");
+			$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day) and user_id = link_author and user_level != 'disabled'");
 			if ($unique_users < 3) {
 				if ($avg_karma < -10) {
 					$ban_period = 86400*30;
@@ -325,7 +325,8 @@ if(!$linkres->check_url($url) || !$linkres->get($url)) {
 			echo '</div>'. "\n";
 			return;
 		} else {
-			echo '<p>'._('Aviso, estás enviando noticias del mismo web, podrías recibir muchos votos negativos y/o el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
+			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
+			echo '<p class="error-text">'._('el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
 			syslog(LOG_NOTICE, "Meneame, warn, high ratio ($current_user->user_login): $linkres->url");
 		}
 	}
