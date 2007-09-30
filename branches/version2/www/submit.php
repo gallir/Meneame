@@ -275,9 +275,13 @@ function do_submit1() {
 	// Check if the domain should be banned
 	if ($sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5) {
 
+		// Count unique users 
+		// TODO: we should discard users with the same IP (clones)
+		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
+
 		// Check for user clones
 		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
-		if ($clones > 0) {
+		if ($clones > 0 && $unique_users < 4) {
 			// we detected that another user has sent to the same URL from the same IP
 			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
 			$ban_period_txt = _('un mes');
@@ -297,7 +301,6 @@ function do_submit1() {
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
 		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
-			$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day) and user_id = link_author and user_level != 'disabled'");
 			if ($unique_users < 3) {
 				if ($avg_karma < -10) {
 					$ban_period = 86400*30;
