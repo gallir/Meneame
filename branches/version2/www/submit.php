@@ -117,6 +117,7 @@ function do_submit1() {
 	echo '<div id="container-wide">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 
+	$new_user = false;
 	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
 		echo '<p class="error"><strong>'._('no tienes el mínimo de karma para enviar una nueva historia').'</strong></p> ';
 // 		echo '<br style="clear: both;" />' . "\n";
@@ -133,6 +134,8 @@ function do_submit1() {
 		return;
 	}
 
+	// Number of links sent by the user
+	$sents = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	// check that the user also votes, not only sends links
 	// if is a new user requires at least 10 votes
 	if ($current_user->user_karma < 6.5) {
@@ -141,13 +144,12 @@ function do_submit1() {
 		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
 		$total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
 		echo "<!-- $user_votes_total, $user_links, $total_links -->\n";
-		if ($user_votes_total < 10 && $total_links > 50) {
+		if ($sents == 0) {
 			// If is a new user, requires more votes, to avoid spam
 			$min_votes = 10;
 			$new_user = true;
 		} else {
 			$min_votes = min(4, intval($total_links/20)) * $user_links;
-			$new_user = false;
 		}
 		if ($user_votes < $min_votes) {
 			$needed = $min_votes - $user_votes;
@@ -269,18 +271,20 @@ function do_submit1() {
 	}
 
 	// Avoid spam, count links in last two months
-	$sents     = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
 
 	// Check if the domain should be banned
-	if ($sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5) {
+	$check_history =  $sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
 
+	// check clones also for new users
+	if ($sents == 0 || $check_history) {
 		// Count unique users 
 		// TODO: we should discard users with the same IP (clones)
-		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 15 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
+		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
 
 		// Check for user clones
 		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
+
 		if ($clones > 0 && $unique_users < 4) {
 			// we detected that another user has sent to the same URL from the same IP
 			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
@@ -295,7 +299,9 @@ function do_submit1() {
 			return;
 		}
 		// end clones
+	}
 
+	if ($check_history) {
 		// Calculate ban period according to previous karma
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
@@ -331,7 +337,8 @@ function do_submit1() {
 		if ($ban_period > 0) {
 			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
 			echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
-			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
+			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a>, ';
+			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
 
 			if (!empty($blog_url)) {
 				$ban = insert_ban('hostname', $blog_url, _('envíos excesivos de'). " $current_user->user_login", time() + $ban_period);
@@ -344,10 +351,18 @@ function do_submit1() {
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
 			return;
-		} else {
+		} elseif ($sents > 0) {  // Just in case check again sent (paranoia setting)
 			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
-			echo '<p class="error-text">'._('el sitio podría ser baneado automáticamente si continúas enviando').'</p>';
-			syslog(LOG_NOTICE, "Meneame, warn, high ratio ($current_user->user_login): $linkres->url");
+			echo '<p class="error-text">'._('el sitio podría ser baneado automáticamente si continúas enviando').', ';
+			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a>, ';
+			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
+			if ($sents > 5 && $ratio > 0.75) {
+				// don't allow to continue
+				syslog(LOG_NOTICE, "Meneame, warn, high ratio, process interrumped ($current_user->user_login): $linkres->url");
+				return;
+			} else {
+				syslog(LOG_NOTICE, "Meneame, warn, high ratio, continue ($current_user->user_login): $linkres->url");
+			}
 		}
 	}
 
