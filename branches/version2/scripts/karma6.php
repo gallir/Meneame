@@ -114,12 +114,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 	//Base karma for the user
 	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
-	if ($user->karma >= $karma_base && $first_published > 0) {
+	if ($first_published > 0) {
 		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365));
 	} else {
 		$karma_base_user = $karma_base;
 	}
-	printf ("%07d ", $user->id); echo "$user->username Karma base: $karma_base_user\n";
 
 	$n = $db->get_var("SELECT SQL_NO_CACHE count(*) FROM  votes  WHERE vote_type in ('links', 'comments') and vote_user_id = $user->id and vote_date > $history_from");
 	$n_events = $db->get_var("select SQL_NO_CACHE count(*) from logs where log_date > $history_from and log_user_id=$user->id");
@@ -233,7 +232,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 	
-		$karma = max($karma_base_user+$karma1+$karma2+$karma3+$karma4+$karma5, $min_karma);
+		$karma_extra = $karma1+$karma2+$karma3+$karma4+$karma5;
+		// If the new value is negative do not use the highest calculated karma base
+		if ($karma_extra < 0 && $user->karma <= $karma_base) $karma_base_user = $karma_base;
+		$karma = max($karma_base_user+$karma_extra, $min_karma);
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
@@ -245,6 +247,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karma = $user->karma;
 		}
 	}
+	printf ("%07d ", $user->id); echo "$user->username Karma base: $karma_base_user\n";
 
 	if ($user->karma == $karma) {
 		printf ("%07d ", $user->id);

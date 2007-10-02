@@ -48,11 +48,11 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.87;
+$min_karma_coef = 0.85;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
-define (PUB_MAX, 65);
+define (PUB_MAX, 70);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
@@ -85,7 +85,7 @@ $continue = true;
 $published=0;
 
 $past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 7 day) and link_status='published'"));
-$past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
+$past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 24 hour) and link_status='published'"));
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 
@@ -176,7 +176,7 @@ if ($links) {
 		// Count number of votes
 		//$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level != 'disabled'"));
 		//$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_value < 0 and vote_user_id = user_id and user_level != 'disabled'"));
-		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0"));
+		$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value>0"));
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 
