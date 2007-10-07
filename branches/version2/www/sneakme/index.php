@@ -151,7 +151,7 @@ function do_posts_tabs($tab_selected, $username) {
 
 	// All
 	if ($tab_selected == 1) {
-		echo '<li><a '.$active.' href="'.post_get_base_url().'" title="'.$reload_text.'">'._('todos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url().'" title="'.$reload_text.'"><em>'._('todos').'</em></a></li>' . "\n";
 	} else {
 		echo '<li><a  href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
 	}
@@ -159,7 +159,7 @@ function do_posts_tabs($tab_selected, $username) {
 	// GEO
 	if ($globals['google_maps_api']) {
 		if ($tab_selected == 5) {
-			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('mapa').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
 		}
@@ -167,20 +167,20 @@ function do_posts_tabs($tab_selected, $username) {
 
 	// Best
 	if ($tab_selected == 2) {
-		echo '<li><a '.$active.' href="'.post_get_base_url('_best').'" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url('_best').'" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
 	} else {
 		echo '<li><a  href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
 	}
 	// Friends
 	if ($tab_selected == 3) {
-		echo '<li><a '.$active.' href="'.post_get_base_url('_friends').'" title="'.$reload_text.'">'._('amigos').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url('_friends').'" title="'.$reload_text.'"><em>'._('amigos').'</em></a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url('_friends').'">'._('amigos').'</a></li>' . "\n";
 	}
 
 	// User
 	if ($tab_selected == 4) {
-		echo '<li><a '.$active.' href="'.post_get_base_url($username).'" title="'.$reload_text.'">'.$username.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+		echo '<li><a '.$active.' href="'.post_get_base_url($username).'" title="'.$reload_text.'"><em>'.$username.'</em></a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
 	}
