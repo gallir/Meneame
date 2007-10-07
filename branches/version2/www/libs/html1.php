@@ -37,28 +37,28 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		// First the standard and always present tabs
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'"><em>'._('portada').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// Google Map
 		if ($tab_selected == 'map') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'map.php" title="'.$reload_text.'">'._('mapa').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'map.php" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'map.php">'._('mapa').'</a></li>' . "\n";
 		}
 
 		// Most voted
 		if ($tab_selected == 'popular') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('popular').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'"><em>'._('menear pendientes').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
@@ -68,7 +68,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-			echo '<li><a '.$active.' href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'</a></li>' . "\n";
 		}
 		echo '</ul>' . "\n";
 	}

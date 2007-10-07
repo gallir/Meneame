@@ -39,7 +39,7 @@ border-color: #ff6400;
 
 .tabmain a:link.tabmain-this, .tabmain a:visited.tabmain-this {
 color: #FF6400;
-background: #fff url(../../img/common/reload-tab-margin-01.png) right center no-repeat;
+background: #fff url(../../img/common/reload-tab-01.png) right center no-repeat;
 border-bottom-color: #fff;
 }
 

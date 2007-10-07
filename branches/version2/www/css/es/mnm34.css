@@ -99,6 +99,11 @@ text-decoration: none;
 border-bottom: 1px solid;
 }
 
+.tabmain em {
+margin-right: 30px;
+font-style: oblique;
+}
+
 /* tabsub specials */
 
 .tabsub-shakeit {
