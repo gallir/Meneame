@@ -68,7 +68,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-			echo '<li><a '.$active.' href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'</a></li>' . "\n";
+			echo '<li><a '.$active.' href="'.$url.'" title="'.$reload_text.'"><em>'.$tab_selected.'</em></a></li>' . "\n";
 		}
 		echo '</ul>' . "\n";
 	}
