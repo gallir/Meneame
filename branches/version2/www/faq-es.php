@@ -106,7 +106,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 
 <p><h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
-<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a> y <a href="http://mueveme.net/">mueveme.net</a>.
+<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://notame.net">notame.net</a>.
 </p>
 <p>
 Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.net/libs/ads/legal-meneame.php#contact">la página de condiciones legales</a>.
@@ -155,7 +155,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 <li>
 <h4>¿Será liberado el software?</h4>
 
-<p><a href="http://mnm.uib.es/gallir/posts/2005/12/12/541/">Ya está liberado</a>, con la licencia <a href="http://www.affero.org/oagpl.html">Affero General Public License</a>, que es compatible con la futura GPL 3.</p>
+<p><a href="http://mnm.uib.es/gallir/posts/2005/12/12/541/">Ya está liberado</a>. En el pie de todas las páginas encontrarás el enlace para descargarlo. Tiene la licencia <a href="http://www.affero.org/oagpl.html">Affero General Public License</a>, que es compatible con la futura GPL 3.</p>
 </li>
 
 
