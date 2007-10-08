@@ -228,7 +228,13 @@ sub StoreChat {
 		return;
 	}
 	my $now = time;
-	my $room = 'all';
+	my $room;
+	if ($body =~ /^ *@/) {
+		$body =~ s/^ *@//;
+		$room = 'friends';
+	} else {
+		$room = 'all';
+	}
 	$body = MnmDB::clean_text($body);
 	$sth = MnmDB::prepare(qq{insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values (?, ?, ?, ?, ?)});
 	$sth->execute($now, $poster->id, $room, $poster->user, $body);
