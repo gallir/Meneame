@@ -155,7 +155,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 <li>
 <h4>¿Será liberado el software?</h4>
 
-<p><a href="http://mnm.uib.es/gallir/posts/2005/12/12/541/">Ya está liberado</a>. En el pie de todas las páginas encontrarás el enlace para descargarlo. Tiene la licencia <a href="http://www.affero.org/oagpl.html">Affero General Public License</a>, que es compatible con la futura GPL 3.</p>
+<p><a href="http://mnm.uib.es/gallir/posts/2005/12/12/541/">Ya está liberado</a>. En el pie de todas las páginas encontrarás el enlace para descargarlo. Tiene la licencia <a href="http://www.affero.org/oagpl.html">Affero General Public License</a>.</p>
 </li>
 
 
