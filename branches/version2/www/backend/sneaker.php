@@ -198,7 +198,7 @@ function get_chat($time) {
 			// Ignore
 			if ($friendship < 0) continue;
 
-			// This uses is ignored by the writer
+			// This user is ignored by the writer
 			if (friend_exists($uid, $current_user->user_id) < 0) continue;
 
 			if ($event->chat_room == 'friends') {
@@ -211,6 +211,10 @@ function get_chat($time) {
 			// Check the sender is a friend of the receiver
 			if (!empty($_REQUEST['friends']) && $friendship <= 0) {
 					continue;
+			}
+		} else {
+			if ($event->chat_room == 'friends') {
+				$status = _('amigo');
 			}
 		}
 		$who = $event->chat_user;
