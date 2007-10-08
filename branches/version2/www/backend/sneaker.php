@@ -153,10 +153,12 @@ function check_chat() {
 		$from = $now - 900;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
-		if (!empty($_REQUEST['friends'])) 
+		if (!empty($_REQUEST['friends']) || preg_match('/^@/', $comment)) {
 			$room = 'friends';
-		else
+			$comment = preg_replace('/^@ */', '', $comment);
+		} else {
 			$room = 'all';
+		}
 		if (strlen($comment)>0) {
 			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
 		}
