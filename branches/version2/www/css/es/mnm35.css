@@ -776,7 +776,7 @@ dl.categorylist {
 float: left;
 width: auto;
 min-width: 20%;
-margin-right: 8px;
+margin-right: 5px;
 padding-bottom: 5px;
 font-size: 85%;
 }
@@ -787,6 +787,10 @@ width: auto;
 text-align: left;
 font-size: 120%;
 font-weight: bold;
+}
+
+dl.categorylist dd {
+margin-left: 2px ;
 }
 
 /* Right column boxes */
