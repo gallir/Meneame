@@ -56,13 +56,15 @@ function do_banner_story() { // side banner A
 	}
 }
 
-function do_legal($legal_name, $target = '') {
+function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if (preg_match('/meneame.net$/', get_server_name())) {
 		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
-		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
-		echo '<a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a>';
+		if ($show_abuse) {
+			echo '&nbsp;&nbsp;|&nbsp;&nbsp;';
+			echo '<a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a>';
+		}
 	} else {
 		echo _('legal conditions link here');
 		echo '&nbsp;&nbsp;|&nbsp;&nbsp;';

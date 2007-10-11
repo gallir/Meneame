@@ -10,6 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 include(mnminclude.'ban.php');
+include(mnminclude.'log.php');
 
 do_header(_("registro"), "post");
 do_banner_top();
@@ -61,7 +62,7 @@ function do_register0() {
 	echo '<input type="password" id="verify" name="password2" size="25" tabindex="4"/></p>' . "\n";
 
 	echo '<p>'._('has leído y aceptas las ');
-	do_legal(_('condiciones de uso'), 'target="_blank"');
+	do_legal(_('condiciones de uso'), 'target="_blank"', false);
 	echo ' <input type="checkbox" id="acceptlegal" name="acceptlegal" value="accept" tabindex="5"/></p>' . "\n";
 
 	echo '<p class="l-bot"><input type="submit" disabled="disabled" name="submit" value="'._('crear usuario').'" class="log2" tabindex="6" /></p>' . "\n";
@@ -111,6 +112,7 @@ function do_register2() {
 	$user_ip = $globals['user_ip'];
 	if (!user_exists($username)) {
 		if ($db->query("INSERT INTO users (user_login, user_login_register, user_email, user_email_register, user_pass, user_date, user_ip) VALUES ('$dbusername', '$dbusername', '$dbemail', '$dbemail', '$password', now(), '$user_ip')")) {
+			log_insert('user_new', 0);
 			echo '<fieldset>'."\n";
 			echo '<legend><span class="sign">'._("registro de usuario").'</span></legend>'."\n";
 			require_once(mnminclude.'user.php');
@@ -171,23 +173,40 @@ function check_user_fields() {
 		register_error(_("Las claves no coinciden"));
 		$error=true;
 	}
+
+	// Check registers from the same IP network
 	$user_ip = $globals['user_ip'];
-	$last_register = $db->get_var("select count(*) from users where user_date > date_sub(now(), interval 12 hour) and user_ip = '$user_ip'");
-	if($last_register > 0) {
-		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 12 horas."));
+	$ip_classes = explode(".", $user_ip);
+
+	// From the same IP
+	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 24 hour) and log_type in ('user_new', 'user_delete') and log_ip = '$user_ip'");
+	if($registered > 0) {
+		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 24 horas."));
 		$error=true;
 	}
+	if ($error) return false;
 
 	// Check class
-	$ip_classes = explode(".", $user_ip);
+	// nnn.nnn.nnn
+	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.' . $ip_classes[2] . '.%';
+	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 12 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
+	if($registered > 0) {
+		register_error(_("Para registrar otro usuario desde la misma red debes esperar 12 horas."). " ($ip_class)");
+		$error=true;
+	}
+	if ($error) return false;
+
+	// Check class
+	// nnn.nnn
 	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.%';
-	$from = time() - 3600;
-	$registered = intval($db->get_var("select count(*) from users where user_date > from_unixtime($from) and user_ip like '$ip_class'"));
+	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 1 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 2) {
 		register_error(_("Para registrar otro usuario desde la misma red debes esperar unos minutos.") . " ($ip_class)");
 		$error=true;
 	}
-	return !$error;
+	if ($error) return false;
+
+	return true;
 }
 
 

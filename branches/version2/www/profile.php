@@ -220,7 +220,9 @@ function save_profile() {
 		$old_user_id = $user->id;
 		$db->query("delete from posts where post_user_id = $old_user_id");
 		$user->disable();
-		syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ".time());
+		require_once(mnminclude.'log.php');
+		log_insert('user_delete', 0);
+		syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ");
 		$current_user->Logout(get_user_uri($user->username));
 		die;
 	}
