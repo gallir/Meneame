@@ -59,9 +59,9 @@ function do_stats2($string) {
 	$comment .= _('artículos') . ':&nbsp;' . $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('publicados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_published_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('descartados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
-	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from comments where  comment_date > date_sub(now(), interval $hours hour)")  . ', ';
-	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from posts where  post_date > date_sub(now(), interval $hours hour)")  . ', ';
-	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from users where  user_date > date_sub(now(), interval $hours hour) and user_validated_date is not null and user_level != 'disabled'");
+	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'comment_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';
+	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'post_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';
+	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from logs, users where log_type = 'user_new' and log_date > date_sub(now(), interval $hours hour) and user_id = log_ref_id and user_validated_date is not null");
 	return $comment;
 }
 
