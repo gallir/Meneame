@@ -215,7 +215,7 @@ function do_profile() {
 	}
 
 	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-		echo '<dt>'._('clave API').':</dt><dd id="api-key">('._('mantenla siempre en secreto').') <a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a></dd>';
+		echo '<dt>'._('clave API').':</dt><dd id="api-key"><a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a> ('._('no la divulgues').')</dd>';
 		if(!empty($user->adcode)) {
 			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'&nbsp;</dd>';
 			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'&nbsp;</dd>';
@@ -237,6 +237,7 @@ function do_profile() {
 	}
 	echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
 	echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
+	echo '<dt>'._('notas').':</dt><dd>'.$user->total_posts.'</dd>';
 	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
 
 	echo '</dl>';

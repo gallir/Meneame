@@ -288,8 +288,8 @@ function do_submit1() {
 		if ($clones > 0 && $unique_users < 4) {
 			// we detected that another user has sent to the same URL from the same IP
 			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
-			$ban_period_txt = _('un mes');
-			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*30);
+			$ban_period_txt = _('dos meses');
+			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*60);
 			$banned_host = $ban->ban_text;
 			echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong>, ";
 			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a></p>';

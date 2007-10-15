@@ -726,7 +726,7 @@ function do_best_comments() {
 		}
 		$output .= '</ul></div>';
 		echo $output;
-		memcache_madd('best_comments', $output, 600);
+		memcache_madd('best_comments', $output, 300);
 	}
 }
 

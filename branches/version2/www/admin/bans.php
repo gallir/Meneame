@@ -137,6 +137,7 @@ function admin_bans($ban_type) {
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
+			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
 			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
 			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
 			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
@@ -159,6 +160,7 @@ function admin_bans($ban_type) {
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
+			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
 			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
 			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
 			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
@@ -185,6 +187,7 @@ function admin_bans($ban_type) {
 			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
 			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
+			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
 			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
 			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
 			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';

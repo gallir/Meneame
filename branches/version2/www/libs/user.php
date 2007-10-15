@@ -23,11 +23,11 @@ class User {
 	var $karma = 10;
 	var $url = '';
 	// For stats
-	var $total_votes = 0;
-	var $total_links = 0;
-	var $published_links = 0;
-	var $positive_votes_received = 0;
-	var $negative_votes_received = 0;
+	var $total_votes;
+	var $total_links;
+	var $published_links;
+	var $total_comments;
+	var $total_posts;
 	
 
 	function User($id=0) {
@@ -137,10 +137,11 @@ class User {
 
 		if(!$this->read) $this->read();
 
-		$this->total_votes = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
-		$this->total_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
-		$this->published_links = $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
-		$this->total_comments = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
+		$this->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
+		$this->total_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
+		$this->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
+		$this->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
+		$this->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
 	}
 
 	function blogs() {
