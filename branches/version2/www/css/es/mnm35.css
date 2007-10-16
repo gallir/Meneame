@@ -134,6 +134,7 @@ list-style-type: none;
 
 .tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
 font-weight: bold;
+font-style: oblique;
 border-bottom: 1px solid;
 }
 
