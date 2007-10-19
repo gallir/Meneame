@@ -14,6 +14,7 @@ $link = new Link;
 
 
 header("Content-type: text/html; charset=utf-8");
+meta_get_current();
 echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 echo '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">' . "\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'">' . "\n";
@@ -34,7 +35,7 @@ if ($globals['meta_current'] > 0) {
 	$from_where = "FROM links WHERE link_status='published' ";
 }
 
-echo '<div id="banner"><img src="./img/banner.png" alt="MeneameDS" /></div>' . "\n";
+echo '<div id="banner"><img src="images/banner.png" alt="MeneameDS" /></div>' . "\n";
 
 echo '<div id="container">';
 
@@ -50,7 +51,7 @@ if ($links) {
 		echo '<div class="news-title"><a href="'.htmlspecialchars($link->url).'">'.$link->title.'</a></div>'."\n";
 		echo '<p class="news-content">'.text_to_html($link->content).'</p>'."\n";
 		echo '<div class="news-footer">'.$link->votes . ' votos &#187; ' . '<a href="'.htmlspecialchars($link->uri).'">en menéame</a>'."\n";
-		echo '</div>';
+		echo '</div></div>';
 	}
 }
 echo "</div>\n";
