@@ -14,25 +14,20 @@ body {
 .news-title {
   background-color: #cccb92;
   font-size: 110%;
-  padding-right: 1em;
-  padding-left: 0em;
-  padding-top: 0.2em;
-  padding-bottom: 0.3em;
+  padding: 0.2em 1em 0.3em 0;
 }
 
 .news-summary {
   border-right: 8px solid #cccb92;
   border-left: 8px solid #cccb92;
+  margin-bottom: 0.5em;
   width: 274px;
 }
 
 .news-content {
   background-color: #fbfadb;
   margin: 0;
-  padding-left: 0.5em;
-  padding-right: 1em;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
+  padding: 0.2em 1em 0.2em 0.5em;
 }
 
 .news-footer {
