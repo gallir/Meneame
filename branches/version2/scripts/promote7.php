@@ -85,7 +85,7 @@ $continue = true;
 $published=0;
 
 $past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 7 day) and link_status='published'"));
-$past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 24 hour) and link_status='published'"));
+$past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 
@@ -180,6 +180,14 @@ if ($links) {
 		$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_value < 0"));
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 
+		if ($link->votes != $votes_pos || $link->anonymous != $votes_pos_anon || $link->negatives != $votes_neg) {
+			$link->votes = $votes_pos;
+			$link->anonymous = $votes_pos_anon;
+			$link->negatives = $votes_neg;
+			$link->store_basic();
+		}
+
+
 		// Calculate the real karma for the link
 		// high =~ users with higher karma greater than average
 		// low =~ users with higher karma less-equal than average
@@ -188,13 +196,14 @@ if ($links) {
 		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
 		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
+
 		// Now you distribute the "equal" among the two values
 		$karma_pos_user_high += $karma_pos_user_equal * (1 - $users_karma_avg_coef);
 		$karma_pos_user_low += $karma_pos_user_equal * $users_karma_avg_coef;
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%
-		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.03, $karma_pos_user_low);
+		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.05, $karma_pos_user_low);
 
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
@@ -242,16 +251,12 @@ if ($links) {
 
 		$imod = $i%2;
 		$changes = 0;
-		if (abs($link->karma - $dblink->karma) > 4 ||
-			$link->votes != $votes_pos || $link->anonymous != $votes_pos_anon || $link->negatives != $votes_neg ) {
+		if (abs($link->karma - $dblink->karma) > 4) {
 			$karma_mess = sprintf ("<br>updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg);
 			if ($link->karma > $dblink->karma) 
 				$changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			$link->karma = round($dblink->karma);
-			$link->votes = $votes_pos;
-			$link->anonymous = $votes_pos_anon;
-			$link->negatives = $votes_neg;
 			$link->store_basic();
 		} else $karma_mess = '';
 		print "<tr><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->anonymous."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
@@ -266,7 +271,7 @@ if ($links) {
 				echo " $user->username disabled, probably due to abuses, penalized.";
 				$do_publish = false;
 			}
-			$link->karma = round($link->karma*0.75);
+			$link->karma = round($link->karma*0.66);
 			$link->store_basic();
 			$changes = 1;
 		} else {
