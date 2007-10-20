@@ -51,9 +51,16 @@ function do_statics() {
 			'topcomments.php', 'sitescloud.php', 'topusers.php', 'map.php', 'faq-es.php');
 
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+	// The index
+   	echo '<url>'."\n";
+	echo '<loc>http://'.get_server_name().$globals['base_url'].'</loc>'."\n";
+	echo '<priority>1.0</priority>'."\n";
+	echo '</url>'."\n";
+	// Secondary pages
 	foreach ($urls as $url) {
     	echo '<url>'."\n";
 		echo '<loc>http://'.get_server_name().$globals['base_url'].$url.'</loc>'."\n";
+		echo '<priority>0.8</priority>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
