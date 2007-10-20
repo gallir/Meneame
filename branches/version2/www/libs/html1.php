@@ -198,10 +198,8 @@ function do_footer($credits = true) {
 
 	// warn warn warn 
 	// dont do stats of password recovering pages
-	@include('ads/statcounter.inc');
-	@include('ads/analytics-01.inc');
-
-	echo "</body></html><!--html1:do_footer-->\n";
+	@include('ads/stats.inc');
+	echo "</body></html>\n";
 }
 
 function do_sidebar($do_vert_bars = true) {

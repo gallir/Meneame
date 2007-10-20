@@ -33,7 +33,7 @@ if (!empty($globals['base_search_url'])) {
 
 
 
-$page_size = 20;
+$page_size = 25;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
