@@ -893,6 +893,25 @@ font-weight: bold;
 text-align: center;
 }
 
+.commentform.warn p, .commentform.warn ul {
+text-align: left;
+font-weight: normal;
+padding-left: 30px;
+}
+
+.commentform.warn li {
+line-height: 0px;
+margin-left: 25px;
+}
+
+.commentform.warn p {
+margin-top: 20px;
+}
+
+.commentform.warn em {
+font-weight: bold;
+}
+
 .comments-warning {
 font-size: 100%;
 margin: 0;
