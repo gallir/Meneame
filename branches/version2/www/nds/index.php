@@ -50,7 +50,7 @@ if ($links) {
 		echo '<div class="news-summary">';
 		echo '<div class="news-title"><a href="'.htmlspecialchars($link->url).'">'.$link->title.'</a></div>'."\n";
 		echo '<p class="news-content">'.text_to_html($link->content).'</p>'."\n";
-		echo '<div class="news-footer">'.$link->votes . ' votos &#187; ' . '<a href="'.htmlspecialchars($link->uri).'">en menéame</a>'."\n";
+		echo '<div class="news-footer">'.$link->votes . ' votos &#187; ' . '<a href="'.$link->get_permalink().'">en menéame</a>'."\n";
 		echo '</div></div>';
 	}
 }
