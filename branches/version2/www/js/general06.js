@@ -10,7 +10,7 @@ function menealo(user, id, htmlid, md5)
 	var content = "id=" + id + "&user=" + user + "&md5=" + md5;
 	url = url + "?" + content;
 	disable_vote_link(id, "...", '#FFC8AF');
-	$.get(url, {},  
+	$.get(url,  
 		 function(html) {
 			if (/^ERROR:/.test(html)) {
 				html = html.substring(6, html.length);
@@ -35,7 +35,7 @@ function menealo_comment(user, id, value)
 	var content = "id=" + id + "&user=" + user + "&value=" + value;
 	var myid = 'comment-'+id;
 	url = url + "?" + content;
-	$.get(url, {}, 
+	$.get(url, 
 		 function(html) {
 			if (/^ERROR:/.test(html) || /^WARN:/.test(html)) {
 				html = html.substring(6, html.length);
@@ -61,7 +61,7 @@ function menealo_post(user, id, value)
 	var content = "id=" + id + "&user=" + user + "&value=" + value;
 	var myid = 'comment-'+id;
 	url = url + "?" + content;
-	$.get(url, {}, 
+	$.get(url,
 		 function(html) {
 			if (/^ERROR:/.test(html) || /^WARN:/.test(html)) {
 				html = html.substring(6, html.length);
@@ -145,7 +145,7 @@ function enablebutton (button, button2, target)
 function checkfield (type, form, field)
 {
 	var url = base_url + 'backend/checkfield.php?type='+type+'&name=' + encodeURIComponent(field.value);
-	$.get(url, {}, 
+	$.get(url,
 		 function(html) {
 			if (html == 'OK') {
 				$('#'+type+'checkitvalue').html('<span style="color:black">"' + encodeURI(field.value) + '": ' + html + '</span>');
@@ -177,7 +177,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 	}
 	var content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
 	var url=base_url + "backend/problem.php?" + content;
-	$.get(url, {}, 
+	$.get(url,
 		 function(html) {
 			if (/^ERROR:/.test(html)) {
 				html = html.substring(6, html.length);

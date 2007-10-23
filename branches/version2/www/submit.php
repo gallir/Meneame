@@ -138,9 +138,9 @@ function do_submit1() {
 	$sents = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
 	// check that the user also votes, not only sends links
 	// if is a new user requires at least 10 votes
-	if ($current_user->user_karma < 6.5) {
+	if ($current_user->user_karma < 6.1) {
 		$user_votes_total = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id");
-		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 24 hour) and vote_user_id=$current_user->user_id");
+		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 72 hour) and vote_user_id=$current_user->user_id");
 		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
 		$total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
 		echo "<!-- $user_votes_total, $user_links, $total_links -->\n";
