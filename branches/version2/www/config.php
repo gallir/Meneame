@@ -125,6 +125,7 @@ $anon_karma	= 4;
 // Don't touch behind this
 @include('local.php');
 @include($_SERVER['SERVER_NAME'].'-local.php');
+@include($_SERVER['SERVER_ADDR'].'-local.php');
 
 //ob_start();
 include mnminclude.'db.php';

@@ -28,8 +28,9 @@ if(!empty($_GET['id'])) {
 	// Link comments
 	//
 	$id = intval($_GET['id']);
-	$mintime = max(time() - $globals['time_enabled_comments'], $if_modified);
-	$from_time = "AND comment_date > FROM_UNIXTIME($mintime)";
+	if ($if_modified) {
+		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
+	}
 	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_link_id=$id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios') . " [$id]";
@@ -55,7 +56,7 @@ if(!empty($_GET['id'])) {
 	if ($if_modified > 0 && $if_modified > time() - 86400*3 ) 
 		$from_time = "FROM_UNIXTIME($if_modified)";
 	else 
-		$from_time = "date_sub(now(), interval 48 hour)";
+		$from_time = "date_sub(now(), interval 5 day)";
 	$sql = "SELECT DISTINCT comments1.comment_id FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comments1.comment_date) FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT 1");
 	$title = _('Menéame: conversación de ') . $username;
@@ -103,8 +104,14 @@ if(!empty($_GET['id'])) {
 $comment = new Comment;
 $link = new Link;
 $comments = $db->get_col($sql);
+
+if ( !$comments && $if_modified) {
+	header('HTTP/1.1 304 Not Modified');
+	exit();
+}
+do_header($title);
+
 if ($comments) {
-	do_header($title);
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
 		$comment->read();
@@ -124,10 +131,7 @@ if ($comments) {
 		echo "]]></description>\n";
 		echo "	</item>\n\n";
 	}
-} else {
-	header('HTTP/1.1 304 Not Modified');
-	exit();
-}
+} 
 
 do_footer();
 
