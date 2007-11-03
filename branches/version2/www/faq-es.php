@@ -26,6 +26,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <li>
 <h4>¿Cómo promover las historias?</h4>
 <p>Selecciona la opción <a href="shakeit.php"><em>menear noticias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
+<p>No te olvides de leer las <a href="http://meneame.net/libs/ads/legal-meneame.php">condiciones de uso</a>.</p>
 </li>
 
 
@@ -37,7 +38,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li>
 <h4>¿Sólo cuenta el número de votos?</h4>
-<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). El algoritmo es bastante complejo, <a href="http://svn.meneame.net/index.cgi/branches/version2/scripts/promote6.php?rev=232&amp;view=log">promote6.php</a>.
+<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). El algoritmo es bastante complejo, <a href="http://svn.meneame.net/index.cgi/branches/version2/scripts/promote7.php">promote7.php</a>.
 </p>
 </li>
 
@@ -89,24 +90,21 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <li>
 <h4>¿Qué es el nótame?</h4>
 <p>Una herramienta de comunicación entre los usuarios de menéame y se organiza en pequeños apuntes, como los mini-post de un blog colectivo --de todos los usuarios de nótame-- y a la vez individual.  Puedes usarlo para cuestiones relacionadas con menéame o para explicar lo que quieras.  Puedes escribir desde el web, mensajería instantánea o el movil.  Encontrarás <a href="http://meneame.wikispaces.com/N%C3%B3tame">más detalles en el wiki</a>.</p>
-</p>
 </li>
 
 <li>
 <h4>¿Qué es la fisgona?</h4>
 <p>Muestra lo que sucede en menéame en tiempo real.  Si eres usuario registrado también puedes usarla para chatear.</p>
-</p>
 </li>
 
 <li>
 <h4>¿No es machista, eso de llamarle «fisgona»?</h4>
 <p>Primero se llamó «el fisgón» (y «¡el jefe!» la pantalla de «la fisgona» para usar en el trabajo). Mujeres opinaban que era machista siempre poner nombres femeninos y les hicimos caso: cambiamos a «la fisgona» y «¡la jefa!».  Ahora hay quien piensa que esto es también machista.  Si no tiene solución ¿para qué solucionarlo?</p>
-</p>
 </li>
 
 
 <p><h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
-<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://mnm.uib.es/gallir/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://notame.net">notame.net</a>.
+<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://ricardogalli.com/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://notame.net">notame.net</a>.
 </p>
 <p>
 Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.net/libs/ads/legal-meneame.php#contact">la página de condiciones legales</a>.
@@ -116,7 +114,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <li>
 <h4>¿Por qué? ¿para qué?</h4>
-<p>Está explicado en  el apunte <a href="http://mnm.uib.es/gallir/posts/2005/12/08/535/"><em>¿Qué y porqué el menéame?</em></a> del blog de Ricardo Galli. La historia comentada del proyecto puede leerse en la <a href="http://mnm.uib.es/gallir/posts/category/meneame/">sección menéame</a> del mismo blog.</p>
+<p>Está explicado en  el apunte <a href="http://mnm.uib.es/gallir/posts/2005/12/08/535/"><em>¿Qué y porqué el menéame?</em></a> del blog de Ricardo Galli.</p>
 </li>
 
 <li>
@@ -162,7 +160,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <li>
 <h4>¿Dónde notificamos errores, problemas o sugerencias?</h4>
-<p>Si esto sigue en marcha (nuestro compromiso personal es aguantar los gastos durante un año) pondremos un foro web. Mientras tanto podéis hacerlo en <a href="http://mnm.uib.es/gallir/meneame">esta página</a> del blog de Ricardo Galli.
+<p>Ver la <a href="http://meneame.net/libs/ads/legal-meneame.php#contact">sección de contacto</a> en la condiciones legales y de uso.
 </p>
 </li>
 
@@ -203,7 +201,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </li>
 
 </ol>
-<p>Para más información, consulta al <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>
+<p>Para más información, consulta al <a href="http://blog.meneame.net">blog</a> o al <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>
 
 </div>
 <?
