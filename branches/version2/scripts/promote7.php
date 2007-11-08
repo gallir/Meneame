@@ -99,7 +99,7 @@ else $max_to_publish = 1;
 $min_votes = 5;
 /////////////
 
-$limit_karma = round(min($past_karma,$min_karma) * 0.60);
+$limit_karma = round(min($past_karma,$min_karma) * 0.70);
 $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
@@ -138,7 +138,7 @@ $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
 echo "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
-echo "<b>Current MIN karma: $min_karma</b><br>\n";
+echo "<b>Current MIN karma: $min_karma</b>, analizing from $limit_karma<br>\n";
 echo "</p>\n";
 
 
@@ -203,7 +203,7 @@ if ($links) {
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%
-		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.05, $karma_pos_user_low);
+		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.07, $karma_pos_user_low);
 
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
@@ -232,7 +232,7 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($now - $link->date < 6300 && $now - $link->date > 900) { // 6300 === 1 hs, 45 min
+		if ($now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
 			$new_coef = 2 - ($now-$link->date)/6300;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
@@ -269,9 +269,9 @@ if ($links) {
 				$do_publish = true;
 			} else {
 				echo " $user->username disabled, probably due to abuses, penalized.";
-				$do_publish = false;
+				$do_publish = true;
 			}
-			$link->karma = round($link->karma*0.66);
+			$link->karma = $dblink->karma = round($link->karma*0.66);
 			$link->store_basic();
 			$changes = 1;
 		} else {
