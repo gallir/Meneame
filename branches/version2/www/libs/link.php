@@ -136,7 +136,11 @@ class Link {
 		// Now we analyse the html to find links to banned domains
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
-		preg_match_all('/<(a|meta +http-equiv|script>)[^>]+(href|url|action)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+		if (!empty($this->pingback) || !empty($this->trackback) || $this->trackback()) {
+			preg_match_all('/<(meta +http-equiv|script>)[^>]+(href|url|action)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+		} else {
+			preg_match_all('/<(a|meta +http-equiv|script>)[^>]+(href|url|action)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+		}
 		$check_counter = 0;
 		foreach ($matches[0] as $match) {
 			if (!preg_match('/<a.+rel=.*nofollow.*>/', $match)) {

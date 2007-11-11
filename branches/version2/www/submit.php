@@ -283,13 +283,13 @@ function do_submit1() {
 		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
 
 		// Check for user clones
-		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
+		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 20 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
 
-		if ($clones > 0 && $unique_users < 4) {
+		if ($clones > 0 && $unique_users < 3) {
 			// we detected that another user has sent to the same URL from the same IP
 			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
-			$ban_period_txt = _('dos meses');
-			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*60);
+			$ban_period_txt = _('un mes');
+			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*30);
 			$banned_host = $ban->ban_text;
 			echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong>, ";
 			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a></p>';
@@ -306,7 +306,7 @@ function do_submit1() {
 		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
-		if (($sents > 2 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
+		if (($sents > 3 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
 			if ($unique_users < 3) {
 				if ($avg_karma < -10) {
 					$ban_period = 86400*30;
@@ -368,7 +368,7 @@ function do_submit1() {
 
 
 	// check there is no an "overflow" from the same site
-	if ($current_user->user_karma < 15) {
+	if ($current_user->user_karma < 18) {
 		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
 		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
 		if ($site_links > 5 && $site_links > $total_links * 0.04) { // Only 4% from the same site
