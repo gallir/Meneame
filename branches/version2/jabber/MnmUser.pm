@@ -39,11 +39,11 @@ sub new {
 
 
 	if (defined($arg{jid})) {
-		$self =  {jid => $arg{jid}, timestamp => 0, karma => 0};
+		$self =  {jid => $arg{jid}, timestamp => 0, karma => 0, level=>'normal'};
 		bless $self, $class;
 		$self->read('jid');
 	} elsif (defined($arg{user})){
-		$self =  {user => $arg{user}, timestamp => 0, karma => 0};
+		$self =  {user => $arg{user}, timestamp => 0, karma => 0, level=>'normal'};
 		bless $self, $class;
 		$self->read('user');
 	}
@@ -79,6 +79,7 @@ sub read {
 			$self->{jid} = $hash->{user_public_info};
 		}
 		$self->{karma} = $hash->{user_karma};
+		$self->{level} = $hash->{user_level};
 		$self->{timestamp} = time;
 	} else {
 		$self->{id} = 0;
@@ -126,7 +127,7 @@ sub get_pref {
 
 sub check {
 	my $self = shift;
-	if (time - $self->{timestamp} > 180) { # Read every three minutes
+	if (time - $self->{timestamp} > 60) { # Read every  60 seconds
 		$self->{id} = 0;
 		$self->read;
 	}
@@ -167,11 +168,15 @@ sub user {
 	return $self->{user};
 }
 
+sub level {
+	my $self = shift;
+	return $self->{level};
+}
+
 sub karma {
 	my $self = shift;
 	return $self->{karma};
 }
-
 
 sub friend {
 	my $self = shift;

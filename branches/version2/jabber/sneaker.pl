@@ -120,13 +120,20 @@ sub ReadEvents {
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($jabber->users()) {
 			$other_relation = $poster->friend($u);
-			if (!$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster && $u->friend($poster) >= 0 && $other_relation >= 0 && ($hash->{chat_room} eq 'all' || $other_relation > 0 )) {
-				if ($hash->{chat_room} eq 'friends') {
-					$prompt = '@@'.$poster->{user};
-				} else {
-					$prompt = $poster->{user};
+			if (!$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster) {
+				if ($hash->{chat_room} eq 'admin') {
+					if ($u->level eq 'admin' || $u->level eq 'god') {
+						$prompt = '##'.$poster->{user};
+						$jabber->SendMessage($u, "$prompt: $content");
+					}
+				} elsif ($u->friend($poster) >= 0 && $other_relation >= 0 && ($hash->{chat_room} eq 'all' || $other_relation > 0 )) {
+					if ($hash->{chat_room} eq 'friends') {
+						$prompt = '@@'.$poster->{user};
+					} else {
+						$prompt = $poster->{user};
+					}
+					$jabber->SendMessage($u, "$prompt: $content");
 				}
-				$jabber->SendMessage($u, "$prompt: $content");
 			}
 		}
 	}
@@ -240,6 +247,9 @@ sub StoreChat {
 	if ($body =~ /^ *@/) {
 		$body =~ s/^ *@//;
 		$room = 'friends';
+	} elsif ($body =~ /^ *#/ && ($poster->level eq 'god' || $poster->level eq 'admin')) {
+		$body =~ s/^ *#//;
+		$room = 'admin';
 	} else {
 		$room = 'all';
 	}
