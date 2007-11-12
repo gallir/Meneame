@@ -421,7 +421,7 @@ function flipChar(c) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak10.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak11.js.php"></script>
 <?
 
 do_banner_top();
