@@ -33,6 +33,7 @@ global_options.show_chat = true;
 global_options.show_post = true;
 global_options.show_pubvotes = true;
 global_options.show_friends = false;
+global_options.show_admin = false;
 
 
 function start_sneak() {
@@ -42,17 +43,6 @@ function start_sneak() {
 		data_timer = setTimeout('get_data()', next_update/2);
 		xmlhttp = undefined;
 	});
-
-	/*
-	$(document).ajaxSend(function (request, settings) {
-		var date_object = new Date();
-		ping_start = date_object.getTime();
-	});
-
-	$(document).ajaxStop(function (request, settings) {
-		xmlhttp = undefined;
-	});
-	*/
 
 	if (!get_options_cookie()) {
 		check_control('vote');
@@ -231,6 +221,7 @@ function get_options_obj () {
 	if (! global_options.show_published) options.nopublished=1;
 	if (! global_options.show_pubvotes) options.nopubvotes=1;
 	if (global_options.show_friends) options.friends=1;
+	if (global_options.show_admin) options.admin=1;
 	return options;
 }
 
@@ -245,6 +236,7 @@ function get_options_string() {
 	if (! global_options.show_published) options += '&nopublished=1';
 	if (! global_options.show_pubvotes) options += '&nopubvotes=1';
 	if (global_options.show_friends) options += '&friends=1';
+	if (global_options.show_admin) options += '&admin=1';
 	return options;
 }
 

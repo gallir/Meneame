@@ -7,7 +7,7 @@ function init_sneak() {
 	global $globals, $db, $current_user;
 
 	// Create temporary table for chat if it does not exist
-	$db->query('CREATE TABLE IF NOT EXISTS `chats` ( `chat_time` INTEGER UNSIGNED NOT NULL DEFAULT 0 , `chat_uid` INTEGER UNSIGNED NOT NULL DEFAULT 0, `chat_room` enum("all","friends") NOT NULL default "all", `chat_user` CHAR( 32 ) NOT NULL , `chat_text` CHAR( 255 ) NOT NULL , INDEX USING BTREE ( `chat_time` ) ) ENGINE = MEMORY MAX_ROWS = 1000');
+	$db->query('CREATE TABLE IF NOT EXISTS `chats` ( `chat_time` INTEGER UNSIGNED NOT NULL DEFAULT 0 , `chat_uid` INTEGER UNSIGNED NOT NULL DEFAULT 0, `chat_room` enum("all","friends","admin") NOT NULL default "all", `chat_user` CHAR( 32 ) NOT NULL , `chat_text` CHAR( 255 ) NOT NULL , INDEX USING BTREE ( `chat_time` ) ) ENGINE = MEMORY MAX_ROWS = 2000');
 	$db->query('CREATE TABLE IF NOT EXISTS `sneakers` ( `sneaker_id` CHAR(24) NOT NULL, `sneaker_time` INTEGER UNSIGNED NOT NULL DEFAULT 0, `sneaker_user` INTEGER UNSIGNED NOT NULL DEFAULT 0, UNIQUE ( `sneaker_id` ) ) ENGINE = MEMORY MAX_ROWS = 1000');
 
 	// Check number of users if it's annonymous

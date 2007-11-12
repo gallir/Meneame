@@ -19,8 +19,8 @@ if (!empty($_REQUEST['getv'])) {
 	die;
 }
 $now = $globals['now'];
-if(!($time=check_integer('time')) > 0 || $now-$time > 900) {
-	$time = $now-900;
+if(!($time=check_integer('time')) > 0 || $now-$time > 1200) {
+	$time = $now-1200;
 }
 
 $dbtime = date("YmdHis", $time);
@@ -59,11 +59,15 @@ $logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log
 
 if ($logs) {
 	foreach ($logs as $log) {
-		if ($current_user->user_id > 0 && !empty($_REQUEST['friends']) && $log->log_user_id != $current_user->user_id) {
-			// Check the user is a friend
-			if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) {
-				continue;
+		if ($current_user->user_id > 0) {
+			if(!empty($_REQUEST['friends']) && $log->log_user_id != $current_user->user_id) {
+				// Check the user is a friend
+				if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) continue;
+			} elseif (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+				$user_level = $db->get_var("select user_level from users where user_id=$log->log_user_id");
+				if ($user_level != 'admin' && $user_level != 'god') continue;
 			}
+
 		}
 		switch ($log->log_type) {
 			case 'link_new':
@@ -150,12 +154,15 @@ function check_chat() {
 			$comment = preg_replace('/(^|[\s\.,¿])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
 		}
 
-		$from = $now - 900;
+		$from = $now - 1200;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
 		if (!empty($_REQUEST['friends']) || preg_match('/^@/', $comment)) {
 			$room = 'friends';
 			$comment = preg_replace('/^@ */', '', $comment);
+		} elseif ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			$room = 'admin';
+			$comment = preg_replace('/^# */', '', $comment);
 		} else {
 			$room = 'all';
 		}
@@ -193,28 +200,42 @@ function get_chat($time) {
 		$type = 'chat';
 		$status = _('chat');
 		if ($uid != $current_user->user_id) {
-			$friendship = friend_exists($current_user->user_id, $uid);
 
-			// Ignore
-			if ($friendship < 0) continue;
-
-			// This user is ignored by the writer
-			if (friend_exists($uid, $current_user->user_id) < 0) continue;
-
-			if ($event->chat_room == 'friends') {
-				// Check the user is a friend of the sender
-				if (friend_exists($uid, $current_user->user_id) <= 0) {
-					continue;
-				}
-				$status = _('amigo');
+			// CHECK ADMIN MODE
+			// If the message is for admins check this user is also admin
+			if ($event->chat_room == 'admin') {
+				if ($current_user->user_level != 'admin' && $current_user->user_level != 'god') continue;
+				$status = 'admin';
 			}
-			// Check the sender is a friend of the receiver
-			if (!empty($_REQUEST['friends']) && $friendship <= 0) {
-					continue;
+			// If this user is in "admin" mode, check the sender is also admin
+			if (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+				$user_level = $db->get_var("select user_level from users where user_id=$uid");
+				if ($user_level != 'admin' && $user_level != 'god') continue;
+			} else  {
+				// CHECK FRIENDSHIP
+				$friendship = friend_exists($current_user->user_id, $uid);
+				// Ignore
+				if ($friendship < 0) continue;
+				// This user is ignored by the writer
+				if (friend_exists($uid, $current_user->user_id) < 0) continue;
+
+				if ($event->chat_room == 'friends') {
+					// Check the user is a friend of the sender
+					if (friend_exists($uid, $current_user->user_id) <= 0) {
+						continue;
+					}
+					$status = _('amigo');
+				}
+				// Check the sender is a friend of the receiver
+				if (!empty($_REQUEST['friends']) && $friendship <= 0) {
+						continue;
+				}
 			}
 		} else {
 			if ($event->chat_room == 'friends') {
 				$status = _('amigo');
+			} elseif ($event->chat_room == 'admin') {
+				$status = 'admin';
 			}
 		}
 		$who = $event->chat_user;
@@ -234,15 +255,20 @@ function get_votes($dbtime) {
 	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_published_date, link_votes, link_anonymous, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
-		if ($current_user->user_id > 0 && $event->vote_user_id != $current_user->user_id && !empty($_REQUEST['friends'])) {
-			// Check the user is a friend
-			if (friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
-				continue;
-			} elseif ($event->vote_value < 0) {
-			// If the vote is negative, verify also the other user has selected as friend to the current one
-				if (friend_exists($event->vote_user_id, $current_user->user_id) <= 0) {
+		if ($current_user->user_id > 0) {
+			if (!empty($_REQUEST['friends']) && $event->vote_user_id != $current_user->user_id) {
+				// Check the user is a friend
+				if (friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
 					continue;
+				} elseif ($event->vote_value < 0) {
+					// If the vote is negative, verify also the other user has selected as friend to the current one
+					if (friend_exists($event->vote_user_id, $current_user->user_id) <= 0) {
+						continue;
+					}
 				}
+			} elseif (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+				$user_level = $db->get_var("select user_level from users where user_id=$event->vote_user_id");
+				if ($user_level != 'admin' && $user_level != 'god') continue;
 			}
 		}
 		if ($event->vote_value >= 0) {

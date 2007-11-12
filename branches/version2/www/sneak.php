@@ -20,6 +20,8 @@ init_sneak();
 array_push($globals['extra_css'], 'es/sneakcol.css');
 if (!empty($_REQUEST['friends'])) {
 	do_header(_('amigos en la fisgona'));
+} elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+	do_header(_('admin'));
 } else {
 	do_header(_('fisgona'));
 }
@@ -143,9 +145,11 @@ function to_html(data) {
 		case 'chat':
 			html += '<img src="img/common/sneak-chat01.png" width="21" height="17" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
-			if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent teh message only to friends
+			if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent the message only to friends
 				text_style = 'style="color: #255c25;"';
-			}
+			} else if (global_options.show_admin || data.status == 'admin') {
+				text_style = 'style="color: #f00000;"';
+			}  
 			if (check_user_ping(data.title)) {
 				text_style = 'style="color: #3e993e;font-weight: bold;"';
 			}
@@ -428,6 +432,9 @@ if ($current_user->user_id > 0) {
 	if (!empty($_REQUEST['friends'])) {
 		$taboption = 2;
 		echo '<script type="text/javascript">global_options.show_friends = true;</script>';
+	} elseif (!empty($_REQUEST['admin']) && $current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+		$taboption = 3;
+		echo '<script type="text/javascript">global_options.show_admin = true;</script>';
 	} else {
 		$taboption = 1;
 	}
@@ -488,14 +495,18 @@ echo '</div>';
 do_footer();
 
 function print_sneak_tabs($option) {
-$active = array();
-$active[$option] = ' class="tabmain-this"';
-echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
+	global $current_user;
+	$active = array();
+	$active[$option] = ' class="tabmain-this"';
+	echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
 
-echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
-echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+		echo '<li style="float: right;"><a '.$active[3].' href="'.$globals['base_url'].'sneak.php?admin=1">&nbsp;&nbsp;'._('admin').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+	}
+	echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+	echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
 
-echo '</ul>' . "\n";
+	echo '</ul>' . "\n";
 }
 
 ?>
