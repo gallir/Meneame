@@ -157,12 +157,12 @@ function check_chat() {
 		$from = $now - 1200;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
-		if (!empty($_REQUEST['friends']) || preg_match('/^@/', $comment)) {
-			$room = 'friends';
-			$comment = preg_replace('/^@ */', '', $comment);
-		} elseif ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+		if ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 			$room = 'admin';
 			$comment = preg_replace('/^# */', '', $comment);
+		} elseif (!empty($_REQUEST['friends']) || preg_match('/^@/', $comment)) {
+			$room = 'friends';
+			$comment = preg_replace('/^@ */', '', $comment);
 		} else {
 			$room = 'all';
 		}

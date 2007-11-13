@@ -131,7 +131,7 @@ function to_html(data) {
 			html += '<img src="img/common/sneak-newnotame01.png" width="21" height="17" alt="<?echo _('nótame');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (check_user_ping(data.title)) {
-				text_style = 'style="color: #3e993e;font-weight: bold;"';
+				text_style = 'style="font-weight: bold;"';
 			}
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
@@ -145,15 +145,23 @@ function to_html(data) {
 		case 'chat':
 			html += '<img src="img/common/sneak-chat01.png" width="21" height="17" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
-			if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { // The sender is a friend and sent the message only to friends
-				text_style = 'style="color: #255c25;"';
-			} else if (global_options.show_admin || data.status == 'admin') {
-				text_style = 'style="color: #f00000;"';
-			}  
-			if (check_user_ping(data.title)) {
-				text_style = 'style="color: #3e993e;font-weight: bold;"';
+			// Change the style
+			if (global_options.show_admin || data.status == 'admin') {
+				text_style = 'color: #f00000;';
+			} else if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { 
+				// The sender is a friend and sent the message only to friends
+				text_style = 'color: #255c25;';
 			}
-			data.title = to_blank(data.title);
+			if (check_user_ping(data.title)) {
+				text_style += 'font-weight: bold;';
+			}
+			if (text_style.length > 0) {
+				// Put the anchor in the same color as the rest of the text
+				data.title = data.title.replace(/ href="/gi, ' style="'+text_style+'" href="');
+				text_style = 'style="'+text_style+'"';
+			}
+			// Open in a new window
+			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1'); 
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
@@ -242,11 +250,6 @@ function check_user_ping(str) {
 		}
 	}
 	return false;
-}
-
-function to_blank(str) {
-	str = str.replace(/(href=")/gi, 'target="_blank" $1');
-	return str;
 }
 
 function put_smiley(str) {
