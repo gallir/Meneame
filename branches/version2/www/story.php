@@ -27,7 +27,7 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	if(is_numeric($url_args[0]) && $link->read('id') ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
-			if (!empty($url_args[1])) $extra_url = '/' . $url_args[1];
+			if (!empty($url_args[1])) $extra_url = '/' . urlencode($url_args[1]);
 			header('Location: ' . $link->get_permalink(). $extra_url);
 			die;
 		}
