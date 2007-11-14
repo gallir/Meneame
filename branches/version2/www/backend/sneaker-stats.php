@@ -22,7 +22,25 @@ function check_stats($string) {
 	if (preg_match('/^!hoygan/', $string)) return '¡HOYGAN! BISITEN http://' . get_server_name().$globals['base_url']. 'sneak.php?hoygan=1 GRASIAS DE HANTEMANO';
 	if (preg_match('/^!webstats/', $string)) return 'http://' . get_server_name().'/statcounter, http://' . get_server_name().'/webalizer/';
 	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
+	if (preg_match('/^!admins/', $string)) return do_admins($string);
 	return false;
+}
+
+function do_admins($string) {
+	global $db, $current_user;
+
+	if ($current_user->user_level != 'admin' && $current_user->user_level != 'god') return false;
+	foreach (array('god', 'admin') as $level) {
+		$res = $db->get_col("select user_login from users where user_level = '$level' and user_id != $current_user->user_id order by user_login asc");
+		if ($res) {
+			$comment .= "<strong>$level</strong>: ";
+			foreach ($res as $user) {
+				$comment .= $user . ' ';
+			}
+		}
+		$comment .= "<br>";
+	}
+	return $comment;
 }
 
 function do_stats1($string) {
