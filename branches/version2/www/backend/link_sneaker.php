@@ -8,6 +8,7 @@
 
 include('../config.php');
 include(mnminclude.'link.php');
+include(mnminclude.'sneak.php');
 
 
 // The client requests version number
