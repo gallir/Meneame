@@ -416,7 +416,7 @@ class Link {
 
 		$this->print_warn();
 
-		if($globals['external_ads']) echo "<!-- google_ad_section_start -->\n";
+		//if($globals['external_ads']) echo "<!-- google_ad_section_start -->\n";
 		
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
@@ -477,7 +477,7 @@ class Link {
 			}
 			echo '</div>' . "\n";
 		}
-		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
+		//if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '<div class="news-details">';
 		if($this->comments > 0) {
@@ -494,7 +494,7 @@ class Link {
 
 		// Print meta and category
 		echo '<span class="tool">';
-		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'"><strong>'.$this->meta_name.'</strong></a>, ';
+		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
 		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
 		echo '</span>';
 
@@ -628,7 +628,8 @@ class Link {
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $user > 0) {
-				$karma_value = round(($value - $current_user->user_karma)/2);
+				//$karma_value = round(($value - $current_user->user_karma)/2);
+				$karma_value = round(-$current_user->user_karma);
 			} else {
 				$karma_value=round($value);
 			}
