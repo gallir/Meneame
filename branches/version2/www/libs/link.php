@@ -463,7 +463,7 @@ class Link {
 			}
 			echo '</p>';
 		}
-		if (!empty($this->tags)) {
+		if ($globals['link'] && !empty($this->tags)) {
 			echo '<div class="news-tags">';
 			echo '<strong><a href="'.$globals['base_url'].'cloud.php" title="'._('nube').'">'._('etiquetas').'</a></strong>:';
 			$tags_array = explode(",", $this->tags);
@@ -508,7 +508,9 @@ class Link {
 				$this->print_problem_form();
 		}
 
-		echo '</div></div>'."\n";
+		echo '</div>'."\n";
+		// End news details
+		echo '</div>'."\n";
 		echo '</div>'."\n";
 
 		// Geo edit form div
