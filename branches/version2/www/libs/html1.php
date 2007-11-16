@@ -88,6 +88,9 @@ function do_header($title, $id='home') {
 	echo '<head>' . "\n";
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
 	echo "<title>$title // men&eacute;ame</title>\n";
+
+	do_css_includes();
+
 	echo '<meta name="generator" content="meneame" />' . "\n";
 	if (!empty($globals['noindex'])) {
 		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
@@ -96,8 +99,6 @@ function do_header($title, $id='home') {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-
-	do_css_includes();
 
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
@@ -156,13 +157,13 @@ function do_css_includes() {
 	global $globals;
 
 	if ($globals['css_main']) {
-		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$globals['css_main'].'";</style>' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].$globals['css_main'].'" />' . "\n";
 	}
 	if ($globals['css_color']) {
-		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].$globals['css_color'].'";</style>' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].$globals['css_color'].'" />' . "\n";
 	}
 	foreach ($globals['extra_css'] as $css) {
-		echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/'.$css.'";</style>' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].'css/'.$css.'" />' . "\n";
 	}
 
 }

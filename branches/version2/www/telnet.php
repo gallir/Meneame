@@ -23,7 +23,7 @@ echo '<head>' . "\n";
 echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
 echo "<title>"._('fisgona')." // men&eacute;ame</title>\n";
 echo '<meta name="generator" content="meneame" />' . "\n";
-echo '<style type="text/css" media="screen">@import "'.$globals['base_url'].'css/es/telnet.css";</style>' . "\n";
+echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].'css/es/telnet.css" />' . "\n";
 echo '<link rel="icon" href="img/common/konsole.png" type="image/x-icon" />' . "\n";
 do_js_includes();
 echo '</head>' . "\n";
