@@ -30,12 +30,16 @@ border-bottom-color: #FFF;
 border-bottom-color: #FFE2C5;
 }
 
-.sneaker-chat {
+.sneaker-chat, .sneaker-chat a {
 color: #9B0000;
 }
 
-.sneaker-chat a {
-color: #9B0000;
+.sneaker-chat-friends, .sneaker-chat-friends a {
+color: #255c25;
+}
+
+.sneaker-chat-admin, .sneaker-chat-admin a {
+color: #f00000;
 }
 
 .sneaker-who img {

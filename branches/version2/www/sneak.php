@@ -112,6 +112,7 @@ function to_html(data) {
 	var tstamp=new Date(data.ts*1000);
 	var timeStr;
 	var text_style = '';
+	var chat_class = 'sneaker-chat';
 
 	var hours = tstamp.getHours();
 	var minutes = tstamp.getMinutes();
@@ -147,10 +148,10 @@ function to_html(data) {
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			// Change the style
 			if (global_options.show_admin || data.status == 'admin') {
-				text_style = 'color: #f00000;';
+				chat_class = 'sneaker-chat-admin'
 			} else if (global_options.show_friends || data.status == '<? echo _('amigo'); ?>') { 
 				// The sender is a friend and sent the message only to friends
-				text_style = 'color: #255c25;';
+				chat_class = 'sneaker-chat-friends'
 			}
 			if (check_user_ping(data.title)) {
 				text_style += 'font-weight: bold;';
@@ -164,7 +165,7 @@ function to_html(data) {
 			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1'); 
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
-			html += '<div class="sneaker-chat" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
+			html += '<div class="'+chat_class+'" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
