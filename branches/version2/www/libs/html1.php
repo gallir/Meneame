@@ -659,7 +659,7 @@ function do_vertical_tags() {
 
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
-		$output = '<div class="vertical-box center">';
+		$output = '<div class="vertical-box" style="text-align: justify">';
 		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4>'."\n";
 		foreach ($res as $item) {
 			$words[$item->tag_words] = $item->count;

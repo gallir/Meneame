@@ -40,7 +40,7 @@ overflow: hidden;
 }
 
 #container { 
-margin: 15px 15px 0 10px;
+margin: 10px 15px 0 10px;
 position: relative;
 overflow: hidden;
 padding-bottom: 50px;
@@ -48,10 +48,10 @@ padding-bottom: 50px;
 
 #contents {
 position: relative;
-margin-left: 14.5em;
+margin-left: 13.9em;
 padding-left: 0;
 padding-right: 0;
-} * html #contents {margin-left: 14.25em;}
+} * html #contents {margin-left: 13.65em;}
 
 #sidebar {
 float: left;
@@ -410,7 +410,7 @@ padding: 5px 0 5px 25px;
 
 #header {
 padding: 0px;
-margin: 0 0 10px 120px;
+margin: 0 0 5px 120px;
 height: 37px;
 white-space: nowrap;
 overflow: hidden;
@@ -803,10 +803,6 @@ padding-bottom: 10px;
 overflow: hidden;
 letter-spacing: 0px;
 border-bottom: 1px solid;
-}
-
-.vertical-box.center {
-text-align: center;
 }
 
 .vertical-box ul {
