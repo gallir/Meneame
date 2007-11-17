@@ -194,7 +194,8 @@ if ($links) {
 		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
 		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
 		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
-		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
+		//$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
+		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(-user_karma) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
 
 		// Now you distribute the "equal" among the two values

@@ -6,7 +6,7 @@ header("Content-Type: text/plain");
 
 // Delete old logs
 $db->query("delete from logs where log_type in ('comment_new','login_failed') and log_date < date_sub(now(), interval 24 hour)");
-$db->query("delete from logs where log_date < date_sub(now(), interval 15 day)");
+$db->query("delete from logs where log_date < date_sub(now(), interval 30 day)");
 
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_validated_date is null");
@@ -240,7 +240,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	} else {
 		$no_calculated++;
 		if ($user->karma > 7) {
-			$karma = max($karma_base_user, $user->karma - 0.2);
+			$karma = max($karma_base_user, $user->karma - 0.4);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
 		} else {
