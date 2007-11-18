@@ -80,7 +80,13 @@ function do_edit() {
 					|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
-		echo '<option value="abuse"';
+		// Keep the previous discard value
+		if ($linkres->status == 'discard' || $linkres->status == 'abuse' ) {
+			$discard_option = $linkres->status;
+		} else {
+			$discard_option = 'abuse';
+		}
+		echo '<option value="'.$discard_option.'"';
 		if ($linkres->status == 'discard' || $linkres->status == 'abuse' ) echo ' selected="selected"';
 		echo '>'._('descartada').'</option>';
 		echo '<option value="queued"';
@@ -127,7 +133,7 @@ function do_save() {
 	$linkres->tags = tags_normalize_string(clean_text($_POST['tags']));
 	// change the status
 	if ($linkres->status != 'published' && ($_POST['status'] == 'queued' || $_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
-		if ($linkres->status != $_POST['status'] && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
+		if ($linkres->status != 'discard' && $linkres->status != 'abuse' && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;
 		}
