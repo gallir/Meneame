@@ -35,7 +35,7 @@ if(!$link->read_basic()) {
 }
 
 if(!$link->is_votable()) {
-	error(_('¡tranquilo cowboy!'));
+	error(_('votos cerrados'));
 }
 
 // Only if the link has been not published, let them play

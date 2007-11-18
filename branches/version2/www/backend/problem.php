@@ -30,7 +30,7 @@ $link->id=$id;
 $link->read_basic();
 
 if(!$link->is_votable()) {
-	error(_('¡tranquilo cowboy!'));
+	error(_('votos cerrados'));
 }
 
 if($current_user->user_id != $user_id) {

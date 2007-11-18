@@ -393,7 +393,7 @@ class Link {
 		}
 		$link_url=$db->escape($url);
 		$link_alternative=$db->escape($link_alternative);
-		$found = $db->get_var("SELECT link_id FROM links WHERE (link_url = '$link_url' OR link_url = '$link_alternative') AND (link_status != 'discard' OR link_votes>0) limit 1");
+		$found = $db->get_var("SELECT link_id FROM links WHERE (link_url = '$link_url' OR link_url = '$link_alternative') AND (link_status not in ('discard', 'abuse') OR link_votes>0) limit 1");
 		return $found;
 	}
 
@@ -531,6 +531,7 @@ class Link {
 			case 'queued': // another color box for not-published
 				$box_class = 'mnm-queued';
 				break;
+			case 'abuse': // another color box for discarded
 			case 'discard': // another color box for discarded
 				$box_class = 'mnm-discarded';
 				break;
@@ -560,7 +561,7 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		if ( $this->status != 'discard' && $this->status != 'abuse' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
@@ -695,7 +696,8 @@ class Link {
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || ($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
+		if($globals['bot'] || $this->status == 'abuse' || 
+				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
 			$this->votes_enabled = true;
@@ -709,6 +711,7 @@ class Link {
 
 		return  $current_user->user_id > 0  &&
 				$this->votes > 0 &&
+				$this->status != 'abuse' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] &&
 				($this->status != 'published' || 
 				// Allows to vote negative to published with high ratio of negatives

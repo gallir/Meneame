@@ -42,10 +42,9 @@ switch ($globals['meta']) {
 		// Show only discarded in four days
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status='discard' and (link_votes >0 || link_author = $current_user->user_id)";
+		$from_where = "FROM links WHERE link_date > $from_time and link_status in ('discard', 'abuse') and (link_votes >0 || link_author = $current_user->user_id)";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 5;
-// 		print_shakeit_tabs(5); benjami 20070212 20:53, reportat a fisgona: duplicava tabs dalt al costat l'Eli
 		$globals['tag_status'] = 'discard';
 		break;
 	case '_all':

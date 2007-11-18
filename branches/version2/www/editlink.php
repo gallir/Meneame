@@ -75,12 +75,13 @@ function do_edit() {
 	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
 
 	// Allow to change the status
-	if ($linkres->votes > 0 && $linkres->status != 'published' && (($linkres->status != 'discard' && $current_user->user_id == $linkres->author) 
-							|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+	if ($linkres->votes > 0 && $linkres->status != 'published' && 
+			(($linkres->status != 'discard' && $linkres->status != 'abuse' && $current_user->user_id == $linkres->author) 
+					|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
-		echo '<option value="discard"';
-		if ($linkres->status == 'discard') echo ' selected="selected"';
+		echo '<option value="abuse"';
+		if ($linkres->status == 'discard' || $linkres->status == 'abuse' ) echo ' selected="selected"';
 		echo '>'._('descartada').'</option>';
 		echo '<option value="queued"';
 		if ($linkres->status == 'queued') echo ' selected="selected"';
@@ -125,8 +126,8 @@ function do_save() {
 	$linkres->content = clean_text($_POST['bodytext']);
 	$linkres->tags = tags_normalize_string(clean_text($_POST['tags']));
 	// change the status
-	if ($linkres->status != 'published' && ($_POST['status'] == 'queued' || $_POST['status'] == 'discard')) {
-		if ($linkres->status != 'discard' && $_POST['status'] == 'discard') {
+	if ($linkres->status != 'published' && ($_POST['status'] == 'queued' || $_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
+		if ($linkres->status != $_POST['status'] && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;
 		}
