@@ -361,6 +361,8 @@ function get_status($status) {
 		case 'queued':
 			$status = _('pendiente');
 			break;
+		case 'duplicated':
+		case 'abuse':
 		case 'discard':
 			$status = _('descartada');
 			break;
