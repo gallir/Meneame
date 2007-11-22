@@ -469,7 +469,7 @@ border: none;
 
 .news-summary {
 margin: 0;
-padding: 10px 0 0 0;
+padding: 10px 0 5px 0;
 position: relative;
 }
 
@@ -508,11 +508,11 @@ vertical-align: top;
 .news-details .tool {
 display: inline;
 border-left: 1px solid;
-padding: 0 4px 0 4px;
+padding: 0 6px 0 6px;
 }
 
 .news-details .comments {
-padding: 0 4px 0 0;
+padding: 0 6px 0 0;
 font-weight: bold;
 border-left: none;
 }
@@ -845,7 +845,7 @@ margin: 0px;
 /* comments [& incipient notes] */
 
 .comments {
-margin: 25px 5px 0 10px;
+margin: 15px 5px 0 10px;
 }
 
 .notes {

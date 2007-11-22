@@ -426,7 +426,7 @@ class Link {
 
 		// GEO
 		if ($this->latlng) {
-			echo '<div class="thumbnail" id="map" style="width:120px;height:120px">&nbsp;</div>'."\n";
+			echo '<div class="thumbnail" id="map" style="width:140px;height:140px">&nbsp;</div>'."\n";
 		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 		// Websnapr
 		// In order not to overload websnapr, display the image only if votes are enabled
@@ -463,21 +463,6 @@ class Link {
 			}
 			echo '</p>';
 		}
-		if ($globals['link'] && !empty($this->tags)) {
-			echo '<div class="news-tags">';
-			echo '<strong><a href="'.$globals['base_url'].'cloud.php" title="'._('nube').'">'._('etiquetas').'</a></strong>:';
-			$tags_array = explode(",", $this->tags);
-			$tags_counter = 0;
-			foreach ($tags_array as $tag_item) {
-				$tag_item=trim($tag_item);
-				$tag_url = urlencode($tag_item);
-				if ($tags_counter > 0) echo ',';
-				echo ' <a href="'.$globals['base_url'].'?search=tag:'.$tag_url.'">'.$tag_item.'</a>';
-				$tags_counter++;
-			}
-			echo '</div>' . "\n";
-		}
-		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '<div class="news-details">';
 		if($this->comments > 0) {
@@ -492,12 +477,6 @@ class Link {
 			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
-		// Print meta and category
-		echo '<span class="tool">';
-		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
-		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
-		echo '</span>';
-
 		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
@@ -510,6 +489,32 @@ class Link {
 
 		echo '</div>'."\n";
 		// End news details
+
+		// Displayed only in a story page
+		if ($globals['link']) {
+			echo '<div class="news-details">';
+			// Print meta and category
+			echo '<strong>'._('categoría').'</strong>: ';
+			echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
+			echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
+			echo '</div>'."\n";
+			if (!empty($this->tags)) {
+				echo '<div class="news-details">';
+				echo '<strong>'._('etiquetas').'</strong>:';
+				$tags_array = explode(",", $this->tags);
+				$tags_counter = 0;
+				foreach ($tags_array as $tag_item) {
+					$tag_item=trim($tag_item);
+					$tag_url = urlencode($tag_item);
+					if ($tags_counter > 0) echo ',';
+					echo ' <a href="'.$globals['base_url'].'?search=tag:'.$tag_url.'">'.$tag_item.'</a>';
+					$tags_counter++;
+				}
+				echo '</div>'."\n";
+			}
+		}
+		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
+
 		echo '</div>'."\n";
 		echo '</div>'."\n";
 
