@@ -650,8 +650,8 @@ function do_vertical_tags() {
 	if(memcache_mprint('tags'.$status.$meta_cond)) return;
 
 	$min_pts = 8;
-	$max_pts = 18;
-	$line_height = $max_pts * 0.75;
+	$max_pts = 20;
+	$line_height = $max_pts * 0.70;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";

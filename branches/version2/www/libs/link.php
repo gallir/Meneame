@@ -416,7 +416,7 @@ class Link {
 
 		$this->print_warn();
 
-		//if($globals['external_ads']) echo "<!-- google_ad_section_start -->\n";
+		if($globals['external_ads']) echo "<!-- google_ad_section_start -->\n";
 		
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
@@ -477,7 +477,7 @@ class Link {
 			}
 			echo '</div>' . "\n";
 		}
-		//if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
+		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '<div class="news-details">';
 		if($this->comments > 0) {

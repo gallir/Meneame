@@ -98,12 +98,13 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 </li>
 
 <li>
-<h4>¿No es machista, eso de llamarle «fisgona»?</h4>
-<p>Primero se llamó «el fisgón» (y «¡el jefe!» la pantalla de «la fisgona» para usar en el trabajo). Mujeres opinaban que era machista siempre poner nombres femeninos y les hicimos caso: cambiamos a «la fisgona» y «¡la jefa!».  Ahora hay quien piensa que esto es también machista.  Si no tiene solución ¿para qué solucionarlo?</p>
+<h4>¿No es machista, eso de llamarle «fisgona» (o «la jefa»)?</h4>
+<p>Primero se llamó «el fisgón» (y «¡el jefe!» la pantalla de «la fisgona» para usar en el trabajo). Había mujeres que opinaban que era machista poner siempre nombres genéricos masculinos y les hicimos caso: cambiamos a «la fisgona» y «¡la jefa!».  Ahora hay quien piensa que esto también es machista.  Si no tiene solución ¿para qué solucionarlo?</p>
 </li>
 
 
-<p><h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
+<li>
+<h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
 <p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://ricardogalli.com/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://notame.net">notame.net</a>.
 </p>
 <p>
