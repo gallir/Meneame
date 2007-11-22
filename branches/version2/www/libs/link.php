@@ -426,7 +426,7 @@ class Link {
 
 		// GEO
 		if ($this->latlng) {
-			echo '<div class="thumbnail" id="map" style="width:140px;height:140px">&nbsp;</div>'."\n";
+			echo '<div class="thumbnail" id="map" style="width:130px;height:130px">&nbsp;</div>'."\n";
 		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
 		// Websnapr
 		// In order not to overload websnapr, display the image only if votes are enabled
@@ -477,7 +477,11 @@ class Link {
 			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
-		echo ' <span class="tool"><a href="'.$this->get_relative_permalink().'/voters">'._('negativos').'</a>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></span>';
+		// Print meta and category
+		echo ' <span class="tool">'._('en').': ';
+		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
+		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
+		echo '</span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
 		if(!$this->voted &&  
@@ -492,12 +496,6 @@ class Link {
 
 		// Displayed only in a story page
 		if ($globals['link']) {
-			echo '<div class="news-details">';
-			// Print meta and category
-			echo '<strong>'._('categoría').'</strong>: ';
-			echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
-			echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
-			echo '</div>'."\n";
 			if (!empty($this->tags)) {
 				echo '<div class="news-details">';
 				echo '<strong>'._('etiquetas').'</strong>:';
@@ -511,6 +509,9 @@ class Link {
 					$tags_counter++;
 				}
 				echo '</div>'."\n";
+			}
+			if ($this->negatives > 0) {
+				echo '<div class="news-details"><strong>'._('negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></div>';
 			}
 		}
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";

@@ -480,11 +480,10 @@ padding-right: 5px;
 
 .news-details {
 display: block;
-margin: 2px 0 0 0;
+margin: 4px 0 0 0;
 padding: 0;
 overflow: hidden;
 white-space: nowrap;
-min-height: 3.5ex;
 }
 
 .news-details span {
