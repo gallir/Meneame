@@ -47,6 +47,11 @@ if(!$user->read()) {
 	not_found();
 }
 
+// For editing notes
+if ($current_user->user_id == $user->id) {
+	array_push($globals['extra_js'], 'jquery-form.pack.js');
+}
+
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
 // 100 if the user is the current one
@@ -63,8 +68,6 @@ if(empty($view)) $view = 'profile';
 // Load Google GEO
 if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
 	if ($current_user->user_id == $user->id) {
-		// For editing notes
-		array_push($globals['post_js'], 'jquery-form.pack.js');
 		geo_init('geo_coder_editor_load', $globals['latlng'], 7, 'user');
 	} else {
 		geo_init('geo_coder_load', $globals['latlng'], 7, 'user');
