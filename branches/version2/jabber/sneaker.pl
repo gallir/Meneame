@@ -116,7 +116,7 @@ sub ReadEvents {
 	while ($hash = $sth->fetchrow_hashref) {
 		$content = MnmDB::utf8($hash->{chat_text});
 		$content = MnmDB::clean_pseudotags(decode_entities($content));
-		$poster = new MnmUser(user=>$hash->{chat_user});
+		$poster = new MnmUser(user=>MnmDB::utf8($hash->{chat_user}));
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($jabber->users()) {
 			$other_relation = $poster->friend($u);
