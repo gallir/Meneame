@@ -14,11 +14,12 @@ if(empty($_GET['url'])) {
 	die;
 }
 $url = $db->escape($_GET['url']);
+$url = preg_replace('/\/$/', '', $url);
 $all = intval($_GET['all']);
 if ($all == '1') {
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url like '$url%' order by link_date DESC");
 } else {
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url='$url'");
+    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url in ('$url', '$url/')");
 }
 if ($links) {
 	foreach ($links as $dblink) {
