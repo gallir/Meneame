@@ -73,14 +73,6 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <p>Finalmente hay una restricción adicional para evitar <em>abusos</em> de los usuarios registrados: sólo pueden ser promovidas aquellas noticias que al menos tengan <em>N</em> votos. Donde <em>N</em> actualmente es cinco (5).</p>
 </li>
 
-
-<li>
-<h4>¿Qué es esa pestaña "recomendadas" en la página de votación de pendientes?</h4>
-<p>Muestra las noticias de autores que están más cercanos al perfil del usuario que vota. Se usan algoritmos de redes sociales (en particular de "afiliación" sobre grafos bi-partitos) para mostrar primero las noticias que más se aproximan a los gustos de cada usuario. Así se evita tener que definir "amigos" manualmente. Este algoritmo está sujeto a constantes mejoras y ajustes, su buen funcionamiento depende de la cantidad y "calidad" de los votos de cada usuario.
-</p>
-</li>
-
-
 <li>
 <h4>¿Qué es esa pestaña "descartadas" en la página de votación de pendientes?</h4>
 <p>Cuando una noticia recibe más reportes de "problemas" que votos positivos, es movida a esta cola. Los usuarios pueden seguir votando y si consigue los votos suficientes volverá a la cola de pendientes normal.
