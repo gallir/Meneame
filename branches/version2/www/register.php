@@ -190,10 +190,10 @@ function check_user_fields() {
 	// Check class
 	// nnn.nnn.nnn
 	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.' . $ip_classes[2] . '.%';
-	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 12 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
+	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 6 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 0) {
 		syslog(LOG_NOTICE, "Meneame, register rejected by IP class ($_POST[username]) $ip_class");
-		register_error(_("Para registrar otro usuario desde la misma red debes esperar 12 horas."). " ($ip_class)");
+		register_error(_("Para registrar otro usuario desde la misma red debes esperar 6 horas."). " ($ip_class)");
 		$error=true;
 	}
 	if ($error) return false;

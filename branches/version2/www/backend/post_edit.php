@@ -65,7 +65,7 @@ function save_post ($post_id) {
 
 		if ($current_user->user_id != intval($_POST['user_id'])) die;
 
-		if ($current_user->user_karma < 5) {
+		if ($current_user->user_karma < $globals['min_karma_for_posts']) {
 			echo 'ERROR: ' . _('el karma es muy bajo');
 			die;
 		}
