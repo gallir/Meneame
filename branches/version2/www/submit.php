@@ -98,13 +98,14 @@ function do_submit0() {
 	echo '<div class="instruction">';
 	echo '<h3>'._('por favor, respeta estas instrucciones para mejorar la calidad:').'</h3>';
 	echo '<ul class="instruction-list">';
-	echo '<li><strong>'._('contenido interesante').':</strong> '._('¿la noticia conseguirá suficientes votos por méritos propios? esto es, sin que haga falta la ayuda de tus amigos, conocidos y saludados. usa la empatía para intentar averiguarlo: ¿interesará a una cantidad razonable de lectores?').'</li>';
+	echo '<li><strong>'._('contenido interesante').':</strong> '._('¿la noticia conseguirá suficientes votos por méritos propios? ¿interesará a una cantidad razonable de lectores?').'</li>';
 	echo '<li><strong>'._('enlaza la fuente original').':</strong> '._('no hagas perder tiempo a los lectores.').'</li>';
 	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar noticias.').'</li>';
 	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica la noticia lo mejor que puedas y porqué es interesante').'.</li>';
-	echo '<li><strong>'._('repetimos, por las dudas... ¡enlaza la fuente original!').'</strong> </li>';
+	//echo '<li><strong>'._('repetimos, por las dudas... ¡enlaza la fuente original!').'</strong> </li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos o la falta de ellos te pueden afectar personalmente, es mejor que no envíes la noticia.').'</li>';
-	echo '<li><strong>'._('NO envíes').':</strong> '._('spam, sensacionalismo, amarillismo, cotilleos, noticias del corazón, provocaciones, difamaciones e insultos.').'</li>';
+	//echo '<li><strong>'._('NO envíes').':</strong> '._('spam, sensacionalismo, amarillismo, cotilleos, noticias del corazón, provocaciones, difamaciones e insultos.').'</li>';
+	echo '<li><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
 	echo '</div>';
