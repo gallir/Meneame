@@ -105,7 +105,7 @@ function do_submit0() {
 	//echo '<li><strong>'._('repetimos, por las dudas... ¡enlaza la fuente original!').'</strong> </li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos o la falta de ellos te pueden afectar personalmente, es mejor que no envíes la noticia.').'</li>';
 	//echo '<li><strong>'._('NO envíes').':</strong> '._('spam, sensacionalismo, amarillismo, cotilleos, noticias del corazón, provocaciones, difamaciones e insultos.').'</li>';
-	echo '<li><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
+	echo '<li class="underl-y"><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
 	echo '</div>';
