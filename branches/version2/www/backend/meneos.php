@@ -43,12 +43,13 @@ $votes_anon = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' a
 $negatives = $db->get_results("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=".$globals['link_id']." and vote_value < 0 group by vote_value order by count desc");
 
 echo '<div class="news-details">';
-echo _('votos usuarios'). ': '.$votes_users_positive.',&nbsp;&nbsp;';
-echo _('votos anónimos'). ': '.$votes_anon;
+//echo _('votos usuarios'). ': '.$votes_users_positive.',&nbsp;&nbsp;';
+//echo _('votos anónimos'). ': '.$votes_anon;
 if ($negatives) {
+	echo '<strong>'._('votos negativos').':</strong>&nbsp;&nbsp;';
 	foreach ($negatives as $negative) {
-		echo ',&nbsp; ';
 		echo get_negative_vote($negative->vote_value) . ':&nbsp;' . $negative->count;
+		echo '&nbsp;&nbsp;';
 	}
 }
 echo '</div>';

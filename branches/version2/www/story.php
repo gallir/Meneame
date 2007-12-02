@@ -191,14 +191,17 @@ case 2:
 		print_comment_form();
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 	} else {
-		// Noit enough karma or anonymous user
+		// Not enough karma or anonymous user
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
-		echo '<div class="commentform warn">'."\n";
-		if ($current_user->authenticated && $current_user->user_karma <= $globals['min_karma_for_comments']) 
+		if ($current_user->authenticated && $current_user->user_karma <= $globals['min_karma_for_comments']) {
+			echo '<div class="commentform warn">'."\n";
 			echo _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma ."\n";
-		else
+			echo '</div>'."\n";
+		} elseif (!$globals['bot']){
+			echo '<div class="commentform warn">'."\n";
 			echo '<a href="'.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a><p><em>¿Qué beneficios obtienes al crear tu cuenta propia?</em></p><ul><li>Enviar las noticias interesantes que encuentres en la Red.</li><li>Expresar tu opinión escribiendo comentarios.</li><li>Votar los comentarios.</li><li>Reflejar en tu perfil las noticias que te interesan, votándolas o enviándolas.</li><li>Recordar las noticias que más te interesan.</li><li>Formar parte de una red de usuarios con gustos afines.</li><li>Chat en «la Fisgona».</li><li>Mensajería breve en notame.net.</li><li>Seguimiento mediante mensajeria instantánea en Google Talk (TM) y cualquier servidor Jabber.</li></ul>'."\n";
-		echo '</div>'."\n";
+			echo '</div>'."\n";
+		}
 	}
 	echo '</div>' . "\n";
 	break;

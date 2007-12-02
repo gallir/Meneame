@@ -510,9 +510,11 @@ class Link {
 				}
 				echo '</div>'."\n";
 			}
-			if ($this->negatives > 0) {
-				echo '<div class="news-details"><strong>'._('negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></div>';
-			}
+			echo '<div class="news-details">';
+			echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
+			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
+			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
+			echo '</div>';
 		}
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
