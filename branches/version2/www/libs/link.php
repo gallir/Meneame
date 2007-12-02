@@ -464,38 +464,13 @@ class Link {
 			echo '</p>';
 		}
 
-		if (preg_match('/story\//', $_SERVER['PHP_SELF'])) $in_story=true; else $in_story=false; // in story page?
-
-		if ($in_story) echo '<a name="comments"></a>'."\n";
-
 		echo '<div class="news-details">';
 		if($this->comments > 0) {
-			if (!$in_story) {
-				$comments_mess = _('leer comentarios') . ' ('. $this->comments . ')';
-				$comments_anchor = "comments";
-			} else {
-				$comments_mess = _('envía tu comentario');
-				$comments_anchor = "tocomment";
-			}
-		} else {
-			if (!$in_story) {
-				$comments_mess = _('sin comentarios');
-				$comments_anchor = "comments";
-			} else {
-				$comments_mess = _('envía el primer comentario');
-				$comments_anchor = "tocomment";
-			}
+			$comments_mess = $this->comments . ' ' . _('comentarios');
+		} else  {
+			$comments_mess = _('sin comentarios');
 		}
-		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'#'.$comments_anchor.'" title="'._("ir a los comentarios").'"><img src="/img/common/tocomments01.png" width="20" height="15" alt="'._('leer comentarios').'" /></a>'.' '.'<a href="'.$this->get_relative_permalink().'#'.$comments_anchor.'" title="'._("ir a los comentarios").'">'.$comments_mess. '</a> </span>';
-
-		if ($in_story) {
-			if ($this->comments > 0) { // show comments #
-				if ($this->comments == 1) $pl = ""; else $pl = "s";
-				echo '<span class="tool">'.$this->comments.' '._("comentario").$pl.'</span>';
-			}
-		} else { // more info icon (to story page)
-			echo '<span class="tool"><a href="'.$this->get_relative_permalink().'" title="'._("más información de la noticia").'"><img src="/img/common/moreinfo01.png" width="16" height="16" alt="'._('más información').'" /></a></span>';
-		}
+		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
@@ -523,7 +498,7 @@ class Link {
 		if ($globals['link']) {
 			if (!empty($this->tags)) {
 				echo '<div class="news-details">';
-				echo '<strong>'._('etiquetas').':</strong>';
+				echo '<strong>'._('etiquetas').'</strong>:';
 				$tags_array = explode(",", $this->tags);
 				$tags_counter = 0;
 				foreach ($tags_array as $tag_item) {
@@ -536,7 +511,7 @@ class Link {
 				echo '</div>'."\n";
 			}
 			if ($this->negatives > 0) {
-				echo '<div class="news-details"><strong>'._('negativos').':</strong> <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></div>';
+				echo '<div class="news-details"><strong>'._('negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span></div>';
 			}
 		}
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
@@ -552,10 +527,9 @@ class Link {
 			}
 			echo '</div>'."\n";
 		}
+
 	}
-
-
-
+	
 	function print_shake_box() {
 		global $current_user, $anonnymous_vote, $site_key, $globals;
 		
