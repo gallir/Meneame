@@ -477,7 +477,7 @@ class Link {
 				$comments_mess = _('envía tu comentario');
 				$comments_anchor = "tocomment";
 			}
-		} else  {
+		} else {
 			if (!$in_story) {
 				$comments_mess = _('sin comentarios');
 				$comments_anchor = "comments";
@@ -489,15 +489,11 @@ class Link {
 		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'#'.$comments_anchor.'" title="'._("ir a los comentarios").'"><img src="/img/common/tocomments01.png" width="20" height="15" alt="'._('leer comentarios').'" /></a>'.' '.'<a href="'.$this->get_relative_permalink().'#'.$comments_anchor.'" title="'._("ir a los comentarios").'">'.$comments_mess. '</a> </span>';
 
 		if ($in_story) {
-			if ($this->comments == 0) {
-				echo '<span class="tool"><a href="'.$this->get_relative_permalink().'#comment" title="'._("ir al formulario para enviar un comentario").'">'._("envía tu comentario").'</a></span>';
-			} else {
+			if ($this->comments > 0) { // show comments #
 				if ($this->comments == 1) $pl = ""; else $pl = "s";
 				echo '<span class="tool">'.$this->comments.' '._("comentario").$pl.'</span>';
 			}
-		}
-
-		if (!$in_story) {
+		} else { // more info icon (to story page)
 			echo '<span class="tool"><a href="'.$this->get_relative_permalink().'" title="'._("más información de la noticia").'"><img src="/img/common/moreinfo01.png" width="16" height="16" alt="'._('más información').'" /></a></span>';
 		}
 
