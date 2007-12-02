@@ -338,7 +338,8 @@ do_footer();
 function print_comment_form() {
 	global $link, $current_user, $globals;
 
-	if (!$link->votes > 0) return; 
+	if (!$link->votes > 0) return;
+	echo '<a name="tocomment"></a>'."\n";
 	echo '<div class="commentform">'."\n";
 	echo '<form action="" method="post">'."\n";
 	echo '<fieldset>'."\n";
