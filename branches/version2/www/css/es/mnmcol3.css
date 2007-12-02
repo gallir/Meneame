@@ -1,0 +1,729 @@
+/* Menéame colors and images */
+
+/***
+All images referenced by the CSS and distributed in the tar file are 
+copyrighted by Benjamí Villoslada and published under a CC license: 
+http://creativecommons.org/licenses/by-sa/2.5/
+
+Source code was developed by Ricardo Galli, it's published 
+under the Affero GPL License (http://meneame.net/COPYING) unless
+stated otherwise in individual files.
+***/
+
+/* main */
+
+body {
+color: #303030;
+background: #FFF;
+}
+
+#container {
+background: url(../../img/common/pixel-ff6400.png) 13.9em top repeat-y;
+}
+
+.tt {
+color: #C85000;
+}
+
+/* tabs */
+
+.tabmain {
+background: #fff url(../../img/common/pixel-ff6400.png) repeat-x bottom;
+}
+
+.tabmain a:link, .tabmain a:visited {
+background: #FFF url(../../img/common/tabs/tabmain-background.png) bottom left repeat-x; /* gradient background */
+color: #FF6400;
+border-color: #ff6400;
+}
+
+.tabmain a:link.tabmain-this, .tabmain a:visited.tabmain-this {
+color: #FF6400;
+background: #fff url(../../img/common/reload-tab-01.png) right center no-repeat;
+border-bottom-color: #fff;
+}
+
+.tabmain a:hover {
+background: #fff;
+}
+
+/* tabsub specials */
+
+.tabsub-shakeit {
+background: #fff url(../../img/common/pixel-ff9400.png) repeat-x bottom;
+}
+
+.tabsub-shakeit a:link, .tabsub-shakeit a:visited {
+color: #FF9400;
+border-color: #FF9400;
+}
+
+.tabsub-shakeit a:link.tabsub-this, .tabsub-shakeit a:visited.tabsub-this {
+border-bottom-color: #FFF;
+}
+
+.tabsub-shakeit a:hover {
+background: #FF9400;
+color: #FFF;
+}
+
+.tabsub {
+background: url(../../img/common/pixel-ff6400.png) repeat-x bottom;
+}
+
+.tabsub a:link, .tabsub a:visited {
+border-color: #ff6400;
+background: #FFF url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x; /* gradient background */
+color: #FF6400;
+}
+
+.tabsub a:link.tabsub-this, .tabsub a:visited.tabsub-this {
+border-bottom-color: #fff;
+color: #FF6400;
+background: #fff;
+}
+
+.tabsub a:hover {
+background: #fff;
+}
+
+/* h2 without underline */
+
+.topheading h2 {
+color: #FF6400;
+}
+
+/* credits */
+
+.credits-strip {
+border-top-color: #FF6400;
+}
+
+.credits-strip-text {
+color: #FF6400;
+}
+
+.credits-strip a:link, .credits-strip a:visited {
+color: #FF6400;
+}
+
+/* elements */
+
+a {
+color: #03A;
+}
+
+a:hover, a:focus {
+color: #FF6400;
+}
+
+a:active {
+color: #000;
+}
+
+hr {
+background: #ccc;
+}
+
+h2 {
+border-bottom-color: #FF6400;
+}
+
+table img {
+border-color: #ccc;
+}
+
+th, td {
+border-bottom-color: #ddd;
+}
+
+th.short a, td.short a {
+border-color: #FFF;
+}
+
+th.short a:hover, td.short a:hover {
+background: #FFF;
+border-color: #000;
+}
+
+tr:hover td {
+background: #FFE2C5;
+}
+
+th span.info_s {
+color: #a00;
+}
+
+/* ATENCION: dos colores de borde... */
+.warn {
+background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
+border-color: #C4C400;
+border-color: #FF9400;
+}
+
+.error {
+color: #FF6400;
+background: url(../../img/common/error.png) no-repeat;
+}
+
+.error-text {
+color: #FF9400;
+}
+
+.form-error, .form-error-submit {
+color: #FF5900;
+background: url(../../img/common/error.png) 0 50% no-repeat;
+}
+
+.form-error-submit {
+background: #FFE2C5;
+border-color: #FF6400;
+}
+
+.form-act {
+color: #FF5900;
+}
+
+.instruction {
+color: #2C3D4E;
+}
+
+#header {
+color: #FFF;
+background: url(../../img/common/heading-background-01.png) repeat-x bottom;
+}
+
+.header-left {
+background: url(../../img/common/tri01.png) left bottom no-repeat;
+}
+
+#header li a, #header li a:visited {
+color: #FFF;
+border-left-color: #FF9400;
+}
+
+#header form {
+border-left-color:  #FF9400;
+}
+
+#header form input {
+color: #FF6400;
+background: #FFD6BB;
+border-color: #FF9400;
+}
+
+#header form input:hover {
+background: #FFF;
+color: #FF6400;
+}
+
+/* news */
+
+.news-details {
+color: #FF6400;
+}
+
+.news-details a:link, .news-details a:visited {
+color: #FF7C00;
+}
+
+.news-details select {
+background: #FFF;
+color: #FF7C00;
+}
+
+.news-details .tool {
+border-left-color: #FF6400;
+}
+
+/* Counter box */
+
+.mnm-published a:hover, .mnm-queued a:hover, .mnm-discarded a:hover {
+color: #03A;
+}
+
+.mnm-published, .mnm-published a {
+color: #FFF;
+}
+
+.mnm-published {
+background: #FF6400 url(../../img/common/elmnm-p03.png) top left no-repeat;
+}
+
+.mnm-queued, .mnm-queued a {
+color: #FF6400;
+}
+
+.mnm-queued {
+background: #FFF url(../../img/common/elmnm-p03a.png) top left no-repeat;
+border-color: #FF6400;
+}
+
+.mnm-discarded, .mnm-discarded a {
+color: #FFF;
+}
+
+.mnm-discarded {
+background: #D9AA95 url(../../img/common/elmnm-p03b.png) top left no-repeat;
+border-color: #D9AA95;
+}
+
+/* vote box */
+
+.menealo {
+background-color: #fff;
+}
+
+.menealo a {
+background: url(../../img/common/menealo-background.png) bottom left repeat-x;
+border-color: #FFCBAA;
+}
+
+.menealo a, .menealo span {
+color: #FF6400;
+}
+
+.menealo span {
+border-color: #FF6400;
+}
+
+.news-submitted {
+color: #666;
+}
+
+.news-submitted a:link, .news-submitted a:visited {
+color: #666;
+}
+
+.news-tags {
+color: #666;
+}
+
+/* gravatar */
+
+.news-submitted img {
+border-color: #FFE2C5;
+}
+
+/* side menu */
+
+.mnu-faq {
+color: #FF6400;
+border-top-color: #FFE2C5;
+}
+
+.mnu-faq a {
+color: #FF9400;
+}
+
+.mnu-submit {
+color: #FF6400;
+border-top-color: #FFE2C5;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-submit01.png) right bottom no-repeat;
+}
+
+.mnu-sneak {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/elmnm-sneak01.png) right bottom no-repeat;
+}
+
+.mnu-notame {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-notame01.png) right bottom no-repeat;
+}
+
+.mnu-geovision {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-geovision01.png) right bottom no-repeat;
+}
+
+.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-geovision a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .tab-trackback a, .mnu-seguiment-ext a  {
+color: #FF6400;
+background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
+}
+
+.mnu-bugs, .mnu-menedising, .mnu-seguiment-ext {
+color: #FF6400;
+background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;
+}
+
+.mnu-meneria, .mnu-tools, .mnu-rss {
+color: #FF6400;
+background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
+}
+
+.mnu-rss a {
+color: #FF6400;
+background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 2px;
+}
+
+li.mnu-rss-external a {
+background: none;
+}
+
+/* trackback */
+
+.tab-trackback-url {
+color: #FF6400;
+}
+
+.tab-trackback-entry {
+color: #666;
+}
+
+.tab-trackback-entry a {
+background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-technorati a {
+background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-google a {
+background: url(../../img/favicons/google.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-askcom a {
+background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
+}
+
+/* categories */
+
+.catsub-block {
+color: #FF9400;
+border-bottom-color: #FF9400;
+border-right-color: #FF9400;
+border-left-color: #FF9400;
+}
+
+.catsub-block a:link, .catsub-block a:visited {
+color: #FF9400;
+}
+
+/* Right column boxes */
+
+.vertical-box {
+background: #FFF;
+border-bottom-color: #FFE2C5;
+}
+
+.vertical-box a {
+color: #8397DA;
+}
+
+.vertical-box ul a {
+color: #666;
+}
+
+.vertical-box h4, .vertical-box h4 a {
+color: #FF6400;
+}
+
+/* submit form */
+
+/* comments */
+
+.commentform a:link, .commentform a:visited {
+color: #FFF;
+}
+
+.commentform .submit {
+background: #FF6400;
+color: #FFF;
+border-color: #FFF;
+}
+
+.commentform textarea {
+color: #303030;
+background: #FFE2C5;
+border-color: #FF9400;
+}
+
+.commentform label {
+color: #FF6400;
+}
+
+.commentform.warn {
+background: #FF6400;
+color: #FFF;
+}
+
+.comments-warning {
+color: #9B0000;
+}
+
+.news-details .comments {
+background: url(../../img/common/tocomments01.png) no-repeat bottom left;
+}
+
+.comment-body {
+background: #FFE2C5 url(../../img/common/comment.png) right bottom no-repeat;
+color: #303030;
+border-color: #FF6400;
+}
+
+.comment-body-hidden {
+border-color: #aaa;
+color: #aaa;
+}
+
+.comment-body-hidden a {
+color: #aaa;
+}
+
+.comment-body strong {
+color: #FF6400;
+}
+
+.comment-body span strong {
+color: #000;
+}
+
+.comment-meta, .comment-meta-hidden {
+color: #FF6400;
+}
+
+.comment-meta-hidden, .comment-meta-hidden a {
+color: #aaa;
+}
+
+.comment-meta a {
+color: #FF9400;
+}
+
+.comments-list ul {
+background: #FFF;
+}
+
+/* fieldsets */
+
+fieldset {
+border-color: #FF9400;
+}
+
+legend, legend a {
+color: #FF9400;
+}
+
+/* gravatar */
+
+.thumbnail {
+border-color: #FFE2C5;
+}
+
+/* pagination */
+
+.pages, .pages-margin {
+border-top-color: #FF6400;
+}
+
+.pages a, .pages span, .pages-margin a, .pages-margin span {
+color: #FF6400;
+border-color: #FFF;
+background: #FFF;
+}
+
+.pages span.current, .pages-margin span.current {
+background: #FFBE94;
+color: #FF6400;
+border-color: #FF6400;
+}
+
+.pages span.current a, .pages-margin span.current a {
+background: #FF6400;
+color: #FF6400;
+}
+
+.pages a, .pages-margin a {
+border-color: #FF6400;
+background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+}
+
+.pages a:hover, .pages-margin a:hover {
+border-color: #FF9400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+.pages span.nextprev, .pages-margin span.nextprev {
+color: #FFE2C5;
+}
+
+.pages span.nextprev, .pages-margin span.nextprev {
+border-color: #FFE2C5;
+color: #FFE2C5;
+}
+
+/* faq page */
+
+#faq-contents ol {
+color: #FF6400;
+}
+
+#faq-contents ul {
+color: #303030;
+}
+
+#faq-contents h4 {
+color: #FF6400;
+}
+
+#faq-contents p {
+color: #303030;
+}
+
+/* generic form and wide page */
+
+#genericform fieldset, #genericform-contents fieldset {
+background: #FFF;
+border-color: #FF6400;
+}
+
+#genericform, .geoform {
+background: #FFF;
+color: #FF6400;
+}
+
+#genericform .sign, #genericform-contents legend {
+color: #FF6400;
+}
+
+#genericform .genericsubmit {
+background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
+border-color: #FF6400;
+color: #FF6400;
+}
+
+#genericform .genericsubmit:hover {
+background: #FFBE94;
+color: #FFF;
+}
+
+#genericform input, .geoform input  {
+background: #FFE2C5;
+border-color: #FF6400;
+color: #303030;
+}
+
+#genericform .genericformtxt {
+color: #303030;
+}
+
+#genericform .genericformnote {
+color: #FF9400;
+}
+
+#genericform textarea {
+background: #FFE2C5;
+border-color: #FF6400;
+color: #303030;
+}
+
+/* generic form: login page specials */
+
+#genericform .recoverpass {
+color: #FF6400;
+}
+
+#genericform .recoverpass a:link, .recoverpass a:visited {
+color: #FF6400;
+}
+
+#genericform .formnotice {
+color: #303030;
+}
+
+/* image forms */
+
+/* shakeit page search form */
+
+.shakeit-form-input {
+color: #303030;
+border-color: #FF6400;
+background: #FFE2C5;
+}
+
+.shakeit-form-submit {
+background: #FF6400;
+color: #FFF;
+border-color: #FFF;
+}
+
+.shakeit-form label {
+color: #FF6400;
+}
+
+/* top banner */
+
+.banner-right {
+background: #FFCBAA;
+}
+
+.voters-list {
+color: #FF6400;
+background: #FFF;
+border-color: #FFE2C5;
+}
+
+.mini-pages a, .mini-pages span {
+color: #FF6400;
+border-color: #FFF;
+background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+}
+
+.mini-pages span.current {
+border-color: #FF6400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+.mini-pages span.current a {
+background: #FFBE94;
+color: #FF6400;
+}
+
+.mini-pages a {
+border-color: #FF6400;
+}
+
+.mini-pages a:hover {
+border-color: #FF9400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+/* classes for bar diagrams */
+
+.bars-list {
+color: #FF6400;
+background: #FFF;
+}
+
+.bars-list .bar-container {
+color: #000;
+}
+
+#tooltip-text {
+background: #FFEEC7;
+border-color: #e2d3b0;
+}
+
+.news-websnapr {
+border-color: #FFE2C5;
+}
+
+.mini-sneaker-title strong {
+color: #FF9400;
+}
+
+.mini-sneaker-item {
+border-bottom-color: #FFE2C5;
+}
+
+.underl-y {
+background-color: #FFFF66;
+}
