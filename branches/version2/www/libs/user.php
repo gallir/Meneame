@@ -59,6 +59,7 @@ class User {
 		$this->adchannel = '';
 		$this->phone = '';
 		$this->avatar = 0;
+		$this->karma = 6;
 		return $this->store();
 	}
 

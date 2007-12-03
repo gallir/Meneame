@@ -28,6 +28,14 @@ if(!empty($_GET['id'])) {
 	// Link comments
 	//
 	$id = intval($_GET['id']);
+	$link_date = $db->get_var("select UNIX_TIMESTAMP(link_date) from links where link_id=$id");
+	// There are bot what request comments for very old links
+	// Sleep for a while and sends a "not modified" to avoid server overload
+	if ($link_date < time() - $globals['time_enabled_comments']) {
+		usleep(900000);
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	}
 	if ($if_modified) {
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	}
