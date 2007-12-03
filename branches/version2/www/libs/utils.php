@@ -99,7 +99,7 @@ function email_exists($email) {
 	$user = $subparts[0];
 	$user = $db->escape($user);
 	$domain = $db->escape($domain);
-	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email LIKE '$user%@$domain'");
+	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email = '$user@$domain' or user_email LIKE '$user+%@$domain'");
 	if ($res>0) return $res;
 	return false;
 }
