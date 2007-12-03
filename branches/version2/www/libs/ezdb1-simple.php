@@ -181,12 +181,17 @@
 			} else {
 			// Query was an select
 				
+				/*
+				*** WARN WARN
+				*** We don't use col info
+				*** Commented out meanwhile
 				// Take note of column info	
 				$i=0;
 				while ($i < @mysql_num_fields($this->result)) {
 					$this->col_info[$i] = @mysql_fetch_field($this->result);
 					$i++;
 				}
+				*/
 				
 				// Store Query Results	
 				$num_rows=0;
