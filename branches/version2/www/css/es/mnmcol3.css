@@ -466,9 +466,8 @@ color: #303030;
 border-color: #FF6400;
 }
 
-.comment-body-high {
+.comment-body.high {
 background: #FFD2C5 url(../../img/common/comment-high.png) right bottom no-repeat;
-color: #303030;
 border-color: #FF9400;
 }
 
