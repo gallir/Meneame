@@ -101,6 +101,9 @@ class Comment {
 		} else {
 			$comment_meta_class = 'comment-meta';
 			$comment_class = 'comment-body';
+			if ($this->karma > 60) {
+				$comment_class .= ' high';
+			}
 		}
 		$this->link_permalink =  $link->get_relative_permalink();
 		echo '<div class="'.$comment_class.'">';

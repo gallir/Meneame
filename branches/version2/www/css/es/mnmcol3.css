@@ -468,7 +468,6 @@ border-color: #FF6400;
 
 .comment-body.high {
 background: #FFD2C5 url(../../img/common/comment-high.png) right bottom no-repeat;
-border-color: #FF9400;
 }
 
 .comment-body-hidden {
@@ -732,3 +731,4 @@ border-bottom-color: #FFE2C5;
 .underl-y {
 background-color: #FFFF66;
 }
+
