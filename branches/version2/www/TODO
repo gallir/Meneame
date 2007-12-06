@@ -16,4 +16,9 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 
 - Mostrar votos negativos (está decidido y "listo" sólo falta encontrar el momento adecuado).
 
+- La info que se devuelve después de un voto debería ser JSON, da mayor flexibilidad para enviar más o menos datos.
+
+- OpenID, parece que se están resolviendo algunos de los problemas: http://openid.net/2007/12/05/openid-2_0-final-ly/
+
+- Desarrollo más rápido del gran módulo secreto que ayudará a la dominación mundial.
 
