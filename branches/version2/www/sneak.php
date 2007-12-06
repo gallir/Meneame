@@ -229,7 +229,7 @@ function to_html(data) {
 		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15);
 	}
 	if (data.type == 'problem') {
-			html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span>';
+			html += '<span class="sneaker-problem"><br />&nbsp;'+data.who+'<\/span>';
 	}
 	html += '<\/div>';
 	if (data.status == '<? echo _('publicada');?>')
