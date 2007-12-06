@@ -226,11 +226,12 @@ function to_html(data) {
 		html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
 		html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {
-		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';
+		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15);
 	}
-/*	if (data.type == 'problem') {
-			html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
-	}*/
+	if (data.type == 'problem') {
+			html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span>';
+	}
+	html += '<\/div>';
 	if (data.status == '<? echo _('publicada');?>')
 		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
 	else if (data.status == '<? echo _('descartada');?>')
