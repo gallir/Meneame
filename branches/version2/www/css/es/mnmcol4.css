@@ -467,7 +467,8 @@ border-color: #FF6400;
 }
 
 .comment-body.high {
-background: #FFD2C5 url(../../img/common/comment-high.png) right bottom no-repeat;
+background: #FFC8A6 url(../../img/common/comment-high.png) right bottom no-repeat;
+border-color: #FF9400;
 }
 
 .comment-body-hidden {
