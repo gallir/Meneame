@@ -1344,6 +1344,7 @@ width: 8%;
 .sneaker-story {
 width: 53%;
 text-align: left;
+overflow: hidden;
 }
 
 .sneaker-chat, .sneaker-chat-friends, .sneaker-chat-admin {

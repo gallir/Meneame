@@ -79,6 +79,7 @@ form, input {
 .sneaker-ts, .sneaker-type, .sneaker-votes, .sneaker-story, .sneaker-chat, .sneaker-who, .sneaker-status {
 	float: left;
 	display: block;
+	overflow: hidden;
 }
 
 .sneaker-ts {
