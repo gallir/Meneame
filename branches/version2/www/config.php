@@ -64,6 +64,9 @@ $globals['mysql_persistent'] = true;
 $globals['check_behind_proxy'] = false;
 //$globals['lounge'] = 'lounge.html';
 //$globals['redirect_feedburner'] = false;
+
+// If > 0 it shows negatives votes and date(vote) > $globals['show_negatives']
+//$globals['show_negatives'] = 0;
 $globals['min_karma_for_negatives'] = 5.5;
 //$globals['min_karma_for_links'] = 4.9;
 //$globals['min_karma_for_comments'] = 4.9;
