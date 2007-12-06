@@ -1,0 +1,19 @@
+Notas de cosas que se _deben_ implementar tarde o temprano
+==========================================================
+(pero sin orden establecido y cuando nos dé la gana... o demasiado coñazo)
+
+- Texto de aviso que la geolocalización se ha grabado.
+
+- Buscador nuevo y más preciso, quizás http://www.sphinxsearch.com/
+
+- Sistema de cache, grabar el HTML recuperado o quizás Coral Cache.
+
+- Recuperar el "recomendados" (http://svn.meneame.net/index.cgi/branches/version2/scripts/affiliation.pl) e intentar mejorarlo
+
+- Mensajes privados entre usuarios.
+
+- Botón de "limpiar" formato en comentarios y noticia.
+
+- Mostrar votos negativos (está decidido y "listo" sólo falta encontrar el momento adecuado).
+
+
