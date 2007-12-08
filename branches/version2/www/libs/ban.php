@@ -51,14 +51,26 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	return false;
 }
 
-function subdomains_list($domain) {
+function subdomains_list($domain_path) {
+	// search also for the first part of the path
+	if(preg_match('/^[^\/]+\/+([^\/]+)\/+/', $domain_path, $match) > 0) {
+		$path = $match[1];
+	}
+	$domain = preg_replace('/\/.*$/', '', $domain_path);
 	$list = "'$domain'";
+	if ($path) {
+		$list .= ", '$domain/$path', '$domain/$path/'";
+	}
 	$array = explode('.', $domain);
 	$size = count($array);
 
 	for($i=1; $i < $size-1; $i++) {
 		$sub = array_slice($array, $i);
-		$list .= ", '". implode('.', $sub). "'";
+		$sub = implode('.', $sub);
+		$list .= ", '$sub'";
+		if ($path) {
+			$list .= ", '$sub/$path', '$sub/$path/'";
+		}
 	}
 	return $list;
 }
