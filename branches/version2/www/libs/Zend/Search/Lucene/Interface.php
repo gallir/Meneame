@@ -324,6 +324,43 @@ interface Zend_Search_Lucene_Interface
      */
     public function terms();
 
+
+    /**
+     * Reset terms stream.
+     */
+    public function resetTermsStream();
+
+    /**
+     * Skip terms stream up to specified term preffix.
+     *
+     * Prefix contains fully specified field info and portion of searched term
+     *
+     * @param Zend_Search_Lucene_Index_Term $prefix
+     */
+    public function skipTo(Zend_Search_Lucene_Index_Term $prefix);
+
+    /**
+     * Scans terms dictionary and returns next term
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function nextTerm();
+
+    /**
+     * Returns term in current position
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function currentTerm();
+
+    /**
+     * Close terms stream
+     *
+     * Should be used for resources clean up if stream is not read up to the end
+     */
+    public function closeTermsStream();
+
+
     /**
      * Undeletes all documents currently marked as deleted in this index.
      */

@@ -172,6 +172,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
      *
      * @param string $filename
      * @return Zend_Search_Lucene_Storage_File
+     * @throws Zend_Search_Lucene_Exception
      */
     public function createFile($filename)
     {
@@ -198,20 +199,22 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
      *
      * @param string $filename
      * @return void
+     * @throws Zend_Search_Lucene_Exception
      */
     public function deleteFile($filename)
     {
-        /**
-         * @todo add support of "deletable" file
-         * "deletable" is used on Windows systems if file can't be deleted
-         * (while it is still open).
-         */
-
         if (isset($this->_fileHandlers[$filename])) {
             $this->_fileHandlers[$filename]->close();
         }
         unset($this->_fileHandlers[$filename]);
-        unlink($this->_dirPath . '/' . $filename);
+
+        global $php_errormsg;
+        $trackErrors = ini_get('track_errors'); ini_set('track_errors', '1');
+        if (!@unlink($this->_dirPath . '/' . $filename)) {
+            ini_set('track_errors', $trackErrors);
+            throw new Zend_Search_Lucene_Exception('Can\'t delete file: ' . $php_errormsg);
+        }
+        ini_set('track_errors', $trackErrors);
     }
 
 

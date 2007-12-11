@@ -118,7 +118,44 @@ class Zend_Search_Lucene_Search_QueryEntry_Term extends Zend_Search_Lucene_Searc
         }
 
         if (strpos($this->_term, '?') !== false || strpos($this->_term, '*') !== false) {
-            throw new Zend_Search_Lucene_Search_QueryParserException('Wildcard queries are not supported yet.');
+            $pattern = '';
+
+            $subPatterns = explode('*', $this->_term);
+
+            $astericFirstPass = true;
+            foreach ($subPatterns as $subPattern) {
+                if (!$astericFirstPass) {
+                    $pattern .= '*';
+                } else {
+                    $astericFirstPass = false;
+                }
+
+                $subPatternsL2 = explode('?', $subPattern);
+
+                $qMarkFirstPass = true;
+                foreach ($subPatternsL2 as $subPatternL2) {
+                    if (!$qMarkFirstPass) {
+                        $pattern .= '?';
+                    } else {
+                        $qMarkFirstPass = false;
+                    }
+
+                    $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($subPatternL2, $encoding);
+                    if (count($tokens) > 1) {
+                        throw new Zend_Search_Lucene_Search_QueryParserException('Wildcard search is supported only for non-multiple word terms');
+                    }
+
+                    foreach ($tokens as $token) {
+                        $pattern .= $token->getTermText();
+                    }
+                }
+            }
+
+            $term  = new Zend_Search_Lucene_Index_Term($pattern, $this->_field);
+            $query = new Zend_Search_Lucene_Search_Query_Wildcard($term);
+            $query->setBoost($this->_boost);
+
+            return $query;
         }
 
         $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_term, $encoding);

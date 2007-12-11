@@ -35,6 +35,12 @@ require_once 'Zend/Search/Lucene/Search/Query/Boolean.php';
 /** Zend_Search_Lucene_Search_Query_Phrase */
 require_once 'Zend/Search/Lucene/Search/Query/Phrase.php';
 
+/** Zend_Search_Lucene_Search_Query_Wildcard */
+require_once 'Zend/Search/Lucene/Search/Query/Wildcard.php';
+
+/** Zend_Search_Lucene_Search_Query_Range */
+require_once 'Zend/Search/Lucene/Search/Query/Range.php';
+
 /** Zend_Search_Lucene_Search_Query_Empty */
 require_once 'Zend/Search/Lucene/Search/Query/Empty.php';
 
@@ -436,7 +442,7 @@ class Zend_Search_Lucene_Search_QueryParser extends Zend_Search_Lucene_FSM
 
             default:
                 // It's not a user input exception
-                throw new Zend_Search_Lucene_Exception('Lexeme modifier parameter must follow lexeme modifier. Char position .' );
+                throw new Zend_Search_Lucene_Exception('Lexeme modifier parameter must follow lexeme modifier. Char position 0.' );
         }
     }
 
@@ -488,13 +494,31 @@ class Zend_Search_Lucene_Search_QueryParser extends Zend_Search_Lucene_FSM
      */
     public function openedRQLastTerm()
     {
-        throw new Zend_Search_Lucene_Search_QueryParserException('Range queries are not supported yet.');
+        $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_rqFirstTerm, $this->_encoding);
+        if (count($tokens) > 1) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('Range query boundary terms must be non-multiple word terms');
+        } else if (count($tokens) == 1) {
+            $from = new Zend_Search_Lucene_Index_Term(reset($tokens)->getTermText(), $this->_context->getField());
+        } else {
+            $from = null;
+        }
 
-        // $firstTerm = new Zend_Search_Lucene_Index_Term($this->_rqFirstTerm,        $this->_context->getField());
-        // $lastTerm  = new Zend_Search_Lucene_Index_Term($this->_currentToken->text, $this->_context->getField());
+        $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_currentToken->text, $this->_encoding);
+        if (count($tokens) > 1) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('Range query boundary terms must be non-multiple word terms');
+        } else if (count($tokens) == 1) {
+            $to = new Zend_Search_Lucene_Index_Term(reset($tokens)->getTermText(), $this->_context->getField());
+        } else {
+            $to = null;
+        }
 
-        // $query = new Zend_Search_Lucene_Search_Query_Range($firstTerm, $lastTerm, false);
-        // $this->_context->addentry($query);
+        if ($from === null  &&  $to === null) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('At least one range query boundary term must be non-empty term');
+        }
+
+        $rangeQuery = new Zend_Search_Lucene_Search_Query_Range($from, $to, false);
+        $entry      = new Zend_Search_Lucene_Search_QueryEntry_Subquery($rangeQuery);
+        $this->_context->addEntry($entry);
     }
 
     /**
@@ -512,13 +536,31 @@ class Zend_Search_Lucene_Search_QueryParser extends Zend_Search_Lucene_FSM
      */
     public function closedRQLastTerm()
     {
-        throw new Zend_Search_Lucene_Search_QueryParserException('Range queries are not supported yet.');
+        $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_rqFirstTerm, $this->_encoding);
+        if (count($tokens) > 1) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('Range query boundary terms must be non-multiple word terms');
+        } else if (count($tokens) == 1) {
+            $from = new Zend_Search_Lucene_Index_Term(reset($tokens)->getTermText(), $this->_context->getField());
+        } else {
+            $from = null;
+        }
 
-        // $firstTerm = new Zend_Search_Lucene_Index_Term($this->_rqFirstTerm,        $this->_context->getField());
-        // $lastTerm  = new Zend_Search_Lucene_Index_Term($this->_currentToken->text, $this->_context->getField());
+        $tokens = Zend_Search_Lucene_Analysis_Analyzer::getDefault()->tokenize($this->_currentToken->text, $this->_encoding);
+        if (count($tokens) > 1) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('Range query boundary terms must be non-multiple word terms');
+        } else if (count($tokens) == 1) {
+            $to = new Zend_Search_Lucene_Index_Term(reset($tokens)->getTermText(), $this->_context->getField());
+        } else {
+            $to = null;
+        }
 
-        // $query = new Zend_Search_Lucene_Search_Query_Range($firstTerm, $lastTerm, true);
-        // $this->_context->addentry($query);
+        if ($from === null  &&  $to === null) {
+            throw new Zend_Search_Lucene_Search_QueryParserException('At least one range query boundary term must be non-empty term');
+        }
+
+        $rangeQuery = new Zend_Search_Lucene_Search_Query_Range($from, $to, true);
+        $entry      = new Zend_Search_Lucene_Search_QueryEntry_Subquery($rangeQuery);
+        $this->_context->addEntry($entry);
     }
 }
 

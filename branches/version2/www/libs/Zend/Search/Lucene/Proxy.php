@@ -460,6 +460,58 @@ class Zend_Search_Lucene_Proxy implements Zend_Search_Lucene_Interface
         return $this->_index->terms();
     }
 
+
+    /**
+     * Reset terms stream.
+     */
+    public function resetTermsStream()
+    {
+        $this->_index->resetTermsStream();
+    }
+
+    /**
+     * Skip terms stream up to specified term preffix.
+     *
+     * Prefix contains fully specified field info and portion of searched term
+     *
+     * @param Zend_Search_Lucene_Index_Term $prefix
+     */
+    public function skipTo(Zend_Search_Lucene_Index_Term $prefix)
+    {
+        return $this->_index->skipTo($prefix);
+    }
+
+    /**
+     * Scans terms dictionary and returns next term
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function nextTerm()
+    {
+        return $this->_index->nextTerm();
+    }
+
+    /**
+     * Returns term in current position
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function currentTerm()
+    {
+        return $this->_index->currentTerm();
+    }
+
+    /**
+     * Close terms stream
+     *
+     * Should be used for resources clean up if stream is not read up to the end
+     */
+    public function closeTermsStream()
+    {
+        $this->_index->closeTermsStream();
+    }
+
+
     /**
      * Undeletes all documents currently marked as deleted in this index.
      */

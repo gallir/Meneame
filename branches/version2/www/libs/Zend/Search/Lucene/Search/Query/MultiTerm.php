@@ -103,7 +103,6 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
      *
      * @param array $terms    Array of Zend_Search_Lucene_Index_Term objects
      * @param array $signs    Array of signs.  Sign is boolean|null.
-     * @return void
      */
     public function __construct($terms = null, $signs = null)
     {
@@ -139,6 +138,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
     public function addTerm(Zend_Search_Lucene_Index_Term $term, $sign = null) {
         if ($sign !== true || $this->_signs !== null) {       // Skip, if all terms are required
             if ($this->_signs === null) {                     // Check, If all previous terms are required
+                $this->_signs = array();
                 foreach ($this->_terms as $prevTerm) {
                     $this->_signs[] = true;
                 }

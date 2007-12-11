@@ -139,13 +139,6 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
 
     /**
-     * Index lock object
-     *
-     * @var Zend_Search_Lucene_Storage_File
-     */
-    private $_lock;
-
-    /**
      * Signal, that index is already closed, changes are fixed and resources are cleaned up
      *
      * @var boolean
@@ -159,6 +152,12 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     private $_refCount = 0;
 
+    /**
+     * Current segment generation
+     *
+     * @var integer
+     */
+    private $_generation;
 
     /**
      * Create index
@@ -182,56 +181,132 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         return new Zend_Search_Lucene_Proxy(new Zend_Search_Lucene($directory, false));
     }
 
+    /** Generation retrieving counter */
+    const GENERATION_RETRIEVE_COUNT = 10;
+
+    /** Pause between generation retrieving attempts in milliseconds */
+    const GENERATION_RETRIEVE_PAUSE = 50;
+
     /**
-     * Opens the index.
+     * Get current generation number
      *
-     * IndexReader constructor needs Directory as a parameter. It should be
-     * a string with a path to the index folder or a Directory object.
+     * Returns generation number
+     * 0 means pre-2.1 index format
+     * -1 means there are no segments files.
      *
-     * @param mixed $directory
+     * @param Zend_Search_Lucene_Storage_Directory $directory
+     * @return integer
      * @throws Zend_Search_Lucene_Exception
      */
-    public function __construct($directory = null, $create = false)
+    public static function getActualGeneration(Zend_Search_Lucene_Storage_Directory $directory)
     {
-        if ($directory === null) {
-            throw new Zend_Search_Exception('No index directory specified');
-        }
+        /**
+         * Zend_Search_Lucene uses segments.gen file to retrieve current generation number
+         *
+         * Apache Lucene index format documentation mentions this method only as a fallback method
+         *
+         * Nevertheless we use it according to the performance considerations
+         *
+         * @todo check if we can use some modification of Apache Lucene generation determination algorithm
+         *       without performance problems
+         */
 
-        if ($directory instanceof Zend_Search_Lucene_Storage_Directory_Filesystem) {
-            $this->_directory      = $directory;
-            $this->_closeDirOnExit = false;
-        } else {
-            $this->_directory      = new Zend_Search_Lucene_Storage_Directory_Filesystem($directory);
-            $this->_closeDirOnExit = true;
-        }
+        try {
+            for ($count = 0; $count < self::GENERATION_RETRIEVE_COUNT; $count++) {
+                // Try to get generation file
+                $genFile = $directory->getFileObject('segments.gen', false);
 
+                $format = $genFile->readInt();
+                if ($format != (int)0xFFFFFFFE) {
+                    throw new Zend_Search_Lucene_Exception('Wrong segments.gen file format');
+                }
 
-        // Get a shared lock to the index
-        $this->_lock = $this->_directory->createFile('index.lock');
+                $gen1 = $genFile->readLong();
+                $gen2 = $genFile->readLong();
 
-        $this->_segmentInfos = array();
+                if ($gen1 == $gen2) {
+                    return $gen1;
+                }
 
-        if ($create) {
-            // Throw an exception if index is under processing now
-            if (!$this->_lock->lock(LOCK_EX, true)) {
-                throw new Zend_Search_Lucene_Exception('Can\'t create index. It\'s under processing now');
+                usleep(self::GENERATION_RETRIEVE_PAUSE * 1000);
             }
 
-            // Writer will create segments file for empty segments list
-            $this->_writer = new Zend_Search_Lucene_Index_Writer($this->_directory, $this->_segmentInfos, true);
+            // All passes are failed
+            throw new Zend_Search_Lucene_Exception('Index is under processing now');
+        } catch (Zend_Search_Lucene_Exception $e) {
+            if (strpos($e->getMessage(), 'is not readable') !== false) {
+                try {
+                    // Try to open old style segments file
+                    $segmentsFile = $directory->getFileObject('segments', false);
 
-            if (!$this->_lock->lock(LOCK_SH)) {
-                throw new Zend_Search_Lucene_Exception('Can\'t reduce lock level from Exclusive to Shared');
+                    // It's pre-2.1 index
+                    return 0;
+                } catch (Zend_Search_Lucene_Exception $e) {
+                    if (strpos($e->getMessage(), 'is not readable') !== false) {
+                        return -1;
+                    } else {
+                        throw $e;
+                    }
+                }
+            } else {
+                throw $e;
             }
-        } else {
-            // Wait if index is under switching from one set of segments to another (Index_Writer::_updateSegments())
-            if (!$this->_lock->lock(LOCK_SH)) {
-                throw new Zend_Search_Lucene_Exception('Can\'t obtain shared index lock');
-            }
-            $this->_writer = null;
         }
 
+        return -1;
+    }
 
+    /**
+     * Obtain exclusive write lock on the index
+     *
+     * @param Zend_Search_Lucene_Storage_Directory $defaultLockDirectory
+     * @return Zend_Search_Lucene_Storage_File
+     * @throws Zend_Search_Lucene_Exception
+     */
+    public static function obtainWriteLock(Zend_Search_Lucene_Storage_Directory $defaultLockDirectory)
+    {
+        $lock = $defaultLockDirectory->createFile('write.lock');
+        if (!$lock->lock(LOCK_EX)) {
+            throw new Zend_Search_Lucene_Exception('Can\'t obtain exclusive index lock');
+        }
+    	
+        return $lock;
+    }
+    
+    /**
+     * Free exclusive write lock on the index
+     * 
+     * @param Zend_Search_Lucene_Storage_Directory $defaultLockDirectory
+     * @param Zend_Search_Lucene_Storage_File      $lock
+     */
+    public static function releaseWriteLock(Zend_Search_Lucene_Storage_Directory $defaultLockDirectory,
+                                            Zend_Search_Lucene_Storage_File $lock)
+    {
+        $lock->unlock();
+        unset($lock);
+        $defaultLockDirectory->deleteFile('write.lock');
+    }
+    
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    public static function getSegmentFileName($generation)
+    {
+        if ($generation == 0) {
+            return 'segments';
+        }
+
+        return 'segments_' . base_convert($generation, 10, 36);
+    }
+
+    /**
+     * Read segments file for pre-2.1 Lucene index format
+     */
+    private function _readPre21SegmentsFile()
+    {
         $segmentsFile = $this->_directory->getFileObject('segments');
 
         $format = $segmentsFile->readInt();
@@ -257,10 +332,143 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
             $segSize = $segmentsFile->readInt();
             $this->_docCount += $segSize;
 
-            $this->_segmentInfos[] =
-                                new Zend_Search_Lucene_Index_SegmentInfo($segName,
+            $this->_segmentInfos[$segName] =
+                                new Zend_Search_Lucene_Index_SegmentInfo($this->_directory,
+                                                                         $segName,
+                                                                         $segSize);
+        }
+    }
+
+    /**
+     * Read segments file
+     *
+     * @throws Zend_Search_Lucene_Exception
+     */
+    private function _readSegmentsFile()
+    {
+        $segmentsFile = $this->_directory->getFileObject(self::getSegmentFileName($this->_generation));
+
+        $format = $segmentsFile->readInt();
+
+        if ($format != (int)0xFFFFFFFD) {
+            throw new Zend_Search_Lucene_Exception('Wrong segments file format');
+        }
+
+        // read version
+        // $segmentsFile->readLong();
+        $segmentsFile->readInt(); $segmentsFile->readInt();
+
+        // read segment name counter
+        $segmentsFile->readInt();
+
+        $segments = $segmentsFile->readInt();
+
+        $this->_docCount = 0;
+
+        // read segmentInfos
+        for ($count = 0; $count < $segments; $count++) {
+            $segName = $segmentsFile->readString();
+            $segSize = $segmentsFile->readInt();
+
+            // 2.1+ specific properties
+            //$delGen          = $segmentsFile->readLong();
+            $delGenHigh        = $segmentsFile->readInt();
+            $delGenLow         = $segmentsFile->readInt();
+            if ($delGenHigh == (int)0xFFFFFFFF  && $delGenLow == (int)0xFFFFFFFF) {
+                $delGen = -1; // There are no deletes
+            } else {
+                $delGen = ($delGenHigh << 32) | $delGenLow;
+            }
+
+            $hasSingleNormFile = $segmentsFile->readByte();
+            $numField          = $segmentsFile->readInt();
+
+            $normGens = array();
+            if ($numField != (int)0xFFFFFFFF) {
+                for ($count1 = 0; $count1 < $numField; $count1++) {
+                    $normGens[] = $segmentsFile->readLong();
+                }
+
+                throw new Zend_Search_Lucene_Exception('Separate norm files are not supported. Optimize index to use it with Zend_Search_Lucene.');
+            }
+
+            $isCompound        = $segmentsFile->readByte();
+
+
+            $this->_docCount += $segSize;
+
+            $this->_segmentInfos[$segName] =
+                                new Zend_Search_Lucene_Index_SegmentInfo($this->_directory,
+                                                                         $segName,
                                                                          $segSize,
-                                                                         $this->_directory);
+                                                                         $delGen,
+                                                                         $hasSingleNormFile,
+                                                                         $isCompound);
+        }
+    }
+
+    /**
+     * Opens the index.
+     *
+     * IndexReader constructor needs Directory as a parameter. It should be
+     * a string with a path to the index folder or a Directory object.
+     *
+     * @param mixed $directory
+     * @throws Zend_Search_Lucene_Exception
+     */
+    public function __construct($directory = null, $create = false)
+    {
+        if ($directory === null) {
+            throw new Zend_Search_Exception('No index directory specified');
+        }
+
+        if ($directory instanceof Zend_Search_Lucene_Storage_Directory_Filesystem) {
+            $this->_directory      = $directory;
+            $this->_closeDirOnExit = false;
+        } else {
+            $this->_directory      = new Zend_Search_Lucene_Storage_Directory_Filesystem($directory);
+            $this->_closeDirOnExit = true;
+        }
+
+        $this->_segmentInfos = array();
+
+        $this->_generation = self::getActualGeneration($this->_directory);
+
+        if ($create) {
+        	try {
+        		$lock = Zend_Search_Lucene::obtainWriteLock($this->_directory);
+        	} catch (Zend_Search_Lucene_Exception $e) {
+        		if (strpos($e->getMessage(), 'Can\'t obtain exclusive index lock') === false) {
+        			throw $e;
+        		} else {
+        			throw new Zend_Search_Lucene_Exception('Can\'t create index. It\'s under processing now');
+        		}
+        	}
+
+            if ($this->_generation == -1) {
+                // Directory doesn't contain existing index, start from 1
+                $this->_generation = 1;
+                $nameCounter = 0;
+            } else {
+                // Directory contains existing index
+                $segmentsFile = $this->_directory->getFileObject(self::getSegmentFileName($this->_generation));
+                $segmentsFile->seek(12); // 12 = 4 (int, file format marker) + 8 (long, index version)
+
+                $nameCounter = $segmentsFile->readInt();
+                $this->_generation++;
+            }
+
+            Zend_Search_Lucene_Index_Writer::createIndex($this->_directory, $this->_generation, $nameCounter);
+
+            Zend_Search_Lucene::releaseWriteLock($this->_directory, $lock);
+        }
+
+        if ($this->_generation == -1) {
+            throw new Zend_Search_Lucene_Exception('Index doesn\'t exists in the specified directory.');
+        } else if ($this->_generation == 0) {
+            $this->_readPre21SegmentsFile();
+        } else {
+            $this->_readSegmentsFile();
         }
     }
 
@@ -275,9 +483,6 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         }
 
         $this->commit();
-
-        // Free shared lock
-        $this->_lock->unlock();
 
         if ($this->_closeDirOnExit) {
             $this->_directory->close();
@@ -1014,6 +1219,8 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
     {
         $this->getIndexWriter()->addDocument($document);
         $this->_docCount++;
+        
+        $this->_hasChanges = true;
     }
 
 
@@ -1039,14 +1246,12 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
             foreach ($this->_segmentInfos as $segInfo) {
                 $segInfo->writeChanges();
             }
-
-            $this->_hasChanges = false;
-        }
-
-        if ($this->_writer !== null) {
-            $this->_writer->commit();
-
+            
+            $this->getIndexWriter()->commit();
+            
             $this->_updateDocCount();
+            
+            $this->_hasChanges = false;
         }
     }
 
@@ -1096,15 +1301,132 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                 $result[] = $segmentInfo->currentTerm();
             }
 
-            $segmentInfo->nextTerm();
-            // check, if segment dictionary is finished
-            if ($segmentInfo->currentTerm() !== null) {
+            if ($segmentInfo->nextTerm() !== null) {
                 // Put segment back into the priority queue
                 $segmentInfoQueue->put($segmentInfo);
             }
         }
 
         return $result;
+    }
+
+
+    /**
+     * Terms stream queue
+     *
+     * @var Zend_Search_Lucene_Index_SegmentInfoPriorityQueue
+     */
+    private $_termsStreamQueue = null;
+
+    /**
+     * Last Term in a terms stream
+     *
+     * @var Zend_Search_Lucene_Index_Term
+     */
+    private $_lastTerm = null;
+
+    /**
+     * Reset terms stream.
+     */
+    public function resetTermsStream()
+    {
+        $this->_termsStreamQueue = new Zend_Search_Lucene_Index_SegmentInfoPriorityQueue();
+
+        foreach ($this->_segmentInfos as $segmentInfo) {
+            $segmentInfo->reset();
+
+            // Skip "empty" segments
+            if ($segmentInfo->currentTerm() !== null) {
+                $this->_termsStreamQueue->put($segmentInfo);
+            }
+        }
+
+        $this->nextTerm();
+    }
+
+    /**
+     * Skip terms stream up to specified term preffix.
+     *
+     * Prefix contains fully specified field info and portion of searched term
+     *
+     * @param Zend_Search_Lucene_Index_Term $prefix
+     */
+    public function skipTo(Zend_Search_Lucene_Index_Term $prefix)
+    {
+        $segments = array();
+
+        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
+            $segments[] = $segmentInfo;
+        }
+
+        foreach ($segments as $segmentInfo) {
+            $segmentInfo->skipTo($prefix);
+
+            if ($segmentInfo->currentTerm() !== null) {
+                $this->_termsStreamQueue->put($segmentInfo);
+            }
+        }
+
+        $this->nextTerm();
+    }
+
+    /**
+     * Scans terms dictionary and returns next term
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function nextTerm()
+    {
+        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
+            if ($this->_termsStreamQueue->top() === null ||
+                $this->_termsStreamQueue->top()->currentTerm()->key() !=
+                            $segmentInfo->currentTerm()->key()) {
+                // We got new term
+                $this->_lastTerm = $segmentInfo->currentTerm();
+
+                if ($segmentInfo->nextTerm() !== null) {
+                    // Put segment back into the priority queue
+                    $this->_termsStreamQueue->put($segmentInfo);
+                }
+
+                return $this->_lastTerm;
+            }
+
+            if ($segmentInfo->nextTerm() !== null) {
+                // Put segment back into the priority queue
+                $this->_termsStreamQueue->put($segmentInfo);
+            }
+        }
+
+        // End of stream
+        $this->_lastTerm = null;
+
+        return null;
+    }
+
+    /**
+     * Returns term in current position
+     *
+     * @return Zend_Search_Lucene_Index_Term|null
+     */
+    public function currentTerm()
+    {
+        return $this->_lastTerm;
+    }
+
+    /**
+     * Close terms stream
+     *
+     * Should be used for resources clean up if stream is not read up to the end
+     */
+    public function closeTermsStream()
+    {
+        while (($segmentInfo = $this->_termsStreamQueue->pop()) !== null) {
+            $segmentInfo->closeTermsStream();
+        }
+
+        $this->_termsStreamQueue = null;
+        $this->_lastTerm         = null;
     }
 
 

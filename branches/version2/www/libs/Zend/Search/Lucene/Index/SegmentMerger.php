@@ -232,7 +232,7 @@ class Zend_Search_Lucene_Index_SegmentMerger
 
         $segmentStartId = 0;
         foreach ($this->_segmentInfos as $segName => $segmentInfo) {
-            $segmentStartId = $segmentInfo->reset($segmentStartId, true);
+            $segmentStartId = $segmentInfo->reset($segmentStartId, Zend_Search_Lucene_Index_SegmentInfo::SM_MERGE_INFO);
 
             // Skip "empty" segments
             if ($segmentInfo->currentTerm() !== null) {

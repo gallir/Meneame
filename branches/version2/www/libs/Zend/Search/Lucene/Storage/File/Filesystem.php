@@ -54,6 +54,11 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
     {
         global $php_errormsg;
 
+        if (strpos($mode, 'w') === false  &&  !is_readable($filename)) {
+            // opening for reading non-readable file
+            throw new Zend_Search_Lucene_Exception('File \'' . $filename . '\' is not readable.');
+        }
+
         $trackErrors = ini_get('track_errors');
         ini_set('track_errors', '1');
 

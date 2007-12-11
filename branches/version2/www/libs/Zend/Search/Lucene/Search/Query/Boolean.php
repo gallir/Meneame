@@ -119,6 +119,7 @@ class Zend_Search_Lucene_Search_Query_Boolean extends Zend_Search_Lucene_Search_
     public function addSubquery(Zend_Search_Lucene_Search_Query $subquery, $sign=null) {
         if ($sign !== true || $this->_signs !== null) {       // Skip, if all subqueries are required
             if ($this->_signs === null) {                     // Check, If all previous subqueries are required
+                $this->_signs = array();
                 foreach ($this->_subqueries as $prevSubquery) {
                     $this->_signs[] = true;
                 }

@@ -204,9 +204,12 @@ class Zend_Search_Lucene_Index_SegmentWriter_DocumentWriter extends Zend_Search_
 
         $this->_generateCFS();
 
-        return new Zend_Search_Lucene_Index_SegmentInfo($this->_name,
+        return new Zend_Search_Lucene_Index_SegmentInfo($this->_directory,
+                                                        $this->_name,
                                                         $this->_docCount,
-                                                        $this->_directory);
+                                                        -1,
+                                                        true,
+                                                        true);
     }
 
 }
