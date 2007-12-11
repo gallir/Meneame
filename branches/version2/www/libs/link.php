@@ -504,7 +504,12 @@ class Link {
 					$tag_item=trim($tag_item);
 					$tag_url = urlencode($tag_item);
 					if ($tags_counter > 0) echo ',';
-					echo ' <a href="'.$globals['base_url'].'search.php?search=tag:'.$tag_url.'">'.$tag_item.'</a>';
+					if ($globals['base_search_url']) {
+						echo ' <a href="'.$globals['base_url'].$globals['base_search_url'].'tag:';
+					} else {
+						echo ' <a href="'.$globals['base_url'].'search.php?search=tag:';
+					}
+					echo $tag_url.'">'.$tag_item.'</a>';
 					$tags_counter++;
 				}
 				echo '</div>'."\n";
