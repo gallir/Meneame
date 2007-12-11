@@ -529,6 +529,7 @@ function do_submit3() {
 			$res = $trackres->send($linkres);
 		}
 		fork("backend/lucene_update.php?id=$linkres->id");
+		fork("backend/send_pingbacks.php?id=$linkres->id");
 	}
 
 	header('Location: '. $linkres->get_permalink());
