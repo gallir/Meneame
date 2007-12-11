@@ -256,6 +256,7 @@ class Link {
 		$link_tags = $db->escape($this->tags);
 		$link_content = $db->escape($this->content);
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags' WHERE link_id=$this->id");
+		$this->lucene_update();
 		
 	}
 
@@ -505,7 +506,7 @@ class Link {
 					$tag_item=trim($tag_item);
 					$tag_url = urlencode($tag_item);
 					if ($tags_counter > 0) echo ',';
-					echo ' <a href="'.$globals['base_url'].'?search=tag:'.$tag_url.'">'.$tag_item.'</a>';
+					echo ' <a href="'.$globals['base_url'].'search.php?search=tag:'.$tag_url.'">'.$tag_item.'</a>';
 					$tags_counter++;
 				}
 				echo '</div>'."\n";
@@ -764,6 +765,40 @@ class Link {
 	function get_latlng() {
 		require_once(mnminclude.'geo.php');
 		return geo_latlng('link', $this->id);
+	}
+
+	function lucene_update() {
+		global $globals;
+
+		// Lucene needs to define an UTF-8 locale, otherwise fails
+		setlocale(LC_CTYPE, "en_US.utf-8");
+		require_once(mnminclude.'Zend/Search/Lucene.php');
+
+		if (!$this->id) return;
+		if (file_exists(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index')) {
+			$index = Zend_Search_Lucene::open(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index');
+		} else {
+			print "Creando dir\n";
+			@mkdir(mnmpath.'/'.$globals['cache_dir'].'/lucene');
+			@chmod(mnmpath.'/'.$globals['cache_dir'].'/lucene', 0777);
+			$index = Zend_Search_Lucene::create(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index');
+			@chmod(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index', 0777);
+		}
+		// Retrieving documents with termDocs() method
+		$term = new Zend_Search_Lucene_Index_Term($this->id, 'link_id');
+		$docIds  = $index->termDocs($term);
+		foreach ($docIds as $hit) {
+			$index->delete($hit);
+		}
+
+		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
+		$doc = new Zend_Search_Lucene_Document();
+		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
+		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', $this->tags));
+		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', $this->title));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', $this->content));
+		$index->addDocument($doc);
 	}
 
 }
