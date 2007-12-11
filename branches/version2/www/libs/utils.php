@@ -236,6 +236,11 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 
 	if(!empty($_REQUEST['search'])) {
 		$_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
+
+		// Basic filtering to avoid Lucene errors
+		$_REQUEST['search'] = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
+		$_REQUEST['search'] = preg_replace('/[\~\*]/','$1',$_REQUEST['search']);
+
 		if(preg_match('/^ *(\w+): *(.*)/', $_REQUEST['search'], $matches)) {
 			$prefix = $matches[1];
 			$words = $matches[2];
@@ -256,6 +261,9 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		if ($prefix) {
 			switch ($prefix) {
+				case 'url';
+					$field = 'url';
+					break;
 				case 'title';
 					$field = 'title';
 					break;
@@ -263,7 +271,6 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 				case 'tags':
 					$field = 'tags';
 					break;
-
 			}
 		}
 		if ($field) {
@@ -271,7 +278,6 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		} else {
 			$query = $words;
 		}
-		//echo "$_REQUEST[search] Prefix $prefix Words: $words Query: $query<br>\n";
 		if (empty($query)) return false;
 
 		require_once(mnminclude.'Zend/Search/Lucene.php');
@@ -283,6 +289,25 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		} else {
 			$hits = $index->find($query);
 		}
+
+		/***
+		*** Range search does not work in Zend 1.0.3
+		*** Should wait for 1.1
+		$days = 180;
+		while (count($hits) >=500 && $days > 15) {
+			$from_date = time() - 86400*$days;
+			$date_range .= ' date:['. $from_date .' TO ' . time(). ']';
+			echo "<!-- SEARCH REFINING  to $days $date_range-->\n";
+			if ($by_date) {
+				$hits = $index->find("$query $date_range", 'date', SORT_NUMERIC, SORT_DESC);
+			} else {
+				$hits = $index->find("$query $date_range");
+			}
+			$days = $days / 2;
+		}
+		***/
+
+		//echo "$_REQUEST[search] Prefix $prefix Words: $words Query: $query<br>\n";
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;

@@ -36,7 +36,7 @@ $globals['base_url'] = '/';
 //RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
 $globals['base_story_url'] = 'story/';
 
-//RewriteRule ^/search(/.*)$ /index.php$1 [L,NS,NE,PT]
+//RewriteRule ^/search(/.*)$ /search.php$1 [L,NS,NE,PT]
 $globals['base_search_url'] = 'search/';
 
 //RewriteRule ^/user/(.+)$ /user.php/$1  [L,NS]
