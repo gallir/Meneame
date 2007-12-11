@@ -138,7 +138,7 @@ function do_header($title, $id='home') {
 
 	// Main search form
 	echo '<li>' . "\n";
-	echo '<form action="'.$globals['base_url'].'" method="get">' . "\n";
+	echo '<form action="'.$globals['base_url'].'search.php" method="get">' . "\n";
 	if (!empty($_REQUEST['search'])) {
 		echo '<input type="text" name="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
 	} else {

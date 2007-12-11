@@ -73,13 +73,21 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// All the others
 	/////
-	$search = get_search_clause('boolean');
+	$search_ids = get_search_ids(true);
+	if ($search_ids) {
+		$search = ' link_id in (';
+		foreach ($search_ids as $lid) {
+			$search .= $lid . ',';
+		}
+		$search = preg_replace('/,$/', '', $search);
+		$search .= ')';
+	}
 	// The link_status to search
 	if(!empty($_REQUEST['status'])) {
 		$status = $db->escape(clean_input_string(trim($_REQUEST['status'])));
 	} else {
 		// By default it searches on all
-		if($search) $status = 'all';
+		if($_REQUEST['search']) $status = 'all';
 		else $status = 'published';
 	}
 	
@@ -109,7 +117,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$search && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
+	if (!$_REQUEST['search'] && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
 		check_redirect_to_feedburner($status);
 	}
 	
@@ -134,8 +142,12 @@ if(!empty($_REQUEST['time'])) {
 		$title .= " -$category_name-";
 	}
 	
-	if($search) {
-		$from_where .= "AND $search";
+	if($_REQUEST['search']) {
+		if($search) {
+			$from_where .= "AND $search";
+		} else {
+			$from_where .= "AND false"; // Force to return empty set
+		}
 		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['search']));
 	}
 	

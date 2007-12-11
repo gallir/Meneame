@@ -229,56 +229,70 @@ function get_current_page() {
     // return $_GET['page']>0 ? $_GET['page'] : 1;
 }
 
-function get_search_clause($option='') {
-	global $db;
-	if($option == 'boolean') {
-		$mode = 'IN BOOLEAN MODE';
-	}
+function get_search_ids($by_date = false, $start = 0, $count = 50) {
+	global $globals;
+
+	$ids = array();
+
 	if(!empty($_REQUEST['search'])) {
-		$_REQUEST['search'] = preg_replace('/\*/', '', trim(substr(strip_tags($_REQUEST['search']), 0, 250))); // to avoid overload in search
-		$words_count = count(explode(" ", $_REQUEST['search']));
-		$words = $db->escape($_REQUEST['search']);
-		// A joke, just try to find flames :-)
-		if (preg_match('/^givemeflame|^damecarnaza/i', $words)) {
-			$where = "link_date > date_sub(now(), interval 48 hour) and link_comments > 10 and link_comments > (link_votes - link_negatives) order by link_comments desc";
-			return $where;
-		} elseif (preg_match('/^tag:/', $words)) {
-			$_REQUEST['tag'] = 'true';
-			$words=preg_replace('/^tag: */', '', $words);
-		} elseif (preg_match('/^date:/', $words) || 
-				($words_count == 1 && ! preg_match('/^http[s]*:\/\/|^www\./', $words))) { // Don't change word if it searches for urls
-			$_REQUEST['date'] = 'true';
-			$mode = 'IN BOOLEAN MODE';
-			$words=preg_replace('/^date: */', '', $words);
-			$words=preg_replace('/(^| )(\w+)/', "$1+$2", $words);
-			// Mysql is very slow for words with chars like "=" in BOOLEAN, don't have any idea, it's not documented
-			if ($words_count == 1 && preg_match('/=/', $words)) {
-				// clean '\"' from the middle of the word
-				$words=preg_replace('/\\\"/', '', $words);
-				$_REQUEST['search']=preg_replace('/\\\"/', '', $_REQUEST['search']);
-				$words = "\"$words\"";
+		$_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
+		if(preg_match('/^ *(\w+): *(.*)/', $_REQUEST['search'], $matches)) {
+			$prefix = $matches[1];
+			$words = $matches[2];
+		} else {
+			$words = $_REQUEST['search'];
+		}
+		if (preg_match('/^http[s]*/', $prefix)) { // It's an url search
+			$words = "$prefix:$words";
+			$prefix = false;
+			$field = 'url';
+		}
+		$words_count = count(explode(" ", $words));
+		if ($by_date || $words_count == 1 || $prefix == 'date') {
+			if (! preg_match('/(^| )(AND|OR|NOT|TO) /', $words)) {
+				$words = preg_replace('/(^| +)(\w)/', '$1+$2', $words);
+			}
+			$by_date = true;
+		}
+		if ($prefix) {
+			switch ($prefix) {
+				case 'title';
+					$field = 'title';
+					break;
+				case 'tag':
+				case 'tags':
+					$field = 'tags';
+					break;
+
 			}
 		}
-		if ($_REQUEST['tag'] == 'true') {
-			$where .= "MATCH (link_tags) AGAINST ('$words' $mode) ";
-		} elseif ($words_count == 1 && preg_match('/^http[s]*:\/\/|^www\./', $words)) {
-			// With URLs, search with "like" because mysql (5.0) give erroneous results otherwise
-			$where = "link_url like '$words%' ";
-			$_REQUEST['date'] = 'true';
+		if ($field) {
+			$query = "$field:($words)";
 		} else {
-			$where = "MATCH (link_url, link_tags, link_title, link_content) AGAINST ('$words' $mode) ";
+			$query = $words;
 		}
-		if (!empty($_REQUEST['from'])) {
-			$where .=  " AND link_date > from_unixtime(".intval($_REQUEST['from']).") ";
+		//echo "$_REQUEST[search] Prefix $prefix Words: $words Query: $query<br>\n";
+		if (empty($query)) return false;
+
+		require_once(mnminclude.'Zend/Search/Lucene.php');
+		setlocale(LC_CTYPE, 'es_ES.utf-8'); 
+		Zend_Search_Lucene::setResultSetLimit(4000);
+		$index = new Zend_Search_Lucene($globals['cache_dir'].'/lucene/link_index');
+		if ($by_date) {
+			$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
+		} else {
+			$hits = $index->find($query);
 		}
-		// To avoid showing news still in "limbo"
-		// it also avoid to show old discarded news
-		//$where .=  " AND (link_status != 'discard' OR (link_status = 'discard' AND link_date > date_sub(now(), interval 7 day) AND link_votes > 0)) ";
-		$where .=  " AND link_votes > 0 ";
-		return $where;
-	} else {
-		return false;
-	}
+		$globals['rows'] = count($hits); // Save the number of hits
+		$elements = min($globals['rows'], $start+$count);
+		if ($elements == 0 || $elements < $start) return false;
+		for ($i=$start; $i<$elements; $i++) {
+			$hit = $hits[$i];
+			array_push($ids, $hit->link_id);
+		}
+		return $ids;
+	} 
+	return false;
 }
 
 function get_date($epoch) {

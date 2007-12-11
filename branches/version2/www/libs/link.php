@@ -256,8 +256,6 @@ class Link {
 		$link_tags = $db->escape($this->tags);
 		$link_content = $db->escape($this->content);
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags' WHERE link_id=$this->id");
-		$this->lucene_update();
-		
 	}
 
 	function store_basic() {

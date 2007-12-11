@@ -8,6 +8,7 @@
 
 define("mnmpath", dirname(__FILE__));
 define("mnminclude", dirname(__FILE__).'/libs/');
+ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 // IMPORTANTE: Do local modification in "hostname-local.php"
 // and/or "local.php"
