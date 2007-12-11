@@ -668,7 +668,13 @@ function do_vertical_tags() {
 		ksort($words);
 		foreach ($words as $word => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
-			$output .= '<a style="font-size: '.$size.'pt" href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a>  ';
+			$output .= '<a style="font-size: '.$size.'pt" href="';
+			if ($globals['base_search_url']) {
+				$output .= $globals['base_url'].$globals['base_search_url'].'tag:';
+			} else {
+				$output .= $globals['base_url'].'search.php?search=tag:';
+			}
+			$output .= urlencode($word).'">'.$word.'</a>  ';
 		}
 		$output .= '</div>';
 		echo $output;
