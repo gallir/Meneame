@@ -254,7 +254,7 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		$words_count = count(explode(" ", $words));
 		if ($by_date || $words_count == 1 || $prefix == 'date') {
-			if (! preg_match('/(^| )(AND|OR|NOT|TO) /', $words)) {
+			if (! preg_match('/(^| )(AND|OR|NOT|TO) /i', $words)) {
 				$words = preg_replace('/(^| +)(\w)/', '$1+$2', $words);
 			}
 			$by_date = true;
@@ -307,7 +307,7 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		***/
 
-		//echo "$_REQUEST[search] Prefix $prefix Words: $words Query: $query<br>\n";
+		//echo "<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;
