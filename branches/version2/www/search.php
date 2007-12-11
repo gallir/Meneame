@@ -36,6 +36,19 @@ $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
+$globals['noindex'] = true;
+
+do_header(_('búsqueda de'). '"'.$search_txt.'"');
+do_banner_top();
+echo '<div id="container">'."\n";
+do_sidebar();
+echo '<div id="contents">';
+do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
+
+$search_txt = htmlspecialchars($_REQUEST['search']);
+echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
+
+flush();
 if ($_REQUEST['search']) {
 	// Catch url searchs and search directly into the mysql db (it is indexed)
 	if (preg_match('/^ *http[s]*:\/\/|^www\./', $_REQUEST['search'])) {
@@ -46,19 +59,7 @@ if ($_REQUEST['search']) {
 	} else {
 		$ids = get_search_ids(false, $offset, $page_size);
 	}
-
 }
-
-$globals['noindex'] = true;
-$search_txt = htmlspecialchars($_REQUEST['search']);
-
-do_header(_('búsqueda de'). '"'.$search_txt.'"');
-do_banner_top();
-echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
-do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
-echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 
 $link = new Link;
 if ($ids) {
