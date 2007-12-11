@@ -239,7 +239,7 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 
 		// Basic filtering to avoid Lucene errors
 		$_REQUEST['search'] = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
-		$_REQUEST['search'] = preg_replace('/[\~\*]/','$1',$_REQUEST['search']);
+		$_REQUEST['search'] = preg_replace('/[\~\*\(\)\[\]]/',' ',$_REQUEST['search']);
 
 		if(preg_match('/^ *(\w+): *(.*)/', $_REQUEST['search'], $matches)) {
 			$prefix = $matches[1];
