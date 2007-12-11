@@ -282,7 +282,11 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 
 		require_once(mnminclude.'Zend/Search/Lucene.php');
 		setlocale(LC_CTYPE, 'es_ES.utf-8'); 
-		Zend_Search_Lucene::setResultSetLimit(4000);
+		if ($globals['bot']) {
+			Zend_Search_Lucene::setResultSetLimit(40);
+		} else {
+			Zend_Search_Lucene::setResultSetLimit(4000);
+		}
 		$index = new Zend_Search_Lucene($globals['cache_dir'].'/lucene/link_index');
 		if ($by_date) {
 			$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
