@@ -48,7 +48,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.85;
+$min_karma_coef = 0.87;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 25);
@@ -59,7 +59,7 @@ $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
 
-$pub_estimation = intval(max(min($links_queue * 0.14, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * 0.12, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
@@ -218,7 +218,7 @@ if ($links) {
 		// Do not allow annonymous users to give more karma than registered users
 		// The ratio up to 10% anonymous
 		if ($karma_new > 0) 
-			$karma_new += min($karma_pos_user_high*0.10, $karma_pos_ano);
+			$karma_new += min($karma_pos_user_high*0.1, $karma_pos_ano);
 
 		//echo "previous $dblink->parent: $karma_new -> ";
 		$karma_new = (int) ($karma_new * $meta_coef[$dblink->parent]);
@@ -227,7 +227,7 @@ if ($links) {
 
 		// Aged karma
 		$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
-		$oldd = 1 - $diff/(3600*120);
+		$oldd = 1 - $diff/(3600*40);
 		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
 
@@ -296,11 +296,12 @@ if ($links) {
 			$link->store_basic();
 			// Add the publish event/log
 			log_insert('link_publish', $link->id, $link->author);
+			$short_url = fon_gs($link->get_permalink());
 			if ($globals['twitter_user'] && $globals['twitter_password']) {
-					twitter_post($link); 
+				twitter_post($link, $short_url); 
 			}
 			if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-				jaiku_post($link); 
+				jaiku_post($link, $short_url); 
 			}
 
 			$changes = 3; // to show a "published" later	
@@ -326,10 +327,10 @@ if ($links) {
 }  
 echo "</body></html>\n";
 
-function twitter_post($link) {
+function twitter_post($link, $short_url) {
 	global $globals;
 
-	$t_status = urlencode($link->title. ' ' . $link->get_permalink());
+	$t_status = urlencode($link->title. ' ' . $short_url);
 	syslog(LOG_NOTICE, "Meneame: twitter updater called, id=$link->id");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
@@ -352,7 +353,7 @@ function twitter_post($link) {
 }
 
 
-function jaiku_post($link) {
+function jaiku_post($link, $short_url) {
 	global $globals;
 
 	syslog(LOG_NOTICE, "Meneame: jaiku updater called, id=$link->id");
@@ -363,7 +364,6 @@ function jaiku_post($link) {
 		return;
 	}
 
-	$short_url = fon_gs($link->get_permalink());
 
 	$postdata =  "method=presence.send";
 	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
@@ -385,9 +385,13 @@ function jaiku_post($link) {
 }
 
 function fon_gs($url) {
-	$url = 'http://fon.gs/create.php?url='.urlencode($url);
+	if (!function_exists('curl_init')) {
+		syslog(LOG_NOTICE, "Meneame: curl is not installed");
+		return $url;
+	}
+	$gs_url = 'http://fon.gs/create.php?url='.urlencode($url);
 	$session = curl_init();
-	curl_setopt($session, CURLOPT_URL, $url);
+	curl_setopt($session, CURLOPT_URL, $gs_url);
 	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);

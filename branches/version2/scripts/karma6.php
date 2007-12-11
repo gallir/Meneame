@@ -25,6 +25,8 @@ if ($dbusers) {
 	}
 }
 
+// Lower karma of disabled users
+$db->query("update users set user_karma = 6 where user_level='disabled' and user_karma > 6 ");
 
 $karma_base=6;
 $karma_base_max=8; // Older users can get up to this value
@@ -33,9 +35,10 @@ $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 36 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
-$points_received = 16;
+$points_received = 10;
+$points_per_published = 3;
 $points_given = 12;
-$comment_votes = 5;
+$comment_votes = 8;
 
 // Following lines are for negative points given to links
 // It takes in account just votes during 24 hours
@@ -126,6 +129,15 @@ while ($dbuser = mysql_fetch_object($result)) {
 		printf ("%07d ", $user->id);
 		print "events: votes: $n, logs: $n_events\n";
 
+		// Count the number of published links during the last 48 hours
+		$karma0 = $points_per_published * (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_published_date > date_sub(now(), interval 48 hour) and link_status = 'published'");
+		// Max: 3 published
+		$karma0 = min($points_per_published * 3, $karma0);
+		if ($karma0 > 0) {
+			printf ("%07d ", $user->id);
+			print "Published links: karma0: $karma0\n";
+		}
+
 		// Count the numbers of link sent by the user in the last 30 days
 		$sent_links = intval($db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > date_sub(now(), interval 30 day) and link_status != 'discard' "));
 
@@ -154,7 +166,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$nopublished_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $history_from and vote_date < $ignored_nonpublished and vote_value > 0 AND link_id = vote_link_id AND link_status != 'published' and link_author != $user->id");
 
-		$discarded_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'discard' and link_author != $user->id");
+		$discarded_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status in ('discard', 'abuse') and link_author != $user->id");
 
 		$karma2 = min($points_given, $points_given * $published_points/$max_published_given - $points_given * ($nopublished_given/$max_nopublished_given)/10 - 0.1 * $discarded_given);
 
@@ -232,7 +244,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 	
-		$karma_extra = $karma1+$karma2+$karma3+$karma4+$karma5;
+		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5;
 		// If the new value is negative do not use the highest calculated karma base
 		if ($karma_extra < 0 && $user->karma <= $karma_base) $karma_base_user = $karma_base;
 		$karma = max($karma_base_user+$karma_extra, $min_karma);
@@ -240,7 +252,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	} else {
 		$no_calculated++;
 		if ($user->karma > 7) {
-			$karma = max($karma_base_user, $user->karma - 0.4);
+			$karma = max($karma_base_user, $user->karma - 1);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
 		} else {
