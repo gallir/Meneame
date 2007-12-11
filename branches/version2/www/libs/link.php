@@ -792,7 +792,7 @@ class Link {
 		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
 		$doc = new Zend_Search_Lucene_Document();
 		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
-		$doc->addField(Zend_Search_Lucene_Field::Unstored('date', $this->date));
+		$doc->addField(Zend_Search_Lucene_Field::Keyword('date', $this->date));
 		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', $this->tags));
 		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', $this->title));
 		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', $this->content));
