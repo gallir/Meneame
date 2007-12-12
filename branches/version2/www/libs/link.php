@@ -773,23 +773,11 @@ class Link {
 	function lucene_update() {
 		global $globals;
 
-		// Lucene needs to define an UTF-8 locale, otherwise fails
-		setlocale(LC_CTYPE, "en_US.utf-8");
-		require_once(mnminclude.'Zend/Search/Lucene.php');
-		// Change the token analyzer
-		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum());
-
 		if (!$this->id) return;
-		if (file_exists(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index')) {
-			$index = Zend_Search_Lucene::open(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index');
-		} else {
-			print "Creando dir\n";
-			@mkdir(mnmpath.'/'.$globals['cache_dir'].'/lucene');
-			@chmod(mnmpath.'/'.$globals['cache_dir'].'/lucene', 0777);
-			$index = Zend_Search_Lucene::create(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index');
-			@chmod(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index', 0777);
-		}
+
+		require_once(mnminclude.'lucene.php');
+		$index = lucene_open();
+
 		// Retrieving documents with termDocs() method
 		$term = new Zend_Search_Lucene_Index_Term($this->id, 'link_id');
 		$docIds  = $index->termDocs($term);
@@ -799,12 +787,12 @@ class Link {
 
 		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
 		$doc = new Zend_Search_Lucene_Document();
-		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
-		$doc->addField(Zend_Search_Lucene_Field::Keyword('date', $this->date));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', mb_strtolower($this->url)));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', mb_strtolower($this->tags)));
-		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', mb_strtolower($this->title)));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', mb_strtolower($this->content)));
+		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('link_id', $this->id));
+		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', $this->url));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', text_sanitize($this->tags)));
+		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', text_sanitize($this->title)));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', text_sanitize($this->content)));
 		$index->addDocument($doc);
 	}
 

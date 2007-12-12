@@ -204,6 +204,13 @@ function text_to_html($string, $do_links = true) {
 	return $string;
 }
 
+// Clean all special chars and html/utf entities
+function text_sanitize($string) {
+	$string = preg_replace('/&[^ ;]{1,8};/', ' ', $string);
+	$string = preg_replace('/(^|[\(¡;,:\s])[_\*]([^\s<>]+)[_\*]/', ' $2 ', $string);
+	return $string;
+}
+
 function check_integer($which) {
 	if (is_numeric($_REQUEST[$which])) {
 		return intval($_REQUEST[$which]);
@@ -240,7 +247,7 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		// Basic filtering to avoid Lucene errors
 		$words = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
 		$words = preg_replace('/[\~\*\(\)\[\]]/',' ',$words);
-		$words = mb_strtolower($words);
+		//$words = mb_strtolower($words);
 
 		if(preg_match('/^ *(\w+): *(.*)/', mb_strtolower($words), $matches)) {
 			$prefix = $matches[1];
@@ -284,19 +291,13 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		if (empty($query)) return false;
 
-		setlocale(LC_CTYPE, 'es_ES.utf-8'); 
-		require_once(mnminclude.'Zend/Search/Lucene.php');
-		// Change the token analyzer, otherwise it fails with numbers
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-		 //new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
-		 new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum()
-		  );
+		require_once(mnminclude.'lucene.php');
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
 		} else {
-			Zend_Search_Lucene::setResultSetLimit(4000);
+			Zend_Search_Lucene::setResultSetLimit(2000);
 		}
-		$index = new Zend_Search_Lucene($globals['cache_dir'].'/lucene/link_index');
+		$index = lucene_open();;
 		if ($by_date) {
 			$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
 		} else {
@@ -307,18 +308,37 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		*** Range search does not work in Zend 1.0.3
 		*** Should wait for 1.1
 		$days = 180;
-		while (count($hits) >=500 && $days > 15) {
+		while (count($hits) >=50 && $days > 15) {
 			$from_date = time() - 86400*$days;
 			$date_range .= ' date:['. $from_date .' TO ' . time(). ']';
 			echo "<!-- SEARCH REFINING  to $days $date_range-->\n";
 			if ($by_date) {
-				$hits = $index->find("$query $date_range", 'date', SORT_NUMERIC, SORT_DESC);
+				$hits = $index->find("+$date_range $query", 'date', SORT_NUMERIC, SORT_DESC);
 			} else {
-				$hits = $index->find("$query $date_range");
+				$hits = $index->find("+$date_range $query");
 			}
 			$days = $days / 2;
 		}
-		***/
+		$seconds = 15500000; // About 6 months
+		$now = time();
+		$last_len = 322222;;
+		while (count($hits) >=50 && $seconds > 1000000) {
+			$past = $now - $seconds;
+			while (strncmp($past, $now, strlen($past)) != 0 && strlen($past) > 1) {
+				$past = preg_replace('/.$/', '', $past);
+			}
+			if (strlen($past) < $last_len) {
+				$last_len = strlen($past);
+				echo "<!-- SEARCH REFINING from $past* -->\n";
+				if ($by_date) {
+					$hits = $index->find("+date:$past* $query", 'date', SORT_NUMERIC, SORT_DESC);
+				} else {
+					$hits = $index->find("+date:$past* $query");
+				}
+			}
+			$seconds /= 2;
+		}
+		*/
 
 		echo "\n<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";
 		$globals['rows'] = count($hits); // Save the number of hits

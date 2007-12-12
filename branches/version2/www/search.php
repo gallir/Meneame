@@ -9,6 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
+include(mnminclude.'lucene.php');
 
 // Manage "search" url and redirections accordingly
 if (!empty($globals['base_search_url'])) {
@@ -57,7 +58,7 @@ if ($_REQUEST['search']) {
 		$globals['rows'] = $db->get_var("select count(*) from links where link_url like '$url%'");
 		$ids = $db->get_col("select link_id from links where link_url like '$url%' order by link_date desc limit $offset,$page_size");
 	} else {
-		$ids = get_search_ids(false, $offset, $page_size);
+		$ids = lucene_get_search_link_ids(false, $offset, $page_size);
 	}
 }
 

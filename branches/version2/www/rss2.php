@@ -73,7 +73,8 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// All the others
 	/////
-	$search_ids = get_search_ids(true);
+	include(mnminclude.'lucene.php');
+	$search_ids = lucene_get_search_link_ids(true);
 	if ($search_ids) {
 		$search = ' link_id in (';
 		foreach ($search_ids as $lid) {

@@ -77,7 +77,10 @@ $globals['min_karma_for_comment_votes'] = 5.5;
 // Ensure you have a avar dir writeable by the web server
 //$globals['avatars_dir'] = 'avatars-local';
 // Changed to a global cache directory
+
 $globals['cache_dir'] = 'cache';
+$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
+
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_files_per_dir'] = 1000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
@@ -128,6 +131,12 @@ $site_key = 12345679;
 $anon_karma	= 4;
 
 // Don't touch behind this
+
+// Set an utf-8 locale if there is no utf-8 defined
+if (!preg_match('/utf-8/i', setlocale(LC_CTYPE, 0)))  {
+	setlocale(LC_CTYPE, "en_US.UTF-8");
+}
+
 @include('local.php');
 @include($_SERVER['SERVER_NAME'].'-local.php');
 @include($_SERVER['SERVER_ADDR'].'-local.php');
