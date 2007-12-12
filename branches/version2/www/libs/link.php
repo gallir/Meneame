@@ -776,6 +776,8 @@ class Link {
 		// Lucene needs to define an UTF-8 locale, otherwise fails
 		setlocale(LC_CTYPE, "en_US.utf-8");
 		require_once(mnminclude.'Zend/Search/Lucene.php');
+		// Change the token analyzer
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
 
 		if (!$this->id) return;
 		if (file_exists(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index')) {

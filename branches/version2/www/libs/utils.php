@@ -282,6 +282,10 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 
 		require_once(mnminclude.'Zend/Search/Lucene.php');
 		setlocale(LC_CTYPE, 'es_ES.utf-8'); 
+		// Change the token analyzer, otherwise it fails with numbers
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+		 new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+		  );
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
 		} else {
@@ -311,7 +315,7 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		***/
 
-		//echo "<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";
+		echo "\n<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;
