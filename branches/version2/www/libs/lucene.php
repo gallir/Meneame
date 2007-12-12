@@ -33,8 +33,8 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 
 		// Basic filtering to avoid Lucene errors
 		$words = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
-		$words = preg_replace('/[\~\*\(\)\[\]]/',' ',$words);
-		//$words = mb_strtolower($words);
+		$words = preg_replace('/[\~\*\(\)\[\]\|\{\}]/',' ',$words);
+		$words = preg_replace('/^ *(and|not|no|or|\&) *$/','',$words);
 
 		if(preg_match('/^ *(\w+): *(.*)/', mb_strtolower($words), $matches)) {
 			$prefix = $matches[1];
@@ -47,9 +47,11 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		$words_count = count(explode(" ", $words));
 		if ($by_date || $words_count == 1 || $prefix == 'date') {
+			/*
 			if (! preg_match('/(^| )(AND|OR|NOT|TO) /i', $words)) {
 				$words = preg_replace('/(^| +)(\w)/', '$1+$2', $words);
 			}
+			*/
 			$by_date = true;
 		}
 		if ($prefix) {
@@ -67,7 +69,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 			}
 		}
 		// if there is only a word and is a number, do not search in urls
-		if ($words_count == 1 && !$field && preg_match('/^[\+0-9]+$/', $words)) {
+		if ($words_count == 1 && !$field && preg_match('/^\+*[0-9]{1,4}$/', $words)) {
 			$words = preg_replace('/\+/', '', $words);
 			$words = "title:$words tags:$words content:$words";
 		}
