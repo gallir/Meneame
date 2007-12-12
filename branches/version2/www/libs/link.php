@@ -777,7 +777,8 @@ class Link {
 		setlocale(LC_CTYPE, "en_US.utf-8");
 		require_once(mnminclude.'Zend/Search/Lucene.php');
 		// Change the token analyzer
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
+		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive());
+		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum());
 
 		if (!$this->id) return;
 		if (file_exists(mnmpath.'/'.$globals['cache_dir'].'/lucene/link_index')) {
@@ -800,10 +801,10 @@ class Link {
 		$doc = new Zend_Search_Lucene_Document();
 		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
 		$doc->addField(Zend_Search_Lucene_Field::Keyword('date', $this->date));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', $this->url));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', $this->tags));
-		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', $this->title));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', $this->content));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', mb_strtolower($this->url)));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', mb_strtolower($this->tags)));
+		$doc->addField(Zend_Search_Lucene_Field::Unstored('title', mb_strtolower($this->title)));
+		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', mb_strtolower($this->content)));
 		$index->addDocument($doc);
 	}
 

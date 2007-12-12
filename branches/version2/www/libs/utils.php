@@ -238,14 +238,13 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		$_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
 
 		// Basic filtering to avoid Lucene errors
-		$_REQUEST['search'] = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
-		$_REQUEST['search'] = preg_replace('/[\~\*\(\)\[\]]/',' ',$_REQUEST['search']);
+		$words = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
+		$words = preg_replace('/[\~\*\(\)\[\]]/',' ',$words);
+		$words = mb_strtolower($words);
 
-		if(preg_match('/^ *(\w+): *(.*)/', $_REQUEST['search'], $matches)) {
+		if(preg_match('/^ *(\w+): *(.*)/', mb_strtolower($words), $matches)) {
 			$prefix = $matches[1];
 			$words = $matches[2];
-		} else {
-			$words = $_REQUEST['search'];
 		}
 		if (preg_match('/^http[s]*/', $prefix)) { // It's an url search
 			$words = "$prefix:$words";
@@ -273,6 +272,11 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 					break;
 			}
 		}
+		// if there is only a word and is a number, do not search in urls
+		if ($words_count == 1 && !$field && preg_match('/^[\+0-9]+$/', $words)) {
+			$words = preg_replace('/\+/', '', $words);
+			$words = "title:$words tags:$words content:$words";
+		}
 		if ($field) {
 			$query = "$field:($words)";
 		} else {
@@ -280,11 +284,12 @@ function get_search_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		if (empty($query)) return false;
 
-		require_once(mnminclude.'Zend/Search/Lucene.php');
 		setlocale(LC_CTYPE, 'es_ES.utf-8'); 
+		require_once(mnminclude.'Zend/Search/Lucene.php');
 		// Change the token analyzer, otherwise it fails with numbers
 		Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-		 new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+		 //new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+		 new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum()
 		  );
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
