@@ -770,24 +770,27 @@ class Link {
 		return geo_latlng('link', $this->id);
 	}
 
-	function lucene_update() {
+	function lucene_update($index = false) {
 		global $globals;
 
 		if (!$this->id) return;
 
 		require_once(mnminclude.'lucene.php');
-		$index = lucene_open();
+		if (!$index) {
+			$index = lucene_open();
+		}
 
 		// Retrieving documents with termDocs() method
 		$term = new Zend_Search_Lucene_Index_Term($this->id, 'link_id');
 		$docIds  = $index->termDocs($term);
 		foreach ($docIds as $hit) {
+			echo "Hit $hit\n";
 			$index->delete($hit);
 		}
 
 		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
 		$doc = new Zend_Search_Lucene_Document();
-		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('link_id', $this->id));
+		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
 		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
 		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', $this->url));
 		$doc->addField(Zend_Search_Lucene_Field::UnStored('tags', text_sanitize($this->tags)));
