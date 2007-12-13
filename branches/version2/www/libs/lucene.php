@@ -29,12 +29,12 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	$ids = array();
 
 	if(!empty($_REQUEST['search'])) {
-		$_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
+		$words = $_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
 
 		// Basic filtering to avoid Lucene errors
-		$words = preg_replace('/\^([^1-9])/','$1',$_REQUEST['search']);
-		$words = preg_replace('/[\~\*\(\)\[\]\|\{\}]/',' ',$words);
-		$words = preg_replace('/^ *(and|not|no|or|\&) *$/','',$words);
+		$words = preg_replace('/\^([^1-9])/','$1',$words);
+		//$words = preg_replace('/[\~\*\(\)\[\]\|\{\}]/',' ',$words);
+		//$words = preg_replace('/^ *(and|not|no|or|\&) *$/','',$words);
 
 		if(preg_match('/^ *(\w+): *(.*)/', mb_strtolower($words), $matches)) {
 			$prefix = $matches[1];
@@ -86,11 +86,18 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		} else {
 			Zend_Search_Lucene::setResultSetLimit(2000);
 		}
-		$index = lucene_open();;
-		if ($by_date) {
-			$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
-		} else {
-			$hits = $index->find($query);
+		$index = lucene_open();
+
+		try {
+			if ($by_date) {
+				$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
+			} else {
+				$hits = $index->find($query);
+			}
+		} catch (Zend_Search_Lucene_Search_QueryParserException $e) {
+			//echo '<strong>'. _('consulta errónea') . '</strong>: ' . $_REQUEST['search']. ' (<em>'.$e->getMessage() . "</em>)\n";
+			$_REQUEST['search'] = false;
+			return false;
 		}
 
 		echo "\n<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";

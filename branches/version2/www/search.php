@@ -41,15 +41,8 @@ $globals['noindex'] = true;
 
 do_header(_('búsqueda de'). '"'.$search_txt.'"');
 do_banner_top();
-echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
-do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 
 $search_txt = htmlspecialchars($_REQUEST['search']);
-echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
-
-flush();
 if ($_REQUEST['search']) {
 	// Catch url searchs and search directly into the mysql db (it is indexed)
 	if (preg_match('/^ *http[s]*:\/\/|^www\./', $_REQUEST['search'])) {
@@ -58,9 +51,16 @@ if ($_REQUEST['search']) {
 		$globals['rows'] = $db->get_var("select count(*) from links where link_url like '$url%'");
 		$ids = $db->get_col("select link_id from links where link_url like '$url%' order by link_date desc limit $offset,$page_size");
 	} else {
+		flush(); // Might take a long time
 		$ids = lucene_get_search_link_ids(false, $offset, $page_size);
 	}
 }
+
+echo '<div id="container">'."\n";
+do_sidebar();
+echo '<div id="contents">';
+do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
+echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 
 $link = new Link;
 if ($ids) {
