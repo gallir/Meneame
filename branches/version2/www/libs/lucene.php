@@ -28,8 +28,8 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 
 	$ids = array();
 
-	if(!empty($_REQUEST['search'])) {
-		$words = $_REQUEST['search'] = trim(substr(strip_tags($_REQUEST['search']), 0, 250)); 
+	if(!empty($_REQUEST['q'])) {
+		$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250)); 
 
 		// Basic filtering to avoid Lucene errors
 		$words = preg_replace('/\^([^1-9])/','$1',$words);
@@ -95,12 +95,11 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 				$hits = $index->find($query);
 			}
 		} catch (Zend_Search_Lucene_Search_QueryParserException $e) {
-			//echo '<strong>'. _('consulta errónea') . '</strong>: ' . $_REQUEST['search']. ' (<em>'.$e->getMessage() . "</em>)\n";
-			$_REQUEST['search'] = false;
+			//echo '<strong>'. _('consulta errónea') . '</strong>: ' . $_REQUEST['q']. ' (<em>'.$e->getMessage() . "</em>)\n";
+			$_REQUEST['q'] = false;
 			return false;
 		}
 
-		echo "\n<!-- Query info: $_REQUEST[search] Prefix:$prefix Words: $words Query: $query -->\n";
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;

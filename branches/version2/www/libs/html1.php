@@ -138,13 +138,13 @@ function do_header($title, $id='home') {
 
 	// Main search form
 	echo '<li>' . "\n";
-	echo '<form action="'.$globals['base_url'].'search.php" method="get">' . "\n";
-	if (!empty($_REQUEST['search'])) {
-		echo '<input type="text" name="search" value="'.htmlspecialchars(strip_tags($_REQUEST['search'])).'" />' . "\n";
+	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
+	if (!empty($_REQUEST['q'])) {
+		echo '<input type="text" name="q" value="'.htmlspecialchars(strip_tags($_REQUEST['q'])).'" />' . "\n";
 	} else {
-		echo '<input name="search" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
+		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
 	}
-	echo '<input class="searchIcon" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_url'].'img/common/search-01.gif" />' . "\n";
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" align="top" alt="buscar" src="'.$globals['base_url'].'img/common/search-01.gif" id="submit_image"/></a>' . "\n";
 	echo '</form>' . "\n";
 	echo '</li>' . "\n";
 	// form
@@ -219,7 +219,7 @@ function do_sidebar($do_vert_bars = true) {
 	do_mnu_notame();
 
 	// don't show every box if it's a search
-	if (!isset($_REQUEST['search'])) {
+	if (!isset($_REQUEST['q'])) {
 		do_mnu_meneria();
 		if($do_vert_bars) {
 			do_vertical_tags();
@@ -371,10 +371,10 @@ function do_mnu_rss() {
 
 	echo '<ul class="mnu-rss">' . "\n";
 
-	if(!empty($_REQUEST['search'])) {
-		$search =  htmlspecialchars($_REQUEST['search']);
+	if(!empty($_REQUEST['q'])) {
+		$search =  htmlspecialchars($_REQUEST['q']);
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?search='.urlencode($search).'" rel="rss">'._("búsqueda").': <strong>'. htmlspecialchars($_REQUEST['search'])."</strong></a>\n";
+		echo '<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($search).'" rel="rss">'._("búsqueda").': <strong>'. htmlspecialchars($_REQUEST['q'])."</strong></a>\n";
 		echo '</li>';
 	}
 
@@ -672,7 +672,7 @@ function do_vertical_tags() {
 			if ($globals['base_search_url']) {
 				$output .= $globals['base_url'].$globals['base_search_url'].'tag:';
 			} else {
-				$output .= $globals['base_url'].'search.php?search=tag:';
+				$output .= $globals['base_url'].'search.php?q=tag:';
 			}
 			$output .= urlencode($word).'">'.$word.'</a>  ';
 		}

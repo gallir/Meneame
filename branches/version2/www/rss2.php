@@ -22,6 +22,9 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$if_modified = get_if_modified();
 }
 
+// Compatibility with the old "search" query string
+if($_REQUEST['search']) $_REQUEST['q'] = $_REQUEST['search'];
+
 if(!empty($_REQUEST['time'])) {
 	/////
 	// Prepare for times
@@ -88,7 +91,7 @@ if(!empty($_REQUEST['time'])) {
 		$status = $db->escape(clean_input_string(trim($_REQUEST['status'])));
 	} else {
 		// By default it searches on all
-		if($_REQUEST['search']) $status = 'all';
+		if($_REQUEST['q']) $status = 'all';
 		else $status = 'published';
 	}
 	
@@ -118,7 +121,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$_REQUEST['search'] && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
+	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
 		check_redirect_to_feedburner($status);
 	}
 	
@@ -143,13 +146,13 @@ if(!empty($_REQUEST['time'])) {
 		$title .= " -$category_name-";
 	}
 	
-	if($_REQUEST['search']) {
+	if($_REQUEST['q']) {
 		if($search) {
 			$from_where .= "AND $search";
 		} else {
 			$from_where .= "AND false"; // Force to return empty set
 		}
-		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['search']));
+		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
 	}
 	
 	$order_by = " ORDER BY $order_field DESC ";

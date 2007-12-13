@@ -16,17 +16,17 @@ if (!empty($globals['base_search_url'])) {
 	if (!empty($_SERVER['PATH_INFO']) ) {
 		$q = preg_quote($globals['base_url'].$globals['base_search_url']);
 		if(preg_match("{^$q}", $_SERVER['SCRIPT_URL'])) {
-			$_REQUEST['search'] = urldecode(substr($_SERVER['PATH_INFO'], 1));
+			$_REQUEST['q'] = urldecode(substr($_SERVER['PATH_INFO'], 1));
 		}
-	} elseif (!empty($_REQUEST['search'])) {
-		$_REQUEST['search'] = substr(trim(strip_tags($_REQUEST['search'])), 0, 300);
-		if (!preg_match('/\//', $_REQUEST['search']) ) {  // Freaking Apache rewrite that translate //+ to just one /
+	} elseif (!empty($_REQUEST['q'])) {
+		$_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 300);
+		if (!preg_match('/\//', $_REQUEST['q']) ) {  // Freaking Apache rewrite that translate //+ to just one /
 														// for example "http://" is converted to http:/
 														// also it cheats the paht_info and redirections, so don't redirect
-			header('Location: http://'. get_server_name().$globals['base_url'].$globals['base_search_url'].urlencode($_REQUEST['search']));
+			header('Location: http://'. get_server_name().$globals['base_url'].$globals['base_search_url'].urlencode($_REQUEST['q']));
 			die;
 		}
-	} elseif (isset($_REQUEST['search'])) {
+	} elseif (isset($_REQUEST['q'])) {
 		header('Location: http://'. get_server_name().$globals['base_url']);
 		die;
 	}
@@ -42,11 +42,11 @@ $globals['noindex'] = true;
 do_header(_('búsqueda de'). '"'.$search_txt.'"');
 do_banner_top();
 
-$search_txt = htmlspecialchars($_REQUEST['search']);
-if ($_REQUEST['search']) {
+$search_txt = htmlspecialchars($_REQUEST['q']);
+if ($_REQUEST['q']) {
 	// Catch url searchs and search directly into the mysql db (it is indexed)
-	if (preg_match('/^ *http[s]*:\/\/|^www\./', $_REQUEST['search'])) {
-		$url = trim(strip_tags( $_REQUEST['search']));
+	if (preg_match('/^ *http[s]*:\/\/|^www\./', $_REQUEST['q'])) {
+		$url = trim(strip_tags( $_REQUEST['q']));
 		$url = $db->escape($url);
 		$globals['rows'] = $db->get_var("select count(*) from links where link_url like '$url%'");
 		$ids = $db->get_col("select link_id from links where link_url like '$url%' order by link_date desc limit $offset,$page_size");
