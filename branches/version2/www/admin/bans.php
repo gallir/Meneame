@@ -18,7 +18,7 @@ do_banner_top();
 $page_size = 40;
 $offset=(get_current_page()-1)*$page_size;
 $ban_text_length=64; // Cambiar también en checkfield.php
-$ban_comment_length=64;
+$ban_comment_length=120;
 
 if ($current_user->user_level=="god") {
 	if (!$_REQUEST["admin"]) {
@@ -110,7 +110,7 @@ function admin_bans($ban_type) {
 	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;'; 
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_text">'.$ban_type.'</a></th>';
-	echo '<th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
+	echo '<th width="30%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_comment">'._('Comentario').'</a></th>';
 	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';

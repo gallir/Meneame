@@ -1,6 +1,7 @@
 <?php
 include('../config.php');
 include(mnminclude.'link.php');
+include_once(mnminclude.'lucene.php');
 
 ini_set('memory_limit', '128M');
 //echo  ini_get('memory_limit'). "\n";

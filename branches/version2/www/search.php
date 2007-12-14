@@ -39,10 +39,10 @@ $globals['ads'] = true;
 
 $globals['noindex'] = true;
 
-do_header(_('búsqueda de'). '"'.$search_txt.'"');
+$search_txt = htmlspecialchars($_REQUEST['q']);
+do_header(_('búsqueda de'). ' "'.$search_txt.'"');
 do_banner_top();
 
-$search_txt = htmlspecialchars($_REQUEST['q']);
 if ($_REQUEST['q']) {
 	// Catch url searchs and search directly into the mysql db (it is indexed)
 	if (preg_match('/^ *http[s]*:\/\/|^www\./', $_REQUEST['q'])) {

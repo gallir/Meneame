@@ -76,23 +76,26 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// All the others
 	/////
-	include(mnminclude.'lucene.php');
-	$search_ids = lucene_get_search_link_ids(true);
-	if ($search_ids) {
-		$search = ' link_id in (';
-		foreach ($search_ids as $lid) {
-			$search .= $lid . ',';
-		}
-		$search = preg_replace('/,$/', '', $search);
-		$search .= ')';
-	}
 	// The link_status to search
 	if(!empty($_REQUEST['status'])) {
 		$status = $db->escape(clean_input_string(trim($_REQUEST['status'])));
 	} else {
 		// By default it searches on all
-		if($_REQUEST['q']) $status = 'all';
-		else $status = 'published';
+		if($_REQUEST['q']) {
+			$status = 'all';
+			include(mnminclude.'lucene.php');
+			$search_ids = lucene_get_search_link_ids(true);
+			if ($search_ids) {
+				$search = ' link_id in (';
+				foreach ($search_ids as $lid) {
+					$search .= $lid . ',';
+				}
+				$search = preg_replace('/,$/', '', $search);
+				$search .= ')';
+			}
+		} else {
+			$status = 'published';
+		}
 	}
 	
 	switch ($status) {

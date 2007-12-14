@@ -775,7 +775,7 @@ class Link {
 
 		if (!$this->id) return;
 
-		require_once(mnminclude.'lucene.php');
+		include_once(mnminclude.'lucene.php');
 		if (!$index) {
 			$index = lucene_open();
 		}

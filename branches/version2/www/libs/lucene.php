@@ -84,7 +84,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
 		} else {
-			Zend_Search_Lucene::setResultSetLimit(2000);
+			Zend_Search_Lucene::setResultSetLimit(3000);
 		}
 		$index = lucene_open();
 
