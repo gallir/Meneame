@@ -29,6 +29,11 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	$ids = array();
 
 	if(!empty($_REQUEST['q'])) {
+		if ($_REQUEST['p']) {
+			//Allows variable "p" as prefix too
+			$_REQUEST['q'] = $_REQUEST['p'].':'.$_REQUEST['q'];
+		}
+
 		$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250)); 
 
 		// Basic filtering to avoid Lucene errors

@@ -507,7 +507,7 @@ class Link {
 					if ($globals['base_search_url']) {
 						echo ' <a href="'.$globals['base_url'].$globals['base_search_url'].'tag:';
 					} else {
-						echo ' <a href="'.$globals['base_url'].'search.php?q=tag:';
+						echo ' <a href="'.$globals['base_url'].'search.php?p=tag&amp;q=';
 					}
 					echo $tag_url.'">'.$tag_item.'</a>';
 					$tags_counter++;
