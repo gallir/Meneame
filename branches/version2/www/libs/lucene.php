@@ -2,14 +2,17 @@
 
 require_once(mnminclude.'Zend/Search/Lucene.php');
 
+global $lucene_stopwords;
+$lucene_stopwords = array('a', 'an', 'at', 'the', 'and', 'or', 'is', 'am', 'la', 'el', 'las', 'los', 'de', 'me', 'mi', 'no',
+			'en', 'con', 'un', 'una', 'tu', 'te', 'con', 'su', 'se');
+
 
 function lucene_open() {
-	global $globals;
+	global $globals, $lucene_stopwords;
 
 	// Change the token analyzer
-	Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-		new Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num()
-	);
+	$analyzer = new Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num($lucene_stopwords);
+	Zend_Search_Lucene_Analysis_Analyzer::setDefault($analyzer);
 
 	if (file_exists($globals['lucene_dir'] )) {
 		$index = Zend_Search_Lucene::open($globals['lucene_dir'] );
@@ -38,7 +41,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 
 		// Basic filtering to avoid Lucene errors
 		$words = preg_replace('/\^([^1-9])/','$1',$words); // Only allow ^ followed by numbers
-		$words = preg_replace('/(.*) +(\w{1,2} *$)/', '$2 $1', $words); // Lucene dies if the last word has 2 chars, move it to the begining
+		//$words = preg_replace('/(.*) +(\w{1,2} *$)/', '$2 $1', $words); // Lucene dies if the last word has 2 chars, move it to the begining
 		//$words = preg_replace('/[\~\*\(\)\[\]\|\{\}]/',' ',$words);
 		//$words = preg_replace('/^ *(and|not|no|or|\&) *$/','',$words);
 
@@ -86,7 +89,6 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		if (empty($query)) return false;
 
-		require_once(mnminclude.'lucene.php');
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
 		} else {
@@ -261,9 +263,9 @@ class Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num extends Zend_Search_Lucene_Ana
 
         return null;
     }
-    public function __construct()
+    public function __construct($stopwords = array())
     {
-        $this->addFilter(new Mnm_Lucene_Analysis_TokenFilter_LowerCase());
+        $this->addFilter(new Mnm_Lucene_Analysis_TokenFilter_LowerCase($stopwords));
     }
 
 }
@@ -271,6 +273,7 @@ class Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num extends Zend_Search_Lucene_Ana
 
 class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analysis_TokenFilter
 {
+	private $_stopSet;
     /**
      * Normalize Token or remove it (if null is returned)
      *
@@ -280,6 +283,8 @@ class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analy
     public function normalize(Zend_Search_Lucene_Analysis_Token $srcToken)
     {
 		if (mb_strlen($srcToken->getTermText()) < 2) return null;
+		if (array_key_exists($srcToken->getTermText(), $this->_stopSet)) return null;
+
         $newToken = new Zend_Search_Lucene_Analysis_Token(
                                      mb_strtolower( $srcToken->getTermText() ),
                                      $srcToken->getStartOffset(),
@@ -289,6 +294,11 @@ class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analy
 
         return $newToken;
     }
+
+	public function __construct($stopwords = array()) {
+		$this->_stopSet = array_flip($stopwords);
+	}
+
 }
 
 ?>
