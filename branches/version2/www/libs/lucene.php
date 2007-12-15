@@ -37,7 +37,8 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250)); 
 
 		// Basic filtering to avoid Lucene errors
-		$words = preg_replace('/\^([^1-9])/','$1',$words);
+		$words = preg_replace('/\^([^1-9])/','$1',$words); // Only allow ^ followed by numbers
+		$words = preg_replace('/(.*) +(\w{1,2} *$)/', '$2 $1', $words); // Lucene dies if the last word has 2 chars, move it to the begining
 		//$words = preg_replace('/[\~\*\(\)\[\]\|\{\}]/',' ',$words);
 		//$words = preg_replace('/^ *(and|not|no|or|\&) *$/','',$words);
 
