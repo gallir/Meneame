@@ -4,7 +4,7 @@ require_once(mnminclude.'Zend/Search/Lucene.php');
 
 global $lucene_stopwords;
 $lucene_stopwords = array('a', 'an', 'at', 'the', 'and', 'or', 'is', 'am', 'la', 'el', 'las', 'los', 'de', 'me', 'mi', 'no',
-			'en', 'con', 'un', 'una', 'tu', 'te', 'con', 'su', 'se');
+			'en', 'con', 'un', 'una', 'tu', 'te', 'con', 'su', 'se', 'si', 'sí');
 
 
 function lucene_open() {

@@ -396,7 +396,7 @@ class Link {
 		return $found;
 	}
 
-	function print_summary($type='full') {
+	function print_summary($type='full', $karma_best_comment = 0) {
 		global $current_user, $current_user, $globals, $db;
 
 		if(!$this->read) return;
@@ -461,6 +461,15 @@ class Link {
 				}
 			}
 			echo '</p>';
+		}
+
+		// Print a summary of the best comment
+		if ($karma_best_comment > 0 && 
+			($best_comment = $db->get_row("select comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment order by comment_karma desc limit 1"))) {
+			echo '<div style="font-size: 90%; border: 1px solid; border-bottom-style: dotted; border-color: #dadada; background: #fafafa; margin: 7px 50px 0 22px; padding: 1px 3px 1px 3px">';
+			$link = $this->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $best_comment->comment_order, $this->comments).'#comment-'.$best_comment->comment_order;
+			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
+			echo ': '.text_to_summary($best_comment->comment_content, 200).'</div>';
 		}
 
 		echo '<div class="news-details">';

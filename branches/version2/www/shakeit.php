@@ -88,7 +88,7 @@ if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;
 		$link->read();
-		$link->print_summary();
+		$link->print_summary('full', 20);
 	}
 }
 do_pages($rows, $page_size);
