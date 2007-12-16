@@ -98,7 +98,19 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 			echo "\n<!--  Trying to refine with a new query: $query -->\n";
 			$hits2 = lucene_search($index, $query, $by_date);
 			if (count($hits2) > 0) {
-				$hits = array_merge($hits2, $hits);
+				$base_hits = 0;
+				// Add the second hits if they are not already among the fist 10
+				for ($i=0; $i<count($hits2); $i++) {
+					$found = false;
+					for ($j=$base_hits; $j<$base_hits+10 && !$found; $j++) {
+						if ($hits2[$i]->link_id == $hits[$j]->link_id) $found = true;
+					}
+					if (!$found) {
+						array_unshift($hits, $hits2[$i]);
+						$base_hits++;
+					}
+				}
+				//$hits = array_merge($hits2, $hits);
 			}
 		}
 		$globals['rows'] = count($hits); // Save the number of hits
