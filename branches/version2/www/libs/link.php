@@ -798,17 +798,23 @@ class Link {
 		}
 
 		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
+		if ($this->status == 'published') $boost = 2.0;
+		else $boost = 1.0;
 		$doc = new Zend_Search_Lucene_Document();
 		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
 		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('url', $this->url));
+		$field = Zend_Search_Lucene_Field::UnStored('url', $this->url);
+		$field->boost = 1.2 * $boost; 
+		$doc->addField($field);
 		$field = Zend_Search_Lucene_Field::UnStored('tags', text_sanitize($this->tags));
-		$title->boost = 2.0; 
+		$field->boost = 1.5 * $boost; 
 		$doc->addField($field);
 		$field = Zend_Search_Lucene_Field::Unstored('title', text_sanitize($this->title));
-		$title->boost = 4.0; 
+		$field->boost = 2.0 * $boost; 
 		$doc->addField($field);
 		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', text_sanitize($this->content)));
+		$field->boost = 1.0 * $boost; 
+		$doc->addField($field);
 		$index->addDocument($doc);
 	}
 
