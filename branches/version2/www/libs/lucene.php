@@ -2,10 +2,11 @@
 
 require_once(mnminclude.'Zend/Search/Lucene.php');
 
+// Configurable parameters
 global $lucene_stopwords;
-$lucene_stopwords = array('a', 'an', 'at', 'the', 'and', 'or', 'is', 'am', 'la', 'el', 'las', 'los', 'de', 'me', 'mi', 'no',
-			'en', 'con', 'un', 'una', 'tu', 'te', 'con', 'su', 'se', 'si', 'sí');
-
+$lucene_stopwords = array('a', 'al', 'an', 'at', 'the', 'and', 'or', 'is', 'am', 'my', 'ho', 'la', 'el', 'las', 'los', 'de', 'me', 'mi', 'no', 'da',
+		'ni', 'en', 'con', 'ha', 'he', 'es', 'un', 'una', 'tu', 'te', 'con', 'por', 'su', 'se', 'si', 'que', 'ya', 'yo', 'va', 'para', 'sin',
+		'http', 'https', 'www', 'fue', 'le', 'del', 'lo', 'sus', 'ip', 'com');
 
 function lucene_open() {
 	global $globals, $lucene_stopwords;
@@ -170,7 +171,9 @@ class Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num extends Zend_Search_Lucene_Ana
 
         // Get UTF-8 string length.
         // It also checks if it's a correct utf-8 string
-        $this->_streamLength = mb_strlen($this->_input);
+		$this->_input = iconv("utf-8", "us-ascii//TRANSLIT", $this->_input);
+        //$this->_streamLength = mb_strlen($this->_input);
+        $this->_streamLength = strlen($this->_input);
     }
 
     /**
@@ -181,11 +184,12 @@ class Mnm_Lucene_Analysis_Analyzer_Common_Utf8Num extends Zend_Search_Lucene_Ana
      */
     private static function _isAlNum($char)
     {
-        if (mb_strlen($char) > 1) {
+        if (strlen($char) > 1) {
             // It's an UTF-8 character
-            return true;
+			// check allowed chars
+			return true;
+        	//return ctype_alnum(iconv("utf-8", "us-ascii//TRANSLIT",$char));
         }
-
         return ctype_alnum($char);
     }
 
@@ -282,14 +286,20 @@ class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analy
      */
     public function normalize(Zend_Search_Lucene_Analysis_Token $srcToken)
     {
-		if (mb_strlen($srcToken->getTermText()) < 2) return null;
-		if (array_key_exists($srcToken->getTermText(), $this->_stopSet)) return null;
+		//iconv("utf-8", "us-ascii//TRANSLIT", $url); // TRANSLIT does the whole job
+		// We could use also remove_accents() in uri.php
+		// Problem: ñ -> n
+		//$token = strtolower(iconv("utf-8", "us-ascii//TRANSLIT", $srcToken->getTermText()));
+		$token = strtolower($srcToken->getTermText());
+		if (strlen($token) < 2  || preg_match('/[0-9]{1,2}/', $token) ||
+			array_key_exists($token, $this->_stopSet) ) {
+			return null;
+		}
 
         $newToken = new Zend_Search_Lucene_Analysis_Token(
-                                     mb_strtolower( $srcToken->getTermText() ),
+                                     $token,
                                      $srcToken->getStartOffset(),
                                      $srcToken->getEndOffset());
-
         $newToken->setPositionIncrement($srcToken->getPositionIncrement());
 
         return $newToken;
