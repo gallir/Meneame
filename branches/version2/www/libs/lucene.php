@@ -308,7 +308,7 @@ class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analy
 		// Problem: ñ -> n
 		//$token = strtolower(iconv("utf-8", "us-ascii//TRANSLIT", $srcToken->getTermText()));
 		$token = strtolower($srcToken->getTermText());
-		if (strlen($token) < 2  || preg_match('/[0-9]{1,2}/', $token) ||
+		if (strlen($token) < 2  || 
 			array_key_exists($token, $this->_stopSet) ) {
 			return null;
 		}
