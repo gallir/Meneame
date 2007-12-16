@@ -797,9 +797,18 @@ class Link {
 			$index->delete($hit);
 		}
 
-		if ($this->votes <= 0 || empty($this->title) || empty($this->content) || $this->status == 'discard' || $this->status == 'abuse' ) return;
-		if ($this->status == 'published') $boost = 2.0;
-		else $boost = 1.0;
+		if ($this->votes <= 0 || empty($this->title) || empty($this->content)) return;
+		switch ($this->status) {
+			case 'published':
+				$boost = 2.0;
+				break;
+			case 'discard':
+			case 'abuse':
+				$boost = 0.3;
+				break;
+			default:
+				$boost = 1.0;
+		}
 		$doc = new Zend_Search_Lucene_Document();
 		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
 		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
