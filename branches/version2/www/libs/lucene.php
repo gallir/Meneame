@@ -56,12 +56,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 			$field = 'url';
 		}
 		$words_count = count(explode(" ", $words));
-		if ($by_date || $words_count == 1 || $prefix == 'date') {
-			/*
-			if (! preg_match('/(^| )(AND|OR|NOT|TO) /i', $words)) {
-				$words = preg_replace('/(^| +)(\w)/', '$1+$2', $words);
-			}
-			*/
+		if ($words_count == 1 || $prefix == 'date') {
 			$by_date = true;
 		}
 		if ($prefix) {
@@ -93,22 +88,19 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
 		} else {
-			Zend_Search_Lucene::setResultSetLimit(3000);
+			Zend_Search_Lucene::setResultSetLimit(2000);
 		}
 		$index = lucene_open();
-
-		try {
-			if ($by_date) {
-				$hits = $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
-			} else {
-				$hits = $index->find($query);
+		$hits = lucene_search($index, $query, $by_date);
+		if (!$by_date && count($hits) > 500 && $words_count > 1 && !preg_match('/[\+\-]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
+			Zend_Search_Lucene::setResultSetLimit(20);
+			$query = preg_replace('/(^|[: ]+)(\w)/', '$1+$2', $query);
+			echo "\n<!--  Trying to refine with a new query: $query -->\n";
+			$hits2 = lucene_search($index, $query, $by_date);
+			if (count($hits2) > 0) {
+				$hits = array_merge($hits2, $hits);
 			}
-		} catch (Zend_Search_Lucene_Search_QueryParserException $e) {
-			//echo '<strong>'. _('consulta errónea') . '</strong>: ' . $_REQUEST['q']. ' (<em>'.$e->getMessage() . "</em>)\n";
-			$_REQUEST['q'] = false;
-			return false;
 		}
-
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;
@@ -121,6 +113,19 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	return false;
 }
 
+function lucene_search($index, $query, $by_date) {
+	try {
+		if ($by_date) {
+			return $index->find($query, 'date', SORT_NUMERIC, SORT_DESC);
+		} else {
+			return $index->find($query);
+		}
+	} catch (Zend_Search_Lucene_Search_QueryParserException $e) {
+		//echo '<strong>'. _('consulta errónea') . '</strong>: ' . $_REQUEST['q']. ' (<em>'.$e->getMessage() . "</em>)\n";
+		$_REQUEST['q'] = false;
+		return false;
+	}
+}
 
 // Following code is base on Zend Framework examples
 /**
@@ -310,5 +315,4 @@ class Mnm_Lucene_Analysis_TokenFilter_LowerCase extends Zend_Search_Lucene_Analy
 	}
 
 }
-
 ?>
