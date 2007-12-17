@@ -88,7 +88,11 @@ if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;
 		$link->read();
-		$link->print_summary('full', 20);
+		if ($offset < 1000) {
+			$link->print_summary('full', 16);
+		} else {
+			$link->print_summary('full');
+		}
 	}
 }
 do_pages($rows, $page_size);
