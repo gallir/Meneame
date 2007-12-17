@@ -57,6 +57,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		$words_count = count(explode(" ", $words));
 		if ($words_count == 1 || $prefix == 'date') {
+			$words = preg_replace('/(^| )(\w)/', '+$2', $words);
 			$by_date = true;
 		}
 		if ($prefix) {
@@ -75,7 +76,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		// if there is only a word and is a number, do not search in urls
 		if ($words_count == 1 && !$field && preg_match('/^\+*[0-9]{1,4}$/', $words)) {
-			$words = preg_replace('/\+/', '', $words);
+			//$words = preg_replace('/\+/', '', $words);
 			$words = "title:$words tags:$words content:$words";
 		}
 		if ($field) {
@@ -87,10 +88,13 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 
 		if ($globals['bot']) {
 			Zend_Search_Lucene::setResultSetLimit(40);
+		} elseif ($words_count == 1) {
+			Zend_Search_Lucene::setResultSetLimit(6000);
 		} else {
-			Zend_Search_Lucene::setResultSetLimit(2000);
+			Zend_Search_Lucene::setResultSetLimit(3000);
 		}
 		$index = lucene_open();
+		echo "<!--Query: $query -->\n";
 		$hits = lucene_search($index, $query, $by_date);
 		if (!$by_date && count($hits) > 200 && $words_count > 1 && !preg_match('/[\+\-\"]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
 			Zend_Search_Lucene::setResultSetLimit(200);
