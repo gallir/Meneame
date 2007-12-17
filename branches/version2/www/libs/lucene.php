@@ -92,23 +92,26 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		$index = lucene_open();
 		$hits = lucene_search($index, $query, $by_date);
-		if (!$by_date && count($hits) > 500 && $words_count > 1 && !preg_match('/[\+\-\"]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
-			Zend_Search_Lucene::setResultSetLimit(20);
+		if (!$by_date && count($hits) > 200 && $words_count > 1 && !preg_match('/[\+\-\"]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
+			Zend_Search_Lucene::setResultSetLimit(200);
 			$query = preg_replace('/(^|[: ]+)(\w)/', '$1+$2', $query);
 			echo "\n<!--  Trying to refine with a new query: $query -->\n";
 			$hits2 = lucene_search($index, $query, $by_date);
 			if (count($hits2) > 0) {
 				$base_hits = 0;
+				$nhits2 = min(count($hits2), 10);
 				// Add the second hits if they are not already among the fist 10
-				for ($i=0; $i<count($hits2); $i++) {
+				for ($i=$nhits2-1; $i>=0;$i--) {
 					$found = false;
-					for ($j=$base_hits; $j<$base_hits+10 && !$found; $j++) {
-						if ($hits2[$i]->link_id == $hits[$j]->link_id) $found = true;
+					for ($j=$base_hits; $j<$base_hits+10 && ! $found; $j++) {
+						if ($hits2[$i]->link_id == $hits[$j]->link_id) {
+							//$hits[$j] = false;
+							unset($hits[$j]);
+							$found = true;
+						}
 					}
-					if (!$found) {
-						array_unshift($hits, $hits2[$i]);
-						$base_hits++;
-					}
+					array_unshift($hits, $hits2[$i]);
+					$base_hits++;
 				}
 				//$hits = array_merge($hits2, $hits);
 			}
@@ -117,9 +120,10 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;
 		$previous = 0;
+		$i=$start;
 		for ($i=$start; $i<$elements; $i++) {
 			$hit = $hits[$i];
-			if ($hit->link_id != $previous) {
+			if ($hit && $hit->link_id != $previous) {
 				array_push($ids, $hit->link_id);
 				$previous = $hit->link_id;
 			}
