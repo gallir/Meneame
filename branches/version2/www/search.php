@@ -39,6 +39,7 @@ $globals['ads'] = true;
 
 $globals['noindex'] = true;
 
+$_REQUEST['q'] = stripslashes($_REQUEST['q']);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(_('búsqueda de'). ' "'.$search_txt.'"');
 do_banner_top();

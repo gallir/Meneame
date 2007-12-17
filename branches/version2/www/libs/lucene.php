@@ -92,7 +92,7 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 		$index = lucene_open();
 		$hits = lucene_search($index, $query, $by_date);
-		if (!$by_date && count($hits) > 500 && $words_count > 1 && !preg_match('/[\+\-]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
+		if (!$by_date && count($hits) > 500 && $words_count > 1 && !preg_match('/[\+\-\"]|(^|[ :])(AND|OR|NOT|TO) /i', $words)) {
 			Zend_Search_Lucene::setResultSetLimit(20);
 			$query = preg_replace('/(^|[: ]+)(\w)/', '$1+$2', $query);
 			echo "\n<!--  Trying to refine with a new query: $query -->\n";
@@ -116,9 +116,13 @@ function lucene_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		$globals['rows'] = count($hits); // Save the number of hits
 		$elements = min($globals['rows'], $start+$count);
 		if ($elements == 0 || $elements < $start) return false;
+		$previous = 0;
 		for ($i=$start; $i<$elements; $i++) {
 			$hit = $hits[$i];
-			array_push($ids, $hit->link_id);
+			if ($hit->link_id != $previous) {
+				array_push($ids, $hit->link_id);
+				$previous = $hit->link_id;
+			}
 		}
 		return $ids;
 	} 
