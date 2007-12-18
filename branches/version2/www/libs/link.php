@@ -582,7 +582,7 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' && $this->status != 'abuse' &&  ($this->negatives >= $this->votes/2 || $this->negatives > 3 && $this->negatives > $this->votes/10) ) {
+		if ( $this->status != 'discard' && $this->status != 'abuse' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
