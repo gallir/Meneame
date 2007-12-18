@@ -83,8 +83,8 @@ if(!empty($_REQUEST['time'])) {
 		// By default it searches on all
 		if($_REQUEST['q']) {
 			$status = 'all';
-			include(mnminclude.'lucene.php');
-			$search_ids = lucene_get_search_link_ids(true);
+			include(mnminclude.'sphinx.php');
+			$search_ids = sphinx_get_search_link_ids(true);
 			if ($search_ids) {
 				$search = ' link_id in (';
 				foreach ($search_ids as $lid) {

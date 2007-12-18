@@ -32,7 +32,7 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	if ($_POST['phase'] == "1") {
 		do_save();
 		fork("backend/send_pingbacks.php?id=$linkres->id");
-		fork("backend/lucene_update.php?id=$linkres->id");
+		//fork("backend/lucene_update.php?id=$linkres->id");
 	} else {
 		do_edit();
 	}

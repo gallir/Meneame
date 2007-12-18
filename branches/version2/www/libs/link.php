@@ -782,6 +782,8 @@ class Link {
 	function lucene_update($index = false) {
 		global $globals;
 
+		return; // Disabled by now
+		/*
 		if (!$this->id) return;
 
 		include_once(mnminclude.'lucene.php');
@@ -824,6 +826,7 @@ class Link {
 		$field->boost = 1.0 * $boost; 
 		$doc->addField($field);
 		$index->addDocument($doc);
+		*/
 	}
 
 }

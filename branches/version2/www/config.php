@@ -79,7 +79,9 @@ $globals['min_karma_for_comment_votes'] = 5.5;
 // Changed to a global cache directory
 
 $globals['cache_dir'] = 'cache';
-$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
+//$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
+$globals['sphinx_server'] = 'localhost';
+$globals['sphinx_port'] = 3312;
 
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_files_per_dir'] = 1000;
