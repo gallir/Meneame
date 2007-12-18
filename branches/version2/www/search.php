@@ -62,7 +62,7 @@ if ($response['ids']) {
 	foreach($response['ids'] as $link_id) {
 		$link->id=$link_id;
 		$link->read();
-		$link->print_summary();
+		$link->print_summary('full', $link_status == 'published' ? 100 : 20);
 	}
 }
 
