@@ -53,7 +53,7 @@ if ($res) {
 	ksort($words);
 	foreach ($words as $word => $count) {
 		$size = round($min_pts + ($count-1)*$coef, 1);
-		echo '<span style="font-size: '.$size.'pt"><a href="'.$globals['base_url'].'?search=tag:'.urlencode($word).'">'.$word.'</a></span>&nbsp;&nbsp; ';
+		echo '<span style="font-size: '.$size.'pt"><a href="'.$globals['base_url'].'search.php?p=tag&amp;q='.urlencode($word).'">'.$word.'</a></span>&nbsp;&nbsp; ';
 	}
 
 }
