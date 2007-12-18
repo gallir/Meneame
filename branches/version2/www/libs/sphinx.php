@@ -19,8 +19,13 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 	$queries = array();
 	$recorded = array();
 
+	$response['rows'] = 0;
+	$response['time'] = 0;
+
 	$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250));
-	if(preg_match('/^ *(\w+): *(.*)/', mb_strtolower($words), $matches)) {
+	if (empty($words)) return $response;
+
+	if(preg_match('/^ *(\w+): *(.*)/', $words, $matches)) {
 		$prefix = $matches[1];
 		$words = $matches[2];
 	}
@@ -55,7 +60,7 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 		$cl->SetMatchMode (SPH_MATCH_EXTENDED);
 		$q = $cl->AddQuery ( "@$field \"$words\"", 'main delta' );
 		array_push($queries, $q);
-	} elseif ($words_count == 1 || $by_date ) {
+	} elseif ($words_count < 2 || $by_date ) {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 		$cl->SetMatchMode (SPH_MATCH_ALL);
 		$q = $cl->AddQuery ( $words, 'main delta' );
@@ -80,11 +85,9 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 	}
 
 
-	$results = $cl->RunQueries ( $words, 'main delta' );
+	$results = $cl->RunQueries();
 
 	$n = 0;
-	$response['rows'] = 0;
-	$response['time'] = 0;
 	$response['error'] = $results['error'];
 	foreach ($queries as $q) {
 		$res = $results[$q];
@@ -92,7 +95,6 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 			$response['rows'] += $res["total_found"];
 			$response['time'] += $res["time"];
 			foreach ( $res["matches"] as $doc => $docinfo ) {
-				//print "$q -> $n. doc_id=$doc, weight=$docinfo[weight]<br>\n";
 				if (!$recorded[$doc]) {
 					$response['ids'][$n] = $doc;
 					$recorded[$doc] = true;
@@ -103,7 +105,6 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 			}
 		}
 	}
-	//print "Matches total: $globals[rows] <br>\n";
 	return $response;
 }
 
