@@ -83,6 +83,7 @@ function sphinx_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	$results = $cl->RunQueries ( $words, 'main delta' );
 
 	$n = 0;
+	$globals['rows'] = 0;
 	foreach ($queries as $q) {
 		$res = $results[$q];
 		if ( is_array($res["matches"]) ) {
@@ -100,6 +101,7 @@ function sphinx_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 		}
 	}
 	//print "Matches total: $globals[rows] <br>\n";
+	$globals['rows'] = min($globals['rows'], 1000);
 	return $hits;
 }
 
