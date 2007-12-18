@@ -84,10 +84,10 @@ if(!empty($_REQUEST['time'])) {
 		if($_REQUEST['q']) {
 			$status = 'all';
 			include(mnminclude.'sphinx.php');
-			$search_ids = sphinx_get_search_link_ids(true);
-			if ($search_ids) {
+			$search_ids = sphinx_get_search_link(true);
+			if ($search_ids['ids']) {
 				$search = ' link_id in (';
-				foreach ($search_ids as $lid) {
+				foreach ($search_ids['ids'] as $lid) {
 					$search .= $lid . ',';
 				}
 				$search = preg_replace('/,$/', '', $search);

@@ -6,7 +6,7 @@ $globals['sphinx_port'] = 3312;
 
 
 
-function sphinx_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
+function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 	global $globals;
 
 	$cl = new SphinxClient ();
@@ -15,7 +15,7 @@ function sphinx_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	// status, title, tags, url,  content
 	$cl->SetWeights ( array ( 0, 4, 2, 1, 1 ) );
 
-	$hits = array();
+	$response = array();
 	$queries = array();
 	$recorded = array();
 
@@ -83,26 +83,28 @@ function sphinx_get_search_link_ids($by_date = false, $start = 0, $count = 50) {
 	$results = $cl->RunQueries ( $words, 'main delta' );
 
 	$n = 0;
-	$globals['rows'] = 0;
+	$response['rows'] = 0;
+	$response['time'] = 0;
+	$response['error'] = $results['error'];
 	foreach ($queries as $q) {
 		$res = $results[$q];
 		if ( is_array($res["matches"]) ) {
-			$globals['rows'] += $res["total_found"];
+			$response['rows'] += $res["total_found"];
+			$response['time'] += $res["time"];
 			foreach ( $res["matches"] as $doc => $docinfo ) {
 				//print "$q -> $n. doc_id=$doc, weight=$docinfo[weight]<br>\n";
 				if (!$recorded[$doc]) {
-					$hits[$n] = $doc;
+					$response['ids'][$n] = $doc;
 					$recorded[$doc] = true;
 					$n++;
 				} else {
-					$globals['rows']--;
+					$response['rows']--;
 				}
 			}
 		}
 	}
 	//print "Matches total: $globals[rows] <br>\n";
-	$globals['rows'] = min($globals['rows'], 1000);
-	return $hits;
+	return $response;
 }
 
 

@@ -52,7 +52,7 @@ if ($_REQUEST['q']) {
 		$globals['rows'] = $db->get_var("select count(*) from links where link_url like '$url%'");
 		$ids = $db->get_col("select link_id from links where link_url like '$url%' order by link_date desc limit $offset,$page_size");
 	} else {
-		$ids = sphinx_get_search_link_ids(false, $offset, $page_size);
+		$response = sphinx_get_search_link(false, $offset, $page_size);
 	}
 }
 
@@ -60,12 +60,14 @@ echo '<div id="container">'."\n";
 do_sidebar();
 echo '<div id="contents">';
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
-echo '<div class="topheading"><h2>'._('resultados de buscar'). ' "'.$search_txt.'" </h2></div>';
 
+echo '<div style="background:#FFE2C5;margin:10px 0 5px 86px;font-size:100%;text-align:right;padding:5px;">'._('búsqueda'). ' <strong>'.$search_txt.'</strong>';
+echo '&nbsp;<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($_REQUEST['q']).'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" alt="rss2" height="12" width="12"  style="vertical-align:top"/></a>';
+echo '&nbsp;&nbsp;&nbsp;'._('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos').'</div>';
 $link = new Link;
-if ($ids) {
-	$rows = $globals['rows'];
-	foreach($ids as $link_id) {
+if ($response['ids']) {
+	$rows = min($response['rows'], 1000);
+	foreach($response['ids'] as $link_id) {
 		$link->id=$link_id;
 		$link->read();
 		$link->print_summary();
