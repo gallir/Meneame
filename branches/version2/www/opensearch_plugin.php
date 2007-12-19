@@ -9,8 +9,7 @@
 include('config.php');
 header('Content-Type: text/xml; charset=utf-8');
 
-echo '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"'."\n";
-echo '			xmlns:moz="http://www.mozilla.org/2006/browser/search/">'."\n";
+echo '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">'."\n";
 echo '<ShortName>Menéame Search</ShortName>'."\n";
 echo '<Description>'._('noticias elegidas por los usuarios').'</Description>'."\n";
 echo '<InputEncoding>UTF-8</InputEncoding>'."\n";
