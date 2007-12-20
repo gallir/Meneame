@@ -528,6 +528,8 @@ class Link {
 			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
 			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
 			echo '</div>';
+		} else {
+			echo "<!--tags: $this->tags-->\n";
 		}
 		if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
