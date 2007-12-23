@@ -11,7 +11,7 @@ include(mnminclude.'user.php');
 include(mnminclude.'post.php');
 include(mnminclude.'html1.php');
 
-array_push($globals['post_js'], 'jquery-form.pack.js');
+array_push($globals['extra_js'], 'jquery-form.pack.js');
 
 $user=new User();
 
