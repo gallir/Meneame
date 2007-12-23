@@ -620,7 +620,7 @@ function print_categories_form($selected = 0) {
 	global $db, $dblang;
 	echo '<fieldset style="clear: both;">';
 	echo '<legend>'._('selecciona la categoría más apropiada').'</legend>'."\n";
-	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
 	foreach ($metas as $meta) {
 	echo '<dl class="categorylist"><dt>'.$meta->category_name.'</dt>'."\n";
 	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
