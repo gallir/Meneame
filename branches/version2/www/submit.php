@@ -229,7 +229,7 @@ function do_submit1() {
 			print_empty_submit_form();
 			return;
 		}
-		echo '<p>'._('no es válido, está fuera de línea, o tiene mecanismos antibots, <strong>continúa</strong>, pero asegúrate que sea correcto').'</p>';
+		echo '<p>'._('No es válido, está fuera de línea, o tiene mecanismos antibots. <strong>Continúa</strong>, pero asegúrate que sea correcto').'</p>';
 	}
 
 	$linkres->status='discard';
