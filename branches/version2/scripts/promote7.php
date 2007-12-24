@@ -340,7 +340,7 @@ function print_row(&$link, $changes, &$log = '') {
 
 
 function publish(&$link) {
-	global $globals;
+	global $globals, $db;
 	global $users_karma_avg;
 
 
