@@ -99,7 +99,7 @@ function do_header($title, $id='home') {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<link rel="search" type="application/opensearchdescription+xml" title="Menéame Search" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>';
+	echo '<link rel="search" type="application/opensearchdescription+xml" title="Menéame Search" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>'."\n";
 
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
