@@ -85,9 +85,10 @@ $continue = true;
 $published=0;
 
 $past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 7 day) and link_status='published'"));
-$past_karma_short = intval($past_karma = $db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
+$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
+$min_past_karma = (int) ($past_karma * $min_karma_coef);
 
 
 //////////////
@@ -120,8 +121,8 @@ foreach ($db_metas as $dbmeta) {
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
-	$meta_coef[$m] = max(min($meta_avg/$v, 1.2), 0.80);
-	if ($meta_previous_coef[$m]  > 0.75 && $meta_previous_coef[$m]  < 1.25) {
+	$meta_coef[$m] = max(min($meta_avg/$v, 1.25), 0.75);
+	if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
 	}
@@ -133,12 +134,13 @@ foreach ($meta_coef as $m => $v) {
 
 // Karma average:  It's used for each link to check the balance of users' votes
 
+global $users_karma_avg;
 $users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 72 hour)");
 $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
 echo "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
-echo "<b>Current MIN karma: $min_karma</b>, analizing from $limit_karma<br>\n";
+echo "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br>\n";
 echo "</p>\n";
 
 
@@ -234,7 +236,7 @@ if ($links) {
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
 		if ($now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
-			$new_coef = 2 - ($now-$link->date)/6300;
+			$link->new_coef = 2 - ($now-$link->date)/6300;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
@@ -244,32 +246,27 @@ if ($links) {
 		} else {
 			// Otherwise use normal decayed min_karma
 			$karma_threshold = $min_karma;
-			$new_coef = 1;
+			$link->new_coef = 1;
 		}
 
-		$aged_karma =  $karma_new * $oldd * $new_coef;
+		$aged_karma =  $karma_new * $oldd * $link->new_coef;
 		$dblink->karma=$aged_karma;
 
-		$imod = $i%2;
 		$changes = 0;
 		if (abs($link->karma - $dblink->karma) > 4) {
-			$karma_mess = sprintf ("<br>updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg);
+			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg);
 			if ($link->karma > $dblink->karma) 
 				$changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			$link->karma = round($dblink->karma);
 			$link->store_basic();
-		} else $karma_mess = '';
-		print "<tr><td class='tnumber$imod'>".$link->votes."</td><td class='tnumber$imod'>".$link->anonymous."</td><td class='tnumber$imod'>".$link->negatives."</td><td class='tnumber$imod'>" . sprintf("%0.2f", $new_coef). "</td><td class='tnumber$imod'>".intval($link->karma)."</td>";
-		echo "<td class='tdata$imod'>$link->meta_name</td>\n";
-		echo "<td class='tdata$imod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
-		echo $karma_mess;
+		} else $link->message = '';
 		if ($user->level == 'disabled') {
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
-				echo " $user->username disabled herself, penalized.";
+				$link->message .= " $user->username disabled herself, penalized.";
 				$do_publish = true;
 			} else {
-				echo " $user->username disabled, probably due to abuses, penalized.";
+				$link->message .= " $user->username disabled, probably due to abuses, penalized.";
 				$do_publish = true;
 			}
 			$link->karma = $dblink->karma = round($link->karma*0.66);
@@ -278,55 +275,96 @@ if ($links) {
 		} else {
 				$do_publish = true;
 		}
-		echo "</td>\n";
 			
-		if (/*$link->user_level != 'disabled' && */ $do_publish && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
+		if ($do_publish && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
-			$link->status = 'published';
-			$link->published_date=time();
-
-			// Calculate votes average
-			// it's used to calculate and check future averages
-			$votes_avg = (float) $db->get_var("select SQL_NO_CACHE avg(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'");
-			if ($votes_avg < $users_karma_avg) $link->votes_avg = max($votes_avg, $users_karma_avg*0.97);
-			else $link->votes_avg = $votes_avg;
-			//echo "AVG: $link->id: $link->votes_avg\n";
-
-			$link->store_basic();
-			// Add the publish event/log
-			log_insert('link_publish', $link->id, $link->author);
-			$short_url = fon_gs($link->get_permalink());
-			if ($globals['twitter_user'] && $globals['twitter_password']) {
-				twitter_post($link, $short_url); 
-			}
-			if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-				jaiku_post($link, $short_url); 
-			}
+			publish($link);
 
 			$changes = 3; // to show a "published" later	
+		} else {
+			if ($link->karma > $past_karma * $min_karma_coef && $link->karma > $last_resort_karma) {
+				$last_resort_id = $link->id;
+				$last_resort_karma = $link->karma;
+			}
 		}
-		echo "<td class='tnumber$imod'>";
-		switch ($changes) {
-			case 1:
-				echo '<img src="../img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
-				break;
-			case 2:
-				echo '<img src="../img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
-				break;
-			case 3:
-				echo '<img src="../img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
-				break;
-		}
-		echo "</td>";
-		echo "</tr>\n";
+		print_row($link, $changes);
 		$i++;
+	}
+	if ($published == 0 && $decay < 0.99) {
+		// Publish last resort
+		$link = new Link;
+		$link->id = $last_resort_id;
+		if ($link->read()) {
+			$link->message = "Last resort: selected with the best karma";
+			print_row($link, 3);
+			publish($link);
+		}
 	}
 	print "</table>\n";
 	//////////
 }  
 echo "</body></html>\n";
 
+function print_row(&$link, $changes, &$log = '') {
+	global $globals;
+	static $row = 0;
+
+	$mod = $row%2;
+
+	echo "<tr><td class='tnumber$mod'>".$link->votes."</td><td class='tnumber$mod'>".$link->anonymous."</td><td class='tnumber$mod'>".$link->negatives."</td><td class='tnumber$mod'>" . sprintf("%0.2f", $link->new_coef). "</td><td class='tnumber$mod'>".intval($link->karma)."</td>";
+	echo "<td class='tdata$mod'>$link->meta_name</td>\n";
+	echo "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
+	if (!empty($link->message)) {
+		echo "<br>$link->message";
+	}
+	$link->message = '';
+	echo "</td>\n";
+	echo "<td class='tnumber$mod'>";
+	switch ($changes) {
+		case 1:
+			echo '<img src="../img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
+			break;
+		case 2:
+			echo '<img src="../img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
+			break;
+		case 3:
+			echo '<img src="../img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
+			break;
+	}
+	echo "</td>";
+	echo "</tr>\n";
+	$row++;
+
+}
+
+
+function publish(&$link) {
+	global $globals;
+	global $users_karma_avg;
+
+
+	// Calculate votes average
+	// it's used to calculate and check future averages
+	$votes_avg = (float) $db->get_var("select SQL_NO_CACHE avg(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'");
+	if ($votes_avg < $users_karma_avg) $link->votes_avg = max($votes_avg, $users_karma_avg*0.97);
+	else $link->votes_avg = $votes_avg;
+
+	$link->status = 'published';
+	$link->published_date=time();
+	$link->store_basic();
+	// Add the publish event/log
+	log_insert('link_publish', $link->id, $link->author);
+
+	$short_url = fon_gs($link->get_permalink());
+	if ($globals['twitter_user'] && $globals['twitter_password']) {
+		twitter_post($link, $short_url); 
+	}
+	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
+		jaiku_post($link, $short_url); 
+	}
+
+}
 function twitter_post($link, $short_url) {
 	global $globals;
 
