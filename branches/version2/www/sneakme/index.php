@@ -15,7 +15,7 @@ array_push($globals['extra_js'], 'jquery-form.pack.js');
 
 $user=new User();
 
-if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
+if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	$option = $url_args[1]; // The first element is always a "/"
 	$post_id = intval($url_args[2]);

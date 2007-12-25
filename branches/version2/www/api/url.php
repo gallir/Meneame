@@ -9,11 +9,13 @@
 include('../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
-if(empty($_GET['url'])) {
+
+$url = $db->escape($_GET['url']);
+$url = addcslashes($url, '%_');
+if(strlen($url) < 8) {
 	echo 'KO';
 	die;
 }
-$url = $db->escape($_GET['url']);
 $url = preg_replace('/\/$/', '', $url);
 $all = intval($_GET['all']);
 if ($all == '1') {
