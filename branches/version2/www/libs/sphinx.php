@@ -1,9 +1,5 @@
 <?
-
 require_once (mnminclude.'sphinxapi.php');
-$globals['sphinx_server'] = 'db2private.meneame.net';
-$globals['sphinx_port'] = 3312;
-
 
 
 function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
