@@ -35,7 +35,7 @@ $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 36 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
-$points_received = 10;
+$points_received = 12;
 $points_per_published = 3;
 $points_given = 12;
 $comment_votes = 8;
@@ -54,29 +54,15 @@ $sql_points_date_ignored = 'link_published_date';
 
 
 
+$published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_published_date > $history_from"));
+
 $sum=0; $i=0;
 // It does an average of the top 10 voted
 
-$published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_published_date > $history_from"));
-
-foreach ($db->get_col("SELECT SQL_NO_CACHE sum(vote_value) as votes from links, votes  where vote_type='links' and  vote_date > $history_from and vote_user_id > 0 and vote_value>0 and vote_link_id = link_id group by link_author order by votes desc limit 10") as $positives) {
-	$sum += $positives; $i++;
-}
-$max_positive_received = $sum/$i;
-$max_positive_received = intval($max_positive_received * 0.75 );
-if($max_positive_received == 0) $max_positive_received = 1;
-
-/*
-$sum=0;
-foreach ($db->get_col("SELECT SQL_NO_CACHE sum(user_karma) as votes from links, votes, users  where vote_type='links' and  vote_date > $history_from and vote_user_id > 0 and vote_value>0 and vote_link_id = link_id and vote_user_id=user_id group by link_author order by votes desc limit 10") as $negatives) {
-	$sum += $negatives; $i++;
-}
-$max_negative_received = $sum/$i;
-$max_negative_received = intval($max_negative_received * 0.75 );
-if($max_negative_received == 0) $max_negative_received = 1;
-*/
-
-$max_negative_received = $max_positive_received * 1.5;
+$max_avg_positive_received = (int) $db->get_var("select avg(link_karma) from links where link_status='published' and link_published_date >  $history_from");;
+$max_avg_positive_received = intval($max_avg_positive_received * 0.6);
+if($max_avg_positive_received == 0) $max_avg_positive_received = 1;
+$max_avg_negative_received = $max_avg_positive_received * 1.5;
 
 
 
@@ -92,7 +78,7 @@ $max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) a
 $max_negative_comment_votes  = max($max_negative_comment_votes, 40);
 
 print "Number of published links in period: $published_links\n";
-print "Pos (top 10 average): $max_positive_received, Neg: $max_negative_received, Published: $max_published_given No: $max_nopublished_given\n";
+print "Pos (top 10 average): $max_avg_positive_received, Neg: $max_avg_negative_received, Published: $max_published_given No: $max_nopublished_given\n";
 print "Max unfair comment votes: $max_negative_comment_votes\n";
 
 
@@ -100,8 +86,6 @@ print "Max unfair comment votes: $max_negative_comment_votes\n";
 
 
 
-//$users = $db->get_results("SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled'");
-//$users = $db->get_results("select distinct vote_user_id as user_id from votes where vote_type in ('links', 'comments', 'posts') and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0; ");
 echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
@@ -109,6 +93,7 @@ $calculated = 0;
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select faila miserably with abpout 40.000 users.
 
 $users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_id desc";
+//$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
 $result = mysql_query($users) or die('Query failed: ' . mysql_error());
 while ($dbuser = mysql_fetch_object($result)) {
 	$user = new User;
@@ -145,16 +130,28 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$total_comments = intval($db->get_var("select SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from"));
 
 		$calculated++;
-		$positive_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0"));
-		$negative_votes_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id"));
 
-		$karma1 = max(min($points_received * (($positive_votes_received-$negative_votes_received*4)/$max_positive_received), $points_received), -$points_received);
-		if ($karma1 != 0) {
+/////////////////////
+////// Calculates karma received from votes to links
+
+		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from"));
+		
+		if ($total_user_links > 0) {
+			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status != 'published' or vote_date < link_published_date)")) / $total_user_links;
+			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status != 'published' or vote_date < link_published_date)")) / $total_user_links;
+
+			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
+			$karma1 = $points_received * $karma_received / $max_avg_positive_received;
+			$karma1 = (min(max(3, $total_user_links), 9)/6) * $karma1;
+			$karma1 = min($points_received, $karma1);
+			$karma1 = max(-$points_received, $karma1);
+			//echo "Average max: $max_avg_positive_received user_links: $total_user_links positive: $positive_karma_received negative: $negative_karma_received total: $karma_received\n";
 			printf ("%07d ", $user->id);
-			print "Votes received:  karma received: $positive_votes_received, negative: $negative_votes_received, karma1: $karma1\n";
+			echo "Karma positive average: $positive_karma_received, negative average: $negative_karma_received, karma1: $karma1\n";
+		} else {
+			$karma1 = 0;
 		}
 
-/////
 
 		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < $sql_points_date_ignored and link_author != $user->id");
 		$published_points = (int) $user_votes->points;
