@@ -137,7 +137,7 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!empty($this->pingback) || $this->has_rss() || !empty($this->trackback) || $this->trackback()) {
-			preg_match_all('/< *(meta +http-equiv|script|iframe|frame[^<]*>| *(h|div|span|b|strong)[^<]*>[^<]*<a)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/< *(meta +http-equiv|script|iframe|frame[^<]*>| *(h[0-9]|div|span|strong)[^<]*>[^<]*<a)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/< *(a|meta +http-equiv|script|iframe|frame[^<]*>)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
 		}
