@@ -152,7 +152,7 @@ function do_submit1() {
 		} else {
 			$min_votes = min(4, intval($total_links/20)) * $user_links;
 		}
-		if ($user_votes < $min_votes) {
+		if ($current_user->user_level != 'god' && $current_user->user_level != 'admin' && $user_votes < $min_votes) {
 			$needed = $min_votes - $user_votes;
 			echo '<p class="error">';
 			if ($new_user) {
