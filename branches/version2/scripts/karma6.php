@@ -137,6 +137,14 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from"));
 		
 		if ($total_user_links > 0) {
+			if ($total_user_links > 2) {
+				// If the user has a few discarded, ignore them
+				$total_user_discarded = intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and link_status in ('discard', 'abuse')"));
+				if ($total_user_discarded < 2 || $total_user_discarded < round($total_user_links/6)) {
+					$total_user_discarded = min($total_user_discarded, round($total_user_links/6));
+					$total_user_links = $total_user_links - $total_user_discarded;
+				}
+			}
 			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status != 'published' or vote_date < link_published_date)")) / $total_user_links;
 			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status != 'published' or vote_date < link_published_date)")) / $total_user_links;
 

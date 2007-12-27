@@ -48,10 +48,10 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.87;
+$min_karma_coef = 0.88;
 define(MAX, 1.15);
 define (MIN, 1.0);
-define (PUB_MIN, 25);
+define (PUB_MIN, 20);
 define (PUB_MAX, 70);
 
 
