@@ -136,7 +136,7 @@ function do_submit1() {
 	}
 
 	// Number of links sent by the user
-	$sents = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_votes > 0");
+	$sents = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_votes > 0");
 	// check that the user also votes, not only sends links
 	// if is a new user requires at least 10 votes
 	if ($current_user->user_karma < 6.1) {
@@ -258,6 +258,23 @@ function do_submit1() {
 	}
 
 
+	// check for users spamming several sites and networks
+	// it does not allow a low "entropy"
+	if ($sents > 30) {
+		$ratio = (float) $db->get_var("select count(distinct link_blog)/count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_votes > 0");
+		$threshold = 1/log($sents, 2);
+		if ($ratio <  $threshold ) {
+			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog = $blog->id and link_votes > 0") > 0) {
+				syslog(LOG_NOTICE, "Meneame, forbidden due to low entropy: $ratio <  $threshold  ($current_user->user_login): $linkres->url");
+				echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a los mismos sitios').'</strong></p> ';
+				echo '<p class="error-text">'._('varía las fuentes, podría ser considerado spam').'</p>';
+				echo '<br style="clear: both;" />' . "\n";
+				echo '</div>'. "\n";
+				return;
+			}
+		}
+	}
+
 	// avoid auto-promotion (autobombo)
 	$minutes = 30;
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
@@ -271,8 +288,8 @@ function do_submit1() {
 		return;
 	}
 
-	// Avoid spam, count links in last two months
-	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog and link_votes > 0");
+	// Avoid spam, count links in last three months
+	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog=$linkres->blog and link_votes > 0");
 
 	// Check if the domain should be banned
 	$check_history =  $sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;

@@ -269,9 +269,6 @@
 
 		function get_results($query=null) {
 
-			// Log how the function was called
-			$this->func_call = "\$db->get_results(\"$query\", $output)";
-
 			// If there is a query then perform it if not then use cached results..
 			if ( $query ) {
 				$this->query($query);
