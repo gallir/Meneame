@@ -264,7 +264,7 @@ function do_submit1() {
 		$ratio = (float) $db->get_var("select count(distinct link_blog)/count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_votes > 0");
 		$threshold = 1/log($sents, 2);
 		if ($ratio <  $threshold ) {
-			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog = $blog->id and link_votes > 0") > 0) {
+			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog = $blog->id and link_votes > 0") > 2) {
 				syslog(LOG_NOTICE, "Meneame, forbidden due to low entropy: $ratio <  $threshold  ($current_user->user_login): $linkres->url");
 				echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a los mismos sitios').'</strong></p> ';
 				echo '<p class="error-text">'._('varía las fuentes, podría ser considerado spam').'</p>';
