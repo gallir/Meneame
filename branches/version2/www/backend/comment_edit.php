@@ -79,7 +79,7 @@ function save_comment () {
 		header('Location: '.$link->get_permalink() . '#comment-'.$comment->order);
 		die;
 	} else {
-		echo _('el cabal te castigará');
+		echo _('error actualizando, probablemente tiempo de edición excedido');
 		die;
 	}
 }

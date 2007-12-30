@@ -95,6 +95,11 @@ switch ($url_args[1]) {
 		not_found();
 }
 
+// When we insert a comment we also modify $link
+if ($_POST['process']=='newcomment') {
+	$new_comment_error = insert_comment();
+}
+
 // Set globals
 $globals['link']=$link;
 $globals['link_id']=$link->id;
@@ -102,13 +107,9 @@ $globals['category_id']=$link->category;
 $globals['category_name']=$link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
-// to avoid penalisation
+// to avoid search engines penalisation
 if ($tab_option != 1 || $link->status == 'discard') {
 	$globals['noindex'] = true;
-}
-
-if ($_POST['process']=='newcomment') {
-	insert_comment();
 }
 
 do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->comments.'-'.$link->modified);
@@ -127,6 +128,13 @@ if (!empty($link->tags))
 	$globals['tags']=$link->tags;
 
 do_header($link->title, 'post');
+
+// Show the error if the comment couldn't be inserted
+if (!empty($new_comment_error)) {
+	echo '<script type="text/javascript">';
+	echo '$(function(){alert(\''._('comentario no insertado'). ":  $new_comment_error".'\')});';
+	echo '</script>';
+}
 
 do_banner_top();
 echo '<div id="container">'."\n";
@@ -369,6 +377,8 @@ function print_comment_form() {
 function insert_comment () {
 	global $link, $db, $current_user, $globals;
 
+	$error = '';
+
 
 	require_once(mnminclude.'ban.php');
 	if(check_ban_proxy()) return;
@@ -411,18 +421,26 @@ function insert_comment () {
 					$user->karma = $user->karma - $reduction;
 					syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
 					$user->store();
+					$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
 				}
 				$comment->store();
 				$comment->insert_vote();
 				$link->update_comments();
 				// Re read link data
 				$link->read();
+			} else {
+				$error .= ' ' . ('duplicado');
 			}
+		} else {
+			$error .= ' ' . ('caracteres no válidos');
 		}
 		// We don't redirect, Firefox show cache data instead of the new data since we send lastmodification time.
 		//header('Location: '.$link->get_permalink());
 		//die;
+	} else {
+		$error .= ' ' . ('texto muy breve, karma bajo o usuario incorrecto');
 	}
+	return $error;
 }
 
 function print_story_tabs($option) {
