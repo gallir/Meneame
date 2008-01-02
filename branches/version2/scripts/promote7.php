@@ -229,7 +229,7 @@ if ($links) {
 
 		// Aged karma
 		$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
-		$oldd = 1 - $diff/(3600*40);
+		$oldd = 1 - $diff/(3600*48);
 		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
 

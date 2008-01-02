@@ -103,7 +103,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	//Base karma for the user
 	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
 	if ($first_published > 0) {
-		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365));
+		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365*1.5));
 	} else {
 		$karma_base_user = $karma_base;
 	}
