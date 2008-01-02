@@ -101,9 +101,10 @@ class User {
 		global $db, $current_user;
 		$id = $this->id;
 		if($this->id>0) $where = "user_id = $id";
-		else if(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
+		elseif(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
+		elseif(!empty($this->email)) $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled'";
 
-		if(!empty($where) && ($user = $db->get_row("SELECT * FROM users WHERE $where"))) {
+		if(!empty($where) && ($user = $db->get_row("SELECT * FROM users WHERE $where limit 1"))) {
 			$this->id =$user->user_id;
 			$this->username = $user->user_login;
 			$this->username_register = $user->user_login_register;

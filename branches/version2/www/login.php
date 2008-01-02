@@ -145,9 +145,14 @@ function do_recover() {
 		} else {
 			require_once(mnminclude.'user.php');
 			$user=new User();
-			$user->username=$_POST['username'];
+			if (preg_match('/.+@.+/', $_POST['username'])) {
+				// It's an email address
+				$user->email=$_POST['username'];
+			} else {
+				$user->username=$_POST['username'];
+			}
 			if(!$user->read()) {
-				recover_error(_('el usuario no existe'));
+				recover_error(_('el usuario o email no existe'));
 				return false;
 			}
 			if($user->level == 'disabled') {
@@ -160,7 +165,7 @@ function do_recover() {
 	}
 	if (!$sent) {
 		echo '<form action="login.php" id="thisform-recover" method="post">'."\n";
-		echo '<label for="name">'._('usuario').':</label><br />'."\n";
+		echo '<label for="name">'._('introduce nombre de usuario o email').':</label><br />'."\n";
 		echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.$username.'" />'."\n";
 		echo '<p class="nobold">'._('(recibirás un e-mail para cambiar la contraseña)').'</p>';
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
