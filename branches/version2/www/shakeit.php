@@ -64,7 +64,7 @@ switch ($globals['meta']) {
 		break;
 }
 
-do_header(_('noticias pendientes') . ' // men&eacute;me');
+do_header(_('noticias pendientes') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar();

@@ -17,7 +17,7 @@ $globals['ads'] = true;
 
 $cat=check_integer('category');
 
-do_header(_('últimas publicadas') . ' // men&eacute;me');
+do_header(_('últimas publicadas') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar();
