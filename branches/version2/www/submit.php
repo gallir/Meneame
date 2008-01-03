@@ -114,6 +114,10 @@ function do_submit0() {
 function do_submit1() {
 	global $db, $dblang, $current_user, $globals;
 
+	$url = clean_input_url($_POST['url']);
+	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
+	$url = preg_replace('/#.*$/', '', $url); // Remove the "#", people just abuse
+
 	do_banner_top();
 	echo '<div id="container-wide">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
@@ -129,7 +133,7 @@ function do_submit1() {
 
 	if(check_ban($globals['user_ip'], 'ip') || check_ban_proxy()) {
 		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].' ('. $globals['ban_message'].')</p>';
-		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $_POST[url]");
+		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $url");
 		print_empty_submit_form();
 		echo '</div>'. "\n";
 		return;
@@ -184,8 +188,8 @@ function do_submit1() {
 	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
 	// it takes in account the number of positive votes in the last six hours
 	if ($same_user > 1 && $current_user->user_karma < 12) {
-		$positives_received = $db->get_var("select count(*) from votes left join links on link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id where vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value > 0");
-		$negatives_received = $db->get_var("select count(*) from votes left join links on link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id where vote_type='links' and vote_link_id = link_id and vote_user_id > 0 and vote_value < 0");
+		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id");
+		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id");
 		echo "<!-- Positives: $positives_received -->\n";
 		echo "<!-- Negatives: $negatives_received -->\n";
 		if ($negatives_received > $positives_received * 1.5) {
@@ -196,8 +200,6 @@ function do_submit1() {
 		}
 	}
 	
-	$url = clean_input_url($_POST['url']);
-	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
 	$linkres=new Link;
 
 	$edit = false;
