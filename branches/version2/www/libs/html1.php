@@ -220,12 +220,12 @@ function do_sidebar($do_vert_bars = true) {
 
 	// don't show every box if it's a search
 	if (!isset($_REQUEST['q'])) {
-		do_mnu_meneria();
 		if($do_vert_bars) {
 			do_vertical_tags();
 			do_best_comments();
 			//do_best_posts();
 		}
+		do_mnu_meneria();
 	}
 	do_mnu_rss();
 	do_mnu_tools();
@@ -723,7 +723,7 @@ function do_best_comments() {
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 10 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 12");
 	if ($res) {
 		$output = '<div class="vertical-box">';
-		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('¿mejores? comentarios').'</a></h4><ul>'."\n";
+		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul>'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
