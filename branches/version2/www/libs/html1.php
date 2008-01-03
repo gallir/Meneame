@@ -87,7 +87,7 @@ function do_header($title, $id='home') {
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
 	echo '<head>' . "\n";
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-	echo "<title>$title // men&eacute;ame</title>\n";
+	echo "<title>$title</title>\n";
 
 	do_css_includes();
 

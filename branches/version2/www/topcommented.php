@@ -31,7 +31,7 @@ if ($range_values[$from] > 0) {
 	$time_link = '';
 }
 
-do_header(_('más comentadas'));
+do_header(_('más comentadas') . ' // men&eacute;me');
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar();

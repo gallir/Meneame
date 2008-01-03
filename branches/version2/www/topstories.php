@@ -60,7 +60,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('más votadas'));
+do_header(_('más votadas') . ' // men&eacute;me');
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar();
