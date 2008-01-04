@@ -8,10 +8,13 @@
 
 
 function tags_normalize_string($string) {
-	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
+	$string = html_entity_decode(trim($string), ENT_COMPAT, 'UTF-8');
+	$string = preg_replace('/-+/', '-', $string); // Don't allow a sequence of more than a "-"
+	$string = preg_replace('/ +,/', ',', $string); // Avoid errors like " ,"
+	$string = preg_replace('/[\n\t\r]+/s', ' ', $string);
 	if (!preg_match('/,/', $string)) {
 	// The user didn't put any comma, we add them
-		$string = preg_replace('/ +/', ',', $string);
+		$string = preg_replace('/ +/', ', ', $string);
 	}
 	$string = preg_replace('/[\.\,] *$/', "", $string);
 	// Clean strange characteres, there are feed reader (including feedburner) that are just too strict and complain loudly

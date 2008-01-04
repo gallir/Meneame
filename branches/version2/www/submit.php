@@ -470,7 +470,7 @@ function do_submit2() {
 	$linkres->read();
 	$linkres->category=intval($_POST['category']);
 	$linkres->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
-	$linkres->tags = tags_normalize_string(clean_text($_POST['tags']));
+	$linkres->tags = tags_normalize_string($_POST['tags']);
 	$linkres->content = clean_text($_POST['bodytext']);
 	if (link_errors($linkres)) {
 		echo '<form id="genericform">'."\n";

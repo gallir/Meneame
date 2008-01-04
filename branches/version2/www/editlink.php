@@ -131,7 +131,7 @@ function do_save() {
 	}
 	$linkres->title = clean_text($_POST['title'], 40);
 	$linkres->content = clean_text($_POST['bodytext']);
-	$linkres->tags = tags_normalize_string(clean_text($_POST['tags']));
+	$linkres->tags = tags_normalize_string($_POST['tags']);
 	// change the status
 	if ($linkres->status != 'published' && ($_POST['status'] == 'queued' || $_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
 		if ($linkres->status != 'discard' && $linkres->status != 'abuse' && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse')) {
