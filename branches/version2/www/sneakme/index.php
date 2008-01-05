@@ -80,7 +80,7 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('nótame') . ' // men&eacute;me');
+do_header(_('nótame') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
 do_sidebar(false);

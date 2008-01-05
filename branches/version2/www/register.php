@@ -181,7 +181,7 @@ function check_user_fields() {
 	// From the same IP
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 24 hour) and log_type in ('user_new', 'user_delete') and log_ip = '$user_ip'");
 	if($registered > 0) {
-		syslog(LOG_NOTICE, "Meneame, register rejected by IP address ($_POST[username]) $user_ip");
+		syslog(LOG_NOTICE, "Meneame, register not accepted by IP address ($_POST[username]) $user_ip");
 		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 24 horas."));
 		$error=true;
 	}
@@ -192,7 +192,7 @@ function check_user_fields() {
 	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.' . $ip_classes[2] . '.%';
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 6 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 0) {
-		syslog(LOG_NOTICE, "Meneame, register rejected by IP class ($_POST[username]) $ip_class");
+		syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
 		register_error(_("Para registrar otro usuario desde la misma red debes esperar 6 horas."). " ($ip_class)");
 		$error=true;
 	}
@@ -203,7 +203,7 @@ function check_user_fields() {
 	$ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.%';
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 1 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 2) {
-		syslog(LOG_NOTICE, "Meneame, register rejected by IP class ($_POST[username]) $ip_class");
+		syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
 		register_error(_("Para registrar otro usuario desde la misma red debes esperar unos minutos.") . " ($ip_class)");
 		$error=true;
 	}

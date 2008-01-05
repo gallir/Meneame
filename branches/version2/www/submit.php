@@ -188,11 +188,11 @@ function do_submit1() {
 	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
 	// it takes in account the number of positive votes in the last six hours
 	if ($same_user > 1 && $current_user->user_karma < 12) {
-		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id");
-		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval 6 hour) and link_author = $current_user->user_id");
+		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval 2 hour) and link_author = $current_user->user_id");
+		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval 2 hour) and link_author = $current_user->user_id");
 		echo "<!-- Positives: $positives_received -->\n";
 		echo "<!-- Negatives: $negatives_received -->\n";
-		if ($negatives_received > $positives_received * 1.5) {
+		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
 			echo '<p class="error"><strong>'._('debes esperar, has tenido demasiados votos negativos en tus últimos envíos').  '</strong></p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";

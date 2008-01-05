@@ -18,7 +18,7 @@ var total_requests = 0;
 var max_requests = 2000;
 var comment = '';
 var last_comment_sent=0;
-var comment_period = 10; //seconds
+var comment_period = 5; //seconds
 var ccnt = 0; 	// Connected counter
 
 var play = true;

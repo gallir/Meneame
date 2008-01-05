@@ -2,9 +2,13 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 ==========================================================
 (pero sin orden establecido y cuando nos dé la gana... o demasiado coñazo)
 
-- Texto de aviso que la geolocalización se ha grabado.
+- "Subportadas" con una "subpublciación" por categorías como propuso unf. Así una noticia podría tener un estado adicional.
 
-- Buscador nuevo y más preciso, quizás http://www.sphinxsearch.com/
+- Categorías configurables en el perfil.
+
+- Avisos JS por errores en comentarios.
+
+- Texto de aviso que la geolocalización se ha grabado.
 
 - Sistema de cache, grabar el HTML recuperado o quizás Coral Cache.
 
@@ -15,8 +19,6 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 
 - Botón de "limpiar" formato en comentarios y noticia.
 
-- Mostrar votos negativos (está decidido y "listo" sólo falta encontrar el momento adecuado).
-
 - La info que se devuelve después de un voto debería ser JSON, da mayor flexibilidad para enviar más o menos datos.
 
 - Gráficas en tiempo real, http://code.google.com/apis/chart/ ? OpenCharts?
@@ -25,3 +27,7 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 
 - Desarrollo más rápido del gran módulo secreto que ayudará a la dominación mundial.
 
+DONE
+====
+- Buscador nuevo y más preciso, quizás http://www.sphinxsearch.com/
+- Mostrar votos negativos (está decidido y "listo" sólo falta encontrar el momento adecuado).

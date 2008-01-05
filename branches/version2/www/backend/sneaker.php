@@ -133,7 +133,7 @@ function check_chat() {
 			send_chat_warn($comment);
 			return;
 		}
-		$period = $now - 9;
+		$period = $now - 5;
 		$counter = intval($db->get_var("select count(*) from chats where chat_time > $period and chat_uid = $current_user->user_id"));
 		if ($counter > 0) {
 			$comment = _('tranquilo charlatán').' ;-)';
