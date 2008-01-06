@@ -147,7 +147,7 @@ class Link {
 				preg_match('/(href|url|action|src)=[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"]{0,1}/i', $match, $url_a);
 				$embeded_link  = $url_a[2];
 				$new_url_components = @parse_url($embeded_link);
-				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $check_counter < 6) {
+				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $check_counter < 20) {
 					$check_counter++;
 					if ($checked_links[$new_url_components['host']] != true) {
 						$checked_links[$new_url_components['host']] = true;
