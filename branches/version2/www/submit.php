@@ -464,7 +464,7 @@ function do_submit1() {
 	if ($linkres->content_type != 'image') {
    		echo '&nbsp;&nbsp;<input type="checkbox" '.$imagechecked.' name="is_image" />';
    	}
-   	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" heigth="18" alt="image" title="'._('¿es una imagen?').'"/>';
+   	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" height="18" alt="image" title="'._('¿es una imagen?').'"/>';
 
 	echo '</p>'."\n";
 
