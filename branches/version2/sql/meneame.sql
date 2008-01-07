@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.41-Debian_1~bpo.1-log
+-- Server version	5.0.45-Debian_1~bpo.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,7 +37,7 @@ CREATE TABLE `bans` (
   `ban_text` char(64) NOT NULL,
   `ban_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `ban_expire` timestamp NULL default NULL,
-  `ban_comment` char(64) default NULL,
+  `ban_comment` char(100) default NULL,
   PRIMARY KEY  (`ban_id`),
   UNIQUE KEY `ban_type` (`ban_type`,`ban_text`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -85,7 +85,7 @@ DROP TABLE IF EXISTS `chats`;
 CREATE TABLE `chats` (
   `chat_time` int(10) unsigned NOT NULL default '0',
   `chat_uid` int(10) unsigned NOT NULL default '0',
-  `chat_room` enum('all','friends') NOT NULL default 'all',
+  `chat_room` enum('all','friends','admin') NOT NULL default 'all',
   `chat_user` char(32) NOT NULL,
   `chat_text` char(255) NOT NULL,
   KEY `chat_time` USING BTREE (`chat_time`)
@@ -189,7 +189,7 @@ CREATE TABLE `links` (
   `link_id` int(20) NOT NULL auto_increment,
   `link_author` int(20) NOT NULL default '0',
   `link_blog` int(20) default '0',
-  `link_status` enum('discard','queued','published','abuse','duplicated') collate utf8_spanish_ci NOT NULL default 'discard',
+  `link_status` enum('discard','queued','published','abuse','duplicated','autodiscard','metapublished') character set utf8 NOT NULL default 'discard',
   `link_randkey` int(20) NOT NULL default '0',
   `link_votes` int(20) NOT NULL default '0',
   `link_negatives` int(11) NOT NULL default '0',
@@ -201,7 +201,9 @@ CREATE TABLE `links` (
   `link_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `link_published_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `link_category` int(11) NOT NULL default '0',
-  `link_lang` varchar(4) collate utf8_spanish_ci NOT NULL default 'es',
+  `link_lang` char(2) character set utf8 NOT NULL default 'es',
+  `link_ip` char(24) collate utf8_spanish_ci default NULL,
+  `link_content_type` char(12) collate utf8_spanish_ci default NULL,
   `link_uri` char(100) collate utf8_spanish_ci default NULL,
   `link_url` varchar(250) collate utf8_spanish_ci NOT NULL,
   `link_url_title` text collate utf8_spanish_ci,
@@ -214,9 +216,7 @@ CREATE TABLE `links` (
   KEY `link_blog` (`link_blog`),
   KEY `link_status` (`link_status`,`link_published_date`),
   KEY `link_status_2` (`link_status`,`link_date`),
-  KEY `link_author` (`link_author`,`link_date`),
-  FULLTEXT KEY `link_tags` (`link_tags`),
-  FULLTEXT KEY `link_url_2` (`link_url`,`link_tags`,`link_title`,`link_content`)
+  KEY `link_author` (`link_author`,`link_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -227,13 +227,14 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL auto_increment,
   `log_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit') NOT NULL,
+  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit','user_new','user_delete') NOT NULL,
   `log_ref_id` int(11) unsigned NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip` char(24) character set utf8 collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`log_id`),
   KEY `log_date` (`log_date`),
-  KEY `log_type` (`log_type`,`log_ref_id`)
+  KEY `log_type` (`log_type`,`log_ref_id`),
+  KEY `log_type_2` (`log_type`,`log_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -396,4 +397,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-09-23 23:53:13
+-- Dump completed on 2008-01-07  1:49:46
