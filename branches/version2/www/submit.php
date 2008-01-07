@@ -277,6 +277,20 @@ function do_submit1() {
 		}
 	}
 
+	// Check the user does not send too many images
+	// they think this is a fotolog
+	if ($sents > 5 && $linkres->content_type == 'image') {
+		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90  day) and link_content_type = 'image' and link_votes > 0"));
+		if ($image_links > $sents * 0.3) {
+			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images sent by user ($current_user->user_login): $linkres->url");
+			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes').'</strong></p> ';
+			echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+	}
+
 	// avoid auto-promotion (autobombo)
 	$minutes = 30;
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
@@ -387,14 +401,28 @@ function do_submit1() {
 	}
 
 
+
+	$links_12hs = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard')");
+
 	// check there is no an "overflow" from the same site
 	if ($current_user->user_karma < 18) {
-		$total_links = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour)");
-		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_blog=$linkres->blog"));
-		if ($site_links > 5 && $site_links > $total_links * 0.04) { // Only 4% from the same site
+		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_blog=$linkres->blog"));
+		if ($site_links > 5 && $site_links > $links_12hs * 0.04) { // Only 4% from the same site
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
-			echo '<p class="error-text">'._('total en 24 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($total_links * 0.04). '</p>';
+			echo '<p class="error-text">'._('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+	}
+	// check there is no an "overflow" of images
+	if ($linkres->content_type == 'image') {
+		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type = 'image'"));
+		if ($image_links > 5 && $image_links > $links_12hs * 0.05) { // Only 5% images
+			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $linkres->url");
+			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes, espera unos minutos por favor').'</strong></p> ';
+			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
 			return;
@@ -403,6 +431,7 @@ function do_submit1() {
 
 	
 	// Now stores new draft
+	$linkres->ip = $globals['user_ip'];
 	$linkres->store();
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 2 de 3').'</h2>'."\n";
@@ -429,7 +458,15 @@ function do_submit1() {
 	echo '<label for="title" accesskey="1">'._('título de la noticia').':</label>'."\n";
 	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
 
-	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" /></p>'."\n";
+	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
+
+	// Is it an image?
+	if ($linkres->content_type != 'image') {
+   		echo '&nbsp;&nbsp;<input type="checkbox" '.$imagechecked.' name="is_image" />';
+   	}
+   	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" heigth="18" alt="image"/>';
+
+	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
 	echo '<p><span class="genericformnote"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
@@ -468,6 +505,11 @@ function do_submit2() {
 	$linkres=new Link;
 	$linkres->id=$link_id = intval($_POST['id']);
 	$linkres->read();
+
+	if ($_POST['is_image']) {
+		$linkres->content_type = 'image';
+	}
+
 	$linkres->category=intval($_POST['category']);
 	$linkres->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$linkres->tags = tags_normalize_string($_POST['tags']);

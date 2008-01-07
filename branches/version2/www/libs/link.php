@@ -34,6 +34,8 @@ class Link {
 	var $tags = '';
 	var $uri = '';
 	var $content = '';
+	var $content_type = '';
+	var $ip = '';
 	var $html = false;
 	var $read = false;
 	var $voted = false;
@@ -93,6 +95,10 @@ class Link {
 						$answer = split(' ', $response);
 						$new_url = clean_input_url($answer[1]);
 					}
+					if (preg_match('/^content-type: /i', $response)) {
+						$answer = split(' ', $response);
+						$this->content_type = preg_replace('/\/.*$/', '', $answer[1]);
+					}
 				}
 				if (!empty($new_url) && $new_url != $url) {
 					syslog(LOG_NOTICE, "Meneame, redirected ($current_user->user_login): $url -> $new_url");
@@ -123,6 +129,13 @@ class Link {
 			$url_ok = $this->html = @file_get_contents($url);
 		}
 		$this->url=$url;
+		// Fill content type if empty
+		// Right now only check for typical image extensions
+		if (empty($this->content_type)) {
+			if (preg_match('/(jpg|jpeg|gif|png)(\?|#|$)/i', $this->url)) {
+				$this->content_type='image';
+			}
+		}
 		// NO more to do
 		if (!$url_ok) return true;
 
@@ -275,12 +288,14 @@ class Link {
 		$link_category = $this->category;
 		$link_date = $this->date;
 		$link_published_date = $this->published_date;
+		$link_content_type = $db->escape($this->content_type);
+		$link_ip = $db->escape($this->ip);
 		if($this->id===0) {
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg)");
+			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg WHERE link_id=$this->id");
+			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
 		}
 		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
 			// This is a new link, add it to the events, it an additional control
@@ -304,7 +319,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts  FROM links WHERE $cond"))) {
+		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->blog=$link->link_blog;
@@ -322,6 +337,8 @@ class Link {
 			$this->date=$link->link_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
+			$this->ip=$link->link_ip;
+			$this->content_type=$link->content_type;
 			return true;
 		}
 		return false;
@@ -370,6 +387,8 @@ class Link {
 			$this->date=$link->link_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
+			$this->ip=$link->link_ip;
+			$this->content_type=$link->link_content_type;
 			if ($this->category > 0) {
 				$meta_info = $db->get_row("SELECT categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
 				$this->category_name=$meta_info->category_name;
@@ -421,6 +440,9 @@ class Link {
 		else $nofollow = '';
 		echo '<h1>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
+		if ($this->content_type == 'image') {
+			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" heigth="18" alt="image"/>';
+		}
 		echo '</h1>';
 
 		// GEO

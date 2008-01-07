@@ -68,7 +68,8 @@ function do_edit() {
 	if($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 		echo '<label for="url" accesskey="1">'._('url de la noticia').':</label>'."\n";
 		echo '<p><span class="genericformnote">'._('url de la noticia.').'</span>'."\n";
-		echo '<br/><input type="url" id="url" name="url" value="'.htmlspecialchars($link_url).'" size="80" /></p>'."\n";
+		echo '<br/><input type="url" id="url" name="url" value="'.htmlspecialchars($link_url).'" size="80" />';
+		echo '</p>'."\n";
 	}
 
 	echo '<label for="title" accesskey="2">'._('título de la noticia').':</label>'."\n";
@@ -95,6 +96,15 @@ function do_edit() {
 		echo '>'._('pendiente').'</option>';
 		echo '</select>';
 	}
+
+	// Is it an image?
+	if ($linkres->content_type == 'image') {
+		$imagechecked = 'checked="checked"';
+	} else {
+		$imagechecked = '';
+	}
+	echo '&nbsp;&nbsp;<input type="checkbox" '.$imagechecked.' name="is_image" />';
+	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" heigth="18" alt="image"/>';
 
 	echo '</p>'."\n";
 
@@ -125,6 +135,11 @@ function do_edit() {
 function do_save() {
 	global $linkres, $dblang, $current_user;
 
+	if ($_POST['is_image']) {
+		$linkres->content_type = 'image';
+	} elseif ($linkres->content_type == 'image') {
+		$linkres->content_type = 'text';
+	}
 	$linkres->category=intval($_POST['category']);
 	if (!empty($_POST['url']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		$linkres->url = clean_input_url($_POST['url']);
