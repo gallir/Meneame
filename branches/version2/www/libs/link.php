@@ -577,6 +577,7 @@ class Link {
 				$box_class = 'mnm-queued';
 				break;
 			case 'abuse': // another color box for discarded
+			case 'autodiscard': // another color box for discarded
 			case 'discard': // another color box for discarded
 				$box_class = 'mnm-discarded';
 				break;
@@ -796,6 +797,23 @@ class Link {
 	function get_trackback() {
 		global $globals;
 		return "http://".get_server_name().$globals['base_url'].'trackback.php?id='.$this->id;
+	}
+
+	function get_status_text($status = false) {
+		if (!$status) $status = $this->status;
+		switch ($status) {
+			case ('abuse'):
+				return _('abuso');
+			case ('discard'):
+				return _('descartada');
+			case ('autodiscard'):
+				return _('autodescartada');
+			case ('queued'):
+				return _('pendiente');
+			case ('published'):
+				return _('publicada');
+		}
+		return $status;
 	}
 
 	function get_latlng() {
