@@ -238,6 +238,18 @@ CREATE TABLE `logs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `pageloads`
+--
+
+DROP TABLE IF EXISTS `pageloads`;
+CREATE TABLE `pageloads` (
+  `date` date NOT NULL,
+  `type` enum('html','ajax','other','rss','image','api','sneaker','redirection','geo') NOT NULL default 'html',
+  `counter` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`date`,`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `posts`
 --
 
@@ -397,4 +409,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-01-07  1:49:46
+-- Dump completed on 2008-01-13 16:17:39
