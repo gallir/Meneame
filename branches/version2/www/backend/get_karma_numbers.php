@@ -1,6 +1,8 @@
 <?php
 include_once('../config.php');
 
+stats_increment('ajax');
+
 if (empty($globals['karma_log']) || empty($current_user->user_login)) {
 	echo _('fichero de karma incorrecto o usuario no identificado');
 	die;

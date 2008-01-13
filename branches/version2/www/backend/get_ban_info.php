@@ -14,8 +14,9 @@ if (! defined('mnmpath')) {
 //include_once(mnminclude.'user.php');
 //include_once(mnminclude.'post.php');
 
+stats_increment('ajax');
 
-if (empty($_GET['id'])) die;
+if (empty($_GET['id']) || $current_user->user_level != 'god') die;
 $id = intval($_GET['id']);
 require_once(mnminclude.'ban.php');
 $ban=new Ban();

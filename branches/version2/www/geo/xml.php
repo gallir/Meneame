@@ -8,6 +8,7 @@
 
 include('../config.php');
 //include(mnminclude.'geo.php');
+stats_increment('geo');
 
 $id = (int) $_REQUEST['id'];
 

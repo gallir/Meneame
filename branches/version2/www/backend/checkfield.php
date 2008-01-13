@@ -7,6 +7,9 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
+
+stats_increment('ajax');
+
 header('Content-Type: text/plain; charset=UTF-8');
 $type=clean_input_string($_REQUEST['type']);
 $name=clean_input_string($_GET['name']);

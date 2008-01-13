@@ -10,6 +10,7 @@ include('../config.php');
 include(mnminclude.'geo.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+stats_increment('geo');
 
 if(!($id=intval($_REQUEST['id']))) {
 	error(_('falta el id'). " $link");

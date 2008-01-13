@@ -11,6 +11,7 @@ include('../config.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'link.php');
 header('Content-Type: text/html; charset=utf-8');
+stats_increment('ajax');
 
 
 $id = intval($_GET['id']);

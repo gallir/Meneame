@@ -10,6 +10,7 @@ if (! defined('mnmpath')) {
 	include('../config.php');
 	include_once(mnminclude.'post.php');
 	include_once(mnminclude.'user.php');
+	stats_increment('other');
 }
 
 //$globals['allowed_gsm_clients'] must be defined;

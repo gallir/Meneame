@@ -3,6 +3,8 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'trackback.php');
 
+stats_increment('other');
+
 
 if($_SERVER["SERVER_ADDR"] != $_SERVER["REMOTE_ADDR"]) {
 	syslog(LOG_NOTICE, "Menéame: Remote address $_SERVER[REMOTE_ADDR] is no local address ($_SERVER[SERVER_ADDR]).");

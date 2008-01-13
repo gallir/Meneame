@@ -9,6 +9,7 @@
 // The code below was made by Beldar <beldar at gmail dot com>
 include_once('../config.php');
 header('Content-Type: text/html; charset=utf-8');
+stats_increment('ajax');
 
 include_once(mnminclude.'user.php');
 include_once(mnminclude.'post.php');

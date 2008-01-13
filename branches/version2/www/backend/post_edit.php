@@ -10,6 +10,7 @@ if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
 	include_once(mnminclude.'post.php');
+	stats_increment('ajax');
 } 
 
 $post = new Post;

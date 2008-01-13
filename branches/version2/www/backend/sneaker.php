@@ -11,6 +11,8 @@ include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 include(mnminclude.'sneak.php');
 
+stats_increment('sneaker');
+
 $foo_link = new Link;
 
 // The client requests version number

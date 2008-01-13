@@ -15,6 +15,7 @@ $mnm_add = "/img/es/mnm-add-01.png";
 if(empty($_GET['url'])) die;
 
 header('Content-Type: text/html; charset=UTF-8');
+stats_increment('ajax', true);
 
 echo '<html>'."\n";
 

@@ -13,6 +13,7 @@ if (! defined('mnmpath')) {
 	require_once(mnminclude.'comment.php');
 } 
 
+stats_increment('ajax');
 
 if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	$comment = new Comment;

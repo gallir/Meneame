@@ -121,9 +121,12 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 $globals['css_main'] = 'css/es/mnm3.css';
 $globals['css_color'] = 'css/es/mnmcol5.css';
 
+// Store access stats
+$globals['save_pageloads'] = true;
+
 // This is for SMS messages
 // Put your authorised addresses
-#$globals['allowed_gsm_clients'] = 'localhost 192.168.0.1';
+//$globals['allowed_gsm_clients'] = 'localhost 192.168.0.1';
 
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period

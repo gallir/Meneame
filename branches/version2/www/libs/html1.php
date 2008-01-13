@@ -200,6 +200,8 @@ function do_footer($credits = true) {
 	// warn warn warn 
 	// dont do stats of password recovering pages
 	@include('ads/stats.inc');
+	// Store as html page load
+	stats_increment('html');
 	echo "</body></html>\n";
 }
 

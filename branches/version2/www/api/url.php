@@ -9,6 +9,7 @@
 include('../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
 $url = addcslashes($url, '%_');

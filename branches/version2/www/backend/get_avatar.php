@@ -2,6 +2,8 @@
 include_once('../config.php');
 include_once(mnmpath.'/libs/avatars.php');
 
+stats_increment('image');
+
 $id = intval($_GET['id']);
 if (! $id > 0) die;
 $size = intval($_GET['size']);

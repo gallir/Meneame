@@ -11,6 +11,7 @@ include(mnminclude.'link.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+stats_increment('ajax');
 
 if(check_ban_proxy()) {
 	error(_('IP no permitida'));

@@ -9,6 +9,8 @@
 include('config.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'link.php');
+
+stats_increment('rss', true);
 	
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);

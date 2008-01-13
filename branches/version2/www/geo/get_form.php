@@ -10,6 +10,7 @@ include('../config.php');
 include(mnminclude.'geo.php');
 
 header('Content-Type: text/html; charset=UTF-8');
+stats_increment('ajax');
 
 if(!($id=intval($_REQUEST['id']))) {
 	error(_('falta el id'). " $link");

@@ -12,6 +12,7 @@ include_once(mnminclude.'user.php');
 include_once(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+stats_increment('api', true);
 
 if (check_ban_proxy()) {
 	echo 'KO: ' . _('IP no permitida');

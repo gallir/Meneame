@@ -9,6 +9,8 @@
 include('../config.php');
 include(mnminclude.'user.php');
 
+stats_increment('ajax');
+
 header('Content-Type: text/plain; charset=UTF-8');
 
 if(!($to=intval($_REQUEST['id']))) {

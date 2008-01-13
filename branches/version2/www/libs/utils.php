@@ -50,7 +50,7 @@ if( !empty($_SERVER['HTTP_REFERER'])) {
 }
 
 // Check bots
-if (preg_match('/(bot|slurp|wget)\W/i', $_SERVER['HTTP_USER_AGENT'])) {
+if (preg_match('/(bot|slurp|wget|java|php)\W/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$globals['bot'] = true;
 }
 
@@ -494,6 +494,14 @@ function fork($uri) {
 		return true;
 	}
 	return false;
+}
+
+function stats_increment($type, $all=false) {
+	global $globals, $db;
+
+	if ($globals['save_pageloads'] && (!$globals['bot'] || $all)) {
+		$db->query("insert into pageloads (date, type, counter) values (now(), '$type', 1) on duplicate key update counter=counter+1");
+	}
 }
 //
 // Memcache functions

@@ -9,6 +9,8 @@
 include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'blog.php');
+
+stats_increment('api', true);
 	
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);

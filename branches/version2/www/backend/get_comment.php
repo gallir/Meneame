@@ -14,6 +14,7 @@ if (! defined('mnmpath')) {
 include_once(mnminclude.'comment.php');
 include_once(mnminclude.'link.php');
 
+stats_increment('ajax');
 
 if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
