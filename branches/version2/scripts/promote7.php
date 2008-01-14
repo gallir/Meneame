@@ -353,6 +353,15 @@ function publish(&$link) {
 	$link->status = 'published';
 	$link->published_date=time();
 	$link->store_basic();
+
+	// Increase user's karma
+	$user = new User;
+	$user->id = $link->author;
+	if ($user->read()) {
+		$user->karma = min(20, $user->karma + 1);
+		$user->store();
+	}
+
 	// Add the publish event/log
 	log_insert('link_publish', $link->id, $link->author);
 
