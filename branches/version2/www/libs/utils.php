@@ -281,7 +281,13 @@ function post_get_base_url($option='') {
 }
 
 function get_avatar_url($user, $avatar, $size) {
-	global $globals; 
+	global $globals, $db; 
+
+	// If it does not get avatar status, check the database
+	if ($user > 0 && $avatar < 0) {
+		$avatar = (int) $db->get_var("select user_avatar from users where user_id = $user");
+	}
+
 	if ($avatar > 0 && $globals['cache_dir']) {
 		$file = $globals['cache_dir'] . '/avatars/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
 		$file_path = mnmpath.'/'.$file;

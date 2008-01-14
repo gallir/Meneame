@@ -138,7 +138,9 @@ function to_html(data) {
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			if (data.icon != undefined && data.icon.length > 0) {
+				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
@@ -167,7 +169,9 @@ function to_html(data) {
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="'+chat_class+'" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			if (data.icon != undefined &&  data.icon.length > 0) {
+				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
@@ -227,7 +231,9 @@ function to_html(data) {
 		html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
-		html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
+		if (data.icon != undefined && data.icon.length > 0) {
+			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
+		}
 		html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {
 		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';

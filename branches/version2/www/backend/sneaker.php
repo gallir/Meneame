@@ -245,6 +245,7 @@ function get_chat($time) {
 		$key = $timestamp . ':chat:'.$uid;
 		$comment = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text)));
 		$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+		if ($uid >0)  $events[$key] .= ',icon:"'.get_avatar_url($uid, -1, 20).'"';
 		if($timestamp > $last_timestamp) $last_timestamp = $timestamp;
 	}
 }
@@ -307,6 +308,7 @@ function get_votes($dbtime) {
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':votes:'.$id;
 		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
+		if ($uid >0) $events[$key] .= ',icon:"'.get_avatar_url($uid, -1, 20).'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -323,6 +325,7 @@ function get_story($time, $type, $linkid, $userid) {
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$id;
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
+	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -337,6 +340,7 @@ function get_comment($time, $type, $commentid, $userid) {
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$commentid;
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
+	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -352,6 +356,7 @@ function get_post($time, $type, $postid, $userid) {
 	$status = _('nótame');
 	$title = text_to_summary($event->post_content,130);
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
+	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
