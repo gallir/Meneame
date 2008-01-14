@@ -97,7 +97,7 @@ function get_votes($dbtime, $link_id) {
 		$id=$event->vote_id;
 		$uid = $event->vote_user_id;
 		if($uid > 0) {
-			$res = $db->get_row("select user_login from users where user_id = $uid");
+			$res = $db->get_row("select user_login, user_avatar from users where user_id = $uid");
 			$user = $res->user_login;
 		} else {
 			$user= preg_replace('/\.[0-9]+$/', '', $event->vote_ip);
@@ -112,6 +112,7 @@ function get_votes($dbtime, $link_id) {
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':votes:'.$id;
 		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$uid.'",status:"'.$status.'"';
+		if ($uid > 0) $events[$key] .= ',icon:"'.get_avatar_url($uid, $res->user_avatar, 20).'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -125,6 +126,7 @@ function get_comment($dbtime, $linkid) {
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':'.$type.':'.$commentid;
 		$events[$key] = 'ts:"'.$event->timestamp.'",type:"comment",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$event->user_id.'", status:"'.$status.'",id:"'.$event->comment_id.'"';
+		$events[$key] .= ',icon:"'.get_avatar_url($event->user_id, -1, 20).'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }

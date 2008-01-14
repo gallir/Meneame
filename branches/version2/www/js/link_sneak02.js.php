@@ -159,7 +159,9 @@ function to_html(data) {
 		html += '<div class="mini-sneaker-who"><span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	else if (data.uid > 0)  {
 		html += '<div class="mini-sneaker-who">';
-		html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+base_url+'backend/get_avatar_url.php?id='+data.uid+'&amp;size=20" width=20 height=20 /><\/a>';
+		if (data.icon != undefined && data.icon.length > 0) {
+			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 /><\/a>';
+		}
 		html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else 
 		html += '<div class="mini-sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';

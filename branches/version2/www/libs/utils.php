@@ -50,7 +50,7 @@ if( !empty($_SERVER['HTTP_REFERER'])) {
 }
 
 // Check bots
-if (preg_match('/(bot|slurp|wget|java|php)\W/i', $_SERVER['HTTP_USER_AGENT'])) {
+if (preg_match('/(bot|slurp|wget|libwww|\Wjava|\Wphp)\W/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$globals['bot'] = true;
 }
 
