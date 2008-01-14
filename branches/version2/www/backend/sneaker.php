@@ -370,6 +370,7 @@ function get_status($status) {
 			break;
 		case 'duplicated':
 		case 'abuse':
+		case 'autodiscard':
 		case 'discard':
 			$status = _('descartada');
 			break;
