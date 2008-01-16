@@ -8,7 +8,7 @@
 
 include('../config.php');
 //include(mnminclude.'geo.php');
-stats_increment('geo');
+stats_increment('ajax');
 
 $id = (int) $_REQUEST['id'];
 

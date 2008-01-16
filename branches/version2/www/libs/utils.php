@@ -505,8 +505,12 @@ function fork($uri) {
 function stats_increment($type, $all=false) {
 	global $globals, $db;
 
-	if ($globals['save_pageloads'] && (!$globals['bot'] || $all)) {
-		$db->query("insert into pageloads (date, type, counter) values (now(), '$type', 1) on duplicate key update counter=counter+1");
+	if ($globals['save_pageloads']) {
+		if(!$globals['bot'] || $all) {
+			$db->query("insert into pageloads (date, type, counter) values (now(), '$type', 1) on duplicate key update counter=counter+1");
+		} else {
+			$db->query("insert into pageloads (date, type, counter) values (now(), 'bot', 1) on duplicate key update counter=counter+1");
+		}
 	}
 }
 //

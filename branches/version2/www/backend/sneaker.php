@@ -11,7 +11,6 @@ include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 include(mnminclude.'sneak.php');
 
-stats_increment('sneaker');
 
 $foo_link = new Link;
 
@@ -123,6 +122,7 @@ foreach ($events as $key => $val) {
 	}
 }
 echo "]);";
+stats_increment('sneaker');
 
 function check_chat() {
 	global $db, $current_user, $now, $globals, $events;

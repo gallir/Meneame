@@ -10,7 +10,7 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 
-stats_increment('geo');
+stats_increment('ajax');
 
 $time = (int) $_GET['time'];
 if($time <= 0 || $globals['now']-$time > 900) {
