@@ -10,7 +10,7 @@ function check_ban_proxy() {
 	return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
 }
 
-function check_ban($ban_text, $ban_type, $check_valid = true) {
+function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false) {
 	global $db, $globals;	
 	
 	$ban_text = $db->escape($ban_text);
@@ -21,11 +21,11 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
-			if ($check_valid  && ! preg_match('/^[\w_\-\.]+\.[\w]{2,4}(\/[a-z]+\/*){0,1}$/', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
 				$globals['ban_message'] =_('No es un dominio correcto');
 				return true;
 			}
-			$where= " ban_text IN (".subdomains_list($ban_text).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
+			$where= " ban_text IN (".subdomains_list($ban_text, $first_level).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
 			break;
 		case 'ip':
 		case 'proxy':
@@ -51,7 +51,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true) {
 	return false;
 }
 
-function subdomains_list($domain_path) {
+function subdomains_list($domain_path, $first_level = false) {
 	// search also for the first part of the path
 	if(preg_match('/^[^\/]+\/+([^\/]+)\/+/', $domain_path, $match) > 0) {
 		$path = $match[1];
@@ -63,12 +63,14 @@ function subdomains_list($domain_path) {
 	}
 	$array = explode('.', $domain);
 	$size = count($array);
+	if ($first_level) $domain_limit = $size;
+	else $domain_limit = $size - 1;
 
-	for($i=1; $i < $size-1; $i++) {
+	for($i=1; $i < $domain_limit; $i++) {
 		$sub = array_slice($array, $i);
 		$sub = implode('.', $sub);
 		$list .= ", '$sub'";
-		if ($path) {
+		if ($path && $i < $size-1 ) { // Add path only if there is at least a second level, avoid tk/path
 			$list .= ", '$sub/$path', '$sub/$path/'";
 		}
 	}
@@ -78,7 +80,7 @@ function subdomains_list($domain_path) {
 function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINED', $ban_id=0) {
 	global $globals;
 
-	if (strlen($ban_text) < 4) {
+	if (strlen($ban_text) < 2) {
 		echo '<div class="form-error">';
 		echo '<p>'._('Texto del ban muy corto').'</p>';
 		echo "</div>\n";

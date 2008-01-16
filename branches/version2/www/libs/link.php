@@ -48,7 +48,7 @@ class Link {
 		echo "encoding: " . $this->encoding . "<br>\n";
 	}
 
-	function check_url($url, $check_local = true) {
+	function check_url($url, $check_local = true, $first_level = false) {
 		global $globals, $current_user;
 		if(!preg_match('/^http[s]*:/', $url)) return false;
 		$url_components = @parse_url($url);
@@ -61,7 +61,7 @@ class Link {
 			return false;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($url_components[host].$url_components[path], 'hostname', false) || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
+		if(check_ban($url_components[host].$url_components[path], 'hostname', false, $first_level) || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
 			syslog(LOG_NOTICE, "Meneame, server name is banned ($current_user->user_login): $url");
 			$this->banned = true;
 			return false;
@@ -108,7 +108,7 @@ class Link {
 						// It's relative
 						$new_url = $url . $new_url;
 					}
-					if (!$this->check_url($new_url, $check_local)) return false;
+					if (!$this->check_url($new_url, $check_local, true)) return false;
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
 						if ($url_components['host'] != $new_url_components['host']) {

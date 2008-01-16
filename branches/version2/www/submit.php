@@ -131,7 +131,7 @@ function do_submit1() {
 	}
 
 
-	if(check_ban($globals['user_ip'], 'ip') || check_ban_proxy()) {
+	if(check_ban($globals['user_ip'], 'ip', true) || check_ban_proxy()) {
 		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].' ('. $globals['ban_message'].')</p>';
 		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $url");
 		print_empty_submit_form();
@@ -207,7 +207,7 @@ function do_submit1() {
 	if(report_dupe($url)) return;
 
 
-	if(!$linkres->check_url($url) || !$linkres->get($url)) {
+	if(!$linkres->check_url($url, true, true) || !$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($url).'<br />';
 		echo '<br /><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
 		// If the domain is banned, decrease user's karma
@@ -250,7 +250,7 @@ function do_submit1() {
 	$blog_url = $blog_url_components[host].$blog_url_components[path];
 	// Now we check against the blog table
 	// it's done because there could be banned blogs like http://lacotelera.com/something
-	if(check_ban($blog_url, 'hostname', false)) {
+	if(check_ban($blog_url, 'hostname', false, true)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
 		echo '<p>'._('El sitio') . " $blog->url ". _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
