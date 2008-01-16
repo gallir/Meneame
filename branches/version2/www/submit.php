@@ -589,7 +589,6 @@ function do_submit3() {
 			//$trackres->content=$linkres->content;
 			$res = $trackres->send($linkres);
 		}
-		//fork("backend/lucene_update.php?id=$linkres->id");
 		fork("backend/send_pingbacks.php?id=$linkres->id");
 	}
 

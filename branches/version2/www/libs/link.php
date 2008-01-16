@@ -607,7 +607,7 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' && $this->status != 'abuse' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		if ( $this->status != 'discard' && $this->status != 'abuse' &&  $this->status != 'autodiscard' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
@@ -742,7 +742,7 @@ class Link {
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || $this->status == 'abuse' || 
+		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' ||
 				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
@@ -757,7 +757,7 @@ class Link {
 
 		return  $current_user->user_id > 0  &&
 				$this->votes > 0 &&
-				$this->status != 'abuse' &&
+				$this->status != 'abuse' && $this->status != 'autodiscard' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] &&
 				($this->status != 'published' || 
 				// Allows to vote negative to published with high ratio of negatives
@@ -819,56 +819,6 @@ class Link {
 	function get_latlng() {
 		require_once(mnminclude.'geo.php');
 		return geo_latlng('link', $this->id);
-	}
-
-	function lucene_update($index = false) {
-		global $globals;
-
-		return; // Disabled by now
-		/*
-		if (!$this->id) return;
-
-		include_once(mnminclude.'lucene.php');
-		if (!$index) {
-			$index = lucene_open();
-		}
-
-		// Retrieving documents with termDocs() method
-		$term = new Zend_Search_Lucene_Index_Term($this->id, 'link_id');
-		$docIds  = $index->termDocs($term);
-		foreach ($docIds as $hit) {
-			$index->delete($hit);
-		}
-
-		if ($this->votes <= 0 || empty($this->title) || empty($this->content)) return;
-		switch ($this->status) {
-			case 'published':
-				$boost = 2.0;
-				break;
-			case 'discard':
-			case 'abuse':
-				$boost = 0.3;
-				break;
-			default:
-				$boost = 1.0;
-		}
-		$doc = new Zend_Search_Lucene_Document();
-		$doc->addField(Zend_Search_Lucene_Field::Keyword('link_id', $this->id));
-		$doc->addField(Zend_Search_Lucene_Field::UnIndexed('date', $this->date));
-		$field = Zend_Search_Lucene_Field::UnStored('url', $this->url);
-		$field->boost = 1.2 * $boost; 
-		$doc->addField($field);
-		$field = Zend_Search_Lucene_Field::UnStored('tags', text_sanitize($this->tags));
-		$field->boost = 1.5 * $boost; 
-		$doc->addField($field);
-		$field = Zend_Search_Lucene_Field::Unstored('title', text_sanitize($this->title));
-		$field->boost = 2.0 * $boost; 
-		$doc->addField($field);
-		$doc->addField(Zend_Search_Lucene_Field::UnStored('content', text_sanitize($this->content)));
-		$field->boost = 1.0 * $boost; 
-		$doc->addField($field);
-		$index->addDocument($doc);
-		*/
 	}
 
 }
