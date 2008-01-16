@@ -101,8 +101,12 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 		// Check if there is a map container, otherwise it creates a container
 		if ($('#map').length == 0 ) {
 			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:150px;height:150px">&nbsp;<\/div>');
-			$('#geocoderform').after('<br clear="right"/>');;
-			geo_coder_editor_load(false, false, 3, "<?echo $icontype?>");
+			$('#geocoderform').after('<br clear="right"/>');
+			if (typeof geo_coder_editor_load == 'function') { // Check if the geo.js has bees loaded
+				geo_coder_editor_load(false, false, 3, "<?echo $icontype?>");
+			} else {
+				$(function() {geo_coder_editor_load(false, false, 3, "<?echo $icontype?>")});
+			}
 		}
 	//]]>
 	</script>
