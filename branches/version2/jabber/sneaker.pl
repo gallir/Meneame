@@ -22,9 +22,11 @@ use utf8;
 
 my $event_timestamp;
 my $chat_timestamp;
+my $chat_period_limit;
 my $counter_timestamp;
 my %link_status = qw(link_new Nueva link_publish Publicada link_edit Editada link_discard Descartada);
 
+$chat_period_limit = 5;
 $chat_timestamp = time;
 $event_timestamp = time - 60;
 
@@ -235,7 +237,7 @@ sub StoreChat {
 	}
 
 
-	my $period = time - 9;
+	my $period = time - $chat_period_limit;
 	$sql = qq{select count(*) from chats where chat_time > $period and chat_uid = $id};
 	my $array = MnmDB::row_array($sql);
 	if ($array->[0] > 0) {
