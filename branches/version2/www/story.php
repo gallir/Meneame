@@ -37,7 +37,7 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 }
 
 // Dont allow indexing of discarded links
-if ($globals['bot'] && $link->status == 'discard') not_found();
+if ($globals['bot'] && ($link->status == 'discard' || $link->status == 'autodiscard' || $link->status == 'abuse')) not_found();
 
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
 if(count($url_args) > 1 && ($last_arg = $url_args[count($url_args)-1]) > 0) {
@@ -406,7 +406,7 @@ function insert_comment () {
 				$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
 				// Check the text is not the same
 				$same_count = $comment->same_text_count() + $comment->same_links_count();
-				if ($comment_count > 3 || $same_count > 2) {
+				if ($comment_count > 2 || $same_count > 2) {
 					require_once(mnminclude.'user.php');
 					$reduction = 0;
 					if ($comment_count > 3) {
