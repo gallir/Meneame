@@ -77,7 +77,7 @@ function do_edit() {
 
 	// Allow to change the status
 	if ($linkres->votes > 0 && ($linkres->status != 'published' || $current_user->user_level == 'god') && 
-			(($linkres->status != 'discard' && $linkres->status != 'abuse' && $linkres->status != 'autodiscard' && $current_user->user_id == $linkres->author) 
+			(( !$linkres->is_discarded() && $current_user->user_id == $linkres->author) 
 					|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
@@ -156,7 +156,7 @@ function do_save() {
 	// change the status
 	if (($current_user->user_level == 'god' || $linkres->status != 'published') && 
 		($_POST['status'] == 'queued' || $_POST['status'] == 'discard' || $_POST['status'] == 'abuse' || $_POST['status'] == 'autodiscard')) {
-		if ($linkres->status != 'discard' && $linkres->status != 'abuse' && $linkres->status != 'autodiscard' && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse' || $_POST['status'] == 'autodiscard')) {
+		if (!$linkres->is_discarded() && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse' || $_POST['status'] == 'autodiscard')) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;
 		}
