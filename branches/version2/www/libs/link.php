@@ -607,11 +607,13 @@ class Link {
 	function print_warn() {
 		global $db;
 
-		if ( $this->status != 'discard' && $this->status != 'abuse' &&  $this->status != 'autodiscard' &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		if ( !$this->is_discarded() &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
 				echo _('noticia controvertida, por favor lee los comentarios');
+			} if ($this->author == $current_user->user_id && $this->is_editable()) {
+					echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
 			} else {
 				// Only says "what" if most votes are "wrong" or "duplicated" 
 				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
@@ -712,6 +714,10 @@ class Link {
 		global $db;
 		$this->comments = $db->get_var("SELECT count(*) FROM comments WHERE comment_link_id = $this->id");
 		$db->query("update links set link_comments = $this->comments where link_id = $this->id");
+	}
+
+	function is_discarded() {
+		return $this->status == 'discard' || $this->status == 'abuse' ||  $this->status == 'autodiscard';
 	}
 
 	function is_editable() {
