@@ -82,24 +82,26 @@ function do_edit() {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
 
-		// Status options
-		if ($linkres->status == 'queued') {
-			if ($current_user->user_id == $linkres->author) $option = 'autodiscard';
-			else $option = 'abuse';
-		} elseif ( $linkres->status == 'discard' || $linkres->status == 'autodiscard' || $linkres->status == 'abuse') {
-			if($current_user->user_level == 'god' || $current_user->user_level == 'admin') $option = 'queued';
-		} else {
-			if($current_user->user_level == 'god') $option = 'abuse';
-		}
-
 		// Current status
 		echo '<option value="'.$linkres->status.'" selected="selected">';
 		echo $linkres->get_status_text().'</option>';
 
-		if ($option) {
-			echo '<option value="'.$option.'">';
-			echo $linkres->get_status_text($option).'</option>';
+		// Status options
+		if ($linkres->status == 'queued') {
+			echo '<option value="autodiscard">'.$linkres->get_status_text('autodiscard').'</option>';
+			if ($current_user->user_id != $linkres->author) {
+				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
+			}
+		} elseif ($linkres->is_discarded()) {
+			if($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+				echo '<option value="queued">'.$linkres->get_status_text('queued').'</option>';
+			}
+		} else {
+			if($current_user->user_level == 'god') {
+				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
+			}
 		}
+
 		echo '</select>';
 	}
 
