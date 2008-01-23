@@ -128,7 +128,6 @@ function ts_print_form() {
 		echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
 	} else {
 	// reCaptcha
-		echo _("escribe las dos palabras")."<br/>\n";
 		echo recaptcha_get_html($globals['recaptcha_public_key'],null);
 	}
 }
