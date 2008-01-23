@@ -43,17 +43,28 @@ $votes_anon = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' a
 
 $negatives = $db->get_results("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=".$globals['link_id']." and vote_value < 0 group by vote_value order by count desc");
 
+$total_negatives = 0;
+
 echo '<div class="news-details">';
-//echo _('votos usuarios'). ': '.$votes_users_positive.',&nbsp;&nbsp;';
-//echo _('votos anónimos'). ': '.$votes_anon;
 if ($negatives) {
 	echo '<strong>'._('votos negativos').':</strong>&nbsp;&nbsp;';
 	foreach ($negatives as $negative) {
 		echo get_negative_vote($negative->vote_value) . ':&nbsp;' . $negative->count;
 		echo '&nbsp;&nbsp;';
+		$total_negatives += $negative->count;
 	}
 }
 echo '</div>';
+
+// Check for consistency of votes' counters
+if ($globals['link'] && $globals['link']->votes > 0 &&  //Make sure we have read the link object
+	($globals['link']->votes !=  $votes_users_positive || $globals['link']->negatives != $total_negatives || $globals['link']->anonymous != $votes_anon)) {
+	$globals['link']->votes =  $votes_users_positive;
+	$globals['link']->negatives = $total_negatives;
+	$globals['link']->anonymous = $votes_anon;
+	$globals['link']->store_basic();
+}
+
 
 if ($no_show_voters) {
 	// don't show voters if the user votes the link
