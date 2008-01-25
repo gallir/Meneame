@@ -510,6 +510,13 @@ function do_submit2() {
 		$linkres->content_type = 'image';
 	}
 
+	// Check if the title contains [IMG], [IMGs], (IMG)... and mark it as image
+
+	if (preg_match('/[\(\[](IMG|PICT*)s*[\)\]]/i', $_POST['title'])) {
+		$_POST['title'] = preg_replace('/[\(\[](IMG|PICT*)s*[\)\]]/i', ' ', $_POST['title']);
+		$linkres->content_type = 'image';
+	}
+
 	$linkres->category=intval($_POST['category']);
 	$linkres->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$linkres->tags = tags_normalize_string($_POST['tags']);
