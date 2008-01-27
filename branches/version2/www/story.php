@@ -188,7 +188,7 @@ case 2:
 		echo "</ol>\n";
 	}
 
-	if($link->date < $globals['now']-$globals['time_enabled_comments'] && $link->comments < 2718) {
+	if($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
 		// Comments already closed
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 		echo '<div class="commentform warn">'."\n";
@@ -385,7 +385,7 @@ function insert_comment () {
 
 	// Check if is a POST of a comment
 	if($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 
-			$link->comments < 2718 &&
+			$link->comments < $globals['max_comments'] &&
 			intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
 			intval($_POST['user_id']) == $current_user->user_id &&
 			($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author) &&
