@@ -122,7 +122,7 @@ $globals['css_main'] = 'css/es/mnm3.css';
 $globals['css_color'] = 'css/es/mnmcol5.css';
 
 // Store access stats
-$globals['save_pageloads'] = true;
+$globals['save_pageloads'] = false;
 
 // This is for SMS messages
 // Put your authorised addresses
