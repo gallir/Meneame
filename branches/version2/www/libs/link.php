@@ -445,32 +445,34 @@ class Link {
 		}
 		echo '</h1>';
 
-		// GEO
-		if ($this->latlng) {
-			echo '<div class="thumbnail" id="map" style="width:130px;height:130px">&nbsp;</div>'."\n";
-		} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
-		// Websnapr
-		// In order not to overload websnapr, display the image only if votes are enabled
-			echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
-		}
+		if (! $globals['bot']) {
+			// GEO
+			if ($this->latlng) {
+				echo '<div class="thumbnail" id="map" style="width:130px;height:130px">&nbsp;</div>'."\n";
+			} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
+			// Websnapr
+			// In order not to overload websnapr, display the image only if votes are enabled
+				echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
+			}
 
-		echo '<div class="news-submitted">';
-		if ($type != 'short') {
-			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="'.$this->username.'" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
+			echo '<div class="news-submitted">';
+			if ($type != 'short') {
+				echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="'.$this->username.'" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
+			}
+			echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
+			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
+			// Print dates
+			if ($globals['now'] - $this->date > 604800) { // 7 days
+				echo _('el').get_date_time($this->date);
+				if($this->status == 'published')
+					echo ', '  ._('publicado el').get_date_time($this->published_date);
+			} else {
+				echo _('hace').txt_time_diff($this->date);
+				if($this->status == 'published')
+					echo ', '  ._('publicado hace').txt_time_diff($this->published_date);
+			}
+			echo "</div>\n";
 		}
-		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
-		echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
-		// Print dates
-		if ($globals['now'] - $this->date > 604800) { // 7 days
-			echo _('el').get_date_time($this->date);
-			if($this->status == 'published')
-				echo ', '  ._('publicado el').get_date_time($this->published_date);
-		} else {
-			echo _('hace').txt_time_diff($this->date);
-			if($this->status == 'published')
-				echo ', '  ._('publicado hace').txt_time_diff($this->published_date);
-		}
-		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
 			echo '<p>'.text_to_html($this->content);
@@ -549,7 +551,7 @@ class Link {
 			echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
 			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
 			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
-			echo '</div>';
+			echo '</div>' . "\n";
 		} else {
 			echo "<!--tags: $this->tags-->\n";
 		}
@@ -589,18 +591,21 @@ class Link {
 		echo '<div class="news-shakeit">';
 		echo '<div class="'.$box_class.'">';
 		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.($this->votes+$this->anonymous).'</a>'._('meneos').'</div>';
-		echo '<div class="menealo" id="a-va-'.$this->id.'">';
 
-		if ($this->votes_enabled == false) {
-			echo '<span>'._('cerrado').'</span>';
-		} elseif( !$this->voted) {
-			echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
-		} else {
-			if ($this->voted > 0) $mess = _('&#161;chachi!');
-			else $mess = ':-(';
-			echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
+		if (! $globals['bot']) {
+			echo '<div class="menealo" id="a-va-'.$this->id.'">';
+
+			if ($this->votes_enabled == false) {
+				echo '<span>'._('cerrado').'</span>';
+			} elseif( !$this->voted) {
+				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
+			} else {
+				if ($this->voted > 0) $mess = _('&#161;chachi!');
+				else $mess = ':-(';
+				echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
+			}
+			echo '</div>'."\n";
 		}
-		echo '</div>'."\n";
 		echo '</div>'."\n";
 	}
 
