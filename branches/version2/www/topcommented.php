@@ -59,8 +59,8 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 	}
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {
-		memcache_madd($memcache_key.'rows', $rows, 600);
-		memcache_madd($memcache_key, $links, 600);
+		memcache_madd($memcache_key.'rows', $rows, 1800);
+		memcache_madd($memcache_key, $links, 1800);
 	}
 }
 

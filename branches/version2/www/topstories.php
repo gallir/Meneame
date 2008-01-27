@@ -96,7 +96,7 @@ function print_period_tabs() {
 		$current_range = 0;
 	}
 
-	for($i=0; $i<count($range_values) && $range_values[$i] < 60; $i++) {
+	for($i=0; $i<count($range_values) /* && $range_values[$i] < 60 */; $i++) {
 		if($i == $current_range)  {
 			$active = ' class="tabsub-this"';
 		} else {
