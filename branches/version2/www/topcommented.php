@@ -42,9 +42,29 @@ echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 
 $link = new Link;
 
-$rows = min(100, $db->get_var("SELECT count(*) FROM links WHERE $time_link"));
+// Use memcache if available
+if ($globals['memcache_host'] && $current_page < 4) {
+	$memcache_key = 'topcommented_'.$from.'_'.$current_page;
+}
 
-$links = $db->get_results("$sql LIMIT $offset,$page_size");
+if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
+	// It's not in memcache
+	if ($time_link) {
+		$rows = min(100, $db->get_var("SELECT count(*) FROM links WHERE $time_link"));
+	} else {
+		$rows = min(100, $db->get_var("SELECT count(*) FROM links"));
+	}
+	if ($rows == 0) {
+		not_found();
+	}
+	$links = $db->get_results("$sql LIMIT $offset,$page_size");
+	if ($memcache_key) {
+		memcache_madd($memcache_key.'rows', $rows, 600);
+		memcache_madd($memcache_key, $links, 600);
+	}
+}
+
+
 if ($links) {
 	foreach($links as $dblink) {
 		$link->id=$dblink->link_id;
@@ -61,7 +81,7 @@ function print_period_tabs() {
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
 	echo '<ul class="tabsub-shakeit">'."\n";
-	for($i=0; $i<count($range_values) && $range_values[$i] < 40; $i++) {
+	for($i=0; $i<count($range_values) /*&& $range_values[$i] < 40 */; $i++) {
 		if($i == $current_range)  {
 			$active = ' class="tabsub-this"';
 		} else {
