@@ -41,6 +41,7 @@ switch ($globals['meta']) {
 	case '_discarded':
 		// Show only discarded in four days
 		$globals['noindex'] = true;
+		$globals['ads'] = false;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status in ('discard', 'abuse', 'autodiscard') and (link_votes >0 || link_author = $current_user->user_id)";
 		$order_by = " ORDER BY link_date DESC ";

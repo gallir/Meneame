@@ -10,7 +10,6 @@ include('config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
 $link = new Link;
 
 
@@ -36,8 +35,17 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
-// Dont allow indexing of discarded links
+if ($link->is_discarded()) {
+	// Dont allow indexing of discarded links
+	if ($globals['bot']) not_found();
+} else {
+	//Only shows ads in non discarded images
+	$globals['ads'] = true;
+}
+/*
 if ($globals['bot'] && $link->is_discarded()) not_found();
+if (! $link->is_discarded()) $globals['ads'] = true;;
+*/
 
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
 if(count($url_args) > 1 && ($last_arg = $url_args[count($url_args)-1]) > 0) {

@@ -2,7 +2,7 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 ==========================================================
 (pero sin orden establecido y cuando nos dé la gana... o demasiado coñazo)
 
-- "Subportadas" con una "subpublciación" por categorías como propuso unf. Así una noticia podría tener un estado adicional.
+- "Subportadas" con una "subpublicación" por categorías como propuso unf. Así una noticia podría tener un estado adicional.
 
 - Categorías configurables en el perfil.
 
@@ -21,7 +21,7 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 
 - La info que se devuelve después de un voto debería ser JSON, da mayor flexibilidad para enviar más o menos datos.
 
-- Gráficas en tiempo real, http://code.google.com/apis/chart/ ? OpenCharts?
+- Gráficas en tiempo real, http://code.google.com/apis/chart/ ? OpenCharts? (hecha y descartada, afecta negativamente a la replicación)
 
 - OpenID, parece que se están resolviendo algunos de los problemas: http://openid.net/2007/12/05/openid-2_0-final-ly/
 
