@@ -419,10 +419,10 @@ function do_submit1() {
 	// check there is no an "overflow" of images
 	if ($linkres->content_type == 'image') {
 		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type = 'image'"));
-		if ($image_links > 5 && $image_links > $links_12hs * 0.04) { // Only 4% images
+		if ($image_links > 5 && $image_links > $links_12hs * 0.05) { // Only 5% images
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes, espera unos minutos por favor').'</strong></p> ';
-			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
+			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
 			return;
