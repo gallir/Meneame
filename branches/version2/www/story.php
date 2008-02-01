@@ -405,7 +405,7 @@ function insert_comment () {
 		$comment->link=$link->id;
 		$comment->randkey=intval($_POST['randkey']);
 		$comment->author=intval($_POST['user_id']);
-		$comment->karma=intval($current_user->user_karma);
+		$comment->karma=round($current_user->user_karma);
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
 		if (mb_strlen($comment->content) > 0 && preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
