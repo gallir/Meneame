@@ -24,6 +24,13 @@ if( !$negatives) {
 
 foreach ($negatives as $negative) {
 	$linkid = $negative->link_id;
+	$user = new User();
+	$user->id = $negative->link_author;
+	if ($user->read()) {
+		$user->karma -= 0.20;
+		echo "$user->username: $user->karma\n";
+		$user->store();
+	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event
 	log_insert('link_discard', $linkid, $negative->link_author);
