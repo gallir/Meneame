@@ -146,6 +146,14 @@ class Link {
 			}
 		}
 
+
+		// Check if the author doesn't want to share
+		if (preg_match('/<!-- *noshare *-->/', $this->html)) {
+			$globals['ban_message'] = _('el autor no desea que se envíe el artículo, respeta sus deseos');
+			syslog(LOG_NOTICE, "Meneame, noshare ($current_user->user_login): $url");
+			return false;
+		}
+
 		// Now we analyse the html to find links to banned domains
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
