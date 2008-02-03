@@ -69,7 +69,7 @@ class Link {
 		return true;
 	}
 
-	function get($url, $maxlen = 100000, $check_local = true) {
+	function get($url, $maxlen = 150000, $check_local = true) {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);

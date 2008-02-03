@@ -153,7 +153,7 @@ function check_chat() {
 			return;
 		} else {
 			$comment = htmlspecialchars($comment);
-			$comment = preg_replace('/(^|[\s\.,¿])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
+			$comment = preg_replace('/(^|[\s\.,¿#@])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
 		}
 
 		$from = $now - 1200;

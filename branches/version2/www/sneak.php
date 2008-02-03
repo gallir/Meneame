@@ -251,7 +251,7 @@ function to_html(data) {
 function check_user_ping(str) {
 	myuser = readCookie('mnm_user');
 	if (myuser != null) {
-		re = new RegExp('(^|\\W)'+myuser+'(\\W|$)', "i");
+		re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])'+myuser+'([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
 		if (str.match(re)) {
 			return true;
 		}
