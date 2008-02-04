@@ -38,6 +38,10 @@ if ($value != -1 && $value != 1) {
 	error(_('Valor del voto incorrecto'));
 }
 
+if ($value < 0 && $current_user->user_id == (int) $db->get_var("select link_author from links, comments where comment_id = $id and link_id = comment_link_id")) {
+	error(_('no votes negativo a comentarios de tus envíos'));
+}
+
 require_once(mnminclude.'votes.php');
 $vote = new Vote;
 $vote->user=$current_user->user_id;
@@ -63,9 +67,9 @@ if ($votes_freq > $freq) {
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
-		warn(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
+		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else  {
-		warn(_('¡tranquilo cowboy!'));
+		error(_('¡tranquilo cowboy!'));
 	}
 }
 
@@ -99,8 +103,4 @@ function error($mess) {
 	die;
 }
 
-function warn($mess) {
-	echo "WARN: $mess";
-	die;
-}
 ?>
