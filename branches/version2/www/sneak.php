@@ -510,6 +510,7 @@ function print_sneak_tabs($option) {
 	$active[$option] = ' class="tabmain-this"';
 	echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
 
+	echo '<li style="float: right;"><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
 	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '<li style="float: right;"><a '.$active[3].' href="'.$globals['base_url'].'sneak.php?admin=1">&nbsp;&nbsp;'._('admin').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
 	}
