@@ -163,12 +163,13 @@ class Link {
 			preg_match_all('/< *(a|meta +http-equiv|script|iframe|frame[^<]*>)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
 		}
 		$check_counter = 0;
+		$second_level = preg_quote(preg_replace('/^(.+\.)*([^\.]+)\.[^\.]+$/', "$2", $url_components[host]));
 		foreach ($matches[0] as $match) {
 			if (!preg_match('/<a.+rel=.*nofollow.*>/', $match)) {
 				preg_match('/(href|url|action|src)=[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"]{0,1}/i', $match, $url_a);
 				$embeded_link  = $url_a[2];
 				$new_url_components = @parse_url($embeded_link);
-				if (! empty($embeded_link) && $new_url_components['host'] != $url_components['host'] && $check_counter < 20) {
+				if (! empty($embeded_link) && ! preg_match("/$second_level\.[^\.]+$/", $new_url_components['host']) && $check_counter < 5) {
 					$check_counter++;
 					if ($checked_links[$new_url_components['host']] != true) {
 						$checked_links[$new_url_components['host']] = true;
