@@ -248,9 +248,9 @@ function do_submit1() {
 
 	$blog_url_components = @parse_url($blog->url);
 	$blog_url = $blog_url_components[host].$blog_url_components[path];
-	// Now we check against the blog table
+	// Now we check again against the blog table
 	// it's done because there could be banned blogs like http://lacotelera.com/something
-	if(check_ban($blog_url, 'hostname', false, true)) {
+	if(check_ban($blog->url, 'hostname', false, true)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
 		echo '<p>'._('El sitio') . " $blog->url ". _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");

@@ -21,8 +21,11 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
-			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
-				$globals['ban_message'] =_('No es un dominio correcto');
+			// Clean protocol and path/arguments
+			$ban_text = preg_replace('/^(https*|ftp):\/\//', '', $ban_text);
+			$ban_text = preg_replace('/(\/[^\/\?]+)[\/\?]+.*$/', '$1', $ban_text);
+			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z\.]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
+				$globals['ban_message'] = _('No es un dominio correcto');
 				return true;
 			}
 			$where= " ban_text IN (".subdomains_list($ban_text, $first_level).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
@@ -53,7 +56,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 
 function subdomains_list($domain_path, $first_level = false) {
 	// search also for the first part of the path
-	if(preg_match('/^[^\/]+\/+([^\/]+)\/+/', $domain_path, $match) > 0) {
+	if(preg_match('/^[^\/]+\/+([^\/\?]+)[\/\?]*/', $domain_path, $match) > 0) {
 		$path = $match[1];
 	}
 	$domain = preg_replace('/\/.*$/', '', $domain_path);
