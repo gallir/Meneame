@@ -20,7 +20,7 @@ $offset=(get_current_page()-1)*$page_size;
 $ban_text_length=64; // Cambiar también en checkfield.php
 $ban_comment_length=120;
 
-if ($current_user->user_level=="god") {
+if ($current_user->user_level=="god" || $current_user->user_level=="admin") {
 	if (!$_REQUEST["admin"]) {
 		$_REQUEST["admin"] = 'hostname';
 	} else {
@@ -64,20 +64,23 @@ function admin_tabs($tab_selected = false) {
 
 
 function admin_bans($ban_type) {
-	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length;
+	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length, $current_user;
 	require_once(mnminclude.'ban.php');
-	if (!empty($_REQUEST["new_ban"])) {
-		insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
-	} elseif (!empty($_REQUEST["edit_ban"])) {
-		insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
-	} elseif (!empty($_REQUEST["new_bans"])) {
-		$array = preg_split ("/\s+/", $_POST["ban_text"]);
-		$size = count($array);
-		for($i=0; $i < $size; $i++) {
-			insert_ban($ban_type, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
+
+	if ($current_user->user_level=="god") {
+		if (!empty($_REQUEST["new_ban"])) {
+			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
+		} elseif (!empty($_REQUEST["edit_ban"])) {
+			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
+		} elseif (!empty($_REQUEST["new_bans"])) {
+			$array = preg_split ("/\s+/", $_POST["ban_text"]);
+			$size = count($array);
+			for($i=0; $i < $size; $i++) {
+				insert_ban($ban_type, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
+			}
+		} elseif (!empty($_REQUEST["del_ban"])) {
+			del_ban($_POST["ban_id"]);
 		}
-	} elseif (!empty($_REQUEST["del_ban"])) {
-		del_ban($_POST["ban_id"]);
 	}
 	
 	echo '<div id="container-wide">' . "\n";
@@ -99,8 +102,10 @@ function admin_bans($ban_type) {
 	echo '</form>';
 	echo '</div>'; 
 
-	echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=new">'._('Nuevo ban').'</a> ]';
-	echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=news">'._('Múltiples bans').'</a> ]';
+	if ($current_user->user_level=="god") {
+		echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=new">'._('Nuevo ban').'</a> ]';
+		echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=news">'._('Múltiples bans').'</a> ]';
+	}
 
 	if (!empty($_REQUEST["op"])) {
 		echo '<form method="post" name="newban" action="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'">';
@@ -132,15 +137,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
-			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
-			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
-			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
-			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
-			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
-			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
-			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
-			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
-			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+			print_expiration_dates();
 			echo '</select>';
 			echo '</td><td>';
 			echo '<input type="hidden" name="new_ban" value="1" />';
@@ -155,15 +152,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
-			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
-			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
-			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
-			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
-			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
-			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
-			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
-			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
-			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+			print_expiration_dates();
 			echo '</select>';
 			echo '</td><td>';
 			echo '<input type="hidden" name="new_bans" value="1" />';
@@ -183,14 +172,7 @@ function admin_bans($ban_type) {
 			echo '</td><td>';
 			echo '<select name="ban_expire" id="ban_expire">';
 			echo '<option value="'.$ban->ban_expire.'">'.$ban->ban_expire.'</option>';
-			echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
-			echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
-			echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
-			echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
-			echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
-			echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
-			echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
-			echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+			print_expiration_dates();
 			echo '</select>';
 			echo '</td><td>';
 			echo '<input type="hidden" name="ban_id" value="'.$ban->ban_id.'" />';
@@ -218,14 +200,16 @@ function admin_bans($ban_type) {
 				$ban->ban_id = $ban_id;
 				$ban->read();
 				echo '<tr>';
-				echo '<td><em onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.clear(event);" >'.clean_text($ban->ban_text).'</em></td>';
-				echo '<td>'.clean_text(txt_shorter($ban->ban_comment, 30)).'</td>';
+				echo '<td onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.clear(event);" >'.clean_text($ban->ban_text).'</td>';
+				echo '<td style="overflow: hidden;white-space: nowrap;" onmouseover="return tooltip.ajax_delayed(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.clear(event);">'.clean_text(txt_shorter($ban->ban_comment, 50)).'</td>';
 				echo '<td>'.$ban->ban_date.'</td>';
 				echo '<td>'.$ban->ban_expire.'</td>';
 				echo '<td>';
-				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
-				echo '&nbsp;/&nbsp;';
-				echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+				if ($current_user->user_level=="god") {
+					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
+					echo '&nbsp;/&nbsp;';
+					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+				}
 				echo '</td>';
 				echo '</tr>';
 			}
@@ -238,4 +222,14 @@ function admin_bans($ban_type) {
 	do_pages($rows, $page_size, false);
 }
 
+function print_expiration_dates() {
+	echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+	echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
+	echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
+	echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
+	echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
+	echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
+	echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
+	echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
+}
 ?>

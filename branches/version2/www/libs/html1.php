@@ -129,7 +129,7 @@ function do_header($title, $id='home') {
 	if ($title != "login") {
 		if($current_user->authenticated) {
 	  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('cerrar sesión') . '</a></li>' . "\n";
-			if ($current_user->user_level=='god') {
+			if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
 				echo '<li><a href="'.$globals['base_url'].'admin/bans.php">'._('adm'). '</a></li>' . "\n";
 			}
   			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' . _('perfil de') . ' ' . $current_user->user_login . '</a></li>' . "\n";

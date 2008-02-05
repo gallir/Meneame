@@ -16,7 +16,7 @@ if (! defined('mnmpath')) {
 
 stats_increment('ajax');
 
-if (empty($_GET['id']) || $current_user->user_level != 'god') die;
+if (empty($_GET['id']) || ($current_user->user_level != 'god' && $current_user->user_level != 'admin')) die;
 $id = intval($_GET['id']);
 require_once(mnminclude.'ban.php');
 $ban=new Ban();
