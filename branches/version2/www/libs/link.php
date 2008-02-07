@@ -108,7 +108,10 @@ class Link {
 						// It's relative
 						$new_url = $url . $new_url;
 					}
-					if (!$this->check_url($new_url, $check_local, true)) return false;
+					if (!$this->check_url($new_url, $check_local, true)) {
+						$this->url = $new_url;
+						return false;
+					}
 					// Change the url if we were directed to another host
 					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
 						if ($url_components['host'] != $new_url_components['host']) {

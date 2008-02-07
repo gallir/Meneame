@@ -201,6 +201,7 @@ function do_submit1() {
 	}
 	
 	$linkres=new Link;
+	$linkres->url = $url;
 
 	$edit = false;
 
@@ -208,7 +209,7 @@ function do_submit1() {
 
 
 	if(!$linkres->check_url($url, true, true) || !$linkres->get($url)) {
-		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($url).'<br />';
+		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong></p><p> '.htmlspecialchars($linkres->url).'<br />';
 		echo '<br /><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
 		// If the domain is banned, decrease user's karma
 		if ($linkres->banned) {
@@ -252,7 +253,7 @@ function do_submit1() {
 	// it's done because there could be banned blogs like http://lacotelera.com/something
 	if(check_ban($blog->url, 'hostname', false, true)) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('El sitio') . " $blog->url ". _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
+		echo '<p>'._('El sitio') . " $blog->url ($globals[ban_text]) " . _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
 		print_empty_submit_form();
 		echo '</div>'. "\n";

@@ -45,9 +45,10 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 
 	$res=$db->get_col("SELECT ban_comment FROM bans WHERE $where");
 	if ($res) {
+		$globals['ban_text'] = $ban_text;
 		$globals['ban_message'] = '';
 		foreach ($res as $comment) {
-			$globals['ban_message'] .= "$ban_text: $comment ";
+			$globals['ban_message'] .= "$comment ";
 		}
 		return true;
 	}
