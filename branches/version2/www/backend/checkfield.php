@@ -57,6 +57,19 @@ switch ($type) {
 			echo $globals['ban_message'];
 			return;
 		}
+		echo "OK";
+		break;
+	case 'ban_punished_hostname':
+		if (strlen($name)>64) {
+			echo _('nombre demasiado largo');
+			return;
+		}
+		require_once(mnminclude.'ban.php');
+
+		if(check_ban($name, 'punished_hostname')) {
+			echo $globals['ban_message'];
+			return;
+		}
 
 		echo "OK";
 		break;

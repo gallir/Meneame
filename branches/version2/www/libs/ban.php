@@ -21,6 +21,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 	switch ($ban_type) {
 		case 'email':
 		case 'hostname':
+		case 'punished_hostname':
 			// Clean protocol and path/arguments
 			$ban_text = preg_replace('/^(https*|ftp):\/\//', '', $ban_text);
 			$ban_text = preg_replace('/(\/[^\/\?]+)[\/\?]+.*$/', '$1', $ban_text);
