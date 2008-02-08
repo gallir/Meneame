@@ -3,6 +3,7 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 include_once(mnminclude.'log.php');
+include_once(mnminclude.'ban.php');
 
 header("Content-Type: text/html");
 echo '<html><head><title>promote7.php</title></head><body>';
@@ -175,6 +176,8 @@ if ($links) {
 		$karma_neg_user = 0;
 		$karma_pos_ano = 0;
 
+		$link_modified = 0;
+
 		// Count number of votes
 		//$votes_pos = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level != 'disabled'"));
 		//$votes_neg = intval($db->get_var("select SQL_NO_CACHE count(*) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_value < 0 and vote_user_id = user_id and user_level != 'disabled'"));
@@ -186,7 +189,8 @@ if ($links) {
 			$link->votes = $votes_pos;
 			$link->anonymous = $votes_pos_anon;
 			$link->negatives = $votes_neg;
-			$link->store_basic();
+			$link_modified = 1;
+			//$link->store_basic();
 		}
 
 
@@ -252,35 +256,64 @@ if ($links) {
 		$aged_karma =  $karma_new * $oldd * $link->new_coef;
 		$dblink->karma=$aged_karma;
 
+
 		$changes = 0;
+		$link->message = '';
+
+		// Verify last published from the same site
+		$hours = 8;
+		$min_pub_coef = 0.8;
+		$last_site_published = (int) $db->get_var("select UNIX_TIMESTAMP(max(link_published_date)) from links where link_blog = $link->blog and link_published_date > date_sub(now(), interval $hours hour)");
+		if ($last_site_published > 0) {
+			$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
+			$dblink->karma *= $pub_coef;
+			$link->message .= '<br/> Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.';
+		}
+
+		
+		// Check domain and user punishments
+		if (check_ban($link->url, 'punished_hostname', false, true)) {
+			$dblink->karma *= 0.75;
+			$link->message .= '<br/>' . $globals['ban_message'];
+		}
+
+		// check if it's "media" and the metacategory coefficient is low
+		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
+			$dblink->karma *= 0.8;
+			$link->message .= '<br/>Image';
+		}
+
+		// Check if the user is banned disabled
+		if(check_ban($link->url, 'hostname', false, true)) {
+			$dblink->karma *= 0.66;
+			$link->message .= '<br/>Domain banned. ';
+		}
+
+		// Check if the  domain is banned
+		if ($user->level == 'disabled' ) {
+			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
+				$link->message .= "<br/>$user->username disabled herself, penalized.";
+			} else {
+				$link->message .= "<br/>$user->username disabled, probably due to abuses, penalized.";
+			}
+			$dblink->karma *= 0.66;
+		}
+
+		// check differences, if > 4 store it
 		if (abs($link->karma - $dblink->karma) > 4) {
-			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg);
+			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg) . $link->message;
 			if ($link->karma > $dblink->karma) 
 				$changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			$link->karma = round($dblink->karma);
 			$link->store_basic();
-		} else $link->message = '';
-		if ($user->level == 'disabled') {
-			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
-				$link->message .= " $user->username disabled herself, penalized.";
-				$do_publish = true;
-			} else {
-				$link->message .= " $user->username disabled, probably due to abuses, penalized.";
-				$do_publish = true;
-			}
-			$link->karma = $dblink->karma = round($link->karma*0.66);
-			$link->store_basic();
-			$changes = 1;
-		} else {
-				$do_publish = true;
 		}
+
 			
-		if ($do_publish && $link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
+		if ($link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
 			publish($link);
-
 			$changes = 3; // to show a "published" later	
 		} else {
 			if ($link->karma > $past_karma * $min_karma_coef && $link->karma > $last_resort_karma) {
@@ -289,6 +322,7 @@ if ($links) {
 			}
 		}
 		print_row($link, $changes);
+		usleep(10000);
 		$i++;
 	}
 	if ($published == 0 && $decay < 0.99) {
@@ -316,7 +350,7 @@ function print_row(&$link, $changes, &$log = '') {
 	echo "<td class='tdata$mod'>$link->meta_name</td>\n";
 	echo "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 	if (!empty($link->message)) {
-		echo "<br>$link->message";
+		echo "$link->message";
 	}
 	$link->message = '';
 	echo "</td>\n";
@@ -334,6 +368,7 @@ function print_row(&$link, $changes, &$log = '') {
 	}
 	echo "</td>";
 	echo "</tr>\n";
+	flush();
 	$row++;
 
 }
