@@ -44,13 +44,18 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 			return false;
 	}
 
-	$res=$db->get_col("SELECT ban_comment FROM bans WHERE $where");
+	$res=$db->get_results("SELECT ban_text, ban_comment FROM bans WHERE $where");
 	if ($res) {
-		$globals['ban_text'] = $ban_text;
+		$globals['ban_text'] = htmlentities($ban_text);
 		$globals['ban_message'] = '';
-		foreach ($res as $comment) {
-			$globals['ban_message'] .= "$comment ";
+		$globals['ban_match'] = '';
+		foreach ($res as $match) {
+			$globals['ban_match'] .= "$match->ban_text ";
+			$globals['ban_message'] .= "$match->ban_comment ";
 		}
+		// For security
+		$globals['ban_match'] = htmlentities(trim($globals['ban_match']));
+		$globals['ban_message'] = htmlentities(trim($globals['ban_message']));
 		return true;
 	}
 	return false;
