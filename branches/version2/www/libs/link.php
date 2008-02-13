@@ -160,7 +160,7 @@ class Link {
 		// Now we analyse the html to find links to banned domains
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
-		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html) && (!empty($this->pingback) || $this->has_rss() || !empty($this->trackback) || $this->trackback())) {
+		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
 			preg_match_all('/< *(meta +http-equiv|script|iframe|frame[^<]*>| *h[0-9][^<]*>[^<]*<a)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/< *(a|meta +http-equiv|script|iframe|frame[^<]*>)[^>]+(href|url|action|src)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
