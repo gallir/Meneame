@@ -209,7 +209,13 @@ function do_submit1() {
 
 
 	if(!$linkres->check_url($url, true, true) || !$linkres->get($url)) {
-		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong>: '.$globals['ban_match'].'</p>';
+		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong>: ';
+		if (!empty($globals['ban_match'])) {
+			echo $globals['ban_match'];
+		} else {
+			echo $linkres->url;
+		}
+		echo '</p>';
 		echo '<p><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
 		// If the domain is banned, decrease user's karma
 		if ($linkres->banned) {

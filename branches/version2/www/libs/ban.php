@@ -55,7 +55,6 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 		}
 		// For security
 		$globals['ban_match'] = htmlentities(trim($globals['ban_match']));
-		$globals['ban_message'] = htmlentities(trim($globals['ban_message']));
 		return true;
 	}
 	return false;
