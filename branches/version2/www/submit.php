@@ -469,15 +469,11 @@ function do_submit1() {
 
 	echo '<label for="title" accesskey="1">'._('título de la noticia').':</label>'."\n";
 	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
+	// Is it an image or video?
+	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	$linkres->print_content_type_buttons();
 
 	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
-
-	// Is it an image?
-	if ($linkres->content_type != 'image') {
-   		echo '&nbsp;&nbsp;<input type="checkbox" '.$imagechecked.' name="is_image" />';
-   	}
-   	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'"/>';
-
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
@@ -518,15 +514,16 @@ function do_submit2() {
 	$linkres->id=$link_id = intval($_POST['id']);
 	$linkres->read();
 
-	if ($_POST['is_image']) {
-		$linkres->content_type = 'image';
-	}
+	$linkres->read_content_type_buttons($_POST['type']);
 
 	// Check if the title contains [IMG], [IMGs], (IMG)... and mark it as image
 
 	if (preg_match('/[\(\[](IMG|PICT*)s*[\)\]]/i', $_POST['title'])) {
 		$_POST['title'] = preg_replace('/[\(\[](IMG|PICT*)s*[\)\]]/i', ' ', $_POST['title']);
 		$linkres->content_type = 'image';
+	} elseif (preg_match('/[\(\[](VID|VIDEO|Vídeo*)s*[\)\]]/i', $_POST['title'])) {
+		$_POST['title'] = preg_replace('/[\(\[](VID|VIDEO|Vídeo*)s*[\)\]]/i', ' ', $_POST['title']);
+		$linkres->content_type = 'video';
 	}
 
 	$linkres->category=intval($_POST['category']);

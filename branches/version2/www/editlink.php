@@ -73,6 +73,11 @@ function do_edit() {
 
 	echo '<label for="title" accesskey="2">'._('título de la noticia').':</label>'."\n";
 	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
+
+	// Is it an image or video?
+	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	$linkres->print_content_type_buttons();
+
 	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
 
 	// Allow to change the status
@@ -105,15 +110,6 @@ function do_edit() {
 		echo '</select>';
 	}
 
-	// Is it an image?
-	if ($linkres->content_type == 'image') {
-		$imagechecked = 'checked="checked"';
-	} else {
-		$imagechecked = '';
-	}
-	echo '&nbsp;&nbsp;<input type="checkbox" '.$imagechecked.' name="is_image" />';
-	echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'" />';
-
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="3">'._('etiquetas').':</label>'."\n";
@@ -143,11 +139,8 @@ function do_edit() {
 function do_save() {
 	global $linkres, $dblang, $current_user;
 
-	if ($_POST['is_image']) {
-		$linkres->content_type = 'image';
-	} elseif ($linkres->content_type == 'image') {
-		$linkres->content_type = 'text';
-	}
+	$linkres->read_content_type_buttons($_POST['type']);
+
 	$linkres->category=intval($_POST['category']);
 	if (!empty($_POST['url']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		$linkres->url = clean_input_url($_POST['url']);
