@@ -284,13 +284,13 @@ function do_submit1() {
 		}
 	}
 
-	// Check the user does not send too many images
+	// Check the user does not send too many images or vídeos
 	// they think this is a fotolog
-	if ($sents > 5 && $linkres->content_type == 'image') {
-		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90  day) and link_content_type = 'image' and link_votes > 0"));
+	if ($sents > 5 && ($linkres->content_type == 'image' || $linkres->content_type == 'video')) {
+		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90  day) and link_content_type in ('image', 'video') and link_votes > 0"));
 		if ($image_links > $sents * 0.3) {
-			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images sent by user ($current_user->user_login): $linkres->url");
-			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes').'</strong></p> ';
+			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $linkres->url");
+			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes o vídeos').'</strong></p> ';
 			echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
@@ -424,11 +424,11 @@ function do_submit1() {
 		}
 	}
 	// check there is no an "overflow" of images
-	if ($linkres->content_type == 'image') {
-		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type = 'image'"));
-		if ($image_links > 5 && $image_links > $links_12hs * 0.05) { // Only 5% images
+	if ($linkres->content_type == 'image' || $linkres->content_type == 'video') {
+		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type in ('image', 'video')"));
+		if ($image_links > 5 && $image_links > $links_12hs * 0.05) { // Only 5% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $linkres->url");
-			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes, espera unos minutos por favor').'</strong></p> ';
+			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor').'</strong></p> ';
 			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05). '</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
@@ -680,8 +680,8 @@ function report_dupe($url) {
 		$dupe->read();
 		echo '<p class="error"><strong>'._('noticia repetida!').'</strong></p> ';
 		echo '<p class="error-text">'._('lo sentimos').'</p>';
-		echo '<p class="error-text"><strong><a href="'.$dupe->get_permalink().'">'.$dupe->title.'</a></strong>';
-		echo '<br style="clear: both;" /><br style="clear: both;" />' . "\n";
+		$dupe->print_summary();
+		echo '<br style="clear: both;" /><br/>' . "\n";
 		echo '<form id="genericform" action="">';
 		echo '<input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
 		echo '</form>'. "\n";

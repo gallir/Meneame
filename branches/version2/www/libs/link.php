@@ -416,14 +416,15 @@ class Link {
 
 	function duplicates($url) {
 		global $db;
-		if (preg_match('/\/$/', $url)) {
-			$link_alternative = preg_replace('/\/$/', '', $url);
+		$trimmed = $db->escape(preg_replace('/\/$/', '', $url));
+		$list = "'$trimmed', '$trimmed/'";
+		if (preg_match('/^http:\/\/www\./', $trimmed)) {
+			$link_alternative = preg_replace('/^http:\/\/www\./', 'http://', $trimmed);
 		} else {
-			$link_alternative = $url . '/';
+			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
 		}
-		$link_url=$db->escape($url);
-		$link_alternative=$db->escape($link_alternative);
-		$found = $db->get_var("SELECT link_id FROM links WHERE (link_url = '$link_url' OR link_url = '$link_alternative') AND (link_status not in ('discard', 'abuse') OR link_votes>0) limit 1");
+		$list .= ", '$link_alternative', '$link_alternative/'";
+		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND (link_status not in ('discard', 'abuse') OR link_votes>0) limit 1");
 		return $found;
 	}
 
