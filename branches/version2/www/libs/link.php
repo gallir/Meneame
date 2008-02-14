@@ -453,7 +453,7 @@ class Link {
 		echo '<h1>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		if ($this->content_type == 'image') {
-			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" width="22" height="18" alt="'._('es una imagen').'" title="'._('es una imagen').'" />';
+			echo '&nbsp;&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="'._('es una imagen').'" title="'._('es una imagen').'" />';
 		}
 		echo '</h1>';
 
