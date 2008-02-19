@@ -458,7 +458,7 @@ class Link {
 		if ($this->content_type == 'image') {
 			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="'._('imagen').'" title="'._('imagen').'" />';
 		} elseif ($this->content_type == 'video') {
-			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('imagen').'" />';
+			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('vídeo').'" />';
 		}
 		echo '</h1>';
 

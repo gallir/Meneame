@@ -4,6 +4,10 @@ Notas de cosas que se _deben_ implementar tarde o temprano
 
 - "Subportadas" con una "subpublicación" por categorías como propuso unf. Así una noticia podría tener un estado adicional.
 
+- Categorías en las páginas de populares.
+
+- Metacategorías en la importación de favoritos.
+
 - Categorías configurables en el perfil.
 
 - Avisos JS por errores en comentarios.
