@@ -5,9 +5,11 @@ include(mnminclude.'trackback.php');
 
 stats_increment('other');
 
+$remote = $_SERVER["REMOTE_ADDR"];
+$local_ips = gethostbynamel($_SERVER["SERVER_NAME"]);
 
-if($_SERVER["SERVER_ADDR"] != $_SERVER["REMOTE_ADDR"]) {
-	syslog(LOG_NOTICE, "Menéame: Remote address $_SERVER[REMOTE_ADDR] is no local address ($_SERVER[SERVER_ADDR]).");
+if(!in_array($remote, $local_ips)) {
+	syslog(LOG_NOTICE, "Meneame: send_pingback remote address $_SERVER[REMOTE_ADDR] is no local address ($_SERVER[SERVER_ADDR]).");
 	echo "ein? $_SERVER[REMOTE_ADDR]\n";
 	die;
 }
