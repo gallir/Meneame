@@ -138,6 +138,9 @@ $anon_karma	= 4;
 
 // Don't touch behind this
 
+// Send logs to "log_user", is windows compatible
+openlog(false, LOG_ODELAY, LOG_USER);
+
 // Set an utf-8 locale if there is no utf-8 defined
 if (!preg_match('/utf-8/i', setlocale(LC_CTYPE, 0)))  {
 	setlocale(LC_CTYPE, "en_US.UTF-8");
