@@ -115,6 +115,7 @@ function do_header($title, $id='home') {
 	}
 
 	do_js_includes();
+	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;</script>'."\n";
 
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
