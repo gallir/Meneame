@@ -27,7 +27,7 @@ function avatars_manage_upload($user, $name) {
 	avatars_remove_user_files($user);
 	move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
 	$size = @getimagesize("$file_base-orig.img");
-	system("convert -quality 85 -resize 80x80! $file_base-orig.img $file_base-80.jpg");
+	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
 	if (!($size[0] == 80 && $size[1] == 80 && avatars_db_store($user, "$file_base-80.jpg"))) {
 		// Mark FALSE in DB
