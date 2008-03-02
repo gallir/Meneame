@@ -1,7 +1,9 @@
 <?
-include('../libs/sneak.php');
+include('../config.php');
+include(mnminclude.'sneak.php');
 header('Content-Type: text/javascript; charset=UTF-8');
 header('Cache-Control: max-age=3600');
+
 ?>
 
 
@@ -23,6 +25,21 @@ var ccnt = 0; 	// Connected counter
 
 var play = true;
 
+var recent_nicks = new Array();
+var friend_nicks = new Array();
+
+<?
+if ($current_user->user_id > 0) {
+	$friends = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from = $current_user->user_id and friend_value > 0 and user_id = friend_to");
+	if ($friends) {
+		$i = 0;
+		foreach ($friends as $friend) {
+			echo "friend_nicks[$i] = '".mb_strtolower($friend)."';\n";
+			$i++;
+		}
+	}
+}
+?>
 var global_options = new Object;
 global_options.show_vote = true;
 global_options.show_problem = true;
@@ -54,6 +71,18 @@ function start_sneak() {
 		check_control('post');
 		check_control('pubvotes');
 	}
+	// For autocompletion
+	$('#comment-input').keydown(function(event) { 
+			if(event.keyCode == 9 ||event.which == 9) {
+				event.returnValue = false;
+				event.preventDefault();
+				sneak_autocomplete();
+				return false;
+			} else {
+				return true;
+			}
+
+		});
 	do_play();
 	return false;
 }
@@ -113,6 +142,9 @@ function received_data(data) {
 			html = $('<div class="sneaker-item">'+to_html(new_data[i])+'</div>');
 			set_initial_display(html, i);
 			$('#items').prepend(html);
+			if (new_data[i].type == 'chat') {
+				sneak_add_recent_nicks(new_data[i].who);
+			}
 		}
 		if (do_animation) {
 			animation_timer = setInterval('animate_background()', 100);
@@ -327,5 +359,36 @@ function do_pause() {
 function do_play() {
 	play = true;
 	get_data();
+}
+
+function sneak_add_recent_nicks(user) {
+	user = user.toLowerCase();
+
+	// Return if is in friends
+	if (jQuery.inArray(user, friend_nicks)) return;
+
+	// Remove if the user is already in the list
+	recent_nicks = jQuery.grep(recent_nicks, function(n, i){
+						return (n != user);
+					});
+	recent_nicks.push(user);
+	if (recent_nicks.length > 30) {
+		removed = recent_nicks.shift();
+	}
+}
+
+function sneak_autocomplete() {
+		str = $('#comment-input').val();
+		if (str.length < 2) return false;
+		match = str.match(/\w+$/);
+		lastWord = match[0];
+		if (lastWord.length < 2) return false;
+		lastWord = lastWord.toLowerCase();
+		match = jQuery.grep(friend_nicks.concat(recent_nicks), function(n, i){
+						return n.slice(0,lastWord.length) == lastWord;
+					});
+		if (match.length == 1) {
+			$('#comment-input').val(str.replace(/\w+$/, match[0]));
+		}
 }
 
