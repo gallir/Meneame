@@ -117,7 +117,6 @@ while ($dbuser = mysql_fetch_object($result)) {
 			printf ("%07d ", $user->id);
 			print "Published links: karma0: $karma0\n";
 		}
-
 		$calculated++;
 
 /////////////////////
@@ -189,8 +188,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		}
 
+		//echo "Published giveN: $published_given Published links: $published_links No published: $nopublished_given Comments: $total_comments Links: $sent_links Average: $published_average\n";
 		// Bot and karmawhoring warning!!!
-		if ($karma2 > 0 && $published_given > $published_links/5 && $published_given > $nopublished_given*1.5 &&
+		if ($karma2 > 0 && $published_given > $published_links/10 && $published_given > $nopublished_given*1.5 &&
 				($published_average < 0.50 || 
 				($total_comments < $published_given/2 && $sent_links == 0)) 
 			) {
@@ -240,6 +240,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$punishment = min(1 + $negative_no_discarded/$max_allowed_negatives, 6);
 			printf ("%07d ", $user->id);
 			$karma3 -= $punishment;
+			$penalized = 1;
 			print "$user->username Unfair negative votes to non discarded ($negative_no_discarded > $max_allowed_negatives), punishment: $punishment, karma3 = $karma3\n";
 		}
 
@@ -250,7 +251,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 		
 		// Limit karma to users that does not send links and does not vote
-		if ($karma1 == 0 && $karma2 == 0 && $karma3 == 0 &&  $karma4 > 0 ) $karma4 = $karma4 * 0.6;
+		if ( $karma4 > 0 && $karma1 == 0 && $karma2 == 0 && $karma3 == 0 ) $karma4 = $karma4 * 0.5;
 		if ($karma4 != 0) {
 			printf ("%07d ", $user->id);
 			print "Comment votes received: votes: $comment_votes_count, votes karma: $comment_votes_sum, karma4: $karma4\n";	
@@ -260,13 +261,17 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) >= 6");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
+			$karma5 -= $karma0; // Take away karma0
+			if ($karma4 > 0) {
+				$karma5 -= $karma4 / 2; // Take away half karma4
+			}
 		}
 		if ($karma5 != 0) {
 			printf ("%07d ", $user->id);
+			$penalized = 1;
 			print "$user->username Unfair negative comments votes: $negative_abused_comment_votes_count, karma5: $karma5\n";	
 		}
 
-	
 		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5;
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
 		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized) $karma_base_user = $karma_base;

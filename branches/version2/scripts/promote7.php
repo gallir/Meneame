@@ -49,11 +49,11 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.88;
+$min_karma_coef = 0.85;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
-define (PUB_MAX, 70);
+define (PUB_MAX, 75);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
@@ -105,7 +105,7 @@ $limit_karma = round(min($past_karma,$min_karma) * 0.70);
 $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
-/// Coeficients to even metacategories
+/// Coeficients to balance metacategories
 $days = 3;
 $total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval $days day)");
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
@@ -122,7 +122,7 @@ foreach ($db_metas as $dbmeta) {
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
-	$meta_coef[$m] = max(min($meta_avg/$v, 1.25), 0.75);
+	$meta_coef[$m] = max(min($meta_avg/$v, 1.3), 0.7);
 	if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
@@ -197,9 +197,9 @@ if ($links) {
 		// Calculate the real karma for the link
 		// high =~ users with higher karma greater than average
 		// low =~ users with higher karma less-equal than average
-		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
-		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
-		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
+		$karma_pos_user_high = intval($db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value > $users_karma_avg_trunc"));
+		$karma_pos_user_equal = intval($db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value = $users_karma_avg_trunc"));
+		$karma_pos_user_low = intval($db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled' and vote_value < $users_karma_avg_trunc"));
 		//$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(vote_value-user_karma/2) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 		$karma_neg_user = intval($db->get_var("select SQL_NO_CACHE sum(-user_karma) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and user_level !='disabled'"));
 
@@ -239,7 +239,7 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
+		if ($link->content_type != 'image' && $now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
 			$link->new_coef = 2 - ($now-$link->date)/6300;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
@@ -301,7 +301,7 @@ if ($links) {
 
 		// check differences, if > 4 store it
 		if (abs($link->karma - $dblink->karma) > 4) {
-			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg) . $link->message;
+			$link->message = sprintf ("<br/>updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($dblink->karma), $votes_pos, $votes_pos_anon, $votes_neg) . $link->message;
 			if ($link->karma > $dblink->karma) 
 				$changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
