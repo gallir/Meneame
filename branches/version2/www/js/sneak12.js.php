@@ -365,7 +365,7 @@ function sneak_add_recent_nicks(user) {
 	user = user.toLowerCase();
 
 	// Return if is in friends
-	if (jQuery.inArray(user, friend_nicks)) return;
+	if (jQuery.inArray(user, friend_nicks) != -1) return;
 
 	// Remove if the user is already in the list
 	recent_nicks = jQuery.grep(recent_nicks, function(n, i){
