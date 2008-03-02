@@ -138,7 +138,7 @@ echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petició
 echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" onsubmit="return send_chat(this);">';
-	echo _('mensaje') . ': <input type="text" name="comment" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
+	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
 	echo '</form>';
 }
 echo '</div>' . "\n";
