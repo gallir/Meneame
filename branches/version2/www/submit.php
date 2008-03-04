@@ -177,8 +177,8 @@ function do_submit1() {
 	// avoid spams, an extra security check
 	// it counts the numbers of links in the last 2 hours
 	$same_user = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_author=$current_user->user_id and link_votes > 0");
-	$same_ip = $db->get_var("select count(*) from links, votes where link_date > date_sub(now(), interval 2 hour) and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int = ".$globals['user_ip_int']);
-	if ($same_user > 6 || $same_ip > 6 ) {
+	$same_ip = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_ip = '".$globals['user_ip']."' and link_votes > 0");
+	if ($same_user > 5 || $same_ip > 5 ) {
 		echo '<p class="error"><strong>'._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP').  '</strong></p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
