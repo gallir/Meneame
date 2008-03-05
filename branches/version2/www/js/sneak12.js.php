@@ -388,7 +388,7 @@ function sneak_autocomplete() {
 						return n.slice(0,lastWord.length) == lastWord;
 					});
 		if (match.length == 1) {
-			$('#comment-input').val(str.replace(/\w+$/, match[0]+" "));
+			$('#comment-input').val(str.replace(/\w+$/, match[0]));
 		}
 }
 
