@@ -25,9 +25,9 @@ $cat = intval($_REQUEST['category']);
 switch ($globals['meta']) {
 	case '_personal':
 		$globals['tag_status'] = 'queued';
-		//$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		//$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
-		$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+		//$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 7;
 		break;
