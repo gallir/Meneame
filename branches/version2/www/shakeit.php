@@ -138,7 +138,9 @@ function print_shakeit_tabs($option=-1) {
 	if (!$globals['bot']) {
 		echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
 	}
-	meta_teaser_item();
+	if ($current_user->user_id == 0) {
+		meta_teaser_item();
+	}
 
 	// Print RSS teasers
 	if ($option==1) { // All published
