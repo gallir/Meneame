@@ -49,7 +49,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.85;
+$min_karma_coef = 0.87;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
@@ -70,10 +70,10 @@ $from_time = "date_sub(now(), interval 5 day)";
 #$from_where = "FROM votes, links WHERE  
 
 
-$last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_published_date)) from links WHERE link_status='published'");
+$last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from links WHERE link_status='published'");
 if (!$last_published) $last_published = $now - 24*3600*30;
-$links_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 24 hour)");
-$links_published_projection = 4 * (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 6 hour)");
+$links_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 24 hour)");
+$links_published_projection = 4 * (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 6 hour)");
 
 $diff = $now - $last_published;
 
@@ -85,8 +85,8 @@ echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> 
 $continue = true;
 $published=0;
 
-$past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 7 day) and link_status='published'"));
-$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_published_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
+$past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 7 day) and link_status='published'"));
+$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
@@ -107,13 +107,13 @@ $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 /// Coeficients to balance metacategories
 $days = 3;
-$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_published_date > date_sub(now(), interval $days day)");
+$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)");
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
 	$meta = $dbmeta->category_id;
 	$meta_previous_coef[$meta] = $dbmeta->category_calculated_coef;
 	$meta_names[$meta] = $dbmeta->category_name;
-	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_published_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
@@ -136,7 +136,7 @@ foreach ($meta_coef as $m => $v) {
 // Karma average:  It's used for each link to check the balance of users' votes
 
 global $users_karma_avg;
-$users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links where link_status = 'published' and link_published_date > date_sub(now(), interval 72 hour)");
+$users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
@@ -263,7 +263,7 @@ if ($links) {
 		// Verify last published from the same site
 		$hours = 8;
 		$min_pub_coef = 0.8;
-		$last_site_published = (int) $db->get_var("select UNIX_TIMESTAMP(max(link_published_date)) from links where link_blog = $link->blog and link_published_date > date_sub(now(), interval $hours hour)");
+		$last_site_published = (int) $db->get_var("select UNIX_TIMESTAMP(max(link_date)) from links where link_blog = $link->blog and link_status = 'published' and link_date > date_sub(now(), interval $hours hour)");
 		if ($last_site_published > 0) {
 			$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
 			$dblink->karma *= $pub_coef;
@@ -279,7 +279,7 @@ if ($links) {
 
 		// check if it's "media" and the metacategory coefficient is low
 		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
-			$dblink->karma *= 0.8;
+			$dblink->karma *= 0.9;
 			$link->message .= '<br/>Image';
 		}
 
@@ -386,7 +386,7 @@ function publish(&$link) {
 	else $link->votes_avg = $votes_avg;
 
 	$link->status = 'published';
-	$link->published_date=time();
+	$link->date = $link->published_date=time();
 	$link->store_basic();
 
 	// Increase user's karma
