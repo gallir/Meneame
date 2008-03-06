@@ -506,9 +506,7 @@ function do_user_tabs($option, $user) {
 }
 
 function do_categories() {
-	global $current_user, $db;
-
-	if (!$current_user->user_id) return;
+	global $current_user, $db, $user;
 
 	if (is_array($_POST['categories'])) {
 		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category'");
@@ -521,17 +519,17 @@ function do_categories() {
 		}
 	}
 	echo '<div id="genericform">';
-	echo '<form action="" method="POST">';
-	print_categories_checkboxes();
-	echo '<input class="genericsubmit" type="submit" value="'._('grabar').'"/>';
-	echo '</form>';
+	print_categories_checkboxes($user);
 	echo '</div>';
 }
 
-function print_categories_checkboxes() {
+function print_categories_checkboxes($user) {
     global $db, $current_user;
 
-	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' ");
+	if ($user->id != $current_user->user_id) $disabled = 'disabled="true"';
+	else $disabled = false;
+
+	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $user->id and pref_key = 'category' ");
 	if ($selected_set) {
 		foreach ($selected_set as $cat) {
 			$selected["$cat"] = true;
@@ -539,19 +537,20 @@ function print_categories_checkboxes() {
 	} else {
 		$empty = true;
 	}
+	echo '<form action="" method="POST">';
 	echo '<fieldset style="clear: both;">';
-	echo '<legend>'._('selecciona las categorías que verás por defecto').'</legend>'."\n";
+	echo '<legend>'._('categorías personalizadas').'</legend>'."\n";
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
 	foreach ($metas as $meta) {
 		echo '<dl class="categorylist" id="meta-'.$meta->category_id.'"><dt>';
-		echo '<input name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
+		echo '<input '.$disabled.' name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
 		if ($empty) echo ' checked="true" ';
 		echo 'onchange="select_meta(this, '.$meta->category_id.')" ';
 		echo '/>';
 		echo $meta->category_name.'</dt>'."\n";
 		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
 		foreach ($categories as $category) {
-			echo '<dd><input name="categories[]" type="checkbox" ';
+			echo '<dd><input '.$disabled.' name="categories[]" type="checkbox" ';
 			if ($empty || $selected[$category->category_id]) echo ' checked="true" ';
 			echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
 		}
@@ -559,6 +558,10 @@ function print_categories_checkboxes() {
 	}
 	echo '<br style="clear: both;"/>' . "\n";
 	echo '</fieldset>';
+	if (!$disabled) {
+		echo '<input class="genericsubmit" type="submit" value="'._('grabar').'"/>';
+	}
+	echo '</form>';
 ?>
 <script type="text/javascript">
 function select_meta(input, meta) {
