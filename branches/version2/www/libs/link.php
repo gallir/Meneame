@@ -18,6 +18,7 @@ class Link {
 	var $karma = 0;
 	var $valid = false;
 	var $date = false;
+	var $sent_date = 0;
 	var $published_date = 0;
 	var $modified = 0;
 	var $url = false;
@@ -299,15 +300,16 @@ class Link {
 		$link_randkey = $this->randkey;
 		$link_category = $this->category;
 		$link_date = $this->date;
+		$link_sent_date = $this->sent_date;
 		$link_published_date = $this->published_date;
 		$link_content_type = $db->escape($this->content_type);
 		$link_ip = $db->escape($this->ip);
 		if($this->id===0) {
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
+			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
+			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
 		}
 		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
 			// This is a new link, add it to the events, it an additional control
@@ -331,7 +333,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
+		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->blog=$link->link_blog;
@@ -347,6 +349,7 @@ class Link {
 			$this->uri= $link->link_uri;
 			$this->title=$link->link_title;
 			$this->date=$link->link_ts;
+			$this->sent_date=$link->sent_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
 			$this->ip=$link->link_ip;
@@ -371,7 +374,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
+		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->username=$link->user_login;
@@ -397,6 +400,7 @@ class Link {
 			$this->tags=$link->link_tags;
 			$this->content=$link->link_content;
 			$this->date=$link->link_ts;
+			$this->sent_date=$link->sent_ts;
 			$this->published_date=$link->published_ts;
 			$this->modified=$link->modified_ts;
 			$this->ip=$link->link_ip;
@@ -480,13 +484,13 @@ class Link {
 			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 			// Print dates
 			if ($globals['now'] - $this->date > 604800) { // 7 days
-				echo _('el').get_date_time($this->date);
+				echo _('el').get_date_time($this->sent_date);
 				if($this->status == 'published')
-					echo ', '  ._('publicado el').get_date_time($this->published_date);
+					echo ', '  ._('publicado el').get_date_time($this->date);
 			} else {
-				echo _('hace').txt_time_diff($this->date);
+				echo _('hace').txt_time_diff($this->sent_date);
 				if($this->status == 'published')
-					echo ', '  ._('publicado hace').txt_time_diff($this->published_date);
+					echo ', '  ._('publicado hace').txt_time_diff($this->date);
 			}
 			echo "</div>\n";
 		}
@@ -728,6 +732,7 @@ class Link {
 		global $globals;
 		if(!$this->read) $this->read_basic();
 		$this->published_date = $globals['now'];
+		$this->date = $globals['now'];
 		$this->status = 'published';
 		$this->store_basic();
 	}
@@ -790,7 +795,7 @@ class Link {
 				($this->status != 'published' || 
 				// Allows to vote negative to published with high ratio of negatives
 				// or a link recently published
-					$this->status == 'published' && ($this->published_date > $globals['now'] - 3600 || $this->negatives > $this->votes/10) 
+					$this->status == 'published' && ($this->date > $globals['now'] - 3600 || $this->negatives > $this->votes/10) 
 					|| $this->warned);
 	}
 

@@ -444,6 +444,7 @@ function do_submit1() {
 	
 	// Now stores new draft
 	$linkres->ip = $globals['user_ip'];
+	$linkres->sent_date = $linkres->date=time();
 	$linkres->store();
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 2 de 3').'</h2>'."\n";
@@ -584,7 +585,7 @@ function do_submit3() {
 	// Check it is not in the queue already
 	if($linkres->votes == 0 && $linkres->status != 'queued') {
 		$linkres->status='queued';
-		$linkres->date=time();
+		$linkres->sent_date = $linkres->date=time();
 		$linkres->get_uri();
 		$linkres->store();
 		$linkres->insert_vote($current_user->user_id, $current_user->user_karma);
