@@ -162,8 +162,8 @@ if(!empty($_REQUEST['time'])) {
 		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category' ");
 		$user_login = $db->get_var("select user_login from users where user_id=$uid");
 		$title .= " -$user_login-";
-		$cats = implode(',', $categories);
 		if ($categories) {
+			$cats = implode(',', $categories);
 			$from_where .= " AND link_category in ($cats) ";
 		}
 	}
