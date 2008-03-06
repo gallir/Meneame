@@ -423,7 +423,7 @@ function meta_get_current() {
 	$globals['meta_current'] = 0;
 
 	if ($current_user->user_id > 0) {
-		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' ");
+		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
 		if ($categories) $current_user->has_personal = true;
 		else $globals['meta_categories'] = false;
 	}

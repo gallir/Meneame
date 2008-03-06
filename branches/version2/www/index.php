@@ -31,7 +31,9 @@ if ($globals['meta_current'] > 0) {
 } elseif ($current_user->user_id > 0) { // Check authenticated users
 	switch ($globals['meta']) {
 		case '_personal':
-			$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+			$from_where = "FROM links WHERE link_date > $from_time and link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			print_index_tabs(7); // Show "personal" as default
 			break;
 		case '_friends':
