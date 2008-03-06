@@ -18,7 +18,6 @@ if (!empty($globals['lounge'])) {
 }
 
 header("Content-type: text/html; charset=utf-8");
-meta_get_current();
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -448,6 +447,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
 	// Always return to page 1
+	$query=preg_replace('/meta=[a-z]*/', '', $query);
 	$query=preg_replace('/page=[0-9]*/', '', $query);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
 	if(!empty($query)) {
@@ -628,14 +628,14 @@ function print_categories_form($selected = 0) {
 	echo '<legend>'._('selecciona la categoría más apropiada').'</legend>'."\n";
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
 	foreach ($metas as $meta) {
-	echo '<dl class="categorylist"><dt>'.$meta->category_name.'</dt>'."\n";
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
-	foreach ($categories as $category) {
-	echo '<dd><input name="category" type="radio" ';
-	if ($selected == $category->category_id) echo '  checked="true" ';
-	echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
-	}
-	echo '</dl>'."\n";
+		echo '<dl class="categorylist"><dt>'.$meta->category_name.'</dt>'."\n";
+		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
+		foreach ($categories as $category) {
+			echo '<dd><input name="category" type="radio" ';
+			if ($selected == $category->category_id) echo '  checked="true" ';
+			echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
+		}
+		echo '</dl>'."\n";
 	}
 	echo '<br style="clear: both;"/>' . "\n";
 	echo '</fieldset>';

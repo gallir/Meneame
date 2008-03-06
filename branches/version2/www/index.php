@@ -10,6 +10,8 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 
+meta_get_current();
+
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
@@ -27,8 +29,11 @@ if ($globals['meta_current'] > 0) {
 	$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 	print_index_tabs(); // No other view
 } elseif ($current_user->user_id > 0) { // Check authenticated users
-	// Check the personalized views
 	switch ($globals['meta']) {
+		case '_personal':
+			$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			print_index_tabs(7); // Show "personal" as default
+			break;
 		case '_friends':
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 			$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
@@ -63,7 +68,7 @@ if ($links) {
 }
 
 do_pages($rows, $page_size);
-echo '</div> <!--index.php-->';
+echo '</div>';
 $globals['tag_status'] = 'published';
 do_footer();
 
@@ -75,6 +80,9 @@ function print_index_tabs($option=-1) {
 		$active[$option] = 'class="tabsub-this"';
 
 	echo '<ul class="tabsub-shakeit">'."\n";
+	if ($current_user->has_personal) {
+		echo '<li><a '.$active[7].' href="'.$globals['base_url'].'">'._('personal'). '</a></li>'."\n";
+	}
 	echo '<li><a '.$active[0].' href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
 	// Do metacategories list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
@@ -87,8 +95,9 @@ function print_index_tabs($option=-1) {
 	}
 	if ($current_user->user_id > 0) {
 		echo '<li><a '.$active[1].' href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
+	} else {
+		meta_teaser_item();
 	}
-	meta_teaser_item();
 
 	// Print RSS teasers
 	if ($option==0) { // All published

@@ -76,6 +76,7 @@ if ($view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$u
 }
 
 switch ($view) {
+	case 'categories':
 	case 'history':
 	case 'commented':
 	case 'shaken':
@@ -123,6 +124,10 @@ switch ($view) {
 		do_user_tabs(6, $login);
 		do_favorites();
 		do_pages($rows, $page_size);
+		break;
+	case 'categories':
+		do_user_tabs(8, $login);
+		do_categories();
 		break;
 	case 'profile':
 	default:
@@ -487,6 +492,7 @@ function do_user_tabs($option, $user) {
 
 	echo '<ul class="tabsub">'."\n";
 	echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+	echo '<li><a '.$active[8].' href="'.get_user_uri($user, 'categories').'">'._('categorías'). '</a></li>';
 	echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
 	echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 	if (! $globals['bot']) {
@@ -497,7 +503,72 @@ function do_user_tabs($option, $user) {
 	}
 	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '</a></li>';
 	echo '</ul>';
-
 }
 
+function do_categories() {
+	global $current_user, $db;
+
+	if (!$current_user->user_id) return;
+
+	if (is_array($_POST['categories'])) {
+		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category'");
+		$total = (int) $db->get_var("SELECT count(*) FROM categories WHERE category_parent != 0");
+		if (count($_POST['categories']) < $total) {
+			for ($i=0; $i<count($_POST['categories']); $i++){ 
+				$cat = intval($_POST['categories'][$i]); 
+				$db->query("insert into prefs (pref_user_id, pref_key, pref_value) values ($current_user->user_id, 'category', $cat)");
+			}
+		}
+	}
+	echo '<div id="genericform">';
+	echo '<form action="" method="POST">';
+	print_categories_checkboxes();
+	echo '<input class="genericsubmit" type="submit" value="'._('grabar').'"/>';
+	echo '</form>';
+	echo '</div>';
+}
+
+function print_categories_checkboxes() {
+    global $db, $current_user;
+
+	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' ");
+	if ($selected_set) {
+		foreach ($selected_set as $cat) {
+			$selected["$cat"] = true;
+		}
+	} else {
+		$empty = true;
+	}
+	echo '<fieldset style="clear: both;">';
+	echo '<legend>'._('selecciona las categorías que verás por defecto').'</legend>'."\n";
+	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
+	foreach ($metas as $meta) {
+		echo '<dl class="categorylist" id="meta-'.$meta->category_id.'"><dt>';
+		echo '<input name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
+		if ($empty) echo ' checked="true" ';
+		echo 'onchange="select_meta(this, '.$meta->category_id.')" ';
+		echo '/>';
+		echo $meta->category_name.'</dt>'."\n";
+		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
+		foreach ($categories as $category) {
+			echo '<dd><input name="categories[]" type="checkbox" ';
+			if ($empty || $selected[$category->category_id]) echo ' checked="true" ';
+			echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
+		}
+		echo '</dl>'."\n";
+	}
+	echo '<br style="clear: both;"/>' . "\n";
+	echo '</fieldset>';
+?>
+<script type="text/javascript">
+function select_meta(input, meta) {
+	if (input.checked) new_value = true;
+	else new_value = false;
+	meta_id = '#meta-'+meta;
+	$(meta_id+' input').attr({checked: new_value});
+	return false;
+}
+</script>
+<?
+}
 ?>

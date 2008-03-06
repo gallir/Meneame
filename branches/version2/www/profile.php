@@ -149,17 +149,6 @@ function show_profile() {
 	print_checkbox('comment_pref', $user->comment_pref & 1);
 	echo '</p>';
 
-
-	echo '<p>'._('mostrar sólo noticias amigos por defecto').':&nbsp;';
-	print_checkbox('show_friends', $user->comment_pref & 2);
-	echo '</p>';
-
-	/*
-	echo '<p>'._('mostrar sólo 2 columnas').':&nbsp;';
-	print_checkbox('show_2cols', $user->comment_pref & 4);
-	echo '</p>';
-	*/
-
 	echo '</fieldset>';
 
 

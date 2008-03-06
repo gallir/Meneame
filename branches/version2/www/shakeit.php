@@ -13,6 +13,8 @@ include(mnminclude.'link.php');
 //header('Cache-Control: max-age=0, must-revalidate');
 header('Cache-Control: no-cache');
 
+meta_get_current();
+
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
@@ -21,6 +23,12 @@ $globals['ads'] = true;
 $cat = intval($_REQUEST['category']);
 
 switch ($globals['meta']) {
+	case '_personal':
+		$globals['tag_status'] = 'queued';
+		$order_by = " ORDER BY link_date DESC ";
+		$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+		$tab = 7;
+		break;
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -109,6 +117,9 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	echo '<ul class="tabsub-shakeit">'."\n";
+	if ($current_user->has_personal) {
+		echo '<li><a '.$active[7].' href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a></li>'."\n";
+	}
 	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
 	// Do metas' list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
