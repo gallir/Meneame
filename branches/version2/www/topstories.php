@@ -22,8 +22,8 @@ $offset=($current_page-1)*$page_size;
 
 // Select a month and year
 if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE YEAR(link_published_date) = $year AND MONTH(link_published_date) = $month AND link_status = 'published' ORDER BY link_votes DESC ";
-	$time_link = "YEAR(link_published_date) = $year AND MONTH(link_published_date) = $month AND";
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE YEAR(link_date) = $year AND MONTH(link_date) = $month AND link_status = 'published' ORDER BY link_votes DESC ";
+	$time_link = "YEAR(link_date) = $year AND MONTH(link_date) = $month AND";
 } else {
 	// Select from a start date
 	$from = intval($_GET['range']);
@@ -37,8 +37,8 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	if ($range_values[$from] > 0) {
 		// we use this to allow sql caching
 		$from_time = '"'.date("Y-m-d H:i:00", time() - 86400 * $range_values[$from]).'"';
-		$sql = "SELECT link_id, link_votes+link_anonymous as votes FROM links WHERE  link_published_date > $from_time AND  link_status = 'published' ORDER BY votes DESC ";
-		$time_link = "link_published_date > $from_time AND";
+		$sql = "SELECT link_id, link_votes+link_anonymous as votes FROM links WHERE  link_date > $from_time AND  link_status = 'published' ORDER BY votes DESC ";
+		$time_link = "link_date > $from_time AND";
 	} else {
 		// Default
 		$sql = "SELECT link_id, link_votes+link_anonymous as votes FROM links WHERE link_status = 'published' ORDER BY votes DESC ";

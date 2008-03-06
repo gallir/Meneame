@@ -39,7 +39,7 @@ echo '<div id="banner"><img src="images/banner.png" alt="MeneameDS" /></div>' . 
 
 echo '<div id="container">';
 
-$links = $db->get_col("SELECT link_id $from_where order by link_published_date desc LIMIT $page_size");
+$links = $db->get_col("SELECT link_id $from_where order by link_date desc LIMIT $page_size");
 
 
 if ($links) {

@@ -75,7 +75,7 @@ function do_stats2($string) {
 	$comment .= _('votos comentarios') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='comments' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('votos notas') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='posts' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('artículos') . ':&nbsp;' . $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour)") . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_published_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('publicados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('descartados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'comment_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';
 	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'post_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';

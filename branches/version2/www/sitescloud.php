@@ -25,7 +25,7 @@ $range_values = array(1, 2, 7, 30, 365, 0);
 if(($from = check_integer('range')) >= 0 && $from < count($range_values) && $range_values[$from] > 0 ) {
 	// we use this to allow sql caching
 	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$from_where = "FROM blogs, links WHERE  link_published_date > $from_time and link_status = 'published' and link_lang = '$dblang' and link_blog = blog_id";
+	$from_where = "FROM blogs, links WHERE  link_date > $from_time and link_status = 'published' and link_lang = '$dblang' and link_blog = blog_id";
 } else {
 	$from_where = "FROM blogs, links WHERE link_status = 'published' and link_lang = '$dblang' and link_blog = blog_id";
 }

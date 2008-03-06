@@ -42,7 +42,7 @@ if ($globals['meta_current'] > 0) {
 
 echo '<div id="container">';
 
-$links = $db->get_col("SELECT link_id $from_where order by link_published_date desc LIMIT $page_size");
+$links = $db->get_col("SELECT link_id $from_where order by link_date desc LIMIT $page_size");
 
 
 if ($links) {
@@ -59,13 +59,13 @@ if ($links) {
 		echo ' '._('por').' <strong>'.$link->username.'</strong> ';
 		// Print dates
 		if (time() - $link->date > 604800) { // 7 days
-			echo _('el').get_date_time($link->date);
+			echo _('el').get_date_time($link->sent_date);
 			if($link->status == 'published')
-				echo ', '  ._('publicado el').get_date_time($link->published_date);
+				echo ', '  ._('publicado el').get_date_time($link->date);
 		} else {
-			echo _('hace').txt_time_diff($link->date);
+			echo _('hace').txt_time_diff($link->sent_date);
 			if($link->status == 'published')
-				echo ', '  ._('publicado hace').txt_time_diff($link->published_date);
+				echo ', '  ._('publicado hace').txt_time_diff($link->date);
 		}
 		echo '</p>' ."\n";
 

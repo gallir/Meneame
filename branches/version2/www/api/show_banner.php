@@ -32,7 +32,7 @@ if ($res) {
 	$url['most'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
 
-$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links where link_status = 'published' order by link_published_date desc limit 1");
+$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links where link_status = 'published' order by link_date desc limit 1");
 if ($res) {
 	$title['published'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
 	$url['published'] = "http://".get_server_name()."/story.php?id=$res->link_id";

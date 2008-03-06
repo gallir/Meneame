@@ -28,8 +28,7 @@ switch ($type) {
 		if ($id > 0) $cond = add_cond($cond, "link_id = $id");
 		else {
 			if ($from > 0) {
-				if ($status == 'published') $cond = add_cond($cond, "link_published_date > date_sub(now(), interval $from hour)");
-				else $cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
+				$cond = add_cond($cond, "link_date > date_sub(now(), interval $from hour)");
 			}
 			if ($status) $cond = add_cond($cond, "link_status = '$status'");
 		}

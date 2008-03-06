@@ -55,7 +55,7 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 if($cat) {
 	$from_where .= " AND link_category=$cat ";
 }
-$order_by = " ORDER BY link_published_date DESC ";
+$order_by = " ORDER BY link_date DESC ";
 
 $link = new Link;
 $rows = $db->get_var("SELECT count(*) $from_where");

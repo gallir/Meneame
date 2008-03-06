@@ -111,8 +111,8 @@ if(!empty($_REQUEST['time'])) {
 	
 	switch ($status) {
 		case 'published':
-			$order_field = 'link_published_date';
-			$link_date = 'published_date';
+			$order_field = 'link_date';
+			$link_date = 'date';
 			$title = _('Menéame: publicadas');
 			break;
 		case 'queued':

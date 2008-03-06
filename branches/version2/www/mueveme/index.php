@@ -31,7 +31,7 @@ echo '<a href="notame/">Nótame</a>';
 echo '</div>';
 
 echo "<ul>\n";
-$links = $db->get_col("SELECT link_id from links where link_status='published' order by link_published_date desc LIMIT $page_size");
+$links = $db->get_col("SELECT link_id from links where link_status='published' order by link_date desc LIMIT $page_size");
 if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;

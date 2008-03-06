@@ -480,7 +480,7 @@ function meta_get_current() {
 
 function meta_get_categories_list($id) {
 	global $db;
-	$categories = $db->get_col("SELECT category_id FROM categories WHERE category_parent = $id");
+	$categories = $db->get_col("SELECT category_id FROM categories WHERE category_parent = $id order by category_id");
 	if (!$categories) return false;
 	return implode(',', $categories);
 }
