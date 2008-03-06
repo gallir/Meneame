@@ -62,6 +62,12 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 </li>
 
 <li>
+<h4>No puedo votar negativo ni/o los comentarios</h4>
+<p>Hace falta un karma mínimo para votar negativo las noticias y otro para cualquier voto a los comentarios.  En <a href="http://meneame.wikispaces.com/Karma">el Wiki</a> informamos del karma mínimo del momento --puede variar-- para estos votos.</p>
+</li>
+
+
+<li>
 <h4>¿Cómo se seleccionan las noticias que se publican en la portada?</h4>
 <p>Lo hace un proceso que se ejecuta cada cinco minutos.</p>
 
