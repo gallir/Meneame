@@ -436,7 +436,7 @@ function meta_get_current() {
 		$globals['meta']  = clean_input_string($_REQUEST['meta']);
 		// Special metas begin with _
 		if ($globals['meta'][0] == '_') {
-			if ($globals['meta_user_default'] > 0) {
+			if ($current_user->has_personal || $globals['meta_user_default'] > 0) {
 				$globals['meta_skip'] = '?meta=_all';
 			}
 			return 0;

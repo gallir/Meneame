@@ -135,7 +135,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta'])) {
+	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta']) && empty($_REQUEST['personal'])) {
 		check_redirect_to_feedburner($status);
 	}
 	
@@ -158,6 +158,14 @@ if(!empty($_REQUEST['time'])) {
 		$from_where .= " AND link_category=$cat ";
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $cat AND category_lang='$dblang'");
 		$title .= " -$category_name-";
+	} elseif(($uid=check_integer('personal'))) {
+		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category' ");
+		$user_login = $db->get_var("select user_login from users where user_id=$uid");
+		$title = _('Menéame: personal de') . ' ' . $user_login;
+		$cats = implode(',', $categories);
+		if ($categories) {
+			$from_where .= " AND link_category in ($cats) ";
+		}
 	}
 	
 	if($_REQUEST['q']) {
@@ -170,7 +178,7 @@ if(!empty($_REQUEST['time'])) {
 	}
 	
 	$order_by = " ORDER BY $order_field DESC ";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max($order_field)) links $from_where");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) links $from_where $order LIMIT 1");
 	if ($if_modified > 0) {
 		$from_where .= " AND $order_field > FROM_UNIXTIME($if_modified)";
 	}

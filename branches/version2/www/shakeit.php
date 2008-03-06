@@ -25,8 +25,9 @@ $cat = intval($_REQUEST['category']);
 switch ($globals['meta']) {
 	case '_personal':
 		$globals['tag_status'] = 'queued';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 		$order_by = " ORDER BY link_date DESC ";
-		$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 		$tab = 7;
 		break;
 	case '_friends':
@@ -143,12 +144,16 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	// Print RSS teasers
-	if ($option==1) { // All published
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
-	} elseif ($globals['meta_current'] > 0) { // A meta rss
-		echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+	switch ($option) {
+		case 1: // All, queued
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			break;
+		case 7: // Personalised, queued
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			break;
+		default:
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	}
-
 
 	echo '</ul>'."\n";
 }
