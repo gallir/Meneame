@@ -17,6 +17,8 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
+$globals['start_time'] = microtime(true);
+
 header("Content-type: text/html; charset=utf-8");
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
@@ -205,6 +207,7 @@ function do_footer($credits = true) {
 	@include('ads/stats.inc');
 	// Store as html page load
 	stats_increment('html');
+	printf("\n<!--Generated in %4.3f seconds-->\n", microtime(true) - $globals['start_time']);
 	echo "</body></html>\n";
 }
 

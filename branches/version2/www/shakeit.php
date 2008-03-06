@@ -19,7 +19,6 @@ $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
 
-
 $cat = intval($_REQUEST['category']);
 
 switch ($globals['meta']) {
@@ -61,11 +60,10 @@ switch ($globals['meta']) {
 	case '_all':
 	default:
 		$globals['tag_status'] = 'queued';
-		// Show last in seven days
-		//$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$order_by = " ORDER BY link_date DESC ";
 		if ($globals['meta_current'] > 0) {
-			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
 			//$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
