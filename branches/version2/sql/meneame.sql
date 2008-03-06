@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.45-Debian_1~bpo.1-log
+-- Server version	5.0.45-5-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,7 +33,7 @@ CREATE TABLE `avatars` (
 DROP TABLE IF EXISTS `bans`;
 CREATE TABLE `bans` (
   `ban_id` int(10) unsigned NOT NULL auto_increment,
-  `ban_type` enum('email','hostname','ip','words','proxy') NOT NULL,
+  `ban_type` enum('email','hostname','punished_hostname','ip','words','proxy') NOT NULL,
   `ban_text` char(64) NOT NULL,
   `ban_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `ban_expire` timestamp NULL default NULL,
@@ -199,6 +199,7 @@ CREATE TABLE `links` (
   `link_karma` decimal(10,2) NOT NULL default '0.00',
   `link_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `link_date` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `link_sent_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `link_published_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `link_category` int(11) NOT NULL default '0',
   `link_lang` char(2) character set utf8 NOT NULL default 'es',
@@ -214,9 +215,9 @@ CREATE TABLE `links` (
   KEY `link_url` (`link_url`),
   KEY `link_uri` (`link_uri`),
   KEY `link_blog` (`link_blog`),
-  KEY `link_status` (`link_status`,`link_published_date`),
-  KEY `link_status_2` (`link_status`,`link_date`),
-  KEY `link_author` (`link_author`,`link_date`)
+  KEY `link_author` (`link_author`,`link_date`),
+  KEY `link_date` (`link_date`),
+  KEY `link_status` (`link_status`,`link_date`,`link_category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -244,7 +245,7 @@ CREATE TABLE `logs` (
 DROP TABLE IF EXISTS `pageloads`;
 CREATE TABLE `pageloads` (
   `date` date NOT NULL,
-  `type` enum('html','ajax','other','rss','image','api','sneaker','redirection','geo') NOT NULL default 'html',
+  `type` enum('html','ajax','other','rss','image','api','sneaker','bot','geo') NOT NULL default 'html',
   `counter` int(11) NOT NULL default '0',
   PRIMARY KEY  (`date`,`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -279,7 +280,7 @@ CREATE TABLE `prefs` (
   `pref_user_id` int(11) NOT NULL,
   `pref_key` char(16) character set utf8 collate utf8_spanish_ci NOT NULL,
   `pref_value` char(6) character set utf8 collate utf8_spanish_ci NOT NULL,
-  UNIQUE KEY `pref_user_id` (`pref_user_id`,`pref_key`)
+  KEY `pref_user_id` (`pref_user_id`,`pref_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -293,6 +294,17 @@ CREATE TABLE `sneakers` (
   `sneaker_user` int(10) unsigned NOT NULL default '0',
   UNIQUE KEY `sneaker_id` (`sneaker_id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8 MAX_ROWS=1000;
+
+--
+-- Table structure for table `sph_counter`
+--
+
+DROP TABLE IF EXISTS `sph_counter`;
+CREATE TABLE `sph_counter` (
+  `counter_id` int(11) NOT NULL,
+  `max_doc_id` int(11) NOT NULL,
+  PRIMARY KEY  (`counter_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tags`
@@ -409,4 +421,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-01-13 16:17:39
+-- Dump completed on 2008-03-06 21:20:52
