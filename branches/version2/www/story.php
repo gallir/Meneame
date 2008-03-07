@@ -125,7 +125,7 @@ do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_i
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
 if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_adcode)) {
-	$globals['do_user_ad'] = $link->user_karma * 2;
+	$globals['do_user_ad'] = $link->user_karma;
 	$globals['user_adcode'] = $link->user_adcode;
 	$globals['user_adchannel'] = $user->adchannel;
 }
@@ -239,7 +239,7 @@ case 3:
 	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
-	if ($globals['link']->date < $globals['now'] - 7776000) { // older than 90 days
+	if ($globals['link']->sent_date < $globals['now'] - 60*86400) { // older than 60 days
 		echo _('Noticia antigua, datos de votos archivados');
 	} else {
 		include(mnmpath.'/backend/meneos.php');
@@ -465,7 +465,7 @@ function print_story_tabs($option) {
 	echo '<li><a '.$active[2].' href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
 	echo '<li><a '.$active[7].' href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
-		if ($globals['link']->date > $globals['now'] - 7776000) { // newer than 90 days
+		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li><a '.$active[3].' href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
 		echo '<li><a '.$active[6].' href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
