@@ -121,7 +121,7 @@ function do_header($title, $id='home') {
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
 	echo '<div id="logo">'  . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="la elefanta Eli"><img src="'.$globals['base_url'].'img/es/logo02.png" alt="logo menéame" /></a>';
+	echo '<a href="'.$globals['base_url'].'" title="la elefanta Eli"><img src="'.$globals['base_url'].$globals['top_logo'].'" alt="logo menéame" /></a>';
 	echo '</div>'  . "\n";
 
 	echo '<div id="header">' . "\n";
