@@ -178,7 +178,7 @@ if(!empty($_REQUEST['time'])) {
 	}
 	
 	$order_by = " ORDER BY $order_field DESC ";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) links $from_where $order LIMIT 1");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) links $from_where $order_by LIMIT 1");
 	if ($if_modified > 0) {
 		$from_where .= " AND $order_field > FROM_UNIXTIME($if_modified)";
 	}

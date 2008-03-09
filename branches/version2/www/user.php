@@ -270,11 +270,11 @@ function do_profile() {
 	// Show first numbers of the address if the user has god privileges
 	if ($current_user->user_level == 'god' &&
 			$user->level != 'god' && $user->level != 'admin' ) { // tops and admins know each other for sure, keep privacy
-		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id and vote_date > date_sub(now(), interval 30 day) order by vote_date desc limit 1000");
+		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
 		if (! $addresses) {
-			$addresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 1000");
+			$addresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
 		}
 
 		// Not addresses to show
