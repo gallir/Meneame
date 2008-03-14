@@ -364,16 +364,13 @@ function do_play() {
 function sneak_add_recent_nicks(user) {
 	user = user.toLowerCase();
 
-	// Return if is in friends
-	if (jQuery.inArray(user, friend_nicks) != -1) return;
-
 	// Remove if the user is already in the list
 	recent_nicks = jQuery.grep(recent_nicks, function(n, i){
 						return (n != user);
 					});
-	recent_nicks.push(user);
+	recent_nicks.unshift(user);
 	if (recent_nicks.length > 30) {
-		removed = recent_nicks.shift();
+		removed = recent_nicks.pop();
 	}
 }
 
@@ -384,10 +381,17 @@ function sneak_autocomplete() {
 		lastWord = match[0];
 		if (lastWord.length < 2) return false;
 		lastWord = lastWord.toLowerCase();
-		match = jQuery.grep(friend_nicks.concat(recent_nicks), function(n, i){
+		// Search in recent nicks
+		match = jQuery.grep(recent_nicks, function(n, i){
 						return n.slice(0,lastWord.length) == lastWord;
 					});
-		if (match.length == 1) {
+		// If not found, search in friends
+		if (match.length == 0) {
+			match = jQuery.grep(friend_nicks, function(n, i){
+							return n.slice(0,lastWord.length) == lastWord;
+						});
+		}
+		if (match.length > 0) {
 			$('#comment-input').val(str.replace(/\w+$/, match[0]));
 		}
 }
