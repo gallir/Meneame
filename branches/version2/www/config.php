@@ -59,6 +59,7 @@ $globals['comments_page_threshold'] = 1.10;
 $globals['comment_edit_time'] = 240;
 
 //$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
+$globals['max_sneakers'] = 250;
 $globals['max_comments'] = 2718;
 $globals['time_enabled_comments'] = 604800; // 7 days
 $globals['time_enabled_votes'] = 345600; // 4 days

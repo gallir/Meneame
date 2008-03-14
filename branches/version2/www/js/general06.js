@@ -120,7 +120,7 @@ function updateLinkValues (id, votes, negatives, karma, value) {
 	$('#a-neg-' + id).html(negatives+"");
 	$('#a-karma-' + id).html(karma+"");
 	if (value > 0) {
-		disable_vote_link(id, "meneado", '#FFFFFF');
+		disable_vote_link(id, "¡chachi!", '#FFFFFF');
 		disable_problem_form(id);
 	} else if (value < 0) {
 		disable_vote_link(id, ":-(", '#FFFFFF');

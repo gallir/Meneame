@@ -621,8 +621,7 @@ class Link {
 			} elseif( !$this->voted) {
 				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
 			} else {
-				//if ($this->voted > 0) $mess = _('&#161;chachi!');
-				if ($this->voted > 0) $mess = _('meneado');
+				if ($this->voted > 0) $mess = _('&#161;chachi!');
 				else $mess = ':-(';
 				echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
 			}
