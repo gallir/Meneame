@@ -64,7 +64,7 @@ if ($posts) {
 		$post->read();
 		$title = strip_tags(text_to_summary($post->content, 40));
 		$title = $post->username.': ' . htmlentities2unicodeentities($title);
-		$content = put_smileys(save_text_to_html($post->content));
+		$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($post->content)));
 		echo "	<item>\n";
 		echo "		<title>$title</title>\n";
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";
@@ -103,6 +103,7 @@ function do_header($title) {
 	header('Content-type: text/xml; charset=UTF-8', true);
 	echo '<?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	echo '<rss version="2.0" '."\n";
+	echo '  xmlns:atom="http://www.w3.org/2005/Atom"'."\n";
 	echo '	xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
 	echo '	xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
 	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
@@ -110,8 +111,9 @@ function do_header($title) {
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo '	<title>'.$title.'</title>'."\n";
+	echo '  <atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
 	echo '	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
-	echo "	<image><title>".get_server_name()."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
+	echo "	<image><title>".$title."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
 	echo '	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo '	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo '	<generator>http://blog.meneame.net/</generator>'."\n";

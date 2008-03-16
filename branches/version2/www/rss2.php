@@ -194,7 +194,7 @@ if ($links) {
 		$link->id=$link_id;
 		$link->read();
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
-		$content = text_to_html($link->content);
+		$content = text_to_html(htmlentities2unicodeentities($link->content));
 		echo "	<item>\n";
 		// Title must not carry htmlentities
 		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
