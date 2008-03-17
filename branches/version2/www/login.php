@@ -52,7 +52,7 @@ function do_login() {
 	
 	$previous_login_failed =  log_get_date('login_failed', $globals['original_user_ip_int'], 0, 90);
 
-	if(!$previous_login_failed && empty($_POST["processlogin"])) {
+	if($previous_login_failed < 3 && empty($_POST["processlogin"])) {
 		echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
 		// gallir: Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
@@ -96,13 +96,13 @@ function do_login() {
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
-		if ($previous_login_failed  && !ts_is_human()) {
-			log_conditional_insert('login_failed', $globals['original_user_ip_int'], 0, 60);
+		if ($previous_login_failed > 2  && !ts_is_human()) {
+			log_insert('login_failed', $globals['original_user_ip_int'], 0);
 			recover_error(_('El código de seguridad no es correcto!'));
 		} elseif ($current_user->Authenticate($username, $password, $persistent) == false) {
-			log_conditional_insert('login_failed', $globals['original_user_ip_int'], 0, 60);
+			log_insert('login_failed', $globals['original_user_ip_int'], 0);
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
-			$previous_login_failed = true;
+			$previous_login_failed++;
 		} else {
 			if(!empty($_REQUEST['return'])) {
 				header('Location: '.$_REQUEST['return']);
@@ -119,7 +119,7 @@ function do_login() {
 	echo '<p class="l-mid"><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p class="l-mid"><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
-	if ($login_failed || $previous_login_failed) {
+	if ($previous_login_failed > 2) {
 		ts_print_form();
 	}
 	echo '<p class="l-bot"><input type="submit" value="login" class="genericsubmit" tabindex="4" />'."\n";
