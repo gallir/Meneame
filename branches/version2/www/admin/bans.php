@@ -67,7 +67,8 @@ function admin_bans($ban_type) {
 	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length, $current_user;
 	require_once(mnminclude.'ban.php');
 
-	if ($current_user->user_level=="god") {
+	$key = get_security_key();
+	if ($current_user->user_level=="god" && $_REQUEST["key"] == $key) {
 		if (!empty($_REQUEST["new_ban"])) {
 			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
 		} elseif (!empty($_REQUEST["edit_ban"])) {
@@ -79,7 +80,7 @@ function admin_bans($ban_type) {
 				insert_ban($ban_type, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
 			}
 		} elseif (!empty($_REQUEST["del_ban"])) {
-			del_ban($_POST["ban_id"]);
+			del_ban($_REQUEST["del_ban"]);
 		}
 	}
 	
@@ -89,6 +90,7 @@ function admin_bans($ban_type) {
 	echo '<div style="float:right;">'."\n";
 	echo '<form method="get" action="'.$globals['base_url'].'admin/bans.php">';
 	echo '<input type="hidden" name="admin" value="'.$ban_type.'" />';
+	echo '<input type="hidden" name="key" value="'.$key.'" />';
 	echo '<input type="text" name="s" ';
 	if ($_REQUEST["s"]) {
 		$_REQUEST["s"] = clean_input_string($_REQUEST["s"]);
@@ -109,6 +111,7 @@ function admin_bans($ban_type) {
 
 	if (!empty($_REQUEST["op"])) {
 		echo '<form method="post" name="newban" action="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'">';
+		echo '<input type="hidden" name="key" value="'.$key.'" />';
 	}
 
 	echo '<table>';
@@ -129,8 +132,8 @@ function admin_bans($ban_type) {
 	switch ($_REQUEST["op"]) {
 		case 'new':
 			echo '<tr><td>';
-			echo '<input type="text" id="ban_text" name="ban_text" size="30" maxlength="'.$ban_text_length.'" onkeyup="enablebutton(this.form.checkbutton1, this.form.submit, this)" value="" />';
-			echo '&nbsp;<span id="checkit"><input type="button" id="checkbutton1" value="'._('verificar').'" disabled="disabled" onclick="checkfield(\'ban_'.$ban_type.'\', this.form, this.form.ban_text)"/></span>' . "\n";
+			echo '<input type="text" id="ban_text" name="ban_text" size="30" maxlength="'.$ban_text_length.'" value="" />';
+			echo '&nbsp;<span id="checkit"><input type="button" id="checkbutton1" value="'._('verificar').'" onclick="checkfield(\'ban_'.$ban_type.'\', this.form, this.form.ban_text)"/></span>' . "\n";
 			echo '<br /><span id="ban_'.$ban_type.'checkitvalue"></span>' . "\n";
 			echo '</td><td>';
 			echo '<input class="form-full" type="text" name="ban_comment" id="ban_comment" />';
@@ -141,7 +144,7 @@ function admin_bans($ban_type) {
 			echo '</select>';
 			echo '</td><td>';
 			echo '<input type="hidden" name="new_ban" value="1" />';
-			echo '<input type="submit" disabled="disabled" name="submit" value="'._('Crear ban').'" />';
+			echo '<input type="submit" name="submit" value="'._('Crear ban').'" />';
 			echo '</td></tr>';
 			break;
 		case 'news':
@@ -208,7 +211,7 @@ function admin_bans($ban_type) {
 				if ($current_user->user_level=="god") {
 					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
 					echo '&nbsp;/&nbsp;';
-					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'&amp;key='.$key.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
 				}
 				echo '</td>';
 				echo '</tr>';
@@ -231,5 +234,10 @@ function print_expiration_dates() {
 	echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
 	echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
 	echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
+}
+
+function get_security_key() {
+	global $globals, $current_user, $site_key;
+	return md5($globals['user_ip'].$current_user->user_id.$site_key);
 }
 ?>

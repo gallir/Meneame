@@ -109,7 +109,7 @@ function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINE
 	if (!empty($ban_comment)) {
 		$ban->ban_comment=$ban_comment;
 	}
-	if ($ban_expire != 'UNDEFINED' && !empty($ban_expire)) {
+	if (!empty($ban_expire)) {
 		$ban->ban_expire=$ban_expire;
 	}
 	$ban->store();
@@ -118,7 +118,7 @@ function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINE
 
 function del_ban($ban_id) {
 	$ban=new Ban();
-	$ban->ban_id=$_REQUEST["del_ban"];
+	$ban->ban_id=$ban_id;
 	$ban->remove();
 }
 
