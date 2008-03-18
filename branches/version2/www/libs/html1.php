@@ -134,7 +134,7 @@ function do_header($title, $id='home') {
 			if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
 				echo '<li><a href="'.$globals['base_url'].'admin/bans.php">'._('adm'). '</a></li>' . "\n";
 			}
-  			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' . _('perfil de') . ' ' . $current_user->user_login . '</a></li>' . "\n";
+  			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' .'<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'" title="'._('perfil').'" />&nbsp;'.$current_user->user_login.'</a></li>' . "\n";
 		} else {
   			echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
   			echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('login') . '</a></li>' . "\n";
