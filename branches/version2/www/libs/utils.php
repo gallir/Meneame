@@ -317,7 +317,7 @@ function utf8_substr($str,$start)
 	}
 }
 
-function not_found() {
+function not_found($mess = '') {
 	header("HTTP/1.0 404 Not Found");
 	header("Status: 404 Not Found");
     echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
@@ -329,7 +329,11 @@ function not_found() {
     echo '<link rel="icon" href="'.$globals['base_url'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
     echo '</head>' . "\n";
     echo "<body>\n";
-	echo '<h1>' . _('error') . ' 3.1415926536</h1><p>' . _('no encontrado') . '</p>';
+	if (empty($mess)) {
+		echo '<h1>' . _('error') . ' 3.1415926536</h1><p>' . _('no encontrado') . '</p>';
+	} else {
+		echo $mess;
+	}
 	echo "</body></html>\n";
 	exit;
 }
