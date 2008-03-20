@@ -449,8 +449,9 @@ function do_mnu_categories_horizontal($what_cat_id) {
 	echo '<ul>' . "\n";
 
 	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
+	// If a meta is not a "virtual" one, delete it.
+	$query=preg_replace('/meta=[a-z]+/i', '', $query);
 	// Always return to page 1
-	$query=preg_replace('/meta=[a-z]*/', '', $query);
 	$query=preg_replace('/page=[0-9]*/', '', $query);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
 	if(!empty($query)) {

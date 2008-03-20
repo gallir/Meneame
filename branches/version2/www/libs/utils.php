@@ -425,58 +425,59 @@ function meta_get_current() {
 	global $globals, $db, $current_user;
 
 	$globals['meta_current'] = 0;
+	$globals['meta']  = clean_input_string($_REQUEST['meta']);
 
+	//Check for personalisation
+	// Authenticated users
 	if ($current_user->user_id > 0) {
 		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
-		if ($categories) $current_user->has_personal = true;
-		else $globals['meta_categories'] = false;
+		if ($categories) { 
+			$current_user->has_personal = true;
+			$globals['meta_skip'] = '?meta=_all';
+			$globals['meta_categories'] = implode(',', $categories); 
+			if (! $globals['meta']) {
+				$globals['meta']= '_personal';
+			}
+		} else {
+			$globals['meta_categories'] = false;
+		}
+	} elseif ($_COOKIE['mnm_user_meta']) {
+		// anonymous users
+		$meta = $db->escape(clean_input_string($_COOKIE['mnm_user_meta']));
+		$globals['meta_skip'] = '?meta=_all';
+		$globals['meta_user_default'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
+		// Anonymous can select metas by cookie
+		// Select user default only if no category has been selected
+		if(!$_REQUEST['category'] && !$globals['meta']) {
+			$globals['meta_current'] = $globals['meta_user_default'];
+		}
 	}
 
-	if (!empty($_REQUEST['category'])) {
-		$cat = (int) $_REQUEST['category'];
-		$globals['meta_current'] = $db->get_var("select category_parent from categories where category_id = $cat and category_parent > 0");
-		$globals['meta'] = '';
-	} elseif (!empty($_REQUEST['meta'])) {
-		$globals['meta']  = clean_input_string($_REQUEST['meta']);
+	if ($_REQUEST['category']) {
+		$_REQUEST['category'] = $cat = (int) $_REQUEST['category'];
+		if ($globals['meta'][0] == '_') {
+			$globals['meta_current'] = $globals['meta'];
+		} else {
+			$globals['meta_current'] = (int) $db->get_var("select category_parent from categories where category_id = $cat and category_parent > 0");
+			$globals['meta'] = '';
+		}
+	} elseif ($globals['meta']) {
 		// Special metas begin with _
 		if ($globals['meta'][0] == '_') {
-			if ($current_user->has_personal || $globals['meta_user_default'] > 0) {
-				$globals['meta_skip'] = '?meta=_all';
-			}
 			return 0;
 		}
 		$meta = $db->escape($globals['meta']);
 		$globals['meta_current'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
-		if (empty($globals['meta_current'])) {
+		if ($globals['meta_current']) {
 			$globals['meta'] = '';  // Security measure
 		}
-	} elseif ($current_user->has_personal) {
-			$globals['meta']= '_personal';
-			$globals['meta_skip'] = '?meta=_all';
-			$globals['meta_categories'] = implode(',', $categories); 
-	} elseif($current_user->user_id == 0 && !empty($_COOKIE['mnm_user_meta'])) {
-		$meta = $db->escape(clean_input_string($_COOKIE['mnm_user_meta']));
-		$globals['meta_user_default'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
-		// Anonymous can select metas by cookie
-		// Select user default only if no category has been selected
-		if(empty($_REQUEST['category'])) {
-			$globals['meta_current'] = $globals['meta_user_default'];
-		}
-	}
-	/* SHOW FRIENDS
-	elseif ($current_user->user_id > 0 && ($current_user->user_comment_pref & 2) > 0) {
-		$globals['meta']= '_friends';
-		$globals['meta_skip'] = '?meta=_all';
-		return 0;
-	}
-	*/
-
+	} 
+	
 	if ($globals['meta_current'] > 0) {
 		$globals['meta_categories'] = meta_get_categories_list($globals['meta_current']);
-		if (empty($globals['meta_categories'])) {
+		if (!$globals['meta_categories']) {
 			$globals['meta_current'] = 0;
 		}
-		$globals['meta_skip'] = '?meta=_all';
 	}
 	//echo "meta_current: " . $globals['meta_current'] . "<br/>\n";
 	return $globals['meta_current'];

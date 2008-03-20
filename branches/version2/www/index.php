@@ -17,7 +17,7 @@ $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
-$cat=check_integer('category');
+$cat=$_REQUEST['category'];
 
 do_header(_('últimas publicadas') . ' // men&eacute;ame');
 do_banner_top();

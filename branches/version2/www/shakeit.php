@@ -19,7 +19,7 @@ $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
 
-$cat = intval($_REQUEST['category']);
+$cat = $_REQUEST['category'];
 
 switch ($globals['meta']) {
 	case '_personal':
