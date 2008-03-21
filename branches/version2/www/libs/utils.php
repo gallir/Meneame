@@ -434,8 +434,8 @@ function meta_get_current() {
 		if ($categories) { 
 			$current_user->has_personal = true;
 			$globals['meta_skip'] = '?meta=_all';
-			$globals['meta_categories'] = implode(',', $categories); 
 			if (! $globals['meta']) {
+				$globals['meta_categories'] = implode(',', $categories); 
 				$globals['meta']= '_personal';
 			}
 		} else {
