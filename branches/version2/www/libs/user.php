@@ -51,7 +51,7 @@ class User {
 		// Delete preferences
 		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
 
-		$this->username = '__'.$this->id.'__';
+		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";
 		$this->url = '';
 		$this->level = 'disabled';

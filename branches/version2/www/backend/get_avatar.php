@@ -4,7 +4,11 @@ include_once(mnmpath.'/libs/avatars.php');
 
 stats_increment('image');
 
-$id = intval($_GET['id']);
+if (!$_GET['id'] && !empty($_GET['user'])) {
+	$id = (int) $db->get_var("select user_id from users where user_login = '".$db->escape($_GET['user'])."'");
+} else {
+	$id = intval($_GET['id']);
+}
 if (! $id > 0) die;
 $size = intval($_GET['size']);
 if (!$size > 0) $size = 80;
