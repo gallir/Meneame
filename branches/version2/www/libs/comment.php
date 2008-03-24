@@ -31,15 +31,17 @@ class Comment {
 		$comment_date = $this->date;
 		$comment_randkey = $this->randkey;
 		$comment_content = $db->escape(clean_lines($this->content));
+		if ($this->type == 'admin') $comment_type = 'admin';
+		else $comment_type = 'normal';
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
-			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_karma, comment_ip, comment_date, comment_randkey, comment_content) VALUES ($comment_author, $comment_link, $comment_karma, '$this->ip', FROM_UNIXTIME($comment_date), $comment_randkey, '$comment_content')");
+			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content) VALUES ($comment_author, $comment_link, '$comment_type', $comment_karma, '$this->ip', FROM_UNIXTIME($comment_date), $comment_randkey, '$comment_content')");
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
 			log_insert('comment_new', $this->id, $current_user->user_id);
 		} else {
-			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
+			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
 			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 30);
 		}
@@ -62,6 +64,7 @@ class Comment {
 		global $db, $current_user;
 		$id = $this->id;
 		if(($link = $db->get_row("SELECT comments.*, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+			$this->type = $link->comment_type;
 			$this->author=$link->comment_user_id;
 			$this->username=$link->user_login;
 			$this->email=$link->user_email;
@@ -124,7 +127,7 @@ class Comment {
 		// The comments info bar
 		echo '<div class="'.$comment_meta_class.'">';
 		// Check that the user can vote
-		if ($this->user_level != 'disabled') {
+		if ($this->type != 'admin' && $this->user_level != 'disabled') {
 			// Print the votes info (left)
 			echo '<div class="comment-votes-info">';
 			if ($current_user->user_id > 0 && $this->author != $current_user->user_id && $single_link)
@@ -138,10 +141,13 @@ class Comment {
 		echo '<div class="comment-info">';
 		echo _('por'). ' ';
 
-		if ($single_link)
+		if ($this->type == 'admin') {
+			echo '<strong>'._('administrador').'</strong> ';
+		} elseif ($single_link) {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a> ';
-		else
+		} else {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
+		}
 
 		// Print dates
 		if ($globals['now'] - $this->date > 604800) { // 7 days
@@ -149,7 +155,7 @@ class Comment {
 		} else {
 			echo _('hace').' '.txt_time_diff($this->date);
 		}
-		if (!$this->hidden) echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="'.$this->username.'" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+		if (!$this->hidden && $this->type != 'admin') echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="'.$this->username.'" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 		echo '</div></div>';
 		echo "</li>\n";
 	}

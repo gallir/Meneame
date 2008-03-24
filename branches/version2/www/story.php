@@ -371,6 +371,10 @@ function print_comment_form() {
 	print_simpleformat_buttons('comment');
 	echo '<label for="comment">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="8"></textarea></div>'."\n";
+	// Allow gods to put "admin" comments which does not allow votes
+	if ($current_user->user_level == 'god') {
+		echo '<span class="comments-warning"><strong>'._('admin').'</strong></span><input name="type" type="checkbox" value="admin"/>&nbsp;&nbsp;&nbsp;&nbsp;';
+	}
 	echo '<input class="submit" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
@@ -407,14 +411,23 @@ function insert_comment () {
 		$comment->author=intval($_POST['user_id']);
 		$comment->karma=round($current_user->user_karma);
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
+		// Check if is an admin comment
+		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
+			$comment->karma = 20;
+			$comment->type = 'admin';
+		}
 		if (mb_strlen($comment->content) > 0 && preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
 			// Check the comment wasn't already stored
 			if (!$already_stored) {
-				// Lower karma to comments' spammers
-				$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
-				// Check the text is not the same
-				$same_count = $comment->same_text_count() + $comment->same_links_count();
+				if ($comment->type != 'admin') {
+					// Lower karma to comments' spammers
+					$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
+					// Check the text is not the same
+					$same_count = $comment->same_text_count() + $comment->same_links_count();
+				} else {
+					$comment_count  = $same_count = 0;
+				}
 				if ($comment_count > 2 || $same_count > 2) {
 					require_once(mnminclude.'user.php');
 					$reduction = 0;
