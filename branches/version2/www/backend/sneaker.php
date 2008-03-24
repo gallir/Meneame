@@ -331,12 +331,17 @@ function get_story($time, $type, $linkid, $userid) {
 
 function get_comment($time, $type, $commentid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
-	$event = $db->get_row("select user_login, comment_user_id, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
+	$event = $db->get_row("select user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
 	$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
-	$who = $event->user_login;
+	if ( $event->comment_type == 'admin') {
+		$who = _('administrador');
+		$userid = 0;
+	} else {
+		$who = $event->user_login;
+	}
 	$status =  get_status($event->link_status);
 	$key = $time . ':'.$type.':'.$commentid;
 	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';

@@ -119,10 +119,15 @@ function get_votes($dbtime, $link_id) {
 
 function get_comment($dbtime, $linkid) {
 	global $db, $events, $last_timestamp, $max_items;
-	$res = $db->get_results("select unix_timestamp(comment_date) as timestamp, user_id, user_login, comment_user_id, comment_order, link_id, link_date, link_votes, link_anonymous, link_status, link_comments, comment_id from comments, links, users where link_id = $linkid and comment_link_id =$linkid and user_id = comment_user_id and comment_date > $dbtime order by comment_date desc limit $max_items");
+	$res = $db->get_results("select unix_timestamp(comment_date) as timestamp, user_id, user_login, comment_user_id, comment_type, comment_order, link_id, link_date, link_votes, link_anonymous, link_status, link_comments, comment_id from comments, links, users where link_id = $linkid and comment_link_id =$linkid and user_id = comment_user_id and comment_date > $dbtime order by comment_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
-		$who = $event->user_login;
+		if ($event->comment_type == 'admin') {
+			$who = _('administrador');
+			$event->user_id = 0;
+		} else {
+			$who = $event->user_login;
+		}
 		$status =  get_status($event->link_status);
 		$key = $event->timestamp . ':'.$type.':'.$commentid;
 		$events[$key] = 'ts:"'.$event->timestamp.'",type:"comment",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",who:"'.addslashes($who).'",uid:"'.$event->user_id.'", status:"'.$status.'",id:"'.$event->comment_id.'"';
