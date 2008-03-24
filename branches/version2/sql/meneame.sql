@@ -98,6 +98,7 @@ CREATE TABLE `chats` (
 DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `comment_id` int(20) NOT NULL auto_increment,
+  `comment_type` enum('normal','admin','private') collate utf8_spanish_ci NOT NULL default 'normal',
   `comment_randkey` int(11) NOT NULL default '0',
   `comment_parent` int(20) default '0',
   `comment_link_id` int(20) NOT NULL default '0',
@@ -421,4 +422,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-03-06 21:20:52
+-- Dump completed on 2008-03-24  0:32:43
