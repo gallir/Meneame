@@ -142,7 +142,7 @@ class Comment {
 		echo _('por'). ' ';
 
 		if ($this->type == 'admin') {
-			echo '<strong>'._('administrador').'</strong> ';
+			echo '<strong>'.get_server_name().'</strong> ';
 		} elseif ($single_link) {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a> ';
 		} else {

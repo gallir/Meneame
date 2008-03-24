@@ -337,7 +337,7 @@ function get_comment($time, $type, $commentid, $userid) {
 	$foo_link->uri=$event->link_uri;
 	$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
 	if ( $event->comment_type == 'admin') {
-		$who = _('administrador');
+		$who = get_server_name();
 		$userid = 0;
 	} else {
 		$who = $event->user_login;

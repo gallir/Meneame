@@ -19,7 +19,7 @@ switch ($option) {
 		do_footer();
 		break;
 	case 'commented':
-		$sql = "SELECT distinct(link_id) FROM links, comments WHERE comment_user_id=$user_id and link_id=comment_link_id ORDER BY link_id DESC LIMIT 1000";
+		$sql = "SELECT distinct(link_id) FROM links, comments WHERE comment_user_id=$user_id and link_id=comment_link_id and comment_type != 'admin' ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('comentadas'));
 		do_link_item($sql);
 		do_footer();

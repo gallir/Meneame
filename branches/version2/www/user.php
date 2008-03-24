@@ -363,20 +363,21 @@ function do_shaken () {
 
 
 function do_commented () {
-	global $db, $rows, $user, $offset, $page_size, $globals;
+	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
 	if ($globals['bot']) return;
 
 	$link = new Link;
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
-	$comments = $db->get_results("SELECT comment_id, link_id FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
+	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<div class="bookmarks-export-user-stories">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" class="bookmarks-export-user-commented"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach ($comments as $dbcomment) {
+			if ($dbcomment->comment_type == 'admin' && $current_user->user_level != 'god' && $current_user->user_level != 'admin') continue;
 			$link->id=$dbcomment->link_id;
 			$comment->id = $dbcomment->comment_id;
 			if ($last_link != $link->id) {

@@ -24,7 +24,7 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$if_modified = get_if_modified();
 }
 
-
+$individual_user = false;
 if(!empty($_GET['id'])) {
 	//
 	// Link comments
@@ -49,6 +49,7 @@ if(!empty($_GET['id'])) {
 	//
 	// Users comments
 	//
+	$individual_user = true;
 	$id = guess_user_id($_GET['user_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0) 
@@ -75,6 +76,7 @@ if(!empty($_GET['id'])) {
 	//
 	// User's link comments
 	//
+	$individual_user = true;
 	$id = guess_user_id($_GET['author_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	if ($if_modified > 0) 
@@ -125,6 +127,10 @@ if ($comments) {
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
 		$comment->read();
+		if ($comment->type == 'admin') {
+			if ($individual_user) continue;
+			else $comment->username = get_server_name();
+		}
 		$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($comment->content)));
 		echo "	<item>\n";
 		$link_id = $link->id = $comment->link;

@@ -123,7 +123,7 @@ function get_comment($dbtime, $linkid) {
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($event->comment_type == 'admin') {
-			$who = _('administrador');
+			$who = get_server_name();
 			$event->user_id = 0;
 		} else {
 			$who = $event->user_login;
