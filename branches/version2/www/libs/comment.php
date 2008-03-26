@@ -143,6 +143,9 @@ class Comment {
 
 		if ($this->type == 'admin') {
 			echo '<strong>'.get_server_name().'</strong> ';
+			if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+				echo ' ('.$this->username.') ';
+			}
 		} elseif ($single_link) {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a> ';
 		} else {
