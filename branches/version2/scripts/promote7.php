@@ -49,7 +49,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.87;
+$min_karma_coef = 0.85;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
@@ -106,7 +106,7 @@ $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
 /// Coeficients to balance metacategories
-$days = 3;
+$days = 2;
 $total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)");
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
@@ -122,7 +122,7 @@ foreach ($db_metas as $dbmeta) {
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
-	$meta_coef[$m] = max(min($meta_avg/$v, 1.3), 0.7);
+	$meta_coef[$m] = max(min($meta_avg/$v, 1.4), 0.7);
 	if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
@@ -239,7 +239,7 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->content_type != 'image' && $now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
+		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
 			$link->new_coef = 2 - ($now-$link->date)/6300;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 

@@ -47,10 +47,7 @@ $discarded_history_from = "date_sub($now, interval 24 hour)";
 $ignored_nondiscarded = "date_sub($now, interval 6 hour)";
 
 // The formula to calculate the decreasing vote points
-$sql_points_calc = 'sum((unix_timestamp(link_published_date) - unix_timestamp(vote_date))/(unix_timestamp(link_published_date) - unix_timestamp(link_date))) as points';
-// Define the period until vote to published links are considered for karma
-//$sql_points_date_ignored = 'date_sub(link_published_date, INTERVAL 30 minute)';
-$sql_points_date_ignored = 'link_published_date';
+$sql_points_calc = 'sum((unix_timestamp(link_date) - unix_timestamp(vote_date))/(unix_timestamp(link_date) - unix_timestamp(link_sent_date))) as points';
 
 
 
@@ -59,7 +56,7 @@ $published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links 
 $sum=0; $i=0;
 // It does an average of the top 10 voted
 
-$max_avg_positive_received = (int) $db->get_var("select avg(link_karma) from links where link_status='published' and link_published_date >  $history_from");;
+$max_avg_positive_received = (int) $db->get_var("select avg(link_karma) from links where link_status='published' and link_date >  $history_from");;
 $max_avg_positive_received = intval($max_avg_positive_received * 0.6);
 if($max_avg_positive_received == 0) $max_avg_positive_received = 1;
 $max_avg_negative_received = $max_avg_positive_received * 1.5;
@@ -67,7 +64,7 @@ $max_avg_negative_received = $max_avg_positive_received * 1.5;
 
 
 // "Unfair" negative votes max
-$max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) as count from votes, comments where vote_type='comments' and vote_date > date_sub(now(), interval 30 hour) and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 5 group by vote_user_id order by count desc limit 1");
+$max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) as count from votes, comments where vote_type='comments' and vote_date > date_sub(now(), interval 30 hour) and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 group by vote_user_id order by count desc limit 1");
 $max_negative_comment_votes  = max($max_negative_comment_votes, 40);
 
 print "Number of published links in period: $published_links\n";
@@ -110,7 +107,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		print "events: votes: $n, logs: $n_events\n";
 
 		// Count the number of published links during the last period
-		$karma0 = $points_per_published * (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_published_date > $history_from and link_status = 'published'");
+		$karma0 = $points_per_published * (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'published'");
 		// Max: 3 published
 		$karma0 = min($points_per_published * 3, $karma0);
 		if ($karma0 > 0) {
@@ -133,8 +130,8 @@ while ($dbuser = mysql_fetch_object($result)) {
 					$total_user_links = $total_user_links - $total_user_discarded;
 				}
 			}
-			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status not in ('published', 'abuse', 'autodiscard') or vote_date < link_published_date)")) / $total_user_links;
-			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status not in ('published', 'autodiscard') or vote_date < link_published_date)")) / $total_user_links;
+			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status not in ('published', 'abuse', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
+			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status not in ('published', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
 
 			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
 			$karma1 = $points_received * $karma_received / $max_avg_positive_received;
@@ -147,7 +144,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$karma1 = max(-$points_received, $karma1 - $link_abuse);
+				$karma1 = max(-$points_received, $karma1 - 2 * $link_abuse);
 				printf ("%07d ", $user->id);
 				echo "Penalized by $link_abuse links tagged as 'abuse'\n";
 				$penalized = 1;
@@ -159,7 +156,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		} 
 		
 
-		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and link_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < $sql_points_date_ignored and link_author != $user->id");
+		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and link_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < link_date and link_author != $user->id");
 		$published_points = (int) $user_votes->points;
 		$published_given = (int) $user_votes->count;
 		if ($user_votes->points > 0) 
@@ -173,10 +170,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$abuse_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status in ('abuse') and link_author != $user->id");
 
-		$karma2 = min($points_given, $points_given * pow($published_average, 2) * ($published_points/($published_links/5) - ($nopublished_given/$published_links)/10) - 0.1 * $discarded_given - $abuse_given);
+		$karma2 = min($points_given, $points_given * pow($published_average, 2) * ($published_points/($published_links/5) - ($nopublished_given/$published_links)/10) - 0.1 * $discarded_given);
 
 		if ($abuse_given > 0) {
 			printf ("%07d ", $user->id);
+			$karma2 -= $abuse_given;
 			print "Votes to links tagged as 'abuse': $abuse_given \n";
 		}
 
@@ -223,7 +221,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$negative_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status in ('discard', 'autodiscard', 'abuse') and TIMESTAMPDIFF(MINUTE, link_date, vote_date) < 15 ");
 
-		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and link_negatives < link_votes/10");
+		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and link_negatives < link_votes/15");
 
 		if ($negative_no_discarded > $negative_discarded/4) { // To fight against karma whores and bots
 			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded);
@@ -237,7 +235,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		// Check the user don't abuse voting only negative
 		$max_allowed_negatives = round(($nopublished_given + $published_given + $negative_discarded) * $user->karma / 10);
 		if($negative_no_discarded > 2 && $negative_no_discarded > $max_allowed_negatives) {
-			$punishment = min(1 + $negative_no_discarded/$max_allowed_negatives, 6);
+			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			printf ("%07d ", $user->id);
 			$karma3 -= $punishment;
 			$penalized = 1;

@@ -16,7 +16,7 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	$maxmin=0;
 	$maxsec=0;
 } else {
-	$h = localtime(time()-86400*120, TRUE);
+	$h = localtime(time()-86400*61, TRUE);
 	$month=$h["tm_mon"] + 1; $maxmonth=$month;
 	$year=$h["tm_year"] + 1900; $maxyear=$year;
 	$maxday=$h["tm_mday"];
@@ -75,14 +75,20 @@ if (!$absolute_maxid > 0) {
 }
 echo "Have to delete up to $absolute_maxid\n";
 flush();
+
 if ($absolute_previous_maxid > 0) {
-	for ($i = $absolute_previous_maxid + 5000; $i < $absolute_maxid; $i = $i+=5000) {
-		echo "Deleting up to $i\n";
+	$start = microtime(true);
+	$max_to_delete = 1000;
+	$total_deleted = 0;
+	$deleted = $max_to_delete;
+	while ($deleted >= $max_to_delete) {
+		$db->query("delete from votes where vote_id <= $absolute_maxid limit $max_to_delete");
+		$deleted = $db->rows_affected;
+		$total_deleted += $deleted;
+		printf("%8.3f: deleted $deleted ($total_deleted) rows\n", microtime(true)-$start);
 		flush();
-		$db->query("delete LOW_PRIORITY from votes where vote_id <= $i");
-		usleep(1000);
+		sleep(1);
 	}
 }
-$db->query("delete LOW_PRIORITY from votes where vote_id <= $absolute_maxid");
 
 ?>
