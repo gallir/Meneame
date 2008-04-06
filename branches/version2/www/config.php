@@ -72,6 +72,7 @@ $globals['check_behind_proxy'] = false;
 // If > 0 it shows negatives votes and date(vote) > $globals['show_negatives']
 //$globals['show_negatives'] = 0;
 $globals['min_karma_for_negatives'] = 5.5;
+$globals['min_user_votes'] = 0;  // For new users and also enable check of sent versus voted
 //$globals['min_karma_for_links'] = 4.9;
 //$globals['min_karma_for_comments'] = 4.9;
 //$globals['min_karma_for_posts'] = 6;

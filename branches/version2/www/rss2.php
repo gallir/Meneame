@@ -38,7 +38,7 @@ if(!empty($_REQUEST['time'])) {
 		$from = time()-$time;
 		$sql .= "link_date > FROM_UNIXTIME($from) AND ";
 	}
-	$sql .= "link_status != 'discard' ORDER BY link_votes DESC LIMIT $rows";
+	$sql .= "link_status in ('published', 'queued') ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
 	$title = _('Menéame: más votadas en') . ' ' . txt_time_diff($from);
 } elseif (!empty($_REQUEST['favorites'])) {
@@ -66,8 +66,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' friends
 	/////
 	$user_id = guess_user_id($_REQUEST['friends_of']);
-	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status != 'discard' ORDER BY link_date DESC limit 1");
+	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('published', 'queued') ORDER BY link_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('published', 'queued') ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: amigos de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
@@ -77,8 +77,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' sent links
 	/////
 	$user_id = guess_user_id($_REQUEST['sent_by']);
-	$sql = "SELECT link_id FROM links WHERE link_author=$user_id  ORDER BY link_id DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id");
+	$sql = "SELECT link_id FROM links WHERE link_author=$user_id and vote_value > 0 ORDER BY link_id DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and vote_value > 0");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: noticias de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
