@@ -77,8 +77,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' sent links
 	/////
 	$user_id = guess_user_id($_REQUEST['sent_by']);
-	$sql = "SELECT link_id FROM links WHERE link_author=$user_id and vote_value > 0 ORDER BY link_id DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and vote_value > 0");
+	$sql = "SELECT link_id FROM links WHERE link_author=$user_id and link_votes > 0 ORDER BY link_id DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and link_votes > 0");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: noticias de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
