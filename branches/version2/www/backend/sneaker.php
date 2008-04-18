@@ -114,7 +114,7 @@ echo "new_data = ([";
 foreach ($events as $key => $val) {
 	if ($counter>0) 
 		echo ",";
-	echo "{" . $val . "}";
+	echo $val;
 	$counter++;
 	if($counter>=$max_items) {
 		echo "]);";
@@ -178,13 +178,17 @@ function check_chat() {
 function send_string($mess) {
 	global $current_user, $now, $globals, $events;
 
-	$uid = $current_user->user_id;
-	$who = $current_user->user_login;
-	$timestamp = $now;
-	$key = $timestamp . ':chat:'.$id;
-	$type = 'chat';
-	$status = _('chat');
-	$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes(text_to_html($mess)).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+	$key = $now . ':chat:'.$id;
+	$json['who'] = addslashes($current_user->user_login);
+	$json['uid'] = $current_user->user_id;
+	$json['ts'] = $now;
+	$json['status'] =  _('chat');
+	$json['type'] =  'chat';
+	$json['votes'] = 0;
+	$json['com'] = 0;
+	$json['title'] = addslashes(text_to_html($mess));
+	$events[$key] = json_encode_single($json);
+	//'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes(text_to_html($mess)).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 }
 
 function send_chat_warn($mess) {
@@ -198,9 +202,7 @@ function get_chat($time) {
 	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
-		$uid = $event->chat_uid;
-		$type = 'chat';
-		$status = _('chat');
+		$json['uid'] = $uid = $event->chat_uid;
 		if ($uid != $current_user->user_id) {
 
 			// CHECK ADMIN MODE
@@ -240,13 +242,20 @@ function get_chat($time) {
 				$status = 'admin';
 			}
 		}
-		$who = $event->chat_user;
-		$timestamp = $event->chat_time;
-		$key = $timestamp . ':chat:'.$uid;
-		$comment = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text)));
-		$events[$key] = 'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
-		if ($uid >0)  $events[$key] .= ',icon:"'.get_avatar_url($uid, -1, 20).'"';
-		if($timestamp > $last_timestamp) $last_timestamp = $timestamp;
+		$json['who'] = addslashes($event->chat_user);
+		$json['ts'] = $event->chat_time;
+		$json['status'] = $status;
+		$json['type'] = 'chat';
+		$json['votes'] = 0;
+		$json['com'] = 0;
+		$json['link'] = 0;
+		$json['title'] = addslashes(text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text))));
+		if ($uid >0) $json['icon'] = get_avatar_url($uid, -1, 20);
+		$key = $event->chat_time . ':chat:'.$uid;
+
+		$events[$key] = json_encode_single($json);
+		//'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
+		if($event->chat_time > $last_timestamp) $last_timestamp = $event->chat_time;
 	}
 }
 
@@ -282,11 +291,10 @@ function get_votes($dbtime) {
 		}
 		$foo_link->id=$event->link_id;
 		$foo_link->uri=$event->link_uri;
-		$link = $foo_link->get_relative_permalink();
-		$id=$event->vote_id;
+		$foo_link->get_relative_permalink();
 		$uid = $event->vote_user_id;
-		if($uid > 0) {
-			$res = $db->get_row("select user_login from users where user_id = $uid");
+		if($event->vote_user_id > 0) {
+			$res = $db->get_row("select user_login from users where user_id = $event->vote_user_id");
 			$user = $res->user_login;
 		} else {
 			$user= preg_replace('/\.[0-9]+$/', '', $event->vote_ip);
@@ -299,16 +307,26 @@ function get_votes($dbtime) {
 			$who = get_negative_vote($event->vote_value);
 			// Show user_login if she voted more than N negatives in one minute
 			if($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
-				$negatives_last_minute = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$uid and vote_date > date_sub(now(), interval 30 second) and vote_value < 0");
+				$negatives_last_minute = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$event->vote_user_id and vote_date > date_sub(now(), interval 30 second) and vote_value < 0");
 				if($negatives_last_minute > 2 ) {
 					$who .= "<br>($user)";
 				}
 			}
 		}
-		$status =  get_status($event->link_status);
-		$key = $event->timestamp . ':votes:'.$id;
-		$events[$key] = 'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
-		if ($uid >0) $events[$key] .= ',icon:"'.get_avatar_url($uid, -1, 20).'"';
+		$json['status'] = get_status($event->link_status);
+		$json['type'] = $type;
+		$json['ts'] = $event->timestamp;
+		$json['votes'] = $event->link_votes+$event->link_anonymous;
+		$json['com'] = $event->link_comments;
+		$json['link'] = $foo_link->get_relative_permalink();
+		$json['title'] = addslashes($event->link_title);
+		$json['who'] = addslashes($who);
+		$json['uid'] = $event->vote_user_id;
+		$json['id'] = $event->link_id;
+		if ($event->vote_user_id >0) $json['icon'] = get_avatar_url($event->vote_user_id, -1, 20);
+		$key = $event->timestamp . ':votes:'.$event->vote_id;;
+		$events[$key] = json_encode_single($json);
+		//'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -320,12 +338,20 @@ function get_story($time, $type, $linkid, $userid) {
 	if (!$event) return;
 	$foo_link->id=$linkid;
 	$foo_link->uri=$event->link_uri;
-	$link = $foo_link->get_relative_permalink();
-	$id=$linkid;
-	$status =  get_status($event->link_status);
-	$key = $time . ':'.$type.':'.$id;
-	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
-	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
+	$json['link'] = $foo_link->get_relative_permalink();
+	$json['id'] = $linkid;
+	$json['status'] = get_status($event->link_status);
+	$json['ts'] = $time;
+	$json['type'] = $type;
+	$json['votes'] = $event->link_votes+$event->link_anonymous;
+	$json['com'] = $event->link_comments;
+	$json['title'] = addslashes($event->link_title);
+	$json['who'] = addslashes($event->user_login);
+	$json['uid'] = $userid;
+	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+	$key = $time . ':'.$type.':'.$linkid;
+	$events[$key] = json_encode_single($json);
+	//'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -335,17 +361,25 @@ function get_comment($time, $type, $commentid, $userid) {
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
-	$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
+	$json['link'] = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
+	$json['id'] = $commentid;
+	$json['status'] = get_status($event->link_status);
+	$json['ts'] = $time;
+	$json['type'] = $type;
+	$json['votes'] = $event->link_votes+$event->link_anonymous;
+	$json['com'] = $event->link_comments;
+	$json['title'] = addslashes($event->link_title);
 	if ( $event->comment_type == 'admin') {
-		$who = get_server_name();
+		$json['who'] = get_server_name();
 		$userid = 0;
 	} else {
-		$who = $event->user_login;
+		$json['who'] = addslashes($event->user_login);
 	}
-	$status =  get_status($event->link_status);
+	$json['uid'] = $userid;
+	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$commentid;
-	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
-	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
+	$events[$key] = json_encode_single($json);
+	//'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -355,13 +389,19 @@ function get_post($time, $type, $postid, $userid) {
 	if (!$event) return;
 	// Dont show her notes if the user ignored
 	if ($type == 'post' && friend_exists($current_user->user_id, $userid) < 0) return;
-	$link = post_get_base_url($event->user_login) . "/$postid";
-	$who = $event->user_login;
-	$key = $time . ':'.$type.':'.$commentid;
-	$status = _('nótame');
-	$title = text_to_summary($event->post_content,130);
-	$events[$key] = 'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
-	if ($userid >0) $events[$key] .= ',icon:"'.get_avatar_url($userid, -1, 20).'"';
+	$josn['link'] = post_get_base_url($event->user_login) . "/$postid";
+	$json['ts'] = $time;
+	$json['who'] = addslashes($event->user_login);
+	$json['status'] = _('nótame');
+	$json['title'] = addslashes(text_to_summary($event->post_content,130));
+	$json['votes'] = 0;
+	$json['com'] = 0;
+	$json['uid'] = $userid;
+	$json['id'] = $postid;
+	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+	$key = $time . ':'.$type.':'.$postid;
+	$events[$key] = json_encode_single($json);
+	//'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 

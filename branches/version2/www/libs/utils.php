@@ -528,6 +528,20 @@ function stats_increment($type, $all=false) {
 		}
 	}
 }
+
+// Json basic functions
+
+function json_encode_single($dict) {
+	$item = '{';
+	$passed = 0;
+	foreach ($dict as $key => $val) {
+		if ($passed) $item .= ',';
+		$item .= $key . ':"' . $val . '"';
+		$passed = 1;
+	}
+	return $item . '}';
+}
+
 //
 // Memcache functions
 //
