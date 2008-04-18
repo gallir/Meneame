@@ -169,7 +169,7 @@ function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	$string = stripslashes(trim($string));
 	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
 	// Replace two "-" by a single longer one, to avoid problems with xhtml comments
-	$string = preg_replace('/--/', '–', $string);
+	//$string = preg_replace('/--/', '–', $string);
 	if ($wrap>0) $string = wordwrap($string, $wrap, " ", 1);
 	if ($replace_nl) $string = preg_replace('/[\n\t\r]+/s', ' ', $string);
 	if ($maxlength > 0) $string = mb_substr($string, 0, $maxlength);

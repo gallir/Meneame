@@ -188,7 +188,6 @@ function send_string($mess) {
 	$json['com'] = 0;
 	$json['title'] = addslashes(text_to_html($mess));
 	$events[$key] = json_encode_single($json);
-	//'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes(text_to_html($mess)).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 }
 
 function send_chat_warn($mess) {
@@ -254,7 +253,6 @@ function get_chat($time) {
 		$key = $event->chat_time . ':chat:'.$uid;
 
 		$events[$key] = json_encode_single($json);
-		//'ts:"'.$timestamp.'",type:"'.$type.'",votes:"0",com:"0",link:"0",title:"'.addslashes($comment).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'"';
 		if($event->chat_time > $last_timestamp) $last_timestamp = $event->chat_time;
 	}
 }
@@ -326,7 +324,6 @@ function get_votes($dbtime) {
 		if ($event->vote_user_id >0) $json['icon'] = get_avatar_url($event->vote_user_id, -1, 20);
 		$key = $event->timestamp . ':votes:'.$event->vote_id;;
 		$events[$key] = json_encode_single($json);
-		//'ts:"'.$event->timestamp.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'", com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$uid.'",id:"'.$event->link_id.'"';
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -351,7 +348,6 @@ function get_story($time, $type, $linkid, $userid) {
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$linkid;
 	$events[$key] = json_encode_single($json);
-	//'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($event->user_login).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$linkid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -379,7 +375,6 @@ function get_comment($time, $type, $commentid, $userid) {
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$commentid;
 	$events[$key] = json_encode_single($json);
-	//'ts:"'.$time.'",type:"'.$type.'",votes:"'.($event->link_votes+$event->link_anonymous).'",com:"'.$event->link_comments.'",link:"'.$link.'",title:"'.addslashes($event->link_title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$commentid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -389,8 +384,9 @@ function get_post($time, $type, $postid, $userid) {
 	if (!$event) return;
 	// Dont show her notes if the user ignored
 	if ($type == 'post' && friend_exists($current_user->user_id, $userid) < 0) return;
-	$josn['link'] = post_get_base_url($event->user_login) . "/$postid";
+	$json['link'] = post_get_base_url($event->user_login) . "/$postid";
 	$json['ts'] = $time;
+	$json['type'] = $type;
 	$json['who'] = addslashes($event->user_login);
 	$json['status'] = _('nótame');
 	$json['title'] = addslashes(text_to_summary($event->post_content,130));
@@ -401,7 +397,6 @@ function get_post($time, $type, $postid, $userid) {
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$postid;
 	$events[$key] = json_encode_single($json);
-	//'ts:"'.$time.'",type:"'.$type.'",votes:"0",com:"0",link:"'.$link.'",title:"'.addslashes($title).'",who:"'.addslashes($who).'",status:"'.$status.'",uid:"'.$userid.'",id:"'.$postid.'"';
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
