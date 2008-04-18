@@ -202,13 +202,14 @@ function get_chat($time) {
 	if (!$res) return;
 	foreach ($res as $event) {
 		$json['uid'] = $uid = $event->chat_uid;
+		$json['status'] = _('chat');
 		if ($uid != $current_user->user_id) {
 
 			// CHECK ADMIN MODE
 			// If the message is for admins check this user is also admin
 			if ($event->chat_room == 'admin') {
 				if ($current_user->user_level != 'admin' && $current_user->user_level != 'god') continue;
-				$status = 'admin';
+				$json['status'] = 'admin';
 			}
 			// If this user is in "admin" mode, check the sender is also admin
 			if (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
@@ -227,7 +228,7 @@ function get_chat($time) {
 					if (friend_exists($uid, $current_user->user_id) <= 0) {
 						continue;
 					}
-					$status = _('amigo');
+					$json['status'] = _('amigo');
 				}
 				// Check the sender is a friend of the receiver
 				if (!empty($_REQUEST['friends']) && $friendship <= 0) {
@@ -236,14 +237,13 @@ function get_chat($time) {
 			}
 		} else {
 			if ($event->chat_room == 'friends') {
-				$status = _('amigo');
+				$json['status'] = _('amigo');
 			} elseif ($event->chat_room == 'admin') {
-				$status = 'admin';
+				$json['status'] = 'admin';
 			}
 		}
 		$json['who'] = addslashes($event->chat_user);
 		$json['ts'] = $event->chat_time;
-		$json['status'] = $status;
 		$json['type'] = 'chat';
 		$json['votes'] = 0;
 		$json['com'] = 0;
