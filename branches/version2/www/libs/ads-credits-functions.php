@@ -145,11 +145,11 @@ function do_banner_left_down() {
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
-/*
+
 	if($globals['external_ads'] && $globals['ads'] && $current_user->user_id == 0 && ! $globals['link']) {
-		@include('ads/leftdown.inc');
+		@include('ads/sexodinos.inc');
 	}
-*/
+
 }
 
 function do_banner_top_lower() { // side banner A
