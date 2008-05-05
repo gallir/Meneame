@@ -9,7 +9,10 @@ $db->query("delete from logs where log_type in ('comment_new','login_failed') an
 $db->query("delete from logs where log_date < date_sub(now(), interval 30 day)");
 
 // Delete not validated users
-$db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_validated_date is null");
+$db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
+
+// Delete old bad links
+$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_votes = 0");
 
 // Delete email, names and url of invalidated users after three months
 $dbusers = $db->get_col("select user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
@@ -135,7 +138,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
 			$karma1 = $points_received * $karma_received / $max_avg_positive_received;
-			$karma1 = (min(max(3, $total_user_links), 9)/6) * $karma1;
+			$karma1 = (min($total_user_links, 9)/6) * $karma1;
 			$karma1 = min($points_received, $karma1);
 			$karma1 = max(-$points_received, $karma1);
 			//echo "Average max: $max_avg_positive_received user_links: $total_user_links positive: $positive_karma_received negative: $negative_karma_received total: $karma_received\n";
@@ -151,7 +154,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			}
 
 			printf ("%07d ", $user->id);
-			echo "Karma positive average: $positive_karma_received, negative average: $negative_karma_received, karma1: $karma1\n";
+			echo "Links karma positive average: $positive_karma_received, negative average: $negative_karma_received, karma1: $karma1\n";
 
 		} 
 		
@@ -256,7 +259,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) >= 6");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
 			$karma5 -= $karma0; // Take away karma0
@@ -277,7 +280,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
-		if ($user->karma > 7) {
+		if ($user->karma > 6) {
 			$karma = max($karma_base_user, $user->karma - 1);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
