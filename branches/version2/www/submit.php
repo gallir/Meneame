@@ -426,7 +426,7 @@ function do_submit1() {
 	// check there is no an "overflow" of images
 	if ($linkres->content_type == 'image' || $linkres->content_type == 'video') {
 		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type in ('image', 'video')"));
-		if ($image_links > 5 && $image_links > $links_12hs * 0.05) { // Only 5% images and videos
+		if ($image_links > 5 && $image_links > $links_12hs * 0.08) { // Only 8% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor').'</strong></p> ';
 			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05). '</p>';
