@@ -130,6 +130,19 @@ function do_submit1() {
 		return;
 	}
 
+	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes = 0");
+	if ($drafts > 3) {
+		echo '<p class="error"><strong>'._('Demasiados borradores').':</strong></p>';
+		echo '<p>'._('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>';
+		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): $_POST[url]");
+		echo '</div>'. "\n";
+		return;
+	}
+	// Delete dangling drafts
+	if ($drafts > 0) {
+		$db->query("delete from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 minute) and link_date < date_sub(now(), interval 10 minute) and link_status='discard' and link_votes = 0");
+	}
+
 
 	if(check_ban($globals['user_ip'], 'ip', true) || check_ban_proxy()) {
 		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].' ('. $globals['ban_message'].')</p>';
@@ -140,10 +153,22 @@ function do_submit1() {
 	}
 
 	// Number of links sent by the user
-	$sents = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_votes > 0");
-	// check that the user also votes, not only sends links
-	// if is a new user requires at least 10 votes
-	if ($globals['min_user_votes'] > 0 && $current_user->user_karma < 6.1) {
+	$total_sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id") - $drafts;
+	if ($total_sents > 0) {
+		$sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day)") - $drafts;
+	} else {
+		$new_user = true;
+		$sents = 0;
+	}
+
+	$register_date = $current_user->Date();
+	if ($globals['now'] - $register_date < 86400*3) {
+		$new_user = true;
+	}
+
+	// check that a new user also votes, not only sends links
+	// it requires $globals['min_user_votes'] votes
+	if ($new_user && $globals['min_user_votes'] > 0 && $current_user->user_karma < 6.1) {
 		$user_votes_total = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id");
 		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 72 hour) and vote_user_id=$current_user->user_id");
 		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
@@ -152,7 +177,6 @@ function do_submit1() {
 		if ($sents == 0) {
 			// If is a new user, requires more votes, to avoid spam
 			$min_votes = $globals['min_user_votes'];
-			$new_user = true;
 		} else {
 			$min_votes = min(4, intval($total_links/20)) * $user_links;
 		}
@@ -175,10 +199,17 @@ function do_submit1() {
 	}
 
 	// avoid spams, an extra security check
-	// it counts the numbers of links in the last 2 hours
-	$same_user = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_author=$current_user->user_id and link_votes > 0");
-	$same_ip = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 2 hour) and link_ip = '".$globals['user_ip']."' and link_votes > 0");
-	if ($same_user > 5 || $same_ip > 5 ) {
+	// it counts the numbers of links in the last hours
+	if ($new_user) {
+		$user_links_limit = 1;
+		$user_links_interval = 1;
+	} else {
+		$user_links_limit = 5;
+		$user_links_interval = 2;
+	}
+	$same_user = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author=$current_user->user_id") - $drafts;
+	$same_ip = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_ip = '".$globals['user_ip']."'") - $drafts;
+	if ($same_user >  $user_links_limit  || $same_ip >  $user_links_limit  ) {
 		echo '<p class="error"><strong>'._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP').  '</strong></p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
@@ -188,8 +219,8 @@ function do_submit1() {
 	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
 	// it takes in account the number of positive votes in the last six hours
 	if ($same_user > 1 && $current_user->user_karma < 12) {
-		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval 2 hour) and link_author = $current_user->user_id");
-		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval 2 hour) and link_author = $current_user->user_id");
+		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
+		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		echo "<!-- Positives: $positives_received -->\n";
 		echo "<!-- Negatives: $negatives_received -->\n";
 		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
@@ -270,10 +301,10 @@ function do_submit1() {
 	// check for users spamming several sites and networks
 	// it does not allow a low "entropy"
 	if ($sents > 30) {
-		$ratio = (float) $db->get_var("select count(distinct link_blog)/count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_votes > 0");
+		$ratio = (float) $db->get_var("select count(distinct link_blog)/count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day)");
 		$threshold = 1/log($sents, 2);
 		if ($ratio <  $threshold ) {
-			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog = $blog->id and link_votes > 0") > 2) {
+			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog = $blog->id") > 2) {
 				syslog(LOG_NOTICE, "Meneame, forbidden due to low entropy: $ratio <  $threshold  ($current_user->user_login): $linkres->url");
 				echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a los mismos sitios').'</strong></p> ';
 				echo '<p class="error-text">'._('varía las fuentes, podría ser considerado spam').'</p>';
@@ -287,7 +318,7 @@ function do_submit1() {
 	// Check the user does not send too many images or vídeos
 	// they think this is a fotolog
 	if ($sents > 5 && ($linkres->content_type == 'image' || $linkres->content_type == 'video')) {
-		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90  day) and link_content_type in ('image', 'video') and link_votes > 0"));
+		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video')"));
 		if ($image_links > $sents * 0.3) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes o vídeos').'</strong></p> ';
@@ -300,7 +331,7 @@ function do_submit1() {
 
 	// avoid auto-promotion (autobombo)
 	$minutes = 30;
-	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
+	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$linkres->blog");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $linkres->url");
 		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
@@ -312,7 +343,7 @@ function do_submit1() {
 	}
 
 	// Avoid spam, count links in last three months
-	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 90 day) and link_blog=$linkres->blog and link_votes > 0");
+	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog");
 
 	// Check if the domain should be banned
 	$check_history =  $sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
@@ -324,7 +355,7 @@ function do_submit1() {
 		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
 
 		// Check for user clones
-		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 20 day) and link_blog=$linkres->blog and link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
+		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 20 day) and link_blog=$linkres->blog link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
 
 		if ($clones > 0 && $unique_users < 3) {
 			// we detected that another user has sent to the same URL from the same IP
@@ -344,7 +375,7 @@ function do_submit1() {
 
 	if ($check_history) {
 		// Calculate ban period according to previous karma
-		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day) and link_votes > 0");
+		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day)");
 		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
 		// the condition is stricter, more links and higher ratio
 		if (($sents > 3 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
@@ -594,7 +625,7 @@ function do_submit3() {
 		require_once(mnminclude.'log.php');
 		log_conditional_insert('link_new', $linkres->id, $linkres->author);
 
-		$db->query("delete from links where link_author = $linkres->author and link_status='discard' and link_votes=0");
+		$db->query("delete from links where link_author = $linkres->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
 		if(!empty($_POST['trackback'])) {
 			require_once(mnminclude.'trackback.php');
 			$trackres = new Trackback;

@@ -135,6 +135,10 @@ class UserAuth {
 		die;
 	}
 
+	function Date() {
+		global $db;
+		return (int) $db->get_var("select UNIX_TIMESTAMP(user_validated_date) from users where user_id=$this->user_id");
+	}
 }
 
 $current_user = new UserAuth();
