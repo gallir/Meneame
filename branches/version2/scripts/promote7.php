@@ -49,7 +49,7 @@ td {
 </style>
 <?
 
-$min_karma_coef = 0.87;
+$min_karma_coef = 0.86;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
@@ -79,8 +79,13 @@ $diff = $now - $last_published;
 
 $decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $decay = max($min_karma_coef, $decay);
+
+if ($diff > $interval * 2.5) {
+	$must_publish = true;
+	echo "Delayed! <br/>";
+}
 print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, Decay: $decay<br>\n";
+echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br>\n";
 
 $continue = true;
 $published=0;
@@ -239,8 +244,8 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 6300 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
-			$link->new_coef = 2 - ($now-$link->date)/6300;
+		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
+			$link->new_coef = 2 - ($now-$link->date)/7200;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
@@ -316,7 +321,8 @@ if ($links) {
 			publish($link);
 			$changes = 3; // to show a "published" later	
 		} else {
-			if ($link->karma > $past_karma * $min_karma_coef && $link->karma > $last_resort_karma) {
+			if (( $must_publish || $link->karma > $past_karma * $min_karma_coef) 
+						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma) {
 				$last_resort_id = $link->id;
 				$last_resort_karma = $link->karma;
 			}
@@ -325,7 +331,7 @@ if ($links) {
 		usleep(10000);
 		$i++;
 	}
-	if ($published == 0 && $decay < 0.99) {
+	if ($published == 0 && ($must_publish || $decay < 0.99) &&  $last_resort_id  > 0) {
 		// Publish last resort
 		$link = new Link;
 		$link->id = $last_resort_id;

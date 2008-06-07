@@ -12,7 +12,7 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 30 day)")
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
 
 // Delete old bad links
-$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_votes = 0");
+$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
 // Delete email, names and url of invalidated users after three months
 $dbusers = $db->get_col("select user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
@@ -237,7 +237,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		// Check the user don't abuse voting only negative
 		$max_allowed_negatives = round(($nopublished_given + $published_given + $negative_discarded) * $user->karma / 10);
-		if($negative_no_discarded > 2 && $negative_no_discarded > $max_allowed_negatives) {
+		if($negative_no_discarded > 10 && $negative_no_discarded > $max_allowed_negatives) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			printf ("%07d ", $user->id);
 			$karma3 -= $punishment;
@@ -281,7 +281,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	} else {
 		$no_calculated++;
 		if ($user->karma > 6) {
-			$karma = max($karma_base_user, $user->karma - 1);
+			$karma = max($karma_base, $user->karma - 1);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
 		} else {
