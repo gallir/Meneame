@@ -85,7 +85,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		$link = new Link;
-		$link->uri= $uri;
+		$link->uri= preg_replace('/#[\w\-\_]+$/', '', $uri);
 		if( empty($uri) || !$link->read('uri') ) {
 			syslog(LOG_NOTICE, "Meneame: pingback, story does not exist: $pagelinkedto");
 	  		return new IXR_Error(33, 'Story doesn\'t exist.');
