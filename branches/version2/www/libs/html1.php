@@ -188,7 +188,7 @@ function do_js_from_array($array) {
 	global $globals;
 
 	foreach ($array as $js) {
-		if (preg_match('/^http/', $js)) {
+		if (preg_match('/^http|^\//', $js)) {
 			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
 		} else {
 			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
