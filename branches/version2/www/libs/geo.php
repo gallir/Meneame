@@ -68,7 +68,7 @@ function geo_delete($type, $id) {
 function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7, $icontype = 'user') {
 	global $globals;
 	if (! $globals['google_maps_api']) return false;
-	array_push($globals['post_js'], 'http://maps.google.com/maps?file=api&amp;v=2.x&amp;key='.$globals['google_maps_api']);
+	array_push($globals['post_js'], 'http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$globals['google_maps_api']);
 	array_push($globals['post_js'], 'geo.js');
 	if ($f) {
 		if ($latlng) 

@@ -80,6 +80,7 @@ if ($logs) {
 			case 'comment_new':
 				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'comment', $log->log_ref_id, $log->log_user_id);
 				break;
+			case 'link_depublished':
 			case 'link_discard':
 				if (empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
 				break;

@@ -18,16 +18,19 @@ $words_limit = 100;
 
 $line_height = $max_pts * 0.75;
 
-$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
-$range_values = array(1, 2, 7, 30, 365, 0);
+//$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
+//$range_values = array(1, 2, 7, 30, 365, 0);
+$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'));
+$range_values = array(1, 2, 7);
 
-if(($from = check_integer('range')) >= 0 && $from < count($range_values) && $range_values[$from] > 0 ) {
-	// we use this to allow sql caching
-	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$from_where = "FROM tags, links WHERE  tag_lang='$dblang' and tag_date > $from_time and link_id = tag_link_id and link_status != 'discard'";
-} else {
-	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and link_id = tag_link_id and link_status != 'discard'";
+$from = check_integer('range');
+
+if($from > count($range_values) || ! $range_values[$from] ) {
+	$from = 0;
 }
+// we use this to allow sql caching
+$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
+$from_where = "FROM tags, links WHERE  tag_lang='$dblang' and tag_date > $from_time and link_id = tag_link_id and link_status != 'discard'";
 $from_where .= " GROUP BY tag_words";
 
 $max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 2);

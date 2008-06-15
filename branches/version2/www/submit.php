@@ -13,7 +13,7 @@ include(mnminclude.'tags.php');
 include(mnminclude.'ban.php');
 include(mnminclude.'blog.php');
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 if(isset($_POST["phase"])) {
 	force_authentication();
