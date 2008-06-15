@@ -147,7 +147,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$karma1 = max(-$points_received, $karma1 - 2 * $link_abuse);
+				$karma1 = max(-$points_received, $karma1 - 4 * $link_abuse);
 				printf ("%07d ", $user->id);
 				echo "Penalized by $link_abuse links tagged as 'abuse'\n";
 				$penalized = 1;
@@ -177,7 +177,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		if ($abuse_given > 0) {
 			printf ("%07d ", $user->id);
-			$karma2 -= $abuse_given;
+			$karma2 -= $abuse_given * 2;
 			print "Votes to links tagged as 'abuse': $abuse_given \n";
 		}
 

@@ -244,7 +244,7 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { // 6300 === 1 hs, 45 min
+		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { 
 			$link->new_coef = 2 - ($now-$link->date)/7200;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
@@ -322,7 +322,8 @@ if ($links) {
 			$changes = 3; // to show a "published" later	
 		} else {
 			if (( $must_publish || $link->karma > $past_karma * $min_karma_coef) 
-						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma) {
+						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma &&
+						$link->votes > $link->negatives*10) {
 				$last_resort_id = $link->id;
 				$last_resort_karma = $link->karma;
 			}
