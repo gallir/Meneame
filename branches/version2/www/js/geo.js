@@ -35,6 +35,7 @@ function geo_get_marker(point, icon) {
 }
 
 function geo_basic_load(lat, lng, zoom) {
+	var map;
 	if (GBrowserIsCompatible() && (map = document.getElementById("map"))) {
 		geo_map = new GMap2(map);
 		zoom = zoom || 7;

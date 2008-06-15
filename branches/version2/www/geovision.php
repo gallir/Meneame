@@ -61,8 +61,10 @@ function get_json() {
 			var delay_time;
 			var item;
 			for (i=items-1; i>=0; i--) {
-				delay_time = parseInt(period - (period/items) * (i+1));
-				add_marker(json.items[i], delay_time);
+				if (typeof (json.items[i]) != "undefined") { // IE return a undefined, sometimes :-O
+					delay_time = parseInt(period - (period/items) * (i+1));
+					add_marker(json.items[i], delay_time);
+				}
 			}
 		});
 	counter++;
