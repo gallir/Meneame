@@ -71,7 +71,7 @@ function load_xmls() {
 	}
 }
 
-function onLoad() {
+function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 	baseicon = new GIcon();
 	baseicon.iconSize = new GSize(20, 25);
 	baseicon.iconAnchor = new GPoint(10, 25);

@@ -99,7 +99,7 @@ if ($option == '_geo') {
 var baseicon;
 var geo_marker_mgr = null;
 
-function onLoad(lat, lng, zoom) {
+function onLoad(lat, lng, zoom, icon) {
 	baseicon = new GIcon();
 	baseicon.iconSize = new GSize(20, 25);
 	baseicon.iconAnchor = new GPoint(10, 25);

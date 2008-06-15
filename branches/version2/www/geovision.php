@@ -75,7 +75,7 @@ function get_json() {
 	setTimeout(get_json, period);
 }
 
-function onLoad() {
+function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 	if (geo_basic_load(18, 15, 3)) {
 		geo_map.addControl(new GLargeMapControl());
 		geo_map.addControl(new GMapTypeControl());
