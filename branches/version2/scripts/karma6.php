@@ -41,7 +41,7 @@ $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_received = 12;
 $points_per_published = 1;
 $points_given = 8;
-$comment_votes = 6;
+$comment_votes = 8;
 
 // Following lines are for negative points given to links
 // It takes in account just votes during 24 hours
@@ -247,8 +247,14 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
 		if ($comment_votes_count > 10)  {
+			// It calculates a coefficient for the karma, 
+			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
+			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
+			$comments_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from");
+			$comment_coeff =  min($comments_count/10, 1) * min($distinct_votes_count/($comments_count*0.75), 1);
+
 			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
-			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes));
+			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes)) * $comment_coeff ;
 		}
 		
 		// Limit karma to users that does not send links and does not vote
