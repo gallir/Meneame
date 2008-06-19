@@ -25,6 +25,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 			// Clean protocol and path/arguments
 			$ban_text = preg_replace('/^(https*|ftp):\/\//', '', $ban_text);
 			$ban_text = preg_replace('/(\/[^\/\?]+)[\/\?]+.*$/', '$1', $ban_text);
+			$ban_text = preg_replace('/\.*$/', '', $ban_text);
 			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z\.]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
 				$globals['ban_message'] = _('No es un dominio correcto');
 				return true;
