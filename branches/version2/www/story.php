@@ -393,7 +393,7 @@ function insert_comment () {
 
 
 	require_once(mnminclude.'ban.php');
-	if(check_ban_proxy()) return;
+	if(check_ban_proxy()) return _('dirección IP no permitida');
 
 	// Check if is a POST of a comment
 	if($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 

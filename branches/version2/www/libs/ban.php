@@ -7,7 +7,8 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 function check_ban_proxy() {
-	return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+	global $globals;
+	return check_ban($globals['user_ip'], 'proxy') || check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
 }
 
 function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false) {

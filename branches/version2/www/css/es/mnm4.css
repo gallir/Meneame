@@ -1641,13 +1641,11 @@ cursor:pointer;
 */
 
 #modalContainer .header {
-height:30px;
 width:100%;
 background:#FF6400;
 color:#fff;
-font-size:1.1em;
 font-weight:bold;
-line-height:30px;
+line-height:1.6em;
 text-align:center;
 }
 
