@@ -47,9 +47,9 @@ if(!$user->read()) {
 	not_found();
 }
 
+array_push($globals['extra_js'], 'jquery.simplemodal.pack.js');
 // For editing notes
 if ($current_user->user_id == $user->id) {
-	array_push($globals['extra_js'], 'jquery.simplemodal.pack.js');
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
 }
 
