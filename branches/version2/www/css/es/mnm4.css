@@ -1606,7 +1606,7 @@ margin-bottom: 4px;
 /* Simple Modal */
 
 #modalOverlay {
-background-color:#000;
+background-color:#888;
 cursor:wait;
 }
 
