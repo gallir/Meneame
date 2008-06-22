@@ -162,15 +162,15 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-9][^<]*>[^<]*<a|window\.|document.\|parent\.)[^>]*(href|url|action|src|location)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-9][^<]*>[^<]*<a|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
-			preg_match_all('/(<* a|<* meta +http-equiv|<* script|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.)[^>]*(href|url|action|src|location)=[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(<* a|<* meta +http-equiv|<* script|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}
 		$check_counter = 0;
 		$second_level = preg_quote(preg_replace('/^(.+\.)*([^\.]+)\.[^\.]+$/', "$2", $url_components['host']));
 		foreach ($matches[0] as $match) {
 			if (!preg_match('/<a.+rel=.*nofollow.*>/', $match)) {
-				preg_match('/(href|url|action|src|location)=[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"]{0,1}/i', $match, $url_a);
+				preg_match('/(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"\;\)]{0,1}/i', $match, $url_a);
 				$embeded_link  = $url_a[2];
 				$new_url_components = @parse_url($embeded_link);
 				if (! empty($embeded_link) && $check_counter < 5 && ! $checked_links[$new_url_components['host']]) {
