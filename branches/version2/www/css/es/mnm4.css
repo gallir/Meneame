@@ -1655,6 +1655,16 @@ text-align:center;
 padding: 5px 5px 5px 5px;
 }
 
+#modalContainer .content ul {
+padding-left: 15px;
+}
+
+#modalContainer .content li {
+margin: 8px 0 0 0;
+}
+
+
+
 */*
 * html #modalContainer a.modalCloseImg {
 background:none;

@@ -49,6 +49,7 @@ if(!$user->read()) {
 
 // For editing notes
 if ($current_user->user_id == $user->id) {
+	array_push($globals['extra_js'], 'jquery.simplemodal-1.1.1.pack.js');
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
 }
 
@@ -233,7 +234,14 @@ function do_profile() {
 		}
 	}
 
-	echo '<dt>'._('karma').':</dt><dd>'.$user->karma.'</dd>';
+	echo '<dt>'._('karma').':</dt><dd>'.$user->karma;
+	// Karma details
+	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
+		echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_karma_numbers.php?id='.$user->id.'\', \''.
+			_('cálculo del karma').
+			'\')" title="'._('detalles').'">'._('detalle cálculo').'</a>)';
+	}
+	echo '</dd>';
 
 	$user->all_stats();
 	echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
@@ -252,10 +260,6 @@ function do_profile() {
 	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
 
 	echo '</dl>';
-	// Karma details
-	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-		echo '<div id="karma-details">(<a href="javascript:get_votes(\'get_karma_numbers.php\',\''.$user->id.'\',\'karma-details\',0,\''.$user->id.'\')" title="'._('detalles').'">'._('detalle cálculo karma').'</a>)</div>';
-	}
 
 	echo '</div>';
 	echo '</fieldset>';

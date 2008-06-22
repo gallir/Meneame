@@ -20,15 +20,17 @@ if (!empty($_GET['id']) && $current_user->user_level == 'god') {
 }
 
 $found = false;
+echo '<ul>';
 while (($line = fgets($fd))) {
 	if (preg_match("/^0*$user /i", $line)) {
 		$found = true;
 		$line = preg_replace('/^\d+ /', '', $line);
-		echo "$line<br />\n";
+		echo "<li>$line</li>\n";
 	} elseif ($found) {
 		break;
 	}
 }
+echo '<ul>';
 fclose($fd);
 
 if (!$found) {

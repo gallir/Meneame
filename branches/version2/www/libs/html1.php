@@ -76,7 +76,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals, $css_main_file, $css_color_file;
+	global $current_user, $dblang, $globals;
 
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery

@@ -204,6 +204,15 @@ function get_votes(program,type,container,page,id) {
 	$('#'+container).load(url);
 }
 
+function modal_from_ajax(url, title) {
+	if (typeof(title) == "undefined") title = '';
+	$.modal('<div class="header">'+title+'<a href="#" title="Close" class="modalCloseX modalClose">x</a></div><div class="content" id="modalContent">Loading...</div>', {overlay: "50"});
+	$.get(url, function(data){
+	// create a modal dialog with the data
+		$('#modalContent').html(data);
+	});
+}
+
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
 function textCounter(field,cntfield,maxlimit) {
 	if (field.value.length > maxlimit)
