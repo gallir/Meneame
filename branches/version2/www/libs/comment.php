@@ -136,7 +136,7 @@ class Comment {
 			// Add the icon to show votes
 			if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
 				echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_c_v.php?id='.$this->id.'\')">';
-				echo '<img src="'.$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info"title="'._('¿quien ha votado?').'"/>';
+				echo '<img src="'.$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info"title="'._('¿quién ha votado?').'"/>';
 				echo '</a>';
 			}
 			echo '</div>';
