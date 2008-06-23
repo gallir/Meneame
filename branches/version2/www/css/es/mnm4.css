@@ -1623,7 +1623,7 @@ background: #FFEEC7;
 #modalContainer a.modalCloseX,
 #modalContainer a.modalCloseX:link,
 #modalContainer a.modalCloseX:active,
-#modalContainer a.modalCloseX:visited {text-decoration:none; font-weight:bold; font-size:1.1em; position:absolute; top:-1px; left:580px; color:#fff;}
+#modalContainer a.modalCloseX:visited {text-decoration:none; font-weight:bold; font-size:1.1em; position:absolute; top:-1px; left:585px; color:#fff;}
 #modalContainer a.modalCloseX:hover {color:#9bb3b3;}
 
 /*

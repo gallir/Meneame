@@ -120,6 +120,7 @@ if ($tab_option != 1 || $link->status == 'discard') {
 	$globals['noindex'] = true;
 }
 
+array_push($globals['extra_js'], 'jquery.simplemodal.pack.js');
 do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->comments.'-'.$link->modified);
 
 // Enable user AdSense

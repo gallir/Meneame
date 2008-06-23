@@ -205,8 +205,8 @@ function get_votes(program,type,container,page,id) {
 }
 
 function modal_from_ajax(url, title) {
-	if (typeof(title) == "undefined") title = '';
-	$.modal('<div class="header">'+title+'<a href="#" title="Close" class="modalCloseX modalClose">x</a></div><div class="content" id="modalContent">Loading...</div>', {overlay: "50"});
+	if (typeof(title) == "undefined") title = '&nbsp';
+	$.modal('<div class="header" id="modalHeader"><div id="modalTitle">'+title+'</div><a href="#" title="Close" class="modalCloseX modalClose">x</a></div><div class="content" id="modalContent">Loading...</div>', {overlay: "50"});
 	$.get(url, function(data){
 	// create a modal dialog with the data
 		$('#modalContent').html(data);
