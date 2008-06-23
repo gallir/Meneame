@@ -290,6 +290,8 @@ function get_avatar_url($user, $avatar, $size) {
 
 	if ($avatar > 0 && $globals['cache_dir']) {
 		$file = $globals['cache_dir'] . '/avatars/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
+		// Don't check every time, but 1/10, decrease VM pressure 
+		if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 		$file_path = mnmpath.'/'.$file;
 		if (is_readable($file_path)) {
 			return $globals['base_url'] . $file;
