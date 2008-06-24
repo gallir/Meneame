@@ -39,22 +39,37 @@
 		var $dbpassword;
 		var $dbname;
 		var $dbhost;
+		var $dbmaster;
 		var $persistent;
+		var $master_active;
 		var $dbh = false;
 
 
 		// ==================================================================
 		//	DB Constructor - connects to the server and selects a database
 
-		function db($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost') {
+		function db($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $dbmaster=false) {
 			$this->dbuser = $dbuser;
 			$this->dbpassword = $dbpassword;
 			$this->dbname = $dbname;
 			$this->dbhost = $dbhost;
+			$this->dbmaster = $dbmaster;
+			if ( $dbmaster && $dbmaster != $dbhost ) {
+				$this->dbmaster = $dbmaster;
+				$master_active = true;
+			} else {
+				$this->dbmaster = false;
+				$master_active = false;
+			}
 		}
 
-		function connect() {
-			if ($this->persistent) {
+		function connect($master = false) {
+			if ($master && $this->dbmaster ) {
+				if (!$master_active) {
+					$this->dbh = @mysql_connect($this->dbmaster, $this->dbuser,$this->dbpassword);
+					$master_active = true;
+				}
+			} elseif ($this->persistent) {
 				$this->dbh = @mysql_pconnect($this->dbhost, $this->dbuser,$this->dbpassword);
 			} else {
 				$this->dbh = @mysql_connect($this->dbhost, $this->dbuser,$this->dbpassword);
@@ -65,6 +80,7 @@
 				die;
 			}
 			if (!empty($this->dbname)) $this->select($this->dbname);
+			$this->query("SET NAMES 'utf8'");
 		}
 
 		// ==================================================================
@@ -146,10 +162,12 @@
 
 		function query($query) {
 			
-			if (!$this->dbh)  $this->connect();
-
 			// For reg expressions
 			$query = trim($query); 
+			$is_update = preg_match("/^(insert|delete|update|replace)\s+/i",$query);
+
+			if (!$this->dbh || ($is_update && ! $master_active) )  $this->connect($is_update);
+
 			
 			// initialise return
 			$return_val = 0;
@@ -168,7 +186,7 @@
 			}
 			
 			// Query was an insert, delete, update, replace
-			if ( preg_match("/^(insert|delete|update|replace)\s+/i",$query) ) {
+			if ( $is_update ) {
 				$this->rows_affected = mysql_affected_rows();
 				
 				// Take note of the insert_id
