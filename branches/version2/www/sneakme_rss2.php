@@ -64,7 +64,7 @@ if ($posts) {
 		$post->read();
 		$title = strip_tags(text_to_summary($post->content, 40));
 		$title = $post->username.': ' . htmlentities2unicodeentities($title);
-		$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($post->content)));
+		$content = htmlentities2unicodeentities(put_smileys(save_text_to_html($post->content)));
 		echo "	<item>\n";
 		echo "		<title>$title</title>\n";
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";

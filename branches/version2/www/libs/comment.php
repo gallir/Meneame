@@ -96,7 +96,7 @@ class Comment {
 
 		echo '<li id="ccontainer-'.$this->id.'">';
 
-		$this->hidden = $this->karma < -80 || $this->user_level == 'disabled';
+		$this->hidden = $this->karma < -80 || ($this->user_level == 'disabled' && $this->type != 'admin');
 
 		if ($this->hidden)  {
 			$comment_meta_class = 'comment-meta-hidden';

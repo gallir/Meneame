@@ -1358,6 +1358,7 @@ overflow: hidden;
 .sneaker-who {
 width: 16%;
 text-align: left;
+white-space: nowrap;
 }
 
 .sneaker-who img {
@@ -1406,6 +1407,7 @@ margin: 0 0 5px 0;
 
 .voters-list .item {
 float: left;
+white-space: nowrap;
 overflow: hidden;
 display: block;
 width: 24%;
@@ -1623,7 +1625,7 @@ background: #FFEEC7;
 #modalContainer a.modalCloseX,
 #modalContainer a.modalCloseX:link,
 #modalContainer a.modalCloseX:active,
-#modalContainer a.modalCloseX:visited {text-decoration:none; font-weight:bold; font-size:1.1em; position:absolute; top:-1px; left:585px; color:#fff;}
+#modalContainer a.modalCloseX:visited {text-decoration:none; font-weight:bold; font-size:1.3em; position:absolute; top:-1px; left:585px; color:#fff;}
 #modalContainer a.modalCloseX:hover {color:#9bb3b3;}
 
 /*
