@@ -109,10 +109,10 @@ if ($_POST['process']=='newcomment') {
 }
 
 // Set globals
-$globals['link']=$link;
-$globals['link_id']=$link->id;
-$globals['category_id']=$link->category;
-$globals['category_name']=$link->category_name;
+$globals['link'] = &$link;
+$globals['link_id'] = $link->id;
+$globals['category_id'] = $link->category;
+$globals['category_name'] = $link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
 // to avoid search engines penalisation
@@ -202,7 +202,9 @@ case 2:
 		echo '<div class="commentform warn">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
-	} elseif ($current_user->authenticated && ($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
+	} elseif ($current_user->authenticated && 
+			($current_user->user_karma > $globals['min_karma_for_comments'] || 
+							$current_user->user_id == $link->author)) {
 		// User can comment
 		print_comment_form();
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
@@ -217,13 +219,6 @@ case 2:
 			echo '<div class="commentform warn">'."\n";
 			echo '<a href="'.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>'."\n";
 			echo '</div>'."\n";
-			/*
-			* Deshabilitado tempralmente, quedaba  muy feo con el fondo naranja
-			* Movido fuera por si hace falta
-			echo '<div style="font-size:80%">'."\n";
-			echo '<em>¿Qué beneficios obtienes al crear tu cuenta propia?</em><ul style="margin:0"><li style="line-height:9pt;margin: 0">Enviar las noticias interesantes que encuentres en la Red.</li><li  style="line-height:9pt">Expresar tu opinión escribiendo comentarios.</li><li>Votar los comentarios.</li><li>Reflejar en tu perfil las noticias que te interesan, votándolas o enviándolas.</li><li>Recordar las noticias que más te interesan.</li><li>Formar parte de una red de usuarios con gustos afines.</li><li>Chat en «la Fisgona».</li><li>Mensajería breve en notame.net.</li><li>Seguimiento mediante mensajeria instantánea en Google Talk (TM) y cualquier servidor Jabber.</li></ul>'."\n";
-			echo '</div>'."\n";
-			*/
 		}
 	}
 	echo '</div>' . "\n";

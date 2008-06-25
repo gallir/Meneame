@@ -41,7 +41,9 @@
 		var $dbhost;
 		var $dbmaster;
 		var $persistent;
-		var $master_active;
+		var $master_persistent;
+		var $dbh_update = false;
+		var $dbh_select = false;
 		var $dbh = false;
 
 
@@ -56,23 +58,42 @@
 			$this->dbmaster = $dbmaster;
 			if ( $dbmaster && $dbmaster != $dbhost ) {
 				$this->dbmaster = $dbmaster;
-				$master_active = true;
 			} else {
 				$this->dbmaster = false;
-				$master_active = false;
+			}
+		}
+
+		// Reset the connection to the slave if it was using the master
+		function barrier() {
+			if ($this->dbh && $this->dbh !== $this->dbh_select) {
+				if ($this->dbh_select) {
+					$this->dbh = & $this->dbh_select;
+				} else {
+					$this->connect();
+				}
 			}
 		}
 
 		function connect($master = false) {
 			if ($master && $this->dbmaster ) {
-				if (!$master_active) {
-					$this->dbh = @mysql_connect($this->dbmaster, $this->dbuser,$this->dbpassword);
-					$master_active = true;
+				if ($this->dbh_update) {
+					$this->dbh = & $this->dbh_update;
+					return;
+				} else {
+					if ($this->master_persistent) {
+						$this->dbh_update = @mysql_pconnect($this->dbmaster, $this->dbuser,$this->dbpassword, MYSQL_CLIENT_COMPRESS);
+					} else {
+						$this->dbh_update = @mysql_connect($this->dbmaster, $this->dbuser,$this->dbpassword, MYSQL_CLIENT_COMPRESS);
+					}
+					$this->dbh = & $this->dbh_update;
 				}
-			} elseif ($this->persistent) {
-				$this->dbh = @mysql_pconnect($this->dbhost, $this->dbuser,$this->dbpassword);
-			} else {
-				$this->dbh = @mysql_connect($this->dbhost, $this->dbuser,$this->dbpassword);
+			} else { 
+				if ($this->persistent) {
+					$this->dbh_select = @mysql_pconnect($this->dbhost, $this->dbuser,$this->dbpassword);
+				} else {
+					$this->dbh_select = @mysql_connect($this->dbhost, $this->dbuser,$this->dbpassword);
+				}
+				$this->dbh = & $this->dbh_select;
 			}
 
 			if ( ! $this->dbh ) {
@@ -166,7 +187,7 @@
 			$query = trim($query); 
 			$is_update = preg_match("/^(insert|delete|update|replace)\s+/i",$query);
 
-			if (!$this->dbh || ($is_update && ! $master_active) )  $this->connect($is_update);
+			if (!$this->dbh || ($is_update && ! $this->dbh_update !==  $this->dbh) )  $this->connect($is_update);
 
 			
 			// initialise return

@@ -44,13 +44,6 @@ if (empty($client_version) || ($client_version != -1 && $client_version != $snea
 	exit();
 }
 
-// Only registered users can see the chat messages
-if ($current_user->user_id > 0 && empty($_REQUEST['nochat'])) {
-	check_chat();
-	get_chat($time);
-}
-
-if(intval($_REQUEST['r']) % 5 == 0) update_sneakers();
 
 if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
@@ -100,6 +93,13 @@ if ($logs) {
 	}
 }
 
+// Only registered users can see the chat messages
+if ($current_user->user_id > 0 && empty($_REQUEST['nochat'])) {
+	check_chat();
+	get_chat($time);
+}
+$db->barrier();
+
 if($last_timestamp == 0) $last_timestamp = $now;
 
 $ccntu = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
@@ -123,6 +123,7 @@ foreach ($events as $key => $val) {
 	}
 }
 echo "]);";
+if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
 stats_increment('sneaker');
 
 function check_chat() {
