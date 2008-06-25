@@ -641,7 +641,7 @@ class Link {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
-				echo _('noticia controvertida, por favor lee los comentarios.');
+				echo _('noticia errónea o controvertida, por favor lee los comentarios.');
 			} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
 					echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
 			} else {

@@ -18,7 +18,7 @@ function check_stats($string) {
 	if (preg_match('/^!cabal/', $string)) return do_cabal($string);
 	if (preg_match('/^!dariaunojo/', $string)) return do_ojo($string);
 	if (preg_match('/^!wiki/', $string)) return 'wiki: http://meneame.wikispaces.com/';
-	if (preg_match('/^!promote/', $string)) return 'http://' . get_server_name().$globals['base_url']. 'archives/promote.html';
+	if (preg_match('/^!promote/', $string)) return 'http://' . get_server_name().$globals['base_url']. 'promote.php';
 	if (preg_match('/^!hoygan/', $string)) return '¡HOYGAN! BISITEN http://' . get_server_name().$globals['base_url']. 'sneak.php?hoygan=1 GRASIAS DE HANTEMANO';
 	if (preg_match('/^!webstats/', $string)) return 'http://www.quantcast.com/'.get_server_name();
 	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
