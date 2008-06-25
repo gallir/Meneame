@@ -4,6 +4,7 @@ include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 include_once(mnminclude.'log.php');
 include_once(mnminclude.'ban.php');
+include_once(mnminclude.'annotation.php');
 
 header("Content-Type: text/html");
 echo '<html><head><title>promote7.php</title></head><body>';
@@ -64,7 +65,7 @@ $pub_estimation = intval(max(min($links_queue * 0.11, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
-echo "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
+$output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
 
 $from_time = "date_sub(now(), interval 5 day)";
 #$from_where = "FROM votes, links WHERE  
@@ -82,10 +83,10 @@ $decay = max($min_karma_coef, $decay);
 
 if ($diff > $interval * 2.5) {
 	$must_publish = true;
-	echo "Delayed! <br/>";
+	$output .= "Delayed! <br/>";
 }
-print "Last published at: " . get_date_time($last_published) ."<br>\n";
-echo "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br>\n";
+$output .= "Last published at: " . get_date_time($last_published) ."<br>\n";
+$output .= "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br>\n";
 
 $continue = true;
 $published=0;
@@ -123,7 +124,7 @@ foreach ($db_metas as $dbmeta) {
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
-	echo "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br>";
+	$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br>";
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
@@ -132,7 +133,7 @@ foreach ($meta_coef as $m => $v) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
 	}
-	echo "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br>";
+	$output .= "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br>";
 	// Store current coef in DB
 	$db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
 }
@@ -145,9 +146,9 @@ $users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links w
 $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
-echo "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
-echo "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br>\n";
-echo "</p>\n";
+$output .= "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
+$output .= "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br>\n";
+$output .= "</p>\n";
 
 
 
@@ -158,17 +159,17 @@ $sort = "ORDER BY link_karma DESC, link_votes DESC";
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from links, users, categories where $where $sort LIMIT 30");
 $rows = $db->num_rows;
 if (!$rows) {
-	echo "There are no articles<br>\n";
-	echo "--------------------------<br>\n";
+	$output .= "There are no articles<br>\n";
+	$output .= "--------------------------<br>\n";
 	die;
 }
 	
 $max_karma_found = 0;
 $best_link = 0;
 $best_karma = 0;
-echo "<table>\n";	
+$output .= "<table>\n";	
 if ($links) {
-	print "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
+	$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 	$i=0;
 	foreach($links as $dblink) {
 		$link = new Link;
@@ -342,39 +343,43 @@ if ($links) {
 			publish($link);
 		}
 	}
-	print "</table>\n";
+	$output .= "</table>\n";
 	//////////
 }  
+echo $output;
 echo "</body></html>\n";
+$annotation = new Annotation('promote');
+$annotation->text = $output;
+$annotation->store();
 
 function print_row(&$link, $changes, &$log = '') {
-	global $globals;
+	global $globals, $output;
 	static $row = 0;
 
 	$mod = $row%2;
 
-	echo "<tr><td class='tnumber$mod'>".$link->votes."</td><td class='tnumber$mod'>".$link->anonymous."</td><td class='tnumber$mod'>".$link->negatives."</td><td class='tnumber$mod'>" . sprintf("%0.2f", $link->new_coef). "</td><td class='tnumber$mod'>".intval($link->karma)."</td>";
-	echo "<td class='tdata$mod'>$link->meta_name</td>\n";
-	echo "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
+	$output .= "<tr><td class='tnumber$mod'>".$link->votes."</td><td class='tnumber$mod'>".$link->anonymous."</td><td class='tnumber$mod'>".$link->negatives."</td><td class='tnumber$mod'>" . sprintf("%0.2f", $link->new_coef). "</td><td class='tnumber$mod'>".intval($link->karma)."</td>";
+	$output .= "<td class='tdata$mod'>$link->meta_name</td>\n";
+	$output .= "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 	if (!empty($link->message)) {
-		echo "$link->message";
+		$output .= "$link->message";
 	}
 	$link->message = '';
-	echo "</td>\n";
-	echo "<td class='tnumber$mod'>";
+	$output .= "</td>\n";
+	$output .= "<td class='tnumber$mod'>";
 	switch ($changes) {
 		case 1:
-			echo '<img src="../img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
+			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
 			break;
 		case 2:
-			echo '<img src="../img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
+			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
 			break;
 		case 3:
-			echo '<img src="../img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
+			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
 			break;
 	}
-	echo "</td>";
-	echo "</tr>\n";
+	$output .= "</td>";
+	$output .= "</tr>\n";
 	flush();
 	$row++;
 
