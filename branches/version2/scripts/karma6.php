@@ -265,7 +265,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 6 * comment_votes)");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 5 * (comment_votes-1))");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
 			$karma5 -= $karma0; // Take away karma0
@@ -303,13 +303,13 @@ while ($dbuser = mysql_fetch_object($result)) {
 		if ($user->karma > $karma) {
 			// Decrease slowly
 			$user->karma = 0.9*$user->karma + 0.1*$karma;
-			printf ("%07d ", $user->id);
-			print "Final karma: average: $user->karma,  calculated karma: $karma, decreasing (status: $user->level)\n";
+			printf("%07d ", $user->id);
+			printf("Final karma: average: %5.2f,  calculated karma: %5.2f, decreasing (status: $user->level)\n", $user->karma, $karma);
 		} else {
 			// Increase faster
 			$user->karma = 0.8*$user->karma + 0.2*$karma;
-			printf ("%07d ", $user->id);
-			print "Final karma: average: $user->karma,  calculated karma: $karma, increasing (status: $user->level)\n";
+			printf("%07d ", $user->id);
+			printf("Final karma: average: %5.2f,  calculated karma: %5.2f, increasing (status: $user->level)\n", $user->karma, $karma);
 		}
 		if ($user->karma > $max_karma * 0.85 && $user->level == 'normal') {
 			$user->level = 'special';
