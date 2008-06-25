@@ -407,6 +407,11 @@ function publish(&$link) {
 	if ($user->read()) {
 		$user->karma = min(20, $user->karma + 1);
 		$user->store();
+		$annotation = new Annotation("karma-$user->id");
+		$annotation->read();
+		$annotation->text .= _('Noticia publicada').": +1, karma: $user->karma\n";
+		echo $annotation->text;
+		$annotation->store();
 	}
 
 	// Add the publish event/log

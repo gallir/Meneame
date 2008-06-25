@@ -2,6 +2,7 @@
 include('../config.php');
 include(mnminclude.'user.php');
 include(mnminclude.'log.php');
+include(mnminclude.'annotation.php');
 
 header("Content-Type: text/plain");
 
@@ -33,9 +34,14 @@ if ($links) {
 			$user = new User();
 			$user->id = $link->link_author;
 			if ($user->read()) {
-				$user->karma -= 2;
+				$user->karma -= -2;
 				echo "$user->username: $user->karma\n";
 				$user->store();
+				$annotation = new Annotation("karma-$user->id");
+				$annotation->read();
+				$annotation->text .= _('Noticia retirada de portada').": -2, karma: $user->karma\n";
+				echo $annotation->text;
+				$annotation->store();
 			}
 		}
 	}
@@ -59,6 +65,11 @@ foreach ($negatives as $negative) {
 		$user->karma -= 0.20;
 		echo "$user->username: $user->karma\n";
 		$user->store();
+		$annotation = new Annotation("karma-$user->id");
+		$annotation->read();
+		$annotation->text .= _('Noticia descartada').": -0.20, karma: $user->karma\n";
+		echo $annotation->text;
+		$annotation->store();
 	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event
