@@ -64,6 +64,7 @@ $globals['max_comments'] = 2718;
 $globals['time_enabled_comments'] = 604800; // 7 days
 $globals['time_enabled_votes'] = 345600; // 4 days
 $globals['mysql_persistent'] = true;
+$globals['mysql_master_persistent'] = false;
 // Enable or disable the detecttion of real IP behind transparents proxies
 $globals['check_behind_proxy'] = false;
 //$globals['lounge'] = 'lounge.html';
