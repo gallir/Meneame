@@ -1,15 +1,11 @@
 <?php
 include_once('../config.php');
+include(mnminclude.'annotation.php');
 
 stats_increment('ajax');
 
-if (empty($globals['karma_log']) || empty($current_user->user_login)) {
-	echo _('fichero de karma incorrecto o usuario no identificado');
-	die;
-}
-$fd = @fopen($globals['karma_log'], 'r');
-if (! $fd) {
-	echo _('no se puedo abrir el fichero ') . $globals['karma_log'];
+if (empty($current_user->user_login)) {
+	echo _('usuario no identificado');
 	die;
 }
 
@@ -19,21 +15,16 @@ if (!empty($_GET['id']) && $current_user->user_level == 'god') {
 	$user = $current_user->user_id;
 }
 
-$found = false;
-echo '<ul>';
-while (($line = fgets($fd))) {
-	if (preg_match("/^0*$user /i", $line)) {
-		$found = true;
-		$line = preg_replace('/^\d+ /', '', $line);
-		echo "<li>$line</li>\n";
-	} elseif ($found) {
-		break;
+$annotation = new Annotation("karma-$user");
+if ($annotation->read()) {
+	echo '<strong>' . _('última modificación') . ':</strong> ' . get_date_time($annotation->time);
+	echo '<ul>';
+	foreach (split("\n", $annotation->text) as $line) {
+		$line = trim($line);
+		if($line) echo "<li>$line</li>\n";
 	}
-}
-echo '<ul>';
-fclose($fd);
-
-if (!$found) {
+	echo '<ul>';
+} else {
 	print _('no hay registros para este usuario');
 }
 ?>
