@@ -15,6 +15,7 @@ $db->query("delete from users where user_date < date_sub(now(), interval 24 hour
 // Delete old bad links
 $db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
+$db->barrier();
 // Delete email, names and url of invalidated users after three months
 $dbusers = $db->get_col("select user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
 if ($dbusers) {
@@ -55,6 +56,7 @@ $sql_points_calc = 'sum((unix_timestamp(link_date) - unix_timestamp(vote_date))/
 
 
 
+$db->barrier();
 $published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > $history_from"));
 
 $sum=0; $i=0;
@@ -86,9 +88,9 @@ $calculated = 0;
 
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select faila miserably with abpout 40.000 users.
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_id < 10 and user_level != 'disabled' order by user_id desc";
+$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_id desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
-$result = mysql_query($users) or die('Query failed: ' . mysql_error());
+$result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
 while ($dbuser = mysql_fetch_object($result)) {
 	$user = new User;
 	$user->id=$dbuser->user_id;
@@ -313,11 +315,15 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$output .= sprintf(_('Karma final').": %4.2f,  ".('último período').": %4.2f, ".('anterior').": %4.2f\n", 
 					$user->karma, $karma, $old_karma);
 		$user->store();
-		usleep(5000); // wait 1/200 seconds
+		// If we run in the same server as the database master, wait few milliseconds
+		if (!$db->dbmaster) {
+			usleep(5000); // wait 1/200 seconds
+		}
 	}
 	$annotation = new Annotation("karma-$user->id");
 	$annotation->text = $output;
 	$annotation->store();
+	$db->barrier();
 	echo $output;
 }
 mysql_free_result($result);
