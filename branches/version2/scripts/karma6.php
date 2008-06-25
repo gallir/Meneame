@@ -86,9 +86,10 @@ echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
 
-// We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select faila miserably with abpout 40.000 users.
+// We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select fails miserably with about 40.000 users.
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_id desc";
+$users = "SELECT SQL_NO_CACHE user_id from users where user_modification > date_sub(now(), interval 30 day) and user_level != 'disabled' order by user_modification desc";
+//$users = "SELECT SQL_NO_CACHE distinct user_id from users, votes where vote_type in ('comments', 'links') and vote_date > $history_from and vote_user_id = user_id and user_level != 'disabled' order by user_id desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
 $result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
 while ($dbuser = mysql_fetch_object($result)) {
@@ -177,7 +178,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma2 = min($points_given, $points_given * pow($published_average, 2) * ($published_points/($published_links/5) - ($nopublished_given/$published_links)/10) - 0.1 * $discarded_given);
 
 		if ($abuse_given > 0) {
-			$karma2 -= $abuse_given * 2;
+			$karma2 -= $abuse_given * 1;
 			$output .= _('Descuento por votar a enlaces que violan las reglas').":  $abuse_given \n";
 		}
 
@@ -283,7 +284,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
-		if ($user->karma > 6) {
+		if (abs($user->karma - $karma_base) < 0.1) {
+			$karma = $karma_base;
+		} elseif ($user->karma > $karma_base) {
 			$karma = max($karma_base, $user->karma - 1);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
@@ -293,10 +296,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	}
 	$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 
-	if ($user->karma == $karma) {
-		$output .= _('Karma no modificado').": ";
-		$output .= sprintf("%4.2f\n", $karma);
-	} else {
+	if ($user->karma != $karma) {
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
 			// Decrease slowly
@@ -312,17 +312,17 @@ while ($dbuser = mysql_fetch_object($result)) {
 				$user->level = 'normal';
 			}
 		}
-		$output .= sprintf(_('Karma final').": %4.2f,  ".('último período').": %4.2f, ".('anterior').": %4.2f\n", 
+		$output .= sprintf(_('Karma final').": %4.2f,  ".('cálculo actual').": %4.2f, ".('karma anterior').": %4.2f\n", 
 					$user->karma, $karma, $old_karma);
 		$user->store();
 		// If we run in the same server as the database master, wait few milliseconds
 		if (!$db->dbmaster) {
 			usleep(5000); // wait 1/200 seconds
 		}
+		$annotation = new Annotation("karma-$user->id");
+		$annotation->text = $output;
+		$annotation->store();
 	}
-	$annotation = new Annotation("karma-$user->id");
-	$annotation->text = $output;
-	$annotation->store();
 	$db->barrier();
 	echo $output;
 }
