@@ -130,6 +130,19 @@ function do_submit1() {
 		return;
 	}
 
+	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute)");
+	if ($current_user->user_karma > 10) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
+	else $enqueued_limit = $globals['limit_3_minutes'];
+
+	if ($enqueued_last_minutes > $enqueued_limit) {
+		echo '<p class="error"><strong>'._('Exceso de envíos').':</strong></p>';
+		echo '<p>'._('Se han enviado demasiadas noticias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
+		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
+		echo '</div>'. "\n";
+		return;
+	}
+
+	// Check the user does not have too many drafts
 	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes = 0");
 	if ($drafts > 3) {
 		echo '<p class="error"><strong>'._('Demasiados borradores').':</strong></p>';
@@ -144,6 +157,7 @@ function do_submit1() {
 	}
 
 
+	// Check for banned IPs
 	if(check_ban($globals['user_ip'], 'ip', true) || check_ban_proxy()) {
 		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].' ('. $globals['ban_message'].')</p>';
 		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $url");
