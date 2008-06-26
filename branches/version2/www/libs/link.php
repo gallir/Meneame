@@ -631,11 +631,11 @@ class Link {
 	}
 
 	function print_warn() {
-		global $db;
+		global $db, $globals;
 
 		if ($this->status == 'abuse') {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
-			echo _('noticia descartada por violar las normas de uso.');
+			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
 			echo "</div>\n";
 		} elseif ( !$this->is_discarded() &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
