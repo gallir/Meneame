@@ -41,6 +41,14 @@ class Annotation {
 		return false;
 	}
 
+	function append($text) {
+		if ($text) {
+			$this->read();
+			$this->text .= $text;
+			$this->store();
+		}
+	}
+
 	function optimize() {
 		global $db;
 

@@ -1653,6 +1653,7 @@ text-align:center;
 
 #modalContainer .content {
 padding: 5px 5px 5px 5px;
+overflow: hidden;
 }
 
 #modalContainer .content ul {
@@ -1660,7 +1661,7 @@ padding-left: 15px;
 }
 
 #modalContainer .content li {
-margin: 8px 0 0 0;
+margin: 3px 0 0 0;
 }
 
 

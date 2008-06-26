@@ -80,12 +80,15 @@ if ($votes_freq > $freq) {
     	// Crazy votes attack, decrease karma
 		// she does not deserve it :-)
     	require_once(mnminclude.'user.php');
+    	require_once(mnminclude.'annotation.php');
     	$user = new User;
     	$user->id = $current_user->user_id;
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
 		warn(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
+		$annotation = new Annotation("karma-$user->id");
+		$annotation->append(_('Voto cowboy').": -0.2, karma: $user->karma\n");
 	} else  {
 		warn(_('¡tranquilo cowboy!'));
 	}
