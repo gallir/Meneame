@@ -200,7 +200,9 @@ function send_chat_warn($mess) {
 function get_chat($time) {
 	global $db, $events, $last_timestamp, $max_items, $current_user;
 
-	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $max_items");
+	if (!empty($_REQUEST['admin']) || !empty($_REQUEST['friends'])) $chat_items = $max_items * 2;
+	else $chat_items = $max_items;
+	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $chat_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$json['uid'] = $uid = $event->chat_uid;
