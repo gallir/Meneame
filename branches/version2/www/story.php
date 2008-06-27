@@ -522,11 +522,22 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 
 
+	$dots_before = $dots_after = false;
 	for ($i=1;$i<=$total_pages;$i++) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			if ($total_pages < 7 || abs($i-$current) < 3 || $i < 3 || abs($i-$total_pages) < 2) {
+				echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			} else {
+				if ($i<$current && !$dots_before) {
+					$dots_before = true;
+					echo '<span>...</span>';
+				} elseif ($i>$current && !$dots_after) {
+					$dots_after = true;
+					echo '<span>...</span>';
+				}
+			}
 		}
 	}
 	
