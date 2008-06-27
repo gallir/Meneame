@@ -111,6 +111,14 @@ class Post {
 		if ($current_user->user_id > 0 && $this->author != $current_user->user_id)
 					$this->print_shake_icons();
 		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
+
+		// Add the icon to show votes
+		if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
+			echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_p_v.php?id='.$this->id.'\')">';
+			echo '<img src="'.$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info"title="'._('¿quién ha votado?').'"/>';
+			echo '</a>';
+		}
+
 		echo '</div>';
 
 		// Print comment info (right)
