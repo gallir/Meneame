@@ -42,7 +42,7 @@ if ($comments) {
 				do_banner_story();
 			//$link->print_summary('short');
 			echo '<h3>';
-			echo '<a href="'.$link->get_permalink().'">'. $link->title. '</a>';
+			echo '<a href="'.$link->get_relative_permalink().'">'. $link->title. '</a>';
 			echo '</h3>';
 		}
 			echo '<ol class="comments-list">';
