@@ -34,14 +34,11 @@ if ($links) {
 			$user = new User();
 			$user->id = $link->link_author;
 			if ($user->read()) {
-				$user->karma -= -2;
+				$user->karma -= 2;
 				echo "$user->username: $user->karma\n";
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
-				$annotation->read();
-				$annotation->text .= _('Noticia retirada de portada').": -2, karma: $user->karma\n";
-				echo $annotation->text;
-				$annotation->store();
+				$annotation->append(_('Noticia retirada de portada').": -2, karma: $user->karma\n");
 			}
 		}
 	}
@@ -66,10 +63,7 @@ foreach ($negatives as $negative) {
 		echo "$user->username: $user->karma\n";
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->read();
-		$annotation->text .= _('Noticia descartada').": -0.20, karma: $user->karma\n";
-		echo $annotation->text;
-		$annotation->store();
+		$annotation->append(_('Noticia descartada').": -0.20, karma: $user->karma\n");
 	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event

@@ -61,7 +61,7 @@ $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
 
-$pub_estimation = intval(max(min($links_queue * 0.11, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * 0.10, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
@@ -408,10 +408,7 @@ function publish(&$link) {
 		$user->karma = min(20, $user->karma + 1);
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->read();
-		$annotation->text .= _('Noticia publicada').": +1, karma: $user->karma\n";
-		echo $annotation->text;
-		$annotation->store();
+		$annotation->append(_('Noticia publicada').": +1, karma: $user->karma\n");
 	}
 
 	// Add the publish event/log

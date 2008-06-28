@@ -88,7 +88,7 @@ $calculated = 0;
 
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select fails miserably with about 40.000 users.
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_modification > date_sub(now(), interval 30 day) and user_level != 'disabled' order by user_modification desc";
+$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_modification desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, votes where vote_type in ('comments', 'links') and vote_date > $history_from and vote_user_id = user_id and user_level != 'disabled' order by user_id desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
 $result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
@@ -105,6 +105,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
 	if ($first_published > 0) {
 		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365*1.5));
+		$karma_base_user = round($karma_base_user, 2);
 	} else {
 		$karma_base_user = $karma_base;
 	}
@@ -139,7 +140,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 				}
 			}
 			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status not in ('published', 'abuse', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
+			$positive_karma_received = round($positive_karma_received);
 			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status not in ('published', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
+			$negative_karma_received = round($negative_karma_received);
 
 			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
 			$karma1 = $points_received * $karma_received / $max_avg_positive_received;
@@ -239,7 +242,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			$karma3 -= $punishment;
 			$penalized = 1;
-			$output .= _('Exceso de votos negativos a no descartadas')." ($negative_no_discarded > $max_allowed_negatives), "._('penalización').": $punishment, karma3: ";
+			$output .= _('Exceso de votos negativos a enlaces')." ($negative_no_discarded > $max_allowed_negatives), "._('penalización').": $punishment, karma3: ";
 			$output .= sprintf("%4.2f\n", $karma3);
 		}
 
@@ -263,7 +266,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 5 * (comment_votes-1))");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 5 * comment_votes)");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
 			$karma5 -= $karma0; // Take away karma0
@@ -273,7 +276,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 		if ($karma5 != 0) {
 			$penalized = 1;
-			$output .= _('Exceso de votos negativos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
+			$output .= _('Exceso de votos negativos injustos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
 			$output .= sprintf("%4.2f\n", $karma5);	
 		}
 
@@ -284,6 +287,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma = min($karma, $max_karma);
 	} else {
 		$no_calculated++;
+		$output = '';
 		if (abs($user->karma - $karma_base) < 0.1) {
 			$karma = $karma_base;
 		} elseif ($user->karma > $karma_base) {
@@ -294,9 +298,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karma = $user->karma;
 		}
 	}
-	$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
+	$karma = round($karma, 2);
 
 	if ($user->karma != $karma) {
+		$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
 			// Decrease slowly
@@ -319,6 +324,8 @@ while ($dbuser = mysql_fetch_object($result)) {
 		if (!$db->dbmaster) {
 			usleep(5000); // wait 1/200 seconds
 		}
+	}
+	if (!empty($output)) {
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->text = $output;
 		$annotation->store();
