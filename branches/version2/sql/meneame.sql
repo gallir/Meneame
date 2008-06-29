@@ -25,7 +25,7 @@ SET character_set_client = utf8;
 CREATE TABLE `annotations` (
   `annotation_key` char(40) NOT NULL,
   `annotation_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `annotation_text` text NOT NULL,
+  `annotation_text` text,
   PRIMARY KEY  (`annotation_key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
