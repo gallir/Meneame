@@ -9,7 +9,7 @@
 class Annotation {
 	var $key = false;
 	var $time;
-	var $text;
+	var $text = '';
 
 	function Annotation($key = false) {
 		if ($key) $this->key = $key;
@@ -19,7 +19,7 @@ class Annotation {
 	function store() {
 		global $db;
 
-		if (empty($this->key) || empty($this->text)) return false;
+		if (empty($this->key)) return false;
 
 		$key = $db->escape($this->key);
 		$text = $db->escape($this->text);
