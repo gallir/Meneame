@@ -23,7 +23,7 @@ if ($annotation->read()) {
 		$line = trim($line);
 		if($line) echo "<li>$line</li>\n";
 	}
-	echo '<ul>';
+	echo '</ul>';
 } else {
 	print _('no hay registros para este usuario');
 }

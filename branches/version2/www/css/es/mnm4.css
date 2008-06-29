@@ -1621,6 +1621,7 @@ margin-left:-300px;
 border:1px solid #FF6400;
 background: #FFEEC7;
 /*border-color: #e2d3b0;*/
+overflow: hidden;
 }
 #modalContainer a.modalCloseX,
 #modalContainer a.modalCloseX:link,
@@ -1653,7 +1654,6 @@ text-align:center;
 
 #modalContainer .content {
 padding: 5px 5px 5px 5px;
-overflow: hidden;
 }
 
 #modalContainer .content ul {
