@@ -1,0 +1,752 @@
+/*
+Description: CSS color and image file for Menéame
+Version: 6.0
+Last updated: 22:30 19/06/2008
+Site URI: http://meneame.net
+Authors: Ricardo Galli and Benjamí Villoslada. CSS by Damián Vila
+Licence: Affero GPL License (http://meneame.net/COPYING)
+Comments: This file contains only colors or images. All images referenced by the CSS and distributed in the tar file are copyrighted by Benjamí Villoslada and published under a CC license: http://creativecommons.org/licenses/by-sa/2.5/
+*/
+
+body {
+background-color: #e5d7c3; /* e5d7c3 ó e6e6e6 */
+}
+
+a {
+color: #03a;
+}
+
+a:hover, a:focus {
+color: #ff6400;
+}
+
+a:active {
+color: #000;
+}
+
+#wrap {
+background-color: #fff;
+}
+
+#header {
+background: #ffd9c0 url('../../img/es/headerbg.png') no-repeat 14.64em -5em;
+}
+
+#logo {
+background: #ffb280 url('../../img/es/logobg.png') no-repeat left top;
+}
+
+#headtools a {
+color: #333;
+}
+
+#headtools li {
+border-color: #fff;
+}
+
+#naviwrap {
+background: url('../../img/es/eli.png') no-repeat left top;
+}
+
+#navigation {
+background: url('../../img/es/navibg.png') no-repeat right top;
+}
+
+#navigation li {
+border-color: #fff;
+}
+
+#navigation a {
+color: #ff6400;
+}
+
+.tabmain {
+border-color: #ff6400;
+}
+
+.tabmain li {
+background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
+}
+
+.tabmain li a {
+background: #fff;
+border-color: #ff6400;
+color: #ff6400;
+}
+
+.tabmain li.tabmain-this {
+background: #fff;
+background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
+}
+
+.tabmain li.tabmain-this a {
+background: #ffd9c0 url('../../img/common/reload-bt.gif') no-repeat right 6px;
+}
+
+.tabsub-shakeit {
+background: #ffd9c0;
+}
+
+.tabsub-shakeit li {
+border-color: #ff6400;
+}
+
+.tabsub-shakeit li a {
+color: #ff6400;
+}
+
+.catsub-block {
+border-color: #ff9400;
+}
+
+.catsub-block li a {
+color: #000;
+}
+
+#sidebar h4 {
+background: #ffd9c0;
+border-color: #ff6400;
+}
+
+#sidebar h4 a {
+color: #000;
+}
+
+#sidebar .vertical-box h4 {
+background: #5073c5;
+border-color: #fff;
+}
+
+#sidebar .vertical-box h4 a {
+color: #fff;
+}
+
+.mini-pop {
+border-color: #ff6400;
+}
+
+.mnm-pop {
+color: #fff;
+background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;
+}
+
+.mnm-pop a {
+color: #fff;
+}
+
+.mnm-pop a:hover {
+color: #006;
+}
+
+.vertical-box {
+background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
+}
+
+.vertical-box a {
+color: #5073c5;
+}
+
+#sidebar .topcommentsli li {
+border-color: #ff6400;
+color: #03a;
+}
+
+#footcol1, #footcol2, #footcol3, #footcol4, #footcol5 {
+border-color: #ff6400;
+}
+
+#footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
+color: #ff6400;
+}
+
+#footcol1 a, #footcol2 a, #footcol3 a, #footcol4 a, #footcol5 a {
+color: #5073c5;
+}
+
+#footthingy {
+background: url('../../img/es/footeli.png') no-repeat left top;
+}
+
+#footthingy li {
+color: #999;
+}
+
+#footthingy li a {
+color: #999;
+}
+
+#footthingy p {
+border-color: #ff6400;
+background: url('../../img/es/meneito.png') no-repeat left 2px;
+}
+
+/*** LEGACY COLORS ***/
+
+.tt {
+color: #C85000;
+}
+
+/* h2 without underline */
+
+.topheading h2 {
+color: #FF6400;
+}
+
+/* credits */
+
+.credits-strip {
+border-top-color: #FF6400;
+}
+
+.credits-strip-text {
+color: #FF6400;
+}
+
+.credits-strip a:link, .credits-strip a:visited {
+color: #FF6400;
+}
+
+hr {
+background: #ccc;
+}
+
+h2 {
+border-bottom-color: #FF6400;
+}
+
+table img {
+border-color: #ccc;
+}
+
+th, td {
+border-bottom-color: #ddd;
+}
+
+th.short a, td.short a {
+border-color: #FFF;
+}
+
+th.short a:hover, td.short a:hover {
+background: #FFF;
+border-color: #000;
+}
+
+tr:hover td {
+background: #FFE2C5;
+}
+
+th span.info_s {
+color: #a00;
+}
+
+/* ATENCION: dos colores de borde... */
+.warn {
+background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
+border-color: #C4C400;
+border-color: #FF9400;
+}
+
+.error {
+color: #FF6400;
+background: url(../../img/common/error.png) no-repeat;
+}
+
+.error-text {
+color: #FF9400;
+}
+
+.form-error, .form-error-submit {
+color: #FF5900;
+background: url(../../img/common/error.png) 0 50% no-repeat;
+}
+
+.form-error-submit {
+background: #FFE2C5;
+border-color: #FF6400;
+}
+
+.form-act {
+color: #FF5900;
+}
+
+.instruction {
+color: #2C3D4E;
+}
+
+/* news */
+
+.news-details {
+color: #FF6400;
+}
+
+.news-details a:link, .news-details a:visited {
+color: #FF7C00;
+}
+
+.news-details select {
+background: #FFF;
+color: #FF7C00;
+}
+
+.news-details .tool {
+border-left-color: #FF6400;
+}
+
+/* Counter box */
+
+.mnm-published a:hover, .mnm-queued a:hover, .mnm-discarded a:hover {
+color: #03A;
+}
+
+.mnm-published, .mnm-published a {
+color: #FFF;
+}
+
+.mnm-published {
+background: #FF6400 url(../../img/common/elmnm-p03.png) top left no-repeat;
+}
+
+.mnm-queued, .mnm-queued a {
+color: #FF6400;
+}
+
+.mnm-queued {
+background: #FFF url(../../img/common/elmnm-p03a.png) top left no-repeat;
+border-color: #FF6400;
+}
+
+.mnm-discarded, .mnm-discarded a {
+color: #FFF;
+}
+
+.mnm-discarded {
+background: #D9AA95 url(../../img/common/elmnm-p03b.png) top left no-repeat;
+border-color: #D9AA95;
+}
+
+/* vote box */
+
+.menealo {
+background-color: #fff;
+}
+
+.menealo a {
+background: url(../../img/common/menealo-background.png) bottom left repeat-x;
+border-color: #FFCBAA;
+}
+
+.menealo a, .menealo span {
+color: #FF6400;
+}
+
+.menealo span {
+border-color: #FF6400;
+}
+
+.news-submitted {
+color: #666;
+}
+
+.news-submitted a:link, .news-submitted a:visited {
+color: #666;
+}
+
+.news-tags {
+color: #666;
+}
+
+/* gravatar */
+
+.news-submitted img {
+border-color: #FFE2C5;
+}
+
+/* side menu */
+
+.mnu-faq {
+color: #FF6400;
+border-top-color: #FFE2C5;
+}
+
+.mnu-faq a {
+color: #FF9400;
+}
+
+.mnu-submit {
+color: #FF6400;
+border-top-color: #FFE2C5;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-submit01.png) right bottom no-repeat;
+}
+
+.mnu-sneak {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/elmnm-sneak01.png) right bottom no-repeat;
+}
+
+.mnu-notame {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-notame01.png) right bottom no-repeat;
+}
+
+.mnu-geovision {
+color: #FF6400;
+border-bottom-color: #FFE2C5;
+background: url(../../img/common/mnu-geovision01.png) right bottom no-repeat;
+}
+
+.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-geovision a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .tab-trackback a, .mnu-seguiment-ext a  {
+color: #FF6400;
+background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
+}
+
+.mnu-bugs, .mnu-menedising, .mnu-seguiment-ext {
+color: #FF6400;
+background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;
+}
+
+.mnu-meneria, .mnu-tools, .mnu-rss {
+color: #FF6400;
+background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
+}
+
+.mnu-rss a {
+color: #FF6400;
+background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 2px;
+}
+
+li.mnu-rss-external a {
+background: none;
+}
+
+/* trackback */
+
+.tab-trackback-url {
+color: #FF6400;
+}
+
+.tab-trackback-entry {
+color: #666;
+}
+
+.tab-trackback-entry a {
+background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-technorati a {
+background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-google a {
+background: url(../../img/favicons/google.png) no-repeat 0px 4px;
+}
+
+.tab-trackback-askcom a {
+background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
+}
+ 
+/* submit form */
+
+/* comments */
+
+.commentform a:link, .commentform a:visited {
+color: #FFF;
+}
+
+.commentform .submit {
+background: #FF6400;
+color: #FFF;
+border-color: #FFF;
+}
+
+.commentform textarea {
+color: #303030;
+background: #FFE2C5;
+border-color: #FF9400;
+}
+
+.commentform label {
+color: #FF6400;
+}
+
+.commentform.warn {
+background: #FF6400;
+color: #FFF;
+}
+
+.comments-warning {
+color: #9B0000;
+}
+
+.news-details .comments {
+background: url(../../img/common/tocomments01.png) no-repeat left;
+}
+
+.comment-body {
+background: #FFE2C5 url(../../img/common/comment.png) right bottom no-repeat;
+color: #303030;
+border-color: #FF6400;
+}
+
+.comment-body.high {
+background: #FFC8A6 url(../../img/common/comment-high.png) right bottom no-repeat;
+border-color: #FF9400;
+}
+
+.comment-body-hidden {
+border-color: #aaa;
+color: #aaa;
+}
+
+.comment-body-hidden a {
+color: #aaa;
+}
+
+.comment-body strong {
+color: #FF6400;
+}
+
+.comment-body span strong {
+color: #000;
+}
+
+.comment-meta, .comment-meta-hidden {
+color: #FF6400;
+}
+
+.comment-meta-hidden, .comment-meta-hidden a {
+color: #aaa;
+}
+
+.comment-meta a {
+color: #FF9400;
+}
+
+.comments-list ul {
+background: #FFF;
+}
+
+/* fieldsets */
+
+fieldset {
+border-color: #FF9400;
+}
+
+legend, legend a {
+color: #FF9400;
+}
+
+/* gravatar */
+
+.thumbnail {
+border-color: #FFE2C5;
+}
+
+/* pagination */
+
+.pages, .pages-margin {
+border-top-color: #FF6400;
+}
+
+.pages a, .pages span, .pages-margin a, .pages-margin span {
+color: #FF6400;
+border-color: #FFF;
+background: #FFF;
+}
+
+.pages span.current, .pages-margin span.current {
+background: #FFBE94;
+color: #FF6400;
+border-color: #FF6400;
+}
+
+.pages span.current a, .pages-margin span.current a {
+background: #FF6400;
+color: #FF6400;
+}
+
+.pages a, .pages-margin a {
+border-color: #FF6400;
+background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+}
+
+.pages a:hover, .pages-margin a:hover {
+border-color: #FF9400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+.pages span.nextprev, .pages-margin span.nextprev {
+color: #FFE2C5;
+}
+
+.pages span.nextprev, .pages-margin span.nextprev {
+border-color: #FFE2C5;
+color: #FFE2C5;
+}
+
+/* faq page */
+
+#faq-contents ol {
+color: #FF6400;
+}
+
+#faq-contents ul {
+color: #303030;
+}
+
+#faq-contents h4 {
+color: #FF6400;
+}
+
+#faq-contents p {
+color: #303030;
+}
+
+/* generic form and wide page */
+
+#genericform fieldset, #genericform-contents fieldset {
+background: #FFF;
+border-color: #FF6400;
+}
+
+#genericform, .geoform {
+background: #FFF;
+color: #FF6400;
+}
+
+#genericform .sign, #genericform-contents legend {
+color: #FF6400;
+}
+
+#genericform .genericsubmit {
+background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
+border-color: #FF6400;
+color: #FF6400;
+}
+
+#genericform .genericsubmit:hover {
+background: #FFBE94;
+color: #FFF;
+}
+
+#genericform input, .geoform input  {
+background: #FFE2C5;
+border-color: #FF6400;
+color: #303030;
+}
+
+#genericform .genericformtxt {
+color: #303030;
+}
+
+#genericform .genericformnote {
+color: #FF9400;
+}
+
+#genericform textarea {
+background: #FFE2C5;
+border-color: #FF6400;
+color: #303030;
+}
+
+/* generic form: login page specials */
+
+#genericform .recoverpass {
+color: #FF6400;
+}
+
+#genericform .recoverpass a:link, .recoverpass a:visited {
+color: #FF6400;
+}
+
+#genericform .formnotice {
+color: #303030;
+}
+
+/* image forms */
+
+/* shakeit page search form */
+
+.shakeit-form-input {
+color: #303030;
+border-color: #FF6400;
+background: #FFE2C5;
+}
+
+.shakeit-form-submit {
+background: #FF6400;
+color: #FFF;
+border-color: #FFF;
+}
+
+.shakeit-form label {
+color: #FF6400;
+}
+
+.voters-list {
+color: #FF6400;
+background: #FFF;
+border-color: #FFE2C5;
+}
+
+.mini-pages a, .mini-pages span {
+color: #FF6400;
+border-color: #FFF;
+background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+}
+
+.mini-pages span.current {
+border-color: #FF6400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+.mini-pages span.current a {
+background: #FFBE94;
+color: #FF6400;
+}
+
+.mini-pages a {
+border-color: #FF6400;
+}
+
+.mini-pages a:hover {
+border-color: #FF9400;
+background: #FFBE94;
+color: #FF6400;
+}
+
+/* classes for bar diagrams */
+
+.bars-list {
+color: #FF6400;
+background: #FFF;
+}
+
+.bars-list .bar-container {
+color: #000;
+}
+
+#tooltip-text {
+background: #FFEEC7;
+border-color: #e2d3b0;
+}
+
+.news-websnapr {
+border-color: #FFE2C5;
+}
+
+.mini-sneaker-title strong {
+color: #FF9400;
+}
+
+.mini-sneaker-item {
+border-bottom-color: #FFE2C5;
+}
+
+.underl-y {
+background-color: #FFFF66;
+}

@@ -38,28 +38,28 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		// First the standard and always present tabs
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'" title="'.$reload_text.'"><em>'._('portada').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'" title="'.$reload_text.'"><em>'._('portada').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// Google Map
 		if ($tab_selected == 'map') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'map.php" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'map.php" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'map.php">'._('mapa').'</a></li>' . "\n";
 		}
 
 		// Most voted
 		if ($tab_selected == 'popular') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('popular').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'"><em>'._('menear pendientes').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'"><em>'._('menear pendientes').'</em></a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
@@ -69,7 +69,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-			echo '<li><a '.$active.' href="'.$url.'" title="'.$reload_text.'"><em>'.$tab_selected.'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$url.'" title="'.$reload_text.'"><em>'.$tab_selected.'</em></a></li>' . "\n";
 		}
 		echo '</ul>' . "\n";
 	}
@@ -119,42 +119,48 @@ function do_header($title, $id='home') {
 
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
-	echo '<div id="logo">'  . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="la elefanta Eli"><img src="'.$globals['base_url'].$globals['top_logo'].'" alt="logo menéame" /></a>';
-	echo '</div>'  . "\n";
+	echo '<div id="wrap">' . "\n";
 
 	echo '<div id="header">' . "\n";
-	echo '<ul>' . "\n";
-	//echo '<li><a href="'.$globals['base_url'].'telnet.php"  title="'._('es la fisgona, pero más segura para el trabajo').'">'. _('¡la jefa!') . '</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
-	if ($title != "login") {
-		if($current_user->authenticated) {
-	  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('cerrar sesión') . '</a></li>' . "\n";
-			if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
-				echo '<li><a href="'.$globals['base_url'].'admin/bans.php">'._('adm'). '</a></li>' . "\n";
-			}
-  			echo '<li><a href="'.get_user_uri($current_user->user_login).'">' .'<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'" title="'._('perfil').'" />&nbsp;'.$current_user->user_login.'</a></li>' . "\n";
-		} else {
-  			echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  			echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">' . _('login') . '</a></li>' . "\n";
-		}
-	}
+	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'">menéame</a>'."\n";
+	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
-	echo '<li>' . "\n";
+	echo '<li class="noborder">' . "\n";
 	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
 	if (!empty($_REQUEST['q'])) {
-		echo '<input type="text" name="q" value="'.htmlspecialchars(strip_tags($_REQUEST['q'])).'" />' . "\n";
+		echo '<input type="text" name="q" value="'.htmlspecialchars(strip_tags($_REQUEST['q'])).'" />';
 	} else {
-		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>' . "\n";
+		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" align="top" alt="buscar" src="'.$globals['base_url'].'img/common/search-01.gif" id="submit_image"/></a>' . "\n";
-	echo '</form>' . "\n";
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" align="top" alt="buscar" src="'.$globals['base_url'].'img/common/search-02.gif" id="submit_image"/></a>';
+	echo '</form>';
 	echo '</li>' . "\n";
 	// form
+
+	echo '<li><a href="http://meneame.wikispaces.com/Ayuda"><img src="'.$globals['base_url'].'img/common/help-bt.gif" alt="help button" title="'._('ayuda').'" width="12" height="12" /></a></li>';
+	if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
+		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_url'].'img/common/tools-bt.gif" alt="tools button" title="herramientas" width="14" height="12" /> </a></li>' . "\n";
+	}
+
+	if($current_user->authenticated) {
+ 		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'._('bienvenid@!').'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.gif" alt="login button" title="login" width="12" height="12" /> '. _('cerrar sesión').'</a></li>' . "\n";
+	} else {
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.gif" alt="login button" title="login" width="12" height="12" /> '. _('login').'</a></li>' . "\n";
+  		echo '<li class="noborder">><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
+	}
+
+	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
 	echo '</ul>' . "\n";
 	echo '<span class="header-left">&nbsp;</span>' . "\n";
 	echo '</div>' . "\n";
+	echo '<div id="naviwrap"><ul id="navigation">'."\n";
+	echo '<li class="first"><a href="'.$globals['base_url'].'submit.php">enviar noticia</a></li>'."\n";
+	echo '<li class="second"><a href="'.$globals['base_url'].'shakeit.php">pendientes</a></li>'."\n";
+	echo '<li class="third"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
+	echo '<li class="fourth"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";
+	echo '</ul></div>'."\n";
 }
 
 function do_css_includes() {
@@ -204,6 +210,7 @@ function do_js_from_array($array) {
 function do_footer($credits = true) {
 	global $globals;
 
+	echo "</div><!--#container closed-->\n";
 	if($credits) @do_credits();
 	do_js_from_array($globals['post_js']);
 
@@ -213,39 +220,23 @@ function do_footer($credits = true) {
 	// Store as html page load
 	stats_increment('html');
 	printf("\n<!--Generated in %4.3f seconds-->\n", microtime(true) - $globals['start_time']);
-	echo "</body></html>\n";
+	echo "</div></body></html>\n";
 }
 
 function do_sidebar($do_vert_bars = true) {
 	global $db, $dblang, $globals;
 	echo '<div id="sidebar">';
 
-	if(!empty($globals['link_id'])) {
-		do_mnu_faq('story');
-	} else {
-		do_mnu_faq('home');
-	}
-
-	do_mnu_submit();
-	do_mnu_sneak();
-	do_mnu_geovision();
-	do_mnu_notame();
+	do_banner_right();
 
 	// don't show every box if it's a search
 	if (!isset($_REQUEST['q'])) {
 		if($do_vert_bars) {
-			do_vertical_tags();
+			do_best_stories();
 			do_best_comments();
-			//do_best_posts();
+			do_vertical_tags();
 		}
-		do_mnu_meneria();
 	}
-	do_mnu_rss();
-	do_mnu_tools();
-	do_mnu_menedising();
-	do_mnu_seguiment_ext();
-	do_mnu_bugs();
-	do_banner_left_down();
 	echo '</div><!--html1:do_sidebar-->' . "\n";
 }
 
@@ -299,84 +290,74 @@ function do_mnu_faq($whichpage) {
 	
 }
 
-function do_mnu_submit() {
-	global $globals;
-	echo '<div class="mnu-submit"><a href="'.$globals['base_url'].'submit.php">'._("enviar noticia").'</a></div>' . "\n";
-}
+function do_footer_menu() {
+	global $globals, $current_user;
 
-function do_mnu_sneak() {
-	global $globals;
-	echo '<div class="mnu-sneak"><a href="'.$globals['base_url'].'sneak.php">'._("fisgona").'</a></div>' . "\n";
-}
+	echo '<div id="footwrap">'."\n";
 
-function do_mnu_notame() {
-	global $globals;
-	echo '<div class="mnu-notame"><a href="'.post_get_base_url().'">'._("nótame").'</a></div>' . "\n";
-}
+	echo '<div id="footcol1">'."\n";
+	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
+	echo '<ul id="rsslist">'."\n";
+	echo '<li><a href="">'._('publicadas').'</a></li>'."\n";
+	echo '<li><a href="">'._('en cola').'</a></li>'."\n";
+	echo '<li><a href="">'._('todas').'</a></li>'."\n";
 
-function do_mnu_geovision() {
-	global $globals;
-	echo '<div class="mnu-geovision"><a href="'.$globals['base_url'].'geovision.php">'._("geovisión").'</a></div>' . "\n";
-}
+	echo '<li><a href="">'._('mis conversaciones').'</a></li>'."\n";
+	echo '<li><a href="">'._('comentarios a mis noticias').'</a></li>'."\n";
 
-function do_mnu_bugs() {
-	echo '<ul class="mnu-bugs">' . "\n";
-	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._("reportar errores").'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._("reportar abusos").'</a></li>' . "\n";
+	echo '<li><a href="">'._('todos los comentarios').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '</div>'."\n";
+	echo '<div id="footcol2">'."\n";
+	echo '<h5>ayuda</h5>'."\n";
+	echo '<ul id="helplist">'."\n";
+	echo '<li><a href="">'._('faq').'</a></li>'."\n";
+	echo '<li><a href="">'._('ayuda').'</a></li>'."\n";
+	echo '<li><a href="">'._('wiki').'</a></li>'."\n";
+	echo '<li><a href="">'._('blog').'</a></li>'."\n";
 
-	} else {
-		echo '<li><a href="#">'._("your bugs link here").'</a></li>' . "\n";
-		echo '<li><a href="#">'._("your abuse link here").'</a></li>' . "\n";
-	}
-	echo '</ul>' . "\n";
-}
+	echo '<li><a href="">'._('reportar errores').'</a></li>'."\n";
+	echo '<li><a href="">'._('reportar abusos').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '</div>'."\n";
+	echo '<div id="footcol3">'."\n";
+	echo '<h5>+menéame</h5>'."\n";
+	echo '<ul id="moremenelist">'."\n";
+	echo '<li><a href="">'._('para móviles').'</a></li>'."\n";
+	echo '<li><a href="">'._('nótame').'</a></li>'."\n";
+	echo '<li><a href="">'._('blog').'</a></li>'."\n";
+	echo '<li><a href="">'._('Twitter').'</a></li>'."\n";
 
-function do_mnu_menedising() {
-	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<div class="mnu-menedising"><a href="http://meneame.wikispaces.com/menechandising">'._("menechandising").'</a></div>' . "\n";
-	} else {
-		echo '<div class="mnu-menedising"><a href="#">'._("merchandasing here").'</a></div>' . "\n";
-	}
-}
+	echo '<li><a href="">'._('Jaiku').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '</div>'."\n";
+	echo '<div id="footcol4">'."\n";
+	echo '<h5>estadísticas</h5>'."\n";
+	echo '<ul id="statisticslist">'."\n";
+	echo '<li><a href="">'._('nube de etiquetas').'</a></li>'."\n";
+	echo '<li><a href="">'._('más meneadas').'</a></li>'."\n";
+	echo '<li><a href="">'._('más comentadas').'</a></li>'."\n";
+	echo '<li><a href="">'._('mejores comentarios').'</a></li>'."\n";
+	echo '<li><a href="">'._('nube de webs').'</a></li>'."\n";
 
-function do_mnu_seguiment_ext() {
-	echo '<ul class="mnu-seguiment-ext">' . "\n";
-	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<li><a href="http://meneame.jaiku.com">'._("seguimiento en Jaiku").'</a></li>' . "\n";
-		echo '<li><a href="http://twitter.com/meneame_net">'._("seguimiento en Twitter").'</a></li>' . "\n";
-	} else {
-		echo '<li><a href="#">'._("here jaiku, twitter, etc").'</a></li>' . "\n";
-	}
-	echo '</ul>' . "\n";
-}
+	echo '<li><a href="">'._('usuarios').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '</div>'."\n";
+	echo '<div id="footcol5">'."\n";
+	echo '<h5>mapas</h5>'."\n";
+	echo '<ul id="mapslist">'."\n";
+	echo '<li><a href="">'._('geovisión').'</a></li>'."\n";
+	echo '<li><a href="">'._('noticias').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '<h5>tienda</h5>'."\n";
+	echo '<ul id="shoplift">'."\n";
+	echo '<li><a href="">'._('camisetas').'</a></li>'."\n";
 
-function do_mnu_meneria () {
-	global $globals;
-	echo '<ul class="mnu-meneria">' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'cloud.php">'._("nube de etiquetas").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._("más meneadas").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'topcommented.php">'._("más comentadas").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._("mejores comentarios").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._("nube de webs").'</a></li>' . "\n";
-	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._("usuarios").'</a></li>' . "\n";
-	echo '<li><a href="http://mueveme.net" title="'._('para móviles').'">'._('muéveme').'</a></li>' . "\n";
-	echo '</ul>' . "\n";
-}
+	echo '<li><a href="">'._('publicidad').'</a></li>'."\n";
+	echo '</ul>'."\n";
+	echo '</div>'."\n";
 
-function do_mnu_tools () {
-	global $dblang, $globals;
-	echo '<ul class="mnu-tools">' . "\n";
-	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('faq').'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._("ayuda").'</a></li>' . "\n";
-		echo '<li><a href="http://meneame.wikispaces.com">'._("wiki").'</a></li>' . "\n";
-		echo '<li><a href="http://blog.meneame.net">'._("blog").'</a></li>' . "\n";
-		echo '<li><a href="http://mueveme.net">'._("para móviles").'</a></li>' . "\n";
-	} else {
-		echo '<li><a href="#">'._("your tools here").'</a></li>' . "\n";
-	}
-	echo '</ul>' . "\n";
+	echo '</div>'."\n";
 }
 
 function do_mnu_rss() {
@@ -494,7 +475,6 @@ function do_mnu_categories_horizontal($what_cat_id) {
 	}
 
 	echo '</ul>';
-// 	echo '<br style="clear: both;" />' . "\n";
 	echo '</div><!--html1:do_mnu_categories_horizontal-->' . "\n";
 
 }
@@ -568,10 +548,6 @@ function force_authentication() {
 }
 
 function do_pages($total, $page_size=25, $margin = true) {
-
-	// pager style == "margin": notices. with margin for meneos box.
-	//             == ''      : rest of pages. no margin.
-
 	global $db;
 
 	$index_limit = 10;
@@ -593,8 +569,6 @@ function do_pages($total, $page_size=25, $margin = true) {
 	} else {
 		echo '<div class="pages">';
 	}
-	// Adsense
-	do_pager_ads();
 
 	if($current==1) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
@@ -697,72 +671,50 @@ function do_vertical_tags() {
 	}
 }
 
-function do_last_comments() {
-	global $db, $globals, $dblang;
-	$foo_link = new Link();
-
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users where comment_link_id = link_id and comment_user_id = user_id order by comment_date desc limit 10");
-	if ($res) {
-		echo '<div class="vertical-box">';
-		echo '<h4>' . _('últimos comentarios'). '</h4><ul>';
-		foreach ($res as $comment) {
-			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
-			echo '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
-		}
-		echo '</ul></div>';
-	}
-}
-
-function do_last_posts() {
-	global $db, $globals, $dblang;
-
-	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_user_id = user_id order by post_date desc limit 10");
-	if ($res) {
-		echo '<div class="vertical-box">';
-		echo '<h4><a href="'.post_get_base_url().'">' . _('últimos nótame'). '</a></h4><ul>';
-		foreach ($res as $post) {
-			echo '<li>'.$post->user_login.': <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_summary($post->post_content, 50).'</a></li>'."\n";
-		}
-		echo '</ul></div>';
-	}
-}
-
 function do_best_comments() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
+	$output = '';
 
-	if(memcache_mprint('best_comments')) return;
+	if(memcache_mprint('best_comments_3')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 10 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 12");
 	if ($res) {
-		$output = '<div class="vertical-box">';
-		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul>'."\n";
+		//$output = '<div class="vertical-box">';
+		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
-			$output .= '<li>'.$comment->user_login.' '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
-		$output .= '</ul></div>';
+		//$output .= '</ul></div>';
+		$output .= '</ul>';
 		echo $output;
-		memcache_madd('best_comments', $output, 300);
+		memcache_madd('best_comments_3', $output, 300);
 	}
 }
 
-function do_best_posts() {
+function do_best_stories() {
 	global $db, $globals, $dblang;
+	$foo_link = new Link();
+	$output = '<div id="sidepop"><h4>'._('noticias populares').'</h4>';
 
-	$min_date = date("Y-m-d H:00:00", $globals['now'] - 22000); // about 6 hours
-	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id order by post_karma desc limit 10");
+	if(memcache_mprint('best_stories_3')) return;
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes from links where link_status='published' and link_date > '$min_date' order by votes desc limit 10");
 	if ($res) {
-		echo '<div class="vertical-box">';
-		echo '<h4><a href="'.post_get_base_url('_best').'">' . _('¿mejores? notas'). '</a></h4><ul>';
-		foreach ($res as $post) {
-			echo '<li>'.$post->user_login.': <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_summary($post->post_content, 50).'</a></li>'."\n";
+		foreach ($res as $link) {
+			$foo_link->uri = $link->link_uri;
+			$url = $foo_link->get_relative_permalink();
+			$output .= '<div class="mnm-pop">'.$link->votes.'</div>';
+			$output .= '<h5><a href="'.$url.'">'.$link->link_title.'</a></h5>';
+			$output .= '<div class="mini-pop"></div>'."\n";
 		}
-		echo '</ul></div>';
+		$output .= '</div>'."\n";
+		echo $output;
+		memcache_madd('best_stories_3', $output, 300);
 	}
 }
-
 ?>

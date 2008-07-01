@@ -19,10 +19,9 @@ $globals['ads'] = true;
 
 $cat=$_REQUEST['category'];
 
-do_header(_('últimas publicadas') . ' // men&eacute;ame');
+do_header(_('últimas publicadas') . ' | men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
 echo '<div id="contents">'."\n";
 do_tabs('main','published');
 if ($globals['meta_current'] > 0) {
@@ -51,6 +50,8 @@ if ($globals['meta_current'] > 0) {
 }
 
 do_mnu_categories_horizontal($_REQUEST['category']);
+do_sidebar();
+echo '<div id="newswrap">'."\n";
 
 if($cat) {
 	$from_where .= " AND link_category=$cat ";
@@ -69,9 +70,12 @@ if ($links) {
 	}
 }
 
+echo '</div>'."\n";
+
 do_pages($rows, $page_size);
 echo '</div>';
 $globals['tag_status'] = 'published';
+do_footer_menu();
 do_footer();
 
 function print_index_tabs($option=-1) {
