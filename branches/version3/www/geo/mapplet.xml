@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Menéame" 
+	description="Noticias geo localizadas del Menéame"
+	author="Ricardo Galli, Benjamí Villoslada"
+	author_email="gallir@gmail.com"
+	author_location="Mallorca, Spain"
+	author_affiliation="Menéame Comunicacions S.L."
+	screenshot="http://meneame.net/geo/mapplet-280.png"
+	thumbnail="http://meneame.net/geo/mapplet-120x60.png"
+	title_url="http://meneame.net/"
+	directory_title="Meneame"
+	height="150">
+	<Require feature="sharedmap"/>
+</ModulePrefs>
+
+<Content type="html"><![CDATA[
+<div style="font-size: 90%">
+<a href="http://meneame.net/" title="Menéame" target="_blank"><img src="http://meneame.net/img/es/logo02.png" alt="logo menéame" /></a>
+<h3>últimas noticias</h3>
+<img src="http://meneame.net/img/geo/common/geo-published01.png"/>&nbsp;publicadas
+<br/>
+<img src="http://meneame.net/img/geo/common/geo-new01.png"/>&nbsp;pendientes
+</div>
+
+<script>
+var baseIcon = new GIcon();
+baseIcon.iconSize = new GSize(20, 25);
+baseIcon.iconAnchor = new GPoint(10, 25);
+baseIcon.infoWindowAnchor = new GPoint(5, 1);
+
+var geo_map = new GMap2();
+geo_map.setCenter(new GLatLng(39.574998,2.914124), 2);
+
+function load_xmls() {
+	geo_load_xml('link', 'queued', 0, "http://meneame.net/img/geo/common/geo-new01.png");
+	geo_load_xml('link', 'published', 0, "http://meneame.net/img/geo/common/geo-published01.png");
+}
+
+function geo_load_xml(type, status, zoom, iconimage) {
+	_IG_FetchXmlContent("http://meneame.net/geo/xml.php?mapplet=1&type="+type+"&status="+status, function(data) {
+		var markers = data.getElementsByTagName("marker");
+		for (var i = 0; i < markers.length; i++) {
+			var point = new GLatLng(parseFloat(markers[i].getAttribute("lat")),
+			parseFloat(markers[i].getAttribute("lng")));
+			var status = markers[i].getAttribute("status");
+			var myIcon = new GIcon(baseIcon);
+			myIcon.image = iconimage;
+			marker = new GMarker(point, {icon:myIcon});
+			marker.myId = parseInt(markers[i].getAttribute("id"));
+			marker.myType = type;
+			geo_map.addOverlay(marker);
+		}
+	}, {refreshInterval: (60 * 10)});
+}
+
+load_xmls();
+GEvent.addListener(geo_map, 'click', function (overlay, point) {
+	if (overlay && overlay.myId > 0) {
+		_IG_FetchContent("http://meneame.net/geo/"+overlay.myType+".php?mapplet=1&id="+overlay.myId, function(data, responseCode) {
+			overlay.openInfoWindowHtml(data);
+		});
+	} 
+});
+</script>
+]]></Content>
+</Module>
+
