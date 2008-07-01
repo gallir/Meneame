@@ -141,7 +141,8 @@ while ($dbuser = mysql_fetch_object($result)) {
 			}
 			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status not in ('published', 'abuse', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
 			$positive_karma_received = round($positive_karma_received);
-			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status not in ('published', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
+			//$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id and (link_status not in ('published', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
+			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id")) / $total_user_links;
 			$negative_karma_received = round($negative_karma_received);
 
 			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
