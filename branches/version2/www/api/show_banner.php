@@ -80,7 +80,7 @@ switch ($format) {
 <? echo $title['sent'] ?>
 </div>
 <?echo $div3;?>
-<a href="<? echo $url['most']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Menéandose'); ?></a><br />
+<a href="<? echo $url['most']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Meneándose'); ?></a><br />
 <? echo $title['most'] ?>
 </div>
 <?echo $div4;?>
