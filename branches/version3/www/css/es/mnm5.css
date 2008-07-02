@@ -235,6 +235,14 @@ text-decoration: none;
 text-decoration: underline;
 }
 
+.tabsub-this {
+font-weight: bold;
+}
+
+.thiscat a {
+font-weight: bold;
+}
+
 .catsub-block {
 border-bottom: 1px dotted;
 padding: 3px 25px;
@@ -284,7 +292,7 @@ float: left;
 width: 40px;
 height: 20px;
 text-align: center;
-font-size: .67em;
+font-size: 1em;
 color: #fff;
 overflow: visible;
 margin: .6em 0;
@@ -370,7 +378,8 @@ font-weight: normal;
 
 #footthingy {
 clear: left;
-padding: 5px 1em 0 60px;
+margin: 0 30px;
+padding: 0 1em 0 60px;
 margin-top: -5em; /* hack ie7 */
 }
 
@@ -404,6 +413,10 @@ padding-left: 0;
 #stdcompliance {
 padding: 2em 0 4em 0;
 text-align: center;
+}
+
+#stdcompliance li {
+margin: 0 5px;
 }
 
 /*** LEGACY STYLES ***/

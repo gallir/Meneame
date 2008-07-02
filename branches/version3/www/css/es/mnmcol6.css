@@ -103,6 +103,10 @@ border-color: #ff9400;
 color: #000;
 }
 
+.catsub-block .thiscat a {
+color: #ff6400;
+}
+
 #sidebar h4 {
 background: #ffd9c0;
 border-color: #ff6400;
