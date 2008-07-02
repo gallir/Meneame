@@ -296,28 +296,15 @@ function do_footer_menu() {
 	echo '<div id="footwrap">'."\n";
 
 	echo '<div id="footcol1">'."\n";
-	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
-	echo '<ul id="rsslist">'."\n";
-	echo '<li><a href="">'._('publicadas').'</a></li>'."\n";
-	echo '<li><a href="">'._('en cola').'</a></li>'."\n";
-	echo '<li><a href="">'._('todas').'</a></li>'."\n";
-
-	echo '<li><a href="">'._('mis conversaciones').'</a></li>'."\n";
-	echo '<li><a href="">'._('comentarios a mis noticias').'</a></li>'."\n";
-
-	echo '<li><a href="">'._('todos los comentarios').'</a></li>'."\n";
-	echo '</ul>'."\n";
+	do_footer_rss();
 	echo '</div>'."\n";
+
 	echo '<div id="footcol2">'."\n";
-
 	do_footer_help();
-
 	echo '</div>'."\n";
 
 	echo '<div id="footcol3">'."\n";
-
 	do_footer_plus_meneame();
-
 	echo '</div>'."\n";
 
 	echo '<div id="footcol4">'."\n";
@@ -346,60 +333,59 @@ function do_footer_menu() {
 	echo '</div>'."\n";
 }
 
-function do_mnu_rss() {
+function do_footer_rss() {
 	global $globals, $current_user;
 
-	echo '<ul class="mnu-rss">' . "\n";
+	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
+	echo '<ul id="rsslist">'."\n";
 
 	if(!empty($_REQUEST['q'])) {
 		$search =  htmlspecialchars($_REQUEST['q']);
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($search).'" rel="rss">'._("búsqueda").': <strong>'. htmlspecialchars($_REQUEST['q'])."</strong></a>\n";
+		echo '<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($search).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
 		echo '</li>';
 	}
 
 	if(!empty($globals['category_name'])) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("rss categoría").': <strong>'.$globals['category_name']."</strong></a>\n";
+		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("categoría").': '.$globals['category_name']."</a>\n";
 		echo '</li>';
 	}
-
 	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('rss publicadas').'</a>';
+	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('publicadas').'</a>';
 	echo '</li>' . "\n";
 	
 	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('rss en cola').'</a>';
+	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
 	echo '</li>' . "\n";
 
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php?status=all" rel="rss">'._('rss todas').'</a>';
-	echo '</li>' . "\n";
 
 	if(!empty($globals['link_id'])) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('rss comentarios <strong>de esta noticia</strong>').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios esta noticia').'</a>';
 		echo '</li>' . "\n";
 	}
 
 	if($current_user->user_id > 0) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('rss mis conversaciones').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('mis conversaciones').'</a>';
 		echo '</li>' . "\n";
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('rss comentarios (mis noticias)').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('comentarios a mis noticias').'</a>';
 		echo '</li>' . "\n";
 	}
 
 	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('rss comentarios (todos)').'</a>';
+	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('todos los comentarios').'</a>';
 	echo '</li>' . "\n";
 
+	/*
 	if(empty($globals['link_id'])) { // Netvibes. In homepage only.
 		echo '<li class="mnu-rss-external">';
 		echo '<a href="http://www.netvibes.com/subscribe.php?preconfig=7cec38e5bac4adc3608f68e8603bb3c3" title="Añadir a Netvibes"><img src="http://www.netvibes.com/img/add2netvibes.gif" width="91" height="17" border="0" alt="Añadir a Netvibes"/></a>';
 		echo '</li>';
 	}
+	*/
 
 	echo '</ul>' . "\n";
 }

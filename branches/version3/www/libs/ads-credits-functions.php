@@ -52,9 +52,6 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if ($globals['is_meneame']) {
 		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a></li>';
-		if ($show_abuse) {
-			echo '<li><a href="/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a></li>';
-		}
 	} else {
 		echo '<li>legal conditions link here</li>';
 		echo '<li>abuse report email address here</li>';
