@@ -122,7 +122,7 @@ function do_header($title, $id='home') {
 	echo '<div id="wrap">' . "\n";
 
 	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'">menéame</a>'."\n";
+	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">menéame</a>'."\n";
 	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
@@ -310,20 +310,20 @@ function do_footer_menu() {
 	echo '<div id="footcol4">'."\n";
 	echo '<h5>estadísticas</h5>'."\n";
 	echo '<ul id="statisticslist">'."\n";
-	echo '<li><a href="">'._('nube de etiquetas').'</a></li>'."\n";
-	echo '<li><a href="">'._('más meneadas').'</a></li>'."\n";
-	echo '<li><a href="">'._('más comentadas').'</a></li>'."\n";
-	echo '<li><a href="">'._('mejores comentarios').'</a></li>'."\n";
-	echo '<li><a href="">'._('nube de webs').'</a></li>'."\n";
-	echo '<li><a href="">'._('usuarios').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'cloud.php">'._('nube de etiquetas').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('más meneadas').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'topcommented.php">'._('más comentadas').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'sitescloud.php">'._('nube de webs').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'topusers.php">'._('usuarios').'</a></li>'."\n";
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
 
 	echo '<div id="footcol5">'."\n";
 	echo '<h5>mapas</h5>'."\n";
 	echo '<ul id="mapslist">'."\n";
-	echo '<li><a href="">'._('geovisión').'</a></li>'."\n";
-	echo '<li><a href="">'._('noticias').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'geovision.php">'._('geovisión').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'map.php">'._('noticias').'</a></li>'."\n";
 	echo '</ul>'."\n";
 
 	do_footer_shop();

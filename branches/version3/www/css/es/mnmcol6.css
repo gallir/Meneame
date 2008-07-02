@@ -546,9 +546,11 @@ border-color: #FFE2C5;
 
 /* pagination */
 
+/*
 .pages, .pages-margin {
 border-top-color: #FF6400;
 }
+*/
 
 .pages a, .pages span, .pages-margin a, .pages-margin span {
 color: #FF6400;

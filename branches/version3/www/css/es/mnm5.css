@@ -1108,7 +1108,7 @@ clear: left
 
 .pages, .pages-margin {
 padding: 10px 0 0 0;
-border-top: 1px dotted;
+/*border-top: 1px dotted;*/
 margin: 20px 0 50px 0;
 clear: left;
 font-size: 90%;
