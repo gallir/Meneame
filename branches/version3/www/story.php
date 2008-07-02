@@ -156,9 +156,6 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
-	// AdSense
-	do_banner_story();
-
 	// Print tabs
 	print_story_tabs($tab_option);
 

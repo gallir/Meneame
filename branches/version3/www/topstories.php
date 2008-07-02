@@ -60,14 +60,15 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('más votadas') . ' // men&eacute;ame');
+do_header(_('más votadas') . ' | men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
 echo '<div id="contents">';
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 print_period_tabs();
+do_sidebar();
+echo '<div id="newswrap">'."\n";
 
 //do_banner_top_lower();
 
@@ -81,7 +82,10 @@ if ($links) {
 	}
 }
 do_pages($rows, $page_size);
+echo '</div>'."\n";
+
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 function print_period_tabs() {

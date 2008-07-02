@@ -73,15 +73,16 @@ switch ($globals['meta']) {
 		break;
 }
 
-do_header(_('noticias pendientes') . ' // men&eacute;ame');
+do_header(_('noticias pendientes') . ' | men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
 echo '<div id="contents">'."\n";
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
 do_mnu_categories_horizontal($_REQUEST['category']);
+do_sidebar();
+echo '<div id="newswrap">'."\n";
 
 // fora en posar dropdown echo '</div>';  // Left margin
 // end of tabs
@@ -106,6 +107,9 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>'."\n";
+
+echo '</div>';
+do_footer_menu();
 do_footer();
 
 function print_shakeit_tabs($option=-1) {
