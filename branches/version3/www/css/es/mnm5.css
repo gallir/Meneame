@@ -1529,6 +1529,7 @@ background: url(../../img/common/shadow.gif) no-repeat bottom right;
 }
  
 #tooltip-text {
+text-align: left;
 position:absolute;
 visibility:hidden;
 margin: 0;
@@ -1654,6 +1655,7 @@ border:1px solid #FF6400;
 background: #FFEEC7;
 /*border-color: #e2d3b0;*/
 overflow: hidden;
+text-align: left;
 }
 #modalContainer a.modalCloseX,
 #modalContainer a.modalCloseX:link,
