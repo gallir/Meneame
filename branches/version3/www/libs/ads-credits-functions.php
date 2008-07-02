@@ -53,7 +53,7 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	if ($globals['is_meneame']) {
 		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a></li>';
 		if ($show_abuse) {
-			echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a></li>';
+			echo '<li><a href="/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a></li>';
 		}
 	} else {
 		echo '<li>legal conditions link here</li>';
@@ -67,12 +67,11 @@ function do_footer_help() {
 	if (! $globals['is_meneame']) return;
 	echo '<h5>ayuda</h5>'."\n";
 	echo '<ul id="helplist">'."\n";
-	echo '<li><a href="">'._('faq').'</a></li>'."\n";
-	echo '<li><a href="">'._('ayuda').'</a></li>'."\n";
-	echo '<li><a href="">'._('wiki').'</a></li>'."\n";
-	echo '<li><a href="">'._('blog').'</a></li>'."\n";
-	echo '<li><a href="">'._('reportar errores').'</a></li>'."\n";
-	echo '<li><a href="">'._('reportar abusos').'</a></li>'."\n";
+	echo '<li><a href="faq-es.php">'._('faq').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._('ayuda').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.wikispaces.com/">'._('wiki').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('reportar errores').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact">'._('reportar abusos').'</a></li>'."\n";
 	echo '</ul>'."\n";
 }
 
@@ -81,11 +80,11 @@ function do_footer_plus_meneame() {
 	if (! $globals['is_meneame']) return;
 	echo '<h5>+menéame</h5>'."\n";
 	echo '<ul id="moremenelist">'."\n";
-	echo '<li><a href="">'._('para móviles').'</a></li>'."\n";
-	echo '<li><a href="">'._('nótame').'</a></li>'."\n";
-	echo '<li><a href="">'._('blog').'</a></li>'."\n";
-	echo '<li><a href="">'._('Twitter').'</a></li>'."\n";
-	echo '<li><a href="">'._('Jaiku').'</a></li>'."\n";
+	echo '<li><a href="http://mueveme.net/">'._('para móviles').'</a></li>'."\n";
+	echo '<li><a href="/notame/">'._('nótame').'</a></li>'."\n";
+	echo '<li><a href="http://blog.meneame.net/">'._('blog').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.jaiku.com/">'._('Jaiku').'</a></li>'."\n";
+	echo '<li><a href="http://twitter.com/meneame_net">'._('Twitter').'</a></li>'."\n";
 	echo '</ul>'."\n";
 }
 
@@ -94,8 +93,8 @@ function do_footer_shop() {
 	if (! $globals['is_meneame']) return;
 	echo '<h5>tienda</h5>'."\n";
 	echo '<ul id="shoplift">'."\n";
-	echo '<li><a href="">'._('camisetas').'</a></li>'."\n";
-    echo '<li><a href="">'._('publicidad').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.wikispaces.com/menechandising">'._('camisetas').'</a></li>'."\n";
+    echo '<li><a href="http://www.socialmediasl.com/">'._('publicidad').'</a></li>'."\n";
 	echo '</ul>'."\n";
 
 }
