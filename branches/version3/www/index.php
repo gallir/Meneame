@@ -70,9 +70,9 @@ if ($links) {
 	}
 }
 
+do_pages($rows, $page_size);
 echo '</div>'."\n";
 
-do_pages($rows, $page_size);
 echo '</div>';
 $globals['tag_status'] = 'published';
 do_footer_menu();

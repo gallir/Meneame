@@ -13,6 +13,9 @@
 *****/
 
 
+if (preg_match('/meneame.net$/', get_server_name())) {
+	$globals['is_meneame']  = true;
+}
 
 function do_banner_top () { // top banner
 	global $globals, $dblang, $current_user;
@@ -47,7 +50,7 @@ function do_banner_right() { // side banner A
 function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
-	if (preg_match('/meneame.net$/', get_server_name())) {
+	if ($globals['is_meneame']) {
 		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a></li>';
 		if ($show_abuse) {
 			echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact" title="'._("encontrarás la dirección en la página de información legal").'">'._('reportar abusos').'</a></li>';
@@ -59,6 +62,43 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	// IMPORTANT: read above
 }
 
+function do_footer_help() {
+	global $globals;
+	if (! $globals['is_meneame']) return;
+	echo '<h5>ayuda</h5>'."\n";
+	echo '<ul id="helplist">'."\n";
+	echo '<li><a href="">'._('faq').'</a></li>'."\n";
+	echo '<li><a href="">'._('ayuda').'</a></li>'."\n";
+	echo '<li><a href="">'._('wiki').'</a></li>'."\n";
+	echo '<li><a href="">'._('blog').'</a></li>'."\n";
+	echo '<li><a href="">'._('reportar errores').'</a></li>'."\n";
+	echo '<li><a href="">'._('reportar abusos').'</a></li>'."\n";
+	echo '</ul>'."\n";
+}
+
+function do_footer_plus_meneame() {
+	global $globals;
+	if (! $globals['is_meneame']) return;
+	echo '<h5>+menéame</h5>'."\n";
+	echo '<ul id="moremenelist">'."\n";
+	echo '<li><a href="">'._('para móviles').'</a></li>'."\n";
+	echo '<li><a href="">'._('nótame').'</a></li>'."\n";
+	echo '<li><a href="">'._('blog').'</a></li>'."\n";
+	echo '<li><a href="">'._('Twitter').'</a></li>'."\n";
+	echo '<li><a href="">'._('Jaiku').'</a></li>'."\n";
+	echo '</ul>'."\n";
+}
+
+function do_footer_shop() {
+	global $globals;
+	if (! $globals['is_meneame']) return;
+	echo '<h5>tienda</h5>'."\n";
+	echo '<ul id="shoplift">'."\n";
+	echo '<li><a href="">'._('camisetas').'</a></li>'."\n";
+    echo '<li><a href="">'._('publicidad').'</a></li>'."\n";
+	echo '</ul>'."\n";
+
+}
 function do_credits() {
 	global $dblang, $globals;
 
@@ -69,8 +109,8 @@ function do_credits() {
 
 	// IMPORTANT: links change in every installation, CHANGE IT!!
 	// contact info
-	if (preg_match('/meneame.net$/', get_server_name())) {
-		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos, contacto').'</a></li>';
+	if ($globals['is_meneame']) {
+		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
 		echo '<li><a href="'.$globals['base_url'].'COPYING">'._('licencia código').'</a></li>';
 		echo '<li><a href="http://svn.meneame.net/index.cgi/branches/version3/">'._('descargar').'</a></li>';
 		echo '<li><a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a></li>' . "\n";

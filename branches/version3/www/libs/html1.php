@@ -309,28 +309,17 @@ function do_footer_menu() {
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
 	echo '<div id="footcol2">'."\n";
-	echo '<h5>ayuda</h5>'."\n";
-	echo '<ul id="helplist">'."\n";
-	echo '<li><a href="">'._('faq').'</a></li>'."\n";
-	echo '<li><a href="">'._('ayuda').'</a></li>'."\n";
-	echo '<li><a href="">'._('wiki').'</a></li>'."\n";
-	echo '<li><a href="">'._('blog').'</a></li>'."\n";
 
-	echo '<li><a href="">'._('reportar errores').'</a></li>'."\n";
-	echo '<li><a href="">'._('reportar abusos').'</a></li>'."\n";
-	echo '</ul>'."\n";
+	do_footer_help();
+
 	echo '</div>'."\n";
+
 	echo '<div id="footcol3">'."\n";
-	echo '<h5>+menéame</h5>'."\n";
-	echo '<ul id="moremenelist">'."\n";
-	echo '<li><a href="">'._('para móviles').'</a></li>'."\n";
-	echo '<li><a href="">'._('nótame').'</a></li>'."\n";
-	echo '<li><a href="">'._('blog').'</a></li>'."\n";
-	echo '<li><a href="">'._('Twitter').'</a></li>'."\n";
 
-	echo '<li><a href="">'._('Jaiku').'</a></li>'."\n";
-	echo '</ul>'."\n";
+	do_footer_plus_meneame();
+
 	echo '</div>'."\n";
+
 	echo '<div id="footcol4">'."\n";
 	echo '<h5>estadísticas</h5>'."\n";
 	echo '<ul id="statisticslist">'."\n";
@@ -339,22 +328,19 @@ function do_footer_menu() {
 	echo '<li><a href="">'._('más comentadas').'</a></li>'."\n";
 	echo '<li><a href="">'._('mejores comentarios').'</a></li>'."\n";
 	echo '<li><a href="">'._('nube de webs').'</a></li>'."\n";
-
 	echo '<li><a href="">'._('usuarios').'</a></li>'."\n";
 	echo '</ul>'."\n";
 	echo '</div>'."\n";
+
 	echo '<div id="footcol5">'."\n";
 	echo '<h5>mapas</h5>'."\n";
 	echo '<ul id="mapslist">'."\n";
 	echo '<li><a href="">'._('geovisión').'</a></li>'."\n";
 	echo '<li><a href="">'._('noticias').'</a></li>'."\n";
 	echo '</ul>'."\n";
-	echo '<h5>tienda</h5>'."\n";
-	echo '<ul id="shoplift">'."\n";
-	echo '<li><a href="">'._('camisetas').'</a></li>'."\n";
 
-	echo '<li><a href="">'._('publicidad').'</a></li>'."\n";
-	echo '</ul>'."\n";
+	do_footer_shop();
+
 	echo '</div>'."\n";
 
 	echo '</div>'."\n";
@@ -698,7 +684,7 @@ function do_best_comments() {
 function do_best_stories() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
-	$output = '<div id="sidepop"><h4>'._('noticias populares').'</h4>';
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('noticias populares').'</a></h4>';
 
 	if(memcache_mprint('best_stories_3')) return;
 
