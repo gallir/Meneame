@@ -80,7 +80,7 @@ function punish_comments($hours = 6) {
 
 
 	$log = new Annotation('punish-comment');
-	if ($log->read() && $log->time > time() - 86400*$hours) {
+	if ($log->read() && $log->time > time() - 3600*$hours) {
 		echo "Comments already verified at: " . get_date_time($log->time) . "\n";
 		return false;
 	}
