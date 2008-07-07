@@ -67,8 +67,8 @@ function do_footer_help() {
 	echo '<li><a href="faq-es.php">'._('faq').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._('ayuda').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/">'._('wiki').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('reportar errores').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact">'._('reportar abusos').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('avisar errores').'</a></li>'."\n";
+	echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact">'._('avisar abusos').'</a></li>'."\n";
 	echo '</ul>'."\n";
 }
 

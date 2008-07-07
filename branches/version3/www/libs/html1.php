@@ -671,12 +671,14 @@ function do_best_comments() {
 function do_best_stories() {
 	global $db, $globals, $dblang;
 	$foo_link = new Link();
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('noticias populares').'</a></h4>';
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('últimas populares').'</a></h4>';
 
 	if(memcache_mprint('best_stories_3')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes from links where link_status='published' and link_date > '$min_date' order by votes desc limit 10");
+	// The order is not exactly the votes
+	// but a time-decreasing function applied to the number of votes
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/86400) as value from links where link_status='published' and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
 		foreach ($res as $link) {
 			$foo_link->uri = $link->link_uri;

@@ -146,9 +146,9 @@ if (!empty($new_comment_error)) {
 
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar(false);
-echo '<div id="contents">';
 do_tabs("main",_('noticia'), true);
+do_sidebar(false);
+echo '<div id="newswrap">'."\n";
 $link->print_summary();
 
 switch ($tab_option) {
@@ -350,6 +350,7 @@ echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
 $globals['tag_status'] = $globals['link']->status;
+do_footer_menu();
 do_footer();
 
 function print_comment_form() {
