@@ -225,9 +225,6 @@ case 3:
 	// Show voters
 	echo '<div class="voters" id="voters">';
 
-	// AdSense
-	do_banner_story();
-
 	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
@@ -245,9 +242,6 @@ case 6:
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
 
-	// AdSense
-	do_banner_story();
-
 	print_story_tabs($tab_option);
 
 	echo '<fieldset>';
@@ -261,9 +255,6 @@ case 6:
 case 4:
 	// Show logs
 	echo '<div class="voters" id="voters">';
-
-	// AdSense
-	do_banner_story();
 
 	print_story_tabs($tab_option);
 	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
@@ -296,8 +287,6 @@ case 4:
 case 5:
 	// Micro sneaker
 	echo '<div class="mini-sneaker">';
-	// AdSense
-	do_banner_story();
 
 	print_story_tabs($tab_option);
 	echo '<fieldset>';
@@ -309,8 +298,7 @@ case 5:
 case 7:
 	// Show trackback
 	echo '<div class="voters" id="voters">';
-	// AdSense
-	do_banner_story();
+
 	print_story_tabs($tab_option);
 	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
 
