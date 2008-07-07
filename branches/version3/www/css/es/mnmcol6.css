@@ -95,16 +95,39 @@ border-color: #ff6400;
 color: #ff6400;
 }
 
+/* Estilos nuevos para las pestañas de las noticias */
+
+.tabsub {
+border-color: #ff6400;
+}
+
+.tabsub li {
+background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
+}
+
+.tabsub li a {
+background: #fff;
+border-color: #ff6400;
+color: #ff6400;
+}
+
+.tabsub li.tabsub-this {
+background: #fff;
+background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
+}
+
+/* Fin de los estilos nuevos */
+
+.catsub-block .thiscat a {
+color: #ff6400;
+}
+
 .catsub-block {
 border-color: #ff9400;
 }
 
 .catsub-block li a {
 color: #000;
-}
-
-.catsub-block .thiscat a {
-color: #ff6400;
 }
 
 #sidebar h4 {
@@ -550,11 +573,9 @@ border-color: #FFE2C5;
 
 /* pagination */
 
-/*
 .pages, .pages-margin {
 border-top-color: #FF6400;
 }
-*/
 
 .pages a, .pages span, .pages-margin a, .pages-margin span {
 color: #FF6400;
