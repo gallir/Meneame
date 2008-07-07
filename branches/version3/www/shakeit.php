@@ -120,25 +120,25 @@ function print_shakeit_tabs($option=-1) {
 
 	echo '<ul class="tabsub-shakeit">'."\n";
 	if ($current_user->has_personal) {
-		echo '<li><a '.$active[7].' href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a></li>'."\n";
+		echo '<li '.$active[7].'><a href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a></li>'."\n";
 	}
-	echo '<li><a '.$active[1].' href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
+	echo '<li '.$active[1].'><a href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
 	// Do metas' list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
 			else $active_meta = '';
-			echo '<li><a '.$active_meta.' href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
+			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
 		}
 	}
 
 	if ($current_user->user_id > 0) {
-		echo '<li><a '.$active[2].' href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li '.$active[2].'><a href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	}
-	echo '<li><a '.$active[3].' href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a></li>'."\n";
+	echo '<li '.$active[3].'><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a></li>'."\n";
 	if (!$globals['bot']) {
-		echo '<li><a '.$active[5].' href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
+		echo '<li '.$active[5].'><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a></li>'."\n";
 	}
 	if ($current_user->user_id == 0) {
 		meta_teaser_item();
