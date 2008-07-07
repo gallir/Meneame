@@ -67,7 +67,7 @@ function check_already_sent() {
 }
 
 function print_empty_submit_form() {
-	global $globals;
+	global $globals, $current_user, $site_key;
 
 	preload_indicators();
 	if (!empty($_GET['url'])) {
@@ -81,7 +81,9 @@ function print_empty_submit_form() {
 	echo '<p class="l-top"><label for="url">'._('url').':</label><br />';
 	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" /></p>';
 	echo '<input type="hidden" name="phase" value="1" />';
-	echo '<input type="hidden" name="randkey" value="'.rand(10000,10000000).'" />';
+	$randkey = rand(10000,10000000);
+	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
+	echo '<input type="hidden" name="randkey" value="'.$randkey.'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
 	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
@@ -102,9 +104,7 @@ function do_submit0() {
 	echo '<li><strong>'._('enlaza la fuente original').':</strong> '._('no hagas perder tiempo a los lectores.').'</li>';
 	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar noticias.').'</li>';
 	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica la noticia lo mejor que puedas y porqué es interesante').'.</li>';
-	//echo '<li><strong>'._('repetimos, por las dudas... ¡enlaza la fuente original!').'</strong> </li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos o la falta de ellos te pueden afectar personalmente, es mejor que no envíes la noticia.').'</li>';
-	//echo '<li><strong>'._('NO envíes').':</strong> '._('spam, sensacionalismo, amarillismo, cotilleos, noticias del corazón, provocaciones, difamaciones e insultos.').'</li>';
 	echo '<li class="underl-y"><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
@@ -123,9 +123,13 @@ function do_submit1() {
 	echo '<div id="genericform-contents">'."\n";
 
 	$new_user = false;
+	if (!check_link_key()) {
+		echo '<p class="error"><strong>'._('clave incorrecta').'</strong></p> ';
+		echo '</div>'. "\n";
+		return;
+	}
 	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
 		echo '<p class="error"><strong>'._('no tienes el mínimo de karma para enviar una nueva historia').'</strong></p> ';
-// 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
 		return;
 	}
@@ -501,6 +505,7 @@ function do_submit1() {
 	echo '<input type="hidden" name="url" id="url" value="'.htmlspecialchars($linkres->url).'" />'."\n";
 	echo '<input type="hidden" name="phase" value="2" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
+	echo '<input type="hidden" name="key" value="'.$_POST['key'].'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
 
 	echo '<fieldset><legend><span class="sign">'._('información del enlace').'</span></legend>'."\n";
@@ -608,6 +613,7 @@ function do_submit2() {
 
 	echo '<input type="hidden" name="phase" value="3" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
+	echo '<input type="hidden" name="key" value="'.$_POST['key'].'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
 	echo '<input type="hidden" name="trackback" value="'.htmlspecialchars(trim($_POST['trackback'])).'" />'."\n";
 
@@ -659,13 +665,17 @@ function do_submit3() {
 	
 }
 
+function check_link_key() {
+	global $site_key, $current_user;
+	return $_POST['key'] == md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+}
+
 function link_errors($linkres)
 {
 	$error = false;
 	// Errors
-	if(intval($_POST['randkey']) != $linkres->randkey) {
-		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("Clave incorrecta"));
+	if(! check_link_key() || intval($_POST['randkey']) != $linkres->randkey) {
+		print_form_submit_error(_("clave incorrecta"));
 		$error = true;
 	}
 	if($linkres->status != 'discard') {
