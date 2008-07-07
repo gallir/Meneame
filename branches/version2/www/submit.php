@@ -632,7 +632,7 @@ function do_submit3() {
 	$linkres=new Link;
 
 	$linkres->id=$link_id = intval($_POST['id']);
-	if(!$linkres->read()) die;
+	if(!check_link_key() || !$linkres->read()) die;
 	// Check it is not in the queue already
 	if($linkres->votes == 0 && $linkres->status != 'queued') {
 		$linkres->status='queued';
