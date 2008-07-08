@@ -34,10 +34,21 @@ if ($range_values[$from] > 0) {
 do_header(_('más comentadas') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main', _('más comentadas'), true);
 print_period_tabs();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+do_best_comments();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
+
 echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 
 $link = new Link;
@@ -74,6 +85,7 @@ if ($links) {
 }
 do_pages($rows, $page_size);
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 function print_period_tabs() {
@@ -87,7 +99,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li><a '.$active.'href="topcommented.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="topcommented.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

@@ -154,16 +154,17 @@ border-color: #ff6400;
 
 .mnm-pop {
 color: #fff;
-background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;
+/*background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;*/
+background-color: #ff6400;
+border-color: #ff6400;
 }
 
-.mnm-pop a {
-color: #fff;
+.mnm-pop.queued {
+color: #ff6400;
+background-color: #fff;
+/*background: #fff url('../../img/common/elmnm-p03-s.png') no-repeat center top;*/
 }
 
-.mnm-pop a:hover {
-color: #006;
-}
 
 .vertical-box {
 background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;

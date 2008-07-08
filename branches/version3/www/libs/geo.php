@@ -97,14 +97,14 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.')"/>';
 	echo '<br/>'._('puedes hacer clic en el mapa o buscar por "país", "ciudad, país" o "calle, ciudad, país"...')."\n";
 	echo '<br/>'._('también acepta coordenadas "lat, long", i.e. "1.234, -54.321"')."\n";
-	echo '</form>';
+	echo '</form>'."\n";
 ?>
 	<script type="text/javascript">
 	//<![CDATA[
 		// Check if there is a map container, otherwise it creates a container
 		if ($('#map').length == 0 ) {
-			$('#geocoderform').before('<div class="thumbnail" id="map" style="margin: 0 5px 10px 10px;width:150px;height:150px">&nbsp;<\/div>');
-			$('#geocoderform').after('<br clear="right"/>');
+			$('#geocoderform').before('<div id="map" style="width:300px;height:250px">&nbsp;<\/div>');
+			$('#geocoderform').after('<br/>');
 			if (typeof geo_coder_editor_load == 'function') { // Check if the geo.js has bees loaded
 				geo_coder_editor_load(false, false, 3, "<?echo $icontype?>");
 			} else {

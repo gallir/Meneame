@@ -46,7 +46,7 @@ switch ($option) {
 		break;
 	case '_best':
 		$tab_option = 2;
-		$min_date = date("Y-m-d H:00:00", time() - 86000); //  about 24 hours
+		$min_date = date("Y-m-d H:00:00", time() - 86400); //  about 24 hours
 		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
 		break;
@@ -80,12 +80,21 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('nótame') . ' // men&eacute;ame');
+do_header(_('nótame') . ' || men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar(false);
-echo '<div id="contents">';
 do_posts_tabs($tab_option, $user->username);
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_posts();
+//do_best_stories();
+do_best_comments();
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
 
 echo '<div class="notes">';
 $post = new Post;
@@ -139,6 +148,7 @@ function onLoad(lat, lng, zoom, icon) {
 }
 
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 function do_posts_tabs($tab_selected, $username) {
@@ -151,36 +161,36 @@ function do_posts_tabs($tab_selected, $username) {
 
 	// All
 	if ($tab_selected == 1) {
-		echo '<li><a '.$active.' href="'.post_get_base_url().'" title="'.$reload_text.'"><em>'._('todos').'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url().'" title="'.$reload_text.'"><em>'._('todos').'</em></a></li>' . "\n";
 	} else {
-		echo '<li><a  href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
+		echo '<li><a href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
 	}
 
 	// GEO
 	if ($globals['google_maps_api']) {
 		if ($tab_selected == 5) {
-			echo '<li><a '.$active.' href="'.post_get_base_url('_geo').'" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
+			echo '<li'.$active.'><a href="'.post_get_base_url('_geo').'" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
 		} else {
-			echo '<li><a  href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
+			echo '<li><a href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
 		}
 	}
 
 	// Best
 	if ($tab_selected == 2) {
-		echo '<li><a '.$active.' href="'.post_get_base_url('_best').'" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url('_best').'" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
 	} else {
-		echo '<li><a  href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
+		echo '<li><a href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
 	}
 	// Friends
 	if ($tab_selected == 3) {
-		echo '<li><a '.$active.' href="'.post_get_base_url('_friends').'" title="'.$reload_text.'"><em>'._('amigos').'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url('_friends').'" title="'.$reload_text.'"><em>'._('amigos').'</em></a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url('_friends').'">'._('amigos').'</a></li>' . "\n";
 	}
 
 	// User
 	if ($tab_selected == 4) {
-		echo '<li><a '.$active.' href="'.post_get_base_url($username).'" title="'.$reload_text.'"><em>'.$username.'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url($username).'" title="'.$reload_text.'"><em>'.$username.'</em></a></li>' . "\n";
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
 	}

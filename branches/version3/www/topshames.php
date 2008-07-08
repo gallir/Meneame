@@ -18,8 +18,18 @@ $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 4
 do_header(_('las peores :-)'));
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+do_best_comments();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
 echo '<div class="topheading"><h2>'._('¿noticias?').' :-) </h2></div>';
 
 $link = new Link;

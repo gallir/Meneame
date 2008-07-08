@@ -49,7 +49,16 @@ if ($globals['meta_current'] > 0) {
 }
 
 do_mnu_categories_horizontal($_REQUEST['category']);
-do_sidebar();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+do_best_comments();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
 echo '<div id="newswrap">'."\n";
 
 if($cat) {
@@ -72,7 +81,6 @@ if ($links) {
 do_pages($rows, $page_size);
 echo '</div>'."\n";
 
-$globals['tag_status'] = 'published';
 do_footer_menu();
 do_footer();
 

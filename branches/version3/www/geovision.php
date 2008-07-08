@@ -17,15 +17,24 @@ geo_init('onLoad', false, 3);
 do_header(_('geovisión'));
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main', _('geo visión'), true);
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_vertical_tags();
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
 echo '<div class="topheading"><h2>actividad de los usuarios geolocalizados</h2></div>';
 
-echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>'
+echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px"></div></div>'
 ?>
 
 <script type="text/javascript">
+//<![CDATA[
 var timestamp = 0;
 var period = 10000;
 var persistency = 300000;
@@ -91,9 +100,10 @@ function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 		get_json();
 	}
 }
-
+//]]>
 </script>
 <?
 
+do_footer_menu();
 do_footer();
 ?>

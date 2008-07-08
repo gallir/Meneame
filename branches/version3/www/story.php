@@ -147,7 +147,21 @@ if (!empty($new_comment_error)) {
 do_banner_top();
 echo '<div id="container">'."\n";
 do_tabs("main",_('noticia'), true);
-do_sidebar(false);
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+// GEO
+if ($link->latlng) {
+	echo '<div id="map" style="width:300px;height:250px;">&nbsp;</div>'."\n";
+}
+if (! $current_user->user_id) {
+	do_best_stories();
+	do_best_comments();
+}
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
 echo '<div id="newswrap">'."\n";
 $link->print_summary();
 
@@ -338,7 +352,6 @@ echo '</rdf:RDF>'."\n".'-->'."\n";
 
 
 $globals['tag_status'] = $globals['link']->status;
-do_footer_menu();
 do_footer();
 
 function print_comment_form() {
@@ -452,20 +465,20 @@ function print_story_tabs($option) {
 	global $globals;
 
 	$active = array();
-	$active[$option] = 'class="tabsub-this"';
+	$active[$option] = ' class="tabsub-this"';
 
 	echo '<ul class="tabsub">'."\n";
-	echo '<li '.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
-	echo '<li '.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li '.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
+	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
+	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
+	echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
-			echo '<li '.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
-		echo '<li><a '.$active[6].'><a href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
+		echo '<li'.$active[6].'><a href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
-			echo '<li '.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
-			echo '<li '.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
+			echo '<li'.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
 		}
 	}
 	echo '</ul>'."\n";

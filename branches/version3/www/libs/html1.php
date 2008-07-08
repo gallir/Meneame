@@ -223,29 +223,6 @@ function do_footer($credits = true) {
 	echo "</div></body></html>\n";
 }
 
-function do_sidebar($do_vert_bars = true) {
-	global $db, $dblang, $globals;
-	echo '<div id="sidebar">';
-
-	do_banner_right();
-
-	// don't show every box if it's a search
-	if (!isset($_REQUEST['q'])) {
-		if($do_vert_bars) {
-			do_best_stories();
-			do_best_comments();
-			do_vertical_tags();
-		}
-	}
-	echo '</div><!--html1:do_sidebar-->' . "\n";
-}
-
-function do_tags_comments() {
-	global $globals;
-	do_vertical_tags();
-	do_best_comments();
-}
-
 // menu items
 
 function do_mnu_faq($whichpage) {
@@ -596,11 +573,11 @@ function print_categories_form($selected = 0) {
 	echo '</fieldset>';
 }
 
-function do_vertical_tags() {
+function do_vertical_tags($what=false) {
 	global $db, $globals, $dblang;
 
-	if (!empty($globals['tag_status'])) {
-		$status = '= "'. $globals['tag_status']. '"';
+	if (!empty($what)) {
+		$status = '= "'.$what. '"';
 	} else {
 		$status = "!= 'discarded'";
 	}
@@ -646,6 +623,7 @@ function do_vertical_tags() {
 
 function do_best_comments() {
 	global $db, $globals, $dblang;
+	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 	$output = '';
 
@@ -654,14 +632,12 @@ function do_best_comments() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments from comments, links, users  where comment_date > '$min_date' and comment_karma > 10 and comment_link_id = link_id and comment_user_id = user_id order by comment_karma desc limit 12");
 	if ($res) {
-		//$output = '<div class="vertical-box">';
 		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
 			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
-		//$output .= '</ul></div>';
 		$output .= '</ul>';
 		echo $output;
 		memcache_madd('best_comments_3', $output, 300);
@@ -670,6 +646,7 @@ function do_best_comments() {
 
 function do_best_stories() {
 	global $db, $globals, $dblang;
+	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('últimas populares').'</a></h4>';
 
@@ -692,4 +669,50 @@ function do_best_stories() {
 		memcache_madd('best_stories_3', $output, 300);
 	}
 }
+
+function do_best_queued() {
+	global $db, $globals, $dblang;
+	require_once(mnminclude.'link.php');
+	$foo_link = new Link();
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'promote.php">'._('candidatas').'</a></h4>';
+
+	if(memcache_mprint('best_queued_3')) return;
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 48 hours
+	// The order is not exactly the votes
+	// but a time-decreasing function applied to the number of votes
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, link_karma from links where link_status='queued' and link_date > '$min_date' order by link_karma desc limit 15");
+	if ($res) {
+		foreach ($res as $link) {
+			$foo_link->uri = $link->link_uri;
+			$url = $foo_link->get_relative_permalink();
+			$output .= '<div class="mnm-pop queued">'.$link->votes.'</div>';
+			$output .= '<h5><a href="'.$url.'">'.$link->link_title.'</a></h5>';
+			$output .= '<div class="mini-pop"></div>'."\n";
+		}
+		$output .= '</div>'."\n";
+		echo $output;
+		memcache_madd('best_queued_3', $output, 300);
+	}
+}
+
+function do_best_posts() {
+	global $db, $globals, $dblang;
+	$output = '';
+
+	if(memcache_mprint('best_posts_3')) return;
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
+	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
+	if ($res) {
+		$output .= '<h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4><ul class="topcommentsli">'."\n";
+		foreach ($res as $post) {
+			$output .= '<li><strong>'.$post->user_login.'</strong>: <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_summary($post->post_content, 50).'</a></li>'."\n";
+		}
+		$output .= '</ul>';
+		echo $output;
+		memcache_madd('best_posts_3', $output, 300);
+	}
+}
+
 ?>

@@ -66,7 +66,15 @@ echo '<div id="container">'."\n";
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 print_period_tabs();
-do_sidebar();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_comments();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
 echo '<div id="newswrap">'."\n";
 
 //do_banner_top_lower();
@@ -100,11 +108,11 @@ function print_period_tabs() {
 
 	for($i=0; $i<count($range_values) /* && $range_values[$i] < 60 */; $i++) {
 		if($i == $current_range)  {
-			$active = 'class="tabsub-this"';
+			$active = ' class="tabsub-this"';
 		} else {
 			$active = "";
 		}
-		echo '<li><a '.$active.' href="topstories.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="topstories.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

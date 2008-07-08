@@ -40,10 +40,18 @@ $coef = ($max_pts - $min_pts)/($max-1);
 do_header(_('nube de sitios web') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs("main", _('+ webs'), true);
 print_period_tabs();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
 echo '<div class="topheading"><h2>Los sitios más enlazados</h2></div>';
 echo '<div style="margin: 20px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 50px;">';
 $res = $db->get_results("select blog_url, count(*) as count $from_where order by count desc limit $limit");
@@ -63,6 +71,7 @@ if ($res) {
 
 echo '</div>';
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 
@@ -77,7 +86,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li><a '.$active.'href="sitescloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="sitescloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

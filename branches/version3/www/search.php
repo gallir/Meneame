@@ -47,9 +47,16 @@ do_banner_top();
 
 
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
 
 echo '<div style="background:#FFE2C5;margin:10px 0 5px 86px;font-size:100%;text-align:right;padding:5px;">'._('búsqueda'). ': <strong>'.$search_txt.'</strong>';
 if(!empty($_REQUEST['q'])) {

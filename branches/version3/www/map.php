@@ -18,9 +18,17 @@ array_push($globals['post_js'], 'markermanager.js');
 do_header(_('mapa de las últimas noticias') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main', 'map');
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_vertical_tags();
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
 echo '<div class="topheading"><h2>noticias de las últimas 24 horas</h2></div>';
 
 echo '<div style="margin:0 0 10px 20px; text-align:center">';
@@ -38,10 +46,11 @@ echo '</form>';
 echo '</div>';
 
 
-echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px"></div></div>'
+echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px"></div></div>'
 ?>
 
 <script type="text/javascript">
+//<![CDATA[
 var baseicon;
 var geo_marker_mgr = null;
 
@@ -90,8 +99,10 @@ function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 		});
 	}
 }
+//]]>
 </script>
 <?
 
+do_footer_menu();
 do_footer();
 ?>

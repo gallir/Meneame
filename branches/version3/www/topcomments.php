@@ -16,9 +16,20 @@ $globals['ads'] = true;
 do_header(_('mejores comentarios en 24 horas') . ' // men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main', _('+ comentarios'), true);
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+do_best_comments();
+do_vertical_tags('published');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
+
 echo '<div class="topheading"><h2>'._('comentarios más valorados 24 horas').'</h2></div>';
 
 
@@ -38,9 +49,6 @@ if ($comments) {
 		$link->read();
 		$comment->read();
 		if ($last_link != $link->id) {
-			if ($counter % 12 == 5)  // AdSense
-				do_banner_story();
-			//$link->print_summary('short');
 			echo '<h3>';
 			echo '<a href="'.$link->get_relative_permalink().'">'. $link->title. '</a>';
 			echo '</h3>';
@@ -57,6 +65,7 @@ if ($comments) {
 
 echo '</div>';
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 ?>

@@ -467,15 +467,6 @@ class Link {
 		echo '</h1>';
 
 		if (! $globals['bot']) {
-			// GEO
-			if ($this->latlng) {
-				echo '<div class="thumbnail" id="map" style="width:130px;height:130px">&nbsp;</div>'."\n";
-			} elseif ($type=='full' && $globals['do_websnapr'] && $this->votes_enabled && $globals['link_id'] > 0 && !empty($this->url_title)) {
-			// Websnapr
-			// In order not to overload websnapr, display the image only if votes are enabled
-				echo '<img class="news-websnapr" alt="websnapr.com" src="http://images.websnapr.com/?size=T&amp;url='.$url.'" width="92" height="70"  onmouseover="return tooltip.ajax_delayed(event, \'get_link_snap.php\', '.$this->id.');" onmouseout="tooltip.clear(event);" onclick="tooltip.clear(this);"/>';
-			}
-
 			echo '<div class="news-submitted">';
 			if ($type != 'short') {
 				echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="'.$this->username.'" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';

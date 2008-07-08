@@ -80,11 +80,19 @@ do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
 do_mnu_categories_horizontal($_REQUEST['category']);
-do_sidebar();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_queued();
+do_best_comments();
+do_vertical_tags('queued');
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+
 echo '<div id="newswrap">'."\n";
 
-// fora en posar dropdown echo '</div>';  // Left margin
-// end of tabs
 
 if($cat) {
 	$from_where .= " AND link_category=$cat ";

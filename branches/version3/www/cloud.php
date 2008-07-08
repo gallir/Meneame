@@ -39,13 +39,22 @@ $max = max($db->get_var("select count(*) as words $from_where order by words des
 $coef = ($max_pts - $min_pts)/($max-1);
 
 
-do_header(_('nube de etiquetas') . ' // men&eacute;ame');
+do_header(_('nube de etiquetas') . ' | men&eacute;ame');
 do_banner_top();
 echo '<div id="container">'."\n";
-do_sidebar();
-echo '<div id="contents">';
 do_tabs('main', _('etiquetas'), true);
 print_period_tabs();
+
+/*** SIDEBAR ****/
+echo '<div id="sidebar">';
+do_banner_right();
+do_best_stories();
+echo '</div>' . "\n";
+/*** END SIDEBAR ***/
+
+echo '<div id="newswrap">'."\n";
+
+
 echo '<div class="topheading"><h2>+ '.$words_limit.'</h2></div>';
 echo '<div style="margin: 0px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 25px;">';
 $res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit $words_limit");
@@ -63,6 +72,7 @@ if ($res) {
 
 echo '</div>';
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 
@@ -77,7 +87,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li><a '.$active.'href="cloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="cloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }
