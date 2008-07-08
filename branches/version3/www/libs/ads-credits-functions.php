@@ -107,10 +107,11 @@ function do_credits() {
 	// contact info
 	if ($globals['is_meneame']) {
 		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
-		echo '<li><a href="'.$globals['base_url'].'COPYING">'._('licencia código').'</a></li>';
+		echo '<li>'._('Licencias').':&nbsp;';
+		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';
+		echo '<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('gráficos').'</a>,&nbsp;';
+		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</li>';
 		echo '<li><a href="http://svn.meneame.net/index.cgi/branches/version3/">'._('descargar').'</a></li>';
-		echo '<li><a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('licencia de los gráficos').'</a></li>' . "\n";
-		echo '<li><a href="http://creativecommons.org/licenses/by/2.5/es/">'._('licencia del contenido').'</a></li>';
 		echo '<li>alojamiento en <a href="http://www.ferca.com">Ferca Network</a></li>';
 	} else {
 		echo '<li>link to code and licenses here (please respect the menéame Affero license and publish your own code!</li>';
@@ -118,13 +119,13 @@ function do_credits() {
 		echo '<li>código: <a href="">licencia</a>, <a href="">descargar</a></li>';
 		echo '<li>you and contact link here</li>';
 	}
-	echo '</ul>';
+	echo '</ul>'."\n";
 	echo '<ul id="stdcompliance">';
 	echo '<li><a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-xhtml10.gif" alt="Valid XHTML 1.0 Transitional" /></a></li>';
 	echo '<li><a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-css.gif" alt="Valid CSS" /></a></li>';
 	echo '<li><a href="http://feedvalidator.org/check.cgi?url=http://meneame.net/rss2.php"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-rss.gif" alt="Valid RSS" title="Validate my RSS feed" /></a></li>';
 	echo '</ul>';
-	echo '</div>';
+	echo '</div>'."\n";
 
 }
 ?>
