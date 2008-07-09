@@ -172,9 +172,9 @@ class Post {
 		echo '<input type="hidden" name="user_id" value="'.$this->author.'" />'."\n";
 		echo '<textarea name="post" rows="3" cols="40" id="post" onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,300)" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,300)">'.$this->content.'</textarea>'."\n";
 		$body_left = 300 - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-		echo '<br /><input readonly type="text" name="postcounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
+		echo '<br /><input readonly type="text" name="postcounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>';
 		echo '&nbsp;&nbsp;&nbsp;';
-		echo '<input class="submit" type="submit" value="'._('guardar').'" />'."\n";
+		echo '<input class="button" type="submit" value="'._('guardar').'" />'."\n";
 		echo '</form>'."\n";
 		echo '</fieldset>'."\n";
 		echo '</div>'."\n";

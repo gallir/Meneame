@@ -12,10 +12,9 @@ include(mnminclude.'tags.php');
 
 force_authentication();
 
-
-
 do_header(_("editar noticia"), "post");
 
+echo '<div id="singlewrap">'."\n";
 echo '<div class="genericform">'."\n";
 
 if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) { 
@@ -39,6 +38,7 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 
 echo "</div>";
+echo "</div>"."\n";
 
 do_footer();
 
@@ -63,13 +63,13 @@ function do_edit() {
 
 	if($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 		echo '<label for="url" accesskey="1">'._('url de la noticia').':</label>'."\n";
-		echo '<p><span class="genericformnote">'._('url de la noticia.').'</span>'."\n";
+		echo '<p><span class="note">'._('url de la noticia.').'</span>'."\n";
 		echo '<br/><input type="url" id="url" name="url" value="'.htmlspecialchars($link_url).'" size="80" />';
 		echo '</p>'."\n";
 	}
 
 	echo '<label for="title" accesskey="2">'._('título de la noticia').':</label>'."\n";
-	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
+	echo '<p><span class="note">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
 
 	// Is it an image or video?
 	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -110,7 +110,7 @@ function do_edit() {
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="3">'._('etiquetas').':</label>'."\n";
-	echo '<p><span class="genericformnote"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
+	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
 	echo '<div style="float: right;">';
@@ -119,10 +119,10 @@ function do_edit() {
 
 
 	echo '<p><label for="bodytext" accesskey="4">'._('descripción de la noticia').':</label>'."\n";
-	echo '<br /><span class="genericformnote">'._('describe con fidelidad el contenido del enlace.').'</span>'."\n";
+	echo '<br /><span class="note">'._('describe con fidelidad el contenido del enlace.').'</span>'."\n";
 	echo '<br/><textarea name="bodytext" rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">'.$link_content.'</textarea>'."\n";
 	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
+	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
 	print_categories_form($linkres->category);
@@ -178,7 +178,7 @@ function do_save() {
 	$linkres->print_summary('preview');
 	echo '</div>'."\n";
 
-	echo '<form class="genericform" method="GET" action="story.php" >';
+	echo '<form class="note" method="GET" action="story.php" >';
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
 	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; modificar').'">&nbsp;&nbsp;'."\n";;
 	echo '<input class="button" type="submit" value="'._('ir a la noticia').'" />'."\n";

@@ -516,7 +516,7 @@ function do_submit1() {
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
 	echo '<label for="title" accesskey="1">'._('título de la noticia').':</label>'."\n";
-	echo '<p><span class="genericformnote">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
+	echo '<p><span class="note">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
 	// Is it an image or video?
 	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	$linkres->print_content_type_buttons();
@@ -525,25 +525,25 @@ function do_submit1() {
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
-	echo '<p><span class="genericformnote"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
+	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
 	print_simpleformat_buttons('bodytext');
 
 	echo '<p><label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
-	echo '<br /><span class="genericformnote">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";
+	echo '<br /><span class="note">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";
 	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"></textarea>'."\n";
-	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
+	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
 	print_categories_form();
 
 	echo '<p><label for="trackback">'._('trackback').':</label><br />'."\n";
 	if (empty($trackback)) {
-		echo '<span class="genericformnote">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
+		echo '<span class="note">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
 		echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";
 	} else {
-		echo '<span class="genericformnote">'.$trackback.'</span>'."\n";
+		echo '<span class="note">'.$trackback.'</span>'."\n";
 		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
 	}
 	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />&nbsp;&nbsp;'."\n";
