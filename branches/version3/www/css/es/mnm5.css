@@ -156,6 +156,7 @@ clear:both;
 float: right;
 width: 300px;
 margin: 25px;
+overflow: hidden;
 }
 
 #newswrap {
