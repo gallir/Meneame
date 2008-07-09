@@ -100,7 +100,7 @@ $post->print_post_teaser($rss_option);
 
 if ($option == '_geo') {
 	echo '<div class="topheading"><h2>notas de las últimas 24 horas</h2></div>';
-	echo '<div id="map" style="width: 100%; height: 500px;margin:0 0 0 20px;"></div></div>';
+	echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px;"></div></div>';
 ?>
 <script type="text/javascript">
 var baseicon;
@@ -146,7 +146,7 @@ function onLoad(lat, lng, zoom, icon) {
 }
 
 echo '</div>';
-do_footer_menu();
+if ($option != '_geo') do_footer_menu();
 do_footer();
 
 function do_posts_tabs($tab_selected, $username) {
