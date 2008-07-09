@@ -11,8 +11,9 @@ include(mnminclude.'html1.php');
 include(mnminclude.'annotation.php');
 
 $globals['ads'] = true;
-do_header(_('promote') . ' // men&eacute;ame');
 promote_style();
+do_header(_('promote') . ' | men&eacute;ame');
+echo '<div id="singlewrap">'."\n";
 
 $annotation = new Annotation('promote');
 $annotation->text = $output;
@@ -20,13 +21,15 @@ if($annotation->read()) {
 	echo $annotation->text;
 }
 
+echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
 
 
 function promote_style() {
-?>
+	global $globals;
+	$globals['extra_head'] = '
 <style type="text/css">
 p {
     font-family: Bitstream Vera Sans, Arial, Helvetica, sans-serif;
@@ -62,7 +65,7 @@ td {
     background-color: #FFF3E8;
 }
 </style>
-<?
+';
 }
 
 ?>

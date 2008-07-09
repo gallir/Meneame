@@ -31,7 +31,7 @@ if ($range_values[$from] > 0) {
 	$time_link = '';
 }
 
-do_header(_('más comentadas') . ' // men&eacute;ame');
+do_header(_('más comentadas') . ' | men&eacute;ame');
 do_tabs('main', _('más comentadas'), true);
 print_period_tabs();
 

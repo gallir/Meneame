@@ -37,7 +37,7 @@ $max = max($db->get_var("select count(*) as count $from_where order by count des
 $coef = ($max_pts - $min_pts)/($max-1);
 
 
-do_header(_('nube de sitios web') . ' // men&eacute;ame');
+do_header(_('nube de sitios web') . ' | men&eacute;ame');
 do_tabs("main", _('+ webs'), true);
 print_period_tabs();
 

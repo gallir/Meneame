@@ -117,6 +117,8 @@ function do_header($title, $id='home') {
 
 	do_js_includes();
 
+	if ($globals['extra_head']) echo $globals['extra_head'];
+
 	echo '</head>' . "\n";
 	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
 	echo '<div id="wrap">' . "\n";

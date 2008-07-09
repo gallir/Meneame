@@ -2,7 +2,7 @@
 	include('config.php');
 	include(mnminclude.'html1.php');
 	include(mnminclude.'link.php');
-	do_header(_('FAQ') . ' // men&eacute;ame');
+	do_header(_('FAQ') . ' | men&eacute;ame');
 	$q = 1;
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
