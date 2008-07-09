@@ -4,7 +4,8 @@
 	include(mnminclude.'link.php');
 	do_header(_('FAQ') . ' // men&eacute;ame');
 	do_banner_top();
-	echo '<div id="container-wide">' . "\n";
+	// ex container-wide
+	echo '<div id="container">' . "\n";
 	$q = 1;
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
@@ -206,5 +207,6 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </div>
 <?
 
+	do_footer_menu();
 	do_footer();
 ?>

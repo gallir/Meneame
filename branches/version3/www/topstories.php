@@ -100,7 +100,7 @@ function print_period_tabs() {
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
 	echo '<ul class="tabsub-shakeit">'."\n";
 	if ($month> 0 && $year > 0) {
-		echo '<li><a class="tabsub-this" href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
+		echo '<li class="tabsub-this"><a href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
 		$current_range = -1;
 	} elseif(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) {
 		$current_range = 0;

@@ -648,7 +648,7 @@ function do_best_stories() {
 	global $db, $globals, $dblang;
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('últimas populares').'</a></h4>';
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('populares').'</a></h4>';
 
 	if(memcache_mprint('best_stories_3')) return;
 

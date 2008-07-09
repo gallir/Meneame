@@ -435,7 +435,8 @@ function flipChar(c) {
 <?
 
 do_banner_top();
-echo '<div id="container-wide">' . "\n";
+// ex container-wide
+echo '<div id="container">' . "\n";
 
 // Check the tab options and set corresponging JS variables
 if ($current_user->user_id > 0) {

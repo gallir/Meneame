@@ -51,10 +51,9 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if ($globals['is_meneame']) {
-		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a></li>';
+		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
 	} else {
-		echo '<li>legal conditions link here</li>';
-		echo '<li>abuse report email address here</li>';
+		echo 'legal conditions link here';
 	}
 	// IMPORTANT: read above
 }
@@ -101,16 +100,16 @@ function do_credits() {
 	echo '<div id="footthingy">';
 	echo '<p>menéame</p>';
 	echo '<ul id="legalese">';
-	do_legal (_('condiciones legales'));
 
 	// IMPORTANT: links change in every installation, CHANGE IT!!
 	// contact info
 	if ($globals['is_meneame']) {
+		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('condiciones legales').'</a></li>';
 		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
 		echo '<li>'._('Licencias').':&nbsp;';
 		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('gráficos').'</a>,&nbsp;';
-		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</li>';
+		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</a></li>';
 		echo '<li><a href="http://svn.meneame.net/index.cgi/branches/version3/">'._('descargar').'</a></li>';
 		echo '<li>alojamiento en <a href="http://www.ferca.com">Ferca Network</a></li>';
 	} else {

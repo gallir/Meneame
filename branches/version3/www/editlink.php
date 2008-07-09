@@ -16,7 +16,8 @@ force_authentication();
 
 do_header(_("editar noticia"), "post");
 do_banner_top();
-echo '<div id="container-wide">' . "\n";
+// ex container-wide
+echo '<div id="container">' . "\n";
 
 
 echo '<div id="genericform-contents">'."\n";

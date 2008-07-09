@@ -89,7 +89,7 @@ do_header($login);
 
 do_banner_top();
 
-echo '<div id="container-wide">' . "\n";
+echo '<div id="container">' . "\n";
 echo '<div id="genericform-contents">'."\n";
 
 $url_login = urlencode($login);
@@ -492,18 +492,17 @@ function do_user_tabs($option, $user) {
 	global $globals, $current_user;
 
 	$active = array();
-	$active[$option] = 'class="tabsub-this"';
+	$active[$option] = ' class="tabsub-this"';
 
 	echo '<ul class="tabsub">'."\n";
-	echo '<li><a '.$active[1].' href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
-	echo '<li><a '.$active[8].' href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
-	echo '<li><a '.$active[7].' href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
-	echo '<li><a '.$active[2].' href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
+	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+	echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
+	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
+	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 	if (! $globals['bot']) {
-		echo '<li><a '.$active[6].' href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
-		echo '<li><a '.$active[3].' href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
-		echo '<li><a '.$active[4].' href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
-		//echo '<li><a '.$active[5].' href="'.get_user_uri($user, 'preferred').'">'._('autores preferidos'). '</a></li>';
+		echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
+		echo '<li'.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
+		echo '<li'.$active[4].'><a href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 	}
 	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '</a></li>';
 	echo '</ul>';

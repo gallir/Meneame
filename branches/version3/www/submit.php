@@ -94,7 +94,8 @@ function print_empty_submit_form() {
 
 function do_submit0() {
 	do_banner_top();
-	echo '<div id="container-wide">' . "\n";
+	// ex container-wide
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	echo '<h2>'._('envío de una nueva noticia: paso 1 de 3').'</h2>';
 	echo '<div class="instruction">';
@@ -119,7 +120,8 @@ function do_submit1() {
 	$url = preg_replace('/#.*$/', '', $url); // Remove the "#", people just abuse
 
 	do_banner_top();
-	echo '<div id="container-wide">' . "\n";
+	// ex container-wide
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 
 	$new_user = false;
@@ -597,7 +599,8 @@ function do_submit2() {
 	$link_content = $linkres->content;
 	do_banner_top();
 	preload_indicators();
-	echo '<div id="container-wide">' . "\n";
+	// ex container-wide
+	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 3 de 3').'</h2>'."\n";
@@ -718,7 +721,8 @@ function print_form_submit_error($mess) {
 	
 	if (!$previous_error) {
 		do_banner_top();
-		echo '<div id="container-wide">' . "\n";
+		// ex container-wide
+		echo '<div id="container">' . "\n";
 		echo '<div id="genericform-contents">'."\n"; // this div MUST be closed after function call!
 		echo '<h2>'._('ooops!').'</h2>'."\n";
 		$previous_error = true;

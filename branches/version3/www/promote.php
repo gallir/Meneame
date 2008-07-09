@@ -13,7 +13,8 @@ include(mnminclude.'annotation.php');
 $globals['ads'] = true;
 do_header(_('promote') . ' // men&eacute;ame');
 do_banner_top();
-echo '<div id="container-wide">' . "\n";
+// ex container-wide
+echo '<div id="container">' . "\n";
 promote_style();
 
 $annotation = new Annotation('promote');

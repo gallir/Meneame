@@ -14,7 +14,8 @@ include(mnminclude.'log.php');
 
 do_header(_("registro"), "post");
 do_banner_top();
-echo '<div id="container-wide">' . "\n";
+// ex container-wide
+echo '<div id="container">' . "\n";
 
 echo '<div id="genericform-contents">'."\n";
 echo '<div id="genericform">'."\n";
