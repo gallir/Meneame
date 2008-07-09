@@ -223,50 +223,6 @@ function do_footer($credits = true) {
 	echo "</div></body></html>\n";
 }
 
-// menu items
-
-function do_mnu_faq($whichpage) {
-	global $dblang, $globals, $current_user;
-
-	if ($current_user->user_id > 0) return; // Don't shpw FAQ if it's a registered user
-
-	echo '<div class="mnu-faq">' . "\n";
-
-	@include mnminclude.'ads/adhere.inc';
-
-	switch ($whichpage) {
-		case 'home':
-			echo '<strong>' . _("menéame"). '</strong>' . "\n";
-			echo _("es un sistema de promoción de noticias...").' <a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'. _("leer más") . '</a>.' . "\n";
-			break;
-		case 'story':
-			echo '<strong>' . _("menéame"). '</strong>' . "\n";
-			echo _("te ofrece esta noticia...").' <a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'. _("¿qué es menéame?") . '</a>' . "\n";
-			break;
-		case 'shakeit':
-			echo 'las noticias de esta p&aacute;gina con suficientes votos pasar&aacute;n a portada. para votar pulsa en <strong>men&eacute;alo</strong>.';
-			break;
-		case 'cloud':
-			echo 'las etiquetas <strong>más populares</strong> aparecen a la derecha <strong>con mayor tamaño</strong>';
-			break;
-		case 'sitescloud':
-			echo 'los webs <strong>más populares</strong> aparecen a la derecha <strong>con mayor tamaño</strong>';
-			break;
-		case 'topstories':
-			echo 'selecciona un período y aparecerán las noticias <strong>más populares</strong> del momento';
-			break;
-		case 'topcomments':
-			echo 'estos son los comentarios más valorados durante las ultimas 24 horas';
-			break;
-		case 'topcommented':
-			echo 'estos son los artículos con más comentarios. en el menú, debajo esta nota, puedes seleccionar el período que quieres ver.';
-			break;
-
-	}
-	echo '</div>' . "\n";
-	
-}
-
 function do_footer_menu() {
 	global $globals, $current_user;
 
@@ -368,17 +324,7 @@ function do_footer_rss() {
 }
 
 function do_mnu_categories_horizontal($what_cat_id) {
-	
-	// $what_cat_type:
-	//	index: from index.php
-	// 	shakeit: from shakeit.php
-
 	global $db, $dblang, $globals;
-
-	/*
-	if (!$globals['meta_current'] > 0) 
-		return;
-	*/
 
 	echo '<div class="catsub-block">' . "\n";
 	echo '<ul>' . "\n";
@@ -425,64 +371,6 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 	echo '</ul>';
 	echo '</div><!--html1:do_mnu_categories_horizontal-->' . "\n";
-
-}
-
-function do_mnu_categories($what_cat_type, $what_cat_id) {
-	
-	// $what_cat_type:
-	//	index: from index.php
-	// 	shakeit: from shakeit.php
-
-	global $db, $dblang, $globals;
-
-	// Categories Box
-
-	// change class id for shakeit page
-	if ($what_cat_type == 'shakeit') 
-		$categorylist_class = 'column-one-list';
-	else 
-		$categorylist_class = 'column-list';
-	echo '<div class="'.$categorylist_class.'">' . "\n";
-	
-	echo '<ul>' . "\n";
-
-
-	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
-	// Always return to page 1
-	$query=preg_replace('/page=[0-9]*/', '', $query);
-	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
-	if(!empty($query)) {
-		$query = htmlspecialchars($query);
-		$query = "&amp;$query";
-	}
-
-	// draw categories
-	if (!empty($globals['meta_categories'])) {
-		$category_condition = "category_id in (".$globals['meta_categories'].")";
-	} else {
-		$category_condition = "category_parent > 0";
-	}
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
-	if ($categories) {
-		foreach ($categories as $category) {
-			if($category->category_id == $what_cat_id) {
-				$globals['category_id'] = $category->category_id;
-				$globals['category_name'] = $category->category_name;
-				$thiscat = ' class="thiscat"';
-			} else {
-				$thiscat = '';
-			}
-
-			echo '<li'.$thiscat.'><a href="'.$base_url.'?category='.$category->category_id.$query.'">';
-			echo _($category->category_name);
-			echo "</a></li>\n";
-		}
-	}
-
-	echo '</ul>';
-	echo '<br style="clear: both;" />' . "\n";
-	echo '</div><!--html1:do_mnu_categories-->' . "\n";
 
 }
 
