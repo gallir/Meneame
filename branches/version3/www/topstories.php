@@ -61,8 +61,6 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 
 
 do_header(_('más votadas') . ' | men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 print_period_tabs();
@@ -76,8 +74,6 @@ echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">'."\n";
-
-//do_banner_top_lower();
 
 
 $link = new Link;

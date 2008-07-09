@@ -62,10 +62,9 @@ switch ($sortby) {
 }
 // Sort by votes
 
-do_header(_('usuarios') . ' // men&eacute;ame');
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
+do_header(_('usuarios') . ' | men&eacute;ame');
+
+echo '<div id="singlewrap">' . "\n";
 echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>';
 
 echo '<table><tr>';
@@ -109,6 +108,7 @@ if ($users) {
 }
 echo "</table>\n\n";
 do_pages($rows, $page_size, false);
+echo "</div>\n";
 do_footer();
 
 

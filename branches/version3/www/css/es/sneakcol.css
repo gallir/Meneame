@@ -58,15 +58,3 @@ color: #FF6400;
 color: #D9AA95;
 }
 
-.sneaker input {
-background: #FFE2C5;
-border-color: #FF6400;
-color: #303030;
-}
-
-.sneaker input.sendmessage {
-color: #FF6400;
-border-color: #FF6400;
-background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
-}
-

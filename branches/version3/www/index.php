@@ -20,8 +20,6 @@ $globals['ads'] = true;
 $cat=$_REQUEST['category'];
 
 do_header(_('últimas publicadas') . ' | men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs('main','published');
 if ($globals['meta_current'] > 0) {
 	$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";

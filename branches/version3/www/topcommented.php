@@ -32,8 +32,6 @@ if ($range_values[$from] > 0) {
 }
 
 do_header(_('más comentadas') . ' // men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs('main', _('más comentadas'), true);
 print_period_tabs();
 

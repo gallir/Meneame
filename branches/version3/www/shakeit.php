@@ -74,8 +74,6 @@ switch ($globals['meta']) {
 }
 
 do_header(_('noticias pendientes') . ' | men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 

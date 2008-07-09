@@ -40,8 +40,6 @@ $coef = ($max_pts - $min_pts)/($max-1);
 
 
 do_header(_('nube de etiquetas') . ' | men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs('main', _('etiquetas'), true);
 print_period_tabs();
 

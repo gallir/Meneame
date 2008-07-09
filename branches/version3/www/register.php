@@ -13,12 +13,8 @@ include(mnminclude.'ban.php');
 include(mnminclude.'log.php');
 
 do_header(_("registro"), "post");
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
 
-echo '<div id="genericform-contents">'."\n";
-echo '<div id="genericform">'."\n";
+echo '<div class="genericform">'."\n";
 
 if(isset($_POST["process"])) {
 	switch (intval($_POST["process"])) {
@@ -34,7 +30,6 @@ if(isset($_POST["process"])) {
 }
 
 echo '</div>' . "\n";
-echo '</div>' . "\n";
 do_footer();
 exit;
 
@@ -47,26 +42,26 @@ function do_register0() {
 	echo '<p><label for="name">' . _("nombre de usuario") . ':</label><br />' . "\n";
 
 	echo '<input type="text" name="username" id="name" value="" onkeyup="enablebutton(this.form.checkbutton1, this.form.submit, this)" size="25" tabindex="1"/>' . "\n";
-	echo '<span id="checkit"><input type="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>' . "\n";
+	echo '<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>' . "\n";
 	echo '<br/><span id="usernamecheckitvalue"></span></p>' . "\n";
 
 	echo '<p><label for="email">email:</label><br />' . "\n";
-	echo _('es importante que sea correcta, recibirás un correo para validar la cuenta').' <br />';
+	echo '<span class="note">'._('es importante que sea correcta, recibirás un correo para validar la cuenta').'</span> <br />';
 	echo '<input type="text" id="email" name="email" value=""  onkeyup="enablebutton(this.form.checkbutton2, this.form.submit, this)" size="25" tabindex="2"/>' . "\n";
-		echo '<input type="button" id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>' . "\n";
+		echo '<input type="button" class="button" id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>' . "\n";
 	echo '<br/><span id="emailcheckitvalue"></span></p>' . "\n";
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
-	echo _('al menos cinco caracteres').' <br />';
+	echo '<span class="note">'._('al menos cinco caracteres').' </span><br />';
 	echo '<input type="password" id="password" name="password" size="25" tabindex="3"/></p>' . "\n";
 	echo '<p><label for="verify">' . _("verificación de clave") . ': </label><br />' . "\n";
 	echo '<input type="password" id="verify" name="password2" size="25" tabindex="4"/></p>' . "\n";
 
-	echo '<p>'._('has leído y aceptas las ');
+	echo '<p><span class="note">'._('has leído y aceptas las ');
 	do_legal(_('condiciones de uso'), 'target="_blank"', false);
-	echo ' <input type="checkbox" id="acceptlegal" name="acceptlegal" value="accept" tabindex="5"/></p>' . "\n";
+	echo ' <input type="checkbox" id="acceptlegal" name="acceptlegal" value="accept" tabindex="5"/></span></p>' . "\n";
 
-	echo '<p><input type="submit" disabled="disabled" name="submit" value="'._('crear usuario').'" class="log2" tabindex="6" /></p>' . "\n";
+	echo '<p><input type="submit" class="button" disabled="disabled" name="submit" value="'._('crear usuario').'" class="log2" tabindex="6" /></p>' . "\n";
 	echo '<input type="hidden" name="process" value="1"/>' . "\n";
 
 	echo '</fieldset>' . "\n";
@@ -87,7 +82,7 @@ function do_register1() {
 	echo '<form action="register.php" method="post" id="thisform">' . "\n";
 	echo '<fieldset><legend><span class="sign">'._('validación').'</span></legend>'."\n";
 	ts_print_form();
-	echo '<input type="submit" name="submit" value="'._('continuar').'" />';
+	echo '<input type="submit" name="submit" class="button" value="'._('continuar').'" />';
 	echo '<input type="hidden" name="process" value="2" />';
 	echo '<input type="hidden" name="email" value="'.clean_input_string($_POST["email"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="username" value="'.clean_input_string($_POST["username"]).'" />'; // extra sanity, in fact not needed

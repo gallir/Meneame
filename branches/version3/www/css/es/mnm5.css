@@ -150,7 +150,6 @@ margin: 0 0 10px 0;
 
 #container {
 clear:both;
-font-size: small;
 }
 
 #sidebar {
@@ -161,6 +160,12 @@ margin: 25px;
 
 #newswrap {
 margin: 10px 345px 0 10px;
+font-size: small;
+}
+
+#singlewrap {
+margin: 0 10px 0 10px;
+font-size: small;
 }
 
 .tabmain {
@@ -275,7 +280,6 @@ height: 23px;
 
 .tabsub li.tabsub-this a {
 font-style: oblique;
-font-size: 1em;
 padding: 2px 8px 0 4px;
 height: 20px;
 }
@@ -492,7 +496,10 @@ vertical-align: bottom;
 
 abbr { cursor: help; }
 
-img { vertical-align: middle;}
+img {
+vertical-align: middle;
+border: none;
+}
 
 /* End holygrail */
 
@@ -502,35 +509,28 @@ cursor: pointer;
 text-decoration: underline;
 }
 
-/* h2 without underline */
+hr {
+height: 1px;
+border: none;
+}
 
+h2 {
+margin-top: 0;
+margin-bottom: 8px;
+font-size: 160%;
+font-weight: normal;
+color: #FF6400;
+border-bottom-width: 1px;
+border-bottom-style: dotted;
+}
+
+/* h2 without underline */
 .topheading h2 {
 padding: 10px 0 20px 0;
 margin: 0 0 0 20px;
 font-size: 160%;
 font-weight: normal;
 border: none;
-}
-
-
-hr {
-height: 1px;
-border: none;
-}
-
-img {
-border: none;
-}
-
-h2 {
-margin-top: 0;
-margin-left: 95px;
-margin-bottom: 3px;
-font-size: 160%;
-font-weight: normal;
-color: #FF6400;
-border-bottom-width: 1px;
-border-bottom-style: dotted;
 }
 
 h3 {
@@ -870,7 +870,6 @@ text-decoration: none;
 .commentform textarea {
 display: block;
 width: 90%;
-border: 1px dotted;
 margin: 0 0 10px 0;
 }
 
@@ -1009,46 +1008,6 @@ margin: 10px 0;
 background: none;
 }
 
-legend {
-font-weight: bold;
-padding: 0 5px;
-}
-
-fieldset dl {
-margin: 0;
-padding: 0;
-}
-
-fieldset dt {
-clear: left;
-float: left;
-width: 12em; /* increase for wider dt text */
-text-align: right;
-padding: 0 10px 4px 0;
-}
-
-fieldset dd {
-padding: 0 0 4px 0;
-font-weight: bold;
-}
-
-label {
-font-weight: bold;
-}
-
-fieldset.labels label {
-width: 160px;
-float: left;
-text-align: right;
-display: block;
-padding: 3px 8px 3px 0;
-}
-
-fieldset.labels div {
-padding: 3px 0;
-clear: left
-}
-
 /* pagination */
 
 .pages, .pages-margin {
@@ -1123,6 +1082,7 @@ font-weight: normal;
 
 /* generic form and wide page */
 
+/*
 #genericform-contents {
 margin: 0 60px 60px 100px;
 }
@@ -1130,54 +1090,55 @@ margin: 0 60px 60px 100px;
 #genericform-contents h2 {
 margin: 10px 0 0 0;
 }
+*/
 
-#genericform fieldset, #genericform-contents fieldset {
+.genericform h2 {
+margin: 10px 0 10px 0;
+}
+
+.genericform fieldset, .genericform-contents fieldset {
 border: 1px solid;
 }
 
-#genericform {
+.genericform {
 border: 0;
-margin: 0;
+margin: 0 60px 10px 60px;
 padding: 0 0 20px 0;
 font-weight: bold;
 }
 
-#genericform .sign, #genericform-contents legend {
+.genericform .sign, .genericform-contents legend {
 font-weight: bold;
 font-size: 110%;
 }
 
-#genericform .genericsubmit {
+/*
+.genericform .genericsubmit {
 border: 1px solid;
 font-weight: bold;
 }
 
-#genericform .genericsubmit:hover {
+.genericform .genericsubmit:hover {
 font-weight: bold;
 }
 
-#genericform input {
+.genericform input {
 border: 1px solid;
 }
+*/
 
-#genericform .nobold {
+.genericform .nobold {
 font-weight: normal;
 }
 
-#genericform .genericformtxt {
+.genericform .genericformtxt {
 font-size: 100%;
 font-weight: normal;
 }
 
-#genericform .genericformnote {
-font-size: 85%;
-font-weight: normal;
-}
-
-#genericform textarea {
+.genericform textarea {
 width: 100%;
 height: 128px;
-border: 1px solid;
 }
 
 .geoform {
@@ -1187,25 +1148,25 @@ font-size: 8.5pt;
 
 /* generic form: login page specials */
 
-#genericform .recoverpass {
+.genericform .recoverpass {
 font-size: 125%;
 }
 
-#genericform .recoverpass a:link, .recoverpass a:visited {
+.genericform .recoverpass a:link, .recoverpass a:visited {
 border-bottom-width: 1px;
 border-bottom-style: dotted;
 padding-bottom: 1px;
 text-decoration: none;
 }
 
-#genericform .recoverpass a:hover {
+.genericform .recoverpass a:hover {
 border-bottom-width: 1px;
 border-bottom-style: solid;
 padding-bottom: 1px;
 text-decoration: none;
 }
 
-#genericform .formnotice {
+.genericform .formnotice {
 font-weight: normal;
 }
 
@@ -1301,17 +1262,6 @@ vertical-align: bottom;
 .sneaker-status {
 width: 8%;
 text-align: right;
-}
-
-.sneaker input {
-margin: 7px 0 2px 0;
-border: 1px solid;
-font-size: 90%;
-}
-
-.sneaker input.sendmessage {
-border: 1px solid;
-font-size: 90%;
 }
 
 .voters, .mini-sneaker {
@@ -1518,6 +1468,7 @@ background: #FFEEC7;
 /*border-color: #e2d3b0;*/
 overflow: hidden;
 text-align: left;
+font-size: 10pt;
 }
 #modalContainer a.modalCloseX,
 #modalContainer a.modalCloseX:link,
@@ -1545,3 +1496,50 @@ padding-left: 15px;
 #modalContainer .content li {
 margin: 3px 0 0 0;
 }
+
+/* Form defaults */
+
+input, textarea {
+margin: 0 0 7px 0;
+}
+
+.button, button {
+border: 1px solid;
+font-weight: bold;
+margin: 4px 0 4px 0;
+padding: 0 4px 0 4px;
+}
+
+legend {
+font-weight: bold;
+padding: 0 5px;
+}
+
+fieldset dl {
+margin: 0;
+padding: 0;
+}
+
+fieldset dt {
+clear: left;
+float: left;
+width: 12em; /* increase for wider dt text */
+text-align: right;
+padding: 0 10px 4px 0;
+}
+
+fieldset dd {
+padding: 0 0 4px 0;
+font-weight: bold;
+}
+
+label {
+font-weight: bold;
+}
+
+.note {
+font-size: 80%;
+font-weight: normal;
+}
+
+

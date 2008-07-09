@@ -88,9 +88,9 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(\''.$icontype.'\')">';
 	echo '<label for="address">'.$label. '</label><br/>';
 	echo '<input type="text" size="40" maxlength="80" name="address" id="address" value="'.$latlng->text.'" />';
-	echo '&nbsp;<input type="button" value="'._('buscar').'" onclick="return geo_show_address(\''.$icontype.'\');"/>';
-	echo '&nbsp;<input type="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.')"/>';
-	echo '&nbsp;<input type="button" id="geodelete" ';
+	echo '&nbsp;<input type="button" class="button" value="'._('buscar').'" onclick="return geo_show_address(\''.$icontype.'\');"/>';
+	echo '&nbsp;<input type="button" class="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.')"/>';
+	echo '&nbsp;<input type="button" class="button" id="geodelete" ';
 	if (!$latlng) {
 		echo 'disabled="disabled" ';
 	}

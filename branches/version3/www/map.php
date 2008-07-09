@@ -16,8 +16,6 @@ geo_init('onLoad', false, 2);
 array_push($globals['post_js'], 'markermanager.js');
 
 do_header(_('mapa de las últimas noticias') . ' // men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs('main', 'map');
 
 /*** SIDEBAR ****/

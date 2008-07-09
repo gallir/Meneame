@@ -15,12 +15,8 @@ force_authentication();
 
 
 do_header(_("editar noticia"), "post");
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
 
-
-echo '<div id="genericform-contents">'."\n";
+echo '<div class="genericform">'."\n";
 
 if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) { 
 	$linkres=new Link;
@@ -55,7 +51,7 @@ function do_edit() {
 	$link_url = $linkres->url;
 
 	echo '<h2>'._('editar noticia').'</h2>'."\n";
-	echo '<div id="genericform">'."\n";
+	echo '<div class="genericform">'."\n";
 	echo '<form action="editlink.php?user='.$current_user->user_id.'" method="post" id="thisform" name="thisform">'."\n";
 	$now = time();
 	echo '<input type="hidden" name="key" value="'.md5($now.$linkres->randkey).'" />'."\n";
@@ -123,15 +119,15 @@ function do_edit() {
 
 
 	echo '<p><label for="bodytext" accesskey="4">'._('descripción de la noticia').':</label>'."\n";
-	echo '<br /><span class="genericformnote">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";
-	echo '<br/><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">'.$link_content.'</textarea>'."\n";
+	echo '<br /><span class="genericformnote">'._('describe con fidelidad el contenido del enlace.').'</span>'."\n";
+	echo '<br/><textarea name="bodytext" rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">'.$link_content.'</textarea>'."\n";
 	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="genericformnote">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
 	print_categories_form($linkres->category);
 
-	echo '<input class="genericsubmit" type="submit" value="'._('guardar &#187;').'" />'."\n";
+	echo '<input class="button" type="submit" value="'._('guardar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 	echo '</div>'."\n";
@@ -182,10 +178,10 @@ function do_save() {
 	$linkres->print_summary('preview');
 	echo '</div>'."\n";
 
-	echo '<form id="genericform" method="GET" action="story.php" >';
+	echo '<form class="genericform" method="GET" action="story.php" >';
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
-	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; modificar').'">&nbsp;&nbsp;'."\n";;
-	echo '<input class="genericsubmit" type="submit" value="'._('ir a la noticia').'" />'."\n";
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; modificar').'">&nbsp;&nbsp;'."\n";;
+	echo '<input class="button" type="submit" value="'._('ir a la noticia').'" />'."\n";
 	echo '</form>'. "\n";
 }
 

@@ -13,7 +13,6 @@ include(mnminclude.'link.php');
 $globals['ads'] = false;
 
 do_header(_('Administración de bans'));
-do_banner_top();
 
 $page_size = 40;
 $offset=(get_current_page()-1)*$page_size;
@@ -29,12 +28,14 @@ if ($current_user->user_level=="god" || $current_user->user_level=="admin") {
 	// Delete expired bans
 	$db->query("delete from bans where ban_expire is not null and ban_expire < date_sub(now(), interval 60 day)");
 	admin_tabs($_REQUEST["admin"]);
+	echo '<div id="singlewrap">' . "\n";
 	admin_bans($_REQUEST["admin"]);
 } else {
-	echo '<div id="container-wide">' . "\n";
+	echo '<div id="singlewrap">' . "\n";
 	echo '<div class="topheading"><h2>'._('Esta página es sólo para administradores').'</h2>';
 }
 echo "</div>";
+echo "</div>"; // singlewrap
 do_footer();
 
 
@@ -43,7 +44,7 @@ function admin_tabs($tab_selected = false) {
 
 	$active = ' class="tabsub-this"';
 	
-	echo '<ul class="tabsub-shakeit">' . "\n";
+	echo '<ul class="tabsub">' . "\n";
 
 	// url with parameters?
 	if (!empty($_SERVER['QUERY_STRING']))
@@ -54,7 +55,7 @@ function admin_tabs($tab_selected = false) {
 	$tabs=array("hostname", "punished_hostname", "email", "ip", "words", "proxy");
 		foreach($tabs as $tab) {
 		if ($tab_selected == $tab) {
-			echo '<li><a '.$active.' href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'" title="'.$reload_text.'">'._($tab).'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
+			echo '<li'.$active.'><a href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'" title="'.$reload_text.'">'._($tab).'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'">'._($tab).'</a></li>' . "\n";
 		}
@@ -84,8 +85,8 @@ function admin_bans($ban_type) {
 		}
 	}
 	
-	echo '<div id="container-wide">' . "\n";
-	echo '<div id="genericform">';
+	// ex container-wide
+	echo '<div class="genericform" style="margin:0">';
 
 	echo '<div style="float:right;">'."\n";
 	echo '<form method="get" action="'.$globals['base_url'].'admin/bans.php">';
@@ -114,7 +115,7 @@ function admin_bans($ban_type) {
 		echo '<input type="hidden" name="key" value="'.$key.'" />';
 	}
 
-	echo '<table>';
+	echo '<table style="font-size: 10pt">';
 	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;'; 
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_text">'.$ban_type.'</a></th>';

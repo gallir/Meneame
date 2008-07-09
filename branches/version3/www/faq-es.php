@@ -3,9 +3,6 @@
 	include(mnminclude.'html1.php');
 	include(mnminclude.'link.php');
 	do_header(_('FAQ') . ' // men&eacute;ame');
-	do_banner_top();
-	// ex container-wide
-	echo '<div id="container">' . "\n";
 	$q = 1;
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>

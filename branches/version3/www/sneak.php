@@ -434,9 +434,7 @@ function flipChar(c) {
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php"></script>
 <?
 
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
+echo '<div id="singlewrap">' . "\n";
 
 // Check the tab options and set corresponging JS variables
 if ($current_user->user_id > 0) {
@@ -478,7 +476,7 @@ echo '<abbr title="'._('tiempo medio en milisegundos para procesar cada petició
 echo "</form>\n";
 if ($current_user->user_id > 0) {
 	echo '<form name="chat_form" action="" onsubmit="return send_chat(this);">';
-	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="sendmessage"/>';
+	echo _('mensaje') . ': <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="'._('enviar').'" class="button"/>';
 	echo '</form>';
 }
 
@@ -500,8 +498,8 @@ for ($i=0; $i<$max_items;$i++) {
 	echo '<div class="sneaker-item">&nbsp;</div>';
 }
 echo "</div>\n";
-
 echo '</div>';
+echo "</div>\n";
 
 do_footer();
 
@@ -513,10 +511,10 @@ function print_sneak_tabs($option) {
 
 	echo '<li style="float: right;"><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
 	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
-		echo '<li style="float: right;"><a '.$active[3].' href="'.$globals['base_url'].'sneak.php?admin=1">&nbsp;&nbsp;'._('admin').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+		echo '<li style="float: right;"'.$active[3].'><a href="'.$globals['base_url'].'sneak.php?admin=1">'._('admin').'</a></li>' . "\n";
 	}
-	echo '<li style="float: right;"><a '.$active[2].' href="'.$globals['base_url'].'sneak.php?friends=1">&nbsp;&nbsp;'._('amigos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
-	echo '<li style="float: right;"><a '.$active[1].' href="'.$globals['base_url'].'sneak.php">&nbsp;&nbsp;'._('todos').'&nbsp;&nbsp;&nbsp;</a></li>' . "\n";
+	echo '<li style="float: right;"'.$active[2].'><a href="'.$globals['base_url'].'sneak.php?friends=1">'._('amigos').'</a></li>' . "\n";
+	echo '<li style="float: right;"'.$active[1].'><a href="'.$globals['base_url'].'sneak.php">'._('todos').'</a></li>' . "\n";
 
 	echo '</ul>' . "\n";
 }

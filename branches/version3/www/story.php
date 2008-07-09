@@ -144,8 +144,6 @@ if (!empty($new_comment_error)) {
 	echo '</script>';
 }
 
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs("main",_('noticia'), true);
 
 /*** SIDEBAR ****/
@@ -365,7 +363,7 @@ function print_comment_form() {
 	print_simpleformat_buttons('comment');
 	echo '<label for="comment">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="8"></textarea></div>'."\n";
-	echo '<input class="submit" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
+	echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	// Allow gods to put "admin" comments which does not allow votes
 	if ($current_user->user_level == 'god') {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments-warning"><strong>'._('admin').'</strong></span><input name="type" type="checkbox" value="admin"/>'."\n";

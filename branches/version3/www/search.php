@@ -43,10 +43,6 @@ $_REQUEST['q'] = stripslashes($_REQUEST['q']);
 $response = sphinx_get_search_link(false, $offset, $page_size);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(_('búsqueda de'). ' "'.$search_txt.'"');
-do_banner_top();
-
-
-echo '<div id="container">'."\n";
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 
 /*** SIDEBAR ****/

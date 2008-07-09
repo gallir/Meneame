@@ -15,15 +15,16 @@ include(mnminclude.'blog.php');
 
 $globals['ads'] = false;
 
+
 if(isset($_POST["phase"])) {
 	force_authentication();
+	do_header(_("enviar noticia"), "post");
+	echo '<div id="singlewrap">' . "\n";
 	switch ($_POST["phase"]) {
 		case 1:
-			do_header(_("enviar noticia"), "post");
 			do_submit1();
 			break;
 		case 2:
-			do_header(_("enviar noticia"), "post");
 			do_submit2();
 			break;
 		case 3:
@@ -34,8 +35,10 @@ if(isset($_POST["phase"])) {
 	check_already_sent();
 	force_authentication();
 	do_header(_("enviar noticia"), "post");
+	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
+echo "</div>\n"; // singlewrap
 do_footer();
 exit;
 
@@ -75,7 +78,7 @@ function print_empty_submit_form() {
 	} else {
 		$url = 'http://';
 	}
-	echo '<div id="genericform">';
+	echo '<div class="genericform">';
 	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
 	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
 	echo '<p><label for="url">'._('url').':</label><br />';
@@ -85,7 +88,7 @@ function print_empty_submit_form() {
 	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.$randkey.'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
-	echo '<p><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
+	echo '<p><input class="button" type="submit" value="'._('continuar &#187;').'" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
@@ -93,10 +96,6 @@ function print_empty_submit_form() {
 }
 
 function do_submit0() {
-	do_banner_top();
-	// ex container-wide
-	echo '<div id="container">' . "\n";
-	echo '<div id="genericform-contents">'."\n";
 	echo '<h2>'._('envío de una nueva noticia: paso 1 de 3').'</h2>';
 	echo '<div class="faq">';
 	echo '<h3>'._('por favor, respeta estas instrucciones para mejorar la calidad:').'</h3>';
@@ -109,7 +108,6 @@ function do_submit0() {
 	echo '<li><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
-	echo '</div>';
 }
 
 function do_submit1() {
@@ -119,10 +117,7 @@ function do_submit1() {
 	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
 	$url = preg_replace('/#.*$/', '', $url); // Remove the "#", people just abuse
 
-	do_banner_top();
-	// ex container-wide
-	echo '<div id="container">' . "\n";
-	echo '<div id="genericform-contents">'."\n";
+	echo '<div>'."\n";
 
 	$new_user = false;
 	if (!check_link_key()) {
@@ -501,7 +496,7 @@ function do_submit1() {
 	echo '<h2>'._('envío de una nueva noticia: paso 2 de 3').'</h2>'."\n";
 
 
-	echo '<div id="genericform">'."\n";
+	echo '<div class="genericform">'."\n";
 	echo '<form action="submit.php" method="post" id="thisform" name="thisform">'."\n";
 
 	echo '<input type="hidden" name="url" id="url" value="'.htmlspecialchars($linkres->url).'" />'."\n";
@@ -551,8 +546,8 @@ function do_submit1() {
 		echo '<span class="genericformnote">'.$trackback.'</span>'."\n";
 		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
 	}
-	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />&nbsp;&nbsp;'."\n";
-	echo '<input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" />'."\n";
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />&nbsp;&nbsp;'."\n";
+	echo '<input class="button" type="submit" value="'._('continuar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 	echo '</div>'."\n";
@@ -584,8 +579,8 @@ function do_submit2() {
 	$linkres->tags = tags_normalize_string($_POST['tags']);
 	$linkres->content = clean_text($_POST['bodytext']);
 	if (link_errors($linkres)) {
-		echo '<form id="genericform">'."\n";
-		echo '<p><input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/></p>'."\n";
+		echo '<form class="genericform">'."\n";
+		echo '<p><input class="button" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/></p>'."\n";
 		echo '</form>'."\n";
 		echo '</div>'."\n"; // opened in print_form_submit_error
 		return;
@@ -597,15 +592,12 @@ function do_submit2() {
 	$edit = true;
 	$link_title = $linkres->title;
 	$link_content = $linkres->content;
-	do_banner_top();
 	preload_indicators();
-	// ex container-wide
-	echo '<div id="container">' . "\n";
-	echo '<div id="genericform-contents">'."\n";
+	echo '<div class="genericform">'."\n";
 	
 	echo '<h2>'._('envío de una nueva noticia: paso 3 de 3').'</h2>'."\n";
 
-	echo '<form action="submit.php" method="post" id="genericform" onSubmit="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">'."\n";
+	echo '<form action="submit.php" method="post" class="genericform" onSubmit="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">'."\n";
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
 	echo '<div class="genericformtxt"><label>'._('ATENCIÓN: esto es sólo una muestra!').'</label>&nbsp;&nbsp;<br/>'._('Ahora puedes 1) ').'<label>'._('retroceder').'</label>'._(' o 2)  ').'<label>'._('enviar a la cola y finalizar').'</label>'._('. Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> elefantes (o no).').'</div>';	
@@ -621,8 +613,8 @@ function do_submit2() {
 	echo '<input type="hidden" name="trackback" value="'.htmlspecialchars(trim($_POST['trackback'])).'" />'."\n";
 
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
-	echo '<input class="genericsubmit" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/>&nbsp;&nbsp;'."\n";
-	echo '<input class="genericsubmit" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/>&nbsp;&nbsp;'."\n";
+	echo '<input class="button" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
@@ -720,10 +712,8 @@ function print_form_submit_error($mess) {
 	static $previous_error=false;
 	
 	if (!$previous_error) {
-		do_banner_top();
 		// ex container-wide
-		echo '<div id="container">' . "\n";
-		echo '<div id="genericform-contents">'."\n"; // this div MUST be closed after function call!
+		echo '<div class="genericform">'."\n"; // this div MUST be closed after function call!
 		echo '<h2>'._('ooops!').'</h2>'."\n";
 		$previous_error = true;
 	}
@@ -742,8 +732,8 @@ function report_dupe($url) {
 		echo '<p class="error-text">'._('lo sentimos').'</p>';
 		$dupe->print_summary();
 		echo '<br style="clear: both;" /><br/>' . "\n";
-		echo '<form id="genericform" action="">';
-		echo '<input class="genericsubmit" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
+		echo '<form class="genericform" action="">';
+		echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
 		echo '</form>'. "\n";
 		echo '</div>'. "\n";
 		return true;

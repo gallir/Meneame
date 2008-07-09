@@ -66,9 +66,6 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
 show_profile();
 
 do_footer();
@@ -80,7 +77,7 @@ function show_profile() {
 
 	save_profile();
 	
-	echo '<div id="genericform-contents"><div id="genericform">';
+	echo '<div class="genericform" style="margin: 0 20px 0 20px">';
 	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<fieldset><legend>';
 	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
@@ -94,7 +91,7 @@ function show_profile() {
 
 	echo '<p><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
-	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
+	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
 	echo '<br/><span id="usernamecheckitvalue"></span>' . "\n";
 	echo '</p>';
 
@@ -104,7 +101,7 @@ function show_profile() {
 
 	echo '<p><label>'._('correo electrónico').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
-	echo '&nbsp;&nbsp;<input type="button"  id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
+	echo '&nbsp;&nbsp;<input type="button" class="button" id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
 	echo '<br/><span id="emailcheckitvalue"></span>';
 	echo '</p>';
 
@@ -113,14 +110,14 @@ function show_profile() {
 	echo '</p>';
 
 	echo '<p><label>'._('mensajero instantáneo público, invisible para los demás').':</label><br/>';
-	echo '<span class="genericformnote">' . _('necesario si te conectarás vía Jabber/Google Talk') . '</span><br/>';
+	echo '<span class="note">' . _('necesario si te conectarás vía Jabber/Google Talk') . '</span><br/>';
 	echo '<input type="text" autocomplete="off" name="public_info" id="public_info" value="'.$user->public_info.'" />';
 	echo '</p>';
 
 	if ($user->id  == $current_user->user_id) {
 		echo '<p><label>'._('teléfono móvil').':</label><br/>';
-		echo '<span class="genericformnote">' . _('sólo necesario si enviarás notas al nótame vía SMS') . '</span><br/>';
-		echo '<span class="genericformnote">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
+		echo '<span class="note">' . _('sólo necesario si enviarás notas al nótame vía SMS') . '</span><br/>';
+		echo '<span class="note">' . _('pon el número completo, con código de país: +34123456789') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="phone" id="phone" value="'.$user->phone.'" />';
 		echo '</p>';
 	}
@@ -129,9 +126,9 @@ function show_profile() {
 
 	if ($globals['external_user_ads']) {
 		echo '<p><label for="adcode">'._('codigo AdSense').':</label><br/>';
-		echo '<span class="genericformnote">' . _('tu código de usuario de AdSense, del tipo pub-123456789') . '</span><br/>';
+		echo '<span class="note">' . _('tu código de usuario de AdSense, del tipo pub-123456789') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="20" value="'.$user->adcode.'" /><br />';
-		echo '<span class="genericformnote">' . _('canal AdSense (opcional), del tipo 1234567890') . '</span><br/>';
+		echo '<span class="note">' . _('canal AdSense (opcional), del tipo 1234567890') . '</span><br/>';
 		echo '<input type="text" autocomplete="off" name="adchannel" id="adchannel" maxlength="12" value="'.$user->adchannel.'" />';
 		echo '</p>';
 	}
@@ -140,8 +137,8 @@ function show_profile() {
 	if (is_avatars_enabled()) {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
 		echo '<p><label>'._('avatar').':</label><br/>';
-		echo '<span class="genericformnote">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
-		echo '<input type="file" autocomplete="off" name="image" />';
+		echo '<span class="note">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
+		echo '<input type="file" class="button" autocomplete="off" name="image" />';
 		echo '</p>';
 	}
 
@@ -178,23 +175,23 @@ function show_profile() {
 
 	}
 	
-	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'" class="genericsubmit" /></p>';
+	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'" class="button" /></p>';
 	echo '</fieldset>';
 
 	// Disable the account
 	if ($user->id  == $current_user->user_id) {
 		echo '<br/><fieldset><legend>'._('deshabilitar la cuenta') . '</legend>';
 		echo '<p>'._('atención! la cuenta será deshabilitada.').'</p>';
-		echo '<p class="genericformnote">'._('se eliminarán automáticamente los datos personales.').'<br/>';
+		echo '<p class="note">'._('se eliminarán automáticamente los datos personales.').'<br/>';
 		echo _('las notas serán eliminadas, los envíos y comentarios NO se borrarán.').'</p>';
 		echo '<p>'._('sí, quiero deshabilitarla').': <input  name="disable" type="checkbox" value="1"/>';
 		echo '</p>';
-		echo '<p><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="genericsubmit" /></p>';
+		echo '<p><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="button" /></p>';
 		echo '</fieldset>';
 	}
 
 
-	echo "</form></div></div>\n";
+	echo "</form></div>\n";
 	
 }
 

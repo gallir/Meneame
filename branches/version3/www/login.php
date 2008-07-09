@@ -27,12 +27,9 @@ if($_GET["op"] === 'logout') {
 ob_start();
 
 do_header("login");
-do_banner_top();
-// ex container-wide
-echo '<div id="container">' . "\n";
+echo '<div id="singlewrap">' . "\n";
 
-echo '<div id="genericform-contents">'."\n";
-//echo '<div id="genericform">'."\n";
+echo '<div class="genericform">'."\n";
 
 if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_recover();
@@ -41,7 +38,7 @@ if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 }
 
 echo '</div>'."\n";
-//echo '</div>'."\n";
+echo '</div>'."\n"; // singlewrap
 
 do_footer();
 
@@ -83,10 +80,9 @@ function do_login() {
 		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
 		echo '</div>'."\n";
 		
-		echo '<div id="genericform" style="float:right; width:30%;">'."\n";	
- 	//End posavasos & ashacz code
+		echo '<div class="genericform" style="float:right; width:30%; margin: 0">'."\n";	
 	} else {
-		echo '<div id="genericform" style="float:auto;">'."\n";	
+		echo '<div class="genericform" style="float:auto;">'."\n";	
 	}
 	echo '<form action="login.php" id="thisform" method="post">'."\n";
 	
@@ -121,7 +117,7 @@ function do_login() {
 	if ($previous_login_failed > 2) {
 		ts_print_form();
 	}
-	echo '<p><input type="submit" value="login" class="genericsubmit" tabindex="4" />'."\n";
+	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</fieldset>'. "\n";
@@ -134,7 +130,7 @@ function do_login() {
 function do_recover() {
 	global $site_key, $globals;
 
-	echo '<div id="genericform">'."\n";
+	echo '<div class="genericform">'."\n";
 	echo '<fieldset>'."\n";
 	echo '<legend><span class="sign">'._("recuperación de contraseñas").'</span></legend>'."\n";
 
@@ -170,7 +166,7 @@ function do_recover() {
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
 		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 		ts_print_form();
-		echo '<br /><input type="submit" value="'._('recibir e-mail').'" class="genericsubmit" />'."\n";
+		echo '<br /><input type="submit" value="'._('recibir e-mail').'" class="button" />'."\n";
 		echo '</form>'."\n";
 	}
 	echo '</fieldset>'."\n";

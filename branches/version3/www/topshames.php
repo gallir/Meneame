@@ -16,8 +16,6 @@ $globals['ads'] = true;
 $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 48 hour) and link_negatives > 0  and link_karma < 0 ORDER BY link_karma ASC LIMIT 50 ";
 
 do_header(_('las peores :-)'));
-do_banner_top();
-echo '<div id="container">'."\n";
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';

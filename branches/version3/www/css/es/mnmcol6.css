@@ -287,10 +287,12 @@ color: #FF6400;
 color: #FF7C00;
 }
 
+/*
 .news-details select {
 background: #FFF;
 color: #FF7C00;
 }
+*/
 
 .news-details .tool {
 border-left-color: #FF6400;
@@ -405,6 +407,7 @@ color: #FFF;
 border-color: #FFF;
 }
 
+/*
 .commentform textarea {
 color: #303030;
 background: #FFE2C5;
@@ -414,6 +417,7 @@ border-color: #FF9400;
 .commentform label {
 color: #FF6400;
 }
+*/
 
 .commentform.warn {
 background: #FF6400;
@@ -470,16 +474,6 @@ color: #FF9400;
 
 .comments-list ul {
 background: #FFF;
-}
-
-/* fieldsets */
-
-fieldset {
-border-color: #FF9400;
-}
-
-legend, legend a {
-color: #FF9400;
 }
 
 /* gravatar */
@@ -549,62 +543,62 @@ color: #303030;
 
 /* generic form and wide page */
 
-#genericform fieldset, #genericform-contents fieldset {
+.genericform fieldset {
 background: #FFF;
 border-color: #FF6400;
 }
 
-#genericform, .geoform {
+.genericform, .geoform {
 background: #FFF;
 color: #FF6400;
 }
 
-#genericform .sign, #genericform-contents legend {
+.genericform .sign legend {
 color: #FF6400;
 }
 
-#genericform .genericsubmit {
+/*
+.genericform .genericsubmit {
 background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 border-color: #FF6400;
 color: #FF6400;
 }
+*/
 
-#genericform .genericsubmit:hover {
+.genericform .genericsubmit:hover {
 background: #FFBE94;
 color: #FFF;
 }
 
-#genericform input, .geoform input  {
+.genericform .genericformtxt {
+color: #303030;
+}
+
+/*
+.genericform input, .geoform input  {
 background: #FFE2C5;
 border-color: #FF6400;
 color: #303030;
 }
 
-#genericform .genericformtxt {
-color: #303030;
-}
-
-#genericform .genericformnote {
-color: #FF9400;
-}
-
-#genericform textarea {
+.genericform textarea {
 background: #FFE2C5;
 border-color: #FF6400;
 color: #303030;
 }
+*/
 
 /* generic form: login page specials */
 
-#genericform .recoverpass {
+.genericform .recoverpass {
 color: #FF6400;
 }
 
-#genericform .recoverpass a:link, .recoverpass a:visited {
+.genericform .recoverpass a:link, .recoverpass a:visited {
 color: #FF6400;
 }
 
-#genericform .formnotice {
+.genericform .formnotice {
 color: #303030;
 }
 
@@ -658,6 +652,48 @@ color: #FF9400;
 border-bottom-color: #FFE2C5;
 }
 
-.underl-y {
-background-color: #FFFF66;
+/* Form defaults */
+
+label {
+color: #FF6400;
 }
+
+textarea,
+input  {
+background: #FFE2C5;
+border: 1px solid #FF9400;
+color: #303030;
+}
+
+select {
+background: #FFF;
+color: #FF7C00;
+}
+
+fieldset {
+border-color: #FF9400;
+}
+
+legend, legend a {
+color: #FF9400;
+}
+
+
+.button, button {
+background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
+border-color: #FF6400;
+color: #FF6400;
+}
+
+.button:hover, button:hover, .button:disabled, button:disabled {
+background: #fff;
+}
+
+#headtools input {
+background-color: #fff;
+}
+
+.note {
+color: #FF9400;
+}
+

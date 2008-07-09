@@ -87,10 +87,7 @@ switch ($view) {
 
 do_header($login);
 
-do_banner_top();
-
-echo '<div id="container">' . "\n";
-echo '<div id="genericform-contents">'."\n";
+echo '<div id="singlewrap">'."\n";
 
 $url_login = urlencode($login);
 switch ($view) {
@@ -521,7 +518,7 @@ function do_categories() {
 			}
 		}
 	}
-	echo '<div id="genericform">';
+	echo '<div class="genericform">';
 	print_categories_checkboxes($user);
 	echo '</div>';
 }
@@ -562,7 +559,7 @@ function print_categories_checkboxes($user) {
 	echo '<br style="clear: both;"/>' . "\n";
 	echo '</fieldset>';
 	if (!$disabled) {
-		echo '<input class="genericsubmit" type="submit" value="'._('grabar').'"/>';
+		echo '<input class="button" type="submit" value="'._('grabar').'"/>';
 	}
 	echo '</form>';
 ?>

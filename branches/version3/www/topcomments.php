@@ -14,8 +14,6 @@ include(mnminclude.'comment.php');
 $globals['ads'] = true;
 
 do_header(_('mejores comentarios en 24 horas') . ' // men&eacute;ame');
-do_banner_top();
-echo '<div id="container">'."\n";
 do_tabs('main', _('+ comentarios'), true);
 
 /*** SIDEBAR ****/

@@ -161,6 +161,8 @@ function do_header($title, $id='home') {
 	echo '<li class="third"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
 	echo '<li class="fourth"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";
 	echo '</ul></div>'."\n";
+	do_banner_top();
+	echo '<div id="container">'."\n";
 }
 
 function do_css_includes() {
