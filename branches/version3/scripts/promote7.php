@@ -65,7 +65,7 @@ $pub_estimation = intval(max(min($links_queue * 0.10, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
-$output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br>\n";
+$output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br/>\n";
 
 $from_time = "date_sub(now(), interval 5 day)";
 #$from_where = "FROM votes, links WHERE  
@@ -85,8 +85,8 @@ if ($diff > $interval * 2.5) {
 	$must_publish = true;
 	$output .= "Delayed! <br/>";
 }
-$output .= "Last published at: " . get_date_time($last_published) ."<br>\n";
-$output .= "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br>\n";
+$output .= "Last published at: " . get_date_time($last_published) ."<br/>\n";
+$output .= "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br/>\n";
 
 $continue = true;
 $published=0;
@@ -124,7 +124,7 @@ foreach ($db_metas as $dbmeta) {
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
-	$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br>";
+	$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br/>";
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
@@ -133,7 +133,7 @@ foreach ($meta_coef as $m => $v) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
 	}
-	$output .= "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br>";
+	$output .= "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br/>";
 	// Store current coef in DB
 	$db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
 }
@@ -146,8 +146,8 @@ $users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links w
 $users_karma_avg_trunc = (int) $users_karma_avg;
 $users_karma_avg_coef = $users_karma_avg - $users_karma_avg_trunc;
 
-$output .= "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br>\n";
-$output .= "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br>\n";
+$output .= "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br/>\n";
+$output .= "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br/>\n";
 $output .= "</p>\n";
 
 
@@ -159,8 +159,8 @@ $sort = "ORDER BY link_karma DESC, link_votes DESC";
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from links, users, categories where $where $sort LIMIT 30");
 $rows = $db->num_rows;
 if (!$rows) {
-	$output .= "There are no articles<br>\n";
-	$output .= "--------------------------<br>\n";
+	$output .= "There are no articles<br/>\n";
+	$output .= "--------------------------<br/>\n";
 	die;
 }
 	
@@ -226,19 +226,22 @@ if ($links) {
 		}
 
 		$karma_new = $karma_pos_user + $karma_neg_user;
+
+		// Small punishment for link having too many negatives
+		$r = min(max(0,abs($karma_neg_user)/$karma_pos_user-0.05), 0.3); 
+		$karma_new = $karma_new * (1-$r);
+	
 		// To void votes spamming
 		// Do not allow annonymous users to give more karma than registered users
 		// The ratio up to 10% anonymous
 		if ($karma_new > 0) 
 			$karma_new += min($karma_pos_user_high*0.1, $karma_pos_ano);
 
-		//echo "previous $dblink->parent: $karma_new -> ";
 		$karma_new = (int) ($karma_new * $meta_coef[$dblink->parent]);
-		//echo "$karma_new<br>";
 
 
 		// Aged karma
-		$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
+		$diff = max(0, $now - ($link->date + 8*3600)); // 8 hours without decreasing
 		$oldd = 1 - $diff/(3600*48);
 		$oldd = max(0.4, $oldd);
 		$oldd = min(1, $oldd);
@@ -259,8 +262,7 @@ if ($links) {
 			$link->new_coef = 1;
 		}
 
-		$aged_karma =  $karma_new * $oldd * $link->new_coef;
-		$dblink->karma=$aged_karma;
+		$dblink->karma =  $karma_new * $oldd * $link->new_coef;
 
 
 		$changes = 0;
@@ -286,7 +288,7 @@ if ($links) {
 		// check if it's "media" and the metacategory coefficient is low
 		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
 			$dblink->karma *= 0.9;
-			$link->message .= '<br/>Image';
+			$link->message .= '<br/>Image/Video';
 		}
 
 		// Check if the user is banned disabled
