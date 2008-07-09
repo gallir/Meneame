@@ -360,7 +360,7 @@ function do_shaken () {
 			$link->read();
 			$link->print_summary('short');
 		}
-		echo '<br/><span class="credits-strip-text"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
+		echo '<br/><span style="color: #FF6400;"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 	}
 }
 

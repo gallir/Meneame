@@ -92,13 +92,13 @@ function show_profile() {
 	if ($admin_mode)
 		echo '<input type="hidden" name="login" value="'.$user->username.'" />';
 
-	echo '<p class="l-top"><label>'._('usuario').':</label><br/>';
+	echo '<p><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
 	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
 	echo '<br/><span id="usernamecheckitvalue"></span>' . "\n";
 	echo '</p>';
 
-	echo '<p class="l-top"><label>'._('nombre real').':</label><br/>';
+	echo '<p><label>'._('nombre real').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="names" id="names" value="'.$user->names.'" />';
 	echo '</p>';
 
@@ -178,7 +178,7 @@ function show_profile() {
 
 	}
 	
-	echo '<p class="l-bottom"><input type="submit" name="save_profile" value="'._('actualizar').'" class="genericsubmit" /></p>';
+	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'" class="genericsubmit" /></p>';
 	echo '</fieldset>';
 
 	// Disable the account
@@ -189,7 +189,7 @@ function show_profile() {
 		echo _('las notas serán eliminadas, los envíos y comentarios NO se borrarán.').'</p>';
 		echo '<p>'._('sí, quiero deshabilitarla').': <input  name="disable" type="checkbox" value="1"/>';
 		echo '</p>';
-		echo '<p class="l-bottom"><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="genericsubmit" /></p>';
+		echo '<p><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="genericsubmit" /></p>';
 		echo '</fieldset>';
 	}
 
@@ -367,7 +367,7 @@ function save_profile() {
 					$current_user->user_email != $user->email || $pass_changed)) {
 			$current_user->Authenticate($user->username, $user->pass);
 		}
-		echo '<p class="form-act">'._('datos actualizados').'</p>';
+		echo '<p class="form-error">'._('datos actualizados').'</h2>';
 	}
 }
 

@@ -49,13 +49,11 @@ do_footer();
 function do_login() {
 	global $current_user, $globals;
 
-	// Start posavasos & ashacz code
-	
 	$previous_login_failed =  log_get_date('login_failed', $globals['original_user_ip_int'], 0, 90);
 
 	if($previous_login_failed < 3 && empty($_POST["processlogin"])) {
-		echo '<div id="mini-faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
-		// gallir: Only prints if the user was redirected from submit.php
+		echo '<div class="faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
+		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
 			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
 		}
@@ -67,19 +65,19 @@ function do_login() {
 		echo '<ul>'."\n";
 		echo '<li>'."\n";
 		echo '<strong>Enviar historias</strong><br />'."\n";
-		echo 'Una vez registrado puedes enviar las historias que consideres interesantes para la comunidad. Si tienes algún tipo de duda sobre que tipo de historias puedes enviar revisa nuestras <a href="faq-es.php" title="Acerca de meneame">preguntas frecuentes sobre menéame.</a>'."\n";
+		echo '<p>Una vez registrado puedes enviar las historias que consideres interesantes para la comunidad. Si tienes algún tipo de duda sobre que tipo de historias puedes enviar revisa nuestras <a href="faq-es.php" title="Acerca de meneame">preguntas frecuentes sobre menéame.</a></p>'."\n";
 		echo '</li>'."\n";
 		echo '<li>'."\n";
 		echo '<strong>Escribir comentarios</strong><br />'."\n";
-		echo 'Puedes escribir tu opinión sobre las historias enviadas a menéame mediante comentarios de texto. También puedes votar positivamente aquellos comentarios ingeniosos, divertidos o interesantes y negativamente aquellos que consideres inoportunos.'."\n";
+		echo '<p>Puedes escribir tu opinión sobre las historias enviadas a menéame mediante comentarios de texto. También puedes votar positivamente aquellos comentarios ingeniosos, divertidos o interesantes y negativamente aquellos que consideres inoportunos.</p>'."\n";
 		echo '</li>'."\n";
 		echo '<li>'."\n";
 		echo '<strong>Perfil de usuario</strong><br />'."\n";
-		echo 'Toda tu información como usuario está disponible desde la página de tu perfil. También puedes subir una imagen que representará a tu usuario en menéame. Incluso es posible compartir los ingresos publicitarios de Menéame, solo tienes que introducir el código de tu cuenta Google Adsense desde tu perfil.'."\n";
+		echo '<p>Toda tu información como usuario está disponible desde la página de tu perfil. También puedes subir una imagen que representará a tu usuario en menéame. Incluso es posible compartir los ingresos publicitarios de Menéame, solo tienes que introducir el código de tu cuenta Google Adsense desde tu perfil.</p>'."\n";
 		echo '</li>'."\n";
 		echo '<li>'."\n";
 		echo '<strong>Chatear en tiempo real desde la fisgona</strong><br />'."\n";
-		echo 'Gracias a la <a href="sneak.php" title="Fisgona">fisgona</a> puedes ver en tiempo real toda la actividad de menéame. Además como usuario registrado podrás chatear con mucha más gente de la comunidad menéame'."\n";
+		echo '<p>Gracias a la <a href="sneak.php" title="Fisgona">fisgona</a> puedes ver en tiempo real toda la actividad de menéame. Además como usuario registrado podrás chatear con mucha más gente de la comunidad menéame</p>'."\n";
 		echo '</li>'."\n";
 		echo '</ul>'."\n";
 		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
@@ -115,15 +113,15 @@ function do_login() {
 	}
 	echo '<fieldset>'."\n";
 	echo '<legend><span class="sign">login</span></legend>'."\n";
-	echo '<p class="l-top"><label for="name">'._('usuario').':</label><br />'."\n";
+	echo '<p><label for="name">'._('usuario').':</label><br />'."\n";
 	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.htmlentities($username).'" /></p>'."\n";
-	echo '<p class="l-mid"><label for="password">'._('clave').':</label><br />'."\n";
+	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
-	echo '<p class="l-mid"><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
+	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
 	if ($previous_login_failed > 2) {
 		ts_print_form();
 	}
-	echo '<p class="l-bot"><input type="submit" value="login" class="genericsubmit" tabindex="4" />'."\n";
+	echo '<p><input type="submit" value="login" class="genericsubmit" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</fieldset>'. "\n";

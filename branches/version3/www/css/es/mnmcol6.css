@@ -165,7 +165,6 @@ background-color: #fff;
 /*background: #fff url('../../img/common/elmnm-p03-s.png') no-repeat center top;*/
 }
 
-
 .vertical-box {
 background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
 }
@@ -220,20 +219,6 @@ color: #C85000;
 color: #FF6400;
 }
 
-/* credits */
-
-.credits-strip {
-border-top-color: #FF6400;
-}
-
-.credits-strip-text {
-color: #FF6400;
-}
-
-.credits-strip a:link, .credits-strip a:visited {
-color: #FF6400;
-}
-
 hr {
 background: #ccc;
 }
@@ -270,7 +255,6 @@ color: #a00;
 /* ATENCION: dos colores de borde... */
 .warn {
 background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
-border-color: #C4C400;
 border-color: #FF9400;
 }
 
@@ -291,14 +275,6 @@ background: url(../../img/common/error.png) 0 50% no-repeat;
 .form-error-submit {
 background: #FFE2C5;
 border-color: #FF6400;
-}
-
-.form-act {
-color: #FF5900;
-}
-
-.instruction {
-color: #2C3D4E;
 }
 
 /* news */
@@ -387,66 +363,6 @@ color: #666;
 
 .news-submitted img {
 border-color: #FFE2C5;
-}
-
-/* side menu */
-
-.mnu-faq {
-color: #FF6400;
-border-top-color: #FFE2C5;
-}
-
-.mnu-faq a {
-color: #FF9400;
-}
-
-.mnu-submit {
-color: #FF6400;
-border-top-color: #FFE2C5;
-border-bottom-color: #FFE2C5;
-background: url(../../img/common/mnu-submit01.png) right bottom no-repeat;
-}
-
-.mnu-sneak {
-color: #FF6400;
-border-bottom-color: #FFE2C5;
-background: url(../../img/common/elmnm-sneak01.png) right bottom no-repeat;
-}
-
-.mnu-notame {
-color: #FF6400;
-border-bottom-color: #FFE2C5;
-background: url(../../img/common/mnu-notame01.png) right bottom no-repeat;
-}
-
-.mnu-geovision {
-color: #FF6400;
-border-bottom-color: #FFE2C5;
-background: url(../../img/common/mnu-geovision01.png) right bottom no-repeat;
-}
-
-.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-geovision a, .mnu-bugs a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .tab-trackback a, .mnu-seguiment-ext a  {
-color: #FF6400;
-background: url(../../img/common/mnu-list-image01.png) no-repeat 2px 4px;
-}
-
-.mnu-bugs, .mnu-menedising, .mnu-seguiment-ext {
-color: #FF6400;
-background: url(../../img/common/mnu-bkgsoft02.png) bottom left repeat-x;
-}
-
-.mnu-meneria, .mnu-tools, .mnu-rss {
-color: #FF6400;
-background: #FFF url(../../img/common/mnu-bkgsoft01.png) bottom left repeat-x;
-}
-
-.mnu-rss a {
-color: #FF6400;
-background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 2px;
-}
-
-li.mnu-rss-external a {
-background: none;
 }
 
 /* trackback */
@@ -617,19 +533,17 @@ color: #FFE2C5;
 
 /* faq page */
 
-#faq-contents ol {
+.faq ul,
+.faq ol {
 color: #FF6400;
 }
 
-#faq-contents ul {
-color: #303030;
-}
-
-#faq-contents h4 {
+.faq h3, 
+.faq h4 {
 color: #FF6400;
 }
 
-#faq-contents p {
+.faq p {
 color: #303030;
 }
 
@@ -694,26 +608,6 @@ color: #FF6400;
 color: #303030;
 }
 
-/* image forms */
-
-/* shakeit page search form */
-
-.shakeit-form-input {
-color: #303030;
-border-color: #FF6400;
-background: #FFE2C5;
-}
-
-.shakeit-form-submit {
-background: #FF6400;
-color: #FFF;
-border-color: #FFF;
-}
-
-.shakeit-form label {
-color: #FF6400;
-}
-
 .voters-list {
 color: #FF6400;
 background: #FFF;
@@ -745,17 +639,6 @@ border-color: #FF6400;
 border-color: #FF9400;
 background: #FFBE94;
 color: #FF6400;
-}
-
-/* classes for bar diagrams */
-
-.bars-list {
-color: #FF6400;
-background: #FFF;
-}
-
-.bars-list .bar-container {
-color: #000;
 }
 
 #tooltip-text {

@@ -78,14 +78,14 @@ function print_empty_submit_form() {
 	echo '<div id="genericform">';
 	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
 	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
-	echo '<p class="l-top"><label for="url">'._('url').':</label><br />';
+	echo '<p><label for="url">'._('url').':</label><br />';
 	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" /></p>';
 	echo '<input type="hidden" name="phase" value="1" />';
 	$randkey = rand(10000,10000000);
 	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.$randkey.'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
-	echo '<p class="l-bottom"><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
+	echo '<p><input class="genericsubmit" type="submit" value="'._('continuar &#187;').'" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
@@ -98,7 +98,7 @@ function do_submit0() {
 	echo '<div id="container">' . "\n";
 	echo '<div id="genericform-contents">'."\n";
 	echo '<h2>'._('envío de una nueva noticia: paso 1 de 3').'</h2>';
-	echo '<div class="instruction">';
+	echo '<div class="faq">';
 	echo '<h3>'._('por favor, respeta estas instrucciones para mejorar la calidad:').'</h3>';
 	echo '<ul class="instruction-list">';
 	echo '<li><strong>'._('contenido interesante').':</strong> '._('¿la noticia conseguirá suficientes votos por méritos propios? ¿interesará a una cantidad razonable de lectores?').'</li>';
@@ -106,7 +106,7 @@ function do_submit0() {
 	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar noticias.').'</li>';
 	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica la noticia lo mejor que puedas y porqué es interesante').'.</li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos o la falta de ellos te pueden afectar personalmente, es mejor que no envíes la noticia.').'</li>';
-	echo '<li class="underl-y"><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
+	echo '<li><strong>¿'._('has leído las').'</strong> <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
 	echo '</div>';

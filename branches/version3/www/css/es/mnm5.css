@@ -512,41 +512,6 @@ font-weight: normal;
 border: none;
 }
 
-/* credits */
-
-* html .credits-wrapper { /* IE6 hack for the footer */
-float: left;
-position: relative;
-width: 100%;
-padding-bottom: 10000px;
-margin-bottom: -10000px;
-}
-
-.credits-strip {
-width: 100%;
-border-top: 1px dotted;
-min-height: 75px;
-background: url(../../img/common/mnu-bkgsoft04.png) repeat-x bottom left;
-white-space: nowrap;
-overflow: hidden;
-clear: both;
-}
-
-.credits-strip-buttons {
-margin: 10px 10px 0px 0px;
-float: right;
-}
-
-.credits-strip-buttons img {
-padding-bottom: 3px;
-}
-
-.credits-strip-text {
-font-size: 85%;
-margin: 10px 0px 0px 20px;
-float: left;
-line-height: 18px;
-}
 
 hr {
 height: 1px;
@@ -671,28 +636,8 @@ margin: 15px 0 0 0;
 border: 1px dotted;
 }
 
-.form-act {
-font-size: 120%;
-font-weight: bold;
-padding: 0;
-margin: 40px 0 0 150px;
-}
-
 .form-full {
 width: 100%;
-}
-
-.instruction {
-margin-bottom: 15px;
-}
-
-.instruction div {
-padding: 16px;
-}
-
-.instruction h3 {
-background: none;
-margin-top: 20px;
 }
 
 .instruction-list {
@@ -845,88 +790,6 @@ font-size: 90%;
 margin: 0;
 }
 
-/* side menu */
-#sidebar ul {
-margin-left: 0; /* IE bug */
-}
-
-.mnu-bugs li, .mnu-meneria li, .mnu-tools li, .mnu-rss li, .mnu-seguiment-ext li {
-margin: 0;
-padding: 0;
-}
-
-.mnu-faq {
-border: none;
-border-top: 1px solid;
-font-size: 90%;
-padding: 10px 4px 10px 4px;
-}
-
-.mnu-faq a {
-text-decoration: underline;
-}
-
-/*
-All boxes:
-- margin top: 15; margen bottom: 5
-- padding bottom: 5; padding left 3
-*/
-
-.mnu-submit, .mnu-sneak, .mnu-notame, .mnu-geovision {
-margin: 0 0 5px 0;
-padding: 10px 0 5px 0;
-text-align: left;
-font-size: 120%;
-border-bottom: 1px solid;
-font-weight: bolder;
-}
-
-.mnu-submit {
-border-top: 1px solid;
-}
-
-.mnu-submit a, .mnu-sneak a, .mnu-notame a, .mnu-bugs a, .mnu-geovision a, .mnu-menedising a, .mnu-meneria a, .mnu-tools a, .mnu-seguiment-ext a {
-padding-left: 15px;
-}
-
-.mnu-menedising {
-margin: 0 0 5px 0;
-padding: 15px 0 5px 3px;
-text-align: left;
-font-size: 100%;
-}
-
-.mnu-bugs, .mnu-meneria, .mnu-tools, .mnu-seguiment-ext {
-margin: 15px 0 5px 0;
-padding: 0 0 5px 3px;
-list-style: none;
-text-align: left;
-font-size: 100%;
-/*white-space: nowrap;*/
-}
-
-.mnu-rss {
-margin: 15px 0 5px 0;
-padding: 0 0 5px 5px;
-list-style: none;
-text-align: left;
-font-size: 100%;
-overflow: hidden;
-}
-
-.mnu-rss a {
-padding-left: 16px;
-}
-
-li.mnu-rss-external {
-padding-top:7px;
-padding-bottom: 3px;
-text-align: center;
-}
-
-li.mnu-rss-external a {
-padding-left: 0px;
-}
 
 /* trackback */
 
@@ -1236,24 +1099,25 @@ border: 1px solid;
 margin: 0 30px 0 150px;
 }
 
-#faq-contents {
-margin: 0 30px 75px 150px;
+.faq {
+margin: 0;
 }
 
-#faq-contents ol {
+.faq ol {
 font-weight: bold;
 }
 
-#faq-contents ul {
+.faq ul {
 font-weight: normal;
 }
 
-#faq-contents h4 {
+.faq h3,
+.faq h4 {
 font-weight: bold;
 font-size: 125%;
 }
 
-#faq-contents p {
+.faq p {
 font-weight: normal;
 }
 
@@ -1349,28 +1213,6 @@ font-weight: normal;
 
 .tc {
 margin: 5px 0 5px 0;
-}
-
-/* shakeit page search form */
-
-.shakeit-form {
-margin: 5px 0 5px 0;
-}
-
-.shakeit-form-input {
-width: 65%;
-border: 1px solid;
-margin-right: 5px;
-}
-
-.shakeit-form-submit {
-border: 1px dotted;
-padding: 1px 0 1px 0;
-}
-
-.shakeit-form label {
-font-weight: normal;
-font-size: 140%;
 }
 
 .sneaker {
@@ -1535,54 +1377,6 @@ border: 0px;
 
 .mini-pages a {
 border: 1px solid;
-text-decoration: none;
-}
-
-/* classes for bar diagrams */ 
-.bars {
-margin: 25px 0 0 25px;
-clear: left;
-}
-
-.bars-list {
-clear: left;
-position: relative;
-padding: 2px 2px 2px 2px;
-float: left;
-width: 99%;
-margin: 0 0 5px 8px;
-font-size: 80%;
-}
-
-.bars-list .bar-container {
-float: left;
-display: block;
-width: 64%;
-height: 25px;
-font-size: 8pt;
-}
-
-.bars-list .item, .bars-list .item-wider {
-float: left;
-display: block;
-overflow: hidden;
-width: 35%;
-height: 25px;
-white-space: nowrap;
-}
-
-.bars-list .item-wider {
-width: 48%;
-height: 30px;
-}
-
-.bars-list img {
-border: 0px;
-margin-right: 5px;
-margin-left: 8px;
-}
-
-.item a {
 text-decoration: none;
 }
 

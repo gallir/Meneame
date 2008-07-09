@@ -9,7 +9,7 @@
 	$q = 1;
 ?>
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
-<div id="faq-contents">
+<div class="faq" style="margin: 0 30px 75px 150px;">
 <ol>
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué es menéame?</h4>
