@@ -311,9 +311,9 @@ text-decoration: underline;
 #sidebar h4 {
 text-align: center;
 border-bottom: 1px dotted;
-font-weight: normal;
-padding: .12em 0;
-font-size: 1.2em;
+font-weight: bold;
+font-size: 1em;
+padding: .25em 0 0.15em 0;
 margin: .75em 0 0 0;
 }
 

@@ -153,6 +153,9 @@ do_banner_right();
 if ($link->latlng) {
 	echo '<div id="map" style="width:300px;height:250px;">&nbsp;</div>'."\n";
 }
+if ($link->comments > 15) {
+	do_best_story_comments($link);
+}
 if (! $current_user->user_id) {
 	do_best_stories();
 	do_best_comments();
@@ -170,7 +173,6 @@ case 2:
 
 	// Print tabs
 	print_story_tabs($tab_option);
-
 
 
 	// If option is "normal comments", show also last trackbakcs and pingbacks
