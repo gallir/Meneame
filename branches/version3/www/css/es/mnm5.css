@@ -1004,7 +1004,7 @@ border: 1px solid;
 padding: 10px 10px;
 margin: 10px 0;
 }
- /* only for IE */ * html fieldset {
+/* only for IE */ * html fieldset {
 background: none;
 }
 
@@ -1339,7 +1339,7 @@ padding: 0;
 background: url(../../img/common/shadow.png) no-repeat bottom right !important;
 background: url(../../img/common/shadow.gif) no-repeat bottom right; 
 }
- 
+
 #tooltip-text {
 text-align: left;
 position:absolute;

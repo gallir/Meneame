@@ -685,8 +685,12 @@ border-color: #FF6400;
 color: #FF6400;
 }
 
-.button:hover, button:hover, .button:disabled, button:disabled {
+.button:hover, button:hover {
 background: #fff;
+}
+
+.button:disabled, button:disabled {
+background: #ffd9c0;
 }
 
 #headtools input {
