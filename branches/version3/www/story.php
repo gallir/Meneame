@@ -151,7 +151,7 @@ echo '<div id="sidebar">';
 do_banner_right();
 // GEO
 if ($link->latlng) {
-	echo '<div id="map" style="width:300px;height:250px;">&nbsp;</div>'."\n";
+	echo '<div id="map" style="width:300px;height:200px;">&nbsp;</div>'."\n";
 }
 if ($link->comments > 15) {
 	do_best_story_comments($link);

@@ -77,7 +77,7 @@ function show_profile() {
 
 	save_profile();
 	
-	echo '<div class="genericform" style="margin: 0 20px 0 20px">';
+	echo '<div class="genericform" style="margin: 0 50px">';
 	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<fieldset><legend>';
 	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";

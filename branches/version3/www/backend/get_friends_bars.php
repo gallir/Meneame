@@ -44,21 +44,19 @@ switch ($prefered_type) {
 }
 if ($dbusers) {
 	$friend = new User;
-	echo '<div class="bars-list">';
 	foreach($dbusers as $dbuser) {
 		$friend->id=$dbuser->who;
 		$friend->read();
-		echo '<div class="item-wider">';
+		echo '<div class="friends-item">';
 		echo '<a href="'.get_user_uri($friend->username).'" title="'.$friend->username.'">';
 		echo '<img src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
-		echo $friend->username.'</a>';
+		echo $friend->username.'</a>&nbsp;';
 		if ($current_user->user_id > 0 && $current_user->user_id != $friend->id) {
 			echo '<a id="friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'\',0,\''.$friend->id.'\')">'.friend_teaser($current_user->user_id, $friend->id).'</a>';
 		}
 		echo '</div>';
 		echo "\n";
 	}
-	echo '</div>';
 	do_contained_pages($prefered_id, $prefered_total, $prefered_page, $prefered_page_size, 'get_friends_bars.php', $prefered_type, $prefered_type.'-container');
 }
 ?>
