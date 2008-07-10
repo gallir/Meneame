@@ -135,9 +135,8 @@ text-decoration: underline;
 }
 
 .banner-01 {
-float: right;
-/*padding: .36em;*/
-margin: 0.36em;
+float: left;
+margin: 0.3em 0 0.4em 0.6em;
 width: 730px;
 height: 92px;
 }
@@ -930,7 +929,6 @@ padding: 5px 50px 5px 10px;
 line-height: 130%;
 overflow: hidden;
 border: 1px dotted;
-min-height: 25px;
 }
 
 .comment-body-hidden {
@@ -1451,14 +1449,7 @@ margin-bottom: 4px;
 /* hacks ie6 */
 
 * html #wrap { /* Code to get min and max width on IE6 */
-width: expression( 
-document.body.clientWidth > (500/12) * 
-parseInt(document.body.currentStyle.fontSize)?
-"1200px":
-document.body.clientWidth < (250/12) * 
-parseInt(document.body.currentStyle.fontSize)?
-"900px":
-"auto" );
+width: expression(documentElement.clientWidth > 1200 ?  "1200px": documentElement.clientWidth < 950 ?  "950px": "auto" );
 text-align: left;
 }
 

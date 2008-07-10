@@ -27,7 +27,7 @@ function do_banner_top () { // top banner
 	if($globals['external_ads'] && $globals['ads']) {
 		@include('ads/top.inc');
 	} else {
-		echo '<div class="banner-01">' . "\n";
+		echo '<div class="banner-top">' . "\n";
 		@include('ads/meneame-01.inc');
 		echo '</div>' . "\n";
 	}
