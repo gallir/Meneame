@@ -4,7 +4,7 @@ header('Cache-Control: max-age=3600');
 ?>
 var mnm_date = new Date();
 var mnm_banner_counter = 0;
-var mnm_banner_url = 'api/show_banner.php?width='+mnm_banner_width+'&height='+mnm_banner_height+'&format='+mnm_banner_format+'&color_border='+mnm_banner_color_border+'&color_bg='+mnm_banner_color_bg+'&color_link='+mnm_banner_color_link+'&color_text='+mnm_banner_color_text+'&font_pt='+mnm_banner_font_pt;
+var mnm_banner_url = base_url+'api/show_banner.php?width='+mnm_banner_width+'&height='+mnm_banner_height+'&format='+mnm_banner_format+'&color_border='+mnm_banner_color_border+'&color_bg='+mnm_banner_color_bg+'&color_link='+mnm_banner_color_link+'&color_text='+mnm_banner_color_text+'&font_pt='+mnm_banner_font_pt;
 
 
 function mnm_banner_load() {
