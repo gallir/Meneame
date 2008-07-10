@@ -18,13 +18,15 @@ $globals['ads'] = false;
 
 if(isset($_POST["phase"])) {
 	force_authentication();
-	do_header(_("enviar noticia"), "post");
-	echo '<div id="singlewrap">' . "\n";
 	switch ($_POST["phase"]) {
 		case 1:
+			do_header(_("enviar noticia 2/3"), "post");
+			echo '<div id="singlewrap">' . "\n";
 			do_submit1();
 			break;
 		case 2:
+			do_header(_("enviar noticia 3/3"), "post");
+			echo '<div id="singlewrap">' . "\n";
 			do_submit2();
 			break;
 		case 3:
@@ -34,7 +36,7 @@ if(isset($_POST["phase"])) {
 } else {
 	check_already_sent();
 	force_authentication();
-	do_header(_("enviar noticia"), "post");
+	do_header(_("enviar noticia 1/3"), "post");
 	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
