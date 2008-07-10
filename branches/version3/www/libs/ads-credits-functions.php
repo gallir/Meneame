@@ -13,7 +13,7 @@
 *****/
 
 
-if (preg_match('/meneame.net$/', get_server_name())) {
+if (preg_match('/meneame-svn.bitassa.net$/', get_server_name())) {
 	$globals['is_meneame']  = true;
 }
 
