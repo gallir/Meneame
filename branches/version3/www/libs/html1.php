@@ -531,7 +531,7 @@ function do_best_comments() {
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
-			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		$output .= '</ul>';
 		echo $output;
@@ -545,17 +545,17 @@ function do_best_story_comments($link) {
 	$do_cache = false;
 	$output = '';
 
-	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*2) $do_cache = true;
+	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 
 	if($do_cache && memcache_mprint('best_story_comments_'.$link->id)) return;
 
 	$limit = min(25, intval($link->comments/4));
-	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 20 and comment_user_id = user_id order by comment_karma desc limit $limit");
+	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 25 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
 		$output .= '<h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('comentarios + valorados').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $link->comments).'#comment-'.$comment->comment_order;
-			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'">'.text_to_summary($comment->content, 50).'</a></li>'."\n";
+			$output .= '<li><strong>'.$comment->user_login.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 50).'</em></a></li>'."\n";
 		}
 		$output .= '</ul>';
 		echo $output;
@@ -626,7 +626,7 @@ function do_best_posts() {
 	if ($res) {
 		$output .= '<h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $post) {
-			$output .= '<li><strong>'.$post->user_login.'</strong>: <a  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'">'.text_to_summary($post->post_content, 50).'</a></li>'."\n";
+			$output .= '<li><strong>'.$post->user_login.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'"><em>'.text_to_summary($post->post_content, 50).'</em></a></li>'."\n";
 		}
 		$output .= '</ul>';
 		echo $output;
