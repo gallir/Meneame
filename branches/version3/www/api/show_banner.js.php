@@ -10,7 +10,6 @@ var mnm_banner_url = 'http://<?echo  preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', s
 function write_banner_frame() {
 	mnm_banner_busy = true;
 	var div = document.getElementById("mnm_banner");
-	//div.innerHTML='<iframe width="'+mnm_banner_width+'" height="'+mnm_banner_height+'" scrolling="no" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" src="'+mnm_banner_url+'" name="mnm_banner_ifr"></iframe>';
 	div.innerHTML='<iframe width="'+mnm_banner_width+'" height="'+mnm_banner_height+'" scrolling="no" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" id="mnm_banner_ifr"></iframe>';
 	setTimeout("mnm_banner_load()", 1);
 }
@@ -24,5 +23,5 @@ function mnm_banner_load() {
 	mnm_banner_counter++;
 }
 
-document.write('<div id="mnm_banner" style="width: '+mnm_banner_width+'px; height: '+mnm_banner_height+'px; border: none; padding: 0; margin: 0; background: transparent ; "><script type="text/javascript">setTimeout("write_banner_frame()", 100)</script></div>');
+document.write('<div id="mnm_banner" style="width: 100%; height: 100%; overflow: hidden; border: none; padding: 0; margin: 0; background: transparent ; "><script type="text/javascript">setTimeout("write_banner_frame()", 10)</script></div>');
 
