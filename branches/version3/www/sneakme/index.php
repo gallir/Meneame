@@ -86,9 +86,11 @@ do_posts_tabs($tab_option, $user->username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_best_posts();
 //do_best_stories();
-do_best_comments();
+if ($rows > 20) {
+	do_best_posts();
+	do_best_comments();
+}
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
@@ -146,7 +148,7 @@ function onLoad(lat, lng, zoom, icon) {
 }
 
 echo '</div>';
-if ($option != '_geo') do_footer_menu();
+if ($rows > 15) do_footer_menu();
 do_footer();
 
 function do_posts_tabs($tab_selected, $username) {
