@@ -111,14 +111,10 @@ border-top: 1px solid;
 }
 
 #navigation li.second {
-/* padding-right: 1.5em; */
-}
-
-#navigation li.third {
 padding-right: 1.5em; /* antes 2em*/
 }
 
-#navigation li.fourth {
+#navigation li.third {
 padding-right: 2em; /* antes 2.5em*/
 }
 
