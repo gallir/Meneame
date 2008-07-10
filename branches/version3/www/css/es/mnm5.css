@@ -94,6 +94,7 @@ padding: 0 0 0 .29em;
 border: 0;
 font-size: 1em;
 height: 1.28em;
+width: 22em;
 }
 
 #naviwrap {
@@ -1190,7 +1191,7 @@ font-size: 95%;
 }
 
 .sneaker-legend {
-
+font-size: 9pt;
 text-align: center;
 padding: 3px 0 5px 0;
 margin: 0px;

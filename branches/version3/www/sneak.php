@@ -434,7 +434,6 @@ function flipChar(c) {
 <script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php"></script>
 <?
 
-echo '<div id="singlewrap">' . "\n";
 
 // Check the tab options and set corresponging JS variables
 if ($current_user->user_id > 0) {
@@ -452,7 +451,7 @@ if ($current_user->user_id > 0) {
 //////
 
 
-echo '<div class="sneaker">';
+echo '<div class="sneaker" style="margin-top: 5px">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
 echo '<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">';
 echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
@@ -481,6 +480,9 @@ if ($current_user->user_id > 0) {
 }
 
 echo '</div>' . "\n";
+
+echo '<div id="singlewrap">' . "\n";
+
 echo '<div class="sneaker-item">';
 echo '<div class="sneaker-title">';
 echo '<div class="sneaker-ts"><strong>'._('hora').'</strong></div>';
@@ -507,14 +509,14 @@ function print_sneak_tabs($option) {
 	global $current_user;
 	$active = array();
 	$active[$option] = ' class="tabmain-this"';
-	echo '<ul class="tabmain" style="padding-right: 50px">' . "\n";
+	echo '<ul class="tabmain">' . "\n";
 
-	echo '<li style="float: right;"><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
+	echo '<li'.$active[1].'><a href="'.$globals['base_url'].'sneak.php">'._('todos').'</a></li>' . "\n";
+	echo '<li'.$active[2].'><a href="'.$globals['base_url'].'sneak.php?friends=1">'._('amigos').'</a></li>' . "\n";
 	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
-		echo '<li style="float: right;"'.$active[3].'><a href="'.$globals['base_url'].'sneak.php?admin=1">'._('admin').'</a></li>' . "\n";
+		echo '<li'.$active[3].'><a href="'.$globals['base_url'].'sneak.php?admin=1">'._('admin').'</a></li>' . "\n";
 	}
-	echo '<li style="float: right;"'.$active[2].'><a href="'.$globals['base_url'].'sneak.php?friends=1">'._('amigos').'</a></li>' . "\n";
-	echo '<li style="float: right;"'.$active[1].'><a href="'.$globals['base_url'].'sneak.php">'._('todos').'</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
 
 	echo '</ul>' . "\n";
 }

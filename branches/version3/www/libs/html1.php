@@ -140,7 +140,7 @@ function do_header($title, $id='home') {
 	echo '</li>' . "\n";
 	// form
 
-	echo '<li><a href="http://meneame.wikispaces.com/Ayuda"><img src="'.$globals['base_url'].'img/common/help-bt.gif" alt="help button" title="'._('ayuda').'" width="12" height="12" /></a></li>';
+	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_url'].'img/common/help-bt.gif" alt="help button" title="'._('ayuda').'" width="12" height="12" /></a></li>';
 	if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
 		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_url'].'img/common/tools-bt.gif" alt="tools button" title="herramientas" width="14" height="12" /> </a></li>' . "\n";
 	}

@@ -106,7 +106,7 @@ function do_credits() {
 	if ($globals['is_meneame']) {
 		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('condiciones legales').'</a></li>';
 		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
-		echo '<li>'._('Licencias').':&nbsp;';
+		echo '<li>'._('licencias').':&nbsp;';
 		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('gráficos').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</a></li>';
