@@ -13,11 +13,6 @@ margin: 0;
 padding: 0;
 }
 
-body, div, td, th, h2, h3, h4, pre { /* redundant rules for bad browsers  */  
-voice-family: "\"}\"";
-voice-family: inherit;
-}
-
 body {
 font-family: sans-serif;
 font-size: 87.5%; /* font size 14px */
@@ -43,6 +38,7 @@ text-align: left;
 
 #header {
 height: 1.79em; /* 25px */
+overflow: hidden;
 }
 
 #logo {
@@ -104,26 +100,26 @@ float: left;
 #navigation {
 text-align: right;
 width: 9em;
-margin: 0 0 .21em 5.71em;
+margin: 0 0 .71em 5.71em;
 }
 
 #navigation li {
 list-style-type: none;
-font-size: 0.79em;
+font-size: 0.93em; /* .86em */
 padding: 3px 1em 3px 0;
 border-top: 1px solid;
 }
 
 #navigation li.second {
-padding-right: 1.5em;
+/* padding-right: 1.5em; */
 }
 
 #navigation li.third {
-padding-right: 2em;
+padding-right: 1.5em; /* antes 2em*/
 }
 
 #navigation li.fourth {
-padding-right: 2.5em;
+padding-right: 2em; /* antes 2.5em*/
 }
 
 #navigation a {
@@ -134,9 +130,9 @@ text-decoration: none;
 text-decoration: underline;
 }
 
-.banner-01 {
+.banner-top {
 float: left;
-margin: 0.3em 0 0.4em 0.6em;
+margin: 0.36em;
 width: 730px;
 height: 92px;
 }
@@ -201,7 +197,7 @@ text-decoration: none;
 }
 
 .tabmain li a:hover {
-text-decoration: underline;
+text-decoration: none;
 }
 
 .tabmain li.tabmain-this {
@@ -261,7 +257,7 @@ float: left;
 list-style-type: none;
 margin-right: 4px;
 height: 22px;
-padding-left: 8px;
+padding-left: 7px;
 }
 
 .tabsub li a {
@@ -276,7 +272,7 @@ text-decoration: none;
 }
 
 .tabsub li a:hover {
-text-decoration: underline;
+text-decoration: none;
 }
 
 .tabsub li.tabsub-this {
@@ -352,7 +348,6 @@ border: 1px solid;
 
 .vertical-box {
 text-align: center;
-line-height: 1.75em;
 }
 
 .vertical-box a {
@@ -365,6 +360,7 @@ text-decoration: underline;
 
 .nube {
 padding: .5em 1em 1.5em 1em;
+line-height: 1.75em;
 }
 
 #sidebar .topcommentsli li {
@@ -929,6 +925,7 @@ padding: 5px 50px 5px 10px;
 line-height: 130%;
 overflow: hidden;
 border: 1px dotted;
+min-height: 25px;
 }
 
 .comment-body-hidden {
@@ -1446,13 +1443,6 @@ margin-bottom: 10px;
 margin-bottom: 4px;
 }
 
-/* hacks ie6 */
-
-* html #wrap { /* Code to get min and max width on IE6 */
-width: expression(documentElement.clientWidth > 1200 ?  "1200px": documentElement.clientWidth < 950 ?  "950px": "auto" );
-text-align: left;
-}
-
 /* Simple Modal */
 
 #modalOverlay {
@@ -1545,4 +1535,21 @@ font-size: 80%;
 font-weight: normal;
 }
 
+/* IE6 hacks */
 
+* html #wrap {
+margin: 0 20px;
+overflow: hidden;
+}
+
+* html #sidebar {
+margin-right: 15px;
+}
+
+* html .tabmain li a:hover {
+text-decoration: underline;
+}
+
+* html .tabsub li a:hover {
+text-decoration: underline;
+}

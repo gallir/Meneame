@@ -68,10 +68,18 @@ border-color: #ff6400;
 background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
 }
 
+.tabmain li:hover {
+background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
+}
+
 .tabmain li a {
 background: #fff;
 border-color: #ff6400;
 color: #ff6400;
+}
+
+.tabmain li a:hover {
+background: #ffd9c0;
 }
 
 .tabmain li.tabmain-this {
@@ -102,7 +110,11 @@ border-color: #ff6400;
 }
 
 .tabsub li {
-background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
+background: url('../../img/common/tab-wht-bg.png') no-repeat -29px 0;
+}
+
+.tabsub li:hover {
+background: url('../../img/common/tab-org-bg.png') no-repeat -29px 0;
 }
 
 .tabsub li a {
@@ -111,9 +123,17 @@ border-color: #ff6400;
 color: #ff6400;
 }
 
+.tabsub li a:hover {
+background: #ffd9c0;
+}
+
 .tabsub li.tabsub-this {
 background: #fff;
-background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
+background: url('../../img/common/tab-wht-bg.png') no-repeat -29px 0;
+}
+
+.tabsub li.tabsub-this a:hover {
+background: #fff;
 }
 
 /* Fin de los estilos nuevos */
@@ -154,15 +174,13 @@ border-color: #ff6400;
 
 .mnm-pop {
 color: #fff;
-/*background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;*/
-background-color: #ff6400;
+background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;
 border-color: #ff6400;
 }
 
 .mnm-pop.queued {
 color: #ff6400;
-background-color: #fff;
-/*background: #fff url('../../img/common/elmnm-p03-s.png') no-repeat center top;*/
+background: #fff url('../../img/common/elmnm-p03a-s.png') no-repeat center top;
 }
 
 .vertical-box {
@@ -678,7 +696,6 @@ legend, legend a {
 color: #FF9400;
 }
 
-
 .button, button {
 background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 border-color: #FF6400;
@@ -701,3 +718,16 @@ background-color: #fff;
 color: #FF9400;
 }
 
+/* Hacks IE6*/
+
+* html .tabmain li a:hover {
+background: #fff;
+}
+
+* html .tabmain li.tabmain-this a:hover {
+background: #ffd9c0 url('../../img/common/reload-bt.gif') no-repeat right 6px;
+}
+
+* html .tabsub li a:hover {
+background: #fff;
+}
