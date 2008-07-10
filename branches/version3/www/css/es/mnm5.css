@@ -1019,7 +1019,7 @@ background: none;
 padding: 10px 0 0 0;
 margin: 20px 0 50px 0;
 clear: left;
-font-size: 90%;
+font-size: 9pt;
 }
 
 .pages-margin {
@@ -1029,7 +1029,7 @@ margin-left: 90px;
 .pages a, .pages span, .pages-margin a, .pages-margin span {
 display: block;
 float: left;
-padding: 5px 7px 5px 7px;
+padding: 3px 5px 3px 5px;
 margin-right: 3px;
 border: 1px solid;
 }
@@ -1321,8 +1321,8 @@ vertical-align: bottom;
 .mini-pages {
 padding: 0;
 margin: 10px 0 10px 0;
-clear: left;
 font-size: 80%;
+clear: left;
 }
 
 .mini-pages a, .mini-pages span {

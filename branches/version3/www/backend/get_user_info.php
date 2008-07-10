@@ -29,9 +29,10 @@ if ($current_user->user_id > 0 && $current_user->user_id  != $user->id)  {
 	echo '&nbsp;' . friend_teaser($current_user->user_id, $user->id);
 }
 echo '<br/>';
-echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
-echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
+if ($user->names) echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
+if ($user->url) echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
 echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
+echo '<strong>' . _('ranking') . ':</strong>&nbsp;#' . $user->ranking() . '<br/>';
 echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br/>';
 if ($current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_latlng = geo_latlng('user', $user->id)) && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
 	$distance = (int) geo_distance($my_latlng, $her_latlng);

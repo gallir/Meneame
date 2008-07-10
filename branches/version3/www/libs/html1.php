@@ -547,7 +547,8 @@ function do_best_story_comments($link) {
 
 	if($do_cache && memcache_mprint('best_story_comments_'.$link->id)) return;
 
-	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 20 and comment_user_id = user_id order by comment_karma desc limit 10");
+	$limit = min(25, intval($link->comments/4));
+	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 20 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
 		$output .= '<h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('comentarios + valorados').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {

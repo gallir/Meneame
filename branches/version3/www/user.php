@@ -239,6 +239,8 @@ function do_profile() {
 	}
 	echo '</dd>';
 
+	echo '<dt>'._('ranking').':</dt><dd>#'.$user->ranking().'</dd>';
+
 	$user->all_stats();
 	echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
 	if ($user->total_links > 0 && $user->published_links > 0) {

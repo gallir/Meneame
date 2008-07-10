@@ -55,8 +55,8 @@ if ($dbusers) {
 			echo '<a id="friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'\',0,\''.$friend->id.'\')">'.friend_teaser($current_user->user_id, $friend->id).'</a>';
 		}
 		echo '</div>';
-		echo "\n";
 	}
+	echo "<br clear='left'/>\n";
 	do_contained_pages($prefered_id, $prefered_total, $prefered_page, $prefered_page_size, 'get_friends_bars.php', $prefered_type, $prefered_type.'-container');
 }
 ?>

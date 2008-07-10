@@ -148,6 +148,13 @@ class User {
 		$this->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
 	}
 
+	function ranking() {
+		global $db;
+
+		if(!$this->read) $this->read();
+		return (int) $db->get_var("SELECT count(*) FROM users WHERE user_karma > $this->karma") + 1;
+	}
+
 	function blogs() {
 		global $db;
 		return $db->get_var("select  count(distinct link_blog) from links where link_author=$this->id");

@@ -193,6 +193,8 @@ case 2:
 		}
 	}
 
+	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+
 	$comments = $db->get_col("SELECT comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
 	if ($comments) {
 		echo '<ol class="comments-list">';
@@ -510,7 +512,6 @@ function do_comment_pages($total, $current, $reverse = true) {
 	$end=$start+$index_limit-1;
 	
 	echo '<div class="pages">';
-
 
 	if($current==1) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
