@@ -305,7 +305,7 @@ function get_avatar_url($user, $avatar, $size) {
 
 function get_no_avatar_url($size) {
 	global $globals;
-	return $globals['base_url'].'img/common/no-gravatar-2-'.$size.'.jpg';
+	return $globals['base_url'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
 }
 
 function utf8_substr($str,$start)

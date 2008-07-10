@@ -174,13 +174,13 @@ border-color: #ff6400;
 
 .mnm-pop {
 color: #fff;
-background: #ff6400 url('../../img/common/elmnm-p03-s.png') no-repeat center top;
+background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
 border-color: #ff6400;
 }
 
 .mnm-pop.queued {
 color: #ff6400;
-background: #fff url('../../img/common/elmnm-p03a-s.png') no-repeat center top;
+background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 }
 
 .vertical-box {
@@ -327,7 +327,7 @@ color: #FFF;
 }
 
 .mnm-published {
-background: #FF6400 url(../../img/common/elmnm-p03.png) top left no-repeat;
+background: #FF6400 url(../../img/mnm/elmnm-p03.png) top left no-repeat;
 }
 
 .mnm-queued, .mnm-queued a {
@@ -335,7 +335,7 @@ color: #FF6400;
 }
 
 .mnm-queued {
-background: #FFF url(../../img/common/elmnm-p03a.png) top left no-repeat;
+background: #FFF url(../../img/mnm/elmnm-p03a.png) top left no-repeat;
 border-color: #FF6400;
 }
 
@@ -344,7 +344,7 @@ color: #FFF;
 }
 
 .mnm-discarded {
-background: #D9AA95 url(../../img/common/elmnm-p03b.png) top left no-repeat;
+background: #D9AA95 url(../../img/mnm/elmnm-p03b.png) top left no-repeat;
 border-color: #D9AA95;
 }
 
@@ -451,7 +451,7 @@ background: url(../../img/common/tocomments01.png) no-repeat left;
 }
 
 .comment-body {
-background: #FFE2C5 url(../../img/common/comment.png) right bottom no-repeat;
+background: #FFE2C5 url(../../img/mnm/comment.png) right bottom no-repeat;
 color: #303030;
 border-color: #FF6400;
 }

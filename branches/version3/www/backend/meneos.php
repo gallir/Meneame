@@ -89,7 +89,7 @@ if ($no_show_voters) {
 				echo '<span>'.get_negative_vote($vote->vote_value).'</span>';
 			} else {
 				echo '<span>';
-				echo '<img src="'.$globals['base_url'].'img/common/mnm-anonym-vote-01.png" width="20" height="20" alt="'._('anónimo').'" title="'.$vote_detail.'"/>';
+				echo '<img src="'.$globals['base_url'].'img/mnm/mnm-anonym-vote-01.png" width="20" height="20" alt="'._('anónimo').'" title="'.$vote_detail.'"/>';
 				echo get_negative_vote($vote->vote_value).'</span>';
 			}
 		}

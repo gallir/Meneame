@@ -10,7 +10,7 @@ var base_url = '<? echo $globals['base_url']; ?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/link_sneaker.php';
 
 
-var default_gravatar = 'http://'+server_name+'/img/common/no-gravatar-2-20.jpg';
+var default_gravatar = 'http://'+server_name+'/img/mnm/no-gravatar-2-20.jpg';
 var do_animation = true;
 var animating = false;
 var animation_colors = Array("#ffc387", "#ffc891", "#ffcd9c", "#ffd2a6", "#ffd7b0", "#ffddba", "#ffe7cf", "#ffecd9", "#fff1e3", "#fff6ed", "#fffbf7", "transparent");
