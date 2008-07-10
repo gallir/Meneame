@@ -29,11 +29,11 @@ background-color: #fff;
 }
 
 #header {
-background: #ffd9c0 url('../../img/es/headerbg.png') no-repeat 14.64em -5em;
+background: #ffd9c0 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
 }
 
 #logo {
-background: #ffb280 url('../../img/es/logobg.png') no-repeat left top;
+background: #ffb280 url('../../img/mnm/logobg.png') no-repeat left top;
 }
 
 #headtools a {
@@ -45,11 +45,11 @@ border-color: #fff;
 }
 
 #naviwrap {
-background: url('../../img/es/eli.png') no-repeat left top;
+background: url('../../img/mnm/eli.png') no-repeat left top;
 }
 
 #navigation {
-background: url('../../img/es/navibg.png') no-repeat right top;
+background: url('../../img/common/navibg.png') no-repeat right top;
 }
 
 #navigation li {
@@ -209,7 +209,7 @@ color: #5073c5;
 }
 
 #footthingy {
-background: url('../../img/es/footeli.png') no-repeat left top;
+background: url('../../img/mnm/footeli.png') no-repeat left top;
 }
 
 #footthingy li {
@@ -222,7 +222,7 @@ color: #999;
 
 #footthingy p {
 border-color: #ff6400;
-background: url('../../img/es/meneito.png') no-repeat left 2px;
+background: url('../../img/mnm/meneito.png') no-repeat left 2px;
 }
 
 /*** LEGACY COLORS ***/

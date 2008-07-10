@@ -113,7 +113,7 @@ function do_header($title) {
 	echo '	<title>'.$title.'</title>'."\n";
 	echo '  <atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
 	echo '	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
-	echo "	<image><title>".$title."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
+	echo "	<image><title>".$title."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_server_name().$globals['base_url']."img/common/logo01-rss.gif</url></image>\n";
 	echo '	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo '	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo '	<generator>http://blog.meneame.net/</generator>'."\n";

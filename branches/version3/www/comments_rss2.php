@@ -177,7 +177,7 @@ function do_header($title) {
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
 	echo'	<link>http://'.get_server_name().'</link>'."\n";
-	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name()."</link><url>http://".get_server_name().$globals['base_url']."img/es/logo01-rss.gif</url></image>\n";
+	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name()."</link><url>http://".get_server_name().$globals['base_url']."img/mnm/logo01-rss.gif</url></image>\n";
 	echo'	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo'	<generator>http://blog.meneame.net/</generator>'."\n";
@@ -189,7 +189,7 @@ function do_footer() {
 }
 
 function check_redirect_to_feedburner() {
-	global $globals; 
+	global $globals;
 
 	if (!$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) return;
 

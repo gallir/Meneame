@@ -8,9 +8,9 @@
 
 include('../config.php');
 
-$mnm_over = "/img/es/mnm-over-01.png";
-$mnm_vote = "/img/es/mnm-vote-01.png";
-$mnm_add = "/img/es/mnm-add-01.png";
+$mnm_over = "/img/mnm/api/mnm-over-01.png";
+$mnm_vote = "/img/mnm/api/mnm-vote-01.png";
+$mnm_add = "/img/mnm/api/mnm-add-01.png";
 
 if(empty($_GET['url'])) die;
 
