@@ -1531,21 +1531,3 @@ font-size: 80%;
 font-weight: normal;
 }
 
-/* IE6 hacks */
-
-* html #wrap {
-margin: 0 20px;
-overflow: hidden;
-}
-
-* html #sidebar {
-margin-right: 15px;
-}
-
-* html .tabmain li a:hover {
-text-decoration: underline;
-}
-
-* html .tabsub li a:hover {
-text-decoration: underline;
-}

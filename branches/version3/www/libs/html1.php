@@ -178,6 +178,11 @@ function do_css_includes() {
 	foreach ($globals['extra_css'] as $css) {
 		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].'css/'.$css.'" />' . "\n";
 	}
+	// IE6 hacks
+	echo '<!--[if lte IE 6]>'."\n";
+	//echo '<style type="text/css" media="all">@import "'.$globals['base_url'].'css/ie6-hacks.css";</style>'."\n";
+	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].'css/ie6-hacks.css" />'."\n";
+	echo '<![endif]-->'."\n";
 
 }
 
