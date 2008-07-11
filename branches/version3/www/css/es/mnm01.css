@@ -49,6 +49,13 @@ height: 1.79em;
 text-indent: -9999px;
 }
 
+.eli-click {
+float: left;
+width: 80px;
+height: 73px;
+text-indent: -9999px;
+}
+
 #headtools {
 text-align: right;
 padding: 0 .71em;
@@ -95,18 +102,19 @@ width: 22em;
 
 #naviwrap {
 float: left;
+margin-left: 0px;
 }
 
 #navigation {
 text-align: right;
 width: 9em;
-margin: 0 0 .71em 5.71em;
+margin: 0 0 .71em 0;
 }
 
 #navigation li {
 list-style-type: none;
 font-size: 0.93em; /* .86em */
-padding: 3px 1em 3px 0;
+padding: 5px 1em 5px 0;
 border-top: 1px solid;
 }
 
@@ -439,7 +447,7 @@ text-align: center;
 
 #legalese li {
 border-left: 1px solid;
-padding: 0 2px 0 6px;
+padding: 0 6px 0 6px;
 }
 
 #legalese li:first-child {

@@ -100,7 +100,7 @@ function do_header($title, $id='home') {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<link rel="search" type="application/opensearchdescription+xml" title="Menéame Search" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>'."\n";
+	echo '<link rel="search" type="application/opensearchdescription+xml" title="'._("menéame search").'" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>'."\n";
 
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
@@ -124,7 +124,7 @@ function do_header($title, $id='home') {
 	echo '<div id="wrap">' . "\n";
 
 	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">menéame</a>'."\n";
+	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
 	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
@@ -154,10 +154,17 @@ function do_header($title, $id='home') {
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
+
+	
+
 	echo '</ul>' . "\n";
 	echo '<span class="header-left">&nbsp;</span>' . "\n";
 	echo '</div>' . "\n";
-	echo '<div id="naviwrap"><ul id="navigation">'."\n";
+	echo '<div id="eli">'."\n";
+	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" class="eli-click">'._("Eli").'</a>'."\n";
+	echo '</div">'."\n";	
+	echo '<div id="naviwrap">'."\n";
+	echo '<ul id="navigation">'."\n";
 	echo '<li class="first"><a href="'.$globals['base_url'].'submit.php">enviar noticia</a></li>'."\n";
 	echo '<li class="second"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
 	echo '<li class="third"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";

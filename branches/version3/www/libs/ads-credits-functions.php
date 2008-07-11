@@ -113,9 +113,9 @@ function do_credits() {
 		echo '<li><a href="http://svn.meneame.net/index.cgi/branches/version3/">'._('descargar').'</a></li>';
 		echo '<li>alojamiento en <a href="http://www.ferca.com">Ferca Network</a></li>';
 	} else {
-		echo '<li>link to code and licenses here (please respect the menéame Affero license and publish your own code!</li>';
-		echo '<li><a href="">contacto</a></li>';
-		echo '<li>código: <a href="">licencia</a>, <a href="">descargar</a></li>';
+		echo '<li>link to code and licenses here (please respect the menéame Affero license and publish your own code!)</li>';
+		echo '<li><a href="">contact here</a></li>';
+		echo '<li>code: <a href="#">Affero license here</a>, <a href="#">download code here</a></li>';
 		echo '<li>you and contact link here</li>';
 	}
 	echo '</ul>'."\n";
