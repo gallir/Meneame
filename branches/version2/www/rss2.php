@@ -34,11 +34,10 @@ if(!empty($_REQUEST['time'])) {
 	if(!($time = check_integer('time')))
 		die;
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";	
-	if ($time > 0) {
-		$from = time()-$time;
-		$sql .= "link_date > FROM_UNIXTIME($from) AND ";
-	}
-	$sql .= "link_status in ('published', 'queued') ORDER BY link_votes DESC LIMIT $rows";
+	if ($time < 0 || $time > 86400*5) $time = 86400;
+	$from = time()-$time;
+	$sql .= "link_date > FROM_UNIXTIME($from) AND ";
+	$sql .= "link_status = 'published' ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
 	$title = _('Menéame: más votadas en') . ' ' . txt_time_diff($from);
 } elseif (!empty($_REQUEST['favorites'])) {
@@ -66,8 +65,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' friends
 	/////
 	$user_id = guess_user_id($_REQUEST['friends_of']);
-	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('published', 'queued') ORDER BY link_date DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('published', 'queued') ORDER BY link_date DESC limit 1");
+	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: amigos de') . ' ' . $user_login;
 	$globals['show_original_link'] = false;
@@ -144,7 +143,7 @@ if(!empty($_REQUEST['time'])) {
 	
 	
 	if($status == 'all' || $status == 'all_local') {
-		$from_where = "FROM links WHERE link_status in ('published', 'queued') ";
+		$from_where = "FROM links WHERE link_status in = 'queued' ";
 	} else {
 		$from_where = "FROM links WHERE link_status='$status' ";
 	}
