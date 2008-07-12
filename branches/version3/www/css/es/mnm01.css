@@ -384,6 +384,7 @@ padding-left: 17px;
 
 #footwrap {
 margin: 5em 100px 0 100px;
+clear: both;
 }
 
 #footcol1, #footcol2, #footcol3, #footcol4, #footcol5 {
@@ -1315,10 +1316,11 @@ height: 25px;
 white-space: nowrap;
 width: 48%;
 height: 30px;
-font-size: 10pt;
+font-size: 85%;
 white-space: nowrap;
 }
 
+.friends-item  img,
 .voters-list img {
 border: 0px;
 margin-right: 5px;
