@@ -367,11 +367,15 @@ padding: .5em 1em 1.5em 1em;
 line-height: 1.75em;
 }
 
-#sidebar .topcommentsli li {
+#sidebar .topcommentsli li, .storyrsslist li {
 list-style-type: none;
 border-bottom: 1px dotted;
 padding: .35em 0;
 font-size: .85em;
+}
+
+#sidebar .storyrsslist li {
+padding-left: 17px;
 }
 
 #footwrap {

@@ -9,7 +9,7 @@ Comments: This file contains only colors or images. All images referenced by the
 */
 
 body {
-background-color: #e5d7c3; /* e5d7c3 ó e6e6e6 */
+background-color: #fff8f3; /* e5d7c3 ó e6e6e6 */
 }
 
 a {
@@ -151,6 +151,7 @@ color: #000;
 }
 
 #sidebar h4 {
+margin-top: 30px;
 background: #ffd9c0;
 border-color: #ff6400;
 }
@@ -191,10 +192,15 @@ background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom
 color: #5073c5;
 }
 
-#sidebar .topcommentsli li {
+#sidebar .topcommentsli li, .storyrsslist li {
 border-color: #ff6400;
 color: #03a;
 }
+
+#sidebar .storyrsslist li {
+background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 5px;
+}
+
 
 #footcol1, #footcol2, #footcol3, #footcol4, #footcol5 {
 border-color: #ff6400;
@@ -550,7 +556,7 @@ color: #FFE2C5;
 color: #FF6400;
 }
 
-.faq h3, 
+.faq h3,
 .faq h4 {
 color: #FF6400;
 }

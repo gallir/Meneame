@@ -246,7 +246,7 @@ function do_footer_menu() {
 	echo '<div id="footwrap">'."\n";
 
 	echo '<div id="footcol1">'."\n";
-	do_footer_rss();
+	do_rss();
 	echo '</div>'."\n";
 
 	echo '<div id="footcol2">'."\n";
@@ -284,11 +284,17 @@ function do_footer_menu() {
 	echo '</div>'."\n";
 }
 
-function do_footer_rss() {
+function do_rss() {
 	global $globals, $current_user;
 
-	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
-	echo '<ul id="rsslist">'."\n";
+	if(!empty($globals['link_id'])) $is_history = true;
+
+	if($is_history) $hlevel='h4'; else $hlevel='h5';
+
+	echo '<'.$hlevel.'>'._('suscripciones por RSS').'</'.$hlevel.'>'."\n";
+
+	if($is_history) $ulclass=' class="storyrsslist"';
+	echo '<ul'.$ulclass.'>'."\n";
 
 	if(!empty($_REQUEST['q'])) {
 		$search =  htmlspecialchars($_REQUEST['q']);
@@ -299,7 +305,7 @@ function do_footer_rss() {
 
 	if(!empty($globals['category_name'])) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("categoría").': '.$globals['category_name']."</a>\n";
+		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("categoría <em>").': '.$globals['category_name']."</em></a>\n";
 		echo '</li>';
 	}
 	echo '<li>';
@@ -310,10 +316,9 @@ function do_footer_rss() {
 	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
 	echo '</li>' . "\n";
 
-
-	if(!empty($globals['link_id'])) {
+	if($is_history) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios esta noticia').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios <em>de esta noticia</em>').'</a>';
 		echo '</li>' . "\n";
 	}
 
@@ -499,7 +504,7 @@ function do_vertical_tags($what=false) {
 	$max_pts = 20;
 	$line_height = $max_pts * 0.70;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
@@ -537,7 +542,7 @@ function do_best_comments() {
 
 	if(memcache_mprint('best_comments_3')) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours  (edit! 2zero)
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments,  comment_karma*(1-(unix_timestamp(now())-unix_timestamp(comment_date))*0.5/22000) as value from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
@@ -567,10 +572,10 @@ function do_best_story_comments($link) {
 	$limit = min(25, intval($link->comments/4));
 	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 25 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
-		$output .= '<h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('comentarios + valorados').'</a></h4><ul class="topcommentsli">'."\n";
+		$output .= '<h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('comentarios +valorados').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $link->comments).'#comment-'.$comment->comment_order;
-			$output .= '<li><strong>'.$comment->user_login.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 50).'</em></a></li>'."\n";
+			$output .= '<li><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 50).'</em></a></li>'."\n";
 		}
 		$output .= '</ul>';
 		echo $output;
@@ -595,8 +600,7 @@ function do_best_stories() {
 	}
 	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
 
-
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hour  (edit! 2zero)
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.25/86400) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");

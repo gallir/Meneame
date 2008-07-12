@@ -111,7 +111,7 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 
 // Websnapr.com previews
-$globals['do_websnapr'] = true;
+$globals['do_websnapr'] = false;
 
 // Forbidden email domains to avoid "clones" and  "too easy" impersoning
 // http://en.wikipedia.org/wiki/Disposable_e-mail_address
