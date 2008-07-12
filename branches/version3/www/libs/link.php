@@ -539,7 +539,8 @@ class Link {
 		// End news details
 
 		// Displayed only in a story page
-		if ($globals['link']) {
+		// and tags in sent/voted listing
+		if ($globals['link'] || $type == 'short') {
 			if (!empty($this->tags)) {
 				echo '<div class="news-details">';
 				echo '<strong>'._('etiquetas').'</strong>:';
@@ -559,11 +560,13 @@ class Link {
 				}
 				echo '</div>'."\n";
 			}
-			echo '<div class="news-details">';
-			echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
-			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
-			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
-			echo '</div>' . "\n";
+			if ($type != 'short') {
+				echo '<div class="news-details">';
+				echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
+				echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
+				echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
+				echo '</div>' . "\n";
+			}
 		} else {
 			echo "<!--tags: $this->tags-->\n";
 		}

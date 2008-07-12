@@ -13,7 +13,7 @@ include(mnminclude.'html1.php');
 $link = new Link;
 
 
-if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
+if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	array_shift($url_args); // The first element is always a "/"
 	$link->uri = $db->escape($url_args[0]);
@@ -35,6 +35,7 @@ if (!defined($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
+
 if ($link->is_discarded()) {
 	// Dont allow indexing of discarded links
 	if ($globals['bot']) not_found();
@@ -42,20 +43,25 @@ if ($link->is_discarded()) {
 	//Only shows ads in non discarded images
 	$globals['ads'] = true;
 }
-/*
-if ($globals['bot'] && $link->is_discarded()) not_found();
-if (! $link->is_discarded()) $globals['ads'] = true;;
-*/
+
 
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
-if(count($url_args) > 1 && ($last_arg = $url_args[count($url_args)-1]) > 0) {
-	if (preg_match('/^000/', $last_arg)) {
-		// Dirty trick to redirect to a comment' page
-		header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $last_arg, $link->comments).'#comment-'.(int) $last_arg);
+$last_arg = count($url_args)-1;
+if ($last_arg > 0) {
+	// Dirty trick to redirect to a comment' page
+	if (preg_match('/^000/', $url_args[$last_arg])) {
+		if ($url_args[$last_arg] > 0) {
+			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], 
+									(int) $url_args[$last_arg], $link->comments).'#comment-'.(int) $url_args[$last_arg]);
+		} else {
+			header('Location: ' . $link->get_permalink());
+		}
 		die;
 	}
-	$current_page =  (int) $last_arg;
-	array_pop($url_args);
+	if ($url_args[$last_arg] > 0) {
+		$current_page =  (int) $url_args[$last_arg];
+		array_pop($url_args);
+	}
 }
 
 switch ($url_args[1]) {
