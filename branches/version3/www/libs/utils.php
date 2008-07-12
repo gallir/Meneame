@@ -482,7 +482,6 @@ function meta_get_current() {
 			$globals['meta_current'] = 0;
 		}
 	}
-	//echo "meta_current: " . $globals['meta_current'] . "<br/>\n";
 	return $globals['meta_current'];
 }
 

@@ -98,8 +98,12 @@ function print_index_tabs($option=-1) {
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
-			if ($meta->category_id == $globals['meta_current']) $active_meta = 'class="tabsub-this"';
-			else $active_meta = '';
+			if ($meta->category_id == $globals['meta_current']) {
+				$active_meta = 'class="tabsub-this"';
+				$globals['meta_current_name'] = $meta->category_name;
+			} else {
+				$active_meta = '';
+			}
 			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
 		}
 	}

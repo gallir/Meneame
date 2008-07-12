@@ -580,16 +580,26 @@ function do_best_story_comments($link) {
 
 function do_best_stories() {
 	global $db, $globals, $dblang;
+
+	if(memcache_mprint('best_stories_'.$globals['meta_categories'])) return;
+
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'._('populares').'</a></h4>';
 
-	if(memcache_mprint('best_stories_3')) return;
+	if ($globals['meta_categories']) {
+			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
+			$title = _('populares en').' '.$globals['meta_current_name'];
+	} else {
+		$category_list  = '';
+		$title = _('populares');
+	}
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
+
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.25/86400) as value from links where link_status='published' and link_date > '$min_date' order by value desc limit 10");
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.25/86400) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
 		foreach ($res as $link) {
 			$foo_link->uri = $link->link_uri;
@@ -600,7 +610,7 @@ function do_best_stories() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_stories_3', $output, 300);
+		memcache_madd('best_stories_'.$globals['meta_categories'], $output, 300);
 	}
 }
 
@@ -608,14 +618,23 @@ function do_best_queued() {
 	global $db, $globals, $dblang;
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'promote.php">'._('candidatas').'</a></h4>';
 
-	if(memcache_mprint('best_queued_3')) return;
+	if(memcache_mprint('best_queued_'.$globals['meta_categories'])) return;
+
+	if ($globals['meta_categories']) {
+			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
+			$title = _('candidatas en').' '.$globals['meta_current_name'];
+	} else {
+		$category_list  = '';
+		$title = _('candidatas');
+	}
+
+	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'promote.php">'.$title.'</a></h4>';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 48 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, link_karma from links where link_status='queued' and link_date > '$min_date' order by link_karma desc limit 15");
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, link_karma from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");
 	if ($res) {
 		foreach ($res as $link) {
 			$foo_link->uri = $link->link_uri;
@@ -626,7 +645,7 @@ function do_best_queued() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_queued_3', $output, 300);
+		memcache_madd('best_queued_'.$globals['meta_categories'], $output, 300);
 	}
 }
 
