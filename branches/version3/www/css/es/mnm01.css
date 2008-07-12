@@ -445,12 +445,12 @@ text-indent: -9999px;
 }
 
 #legalese {
-margin-top: 2px;
+margin-top: 5px;
 text-align: center;
 }
 
 #legalese li {
-border-left: 1px solid;
+border-left: 1px solid #c6c6c6;
 padding: 0 6px 0 6px;
 }
 

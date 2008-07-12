@@ -214,6 +214,10 @@ color: #ff6400;
 color: #5073c5;
 }
 
+#footcol1 {
+background: url('../../img/common/rss-bigfoot.png') no-repeat 85% bottom;
+}
+
 #footthingy {
 background: url('../../img/mnm/footeli.png') no-repeat left top;
 }
