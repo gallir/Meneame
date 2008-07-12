@@ -248,7 +248,7 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->content_type != 'image' && $link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { 
+		if ($link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { 
 			$link->new_coef = 2 - ($now-$link->date)/7200;
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
@@ -286,9 +286,9 @@ if ($links) {
 		}
 
 		// check if it's "media" and the metacategory coefficient is low
-		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
+		if ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
 			$dblink->karma *= 0.9;
-			$link->message .= '<br/>Image/Video';
+			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
 		}
 
 		// Check if the user is banned disabled
