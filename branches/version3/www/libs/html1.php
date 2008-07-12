@@ -140,17 +140,17 @@ function do_header($title, $id='home') {
 	echo '</li>' . "\n";
 	// form
 
-	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_url'].'img/common/help-bt.gif" alt="help button" title="'._('ayuda').'" width="12" height="12" /></a></li>';
+	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_url'].'img/common/help-bt.png" alt="help button" title="'._('ayuda').'" width="16" height="16" /></a></li>';
 	if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
-		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_url'].'img/common/tools-bt.gif" alt="tools button" title="herramientas" width="14" height="12" /> </a></li>' . "\n";
+		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_url'].'img/common/tools-bt.png" alt="tools button" title="herramientas" width="19" height="16" /> </a></li>' . "\n";
 	}
 
 	if($current_user->authenticated) {
  		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'._('bienvenid@').'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.gif" alt="login button" title="login" width="12" height="12" /> '. _('cerrar sesión').'</a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> '. _('cerrar sesión').'</a></li>' . "\n";
 	} else {
   		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.gif" alt="login button" title="login" width="12" height="12" /> '. _('login').'</a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> '. _('login').'</a></li>' . "\n";
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";

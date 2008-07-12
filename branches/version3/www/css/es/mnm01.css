@@ -97,7 +97,7 @@ padding: 0 0 0 .29em;
 border: 0;
 font-size: 1em;
 height: 1.28em;
-width: 22em;
+width: 15em;
 }
 
 #naviwrap {
@@ -223,7 +223,7 @@ font-weight: bold;
 height: 21px !important;
 clear: both;
 padding: 5px 25px 0 180px;
-font-size: 9pt;
+font-size: 11pt;
 }
 
 .tabsub-shakeit li {
@@ -232,6 +232,10 @@ list-style-type: none;
 padding-left: 6px;
 border-left: 1px solid;
 margin-left: 6px;
+}
+
+.tabsub-shakeit-img {
+margin-bottom: 2px;
 }
 
 .tabsub-shakeit li:first-child {
@@ -297,7 +301,7 @@ font-weight: bold;
 .catsub-block {
 border-bottom: 1px dotted;
 padding: 3px 25px;
-font-size: 7.5pt;
+font-size: 8.5pt;
 }
 
 .catsub-block li {
