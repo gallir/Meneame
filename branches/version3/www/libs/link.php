@@ -573,9 +573,9 @@ class Link {
 		echo '</div>'."\n";
 
 		// Geo edit form div
-		if ($this->geo && $this->sent_date > $globals['now'] - 600 && $this->is_map_editable())  {
+		if ($this->geo && $this->is_map_editable())  {
 			echo '<div id="geoedit" class="geoform" style="margin-left:20px">';
-			if ($current_user->user_id == $this->author && !$this->latlng)  {
+			if ($current_user->user_id == $this->author && $this->sent_date > $globals['now'] - 600 && !$this->latlng)  {
 				geo_coder_print_form('link', $this->id, $globals['latlng'], _('ubica al origen de la noticia o evento (ciudad, país)'));
 			}
 			echo '</div>'."\n";
