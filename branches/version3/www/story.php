@@ -158,7 +158,6 @@ if ($link->comments > 15) {
 }
 if (! $current_user->user_id) {
 	do_best_stories();
-	do_best_comments();
 }
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/

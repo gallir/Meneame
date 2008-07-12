@@ -38,28 +38,28 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		// First the standard and always present tabs
 		// published tab
 		if ($tab_selected == 'published') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'" title="'.$reload_text.'"><em>'._('portada').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'</a></li>' . "\n";
 		} else {
 			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>' . "\n";
 		}
 
 		// Google Map
 		if ($tab_selected == 'map') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'map.php" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'map.php" title="'.$reload_text.'">'._('mapa').'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'map.php">'._('mapa').'</a></li>' . "\n";
 		}
 
 		// Most voted
 		if ($tab_selected == 'popular') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('popular').'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('popular').'</a></li>' . "\n";
 		}
 
 		// shake it
 		if ($tab_selected == 'shakeit') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'"><em>'._('menear pendientes').'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('menear pendientes').'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('menear pendientes').'</a></li>' . "\n";
 		}
@@ -69,7 +69,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-			echo '<li '.$active.'><a href="'.$url.'" title="'.$reload_text.'"><em>'.$tab_selected.'</em></a></li>' . "\n";
+			echo '<li '.$active.'><a href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'</a></li>' . "\n";
 		}
 		echo '</ul>' . "\n";
 	}
@@ -402,6 +402,8 @@ function force_authentication() {
 
 function do_pages($total, $page_size=25, $margin = true) {
 	global $db;
+
+	if ($total < $page_size) return;
 
 	$index_limit = 5;
 
