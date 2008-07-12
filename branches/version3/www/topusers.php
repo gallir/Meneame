@@ -109,6 +109,7 @@ if ($users) {
 echo "</table>\n\n";
 do_pages($rows, $page_size, false);
 echo "</div>\n";
+do_footer_menu();
 do_footer();
 
 
