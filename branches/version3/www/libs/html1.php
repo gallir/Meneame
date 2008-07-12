@@ -581,14 +581,14 @@ function do_best_story_comments($link) {
 function do_best_stories() {
 	global $db, $globals, $dblang;
 
-	if(memcache_mprint('best_stories_'.$globals['meta_categories'])) return;
+	if(memcache_mprint('best_stories_'.$globals['meta_current'])) return;
 
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 
-	if ($globals['meta_categories']) {
+	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = _('populares en').' '.$globals['meta_current_name'];
+			$title = _('populares de').' <em>'.$globals['meta_current_name'].'</em>';
 	} else {
 		$category_list  = '';
 		$title = _('populares');
@@ -610,7 +610,7 @@ function do_best_stories() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_stories_'.$globals['meta_categories'], $output, 300);
+		memcache_madd('best_stories_'.$globals['meta_current'], $output, 300);
 	}
 }
 
@@ -619,11 +619,11 @@ function do_best_queued() {
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 
-	if(memcache_mprint('best_queued_'.$globals['meta_categories'])) return;
+	if(memcache_mprint('best_queued_'.$globals['meta_current'])) return;
 
-	if ($globals['meta_categories']) {
+	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = _('candidatas en').' '.$globals['meta_current_name'];
+			$title = _('candidatas en').' <em>'.$globals['meta_current_name'].'</em>';
 	} else {
 		$category_list  = '';
 		$title = _('candidatas');
@@ -645,7 +645,7 @@ function do_best_queued() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_queued_'.$globals['meta_categories'], $output, 300);
+		memcache_madd('best_queued_'.$globals['meta_current'], $output, 300);
 	}
 }
 

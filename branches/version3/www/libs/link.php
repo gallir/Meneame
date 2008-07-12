@@ -573,7 +573,7 @@ class Link {
 		echo '</div>'."\n";
 
 		// Geo edit form div
-		if ($this->geo && $this->is_map_editable())  {
+		if ($this->geo && $this->sent_date > $globals['now'] - 600 && $this->is_map_editable())  {
 			echo '<div id="geoedit" class="geoform" style="margin-left:20px">';
 			if ($current_user->user_id == $this->author && !$this->latlng)  {
 				geo_coder_print_form('link', $this->id, $globals['latlng'], _('ubica al origen de la noticia o evento (ciudad, país)'));
@@ -745,8 +745,7 @@ class Link {
 	function is_editable() {
 		global $current_user, $db, $globals;
 
-		if($current_user->user_id ==  0) return false;
-		if($this->status != 'published' && 
+		if($current_user->user_id && $this->status != 'published' && 
 			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
 					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
@@ -759,8 +758,8 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id ==  0) return false;
-		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 9800) 
-					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 14400)
+		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->sent_date < 9800) 
+					|| ($current_user->user_level == 'special' && $globals['now'] - $this->sent_date < 14400)
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 				return true;
 			}
