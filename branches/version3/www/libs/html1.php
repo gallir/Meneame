@@ -135,7 +135,7 @@ function do_header($title, $id='home') {
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" align="top" alt="buscar" src="'.$globals['base_url'].'img/common/search-02.gif" id="submit_image"/></a>';
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_url'].'img/common/search-02.gif" id="submit_image"/></a>';
 	echo '</form>';
 	echo '</li>' . "\n";
 	// form
