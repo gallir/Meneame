@@ -49,7 +49,8 @@ height: 1.79em;
 text-indent: -9999px;
 }
 
-.eli-click {
+#eli {
+display: block;
 float: left;
 width: 80px;
 height: 73px;
