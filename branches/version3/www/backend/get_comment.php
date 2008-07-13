@@ -14,7 +14,9 @@ if (! defined('mnmpath')) {
 include_once(mnminclude.'comment.php');
 include_once(mnminclude.'link.php');
 
+if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
+$comment = new Comment;
 $comment->id=$id;
 $comment->read();
 if(!$comment->read) die;
