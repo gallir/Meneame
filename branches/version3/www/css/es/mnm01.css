@@ -114,7 +114,7 @@ margin: 0 0 .71em 0;
 #navigation li {
 list-style-type: none;
 font-size: 0.93em; /* .86em */
-padding: 5px 1em 5px 0;
+padding: 2px 1em 2px 0;
 border-top: 1px solid;
 }
 
@@ -124,6 +124,10 @@ padding-right: 1.5em; /* antes 2em*/
 
 #navigation li.third {
 padding-right: 2em; /* antes 2.5em*/
+}
+
+#navigation li.fourth {
+padding-right: 2.5em;
 }
 
 #navigation a {

@@ -166,8 +166,9 @@ function do_header($title, $id='home') {
 	echo '<div id="naviwrap">'."\n";
 	echo '<ul id="navigation">'."\n";
 	echo '<li class="first"><a href="'.$globals['base_url'].'submit.php">enviar noticia</a></li>'."\n";
-	echo '<li class="second"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
-	echo '<li class="third"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";
+	echo '<li class="second"><a href="'.$globals['base_url'].'shakeit.php">pendientes</a></li>'."\n";
+	echo '<li class="third"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
+	echo '<li class="fourth"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";
 	echo '</ul></div>'."\n";
 	do_banner_top();
 	echo '<div id="container">'."\n";
