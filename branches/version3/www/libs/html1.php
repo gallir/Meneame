@@ -147,10 +147,10 @@ function do_header($title, $id='home') {
 
 	if($current_user->authenticated) {
  		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'._('bienvenid@').'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> '. _('cerrar sesión').'</a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {
   		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'"><img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> '. _('login').'</a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";

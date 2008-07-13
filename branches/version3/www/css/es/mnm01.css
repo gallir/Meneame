@@ -224,22 +224,27 @@ font-weight: bold;
 }
 
 .tabsub-shakeit {
-height: 21px !important;
+height: 25px !important;
 clear: both;
-padding: 5px 25px 0 180px;
+/*padding: 5px 25px 0 180px;*/
+padding-left: 180px;
 font-size: 11pt;
 }
 
 .tabsub-shakeit li {
 float:left;
 list-style-type: none;
+/* l & r margins */
 padding-left: 6px;
-border-left: 1px solid;
 margin-left: 6px;
+border-left: 1px solid;
+/* t & b margins */
+height: 17px;
+margin-top: 4px;
 }
 
-.tabsub-shakeit-img {
-margin-bottom: 2px;
+.tabsub-shakeit-icon {
+padding-top: 2px;
 }
 
 .tabsub-shakeit li:first-child {
@@ -515,7 +520,6 @@ vertical-align: bottom;
 abbr { cursor: help; }
 
 img {
-vertical-align: middle;
 border: none;
 }
 
