@@ -286,7 +286,7 @@ if ($links) {
 		}
 
 		// check if it's "media" and the metacategory coefficient is low
-		if ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
+		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
 			$dblink->karma *= 0.9;
 			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
 		}
