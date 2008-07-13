@@ -9,7 +9,7 @@ Comments: This file contains only colors or images. All images referenced by the
 */
 
 body {
-background-color: #fff8f3; /* e5d7c3 ó e6e6e6 */
+background-color: #fff8f3; /* before e5d7c3 or e6e6e6 */
 }
 
 a {
@@ -22,6 +22,10 @@ color: #ff6400;
 
 a:active {
 color: #000;
+}
+
+a:visited {
+color: #551a8b;
 }
 
 #wrap {
