@@ -10,8 +10,6 @@ include('config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'geo.php');
 
-stats_increment('rss', true);
-
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 200) $rows = 50; //avoid abuses

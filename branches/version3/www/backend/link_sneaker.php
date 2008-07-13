@@ -10,9 +10,6 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'sneak.php');
 
-stats_increment('other');
-
-
 // The client requests version number
 if (!empty($_GET['getv'])) {
 	echo $sneak_version;

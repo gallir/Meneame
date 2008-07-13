@@ -10,7 +10,6 @@
 if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
-	stats_increment('ajax');
 }
 
 include_once('pager.php');

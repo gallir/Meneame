@@ -1,6 +1,5 @@
 <?php
 include_once('../config.php');
-stats_increment('image');
 
 $id = intval($_GET['id']);
 if (! $id > 0) die;

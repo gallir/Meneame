@@ -13,8 +13,6 @@ if (! defined('mnmpath')) {
 }
 include_once(mnminclude.'comment.php');
 
-stats_increment('ajax');
-
 if (!empty($_GET['id'])) {
 	if (!empty($_GET['link'])) {
 		$link = intval($_GET['link']);

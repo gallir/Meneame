@@ -1,8 +1,6 @@
 <?php
 include_once('../config.php');
 
-stats_increment('other');
-
 $id = intval($_GET['id']);
 if (! $id > 0) die;
 $size = intval($_GET['size']);

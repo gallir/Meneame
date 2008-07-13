@@ -3,8 +3,6 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'trackback.php');
 
-stats_increment('other');
-
 $remote = $_SERVER["REMOTE_ADDR"];
 $local_ips = gethostbynamel($_SERVER["SERVER_NAME"]);
 

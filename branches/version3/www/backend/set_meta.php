@@ -9,7 +9,6 @@
 include('../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
-stats_increment('ajax');
 
 $user = intval($_REQUEST['type']);
 if ($user != $current_user->user_id) {

@@ -2,8 +2,6 @@
 include_once('../config.php');
 include(mnminclude.'annotation.php');
 
-stats_increment('ajax');
-
 if (empty($current_user->user_login)) {
 	echo _('usuario no identificado');
 	die;

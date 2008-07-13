@@ -2,8 +2,6 @@
 include_once('../config.php');
 include_once(mnmpath.'/libs/avatars.php');
 
-stats_increment('image');
-
 if (!$_GET['id'] && !empty($_GET['user'])) {
 	$id = (int) $db->get_var("select user_id from users where user_login = '".$db->escape($_GET['user'])."'");
 } else {

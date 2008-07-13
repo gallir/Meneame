@@ -15,8 +15,6 @@ include_once('../config.php');
 include_once('pager.php');
 
 header('Content-Type: text/html; charset=utf-8');
-stats_increment('ajax');
-
 
 global $db, $globals;
 

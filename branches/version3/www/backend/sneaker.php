@@ -124,7 +124,6 @@ foreach ($events as $key => $val) {
 }
 echo "]);";
 if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
-stats_increment('sneaker');
 
 function check_chat() {
 	global $db, $current_user, $now, $globals, $events;

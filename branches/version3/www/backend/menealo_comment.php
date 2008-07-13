@@ -10,7 +10,6 @@ include('../config.php');
 include(mnminclude.'comment.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
-stats_increment('ajax');
 
 if(!($id=check_integer('id'))) {
 	error(_('Falta el ID del comentario'));
