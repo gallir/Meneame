@@ -376,7 +376,7 @@ function print_comment_form() {
 	echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	// Allow gods to put "admin" comments which does not allow votes
 	if ($current_user->user_level == 'god') {
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments-warning"><strong>'._('admin').'</strong></span><input name="type" type="checkbox" value="admin"/>'."\n";
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments-warning"><strong>'._('admin').' </strong></span><input name="type" type="checkbox" value="admin"/>'."\n";
 	}
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";

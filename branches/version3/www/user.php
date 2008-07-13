@@ -308,7 +308,7 @@ function do_history () {
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
-		echo '<div style="margin-left: 40px">';
+		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?sent_by='.$user->id.'" title="'._('obtener historial en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
@@ -348,7 +348,7 @@ function do_shaken () {
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
 	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
-		echo '<div style="margin-left: 40px">';
+		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?voted_by='.$user->id.'" title="'._('noticias votadas en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
@@ -372,8 +372,8 @@ function do_commented () {
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
-		echo '<div style="margin-left: 40px">';
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" style="margin-left: 40px"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
+		echo '<div style="margin-left: 0px">';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" style="margin-left: 0px"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach ($comments as $dbcomment) {
@@ -457,7 +457,7 @@ function do_voters_preferred() {
 function do_friends() {
 	global $db, $user, $globals;
 
-	echo '<div style="margin-left: 40px">';
+	echo '<div style="margin-left: 0px">';
 	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 	echo '</div>';
 
@@ -546,13 +546,13 @@ function print_categories_checkboxes($user) {
 		echo '<input '.$disabled.' name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
 		if ($empty) echo ' checked="true" ';
 		echo 'onchange="select_meta(this, '.$meta->category_id.')" ';
-		echo '/>';
+		echo '/> ';
 		echo $meta->category_name.'</dt>'."\n";
 		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
 		foreach ($categories as $category) {
 			echo '<dd><input '.$disabled.' name="categories[]" type="checkbox" ';
 			if ($empty || $selected[$category->category_id]) echo ' checked="true" ';
-			echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
+			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</dd>'."\n";
 		}
 		echo '</dl>'."\n";
 	}

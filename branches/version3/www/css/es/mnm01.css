@@ -74,7 +74,7 @@ padding-left: .56em;
 #headtools li.noborder {
 border-left: none;
 }
-
+	
 #headtools a {
 text-decoration: none;
 }
@@ -1536,7 +1536,7 @@ clear: left;
 float: left;
 width: 12em; /* increase for wider dt text */
 text-align: right;
-padding: 0 10px 4px 0;
+padding: 0 10px 4px 5px;
 }
 
 fieldset dd {
