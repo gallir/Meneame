@@ -80,7 +80,7 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('nótame') . ' || men&eacute;ame');
+do_header(_('nótame') . ' | men&eacute;ame');
 do_posts_tabs($tab_option, $user->username);
 
 /*** SIDEBAR ****/
