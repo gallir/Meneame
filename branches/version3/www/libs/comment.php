@@ -43,7 +43,7 @@ class Comment {
 		} else {
 			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
-			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 30);
+			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
 		}
 		$this->update_order();
 	}

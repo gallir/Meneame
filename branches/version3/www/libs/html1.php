@@ -497,7 +497,7 @@ function do_vertical_tags($what=false) {
 		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
 	}
 
-	if(memcache_mprint('tags'.$status.$meta_cond)) return;
+	if(memcache_mprint('tags_3_'.$status.$meta_cond)) return;
 
 	$min_pts = 8;
 	$max_pts = 20;
@@ -529,7 +529,7 @@ function do_vertical_tags($what=false) {
 		}
 		$output .= '</p></div>';
 		echo $output;
-		memcache_madd('tags'.$status.$meta_cond, $output, 600);
+		memcache_madd('tags_3_'.$status.$meta_cond, $output, 600);
 	}
 }
 

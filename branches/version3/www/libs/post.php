@@ -152,7 +152,7 @@ class Post {
 	}
 
 	function put_tooltips ($str) {
-		return preg_replace('/(^|\s*)@([^\s:,\)\?\!]+)/u', "$1<a class='tt' href='/".$globals['base_url']."backend/get_post_url.php?id=$2-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$2</a>", $str);
+		return preg_replace('/(^|\s)@([^\s:,\)\?\!]+)/u', "$1<a class='tt' href='/".$globals['base_url']."backend/get_post_url.php?id=$2-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$2</a>", $str);
 	}
 
 	function print_edit_form() {

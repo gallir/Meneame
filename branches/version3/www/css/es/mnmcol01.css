@@ -140,6 +140,12 @@ background: url('../../img/common/tab-wht-bg.png') no-repeat -29px 0;
 background: #fff;
 }
 
+.tabsub a:visited,
+.tabmain a:visited,
+.tabsub-shakeit a:visited {
+color: #ff6400;
+}
+
 /* Fin de los estilos nuevos */
 
 .catsub-block .thiscat a {
