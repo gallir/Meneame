@@ -143,7 +143,7 @@ class Post {
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < 3600 ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
-			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'"><img src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'"><img class="edit-icon" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		}
 
