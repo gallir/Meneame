@@ -960,11 +960,6 @@ overflow: hidden;
 font-weight: bold;
 }
 
-.comment-body img {
-vertical-align: bottom;
-border: 0px;
-}
-
 .comment-body .avatar {
 float: left;
 margin: 2px 10px 2px 0;
