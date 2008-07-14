@@ -148,8 +148,7 @@ function do_header($title, $id='home') {
 	}
 
 	if($current_user->authenticated) {
-		$hellokey = array_rand($hello, 1);
- 		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'.$hello[$hellokey].'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
+ 		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'.$hello[array_rand($hello, 1)].'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {
   		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
