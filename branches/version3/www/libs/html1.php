@@ -541,7 +541,7 @@ function do_best_comments() {
 
 	if(memcache_mprint('best_comments_3')) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours  (edit! 2zero)
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours 
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments,  comment_karma*(1-(unix_timestamp(now())-unix_timestamp(comment_date))*0.5/22000) as value from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
@@ -599,10 +599,10 @@ function do_best_stories() {
 	}
 	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hour  (edit! 2zero)
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours 
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.25/86400) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
+	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
 		foreach ($res as $link) {
 			$foo_link->uri = $link->link_uri;
