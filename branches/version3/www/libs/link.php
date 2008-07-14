@@ -493,7 +493,7 @@ class Link {
 					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="edit-icon" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 				}
 				if ($this->geo && $this->is_map_editable()) {
-					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img class="edit-icon" src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 				}
 			}
 			echo '</p>';
@@ -749,8 +749,9 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id && $this->status != 'published' && 
-			(($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
-					|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
+			(($this->author == $current_user->user_id && $this->status != 'abuse' 
+					&& $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
+			|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 				return true;
 			}
