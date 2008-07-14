@@ -284,10 +284,9 @@ th span.info_s {
 color: #a00;
 }
 
-/* ATENCION: dos colores de borde... */
 .warn {
 background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
-border-color: #FF9400;
+border-color: #FF6400;
 }
 
 .error {

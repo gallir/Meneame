@@ -174,7 +174,7 @@ font-size: small;
 overflow: hidden;
 }
 
-.edit-icon {
+.mini-icon-text {
 vertical-align: middle;
 }
 
@@ -630,7 +630,7 @@ text-align: right;
 position: relative;
 border: 1px solid;
 padding: 3px 10px 3px 30px ;
-margin-bottom: 5px;
+margin: 5px 0 5px 0;
 font-size: 85%;
 }
 

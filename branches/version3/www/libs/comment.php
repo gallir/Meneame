@@ -217,7 +217,7 @@ class Comment {
 
 		if (($this->author == $current_user->user_id &&
 			$globals['now'] - $this->date < $globals['comment_edit_time']) || $current_user->user_level == 'god') { // gods can always edit 
-			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="edit-icon" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
