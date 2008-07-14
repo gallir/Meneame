@@ -477,7 +477,7 @@ function print_categories_form($selected = 0) {
 		foreach ($categories as $category) {
 			echo '<dd><input name="category" type="radio" ';
 			if ($selected == $category->category_id) echo '  checked="true" ';
-			echo 'value="'.$category->category_id.'"/>'._($category->category_name).'</dd>'."\n";
+			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</dd>'."\n";
 		}
 		echo '</dl>'."\n";
 	}
