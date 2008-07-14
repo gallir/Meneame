@@ -76,9 +76,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals;
-	/* from http://es.wikihow.com/decir-hola-en-diferentes-idiomas  thanks! */
-	static $hello = array("bienvenid@","hola","kaixo","apa","com va","com vas","cómo andás","epa","aupa","ieup","gñap","aiya","hello","uep","hey","passa","hi","hunga hunga","salut","bonjour","hallo","guten tag","moin moin","Dobrý deň","helo","minjhani","kunjhani","ciao","hej","god dag","have a nice day","as-salaam-aleykum","marhabah","sabbah-el-khair","salaam or do-rood","namaste","ahn nyeong ha se yo","ahn nyeong","goedendag","priviet","zdravstvuyte","ni hao","nei ho","shalom","hei","oi","olá","hej","god dag","mingalarbar","merhaba","chao","kumusta ka","saluton","vanakkam","jambo","mbote","namaskar","dzień dobry","cześć","aloha","jo napot","szervusz","dobriy ranok","labdien","sveiki","chau","hyvää päivää","moi","hei","yia sou","yia sas","góðan dag","hæ","ellohay","namaskkaram","adaab","baagunnara","niltze","hao","bok","ya'at'eeh","merħba","mambo","salam aleikum","grüzi","haj","hallå","moïen","talofa","malo","malo e leilei","la orana","kia ora","buna ziua","kem che","namaskar","sawa dee krap/ka","kanien'kéha","kwe kwe","hola, ho","hâu","vary","Привет",'konnichiwa',"hello world","klaatu barada nikto","AAAAA");
+	global $current_user, $dblang, $globals, $greetings;
+
 
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
@@ -148,7 +147,8 @@ function do_header($title, $id='home') {
 	}
 
 	if($current_user->authenticated) {
- 		echo '<li><a href="'.get_user_uri($current_user->user_login).'">'.$hello[array_rand($hello, 1)].'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'" title="'._('perfil').'"/></a></li>' . "\n";
+    	$randhello = array_rand($greetings, 1);
+ 		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('Menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {
   		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
