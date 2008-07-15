@@ -503,7 +503,9 @@ font-weight: bold;
 }
 
 dl.categorylist dd {
-margin-left: 5px ;
+margin-left: 15px ;
+font-size: 100%;
+padding-bottom: 0;
 }
 
 .thumbnail {
