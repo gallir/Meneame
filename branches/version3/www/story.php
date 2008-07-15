@@ -371,12 +371,12 @@ function print_comment_form() {
 	echo '<fieldset>'."\n";
 	echo '<legend>'._('envía un comentario').'</legend>'."\n";
 	print_simpleformat_buttons('comment');
-	echo '<label for="comment">'. _('escribe el texto del comentario / no se admiten etiquetas HTML').'<br /><span class="comments-warning">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="8"></textarea></div>'."\n";
+	echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
+	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="12"></textarea></div>'."\n";
 	echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 	// Allow gods to put "admin" comments which does not allow votes
 	if ($current_user->user_level == 'god') {
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments-warning"><strong>'._('admin').' </strong></span><input name="type" type="checkbox" value="admin"/>'."\n";
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;<strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin"/>'."\n";
 	}
 	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";

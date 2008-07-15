@@ -48,7 +48,7 @@ function print_edit_form() {
 	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" method="post">'."\n";
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
-	echo '<div><textarea name="comment_content" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
+	echo '<div style="clear: right"><textarea name="comment_content" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
 	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
 	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";

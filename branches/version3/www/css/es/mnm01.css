@@ -893,7 +893,7 @@ text-decoration: none;
 
 .commentform textarea {
 display: block;
-width: 90%;
+width: 99%;
 margin: 0 0 10px 0;
 }
 
@@ -926,11 +926,6 @@ margin-top: 20px;
 
 .commentform.warn em {
 font-weight: bold;
-}
-
-.comments-warning {
-font-size: 100%;
-margin: 0;
 }
 
 .comments-list {
