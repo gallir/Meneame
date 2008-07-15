@@ -279,6 +279,11 @@ function do_profile() {
 			$addresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
 		}
 
+		if (! $addresses) {
+			// Use register IP
+			$addresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
+		}
+
 		// Not addresses to show
 		if (! $addresses) {
 			return;
