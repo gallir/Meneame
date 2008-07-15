@@ -148,16 +148,18 @@ color: #ff6400;
 
 /* Fin de los estilos nuevos */
 
+/*
 .catsub-block .thiscat a {
 color: #ff6400;
 }
+*/
 
 .catsub-block {
 border-color: #ff9400;
 }
 
 .catsub-block li a {
-color: #000;
+color: #5073c5;
 }
 
 #sidebar h4 {

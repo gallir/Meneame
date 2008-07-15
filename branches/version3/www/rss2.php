@@ -32,7 +32,7 @@ if(!empty($_REQUEST['time'])) {
 	if(!($time = check_integer('time')))
 		die;
 	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";	
-	if ($time < 0 || $time > 86400*5) $time = 86400;
+	if ($time < 0 || $time > 86400*5) $time = 86400*2;
 	$from = time()-$time;
 	$sql .= "link_date > FROM_UNIXTIME($from) AND ";
 	$sql .= "link_status = 'published' ORDER BY link_votes DESC LIMIT $rows";
@@ -141,10 +141,21 @@ if(!empty($_REQUEST['time'])) {
 	
 	
 	if($status == 'all' || $status == 'all_local') {
-		$from_where = "FROM links WHERE link_status in = 'queued' ";
+		$from_where = "FROM links WHERE link_status in  ('published', 'queued') AND link_date > date_sub(now(), interval 2 day) ";
 	} else {
-		$from_where = "FROM links WHERE link_status='$status' ";
+		$from_where = "FROM links WHERE link_status='$status' AND link_date > date_sub(now(), interval 2 day) ";
 	}
+
+	// Check if it's search
+	if($_REQUEST['q']) {
+		if($search) {
+			$from_where = "FROM links WHERE $search ";
+		} else {
+			$from_where .= "AND false"; // Force to return empty set
+		}
+		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
+	}
+	
 
 	if(($meta=check_integer('meta'))) {
 		$cat_list = meta_get_categories_list($meta);
@@ -165,15 +176,6 @@ if(!empty($_REQUEST['time'])) {
 		}
 	}
 	
-	if($_REQUEST['q']) {
-		if($search) {
-			$from_where .= "AND $search";
-		} else {
-			$from_where .= "AND false"; // Force to return empty set
-		}
-		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
-	}
-	
 	$order_by = " ORDER BY $order_field DESC ";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) links $from_where $order_by LIMIT 1");
 	if ($if_modified > 0) {
@@ -186,6 +188,8 @@ do_header($title);
 
 $link = new Link;
 $links = $db->get_col($sql);
+
+echo "<!-- $sql -->\n";
 if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;
