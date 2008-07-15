@@ -5,6 +5,7 @@
 	do_header(_('FAQ') . ' | men&eacute;ame');
 	$q = 1;
 ?>
+<div id="singlewrap">
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
 <div class="faq" style="margin: 0 30px 75px 150px;">
 <ol>
@@ -51,7 +52,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué tipos de historias hay que enviar?</h4>
-<p>Las que tú desees, pero sigue leyendo. Estarán sujetas a la revisión de los lectores que las votarán, o no. Aún así, el objetivo principal es que se traten de noticias y apuntes de blogs. Lo que <strong>no debes hacer es <em>autobombo</em> o <em>spam</em></strong>, es decir enviar demasiados enlaces con el objetivo de promocionar tu propio <em>blog</em> (o el de tus amigos), envía historias que puedan ser interesantes para muchos. Ya sabemos que si lo escribes es porque lo consideras relevante para ti, pero puede no serlo para la audiencia de menéame. Además, si todos hiciesen lo mismo, habría decenas de miles de noticias para votar, lo que haría imposible el funcionamiento de la idea. Usa el sentido común, intenta pasar un <em>cromo</em> interesante o que alegre a la gente. No mires sólo tu ombligo. Sólo usa el <strong>sentido común y un mínimo de espíritu colaborativo y respeto hacia los demás</strong>. Es muy recomendable leer la <a href="http://meneame.wikispaces.com/Meneatiqueta">"Meneatiqueta"</a> en el wiki, redactada y mejorada con el aporte de los usuarios.
+<p>Las que tú desees, pero sigue leyendo. Estarán sujetas a la revisión de los lectores que las votarán, o no. Aún así, el objetivo principal es que se traten de noticias y apuntes de blogs. Lo que <strong>no debes hacer es <em>spam</em></strong>, es decir enviar muchos enlaces de unas pocas fuentes. Intenta ser variado. Envía historias que puedan ser interesantes para muchos, intenta pasar un <em>cromo</em> interesante. No mires sólo tu ombligo, usa el <strong>sentido común y un mínimo de espíritu colaborativo y respeto hacia los demás</strong>. Es muy recomendable leer la <a href="http://meneame.wikispaces.com/Meneatiqueta">"Meneatiqueta"</a> en el wiki, redactada y mejorada con el aporte de los usuarios.
 </p>
 </li>
 
@@ -201,6 +202,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </ol>
 <p>Para más información, consulta al <a href="http://blog.meneame.net">blog</a> o al <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>
 
+</div>
 </div>
 <?
 
