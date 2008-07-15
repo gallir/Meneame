@@ -303,10 +303,18 @@ function do_rss() {
 		echo '</li>';
 	}
 
-	if(!empty($globals['category_name'])) {
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?status=all&amp;category='.$globals['category_id'].'" rel="rss">'._("categoría <em>").': '.$globals['category_name']."</em></a>\n";
-		echo '</li>';
+	// RSS related to a single link
+	if ($globals['link']) {
+		if(!empty($globals['link']->meta_name)) {
+			echo '<li>';
+			echo '<a href="'.$globals['base_url'].'rss2.php?meta='.$globals['link']->meta_id.'&amp;status=all" rel="rss">'._('temática').': <em>'.$globals['link']->meta_name."</em></a>\n";
+			echo '</li>';
+		}
+		if(!empty($globals['link']->category_name)) {
+			echo '<li>';
+			echo '<a href="'.$globals['base_url'].'rss2.php?category='.$globals['link']->category.'&amp;status=all" rel="rss">'._('categoría').': <em>'.$globals['link']->category_name."</em></a>\n";
+			echo '</li>';
+		}
 	}
 	echo '<li>';
 	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('publicadas').'</a>';

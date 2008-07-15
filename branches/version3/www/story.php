@@ -117,8 +117,6 @@ if ($_POST['process']=='newcomment') {
 // Set globals
 $globals['link'] = &$link;
 $globals['link_id'] = $link->id;
-$globals['category_id'] = $link->category;
-$globals['category_name'] = $link->category_name;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
 // to avoid search engines penalisation

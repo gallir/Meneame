@@ -189,7 +189,6 @@ do_header($title);
 $link = new Link;
 $links = $db->get_col($sql);
 
-echo "<!-- $sql -->\n";
 if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;

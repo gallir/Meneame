@@ -406,10 +406,11 @@ class Link {
 			$this->ip=$link->link_ip;
 			$this->content_type=$link->link_content_type;
 			if ($this->category > 0) {
-				$meta_info = $db->get_row("SELECT categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
+				$meta_info = $db->get_row("SELECT categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
 				$this->category_name=$meta_info->category_name;
 				$this->meta_name=$meta_info->meta_name;
 				$this->meta_uri=$meta_info->meta_uri;
+				$this->meta_id=$meta_info->meta_id;
 			}
 			$this->read = true;
 			return true;
