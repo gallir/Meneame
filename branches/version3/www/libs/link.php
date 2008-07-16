@@ -162,7 +162,7 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-9][^<]*>[^<]*<a|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-9][^<]*>[^<]*<a|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/(<* a|<* meta +http-equiv|<* script|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}
