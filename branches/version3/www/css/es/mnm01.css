@@ -293,16 +293,14 @@ text-decoration: none;
 text-decoration: none;
 }
 
-/*
 .tabsub li.tabsub-this {
 height: 23px;
 }
-*/
 
 .tabsub li.tabsub-this a {
 font-style: oblique;
 padding: 2px 8px 0 4px;
-/*height: 20px;*/
+height: 20px;
 }
 
 .thiscat a {
