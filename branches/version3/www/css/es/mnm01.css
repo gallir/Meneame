@@ -145,7 +145,6 @@ height: 92px;
 .banner-right { 
 width: 100%;
 height: 252px;
-/*margin: 0 auto;*/
 margin: 0 0 10px 0;
 }
 
@@ -227,7 +226,6 @@ font-weight: bold;
 .tabsub-shakeit {
 height: 25px !important;
 clear: both;
-/*padding: 5px 25px 0 180px;*/
 padding-left: 180px;
 font-size: 11pt;
 }
@@ -1094,18 +1092,6 @@ font-size: 125%;
 font-weight: normal;
 }
 
-/* generic form and wide page */
-
-/*
-#genericform-contents {
-margin: 0 60px 60px 100px;
-}
-
-#genericform-contents h2 {
-margin: 10px 0 0 0;
-}
-*/
-
 .genericform h2 {
 margin: 10px 0 10px 0;
 }
@@ -1124,25 +1110,6 @@ font-weight: bold;
 .genericform .sign, .genericform-contents legend {
 font-weight: bold;
 font-size: 110%;
-}
-
-/*
-.genericform .genericsubmit {
-border: 1px solid;
-font-weight: bold;
-}
-
-.genericform .genericsubmit:hover {
-font-weight: bold;
-}
-
-.genericform input {
-border: 1px solid;
-}
-*/
-
-.genericform .nobold {
-font-weight: normal;
 }
 
 .genericform .genericformtxt {
@@ -1472,7 +1439,6 @@ top:20%;
 margin-left:-300px;
 border:1px solid #FF6400;
 background: #FFEEC7;
-/*border-color: #e2d3b0;*/
 overflow: hidden;
 text-align: left;
 font-size: 10pt;

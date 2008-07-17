@@ -162,7 +162,7 @@ function do_recover() {
 		echo '<form action="login.php" id="thisform-recover" method="post">'."\n";
 		echo '<label for="name">'._('introduce nombre de usuario o email').':</label><br />'."\n";
 		echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.$username.'" />'."\n";
-		echo '<p class="nobold">'._('(recibirás un e-mail para cambiar la contraseña)').'</p>';
+		echo '<p>'._('(recibirás un e-mail para cambiar la contraseña)').'</p>';
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
 		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 		ts_print_form();
