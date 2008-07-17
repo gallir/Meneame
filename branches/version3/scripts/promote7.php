@@ -9,59 +9,20 @@ include_once(mnminclude.'annotation.php');
 header("Content-Type: text/html");
 echo '<html><head><title>promote7.php</title></head><body>';
 ob_end_flush();
-?>
-<style type="text/css">
-body {
-	font-family: Bitstream Vera Sans, Arial, Helvetica, sans-serif;
-	font-size: 80%;
-	margin: 0px;
-	padding: 20px;
-}
-table {
-	width: 90%;
-	font-size: 110%;
-	margin: 0px;
-	padding: 4px;
-}
-td {
-	margin: 0px;
-	padding: 4px;
-}
-.thead {
-	font-size: 115%;
-	text-transform: uppercase;
-	color: #FFFFFF;
-	background-color: #FF6600;
-	padding: 6px;
-}
-.tdata0 {
-	background-color: #FFF;
-}
-.tdata1 {
-	background-color: #FFF3E8;
-}
-.tnumber0 {
-	text-align: center;
-}
-.tnumber1 {
-	text-align: center;
-	background-color: #FFF3E8;
-}
-</style>
-<?
 
 $min_karma_coef = 0.86;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
+define (PUB_PERC, 0.9);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status !='discard'");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
 
-$pub_estimation = intval(max(min($links_queue * 0.10, PUB_MAX), PUB_MIN));
+$pub_estimation = intval(max(min($links_queue * PUB_PERC, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
@@ -248,8 +209,11 @@ if ($links) {
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->negatives < ($link->votes/10) && $now - $link->date < 7200 && $now - $link->date > 600) { 
+		if ($link->negatives < ($link->votes/20) && $now - $link->date < 7200 && $now - $link->date > 600) { 
 			$link->new_coef = 2 - ($now-$link->date)/7200;
+			// It applies the same meta coefficient to the bonus'
+			// Check 1 <= bonus <= 2
+			$link->new_coef = max(min($link->new_coef * $meta_coef[$dblink->parent], 2), 1);
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
