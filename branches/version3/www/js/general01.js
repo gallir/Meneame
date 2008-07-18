@@ -468,3 +468,19 @@ function reportAjaxStats(page) {
 		urchinTracker(page+'.ajax'); 
 	}
 }
+
+function bindToggleArrow(img_id, link_id, container_id) {
+	$(document).ready(function (){ 
+		$('#'+link_id).bind('click',
+			function() {
+				if ($('#'+img_id).attr("src") == arrow_right){
+					$('#'+img_id).attr("src", arrow_down);
+				}else{
+					$('#'+img_id).attr("src", arrow_right);
+				}
+				$('#'+container_id).slideToggle("fast");
+				return false;
+			}
+		);
+	});
+}

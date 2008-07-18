@@ -235,11 +235,16 @@ float:left;
 list-style-type: none;
 /* l & r margins */
 padding-left: 6px;
-margin-left: 6px;
+padding-right: 4px; /* in padding instead of margin for toggler */
+margin-left: 2px;
 border-left: 1px solid;
 /* t & b margins */
 height: 17px;
 margin-top: 4px;
+}
+
+.tabsub-shakeit li.tabsub-this {
+padding-right: 0px; /* 0 pixels for the toggler */
 }
 
 .tabsub-shakeit-icon {
@@ -1513,4 +1518,10 @@ font-weight: bold;
 .note {
 font-size: 85%;
 font-weight: normal;
+}
+
+.toggler img {
+border: none;
+margin: 0 0 0 6px;
+vertical-align: middle;
 }

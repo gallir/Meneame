@@ -85,15 +85,19 @@ do_footer();
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
+	$toggler = get_toggler_arrow('topcatlist', $_REQUEST['category']);
 	$active = array();
-	if ($option >= 0)
+	$toggle_active = array();
+	if ($option >= 0) {
 		$active[$option] = 'class="tabsub-this"';
+		$toggle_active[$option] = &$toggler;
+	}
 
 	echo '<ul class="tabsub-shakeit">'."\n";
 	if ($current_user->has_personal) {
-		echo '<li '.$active[7].'><a href="'.$globals['base_url'].'">'._('personal'). '</a></li>'."\n";
+		echo '<li '.$active[7].'><a href="'.$globals['base_url'].'">'._('personal'). '</a>'.$toggle_active[7].'</li>'."\n";
 	}
-	echo '<li '.$active[0].'><a href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a></li>'."\n";
+	echo '<li '.$active[0].'><a href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[0].'</li>'."\n";
 	// Do metacategories list
 	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
@@ -101,14 +105,16 @@ function print_index_tabs($option=-1) {
 			if ($meta->category_id == $globals['meta_current']) {
 				$active_meta = 'class="tabsub-this"';
 				$globals['meta_current_name'] = $meta->category_name;
+				$toggle = &$toggler;
 			} else {
 				$active_meta = '';
+				$toggle = '';
 			}
-			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a></li>'."\n";
+			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</li>'."\n";
 		}
 	}
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[1].'><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li '.$active[1].'>'.$toggle_active[1].'<a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
 	} else {
 		meta_teaser_item();
 	}
