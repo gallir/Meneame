@@ -205,7 +205,7 @@ function do_js_includes() {
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jquery.simplemodal.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general01.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general02.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";
 	if ($globals['extra_js_text']) {
@@ -371,7 +371,7 @@ function get_toggler_arrow($container_id, $enabled = false) {
 	}
 	echo "bindToggleArrow('toggle_i_$n', 'toggle_l_$n', '$container_id')";
 	echo "</script>\n";
-	return "<a class=\"toggler\" id=\"toggle_l_$n\" href=\"\"><img src=\"$image\" id=\"toggle_i_$n\" alt=\"\"/></a>";
+	return "<a class='toggler' id='toggle_l_$n' href=''><img src='$image' id='toggle_i_$n' alt='' width='12' height='12'/></a>";
 	$n++;
 }
 
