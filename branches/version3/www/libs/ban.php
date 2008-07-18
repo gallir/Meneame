@@ -25,7 +25,10 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 		case 'punished_hostname':
 			// Clean protocol and path/arguments
 			$ban_text = preg_replace('/^(https*|ftp):\/\//', '', $ban_text);
-			$ban_text = preg_replace('/(\/[^\/\?]+)[\/\?]+.*$/', '$1', $ban_text);
+			// Delete double "/" that can be used to cheat the control
+			$ban_text = preg_replace('/\/+/', '/', $ban_text);
+			// It leaves up to second level path
+			$ban_text = preg_replace('/(\/[^\/\?]+)(\/[^\/\?]+){0,1}[\/\?]+.*$/', '$1$2', $ban_text);
 			$ban_text = preg_replace('/\.*$/', '', $ban_text);
 			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z\.]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
 				$globals['ban_message'] = _('No es un dominio correcto');
@@ -63,13 +66,19 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 }
 
 function subdomains_list($domain_path, $first_level = false) {
-	// search also for the first part of the path
+	$paths = array();
+	// search for the first part of the path
 	if(preg_match('/^[^\/]+\/+([^\/\?]+)[\/\?]*/', $domain_path, $match) > 0) {
-		$path = $match[1];
+		$paths[0] = $match[1];
+		// search for the second part of the path
+		if($paths[0] && preg_match('/^[^\/]+\/+[^\/\?]+\/+([^\/\?]+)[\/\?]*/', $domain_path, $match) > 0) {
+			$paths[1] = $paths[0].'/'.$match[1];
+		}
 	}
+
 	$domain = preg_replace('/\/.*$/', '', $domain_path);
 	$list = "'$domain'";
-	if ($path) {
+	foreach ($paths as $path) {
 		$list .= ", '$domain/$path', '$domain/$path/'";
 	}
 	$array = explode('.', $domain);
@@ -81,8 +90,10 @@ function subdomains_list($domain_path, $first_level = false) {
 		$sub = array_slice($array, $i);
 		$sub = implode('.', $sub);
 		$list .= ", '$sub'";
-		if ($path && $i < $size-1 ) { // Add path only if there is at least a second level, avoid tk/path
-			$list .= ", '$sub/$path', '$sub/$path/'";
+		if ($i < $size-1 ) { // Add path only if there is at least a second level, avoid tk/path
+			foreach ($paths as $path) {
+				$list .= ", '$sub/$path', '$sub/$path/'";
+			}
 		}
 	}
 	return $list;
