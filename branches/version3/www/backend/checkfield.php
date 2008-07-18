@@ -51,8 +51,8 @@ switch ($type) {
 		}
 		require_once(mnminclude.'ban.php');
 
-		if(check_ban($name, 'hostname')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'hostname'))) {
+			echo $ban['comment'];
 			return;
 		}
 		echo "OK";
@@ -64,8 +64,8 @@ switch ($type) {
 		}
 		require_once(mnminclude.'ban.php');
 
-		if(check_ban($name, 'punished_hostname')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'punished_hostname'))) {
+			echo $ban['comment'];
 			return;
 		}
 
@@ -81,8 +81,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($name, 'email')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'email'))) {
+			echo $ban['comment'];
 			return;
 		}
 		echo "OK";
@@ -93,8 +93,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($name, 'ip')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'ip'))) {
+			echo $ban['comment'];
 			return;
 		}
 		echo "OK";
@@ -105,8 +105,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($name, 'proxy')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'proxy'))) {
+			echo $ban['comment'];
 			return;
 		}
 		echo "OK";
@@ -117,8 +117,8 @@ switch ($type) {
 			return;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($name, 'words')) {
-			echo $globals['ban_message'];
+		if(($ban = check_ban($name, 'words'))) {
+			echo $ban['comment'];
 			return;
 		}
 		echo "OK";

@@ -57,12 +57,13 @@ class Link {
 		if (!preg_match('/[a-z]+/', $url_components['host'])) return false;
 		$quoted_domain = preg_quote(get_server_name());
 		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
-			$globals['ban_message'] = _('el servidor es local');
+			$this->ban = array();
+			$this->ban['comment'] = _('el servidor es local');
 			syslog(LOG_NOTICE, "Meneame, server name is local name ($current_user->user_login): $url");
 			return false;
 		}
 		require_once(mnminclude.'ban.php');
-		if(check_ban($url, 'hostname', false, $first_level) || check_ban_list($url_components[host], $globals['forbiden_domains'])) {
+		if(($this->ban = check_ban($url, 'hostname', false, $first_level))) {
 			syslog(LOG_NOTICE, "Meneame, server name is banned ($current_user->user_login): $url");
 			$this->banned = true;
 			return false;
@@ -153,7 +154,8 @@ class Link {
 
 		// Check if the author doesn't want to share
 		if (preg_match('/<!-- *noshare *-->/', $this->html)) {
-			$globals['ban_message'] = _('el autor no desea que se envíe el artículo, respeta sus deseos');
+			$this->ban = array();
+			$this->ban['comment'] = _('el autor no desea que se envíe el artículo, respeta sus deseos');
 			syslog(LOG_NOTICE, "Meneame, noshare ($current_user->user_login): $url");
 			return false;
 		}

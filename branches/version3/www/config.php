@@ -113,16 +113,6 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 // Websnapr.com previews
 $globals['do_websnapr'] = false;
 
-// Forbidden email domains to avoid "clones" and  "too easy" impersoning
-// http://en.wikipedia.org/wiki/Disposable_e-mail_address
-// See http://c2.com/cgi/wiki?ThrowawayEmailAndRidYourselfOfSpam
-// Comment it out if you don't care
-$globals['forbidden_email_domains'] = 'foo.domain.foo another.foo.domain';
-
-// Anti spams
-// check http://meneame.net/story/aviso-spam-programado-contra-meneame
-$globals['forbiden_domains'] = 'foo.domain.foo another.foo.domain';
-
 // Put here the pathname of the file where you store your karma.log file
 $globals['karma_log'] = mnmpath . '/../../karma.log';
 

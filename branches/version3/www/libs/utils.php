@@ -104,23 +104,12 @@ function email_exists($email) {
 	return false;
 }
 
-function check_ban_list($what, $list) {
-	if (!empty($list)) { 
-		$domains = preg_split("/[\s,]+/", $list);
-		foreach ($domains as $domain) {
-			if (preg_match("/$domain$/i", $what))
-				return true;
-		}
-	}
-	return false;
-}
-
 function check_email($email) {
 	global $globals;
 	require_once(mnminclude.'ban.php');
 	if (! preg_match('/^[a-zA-Z0-9_\-\.]+(\+[a-zA-Z0-9_\-\.]+)*@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $email)) 
 		return false;
-	if(check_ban(preg_replace('/^.*@/', '', $email), 'email') || check_ban_list($email, $globals['forbidden_email_domains'])) return false;
+	if(check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
 	return true;
 }
 

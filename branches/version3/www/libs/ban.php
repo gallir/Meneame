@@ -8,7 +8,8 @@
 
 function check_ban_proxy() {
 	global $globals;
-	return check_ban($globals['user_ip'], 'proxy') || check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+	if (($ban = check_ban($globals['user_ip'], 'proxy'))) return $ban;
+	else return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
 }
 
 function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false) {
@@ -31,36 +32,38 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 			$ban_text = preg_replace('/(\/[^\/\?]+)(\/[^\/\?]+){0,1}[\/\?]+.*$/', '$1$2', $ban_text);
 			$ban_text = preg_replace('/\.*$/', '', $ban_text);
 			if ($check_valid  && ! preg_match('/^([\w_\-\.]+\.[\w]{2,4}(\/[a-z\.]+\/*){0,1}|[\w]{2,5})$/', $ban_text)) {
-				$globals['ban_message'] = _('No es un dominio correcto');
-				return true;
+				$ban = array();
+				$ban['match'] =  $ban_text;
+				$ban['comment'] = _('No es un dominio correcto');
+				return $ban;
 			}
-			$where= " ban_text IN (".subdomains_list($ban_text, $first_level).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); ";
+			$where= " ban_text IN (".subdomains_list($ban_text, $first_level).") AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()) ";
 			break;
 		case 'ip':
 		case 'proxy':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
 			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}\d{1,3}$/s', $ban_text)) {
-				$globals['ban_message'] =_('No es una IP válida');
-				return true;
+				$ban = array();
+				$ban['match'] =  $ban_text;
+				$ban['comment'] =_('No es una IP válida');
+				return $ban;
 			}
-			$where="ban_text='$ban_text' AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now()); "; 
+			$where="ban_text='$ban_text' AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now())"; 
 			break;
 		default:
 			return false;
 	}
 
-	$res=$db->get_results("SELECT ban_text, ban_comment FROM bans WHERE $where");
-	if ($res) {
-		$globals['ban_text'] = htmlentities($ban_text);
-		$globals['ban_message'] = '';
-		$globals['ban_match'] = '';
-		foreach ($res as $match) {
-			$globals['ban_match'] .= "$match->ban_text ";
-			$globals['ban_message'] .= "$match->ban_comment ";
-		}
+	$match=$db->get_row("SELECT ban_text, ban_comment, UNIX_TIMESTAMP(ban_date) as date, UNIX_TIMESTAMP(ban_expire) as expire FROM bans WHERE $where LIMIT 1");
+	if ($match) {
+		$ban = array();
+		$ban['date'] = $match->date;
+		$ban['expire'] = $match->expire;
+		$ban['text'] = htmlentities($ban_text);
 		// For security
-		$globals['ban_match'] = htmlentities(trim($globals['ban_match']));
-		return true;
+		$ban['match']  = htmlentities(trim($match->ban_text));
+		$ban['comment'] = $match->ban_comment;
+		return $ban;
 	}
 	return false;
 }

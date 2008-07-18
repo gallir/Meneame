@@ -161,8 +161,12 @@ function do_submit1() {
 
 
 	// Check for banned IPs
-	if(check_ban($globals['user_ip'], 'ip', true) || check_ban_proxy()) {
-		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].' ('. $globals['ban_message'].')</p>';
+	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
+		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].'</p>';
+		echo '<p><strong>'._('Razón').'</strong>: '.$ban['comment'].'</p>';
+		if ($ban['expire'] > 0) {
+			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
+		}
 		syslog(LOG_NOTICE, "Meneame, banned IP $globals[user_ip] ($current_user->user_login): $url");
 		print_empty_submit_form();
 		echo '</div>'. "\n";
@@ -258,15 +262,18 @@ function do_submit1() {
 
 	if(!$linkres->check_url($url, true, true) || !$linkres->get($url)) {
 		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong>: ';
-		if (!empty($globals['ban_match'])) {
-			echo $globals['ban_match'];
+		if ($linkres->ban && $linkres->ban['match']) {
+			echo $linkres->ban['match'];
 		} else {
 			echo $linkres->url;
 		}
 		echo '</p>';
-		echo '<p><strong>'._('Razón').':</strong> '. $globals['ban_message'].'</p>';
+		echo '<p><strong>'._('Razón').':</strong> '. $linkres->ban['comment'].'</p>';
+		if ($linkres->ban['expire'] > 0) {
+			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($linkres->ban['expire']).'</p>';
+		}
 		// If the domain is banned, decrease user's karma
-		if ($linkres->banned) {
+		if ($linkres->banned && $current_user->user_level == 'normal') {
 			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
 		}
 		print_empty_submit_form();
@@ -305,9 +312,12 @@ function do_submit1() {
 	$blog_url = $blog_url_components[host].$blog_url_components[path];
 	// Now we check again against the blog table
 	// it's done because there could be banned blogs like http://lacotelera.com/something
-	if(check_ban($blog->url, 'hostname', false, true)) {
+	if(($ban = check_ban($blog->url, 'hostname', false, true))) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('El sitio') . " $globals[ban_match] " . _('está deshabilitado'). ' ('. $globals['ban_message'].') </p>';
+		echo '<p>'._('El sitio').' '.$ban['match'].' '. _('está deshabilitado'). ' ('. $ban['comment'].') </p>';
+		if ($ban['expire'] > 0) {
+			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
+		}
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
 		print_empty_submit_form();
 		echo '</div>'. "\n";
@@ -484,8 +494,8 @@ function do_submit1() {
 		}
 	}
 
-	if(check_ban($linkres->url, 'punished_hostname', false, true)) {
-		echo '<p class="error"><strong>'._('Aviso').' '.$globals['ban_match']. ':</strong> <em>'.$globals['ban_message'].'</em></p>';
+	if(($ban = check_ban($linkres->url, 'punished_hostname', false, true))) {
+		echo '<p class="error"><strong>'._('Aviso').' '.$ban['match']. ':</strong> <em>'.$ban['comment'].'</em></p>';
 		echo '<p>'._('mejor enviar el enlace a la fuente original, sino será penalizado').'</p>';
 	}
 
