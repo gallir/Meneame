@@ -87,7 +87,7 @@ switch ($view) {
 
 do_header($login);
 
-echo '<div id="singlewrap" style="margin: 0 50px">'."\n";
+echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 
 $url_login = urlencode($login);
 switch ($view) {
