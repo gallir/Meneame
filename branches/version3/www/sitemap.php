@@ -67,10 +67,14 @@ function do_statics() {
 }
 
 function do_published($page) {
-	global $globals, $index_size;
+	global $globals, $index_size, $db;
 	$start = 1 + $page * $index_size;
+
+	// Force to open DB connection
+	$db->get_var("select count(*) from users");
+
 	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' order by link_date asc limit $start, $index_size";
-	$result = mysql_query($sql) or die('Query failed: ' . mysql_error());
+	$result = mysql_query($sql,  $db->dbh) or die('Query failed: ' . mysql_error());
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	while ($res = mysql_fetch_object($result)) {
     	echo '<url>'."\n";
