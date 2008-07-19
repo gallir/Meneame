@@ -449,13 +449,11 @@ class Link {
 		echo '<div class="news-summary">';
 		echo '<div class="news-body">';
 		if ($type != 'preview' && !empty($this->title) && !empty($this->content)) {
-			$this->print_shake_box($votes_enabled);
+			$this->print_shake_box();
 		}
 
 		$this->print_warn();
 
-		//if($globals['external_ads']) echo "<!-- google_ad_section_start -->\n";
-		
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
 		echo '<h1>';
@@ -573,7 +571,6 @@ class Link {
 		} else {
 			echo "<!--tags: $this->tags-->\n";
 		}
-		//if($globals['external_ads']) echo "<!-- google_ad_section_end -->\n";
 
 		echo '</div>'."\n";
 		echo '</div>'."\n";
@@ -634,7 +631,7 @@ class Link {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
 			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
 			echo "</div>\n";
-		} elseif ( !$this->is_discarded() &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		} elseif ( $this->votes_enabled  && !$this->is_discarded() &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {
@@ -649,7 +646,7 @@ class Link {
 				} else {
 					echo _('Esta noticia tiene varios votos negativos.');
 				}
-				if( $this->votes_enabled && !$this->voted ) {
+				if(!$this->voted ) {
 					echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
 				}
 			}
