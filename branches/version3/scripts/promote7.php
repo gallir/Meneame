@@ -68,7 +68,7 @@ else $max_to_publish = 1;
 $min_votes = 5;
 /////////////
 
-$limit_karma = round(min($past_karma,$min_karma) * 0.70);
+$limit_karma = round(min($past_karma,$min_karma) * 0.65);
 $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 
@@ -130,7 +130,7 @@ $best_link = 0;
 $best_karma = 0;
 $output .= "<table>\n";	
 if ($links) {
-	$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>bonus</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
+	$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>coef</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 	$i=0;
 	foreach($links as $dblink) {
 		$link = new Link;
@@ -179,54 +179,57 @@ if ($links) {
 		// Allowed difference up to 3%
 		$karma_pos_user = $karma_pos_user_high + (int) min($karma_pos_user_high * 1.07, $karma_pos_user_low);
 
+		// Small punishment for link having too many negatives
+		if (abs($karma_neg_user)/$karma_pos_user > 0.05) {
+			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.35); 
+			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
+		}
+	
 		// If the user was disabled don't count anon. votes due to abuses
 		if ($user->level != 'disabled') {
 			$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
+			// To void votes spamming
+			// Do not allow annonymous users to give more karma than registered users
+			// The ratio up to 10% anonymous
+			$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
+
 		} else {
 			$karma_pos_ano = 0;
 		}
 
-		$karma_new = $karma_pos_user + $karma_neg_user;
-
-		// Small punishment for link having too many negatives
-		$r = min(max(0,abs($karma_neg_user)/$karma_pos_user-0.05), 0.3); 
-		$karma_new = $karma_new * (1-$r);
-	
-		// To void votes spamming
-		// Do not allow annonymous users to give more karma than registered users
-		// The ratio up to 10% anonymous
-		if ($karma_new > 0) 
-			$karma_new += min($karma_pos_user_high*0.1, $karma_pos_ano);
-
-		$karma_new = (int) ($karma_new * $meta_coef[$dblink->parent]);
-
-
-		// Aged karma
-		$diff = max(0, $now - ($link->date + 8*3600)); // 8 hours without decreasing
-		$oldd = 1 - $diff/(3600*48);
-		$oldd = max(0.4, $oldd);
-		$oldd = min(1, $oldd);
-
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if ($link->negatives < ($link->votes/20) && $now - $link->date < 7200 && $now - $link->date > 600) { 
+		if (abs($karma_neg_user)/$karma_pos_user < 0.05 && $now - $link->date < 7200 && $now - $link->date > 600) { 
 			$link->new_coef = 2 - ($now-$link->date)/7200;
 			// It applies the same meta coefficient to the bonus'
 			// Check 1 <= bonus <= 2
-			$link->new_coef = max(min($link->new_coef * $meta_coef[$dblink->parent], 2), 1);
+			$link->new_coef = max(min($link->new_coef, 2), 1);
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
 			else
 				$karma_threshold = $min_karma;
-
 		} else {
 			// Otherwise use normal decayed min_karma
 			$karma_threshold = $min_karma;
-			$link->new_coef = 1;
+			// Aged karma
+			$diff = max(0, $now - ($link->date + 8*3600)); // 8 hours without decreasing
+			$oldd = 1 - $diff/(3600*48);
+			$oldd = max(0.4, $oldd);
+			$oldd = min(1, $oldd);
+			$link->new_coef = $oldd;
 		}
 
-		$dblink->karma =  $karma_new * $oldd * $link->new_coef;
+
+		// Applies also category coefficient
+		if ( $link->new_coef >= 1) {
+			$karma_new = ($karma_pos_user + $karma_neg_user + $karma_pos_ano) * $link->new_coef * $meta_coef[$dblink->parent];
+		} else {
+			// Negatives votes weights more for older news, so newers and "clean" are preferred
+			$karma_new = ($karma_pos_user+$karma_pos_ano)*$link->new_coef*$meta_coef[$dblink->parent] + $karma_neg_user/$link->new_coef;
+		}
+
+		$dblink->karma =  $karma_new;
 
 
 		$changes = 0;
