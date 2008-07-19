@@ -32,7 +32,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué es ese formulario <em>¿problemas?</em> que me aparece cuando voy a menear noticias pendientes?</h4>
-<p>Es un formulario para indicar que una noticia es duplicada, <em>spam</em>, provocación o simple basura. Dichos reportes son votos negativos a la noticia, no abuses de él. Los votos que reúnan un mínimo de votos contarios serán movidos a una cola diferente.</p>
+<p>Es un formulario para indicar que una noticia es duplicada, <em>spam</em>, provocación o errónea. Dichos reportes son votos negativos a la noticia, no abuses de él. Los envíos que reúnan muchos votos negativos serán movidos a la cola de descartadas.</p>
 </li>
 
 
