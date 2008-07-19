@@ -170,7 +170,7 @@ background: #feefe5;
 border-color: #ff6400;
 }
 
-#sidebar h4 a {
+#sidebar h4, #sidebar h4 a {
 color: #ff6400;
 }
 
@@ -193,11 +193,11 @@ background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
 border-color: #ff6400;
 }
 
-#sidepop h5 a {
+#sidepop h5 a, .storyrsslist li a, .vertical-box a, .topcommentsli a {
 color: #5073c5;
 }
 
-#sidepop h5 a:visited {
+#sidepop h5 a:visited, .topcommentsli a:visited {
 color: #551a8b;
 }
 
@@ -210,23 +210,10 @@ background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
 }
 
-.vertical-box a {
-color: #5073c5;
-}
-
 #sidebar .topcommentsli li, .storyrsslist li {
 border-color: #ff6400;
 color: #5073c5;
 }
-
-.topcommentsli a {
-color: #5073c5;
-}
-
-.topcommentsli a:visited {
-color: #5073c5;
-}
-
 
 #sidebar .storyrsslist li {
 background: url(../../img/common/feed-icon-12x12.png) no-repeat 0px 5px;
