@@ -92,7 +92,7 @@ background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
 }
 
 .tabmain li.tabmain-this a {
-background: #ffd9c0 url('../../img/common/reload-bt.gif') no-repeat right 6px;
+background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 .tabsub-shakeit {
@@ -746,7 +746,7 @@ background: #fff;
 }
 
 * html .tabmain li.tabmain-this a:hover {
-background: #ffd9c0 url('../../img/common/reload-bt.gif') no-repeat right 6px;
+background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 * html .tabsub li a:hover {
