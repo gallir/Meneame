@@ -350,17 +350,24 @@ function do_shaken () {
 	if ($globals['bot']) return;
 
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id and vote_value > 0");
-	$links = $db->get_col("SELECT link_id FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id  and vote_value > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
+	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id");
+	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?voted_by='.$user->id.'" title="'._('noticias votadas en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
-		foreach($links as $link_id) {
-			$link->id=$link_id;
+		foreach($links as $linkdb) {
+			$link->id=$linkdb->link_id;
 			$link->read();
-			$link->print_summary('short');
+			echo '<div style="max-width: 60em">';
+			$link->print_summary('short', 0, false);
+			if ($linkdb->vote_value < 0) {
+				echo '<div style="color: #f00; margin: -5px 0 0 86px; font-size: 120%"><strong>';
+				echo get_negative_vote($linkdb->vote_value);
+				echo "</strong></div>\n";
+			}
+			echo "</div>\n";
 		}
 		echo '<br/><span style="color: #FF6400;"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 	}

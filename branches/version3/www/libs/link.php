@@ -435,7 +435,7 @@ class Link {
 		return $found;
 	}
 
-	function print_summary($type='full', $karma_best_comment = 0) {
+	function print_summary($type='full', $karma_best_comment = 0, $show_tags = true) {
 		global $current_user, $current_user, $globals, $db;
 
 		if(!$this->read) return;
@@ -544,7 +544,7 @@ class Link {
 		// Displayed only in a story page
 		// and tags in sent/voted listing
 		if ($globals['link'] || $type == 'short') {
-			if (!empty($this->tags)) {
+			if ($show_tags && !empty($this->tags)) {
 				echo '<div class="news-details">';
 				echo '<strong>'._('etiquetas').'</strong>:';
 				$tags_array = explode(",", $this->tags);
