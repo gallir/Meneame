@@ -417,7 +417,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 			}
 			$i++;
 			echo '<a href="'.$base_url.'?category='.$category->category_id.$query.'">';
-			echo _($category->category_name);
+			echo '&nbsp;&nbsp;'._($category->category_name).'&nbsp;&nbsp;';
 			echo "</a></li>\n";
 		}
 	}

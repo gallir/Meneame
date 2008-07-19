@@ -9,7 +9,7 @@ Comments: This file contains only colors or images. All images referenced by the
 */
 
 body {
-background-color: #fff8f3; /* before e5d7c3 or e6e6e6 */
+background-color: #fff; /* before e5d7c3 or e6e6e6 or #fff8f3 */
 }
 
 a {
@@ -83,7 +83,7 @@ color: #ff6400;
 }
 
 .tabmain li a:hover {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabmain li.tabmain-this {
@@ -92,11 +92,11 @@ background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
 }
 
 .tabmain li.tabmain-this a {
-background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 .tabsub-shakeit {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabsub-shakeit li {
@@ -128,7 +128,7 @@ color: #ff6400;
 }
 
 .tabsub li a:hover {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabsub li.tabsub-this {
@@ -156,6 +156,8 @@ color: #ff6400;
 
 .catsub-block {
 border-color: #ff9400;
+background: #feefe5;
+color: #5073c5;
 }
 
 .catsub-block li a {
@@ -164,7 +166,7 @@ color: #5073c5;
 
 #sidebar h4 {
 margin-top: 30px;
-background: #ffd9c0;
+background: #feefe5;
 border-color: #ff6400;
 }
 
@@ -189,6 +191,14 @@ border-color: #ff6400;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
 border-color: #ff6400;
+}
+
+#sidepop h5 a {
+color: #5073c5;
+}
+
+#sidepop h5 a:visited {
+color: #551a8b;
 }
 
 .mnm-pop.queued {
@@ -728,7 +738,7 @@ background: #fff;
 }
 
 .button:disabled, button:disabled {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 #headtools input {
@@ -746,7 +756,7 @@ background: #fff;
 }
 
 * html .tabmain li.tabmain-this a:hover {
-background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 * html .tabsub li a:hover {

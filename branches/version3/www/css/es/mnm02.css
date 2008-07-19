@@ -311,9 +311,9 @@ font-weight: bold;
 }
 
 .catsub-block {
-border-bottom: 1px dotted;
-padding: 3px 25px;
-font-size: 8.5pt;
+/*border-bottom: 1px dotted;*/
+padding: 3px 25px 10px 25px;
+font-size: 10pt;
 }
 
 .catsub-block li {
@@ -351,6 +351,7 @@ border-bottom: 1px dotted;
 #sidepop h5 {
 margin: .3em 5px .6em 48px;
 font-size: .85em;
+font-weight: normal;
 }
 
 .mnm-pop {
