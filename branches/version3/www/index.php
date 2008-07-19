@@ -85,7 +85,7 @@ do_footer();
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
-	$toggler = get_toggler_arrow('topcatlist', $_REQUEST['category']);
+	$toggler = get_toggler_plusminus('topcatlist', $_REQUEST['category']);
 	$active = array();
 	$toggle_active = array();
 	if ($option >= 0) {

@@ -469,14 +469,14 @@ function reportAjaxStats(page) {
 	}
 }
 
-function bindToggleArrow(img_id, link_id, container_id) {
+function bindTogglePlusMinus(img_id, link_id, container_id) {
 	$(document).ready(function (){ 
 		$('#'+link_id).bind('click',
 			function() {
-				if ($('#'+img_id).attr("src") == arrow_right){
-					$('#'+img_id).attr("src", arrow_down);
+				if ($('#'+img_id).attr("src") == plus){
+					$('#'+img_id).attr("src", minus);
 				}else{
-					$('#'+img_id).attr("src", arrow_right);
+					$('#'+img_id).attr("src", plus);
 				}
 				$('#'+container_id).slideToggle("fast");
 				return false;

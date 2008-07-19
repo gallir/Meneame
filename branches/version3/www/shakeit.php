@@ -119,7 +119,7 @@ do_footer();
 function print_shakeit_tabs($option=-1) {
 	global $globals, $current_user, $db;
 
-	$toggler = get_toggler_arrow('topcatlist', $_REQUEST['category']);
+	$toggler = get_toggler_plusminus('topcatlist', $_REQUEST['category']);
 	$active = array();
 	$toggle_active = array();
 	if ($option > 0) {

@@ -354,22 +354,22 @@ function do_rss() {
 	echo '</ul>' . "\n";
 }
 
-function get_toggler_arrow($container_id, $enabled = false) {
+function get_toggler_plusminus($container_id, $enabled = false) {
 	global $globals;
 
 	static $n = 0;
 
 	if ($enabled) {
-		$image = $globals['base_url'].'img/common/arrow-down-01.png';
+		$image = $globals['base_url'].'img/common/minus-01.png';
 	} else {
-		$image = $globals['base_url'].'img/common/arrow-right-01.png';
+		$image = $globals['base_url'].'img/common/plus-01.png';
 	}
 	echo "<script type=\"text/javascript\">";
 	if ($n == 0) {
-		echo "var arrow_right = base_url + 'img/common/arrow-right-01.png';\n";
-		echo "var arrow_down = base_url + 'img/common/arrow-down-01.png';\n";
+		echo "var plus = base_url + 'img/common/plus-01.png';\n";
+		echo "var minus = base_url + 'img/common/minus-01.png';\n";
 	}
-	echo "bindToggleArrow('toggle_i_$n', 'toggle_l_$n', '$container_id')";
+	echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
 	echo "</script>\n";
 	return "<a class='toggler' id='toggle_l_$n' href=''><img src='$image' id='toggle_i_$n' alt='' width='12' height='12'/></a>";
 	$n++;
