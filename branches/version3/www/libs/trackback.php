@@ -75,8 +75,7 @@ class Trackback {
 // Send a Trackback
 	function send($link) {
 
-        if (empty($this->url))
-                return;
+		if (empty($this->url)) return;
 
 		$this->title = clean_input_url($link->url);
 
@@ -146,6 +145,21 @@ class Trackback {
 
 	function abuse() {
 		global $globals, $db;
+       		$trackback_url = parse_url($this->url);
+		$host = $trackback_url['host'];
+
+		if ($host == get_server_name()) return false;
+
+		if ($this->url && $this->link_id && $this->type == 'in') {
+			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_type='in' and trackback_link_id = $this->link_id and trackback_url like '%://$host/%");
+			if ($tbs > 0) {
+				syslog(LOG_NOTICE, "Meneame: too many trackbacks/pingbacks from $host ($this->url)");
+				$this->status = 'error';
+				$this->store();
+				return true;
+			}
+		}
+
 		if ($globals['user_ip'] !=  $_SERVER["SERVER_ADDR"]) {
 			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_date > date_sub(now(), interval 120 minute) and trackback_type='in' and trackback_ip_int = $globals[user_ip_int]");
 			if ($tbs > 2) {
