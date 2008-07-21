@@ -413,12 +413,12 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 			echo '<li'.$thiscat.'>';
 			if ($i > 0) {
-				echo '&bull; '; 
+				echo '&bull;&nbsp;&nbsp;'; 
 			}
 			$i++;
-			echo '&nbsp;&nbsp;<a href="'.$base_url.'?category='.$category->category_id.$query.'">';
+			echo '<a href="'.$base_url.'?category='.$category->category_id.$query.'">';
 			echo _($category->category_name);
-			echo "</a>&nbsp;&nbsp;</li>\n";
+			echo "</a></li>\n";
 		}
 	}
 

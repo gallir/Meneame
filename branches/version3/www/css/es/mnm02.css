@@ -318,6 +318,7 @@ font-size: 10pt;
 
 .catsub-block li {
 display: inline;
+margin-right: 0.4em;
 list-style-type: none;
 }
 
