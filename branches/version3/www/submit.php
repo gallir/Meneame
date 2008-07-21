@@ -467,23 +467,22 @@ function do_submit1() {
 
 
 
-	$links_12hs = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard')");
+	$links_12hs = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour)");
 
 	// check there is no an "overflow" from the same site
-	if ($current_user->user_karma < 18) {
-		$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_blog=$linkres->blog"));
-		if ($site_links > 5 && $site_links > $links_12hs * 0.04) { // Only 4% from the same site
-			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
-			echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
-			echo '<p class="error-text">'._('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
-		}
+	$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_blog=$linkres->blog"));
+	if ($site_links > 5 && $site_links > $links_12hs * 0.04) { // Only 4% from the same site
+		syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
+		echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
+		echo '<p class="error-text">'._('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
+		echo '<br style="clear: both;" />' . "\n";
+		echo '</div>'. "\n";
+		return;
 	}
+
 	// check there is no an "overflow" of images
 	if ($linkres->content_type == 'image' || $linkres->content_type == 'video') {
-		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_status in ('published', 'queued', 'discard') and link_content_type in ('image', 'video')"));
+		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video')"));
 		if ($image_links > 5 && $image_links > $links_12hs * 0.08) { // Only 8% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor').'</strong></p> ';
