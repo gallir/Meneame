@@ -67,9 +67,9 @@ if ($votes_freq > $freq) {
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
-		warn(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
+		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else  {
-		warn(_('¡tranquilo cowboy!'));
+		error(_('¡tranquilo cowboy!'));
 	}
 }
 
@@ -91,20 +91,22 @@ if (!$vote->insert()) {
 
 $votes_info->post_votes++;
 $votes_info->post_karma += $vote->value;
-if ($vote->value > 0) $image = $globals['base_url'].'img/common/vote-up-gy01.png';
-else $image = $globals['base_url'].'img/common/vote-down-gy01.png';
+if ($vote->value > 0) $dict['image'] = $globals['base_url'].'img/common/vote-up-gy01.png';
+else $dict['image'] = $globals['base_url'].'img/common/vote-down-gy01.png';
 
-echo "$votes_info->post_votes,$votes_info->post_karma,$image";
+$dict['id'] = $id;
+$dict['votes'] = $votes_info->post_votes;
+$dict['value'] = $vote->value;
+$dict['karma'] = $votes_info->post_karma;
+
+echo json_encode_single($dict);
 
 $db->query("update posts set post_votes=post_votes+1, post_karma=post_karma+$vote->value, post_date=post_date where post_id=$id and post_user_id != $current_user->user_id");
 
 function error($mess) {
-	echo "ERROR: $mess";
+	$dict['error'] = $mess;
+	echo json_encode_single($dict);
 	die;
 }
 
-function warn($mess) {
-	echo "WARN: $mess";
-	die;
-}
 ?>

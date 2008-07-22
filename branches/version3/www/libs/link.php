@@ -42,6 +42,17 @@ class Link {
 	var $voted = false;
 	var $banned = false;
 
+	function json_votes_info($value=false) {
+		$dict = array();
+		$dict['id'] = $this->id;
+		if ($value) $dict['value'] = $value;
+		$dict['votes'] = $this->votes;
+		$dict['anonymous'] = $this->anonymous;
+		$dict['negatives'] = $this->negatives;
+		$dict['karma'] = intval($this->karma);
+		return json_encode_single($dict);
+	}
+
 	function print_html() {
 		echo "Valid: " . $this->valid . "<br>\n";
 		echo "Url: " . $this->url . "<br>\n";
@@ -564,8 +575,8 @@ class Link {
 			if ($type != 'short') {
 				echo '<div class="news-details">';
 				echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
-				echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
-				echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
+				echo '<strong>'._('usuarios').'</strong>: <span id="a-usu-'.$this->id.'">'.$this->votes.'</span>&nbsp;&nbsp;';
+				echo '<strong>'._('anónimos').'</strong>: <span id="a-ano-'.$this->id.'">'.$this->anonymous.'</span>&nbsp;&nbsp;';
 				echo '</div>' . "\n";
 			}
 		} else {

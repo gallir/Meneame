@@ -72,11 +72,12 @@ if (!$link->insert_vote($current_user->user_id, $value)) {
 	error(_('ya ha votado antes'));
 }
 
-echo "$link->id~".($link->votes+$link->anonymous)."~$link->negatives~".intval($link->karma)."~".intval($value);
+echo $link->json_votes_info(intval($value));
 
 
 function error($mess) {
-	echo "ERROR:$mess";
+	$dict['error'] = $mess;
+	echo json_encode_single($dict);
 	die;
 }
 ?>

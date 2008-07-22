@@ -98,15 +98,21 @@ if (!$vote->insert()) {
 
 $votes_info->comment_votes++;
 $votes_info->comment_karma += $vote->value;
-if ($vote->value > 0) $image = $globals['base_url'].'img/common/vote-up-gy01.png';
-else $image = $globals['base_url'].'img/common/vote-down-gy01.png';
+if ($vote->value > 0) $dict['image'] = $globals['base_url'].'img/common/vote-up-gy01.png';
+else $dict['image'] = $globals['base_url'].'img/common/vote-down-gy01.png';
 
-echo "$votes_info->comment_votes,$votes_info->comment_karma,$image";
+$dict['id'] = $id;
+$dict['votes'] = $votes_info->comment_votes;
+$dict['value'] = $vote->value;
+$dict['karma'] = $votes_info->comment_karma;
+
+echo json_encode_single($dict);
 
 $db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$vote->value, comment_date=comment_date where comment_id=$id and comment_user_id != $current_user->user_id");
 
 function error($mess) {
-	echo "ERROR: $mess";
+	$dict['error'] = $mess;
+	echo json_encode_single($dict);
 	die;
 }
 

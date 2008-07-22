@@ -85,11 +85,11 @@ if ($votes_freq > $freq) {
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
-		warn(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
+		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->append(_('Voto cowboy').": -0.2, karma: $user->karma\n");
 	} else  {
-		warn(_('¡tranquilo cowboy!'));
+		error(_('¡tranquilo cowboy!'));
 	}
 }
 
@@ -111,15 +111,11 @@ if ($link->status == 'discard' && $current_user->user_id>0 && $link->votes > $li
 	$link->store_basic();
 }
 	
-echo "$link->id~".($link->votes+$link->anonymous)."~$link->negatives~".intval($link->karma)."~".intval($value);
+echo $link->json_votes_info(intval($value));
 
 function error($mess) {
-	echo "ERROR: $mess";
-	die;
-}
-
-function warn($mess) {
-	echo "WARN: $mess";
+	$dict['error'] = $mess;
+	echo json_encode_single($dict);
 	die;
 }
 ?>
