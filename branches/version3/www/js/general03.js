@@ -2,7 +2,6 @@
 VOTES FUNCTIONS
 BASIC FUNCTIONS
 ************************************/
-var update_voters = false;
 
 function menealo(user, id, htmlid, md5)
 {
@@ -147,12 +146,6 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 		}
 	);
 	return false;
-}
-
-function updateVoters(id) {
-	if (update_voters) {
-		get_votes('meneos.php', 'voters', 'voters-container',1, id);
-	}
 }
 
 // Get voters by Beldar <beldar.cat at gmail dot com>

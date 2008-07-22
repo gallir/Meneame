@@ -51,7 +51,13 @@ function received_data(data) {
 	}
 	eval (data);
 	if (link_votes_0 != link_votes || link_negatives_0 != link_negatives || link_karma_0 != link_karma) {
-		updateLinkValues (link_id, link_votes, link_negatives, link_karma, 0);
+		if ($('#a-votes-' + link_id).html() != link_votes) {
+			$('#a-votes-' + link_id).hide();
+			$('#a-votes-' + link_id).html(link_votes+"");
+			$('#a-votes-' + link_id).fadeIn('slow');
+		}
+		$('#a-neg-' + link_id).html(link_negatives+"");
+		$('#a-karma-' + link_id).html(link_karma+"");
 		link_votes_0 = link_votes;
 		link_negatives_0 = link_negatives;
 		link_karma_0 = link_karma;
