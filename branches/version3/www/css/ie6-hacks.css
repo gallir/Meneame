@@ -34,3 +34,10 @@ background: #ffd9c0 url('../img/common/reload-bt.png') no-repeat right 6px;
 text-decoration: underline;
 background: #fff;
 }
+
+#modalContainer {
+top: expression((document.documentElement.scrollTop
+	|| document.body.scrollTop) + Math.round(15 *
+	(document.documentElement.offsetHeight
+	|| document.body.clientHeight) / 100) + 'px');
+}
