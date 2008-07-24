@@ -71,7 +71,7 @@ function parseLinkAnswer (id, link)
 	$('#problem-' + id).hide();
 	if (link.error || id != link.id) {
 		disable_vote_link(id, "grr...", '#FFCBAA');
-		alert("Error: "+data.error);
+		alert("Error: "+link.error);
 		return false;
 	}
 	votes = parseInt(link.votes)+parseInt(link.anonymous);

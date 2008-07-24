@@ -20,7 +20,7 @@ if(empty($_REQUEST['user'])) {
 }
 
 if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto'). $current_user->user_id . '-'. htmlspecialchars($_REQUEST['user']));
+	error(_('Usuario incorrecto'));
 }
 
 if (empty($_REQUEST['value']) || ! is_numeric($_REQUEST['value'])) {
@@ -72,9 +72,9 @@ if ($votes_freq > $freq) {
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
-		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->append(_('Voto cowboy a comentarios').": -0.2, karma: $user->karma\n");
+		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else  {
 		error(_('¡tranquilo cowboy!'));
 	}

@@ -48,10 +48,10 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 		if ($link->anonymous >  $link->votes * $anon_to_user_votes) {
 			// start anti spam measure: assing 1 to previous anonnymous votes
 			$db->query("update votes set vote_value = 1 where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and date_sub(now(), interval 30 minute) and vote_value > 0");
-			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 			if ($link->status != 'published') {
 				syslog(LOG_NOTICE, "Meneame, too many anonymous votes ($globals[user_ip]) $link->uri");
 			}
+			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 		}
 	}
 }
@@ -85,9 +85,9 @@ if ($votes_freq > $freq) {
     	$user->read();
     	$user->karma = $user->karma - 0.2;
 		$user->store();
-		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->append(_('Voto cowboy').": -0.2, karma: $user->karma\n");
+		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else  {
 		error(_('¡tranquilo cowboy!'));
 	}
