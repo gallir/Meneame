@@ -46,11 +46,6 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 		// Check that there are not too much annonymous votes
 		if ($link->status == 'published') $anon_to_user_votes = max(3, $anon_to_user_votes); // Allow more ano votes if published. 
 		if ($link->anonymous >  $link->votes * $anon_to_user_votes) {
-			// start anti spam measure: assing 1 to previous anonnymous votes
-			$db->query("update votes set vote_value = 1 where vote_type = 'links' and vote_link_id = $id and vote_user_id = 0 and date_sub(now(), interval 30 minute) and vote_value > 0");
-			if ($link->status != 'published') {
-				syslog(LOG_NOTICE, "Meneame, too many anonymous votes ($globals[user_ip]) $link->uri");
-			}
 			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 		}
 	}

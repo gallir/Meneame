@@ -145,13 +145,14 @@ class Trackback {
 
 	function abuse() {
 		global $globals, $db;
-       		$trackback_url = parse_url($this->url);
+
+		$trackback_url = parse_url($this->url);
 		$host = $trackback_url['host'];
 
 		if ($host == get_server_name()) return false;
 
-		if ($this->url && $this->link_id && $this->type == 'in') {
-			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_type='in' and trackback_link_id = $this->link_id and trackback_url like '%://$host/%");
+		if ($host && $this->link_id && $this->type == 'in') {
+			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_type='in' and trackback_link_id = $this->link_id and trackback_url like '%://$host/%'");
 			if ($tbs > 0) {
 				syslog(LOG_NOTICE, "Meneame: too many trackbacks/pingbacks from $host ($this->url)");
 				$this->status = 'error';
