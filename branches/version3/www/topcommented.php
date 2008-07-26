@@ -52,8 +52,8 @@ echo '<div class="topheading"><h2>'._('noticias más comentadas').'</h2></div>';
 $link = new Link;
 
 // Use memcache if available
-if ($globals['memcache_host'] && $current_page < 4) {
-	$memcache_key = 'topcommented_'.$from.'_'.$current_page;
+if ($globals['memcache_host'] && get_current_page() < 4) {
+	$memcache_key = 'topcommented_'.$from.'_'.get_current_page();
 }
 
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
