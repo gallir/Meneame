@@ -311,7 +311,7 @@ font-weight: bold;
 }
 
 .catsub-block {
-/*border-bottom: 1px dotted;*/
+*border-bottom: 1px dotted;
 padding: 3px 25px 10px 25px;
 font-size: 10pt;
 }

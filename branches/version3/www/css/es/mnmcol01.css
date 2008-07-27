@@ -33,11 +33,11 @@ background-color: #fff;
 }
 
 #header {
-background: #ffd9c0 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
+background: #feefe5 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
 }
 
 #logo {
-background: #ffb280 url('../../img/mnm/logobg.png') no-repeat left top;
+background: #ff6400 url('../../img/mnm/logobg.png') no-repeat left top;
 }
 
 #headtools a {
@@ -72,9 +72,9 @@ border-color: #ff6400;
 background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
 }
 
-.tabmain li:hover {
+/*.tabmain li:hover {
 background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
-}
+}*/
 
 .tabmain li a {
 background: #fff;
@@ -83,7 +83,7 @@ color: #ff6400;
 }
 
 .tabmain li a:hover {
-background: #feefe5;
+background: #fff;
 }
 
 .tabmain li.tabmain-this {
@@ -92,11 +92,11 @@ background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
 }
 
 .tabmain li.tabmain-this a {
-background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #fff url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 .tabsub-shakeit {
-background: #feefe5;
+background: #fff;
 }
 
 .tabsub-shakeit li {
@@ -128,7 +128,7 @@ color: #ff6400;
 }
 
 .tabsub li a:hover {
-background: #feefe5;
+background: #fff;
 }
 
 .tabsub li.tabsub-this {
@@ -156,7 +156,7 @@ color: #ff6400;
 
 .catsub-block {
 border-color: #ff9400;
-background: #feefe5;
+background: #fff;
 color: #5073c5;
 }
 
