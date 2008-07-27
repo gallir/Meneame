@@ -63,7 +63,7 @@ function do_footer_help() {
 	if (! $globals['is_meneame']) return;
 	echo '<h5>ayuda</h5>'."\n";
 	echo '<ul id="helplist">'."\n";
-	echo '<li><a href="faq-es.php">'._('faq').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'faq-es.php">'._('faq').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._('ayuda').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/">'._('wiki').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('avisar errores').'</a></li>'."\n";
