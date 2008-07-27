@@ -42,7 +42,7 @@ $diff = $now - $last_published;
 $decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
 $decay = max($min_karma_coef, $decay);
 
-if ($diff > $interval * 2.5) {
+if ($diff > $interval * 3) {
 	$must_publish = true;
 	$output .= "Delayed! <br/>";
 }
@@ -225,8 +225,8 @@ if ($links) {
 		if ( $link->new_coef >= 1) {
 			$karma_new = ($karma_pos_user + $karma_neg_user + $karma_pos_ano) * $link->new_coef * $meta_coef[$dblink->parent];
 		} else {
-			// Negatives votes weights more for older news, so newers and "clean" are preferred
-			$karma_new = ($karma_pos_user+$karma_pos_ano)*$link->new_coef*$meta_coef[$dblink->parent] + $karma_neg_user/$link->new_coef;
+			// Decay is not applied to negatives votes, so newers and "clean" are preferred
+			$karma_new = $meta_coef[$dblink->parent] * (($karma_pos_user+$karma_pos_ano)*$link->new_coef + $karma_neg_user);
 		}
 
 		$dblink->karma =  $karma_new;
