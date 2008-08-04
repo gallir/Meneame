@@ -97,6 +97,7 @@ function do_edit() {
 		} elseif ($linkres->is_discarded()) {
 			if($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
 				echo '<option value="queued">'.$linkres->get_status_text('queued').'</option>';
+				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
 			}
 		} else {
 			if($current_user->user_level == 'god') {
