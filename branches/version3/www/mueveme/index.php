@@ -39,7 +39,7 @@ if ($links) {
 		$title_short = wordwrap($link->title, 36, " ", 1);
 		echo '<li><a href="'.htmlspecialchars($link->url).'">'.$title_short.'</a> ';
 		echo "<em>[$link->votes ". _('meneos').", $link->comments " . _('comentarios') ."]</em>. ";
-		echo '<span class="text">'.text_to_html($link->content).'</span>';
+		echo '<div class="text">'.text_to_html($link->content).'</div>';
 		echo '&nbsp;&#187;&nbsp;<a href="http://meneame.net'.$link->get_relative_permalink().'"><em>'._('en menéame').'</em></a>';
 		echo "</li>\n";
 	}
