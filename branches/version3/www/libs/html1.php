@@ -19,7 +19,10 @@ if (!empty($globals['lounge'])) {
 
 $globals['start_time'] = microtime(true);
 
-header("Content-type: text/html; charset=utf-8");
+header('Content-type: text/html; charset=utf-8');
+if ($current_user->user_id) {
+	header('Cache-Control: private');
+}
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -572,10 +575,10 @@ function do_best_comments() {
 
 	if(memcache_mprint('best_comments_3')) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 22000); // about 6 hours 
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 43000); // about 12 hours 
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments,  comment_karma*(1-(unix_timestamp(now())-unix_timestamp(comment_date))*0.5/22000) as value from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
+	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments,  comment_karma*(1-(unix_timestamp(now())-unix_timestamp(comment_date))*0.7/43000) as value from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
 	if ($res) {
 		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
