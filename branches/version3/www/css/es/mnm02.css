@@ -311,14 +311,13 @@ font-weight: bold;
 }
 
 .catsub-block {
-*border-bottom: 1px dotted;
-padding: 3px 25px 10px 25px;
-font-size: 10pt;
+border-bottom: 1px dotted;
+padding: 3px 25px;
+font-size: 8.5pt;
 }
 
 .catsub-block li {
 display: inline;
-margin-right: 0.4em;
 list-style-type: none;
 }
 
@@ -332,9 +331,10 @@ text-decoration: underline;
 
 #sidebar h4 {
 text-align: center;
+border-bottom: 1px dotted;
 font-weight: bold;
 font-size: .9em;
-padding: .25em 0 0.30em 0;
+padding: .25em 0 0.15em 0;
 margin: .75em 0 0 0;
 }
 
@@ -351,7 +351,6 @@ border-bottom: 1px dotted;
 #sidepop h5 {
 margin: .3em 5px .6em 48px;
 font-size: .85em;
-font-weight: normal;
 }
 
 .mnm-pop {

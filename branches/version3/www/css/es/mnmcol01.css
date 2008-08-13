@@ -9,7 +9,7 @@ Comments: This file contains only colors or images. All images referenced by the
 */
 
 body {
-background-color: #fff; /* before e5d7c3 or e6e6e6 or #fff8f3 */
+background-color: #fff8f3; /* before e5d7c3 or e6e6e6 */
 }
 
 a {
@@ -33,11 +33,11 @@ background-color: #fff;
 }
 
 #header {
-background: #feefe5 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
+background: #ffd9c0 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
 }
 
 #logo {
-background: #ff6400 url('../../img/mnm/logobg.png') no-repeat left top;
+background: #ffb280 url('../../img/mnm/logobg.png') no-repeat left top;
 }
 
 #headtools a {
@@ -72,9 +72,9 @@ border-color: #ff6400;
 background: url('../../img/common/tab-wht-bg.png') no-repeat -28px 0;
 }
 
-/*.tabmain li:hover {
+.tabmain li:hover {
 background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
-}*/
+}
 
 .tabmain li a {
 background: #fff;
@@ -83,7 +83,7 @@ color: #ff6400;
 }
 
 .tabmain li a:hover {
-background: #fff;
+background: #ffd9c0;
 }
 
 .tabmain li.tabmain-this {
@@ -92,11 +92,11 @@ background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
 }
 
 .tabmain li.tabmain-this a {
-background: #fff url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 .tabsub-shakeit {
-background: #fff;
+background: #ffd9c0;
 }
 
 .tabsub-shakeit li {
@@ -128,7 +128,7 @@ color: #ff6400;
 }
 
 .tabsub li a:hover {
-background: #fff;
+background: #ffd9c0;
 }
 
 .tabsub li.tabsub-this {
@@ -156,8 +156,6 @@ color: #ff6400;
 
 .catsub-block {
 border-color: #ff9400;
-background: #fff;
-color: #5073c5;
 }
 
 .catsub-block li a {
@@ -166,12 +164,12 @@ color: #5073c5;
 
 #sidebar h4 {
 margin-top: 30px;
-background: #feefe5;
+background: #ffd9c0;
 border-color: #ff6400;
 }
 
-#sidebar h4, #sidebar h4 a {
-color: #ff6400;
+#sidebar h4 a {
+color: #000;
 }
 
 #sidebar .vertical-box h4 {
@@ -193,14 +191,6 @@ background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
 border-color: #ff6400;
 }
 
-#sidepop h5 a, .storyrsslist li a, .vertical-box a, .topcommentsli a {
-color: #5073c5;
-}
-
-#sidepop h5 a:visited, .topcommentsli a:visited {
-color: #551a8b;
-}
-
 .mnm-pop.queued {
 color: #ff6400;
 background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
@@ -210,9 +200,13 @@ background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
 }
 
+.vertical-box a {
+color: #5073c5;
+}
+
 #sidebar .topcommentsli li, .storyrsslist li {
 border-color: #ff6400;
-color: #5073c5;
+color: #03a;
 }
 
 #sidebar .storyrsslist li {
@@ -734,7 +728,7 @@ background: #fff;
 }
 
 .button:disabled, button:disabled {
-background: #feefe5;
+background: #ffd9c0;
 }
 
 #headtools input {
@@ -752,7 +746,7 @@ background: #fff;
 }
 
 * html .tabmain li.tabmain-this a:hover {
-background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 * html .tabsub li a:hover {
