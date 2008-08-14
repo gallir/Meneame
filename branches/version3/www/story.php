@@ -444,7 +444,11 @@ function insert_comment () {
 						$user->karma = $user->karma - $reduction;
 						syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
 						$user->store();
+						require_once(mnminclude.'annotation.php');
+						$annotation = new Annotation("karma-$user->id");
+						$annotation->append(_('texto repetido o abuso de enlaces en comentarios').": -$reduction, karma: $user->karma\n");
 						$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
+
 					}
 				}
 				$comment->store();
