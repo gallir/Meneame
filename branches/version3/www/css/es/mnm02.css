@@ -720,7 +720,7 @@ vertical-align: top;
 .news-details .tool {
 display: inline;
 border-left: 1px solid;
-padding: 0 6px 0 6px;
+padding: 0 4px 0 6px;
 }
 
 .news-details .comments {
