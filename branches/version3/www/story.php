@@ -51,15 +51,14 @@ if ($last_arg > 0) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^000/', $url_args[$last_arg])) {
 		if ($url_args[$last_arg] > 0) {
-			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], 
-									(int) $url_args[$last_arg], $link->comments).'#comment-'.(int) $url_args[$last_arg]);
+			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#comment-'.(int) $url_args[$last_arg]);
 		} else {
 			header('Location: ' . $link->get_permalink());
 		}
 		die;
 	}
 	if ($url_args[$last_arg] > 0) {
-		$current_page =  (int) $url_args[$last_arg];
+		$requested_page = $current_page =  (int) $url_args[$last_arg];
 		array_pop($url_args);
 	}
 }
@@ -180,7 +179,8 @@ case 2:
 
 
 	// If option is "normal comments", show also last trackbakcs and pingbacks
-	if ($tab_option == 1) {
+	// TB are shown only in the last page
+	if ($tab_option == 1 && ! $requested_page) {
 		$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
 		if ($trackbacks) {
 			echo '<fieldset><legend><a href="'.$globals['link_permalink'].'/trackbacks">'._('últimas relacionadas').'</a></legend>';
