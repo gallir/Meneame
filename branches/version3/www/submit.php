@@ -134,6 +134,17 @@ function do_submit1() {
 		return;
 	}
 
+	// check the URL is OK and that it resolves
+	$url_components = @parse_url($url);
+	if (!$url_components || ! $url_components['host'] || gethostbyname($url_components['host']) == $url_components['host']) {
+		echo '<p class="error"><strong>'._('URL o nombre de servidor erróneo').'</strong></p> ';
+		echo '<p>'._('el nombre del servidor es incorrecto o éste tiene problemas para resolver el nombre'). ' </p>';
+		syslog(LOG_NOTICE, "Meneame, hostname error ($current_user->user_login): $url");
+		print_empty_submit_form();
+		echo '</div>'. "\n";
+		return;
+	}
+
 	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute)");
 	if ($current_user->user_karma > 10) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
 	else $enqueued_limit = $globals['limit_3_minutes'];
@@ -310,7 +321,7 @@ function do_submit1() {
 	$blog->read();
 
 	$blog_url_components = @parse_url($blog->url);
-	$blog_url = $blog_url_components[host].$blog_url_components[path];
+	$blog_url = $blog_url_components['host'].$blog_url_components['path'];
 	// Now we check again against the blog table
 	// it's done because there could be banned blogs like http://lacotelera.com/something
 	if(($ban = check_ban($blog->url, 'hostname', false, true))) {
