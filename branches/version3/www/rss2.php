@@ -118,7 +118,7 @@ if(!empty($_REQUEST['time'])) {
 			$link_date = "date";
 			$home = "/shakeit.php";
 			// disable feedburner for queued
-			$globals['redirect_feedburner'] = false;
+			//$globals['redirect_feedburner'] = false;
 			break;
 		case 'all':
 		case 'all_local':
@@ -289,15 +289,18 @@ function check_redirect_to_feedburner($status) {
 
 	switch ($status) {
 		case 'published':
-			header("Location: http://feeds.feedburner.com/meneame/published");
+			//header("Location: http://feeds.feedburner.com/meneame/published");
+			header("Location: http://feedproxy.google.com/MeneamePublicadas");
 			exit();
 			break;
 		case 'queued':
-			header("Location: http://feeds.feedburner.com/meneame/queued");
+			//header("Location: http://feeds.feedburner.com/meneame/queued");
+			header("Location: http://feedproxy.google.com/MeneameEnCola");
 			exit();
 			break;
 		case 'all':
-			header("Location: http://feeds.feedburner.com/meneame/all");
+			//header("Location: http://feeds.feedburner.com/meneame/all");
+			header("Location: http://feedproxy.google.com/MeneameEnCola");
 			exit();
 			break;
 	}

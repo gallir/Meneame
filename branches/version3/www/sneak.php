@@ -227,7 +227,7 @@ function to_html(data) {
 	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';
-		html += '<img src="'+base_url+'img/common/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
+		html += '<img src="'+base_url+'img/mnm/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
 		html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
