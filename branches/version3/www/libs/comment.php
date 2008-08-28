@@ -255,8 +255,8 @@ class Comment {
 		foreach ($matches[2] as $match) {
 			$link=clean_input_url($match);
 			$components = parse_url($link);
-			if (! preg_match("/.*$localdomain$/", $components[host])) {
-				$link = "//$components[host]$components[path]";
+			if (! preg_match("/.*$localdomain$/", $components['host'])) {
+				$link = '//'.$components['host'].$components['path'];
 				$link=preg_replace('/(_%)/', "\$1", $link);
 				$link=$db->escape($link);
 				$count = max($count, (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'"));
@@ -264,5 +264,4 @@ class Comment {
 		}
 		return $count;
 	}
-
 }
