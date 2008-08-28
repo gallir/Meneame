@@ -428,10 +428,11 @@ function insert_comment () {
 				} else {
 					$comment_count  = $same_count = 0;
 				}
-				if ($comment_count > 2 || $same_count > 2) {
+				$comment_limit = round(min($current_user->user_karma/6, 2) * 2.5);
+				if ($comment_count > $comment_limit || $same_count > 2) {
 					require_once(mnminclude.'user.php');
 					$reduction = 0;
-					if ($comment_count > 3) {
+					if ($comment_count > $comment_limit) {
 						$reduction += ($comment_count-3) * 0.1;
 					}
 					if($same_count > 1) {
