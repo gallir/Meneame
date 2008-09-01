@@ -122,8 +122,8 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$n_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > date_sub($now, interval 3 day) and link_status = 'published'");
 
 		$karma0 = $points_per_published * $n_published;
-		// Max: 3 published
-		$karma0 = min($points_per_published * 3, $karma0);
+		// Max: 4 published
+		$karma0 = min($points_per_published * 4, $karma0);
 		if ($karma0 > 0) {
 			$output .= _('Publicadas').": $n_published karma: $karma0\n";
 		}

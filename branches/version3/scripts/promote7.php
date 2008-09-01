@@ -83,7 +83,7 @@ foreach ($db_metas as $dbmeta) {
 	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$meta_coef[$meta] = $x/$y;
-	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
+	$meta_coef[$meta] = 0.7 * $meta_coef[$meta] + 0.3 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
 	$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br/>";
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
@@ -214,7 +214,7 @@ if ($links) {
 			$karma_threshold = $min_karma;
 			// Aged karma
 			$diff = max(0, $now - ($link->date + 8*3600)); // 8 hours without decreasing
-			$oldd = 1 - $diff/(3600*48);
+			$oldd = 1 - $diff/(3600*60);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$link->new_coef = $oldd;
