@@ -113,7 +113,7 @@ $bonus_karma = round(min($past_karma,$min_karma) * 0.50);
 
 /// Coeficients to balance metacategories
 $days = 2;
-$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)");
+$total_published = max((int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)"), 1); // max() avoid division by zero
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
 	$meta = $dbmeta->category_id;
@@ -121,6 +121,7 @@ foreach ($db_metas as $dbmeta) {
 	$meta_names[$meta] = $dbmeta->category_name;
 	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	if ( ! $x || ! $y) $x = $y = 1; // Avoid division by zero
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.8 * $meta_coef[$meta] + 0.2 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
