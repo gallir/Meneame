@@ -343,7 +343,7 @@ border-left-color: #FF6400;
 color: #03A;
 }
 
-.mnm-published, .mnm-published a {
+.mnm-published, .mnm-published a, .mnm-published a:visited {
 color: #FFF;
 }
 
@@ -351,7 +351,7 @@ color: #FFF;
 background: #FF6400 url(../../img/mnm/elmnm-p03.png) top left no-repeat;
 }
 
-.mnm-queued, .mnm-queued a {
+.mnm-queued, .mnm-queued a, .mnm-queued a:visited {
 color: #FF6400;
 }
 
@@ -360,7 +360,7 @@ background: #FFF url(../../img/mnm/elmnm-p03a.png) top left no-repeat;
 border-color: #FF6400;
 }
 
-.mnm-discarded, .mnm-discarded a {
+.mnm-discarded, .mnm-discarded a, .mnm-discarded a:visited {
 color: #FFF;
 }
 

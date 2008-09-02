@@ -21,6 +21,10 @@ overflow: hidden;
 margin-right: 15px;
 }
 
+fieldset {
+background: none;
+}
+
 .tabmain li a:hover {
 text-decoration: underline;
 background: #fff;
