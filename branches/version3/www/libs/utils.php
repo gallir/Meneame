@@ -283,10 +283,10 @@ function get_avatar_url($user, $avatar, $size) {
 		// Disabled for the moment, it fails just too much for size 40
 		//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 		$file_path = mnmpath.'/'.$file;
-		if (is_readable($file_path)) {
+		if (@filemtime($file_path) >= $avatar) {
 			return $globals['base_url'] . $file;
 		} else {
-			return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size";
+			return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
 		}
 	} 
 	return get_no_avatar_url($size);

@@ -9,9 +9,10 @@ if (!$_GET['id'] && !empty($_GET['user'])) {
 }
 if (! $id > 0) die;
 $size = intval($_GET['size']);
+$time = intval($_GET['time']);
 if (!$size > 0) $size = 80;
 
-if (!($img=avatar_get_from_file($id, $size))) {
+if (!($img=avatar_get_from_file($id, $size, $time))) {
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {
 		if (is_writable($globals['avatars_dir'])) {

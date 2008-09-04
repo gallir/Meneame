@@ -29,18 +29,20 @@ function avatars_manage_upload($user, $name) {
 	$size = @getimagesize("$file_base-orig.img");
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
-	if (!($size[0] == 80 && $size[1] == 80 && avatars_db_store($user, "$file_base-80.jpg"))) {
+	if (!($size[0] == 80 && $size[1] == 80 && ($mtime = avatars_db_store($user, "$file_base-80.jpg")))) {
 		// Mark FALSE in DB
 		avatars_db_remove($user);
 		avatars_remove_user_files($user);
 		return false;
 	}
+	/*
 	// Upload to DB and mark TRUE
 	avatar_resize("$file_base-orig.img", "$file_base-20.jpg", 20);
 	avatar_resize("$file_base-orig.img", "$file_base-25.jpg", 25);
 	avatar_resize("$file_base-orig.img", "$file_base-40.jpg", 40);
+	*/
 	unlink("$file_base-orig.img");
-	return true;
+	return $mtime;
 }
 
 function avatars_remove_user_files($user) {
@@ -63,13 +65,13 @@ function avatars_check_upload_size($name) {
 
 function avatars_db_store($user, $file) {
 	global $db;
-	echo "\n<!-- uploading $$usr-$file- -->\n";
 	$bytes = file_get_contents($file);
 	if (strlen($bytes)>0 && strlen($bytes) < 30000) {
+		$now = time();
 		$bytes = addslashes($bytes);
 		$db->query("replace into avatars set avatar_id = $user, avatar_image='$bytes'");
-		$db->query("update users set user_avatar = 1  where user_id=$user");
-		return true;
+		$db->query("update users set user_avatar = $now  where user_id=$user");
+		return $now;
 	}
 	return false;
 }
@@ -80,12 +82,15 @@ function avatars_db_remove($user) {
 	$db->query("update users set user_avatar = 0  where user_id=$user");
 }
 
-function avatar_get_from_file($user, $size) {
+function avatar_get_from_file($user, $size, $mtime = 0) {
 	global $globals;
 
 	$file = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
-	if (is_readable($file))  return file_get_contents($file);
-	else return false;
+	if (($mtime > 0 && @filemtime($file) >= $mtime) || ($mtime == 0 && is_readable($file))) {
+		return  file_get_contents($file);
+	} else {
+		return false;
+	}
 
 }
 

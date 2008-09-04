@@ -65,18 +65,16 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 }
 
 
+$save_messages = save_profile();
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
+echo $save_messages; // We do it later because teh profile could change header's info
 show_profile();
-
 do_footer();
 
 
 function show_profile() {
 	global $user, $admin_mode, $user_levels, $globals, $site_key, $current_user;
 
-
-	save_profile();
-	
 	echo '<div class="genericform" style="margin: 0 50px">';
 	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<fieldset><legend>';
@@ -200,6 +198,7 @@ function save_profile() {
 	global $db, $user, $current_user, $globals, $admin_mode, $site_key;
 	$errors = 0; // benjami: control added (2005-12-22)
 	$pass_changed=false;
+	$messages = '';
 	
 	$form_hash = md5($site_key.$user->id.$globals['user_ip']);
 	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
@@ -219,21 +218,21 @@ function save_profile() {
 		($_POST['user_id'] != $current_user->user_id && !$admin_mode) ) return;
 		
 	if ( empty($_POST['form_hash']) || $_POST['form_hash'] != $form_hash ) {
-		echo '<p class="form-error">'._('Falta la clave de control').'</p>';
+		$messages .= '<p class="form-error">'._('Falta la clave de control').'</p>';
 		$errors++;
 	}
 
 	if(!empty($_POST['username']) && trim($_POST['username']) != $user->username) {
 		if (strlen(trim($_POST['username']))<3) {
-			echo '<p class="form-error">'._('nombre demasiado corto').'</p>';
+			$messages .= '<p class="form-error">'._('nombre demasiado corto').'</p>';
 			$errors++;
 		}
 
 		if(!check_username($_POST['username'])) {
-			echo '<p class="form-error">'._('nombre de usuario erróneo, caracteres no admitidos').'</p>';
+			$messages .= '<p class="form-error">'._('nombre de usuario erróneo, caracteres no admitidos').'</p>';
 			$errors++;
 		} elseif (user_exists(trim($_POST['username'])) ) {
-			echo '<p class="form-error">'._('el usuario ya existe').'</p>';
+			$messages .= '<p class="form-error">'._('el usuario ya existe').'</p>';
 			$errors++;
 		} else {
 			$user->username=trim($_POST['username']);
@@ -241,10 +240,10 @@ function save_profile() {
 	}
 	
 	if($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
-		echo '<p class="form-error">'._('el correo electrónico no es correcto').'</p>';
+		$messages .= '<p class="form-error">'._('el correo electrónico no es correcto').'</p>';
 		$errors++;
 	} elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']))) {
-		echo '<p class="form-error">'. _('ya existe otro usuario con esa dirección de correo'). '</p>';
+		$messages .= '<p class="form-error">'. _('ya existe otro usuario con esa dirección de correo'). '</p>';
 		$errors++;
 	} else {
 		$user->email=trim($_POST['email']);
@@ -258,7 +257,7 @@ function save_profile() {
 		$public = $db->escape($_POST['public_info']);
 		$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_public_info='$public'"));
 		if ($im_count > 0) {
-			echo '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
+			$messages .= '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
 			$_POST['public_info'] = '';
 			$errors++;
 		}
@@ -271,14 +270,14 @@ function save_profile() {
 		// Check phone number
 		if (!empty($_POST['phone'])) {
 			if ( !preg_match('/^\+[0-9]{9,16}$/', $_POST['phone'])) {
-				echo '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
+				$messages .= '<p class="form-error">'. _('número telefónico erróneo, no se ha grabado'). '</p>';
 				$_POST['phone'] = '';
 				$errors++;
 			} else {
 				$phone = $db->escape($_POST['phone']);
 				$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_phone='$phone'"));
 				if ($phone_count > 0) {
-					echo '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
+					$messages .= '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
 					$_POST['phone'] = '';
 					$errors++;
 				}
@@ -294,13 +293,13 @@ function save_profile() {
 		$_POST['adchannel'] = trim($_POST['adchannel']);
 		if (!empty($_POST['adcode']) && $user->adcode != $_POST['adcode']) {
 			if ( !preg_match('/^pub-[0-9]{16}$/', $_POST['adcode'])) {
-				echo '<p class="form-error">'. _('código AdSense incorrecto, no se ha grabado'). '</p>';
+				$messages .= '<p class="form-error">'. _('código AdSense incorrecto, no se ha grabado'). '</p>';
 				$_POST['adcode'] = '';
 				$errors++;
 			} else {
 				$adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_adcode='".$_POST['adcode']."'"));
 				if ($adcode_count > 0) {
-					echo '<p class="form-error">'. _('ya hay otro usuario con la misma cuenta, no se ha grabado'). '</p>';
+					$messages .= '<p class="form-error">'. _('ya hay otro usuario con la misma cuenta, no se ha grabado'). '</p>';
 					$_POST['adcode'] = '';
 					$errors++;
 				}
@@ -308,7 +307,7 @@ function save_profile() {
 		}
 		if (!empty($_POST['adcode']) && !empty($_POST['adchannel']) && $user->adchannel != $_POST['adchannel']) {
 			if ( !preg_match('/^[0-9]{10,12}$/', $_POST['adchannel'])) {
-				echo '<p class="form-error">'. _('canal AdSense incorrecto, no se ha grabado'). '</p>';
+				$messages .= '<p class="form-error">'. _('canal AdSense incorrecto, no se ha grabado'). '</p>';
 				$_POST['adchannel'] = '';
 				$errors++;
 			}
@@ -320,11 +319,11 @@ function save_profile() {
 	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
 		if(trim($_POST['password']) !== trim($_POST['password2'])) {
-			echo '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
+			$messages .= '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
 			$errors = 1;
 		} else {
 			$user->pass=md5(trim($_POST['password']));
-			echo '<p>'._('La clave se ha cambiado').'</p>';
+			$messages .= '<p>'._('La clave se ha cambiado').'</p>';
 			$pass_changed = true;
 		}
 	}
@@ -340,21 +339,22 @@ function save_profile() {
 	// Manage avatars upload
 	if (!empty($_FILES['image']['tmp_name']) ) {
 		if(avatars_check_upload_size('image')) {
-			if (!avatars_manage_upload($user->id, 'image')) {
-				echo '<p class="form-error">'._('error guardando la imagen').'</p>';
+			$avatar_mtime = avatars_manage_upload($user->id, 'image');
+			if (!$avatar_mtime) {
+				$messages .= '<p class="form-error">'._('error guardando la imagen').'</p>';
 				$errors = 1;
 				$user->avatar = 0;
 			} else {
-				$user->avatar = 1;
+				$user->avatar = $avatar_mtime;
 			}
 		} else {
-			echo '<p class="form-error">'._('el tamaño de la imagen excede el límite').'</p>';
+			$messages .= '<p class="form-error">'._('el tamaño de la imagen excede el límite').'</p>';
 			$errors = 1;
 			$user->avatar = 0;
 		}
 	}
 
-	if (!$errors) { // benjami: "if" added (2005-12-22)
+	if (!$errors) {
 		if (empty($user->ip)) {
 			$user->ip=$globals['user_ip'];
 		}
@@ -364,8 +364,9 @@ function save_profile() {
 					$current_user->user_email != $user->email || $pass_changed)) {
 			$current_user->Authenticate($user->username, $user->pass);
 		}
-		echo '<p class="form-error">'._('datos actualizados').'</h2>';
+		$messages .= '<p class="form-error">'._('datos actualizados').'</h2>';
 	}
+	return $messages;
 }
 
 function print_checkbox($name, $current_value) {
