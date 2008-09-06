@@ -469,30 +469,28 @@ function do_voters_preferred() {
 function do_friends() {
 	global $db, $user, $globals;
 
-	echo '<div style="margin-left: 0px">';
+	echo '<div style="margin-left: 0px; margin-bottom:20px">';
 	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 	echo '</div>';
 
-	echo '<fieldset style="width: 45%; display: block; float: left;"><legend>';
-	echo _('amigos');
-	echo '</legend>';
+	echo '<div style="width: 48%; display: block; float: left; border: 1px solid #ff6400;padding: 5px 0px 10px 5px">';
+	echo '<h3>'._('amigos').'</h3>';
 	$prefered_id = $user->id;
 	$prefered_type = 'from';
 	echo '<div id="from-container">'. "\n";
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
-	echo '</fieldset>'. "\n";
+	echo '</div>'. "\n";
 
 
-	echo '<fieldset style="width: 45%; display: block; float: right;"><legend>';
-	echo _('elegido por');
-	echo '</legend>';
+	echo '<div style="width: 48%; display: block; float: right; border: 1px solid #ff6400;padding: 5px 0px 10px 5px">';
+	echo '<h3>'._('elegido por').'</h3>';;
 	$prefered_id = $user->id;
 	$prefered_type = 'to';
 	echo '<div id="to-container">'. "\n";
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
-	echo '</fieldset>'. "\n";
+	echo '</div>'. "\n";
 
 	echo '<br clear="all" />';
 }

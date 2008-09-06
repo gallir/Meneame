@@ -546,9 +546,12 @@ margin-top: 0;
 margin-bottom: 8px;
 font-size: 160%;
 font-weight: normal;
-color: #FF6400;
 border-bottom-width: 1px;
 border-bottom-style: dotted;
+}
+
+h3 {
+margin-bottom: 8px;
 }
 
 /* h2 without underline */

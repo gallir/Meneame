@@ -253,18 +253,17 @@ background: url('../../img/mnm/meneito.png') no-repeat left 2px;
 color: #C85000;
 }
 
-/* h2 without underline */
+h2 {
+color: #FF6400;
+border-bottom-color: #FF6400;
+}
 
-.topheading h2 {
+h3 {
 color: #FF6400;
 }
 
 hr {
 background: #ccc;
-}
-
-h2 {
-border-bottom-color: #FF6400;
 }
 
 table img {
