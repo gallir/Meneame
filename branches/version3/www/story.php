@@ -246,15 +246,13 @@ case 3:
 	echo '<div class="voters" id="voters">';
 
 	print_story_tabs($tab_option);
-	echo '<fieldset>';
-	echo '<div id="voters-container">';
+	echo '<div id="voters-container" style="padding: 10px;">';
 	if ($globals['link']->sent_date < $globals['now'] - 60*86400) { // older than 60 days
 		echo _('Noticia antigua, datos de votos archivados');
 	} else {
 		include(mnmpath.'/backend/meneos.php');
 	}
 	echo '</div><br />';
-	echo '</fieldset>';
 	echo '</div>';
 	break;
 
