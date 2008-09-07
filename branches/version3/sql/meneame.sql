@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.51a-3-log
+-- Server version	5.0.51a-12~bpo40+1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -39,6 +39,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `avatars` (
   `avatar_id` int(11) NOT NULL,
+  `avatar_modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `avatar_image` blob NOT NULL,
   PRIMARY KEY  (`avatar_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -173,7 +174,7 @@ DROP TABLE IF EXISTS `friends`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `friends` (
-  `friend_type` enum('affiliate','manual','hide') collate utf8_spanish_ci NOT NULL default 'affiliate',
+  `friend_type` enum('affiliate','manual','hide','affinity') collate utf8_spanish_ci NOT NULL default 'affiliate',
   `friend_from` int(10) NOT NULL default '0',
   `friend_to` int(10) NOT NULL default '0',
   `friend_value` smallint(3) NOT NULL default '0',
@@ -431,7 +432,7 @@ CREATE TABLE `users` (
   `user_id` int(20) NOT NULL auto_increment,
   `user_login` char(32) collate utf8_spanish_ci NOT NULL,
   `user_level` enum('disabled','normal','special','blogger','admin','god') collate utf8_spanish_ci NOT NULL default 'normal',
-  `user_avatar` tinyint(1) NOT NULL default '0',
+  `user_avatar` int(10) unsigned NOT NULL default '0',
   `user_modification` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `user_date` timestamp NOT NULL default '0000-00-00 00:00:00',
   `user_validated_date` timestamp NULL default NULL,
@@ -508,4 +509,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-06-26 18:19:45
+-- Dump completed on 2008-09-07 16:20:41
