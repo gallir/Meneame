@@ -214,7 +214,7 @@ if ($links) {
 			// Otherwise use normal decayed min_karma
 			$karma_threshold = $min_karma;
 			// Aged karma
-			$diff = max(0, $now - ($link->date + 8*3600)); // 8 hours without decreasing
+			$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
 			$oldd = 1 - $diff/(3600*60);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
@@ -381,7 +381,7 @@ function publish(&$link) {
 	if ($user->read()) {
 		$user->karma = min(20, $user->karma + 1);
 		$user->store();
-		$nnotation = new Annotation("karma-$user->id");
+		$annotation = new Annotation("karma-$user->id");
 		$annotation->append(_('Noticia publicada').": +1, karma: $user->karma\n");
 	}
 
@@ -481,7 +481,7 @@ function check_affinity($uid, $min_karma) {
 	if ($log->read() && $log->time > time() - 3600*12) {
 		return unserialize($log->text);
 	}
-	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 12 hour)");
+	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 30 day)");
 	$link_ids = $db->get_col("SELECT link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
 	$nlinks = count($link_ids);
 	if ($nlinks < 3) {
