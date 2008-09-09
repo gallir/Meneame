@@ -183,7 +183,7 @@ define('FRIEND_IGNORE', '<img src="'.$globals['base_url'].'img/common/icon_heart
 function friend_exists($from, $to) {
 	global $db;
 	if ($from == $to) return 0;
-	return intval($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
+	return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
 }
 
 function friend_insert($from, $to, $value = 1) {
