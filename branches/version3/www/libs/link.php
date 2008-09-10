@@ -700,22 +700,31 @@ class Link {
 		return $vote->count();
 	}
 
-	function insert_vote($user, $value) {
+	function insert_vote($value) {
 		global $db, $current_user;
 		require_once(mnminclude.'votes.php');
 
 		$vote = new Vote;
-		$vote->user=$user;
+		$vote->user=$current_user->user_id;
 		$vote->link=$this->id;
 		if ($vote->exists()) return false;
 		$vote->value=$value;
 		// For karma calculation
 		if ($this->status != 'published') {
-			if($value < 0 && $user > 0) {
-				//$karma_value = round(($value - $current_user->user_karma)/2);
-				$karma_value = round(-$current_user->user_karma);
+			if($value < 0 && $current_user->user_id > 0) {
+				if (($affinity = $this->affinity_get($current_user->user_id)) <  0 ) {
+					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
+					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
+				} else {
+					$karma_value = round(-$current_user->user_karma);
+				}
 			} else {
-				$karma_value=round($value);
+				if (($affinity = $this->affinity_get($current_user->user_id)) > 0 ) {
+					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
+					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
+				} else {
+					$karma_value=round($value);
+				}
 			}
 		} else {
 			$karma_value = 0;
@@ -724,7 +733,7 @@ class Link {
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			} else {
-				if ($user > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
+				if ($current_user->user_id > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
 			$new = $db->get_row("select link_votes, link_anonymous, link_negatives, link_karma from links where link_id = $this->id");
@@ -732,7 +741,7 @@ class Link {
 			$this->anonymous = $new->link_anonymous;
 			$this->negatives = $new->link_negatives;
 			$this->karma = $new->link_karma;
-			return true;
+			return $value;
 		}
 		return false;
 	}
@@ -897,6 +906,21 @@ class Link {
 			default:
 				$this->content_type = 'text';
 		}
+	}
+
+	// Read affinity values using annotations
+
+	// $this->author is the key in annotations
+	function affinity_get($from = false) {
+		require_once(mnminclude.'annotation.php');
+
+		$log = new Annotation("affinity-$this->author");
+		if (!$log->read()) return false;
+		$dict = unserialize($log->text);
+		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
+		if (!$from) return $dict; // Asked for the whole dict
+		if ($dict[$from]) return $dict[$from]; // Asked just a value;
+		return false; // Nothing found
 	}
 
 }

@@ -68,7 +68,7 @@ if ($votes_freq > $freq && $current_user->user_karma > 4) {
 	error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 }
 
-if (!$link->insert_vote($current_user->user_id, $value)) {
+if (!$link->insert_vote($value)) {
 	error(_('ya ha votado antes'));
 }
 

@@ -78,13 +78,14 @@ if ($no_show_voters) {
 		// If current users is a god, show the first IP addresses
 		if ($current_user->user_level == 'god') $vote_detail .= ' ('.preg_replace('/\.[0-9]+$/', '', $vote->ip).')';
 		if ($vote->vote_value>0) {
+			$vote_detail .= ' '._('valor').":&nbsp;$vote->vote_value";
 			echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
-			echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt="'.$vote->user_login.'"/>';
+			echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
 			echo $vote->user_login.'</a>';
 		} else {
 			if($globals['show_negatives'] > 0 && $vote->ts > $globals['show_negatives']) {
 				echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
-				echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt="'.$vote->user_login.'"/></a>';
+				echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/></a>';
 				echo '<span>'.get_negative_vote($vote->vote_value).'</span>';
 			} else {
 				echo '<span>';

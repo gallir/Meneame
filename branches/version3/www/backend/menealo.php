@@ -94,8 +94,7 @@ if($current_user->user_id>0) {
 	$value=$anon_karma;
 }
 
-if (!$link->insert_vote($current_user->user_id, $value)) {
-	//error(_('error insertando voto'));
+if (!$link->insert_vote($value)) {
 	error(_('ya ha votado antes'));
 }
 
