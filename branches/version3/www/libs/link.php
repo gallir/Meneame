@@ -708,7 +708,6 @@ class Link {
 		$vote->user=$current_user->user_id;
 		$vote->link=$this->id;
 		if ($vote->exists()) return false;
-		$vote->value=$value;
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
@@ -731,6 +730,7 @@ class Link {
 		} else {
 			$karma_value = 0;
 		}
+		$vote->value=$value;
 		if($vote->insert()) {
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
