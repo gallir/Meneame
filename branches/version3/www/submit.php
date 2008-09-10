@@ -657,7 +657,7 @@ function do_submit3() {
 		$linkres->sent_date = $linkres->date=time();
 		$linkres->get_uri();
 		$linkres->store();
-		$linkres->insert_vote($current_user->user_id, $current_user->user_karma);
+		$linkres->insert_vote($current_user->user_karma);
 
 		// Add the new link log/event
 		require_once(mnminclude.'log.php');

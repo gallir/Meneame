@@ -712,14 +712,16 @@ class Link {
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
-				if (($affinity = $this->affinity_get($current_user->user_id)) <  0 ) {
+				if ($current_user->user_id != $this->author && 
+						($affinity = $this->affinity_get($current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
 					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
 				} else {
 					$karma_value = round(-$current_user->user_karma);
 				}
 			} else {
-				if (($affinity = $this->affinity_get($current_user->user_id)) > 0 ) {
+				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author && 
+						($affinity = $this->affinity_get($current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
 					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
 				} else {
@@ -912,6 +914,8 @@ class Link {
 
 	// $this->author is the key in annotations
 	function affinity_get($from = false) {
+		global $current_user;
+
 		require_once(mnminclude.'annotation.php');
 
 		$log = new Annotation("affinity-$this->author");
@@ -919,7 +923,7 @@ class Link {
 		$dict = unserialize($log->text);
 		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
 		if (!$from) return $dict; // Asked for the whole dict
-		if ($dict[$from]) return $dict[$from]; // Asked just a value;
+		if (abs($dict[$from]) <= 100) return intval($dict[$from]); // Asked just a value;
 		return false; // Nothing found
 	}
 
