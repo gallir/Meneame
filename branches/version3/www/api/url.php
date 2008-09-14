@@ -13,14 +13,14 @@ stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
 $url = addcslashes($url, '%_');
-if(strlen($url) < 8) {
+if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['host']) < 5) {
 	echo 'KO';
 	die;
 }
 $url = preg_replace('/\/$/', '', $url);
 $all = intval($_GET['all']);
 if ($all == '1') {
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url like '$url%' order by link_date DESC");
+    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url like '$url%' order by link_date DESC limit 100");
 } else {
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_status from links where link_url in ('$url', '$url/')");
 }
