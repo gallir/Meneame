@@ -40,8 +40,7 @@ $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
-$points_received = 12;
-$points_per_published = 1;
+$points_per_published = 1.5;
 $points_given = 8;
 $comment_votes = 8;
 
@@ -60,12 +59,12 @@ $db->barrier();
 $published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > $history_from"));
 
 $sum=0; $i=0;
-// It does an average of the top 10 voted
 
-$max_avg_positive_received = (int) $db->get_var("select avg(link_karma) from links where link_status='published' and link_date >  $history_from");;
-$max_avg_positive_received = intval($max_avg_positive_received * 0.6);
-if($max_avg_positive_received == 0) $max_avg_positive_received = 1;
-$max_avg_negative_received = $max_avg_positive_received * 1.5;
+$max_avg_positive_received = (int) $db->get_var("select avg(link_karma) from links where link_status='published' and link_date > $history_from");
+$max_avg_positive_received = max(intval($max_avg_positive_received * 0.75), 1);
+
+$max_avg_negative_received = (int) $db->get_var("select avg(link_karma) from links where link_karma < -20 and link_date > $history_from");
+$max_avg_negative_received = min(intval($max_avg_negative_received), -20);
 
 
 
@@ -135,38 +134,35 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and link_status not in ('autodiscard')"));
 		
 		if ($total_user_links > 0) {
-			if ($total_user_links > 2) {
-				// If the user has a few discarded, ignore them
-				$total_user_discarded = intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and link_status in ('discard', 'autodiscard')"));
-				if ($total_user_discarded < 2 || $total_user_discarded < round($total_user_links/6)) {
-					$total_user_discarded = min($total_user_discarded, round($total_user_links/6));
-					$total_user_links = $total_user_links - $total_user_discarded;
+			$positive_karma_received = $negative_karma_received = 0;
+			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
+			if ($karmas) {
+				foreach ($karmas as $k) {
+					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 2) * 3;
 				}
 			}
-			$positive_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(vote_value) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value > 0 and (link_status not in ('published', 'abuse', 'autodiscard') or (link_status = 'published' and vote_date < link_date))")) / $total_user_links;
-			$positive_karma_received = round($positive_karma_received);
-			$negative_karma_received=intval($db->get_var("SELECT SQL_NO_CACHE sum(user_karma) FROM links, votes, users WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and vote_user_id > 0 and vote_value < 0 and user_id=vote_user_id")) / $total_user_links;
-			$negative_karma_received = round($negative_karma_received);
-
-			$karma_received = min($positive_karma_received-$negative_karma_received*3, $max_avg_positive_received);
-			$karma1 = $points_received * $karma_received / $max_avg_positive_received;
-			$karma1 = (min($total_user_links, 9)/6) * $karma1;
-			$karma1 = min($points_received, $karma1);
-			$karma1 = max(-$points_received, $karma1);
-			//echo "Average max: $max_avg_positive_received user_links: $total_user_links positive: $positive_karma_received negative: $negative_karma_received total: $karma_received\n";
-
+			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
+			if ($karmas) {
+				foreach ($karmas as $k) {
+					$negative_karma_received += pow(min(1,$k/$max_avg_negative_received), 2) * 3;
+				}
+			}
+			$karma_received = $positive_karma_received - $negative_karma_received;
+			$karma1 = min(12, $karma_received);
+			$karma1 = max(-12, $karma1);
 			
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$karma1 = max(-$points_received, $karma1 - 4 * $link_abuse);
+				$karma1 = max(-12, $karma1 - 4 * $link_abuse);
 				$output .= _('Penalizado por enlaces que violan las reglas').": $link_abuse\n";
 				$penalized = 1;
 			}
-			$output .= _('Karma recibido en envíos propios').": +$positive_karma_received, - $negative_karma_received, karma1: ";
+
+
+			$output .= _('Karma recibido en envíos propios').",  karma1: ";
 			$output .= sprintf("%4.2f\n", $karma1);
 		} 
-		
 
 		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and link_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < link_date and link_author != $user->id");
 		$published_points = (int) $user_votes->points;
@@ -185,8 +181,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma2 = min($points_given, $points_given * pow($published_average, 2) * ($published_points/($published_links/5) - ($nopublished_given/$published_links)/10) - 0.1 * $discarded_given);
 
 		if ($abuse_given > 0) {
-			$karma2 -= $abuse_given * 1;
-			$output .= _('Descuento por votar a enlaces que violan las reglas').":  $abuse_given \n";
+			$pun = $abuse_given * 2;
+			$karma2 -= $pun;
+			$output .= _('Descuento por votar a enlaces que violan las reglas')." ($abuse_given):  $pun\n";
 		}
 
 		if ($karma2 > 0) {
@@ -254,9 +251,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 		if ($comment_votes_count > 10)  {
 			// It calculates a coefficient for the karma, 
 			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
-			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
+			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
+			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
 			$comments_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from");
-			$comment_coeff =  min($comments_count/10, 1) * min($distinct_votes_count/($comments_count*0.75), 1);
+			$comment_coeff =  min($comments_count/10, 1) * min($distinct_votes_count/($comments_count*0.75), 1) * $distinct_user_votes_count/$comment_votes_count;
+			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count)\n";
 
 			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
 			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes)) * $comment_coeff ;

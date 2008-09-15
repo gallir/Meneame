@@ -15,7 +15,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.10);
+define (PUB_PERC, 0.11);
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status in ('published', 'queued')");
@@ -38,8 +38,18 @@ $links_published = (int) $db->get_var("select count(*) from links where link_sta
 $links_published_projection = 4 * (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 6 hour)");
 
 $diff = $now - $last_published;
+// If published and estimation are lower than projection then
+// fasten decay
+if ($diff < $interval && ($links_published_projection < $pub_estimation * 0.9 || $links_published < $pub_estimation * 0.85)) {
+	$diff = max($diff * 2, $interval);
+}
 
 $decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
+/*
+if ($decay > MIN && ($links_published_projection < $pub_estimation * 0.9 || $links_published < $pub_estimation * 0.9)) {
+	$decay = MIN;
+}
+*/
 $decay = max($min_karma_coef, $decay);
 
 if ($diff > $interval * 3) {
@@ -47,7 +57,7 @@ if ($diff > $interval * 3) {
 	$output .= "Delayed! <br/>";
 }
 $output .= "Last published at: " . get_date_time($last_published) ."<br/>\n";
-$output .= "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: $diff secs, Decay: $decay<br/>\n";
+$output .= "24hs queue: $links_queue/$links_queue_all, Published: $links_published -> $links_published_projection Published goal: $pub_estimation, Interval: $interval secs, difference: ". intval($now - $last_published)." secs, Decay: $decay<br/>\n";
 
 $continue = true;
 $published=0;
@@ -150,20 +160,27 @@ if ($links) {
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
 		$votes = $db->get_results("select user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
-		$affinity = check_affinity($link->author, $past_karma*0.5);
+		//echo "Call for $link->author $link->uri\n";
+		$affinity = check_affinity($link->author, $past_karma*0.3);
 		foreach ($votes as $vote) {
 			if ($vote->vote_value > 0) {
 				$votes_pos++;
 				if ($affinity && $affinity[$vote->user_id] > 0) {
+					// Change vote_value if there is affinity
 					//echo "$vote->vote_value -> ";
-					$vote->vote_value = max($vote->vote_value * $affinity[$vote->user_id]/100, 5);
+					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 5);
 					//echo "$vote->vote_value ($link->author -> $vote->user_id)\n";
-				}
+				} 
 				if ($vote->vote_value >=  $users_karma_avg) $karma_pos_user_high += $vote->vote_value;
 				else $karma_pos_user_low += $vote->vote_value;
 			} else {
 				$votes_neg++;
-				$karma_neg_user -= $vote->user_karma;
+				if ($affinity && $affinity[$vote->user_id] < 0) {
+					$karma_neg_user += min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100);
+					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
+				} else {
+					$karma_neg_user -= $vote->user_karma;
+				}
 			}
 		}
 
@@ -214,7 +231,7 @@ if ($links) {
 			// Otherwise use normal decayed min_karma
 			$karma_threshold = $min_karma;
 			// Aged karma
-			$diff = max(0, $now - ($link->date + 10*3600)); // 10 hours without decreasing
+			$diff = max(0, $now - ($link->date + 9*3600)); // 9 hours without decreasing
 			$oldd = 1 - $diff/(3600*60);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
@@ -287,7 +304,7 @@ if ($links) {
 			$link->store_basic();
 		}
 
-			
+
 		if ($link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
@@ -315,10 +332,9 @@ if ($links) {
 			publish($link);
 		}
 	}
-	$output .= "</table>\n";
 	//////////
-}  
-
+}
+$output .= "</table>\n";
 
 echo $output;
 echo "</body></html>\n";
@@ -478,13 +494,13 @@ function check_affinity($uid, $min_karma) {
 
 	$affinity = array();
 	$log = new Annotation("affinity-$uid");
-	if ($log->read() && $log->time > time() - 3600*12) {
+	if ($log->read() && $log->time > time() - 3600*4) {
 		return unserialize($log->text);
 	}
-	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 30 day)");
+	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 15 day)");
 	$link_ids = $db->get_col("SELECT link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
 	$nlinks = count($link_ids);
-	if ($nlinks < 3) {
+	if ($nlinks < 5) {
 		$log->store();
 		return false;
 	}
@@ -493,8 +509,14 @@ function check_affinity($uid, $min_karma) {
 	$votes = $db->get_results("select vote_user_id as id, sum(vote_value/abs(vote_value)) as count from votes where vote_link_id in ($links) and vote_type='links' group by vote_user_id");
 	if ($votes) {
 		foreach ($votes as $vote) {
-			if ($vote->id > 0 && $vote->id != $uid && $vote->count > max(1, $nlinks/10) ) {
-				$affinity[$vote->id] = round((1 - ($vote->count/$nlinks))*100);  // store as int (percent) to save space,
+			if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
+				$c = $vote->count/$nlinks * 0.75;
+				if ($vote->count > 0) {
+					$affinity[$vote->id] = round((1 - $c)*100);  // store as int (percent) to save space,
+				} else {
+					$affinity[$vote->id] = round((-1 - $c)*100);  // store as int (percent) to save space,
+				}
+			
 			}
 		}
 		$log->text = serialize($affinity);
