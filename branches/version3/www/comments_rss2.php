@@ -37,9 +37,12 @@ if(!empty($_GET['id'])) {
 		exit();
 	}
 	if ($if_modified) {
-		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
+		$extra_sql = "AND comment_date > FROM_UNIXTIME($if_modified) ";
 	}
-	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
+	if (isset($_GET['min_karma'])) {
+		$extra_sql .= ' AND comment_karma >= '.intval($_GET['min_karma']);
+	}
+	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $extra_sql ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_link_id=$id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios') . " [$id]";
 	$globals['redirect_feedburner'] = false;
