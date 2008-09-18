@@ -88,8 +88,8 @@ class Link {
 		$url_components = @parse_url($url);
 		if(version_compare(phpversion(), '5.0.0') >= 0) {
 			$opts = array(
-				'http' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n" ),
-				'https' => array('user_agent' => 'Mozilla/5.0 (compatible; Meneame; +http://meneame.net/) Gecko/Meneame Firefox', 'max_redirects' => 7, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n")
+				'http' => array('user_agent' => 'Meneamebot (http://meneame.net/)', 'max_redirects' => 7, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n" ),
+				'https' => array('user_agent' => 'Meneamebot (http://meneame.net/)', 'max_redirects' => 7, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n" ),
 			);
 			$context = stream_context_create($opts);
 			if(($stream = @fopen($url, 'r', false, $context))) {
