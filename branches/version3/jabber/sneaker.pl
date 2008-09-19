@@ -48,7 +48,10 @@ sub InMessage {
 	my $user = shift;
 	my $body = shift;
 
-	return if length($body) < 3;
+	if (length($body) < 3) {
+		$jabber->SendMessage($user, "mensaje muy corto");
+		return;
+	}
 
 	if ($body =~ /^ *!/) {
 		ExecuteCommand($user, $body)
