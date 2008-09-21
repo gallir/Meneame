@@ -25,8 +25,8 @@ if ($links) {
 	foreach ($links as $link) {
 		// count those votes with $globals['negative_votes_values'] = -8 =>  _('errónea'),  -9 => _('copia/plagio')
 		// Count only those votes with karma > 6.2 to avoid abuses with new accounts with new accounts
-		$negatives = (int) $db->get_var("select sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.2");
-		$positives = (int) $db->get_var("select sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.2");
+		$negatives = (int) $db->get_var("select sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.3");
+		$positives = (int) $db->get_var("select sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.3");
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
 		if ($negatives > $link->link_karma/5 and $negatives > $positives) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
