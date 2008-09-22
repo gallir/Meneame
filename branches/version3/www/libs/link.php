@@ -714,7 +714,6 @@ class Link {
 				if ($current_user->user_id != $this->author && 
 						($affinity = $this->affinity_get($current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
-					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
 				} else {
 					$karma_value = round(-$current_user->user_karma);
 				}
@@ -722,7 +721,6 @@ class Link {
 				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author && 
 						($affinity = $this->affinity_get($current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
-					syslog(LOG_NOTICE, "Affinity $current_user->user_login: $current_user->user_karma $karma_value $value ($affinity)");
 				} else {
 					$karma_value=round($value);
 				}

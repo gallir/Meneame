@@ -8,7 +8,7 @@
 
 if(empty($_GET['url'])) die;
 
-$mnm_image = "/img/es/mnm-over-01.png";
+$mnm_image = "/img/mnm/api/mnm-over-01.png";
 header('Content-Type: text/html; charset=UTF-8');
 
 echo '<html>'."\n";

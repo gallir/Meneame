@@ -111,9 +111,11 @@ function insert_ban($ban_type, $ban_text, $ban_comment="", $ban_expire='UNDEFINE
 		echo "</div>\n";
 		return;
 	}
+	/*
 	if (strlen($ban_text) > 8 && preg_match('/^www\..+\.[a-z]+(\/[a-z]+\/*){0,1}$/i', $ban_text) ) {
 		$ban_text = preg_replace('/^www\./', '', $ban_text);
 	}
+	*/
 
 	$ban=new Ban();
 	if ($ban_id > 0) {
