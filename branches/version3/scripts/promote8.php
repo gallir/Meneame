@@ -40,7 +40,7 @@ $links_published_projection = 4 * (int) $db->get_var("select count(*) from links
 $diff = $now - $last_published;
 // If published and estimation are lower than projection then
 // fasten decay
-if ($diff < $interval && ($links_published_projection < $pub_estimation * 0.9 || $links_published < $pub_estimation * 0.85)) {
+if ($diff < $interval && ($links_published_projection < $pub_estimation * 0.9 && $links_published < $pub_estimation * 0.9 )) {
 	$diff = max($diff * 2, $interval);
 }
 
@@ -168,7 +168,7 @@ if ($links) {
 				if ($affinity && $affinity[$vote->user_id] > 0) {
 					// Change vote_value if there is affinity
 					//echo "$vote->vote_value -> ";
-					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 5);
+					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
 					//echo "$vote->vote_value ($link->author -> $vote->user_id)\n";
 				} 
 				if ($vote->vote_value >=  $users_karma_avg) $karma_pos_user_high += $vote->vote_value;
@@ -176,7 +176,7 @@ if ($links) {
 			} else {
 				$votes_neg++;
 				if ($affinity && $affinity[$vote->user_id] < 0) {
-					$karma_neg_user += min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100);
+					$karma_neg_user += min(-6, $vote->user_karma *  $affinity[$vote->user_id]/100);
 					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
 				} else {
 					$karma_neg_user -= $vote->user_karma;
@@ -322,7 +322,7 @@ if ($links) {
 		usleep(10000);
 		$i++;
 	}
-	if ($published == 0 && ($must_publish || $decay < 0.99) &&  $last_resort_id  > 0) {
+	if ($published == 0 && ($must_publish || $decay < 0.98) &&  $last_resort_id  > 0) {
 		// Publish last resort
 		$link = new Link;
 		$link->id = $last_resort_id;

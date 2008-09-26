@@ -34,7 +34,7 @@ if ($dbusers) {
 $db->query("update users set user_karma = 6 where user_level='disabled' and user_karma > 6 ");
 
 $karma_base=6;
-$karma_base_max=8; // Older users can get up to this value
+$karma_base_max=8; // If not penalised, older users can get up to this value as base for the calculus
 $min_karma=1;
 $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
@@ -103,7 +103,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	//Base karma for the user
 	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
 	if ($first_published > 0) {
-		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365*1.5));
+		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365*2));
 		$karma_base_user = round($karma_base_user, 2);
 	} else {
 		$karma_base_user = $karma_base;
@@ -154,8 +154,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$karma1 = max(-12, $karma1 - 4 * $link_abuse);
-				$output .= _('Penalizado por enlaces que violan las reglas').": $link_abuse\n";
+				$pun =  4 * $link_abuse;
+				$karma1 = max(-12, $karma1 - $pun);
+				$output .= _('Penalizado por enlaces que violan las reglas')." ($link_abuse): $pun\n";
 				$penalized = 1;
 			}
 
