@@ -54,29 +54,29 @@ function sphinx_get_search_link($by_date = false, $start = 0, $count = 50) {
 	if ($field) {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 		$cl->SetMatchMode (SPH_MATCH_EXTENDED);
-		$q = $cl->AddQuery ( "@$field \"$words\"", 'main delta' );
+		$q = $cl->AddQuery ( "@$field \"$words\"", '*' );
 		array_push($queries, $q);
 	} elseif ($words_count < 2 || $by_date ) {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 		$cl->SetMatchMode (SPH_MATCH_ALL);
-		$q = $cl->AddQuery ( $words, 'main delta' );
+		$q = $cl->AddQuery ( $words, '*' );
 		array_push($queries, $q);
 	} else  {
 		if ($words_count > 2) {
 			$cl->SetMatchMode (SPH_MATCH_PHRASE);
 			//$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 			$cl->SetSortMode (SPH_SORT_RELEVANCE);
-			$q = $cl->AddQuery ( $words, 'main delta' );
+			$q = $cl->AddQuery ( $words, '*' );
 			array_push($queries, $q);
 		}
 		$cl->SetMatchMode (SPH_MATCH_ALL);
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 		//$cl->SetSortMode (SPH_SORT_RELEVANCE);
-		$q = $cl->AddQuery ( $words, 'main delta' );
+		$q = $cl->AddQuery ( $words, '*' );
 		array_push($queries, $q);
 		$cl->SetMatchMode (SPH_MATCH_ANY);
 		$cl->SetSortMode (SPH_SORT_RELEVANCE);
-		$q = $cl->AddQuery ( $words, 'main delta' );
+		$q = $cl->AddQuery ( $words, '*' );
 		array_push($queries, $q);
 	}
 

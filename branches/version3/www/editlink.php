@@ -166,7 +166,7 @@ function do_save() {
 			// Insert always a link and discard event if the status has been changed to discard
 			log_insert('link_discard', $linkres->id, $current_user->user_id);
 			log_insert('link_edit', $linkres->id, $current_user->user_id);
-		} else {
+		} elseif ($linkres->votes > 0) {
 			log_conditional_insert('link_edit', $linkres->id, $current_user->user_id, 60);
 		}
 
