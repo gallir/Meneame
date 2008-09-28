@@ -63,7 +63,7 @@ $continue = true;
 $published=0;
 
 $past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 7 day) and link_status='published'"));
-$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 8 hour) and link_status='published'"));
+$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 12 hour) and link_status='published'"));
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
@@ -510,7 +510,7 @@ function check_affinity($uid, $min_karma) {
 	if ($votes) {
 		foreach ($votes as $vote) {
 			if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
-				$c = $vote->count/$nlinks * 0.75;
+				$c = $vote->count/$nlinks * 0.70;
 				if ($vote->count > 0) {
 					$affinity[$vote->id] = round((1 - $c)*100);  // store as int (percent) to save space,
 				} else {

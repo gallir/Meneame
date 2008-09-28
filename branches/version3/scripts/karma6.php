@@ -40,7 +40,7 @@ $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
-$points_per_published = 1.5;
+$points_per_published = 2;
 $points_given = 8;
 $comment_votes = 8;
 
