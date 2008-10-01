@@ -61,13 +61,15 @@ switch ($globals['meta']) {
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = " ORDER BY link_date DESC ";
+		//$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 864000).'"'; // Ten days
+		//$from_time = 'date_sub(now(), interval 10 day)';
 		if ($globals['meta_current'] > 0) {
-			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
-			//$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-			$from_where = "FROM links WHERE link_status='queued'";
+			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
+			//$from_where = "FROM links WHERE link_status='queued'";
 			$tab = 1;
 		}
 		break;

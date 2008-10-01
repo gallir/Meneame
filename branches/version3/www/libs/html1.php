@@ -532,10 +532,10 @@ function do_vertical_tags($what=false) {
 		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
 	}
 
-	if(memcache_mprint('tags_3_'.$status.$meta_cond)) return;
+	if(memcache_mprint('tags_'.$status.$meta_cond)) return;
 
 	$min_pts = 8;
-	$max_pts = 20;
+	$max_pts = 30;
 	$line_height = $max_pts * 0.70;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
