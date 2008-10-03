@@ -292,6 +292,9 @@ case 4:
 			if ($log->log_type == 'link_discard' &&  $link->author != $log->user_id) { // It was discarded by an admin
 				echo '<img src="'.get_no_avatar_url(20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
 				echo ('admin');
+				if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+					echo '&nbsp;('.$log->user_login.')';
+				}
 			} else {
 				echo '<a href="'.get_user_uri($log->user_login).'" title="'.$log->date.'">';
 				echo '<img src="'.get_avatar_url($log->log_user_id, $log->user_avatar, 20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
