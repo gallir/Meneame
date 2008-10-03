@@ -289,10 +289,15 @@ case 4:
 			echo '<div style="width:30%; float: left;padding: 4px 0 4px 0;">'.$log->log_date.'</div>';
 			echo '<div style="width:24%; float: left;padding: 4px 0 4px 0;"><strong>'.$log->log_type.'</strong></div>';
 			echo '<div style="width:45%; float: left;padding: 4px 0 4px 0;">';
-			echo '<a href="'.get_user_uri($log->user_login).'" title="'.$log->date.'">';
-			echo '<img src="'.get_avatar_url($log->log_user_id, $log->user_avatar, 20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
-			echo $log->user_login;
-			echo '</a>';
+			if ($log->log_type == 'link_discard' &&  $link->author != $log->user_id) { // It was discarded by an admin
+				echo '<img src="'.get_no_avatar_url(20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
+				echo ('admin');
+			} else {
+				echo '<a href="'.get_user_uri($log->user_login).'" title="'.$log->date.'">';
+				echo '<img src="'.get_avatar_url($log->log_user_id, $log->user_avatar, 20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
+				echo $log->user_login;
+				echo '</a>';
+			}
 			echo '</div>';
 			echo '</div>';
 

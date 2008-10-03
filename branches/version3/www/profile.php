@@ -90,7 +90,7 @@ function show_profile() {
 	echo '<p><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
 	echo '&nbsp;&nbsp;<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>';
-	echo '<br/><span id="usernamecheckitvalue"></span>' . "\n";
+	echo '&nbsp;<span id="usernamecheckitvalue"></span>' . "\n";
 	echo '</p>';
 
 	echo '<p><label>'._('nombre real').':</label><br/>';
@@ -100,7 +100,7 @@ function show_profile() {
 	echo '<p><label>'._('correo electrónico').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
 	echo '&nbsp;&nbsp;<input type="button" class="button" id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>';
-	echo '<br/><span id="emailcheckitvalue"></span>';
+	echo '&nbsp;<span id="emailcheckitvalue"></span>';
 	echo '</p>';
 
 	echo '<p><label>'._('página web').':</label><br/>';

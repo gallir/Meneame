@@ -43,13 +43,13 @@ function do_register0() {
 
 	echo '<input type="text" name="username" id="name" value="" onkeyup="enablebutton(this.form.checkbutton1, this.form.submit, this)" size="25" tabindex="1"/>' . "\n";
 	echo '<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'username\', this.form, this.form.username)"/></span>' . "\n";
-	echo '<br/><span id="usernamecheckitvalue"></span></p>' . "\n";
+	echo '&nbsp;<span id="usernamecheckitvalue"></span></p>' . "\n";
 
 	echo '<p><label for="email">email:</label><br />' . "\n";
 	echo '<span class="note">'._('es importante que sea correcta, recibirás un correo para validar la cuenta').'</span> <br />';
 	echo '<input type="text" id="email" name="email" value=""  onkeyup="enablebutton(this.form.checkbutton2, this.form.submit, this)" size="25" tabindex="2"/>' . "\n";
 		echo '<input type="button" class="button" id="checkbutton2" disabled="disabled" value="'._('verificar').'" onclick="checkfield(\'email\', this.form, this.form.email)"/>' . "\n";
-	echo '<br/><span id="emailcheckitvalue"></span></p>' . "\n";
+	echo '&nbsp;<span id="emailcheckitvalue"></span></p>' . "\n";
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
 	echo '<span class="note">'._('al menos cinco caracteres').' </span><br />';

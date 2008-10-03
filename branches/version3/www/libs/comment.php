@@ -148,7 +148,7 @@ class Comment {
 		echo _('por'). ' ';
 
 		if ($this->type == 'admin') {
-			echo '<strong>'.get_server_name().'</strong> ';
+			echo '<strong>'._('admin').'</strong> ';
 			if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
 				echo ' ('.$this->username.') ';
 			}

@@ -107,8 +107,7 @@ function email_exists($email) {
 function check_email($email) {
 	global $globals;
 	require_once(mnminclude.'ban.php');
-	if (! preg_match('/^[a-zA-Z0-9_\-\.]+(\+[a-zA-Z0-9_\-\.]+)*@[a-zA-Z0-9_\-\.]+\.[a-zA-Z]{2,4}$/', $email)) 
-		return false;
+	if (! preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,4}$/i', $email)) return false;
 	if(check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
 	return true;
 }
@@ -119,7 +118,8 @@ function url_clean($url) {
 }
 
 function check_username($name) {
-	return (preg_match('/^[a-zçÇñÑ][a-z0-9_\-\.çÇñÑ·]+$/i', $name) && strlen($name) <= 24);
+	return (preg_match('/^[a-zçÇñÑ][a-z0-9_\-\.çÇñÑ·]+$/i', $name) && mb_strlen($name) <= 24 &&
+				! preg_match('/^admin/i', $name) ); // Does not allow nicks begining with "admin"
 }
 
 
