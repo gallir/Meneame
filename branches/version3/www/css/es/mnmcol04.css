@@ -163,26 +163,27 @@ color: #5073c5;
 }
 
 #sidebar h4 {
-margin-top: 30px;
+/*
 background: #ffd9c0;
-border-color: #ff6400;
+*/
+border-color: #FFCBAA;
 }
 
-#sidebar h4 a {
-color: #000;
+#sidebar h4 , #sidebar h4 a {
+color: #5073c5; 
 }
 
-#sidebar .vertical-box h4 {
+#sidebar .tags-box h4 {
 background: #5073c5;
 border-color: #fff;
 }
 
-#sidebar .vertical-box h4 a {
+#sidebar .tags-box h4 a {
 color: #fff;
 }
 
 .mini-pop {
-border-color: #ff6400;
+border-color: #FFCBAA;
 }
 
 .mnm-pop {
@@ -196,16 +197,16 @@ color: #ff6400;
 background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 }
 
-.vertical-box {
+.tags-box {
 background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
 }
 
-.vertical-box a {
+.tags-box a {
 color: #5073c5;
 }
 
 #sidebar .topcommentsli li, .storyrsslist li {
-border-color: #ff6400;
+border-color: #FFCBAA;
 color: #03a;
 }
 

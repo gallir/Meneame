@@ -155,7 +155,7 @@ clear:both;
 #sidebar {
 float: right;
 width: 300px;
-margin: 25px;
+margin: 2px 25px 25px 25px;
 overflow: hidden;
 }
 
@@ -331,26 +331,34 @@ text-decoration: underline;
 
 #sidebar h4 {
 text-align: center;
-border-bottom: 1px dotted;
 font-weight: bold;
-font-size: .9em;
-padding: .25em 0 0.15em 0;
-margin: .75em 0 0 0;
+font-size: 130%;
+font-family: sans-serif;
+padding: 0 0 0.15em 0;
+border-bottom: 1px solid;
 }
 
 #sidebar h4 a {
-font-size: 1em;
 text-decoration: none;
 }
 
-.mini-pop {
-clear: both;
-border-bottom: 1px dotted;
+#sidebar h4 a:hover {
+text-decoration: underline;
 }
 
-#sidepop h5 {
+.sidebox, .banner-right  {
+margin-bottom: 25px;
+}
+
+.sidebox h5 {
 margin: .3em 5px .6em 48px;
 font-size: .85em;
+}
+
+
+.mini-pop {
+clear: both;
+border-bottom: 1px solid;
 }
 
 .mnm-pop {
@@ -366,15 +374,16 @@ padding-top: 6px;
 border: 1px solid;
 }
 
-.vertical-box {
+.tags-box {
+margin-top: 30px;
 text-align: center;
 }
 
-.vertical-box a {
+.tags-box a {
 text-decoration: none;
 }
 
-.vertical-box a:hover {
+.tags-box a:hover {
 text-decoration: underline;
 }
 
@@ -385,7 +394,7 @@ line-height: 1.75em;
 
 #sidebar .topcommentsli li, .storyrsslist li {
 list-style-type: none;
-border-bottom: 1px dotted;
+border-bottom: 1px solid;
 padding: .35em 0;
 font-size: .85em;
 }
