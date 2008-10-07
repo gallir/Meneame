@@ -48,7 +48,7 @@ do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_best_stories();
+do_rss_box();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
@@ -71,6 +71,7 @@ if ($response['ids']) {
 
 do_pages($rows, $page_size);
 echo '</div>';
+do_footer_menu();
 do_footer();
 
 ?>

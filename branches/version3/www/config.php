@@ -118,8 +118,8 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm03.css';
-$globals['css_color'] = 'css/es/mnmcol03.css';
+$globals['css_main'] = 'css/es/mnm04.css';
+$globals['css_color'] = 'css/es/mnmcol04.css';
 
 // Store access stats
 $globals['save_pageloads'] = false;

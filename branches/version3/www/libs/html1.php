@@ -291,14 +291,38 @@ function do_footer_menu() {
 function do_rss() {
 	global $globals, $current_user;
 
-	if(!empty($globals['link_id'])) $is_history = true;
+	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
+	echo '<ul>'."\n";
 
-	if($is_history) $hlevel='h4'; else $hlevel='h5';
+	echo '<li>';
+	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('publicadas').'</a>';
+	echo '</li>' . "\n";
+	
+	echo '<li>';
+	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
+	echo '</li>' . "\n";
 
-	echo '<'.$hlevel.'>'._('suscripciones por RSS').'</'.$hlevel.'>'."\n";
+	if($current_user->user_id > 0) {
+		echo '<li>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('mis conversaciones').'</a>';
+		echo '</li>' . "\n";
+		echo '<li>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('comentarios a mis noticias').'</a>';
+		echo '</li>' . "\n";
+	}
 
-	if($is_history) $ulclass=' class="storyrsslist"';
-	echo '<ul'.$ulclass.'>'."\n";
+	echo '<li>';
+	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('todos los comentarios').'</a>';
+	echo '</li>' . "\n";
+	echo '</ul>' . "\n";
+}
+
+function do_rss_box() {
+	global $globals, $current_user;
+
+
+	echo '<div class="sidebox"><h4>'._('suscripciones por RSS').'</h4>'."\n";
+	echo '<ul class="storyrsslist">'."\n";
 
 	if(!empty($_REQUEST['q'])) {
 		$search =  htmlspecialchars($_REQUEST['q']);
@@ -328,7 +352,7 @@ function do_rss() {
 	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
 	echo '</li>' . "\n";
 
-	if($is_history) {
+	if($globals['link_id']) {
 		echo '<li>';
 		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios <em>de esta noticia</em>').'</a>';
 		echo '</li>' . "\n";
@@ -346,16 +370,7 @@ function do_rss() {
 	echo '<li>';
 	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('todos los comentarios').'</a>';
 	echo '</li>' . "\n";
-
-	/*
-	if(empty($globals['link_id'])) { // Netvibes. In homepage only.
-		echo '<li class="mnu-rss-external">';
-		echo '<a href="http://www.netvibes.com/subscribe.php?preconfig=7cec38e5bac4adc3608f68e8603bb3c3" title="Añadir a Netvibes"><img src="http://www.netvibes.com/img/add2netvibes.gif" width="91" height="17" border="0" alt="Añadir a Netvibes"/></a>';
-		echo '</li>';
-	}
-	*/
-
-	echo '</ul>' . "\n";
+	echo '</ul></div>' . "\n";
 }
 
 function get_toggler_plusminus($container_id, $enabled = false) {
@@ -532,7 +547,7 @@ function do_vertical_tags($what=false) {
 		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
 	}
 
-	if(memcache_mprint('tags_'.$status.$meta_cond)) return;
+	if(memcache_mprint('tags_4_'.$status.$meta_cond)) return;
 
 	$min_pts = 8;
 	$max_pts = 30;
@@ -545,7 +560,7 @@ function do_vertical_tags($what=false) {
 
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
-		$output = '<div class="vertical-box">';
+		$output = '<div class="tags-box">';
 		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4><p 
 		class="nube">'."\n";
 		foreach ($res as $item) {
@@ -564,7 +579,7 @@ function do_vertical_tags($what=false) {
 		}
 		$output .= '</p></div>';
 		echo $output;
-		memcache_madd('tags_3_'.$status.$meta_cond, $output, 600);
+		memcache_madd('tags_4_'.$status.$meta_cond, $output, 600);
 	}
 }
 
@@ -574,22 +589,22 @@ function do_best_comments() {
 	$foo_link = new Link();
 	$output = '';
 
-	if(memcache_mprint('best_comments_3')) return;
+	if(memcache_mprint('best_comments_4')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 43000); // about 12 hours 
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_login, link_id, link_uri, link_title, link_comments,  comment_karma*(1-(unix_timestamp(now())-unix_timestamp(comment_date))*0.7/43000) as value from comments, links, users  where comment_date > '$min_date' and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
 	if ($res) {
-		$output .= '<h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
+		$output .= '<div class="sidebox"><h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
 			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
-		$output .= '</ul>';
+		$output .= '</ul></div>';
 		echo $output;
-		memcache_madd('best_comments_3', $output, 300);
+		memcache_madd('best_comments_4', $output, 300);
 	}
 }
 
@@ -601,26 +616,26 @@ function do_best_story_comments($link) {
 
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 
-	if($do_cache && memcache_mprint('best_story_comments_'.$link->id)) return;
+	if($do_cache && memcache_mprint('best_story_comments_4_'.$link->id)) return;
 
 	$limit = min(25, intval($link->comments/5));
 	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 25 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
-		$output .= '<h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('comentarios +valorados').'</a></h4><ul class="topcommentsli">'."\n";
+		$output .= '<div class="sidebox"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $link->comments).'#comment-'.$comment->comment_order;
 			$output .= '<li><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 50).'</em></a></li>'."\n";
 		}
-		$output .= '</ul>';
+		$output .= '</ul></div>';
 		echo $output;
-		memcache_madd('best_story_comments_'.$link->id, $output, 300);
+		memcache_madd('best_story_comments_4_'.$link->id, $output, 300);
 	}
 }
 
 function do_best_stories() {
 	global $db, $globals, $dblang;
 
-	if(memcache_mprint('best_stories_'.$globals['meta_current'])) return;
+	if(memcache_mprint('best_stories_4_'.$globals['meta_current'])) return;
 
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
@@ -632,7 +647,7 @@ function do_best_stories() {
 		$category_list  = '';
 		$title = _('populares');
 	}
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
+	$output = '<div class="sidebox"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours 
 	// The order is not exactly the votes
@@ -648,7 +663,7 @@ function do_best_stories() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_stories_'.$globals['meta_current'], $output, 300);
+		memcache_madd('best_stories_4_'.$globals['meta_current'], $output, 300);
 	}
 }
 
@@ -657,7 +672,7 @@ function do_best_queued() {
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 
-	if(memcache_mprint('best_queued_'.$globals['meta_current'])) return;
+	if(memcache_mprint('best_queued_4_'.$globals['meta_current'])) return;
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
@@ -667,7 +682,7 @@ function do_best_queued() {
 		$title = _('candidatas');
 	}
 
-	$output = '<div id="sidepop"><h4><a href="'.$globals['base_url'].'promote.php">'.$title.'</a></h4>';
+	$output = '<div class="sidebox"><h4><a href="'.$globals['base_url'].'promote.php">'.$title.'</a></h4>';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*3); // 72 hours
 	// The order is not exactly the votes
@@ -683,7 +698,7 @@ function do_best_queued() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_queued_'.$globals['meta_current'], $output, 300);
+		memcache_madd('best_queued_4_'.$globals['meta_current'], $output, 300);
 	}
 }
 
@@ -691,7 +706,7 @@ function do_best_posts() {
 	global $db, $globals, $dblang;
 	$output = '';
 
-	if(memcache_mprint('best_posts_3')) return;
+	if(memcache_mprint('best_posts_4')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
@@ -702,7 +717,7 @@ function do_best_posts() {
 		}
 		$output .= '</ul>';
 		echo $output;
-		memcache_madd('best_posts_3', $output, 300);
+		memcache_madd('best_posts_4', $output, 300);
 	}
 }
 
