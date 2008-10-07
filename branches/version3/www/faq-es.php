@@ -119,16 +119,16 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Por qué es tan similar a Digg?</h4>
 
-<p>Porque era un buen punto de partida, la interfaz e interacción con el usuario era simple y efectiva. ¿Porqué reinventar la rueda desde cero si ya está bastante redonda?.</p>
+<p>Porque era un buen punto de partida, la interfaz e interacción con el usuario era simple y efectiva. ¿Por qué reinventar la rueda desde cero si ya está bastante redonda?</p>
 
-<p>De todas formas el objetivo del menéame es distinto. No sólo se dan cuenta los que pueden votar anónimamente, también los autores de los apuntes enlazados que reciben notificación inmediata (<em>trackbacks</em>) y especialmente los autores que envian noticias. Estos últimos notan las diferencias fundamentales, y cómo está todo pensado para facilitar el <em>meneos</em> de blogs más que de sitios genéricos.</p>
+<p>De todas formas el objetivo del menéame es distinto. No sólo se dan cuenta los que pueden votar anónimamente, también los autores de los apuntes enlazados que reciben notificación inmediata (<em>trackbacks</em>) y especialmente los autores que envían noticias. Estos últimos notan las diferencias fundamentales, y cómo está todo pensado para facilitar el <em>meneos</em> de blogs más que de sitios genéricos.</p>
 
 <p>El objetivo fundamental y diferencias con Digg están explicadas en <a href="http://mnm.uib.es/gallir/posts/2005/12/08/535/"><em>¿Qué y porqué el menéame?</em></a></p>
 </li>
 
 
 <li id="<? echo "q$q";$q++;?>">
-<h4>¿Cuales son las diferencias fundamentales con Digg y otros servicios similares?</h4>
+<h4>¿Cuáles son las diferencias fundamentales con Digg y otros servicios similares?</h4>
 <ul>
 
 <li>Se permiten votos anónimos.</li>
@@ -170,11 +170,11 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </li>
 
 <li id="<? echo "q$q";$q++;?>">
-<h4>Dices que el software no está acabado, ¿cuando lo estará?</h4>
-<p><strong>Nunca</strong>. Un programa nunca está acabado. A nosotros nos está resultando divertido hacer estos programas que nos ayuda a resolver un problema inherente de los blogs personales, y al mismo tiempo pasarnos pipas implementando chorradas que no tienen sentido o son impensables en la actual web donde predomina el <em>eBusiness</em>.
+<h4>Dices que el software no está acabado, ¿cuándo lo estará?</h4>
+<p><strong>Nunca</strong>. Un programa nunca está acabado. A nosotros nos está resultando divertido hacer estos programas que nos ayudan a resolver un problema inherente de los blogs personales, y al mismo tiempo pasarlo muy bien implementando chorradas que no tienen sentido o son impensables en la actual web donde predomina el <em>eBusiness</em>.
 </p>
 
-<p>Las funcionalidad básicas están acabadas, faltan detalles, como las características que <a href="http://meneame.wikispaces.com/Sugerencias" title="en el wiki">solicitan los usuarios</a>.</p>
+<p>Las funcionalidades básicas están acabadas, faltan detalles, como las características que <a href="http://meneame.wikispaces.com/Sugerencias" title="en el wiki">solicitan los usuarios</a>.</p>
 
 </li>
 
@@ -185,7 +185,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </li>
 
 <li id="<? echo "q$q";$q++;?>">
-<h4>¿Porqué una elefanta en el logo?</h4>
+<h4>¿Por qué una elefanta en el logo?</h4>
 <pre>
     Un elefante se <strike>balanceaba</strike> meneaba
     sobre la tela de una araña
