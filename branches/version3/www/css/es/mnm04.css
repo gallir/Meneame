@@ -334,8 +334,7 @@ text-align: center;
 font-weight: bold;
 font-size: 130%;
 font-family: sans-serif;
-padding: 0 0 0.15em 0;
-border-bottom: 1px solid;
+padding: 0 0 0.25em 0;
 }
 
 #sidebar h4 a {
@@ -348,10 +347,11 @@ text-decoration: underline;
 
 .sidebox, .banner-right  {
 margin-bottom: 25px;
+padding-top: 12px;
 }
 
 .sidebox h5 {
-margin: .3em 5px .6em 48px;
+margin: .5em 5px .6em 48px;
 font-size: .85em;
 }
 
@@ -388,7 +388,7 @@ text-decoration: underline;
 }
 
 .nube {
-padding: .5em 1em 1.5em 1em;
+padding: 0 1em 1.5em 1em;
 line-height: 1.75em;
 }
 

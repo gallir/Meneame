@@ -170,16 +170,11 @@ border-color: #FFCBAA;
 }
 
 #sidebar h4 , #sidebar h4 a {
-color: #5073c5; 
-}
-
-#sidebar .tags-box h4 {
-background: #5073c5;
-border-color: #fff;
+color: #FF6400;
 }
 
 #sidebar .tags-box h4 a {
-color: #fff;
+color: #FF6400;
 }
 
 .mini-pop {
@@ -198,7 +193,7 @@ background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 }
 
 .tags-box {
-background: #f3f6fb url('../../img/common/cloud-bg.png') no-repeat center bottom;
+background: #fff url('../../img/common/cloud-bg.png') no-repeat center bottom;
 }
 
 .tags-box a {
