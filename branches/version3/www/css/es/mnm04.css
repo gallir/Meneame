@@ -157,6 +157,7 @@ float: right;
 width: 300px;
 margin: 2px 25px 25px 25px;
 overflow: hidden;
+padding-top: 12px;
 }
 
 #newswrap {
@@ -347,6 +348,9 @@ text-decoration: underline;
 
 .sidebox, .banner-right  {
 margin-bottom: 25px;
+}
+
+.banner-right {
 padding-top: 12px;
 }
 
