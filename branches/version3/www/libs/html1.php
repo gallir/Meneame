@@ -711,11 +711,11 @@ function do_best_posts() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
 	if ($res) {
-		$output .= '<h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4><ul class="topcommentsli">'."\n";
+		$output .= '<div class="sidebox"><h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $post) {
 			$output .= '<li><strong>'.$post->user_login.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'"><em>'.text_to_summary($post->post_content, 50).'</em></a></li>'."\n";
 		}
-		$output .= '</ul>';
+		$output .= '</ul></div>';
 		echo $output;
 		memcache_madd('best_posts_4', $output, 300);
 	}
