@@ -8,8 +8,13 @@
 
 include('../config.php');
 include(mnminclude.'comment.php');
+include(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
+
+if(check_ban_proxy()) {
+	error(_('IP no permitida'));
+}
 
 if(!($id=check_integer('id'))) {
 	error(_('Falta el ID del comentario'));
