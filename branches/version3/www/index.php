@@ -52,8 +52,8 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 echo '<div id="sidebar">';
 do_best_stories();
 do_banner_right();
-do_best_comments();
 do_categories_cloud('published');
+do_best_comments();
 do_vertical_tags('published');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
