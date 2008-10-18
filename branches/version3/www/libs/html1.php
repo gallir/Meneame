@@ -547,7 +547,8 @@ function do_vertical_tags($what=false) {
 		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
 	}
 
-	if(memcache_mprint('tags_4_'.$status.$meta_cond)) return;
+	$cache_key = 'tags_4_'.$status.$meta_cond;
+	if(memcache_mprint($cache_key)) return;
 
 	$min_pts = 8;
 	$max_pts = 30;
@@ -561,8 +562,7 @@ function do_vertical_tags($what=false) {
 	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
 	if ($res) {
 		$output = '<div class="tags-box">';
-		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4><p 
-		class="nube">'."\n";
+		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4><p class="nube">'."\n";
 		foreach ($res as $item) {
 			$words[$item->tag_words] = $item->count;
 		}
@@ -579,7 +579,52 @@ function do_vertical_tags($what=false) {
 		}
 		$output .= '</p></div>';
 		echo $output;
-		memcache_madd('tags_4_'.$status.$meta_cond, $output, 600);
+		memcache_madd($cache_key, $output, 600);
+	}
+}
+
+function do_categories_cloud($what=false, $hours = 48) {
+	global $db, $globals, $dblang;
+
+	$cache_key = 'categories_cloud_'.$what;
+	if(memcache_mprint($cache_key)) return;
+
+	if (!empty($what)) {
+		$status = '= "'.$what. '"';
+	} else {
+		$status = "!= 'discarded'";
+	}
+
+
+	$min_pts = 8;
+	$max_pts = 30;
+	$line_height = $max_pts * 0.70;
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600); 
+	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id group by category_name";
+	$max = $db->get_var("select count(*) as words $from_where order by words desc limit 1");
+	$coef = ($max_pts - $min_pts)/($max-1);
+
+	$res = $db->get_results("select count(*) as count, category_name, category_id $from_where order by category_name asc");
+	if ($res) {
+		if ($what == 'queued') $page = $globals['base_url'].'shakeit.php?category=';
+		else  $page = $globals['base_url'].'?category=';
+
+		$output = '<div class="tags-box">';
+		$output .= '<h4>'._('categorias populares').'</h4><p class="nube">'."\n";
+		foreach ($res as $item) {
+			if ($item->count > 1) {
+				$counts[$item->category_id] = $item->count;
+				$names[$item->category_id] = $item->category_name;
+			}
+		}
+		foreach ($counts as $id => $count) {
+			$size = round($min_pts + ($count-1)*$coef, 1);
+			$output .= '<a style="font-size: '.$size.'pt" href="'.$page.$id.'">'.$names[$id].'</a> ';
+		}
+		$output .= '</p></div>';
+		echo $output;
+		memcache_madd($cache_key, $output, 600);
 	}
 }
 
