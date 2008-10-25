@@ -768,13 +768,13 @@ class Link {
 	function is_editable() {
 		global $current_user, $db, $globals;
 
-		if($current_user->user_id && $this->status != 'published' && 
-			(($this->author == $current_user->user_id && $this->status != 'abuse' 
-					&& $current_user->user_level == 'normal' && $globals['now'] - $this->date < 1800) 
-			|| ($current_user->user_level == 'special' && $globals['now'] - $this->date < 10400))
+		if($current_user->user_id) {
+			if(($this->author == $current_user->user_id && $this->status != 'published' && $this->status != 'abuse' && $globals['now'] - $this->sent_date < 1800)
+			|| ($this->author != $current_user->user_id && $current_user->user_level == 'special' && $globals['now'] - $this->sent_date < 10400)
 			|| $current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 				return true;
 			}
+		}
 		return false;
 	}
 
