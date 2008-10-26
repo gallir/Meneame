@@ -230,12 +230,12 @@ function get_current_page() {
 }
 
 function get_date($epoch) {
-    return date("Y-m-d", $epoch);
+    return date("Y-m-d e", $epoch);
 }
 
 function get_date_time($epoch) {
 	    //return date("Y-m-d H:i", $epoch);
-	    return date(" d-m-Y H:i", $epoch);
+	    return date(" d-m-Y H:i e", $epoch);
 }
 
 function get_server_name() {
