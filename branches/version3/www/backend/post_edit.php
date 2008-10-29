@@ -92,9 +92,12 @@ function save_post ($post_id) {
 				$user->karma = $user->karma - $reduction;
 				syslog(LOG_NOTICE, "Meneame: post_edit decreasing $reduction of karma to $user->username (now $user->karma)");
 				$user->store();
+
+				require_once(mnminclude.'annotation.php');
+				$annotation = new Annotation("karma-$user->id");
+				$annotation->append(_('demasiados enlaces al mismo dominio en las notas').": -$reduction, karma: $user->karma\n");
+
 			}
-
-
 			$post->store();
 		} else {
 			echo 'ERROR: ' . _('comentario grabado previamente');

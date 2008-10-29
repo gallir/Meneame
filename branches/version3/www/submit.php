@@ -118,7 +118,7 @@ function do_submit1() {
 
 	$url = clean_input_url($_POST['url']);
 	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
-	$url = preg_replace('/#.*$/', '', $url); // Remove the "#", people just abuse
+	$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
 
 	echo '<div>'."\n";
 

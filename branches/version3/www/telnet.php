@@ -65,6 +65,8 @@ function to_html(data) {
 	if (data.type == 'chat') {
 		html += '<div class="sneaker-type">T</div>';
 		html += '<div class="sneaker-votes">&nbsp;</div>';
+		// Open in a new window
+		data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
 		html += '<div class="sneaker-chat">'+data.title+'</div>';
 		html += '<div class="sneaker-who">';
 		html += '<a target="_blank" href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
