@@ -680,7 +680,8 @@ function do_best_story_comments($link) {
 function do_best_stories() {
 	global $db, $globals, $dblang;
 
-	if(memcache_mprint('best_stories_4_'.$globals['meta_current'])) return;
+	$key = 'best_stories_4_'.$globals['meta_current'];
+	if(memcache_mprint($key)) return;
 
 	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
@@ -699,16 +700,20 @@ function do_best_stories() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
+		$n = 0;
 		foreach ($res as $link) {
 			$foo_link->uri = $link->link_uri;
 			$url = $foo_link->get_relative_permalink();
 			$output .= '<div class="mnm-pop">'.$link->votes.'</div>';
-			$output .= '<h5><a href="'.$url.'">'.$link->link_title.'</a></h5>';
+			if ($n == 0) $output .= '<h5 style="font-size:100%">';
+			else $output .= '<h5>';
+			$output .= '<a href="'.$url.'">'.$link->link_title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
+			$n++;
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_stories_4_'.$globals['meta_current'], $output, 300);
+		memcache_madd($key, $output, 300);
 	}
 }
 
