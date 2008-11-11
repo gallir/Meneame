@@ -134,7 +134,7 @@ function check_checkfield(fieldname, mess) {
 function report_problem(frm, user, id, md5 /*id, code*/) {
 	if (frm.ratings.value == 0)
 		return;
-	if (! confirm("¿Seguro que desea reportarlo?") ) {
+	if (! confirm("¿Seguro que desea votar '" + frm.ratings.options[frm.ratings.selectedIndex].text +"'?") ) {
 		frm.ratings.selectedIndex=0;
 		return false;
 	}
