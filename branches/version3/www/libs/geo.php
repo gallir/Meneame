@@ -95,7 +95,7 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 		echo 'disabled="disabled" ';
 	}
 	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.')"/>';
-	echo '<br/><spam class="note">'._('puedes hacer clic en el mapa o buscar por "país", "ciudad, país" o "calle, ciudad, país"...')."\n";
+	echo '<br/><span class="note">'._('puedes hacer clic en el mapa o buscar por "país", "ciudad, país" o "calle, ciudad, país"...')."\n";
 	echo '<br/>'._('también acepta coordenadas "lat, long", i.e. "1.234, -54.321"')."</span>\n";
 	echo '</form>'."\n";
 ?>

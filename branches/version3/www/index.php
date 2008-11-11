@@ -13,8 +13,9 @@ include(mnminclude.'link.php');
 meta_get_current();
 
 
-$page_size = 20;
-$offset=(get_current_page()-1)*$page_size;
+$page_size = 15;
+$page = get_current_page();
+$offset=($page-1)*$page_size;
 $globals['ads'] = true;
 
 $cat=$_REQUEST['category'];
@@ -50,11 +51,18 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
-do_best_stories();
-do_banner_right();
+if ($page < 2) {
+	do_best_stories();
+	do_banner_right();
+} else {
+	do_banner_right();
+	do_best_stories();
+}
 do_categories_cloud('published');
-do_best_comments();
-do_vertical_tags('published');
+if ($page < 2) {
+	do_best_comments();
+	do_vertical_tags('published');
+}
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
