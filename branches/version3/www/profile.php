@@ -152,10 +152,10 @@ function show_profile() {
 	echo '<p>'._('introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:').'</p>';
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
-	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" /></p>' . "\n";
+	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" onkeyup="return securePasswordCheck(this.form.password);"/></p>' . "\n";
 
 	echo '<p><label for="verify">' . _("repite la clave") . ': </label><br />' . "\n";
-	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" /></p>' . "\n";
+	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" onkeyup="checkEqualFields(this.form.password2, this.form.password)"/></p>' . "\n";
 
 	if ($admin_mode) {
 		echo '<p><label for="verify">' . _("estado") . ': </label><br />' . "\n";
@@ -318,12 +318,15 @@ function save_profile() {
 
 	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
-		if(trim($_POST['password']) !== trim($_POST['password2'])) {
+		if(! check_password($_POST["password"]) ) {
+    	    $messages .= '<p class="form-error">'._('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números').'</p>';
+        	$errors=1;
+	    } else if(trim($_POST['password']) !== trim($_POST['password2'])) {
 			$messages .= '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
 			$errors = 1;
 		} else {
 			$user->pass=md5(trim($_POST['password']));
-			$messages .= '<p>'._('La clave se ha cambiado').'</p>';
+			$messages .= '<p  class="form-error">'._('La clave se ha cambiado').'</p>';
 			$pass_changed = true;
 		}
 	}
@@ -364,7 +367,7 @@ function save_profile() {
 					$current_user->user_email != $user->email || $pass_changed)) {
 			$current_user->Authenticate($user->username, $user->pass);
 		}
-		$messages .= '<p class="form-error">'._('datos actualizados').'</h2>';
+		$messages .= '<p class="form-error">'._('datos actualizados').'</p>';
 	}
 	return $messages;
 }

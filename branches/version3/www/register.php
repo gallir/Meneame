@@ -52,10 +52,11 @@ function do_register0() {
 	echo '&nbsp;<span id="emailcheckitvalue"></span></p>' . "\n";
 
 	echo '<p><label for="password">' . _("clave") . ':</label><br />' . "\n";
-	echo '<span class="note">'._('al menos cinco caracteres').' </span><br />';
-	echo '<input type="password" id="password" name="password" size="25" tabindex="3"/></p>' . "\n";
+	echo '<span class="note">'._('al menos ocho caracteres, incluyendo mayúsculas, minúsculas y números').' </span><br />';
+	echo '<input type="password" id="password" name="password" size="25" tabindex="3" onkeyup="return securePasswordCheck(this.form.password);"/><span id="password1-warning"></span></p>' . "\n";
 	echo '<p><label for="verify">' . _("verificación de clave") . ': </label><br />' . "\n";
-	echo '<input type="password" id="verify" name="password2" size="25" tabindex="4"/></p>' . "\n";
+
+	echo '<input type="password" id="verify" name="password2" size="25" tabindex="4" onkeyup="checkEqualFields(this.form.password2, this.form.password)"/></p>' . "\n";
 
 	echo '<p><span class="note">'._('has leído y aceptas las ');
 	do_legal(_('condiciones de uso'), 'target="_blank"', false);
@@ -161,8 +162,8 @@ function check_user_fields() {
 		register_error(_("Caracteres inválidos en la clave"));
 		$error=true;
 	}
-	if(strlen($_POST["password"]) < 5 ) {
-		register_error(_("Clave demasiado corta, debe ser de 5 o más caracteres"));
+	if(! check_password($_POST["password"])) {
+		register_error(_("Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números."));
 		$error=true;
 	}
 	if($_POST["password"] !== $_POST["password2"] ) {

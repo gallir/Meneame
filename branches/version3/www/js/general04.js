@@ -92,6 +92,36 @@ function parseLinkAnswer (id, link)
 	return false;
 }
 
+function securePasswordCheck(field) {
+	/*La función comprueba si la clave contiene al menos
+	 *ocho caracteres e incluye mayúsculas, minúsculas y números.
+	 *
+	 * Function checks if the password provided contains at least
+	 * eight chars, including upper, lower and numbers.
+	 *
+	 * jotape - jplopez.net */
+
+	if (field.value.length > 5 && field.value.match("^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$", "g")) {
+		if (field.value.match("^(?=.{8,})(?=(.*[a-z].*))(?=(.*[A-Z].*))(?=(.*[0-9].*)).*$", "g")) {
+			field.style.backgroundColor = "#8FFF00";
+		} else {
+			field.style.backgroundColor = "#F2ED54";
+		}
+	} else {
+		field.style.backgroundColor = "#F56874";
+	}
+	return false;
+}
+
+function checkEqualFields(field, against) {
+	if(field.value == against.value) {
+		field.style.backgroundColor = '#8FFF00';
+	} else {
+		field.style.backgroundColor = "#F56874";
+	}
+	return false;
+}
+
 function enablebutton (button, button2, target)
 {
 	var string = target.value;

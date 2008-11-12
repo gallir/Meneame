@@ -126,6 +126,10 @@ function check_username($name) {
 				! preg_match('/^admin/i', $name) ); // Does not allow nicks begining with "admin"
 }
 
+function check_password($password) {
+	 return preg_match("/^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$/", $password);
+}
+
 
 function txt_time_diff($from, $now=0){
 	global $globals;
