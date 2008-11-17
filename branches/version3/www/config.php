@@ -59,9 +59,11 @@ $globals['comments_page_threshold'] = 1.10;
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
 
-// How many links for last 3 minutes
+// How many *global* links for last 3 minutes
 // If user->karma > 10 then limit = limit*1.5
 $globals['limit_3_minutes'] = 10;
+
+$globals['limit_user_24_hours'] = 12;
 
 //$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
 $globals['max_sneakers'] = 250;

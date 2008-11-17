@@ -134,6 +134,16 @@ function do_submit1() {
 		return;
 	}
 
+	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
+
+	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
+		echo '<p class="error">'._('Debes esperar, tienes demasiadas noticias en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
+		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): $_POST[url]");
+		echo '<br style="clear: both;" />' . "\n";
+		echo '</div>'. "\n";
+		return;
+	}
+
 	// check the URL is OK and that it resolves
 	$url_components = @parse_url($url);
 	if (!$url_components || ! $url_components['host'] || gethostbyname($url_components['host']) == $url_components['host']) {
