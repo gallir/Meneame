@@ -254,8 +254,6 @@ function do_submit1() {
 	if ($same_user > 1 && $current_user->user_karma < 12) {
 		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
-		echo "<!-- Positives: $positives_received -->\n";
-		echo "<!-- Negatives: $negatives_received -->\n";
 		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
 			echo '<p class="error"><strong>'._('debes esperar, has tenido demasiados votos negativos en tus últimos envíos').  '</strong></p>';
 			echo '<br style="clear: both;" />' . "\n";
@@ -366,6 +364,17 @@ function do_submit1() {
 			echo '</div>'. "\n";
 			return;
 		}
+	}
+
+	// Avoid users sending too many links to the same site in last hours
+	$hours = 24;
+	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour) and link_author=$current_user->user_id and link_blog=$linkres->blog and link_votes > 0");
+	if ($same_blog > 2) {
+		syslog(LOG_NOTICE, "Meneame, forbidden due to too many links to the same site in last $hours hours ($current_user->user_login): $linkres->url");
+		echo '<p class="error"><strong>'._('demasiados enlaces al mismo sitio en las últimas horas').'</strong></p> ';
+		echo '<br style="clear: both;" />' . "\n";
+		echo '</div>'. "\n";
+		return;
 	}
 
 	// avoid auto-promotion (autobombo)
