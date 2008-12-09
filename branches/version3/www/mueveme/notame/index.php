@@ -24,6 +24,20 @@ $page_size = 30;
 $post = new Post;
 
 
+switch ($option) {
+	case '':
+    case '_all':
+		$sql = "SELECT post_id from posts order by post_date desc LIMIT $page_size";
+		break;
+	default:
+		$user = new User;
+		$user->username = $db->escape($option);
+		if(!$user->read()) {
+			not_found();
+		}
+		$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $page_size";
+}
+
 header("Content-type: text/html; charset=utf-8");
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">' . "\n";
 echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'">' . "\n";
@@ -44,20 +58,6 @@ echo '<a href="../">'._('Muéveme').'</a>';
 echo '</div>';
 
 echo "<ul>\n";
-switch ($option) {
-	case '':
-    case '_all':
-		$sql = "SELECT post_id from posts order by post_date desc LIMIT $page_size";
-		break;
-	default:
-		$user = new User;
-		$user->username = $db->escape($option);
-		if(!$user->read()) {
-			not_found();
-		}
-		$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $page_size";
-}
-
 
 $posts = $db->get_col($sql);
 if ($posts) {
