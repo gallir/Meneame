@@ -16,10 +16,12 @@ if(!empty($_REQUEST['rows'])) {
 } else $rows = 100;
 	
 $if_modified = get_if_modified();
-if ($if_modified < time() - 250000) { // Last 3 days at most
-	$if_modified = time() - 250000;
-}
-$from_time = "post_date > FROM_UNIXTIME($if_modified)";
+if ($if_modified) {
+	if ($if_modified < time() - 250000) { // Last 3 days at most
+		$if_modified = time() - 250000;
+	}
+	$from_time = "post_date > FROM_UNIXTIME($if_modified)";
+} $from_time = 'True'; // Trick to avoid sql errors with empty "and's"
 
 
 
