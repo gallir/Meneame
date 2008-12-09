@@ -29,7 +29,7 @@ class UserAuth {
 			if($_COOKIE['mnm_user'] === $userInfo[0]) {
 				$cookietime = (int) $userInfo[3];
 				$dbusername = $db->escape($_COOKIE['mnm_user']);
-				$dbuser=$db->get_row("SELECT user_id, user_pass, user_level, user_validated_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
+				$dbuser=$db->get_row("SELECT SQL_CACHE user_id, user_pass, user_level, user_validated_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
 
 				// We have two versions from now
 				// The second is more strong agains brute force md5 attacks

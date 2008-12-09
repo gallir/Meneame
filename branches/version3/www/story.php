@@ -184,7 +184,7 @@ case 2:
 	// If option is "normal comments", show also last trackbakcs and pingbacks
 	// TB are shown only in the last page
 	if ($tab_option == 1 && ! $requested_page) {
-		$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
+		$trackbacks = $db->get_col("SELECT SQL_CACHE trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
 		if ($trackbacks) {
 			echo '<fieldset><legend><a href="'.$globals['link_permalink'].'/trackbacks">'._('últimas relacionadas').'</a></legend>';
 			echo '<ul class="tab-trackback">';
@@ -202,7 +202,7 @@ case 2:
 
 	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 
-	$comments = $db->get_col("SELECT comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
+	$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
 	if ($comments) {
 		echo '<ol class="comments-list">';
 		require_once(mnminclude.'comment.php');
@@ -334,7 +334,7 @@ case 7:
 	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
 	echo '<ul class="tab-trackback">';
 
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
+	$trackbacks = $db->get_col("SELECT SQL_CACHE trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
 	if ($trackbacks) {
 		require_once(mnminclude.'trackback.php');
 		$trackback = new Trackback;

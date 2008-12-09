@@ -418,7 +418,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 	} else {
 		$category_condition = "category_parent > 0";
 	}
-	$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
+	$categories = $db->get_results("SELECT SQL_CACHE category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
 	if ($categories) {
 		$i = 0;
 		foreach ($categories as $category) {
@@ -611,7 +611,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 		else  $page = $globals['base_url'].'?category=';
 
 		$output = '<div class="tags-box">';
-		$output .= '<h4>'._('categorias populares').'</h4><p class="nube">'."\n";
+		$output .= '<h4>'._('categorías populares').'</h4><p class="nube">'."\n";
 		foreach ($res as $item) {
 			if ($item->count > 1) {
 				$counts[$item->category_id] = $item->count;

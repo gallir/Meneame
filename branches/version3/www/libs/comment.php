@@ -63,7 +63,7 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT comments.*, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
 			$this->type = $link->comment_type;
 			$this->author=$link->comment_user_id;
 			$this->username=$link->user_login;
@@ -232,7 +232,7 @@ class Comment {
 	function username() {
 		global $db;
 //TODO
-		$this->username = $db->get_var("SELECT user_login FROM users WHERE user_id = $this->author");
+		$this->username = $db->get_var("SELECT SQL_CACHE user_login FROM users WHERE user_id = $this->author");
 		return $this->username;
 	}
 

@@ -106,7 +106,7 @@ class User {
 		elseif(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
 		elseif(!empty($this->email)) $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled'";
 
-		if(!empty($where) && ($user = $db->get_row("SELECT * FROM users WHERE $where limit 1"))) {
+		if(!empty($where) && ($user = $db->get_row("SELECT SQL_CACHE * FROM users WHERE $where limit 1"))) {
 			$this->id =$user->user_id;
 			$this->username = $user->user_login;
 			$this->username_register = $user->user_login_register;
@@ -152,7 +152,7 @@ class User {
 		global $db;
 
 		if(!$this->read) $this->read();
-		return (int) $db->get_var("SELECT count(*) FROM users WHERE user_karma > $this->karma") + 1;
+		return (int) $db->get_var("SELECT SQL_CACHE count(*) FROM users WHERE user_karma > $this->karma") + 1;
 	}
 
 	function blogs() {

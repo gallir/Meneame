@@ -346,7 +346,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
+		if(($link = $db->get_row("SELECT SQL_CACHE link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->blog=$link->link_blog;
@@ -387,7 +387,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT links.*, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
+		if(($link = $db->get_row("SELECT SQL_CACHE links.*, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
 			$this->id=$link->link_id;
 			$this->author=$link->link_author;
 			$this->username=$link->user_login;
@@ -419,7 +419,7 @@ class Link {
 			$this->ip=$link->link_ip;
 			$this->content_type=$link->link_content_type;
 			if ($this->category > 0) {
-				$meta_info = $db->get_row("SELECT categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
+				$meta_info = $db->get_row("SELECT SQL_CACHE categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
 				$this->category_name=$meta_info->category_name;
 				$this->meta_name=$meta_info->meta_name;
 				$this->meta_uri=$meta_info->meta_uri;
@@ -442,7 +442,8 @@ class Link {
 			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
 		}
 		$list .= ", '$link_alternative', '$link_alternative/'";
-		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND (link_status not in ('discard', 'abuse') OR link_votes>0) limit 1");
+		// If it was abuse o autodiscarded allow other to send it again
+		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse', 'autodiscard') AND link_votes > 0 ORDER by link_id asc limit 1");
 		return $found;
 	}
 
@@ -513,7 +514,7 @@ class Link {
 
 		// Print a summary of the best comment
 		if ($karma_best_comment > 0 && 
-			($best_comment = $db->get_row("select comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment order by comment_karma desc limit 1"))) {
+			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment order by comment_karma desc limit 1"))) {
 			echo '<div style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
 			$link = $this->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $best_comment->comment_order, $this->comments).'#comment-'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
@@ -651,7 +652,7 @@ class Link {
 					echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
 			} else {
 				// Only says "what" if most votes are "wrong" or "duplicated" 
-				$negatives = $db->get_row("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
+				$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 				if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
 					echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
 				} else {

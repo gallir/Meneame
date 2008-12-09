@@ -49,7 +49,7 @@ if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbti
 
 
 // Get the logs
-$logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > $dbtime order by log_date desc limit $max_items");
+$logs = $db->get_results("select SQL_CACHE UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > $dbtime order by log_date desc limit $max_items");
 
 if ($logs) {
 	foreach ($logs as $log) {
@@ -201,7 +201,7 @@ function get_chat($time) {
 
 	if (!empty($_REQUEST['admin']) || !empty($_REQUEST['friends'])) $chat_items = $max_items * 2;
 	else $chat_items = $max_items;
-	$res = $db->get_results("select * from chats where chat_time > $time order by chat_time desc limit $chat_items");
+	$res = $db->get_results("select SQL_CACHE * from chats where chat_time > $time order by chat_time desc limit $chat_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$json['uid'] = $uid = $event->chat_uid;
@@ -265,7 +265,7 @@ function get_chat($time) {
 function get_votes($dbtime) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select SQL_CACHE vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($current_user->user_id > 0) {
@@ -334,7 +334,7 @@ function get_votes($dbtime) {
 
 function get_story($time, $type, $linkid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link;
-	$event = $db->get_row("select user_login, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments from links, users where link_id = $linkid and user_id=$userid");
+	$event = $db->get_row("select SQL_CACHE user_login, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments from links, users where link_id = $linkid and user_id=$userid");
 	if (!$event) return;
 	$foo_link->id=$linkid;
 	$foo_link->uri=$event->link_uri;
@@ -356,7 +356,7 @@ function get_story($time, $type, $linkid, $userid) {
 
 function get_comment($time, $type, $commentid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
-	$event = $db->get_row("select user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
+	$event = $db->get_row("select SQL_CACHE user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
@@ -383,7 +383,7 @@ function get_comment($time, $type, $commentid, $userid) {
 
 function get_post($time, $type, $postid, $userid) {
 	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
-	$event = $db->get_row("select user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
+	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
 	// Dont show her notes if the user ignored
 	if ($type == 'post' && friend_exists($current_user->user_id, $userid) < 0) return;

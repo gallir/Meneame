@@ -430,7 +430,7 @@ function meta_get_current() {
 	//Check for personalisation
 	// Authenticated users
 	if ($current_user->user_id > 0) {
-		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
+		$categories = $db->get_col("SELECT SQL_CACHE pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
 		if ($categories) { 
 			$current_user->has_personal = true;
 			$globals['meta_skip'] = '?meta=_all';
@@ -458,7 +458,7 @@ function meta_get_current() {
 		if ($globals['meta'][0] == '_') {
 			$globals['meta_current'] = $globals['meta'];
 		} else {
-			$globals['meta_current'] = (int) $db->get_var("select category_parent from categories where category_id = $cat and category_parent > 0");
+			$globals['meta_current'] = (int) $db->get_var("select SQL_CACHE category_parent from categories where category_id = $cat and category_parent > 0");
 			$globals['meta'] = '';
 		}
 	} elseif ($globals['meta']) {
@@ -467,7 +467,7 @@ function meta_get_current() {
 			return 0;
 		}
 		$meta = $db->escape($globals['meta']);
-		$globals['meta_current'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
+		$globals['meta_current'] = $db->get_var("select SQL_CACHE category_id from categories where category_uri = '$meta' and category_parent = 0");
 		if ($globals['meta_current']) {
 			$globals['meta'] = '';  // Security measure
 		}
@@ -484,7 +484,7 @@ function meta_get_current() {
 
 function meta_get_categories_list($id) {
 	global $db;
-	$categories = $db->get_col("SELECT category_id FROM categories WHERE category_parent = $id order by category_id");
+	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories WHERE category_parent = $id order by category_id");
 	if (!$categories) return false;
 	return implode(',', $categories);
 }

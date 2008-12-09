@@ -30,32 +30,32 @@ if ( !strlen($_GET['sortby']) > 0) {
 
 switch ($sortby) {
 	case 0:
-		$select = "SELECT user_id ";
+		$select = "SELECT SQL_CACHE user_id ";
 		$from_where = " FROM users ";
 		$order_by = " ORDER BY user_login ";
 		break;
 	case 1:
-		$select = "SELECT user_id ";
+		$select = "SELECT SQL_CACHE user_id ";
 		$from_where = " FROM users ";
 		$order_by = " ORDER BY user_karma DESC ";
 		break;
 	case 2:
-		$select = "SELECT user_id, count(*) as count ";
+		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
 		$from_where = " FROM links, users WHERE  link_author=user_id GROUP BY link_author";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 3:
-		$select = "SELECT user_id, count(*) as count ";
+		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
 		$from_where = " FROM links, users WHERE  link_status = 'published' AND link_author=user_id GROUP BY link_author";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 4:
-		$select = "SELECT user_id, count(*) as count ";
+		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
 		$from_where = " FROM comments, users WHERE comment_user_id=user_id GROUP BY comment_user_id";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 5:
-		$select = "SELECT user_id, count(*) as count ";
+		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
 		$from_where = " FROM votes, users WHERE vote_type='links' and vote_user_id=user_id GROUP BY vote_user_id";
 		$order_by = " ORDER BY count DESC ";
 		break;
@@ -86,7 +86,7 @@ for($i=0; $i<count($items); $i++) {
 
 echo '</tr>';
 $user = new User;
-$rows = $db->get_var("SELECT count(*) as count $from_where");
+$rows = $db->get_var("SELECT SQL_CACHE count(*) as count $from_where");
 $users = $db->get_results("$select $from_where $order_by LIMIT $offset,$page_size");
 if ($users) {
 	foreach($users as $dbuser) {

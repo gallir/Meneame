@@ -100,8 +100,8 @@ if($cat) {
 }
 
 $link = new Link;
-$rows = $db->get_var("SELECT count(*) $from_where");
-$links = $db->get_col("SELECT link_id $from_where $order_by LIMIT $offset,$page_size");
+$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
+$links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {
 		$link->id=$link_id;
@@ -136,7 +136,7 @@ function print_shakeit_tabs($option=-1) {
 	}
 	echo '<li '.$active[1].'><a href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[1].'</li>'."\n";
 	// Do metas' list
-	$metas = $db->get_results("SELECT category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) {
