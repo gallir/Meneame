@@ -14,6 +14,7 @@ function menealo(user, id, htmlid, md5)
 				parseLinkAnswer(htmlid, data);
 		}
 	);
+	reportAjaxStats('vote', 'link');
 }
 
 function menealo_comment(user, id, value)
@@ -36,6 +37,7 @@ function menealo_comment(user, id, value)
 			}
 		}
 	);
+	reportAjaxStats('vote', 'comment');
 }
 
 function menealo_post(user, id, value)
@@ -58,6 +60,7 @@ function menealo_post(user, id, value)
 			}
 		}
 	);
+	reportAjaxStats('vote', 'post');
 }
 
 
@@ -175,6 +178,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 			parseLinkAnswer(id, data);
 		}
 	);
+	reportAjaxStats('vote', 'link');
 	return false;
 }
 
@@ -183,6 +187,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
 	$('#'+container).load(url);
+	reportAjaxStats('html', program);
 }
 
 function modal_from_ajax(url, title) {
@@ -192,6 +197,7 @@ function modal_from_ajax(url, title) {
 	// create a modal dialog with the data
 		$('#modalContent').html(data);
 	});
+	reportAjaxStats('modal', 'view');
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
@@ -396,6 +402,7 @@ tooltip.ajax_request = function(script, id, maxcache) {
 			tooltip.setText(html);
 		}
 	});
+	reportAjaxStats('tooltip', 'ajax');
 }
 
 /************************
@@ -440,13 +447,12 @@ function replaceText(text, tag) {
 }
 
 
-// This function report the ajax request to stats trackers
-// Only known how to do it with urchin/Google Analytics
-// See http://www.google.com/support/analytics/bin/answer.py?answer=33985&topic=7292
-function reportAjaxStats(page) {
-	return; // Slow down
-	if (window.urchinTracker) {
-		urchinTracker(page+'.ajax'); 
+// This function report the ajax request to stats events if enabled in your account
+// http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
+function reportAjaxStats(category, action) {
+	//return; // Slow down
+	if (pageTracker._trackEvent) {
+		pageTracker._trackEvent(category, action);
 	}
 }
 

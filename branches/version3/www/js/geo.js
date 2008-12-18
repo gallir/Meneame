@@ -63,8 +63,9 @@ function geo_coder_load(lat, lng, zoom, icontype) {
 }
 
 function geo_coder_editor_load(lat, lng, zoom, icontype) {
-	if (geo_coder_load(lat, lng, zoom, icontype))
-		geo_add_click_listener(icontype)
+	if (geo_coder_load(lat, lng, zoom, icontype)) {
+		geo_add_click_listener(icontype);
+	}
 }
 
 function geo_add_click_listener(icontype) {
@@ -134,6 +135,7 @@ function geo_save_current(type, id) {
 				}
 			}
     	});
+		reportAjaxStats('geo', 'save');
 	} else {
 		alert ('No address to save');
 	}
@@ -154,6 +156,7 @@ function geo_delete(type, id) {
 			}
 		}
    	});
+	reportAjaxStats('geo', 'delete');
 }
 
 function geo_load_xml(type, req_status, zoom) {
