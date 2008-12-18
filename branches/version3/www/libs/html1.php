@@ -659,12 +659,17 @@ function do_best_story_comments($link) {
 	$do_cache = false;
 	$output = '';
 
-	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
+	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) {
+		$do_cache = true;
+		$sql_cache = 'SQL_NO_CACHE';
+	} else {
+		$sql_cache = 'SQL_CACHE';
+	}
 
 	if($do_cache && memcache_mprint('best_story_comments_4_'.$link->id)) return;
 
 	$limit = min(25, intval($link->comments/5));
-	$res = $db->get_results("select comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 25 and comment_user_id = user_id order by comment_karma desc limit $limit");
+	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_login, substring(comment_content, 1, 60) as content from comments, users  where comment_link_id = $link->id and comment_karma > 25 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
 		$output .= '<div class="sidebox"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
