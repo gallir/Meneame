@@ -143,17 +143,19 @@ class HtmlImages {
 
 	function parse_img() {
 		preg_match_all('/(<img [^>]*>|["\'][\da-z\/]+\.jpg["\'])/i', $this->html, $matches);
-		$n = 0;
+		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
 			//echo htmlentities($match) . "<br>\n";
 			$img = new WebImage($match, $this->url);
 			if ($img->same_domain && $img->good()) {
+				$goods++;
 				if (!$this->selected || ($this->selected->surface() < $img->surface() / ($n+2))) {
 					$this->selected = $img;
 					$n++;
 					//echo "CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y<br/>\n";
 				}
 			}
+			if ($goods > 5 && $n > 0) break;
 		}
 		if ($this->selected && ! $this->selected->image) $this->selected->get();
 		return $this->selected;
