@@ -953,12 +953,15 @@ class Link {
 			$l2 = intval(($this->id % 100000) / 1000);
 			$filepath .= "/$l1";
 			@mkdir($filepath);
+			@chmod($filepath, 0777);
 			$filepath .= "/$l2";
 			@mkdir($filepath);
+			@chmod($filepath, 0777);
 			$filepath .= "/$this->id.jpg";
 			if ($img->type == 'local') {
 				$img->scale(60);
 				if($img->save($filepath)) {
+					@chmod($filepath, 0777);
 					$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
 					$this->thumb .= "/$l1/$l2/$this->id.jpg";
 					$this->thumb_x = $img->x;
