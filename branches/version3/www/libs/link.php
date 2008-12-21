@@ -926,4 +926,36 @@ class Link {
 		return false; // Nothing found
 	}
 
+	// Thumbnails management
+
+	function get_thumb() {
+		global $globals;
+		require_once(mnminclude.'webimages.php');
+		if (empty($this->url)) {
+			if (!$this->read()) return false;
+		}
+		$anal = new HtmlImages($this->url);
+		$img = $anal->get();
+		if ($img) {
+			$filepath = mnmpath.'/'.$globals['cache_dir'].'/thumbs';
+			@mkdir($filepath);
+			$l1 = intval($this->id / 100000);
+			$l2 = intval(($this->id % 100000) / 1000);
+			$filepath .= "/$l1";
+			@mkdir($filepath);
+			$filepath .= "/$l2";
+			@mkdir($filepath);
+			$filepath .= "/$this->id.jpg";
+			if ($img->type == 'local') {
+				$img->scale(100);
+				if($img->save($filepath)) {
+					$this->thumb_url = $globals['base_url'].$globals['cache_dir'].'/thumbs';
+					$this->thumb_url .= "/$l1/$l2/$this->id.jpg";
+					$this->thumb_x = $img->x;
+					$this->thumb_y = $img->y;
+				}
+			}
+		}
+	}
+
 }

@@ -63,13 +63,13 @@ class WebImage {
 	function fromstring($imgstr, $url = false) {
 		$this->image = @imagecreatefromstring($imgstr);
 		if ($this->image !== false) {
+			$this->type = 'local';
 			$this->x = imagesx($this->image);
 			$this->y = imagesy($this->image);
 			if ($url) {
 				$this->url = $url;
 				$this->same_domain = true; // We consider it from the same domain
 				$this->checked = true;
-				$this->type = 'local';
 			}
 			//echo "Local: $this->same_domain X: $this->x Y: $this->y<br>\n";
 			return true;
@@ -109,6 +109,7 @@ class WebImage {
 		return false;
 	}
 	function save($filename) {
+		if (!$this->image) return false;
 		return imagejpeg($this->image, $filename, 85);
 	}
 
@@ -150,10 +151,11 @@ class HtmlImages {
 				if (!$this->selected || ($this->selected->surface() < $img->surface() / ($n+2))) {
 					$this->selected = $img;
 					$n++;
-					echo "CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y<br/>\n";
+					//echo "CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y<br/>\n";
 				}
 			}
 		}
+		if ($this->selected && ! $this->selected->image) $this->selected->get();
 		return $this->selected;
 	}
 }
