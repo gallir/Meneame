@@ -221,6 +221,9 @@ if ($links) {
 		echo '		<description><![CDATA[';
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
+		if ($link->has_thumb()) {
+			echo "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+		}
 		echo '<p>'.$content.'</p>';
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
 
