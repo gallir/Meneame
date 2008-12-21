@@ -88,7 +88,7 @@ class WebImage {
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) $min_surface = 36000;
 		else $min_surface = 18000;
 		//echo "$this->url Content_type:  $this->content_type surface: $min_surface<br>";
-		return $this->x >= 80 && $this->y >= 80 && $this->surface() > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ads\/|\/pub\//', $this->url);
+		return $this->x >= 80 && $this->y >= 80 && $this->surface() > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
 	}
 
 	function scale($size=100) {

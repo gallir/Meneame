@@ -972,6 +972,7 @@ class Link {
 			}
 		}
 		$this->store_thumb();
+		return $this->has_thumb();
 	}
 
 	function store_thumb() {
