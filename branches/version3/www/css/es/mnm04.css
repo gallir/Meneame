@@ -522,7 +522,9 @@ padding-bottom: 0;
 .thumbnail {
 border: 1px solid;
 overflow: hidden;
+padding: 2px;
 float: right;
+margin-left: 5px;
 }
 
 .news-submitted img {
