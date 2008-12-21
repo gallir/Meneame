@@ -167,6 +167,7 @@ $site_key = 12345679;
 $anon_karma	= 4;
 
 // Don't touch behind this
+$globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
 
 // Send logs to "log_user", is windows compatible
 openlog(false, LOG_ODELAY, LOG_USER);
