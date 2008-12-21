@@ -418,6 +418,10 @@ class Link {
 			$this->modified=$link->modified_ts;
 			$this->ip=$link->link_ip;
 			$this->content_type=$link->link_content_type;
+			$this->thumb_status = $link->link_thumb_status;
+			$this->thumb_x = $link->link_thumb_x;
+			$this->thumb_y = $link->link_thumb_y;
+			$this->thumb = $link->link_thumb;
 			if ($this->category > 0) {
 				$meta_info = $db->get_row("SELECT SQL_CACHE categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
 				$this->category_name=$meta_info->category_name;
@@ -479,6 +483,10 @@ class Link {
 		}
 		echo '</h1>';
 
+		if ($this->thumb && $this->thumb_x > 0 && $this->thumb_y > 0) {
+			echo "<img src='$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
+		}
+
 		if (! $globals['bot']) {
 			echo '<div class="news-submitted">';
 			if ($type != 'short') {
@@ -500,7 +508,8 @@ class Link {
 		}
 
 		if($type=='full' || $type=='preview') {
-			echo '<p>'.text_to_html($this->content);
+			echo '<p>';
+			echo text_to_html($this->content);
 			if ($type != 'preview' ) {
 				if ($this->is_editable()) {
 					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
@@ -936,6 +945,7 @@ class Link {
 		}
 		$anal = new HtmlImages($this->url);
 		$img = $anal->get();
+		$this->thumb_status = 'checked';
 		if ($img) {
 			$filepath = mnmpath.'/'.$globals['cache_dir'].'/thumbs';
 			@mkdir($filepath);
@@ -947,15 +957,23 @@ class Link {
 			@mkdir($filepath);
 			$filepath .= "/$this->id.jpg";
 			if ($img->type == 'local') {
-				$img->scale(100);
+				$img->scale(60);
 				if($img->save($filepath)) {
-					$this->thumb_url = $globals['base_url'].$globals['cache_dir'].'/thumbs';
-					$this->thumb_url .= "/$l1/$l2/$this->id.jpg";
+					$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
+					$this->thumb .= "/$l1/$l2/$this->id.jpg";
 					$this->thumb_x = $img->x;
 					$this->thumb_y = $img->y;
+				} else {
+					$this->thumb_status = 'error';
 				}
 			}
 		}
+		$this->store_thumb();
+	}
+
+	function store_thumb() {
+		global $db;
+		$db->query("update links set link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
 }
