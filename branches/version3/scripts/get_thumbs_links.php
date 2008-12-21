@@ -11,10 +11,10 @@ foreach ($res as $l) {
 	$link->id = $l;
 	$link->read();
 	//echo "$l $link->title URL: $link->url<br>";
-	$link->get_thumb();
+	if ($link->thumb_status == 'unknown') $link->get_thumb();
 	echo "<h2>$link->title</h2>";
-	if ($link->thumb_url) {
-		echo "<p><img src='$link->thumb_url' width='$link->thumb_x' height='$link->thumb_y'></p>";
+	if ($link->thumb) {
+		echo "<p><img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y'></p>";
 	}
 }
 
