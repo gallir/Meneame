@@ -483,7 +483,7 @@ class Link {
 		}
 		echo '</h1>';
 
-		if ($this->thumb && $this->thumb_x > 0 && $this->thumb_y > 0) {
+		if ($this->has_thumb()) {
 			echo "<img src='$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 		}
 
@@ -977,6 +977,10 @@ class Link {
 	function store_thumb() {
 		global $db;
 		$db->query("update links set link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
+	}
+
+	function has_thumb() {
+		return $this->thumb && $this->thumb_x > 0 && $this->thumb_y > 0;
 	}
 
 }

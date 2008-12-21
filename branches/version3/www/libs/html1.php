@@ -703,16 +703,25 @@ function do_best_stories() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours 
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
+	$res = $db->get_results("select link_id, (link_votes+link_anonymous)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
 		$n = 0;
-		foreach ($res as $link) {
-			$foo_link->uri = $link->link_uri;
-			$url = $foo_link->get_relative_permalink();
-			$output .= '<div class="mnm-pop">'.$link->votes.'</div>';
-			if ($n == 0) $output .= '<h5 style="font-size:100%">';
+		$link = new Link();
+		foreach ($res as $l) {
+			$link->id = $l->link_id;
+			$link->read();
+			$url = $link->get_relative_permalink();
+			$output .= '<div class="mnm-pop">'.($link->votes+$link->anonymous).'</div>';
+			if ($n == 0 && ! $link->has_thumb()) $output .= '<h5 style="font-size:100%">';
 			else $output .= '<h5>';
-			$output .= '<a href="'.$url.'">'.$link->link_title.'</a></h5>';
+			if ($link->has_thumb()) {
+				if ($n > 0) {
+					$link->thumb_x = (int) $link->thumb_x / 2;
+					$link->thumb_y = (int) $link->thumb_y / 2;
+				}
+				$output .= "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
+			}
+			$output .= '<a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
 			$n++;
 		}
@@ -742,13 +751,20 @@ function do_best_queued() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*3); // 72 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, link_uri, link_title, link_votes+link_anonymous as votes, link_karma from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");
+	$res = $db->get_results("select link_id from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");
 	if ($res) {
-		foreach ($res as $link) {
-			$foo_link->uri = $link->link_uri;
-			$url = $foo_link->get_relative_permalink();
-			$output .= '<div class="mnm-pop queued">'.$link->votes.'</div>';
-			$output .= '<h5><a href="'.$url.'">'.$link->link_title.'</a></h5>';
+		$link = new Link();
+		foreach ($res as $l) {
+			$link->id = $l->link_id;
+			$link->read();
+			$url = $link->get_relative_permalink();
+			$output .= '<div class="mnm-pop queued">'.($link->votes+$link->anonymous).'</div>';
+			if ($link->has_thumb()) {
+				$link->thumb_x = (int) $link->thumb_x / 2;
+				$link->thumb_y = (int) $link->thumb_y / 2;
+				$output .= "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
+			}
+			$output .= '<h5><a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
 		}
 		$output .= '</div>'."\n";
