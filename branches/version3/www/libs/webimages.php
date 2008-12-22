@@ -88,10 +88,15 @@ class WebImage {
 		if ($this->same_domain && ! $this->checked) {
 			$this->get();
 		}
-		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) $min_surface = 36000;
-		else $min_surface = 18000;
+		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
+			$min_size = 140;
+			$min_surface = 28000;
+		} else {
+			$min_size = 80;
+			$min_surface = 18000;
+		}
 		//echo "$this->url Content_type:  $this->content_type surface: $min_surface<br>";
-		return $this->x >= 80 && $this->y >= 80 && $this->surface() > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
+		return $this->x >= $min_size && $this->y >= $min_size && $this->surface() > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
 	}
 
 	function scale($size=100) {
@@ -133,16 +138,18 @@ class HtmlImages {
 	function get() {
 		$res = get_url($this->url);
 		if (!$res) return;
-		$res = preg_replace('/<!--.+?-->/s', '', $res); // Delete commented HTML
-		$res = preg_replace('/^.*?<h\d *>/is', '', $res); // Delete commented HTML
-		//echo "CONTENT: ".$res['content_type']."<br>";
 		if (preg_match('/^image/i', $res['content_type'])) {
 			$img = new WebImage();
 			if ($img->fromstring($res['content'], $this->url) && $img->good()) {
 				$this->selected = $img;
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
-			$this->html = $res['content'];
+			$html = $res['content'];
+			$html = preg_replace('/<!--.+?-->/s', '', $html); // Delete commented HTML
+			$html = preg_replace('/<script[^>]*?>.+?<\/script>/is', '', $html); // Delete javascript
+			$html = preg_replace('/^.*?<h\d[^>]*?>/is', '', $html); // Search for a <Hn>
+			$html = substr($html, 0, 10000); // Only analyze first X bytes
+			$this->html = $html;
 			$this->parse_img();
 		}
 		return $this->selected;
