@@ -41,6 +41,7 @@ class Link {
 	var $read = false;
 	var $voted = false;
 	var $banned = false;
+	var $thumb_status = 'unknown';
 
 	function json_votes_info($value=false) {
 		$dict = array();
@@ -295,8 +296,8 @@ class Link {
 		$link_tags = $db->escape($this->tags);
 		$link_content = $db->escape($this->content);
 		$link_thumb = $db->escape($this->thumb);
-		$link_thumb_x = $this->thumb_x;
-		$link_thumb_y = $this->thumb_y;
+		$link_thumb_x = intval($this->thumb_x);
+		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
 	}
