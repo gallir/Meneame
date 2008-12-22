@@ -570,12 +570,14 @@ function do_submit1() {
 	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
+	echo '<div style="float: right;">';
 	print_simpleformat_buttons('bodytext');
+	echo '<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span>&nbsp;&nbsp;';
+	echo '</div>';
 
 	echo '<p><label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
 	echo '<br /><span class="note">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";
 	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"></textarea>'."\n";
-	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
 	print_categories_form();

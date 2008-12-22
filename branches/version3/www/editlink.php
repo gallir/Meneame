@@ -116,17 +116,25 @@ function do_edit() {
 
 	echo '<div style="float: right;">';
 	print_simpleformat_buttons('bodytext');
+	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
+	echo '<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>&nbsp;&nbsp;';
 	echo '</div>';
 
 
 	echo '<p><label for="bodytext" accesskey="4">'._('descripción de la noticia').':</label>'."\n";
 	echo '<br /><span class="note">'._('describe con fidelidad el contenido del enlace.').'</span>'."\n";
 	echo '<br/><textarea name="bodytext" rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">'.$link_content.'</textarea>'."\n";
-	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-	echo '<br /><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>';
 	echo '</p>'."\n";
 
 	print_categories_form($linkres->category);
+
+	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+		if ($linkres->has_thumb()) {
+			echo _('Eliminar imagen').': <input type="checkbox" name="thumb_delete" value="1"/><br/>';
+		} else {
+			echo _('Obtener imagen (puede tardar varios segundos)').': <input type="checkbox" name="thumb_get" value="1"/><br/>';
+		}
+	}
 
 	echo '<input class="button" type="submit" value="'._('guardar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
@@ -140,8 +148,19 @@ function do_save() {
 	$linkres->read_content_type_buttons($_POST['type']);
 
 	$linkres->category=intval($_POST['category']);
-	if (!empty($_POST['url']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
-		$linkres->url = clean_input_url($_POST['url']);
+	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+		if (!empty($_POST['url'])) {
+			$linkres->url = clean_input_url($_POST['url']);
+		}
+		echo "THUMB: " . $_POST['thumb_delete']. "\n";
+		if ($_POST['thumb_delete']) {
+			$linkres->thumb = '';
+			$linkres->thumb_x = 0;
+			$linkres->thumb_y = 0;
+		}
+		if ($_POST['thumb_get']) {
+			$linkres->get_thumb();
+		}
 	}
 	$linkres->title = clean_text($_POST['title'], 40);
 	$linkres->content = clean_text($_POST['bodytext']);

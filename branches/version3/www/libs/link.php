@@ -294,7 +294,11 @@ class Link {
 		$link_title = $db->escape($this->title);
 		$link_tags = $db->escape($this->tags);
 		$link_content = $db->escape($this->content);
-		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags' WHERE link_id=$this->id");
+		$link_thumb = $db->escape($this->thumb);
+		$link_thumb_x = $this->thumb_x;
+		$link_thumb_y = $this->thumb_y;
+		$link_thumb_status = $db->escape($this->thumb_status);
+		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
 	}
 
 	function store_basic() {
