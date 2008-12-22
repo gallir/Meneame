@@ -1,5 +1,6 @@
 <?
 class WebImage {
+	static $visited = array();
 	var $x = 0;
 	var $y = 0;
 	var $image = false;
@@ -20,7 +21,9 @@ class WebImage {
 		}
 		$url = clean_input_url($matches[1]);
 		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
-		if (strlen($url) < 5) return;
+		if (strlen($url) < 5 || WebImage::$visited[$url] ) return;
+		 WebImage::$visited[$url] = true;
+
 		$parsed_referer = parse_url($referer);
 		if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
 			$this->url = "http:$url";
@@ -82,7 +85,7 @@ class WebImage {
 	}
 
 	function good() {
-		if ($this->same_domain && ($this->x == 0 || $this->y == 0)) {
+		if ($this->same_domain && ! $this->checked) {
 			$this->get();
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) $min_surface = 36000;
@@ -99,8 +102,12 @@ class WebImage {
 		} else {
 			$percent = $size/$this->y;
 		}
-		$dst = ImageCreateTrueColor($this->x*$percent,$this->y*$percent);
-		if(imagecopyresampled($dst,$this->image,0,0,0,0,$this->x*$percent,$this->y*$percent,$this->x,$this->y)) {
+		$min = min($this->x*$percent, $this->y*$percent);
+		if ($min < $size/2.5) $percent = $percent * $size/2.5/$min; // Ensure then minimux is size/2.5
+		$new_x = round($this->x*$percent);
+		$new_y = round($this->y*$percent);
+		$dst = ImageCreateTrueColor($new_x,$new_y);
+		if(imagecopyresampled($dst,$this->image,0,0,0,0,$new_x,$new_y,$this->x,$this->y)) {
 			$this->image = $dst;
 			$this->x=imagesx($this->image);
 			$this->y=imagesy($this->image);
@@ -127,7 +134,7 @@ class HtmlImages {
 		$res = get_url($this->url);
 		if (!$res) return;
 		$res = preg_replace('/<!--.+?-->/s', '', $res); // Delete commented HTML
-		$res = preg_replace('/^.*?<h1 *>/is', '', $res); // Delete commented HTML
+		$res = preg_replace('/^.*?<h\d *>/is', '', $res); // Delete commented HTML
 		//echo "CONTENT: ".$res['content_type']."<br>";
 		if (preg_match('/^image/i', $res['content_type'])) {
 			$img = new WebImage();
@@ -157,7 +164,9 @@ class HtmlImages {
 			}
 			if ($goods > 5 && $n > 0) break;
 		}
-		if ($this->selected && ! $this->selected->image) $this->selected->get();
+		if ($this->selected && ! $this->selected->image) {
+			$this->selected->get();
+		}
 		return $this->selected;
 	}
 }
