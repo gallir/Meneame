@@ -222,7 +222,7 @@ if ($links) {
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
 		if ($link->has_thumb()) {
-			echo "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+			echo "<img src='http://".get_server_name()."$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
 		}
 		echo '<p>'.$content.'</p>';
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
@@ -235,10 +235,13 @@ if ($links) {
 			echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."'>"._('noticia original')."</a></p>";
 		}
 		echo "]]></description>\n";
+		if ($link->has_thumb()) {
+			echo '		<media:thumbnail url="http://'.get_server_name().$link->thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
+		}
 		//echo '<wfw:comments>'.$link->comments().'</wfw:comments>';
 		// echo "		<trackback:ping>".get_trackback($link->id)."</trackback:ping>\n";  // no standard
 		//echo "<content:encoded><![CDATA[ ]]></content:encoded>\n";
-		echo '<wfw:commentRss>http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'</wfw:commentRss>';
+		echo '		<wfw:commentRss>http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'</wfw:commentRss>';
 		echo "	</item>\n\n";
 	}
 }
@@ -268,6 +271,7 @@ function do_header($title) {
 	echo '	xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
 	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
 	echo '	xmlns:georss="http://www.georss.org/georss"'."\n";
+	echo '	xmlns:media="http://search.yahoo.com/mrss/"'."\n";
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
