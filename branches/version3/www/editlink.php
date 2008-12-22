@@ -152,7 +152,6 @@ function do_save() {
 		if (!empty($_POST['url'])) {
 			$linkres->url = clean_input_url($_POST['url']);
 		}
-		echo "THUMB: " . $_POST['thumb_delete']. "\n";
 		if ($_POST['thumb_delete']) {
 			$linkres->thumb = '';
 			$linkres->thumb_x = 0;
