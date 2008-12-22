@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.0.51a-12~bpo40+1-log
+-- Server version	5.0.51a-3ubuntu5.4-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -259,6 +259,10 @@ CREATE TABLE `links` (
   `link_content_type` char(12) collate utf8_spanish_ci default NULL,
   `link_uri` char(100) collate utf8_spanish_ci default NULL,
   `link_url` varchar(250) collate utf8_spanish_ci NOT NULL,
+  `link_thumb_status` enum('unknown','checked','error','local','remote') collate utf8_spanish_ci NOT NULL default 'unknown',
+  `link_thumb_x` tinyint(3) unsigned NOT NULL default '0',
+  `link_thumb_y` tinyint(3) unsigned NOT NULL default '0',
+  `link_thumb` tinytext collate utf8_spanish_ci,
   `link_url_title` text collate utf8_spanish_ci,
   `link_title` text collate utf8_spanish_ci NOT NULL,
   `link_content` text collate utf8_spanish_ci NOT NULL,
@@ -509,4 +513,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-09-07 16:20:41
+-- Dump completed on 2008-12-22 19:46:22
