@@ -42,7 +42,7 @@ class WebImage {
 		$parsed_url = parse_url($this->url);
 		$this->referer = $referer;
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/cdn\.|\.imgs*\.|\.img|media\.|cache\.|static\.|ytimg\.com/', $parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/cdn\.|\.imgs*\.|\.img|media\.|cache\.|static\.|ytimg\.com|\.ggpht.com/', $parsed_url['host'])) {
 			$this->same_domain = true;
 		}
 		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
