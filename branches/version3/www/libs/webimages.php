@@ -151,7 +151,7 @@ class HtmlImages {
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
 			$html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a <Hn>
 			$html = substr($html, 0, 18000); // Only analyze first X bytes
-			echo "<hr>".htmlentities($html)."<hr>\n";
+			//echo "<hr>".htmlentities($html)."<hr>\n";
 			$this->html = $html;
 			$this->parse_img();
 		}
