@@ -90,7 +90,7 @@ class WebImage {
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
-			$min_surface = 28000;
+			$min_surface = 30000;
 		} else {
 			$min_size = 80;
 			$min_surface = 18000;
@@ -149,8 +149,10 @@ class HtmlImages {
 			$html = preg_replace('/<!--.+?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
+			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
+			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-			$html = substr($html, 0, 18000); // Only analyze first X bytes
+			$html = substr($html, 0, 20000); // Only analyze first X bytes
 			$this->html = $html;
 			$this->parse_img();
 		}

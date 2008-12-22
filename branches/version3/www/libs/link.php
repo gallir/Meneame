@@ -966,6 +966,7 @@ class Link {
 					$this->thumb .= "/$l1/$l2/$this->id.jpg";
 					$this->thumb_x = $img->x;
 					$this->thumb_y = $img->y;
+					$this->thumb_status='local';
 				} else {
 					$this->thumb_status = 'error';
 				}
