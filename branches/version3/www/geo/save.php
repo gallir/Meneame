@@ -44,7 +44,7 @@ if(geo_insert($type, $id, $lat, $lng, $text)) {
 	echo "OK";
 	if ($type == 'link') {
 		require_once(mnminclude.'log.php');
-		log_conditional_insert('link_geo_edit', $link->id, $current_user->user_id, 60);
+		log_conditional_insert('link_geo_edit', $link->id, $current_user->user_id, 3600);
 	}
 } else {
 	error(_('no se insertó en la base de datos'));

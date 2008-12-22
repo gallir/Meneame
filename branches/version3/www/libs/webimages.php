@@ -67,7 +67,7 @@ class WebImage {
 			$this->x = imagesx($this->image);
 			$this->y = imagesy($this->image);
 			if ($url) {
-				$this->url = $url;
+				$this->url = clean_input_url($url);
 				$this->same_domain = true; // We consider it from the same domain
 				$this->checked = true;
 			}

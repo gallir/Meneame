@@ -976,6 +976,7 @@ class Link {
 
 	function store_thumb() {
 		global $db;
+		$this->thumb = $db->escape($this->thumb);
 		$db->query("update links set link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
