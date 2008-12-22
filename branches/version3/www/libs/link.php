@@ -942,9 +942,10 @@ class Link {
 		if (empty($this->url)) {
 			if (!$this->read()) return false;
 		}
-		$anal = new HtmlImages($this->url);
-		$img = $anal->get();
+		$this->image_parser = new HtmlImages($this->url);
+		$img = $this->image_parser->get();
 		$this->thumb_status = 'checked';
+		$this->thumb = '';
 		if ($img) {
 			$filepath = mnmpath.'/'.$globals['cache_dir'].'/thumbs';
 			@mkdir($filepath);

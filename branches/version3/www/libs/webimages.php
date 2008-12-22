@@ -42,7 +42,7 @@ class WebImage {
 		$parsed_url = parse_url($this->url);
 		$this->referer = $referer;
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload/', $parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload/', $parsed_url['host'])) {
 			$this->same_domain = true;
 		}
 		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
@@ -149,9 +149,8 @@ class HtmlImages {
 			$html = preg_replace('/<!--.+?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
-			$html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a <Hn>
+			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
 			$html = substr($html, 0, 18000); // Only analyze first X bytes
-			//echo "<hr>".htmlentities($html)."<hr>\n";
 			$this->html = $html;
 			$this->parse_img();
 		}
