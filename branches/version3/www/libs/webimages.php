@@ -103,7 +103,7 @@ class WebImage {
 			$percent = $size/$this->y;
 		}
 		$min = min($this->x*$percent, $this->y*$percent);
-		if ($min < $size/2.5) $percent = $percent * $size/2.5/$min; // Ensure then minimux is size/2.5
+		if ($min < $size/2.2) $percent = $percent * $size/2.2/$min; // Ensure then minimux is size/2.2
 		$new_x = round($this->x*$percent);
 		$new_y = round($this->y*$percent);
 		$dst = ImageCreateTrueColor($new_x,$new_y);
@@ -159,7 +159,7 @@ class HtmlImages {
 				if (!$this->selected || ($this->selected->surface() < $img->surface() / ($n+2))) {
 					$this->selected = $img;
 					$n++;
-					//echo "CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y<br/>\n";
+					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
 				}
 			}
 			if ($goods > 5 && $n > 0) break;
