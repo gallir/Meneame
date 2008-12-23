@@ -15,7 +15,7 @@ class WebImage {
 		$this->tag = $imgtag;
 		//echo "TAG: " . htmlentities($this->tag) . "<br>\n";
 		
-		if (!preg_match('/src=["\']{0,1}([^"\' ]+)/i', $this->tag, $matches)) {
+		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches)) {
 			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
 				return;
 			}
@@ -24,7 +24,7 @@ class WebImage {
 			if (preg_match('/usemap=/i',  $this->tag)) return;
 		}
 
-		$url = clean_input_url($matches[1]);
+		$url = $this->clean_url($matches[1]);
 		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
 		if (strlen($url) < 5 || WebImage::$visited[$url] ) return;
 		 WebImage::$visited[$url] = true;
@@ -40,7 +40,6 @@ class WebImage {
 			} else {
 				$this->url .= normalize_path(dirname($parsed_referer['path']).'/'.$url);
 			}
-			//echo "PARSED: $url -> $this->url <br>\n";
 		} else {
 			$this->url = $url;
 		}
@@ -60,9 +59,14 @@ class WebImage {
 		}
 
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload|files/', $parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files/', $parsed_url['host'])) {
 			$this->candidate = true;
+			//echo "Candidate: $url -> $this->url <br>\n";
 		}
+	}
+
+	function clean_url($str) {
+		return clean_input_url(preg_replace('/ /', '%20', $str));
 	}
 
 	function get() {
@@ -82,7 +86,7 @@ class WebImage {
 			$this->x = imagesx($this->image);
 			$this->y = imagesy($this->image);
 			if ($url) {
-				$this->url = clean_input_url($url);
+				$this->url = $this->clean_url($url);
 				$this->candidate = true; // We consider it from the same domain
 				$this->checked = true;
 			}
@@ -113,13 +117,13 @@ class WebImage {
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
-			$min_surface = 30000;
+			$min_surface = 29000;
 		} else {
 			$min_size = 80;
 			$min_surface = 18000;
 		}
-		//echo "$this->url Content_type:  $this->content_type surface: $min_surface<br>";
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
+		//echo "$this->url Content_type:  $this->content_type surface: ". $this->surface(). " $min_surface<br>";
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|ads\W|\Wads|\Wpub\W|logo/i', $this->url);
 	}
 
 	function scale($size=100) {
@@ -137,6 +141,7 @@ class WebImage {
 		$new_x = round($this->x*$percent);
 		$new_y = round($this->y*$percent);
 		$dst = ImageCreateTrueColor($new_x,$new_y);
+		imagefill($dst, 0, 0, imagecolorallocate($dst, 255, 255, 255));
 		if(imagecopyresampled($dst,$this->image,0,0,0,0,$new_x,$new_y,$this->x,$this->y)) {
 			$this->image = $dst;
 			$this->x=imagesx($this->image);
@@ -181,7 +186,7 @@ class HtmlImages {
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-			$html = substr($html, 0, 25000); // Only analyze first X bytes
+			$html = substr($html, 0, 30000); // Only analyze first X bytes
 			$this->html = $html;
 			$this->parse_img();
 		}
@@ -189,14 +194,16 @@ class HtmlImages {
 	}
 
 	function parse_img() {
-		preg_match_all('/(<img [^>]*>|["\'][\da-z\/]+\.jpg["\'])/i', $this->html, $matches);
+		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $this->html, $matches);
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
 			//echo htmlentities($match) . "<br>\n";
 			$img = new WebImage($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				if (!$this->selected || ($this->selected->surface() < $img->surface() / ($n+2))) {
+				//print "Surface/ratio: $img->url ". ($img->surface()/$img->ratio()) . "<br>\n";
+				//print "Surface/ratio ($n): $img->url ". ($img->surface()/$img->ratio()/($n+0.5)) . "<br>\n";
+				if (!$this->selected || ($this->selected->surface()/$this->selected->ratio() < $img->surface()/$img->ratio()/($n+0.5))) {
 					$this->selected = $img;
 					$n++;
 					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
