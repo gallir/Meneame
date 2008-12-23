@@ -1,101 +1,39 @@
 <?
-class WebImage {
-	static $visited = array();
-	var $x = 0;
-	var $y = 0;
-	var $image = false;
-	var $checked = false;
-	var $url = false;
-	var $referer = '';
-	var $candidate = false;
-	var $type = 'external';
+class BasicThumb {
+	public $x = 0;
+	public $y = 0;
+	public $image = false;
+	public $referer = false;
+	public $type = 'external';
+	public $url = false;
+	public $checked = false;
+	protected $parsed_url = false;
+	protected $parsed_referer = false;
 
-	function __construct($imgtag = '', $referer = '') {
-		if (!$imgtag) return;
-		$this->tag = $imgtag;
-		//echo "TAG: " . htmlentities($this->tag) . "<br>\n";
-		
-		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches)) {
-			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
-				return;
-			}
-		} else {
-			// Avoid maps
-			if (preg_match('/usemap=/i',  $this->tag)) return;
-		}
 
-		$url = $this->clean_url($matches[1]);
-		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
-		if (strlen($url) < 5 || WebImage::$visited[$url] ) return;
-		 WebImage::$visited[$url] = true;
-
-		$parsed_referer = parse_url($referer);
+	function __construct($url='', $referer=false) {
+		$url = $this->clean_url($url);
+		if ($referer) $this->parsed_referer = parse_url($referer);
 		if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
 			$this->url = "http:$url";
-		} elseif (!preg_match('/https*:\/\//', $url)) {
-			$this->url = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
-			if ($parsed_referer['port']) $this->url .= ':'.$parsed_referer['port'];
+		} elseif ($this->parsed_referer && !preg_match('/https*:\/\//', $url)) {
+			$this->url = $this->parsed_referer['scheme'].'://'.$this->parsed_referer['host'];
+			if ($this->parsed_referer['port']) $this->url .= ':'.$this->parsed_referer['port'];
 			if (preg_match('/^\/+/', $url)) {
 				$this->url .= $url;
 			} else {
-				$this->url .= normalize_path(dirname($parsed_referer['path']).'/'.$url);
+				$this->url .= normalize_path(dirname($this->parsed_referer['path']).'/'.$url);
 			}
 		} else {
 			$this->url = $url;
 		}
-		$parsed_url = parse_url($this->url);
+		$this->parsed_url = parse_url($this->url);
 		$this->referer = $referer;
-		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->x = $match[1];
-		}
-		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->y = $match[1];
-		}
-
-		// First filter to avoid downloading very small images
-		if (($this->x > 0 && $this->x < 80) || ($this->y > 0 && $this->y < 80)) {
-			$this->candidate = false;
-			return;
-		}
-
-		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files/', $parsed_url['host'])) {
-			$this->candidate = true;
-			//echo "Candidate: $url -> $this->url <br>\n";
-		}
+		//echo "BASE URL: $this->url<br/>\n";
 	}
 
 	function clean_url($str) {
 		return clean_input_url(preg_replace('/ /', '%20', $str));
-	}
-
-	function get() {
-		$res = get_url($this->url);
-		$this->checked = true;
-		if ($res) {
-			$this->content_type = $res['content_type'];
-			return $this->fromstring($res['content']);
-		} 
-		echo "Failed to get $this->url<br>";
-	}
-
-	function fromstring($imgstr, $url = false) {
-		$this->image = @imagecreatefromstring($imgstr);
-		if ($this->image !== false) {
-			$this->type = 'local';
-			$this->x = imagesx($this->image);
-			$this->y = imagesy($this->image);
-			if ($url) {
-				$this->url = $this->clean_url($url);
-				$this->candidate = true; // We consider it from the same domain
-				$this->checked = true;
-			}
-			//echo "Local: $this->candidate X: $this->x Y: $this->y<br>\n";
-			return true;
-		}
-		$this->x = $this->y = 0;
-		$this->type = 'error';
-		return false;
 	}
 
 	function surface() {
@@ -104,26 +42,6 @@ class WebImage {
 
 	function ratio() {
 		return (max($this->x, $this->y) / min($this->x, $this->y));
-	}
-
-	function good() {
-		if ($this->candidate && ! $this->checked) {
-			$x = $this->x;
-			$y = $this->y;
-			$this->get();
-			// To avoid the selection of images scaled down in the page
-			if ($x == 0 || $this->x < $x) $x = $this->x;
-			if ($y == 0 || $this->y < $y) $y = $this->y;
-		}
-		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
-			$min_size = 140;
-			$min_surface = 29000;
-		} else {
-			$min_size = 80;
-			$min_surface = 18000;
-		}
-		//echo "$this->url Content_type:  $this->content_type surface: ". $this->surface(). " $min_surface<br>";
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
 
 	function scale($size=100) {
@@ -150,9 +68,102 @@ class WebImage {
 		} 
 		return false;
 	}
+
 	function save($filename) {
 		if (!$this->image) return false;
 		return imagejpeg($this->image, $filename, 85);
+	}
+
+	function get() {
+		$res = get_url($this->url);
+		$this->checked = true;
+		if ($res) {
+			$this->content_type = $res['content_type'];
+			return $this->fromstring($res['content']);
+		} 
+		echo "Failed to get $this->url<br>";
+	}
+
+	function fromstring($imgstr) {
+		$this->checked = true;
+		$this->image = @imagecreatefromstring($imgstr);
+		if ($this->image !== false) {
+			$this->x = imagesx($this->image);
+			$this->y = imagesy($this->image);
+			return true;
+		}
+		$this->x = $this->y = 0;
+		$this->type = 'error';
+		return false;
+	}
+
+
+
+}
+
+class WebThumb extends BasicThumb {
+	protected static $visited = array();
+	public $candidate = false;
+
+	function __construct($imgtag = '', $referer = '') {
+		if (!$imgtag) return;
+		$this->tag = $imgtag;
+		//echo "TAG: " . htmlentities($this->tag) . "<br>\n";
+		
+		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches)) {
+			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
+				return;
+			}
+		} else {
+			// Avoid maps
+			if (preg_match('/usemap=/i',  $this->tag)) return;
+		}
+
+		parent::__construct($matches[1], $referer);
+		$this->type = 'local';
+
+		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
+		if (strlen($this->url) < 5 || WebThumb::$visited[$this->url] ) return;
+		WebThumb::$visited[$this->url] = true;
+
+		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
+			$this->x = $match[1];
+		}
+		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
+			$this->y = $match[1];
+		}
+
+		// First filter to avoid downloading very small images
+		if (($this->x > 0 && $this->x < 80) || ($this->y > 0 && $this->y < 80)) {
+			$this->candidate = false;
+			return;
+		}
+
+		// Check if domain.com are the same for the referer and the url
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files/', $this->parsed_url['host'])) {
+			$this->candidate = true;
+			//echo "Candidate: $url -> $this->url <br>\n";
+		}
+	}
+
+	function good() {
+		if ($this->candidate && ! $this->checked) {
+			$x = $this->x;
+			$y = $this->y;
+			$this->get();
+			// To avoid the selection of images scaled down in the page
+			if ($x == 0 || $this->x < $x) $x = $this->x;
+			if ($y == 0 || $this->y < $y) $y = $this->y;
+		}
+		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
+			$min_size = 140;
+			$min_surface = 29000;
+		} else {
+			$min_size = 80;
+			$min_surface = 18000;
+		}
+		//echo "$this->url Content_type:  $this->content_type surface: ". $this->surface(). " $min_surface<br>";
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
 
 }
@@ -170,8 +181,10 @@ class HtmlImages {
 		$res = get_url($this->url);
 		if (!$res) return;
 		if (preg_match('/^image/i', $res['content_type'])) {
-			$img = new WebImage();
-			if ($img->fromstring($res['content'], $this->url) && $img->good()) {
+			$img = new BasicThumb($this->url);
+			if ($img->fromstring($res['content'])) {
+				$img->type = 'local';
+				$img->candidate = true;
 				$this->selected = $img;
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
@@ -198,15 +211,16 @@ class HtmlImages {
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
 			//echo htmlentities($match) . "<br>\n";
-			$img = new WebImage($match, $this->base);
+			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Aspect: ".$img->ratio()." Coef1: ".intval($img->surface()/pow($img->ratio(),2))." Coef2: ".intval($img->surface()/pow($img->ratio(), 2)/1.5)." -->\n";
 				//print "Surface/ratio: $img->url ". ($img->surface()/$img->ratio()) . "<br>\n";
 				//print "Surface/ratio ($n): $img->url ". ($img->surface()/$img->ratio()/($n+0.5)) . "<br>\n";
-				if (!$this->selected || ($this->selected->surface()/$this->selected->ratio() < $img->surface()/$img->ratio()/($n+0.5))) {
+				if (!$this->selected || ($this->selected->surface()/pow($this->selected->ratio(), 2) < $img->surface()/pow($img->ratio(), 2)/1.5)) {
 					$this->selected = $img;
 					$n++;
-					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
+					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
 				}
 			}
 			if ($goods > 5 && $n > 0) break;
