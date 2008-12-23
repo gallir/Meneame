@@ -7,7 +7,7 @@ class WebImage {
 	var $checked = false;
 	var $url = false;
 	var $referer = '';
-	var $same_domain = false;
+	var $candidate = false;
 	var $type = 'external';
 
 	function __construct($imgtag = '', $referer = '') {
@@ -41,15 +41,22 @@ class WebImage {
 		}
 		$parsed_url = parse_url($this->url);
 		$this->referer = $referer;
-		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload/', $parsed_url['host'])) {
-			$this->same_domain = true;
-		}
 		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
 			$this->x = $match[1];
 		}
 		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
 			$this->y = $match[1];
+		}
+
+		// First filter to avoid downloading very small images
+		if (($this->x > 0 && $this->x < 80) || ($this->y > 0 && $this->y < 80)) {
+			$this->candidate = false;
+			return;
+		}
+
+		// Check if domain.com are the same for the referer and the url
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload/', $parsed_url['host'])) {
+			$this->candidate = true;
 		}
 	}
 
@@ -71,12 +78,14 @@ class WebImage {
 			$this->y = imagesy($this->image);
 			if ($url) {
 				$this->url = clean_input_url($url);
-				$this->same_domain = true; // We consider it from the same domain
+				$this->candidate = true; // We consider it from the same domain
 				$this->checked = true;
 			}
-			//echo "Local: $this->same_domain X: $this->x Y: $this->y<br>\n";
+			//echo "Local: $this->candidate X: $this->x Y: $this->y<br>\n";
 			return true;
 		}
+		$this->x = $this->y = 0;
+		$this->type = 'error';
 		return false;
 	}
 
@@ -85,8 +94,13 @@ class WebImage {
 	}
 
 	function good() {
-		if ($this->same_domain && ! $this->checked) {
+		if ($this->candidate && ! $this->checked) {
+			$x = $this->x;
+			$y = $this->y;
 			$this->get();
+			// To avoid the selection of images scaled down in the page
+			if ($x == 0 || $this->x < $x) $x = $this->x;
+			if ($y == 0 || $this->y < $y) $y = $this->y;
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
@@ -96,11 +110,13 @@ class WebImage {
 			$min_surface = 18000;
 		}
 		//echo "$this->url Content_type:  $this->content_type surface: $min_surface<br>";
-		return $this->x >= $min_size && $this->y >= $min_size && $this->surface() > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
 	}
 
 	function scale($size=100) {
-		if (!$this->image && ! $this->checked)  $this->get();
+		if (!$this->image && ! $this->checked) {
+			$this->get();
+		}
 		if (!$this->image) return false;
 		if ($this->x > $this->y) {
 			$percent = $size/$this->x;
@@ -133,6 +149,7 @@ class HtmlImages {
 
 	function __construct($url) {
 		$this->url = $url;
+		$this->base = $url;
 	}
 
 	function get() {
@@ -145,14 +162,17 @@ class HtmlImages {
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
 			$html = $res['content'];
+			if (preg_match('/<base *href=["\'](.+?)["\']/i', $html, $match)) {
+				$this->base = $match[1];
+			}
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
-			$html = preg_replace('/<!--.+?-->/s', '', $html); // Delete commented HTML
+			$html = preg_replace('/<*!--.+?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-			$html = substr($html, 0, 20000); // Only analyze first X bytes
+			$html = substr($html, 0, 25000); // Only analyze first X bytes
 			$this->html = $html;
 			$this->parse_img();
 		}
@@ -164,8 +184,8 @@ class HtmlImages {
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
 			//echo htmlentities($match) . "<br>\n";
-			$img = new WebImage($match, $this->url);
-			if ($img->same_domain && $img->good()) {
+			$img = new WebImage($match, $this->base);
+			if ($img->candidate && $img->good()) {
 				$goods++;
 				if (!$this->selected || ($this->selected->surface() < $img->surface() / ($n+2))) {
 					$this->selected = $img;
@@ -198,9 +218,10 @@ function normalize_path($path) {
 }
 
 function get_url($url) {
+	global $globals;
 	$session = curl_init();
 	curl_setopt($session, CURLOPT_URL, $url);
-	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
+	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
