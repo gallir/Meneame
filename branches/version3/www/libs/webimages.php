@@ -14,11 +14,16 @@ class WebImage {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
 		//echo "TAG: " . htmlentities($this->tag) . "<br>\n";
+		
 		if (!preg_match('/src=["\']{0,1}([^"\' ]+)/i', $this->tag, $matches)) {
 			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
 				return;
 			}
+		} else {
+			// Avoid maps
+			if (preg_match('/usemap=/i',  $this->tag)) return;
 		}
+
 		$url = clean_input_url($matches[1]);
 		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
 		if (strlen($url) < 5 || WebImage::$visited[$url] ) return;
@@ -55,7 +60,7 @@ class WebImage {
 		}
 
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload/', $parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|static\.|\.ggpht.com|upload|files/', $parsed_url['host'])) {
 			$this->candidate = true;
 		}
 	}
@@ -93,6 +98,10 @@ class WebImage {
 		return $this->x * $this->y;
 	}
 
+	function ratio() {
+		return (max($this->x, $this->y) / min($this->x, $this->y));
+	}
+
 	function good() {
 		if ($this->candidate && ! $this->checked) {
 			$x = $this->x;
@@ -110,7 +119,7 @@ class WebImage {
 			$min_surface = 18000;
 		}
 		//echo "$this->url Content_type:  $this->content_type surface: $min_surface<br>";
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && (max($this->x, $this->y) / min($this->x, $this->y)) < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\/ban[_\/]|\/ads\/|\/pub\//', $this->url);
 	}
 
 	function scale($size=100) {
