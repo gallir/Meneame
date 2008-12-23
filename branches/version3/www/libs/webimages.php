@@ -123,7 +123,7 @@ class WebImage {
 			$min_surface = 18000;
 		}
 		//echo "$this->url Content_type:  $this->content_type surface: ". $this->surface(). " $min_surface<br>";
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|ads\W|\Wads|\Wpub\W|logo/i', $this->url);
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
 
 	function scale($size=100) {
