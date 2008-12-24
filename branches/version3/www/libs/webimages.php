@@ -211,13 +211,15 @@ class HtmlImages {
 
 
 			// Check if there are players
-			if (preg_match('/<(embed|object|param)/i', $html)) {
+			if (preg_match('/(<|&lt;)(embed|object|param)/i', $html)) {
 				$this->html = &$html;
 				echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube()) return $this->selected;
 				if ($this->check_google_video()) return $this->selected;
 				if ($this->check_metacafe()) return $this->selected;
 				if ($this->check_vimeo()) return $this->selected;
+				if ($this->check_zapp_internet()) return $this->selected;
+				if ($this->check_daily_motion()) return $this->selected;
 			}
 
 			// Analyze HTML <img's
@@ -397,6 +399,59 @@ class HtmlImages {
 			}
 		}
 		return false;
+	}
+
+	// ZappInternet Video detection
+	function check_zapp_internet() {
+		if (preg_match('#http://zappinternet\.com/v/([^&]+)#i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Zapp Internet Video, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_zapp_internet_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	function get_zapp_internet_thumb($videoid) {
+		return 'http://zappinternet.com/videos/'.substr($videoid, 0, 1).'/frames/'.$videoid.'.jpg';
+	}
+
+	// Daily Motion Video detection
+	function check_daily_motion() {
+		if (preg_match('#=["\']http://www.dailymotion.com/swf/([^&"\']+)#i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Daily Motion Video, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_daily_motion_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function get_daily_motion_thumb($videoid) {
+		return 'http://www.dailymotion.com/thumbnail/160x120/video/'.$videoid;
 	}
 
 }

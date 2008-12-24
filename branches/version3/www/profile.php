@@ -141,9 +141,9 @@ function show_profile() {
 	}
 
 	echo '<fieldset><legend>'._('opciones de visualización') . '</legend>';
-	echo '<p>'._('mostrar todos los comentarios').':&nbsp;';
+	echo '<p><label>'._('mostrar todos los comentarios').':&nbsp;';
 	print_checkbox('comment_pref', $user->comment_pref & 1);
-	echo '</p>';
+	echo '</label></p>';
 
 	echo '</fieldset>';
 
@@ -182,8 +182,8 @@ function show_profile() {
 		echo '<p>'._('atención! la cuenta será deshabilitada.').'</p>';
 		echo '<p class="note">'._('se eliminarán automáticamente los datos personales.').'<br/>';
 		echo _('las notas serán eliminadas, los envíos y comentarios NO se borrarán.').'</p>';
-		echo '<p>'._('sí, quiero deshabilitarla').': <input  name="disable" type="checkbox" value="1"/>';
-		echo '</p>';
+		echo '<p><label>'._('sí, quiero deshabilitarla').': <input  name="disable" type="checkbox" value="1"/>';
+		echo '</label></p>';
 		echo '<p><input type="submit" name="disabledme" value="'._('deshabilitar cuenta').'" class="button" /></p>';
 		echo '</fieldset>';
 	}

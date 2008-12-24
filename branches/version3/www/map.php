@@ -33,11 +33,11 @@ echo '<div style="margin:0 0 10px 20px; text-align:center">';
 
 echo '<form action="" id="map-control" name="map-control">';
 
-echo _('publicadas').'&nbsp;<img src="img/geo/common/geo-published01.png" width="20" height="25" alt="'._('publicadas').'" title="'._('publicadas').'"/><input type="checkbox" checked="checked"  id="published" onclick="toggle(\'published\')" />';
+echo '<label>'._('publicadas').'&nbsp;<img src="img/geo/common/geo-published01.png" width="20" height="25" alt="'._('publicadas').'" title="'._('publicadas').'"/><input type="checkbox" checked="checked"  id="published" onclick="toggle(\'published\')" /></label>';
 echo '&nbsp;&nbsp;&nbsp;';
-echo _('pendientes').'&nbsp;<img src="img/geo/common/geo-new01.png" width="20" height="25" alt="'._('pendientes').'" title="'._('pendientes').'"/><input type="checkbox" checked="checked"  id="queued" onclick="toggle(\'queued\')" />';
+echo '<label>'._('pendientes').'&nbsp;<img src="img/geo/common/geo-new01.png" width="20" height="25" alt="'._('pendientes').'" title="'._('pendientes').'"/><input type="checkbox" checked="checked"  id="queued" onclick="toggle(\'queued\')" /></label>';
 echo '&nbsp;&nbsp;&nbsp;';
-echo _('autores').'&nbsp;<img src="img/geo/common/geo-user01.png" width="20" height="25" alt="'._('autores').'" title="'._('authors').'"/><input type="checkbox"  id="author" onclick="toggle(\'author\')" />';
+echo '<label>'._('autores').'&nbsp;<img src="img/geo/common/geo-user01.png" width="20" height="25" alt="'._('autores').'" title="'._('authors').'"/><input type="checkbox"  id="author" onclick="toggle(\'author\')" /></label>';
 
 
 echo '</form>';

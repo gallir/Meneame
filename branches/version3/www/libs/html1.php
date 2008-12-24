@@ -603,21 +603,27 @@ function do_categories_cloud($what=false, $hours = 48) {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600); 
 	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id group by category_name";
 	$max = $db->get_var("select count(*) as words $from_where order by words desc limit 1");
-	$coef = ($max_pts - $min_pts)/($max-1);
+
+	$coef = (($max - 1) > 0)?(($max_pts - $min_pts)/($max-1)):0;
 
 	$res = $db->get_results("select count(*) as count, category_name, category_id $from_where order by category_name asc");
+
 	if ($res) {
 		if ($what == 'queued') $page = $globals['base_url'].'shakeit.php?category=';
 		else  $page = $globals['base_url'].'?category=';
 
 		$output = '<div class="tags-box">';
 		$output .= '<h4>'._('categorías populares').'</h4><p class="nube">'."\n";
+
+		$counts = array();
+
 		foreach ($res as $item) {
 			if ($item->count > 1) {
 				$counts[$item->category_id] = $item->count;
 				$names[$item->category_id] = $item->category_name;
 			}
 		}
+
 		foreach ($counts as $id => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$output .= '<a style="font-size: '.$size.'pt" href="'.$page.$id.'">'.$names[$id].'</a> ';

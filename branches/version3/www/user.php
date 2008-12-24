@@ -553,16 +553,16 @@ function print_categories_checkboxes($user) {
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
 	foreach ($metas as $meta) {
 		echo '<dl class="categorylist" id="meta-'.$meta->category_id.'"><dt>';
-		echo '<input '.$disabled.' name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
+		echo '<label><input '.$disabled.' name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
 		if ($empty) echo ' checked="true" ';
 		echo 'onchange="select_meta(this, '.$meta->category_id.')" ';
 		echo '/> ';
-		echo $meta->category_name.'</dt>'."\n";
+		echo $meta->category_name.'</label></dt>'."\n";
 		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
 		foreach ($categories as $category) {
-			echo '<dd><input '.$disabled.' name="categories[]" type="checkbox" ';
+			echo '<dd><label><input '.$disabled.' name="categories[]" type="checkbox" ';
 			if ($empty || $selected[$category->category_id]) echo ' checked="true" ';
-			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</dd>'."\n";
+			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</label></dd>'."\n";
 		}
 		echo '</dl>'."\n";
 	}

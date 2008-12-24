@@ -130,9 +130,9 @@ function do_edit() {
 
 	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
 		if ($linkres->has_thumb()) {
-			echo _('Eliminar imagen').': <input type="checkbox" name="thumb_delete" value="1"/><br/>';
+			echo '<label>'._('Eliminar imagen').': <input type="checkbox" name="thumb_delete" value="1"/></label><br/>';
 		} else {
-			echo _('Obtener imagen (puede tardar varios segundos)').': <input type="checkbox" name="thumb_get" value="1"/><br/>';
+			echo '<label>'._('Obtener imagen (puede tardar varios segundos)').': <input type="checkbox" name="thumb_get" value="1"/></label><br/>';
 		}
 	}
 
