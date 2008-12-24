@@ -141,6 +141,10 @@ if (!empty($link->tags))
 // add also a rel to the comments rss
 $globals['extra_head'] = '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";
 
+if ($link->has_thumb()) {
+	$globals['extra_head'] .= '<meta name="thumbnail_url" content="http://'.get_server_name().$link->thumb."\" />\n";
+}
+
 do_header($link->title, 'post');
 
 // Show the error if the comment couldn't be inserted
