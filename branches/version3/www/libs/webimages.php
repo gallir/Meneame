@@ -46,6 +46,10 @@ class BasicThumb {
 		return $this->x * $this->y;
 	}
 
+	function diagonal() {
+		return (int) sqrt(pow($this-x, 2) + pow($this->y, 2));
+	}
+
 	function ratio() {
 		return (max($this->x, $this->y) / min($this->x, $this->y));
 	}
@@ -61,7 +65,7 @@ class BasicThumb {
 			$percent = $size/$this->y;
 		}
 		$min = min($this->x*$percent, $this->y*$percent);
-		if ($min < $size/2.2) $percent = $percent * $size/2.2/$min; // Ensure then minimux is size/2.2
+		if ($min < $size/2) $percent = $percent * $size/2/$min; // Ensure that minimum axis size is size/2
 		$new_x = round($this->x*$percent);
 		$new_y = round($this->y*$percent);
 		$dst = ImageCreateTrueColor($new_x,$new_y);
@@ -145,7 +149,7 @@ class WebThumb extends BasicThumb {
 		}
 
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files/', $this->parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|wp-content/', $this->parsed_url['host'])) {
 			$this->candidate = true;
 			//echo "Candidate: $url -> $this->url <br>\n";
 		}
@@ -162,10 +166,10 @@ class WebThumb extends BasicThumb {
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
-			$min_surface = 29000;
+			$min_surface = 35000;
 		} else {
 			$min_size = 90;
-			$min_surface = 15000;
+			$min_surface = 20000;
 		}
 		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
@@ -247,8 +251,9 @@ class HtmlImages {
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Aspect: ".$img->ratio()." Coef1: ".intval($img->surface()/pow($img->ratio(),2))." Coef2: ".intval($img->surface()/pow($img->ratio(), 2)/2)." -->\n";
-				if (!$this->selected || ($this->selected->surface()/pow($this->selected->ratio(), 2) < $img->surface()/pow($img->ratio(), 2)/2)) {
+				$img->coef = intval($img->surface()/$img->diagonal()/pow($img->ratio(), 1));
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Diagonal: ".$img->diagonal()." Aspect: ".$img->ratio()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
 					$this->selected = $img;
 					$n++;
 					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
