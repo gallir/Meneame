@@ -247,8 +247,8 @@ class HtmlImages {
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Aspect: ".$img->ratio()." Coef1: ".intval($img->surface()/pow($img->ratio(),2))." Coef2: ".intval($img->surface()/pow($img->ratio(), 2)/1.5)." -->\n";
-				if (!$this->selected || ($this->selected->surface()/pow($this->selected->ratio(), 2) < $img->surface()/pow($img->ratio(), 2)/1.5)) {
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Aspect: ".$img->ratio()." Coef1: ".intval($img->surface()/pow($img->ratio(),2))." Coef2: ".intval($img->surface()/pow($img->ratio(), 2)/2)." -->\n";
+				if (!$this->selected || ($this->selected->surface()/pow($this->selected->ratio(), 2) < $img->surface()/pow($img->ratio(), 2)/2)) {
 					$this->selected = $img;
 					$n++;
 					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
