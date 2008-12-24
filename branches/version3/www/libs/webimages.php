@@ -207,12 +207,14 @@ class HtmlImages {
 				}
 			}
 
-			$this->html = &$html;
 
-			//Check for Youtube Videos
-			if ($this->check_youtube()) return $this->selected;
-			//Check for Google Videos
-			if ($this->check_google_video()) return $this->selected;
+			// Check if there are players
+			if (preg_match('/<(embed|object|param)/i', $html)) {
+				$this->html = &$html;
+				if ($this->check_youtube()) return $this->selected;
+				if ($this->check_google_video()) return $this->selected;
+				if ($this->check_metacafe()) return $this->selected;
+			}
 
 			// Analyze HTML <img's
 			if (preg_match('/<base *href=["\'](.+?)["\']/i', $html, $match)) {
@@ -332,6 +334,40 @@ class HtmlImages {
 		}
 		return $thumbnail;
 	}
+
+	// Metaface detection
+	function check_metacafe() {
+		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/([\d]+)\//i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Metacafe, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_metacafe_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function get_metacafe_thumb($videoid) {
+		if(($res = get_url("http://www.metacafe.com/api/item/$videoid"))) {
+			$vrss = $res['content'];
+			if($vrss) {
+				preg_match('/<media:thumbnail url=["\'](.+?)["\']/',$vrss,$thumbnail_array);
+				return $thumbnail_array[1];
+			}
+		}
+		return false;
+	}
+
 }
 
 function normalize_path($path) {
