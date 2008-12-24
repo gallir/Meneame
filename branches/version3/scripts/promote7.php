@@ -294,7 +294,7 @@ if ($links) {
 		} else {
 			if (( $must_publish || $link->karma > $past_karma * $min_karma_coef) 
 						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma &&
-						$link->votes > $link->negatives*10) {
+						$link->votes > $link->negatives*20) {
 				$last_resort_id = $link->id;
 				$last_resort_karma = $link->karma;
 			}

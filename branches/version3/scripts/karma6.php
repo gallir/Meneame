@@ -17,7 +17,7 @@ $db->query("delete from links where link_status='discard' and link_date < date_s
 
 $db->barrier();
 // Delete email, names and url of invalidated users after three months
-$dbusers = $db->get_col("select user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
+$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
 if ($dbusers) {
 	foreach ($dbusers as $id) {
 		$user = new User;
@@ -138,7 +138,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
 			if ($karmas) {
 				foreach ($karmas as $k) {
-					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 2) * 3;
+					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 2) * 4;
 				}
 			}
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
@@ -152,12 +152,12 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karma1 = max(-12, $karma1);
 			
 			// Check if the user has links tagged as abuse
-			$link_abuse = (int) $db->get_var("select count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
+			$link_abuse = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
 				$pun =  4 * $link_abuse;
 				$karma1 = max(-12, $karma1 - $pun);
 				$output .= _('Penalizado por enlaces que violan las reglas')." ($link_abuse): $pun\n";
-				$penalized = 1;
+				$penalized += 4;
 			}
 
 
@@ -185,6 +185,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$pun = $abuse_given * 2;
 			$karma2 -= $pun;
 			$output .= _('Descuento por votar a enlaces que violan las reglas')." ($abuse_given):  $pun\n";
+			$penalized += 2;
 		}
 
 		if ($karma2 > 0) {
@@ -201,7 +202,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 				($published_average < 0.50 || 
 				($total_comments < $published_given/2 && $sent_links == 0)) 
 			) {
-			$penalized = 1;
+			$penalized += 1;
 			if ($total_comments == 0 && $sent_links == 0) {
 				$output .= _('Coeficiente de votos muy bajos, posible bot, penalizado');
 				$punish_coef = 5;
@@ -243,7 +244,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		if($negative_no_discarded > 10 && $negative_no_discarded > $max_allowed_negatives) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			$karma3 -= $punishment;
-			$penalized = 1;
+			$penalized += 1;
 			$output .= _('Exceso de votos negativos a enlaces')." ($negative_no_discarded > $max_allowed_negatives), "._('penalización').": $punishment, karma3: ";
 			$output .= sprintf("%4.2f\n", $karma3);
 		}
@@ -279,14 +280,20 @@ while ($dbuser = mysql_fetch_object($result)) {
 			}
 		}
 		if ($karma5 != 0) {
-			$penalized = 1;
+			$penalized = +2;
 			$output .= _('Exceso de votos negativos injustos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
 			$output .= sprintf("%4.2f\n", $karma5);	
 		}
 
 		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5;
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
-		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized) $karma_base_user = $karma_base;
+		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized) {
+			$karma_base_user = $karma_base;
+			if ($penalized > 2) {
+				$karma_extra = min($karma_extra, 1);
+				$output .= _('Karma extra máximo por penalizaciones o abusos').": 1\n"; 
+			}
+		}
 		$karma = max($karma_base_user+$karma_extra, $min_karma);
 		$karma = min($karma, $max_karma);
 	} else {
@@ -295,7 +302,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		if (abs($user->karma - $karma_base) < 0.1) {
 			$karma = $karma_base;
 		} elseif ($user->karma > $karma_base) {
-			$karma = max($karma_base, $user->karma - 1);
+			$karma = max($karma_base, $user->karma - 0.5);
 		} elseif ($user->karma < $karma_base) {
 			$karma = min($karma_base, $user->karma + 0.1);
 		} else {
@@ -308,10 +315,14 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
-			// Decrease slowly
-			$user->karma = 0.9*$user->karma + 0.1*$karma;
+			if ($karma < $karma_base || $penalized) {
+				$user->karma = 0.5*$user->karma + 0.5*$karma; // In case of very low karma, penalized more
+			} else {
+				// Decrease very slowly
+				$user->karma = 0.95*$user->karma + 0.05*$karma;
+			}
 		} else {
-			// Increase faster
+			// Increase/decrease faster
 			$user->karma = 0.8*$user->karma + 0.2*$karma;
 		}
 		if ($user->karma > $max_karma * 0.85 && $user->level == 'normal') {

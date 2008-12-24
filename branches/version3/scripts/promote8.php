@@ -10,7 +10,7 @@ header("Content-Type: text/html");
 echo '<html><head><title>promote8.php</title></head><body>';
 ob_end_flush();
 
-$min_karma_coef = 0.86;
+$min_karma_coef = 0.87;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
@@ -34,8 +34,8 @@ $from_time = "date_sub(now(), interval 5 day)";
 
 $last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from links WHERE link_status='published'");
 if (!$last_published) $last_published = $now - 24*3600*30;
-$links_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 24 hour)");
-$links_published_projection = 4 * (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 6 hour)");
+$links_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 24 hour)");
+$links_published_projection = 4 * (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval 6 hour)");
 
 $diff = $now - $last_published;
 // If published and estimation are lower than projection then
@@ -52,7 +52,7 @@ if ($decay > MIN && ($links_published_projection < $pub_estimation * 0.9 || $lin
 */
 $decay = max($min_karma_coef, $decay);
 
-if ($diff > $interval * 3) {
+if ($diff > $interval * 2) {
 	$must_publish = true;
 	$output .= "Delayed! <br/>";
 }
@@ -67,6 +67,7 @@ $past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) fro
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
+$last_resort_karma = (int) $past_karma * 0.65;
 
 
 //////////////
@@ -79,19 +80,19 @@ $min_votes = 5;
 /////////////
 
 $limit_karma = round(min($past_karma,$min_karma) * 0.65);
-$bonus_karma = round(min($past_karma,$min_karma) * 0.50);
+$bonus_karma = round(min($past_karma,$min_karma) * 0.40);
 
 
 /// Coeficients to balance metacategories
 $days = 2;
-$total_published = (int) $db->get_var("select count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)");
+$total_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > date_sub(now(), interval $days day)");
 $db_metas = $db->get_results("select category_id, category_name, category_calculated_coef from categories where category_parent = 0 and category_id in (select category_parent from categories where category_parent > 0)");
 foreach ($db_metas as $dbmeta) {
 	$meta = $dbmeta->category_id;
 	$meta_previous_coef[$meta] = $dbmeta->category_calculated_coef;
 	$meta_names[$meta] = $dbmeta->category_name;
-	$x = (int) $db->get_var("select count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
-	$y = (int) $db->get_var("select count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	$x = (int) $db->get_var("select SQL_NO_CACHE count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	$y = (int) $db->get_var("select SQL_NO_CACHE count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$meta_coef[$meta] = $x/$y;
 	$meta_coef[$meta] = 0.7 * $meta_coef[$meta] + 0.3 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
@@ -113,7 +114,7 @@ foreach ($meta_coef as $m => $v) {
 // Karma average:  It's used for each link to check the balance of users' votes
 
 global $users_karma_avg;
-$users_karma_avg = (float) $db->get_var("select avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
+$users_karma_avg = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 
 $output .= "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br/>\n";
 $output .= "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br/>\n";
@@ -159,7 +160,7 @@ if ($links) {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value > 0"));
-		$votes = $db->get_results("select user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
+		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
 		//echo "Call for $link->author $link->uri\n";
 		$affinity = check_affinity($link->author, $past_karma*0.3);
 		foreach ($votes as $vote) {
@@ -232,7 +233,7 @@ if ($links) {
 			$karma_threshold = $min_karma;
 			// Aged karma
 			$diff = max(0, $now - ($link->date + 9*3600)); // 9 hours without decreasing
-			$oldd = 1 - $diff/(3600*60);
+			$oldd = 1 - $diff/(3600*54);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$link->new_coef = $oldd;
@@ -256,7 +257,7 @@ if ($links) {
 		// Verify last published from the same site
 		$hours = 8;
 		$min_pub_coef = 0.8;
-		$last_site_published = (int) $db->get_var("select UNIX_TIMESTAMP(max(link_date)) from links where link_blog = $link->blog and link_status = 'published' and link_date > date_sub(now(), interval $hours hour)");
+		$last_site_published = (int) $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from links where link_blog = $link->blog and link_status = 'published' and link_date > date_sub(now(), interval $hours hour)");
 		if ($last_site_published > 0) {
 			$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
 			$dblink->karma *= $pub_coef;
@@ -271,7 +272,7 @@ if ($links) {
 		}
 
 		// check if it's "media" and the metacategory coefficient is low
-		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image' || $link->content_type == 'video')) {
+		if ($meta_coef[$dblink->parent] < 1.1 && ($link->content_type == 'image')) {
 			$dblink->karma *= 0.9;
 			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
 		}
@@ -305,15 +306,17 @@ if ($links) {
 		}
 
 
+		if ($link->thumb_status == 'unknown') $link->get_thumb();
+
 		if ($link->votes >= $min_votes && $dblink->karma >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($dblink->karma);
 			publish($link);
 			$changes = 3; // to show a "published" later	
 		} else {
-			if (( $must_publish || $link->karma > $past_karma * $min_karma_coef) 
+			if (( $must_publish || $link->karma > $min_past_karma) 
 						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma &&
-						$link->votes > $link->negatives*10) {
+						$link->votes > $link->negatives*20) {
 				$last_resort_id = $link->id;
 				$last_resort_karma = $link->karma;
 			}
@@ -322,7 +325,7 @@ if ($links) {
 		usleep(10000);
 		$i++;
 	}
-	if ($published == 0 && ($must_publish || $decay < 0.98) &&  $last_resort_id  > 0) {
+	if ($published == 0 && $links_published_projection < $pub_estimation * 0.9 && $must_publish && $last_resort_id  > 0) {
 		// Publish last resort
 		$link = new Link;
 		$link->id = $last_resort_id;
@@ -462,6 +465,7 @@ function jaiku_post($link, $short_url) {
 	curl_setopt($session, CURLOPT_HEADER, false);
 	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($session, CURLOPT_TIMEOUT, 20);
 	curl_setopt ($session, CURLOPT_FOLLOWLOCATION,1); 
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_POST, 1);
@@ -481,6 +485,7 @@ function fon_gs($url) {
 	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($session, CURLOPT_TIMEOUT, 20);
 	$result = curl_exec($session);
 	curl_close($session);
 	if (preg_match('/^OK/', $result)) {
@@ -498,7 +503,7 @@ function check_affinity($uid, $min_karma) {
 		return unserialize($log->text);
 	}
 	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 15 day)");
-	$link_ids = $db->get_col("SELECT link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
+	$link_ids = $db->get_col("SELECT SQL_NO_CACHE link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
 	$nlinks = count($link_ids);
 	if ($nlinks < 5) {
 		$log->store();
@@ -506,7 +511,7 @@ function check_affinity($uid, $min_karma) {
 	}
 
 	$links = implode(',', $link_ids);
-	$votes = $db->get_results("select vote_user_id as id, sum(vote_value/abs(vote_value)) as count from votes where vote_link_id in ($links) and vote_type='links' group by vote_user_id");
+	$votes = $db->get_results("select SQL_NO_CACHE vote_user_id as id, sum(vote_value/abs(vote_value)) as count from votes where vote_link_id in ($links) and vote_type='links' group by vote_user_id");
 	if ($votes) {
 		foreach ($votes as $vote) {
 			if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
