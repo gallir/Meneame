@@ -1,4 +1,11 @@
 <?
+// The source code packaged with this file is Free Software, Copyright (C) 2008 by
+// Ricardo Galli <gallir at uib dot es>.
+// It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
+// You can get copies of the licenses here:
+//      http://www.affero.org/oagpl.html
+// AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
+
 class BasicThumb {
 	public $x = 0;
 	public $y = 0;
@@ -192,9 +199,8 @@ class HtmlImages {
 			$html = $res['content'];
 
 			// First check for thumbnail head metas
-			$head = substr($html, 0, 4000);
-			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $head, $match) ||
-				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $head, $match)) {
+			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $html, $match) ||
+				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $html, $match)) {
 				$url = $match[1];
 				echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
@@ -211,9 +217,11 @@ class HtmlImages {
 			// Check if there are players
 			if (preg_match('/<(embed|object|param)/i', $html)) {
 				$this->html = &$html;
+				echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube()) return $this->selected;
 				if ($this->check_google_video()) return $this->selected;
 				if ($this->check_metacafe()) return $this->selected;
+				if ($this->check_vimeo()) return $this->selected;
 			}
 
 			// Analyze HTML <img's
@@ -281,7 +289,6 @@ class HtmlImages {
 		return false;
 	}
 
-	// Youtube detection
 	function get_google_thumb($videoid) {
 		if(($res = get_url("http://video.google.com/videofeed?docid=$videoid"))) {
 			$vrss = $res['content'];
@@ -295,7 +302,7 @@ class HtmlImages {
 		return false;
 	}
 
-	//value="http://www.youtube.com/v/ESmWWwXP-TQ&
+	// Youtube detection
 	function check_youtube() {
 		if (preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)&/i', $this->html, $match)) {
 			$video_id = $match[1];
@@ -337,7 +344,7 @@ class HtmlImages {
 
 	// Metaface detection
 	function check_metacafe() {
-		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/([\d]+)\//i', $this->html, $match)) {
+		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/(\d+)\//i', $this->html, $match)) {
 			$video_id = $match[1];
 			echo "<!-- Detect Metacafe, id: $video_id -->\n";
 			if ($video_id) {
@@ -362,6 +369,39 @@ class HtmlImages {
 			$vrss = $res['content'];
 			if($vrss) {
 				preg_match('/<media:thumbnail url=["\'](.+?)["\']/',$vrss,$thumbnail_array);
+				return $thumbnail_array[1];
+			}
+		}
+		return false;
+	}
+
+	// Vimeo detection
+	function check_vimeo() {
+		if (preg_match('/=["\']http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Vimeo, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_vimeo_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function get_vimeo_thumb($videoid) {
+		if(($res = get_url("http://vimeo.com/api/clip/$videoid.xml"))) {
+			$vrss = $res['content'];
+			if($vrss) {
+				preg_match('/<thumbnail_large>(.+)<\/thumbnail_large>/i',$vrss,$thumbnail_array);
 				return $thumbnail_array[1];
 			}
 		}
