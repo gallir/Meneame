@@ -82,6 +82,7 @@ class BasicThumb {
 			return $this->fromstring($res['content']);
 		} 
 		echo "Failed to get $this->url<br>";
+		return false;
 	}
 
 	function fromstring($imgstr) {
@@ -189,6 +190,31 @@ class HtmlImages {
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
 			$html = $res['content'];
+
+			// First check for thumbnail head metas
+			$head = substr($html, 0, 4000);
+			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $head, $match) ||
+				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $head, $match)) {
+				$url = $match[1];
+				echo "<!-- Try to select from $url -->\n";
+				$img = new BasicThumb($url);
+				if ($img->get()) {
+					$img->type = 'local';
+					$img->candidate = true;
+					$this->selected = $img;
+					echo "<!-- Selected from $img->url -->\n";
+					return $this->selected;
+				}
+			}
+
+			$this->html = &$html;
+
+			//Check for Youtube Videos
+			if ($this->check_youtube()) return $this->selected;
+			//Check for Google Videos
+			if ($this->check_google_video()) return $this->selected;
+
+			// Analyze HTML <img's
 			if (preg_match('/<base *href=["\'](.+?)["\']/i', $html, $match)) {
 				$this->base = $match[1];
 			}
@@ -230,6 +256,82 @@ class HtmlImages {
 		}
 		return $this->selected;
 	}
+
+	// Google Video detection
+	function check_google_video() {
+		if (preg_match('/=["\']http:\/\/video\.google\.[a-z]{2,5}\/.+?\?docid=(.+?)&/i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Google Video, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_google_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	// Youtube detection
+	function get_google_thumb($videoid) {
+		if(($res = get_url("http://video.google.com/videofeed?docid=$videoid"))) {
+			$vrss = $res['content'];
+			if($vrss) {
+				preg_match('/<media:thumbnail url=["\'](.+?)["\']/',$vrss,$thumbnail_array);
+				$thumbnail = $thumbnail_array[1];
+				//Remove amp;
+				return str_replace('amp;','',$thumbnail);
+			}
+		}
+		return false;
+	}
+
+	//value="http://www.youtube.com/v/ESmWWwXP-TQ&
+	function check_youtube() {
+		if (preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)&/i', $this->html, $match)) {
+			$video_id = $match[1];
+			echo "<!-- Detect Youtube, id: $video_id -->\n";
+			if ($video_id) {
+				$url = $this->get_youtube_thumb($video_id);
+				if($url) {
+					$img = new BasicThumb($url);
+					if ($img->get()) {
+						$img->type = 'local';
+						$img->candidate = true;
+						$this->selected = $img;
+						echo "<!-- Video selected from $img->url -->\n";
+						return $this->selected;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function get_youtube_thumb($videoid) {
+		$thumbnail = false;
+		if(($res = get_url("http://gdata.youtube.com/feeds/api/videos/$videoid"))) {
+			$vrss = $res['content'];
+			$previous = 0;
+			if($vrss && 
+				preg_match_all('/<media:thumbnail url=["\'](.+?)["\'].*?width=["\'](\d+)["\']/',$vrss,$matches, PREG_SET_ORDER)) {
+				foreach ($matches as $match) {
+					if ($match[2] > $previous) {
+						$thumbnail = $match[1];
+						$previous = $match[2];
+					}
+				}
+			}
+		}
+		return $thumbnail;
+	}
 }
 
 function normalize_path($path) {
@@ -263,4 +365,5 @@ function get_url($url) {
 	curl_close($session);
 	return $result;
 }
+
 ?>
