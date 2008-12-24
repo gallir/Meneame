@@ -177,8 +177,8 @@ class WebThumb extends BasicThumb {
 }
 
 class HtmlImages {
-	var $html = '';
-	var $selected = false;
+	public $html = '';
+	public $selected = false;
 
 	function __construct($url) {
 		$this->url = $url;
