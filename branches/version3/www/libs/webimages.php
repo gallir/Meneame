@@ -36,7 +36,6 @@ class BasicThumb {
 		}
 		$this->parsed_url = parse_url($this->url);
 		$this->referer = $referer;
-		//echo "BASE URL: $this->url<br/>\n";
 	}
 
 	function clean_url($str) {
@@ -116,7 +115,6 @@ class WebThumb extends BasicThumb {
 	function __construct($imgtag = '', $referer = '') {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
-		//echo "TAG: " . htmlentities($this->tag) . "<br>\n";
 		
 		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches)) {
 			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
@@ -130,7 +128,6 @@ class WebThumb extends BasicThumb {
 		parent::__construct($matches[1], $referer);
 		$this->type = 'local';
 
-		//echo "URL: ".htmlentities($imgtag)." -> ".htmlentities($url)."<br>\n";
 		if (strlen($this->url) < 5 || WebThumb::$visited[$this->url] ) return;
 		WebThumb::$visited[$this->url] = true;
 
@@ -170,7 +167,6 @@ class WebThumb extends BasicThumb {
 			$min_size = 80;
 			$min_surface = 18000;
 		}
-		//echo "$this->url Content_type:  $this->content_type surface: ". $this->surface(). " $min_surface<br>";
 		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
 
@@ -246,13 +242,10 @@ class HtmlImages {
 		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $this->html, $matches);
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
-			//echo htmlentities($match) . "<br>\n";
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
 				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Aspect: ".$img->ratio()." Coef1: ".intval($img->surface()/pow($img->ratio(),2))." Coef2: ".intval($img->surface()/pow($img->ratio(), 2)/1.5)." -->\n";
-				//print "Surface/ratio: $img->url ". ($img->surface()/$img->ratio()) . "<br>\n";
-				//print "Surface/ratio ($n): $img->url ". ($img->surface()/$img->ratio()/($n+0.5)) . "<br>\n";
 				if (!$this->selected || ($this->selected->surface()/pow($this->selected->ratio(), 2) < $img->surface()/pow($img->ratio(), 2)/1.5)) {
 					$this->selected = $img;
 					$n++;
@@ -294,9 +287,7 @@ class HtmlImages {
 			$vrss = $res['content'];
 			if($vrss) {
 				preg_match('/<media:thumbnail url=["\'](.+?)["\']/',$vrss,$thumbnail_array);
-				$thumbnail = $thumbnail_array[1];
-				//Remove amp;
-				return str_replace('amp;','',$thumbnail);
+				return $thumbnail_array[1];
 			}
 		}
 		return false;
@@ -428,7 +419,7 @@ function normalize_path($path) {
 function get_url($url) {
 	global $globals;
 	$session = curl_init();
-	curl_setopt($session, CURLOPT_URL, $url);
+	curl_setopt($session, CURLOPT_URL, html_entity_decode($url));
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
