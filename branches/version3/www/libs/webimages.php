@@ -164,8 +164,8 @@ class WebThumb extends BasicThumb {
 			$min_size = 140;
 			$min_surface = 29000;
 		} else {
-			$min_size = 80;
-			$min_surface = 18000;
+			$min_size = 90;
+			$min_surface = 15000;
 		}
 		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
 	}
@@ -418,8 +418,22 @@ function normalize_path($path) {
 
 function get_url($url) {
 	global $globals;
-	$session = curl_init();
-	curl_setopt($session, CURLOPT_URL, html_entity_decode($url));
+	static $session = false;
+	static $previous_host = false;
+
+	$url = html_entity_decode($url);
+	$parsed = parse_url($url);
+	if (!$parsed) return false;
+
+	if ($session && $previous_host != $parsed['host']) {
+		curl_close($session);
+		$session = false;
+	}
+	if (!$session) {
+		$session = curl_init();
+		$previous_host =  $parsed['host'];
+	}
+	curl_setopt($session, CURLOPT_URL, $url);
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
@@ -429,7 +443,6 @@ function get_url($url) {
 	$result['content'] = curl_exec($session);
 	if (!$result['content']) return false;
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
-	curl_close($session);
 	return $result;
 }
 
