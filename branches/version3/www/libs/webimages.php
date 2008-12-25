@@ -125,8 +125,8 @@ class WebThumb extends BasicThumb {
 				return;
 			}
 		} else {
-			// Avoid maps
-			if (preg_match('/usemap=/i',  $this->tag)) return;
+			// Avoid maps, headers and such
+			if (preg_match('/usemap=|header/i',  $this->tag)) return;
 		}
 
 		parent::__construct($matches[1], $referer);
@@ -171,7 +171,7 @@ class WebThumb extends BasicThumb {
 			$min_size = 90;
 			$min_surface = 20000;
 		}
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo/i', $this->url);
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header/i', $this->url);
 	}
 
 }
