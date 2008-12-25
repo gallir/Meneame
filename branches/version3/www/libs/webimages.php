@@ -120,7 +120,8 @@ class WebThumb extends BasicThumb {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
 		
-		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches)) {
+		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches) 
+			&& !preg_match('/src=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
 			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
 				return;
 			}
@@ -136,10 +137,10 @@ class WebThumb extends BasicThumb {
 		WebThumb::$visited[$this->url] = true;
 
 		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->x = $match[1];
+			$this->x = (int) $match[1];
 		}
 		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->y = $match[1];
+			$this->y = (int) $match[1];
 		}
 
 		// First filter to avoid downloading very small images
@@ -251,7 +252,7 @@ class HtmlImages {
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				$img->coef = intval($img->surface()/$img->diagonal()/pow($img->ratio(), 1));
+				$img->coef = intval($img->surface()/$img->diagonal()/$img->ratio());
 				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Diagonal: ".$img->diagonal()." Aspect: ".$img->ratio()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
 				if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
 					$this->selected = $img;
