@@ -42,18 +42,6 @@ class BasicThumb {
 		return clean_input_url(preg_replace('/ /', '%20', $str));
 	}
 
-	function surface() {
-		return $this->x * $this->y;
-	}
-
-	function diagonal() {
-		return (int) sqrt(pow($this-x, 2) + pow($this->y, 2));
-	}
-
-	function ratio() {
-		return (max($this->x, $this->y) / min($this->x, $this->y));
-	}
-
 	function scale($size=100) {
 		if (!$this->image && ! $this->checked) {
 			$this->get();
@@ -115,6 +103,8 @@ class BasicThumb {
 class WebThumb extends BasicThumb {
 	protected static $visited = array();
 	public $candidate = false;
+	public $html_x = 0;
+	public $html_y = 0;
 
 	function __construct($imgtag = '', $referer = '') {
 		if (!$imgtag) return;
@@ -137,14 +127,14 @@ class WebThumb extends BasicThumb {
 		WebThumb::$visited[$this->url] = true;
 
 		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->x = (int) $match[1];
+			$this->html_x = $this->x = (int) $match[1];
 		}
 		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->y = (int) $match[1];
+			$this->html_y = $this->y = (int) $match[1];
 		}
 
 		// First filter to avoid downloading very small images
-		if (($this->x > 0 && $this->x < 80) || ($this->y > 0 && $this->y < 80)) {
+		if (($this->x > 0 && $this->x < 100) || ($this->y > 0 && $this->y < 100)) {
 			$this->candidate = false;
 			return;
 		}
@@ -156,20 +146,49 @@ class WebThumb extends BasicThumb {
 		}
 	}
 
+	function get() {
+		if( !parent::get() ) return false;
+		// Ensure we use the html "virtual" size
+		// to avoid the selection of images scaled down in the page
+		if ($this->html_x == 0 && $this->html_y == 0) {
+			$this->html_x = $this->x;
+			$this->html_y = $this->y;
+		} elseif ($this->html_x == 0) {
+			$this->html_x = intval($this->html_y * $this->x / $this->y);
+		} else {
+			$this->html_y = intval($this->html_x * $this->y / $this->x);
+		}
+		return true;
+	}
+
+	function surface() {
+		return $this->html_x * $this->html_y;
+	}
+
+	function diagonal() {
+		return (int) sqrt(pow($this->html_x, 2) + pow($this->html_y, 2));
+	}
+
+	function ratio() {
+		return (max($this->html_x, $this->html_y) / min($this->html_x, $this->html_y));
+	}
+
+	function max() {
+		return max($this->html_x, $this->html_y);
+	}
+
+
 	function good() {
 		if ($this->candidate && ! $this->checked) {
-			$x = $this->x;
-			$y = $this->y;
 			$this->get();
-			// To avoid the selection of images scaled down in the page
-			if ($x == 0 || $this->x < $x) $x = $this->x;
-			if ($y == 0 || $this->y < $y) $y = $this->y;
+			$x = $this->html_x;
+			$y = $this->html_y;
 		}
 		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
 			$min_surface = 35000;
 		} else {
-			$min_size = 90;
+			$min_size = 100;
 			$min_surface = 20000;
 		}
 		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header/i', $this->url);
@@ -252,12 +271,13 @@ class HtmlImages {
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				$img->coef = intval($img->surface()/$img->diagonal()/$img->ratio());
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->x Y: $img->y Diagonal: ".$img->diagonal()." Aspect: ".$img->ratio()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
-				if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
+				//$img->coef = intval($img->surface()/$img->diagonal()/$img->ratio());
+				$img->coef = intval($img->surface()/$img->max());
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
 					$this->selected = $img;
 					$n++;
-					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->x Y: $img->y -->\n";
+					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
 				}
 			}
 			if ($goods > 5 && $n > 0) break;
