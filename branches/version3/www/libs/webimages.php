@@ -140,7 +140,7 @@ class WebThumb extends BasicThumb {
 		}
 
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|wp-content/', $this->parsed_url['host'])) {
+		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|wp-content|pic\./', $this->parsed_url['host'])) {
 			$this->candidate = true;
 			//echo "Candidate: $url -> $this->url <br>\n";
 		}
