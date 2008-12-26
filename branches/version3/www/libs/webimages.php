@@ -109,6 +109,7 @@ class WebThumb extends BasicThumb {
 	function __construct($imgtag = '', $referer = '') {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
+		//echo htmlentities($this->tag)."<br>\n";
 		
 		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches) 
 			&& !preg_match('/src=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
@@ -126,11 +127,11 @@ class WebThumb extends BasicThumb {
 		if (strlen($this->url) < 5 || WebThumb::$visited[$this->url] ) return;
 		WebThumb::$visited[$this->url] = true;
 
-		if(preg_match('/[ "]width *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->html_x = $this->x = (int) $match[1];
+		if(preg_match('/[ "]width *[=:][ \'"]*(\d+)/i', $this->tag, $match)) {
+			$this->html_x = $this->x = intval($match[1]);
 		}
-		if(preg_match('/[ "]height *[=:][ "]*(\d+)/i', $this->tag, $match)) {
-			$this->html_y = $this->y = (int) $match[1];
+		if(preg_match('/[ "]height *[=:][ \'"]*(\d+)/i', $this->tag, $match)) {
+			$this->html_y = $this->y = intval($match[1]);
 		}
 
 		// First filter to avoid downloading very small images
@@ -140,9 +141,13 @@ class WebThumb extends BasicThumb {
 		}
 
 		// Check if domain.com are the same for the referer and the url
-		if (preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) || preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|wp-content|pic\./', $this->parsed_url['host'])) {
+		if (!preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header|rss/i', $this->url) && (
+				preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) 
+				|| preg_match('/images\W|wp-content\W|upload\W|imgs\W|pics\W|pictures\W/', $this->url) 
+				|| preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|pic\./', $this->parsed_url['host'])
+				)) {
 			$this->candidate = true;
-			//echo "Candidate: $url -> $this->url <br>\n";
+			//echo "Candidate: $this->x, $this->y $url -> $this->url<br>\n";
 		}
 	}
 
@@ -191,7 +196,7 @@ class WebThumb extends BasicThumb {
 			$min_size = 100;
 			$min_surface = 20000;
 		}
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5 && !preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header/i', $this->url);
+		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5;
 	}
 
 }
@@ -251,7 +256,7 @@ class HtmlImages {
 				$this->base = $match[1];
 			}
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
-			$html = preg_replace('/<*!--.+?-->/s', '', $html); // Delete commented HTML
+			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
@@ -259,6 +264,7 @@ class HtmlImages {
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
 			$html = substr($html, 0, 30000); // Only analyze first X bytes
 			$this->html = $html;
+			echo "<!-- $this->html -->\n";
 			$this->parse_img();
 		}
 		return $this->selected;
