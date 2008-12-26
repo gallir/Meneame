@@ -38,7 +38,7 @@ background: #feefe5;
 }
 
 #logo {
-background: #ff6400 url('../../img/mnm/logobg02.png') no-repeat left top;
+background: url('../../img/mnm/logobg02.png') no-repeat left top;
 }
 
 #headtools a {
