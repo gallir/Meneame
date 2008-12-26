@@ -129,7 +129,7 @@ color: #ff6400;
 }
 
 .tabsub li a:hover {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabsub li.tabsub-this {
@@ -164,10 +164,7 @@ color: #5073c5;
 }
 
 #sidebar h4 {
-/*
-background: #ffd9c0;
-*/
-border-color: #FFCBAA;
+border-color: #ffcbaa;
 }
 
 #sidebar h4 , #sidebar h4 a {
@@ -179,7 +176,7 @@ color: #FF6400;
 }
 
 .mini-pop {
-border-color: #FFCBAA;
+border-color: #ffcbaa;
 }
 
 .mnm-pop {
@@ -202,7 +199,7 @@ color: #5073c5;
 }
 
 #sidebar .topcommentsli li, .storyrsslist li {
-border-color: #FFCBAA;
+border-color: #ffcbaa;
 color: #03a;
 }
 
@@ -373,7 +370,7 @@ background-color: #fff;
 
 .menealo a {
 background: url(../../img/common/menealo-background.png) bottom left repeat-x;
-border-color: #FFCBAA;
+border-color: #ffcbaa;
 }
 
 .menealo a, .menealo span {
@@ -724,7 +721,7 @@ background: #fff;
 }
 
 .button:disabled, button:disabled {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 #headtools input {
@@ -742,7 +739,7 @@ background: #fff;
 }
 
 * html .tabmain li.tabmain-this a:hover {
-background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 * html .tabsub li a:hover {
