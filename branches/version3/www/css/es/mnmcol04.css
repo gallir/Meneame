@@ -9,7 +9,8 @@ Comments: This file contains only colors or images. All images referenced by the
 */
 
 body {
-background-color: #fff8f3; /* before e5d7c3 or e6e6e6 */
+background-color: #fff;
+background-image: url('../../img/common/bkg-01.png');
 }
 
 a {
@@ -33,11 +34,11 @@ background-color: #fff;
 }
 
 #header {
-background: #ffd9c0 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
+background: #feefe5 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
 }
 
 #logo {
-background: #ffb280 url('../../img/mnm/logobg.png') no-repeat left top;
+background: #ff6400 url('../../img/mnm/logobg.png') no-repeat left top;
 }
 
 #headtools a {
@@ -83,7 +84,7 @@ color: #ff6400;
 }
 
 .tabmain li a:hover {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabmain li.tabmain-this {
@@ -92,11 +93,11 @@ background: url('../../img/common/tab-org-bg.png') no-repeat -28px 0;
 }
 
 .tabmain li.tabmain-this a {
-background: #ffd9c0 url('../../img/common/reload-bt.png') no-repeat right 6px;
+background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
 }
 
 .tabsub-shakeit {
-background: #ffd9c0;
+background: #feefe5;
 }
 
 .tabsub-shakeit li {
