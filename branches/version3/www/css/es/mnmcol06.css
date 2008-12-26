@@ -34,11 +34,11 @@ background-color: #fff;
 }
 
 #header {
-background: #feefe5 url('../../img/common/headerbg.png') no-repeat 14.64em -5em;
+background: #feefe5;
 }
 
 #logo {
-background: #ff6400 url('../../img/mnm/logobg01.png') no-repeat left top;
+background: #ff6400 url('../../img/mnm/logobg02.png') no-repeat left top;
 }
 
 #headtools a {
@@ -50,11 +50,11 @@ border-color: #fff;
 }
 
 #eli {
-background: url('../../img/mnm/eli.png') no-repeat left top;
+background: #fff url('../../img/mnm/eli.png') no-repeat left top;
 }
 
 #navigation {
-background: url('../../img/common/navibg.png') no-repeat right top;
+background: #fff url('../../img/common/navibg.png') no-repeat right top;
 }
 
 #navigation li {

@@ -37,15 +37,15 @@ text-align: left;
 }
 
 #header {
-height: 1.79em; /* 25px */
+height: 25px;
 overflow: hidden;
 }
 
 #logo {
 display: block;
 float: left;
-width: 14.71em; /* 206px */
-height: 1.79em;
+width: 210px;
+height: 24px;
 text-indent: -9999px;
 }
 
@@ -104,27 +104,27 @@ margin-left: 0px;
 
 #navigation {
 text-align: right;
-width: 9em;
+width: 124px;
 margin: 0 0 .71em 0;
 }
 
 #navigation li {
 list-style-type: none;
-font-size: 0.93em; /* .86em */
-padding: 2px 1em 2px 0;
+font-size: 0.93em;
+padding: 2px 12px 2px 0;
 border-top: 1px solid;
 }
 
 #navigation li.second {
-padding-right: 1.5em; /* antes 2em*/
+padding-right: 18px;
 }
 
 #navigation li.third {
-padding-right: 2em; /* antes 2.5em*/
+padding-right: 24px;
 }
 
 #navigation li.fourth {
-padding-right: 2.5em;
+padding-right: 30px;
 }
 
 #navigation a {
