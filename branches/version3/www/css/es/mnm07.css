@@ -91,7 +91,7 @@ vertical-align: top;
 
 #headtools input {
 padding: 0 0 0 .29em;
-border: 0;
+border: 1px dotted;
 font-size: 1em;
 height: 1.28em;
 width: 15em;

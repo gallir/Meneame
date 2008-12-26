@@ -84,7 +84,7 @@ function print_empty_submit_form() {
 	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
 	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
 	echo '<p><label for="url">'._('url').':</label><br />';
-	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" /></p>';
+	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" onblur="if(this.value==\'\') this.value=\'http://\';" onclick="if(this.value==\''._('http://').'\') this.value=\'\';"/></p>';
 	echo '<input type="hidden" name="phase" value="1" />';
 	$randkey = rand(10000,10000000);
 	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
