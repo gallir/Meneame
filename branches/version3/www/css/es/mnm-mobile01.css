@@ -46,9 +46,9 @@ white-space: nowrap;
 font-size: 0.79em;
 display: inline;
 float: right;
-margin: 0 .28em 0 .28em;
+margin: 2px 5px 0 5px;
 border-left: 1px solid;
-padding-left: .56em;
+padding-left: 10px;
 white-space: nowrap;
 }
 
@@ -105,7 +105,7 @@ font-weight: bold;
 display: block;
 float: left;
 height: 20px;
-padding: 3px 8px 0 4px;
+padding: 3px 3px 0 3px;
 border-top: 1px solid;
 border-right: 1px solid;
 border-left: 1px solid;

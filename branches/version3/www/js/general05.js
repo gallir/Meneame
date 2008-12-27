@@ -221,10 +221,10 @@ Tooltips functions
  */
 
 
-// create the tooltip object
-function tooltip(){}
 
 if (typeof(JSOC) != "undefined") {
+	// create the tooltip object
+	function tooltip(){}
 	// setup properties of tooltip object
 	tooltip.id="tooltip";
 	tooltip.main=null;

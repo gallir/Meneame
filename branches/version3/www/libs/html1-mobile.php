@@ -173,7 +173,7 @@ function do_footer($credits = true) {
 
 	// warn warn warn 
 	// dont do stats of password recovering pages
-	@include('ads/stats.inc');
+	@include('ads/stats-mobile.inc');
 	printf("\n<!--Generated in %4.3f seconds-->\n", microtime(true) - $globals['start_time']);
 	echo "</body></html>\n";
 }
