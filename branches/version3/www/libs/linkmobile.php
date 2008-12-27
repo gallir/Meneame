@@ -108,7 +108,7 @@ class LinkMobile extends Link{
 		}
 		echo '<div class="news-shakeit">';
 		echo '<div class="'.$box_class.'">';
-		echo ($this->votes+$this->anonymous).'</div>';
+		echo '<span id="a-votes-'.$this->id.'">'.($this->votes+$this->anonymous).'</span></div>';
 
 		if ($globals['link']) {
 			echo '<div class="menealo" id="a-va-'.$this->id.'">';

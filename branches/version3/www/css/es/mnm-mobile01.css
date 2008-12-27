@@ -74,15 +74,6 @@ border: none;
 vertical-align: top;
 }
 
-#headtools input {
-padding: 0 0 0 .29em;
-border: 0;
-font-size: 1em;
-height: 1.28em;
-width: 15em;
-}
-
-
 #container {
 clear:both;
 }
@@ -196,7 +187,7 @@ font-size: 100%;
 
 .news-summary {
 margin: 0;
-padding: 10px 0 5px 5em;
+padding: 10px 0 5px 0;
 position: relative;
 }
 
@@ -225,13 +216,13 @@ border-left: none;
 
 /* Counter box */
 .news-shakeit {
+/*
 position: absolute;
 top: 10px;
-left: 10px;
-/*
-float: left;
+left: 2px;
 */
-width: 4em;
+float: left;
+width: 3.8em;
 text-align: center;
 font-size: 90%;
 margin: 5px 5px 0 0;
@@ -241,13 +232,13 @@ overflow: hidden;
 
 .mnm-published, .mnm-queued, .mnm-discarded {
 display: block;
-font-size: 15pt;
-font-weight: normal;
+font-size: 12pt;
+font-weight: bold;
 height: 16pt !important;
 letter-spacing: -1px;
 text-decoration: none;
 vertical-align: bottom;
-padding: 4px 0 4px 0;
+padding: 7px 0 7px 0;
 }
 
 
@@ -269,7 +260,7 @@ border: 1px solid;
 margin-top: 2px;
 display: block;
 padding: 2px 0 2px 0;
-font-size: 8pt;
+font-size: 7pt;
 }
 
 .menealo span {
@@ -412,29 +403,6 @@ font-weight: bold;
 
 .pages span.nextprev, .pages-margin span.nextprev {
 border: 1px solid;
-}
-
-.mini-pages a, .mini-pages span {
-display: block;
-float: left;
-padding: 3px 5px 3px 5px;
-margin-right: 3px;
-border: 1px solid;
-}
-
-.mini-pages span.current {
-border: 1px solid;
-font-weight: bold;
-}
-
-.mini-pages span.current a {
-padding: 0;
-border: 0px;
-}
-
-.mini-pages a {
-border: 1px solid;
-text-decoration: none;
 }
 
 

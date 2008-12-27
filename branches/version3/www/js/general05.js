@@ -224,6 +224,7 @@ Tooltips functions
 // create the tooltip object
 function tooltip(){}
 
+if (typeof(JSOC) != "undefined") {
 // setup properties of tooltip object
 tooltip.id="tooltip";
 tooltip.main=null;
@@ -246,6 +247,7 @@ tooltip.ie = (document.all)? true:false;		// check if ie
 if(tooltip.ie) tooltip.ie5 = (navigator.userAgent.indexOf('MSIE 5')>0);
 else tooltip.ie5 = false;
 tooltip.dom2 = ((document.getElementById) && !(tooltip.ie5))? true:false; // check the W3C DOM level2 compliance. ie4, ie5, ns4 are not dom level2 compliance !! grrrr >:-(
+}
 
 
 
@@ -450,7 +452,6 @@ function replaceText(text, tag) {
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 function reportAjaxStats(category, action) {
-	//return; // Slow down
 	if (pageTracker._trackEvent) {
 		pageTracker._trackEvent(category, action);
 	}

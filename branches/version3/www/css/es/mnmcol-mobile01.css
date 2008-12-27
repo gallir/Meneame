@@ -1,9 +1,5 @@
 /*
-Description: CSS color and image file for Menéame
-Version: 6.0
-Last updated: 22:30 19/06/2008
-Site URI: http://meneame.net
-Authors: Ricardo Galli and Benjamí Villoslada. CSS by Damián Vila
+Authors: Ricardo Galli and Benjamí Villoslada. 
 Licence: Affero GPL License (http://meneame.net/COPYING)
 Comments: This file contains only colors or images. All images referenced by the CSS and distributed in the tar file are copyrighted by Benjamí Villoslada and published under a CC license: http://creativecommons.org/licenses/by-sa/2.5/
 */
@@ -179,13 +175,6 @@ color: #666;
 color: #666;
 }
 
-
-.news-submitted img {
-border-color: #FFE2C5;
-}
-
-
-
 .comment-body {
 background: #feefe5;
 color: #303030;
@@ -276,49 +265,6 @@ color: #FFE2C5;
 .pages span.nextprev, .pages-margin span.nextprev {
 border-color: #FFE2C5;
 color: #FFE2C5;
-}
-
-.mini-pages a, .mini-pages span {
-color: #FF6400;
-border-color: #FFF;
-}
-
-.mini-pages span.current {
-border-color: #FF6400;
-background: #FFBE94;
-color: #FF6400;
-}
-
-.mini-pages span.current a {
-background: #FFBE94;
-color: #FF6400;
-}
-
-.mini-pages a {
-border-color: #FF6400;
-}
-
-.mini-pages a:hover {
-border-color: #FF9400;
-background: #FFBE94;
-color: #FF6400;
-}
-
-#tooltip-text {
-background: #FFEEC7;
-border-color: #e2d3b0;
-}
-
-.news-websnapr {
-border-color: #FFE2C5;
-}
-
-.mini-sneaker-title strong {
-color: #FF9400;
-}
-
-.mini-sneaker-item {
-border-bottom-color: #FFE2C5;
 }
 
 /* Form defaults */

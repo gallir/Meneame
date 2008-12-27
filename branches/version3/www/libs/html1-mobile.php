@@ -138,7 +138,7 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals;
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>'."\n";
+	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;</script>'."\n";
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/general05.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
@@ -216,10 +216,10 @@ function do_pages($total, $page_size=25, $margin = true) {
 	}
 
 	if($current==1) {
-		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
+		echo '<span class="nextprev">&#171; '._('ant'). '</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="?page='.$i.$query.'">&#171; '._('anterior').'</a>';
+		echo '<a href="?page='.$i.$query.'">&#171; '._('ant').'</a>';
 	}
 
 	if($start>1) {
@@ -235,17 +235,15 @@ function do_pages($total, $page_size=25, $margin = true) {
 		}
 	}
 	if($total_pages>$end) {
-		$i = $total_pages;
 		echo '<span>...</span>';
-		echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 	}
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="?page='.$i.$query.'">&#187; '._('siguiente').'</a>';
+		echo '<a href="?page='.$i.$query.'">&#187; '._('sig').'</a>';
 	} else {
-		echo '<span class="nextprev">&#187; '._('siguiente'). '</span>';
+		echo '<span class="nextprev">&#187; '._('sig'). '</span>';
 	}
-	echo "</div><!--html1:do_pages-->\n";
+	echo "</div>\n";
 
 }
 
