@@ -34,6 +34,18 @@ function do_banner_top () { // top banner
 }
 
 
+function do_banner_top_mobile () { 
+	global $globals, $dblang;
+//
+// WARNING!
+//
+// IMPORTANT! adapt this section to your contracted banners!!
+//
+	if($globals['ads']) {
+		@include('ads/mobile.inc');
+	}
+}
+
 
 function do_banner_right() { // side banner A
 	global $globals, $current_user;

@@ -14,7 +14,6 @@ include(mnminclude.'user.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
 
 
 if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {

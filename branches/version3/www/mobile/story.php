@@ -10,6 +10,8 @@ include('config.php');
 include(mnminclude.'linkmobile.php');
 include(mnminclude.'html1-mobile.php');
 
+$globals['ads'] = true;
+
 $link = new LinkMobile;
 
 

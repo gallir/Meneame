@@ -10,6 +10,8 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
+$globals['ads'] = true;
+
 $page_size = 15;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
