@@ -1,9 +1,4 @@
 /*
-Description: Menéame main CSS file
-Version: 4.0
-Last updated: 22:32 19/06/2008
-Site URI: http://meneame.net
-Authors: Ricardo Galli and Benjamí Villoslada. CSS by Damián Vila
 Licence: Affero GPL License (http://meneame.net/COPYING)
 Comments: This file contains only styles without colors or images. A separate file with colors and images is available.
 */
@@ -91,7 +86,7 @@ font-size: small;
 .tabmain {
 height: 24px !important;
 margin: 10px 0 0 0;
-padding-left: 15px;
+padding-left: 5px;
 border-bottom: 1px solid;
 white-space: nowrap;
 }
@@ -105,7 +100,7 @@ white-space: nowrap;
 }
 
 .tabmain li a {
-font-size: .93em;
+font-size: .8em;
 font-weight: bold;
 display: block;
 float: left;
@@ -126,10 +121,8 @@ height: 25px;
 }
 
 .tabmain li.tabmain-this a {
-font-style: oblique;
-font-size: 1.07em;
-padding: 2px 4px 0 5px;
-height: 22px;
+font-size: 0.8em;
+height: 21px;
 }
 
 
@@ -187,7 +180,7 @@ font-size: 100%;
 
 .news-summary {
 margin: 0;
-padding: 10px 0 5px 0;
+padding: 5px 0 5px 0;
 position: relative;
 }
 
@@ -232,25 +225,18 @@ overflow: hidden;
 
 .mnm-published, .mnm-queued, .mnm-discarded {
 display: block;
-font-size: 12pt;
+font-size: 1.3em;
 font-weight: bold;
-height: 16pt !important;
 letter-spacing: -1px;
 text-decoration: none;
 vertical-align: bottom;
-padding: 7px 0 7px 0;
+padding: 5px 0 5px 0;
 }
 
 
-.mnm-queued {
+.mnm-queued, .mnm-discarded  {
 border: 1px solid;
 }
-
-.mnm-discarded {
-border: 1px solid;
-}
-
-/* vote box */
 
 .menealo a {
 border: 1px solid;
@@ -270,8 +256,8 @@ border: 1px dotted;
 .news-body h1 {
 margin: 0;
 padding: 0 5px 0 0;
-font-size: 140%;
-font-weight: normal;
+font-size: 120%;
+font-weight: bold;
 background: none;
 border: none;
 }

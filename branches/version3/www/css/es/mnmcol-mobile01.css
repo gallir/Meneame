@@ -302,10 +302,6 @@ color: #FF6400;
 background: #fff;
 }
 
-.button:disabled, button:disabled {
-background: #feefe5;
-}
-
 #headtools input {
 background-color: #fff;
 }

@@ -69,6 +69,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 			echo '<li '.$active.'><a href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'</a></li>';
 		}
 		echo '</ul>' . "\n";
+		echo '<div style="clear:left"></div>'; // Some browsers wrap the tabs
 	}
 }
 
@@ -81,6 +82,7 @@ function do_header($title, $id='home') {
 	echo '<head>' . "\n";
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
 	echo '<meta name="ROBOTS" content="NOARCHIVE" />'."\n";
+	echo '<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>' . "\n";
 	echo "<title>$title</title>\n";
 
 	do_css_includes();
@@ -117,7 +119,6 @@ function do_header($title, $id='home') {
 
 
 	echo '</ul>' . "\n";
-	echo '<span class="header-left">&nbsp;</span>' . "\n";
 	echo '</div>' . "\n";
 	echo '<div id="container">'."\n";
 }
