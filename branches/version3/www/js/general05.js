@@ -225,28 +225,28 @@ Tooltips functions
 function tooltip(){}
 
 if (typeof(JSOC) != "undefined") {
-// setup properties of tooltip object
-tooltip.id="tooltip";
-tooltip.main=null;
-tooltip.offsetx = 10;
-tooltip.offsety = 10;
-tooltip.shoffsetx = 8;
-tooltip.shoffsety = 8;
-tooltip.x = 0;
-tooltip.y = 0;
-tooltip.tooltipShadow=null;
-tooltip.tooltipText=null;
-tooltip.title_saved='';
-tooltip.saveonmouseover=null;
-tooltip.timeout = null;
-tooltip.active = false;
+	// setup properties of tooltip object
+	tooltip.id="tooltip";
+	tooltip.main=null;
+	tooltip.offsetx = 10;
+	tooltip.offsety = 10;
+	tooltip.shoffsetx = 8;
+	tooltip.shoffsety = 8;
+	tooltip.x = 0;
+	tooltip.y = 0;
+	tooltip.tooltipShadow=null;
+	tooltip.tooltipText=null;
+	tooltip.title_saved='';
+	tooltip.saveonmouseover=null;
+	tooltip.timeout = null;
+	tooltip.active = false;
 
-tooltip.cache = new JSOC();
+	tooltip.cache = new JSOC();
 
-tooltip.ie = (document.all)? true:false;		// check if ie
-if(tooltip.ie) tooltip.ie5 = (navigator.userAgent.indexOf('MSIE 5')>0);
-else tooltip.ie5 = false;
-tooltip.dom2 = ((document.getElementById) && !(tooltip.ie5))? true:false; // check the W3C DOM level2 compliance. ie4, ie5, ns4 are not dom level2 compliance !! grrrr >:-(
+	tooltip.ie = (document.all)? true:false;		// check if ie
+	if(tooltip.ie) tooltip.ie5 = (navigator.userAgent.indexOf('MSIE 5')>0);
+	else tooltip.ie5 = false;
+	tooltip.dom2 = ((document.getElementById) && !(tooltip.ie5))? true:false; // check the W3C DOM level2 compliance. ie4, ie5, ns4 are not dom level2 compliance !! grrrr >:-(
 }
 
 
