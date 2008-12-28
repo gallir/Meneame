@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
-include(mnminclude.'sphinx.php');
+include(mnminclude.'search.php');
 
 // Manage "search" url and redirections accordingly
 if (!empty($globals['base_search_url'])) {
@@ -39,8 +39,8 @@ $globals['ads'] = true;
 
 $globals['noindex'] = true;
 
-$_REQUEST['q'] = stripslashes($_REQUEST['q']);
-$response = sphinx_get_search_link(false, $offset, $page_size);
+$_REQUEST['q'] = trim(stripslashes($_REQUEST['q']));
+$response = get_search_links(false, $offset, $page_size);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(_('búsqueda de'). ' "'.$search_txt.'"');
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
@@ -73,5 +73,4 @@ do_pages($rows, $page_size);
 echo '</div>';
 do_footer_menu();
 do_footer();
-
 ?>

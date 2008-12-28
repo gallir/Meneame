@@ -116,12 +116,16 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 	// For now it serves for search specific blogs (used from most voted sites)
 	if (!preg_match('/^site: *(http[^ ]+)/i', $_REQUEST['q'])) return false;
 
-	$sql = $where = $from = '';
-
+	$response = array();
+	$start_time = microtime(true);
 	if (preg_match('/^site: *(http[^ ]+)/i', $_REQUEST['q'], $match)) {
 		$url = $db->escape($match[1]);
-		$from = "links, blogs";
-		$where = "link_blog = blog_id and blog_url like '$url%'";
+		$site_ids = $db->get_col("select blog_id from blogs where blog_url like '$url%'");
+		if ($site_ids) {
+			$list = implode(',', $site_ids);
+			$from = "links";
+			$where = "link_blog in ($list)";
+		}
 	}
 
 	if (preg_match('/ status: *(\w+)/i', $_REQUEST['q'], $match)) {
@@ -133,17 +137,17 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$hours = intval($match[1]);
 		$where .= " and link_date > date_sub(now(), interval $hours hour)";
 	}
-	$sql = "select link_id from $from where $where order by link_status, link_date desc limit $start,$count";
-	$start_time = microtime(true);
-	$response['rows'] = $db->get_var("select count(*)  from $from where $where");
-	if ($response['rows'] > 0) {
-		$response['ids'] = array();
-		$ids = $db->get_col($sql);
-		foreach ($ids as $id) $response['ids'][] = $id;
+	if ($where && $from) { 
+		$sql = "select link_id from $from where $where order by link_status, link_date desc limit $start,$count";
+		$response['rows'] = $db->get_var("select count(*)  from $from where $where");
+		if ($response['rows'] > 0) {
+			$response['ids'] = array();
+			$ids = $db->get_col($sql);
+			foreach ($ids as $id) $response['ids'][] = $id;
+		}
 	}
 	$response['time'] = microtime(true) - $start_time;
 	return $response;
-	
 }
 
 ?>

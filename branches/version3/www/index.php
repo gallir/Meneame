@@ -58,6 +58,7 @@ if ($page < 2) {
 	do_banner_right();
 	do_best_stories();
 }
+do_best_sites();
 do_categories_cloud('published');
 if ($page < 2) {
 	do_best_comments();

@@ -91,8 +91,8 @@ if(!empty($_REQUEST['time'])) {
 		// By default it searches on all
 		if($_REQUEST['q']) {
 			$status = 'all';
-			include(mnminclude.'sphinx.php');
-			$search_ids = sphinx_get_search_link(true);
+			include(mnminclude.'search.php');
+			$search_ids = get_search_links(true);
 			if ($search_ids['ids']) {
 				$search = ' link_id in (';
 				foreach ($search_ids['ids'] as $lid) {
