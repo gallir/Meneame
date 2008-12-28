@@ -642,7 +642,7 @@ function do_best_sites() {
 	global $db, $globals, $dblang;
 	$output = '';
 
-	//if(memcache_mprint('best_sites_4')) return;
+	if(memcache_mprint('best_sites_4')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // about  36 hours
 	// The order is not exactly the votes counts
