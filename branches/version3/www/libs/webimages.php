@@ -196,7 +196,9 @@ class WebThumb extends BasicThumb {
 			$min_size = 100;
 			$min_surface = 20000;
 		}
-		return $x >= $min_size && $y >= $min_size && ($x*$y) > $min_surface && $this->ratio() < 3.5;
+		return $x >= $min_size && $y >= $min_size && ( 
+			(($x*$y) > $min_surface && $this->ratio() < 3.5) || 
+			( $x > $min_size*4 && ($x*$y) > $min_surface*3 && $this->ratio() < 4.6)); // For panoramic photos
 	}
 
 }
