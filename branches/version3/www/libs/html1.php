@@ -558,12 +558,12 @@ function do_vertical_tags($what=false) {
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 	$coef = ($max_pts - $min_pts)/($max-1);
 
-	$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit 30");
+	$res = $db->get_results("select lower(tag_words) as word, count(*) as count $from_where order by count desc limit 20");
 	if ($res) {
 		$output = '<div class="tags-box">';
 		$output .= '<h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4><p class="nube">'."\n";
 		foreach ($res as $item) {
-			$words[$item->tag_words] = $item->count;
+			$words[$item->word] = $item->count;
 		}
 		ksort($words);
 		foreach ($words as $word => $count) {
@@ -588,6 +588,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 	$cache_key = 'categories_cloud_'.$what;
 	if(memcache_mprint($cache_key)) return;
 
+
 	if (!empty($what)) {
 		$status = '= "'.$what. '"';
 	} else {
@@ -601,11 +602,10 @@ function do_categories_cloud($what=false, $hours = 48) {
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600); 
 	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id group by category_name";
-	$max = $db->get_var("select count(*) as words $from_where order by words desc limit 1");
+	$max = 0;
 
-	$coef = (($max - 1) > 0)?(($max_pts - $min_pts)/($max-1)):0;
 
-	$res = $db->get_results("select count(*) as count, category_name, category_id $from_where order by category_name asc");
+	$res = $db->get_results("select count(*) as count, lower(category_name) as category_name, category_id $from_where order by count desc limit 10");
 
 	if ($res) {
 		if ($what == 'queued') $page = $globals['base_url'].'shakeit.php?category=';
@@ -615,17 +615,22 @@ function do_categories_cloud($what=false, $hours = 48) {
 		$output .= '<h4>'._('categorías más populares').'</h4><p class="nube">'."\n";
 
 		$counts = array();
+		$names = array();
 
 		foreach ($res as $item) {
 			if ($item->count > 1) {
+				if ($item->count > $max) $max = $item->count;
 				$counts[$item->category_id] = $item->count;
-				$names[$item->category_id] = $item->category_name;
+				$names[$item->category_name] = $item->category_id;
 			}
 		}
+		ksort($names);
+		$coef = (($max - 1) > 0)?(($max_pts - $min_pts)/($max-1)):0;
 
-		foreach ($counts as $id => $count) {
+		foreach ($names as $name => $id) {
+			$count = $counts[$id];
 			$size = round($min_pts + ($count-1)*$coef, 1);
-			$output .= '<a style="font-size: '.$size.'pt" href="'.$page.$id.'">'.$names[$id].'</a> ';
+			$output .= '<a style="font-size: '.$size.'pt" href="'.$page.$id.'">'.$name.'</a> ';
 		}
 		$output .= '</p></div>';
 		echo $output;
