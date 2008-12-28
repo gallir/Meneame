@@ -264,7 +264,7 @@ class HtmlImages {
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
 			$html = substr($html, 0, 30000); // Only analyze first X bytes
 			$this->html = $html;
-			echo "<!-- $this->html -->\n";
+			// echo "<!-- $this->html -->\n";
 			$this->parse_img();
 		}
 		return $this->selected;
