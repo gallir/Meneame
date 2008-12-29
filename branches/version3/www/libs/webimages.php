@@ -194,7 +194,7 @@ class WebThumb extends BasicThumb {
 			$min_surface = 35000;
 		} else {
 			$min_size = 100;
-			$min_surface = 20000;
+			$min_surface = 24000;
 		}
 		return $x >= $min_size && $y >= $min_size && ( 
 			(($x*$y) > $min_surface && $this->ratio() < 3.5) || 

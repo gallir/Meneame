@@ -2,7 +2,7 @@
 require_once (mnminclude.'sphinxapi.php');
 
 function get_search_links($by_date = false, $start = 0, $count = 50) {
-	$response = db_get_search_links($by_date = false, $start = 0, $count = 50);
+	$response = db_get_search_links($by_date, $start, $count);
 	if ($response) return $response;
 	return sphinx_get_search_links($by_date, $start, $count);
 
