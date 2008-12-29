@@ -223,11 +223,11 @@ class HtmlImages {
 				$this->selected = $img;
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
-			$html = $res['content'];
+			$this->html = &$res['content'];
 
 			// First check for thumbnail head metas
-			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $html, $match) ||
-				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $html, $match)) {
+			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $this->html, $match)) {
 				$url = $match[1];
 				echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
@@ -241,9 +241,24 @@ class HtmlImages {
 			}
 
 
+			// Analyze HTML <img's
+			if (preg_match('/<base *href=["\'](.+?)["\']/i', $this->html, $match)) {
+				$this->base = $match[1];
+			}
+			$html_short = preg_replace('/^.*?<body[^>]*?>/is', '', $this->html); // Search for body
+			$html_short = preg_replace('/<*!--.*?-->/s', '', $html_short); // Delete commented HTML
+			$html_short = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html_short); // Delete javascript
+			$html_short = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html_short); // Delete javascript
+			$html_short = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html_short); // Delete javascript
+			$html_short = preg_replace('/[ ]{3,}/ism', '', $html_short); // Delete useless spaces
+			/* $html_short = preg_replace('/^.*?<h1[^>]*?>/is', '', $html_short); // Search for a h1 */
+			$html_short = substr($html_short, 0, 30000); // Only analyze first X bytes
+			// echo "<!-- $html_short -->\n";
+			$this->parse_img(&$html_short);
+
+			// If there is no image or image is slow
 			// Check if there are players
-			if (preg_match('/(<|&lt;)(embed|object|param)/i', $html)) {
-				$this->html = &$html;
+			if ((!$this->selected || $this->selected->surface() < 75000) && preg_match('/(<|&lt;)(embed|object|param)/i', $this->html)) {
 				echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube()) return $this->selected;
 				if ($this->check_google_video()) return $this->selected;
@@ -253,27 +268,12 @@ class HtmlImages {
 				if ($this->check_daily_motion()) return $this->selected;
 			}
 
-			// Analyze HTML <img's
-			if (preg_match('/<base *href=["\'](.+?)["\']/i', $html, $match)) {
-				$this->base = $match[1];
-			}
-			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
-			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
-			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
-			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
-			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
-			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
-			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-			$html = substr($html, 0, 30000); // Only analyze first X bytes
-			$this->html = $html;
-			// echo "<!-- $this->html -->\n";
-			$this->parse_img();
 		}
 		return $this->selected;
 	}
 
-	function parse_img() {
-		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $this->html, $matches);
+	function parse_img($html) {
+		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $html, $matches);
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
 			$img = new WebThumb($match, $this->base);
