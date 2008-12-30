@@ -1,5 +1,5 @@
 <?
-// The source code packaged with this file is Free Software, Copyright (C) 2005 by
+// The source code packaged with this file is Free Software, Copyright (C) 2008 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'linkmobile.php');
+include(mnminclude.'commentmobile.php');
 include(mnminclude.'html1-mobile.php');
 
 $globals['ads'] = true;
@@ -65,6 +66,11 @@ if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_
 } 
 
 
+if ($_POST['process']=='newcomment') {
+    $comment = new Comment;
+    $new_comment_error = $comment->save_from_post(&$link);
+}
+
 // Set globals
 $globals['link'] = &$link;
 $globals['link_id'] = $link->id;
@@ -84,13 +90,14 @@ do_tabs("main",_('noticia'), true);
 echo '<div id="newswrap">'."\n";
 $link->print_summary();
 
+do_comment_pages($link->comments, $current_page);
+
 echo '<div class="comments">';
 
 
 $comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
 if ($comments) {
 	echo '<ol class="comments-list">';
-	require_once(mnminclude.'commentmobile.php');
 	$comment = new CommentMobile;
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
@@ -102,12 +109,25 @@ if ($comments) {
 }
 
 echo '</div>' . "\n";
-do_comment_pages($link->comments, $current_page);
-echo '</div>';
 
+if($link->date > $globals['now']-$globals['time_enabled_comments'] && $link->comments < $globals['max_comments'] && 
+	$current_user->authenticated && 
+	($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
+        print_comment_form();
+}
+
+echo '</div>';
 
 $globals['tag_status'] = $globals['link']->status;
 do_footer();
+
+// Show the error if the comment couldn't be inserted
+if (!empty($new_comment_error)) {
+    echo '<script type="text/javascript">';
+    echo '$(function(){alert(\''._('comentario no insertado'). ":  $new_comment_error".'\')});';
+    echo '</script>';
+}
+
 
 
 function do_comment_pages($total, $current, $reverse = true) {
@@ -177,5 +197,27 @@ function get_comment_page_url($i, $total, $query) {
 	global $globals;
 	if ($i == $total) return $query;
 	else return $query.'/'.$i;
+}
+
+function print_comment_form() {
+	global $link, $current_user, $globals;
+
+	if (!$link->votes > 0) return;
+	echo '<form action="" method="post">'."\n";
+	echo '<fieldset>'."\n";
+	echo '<label for="comment">'. _('texto del comentario').'</label>'."\n";
+	echo '<div><textarea name="comment_content" id="comment" cols="60" rows="8"></textarea></div>'."\n";
+	echo '<input class="button" type="submit" name="submit" value="'._('enviar').'" />'."\n";
+	// Allow gods to put "admin" comments which does not allow votes
+	if ($current_user->user_level == 'god') {
+		echo '&nbsp;&nbsp;<label>'._('admin').' <input name="type" type="checkbox" value="admin"/></label>'."\n";
+	}
+	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
+	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
+	echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";
+	echo '<input type="hidden" name="user_id" value="'.$current_user->user_id.'" />'."\n";
+	echo "</fieldset>\n";
+	echo '</form>'."\n";
+
 }
 ?>

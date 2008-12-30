@@ -74,7 +74,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals, $greetings;
+	global $current_user, $dblang, $globals;
 
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">' . "\n";
@@ -110,9 +110,8 @@ function do_header($title, $id='home') {
 	echo '<ul id="headtools">';
 
 	if($current_user->authenticated) {
-    	$randhello = array_rand($greetings, 1);
- 		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>';
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('Logout').'</a></li>';
+  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('Logout').'</a></li>';
+ 		echo '<li class="noborder"><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>';
 	} else {
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('Login').'</a></li>';
 	}
@@ -193,7 +192,7 @@ function force_authentication() {
 	return true;
 }
 
-function do_pages($total, $page_size=25, $margin = true) {
+function do_pages($total, $page_size=25) {
 	global $db;
 
 	if ($total < $page_size) return;
@@ -212,11 +211,7 @@ function do_pages($total, $page_size=25, $margin = true) {
 	$start=max($current-intval($index_limit/2), 1);
 	$end=$start+$index_limit-1;
 	
-	if ($margin) {
-		echo '<div class="pages-margin">';
-	} else {
-		echo '<div class="pages">';
-	}
+	echo '<div class="pages">';
 
 	if($current==1) {
 		echo '<span class="nextprev">&#171; '._('ant'). '</span>';

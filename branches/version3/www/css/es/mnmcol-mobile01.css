@@ -76,14 +76,6 @@ color: #999;
 color: #999;
 }
 
-#footthingy p {
-background: url('../../img/mnm/meneito.png') no-repeat left 2px;
-}
-
-th span.info_s {
-color: #a00;
-}
-
 .warn {
 background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
 border-color: #FF6400;

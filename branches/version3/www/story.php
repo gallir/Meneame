@@ -108,7 +108,7 @@ switch ($url_args[1]) {
 		not_found();
 }
 
-// When we insert a comment we also modify $link
+// Check for comment post
 if ($_POST['process']=='newcomment') {
 	require_once(mnminclude.'comment.php');
 	$comment = new Comment;

@@ -11,6 +11,7 @@ padding: 0;
 body {
 font-family: sans-serif;
 margin: 0 2px 0 2px;
+min-width: 300px;
 }
 
 a {
@@ -91,6 +92,16 @@ border-bottom: 1px solid;
 white-space: nowrap;
 }
 
+/* to avoid non standard <br clear=..> */
+.tabmain:after {
+clear: both;
+content: ".";
+display: block;
+height: 0;
+visibility: hidden;
+}
+
+
 .tabmain li {
 float: left;
 list-style-type: none;
@@ -137,7 +148,7 @@ list-style-type: none;
 font-size: .65em;
 }
 
-#footthingy p {
+#footthingy div {
 text-indent: -9999px;
 }
 
@@ -344,23 +355,28 @@ padding: 16px 0 0 48px;
 fieldset {
 border: 1px solid;
 padding: 10px 10px;
-margin: 10px 0;
+margin: 2px 2px;
 }
 
 /* pagination */
 
-.pages, .pages-margin {
-padding: 10px 0 0 0;
-margin: 20px 0 25px 0;
+.pages {
+margin: 15px 0 25px 0;
 clear: left;
 font-size: 9pt;
 }
 
-.pages-margin {
-margin-left: 10px;
+/* to avoid non standard <br clear=..> */
+.pages:after {
+clear: both;
+content: ".";
+display: block;
+height: 0;
+visibility: hidden;
 }
 
-.pages a, .pages span, .pages-margin a, .pages-margin span {
+
+.pages a, .pages span {
 display: block;
 float: left;
 padding: 3px 5px 3px 5px;
@@ -368,26 +384,26 @@ margin-right: 3px;
 border: 1px solid;
 }
 
-.pages span.current, .pages-margin span.current {
+.pages span.current {
 border: 1px solid;
 font-weight: bold;
 }
 
-.pages span.current a, .pages-margin span.current a {
+.pages span.current a {
 padding: 0;
 border: 0px;
 }
 
-.pages a, .pages-margin a {
+.pages a {
 border: 1px solid;
 text-decoration: none;
 }
 
-.pages a.nextprev, .pages-margin a.nextprev {
+.pages a.nextprev {
 font-weight: bold;
 }
 
-.pages span.nextprev, .pages-margin span.nextprev {
+.pages span.nextprev {
 border: 1px solid;
 }
 

@@ -45,13 +45,15 @@ class LinkMobile extends Link{
 			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 			// Print dates
 			if ($globals['now'] - $this->date > 604800) { // 7 days
-				echo _('el').get_date_time($this->sent_date);
 				if($this->status == 'published')
-					echo ', '  ._('publicado el').get_date_time($this->date);
+					echo _('publicado el').get_date_time($this->date);
+				else
+					echo _('el').get_date_time($this->sent_date);
 			} else {
-				echo _('hace').txt_time_diff($this->sent_date);
 				if($this->status == 'published')
-					echo ', '  ._('publicado hace').txt_time_diff($this->date);
+					echo _('publicado hace').txt_time_diff($this->date);
+				else
+					echo _('hace').txt_time_diff($this->sent_date);
 			}
 			echo "</div>\n";
 			echo text_to_html($this->content);

@@ -30,9 +30,9 @@ class CommentMobile extends Comment{
 		}
 		$this->link_permalink =  $link->get_relative_permalink();
 		echo '<div class="'.$comment_class.'">';
-		echo '<a href="'.$this->link_permalink.get_comment_page_suffix($globals['comments_page_size'], $this->order, $globals['link']->comments).'#comment-'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
+		echo '<strong>#'.$this->order.'</strong>';
 
-		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
+		echo '&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
 		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';

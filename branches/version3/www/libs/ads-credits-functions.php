@@ -110,11 +110,13 @@ function do_credits_mobile() {
 	global $dblang, $globals;
 
 	echo '<div id="footthingy">';
-	echo '<p>menéame</p>';
+	echo '<a href="http://meneame.net" title="meneame.net"><img src="'.$globals['base_url'].'img/mnm/meneito.png" alt="Menéame"/></a>';
+	/*
 	echo '<ul id="stdcompliance">';
 	echo '<li><a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-xhtml10.gif" alt="Valid XHTML 1.0 Transitional" /></a></li>';
 	echo '<li><a href="http://jigsaw.w3.org/css-validator/check/referer?profile=css3"><img style="border:0;width:80px;height:15px" src="'.$globals['base_url'].'img/common/valid-css.gif" alt="Valid CSS" /></a></li>';
 	echo '</ul>';
+	*/
 	echo '</div>'."\n";
 }
 

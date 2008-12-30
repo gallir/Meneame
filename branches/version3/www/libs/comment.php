@@ -288,8 +288,6 @@ class Comment {
 			return _('karma demasiado bajo');
 		}
 	
-
-
 		$this->link=$link->id;
 		$this->randkey=intval($_POST['randkey']);
 		$this->author=intval($_POST['user_id']);
@@ -301,7 +299,7 @@ class Comment {
 			$this->type = 'admin';
 		}
 
-		if (mb_strlen($this->content) == 0 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
+		if (mb_strlen($this->content) < 5 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			return _('texto muy breve o caracteres no válidos');
 		}
 
