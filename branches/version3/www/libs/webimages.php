@@ -239,14 +239,7 @@ class HtmlImages {
 			if (preg_match('/<base *href=["\'](.+?)["\']/i', $this->html, $match)) {
 				$this->base = $match[1];
 			}
-			$html_short = preg_replace('/^.*?<body[^>]*?>/is', '', $this->html); // Search for body
-			$html_short = preg_replace('/<*!--.*?-->/s', '', $html_short); // Delete commented HTML
-			$html_short = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html_short); // Delete javascript
-			$html_short = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html_short); // Delete javascript
-			$html_short = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html_short); // Delete javascript
-			$html_short = preg_replace('/[ ]{3,}/ism', '', $html_short); // Delete useless spaces
-			/* $html_short = preg_replace('/^.*?<h1[^>]*?>/is', '', $html_short); // Search for a h1 */
-			$html_short = substr($html_short, 0, 55000); // Only analyze first X bytes
+			$html_short = $this->shorten_html($this->html);
 			//echo "<!-- $html_short -->\n";
 			$this->parse_img(&$html_short);
 
@@ -264,6 +257,18 @@ class HtmlImages {
 
 		}
 		return $this->selected;
+	}
+
+	function shorten_html($html) {
+			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
+			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
+			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
+			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
+			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
+			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
+			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
+			$html = substr($html, 0, 55000); // Only analyze first X bytes
+			return $html;
 	}
 
 	function parse_img($html) {
@@ -340,11 +345,22 @@ class HtmlImages {
 				}
 				if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
 					krsort($selection);
+					$n = 0;
+					$last_path = false;
 					foreach ($selection as $key => $url) {
+						$parsed = parse_url($url);
+						if ($last_path && preg_match('/^'.preg_quote($last_path, '/').'/', $parsed['path'])) {
+							echo "<!-- Skipped by same path: $url -->\n";
+							continue;
+						}
 						$res = get_url($url, $this->url);
-						if ($res && preg_match('/text\/html/i', $res['content_type']) && preg_match('/<img.+?>/',$res['content'])) {
-							$this->other_html = substr($res['content'], 0, 100000);
-							break;
+						echo "<!-- Other: read $url -->\n";
+						if ($res && preg_match('/text\/html/i', $res['content_type']) && 
+								preg_match('/<img.+?>/',$res['content'])) {
+							$n++;
+							$this->other_html = $this->shorten_html($res['content']). "<!-- END part $n -->\n";
+							$last_path = preg_replace('/^(\/[^\/]+).*/', '$1', $parsed['path']);
+							if ($n > 2) break;
 						}
 					}
 				}
