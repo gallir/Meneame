@@ -773,6 +773,7 @@ class Link {
 	function update_comments() {
 		global $db;
 		$db->query("update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id");
+		$this->comments = $db->get_var("select link_comments from links where link_id = $this->id");
 	}
 
 	function is_discarded() {
