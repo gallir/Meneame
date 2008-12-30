@@ -21,19 +21,7 @@ class BasicThumb {
 	function __construct($url='', $referer=false) {
 		$url = $this->clean_url($url);
 		if ($referer) $this->parsed_referer = parse_url($referer);
-		if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
-			$this->url = "http:$url";
-		} elseif ($this->parsed_referer && !preg_match('/https*:\/\//', $url)) {
-			$this->url = $this->parsed_referer['scheme'].'://'.$this->parsed_referer['host'];
-			if ($this->parsed_referer['port']) $this->url .= ':'.$this->parsed_referer['port'];
-			if (preg_match('/^\/+/', $url)) {
-				$this->url .= $url;
-			} else {
-				$this->url .= normalize_path(dirname($this->parsed_referer['path']).'/'.$url);
-			}
-		} else {
-			$this->url = $url;
-		}
+		$this->url = build_full_url($url, $referer);
 		$this->parsed_url = parse_url($this->url);
 		$this->referer = $referer;
 	}
@@ -73,13 +61,13 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url);
+		$res = get_url($this->url, $this->referer);
 		$this->checked = true;
 		if ($res) {
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
-		echo "Failed to get $this->url<br>";
+		echo "<!-- Failed to get $this->url-->\n";
 		return false;
 	}
 
@@ -93,6 +81,7 @@ class BasicThumb {
 		}
 		$this->x = $this->y = 0;
 		$this->type = 'error';
+		echo "<!-- GET error: $this->url: $this->x, $this->y-->\n";
 		return false;
 	}
 
@@ -109,10 +98,9 @@ class WebThumb extends BasicThumb {
 	function __construct($imgtag = '', $referer = '') {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
-		//echo htmlentities($this->tag)."<br>\n";
 		
-		if (!preg_match('/src=["\'](.+?)["\']/i', $this->tag, $matches) 
-			&& !preg_match('/src=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
+		if (!preg_match('/src *=["\'](.+?)["\']/i', $this->tag, $matches) 
+			&& !preg_match('/src *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
 			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
 				return;
 			}
@@ -140,12 +128,15 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		// Check if domain.com are the same for the referer and the url
-		if (!preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header|rss/i', $this->url) && (
+		if (!preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header|rss/i', $this->url) 
+				/*&& (
+				// Check if domain.com are the same for the referer and the url
 				preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) 
 				|| preg_match('/images\W|wp-content\W|upload\W|imgs\W|pics\W|pictures\W/', $this->url) 
 				|| preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|pic\./', $this->parsed_url['host'])
-				)) {
+				)
+			*/
+			) {
 			$this->candidate = true;
 			//echo "Candidate: $this->x, $this->y $url -> $this->url<br>\n";
 		}
@@ -205,11 +196,14 @@ class WebThumb extends BasicThumb {
 
 class HtmlImages {
 	public $html = '';
+	public $alternate_html = '';
 	public $selected = false;
 
-	function __construct($url) {
+	function __construct($url, $site = false) {
 		$this->url = $url;
+		$this->parsed_url = parse_url($url);
 		$this->base = $url;
+		$this->site = $site;
 	}
 
 	function get() {
@@ -223,7 +217,7 @@ class HtmlImages {
 				$this->selected = $img;
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
-			$this->html = &$res['content'];
+			$this->html = $res['content'];
 
 			// First check for thumbnail head metas
 			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
@@ -252,8 +246,8 @@ class HtmlImages {
 			$html_short = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html_short); // Delete javascript
 			$html_short = preg_replace('/[ ]{3,}/ism', '', $html_short); // Delete useless spaces
 			/* $html_short = preg_replace('/^.*?<h1[^>]*?>/is', '', $html_short); // Search for a h1 */
-			$html_short = substr($html_short, 0, 30000); // Only analyze first X bytes
-			// echo "<!-- $html_short -->\n";
+			$html_short = substr($html_short, 0, 55000); // Only analyze first X bytes
+			//echo "<!-- $html_short -->\n";
 			$this->parse_img(&$html_short);
 
 			// If there is no image or image is slow
@@ -273,13 +267,15 @@ class HtmlImages {
 	}
 
 	function parse_img($html) {
+		$this->get_other_html();
 		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $html, $matches);
+		if (! $matches) return false;
 		$goods = $n = 0;
 		foreach ($matches[0] as $match) {
+			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				//$img->coef = intval($img->surface()/$img->diagonal()/$img->ratio());
 				$img->coef = intval($img->surface()/$img->max());
 				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
 				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
@@ -296,9 +292,81 @@ class HtmlImages {
 		return $this->selected;
 	}
 
+	function get_other_html() {
+		// Tries to find an alternate page to check for "common images" and ignore them
+		$this->other_html = false;
+		if ($this->html) {
+			$regexp = '[a-z]+?:\/\/'.preg_quote($this->parsed_url['host']).'\/[^\"\'>]+?';
+			if ($this->site) {
+				$parsed = parse_url($this->site);
+				if ($parsed['host'] != $this->parsed_url['host']) {
+					$regexp .= preg_quote($this->site, '/').'\/[^\"\'>]+?';
+				}
+			}
+			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
+
+			$selection = array();
+		
+			if (preg_match_all("/<a\s[^>]*href=[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
+				foreach ($matches as $match) {
+					$weight = 1;
+					$url = urldecode($match[1]);
+					$parsed_match = parse_url($url);
+					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
+						(!empty($this->parsed_url['query']) && $this->parsed_url['query'] == $parsed_match['query']) ||
+						// Avoid pages from the same section
+						substr($parsed_match['path'].$parsed_match['query'], 0, 45) == 
+							substr($this->parsed_url['path'].$this->parsed_url['query'], 0, 45) 
+|| 
+						preg_match('/feed|rss|atom|trackback/', $match[1])) {
+						continue;
+					}
+
+					// Decrease weights
+					if (substr(preg_replace('/\/\d+/', '', $parsed_match['path']).$parsed_match['query'], 0, 15) == 
+							substr(preg_replace('/\/\d+\//', '', $this->parsed_url['path']).$this->parsed_url['query'], 0, 15)) 
+						$weight *= 0.7;
+					//if (!empty($parsed_match['query'])) $weight *= 0.5;
+					if (!empty($parsed_match['query'])) {
+						if (empty($this->parsed_url['query'])) $weight *= 0.5;
+						elseif ($this->parsed_url['path'] == $parsed_match['path']) $weight *= 2;
+					}
+					$url = build_full_url(trim($url), $this->url);
+					$weight *= strlen($url);
+					$key = sprintf('%04.2f:%s', $weight, $url);
+					if (!$selection[$key]) {
+						$selection[$key] = $url;
+					}
+				}
+				if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
+					krsort($selection);
+					foreach ($selection as $key => $url) {
+						$res = get_url($url, $this->url);
+						if ($res && preg_match('/text\/html/i', $res['content_type']) && preg_match('/<img.+?>/',$res['content'])) {
+							$this->other_html = substr($res['content'], 0, 100000);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return $this->other_html;
+	}
+
+	function check_in_other($str) {
+		if (preg_match('/'.preg_quote($str,'/').'/', $this->other_html)) {
+				echo "<!-- Skip: " . htmlentities($str). "-->\n";
+				return true;
+		}
+		return false;
+	}
+
+	// VIDEOS
+
 	// Google Video detection
 	function check_google_video() {
-		if (preg_match('/=["\']http:\/\/video\.google\.[a-z]{2,5}\/.+?\?docid=(.+?)&/i', $this->html, $match)) {
+		if (preg_match('/=["\']http:\/\/video\.google\.[a-z]{2,5}\/.+?\?docid=(.+?)&/i', $this->html, $match) &&
+				(preg_match('/video\.google/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Google Video, id: $video_id -->\n";
 			if ($video_id) {
@@ -331,7 +399,8 @@ class HtmlImages {
 
 	// Youtube detection
 	function check_youtube() {
-		if (preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)&/i', $this->html, $match)) {
+		if (preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)[\"\'&]/i', $this->html, $match) &&
+			(preg_match('/youtube\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Youtube, id: $video_id -->\n";
 			if ($video_id) {
@@ -371,7 +440,8 @@ class HtmlImages {
 
 	// Metaface detection
 	function check_metacafe() {
-		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/(\d+)\//i', $this->html, $match)) {
+		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/(\d+)\//i', $this->html, $match) &&
+				(preg_match('/metacafe\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Metacafe, id: $video_id -->\n";
 			if ($video_id) {
@@ -404,7 +474,8 @@ class HtmlImages {
 
 	// Vimeo detection
 	function check_vimeo() {
-		if (preg_match('/=["\']http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i', $this->html, $match)) {
+		if (preg_match('/=["\']http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i', $this->html, $match) &&
+				(preg_match('/vimeo\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Vimeo, id: $video_id -->\n";
 			if ($video_id) {
@@ -437,7 +508,8 @@ class HtmlImages {
 
 	// ZappInternet Video detection
 	function check_zapp_internet() {
-		if (preg_match('#http://zappinternet\.com/v/([^&]+)#i', $this->html, $match)) {
+		if (preg_match('#http://zappinternet\.com/v/([^&]+)#i', $this->html, $match) &&
+				(preg_match('/zappinternet\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Zapp Internet Video, id: $video_id -->\n";
 			if ($video_id) {
@@ -464,7 +536,8 @@ class HtmlImages {
 
 	// Daily Motion Video detection
 	function check_daily_motion() {
-		if (preg_match('#=["\']http://www.dailymotion.com/swf/([^&"\']+)#i', $this->html, $match)) {
+		if (preg_match('#=["\']http://www.dailymotion.com/swf/([^&"\']+)#i', $this->html, $match) &&
+				(preg_match('/dailymotion\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			echo "<!-- Detect Daily Motion Video, id: $video_id -->\n";
 			if ($video_id) {
@@ -490,6 +563,26 @@ class HtmlImages {
 
 }
 
+function build_full_url($url, $referer) {
+	$parsed_url = parse_url($url);
+	$parsed_referer = parse_url($referer);
+
+	if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
+            return $parsed_referer['scheme']."$url";
+	} elseif (! $parsed_url['scheme']) {
+		$fullurl = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
+		if ($parsed_referer['port']) $fullurl .= ':'.$parsed_referer['port'];
+		if (!preg_match('/^\/+/', $parsed_url['path'])) {
+			$fullurl .= normalize_path(dirname($parsed_referer['path']).'/'.$parsed_url['path']);
+		} else {
+			$fullurl .= $parsed_url['path'];
+		}
+		if ($parsed_url['query']) $fullurl .= '?'.$parsed_url['query'];
+		return $fullurl;
+	}
+	return $url;
+
+}
 function normalize_path($path) {
 	$path = preg_replace('~/\./~', '/', $path);
     // resolve /../
@@ -505,7 +598,7 @@ function normalize_path($path) {
 	return '/' . implode("/", $parts);
 }
 
-function get_url($url) {
+function get_url($url, $referer = false) {
 	global $globals;
 	static $session = false;
 	static $previous_host = false;
@@ -524,11 +617,13 @@ function get_url($url) {
 	}
 	curl_setopt($session, CURLOPT_URL, $url);
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
+	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
 	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
 	curl_setopt($session, CURLOPT_TIMEOUT, 20);
+	curl_setopt($session,CURLOPT_FAILONERROR,true);
 	$result['content'] = curl_exec($session);
 	if (!$result['content']) return false;
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);

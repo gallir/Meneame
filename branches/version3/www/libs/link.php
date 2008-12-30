@@ -944,10 +944,17 @@ class Link {
 	function get_thumb() {
 		global $globals;
 		require_once(mnminclude.'webimages.php');
+		require_once(mnminclude.'blog.php');
+		$site = false;
 		if (empty($this->url)) {
 			if (!$this->read()) return false;
 		}
-		$this->image_parser = new HtmlImages($this->url);
+		$blog = new Blog();
+		$blog->id = $this->blog;
+		if ($blog->read()) {
+			$site = $blog->url;
+		}
+		$this->image_parser = new HtmlImages($this->url, $site);
 		$img = $this->image_parser->get();
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
