@@ -55,28 +55,30 @@ class LinkMobile extends Link{
 			}
 			echo "</div>\n";
 			echo text_to_html($this->content);
+		}
 
 
-
-			echo '<div class="news-details">';
-			if($this->comments > 0) {
-				$comments_mess = $this->comments . ' ' . _('comentarios');
-			} else  {
-				$comments_mess = _('sin comentarios');
-			}
-			echo '<span class="comments">'.$comments_mess. '</span>';
+		echo '<div class="news-details">';
+		if($this->comments > 0) {
+			$comments_mess = $this->comments . ' ' . _('comentarios');
+		} else  {
+			$comments_mess = _('sin comentarios');
+		}
+		echo '<span class="comments">'.$comments_mess. '</span>';
 	
+		if ($globals['link']) {
 			// Print meta and category
 			echo ' <span class="tool">'._('en').': ';
 			echo $this->meta_name.', ';
 			echo $this->category_name;
 			echo '</span>';
 			echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
-	
+		}
 
 			echo '</div>'."\n";
 			// End news details
 
+		if ($globals['link']) {
 			echo '<div class="news-details">';
 			echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
 			echo '<strong>'._('usuarios').'</strong>: <span id="a-usu-'.$this->id.'">'.$this->votes.'</span>&nbsp;&nbsp;';

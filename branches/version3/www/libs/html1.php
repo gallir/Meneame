@@ -644,10 +644,10 @@ function do_best_sites() {
 
 	if(memcache_mprint('best_sites_4')) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // about  36 hours
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select sum(link_votes+link_anonymous-link_negatives)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as coef, sum(link_votes+link_anonymous-link_negatives) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
+	$res = $db->get_results("select sum(link_votes+link_anonymous-link_negatives)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes+link_anonymous-link_negatives) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
 ");
 	if ($res) {
 		$i = 0;
@@ -655,7 +655,7 @@ function do_best_sites() {
 		foreach ($res as $site) {
 			$i++;
 			$parsed_url = parse_url($site->blog_url);
-			$output .= '<li><strong>'.$i.'. <a href="'.$globals['base_url'].'search.php?q=site:'.rawurlencode($site->blog_url).'+period:36+status:published" title="'._('votos 36 horas').': '.$site->total.' Coef: '.$site->coef.'">'.$parsed_url['host'].'</a></strong></li>'."\n";
+			$output .= '<li><strong>'.$i.'. <a href="'.$globals['base_url'].'search.php?q=site:'.rawurlencode($site->blog_url).'+period:48+status:published" title="'._('votos 48 horas').': '.$site->total.' (coef: '.intval($site->coef).')">'.$parsed_url['host'].'</a></strong></li>'."\n";
 		}
 		$output .= '</ul></div>';
 		echo $output;
