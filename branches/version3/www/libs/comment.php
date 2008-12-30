@@ -264,4 +264,91 @@ class Comment {
 		}
 		return $count;
 	}
+
+	function save_from_post($link) {
+		global $link, $db, $current_user, $globals;
+
+		$error = '';
+
+
+		require_once(mnminclude.'ban.php');
+		if(check_ban_proxy()) return _('dirección IP no permitida');
+
+		// Check if is a POST of a comment
+		if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 
+				$link->comments < $globals['max_comments'] &&
+				intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
+				intval($_POST['user_id']) == $current_user->user_id &&
+				intval($_POST['randkey']) > 0
+				)) {
+			return _('comentario o usuario incorrecto');
+		}
+
+		if ($current_user->user_karma < $globals['min_karma_for_comments'] && $current_user->user_id != $link->author) {
+			return _('karma demasiado bajo');
+		}
+	
+
+
+		$this->link=$link->id;
+		$this->randkey=intval($_POST['randkey']);
+		$this->author=intval($_POST['user_id']);
+		$this->karma=round($current_user->user_karma);
+		$this->content=clean_text($_POST['comment_content'], 0, false, 10000);
+		// Check if is an admin comment
+		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
+			$this->karma = 20;
+			$this->type = 'admin';
+		}
+
+		if (mb_strlen($this->content) == 0 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
+			return _('texto muy breve o caracteres no válidos');
+		}
+
+
+		// Check the comment wasn't already stored
+		$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $this->link and comment_user_id = $this->author and comment_randkey = $this->randkey"));
+		if ($already_stored) {
+			return _('duplicado');
+		}
+
+		if ($this->type != 'admin') {
+			// Lower karma to comments' spammers
+			$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
+			// Check the text is not the same
+			$same_count = $this->same_text_count() + $this->same_links_count();
+		} else {
+			$comment_count  = $same_count = 0;
+		}
+
+		$comment_limit = round(min($current_user->user_karma/6, 2) * 2.5);
+		if ($comment_count > $comment_limit || $same_count > 2) {
+			require_once(mnminclude.'user.php');
+			$reduction = 0;
+			if ($comment_count > $comment_limit) {
+				$reduction += ($comment_count-3) * 0.1;
+			}
+			if($same_count > 1) {
+				$reduction += $same_count * 0.25;
+			}
+			if ($reduction > 0) {
+				$user = new User;
+				$user->id = $current_user->user_id;
+				$user->read();
+				$user->karma = $user->karma - $reduction;
+				syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
+				$user->store();
+				require_once(mnminclude.'annotation.php');
+				$annotation = new Annotation("karma-$user->id");
+				$annotation->append(_('texto repetido o abuso de enlaces en comentarios').": -$reduction, karma: $user->karma\n");
+				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
+
+			}
+		}
+		$this->store();
+		$this->insert_vote();
+		$link->update_comments();
+		return $error;
+	}
 }
+?>
