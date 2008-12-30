@@ -218,6 +218,7 @@ class HtmlImages {
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
 			$this->html = $res['content'];
+			$this->title = get_html_title(&$this->html);
 
 			// First check for thumbnail head metas
 			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
@@ -319,26 +320,26 @@ class HtmlImages {
 					$parsed_match = parse_url($url);
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
 						(!empty($this->parsed_url['query']) && $this->parsed_url['query'] == $parsed_match['query']) ||
-						// Avoid pages from the same section
 						substr($parsed_match['path'].$parsed_match['query'], 0, 45) == 
 							substr($this->parsed_url['path'].$this->parsed_url['query'], 0, 45) 
 || 
-						preg_match('/feed|rss|atom|trackback/', $match[1])) {
+						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
 						continue;
 					}
 
-					// Decrease weights
-					if (substr(preg_replace('/\/\d+/', '', $parsed_match['path']).$parsed_match['query'], 0, 15) == 
-							substr(preg_replace('/\/\d+\//', '', $this->parsed_url['path']).$this->parsed_url['query'], 0, 15)) 
-						$weight *= 0.7;
-					//if (!empty($parsed_match['query'])) $weight *= 0.5;
+					// Assign weights
 					if (!empty($parsed_match['query'])) {
 						if (empty($this->parsed_url['query'])) $weight *= 0.5;
 						elseif ($this->parsed_url['path'] == $parsed_match['path']) $weight *= 2;
 					}
+					$equals = path_equals($parsed_match['path'], $this->parsed_url['path']);
+					if ($equals > 0) {
+						$weight *= 1.1 * $equals;
+					}
+
 					$url = build_full_url(trim($url), $this->url);
 					$weight *= strlen($url);
-					$key = sprintf('%04.2f:%s', $weight, $url);
+					$key = sprintf('%08.2f:%s', $weight, $url);
 					if (!$selection[$key]) {
 						$selection[$key] = $url;
 					}
@@ -346,21 +347,24 @@ class HtmlImages {
 				if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
 					krsort($selection);
 					$n = 0;
-					$last_path = false;
+					$paths = array();
 					foreach ($selection as $key => $url) {
 						$parsed = parse_url($url);
-						if ($last_path && preg_match('/^'.preg_quote($last_path, '/').'/', $parsed['path'])) {
-							echo "<!-- Skipped by same path: $url -->\n";
+						$first_path = path_sub_path($parsed['path'], 2);
+						if ($paths[$first_path] > 1) {
+							echo "<!-- Skipped path count > 2: $url -->\n";
 							continue;
 						}
 						$res = get_url($url, $this->url);
-						echo "<!-- Other: read $url -->\n";
+						echo "<!-- Other: read $key -->\n";
 						if ($res && preg_match('/text\/html/i', $res['content_type']) && 
-								preg_match('/<img.+?>/',$res['content'])) {
+								$this->title != get_html_title($res['content']) &&
+								preg_match('/<img.+?>/',$res['content'])
+							) {
 							$n++;
-							$this->other_html = $this->shorten_html($res['content']). "<!-- END part $n -->\n";
-							$last_path = preg_replace('/^(\/[^\/]+).*/', '$1', $parsed['path']);
+							$this->other_html .= $this->shorten_html($res['content']). "<!-- END part $n -->\n";
 							if ($n > 2) break;
+							$paths[$first_path] = $paths[$first_path] + 1;
 						}
 					}
 				}
@@ -614,6 +618,28 @@ function normalize_path($path) {
 	return '/' . implode("/", $parts);
 }
 
+function path_sub_path($path, $level = -1) {
+	$parts = array();
+	$dirs = explode('/',  preg_replace('#^/+#', '', $path));
+	$count = count($dirs);
+	if ($level < 0) $n = $count - $level;
+	else  $n = $level;
+	for ($i=0; $i<$n && $i<$count; $i++) {
+			$parts[] = $dirs[$i];
+	}
+	return '/' . implode("/", $parts);
+}
+
+function path_equals($path1, $path2) {
+	$parts1 = explode('/', preg_replace('#^/+#', '', $path1));
+	$parts2 = explode('/', preg_replace('#^/+#', '', $path2));
+	$n = 0;
+	$max = min(count($parts1), count($parts2));
+	for ($i=0; $i < $max && $parts1[$i] == $parts2[$i]; $i++) $n++;
+	return $n;
+}
+
+
 function get_url($url, $referer = false) {
 	global $globals;
 	static $session = false;
@@ -645,5 +671,12 @@ function get_url($url, $referer = false) {
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
 	return $result;
 }
+
+function get_html_title($html) {
+	if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $html, $matches))
+		return $matches[1];
+	return false;
+}
+
 
 ?>
