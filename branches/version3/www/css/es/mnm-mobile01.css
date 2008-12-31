@@ -92,16 +92,6 @@ border-bottom: 1px solid;
 white-space: nowrap;
 }
 
-/* to avoid non standard <br clear=..> */
-.tabmain:after {
-clear: both;
-content: ".";
-display: block;
-height: 0;
-visibility: hidden;
-}
-
-
 .tabmain li {
 float: left;
 list-style-type: none;
