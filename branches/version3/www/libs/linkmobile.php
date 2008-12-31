@@ -82,9 +82,9 @@ class LinkMobile extends Link{
 
 		if ($globals['link']) {
 			echo '<div class="news-details">';
-			echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
-			echo '<strong>'._('usuarios').'</strong>: <span id="a-usu-'.$this->id.'">'.$this->votes.'</span>&nbsp;&nbsp;';
-			echo '<strong>'._('anónimos').'</strong>: <span id="a-ano-'.$this->id.'">'.$this->anonymous.'</span>&nbsp;&nbsp;';
+			echo '<strong>'._('votos negativos').'</strong>: '.$this->negatives.'&nbsp;&nbsp;';
+			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
+			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
 			echo '</div>' . "\n";
 		}
 
