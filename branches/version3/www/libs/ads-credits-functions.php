@@ -88,7 +88,7 @@ function do_footer_plus_meneame() {
 	if (! $globals['is_meneame']) return;
 	echo '<h5>+menéame</h5>'."\n";
 	echo '<ul id="moremenelist">'."\n";
-	echo '<li><a href="http://mueveme.net/">'._('para móviles').'</a></li>'."\n";
+	echo '<li><a href="http://m.meneame.net/">'._('para móviles').'</a></li>'."\n";
 	echo '<li><a href="/notame/">'._('nótame').'</a></li>'."\n";
 	echo '<li><a href="http://blog.meneame.net/">'._('blog').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.jaiku.com/">'._('Jaiku').'</a></li>'."\n";
