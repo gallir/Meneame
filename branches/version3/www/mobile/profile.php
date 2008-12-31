@@ -55,8 +55,10 @@ $globals['ads'] = true;
 
 $save_messages = save_profile();
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
+echo '<div id="singlewrap">'."\n";
 echo $save_messages; // We do it later because teh profile could change header's info
 show_profile();
+echo "</div>\n";
 do_footer();
 
 
@@ -74,15 +76,15 @@ function show_profile() {
 	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.$globals['user_ip']) .'" />';
 
 	echo '<p><label>'._('usuario').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />';
+	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'"/>';
 	echo '</p>';
 
 	echo '<p><label>'._('nombre real').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="names" id="names" value="'.$user->names.'" />';
+	echo '<input type="text" autocomplete="off" name="names" id="names" value="'.$user->names.'"/>';
 	echo '</p>';
 
 	echo '<p><label>'._('correo electrónico').':</label><br/>';
-	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>';
+	echo '<input type="text" autocomplete="off" name="email" id="email" value="'.$user->email.'"/>';
 	echo '</p>';
 
 	echo '<p><label>'._('página web').':</label><br/>';

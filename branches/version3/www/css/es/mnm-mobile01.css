@@ -10,8 +10,7 @@ padding: 0;
 
 body {
 font-family: sans-serif;
-margin: 0 2px 0 2px;
-min-width: 300px;
+margin: 0 0px 0 0px;
 }
 
 a {
@@ -25,6 +24,7 @@ text-decoration: underline;
 }
 
 #header {
+min-width: 300px;
 height: 25px;
 overflow: hidden;
 }
@@ -74,13 +74,8 @@ vertical-align: top;
 clear:both;
 }
 
-#newswrap {
-margin: 0;
-font-size: small;
-}
-
-#singlewrap {
-margin: 0;
+#newswrap, #singlewrap {
+margin: 2px;
 font-size: small;
 }
 
@@ -369,9 +364,14 @@ visibility: hidden;
 .pages a, .pages span {
 display: block;
 float: left;
-padding: 3px 5px 3px 5px;
+padding: 5px 15px 5px 15px;
 margin-right: 3px;
 border: 1px solid;
+}
+
+.pages span.empty {
+padding-right: 2px;
+padding-left: 2px;
 }
 
 .pages span.current {

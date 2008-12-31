@@ -135,7 +135,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 	
-	$index_limit = 10;
+	$index_limit = 2;
 
 	if ($globals['base_story_url'] = 'story/') {
 		$query = $globals['link_permalink'];
@@ -152,16 +152,14 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;
 	}
-	$start=max($current-intval($index_limit/2), 1);
-	$end=$start+$index_limit-1;
 	
 	echo '<div class="pages">';
 
 	if($current==1) {
-		echo '<span class="nextprev">&#171; '._('ant'). '</span>';
+		echo '<span class="nextprev">&#171;</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#171; '._('ant').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#171;</a>';
 	}
 
 	$dots_before = $dots_after = false;
@@ -169,15 +167,15 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			if ($total_pages < 7 || abs($i-$current) < 3 || $i < 3 || abs($i-$total_pages) < 2) {
+			if ($total_pages < 5 || abs($i-$current) < 2 || $i < 2 || abs($i-$total_pages) < 1) {
 				echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 			} else {
 				if ($i<$current && !$dots_before) {
 					$dots_before = true;
-					echo '<span>...</span>';
+					echo '<span class="empty">...</span>';
 				} elseif ($i>$current && !$dots_after) {
 					$dots_after = true;
-					echo '<span>...</span>';
+					echo '<span class="empty">...</span>';
 				}
 			}
 		}
@@ -185,9 +183,9 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#187; '._('sig').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#187;</a>';
 	} else {
-		echo '<span class="nextprev">&#187; '._('sig'). '</span>';
+		echo '<span class="nextprev">&#187;</span>';
 	}
 	echo "</div>\n";
 

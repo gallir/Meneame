@@ -142,7 +142,7 @@ function do_js_includes() {
 
 	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;</script>'."\n";
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general05.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/mobile01.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";
 	if ($globals['extra_js_text']) {
@@ -192,12 +192,10 @@ function force_authentication() {
 	return true;
 }
 
-function do_pages($total, $page_size=25) {
+function do_pages($total, $page_size=15) {
 	global $db;
 
 	if ($total < $page_size) return;
-
-	$index_limit = 3;
 
 	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
@@ -208,38 +206,22 @@ function do_pages($total, $page_size=25) {
 	
 	$current = get_current_page();
 	$total_pages=ceil($total/$page_size);
-	$start=max($current-intval($index_limit/2), 1);
-	$end=$start+$index_limit-1;
-	
+
 	echo '<div class="pages">';
 
 	if($current==1) {
-		echo '<span class="nextprev">&#171; '._('ant'). '</span>';
+		echo '<span class="nextprev">&#171;</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="?page='.$i.$query.'">&#171; '._('ant').'</a>';
+		echo '<a href="?page='.$i.$query.'">&#171;</a>';
 	}
 
-	if($start>1) {
-		$i = 1;
-		echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
-		echo '<span>...</span>';
-	}
-	for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
-		if($i==$current) {
-			echo '<span class="current">'.$i.'</span>';
-		} else {
-			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
-		}
-	}
-	if($total_pages>$end) {
-		echo '<span>...</span>';
-	}
+	echo '<span class="current">'.$current.'</span>';
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="?page='.$i.$query.'">&#187; '._('sig').'</a>';
+		echo '<a href="?page='.$i.$query.'">&#187;</a>';
 	} else {
-		echo '<span class="nextprev">&#187; '._('sig'). '</span>';
+		echo '<span class="nextprev">&#187;</span>';
 	}
 	echo "</div>\n";
 

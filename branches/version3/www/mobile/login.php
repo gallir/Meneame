@@ -27,7 +27,7 @@ if($_GET["op"] === 'logout') {
 ob_start();
 
 do_header("login");
-echo '<div id="newswrap">' . "\n";
+echo '<div id="singlewrap">' . "\n";
 
 
 if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
@@ -36,7 +36,7 @@ if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_login();
 }
 
-echo '</div>'."\n"; // singlewrap
+echo '</div>'."\n";
 
 do_footer();
 
