@@ -119,8 +119,8 @@ function do_header($title, $id='home') {
 
 	echo '</ul>' . "\n";
 	echo '</div>' . "\n";
-	do_banner_top_mobile();
 	echo '<div id="container">'."\n";
+	do_banner_top_mobile();
 }
 
 function do_css_includes() {

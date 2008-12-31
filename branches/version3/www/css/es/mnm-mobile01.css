@@ -71,11 +71,11 @@ vertical-align: top;
 }
 
 #container {
+margin: 2px;
 clear:both;
 }
 
 #newswrap, #singlewrap {
-margin: 2px;
 font-size: small;
 }
 
