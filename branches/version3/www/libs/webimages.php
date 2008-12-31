@@ -317,12 +317,13 @@ class HtmlImages {
 				foreach ($matches as $match) {
 					$weight = 1;
 					$url = urldecode($match[1]);
+					$url = build_full_url(trim($url), $this->url);
 					$parsed_match = parse_url($url);
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
-						(!empty($this->parsed_url['query']) && $this->parsed_url['query'] == $parsed_match['query']) ||
-						substr($parsed_match['path'].$parsed_match['query'], 0, 45) == 
-							substr($this->parsed_url['path'].$this->parsed_url['query'], 0, 45) 
-|| 
+						(!empty($this->parsed_url['query']) && substr($this->parsed_url['query'], 0, 20) == 
+								substr($parsed_match['query'], 0, 20)) ||
+						(empty($this->parsed_url['query']) && substr($parsed_match['path'], 0, 45) == 
+								substr($this->parsed_url['path'], 0, 45)) || 
 						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
 						continue;
 					}
@@ -330,14 +331,15 @@ class HtmlImages {
 					// Assign weights
 					if (!empty($parsed_match['query'])) {
 						if (empty($this->parsed_url['query'])) $weight *= 0.5;
-						elseif ($this->parsed_url['path'] == $parsed_match['path']) $weight *= 2;
+						elseif ($this->parsed_url['path'] == $parsed_match['path']) {
+								$weight *= 2;
+						}
 					}
 					$equals = path_equals($parsed_match['path'], $this->parsed_url['path']);
 					if ($equals > 0) {
 						$weight *= 1.1 * $equals;
 					}
 
-					$url = build_full_url(trim($url), $this->url);
 					$weight *= strlen($url);
 					$key = sprintf('%08.2f:%s', $weight, $url);
 					if (!$selection[$key]) {
@@ -356,11 +358,11 @@ class HtmlImages {
 							continue;
 						}
 						$res = get_url($url, $this->url);
-						echo "<!-- Other: read $key -->\n";
 						if ($res && preg_match('/text\/html/i', $res['content_type']) && 
 								$this->title != get_html_title($res['content']) &&
 								preg_match('/<img.+?>/',$res['content'])
 							) {
+							echo "<!-- Other: read $key -->\n";
 							$n++;
 							$this->other_html .= $this->shorten_html($res['content']). "<!-- END part $n -->\n";
 							if ($n > 2) break;
