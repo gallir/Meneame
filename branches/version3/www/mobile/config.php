@@ -51,7 +51,7 @@ $globals['base_sneakme_url'] = 'notame/';
 $globals['memcache_port'] = 11211; // optional
 
 // Comment pages
-$globals['comments_page_size'] = 15;
+$globals['comments_page_size'] = 20;
 $globals['comments_page_threshold'] = 1.10;
 $globals['max_comments'] = 2718;
 

@@ -135,8 +135,6 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 	
-	$index_limit = 2;
-
 	if ($globals['base_story_url'] = 'story/') {
 		$query = $globals['link_permalink'];
 	} else {
@@ -167,7 +165,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			if ($total_pages < 5 || abs($i-$current) < 2 || $i < 2 || abs($i-$total_pages) < 1) {
+			if ($total_pages < 5 || $i < 2 || abs($i-$total_pages) < 1) {
 				echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 			} else {
 				if ($i<$current && !$dots_before) {

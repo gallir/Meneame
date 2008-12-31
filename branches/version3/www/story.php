@@ -430,8 +430,6 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 	
-	$index_limit = 10;
-
 	if ($globals['base_story_url'] = 'story/') {
 		$query = $globals['link_permalink'];
 	} else {
@@ -447,8 +445,6 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;
 	}
-	$start=max($current-intval($index_limit/2), 1);
-	$end=$start+$index_limit-1;
 	
 	echo '<div class="pages">';
 
