@@ -22,14 +22,16 @@ class LinkMobile extends Link{
 		echo '<div class="news-body">';
 		if ($globals['link']) $this->print_warn();
 
+/*
 		if (! $globals['link']) {
 			$url = $this->get_permalink();
 			$nofollow = '';
-		} else {
-			if ($this->status != 'published') $nofollow = ' rel="nofollow"';
-			else $nofollow = '';
-			$url = htmlspecialchars($this->url);
-		}
+*/
+
+
+		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
+		else $nofollow = '';
+		$url = htmlspecialchars($this->url);
 
 		if ($type != 'preview' && !empty($this->title) && !empty($this->content)) {
 			$this->print_shake_box();
@@ -56,8 +58,8 @@ class LinkMobile extends Link{
 					echo _('hace').txt_time_diff($this->sent_date);
 			}
 			echo "</div>\n";
-			echo text_to_html($this->content);
 		}
+		echo text_to_html($this->content);
 
 
 		echo '<div class="news-details">';
@@ -66,7 +68,7 @@ class LinkMobile extends Link{
 		} else  {
 			$comments_mess = _('sin comentarios');
 		}
-		echo '<span class="comments">'.$comments_mess. '</span>';
+		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
 	
 		if ($globals['link']) {
 			// Print meta and category
@@ -112,7 +114,7 @@ class LinkMobile extends Link{
 		}
 		echo '<div class="news-shakeit">';
 		echo '<div class="'.$box_class.'">';
-		echo '<span id="a-votes-'.$this->id.'">'.($this->votes+$this->anonymous).'</span></div>';
+		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.($this->votes+$this->anonymous).'</a></div>';
 
 		if ($globals['link']) {
 			echo '<div class="menealo" id="a-va-'.$this->id.'">';

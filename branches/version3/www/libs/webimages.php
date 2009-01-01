@@ -354,7 +354,7 @@ class HtmlImages {
 						$parsed = parse_url($url);
 						$first_path = path_sub_path($parsed['path'], 2);
 						if ($paths[$first_path] > 1) {
-							echo "<!-- Skipped path count > 2: $url -->\n";
+							//echo "<!-- Skipped path count > 2: $url -->\n";
 							continue;
 						}
 						$res = get_url($url, $this->url);
