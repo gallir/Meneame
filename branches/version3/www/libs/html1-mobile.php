@@ -109,11 +109,12 @@ function do_header($title, $id='home') {
 	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
 	echo '<ul id="headtools">';
 
+ 	echo '<li><a href="'.$globals['base_url'].'search.php">'. _('buscar').'</a></li>';
 	if($current_user->authenticated) {
-  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('Logout').'</a></li>';
+  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('logout').'</a></li>';
  		echo '<li class="noborder"><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>';
 	} else {
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('Login').'</a></li>';
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').'</a></li>';
 	}
 
 
