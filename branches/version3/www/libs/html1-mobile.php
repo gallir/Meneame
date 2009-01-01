@@ -141,7 +141,6 @@ function do_js_includes() {
 	global $globals;
 
 	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;</script>'."\n";
-	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/mobile01.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";

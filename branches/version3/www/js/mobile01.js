@@ -1,10 +1,30 @@
+function getAJAX(url, fn) {
+	var ajax;
+	try {
+		ajax = new XMLHttpRequest ();
+		ajax.open ("GET", url, true);
+		ajax.send (null);
+		ajax.onreadystatechange = function () {
+			if (ajax.readyState == 4) {
+				fn(ajax.responseText);
+			}
+		}
+	} catch (e) {}
+}
+
+function getJSON(url, fn) {
+	getAJAX(url, function (data) {
+			 fn(eval('('+data+')'));
+		});
+}
+
 function menealo(user, id, htmlid, md5)
 {
 	var url = base_url + "backend/menealo.php";
 	var content = "id=" + id + "&user=" + user + "&md5=" + md5;
 	url = url + "?" + content;
 	disable_vote_link(id, "...", '#FFC8AF');
-	$.getJSON(url,  
+	getJSON(url,  
 		 function(data) {
 				parseLinkAnswer(htmlid, data);
 		}
@@ -12,8 +32,11 @@ function menealo(user, id, htmlid, md5)
 }
 
 function disable_vote_link(id, mess, background) {
-	$('#a-va-' + id).html('<span>'+mess+'</span>');
-	$('#a-va-' + id).css('background', background);
+	var ob = document.getElementById('a-va-' + id);
+	try {
+		ob.innerHTML = '<span>'+mess+'</span>';
+		ob.style.setProperty('background-color', background);
+	} catch (e) {}
 }
 
 function parseLinkAnswer (id, link)
@@ -24,7 +47,9 @@ function parseLinkAnswer (id, link)
 		return false;
 	}
 	votes = parseInt(link.votes)+parseInt(link.anonymous);
-	$('#a-votes-' + link.id).html(votes+"");
+	var ob = document.getElementById('a-votes-' + link.id);
+	try { ob.innerHTML = votes+"" }
+	catch (e) {}
 	if (link.value > 0) {
 		disable_vote_link(link.id, "¡chachi!", '#FFFFFF');
 	} else if (link.value < 0) {
@@ -33,8 +58,12 @@ function parseLinkAnswer (id, link)
 	return false;
 }
 
-function get_votes(program,type,container,page,id) {
+function load_html(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
-	$('#'+container).load(url);
+	getAJAX(url, function (data) {
+			var ob = document.getElementById(container);
+			try { ob.innerHTML = data }
+			catch (e) {}
+		});
 }
 

@@ -59,7 +59,16 @@ class LinkMobile extends Link{
 			}
 			echo "</div>\n";
 		}
-		echo text_to_html($this->content);
+
+		$text = text_to_html($this->content);
+
+		// Change links to mydomain.net to m.mydomain.net (used in "related")
+		$my_domain = get_server_name();
+		$parent_domain = preg_replace('/m\./', '', $my_domain);
+		if ($parent_domain != $my_domain && preg_match('#[^\.]'.preg_quote($parent_domain).'/#', $text)) {
+			$text = preg_replace('#([^\.])'.preg_quote($parent_domain).'/#', "$1$my_domain/", $text);
+		}
+		echo $text;
 
 
 		echo '<div class="news-details">';

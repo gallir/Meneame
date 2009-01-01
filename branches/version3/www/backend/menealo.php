@@ -31,7 +31,7 @@ if (empty($_REQUEST['md5'])) {
 $link = new Link;
 $link->id=$id;
 if(!$link->read_basic()) {
-	error(_('Artículo inexistente'). $current_user->user_id . '-'. $_REQUEST['user']);
+	error(_('Artículo inexistente'));
 }
 
 if(!$link->is_votable()) {
@@ -52,7 +52,7 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 }
 
 if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto'). $current_user->user_id . '-'. htmlspecialchars($_REQUEST['user']));
+	error(_('Usuario incorrecto'));
 }
 
 $md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);
@@ -97,7 +97,6 @@ if($current_user->user_id>0) {
 if (!$link->insert_vote($value)) {
 	error(_('ya ha votado antes'));
 }
-
 
 if ($link->status == 'discard' && $current_user->user_id>0 && $link->votes > $link->negatives && $link->karma > 0) {
 	$link->read_basic();

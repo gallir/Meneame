@@ -34,7 +34,7 @@ if(!$link->is_votable()) {
 }
 
 if($current_user->user_id != $user_id) {
-	error(_('Usuario incorrecto'). $current_user->user_id . '-'. $user_id);
+	error(_('Usuario incorrecto'));
 }
 
 $md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);

@@ -35,7 +35,7 @@ class CommentMobile extends Comment{
 		echo '&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
 		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
-			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
+			echo '&#187;&nbsp;<a href="javascript:load_html(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
 		} else {
 			$this->print_text($length);
 		}
@@ -67,7 +67,7 @@ class CommentMobile extends Comment{
 		if ($length>0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
 			$expand = '...&nbsp;&nbsp;' .
-				'<a href="javascript:get_votes(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
+				'<a href="javascript:load_html(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
 		}
 
 		echo put_smileys(save_text_to_html($this->content)) . $expand;
