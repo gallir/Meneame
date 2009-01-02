@@ -76,8 +76,8 @@ $globals['cache_dir'] = 'cache';
 //$globals['recaptcha_private_key'] = '';
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm-mobile01.css';
-$globals['css_color'] = 'css/es/mnmcol-mobile01.css';
+$globals['css_main'] = 'css/es/mnm-mobile02.css';
+//$globals['css_color'] = 'css/es/mnmcol-mobile01.css';
 
 
 // This is for SMS messages
