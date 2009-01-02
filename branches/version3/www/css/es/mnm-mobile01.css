@@ -11,22 +11,34 @@ padding: 0;
 body {
 font-family: sans-serif;
 margin: 0 0px 0 0px;
+background-color: #fff;
 }
 
 a {
 text-decoration: none;
 outline: none;
 vertical-align: baseline;
+color: #03a;
 }
 
 a:hover, a:focus {
 text-decoration: underline;
+color: #ff6400;
+}
+
+a:active {
+color: #000;
+}
+
+a:visited {
+color: #551a8b;
 }
 
 #header {
 min-width: 300px;
 height: 25px;
 overflow: hidden;
+background: #feefe5;
 }
 
 #logo {
@@ -35,6 +47,7 @@ float: left;
 width: 125px;
 height: 24px;
 text-indent: -9999px;
+background: #ff6400 url('../../img/mnm/logobg01.png') no-repeat left top;
 }
 
 #headtools {
@@ -51,6 +64,7 @@ margin: 2px 5px 0 5px;
 border-left: 1px solid;
 padding-left: 10px;
 white-space: nowrap;
+border-color: #fff;
 }
 
 #headtools li.noborder {
@@ -59,6 +73,7 @@ border-left: none;
 	
 #headtools a {
 text-decoration: none;
+color: #333;
 }
 
 #headtools a:hover {
@@ -85,6 +100,7 @@ margin: 10px 0 0 0;
 padding-left: 5px;
 border-bottom: 1px solid;
 white-space: nowrap;
+border-color: #ff6400;
 }
 
 .tabmain li {
@@ -106,19 +122,25 @@ border-top: 1px solid;
 border-right: 1px solid;
 border-left: 1px solid;
 text-decoration: none;
+background: #fff;
+border-color: #ff6400;
+color: #ff6400;
 }
 
 .tabmain li a:hover {
 text-decoration: none;
+background: #feefe5
 }
 
 .tabmain li.tabmain-this {
 height: 25px;
+background: #fff;
 }
 
 .tabmain li.tabmain-this a {
 font-size: 0.8em;
 height: 21px;
+background: #feefe5;
 }
 
 
@@ -131,6 +153,11 @@ margin: 2em 10px 0 10px;
 display: inline;
 list-style-type: none;
 font-size: .65em;
+color: #999;
+}
+
+#footthingy li a {
+color: #999;
 }
 
 #footthingy div {
@@ -159,6 +186,8 @@ border: 1px solid;
 padding: 3px 10px 3px 30px ;
 margin: 5px 0 5px 0;
 font-size: 85%;
+background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
+border-color: #FF6400;
 }
 
 .error {
@@ -166,10 +195,13 @@ font-weight: bold;
 font-size: 140%;
 margin: 5px 0 0 0;
 padding: 25px 0 0 0;
+color: #FF6400;
+background: url(../../img/common/error.png) no-repeat;
 }
 
 .error-text {
 font-size: 100%;
+color: #FF9400;
 }
 
 /* news */
@@ -186,6 +218,11 @@ margin: 4px 0 0 0;
 padding: 0;
 overflow: hidden;
 white-space: nowrap;
+color: #FF6400;
+}
+
+.news-details a:link, .news-details a:visited {
+color: #FF7C00;
 }
 
 .news-details span {
@@ -197,6 +234,7 @@ vertical-align: top;
 display: inline;
 border-left: 1px solid;
 padding: 0 4px 0 6px;
+border-left-color: #FF6400;
 }
 
 .news-details .comments {
@@ -235,8 +273,39 @@ padding: 5px 0 5px 0;
 border: 1px solid;
 }
 
+.mnm-published a:hover, .mnm-queued a:hover, .mnm-discarded a:hover {
+color: #03A;
+}
+
+.mnm-published, .mnm-published a, .mnm-published a:visited, .mnm-discarded, .mnm-discarded a, .mnm-discarded a:visited {
+color: #FFF;
+}
+
+.mnm-published {
+background: #FF6400;
+}
+
+.mnm-queued, .mnm-queued a, .mnm-queued a:visited {
+color: #FF6400;
+}
+
+.mnm-queued {
+background: #FFF;
+border-color: #FF6400;
+}
+
+.mnm-discarded {
+background: #D9AA95;
+border-color: #D9AA95;
+}
+
+.menealo {
+background-color: #fff;
+}
+
 .menealo a {
 border: 1px solid;
+border-color: #ffcbaa;
 }
 
 .menealo a, .menealo span {
@@ -244,10 +313,12 @@ margin-top: 2px;
 display: block;
 padding: 2px 0 2px 0;
 font-size: 7pt;
+color: #FF6400;
 }
 
 .menealo span {
 border: 1px dotted;
+border-color: #FF6400;
 }
 
 .news-body h1 {
@@ -270,15 +341,18 @@ overflow: hidden;
 font-size: 85%;
 margin: 0;
 white-space: nowrap;
+color: #666;
 }
 
 .news-submitted a:link, .news-submitted a:visited {
 font-weight: bold;
+color: #666;
 }
 
 .news-tags {
 font-size: 90%;
 margin: 0;
+color: #666;
 }
 
 
@@ -302,16 +376,35 @@ margin-bottom: 5px;
 padding: 5px;
 line-height: 130%;
 overflow: hidden;
+background: #feefe5;
+color: #303030;
+border-color: #FF6400;
+}
+
+.comment-body.high {
+background: #FFC8A6;
+border-color: #FF9400;
 }
 
 .comment-body-hidden {
 padding: 5px;
 font-size: 90%;
 overflow: hidden;
+border-color: #aaa;
+color: #aaa;
+}
+
+.comment-body-hidden a {
+color: #aaa;
 }
 
 .comment-body strong {
 font-weight: bold;
+color: #FF6400;
+}
+
+.comment-body span strong {
+color: #000;
 }
 
 .comment-meta, .comment-meta-hidden {
@@ -319,10 +412,16 @@ font-size: 85%;
 line-height: 140%;
 padding: 0 0px 5px 0;
 white-space: nowrap;
+color: #FF6400;
 }
 
 .comment-meta a {
 font-weight: bold;
+color: #FF9400;
+}
+
+.comment-meta-hidden, .comment-meta-hidden a {
+color: #aaa;
 }
 
 .comments-list ul li {
@@ -333,6 +432,7 @@ margin: 0 0 16px 0;
 .comments-list ul {
 margin: 0;
 padding: 16px 0 0 48px;
+background: #FFF;
 }
 
 
@@ -350,6 +450,7 @@ margin: 2px 2px;
 margin: 15px 0 25px 0;
 clear: left;
 font-size: 9pt;
+border-top-color: #FF6400;
 }
 
 /* to avoid non standard <br clear=..> */
@@ -368,6 +469,9 @@ float: left;
 padding: 5px 15px 5px 15px;
 margin-right: 3px;
 border: 1px solid;
+color: #FF6400;
+border-color: #FFF;
+background: #FFF;
 }
 
 .pages span.empty {
@@ -378,16 +482,28 @@ padding-left: 2px;
 .pages span.current {
 border: 1px solid;
 font-weight: bold;
+background: #FFBE94;
+color: #FF6400;
+border-color: #FF6400;
 }
 
 .pages span.current a {
 padding: 0;
 border: 0px;
+background: #FF6400;
+color: #FF6400;
 }
 
 .pages a {
 border: 1px solid;
 text-decoration: none;
+border-color: #FF6400;
+}
+
+.pages a:hover, .pages-margin a:hover {
+border-color: #FF9400;
+background: #FFBE94;
+color: #FF6400;
 }
 
 .pages a.nextprev {
@@ -396,6 +512,8 @@ font-weight: bold;
 
 .pages span.nextprev {
 border: 1px solid;
+border-color: #FFE2C5;
+color: #FFE2C5;
 }
 
 
@@ -403,6 +521,14 @@ border: 1px solid;
 
 input, textarea {
 margin: 0 0 10px 0;
+background: #feefe5;
+border: 1px solid #FF9400;
+color: #303030;
+}
+
+select {
+background: #FFF;
+color: #FF7C00;
 }
 
 .button, button {
@@ -410,11 +536,25 @@ border: 1px solid;
 font-weight: bold;
 margin: 4px 0 4px 0;
 padding: 0 4px 0 4px;
+border-color: #FF6400;
+color: #FF6400;
+}
+
+.button:hover, button:hover {
+background: #fff;
 }
 
 legend {
 font-weight: bold;
 padding: 0 5px;
+}
+
+legend, legend a {
+color: #FF9400;
+}
+
+fieldset {
+border-color: #FF9400;
 }
 
 fieldset dl {
@@ -436,5 +576,6 @@ font-weight: bold;
 
 label {
 font-weight: bold;
+color: #FF6400;
 }
 
