@@ -984,6 +984,7 @@ class Link {
 					$this->thumb_status = 'error';
 				}
 			}
+			if ($img->video) $this->content_type = 'video';
 		}
 		$this->store_thumb();
 		return $this->has_thumb();
@@ -992,7 +993,7 @@ class Link {
 	function store_thumb() {
 		global $db;
 		$this->thumb = $db->escape($this->thumb);
-		$db->query("update links set link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
+		$db->query("update links set link_content_type = '$this->content_type', link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
 	function has_thumb() {

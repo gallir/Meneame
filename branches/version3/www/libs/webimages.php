@@ -10,6 +10,7 @@ class BasicThumb {
 	public $x = 0;
 	public $y = 0;
 	public $image = false;
+	public $video = false;
 	public $referer = false;
 	public $type = 'external';
 	public $url = false;
@@ -246,14 +247,18 @@ class HtmlImages {
 
 			// If there is no image or image is slow
 			// Check if there are players
-			if ((!$this->selected || $this->selected->surface() < 75000) && preg_match('/(<|&lt;)(embed|object|param)/i', $this->html)) {
+			if ((!$this->selected || $this->selected->surface() < 75000) && 
+					preg_match('/(<|&lt;)(embed|object|param)/i', $this->html)) {
 				echo "<!-- Searching for video -->\n";
-				if ($this->check_youtube()) return $this->selected;
-				if ($this->check_google_video()) return $this->selected;
-				if ($this->check_metacafe()) return $this->selected;
-				if ($this->check_vimeo()) return $this->selected;
-				if ($this->check_zapp_internet()) return $this->selected;
-				if ($this->check_daily_motion()) return $this->selected;
+				if ($this->check_youtube() || 
+						$this->check_google_video() ||
+						$this->check_metacafe() ||
+						$this->check_vimeo() ||
+						$this->check_zapp_internet() ||
+						$this->check_daily_motion()) {
+					$this->selected->video = true;
+					return $this->selected;
+				}
 			}
 
 		}
