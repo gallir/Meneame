@@ -129,7 +129,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/button|banner|\Wban[_\W]|\Wads\W|\Wpub\W|logo|header|rss/i', $this->url) 
+		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|header|rss/i', $this->url) 
 				/*&& (
 				// Check if domain.com are the same for the referer and the url
 				preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) 
@@ -358,8 +358,7 @@ class HtmlImages {
 					foreach ($selection as $key => $url) {
 						$parsed = parse_url($url);
 						$first_path = path_sub_path($parsed['path'], 2);
-						if ($paths[$first_path] > 1) {
-							//echo "<!-- Skipped path count > 2: $url -->\n";
+						if ($paths[$first_path] > 0) { // Don't get twice a page with similar paths
 							continue;
 						}
 						$res = get_url($url, $this->url);
@@ -370,8 +369,8 @@ class HtmlImages {
 							echo "<!-- Other: read $key -->\n";
 							$n++;
 							$this->other_html .= $this->shorten_html($res['content']). "<!-- END part $n -->\n";
-							if ($n > 2) break;
 							$paths[$first_path] = $paths[$first_path] + 1;
+							if ($n > 1) break;
 						}
 					}
 				}
