@@ -329,7 +329,8 @@ class HtmlImages {
 								substr($parsed_match['query'], 0, 20)) ||
 						(empty($this->parsed_url['query']) && substr($parsed_match['path'], 0, 45) == 
 								substr($this->parsed_url['path'], 0, 45)) || 
-						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
+						preg_match('/feed|rss|atom|trackback/i', $match[1]) ||
+						path_equals($parsed_match['path'], $this->parsed_url['path']) > 2 ) {
 						continue;
 					}
 
