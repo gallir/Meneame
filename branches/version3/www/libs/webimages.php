@@ -252,14 +252,15 @@ class HtmlImages {
 			// If there is no image or image is slow
 			// Check if there are players
 			if ((!$this->selected || $this->selected->surface() < 75000) && 
-					preg_match('/(<|&lt;)(embed|object|param)/i', $this->html)) {
+					preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
 				echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
 						$this->check_google_video() ||
 						$this->check_metacafe() ||
 						$this->check_vimeo() ||
 						$this->check_zapp_internet() ||
-						$this->check_daily_motion()) {
+						$this->check_daily_motion() ||
+						$this->check_elmundo_video() ) {
 					$this->selected->video = true;
 					return $this->selected;
 				}
@@ -269,13 +270,13 @@ class HtmlImages {
 		return $this->selected;
 	}
 
-	function shorten_html($html, $max = 50000) {
+	function shorten_html($html, $max = 60000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
-			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
-			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
-			$html = preg_replace('/< *(div|span)[^>]*?>/is', '<$1>', $html); // Delete long divs and span with style
+			/*$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript */
+			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript 
+			$html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
 			$html = substr($html, 0, $max); // Only analyze first X bytes
@@ -388,7 +389,7 @@ class HtmlImages {
 							) {
 							echo "<!-- Other: read $key -->\n";
 							$n++;
-							$this->other_html .= $this->shorten_html($res['content'], 75000). "<!-- END part $n -->\n";
+							$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
 							$paths[$first_path] = $paths[$first_path] + 1;
 							if ($n > 1) break;
 						}
@@ -513,6 +514,27 @@ class HtmlImages {
 			if($vrss) {
 				preg_match('/<media:thumbnail url=["\'](.+?)["\']/',$vrss,$thumbnail_array);
 				return $thumbnail_array[1];
+			}
+		}
+		return false;
+	}
+
+	// Elmundo.es detection
+	function check_elmundo_video() {
+		if (preg_match('#ArchivoFlash *= *"(http.+?reproductor_video.swf)".+?fotograma=(.+?\.jpg)#is', $this->html, $match) &&
+			! $this->check_in_other($match[2])) {
+			$server = $match[1];
+			$url = $match[2];
+			echo "<!-- Detected El Mundo, fotograma: $url -->\n";
+			if ($url) {
+				$img = new BasicThumb($url, $server);
+				if ($img->get()) {
+					$img->type = 'local';
+					$img->candidate = true;
+					$this->selected = $img;
+					echo "<!-- Video selected from $img->url -->\n";
+					return $this->selected;
+				}
 			}
 		}
 		return false;
@@ -666,7 +688,7 @@ function path_equals($path1, $path2) {
 }
 
 
-function get_url($url, $referer = false) {
+function get_url($url, $referer = false, $max=200000) {
 	global $globals;
 	static $session = false;
 	static $previous_host = false;
@@ -692,6 +714,7 @@ function get_url($url, $referer = false) {
 	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
 	curl_setopt($session, CURLOPT_TIMEOUT, 20);
 	curl_setopt($session,CURLOPT_FAILONERROR,true);
+	curl_setopt($session,CURLOPT_RANGE,"0-$max");
 	$result['content'] = curl_exec($session);
 	if (!$result['content']) return false;
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
