@@ -269,15 +269,16 @@ class HtmlImages {
 		return $this->selected;
 	}
 
-	function shorten_html($html) {
+	function shorten_html($html, $max = 50000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
+			$html = preg_replace('/< *(div|span)[^>]*?>/is', '$1', $html); // Delete long divs and span with style
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-			$html = substr($html, 0, 55000); // Only analyze first X bytes
+			$html = substr($html, 0, $max); // Only analyze first X bytes
 			return $html;
 	}
 
