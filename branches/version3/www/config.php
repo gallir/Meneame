@@ -129,9 +129,9 @@ $globals['save_pageloads'] = false;
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
 $greetings = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
-		'apa'=>'catalán','com va'=>'catalán','com vas'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
+		'apa'=>'catalán','com va'=>'catalán','va bé?'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
 		'aupa'=>'español','ieup'=>'vasco','gñap'=>'gñapés','aiya'=>'sindarin','hello'=>'inglés',
-		'uep'=>'catalán','hey'=>'inglés','passa'=>'catalán','hi'=>'inglés','hunga hunga'=>'troglodita',
+		'uep com anam'=>'catalán','hey'=>'inglés','hi'=>'inglés','hunga hunga'=>'troglodita',
 		'salut'=>'francés','bonjour'=>'francés','hallo'=>'alemán','guten tag'=>'alemán','moin moin'=>'frisón',
 		'Dobrý deň'=>'eslovaco','helo'=>'SMTP','minjhani'=>'tsonga','kunjhani'=>'tsonga','ciao'=>'italiano',
 		'hej'=>'danés','god dag'=>'noruego','have a nice day'=>'inglés','as-salaam-aleykum'=>'árabe',
