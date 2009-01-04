@@ -124,7 +124,7 @@ function print_index_tabs($option=-1) {
 		}
 	}
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[1].'>'.$toggle_active[1].'<a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a></li>'."\n";
+		echo '<li '.$active[1].'><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a>'.$toggle_active[1].'</li>'."\n";
 	} else {
 		meta_teaser_item();
 	}
