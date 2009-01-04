@@ -275,7 +275,7 @@ class HtmlImages {
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript
-			$html = preg_replace('/< *(div|span)[^>]*?>/is', '$1', $html); // Delete long divs and span with style
+			$html = preg_replace('/< *(div|span)[^>]*?>/is', '<$1>', $html); // Delete long divs and span with style
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
 			$html = substr($html, 0, $max); // Only analyze first X bytes
@@ -388,7 +388,7 @@ class HtmlImages {
 							) {
 							echo "<!-- Other: read $key -->\n";
 							$n++;
-							$this->other_html .= $this->shorten_html($res['content']). "<!-- END part $n -->\n";
+							$this->other_html .= $this->shorten_html($res['content'], 75000). "<!-- END part $n -->\n";
 							$paths[$first_path] = $paths[$first_path] + 1;
 							if ($n > 1) break;
 						}
