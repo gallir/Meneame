@@ -87,64 +87,45 @@ class Link {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
-		if(version_compare(phpversion(), '5.0.0') >= 0) {
-			$opts = array(
-				'http' => array('user_agent' => $globals['user_agent'], 'max_redirects' => 10, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n" ),
-				'https' => array('user_agent' => $globals['user_agent'], 'max_redirects' => 10, 'timeout' => 10, 'header' => 'Referer: http://'.get_server_name().$globals['base_url']."\r\n" ),
-			);
-			$context = stream_context_create($opts);
-			if(($stream = @fopen($url, 'r', false, $context))) {
-				$meta_data = stream_get_meta_data($stream);
-				foreach($meta_data['wrapper_data'] as $response) {
-					// Check if it has pingbacks
-					if (preg_match('/^X-Pingback: /i', $response)) {
-						$answer = split(' ', $response);
-						if (!empty($answer[1])) {
-							$this->pingback = 'ping:'.trim($answer[1]);
-						}
-					}
-					/* Were we redirected? */
-					if (preg_match('/^location: /i', $response)) {
-						/* update $url with where we were redirected to */
-						$answer = split(' ', $response);
-						$new_url = clean_input_url($answer[1]);
-					}
-					if (preg_match('/^content-type: /i', $response)) {
-						$answer = split(' ', $response);
-						$this->content_type = preg_replace('/\/.*$/', '', $answer[1]);
-					}
-				}
-				if (!empty($new_url) && $new_url != $url) {
-					syslog(LOG_NOTICE, "Meneame, redirected ($current_user->user_login): $url -> $new_url");
-					/* Check again the url */
-					// Warn: relative path can come in "Location:" headers, manage them
-					if(!preg_match('/^http[s]*:/', $new_url)) {
-						// It's relative
-						$new_url = $url . $new_url;
-					}
-					if (!$this->check_url($new_url, $check_local, true)) {
-						$this->url = $new_url;
-						return false;
-					}
-					// Change the url if we were directed to another host
-					if (strlen($new_url) < 250  && ($new_url_components = @parse_url($new_url))) {
-						if ($url_components['host'] != $new_url_components['host']) {
-							syslog(LOG_NOTICE, "Meneame, changed source URL ($current_user->user_login): $url -> $new_url");
-							$url = $new_url;
-							$url_components = $new_url_components;
-						}
-					}
-				}
-				$url_ok = $this->html = @stream_get_contents($stream, $maxlen);
-				fclose($stream);
-			} else {
-				syslog(LOG_NOTICE, "Meneame, error getting ($current_user->user_login): $url");
-				$url_ok = false;
+
+
+		if (($response = get_url($url)) ) {
+			$this->content_type = $response['content_type'];
+
+			// Check if it has pingbacks
+			if (preg_match('/X-Pingback: *(.+)/i', $response['header'], $match)) {
+				$this->pingback = 'ping:'.clean_input_url($match[1]);
 			}
-			//$url_ok = $this->html = @file_get_contents($url, false, $context, 0, 200000);
+
+			/* Were we redirected? */
+			if ($response['redirect_count'] > 0) {
+				/* update $url with where we were redirected to */
+				$new_url = clean_input_url($response['location']);
+			}
+			if (!empty($new_url) && $new_url != $url) {
+				syslog(LOG_NOTICE, "Meneame, redirected ($current_user->user_login): $url -> $new_url");
+				/* Check again the url */
+				if (!$this->check_url($new_url, $check_local, true)) {
+					$this->url = $new_url;
+					return false;
+				}
+				// Change the url if we were directed to another host
+				if (strlen($new_url) < 300  && ($new_url_components = @parse_url($new_url))) {
+					if ($url_components['host'] != $new_url_components['host']) {
+						syslog(LOG_NOTICE, "Meneame, changed source URL ($current_user->user_login): $url -> $new_url");
+						$url = $new_url;
+						$url_components = $new_url_components;
+					}
+				}
+			}
+			$this->html = $response['content'];
+			$url_ok = true;
 		} else {
-			$url_ok = $this->html = @file_get_contents($url);
+			syslog(LOG_NOTICE, "Meneame, error getting ($current_user->user_login): $url");
+			$url_ok = false;
 		}
+
+
 		$this->url=$url;
 		// Fill content type if empty
 		// Right now only check for typical image extensions
