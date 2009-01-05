@@ -343,10 +343,16 @@ class HtmlImages {
 					if (!empty($parsed_match['query'])) {
 						if (empty($this->parsed_url['query'])) $weight *= 0.5;
 						elseif ($this->parsed_url['path'] == $parsed_match['path']) {
-							$weight *= 2;
-							if (preg_replace('/(.+?)=.*/', '$1', $parsed_match['query']) ==
-									preg_replace('/(.+?)=.*/', '$1', $this->parsed_url['query'])) {
-									$weight *= 2;
+							// Decrease weights of queries with the same number, normallu a story ID
+							if (preg_replace('/.*?(\d{4,})($|\W.*)/', '$1', $this->parsed_url['query']) ==
+								preg_replace('/.*?(\d{4,})($|\W.*)/', '$1', $parsed_match['query']) ) {
+								$weight *= 0.5;
+							} else {
+								$weight *= 2;
+								if (preg_replace('/(.+?)=.*/', '$1', $parsed_match['query']) ==
+										preg_replace('/(.+?)=.*/', '$1', $this->parsed_url['query'])) {
+										$weight *= 2;
+								}
 							}
 						}
 					}
