@@ -696,42 +696,6 @@ function path_equals($path1, $path2) {
 	return $n;
 }
 
-
-function get_url($url, $referer = false, $max=200000) {
-	global $globals;
-	static $session = false;
-	static $previous_host = false;
-
-	$url = html_entity_decode($url);
-	$parsed = parse_url($url);
-	if (!$parsed) return false;
-
-	if ($session && $previous_host != $parsed['host']) {
-		curl_close($session);
-		$session = false;
-	}
-	if (!$session) {
-		$session = curl_init();
-		$previous_host =  $parsed['host'];
-	}
-	curl_setopt($session, CURLOPT_URL, $url);
-	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
-	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 
-	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
-	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
-	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
-	curl_setopt($session, CURLOPT_TIMEOUT, 20);
-	curl_setopt($session, CURLOPT_FAILONERROR, true);
-	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
-	curl_setopt($session,CURLOPT_RANGE,"0-$max");
-	$result['content'] = curl_exec($session);
-	if (!$result['content']) return false;
-	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
-	return $result;
-}
-
 function get_html_title($html) {
 	if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $html, $matches))
 		return $matches[1];

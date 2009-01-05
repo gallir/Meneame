@@ -1,5 +1,5 @@
 <?
-// The source code packaged with this file is Free Software, Copyright (C) 2005-2007 by
+// The source code packaged with this file is Free Software, Copyright (C) 2005-2009 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -591,5 +591,48 @@ function memcache_mdelete ($key) {
 	global $memcache;
 	if (memcache_minit()) return $memcache->delete($key);
 	return false;
+}
+
+// Generic function to get content from an url
+function get_url($url, $referer = false, $max=200000) {
+	global $globals;
+	static $session = false;
+	static $previous_host = false;
+
+	$url = html_entity_decode($url);
+	$parsed = parse_url($url);
+	if (!$parsed) return false;
+
+	if ($session && $previous_host != $parsed['host']) {
+		curl_close($session);
+		$session = false;
+	}
+	if (!$session) {
+		$session = curl_init();
+		$previous_host =  $parsed['host'];
+	}
+	curl_setopt($session, CURLOPT_URL, $url);
+	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
+	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 
+	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($session, CURLOPT_HEADER , true );
+	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
+	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
+	curl_setopt($session, CURLOPT_TIMEOUT, 20);
+	curl_setopt($session, CURLOPT_FAILONERROR, true);
+	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
+	curl_setopt($session,CURLOPT_RANGE,"0-$max");
+	$response = curl_exec($session);
+	if (!$response) return false;
+	$header_size = curl_getinfo($session,CURLINFO_HEADER_SIZE);
+	$result['header'] = substr($response, 0, $header_size);
+	$result['content'] = substr($response, $header_size );
+	$result['http_code'] = curl_getinfo($session,CURLINFO_HTTP_CODE);
+	$result['last_url'] = curl_getinfo($session,CURLINFO_EFFECTIVE_URL);
+	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
+	$result['location'] = curl_getinfo($session, CURLINFO_EFFECTIVE_URL);
+	return $result;
 }
 ?>
