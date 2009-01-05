@@ -213,7 +213,10 @@ class HtmlImages {
 
 	function get() {
 		$res = get_url($this->url);
-		if (!$res) return;
+		if (!$res) {
+			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
+			return;
+		}
 		if (preg_match('/^image/i', $res['content_type'])) {
 			$img = new BasicThumb($this->url);
 			if ($img->fromstring($res['content'])) {
@@ -719,7 +722,9 @@ function get_url($url, $referer = false, $max=200000) {
 	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
 	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
 	curl_setopt($session, CURLOPT_TIMEOUT, 20);
-	curl_setopt($session,CURLOPT_FAILONERROR,true);
+	curl_setopt($session, CURLOPT_FAILONERROR, true);
+	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
 	curl_setopt($session,CURLOPT_RANGE,"0-$max");
 	$result['content'] = curl_exec($session);
 	if (!$result['content']) return false;
