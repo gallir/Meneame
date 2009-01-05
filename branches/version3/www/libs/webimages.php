@@ -28,7 +28,7 @@ class BasicThumb {
 	}
 
 	function clean_url($str) {
-		return clean_input_url(preg_replace('/ /', '%20', $str));
+		return clean_input_url(urldecode($str));
 	}
 
 	function scale($size=100) {
@@ -641,12 +641,14 @@ class HtmlImages {
 }
 
 function build_full_url($url, $referer) {
-	$parsed_url = parse_url($url);
-	$parsed_referer = parse_url($referer);
+	$parsed_referer = @parse_url($referer);
 
 	if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
             return $parsed_referer['scheme']."$url";
-	} elseif (! $parsed_url['scheme']) {
+	}
+
+	$parsed_url = @parse_url($url);
+	if (! $parsed_url['scheme']) {
 		$fullurl = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
 		if ($parsed_referer['port']) $fullurl .= ':'.$parsed_referer['port'];
 		if (!preg_match('/^\/+/', $parsed_url['path'])) {

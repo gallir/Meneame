@@ -10,8 +10,6 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
-header('Cache-Control: no-cache');
-
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
