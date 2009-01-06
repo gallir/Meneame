@@ -62,9 +62,9 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url, $this->referer);
+		$res = get_url($this->url, $this->referer, 200000);
 		$this->checked = true;
-		if ($res) {
+		if ($res && strlen($res['content']) < 200000) { // Image is smaller than our limit
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
@@ -102,7 +102,7 @@ class WebThumb extends BasicThumb {
 		
 		if (!preg_match('/src *=["\'](.+?)["\']/i', $this->tag, $matches) 
 			&& !preg_match('/src *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
-			if (!preg_match('/["\']*([\da-z\/]+\.jpg)["\']*/i', $this->tag, $matches)) {
+			if (!preg_match('/["\']((http:){0,1}[\.\d\w\-\/]+\.jpg)["\']/i', $this->tag, $matches)) {
 				return;
 			}
 		} else {
@@ -133,15 +133,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|header|rss/i', $this->url) 
-				/*&& (
-				// Check if domain.com are the same for the referer and the url
-				preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_url['host']) == preg_replace('/.*?([^\.]+\.[^\.]+)$/', '$1', $this->parsed_referer['host']) 
-				|| preg_match('/images\W|wp-content\W|upload\W|imgs\W|pics\W|pictures\W/', $this->url) 
-				|| preg_match('/gfx\.|cdn\.|imgs*\.|\.img|media\.|cache\.|\.cache|static\.|\.ggpht.com|upload|files|blogspot|blogger|wordpress\.com|pic\./', $this->parsed_url['host'])
-				)
-			*/
-			) {
+		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|\/logo|header|rss/i', $this->url)) {
 			$this->candidate = true;
 			//echo "Candidate: $this->x, $this->y $url -> $this->url<br>\n";
 		}
@@ -159,6 +151,7 @@ class WebThumb extends BasicThumb {
 		} else {
 			$this->html_y = intval($this->html_x * $this->y / $this->x);
 		}
+		//echo "Got: $this->x, $this->y $url -> $this->url<br>\n";
 		return true;
 	}
 
@@ -287,18 +280,26 @@ class HtmlImages {
 	}
 
 	function parse_img($html) {
+		$tags = array();
 		$this->get_other_html();
-		preg_match_all('/(<img\s.+?>|["\'][\da-z\/]+\.jpg["\'])/is', $html, $matches);
-		if (! $matches) return false;
+		preg_match_all('/(<img\s.+?>)/is', $html, $matches);
+		$tags = array_merge($tags, $matches[1]);
+		// Try with plain links in javascripts (RTVE uses it...)
+		preg_match_all('/["\']image["\'][, ]+(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\'])/is', $html, $matches);
+		$tags = array_merge($tags, $matches[1]);
+		// Now try with images in JS arrays (Clarin uses it...)
+		preg_match_all('/\( *(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\']) *\)/is', $html, $matches);
+		$tags = array_merge($tags, $matches[1]);
+		if (! count($tags)) return false;
 		$goods = $n = 0;
-		foreach ($matches[0] as $match) {
+		foreach ($tags as $match) {
 			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good()) {
 				$goods++;
-				$img->coef = intval($img->surface()/$img->max());
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
-				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
+				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2));
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.25)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.2)) {
 					$this->selected = $img;
 					$n++;
 					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
@@ -385,10 +386,11 @@ class HtmlImages {
 					$n = 0;
 					$paths = array();
 					foreach ($selection as $key => $url) {
-						// echo "<!-- Checking: $key -->\n";
+						//echo "<!-- Checking: $key -->\n";
 						$parsed = parse_url($url);
 						$first_path = path_sub_path($parsed['path'], 2).'?'.preg_replace('/(.+?)&.*/', '$1', $parsed['query']);
 						if ($paths[$first_path] > 0) { // Don't get twice a page with similar paths
+							//echo "<!-- Ignoring: $key -->\n";
 							continue;
 						}
 						$res = get_url($url, $this->url);
