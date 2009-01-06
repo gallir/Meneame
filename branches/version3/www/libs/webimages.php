@@ -28,6 +28,9 @@ class BasicThumb {
 	}
 
 	function clean_url($str) {
+		// Decode HTML entities
+		//$str = preg_replace('~&#x0*([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $str);
+		//$str = preg_replace('~&#0*([0-9]+);~e', 'chr(\\1)', $str);
 		return clean_input_url(urldecode($str));
 	}
 
@@ -62,13 +65,13 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url, $this->referer, 200000);
+		$res = get_url($this->url, $this->referer, 500000);
 		$this->checked = true;
-		if ($res && strlen($res['content']) < 200000) { // Image is smaller than our limit
+		if ($res && strlen($res['content']) < 500000) { // Image is smaller than our limit
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
-		echo "<!-- Failed to get $this->url-->\n";
+		echo "<!-- Failed to get $this->url -->\n";
 		return false;
 	}
 
@@ -151,7 +154,7 @@ class WebThumb extends BasicThumb {
 		} else {
 			$this->html_y = intval($this->html_x * $this->y / $this->x);
 		}
-		//echo "Got: $this->x, $this->y $url -> $this->url<br>\n";
+		//echo "Got: $this->html_x, $this->html_y $url -> $this->url<br>\n";
 		return true;
 	}
 
