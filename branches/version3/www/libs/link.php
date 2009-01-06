@@ -90,7 +90,7 @@ class Link {
 
 
 		if (($response = get_url($url)) ) {
-			$this->content_type = $response['content_type'];
+			$this->content_type = preg_replace('#^(\w+).+#', '$1', $response['content_type']);
 
 			// Check if it has pingbacks
 			if (preg_match('/X-Pingback: *(.+)/i', $response['header'], $match)) {
