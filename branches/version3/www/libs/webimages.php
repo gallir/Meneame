@@ -298,8 +298,8 @@ class HtmlImages {
 			if ($img->candidate && $img->good()) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2));
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.25)." -->\n";
-				if (!$this->selected || ($this->selected->coef < $img->coef/1.2)) {
+				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
 					$this->selected = $img;
 					$n++;
 					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
@@ -316,6 +316,7 @@ class HtmlImages {
 	function get_other_html() {
 		// Tries to find an alternate page to check for "common images" and ignore them
 		$this->other_html = false;
+		$this->path_query = $this->parsed_url['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $this->parsed_url['query']);
 		if ($this->html) {
 			$regexp = '[a-z]+?:\/\/'.preg_quote($this->parsed_url['host']).'\/[^\"\'>]+?';
 			if ($this->site) {
@@ -327,11 +328,14 @@ class HtmlImages {
 			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
 
 			$selection = array();
+			$levels = array();
+			$level_max = array();
 		
 			if (preg_match_all("/<a\s[^>]*href=[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
 					$weight = 1;
 					$url = preg_replace('/&amp;/i', '&', urldecode($match[1]));
+					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
 					$parsed_match = parse_url($url);
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
@@ -342,66 +346,38 @@ class HtmlImages {
 						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
 						continue;
 					}
+					$path_query_match = $parsed_match['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $parsed_match['query']);
+					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
-					// Assign weights
-					if (!empty($parsed_match['query'])) {
-						if (empty($this->parsed_url['query'])) $weight *= 0.5;
-						elseif ($this->parsed_url['path'] == $parsed_match['path']) {
-							// Decrease weights of queries with the same number, normallu a story ID
-							if (preg_replace('/.*?(\d{4,})($|\W.*)/', '$1', $this->parsed_url['query']) ==
-								preg_replace('/.*?(\d{4,})($|\W.*)/', '$1', $parsed_match['query']) ) {
-								$weight *= 0.5;
-							} else {
-								$weight *= 2;
-								if (preg_replace('/(.+?)=.*/', '$1', $parsed_match['query']) ==
-										preg_replace('/(.+?)=.*/', '$1', $this->parsed_url['query'])) {
-										$weight *= 2;
-								}
-							}
-						}
-					}
-					if (preg_match('#/[\d/]{6,}#',  $parsed_match['path']) && 
-							preg_match('#/[\d/]{6,}#',  $this->parsed_url['path']) ) {
-							// Decrease weight if the path has numbers which resemble a date 
-							// of the type /aaaa/mm, /aaaamm or /aa/mm/dd
-							if (preg_replace('#.*?/([\d/]{6,}).*#', "$1", $parsed_match['path']) == 
-								preg_replace('#.*?/([\d/]{6,}).*#', "$1", $this->parsed_url['path'])) {
-								$weight *= 0.1;
-							}
-					} else {
-						$equals = path_equals($parsed_match['path'], $this->parsed_url['path']);
-						if ($equals > 0 && $equals < 5) {
-							$weight *= 1.1 * $equals;
-						}
-					}
+					$distance = levenshtein($path_query_match, $this->path_query) 
+								* min(strlen($path_query_match), strlen($this->path_query))
+								/ max(strlen($path_query_match), strlen($this->path_query));
+					$item = array($url, $distance);
+					$levels[$equals][] = $item;
+					//echo "<!-- Adding ($equals, $distance): $path_query_match -->\n";
+				}
 
-					$weight *= strlen($url);
-					$key = sprintf('%08.2f:%s', $weight, $url);
-					if (!$selection[$key]) {
-						$selection[$key] = $url;
+				// Insert in selection ordered by level and the distance
+				krsort($levels);
+				foreach ($levels as $level => $items) {
+					usort($items, 'sort_url_distance_items');
+					foreach ($items as $item) {
+						$selection[] = $item[0];
 					}
 				}
+
 				if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
-					krsort($selection);
 					$n = 0;
-					$paths = array();
-					foreach ($selection as $key => $url) {
-						//echo "<!-- Checking: $key -->\n";
-						$parsed = parse_url($url);
-						$first_path = path_sub_path($parsed['path'], 2).'?'.preg_replace('/(.+?)&.*/', '$1', $parsed['query']);
-						if ($paths[$first_path] > 0) { // Don't get twice a page with similar paths
-							//echo "<!-- Ignoring: $key -->\n";
-							continue;
-						}
+					foreach ($selection as $url) {
+						echo "<!-- Checking: $url -->\n";
 						$res = get_url($url, $this->url);
 						if ($res && preg_match('/text\/html/i', $res['content_type']) && 
 								$this->title != get_html_title($res['content']) &&
 								preg_match('/<img.+?>/',$res['content'])
 							) {
-							echo "<!-- Other: read $key -->\n";
+							echo "<!-- Other: read $url -->\n";
 							$n++;
 							$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
-							$paths[$first_path] = $paths[$first_path] + 1;
 							if ($n > 1) break;
 						}
 					}
@@ -413,7 +389,7 @@ class HtmlImages {
 
 	function check_in_other($str) {
 		if (preg_match('/'.preg_quote($str,'/').'/', $this->other_html)) {
-				echo "<!-- Skip: " . htmlentities($str). "-->\n";
+				//echo "<!-- Skip: " . htmlentities($str). "-->\n";
 				return true;
 		}
 		return false;
@@ -692,12 +668,16 @@ function path_sub_path($path, $level = -1) {
 }
 
 function path_equals($path1, $path2) {
-	$parts1 = explode('/', preg_replace('#^/+#', '', $path1));
-	$parts2 = explode('/', preg_replace('#^/+#', '', $path2));
+	$parts1 = explode('/', preg_replace('#^/+|/+$#', '', $path1));
+	$parts2 = explode('/', preg_replace('#^/+|/+$#', '', $path2));
 	$n = 0;
 	$max = min(count($parts1), count($parts2));
 	for ($i=0; $i < $max && $parts1[$i] == $parts2[$i]; $i++) $n++;
 	return $n;
+}
+
+function path_count($path) {
+	return count(explode('/', preg_replace('#^/+|/+$#', '', $path)));
 }
 
 function get_html_title($html) {
@@ -706,5 +686,8 @@ function get_html_title($html) {
 	return false;
 }
 
+function sort_url_distance_items($a, $b) {
+	return $a[1] < $b[1];
+}
 
 ?>
