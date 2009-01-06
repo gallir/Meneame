@@ -247,8 +247,9 @@ class HtmlImages {
 
 			// If there is no image or image is slow
 			// Check if there are players
-			if ((!$this->selected || $this->selected->surface() < 75000) && 
-					preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
+			if ((!$this->selected || $this->selected->surface() < 75000)
+					&& $this->other_html 
+					&& preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
 				echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
 						$this->check_google_video() ||
@@ -268,8 +269,8 @@ class HtmlImages {
 
 	function shorten_html($html, $max = 60000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
-			$html = preg_replace('/<*!--.*?-->/s', '', $html); // Delete commented HTML
-			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete javascript
+			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
+			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
 			/*$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript */
 			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript 
 			$html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
@@ -281,7 +282,7 @@ class HtmlImages {
 
 	function parse_img($html) {
 		$tags = array();
-		$this->get_other_html();
+		if (!$this->get_other_html()) return false;
 		preg_match_all('/(<img\s.+?>)/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Try with plain links in javascripts (RTVE uses it...)
@@ -314,6 +315,10 @@ class HtmlImages {
 	}
 
 	function get_other_html() {
+		$selection = array();
+		$levels = array();
+		$level_max = array();
+
 		// Tries to find an alternate page to check for "common images" and ignore them
 		$this->other_html = false;
 		$this->path_query = $this->parsed_url['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $this->parsed_url['query']);
@@ -322,22 +327,23 @@ class HtmlImages {
 			if ($this->site) {
 				$parsed = parse_url($this->site);
 				if ($parsed['host'] != $this->parsed_url['host']) {
-					$regexp .= preg_quote($this->site, '/').'\/[^\"\'>]+?';
+					$regexp .= '|'.preg_quote($this->site, '/').'\/[^\"\'>]+?';
 				}
 			}
-			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
-
-			$selection = array();
-			$levels = array();
-			$level_max = array();
+			$regexp .= '|[\/\.\w][^\"\']+?|\w[^\"\':]+?';
 		
-			if (preg_match_all("/<a\s[^>]*href=[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
+			$visited = array();
+			if (preg_match_all("/<a\s[^>]*href *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
 					$weight = 1;
 					$url = preg_replace('/&amp;/i', '&', urldecode($match[1]));
 					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
 					$parsed_match = parse_url($url);
+					$path_query_match = $parsed_match['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $parsed_match['query']);
+
+					if ($visited[$path_query_match ]) continue;
+					$visited[$path_query_match] = true;
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
 						(!empty($this->parsed_url['query']) && substr($this->parsed_url['query'], 0, 20) == 
 								substr($parsed_match['query'], 0, 20)) ||
@@ -346,7 +352,6 @@ class HtmlImages {
 						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
 						continue;
 					}
-					$path_query_match = $parsed_match['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $parsed_match['query']);
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
 					$distance = levenshtein($path_query_match, $this->path_query) 
@@ -365,21 +370,33 @@ class HtmlImages {
 						$selection[] = $item[0];
 					}
 				}
+			}
 
-				if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
-					$n = 0;
-					foreach ($selection as $url) {
-						echo "<!-- Checking: $url -->\n";
-						$res = get_url($url, $this->url);
-						if ($res && preg_match('/text\/html/i', $res['content_type']) && 
-								$this->title != get_html_title($res['content']) &&
-								preg_match('/<img.+?>/',$res['content'])
-							) {
-							echo "<!-- Other: read $url -->\n";
-							$n++;
-							$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
-							if ($n > 1) break;
-						}
+			if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
+				$n = $checked = 0;
+				$paths = array();
+				foreach ($selection as $url) {
+					if ($checked > 5) break;
+
+					$parsed = parse_url($url);
+					$first_path = path_sub_path($parsed['path'], 2).'?'.preg_replace('/(.+?)&.*/', '$1', $parsed['query']);
+					if ($paths[$first_path]) { // Don't get twice a page with similar paths
+						echo "<!-- Ignoring $url by previous path: $first_path] -->\n";
+						continue;
+					}
+					$paths[$first_path] = true;
+
+					echo "<!-- Checking: $url -->\n";
+					$checked ++;
+					$res = get_url($url, $this->url);
+					if ($res && preg_match('/text\/html/i', $res['content_type']) && 
+							$this->title != get_html_title($res['content']) &&
+							preg_match('/<img.+?>/',$res['content'])
+						) {
+						echo "<!-- Other: read $url -->\n";
+						$n++;
+						$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
+						if ($n > 1) break;
 					}
 				}
 			}
