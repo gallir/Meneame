@@ -213,6 +213,7 @@ class HtmlImages {
 			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;
 		}
+		//echo "<!-- Final URL: ".$res['location']." -->\n";
 		if (preg_match('/^image/i', $res['content_type'])) {
 			$img = new BasicThumb($this->url);
 			if ($img->fromstring($res['content'])) {
@@ -245,7 +246,7 @@ class HtmlImages {
 				$this->base = $match[1];
 			}
 			$html_short = $this->shorten_html($this->html);
-			//echo "<!-- $html_short -->\n";
+			//echo "<!-- $this->html -->\n";
 			$this->parse_img(&$html_short);
 
 			// If there is no image or image is slow
@@ -274,8 +275,8 @@ class HtmlImages {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
-			/*$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript */
-			$html = preg_replace('/<noscript[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript 
+			/*$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript 
+			$html = preg_replace('/<noscript[^>]*?|<script[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript */
 			$html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
