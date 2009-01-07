@@ -136,7 +136,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|\/logo|header|rss/i', $this->url)) {
+		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|\/logo|header|rss|[?;](.+?[;&]){2,}/i', $this->url)) {
 			$this->candidate = true;
 			//echo "Candidate: $this->x, $this->y $url -> $this->url<br>\n";
 		}
@@ -246,7 +246,7 @@ class HtmlImages {
 				$this->base = $match[1];
 			}
 			$html_short = $this->shorten_html($this->html);
-			//echo "<!-- $this->html -->\n";
+			//  echo "<!-- $this->html -->\n";
 			$this->parse_img(&$html_short);
 
 			// If there is no image or image is slow
@@ -275,8 +275,8 @@ class HtmlImages {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
-			/*$html = preg_replace('/<script[^>]*?>.*?<\/script>/is', '', $html); // Delete javascript 
-			$html = preg_replace('/<noscript[^>]*?|<script[^>]*?>.*?<\/noscript>/is', '', $html); // Delete javascript */
+			/* $html = preg_replace('/<script[^>].*?>.*?<\/script>/is', '', $html); // Delete javascript */
+			$html = preg_replace('/<noscript *>.+?<\/noscript>/is', '', $html); // Delete javascript 
 			$html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
 			$html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
 			/* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
@@ -334,7 +334,7 @@ class HtmlImages {
 					$regexp .= '|'.preg_quote($this->site, '/').'\/[^\"\'>]+?';
 				}
 			}
-			$regexp .= '|[\/\.\w][^\"\']+?|\w[^\"\':]+?';
+			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
 		
 			$visited = array();
 			if (preg_match_all("/<a\s[^>]*href *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
@@ -363,7 +363,7 @@ class HtmlImages {
 								/ max(strlen($path_query_match), strlen($this->path_query));
 					$item = array($url, $distance);
 					$levels[$equals][] = $item;
-					//echo "<!-- Adding ($equals, $distance): $path_query_match -->\n";
+					//echo "<!-- Adding ($equals, $distance): ".$match[1]." -->\n";
 				}
 
 				// Insert in selection ordered by level and the distance
@@ -388,7 +388,6 @@ class HtmlImages {
 						echo "<!-- Ignoring $url by previous path: $first_path] -->\n";
 						continue;
 					}
-					$paths[$first_path] = true;
 
 					echo "<!-- Checking: $url -->\n";
 					$checked ++;
@@ -398,6 +397,7 @@ class HtmlImages {
 							preg_match('/<img.+?>/',$res['content'])
 						) {
 						echo "<!-- Other: read $url -->\n";
+						$paths[$first_path] = true;
 						$n++;
 						$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
 						if ($n > 1) break;
