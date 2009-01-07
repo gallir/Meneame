@@ -205,6 +205,7 @@ class HtmlImages {
 		$this->parsed_url = parse_url($url);
 		$this->base = $url;
 		$this->site = $site;
+		$this->redirected = false;
 	}
 
 	function get() {
@@ -213,7 +214,12 @@ class HtmlImages {
 			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;
 		}
-		//echo "<!-- Final URL: ".$res['location']." -->\n";
+		if ($res['location'] != $this->url) {
+			$this->redirected = clean_input_url($res['location']);
+			$this->parsed_redirected = parse_url($this->redirected);
+			echo "<!-- Redirected to URL: $this->redirected -->\n";
+		}
+
 		if (preg_match('/^image/i', $res['content_type'])) {
 			$img = new BasicThumb($this->url);
 			if ($img->fromstring($res['content'])) {
@@ -303,7 +309,7 @@ class HtmlImages {
 			if ($img->candidate && $img->good()) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2));
-				echo "\n<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
+				echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
 				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
 					$this->selected = $img;
 					$n++;
@@ -325,7 +331,7 @@ class HtmlImages {
 
 		// Tries to find an alternate page to check for "common images" and ignore them
 		$this->other_html = false;
-		$this->path_query = $this->parsed_url['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $this->parsed_url['query']);
+		$this->path_query = unify_path_query($this->parsed_url['path'], $this->parsed_url['query']);
 		if ($this->html) {
 			$regexp = '[a-z]+?:\/\/'.preg_quote($this->parsed_url['host']).'\/[^\"\'>]+?';
 			if ($this->site) {
@@ -333,6 +339,9 @@ class HtmlImages {
 				if ($parsed['host'] != $this->parsed_url['host']) {
 					$regexp .= '|'.preg_quote($this->site, '/').'\/[^\"\'>]+?';
 				}
+			}
+			if ($this->redirected && $this->parsed_redirected['host'] != $this->parsed_url['host']) {
+				$regexp .= '|[a-z]+?:\/\/'.preg_quote($this->parsed_redirected['host']).'\/[^\"\'>]+?';
 			}
 			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
 		
@@ -344,7 +353,7 @@ class HtmlImages {
 					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
 					$parsed_match = parse_url($url);
-					$path_query_match = $parsed_match['path'].'/'.preg_replace('/(.+?)&.*/', '$1',  $parsed_match['query']);
+					$path_query_match = unify_path_query($parsed_match['path'], $parsed_match['query']);
 
 					if ($visited[$path_query_match ]) continue;
 					$visited[$path_query_match] = true;
@@ -358,12 +367,18 @@ class HtmlImages {
 					}
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
+					// Penalize with up to two levels if urls has same "dates"
+					if ($equals > 0 && preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $path_query_match) ==
+							 preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $this->path_query)) {
+						$equals = min(0, $equals-2);
+					}
+
 					$distance = levenshtein($path_query_match, $this->path_query) 
 								* min(strlen($path_query_match), strlen($this->path_query))
 								/ max(strlen($path_query_match), strlen($this->path_query));
 					$item = array($url, $distance);
 					$levels[$equals][] = $item;
-					//echo "<!-- Adding ($equals, $distance): ".$match[1]." -->\n";
+					//echo "<!-- Adding ($equals, $distance): ".$match[1]." ($path_query_match) -->\n";
 				}
 
 				// Insert in selection ordered by level and the distance
@@ -393,9 +408,17 @@ class HtmlImages {
 					$checked ++;
 					$res = get_url($url, $this->url);
 					if ($res && preg_match('/text\/html/i', $res['content_type']) && 
-							$this->title != get_html_title($res['content']) &&
+							(empty($this->title) || $this->title != get_html_title($res['content'])) &&
 							preg_match('/<img.+?>/',$res['content'])
 						) {
+						if ($res['location'] != $url) {
+							$location_parsed = parse_url($res['location']);
+							if ($location_parsed['host'] != $parsed['host'] 
+									&& $location_parsed['host'] != $this->parsed_redirected['host']) {
+								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
+								continue;
+							}
+						}
 						echo "<!-- Other: read $url -->\n";
 						$paths[$first_path] = true;
 						$n++;
@@ -709,6 +732,17 @@ function get_html_title($html) {
 
 function sort_url_distance_items($a, $b) {
 	return $a[1] < $b[1];
+}
+
+function unify_path_query($path, $query) {
+		$path_query = preg_replace('#/index\.\w{2,5}$#', '/', $path); // Don't count indexes
+		if (!empty($query)) {
+			$query = preg_replace('/(.+?)&.*/', '$1', $query); // Take just first part
+			$query = preg_replace('#&|=#', '/', $query);
+			$path_query .= "/$query";
+		}
+		$path_query = preg_replace('#/{2,}#', '/', $path_query);
+		return $path_query;
 }
 
 ?>

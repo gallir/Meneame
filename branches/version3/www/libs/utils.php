@@ -623,14 +623,16 @@ function get_url($url, $referer = false, $max=200000) {
 	curl_setopt($session, CURLOPT_FAILONERROR, true);
 	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
-	curl_setopt($session,CURLOPT_RANGE,"0-$max");
+	//curl_setopt($session,CURLOPT_RANGE,"0-$max"); // It gives error with some servers
 	$response = @curl_exec($session);
-	if (!$response) return false;
+	if (!$response) {
+			echo "<! -- CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session) . " -->\n";
+			return false;
+	}
 	$header_size = curl_getinfo($session,CURLINFO_HEADER_SIZE);
 	$result['header'] = substr($response, 0, $header_size);
-	$result['content'] = substr($response, $header_size );
+	$result['content'] = substr($response, $header_size, $max);
 	$result['http_code'] = curl_getinfo($session,CURLINFO_HTTP_CODE);
-	$result['last_url'] = curl_getinfo($session,CURLINFO_EFFECTIVE_URL);
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
 	$result['redirect_count'] = curl_getinfo($session, CURLINFO_REDIRECT_COUNT);
 	$result['location'] = curl_getinfo($session, CURLINFO_EFFECTIVE_URL);
