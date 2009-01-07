@@ -966,6 +966,7 @@ class Link {
 				}
 			}
 			if ($img->video) $this->content_type = 'video';
+			syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
 		}
 		$this->store_thumb();
 		return $this->has_thumb();
