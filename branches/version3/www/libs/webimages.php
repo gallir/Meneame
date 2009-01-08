@@ -368,14 +368,20 @@ class HtmlImages {
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
 					// Penalize with up to two levels if urls has same "dates"
-					if ($equals > 0 && preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $path_query_match) ==
-							 preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $this->path_query)) {
+					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)
+							&& preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $path_query_match) ==
+							preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $this->path_query)) {
 						$equals = min(0, $equals-2);
 					}
 
 					$distance = levenshtein($path_query_match, $this->path_query) 
 								* min(strlen($path_query_match), strlen($this->path_query))
 								/ max(strlen($path_query_match), strlen($this->path_query));
+
+					//  Decrease distance if query comes in just one
+					if (empty($parsed_match['query']) != empty($this->parsed_url['query'])) {
+						$distance *= 0.5;
+					}
 					$item = array($url, $distance);
 					$levels[$equals][] = $item;
 					//echo "<!-- Adding ($equals, $distance): ".$match[1]." ($path_query_match) -->\n";
