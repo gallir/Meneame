@@ -152,7 +152,8 @@ $greetings = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español',
 		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, oh'=>'asturiano','hâu'=>'nicolino',
 		'vary'=>'nicolino','Привет'=>'ruso','konnichiwa'=>'japonés','hello world'=>'holamundo',
 		'klaatu barada nikto'=>'el idioma de Klatu y Gort',
-		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon'
+		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon',
+		'Mba\'eichapa' => 'guaraní', 'Mba\'eteko' => 'guaraní'
 	);
 
 // This is for SMS messages
