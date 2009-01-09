@@ -154,7 +154,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$pun =  4 * $link_abuse;
+				$pun =  3 * $link_abuse;
 				$karma1 = max(-12, $karma1 - $pun);
 				$output .= _('Penalizado por enlaces que violan las reglas')." ($link_abuse): $pun\n";
 				$penalized += 4;
@@ -182,7 +182,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma2 = min($points_given, $points_given * pow($published_average, 2) * ($published_points/($published_links/5) - ($nopublished_given/$published_links)/10) - 0.1 * $discarded_given);
 
 		if ($abuse_given > 0) {
-			$pun = $abuse_given * 2;
+			$pun = $abuse_given * 1;
 			$karma2 -= $pun;
 			$output .= _('Descuento por votar a enlaces que violan las reglas')." ($abuse_given):  $pun\n";
 			$penalized += 2;
@@ -210,7 +210,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 				$output .= _('Coeficiente de votos muy bajos, ¿"karmawhore"?, penalizado');
 				$punish_coef = 1;
 			}
-			$punishment = -(1 - $published_average) * $punish_coef;
+			$punishment = -$published_average * $punish_coef;
 			$output .= sprintf(" karma2 = %4.2f -> %4.2f\n", $karma2, $punishment);
 			$karma2 = $punishment;
 		} elseif ($karma2 > 0 && ($sent_links == 0 || ($published_given > $nopublished_given && $published_points > $published_links/3 && $published_given > $published_links/5))) {
@@ -316,7 +316,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
 			if ($karma < $karma_base || $penalized) {
-				$user->karma = 0.5*$user->karma + 0.5*$karma; // In case of very low karma, penalized more
+				$user->karma = 0.7*$user->karma + 0.3*$karma; // In case of very low karma, penalized more
 			} else {
 				// Decrease very slowly
 				$user->karma = 0.95*$user->karma + 0.05*$karma;
