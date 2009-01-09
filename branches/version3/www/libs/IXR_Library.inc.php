@@ -537,7 +537,7 @@ class IXR_Client {
         if (!$this->message->parse()) {
             // XML error
             $this->error = new IXR_Error(-32700, 'parse error. remote message not well formed');
-			syslog(LOG_NOTICE, "IXR_Error: $contents");
+			// syslog(LOG_NOTICE, "IXR_Error: $contents");
             return false;
         }
         // Is the message a fault?

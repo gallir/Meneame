@@ -51,19 +51,14 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
-if ($page < 2) {
-	do_banner_right();
-	do_best_stories();
-} else {
-	do_banner_right();
-	do_best_stories();
-}
+do_banner_right();
+do_best_stories();
 do_best_sites();
 do_categories_cloud('published');
 if ($page < 2) {
 	do_best_comments();
-	do_vertical_tags('published');
 }
+do_vertical_tags('published');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
