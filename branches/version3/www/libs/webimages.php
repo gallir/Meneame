@@ -358,10 +358,7 @@ class HtmlImages {
 					if ($visited[$path_query_match ]) continue;
 					$visited[$path_query_match] = true;
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
-						(!empty($this->parsed_url['query']) && substr($this->parsed_url['query'], 0, 20) == 
-								substr($parsed_match['query'], 0, 20)) ||
-						(empty($this->parsed_url['query']) && substr($parsed_match['path'], 0, 45) == 
-								substr($this->parsed_url['path'], 0, 45)) || 
+						$this->path_query  ==  $path_query_match ||
 						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
 						continue;
 					}
@@ -397,16 +394,19 @@ class HtmlImages {
 				}
 			}
 
-			if (count($selection) > 1) { // we avoid those simple pages with only a link to itself or home
+			if (count($selection) > 2) { // we avoid those simple pages with few links to other pages
 				$n = $checked = 0;
 				$paths = array();
 				foreach ($selection as $url) {
 					if ($checked > 5) break;
 
 					$parsed = parse_url($url);
-					$first_path = path_sub_path($parsed['path'], 2).'?'.preg_replace('/(.+?)&.*/', '$1', $parsed['query']);
-					if ($paths[$first_path]) { // Don't get twice a page with similar paths
-						echo "<!-- Ignoring $url by previous path: $first_path] -->\n";
+					$unified = unify_path_query($parsed['path'], $parsed['query']);
+					$first_paths = path_sub_path($unified, 2);
+					$paths_len = path_count($unified);
+					if ($paths[$first_paths] && $paths_len < $paths[$first_paths]) {
+						// Don't get twice a page with similar but shorter paths
+						echo "<!-- Ignoring $url by previous path: $first_paths and lenght: $paths_len] -->\n";
 						continue;
 					}
 
@@ -426,7 +426,7 @@ class HtmlImages {
 							}
 						}
 						echo "<!-- Other: read $url -->\n";
-						$paths[$first_path] = true;
+						$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
 						$n++;
 						$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
 						if ($n > 1) break;
