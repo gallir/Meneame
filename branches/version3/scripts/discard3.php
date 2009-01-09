@@ -35,11 +35,11 @@ if ($links) {
 			$user = new User();
 			$user->id = $link->link_author;
 			if ($user->read()) {
-				$user->karma -= 2;
+				$user->karma -= 1;
 				echo "$user->username: $user->karma\n";
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('Noticia retirada de portada').": -2, karma: $user->karma\n");
+				$annotation->append(_('Noticia retirada de portada').": -1, karma: $user->karma\n");
 			}
 		}
 	}
