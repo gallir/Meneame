@@ -130,7 +130,8 @@ function do_credits() {
 	// IMPORTANT: links change in every installation, CHANGE IT!!
 	// contact info
 	if ($globals['is_meneame']) {
-		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('condiciones legales').'</a></li>';
+		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('condiciones legales').'</a> ';
+		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php#tos">'._('y de uso').'</a></li>';
 		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
 		echo '<li>'._('licencias').':&nbsp;';
 		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';
