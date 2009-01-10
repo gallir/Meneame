@@ -358,7 +358,7 @@ class HtmlImages {
 			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
 					$weight = 1;
-					$url = preg_replace('/&amp;/i', '&', urldecode($match[1]));
+					$url = preg_replace('/&amp;/i', '&', $match[1]);
 					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
 					$parsed_match = parse_url($url);
@@ -407,6 +407,7 @@ class HtmlImages {
 			if (count($selection) > 2) { // we avoid those simple pages with few links to other pages
 				$n = $checked = 0;
 				$paths = array();
+				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
 				foreach ($selection as $url) {
 					if ($checked > 5) break;
 
