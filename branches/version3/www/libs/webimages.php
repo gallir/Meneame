@@ -31,7 +31,7 @@ class BasicThumb {
 		// Decode HTML entities
 		//$str = preg_replace('~&#x0*([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $str);
 		//$str = preg_replace('~&#0*([0-9]+);~e', 'chr(\\1)', $str);
-		return clean_input_url(urldecode($str));
+		return  urldecode(preg_replace('/[<>\r\n\t]/', '', $str));
 	}
 
 	function scale($size=100) {
@@ -215,6 +215,7 @@ class HtmlImages {
 			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;
 		}
+		if ($this->debug) echo "<!-- Got $this->url (". strlen($res['content']) .") -->\n";
 		if ($res['location'] != $this->url) {
 			$this->redirected = clean_input_url($res['location']);
 			$this->parsed_redirected = parse_url($this->redirected);
@@ -232,6 +233,7 @@ class HtmlImages {
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
 			$this->html = $res['content'];
 			$this->title = get_html_title(&$this->html);
+			if ($this->debug) echo "<!-- HTML $this->title -->\n";
 
 			// First check for thumbnail head metas
 			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
@@ -353,7 +355,7 @@ class HtmlImages {
 			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
 		
 			$visited = array();
-			if (preg_match_all("/<a\s[^>]*href *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
+			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
 					$weight = 1;
 					$url = preg_replace('/&amp;/i', '&', urldecode($match[1]));
