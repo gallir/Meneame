@@ -284,7 +284,7 @@ class HtmlImages {
 		return $this->selected;
 	}
 
-	function shorten_html($html, $max = 60000) {
+	function shorten_html($html, $max = 80000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
@@ -442,7 +442,7 @@ class HtmlImages {
 							echo "<!-- Other: read $url -->\n";
 						$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
 						$n++;
-						$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
+						$this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
 						if ($n > 1) break;
 					}
 				}
