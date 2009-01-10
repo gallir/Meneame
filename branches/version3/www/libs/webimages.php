@@ -136,7 +136,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/button|banner|\Wads\W|\Wpub\W|\/logo|header|rss|[?;](.+?[;&]){2,}/i', $this->url)) {
+		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/logo|header|rss|[?;](.+?[;&]){2,}/i', $this->url)) {
 			$this->candidate = true;
 			//echo "Candidate: $this->x, $this->y $url -> $this->url<br>\n";
 		}
@@ -199,6 +199,7 @@ class HtmlImages {
 	public $html = '';
 	public $alternate_html = '';
 	public $selected = false;
+	public $debug = false;
 
 	function __construct($url, $site = false) {
 		$this->url = $url;
@@ -217,7 +218,8 @@ class HtmlImages {
 		if ($res['location'] != $this->url) {
 			$this->redirected = clean_input_url($res['location']);
 			$this->parsed_redirected = parse_url($this->redirected);
-			echo "<!-- Redirected to URL: $this->redirected -->\n";
+			if ($this->debug)
+				echo "<!-- Redirected to URL: $this->redirected -->\n";
 		}
 
 		if (preg_match('/^image/i', $res['content_type'])) {
@@ -235,13 +237,15 @@ class HtmlImages {
 			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $this->html, $match)) {
 				$url = $match[1];
-				echo "<!-- Try to select from $url -->\n";
+				if ($this->debug)
+					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
 				if ($img->get()) {
 					$img->type = 'local';
 					$img->candidate = true;
 					$this->selected = $img;
-					echo "<!-- Selected from $img->url -->\n";
+					if ($this->debug)
+						echo "<!-- Selected from $img->url -->\n";
 					return $this->selected;
 				}
 			}
@@ -260,7 +264,8 @@ class HtmlImages {
 			if ((!$this->selected || $this->selected->surface() < 75000)
 					&& $this->other_html 
 					&& preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
-				echo "<!-- Searching for video -->\n";
+				if ($this->debug)
+					echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
 						$this->check_google_video() ||
 						$this->check_metacafe() ||
@@ -309,11 +314,13 @@ class HtmlImages {
 			if ($img->candidate && $img->good()) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2));
-				echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
+				if ($this->debug)
+					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
 				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
 					$this->selected = $img;
 					$n++;
-					echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
+					if ($this->debug)
+						echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
 				}
 			}
 			if ($goods > 5 && $n > 0) break;
@@ -381,7 +388,8 @@ class HtmlImages {
 					}
 					$item = array($url, $distance);
 					$levels[$equals][] = $item;
-					//echo "<!-- Adding ($equals, $distance): ".$match[1]." ($path_query_match) -->\n";
+					if ($this->debug)
+						echo "<!-- Adding ($equals, $distance): ".$match[1]." ($path_query_match) -->\n";
 				}
 
 				// Insert in selection ordered by level and the distance
@@ -406,11 +414,13 @@ class HtmlImages {
 					$paths_len = path_count($unified);
 					if ($paths[$first_paths] && $paths_len < $paths[$first_paths]) {
 						// Don't get twice a page with similar but shorter paths
-						echo "<!-- Ignoring $url by previous path: $first_paths and lenght: $paths_len] -->\n";
+						if ($this->debug)
+							echo "<!-- Ignoring $url by previous path: $first_paths and lenght: $paths_len] -->\n";
 						continue;
 					}
 
-					echo "<!-- Checking: $url -->\n";
+					if ($this->debug)
+						echo "<!-- Checking: $url -->\n";
 					$checked ++;
 					$res = get_url($url, $this->url);
 					if ($res && preg_match('/text\/html/i', $res['content_type']) && 
@@ -421,11 +431,13 @@ class HtmlImages {
 							$location_parsed = parse_url($res['location']);
 							if ($location_parsed['host'] != $parsed['host'] 
 									&& $location_parsed['host'] != $this->parsed_redirected['host']) {
-								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
+								if ($this->debug)
+									echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
 								continue;
 							}
 						}
-						echo "<!-- Other: read $url -->\n";
+						if ($this->debug)
+							echo "<!-- Other: read $url -->\n";
 						$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
 						$n++;
 						$this->other_html .= $this->shorten_html($res['content'], 90000). "<!-- END part $n -->\n";
@@ -452,7 +464,8 @@ class HtmlImages {
 		if (preg_match('/=["\']http:\/\/video\.google\.[a-z]{2,5}\/.+?\?docid=(.+?)&/i', $this->html, $match) &&
 				(preg_match('/video\.google/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Google Video, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Google Video, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_google_thumb($video_id);
 				if($url) {
@@ -461,7 +474,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}
@@ -486,7 +500,8 @@ class HtmlImages {
 		if (preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)[\"\'&]/i', $this->html, $match) &&
 			(preg_match('/youtube\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Youtube, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Youtube, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_youtube_thumb($video_id);
 				if($url) {
@@ -495,7 +510,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}
@@ -527,7 +543,8 @@ class HtmlImages {
 		if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/(\d+)\//i', $this->html, $match) &&
 				(preg_match('/metacafe\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Metacafe, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Metacafe, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_metacafe_thumb($video_id);
 				if($url) {
@@ -536,7 +553,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}
@@ -562,14 +580,16 @@ class HtmlImages {
 			! $this->check_in_other($match[2])) {
 			$server = $match[1];
 			$url = $match[2];
-			echo "<!-- Detected El Mundo, fotograma: $url -->\n";
+			if ($this->debug)
+				echo "<!-- Detected El Mundo, fotograma: $url -->\n";
 			if ($url) {
 				$img = new BasicThumb($url, $server);
 				if ($img->get()) {
 					$img->type = 'local';
 					$img->candidate = true;
 					$this->selected = $img;
-					echo "<!-- Video selected from $img->url -->\n";
+					if ($this->debug)
+						echo "<!-- Video selected from $img->url -->\n";
 					return $this->selected;
 				}
 			}
@@ -582,7 +602,8 @@ class HtmlImages {
 		if (preg_match('/=["\']http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i', $this->html, $match) &&
 				(preg_match('/vimeo\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Vimeo, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Vimeo, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_vimeo_thumb($video_id);
 				if($url) {
@@ -591,7 +612,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}
@@ -616,7 +638,8 @@ class HtmlImages {
 		if (preg_match('#http://zappinternet\.com/v/([^&]+)#i', $this->html, $match) &&
 				(preg_match('/zappinternet\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Zapp Internet Video, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Zapp Internet Video, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_zapp_internet_thumb($video_id);
 				if($url) {
@@ -625,7 +648,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}
@@ -644,7 +668,8 @@ class HtmlImages {
 		if (preg_match('#=["\']http://www.dailymotion.com/swf/([^&"\']+)#i', $this->html, $match) &&
 				(preg_match('/dailymotion\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
-			echo "<!-- Detect Daily Motion Video, id: $video_id -->\n";
+			if ($this->debug)
+				echo "<!-- Detect Daily Motion Video, id: $video_id -->\n";
 			if ($video_id) {
 				$url = $this->get_daily_motion_thumb($video_id);
 				if($url) {
@@ -653,7 +678,8 @@ class HtmlImages {
 						$img->type = 'local';
 						$img->candidate = true;
 						$this->selected = $img;
-						echo "<!-- Video selected from $img->url -->\n";
+						if ($this->debug)
+							echo "<!-- Video selected from $img->url -->\n";
 						return $this->selected;
 					}
 				}

@@ -923,7 +923,7 @@ class Link {
 
 	// Thumbnails management
 
-	function get_thumb() {
+	function get_thumb($debug = false) {
 		global $globals;
 		require_once(mnminclude.'webimages.php');
 		require_once(mnminclude.'blog.php');
@@ -937,6 +937,7 @@ class Link {
 			$site = $blog->url;
 		}
 		$this->image_parser = new HtmlImages($this->url, $site);
+		$this->image_parser->debug = $debug;
 		$img = $this->image_parser->get();
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
@@ -967,6 +968,8 @@ class Link {
 			}
 			if ($img->video) $this->content_type = 'video';
 			syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
+			if ($debug)
+				echo "<!-- Meneame, new thumbnail $img->url -->\n";
 		}
 		$this->store_thumb();
 		return $this->has_thumb();
