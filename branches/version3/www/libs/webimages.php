@@ -304,7 +304,7 @@ class HtmlImages {
 		preg_match_all('/["\']image["\'][, ]+(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\'])/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Now try with images in JS arrays (Clarin uses it...)
-		preg_match_all('/\( *(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\']) *\)/is', $html, $matches);
+		preg_match_all('/\( *(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\']) *[\),]/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		if (! count($tags)) return false;
 		$goods = $n = 0;
