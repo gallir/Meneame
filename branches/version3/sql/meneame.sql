@@ -80,7 +80,8 @@ CREATE TABLE `blogs` (
   `blog_atom` varchar(64) collate utf8_spanish_ci NOT NULL default '',
   `blog_url` varchar(64) collate utf8_spanish_ci default NULL,
   PRIMARY KEY  (`blog_id`),
-  UNIQUE KEY `key` (`blog_key`)
+  UNIQUE KEY `key` (`blog_key`),
+  KEY `blog_url` (`blog_url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 SET character_set_client = @saved_cs_client;
 
@@ -259,7 +260,7 @@ CREATE TABLE `links` (
   `link_content_type` char(12) collate utf8_spanish_ci default NULL,
   `link_uri` char(100) collate utf8_spanish_ci default NULL,
   `link_url` varchar(250) collate utf8_spanish_ci NOT NULL,
-  `link_thumb_status` enum('unknown','checked','error','local','remote') collate utf8_spanish_ci NOT NULL default 'unknown',
+  `link_thumb_status` enum('unknown','checked','error','local','remote','deleted') collate utf8_spanish_ci NOT NULL default 'unknown',
   `link_thumb_x` tinyint(3) unsigned NOT NULL default '0',
   `link_thumb_y` tinyint(3) unsigned NOT NULL default '0',
   `link_thumb` tinytext collate utf8_spanish_ci,
@@ -513,4 +514,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-12-22 19:46:22
+-- Dump completed on 2009-01-11 22:07:24
