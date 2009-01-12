@@ -368,7 +368,7 @@ class HtmlImages {
 					$visited[$path_query_match] = true;
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
 						$this->path_query  ==  $path_query_match ||
-						preg_match('/feed|rss|atom|trackback/i', $match[1])) {
+						preg_match('/(feed|rss|atom|trackback|search)\W/i', $match[1])) {
 						continue;
 					}
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
