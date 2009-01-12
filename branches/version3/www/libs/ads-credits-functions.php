@@ -63,7 +63,7 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!
 	if ($globals['is_meneame']) {
-		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php" '.$target.'>'.$legal_name.'</a>';
+		echo '<a href="'.$globals['legal'].'" '.$target.'>'.$legal_name.'</a>';
 	} else {
 		echo 'legal conditions link here';
 	}
@@ -79,7 +79,7 @@ function do_footer_help() {
 	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._('ayuda').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/">'._('wiki').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('avisar errores').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.net/libs/ads/legal-meneame.php#contact">'._('avisar abusos').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['legal'].'#contact">'._('avisar abusos').'</a></li>'."\n";
 	echo '</ul>'."\n";
 }
 
@@ -130,8 +130,8 @@ function do_credits() {
 	// IMPORTANT: links change in every installation, CHANGE IT!!
 	// contact info
 	if ($globals['is_meneame']) {
-		echo '<li><a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('condiciones legales').'</a> ';
-		echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php#tos">'._('y de uso').'</a></li>';
+		echo '<li><a href="'.$globals['legal'].'">'._('condiciones legales').'</a> ';
+		echo '<a href="'.$globals['legal'].'#tos">'._('y de uso').'</a></li>';
 		echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php#we">'._('quiénes somos').'</a></li>';
 		echo '<li>'._('licencias').':&nbsp;';
 		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';

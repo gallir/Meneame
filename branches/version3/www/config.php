@@ -32,7 +32,7 @@ $globals['db_password'] = '';
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/es/logo02.png';
-//$globals['legal'] = globals['base_url'].'libs/ads/legal-meneame.php';
+$globals['legal'] = $globals['base_url'].'legal.php';
 // leave empty if you don't have the rewrite rule in apache
 
 //RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
