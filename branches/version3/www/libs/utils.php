@@ -632,10 +632,33 @@ function get_url($url, $referer = false, $max=200000) {
 	$header_size = curl_getinfo($session,CURLINFO_HEADER_SIZE);
 	$result['header'] = substr($response, 0, $header_size);
 	$result['content'] = substr($response, $header_size, $max);
+	if (preg_match('/Content-Encoding: *gzip/i', $result['header'])) {
+			$result['content'] = gzBody($result['content']);
+			echo "<!-- get_url gzinflating -->\n";
+	}
 	$result['http_code'] = curl_getinfo($session,CURLINFO_HTTP_CODE);
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
 	$result['redirect_count'] = curl_getinfo($session, CURLINFO_REDIRECT_COUNT);
 	$result['location'] = curl_getinfo($session, CURLINFO_EFFECTIVE_URL);
 	return $result;
+}
+
+// From http://es2.php.net/manual/en/function.gzinflate.php#77336
+function gzBody($gzData){
+    if(substr($gzData,0,3)=="\x1f\x8b\x08"){
+        $i=10;
+        $flg=ord(substr($gzData,3,1));
+        if($flg>0){
+            if($flg&4){
+                list($xlen)=unpack('v',substr($gzData,$i,2));
+                $i=$i+2+$xlen;
+            }
+            if($flg&8) $i=strpos($gzData,"\0",$i)+1;
+            if($flg&16) $i=strpos($gzData,"\0",$i)+1;
+            if($flg&2) $i=$i+2;
+        }
+        return gzinflate(substr($gzData,$i,-8));
+    }
+    else return false;
 }
 ?>
