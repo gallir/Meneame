@@ -196,6 +196,15 @@ if ($links) {
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$content = text_to_html(htmlentities2unicodeentities($link->content));
 		echo "	<item>\n";
+
+		// Meneame own namespace
+		echo "		<meneame:user>$link->username</meneame:user>\n";
+		echo "		<meneame:votes>".intval($link->votes+$link->anonymous)."</meneame:votes>\n";
+		echo "		<meneame:negatives>$link->negatives</meneame:negatives>\n";
+		echo "		<meneame:karma>".intval($link->karma)."</meneame:karma>\n";
+		echo "		<meneame:comments>$link->comments</meneame:comments>\n";
+		echo "		<meneame:url>".htmlentities($link->url)."</meneame:url>\n";
+
 		// Title must not carry htmlentities
 		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
 		echo "		<link>".$link->get_permalink()."</link>\n";
@@ -272,6 +281,7 @@ function do_header($title) {
 	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
 	echo '	xmlns:georss="http://www.georss.org/georss"'."\n";
 	echo '	xmlns:media="http://search.yahoo.com/mrss/"'."\n";
+	echo '	xmlns:meneame="http://meneame.net/faq-es.php"'."\n";
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
