@@ -203,7 +203,7 @@ if ($links) {
 		echo "		<meneame:negatives>$link->negatives</meneame:negatives>\n";
 		echo "		<meneame:karma>".intval($link->karma)."</meneame:karma>\n";
 		echo "		<meneame:comments>$link->comments</meneame:comments>\n";
-		echo "		<meneame:url>".htmlentities($link->url)."</meneame:url>\n";
+		echo "		<meneame:url>".htmlspecialchars($link->url)."</meneame:url>\n";
 
 		// Title must not carry htmlentities
 		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
