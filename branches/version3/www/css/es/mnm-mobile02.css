@@ -95,36 +95,32 @@ font-size: small;
 }
 
 .tabmain {
-height: 24px !important;
-margin: 10px 0 0 0;
-padding-left: 5px;
+margin: 10px 0 5px 0;
+padding: 0 0 2px 5px;
 border-bottom: 1px solid;
 white-space: nowrap;
-border-color: #ff6400;
+border-color: #feefe5;
 }
 
 .tabmain li {
-float: left;
+font-size: 0.8em;
+font-weight: bold;
+padding: 3px 3px 0 3px;
+display: inline;
 list-style-type: none;
-margin-right: 4px;
-height: 24px;
 white-space: nowrap;
 }
 
+.tabmain li:after {
+content: " • ";
+}
+
+.tabmain li.last:after {
+content: ".";
+}
+
 .tabmain li a {
-font-size: .8em;
-font-weight: bold;
-display: block;
-float: left;
-height: 20px;
-padding: 3px 3px 0 3px;
-border-top: 1px solid;
-border-right: 1px solid;
-border-left: 1px solid;
 text-decoration: none;
-background: #fff;
-border-color: #ff6400;
-color: #ff6400;
 }
 
 .tabmain li a:hover {
@@ -133,14 +129,10 @@ background: #feefe5
 }
 
 .tabmain li.tabmain-this {
-height: 25px;
-background: #fff;
+background: #feefe5;
 }
 
 .tabmain li.tabmain-this a {
-font-size: 0.8em;
-height: 21px;
-background: #feefe5;
 }
 
 

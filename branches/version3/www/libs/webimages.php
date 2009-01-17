@@ -368,9 +368,9 @@ class HtmlImages {
 
 					if ($visited[$path_query_match ]) continue;
 					$visited[$path_query_match] = true;
-					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp3|mov|mpeg|mpg)($|\s)/i', $url) ||
+					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar)($|\s)/i', $url) ||
 						$this->path_query  ==  $path_query_match ||
-						preg_match('/\W(feed|rss|atom|trackback|search)/i', $match[1])) {
+						preg_match('/\W(feed|rss|atom|trackback|search|download)/i', $match[1])) {
 						continue;
 					}
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
@@ -711,7 +711,10 @@ function build_full_url($url, $referer) {
 		$fullurl = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
 		if ($parsed_referer['port']) $fullurl .= ':'.$parsed_referer['port'];
 		if (!preg_match('/^\/+/', $parsed_url['path'])) {
-			$fullurl .= normalize_path(dirname($parsed_referer['path']).'/'.$parsed_url['path']);
+			if (!preg_match('#/$#', $parsed_referer['path'])) {
+				$parsed_referer['path'] = dirname($parsed_referer['path']).'/'; // dirname always take the last out!
+			}
+			$fullurl .= normalize_path($parsed_referer['path'].$parsed_url['path']);
 		} else {
 			$fullurl .= $parsed_url['path'];
 		}
