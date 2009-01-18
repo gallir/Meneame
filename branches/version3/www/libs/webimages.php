@@ -201,6 +201,7 @@ class HtmlImages {
 	public $html = '';
 	public $alternate_html = '';
 	public $selected = false;
+	public $referer = false;
 	public $debug = false;
 
 	function __construct($url, $site = false) {
@@ -212,7 +213,7 @@ class HtmlImages {
 	}
 
 	function get() {
-		$res = get_url($this->url);
+		$res = get_url($this->url, $this->referer);
 		if (!$res) {
 			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;

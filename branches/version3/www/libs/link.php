@@ -938,6 +938,7 @@ class Link {
 		}
 		$this->image_parser = new HtmlImages($this->url, $site);
 		$this->image_parser->debug = $debug;
+		$this->image_parser->referer = $this->get_permalink();
 		$img = $this->image_parser->get();
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
