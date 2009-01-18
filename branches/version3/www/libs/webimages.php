@@ -178,7 +178,7 @@ class WebThumb extends BasicThumb {
 
 	function good() {
 		if ($this->candidate && ! $this->checked) {
-			$this->get();
+			if (!$this->get()) return false;
 			$x = $this->html_x;
 			$y = $this->html_y;
 		}
@@ -362,20 +362,23 @@ class HtmlImages {
 			$visited = array();
 			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
+					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar)($|\s)/i', $match[1]) 
+						|| preg_match('/^#/', $match[1])
+						|| preg_match('/\W(feed|rss|atom|trackback|search|download)/i', $match[1])) {
+						continue;
+					}
 					$weight = 1;
 					$url = preg_replace('/&amp;/i', '&', $match[1]);
 					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
+					if (!$url) continue;
+
 					$parsed_match = parse_url($url);
 					$path_query_match = unify_path_query($parsed_match['path'], $parsed_match['query']);
 
-					if ($visited[$path_query_match ]) continue;
+					if ($visited[$path_query_match] || $this->path_query == $path_query_match) continue;
 					$visited[$path_query_match] = true;
-					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar)($|\s)/i', $url) ||
-						$this->path_query  ==  $path_query_match ||
-						preg_match('/\W(feed|rss|atom|trackback|search|download)/i', $match[1])) {
-						continue;
-					}
+
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
 					// Penalize with up to two levels if urls has same "dates"
@@ -414,7 +417,7 @@ class HtmlImages {
 				$paths = array();
 				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
 				foreach ($selection as $url) {
-					if ($checked > 5) break;
+					if ($checked > 10) break;
 
 					$parsed = parse_url($url);
 					$unified = unify_path_query($parsed['path'], $parsed['query']);
@@ -728,6 +731,7 @@ function build_full_url($url, $referer) {
 	}
 
 	$parsed_url = @parse_url($url);
+	if (! $parsed_url) return false;
 	if (! $parsed_url['scheme']) {
 		$fullurl = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
 		if ($parsed_referer['port']) $fullurl .= ':'.$parsed_referer['port'];

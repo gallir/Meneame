@@ -611,6 +611,7 @@ function get_url($url, $referer = false, $max=200000) {
 		$session = curl_init();
 		$previous_host =  $parsed['host'];
 	}
+	$url = preg_replace('/ /', '%20', $url);
 	curl_setopt($session, CURLOPT_URL, $url);
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
 	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 

@@ -962,14 +962,16 @@ class Link {
 					$this->thumb_x = $img->x;
 					$this->thumb_y = $img->y;
 					$this->thumb_status='local';
+					syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
+					if ($debug)
+						echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				} else {
 					$this->thumb_status = 'error';
+					if ($debug)
+						echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
 				}
 			}
 			if ($img->video) $this->content_type = 'video';
-			syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
-			if ($debug)
-				echo "<!-- Meneame, new thumbnail $img->url -->\n";
 		}
 		$this->store_thumb();
 		return $this->has_thumb();
