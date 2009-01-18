@@ -301,7 +301,6 @@ class HtmlImages {
 
 	function parse_img($html) {
 		$tags = array();
-		if (!$this->get_other_html()) return false;
 		preg_match_all('/(<img\s.+?>)/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Try with plain links in javascripts (RTVE uses it...)
@@ -311,6 +310,10 @@ class HtmlImages {
 		preg_match_all('/\( *(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\']) *[\),]/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		if (! count($tags)) return false;
+		$this->images_count =  count($tags);
+
+		if (!$this->get_other_html()) return false;
+
 		$goods = $n = 0;
 		foreach ($tags as $match) {
 			if ($this->check_in_other($match)) continue;
@@ -407,7 +410,7 @@ class HtmlImages {
 			}
 
 			if (count($selection) > 2) { // we avoid those simple pages with few links to other pages
-				$n = $checked = 0;
+				$n = $checked = $same_title = $other_title = $images_total = 0;
 				$paths = array();
 				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
 				foreach ($selection as $url) {
@@ -428,25 +431,43 @@ class HtmlImages {
 						echo "<!-- Checking: $url -->\n";
 					$checked ++;
 					$res = get_url($url, $this->url);
-					if ($res && preg_match('/text\/html/i', $res['content_type']) && 
-							(empty($this->title) || $this->title != get_html_title($res['content'])) &&
-							preg_match('/<img.+?>/',$res['content'])
-						) {
-						if ($res['location'] != $url) {
-							$location_parsed = parse_url($res['location']);
-							if ($location_parsed['host'] != $parsed['host'] 
-									&& $location_parsed['host'] != $this->parsed_redirected['host']) {
-								if ($this->debug)
-									echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
-								continue;
-							}
+
+					if (! $res || ! preg_match('/text\/html/i', $res['content_type'])) 
+						continue;
+
+					$images_count = preg_match_all('/<img .+?>/is', $res['content'], $dummy);
+					if (! $images_count) 
+						continue;
+					$images_total += $images_count;
+
+					// Check if it has the same title
+					if (empty($this->title) || $this->title == get_html_title($res['content'])) {
+						$same_title++;
+						// Next iff we found less that 2 pages, otherwise we asume all pages have same title
+						if ($same_title < 2 || $other_title) {
+							echo "<!-- Skipping: same title $url -->\n";
+							continue;
 						}
-						if ($this->debug)
-							echo "<!-- Other: read $url -->\n";
-						$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
-						$n++;
-						$this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
-						if ($n > 1) break;
+					} else {
+						$other_title++;
+					}
+
+					if ($res['location'] != $url) {
+						$location_parsed = parse_url($res['location']);
+						if ($location_parsed['host'] != $parsed['host'] 
+								&& $location_parsed['host'] != $this->parsed_redirected['host']) {
+							if ($this->debug)
+								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
+							continue;
+						}
+					}
+					if ($this->debug)
+						echo "<!-- Other: read $url -->\n";
+					$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
+					$n++;
+					$this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
+					if ($n > 2 || $images_total > $this->images_count * 0.9) {
+						break;
 					}
 				}
 			}
