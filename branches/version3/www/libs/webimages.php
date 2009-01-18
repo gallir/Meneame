@@ -383,8 +383,8 @@ class HtmlImages {
 
 					// Penalize with up to two levels if urls has same "dates"
 					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)
-							&& preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $path_query_match) ==
-							preg_replace('#.*?(/\d{4,}/\d{2,}/).*#', '$1', $this->path_query)) {
+							&& preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+							preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
 						$equals = min(0, $equals-2);
 					}
 
@@ -438,6 +438,21 @@ class HtmlImages {
 					if (! $res || ! preg_match('/text\/html/i', $res['content_type'])) 
 						continue;
 
+					if ($res['location'] != $url) {
+						$location_parsed = parse_url($res['location']);
+						if ($location_parsed['host'] != $parsed['host'] 
+								&& $location_parsed['host'] != $this->parsed_redirected['host']) {
+							if ($this->debug)
+								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
+							continue;
+						} elseif (unify_path_query($location_parsed['path'], $location_parsed['query']) == 
+							$this->path_query) {
+							if ($this->debug)
+								echo "<!-- Redirected to same address: ".$res['location'].", skipping -->\n";
+							continue;
+						}
+					}
+
 					$images_count = preg_match_all('/<img .+?>/is', $res['content'], $dummy);
 					if (! $images_count) 
 						continue;
@@ -455,15 +470,6 @@ class HtmlImages {
 						$other_title++;
 					}
 
-					if ($res['location'] != $url) {
-						$location_parsed = parse_url($res['location']);
-						if ($location_parsed['host'] != $parsed['host'] 
-								&& $location_parsed['host'] != $this->parsed_redirected['host']) {
-							if ($this->debug)
-								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
-							continue;
-						}
-					}
 					if ($this->debug)
 						echo "<!-- Other: read $url -->\n";
 					$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
