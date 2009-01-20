@@ -152,6 +152,25 @@ CREATE TABLE `comments` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `conversations`
+--
+
+DROP TABLE IF EXISTS `conversations`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `conversations` (
+  `conversation_user_to` int(10) unsigned NOT NULL,
+  `conversation_type` enum('comment','post','link') NOT NULL,
+  `conversation_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `conversation_from` int(10) unsigned NOT NULL,
+  `conversation_to` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`conversation_user_to`,`conversation_type`,`conversation_time`),
+  KEY `conversation_type` (`conversation_type`,`conversation_from`),
+  KEY `conversation_time` (`conversation_time`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `favorites`
 --
 
@@ -514,4 +533,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-01-11 22:07:24
+-- Dump completed on 2009-01-20 16:34:05
