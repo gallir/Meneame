@@ -79,6 +79,7 @@ switch ($view) {
 	case 'categories':
 	case 'history':
 	case 'commented':
+	case 'conversation':
 	case 'shaken':
 	case 'friends':
 	case 'favorites':
@@ -125,6 +126,11 @@ switch ($view) {
 	case 'categories':
 		do_user_tabs(8, $login);
 		do_categories();
+		break;
+	case 'conversation':
+		do_user_tabs(9, $login);
+		do_conversation();
+		do_pages($rows, $page_size, false);
 		break;
 	case 'profile':
 	default:
@@ -379,8 +385,6 @@ function do_commented () {
 
 	if ($globals['bot']) return;
 
-	$link = new Link;
-	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -388,23 +392,47 @@ function do_commented () {
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" style="margin-left: 0px"><img src="'.$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
-		foreach ($comments as $dbcomment) {
-			if ($dbcomment->comment_type == 'admin' && $current_user->user_level != 'god' && $current_user->user_level != 'admin') continue;
-			$link->id=$dbcomment->link_id;
-			$comment->id = $dbcomment->comment_id;
-			if ($last_link != $link->id) {
-				$link->read();
-				echo '<h4>';
-				echo '<a href="'.$link->get_permalink().'">'. $link->title. '</a>';
-				echo ' ['.$link->comments.']';
-				echo '</h4>';
-				$last_link = $link->id;
-			}
-			$comment->read();
-			echo '<ol class="comments-list">';
-			$comment->print_summary($link, 2000, false);
-			echo "</ol>\n";
+		print_comment_list($comments, $user);
+	}
+}
+
+function do_conversation () {
+	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
+
+	if ($globals['bot']) return;
+
+	$rows = $db->get_var("SELECT count(*) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
+	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM conversations, comments, links WHERE conversation_user_to=$user->id and conversation_type='comment' and comment_id=conversation_from and link_id=comment_link_id ORDER BY conversation_time desc LIMIT $offset,$page_size");
+	if ($comments) {
+		echo '<div style="margin-left: 0px">';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?answers_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '</div>';
+		print_comment_list($comments, $user);
+	}
+}
+
+function print_comment_list($comments, $user) {
+	global $globals;
+
+	$link = new Link;
+	$comment = new Comment;
+
+	foreach ($comments as $dbcomment) {
+		if ($dbcomment->comment_type == 'admin' && $current_user->user_level != 'god' && $current_user->user_level != 'admin') continue;
+		$link->id=$dbcomment->link_id;
+		$comment->id = $dbcomment->comment_id;
+		if ($last_link != $link->id) {
+			$link->read();
+			echo '<h4>';
+			echo '<a href="'.$link->get_permalink().'">'. $link->title. '</a>';
+			echo ' ['.$link->comments.']';
+			echo '</h4>';
+			$last_link = $link->id;
 		}
+		$comment->read();
+		echo '<ol class="comments-list">';
+		$comment->print_summary($link, 2000, false);
+		echo "</ol>\n";
 	}
 }
 
@@ -504,6 +532,7 @@ function do_user_tabs($option, $user) {
 	echo '<ul class="tabsub">'."\n";
 	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
 	echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
+	echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
 	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
 	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 	if (! $globals['bot']) {

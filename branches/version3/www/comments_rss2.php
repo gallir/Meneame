@@ -1,5 +1,5 @@
 <?
-// The source code packaged with this file is Free Software, Copyright (C) 2005 by
+// The source code packaged with this file is Free Software, Copyright (C) 2005-2009 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -77,6 +77,19 @@ if(!empty($_GET['id'])) {
 	$sql = "SELECT comment_id FROM comments, links  WHERE link_author=$id and comment_link_id=link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ORDER BY comment_date DESC LIMIT 1");
 	$title = _('Menéame: comentarios noticias de ') . $username;
+	$globals['redirect_feedburner'] = false;
+} elseif(!empty($_GET['answers_id'])) {
+	//
+	// Answers to this user's comments
+	//
+	$individual_user = true;
+	$id = guess_user_id($_GET['answers_id']);
+	$username = $db->get_var("select user_login from users where user_id=$id");
+	if ($if_modified > 0) 
+		$from_time = "AND conversation_time > FROM_UNIXTIME($if_modified)";
+	$sql = "SELECT conversation_from FROM conversations  WHERE  conversation_user_to=$id and conversation_type='comment' $from_time ORDER BY conversation_time DESC LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(conversation_time) FROM conversations WHERE conversation_user_to=$id and conversation_type='comment'  ORDER BY conversation_time DESC LIMIT 1");
+	$title = _('Menéame: respuestas a ') . $username;
 	$globals['redirect_feedburner'] = false;
 } else {
 	//

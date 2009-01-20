@@ -46,6 +46,7 @@ class Comment {
 			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
 		}
 		$this->update_order();
+		$this->update_conversation();
 	}
 
 	function update_order() {
@@ -347,6 +348,26 @@ class Comment {
 		$this->insert_vote();
 		$link->update_comments();
 		return $error;
+	}
+
+	function update_conversation() {
+		global $db, $globals;
+
+		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
+		$orders = array();
+		if (preg_match_all('/(^|[\(,;\.\s])#([1-9]\d*)\W/', $this->content, $matches)) {
+			foreach ($matches[2] as $order) {
+				$orders[$order] += 1;
+			}
+		}
+		foreach ($orders as $order => $val) {
+			$to = $db->get_row("select comment_id, comment_user_id from comments where comment_link_id = $this->link and comment_order=$order");
+			if ($to && $to->comment_user_id != $this->author) {
+				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_from, conversation_to) values
+								($to->comment_user_id, 'comment', $this->id, $to->comment_id)");
+			}
+		}
+
 	}
 }
 ?>
