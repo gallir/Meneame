@@ -41,6 +41,7 @@ class Post {
 			// Insert post_new event into logs
 			log_conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
+		$this->update_conversation();
 	}
 
 	function read() {
@@ -282,5 +283,25 @@ class Post {
 		}
 		return $count;
     }
+
+	function update_conversation() {
+		global $db, $globals;
+
+		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
+		$referentes = array();
+		if (preg_match_all('/(^|\s)@([^\s:,\)\?\!]+)/u', $this->content, $matches)) {
+			foreach ($matches[2] as $reference) {
+				$references[$db->escape($reference)] += 1;
+			}
+		}
+		foreach ($references as $user => $val) {
+			$to = $db->get_row("select user_id from users where user_login = '$user'");
+			if ($to && $to->user_id != $this->author) {
+				if (!$this->date) $this->date = time();
+				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'post', from_unixtime($this->date), $this->id, 0)");
+			}
+		}
+
+	}
 
 }
