@@ -355,16 +355,20 @@ class Comment {
 
 		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
 		$orders = array();
-		if (preg_match_all('/(^|[\(,;\.\s])#([1-9]\d*)\W/', $this->content, $matches)) {
+		if (preg_match_all('/(^|[\(,;\.\s])#(\d+)\W/', $this->content, $matches)) {
 			foreach ($matches[2] as $order) {
 				$orders[$order] += 1;
 			}
 		}
 		foreach ($orders as $order => $val) {
-			$to = $db->get_row("select comment_id, comment_user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
-			if ($to && $to->comment_user_id != $this->author) {
+			if ($order == 0) {
+				$to = $db->get_row("select 0 as id, link_author as user_id from links where link_id = $this->link");
+			} else {
+				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
+			}
+			if ($to && $to->user_id != $this->author) {
 				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_from, conversation_to) values
-								($to->comment_user_id, 'comment', $this->id, $to->comment_id)");
+								($to->user_id, 'comment', $this->id, $to->id)");
 			}
 		}
 
