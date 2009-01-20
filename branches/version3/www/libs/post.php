@@ -288,7 +288,7 @@ class Post {
 		global $db, $globals;
 
 		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
-		$referentes = array();
+		$references = array();
 		if (preg_match_all('/(^|\s)@([^\s:,\)\?\!]+)/u', $this->content, $matches)) {
 			foreach ($matches[2] as $reference) {
 				$references[$db->escape($reference)] += 1;
