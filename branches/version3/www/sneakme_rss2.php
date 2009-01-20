@@ -1,5 +1,5 @@
 <?
-// The source code packaged with this file is Free Software, Copyright (C) 2005 by
+// The source code packaged with this file is Free Software, Copyright (C) 2005-2009 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -21,6 +21,7 @@ if ($if_modified) {
 		$if_modified = time() - 250000;
 	}
 	$from_time = "post_date > FROM_UNIXTIME($if_modified)";
+	$from_time_conversation = "conversation_date > FROM_UNIXTIME($if_modified)";
 } $from_time = 'True'; // Trick to avoid sql errors with empty "and's"
 
 
@@ -43,6 +44,15 @@ if(!empty($_GET['user_id'])) {
 	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 ORDER BY post_date DESC LIMIT 1");
 	$title = _('Nótame: notas amigos de ') . $username;
+} elseif(!empty($_REQUEST['conversation_of'])) {
+	//
+	// Conversation posts
+	//
+	$id = guess_user_id($_GET['conversation_of']);
+	$username = $db->get_var("select user_login from users where user_id=$id");
+	$sql = "SELECT conversation_from as post_id FROM conversations WHERE conversation_user_to=$id and conversation_type='post' ORDER BY conversation_time desc LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(conversation_time) FROM conversations WHERE conversation_user_to=$id and conversation_type='post' ORDER BY conversation_time DESC LIMIT 1");
+	$title = _('Nótame: conversación de ') . $username;
 } else {
 	//
 	// All posts

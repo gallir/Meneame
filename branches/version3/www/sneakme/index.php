@@ -62,6 +62,18 @@ switch ($option) {
 		}
 		$rss_option="?friends_of=$current_user->user_id";
 		break;
+	case '_conversation':
+		if ($current_user->user_id > 0) {
+			$tab_option = 6;
+			$sql = "SELECT conversation_from as post_id FROM conversations WHERE conversation_user_to=$current_user->user_id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size";
+			$rows =  $db->get_var("SELECT count(*) FROM conversations WHERE conversation_user_to=$current_user->user_id and conversation_type='post'");
+		} else {
+			$tab_option = 1;	
+			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts");
+		}
+		$rss_option="?conversation_of=$current_user->user_id";
+		break;
 	default:
 		$tab_option = 4;
 		$user->username = $db->escape($option);
@@ -181,6 +193,14 @@ function do_posts_tabs($tab_selected, $username) {
 	} else {
 		echo '<li><a href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
 	}
+
+	// Conversation
+	if ($tab_selected == 6) {
+		echo '<li'.$active.'><a href="'.post_get_base_url('_conversation').'" title="'.$reload_text.'"><em>'._('conversación').'</em></a></li>' . "\n";
+	} elseif ($current_user->user_id > 0) {
+		echo '<li><a href="'.post_get_base_url('_conversation').'">'._('conversación').'</a></li>' . "\n";
+	}
+
 	// Friends
 	if ($tab_selected == 3) {
 		echo '<li'.$active.'><a href="'.post_get_base_url('_friends').'" title="'.$reload_text.'"><em>'._('amigos').'</em></a></li>' . "\n";
@@ -194,6 +214,7 @@ function do_posts_tabs($tab_selected, $username) {
 	} elseif ($current_user->user_id > 0) {
 		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
 	}
+
 	// END STANDARD TABS
 
 	echo '</ul>' . "\n";
