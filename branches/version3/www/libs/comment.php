@@ -361,7 +361,7 @@ class Comment {
 			}
 		}
 		foreach ($orders as $order => $val) {
-			$to = $db->get_row("select comment_id, comment_user_id from comments where comment_link_id = $this->link and comment_order=$order");
+			$to = $db->get_row("select comment_id, comment_user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			if ($to && $to->comment_user_id != $this->author) {
 				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_from, conversation_to) values
 								($to->comment_user_id, 'comment', $this->id, $to->comment_id)");
