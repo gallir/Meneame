@@ -157,7 +157,7 @@ class Post {
 	}
 
 	function put_tooltips ($str) {
-		return preg_replace('/(^|\s)@([^\s:,\)\?\!]+)/u', "$1<a class='tt' href='/".$globals['base_url']."backend/get_post_url.php?id=$2-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$2</a>", $str);
+		return preg_replace('/(^|\s)@([\w\.\-]+[\w])/u', "$1<a class='tt' href='/".$globals['base_url']."backend/get_post_url.php?id=$2-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$2</a>", $str);
 	}
 
 	function print_edit_form() {
@@ -289,7 +289,7 @@ class Post {
 
 		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
 		$references = array();
-		if (preg_match_all('/(^|\s)@([^\s:,\)\?\!]+)/u', $this->content, $matches)) {
+		if (preg_match_all('/(^|\s)@([\w\.\-]+[\w])/u', $this->content, $matches)) {
 			foreach ($matches[2] as $reference) {
 				$references[$db->escape($reference)] += 1;
 			}
