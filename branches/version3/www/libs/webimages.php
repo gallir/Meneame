@@ -365,7 +365,7 @@ class HtmlImages {
 				foreach ($matches as $match) {
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar)($|\s)/i', $match[1]) 
 						|| preg_match('/^#/', $match[1])
-						|| preg_match('/\W(feed|rss|atom|trackback|search|download)/i', $match[1])) {
+						|| preg_match('/(feed|rss|atom|trackback|search|download)\W/i', $match[1])) {
 						continue;
 					}
 					$weight = 1;
@@ -441,15 +441,20 @@ class HtmlImages {
 
 					if ($res['location'] != $url) {
 						$location_parsed = parse_url($res['location']);
+						$location_unified = unify_path_query($location_parsed['path'], $location_parsed['query']);
 						if ($location_parsed['host'] != $parsed['host'] 
 								&& $location_parsed['host'] != $this->parsed_redirected['host']) {
 							if ($this->debug)
 								echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
 							continue;
-						} elseif (unify_path_query($location_parsed['path'], $location_parsed['query']) == 
-							$this->path_query) {
+						} elseif ($location_unified  == $this->path_query) {
 							if ($this->debug)
 								echo "<!-- Redirected to same address: ".$res['location'].", skipping -->\n";
+							continue;
+						} elseif (path_count($location_unified) < path_count($this->path_query) 
+									&& path_count($location_unified) < path_count($unified) ) {
+							if ($this->debug)
+								echo "<!-- Redirected to a shorter path: $url -> ".$res['location'].", skipping -->\n";
 							continue;
 						}
 					}
