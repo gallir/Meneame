@@ -15,6 +15,7 @@ class UserAuth {
 	var $md5_pass = '';
 	var $authenticated = FALSE;
 	var $user_level='';
+	var $admin = false;
 	var $user_karma=0;
 	var $user_avatar=0;
 	var $user_comment_pref=0;
@@ -58,6 +59,7 @@ class UserAuth {
 				$this->user_login  = $userInfo[0];
 				$this->md5_pass = $dbuser->user_pass;
 				$this->user_level = $dbuser->user_level;
+				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
 				$this->user_karma = $dbuser->user_karma;
 				$this->user_email = $dbuser->user_email;
 				$this->user_avatar = $dbuser->user_avatar;
