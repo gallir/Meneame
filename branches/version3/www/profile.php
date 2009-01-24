@@ -204,7 +204,6 @@ function save_profile() {
 	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
 		$old_user_login = $user->username;
 		$old_user_id = $user->id;
-		$db->query("delete from posts where post_user_id = $old_user_id");
 		$user->disable();
 		require_once(mnminclude.'log.php');
 		log_insert('user_delete', $old_user_id, $old_user_id );

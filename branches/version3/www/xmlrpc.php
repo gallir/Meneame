@@ -80,7 +80,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		if(check_ban($urlfrom[host], 'hostname', false)) {
-			syslog(LOG_NOTICE, "Meneame: pingback, site is banned: $pagelinkedfrom - $pagelinkedto");
+			syslog(LOG_NOTICE, "Meneame: pingback, site is banned ($globals[user_ip]): $pagelinkedfrom - $pagelinkedto");
 	  		return new IXR_Error(33, 'Site is banned.');
 		}
 

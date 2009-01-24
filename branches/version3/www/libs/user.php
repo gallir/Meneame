@@ -50,6 +50,8 @@ class User {
 		$db->query("DELETE FROM friends WHERE friend_type='manual' and (friend_from = $this->id or friend_to = $this->id)");
 		// Delete preferences
 		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
+		// Delete posts
+		$db->query("delete from posts where post_user_id = $$this->id");
 
 		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";

@@ -412,7 +412,7 @@ function do_conversation () {
 }
 
 function print_comment_list($comments, $user) {
-	global $globals;
+	global $globals, $current_user;
 
 	$link = new Link;
 	$comment = new Comment;
