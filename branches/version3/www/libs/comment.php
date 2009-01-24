@@ -150,7 +150,7 @@ class Comment {
 
 		if ($this->type == 'admin') {
 			echo '<strong>'._('admin').'</strong> ';
-			if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+			if ($current_user->admin) {
 				echo ' ('.$this->username.') ';
 			}
 		} elseif ($single_link) {

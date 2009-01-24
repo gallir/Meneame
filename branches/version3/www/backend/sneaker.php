@@ -57,7 +57,7 @@ if ($logs) {
 			if(!empty($_REQUEST['friends']) && $log->log_user_id != $current_user->user_id) {
 				// Check the user is a friend
 				if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) continue;
-			} elseif (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
 				$user_level = $db->get_var("select user_level from users where user_id=$log->log_user_id");
 				if ($user_level != 'admin' && $user_level != 'god') continue;
 			}
@@ -78,13 +78,13 @@ if ($logs) {
 				if (empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_edit':
-				if (empty($_REQUEST['noedit'])) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['noedit']) && $current_user->admin) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_geo_edit':
-				if (empty($_REQUEST['nogeoedit'])) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nogeoedit']) && $current_user->admin) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
-				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nocomment']) && $current_user->admin) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'post_new':
 				if (empty($_REQUEST['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
@@ -160,7 +160,7 @@ function check_chat() {
 		$from = $now - 1200;
 		$db->query("delete from chats where chat_time < $from");
 		$comment = $db->escape(trim($comment));
-		if ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+		if ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && $current_user->admin) {
 			$room = 'admin';
 			$comment = preg_replace('/^# */', '', $comment);
 		} elseif (!empty($_REQUEST['friends']) || preg_match('/^@/', $comment)) {
@@ -211,11 +211,11 @@ function get_chat($time) {
 			// CHECK ADMIN MODE
 			// If the message is for admins check this user is also admin
 			if ($event->chat_room == 'admin') {
-				if ($current_user->user_level != 'admin' && $current_user->user_level != 'god') continue;
+				if (! $current_user->admin) continue;
 				$json['status'] = 'admin';
 			}
 			// If this user is in "admin" mode, check the sender is also admin
-			if (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			if (!empty($_REQUEST['admin']) && $current_user->admin) {
 				$user_level = $db->get_var("select user_level from users where user_id=$uid");
 				if ($user_level != 'admin' && $user_level != 'god') continue;
 			} else  {
@@ -279,7 +279,7 @@ function get_votes($dbtime) {
 						continue;
 					}
 				}
-			} elseif (!empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
 				$user_level = $db->get_var("select user_level from users where user_id=$event->vote_user_id");
 				if ($user_level != 'admin' && $user_level != 'god') continue;
 			}
@@ -307,7 +307,7 @@ function get_votes($dbtime) {
 			$type = 'problem';
 			$who = get_negative_vote($event->vote_value);
 			// Show user_login if she voted more than N negatives in one minute
-			if($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			if($current_user->user_id > 0 && $current_user->admin) {
 				$negatives_last_minute = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$event->vote_user_id and vote_date > date_sub(now(), interval 30 second) and vote_value < 0");
 				if($negatives_last_minute > 2 ) {
 					$who .= "<br>($user)";

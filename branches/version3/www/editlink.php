@@ -61,7 +61,7 @@ function do_edit() {
 
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
-	if($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+	if($current_user->admin) {
 		echo '<label for="url" accesskey="1">'._('url de la noticia').':</label>'."\n";
 		echo '<p><span class="note">'._('url de la noticia.').'</span>'."\n";
 		echo '<br/><input type="url" id="url" name="url" value="'.htmlspecialchars($link_url).'" size="80" />';
@@ -79,8 +79,7 @@ function do_edit() {
 
 	// Allow to change the status
 	if ($linkres->votes > 0 && ($linkres->status != 'published' || $current_user->user_level == 'god') && 
-			(( !$linkres->is_discarded() && $current_user->user_id == $linkres->author) 
-					|| $current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+			(( !$linkres->is_discarded() && $current_user->user_id == $linkres->author) || $current_user->admin)) {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		echo '<select name="status">';
 
@@ -95,7 +94,7 @@ function do_edit() {
 				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
 			}
 		} elseif ($linkres->is_discarded()) {
-			if($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+			if($current_user->admin) {
 				echo '<option value="queued">'.$linkres->get_status_text('queued').'</option>';
 				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
 			}
@@ -128,7 +127,7 @@ function do_edit() {
 
 	print_categories_form($linkres->category);
 
-	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+	if ($current_user->admin) {
 		if ($linkres->has_thumb()) {
 			echo '<label>'._('Eliminar imagen').': <input type="checkbox" name="thumb_delete" value="1"/></label><br/>';
 		} else {
@@ -148,7 +147,7 @@ function do_save() {
 	$linkres->read_content_type_buttons($_POST['type']);
 
 	$linkres->category=intval($_POST['category']);
-	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') {
+	if ($current_user->admin) {
 		if (!empty($_POST['url'])) {
 			$linkres->url = clean_input_url($_POST['url']);
 		}
@@ -213,7 +212,7 @@ function link_edit_errors($linkres) {
 
 	$error = false;
 	// only checks if the user is not special or god
-	if(!$linkres->check_url($linkres->url, false) && $current_user->user_level != 'admin' && $current_user->user_level != 'god') {
+	if(!$linkres->check_url($linkres->url, false) && ! $current_user->admin) {
 		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('url incorrecto').'</div>';
 		$error = true;
 	}

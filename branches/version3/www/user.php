@@ -58,7 +58,7 @@ if ($current_user->user_id == $user->id) {
 if($globals['external_user_ads'] && !empty($user->adcode)) {
     $globals['user_adcode'] = $user->adcode;
     $globals['user_adchannel'] = $user->adchannel;
-	if ($current_user->user_id == $user->id || $current_user->user_level=='god') $globals['do_user_ad']  = 100; 
+	if ($current_user->user_id == $user->id || $current_user->admin) $globals['do_user_ad']  = 100; 
 	else $globals['do_user_ad'] = $user->karma * 2;
 }
 
@@ -276,8 +276,7 @@ function do_profile() {
 	}
 
 	// Show first numbers of the address if the user has god privileges
-	if ($current_user->user_level == 'god' &&
-			$user->level != 'god' && $user->level != 'admin' ) { // tops and admins know each other for sure, keep privacy
+	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // tops and admins know each other for sure, keep privacy
 		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
@@ -418,7 +417,7 @@ function print_comment_list($comments, $user) {
 	$comment = new Comment;
 
 	foreach ($comments as $dbcomment) {
-		if ($dbcomment->comment_type == 'admin' && $current_user->user_level != 'god' && $current_user->user_level != 'admin') continue;
+		if ($dbcomment->comment_type == 'admin' && ! $current_user->admin) continue;
 		$link->id=$dbcomment->link_id;
 		$comment->id = $dbcomment->comment_id;
 		if ($last_link != $link->id) {

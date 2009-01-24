@@ -11,6 +11,7 @@ class User {
 	var $id = 0;
 	var $username = '';
 	var $level = 'normal';
+	var $admin = false; 
 	var $modification = false;
 	var $date = false;
 	var $ip = '';
@@ -113,6 +114,7 @@ class User {
 			$this->username = $user->user_login;
 			$this->username_register = $user->user_login_register;
 			$this->level = $user->user_level;
+			if ($this->level == 'admin' || $this->level == 'god') $this->admin = true;
 			$this->comment_pref = $user->user_comment_pref;
 			$date=$user->user_date;
 			$this->date=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");

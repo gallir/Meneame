@@ -147,7 +147,7 @@ function do_header($title, $id='home') {
 	// form
 
 	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_url'].'img/common/help-bt.png" alt="help button" title="'._('ayuda').'" width="16" height="16" /></a></li>';
-	if ($current_user->user_level=='god' || $current_user->user_level=='admin') {
+	if ($current_user->admin) {
 		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_url'].'img/common/tools-bt.png" alt="tools button" title="herramientas" width="19" height="16" /> </a></li>' . "\n";
 	}
 
