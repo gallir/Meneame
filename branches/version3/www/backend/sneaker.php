@@ -84,7 +84,7 @@ if ($logs) {
 				if (empty($_REQUEST['nogeoedit']) && $current_user->admin) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
-				if (empty($_REQUEST['nocomment']) && $current_user->admin) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'post_new':
 				if (empty($_REQUEST['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
