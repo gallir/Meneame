@@ -207,7 +207,7 @@ function do_js_includes() {
 	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/jquery.simplemodal.pack.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/jquery.simplemodal-1.2.2.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/general05.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";

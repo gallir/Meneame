@@ -1444,47 +1444,44 @@ margin-bottom: 0px;
 
 /* Simple Modal */
 
-#modalOverlay {
+#simplemodal-overlay {
 background-color:#888;
 cursor:wait;
 }
 
-#modalContainer {
+#simplemodal-container {
 height:300px;
 width:600px;
-left:50%;
-top:20%;
-margin-left:-300px;
 border:1px solid #FF6400;
 background: #FFEEC7;
 overflow: hidden;
 text-align: left;
 font-size: 10pt;
 }
-#modalContainer a.modalCloseX,
-#modalContainer a.modalCloseX:link,
-#modalContainer a.modalCloseX:active,
-#modalContainer a.modalCloseX:visited {text-decoration:none; font-weight:bold; font-size:1.3em; position:absolute; top:-1px; left:585px; color:#fff;}
-#modalContainer a.modalCloseX:hover {color:#9bb3b3;}
+#simplemodal-container a.modalCloseImg,
+#simplemodal-container a.modalCloseImg:link,
+#simplemodal-container a.modalCloseImg:active,
+#simplemodal-container a.modalCloseImg:visited {display: inline; text-decoration:none; font-weight:bold; font-size:1.3em; position:absolute; top:-1px; right:5px; color:#fff; cursor: pointer;}
+#simplemodal-container a.modelCloseImg:hover {color:#9bb3b3;}
 
-#modalContainer .header {
+#simplemodal-container .header {
 width:100%;
-background:#FF6400;
+background: url(../../img/common/modal-header-bkg01.png) repeat;
 color:#fff;
 font-weight:bold;
-line-height:1.6em;
+height: 20px;
 text-align:center;
 }
 
-#modalContainer .content {
+#simplemodal-container .content {
 padding: 5px 5px 5px 5px;
 }
 
-#modalContainer .content ul {
+#simplemodal-container .content ul {
 padding-left: 15px;
 }
 
-#modalContainer .content li {
+#simplemodal-container .content li {
 margin: 3px 0 0 0;
 }
 

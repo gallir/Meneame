@@ -190,9 +190,18 @@ function get_votes(program,type,container,page,id) {
 	reportAjaxStats('html', program);
 }
 
+// Modal functions
+//
+$.extend($.modal.defaults, {
+	closeHTML: '<a class="modalCloseImg" title="Close">x</a>',
+	opacity: "50"
+});
+
 function modal_from_ajax(url, title) {
 	if (typeof(title) == "undefined") title = '&nbsp';
-	$.modal('<div class="header" id="modalHeader"><div id="modalTitle">'+title+'</div><a href="#" title="Close" class="modalCloseX modalClose">x</a></div><div class="content" id="modalContent">Loading...</div>', {overlay: "50"});
+
+	$.modal('<div class="header" id="modalHeader"><div id="modalTitle">'+title+'</div></div><div class="content" id="modalContent">Loading...</div>',
+			{});
 	$.get(url, function(data){
 	// create a modal dialog with the data
 		$('#modalContent').html(data);
