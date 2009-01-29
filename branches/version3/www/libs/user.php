@@ -52,7 +52,7 @@ class User {
 		// Delete preferences
 		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
 		// Delete posts
-		$db->query("delete from posts where post_user_id = $$this->id");
+		$db->query("delete from posts where post_user_id = $this->id");
 
 		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";
