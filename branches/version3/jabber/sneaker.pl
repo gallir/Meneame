@@ -13,6 +13,7 @@
 # libproc-daemon-perl
 # libdbi-perl
 
+use Time::HiRes qw (time);
 use HTML::Entities;
 
 use MnmJabber;
@@ -28,7 +29,7 @@ my %link_status = qw(link_new Nueva link_publish Publicada link_edit Editada lin
 
 $chat_period_limit = 5;
 $chat_timestamp = time;
-$event_timestamp = time - 60;
+$event_timestamp = int(time - 60);
 
 
 my $jabber = new MnmJabber;
@@ -63,7 +64,7 @@ sub InMessage {
 }
 
 sub UpdateCounters {
-	my $now = time;
+	my $now = int(time);
 	my $key;
 	my $sth;
 
