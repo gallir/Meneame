@@ -20,13 +20,15 @@ if (!empty($_REQUEST['getv'])) {
 	die;
 }
 $now = $globals['now'];
-if(!($time=check_integer('time')) > 0 || $now-$time > 1200) {
-	$time = $now-1200;
+$now_f = round(microtime(true), 2);
+
+if(!($time_f=floatval($_REQUEST['time'])) > 0 || $now-$time_f > 1200) {
+	$time_f = $now-1200;
 }
 
-$dbtime = date("YmdHis", $time);
-
-$last_timestamp = $time;
+$time = intval($time_f);
+$dbtime = date("YmdHis", intval($time));
+$last_timestamp = $time_f;
 
 if(!empty($_REQUEST['items']) && intval($_REQUEST['items']) > 0) {
 	$max_items = intval($_REQUEST['items']);
@@ -96,11 +98,11 @@ if ($logs) {
 // Only registered users can see the chat messages
 if ($current_user->user_id > 0 && empty($_REQUEST['nochat'])) {
 	check_chat();
-	get_chat($time);
+	get_chat();
 }
 $db->barrier();
 
-if($last_timestamp == 0) $last_timestamp = $now;
+if($last_timestamp == 0) $last_timestamp = $now_f;
 
 $ccntu = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
 $ccntj = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
@@ -126,7 +128,7 @@ echo "]);";
 if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
 
 function check_chat() {
-	global $db, $current_user, $now, $globals, $events;
+	global $db, $current_user, $now, $now_f, $globals, $events;
 	if(empty($_POST['chat'])) return;
 	$comment = trim(preg_replace("/[\r\n\t]/", ' ', $_REQUEST['chat']));
 	if ($current_user->user_id > 0 && strlen($comment) > 2) {
@@ -170,7 +172,7 @@ function check_chat() {
 			$room = 'all';
 		}
 		if (strlen($comment)>0) {
-			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
+			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now_f, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
 		}
 
 	}
@@ -196,12 +198,12 @@ function send_chat_warn($mess) {
 	send_string($mess);
 }
 
-function get_chat($time) {
-	global $db, $events, $last_timestamp, $max_items, $current_user;
+function get_chat() {
+	global $db, $events, $last_timestamp, $max_items, $current_user, $time_f;
 
 	if (!empty($_REQUEST['admin']) || !empty($_REQUEST['friends'])) $chat_items = $max_items * 2;
 	else $chat_items = $max_items;
-	$res = $db->get_results("select SQL_CACHE * from chats where chat_time > $time order by chat_time desc limit $chat_items");
+	$res = $db->get_results("select * from chats where chat_time > $time_f order by chat_time desc limit $chat_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		$json['uid'] = $uid = $event->chat_uid;
@@ -246,7 +248,7 @@ function get_chat($time) {
 			}
 		}
 		$json['who'] = addslashes($event->chat_user);
-		$json['ts'] = $event->chat_time;
+		$json['ts'] = intval($event->chat_time);
 		$json['type'] = 'chat';
 		$json['votes'] = 0;
 		$json['com'] = 0;
