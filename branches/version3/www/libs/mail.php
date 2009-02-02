@@ -23,7 +23,10 @@ function send_recover_mail ($user) {
 	$message .= "\n\n". _('Este mensaje ha sido enviado a solicitud de la dirección: ') . $globals['user_ip'] . "\n\n";
 	$message .= "-- \n  " . _('el equipo de menéame');
 	$message = wordwrap($message, 70);
-	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" . 'X-Mailer: meneame.net/PHP/' . phpversion(). "\n". 'From: meneame.net <web@'.get_server_name().">\n";
+	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" . 
+				'From: '._('Avisos').' '.get_server_name().' <'._('no_contestar').'@'.get_server_name().">\n".
+				'Reply-To: '._('no_contestar').'@'.get_server_name()."\n".
+				'X-Mailer: meneame.net/PHP/' . phpversion(). "\n";
 	//$pars = '-fweb@'.get_server_name();
 	mail($to, $subject, $message, $headers);
 	echo '<p><strong>' ._ ('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.') . '</strong></p>';
