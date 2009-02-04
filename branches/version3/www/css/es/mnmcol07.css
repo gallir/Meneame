@@ -692,8 +692,8 @@ color: #FF6400;
 
 textarea,
 input  {
-background: #feefe5;
-border: 1px solid #FF9400;
+background: #fff;
+border: 1px solid #FF6400;
 color: #303030;
 }
 
@@ -703,11 +703,13 @@ color: #FF7C00;
 }
 
 fieldset {
-border-color: #FF9400;
+border-color: #FF6400;
+background: #FEEFE5;
 }
 
 legend, legend a {
-color: #FF9400;
+background: #FF6400;
+color: #fff;
 }
 
 .button, button {

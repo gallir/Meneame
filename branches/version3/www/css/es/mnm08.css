@@ -1427,8 +1427,8 @@ text-align: right;
 }
 
 .rich-edit-key {
-margin-left: 3px;
-margin-bottom: 3px;
+padding-right: 5px;
+margin-bottom: 3px; /* when edit */
 float: right;
 }
 
