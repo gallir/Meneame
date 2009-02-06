@@ -96,6 +96,7 @@ function do_edit() {
 		} elseif ($linkres->is_discarded()) {
 			if($current_user->admin) {
 				echo '<option value="queued">'.$linkres->get_status_text('queued').'</option>';
+				echo '<option value="autodiscard">'.$linkres->get_status_text('autodiscard').'</option>';
 				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
 			}
 		} else {

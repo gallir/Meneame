@@ -1457,6 +1457,7 @@ background: #FFEEC7;
 overflow: hidden;
 text-align: left;
 font-size: 10pt;
+z-index:10000;
 }
 #simplemodal-container a.modalCloseImg,
 #simplemodal-container a.modalCloseImg:link,

@@ -146,7 +146,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué software se usa?</h4>
-<p>El software está completamente desarrollado por Ricardo Galli. Está programado enteramente en PHP y MySQL.</p>
+<p>El software está completamente desarrollado por Ricardo Galli, Benjamí Villoslada y colaboraciones de terceros.</p>
 </li>
 
 <li id="<? echo "q$q";$q++;?>">
@@ -200,7 +200,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </li>
 
 </ol>
-<p>Para más información, consulta al <a href="http://blog.meneame.net">blog</a> o al <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>
+<p>El logo y el nombre Menéame es Marca Registrada de Menéame Comunicacions S.L. Para más información, consulta al <a href="http://blog.meneame.net">blog</a> o al <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.</p>
 
 </div>
 </div>

@@ -68,9 +68,9 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url, $this->referer, 500000);
+		$res = get_url($this->url, $this->referer, 1000000);
 		$this->checked = true;
-		if ($res && strlen($res['content']) < 500000) { // Image is smaller than our limit
+		if ($res && strlen($res['content']) < 1000000) { // Image is smaller than our limit
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
