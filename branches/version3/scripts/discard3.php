@@ -8,7 +8,7 @@ header("Content-Type: text/plain");
 
 $now = time();
 $max_date = "date_sub(now(), interval 15 minute)";
-$min_date = "date_sub(now(), interval 48 hour)"; 
+$min_date = "date_sub(now(), interval 24 hour)"; 
 
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 12 hour) and user_date > date_sub(now(), interval 24 hour) and user_validated_date is null");
