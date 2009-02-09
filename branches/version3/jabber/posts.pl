@@ -102,6 +102,7 @@ sub InMessage {
 	my $last_id = MnmDB::last_insert_id;
 	$sth = MnmDB::prepare(qq{insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) VALUES (FROM_UNIXTIME(?), ?, ?, ?, ?) });
 	$sth->execute(time, 'post_new', $last_id, $poster->id, 0);
+	UpdateConversation($id, $last_id, $body);
 }
 
 sub ExecuteCommand {
@@ -131,3 +132,27 @@ sub ExecuteCommand {
 	}
 }
 
+sub UpdateConversation() {
+	my $me = shift;
+	my $id = shift;
+	my $text = shift;
+	my @matches;
+	my %visited;
+	my ($sth, $sql, $foo, $user, $user_id);
+
+	$sql = qq{delete from conversations where conversation_type='post' and conversation_from=$id};
+	$sth = MnmDB::prepare($sql);
+	$sth->execute;
+
+	if (@matches = $text =~ /(?:^|\s)@([\S\.\-]+[\w])/gm) {
+		foreach $user (@matches) {
+			next if $visited{$user};
+			$visited{$user} = 1;
+			$sql = qq{select user_id from users where user_login = '$user'};
+			($user_id) = $MnmDB::dbh->selectrow_array($sql);
+			next if $me == $user_id;
+			$sth = MnmDB::prepare(qq{insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values (?, ?, now(), ?, 0)});
+			$sth->execute($user_id, 'post', $id);
+		}
+	} 
+}
