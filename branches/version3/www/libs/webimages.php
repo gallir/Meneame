@@ -323,8 +323,8 @@ class HtmlImages {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
 				if ($this->debug)
-					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.33)." -->\n";
-				if (!$this->selected || ($this->selected->coef < $img->coef/1.33)) {
+					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.4)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.4)) {
 					$this->selected = $img;
 					$n++;
 					if ($this->debug)
@@ -386,17 +386,18 @@ class HtmlImages {
 					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)
 							&& preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
 							preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
-						$equals = min(0, $equals-2);
+						$equals = max(0, $equals-2);
+					}
+
+					// Penalize with a level if one has query and the other does not
+					if (empty($parsed_match['query']) != empty($this->parsed_url['query'])) {
+						$equals = $equals-2;
 					}
 
 					$distance = levenshtein($path_query_match, $this->path_query) 
 								* min(strlen($path_query_match), strlen($this->path_query))
 								/ max(strlen($path_query_match), strlen($this->path_query));
 
-					//  Decrease distance if query comes in just one
-					if (empty($parsed_match['query']) != empty($this->parsed_url['query'])) {
-						$distance *= 0.5;
-					}
 					$item = array($url, $distance);
 					$levels[$equals][] = $item;
 					if ($this->debug)
@@ -481,7 +482,7 @@ class HtmlImages {
 					$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
 					$n++;
 					$this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
-					if ($n > 2 || $images_total > $this->images_count * 0.9) {
+					if ($n > 2 || $images_total > $this->images_count) {
 						break;
 					}
 				}
