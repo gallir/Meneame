@@ -157,7 +157,7 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-2][^<]*>[^<]*<a|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(< *meta +http-equiv|< *script|< *iframe|< *frame[^<]*>|< *h[0-1][^<]*>[^<]*<a|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/(< *a|<* meta +http-equiv|<* script|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^>]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}
@@ -433,7 +433,7 @@ class Link {
 		}
 		$list .= ", '$link_alternative', '$link_alternative/'";
 		// If it was abuse o autodiscarded allow other to send it again
-		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse', 'autodiscard') AND link_votes > 0 ORDER by link_id asc limit 1");
+		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
 		return $found;
 	}
 
