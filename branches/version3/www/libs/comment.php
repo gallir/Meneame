@@ -355,7 +355,7 @@ class Comment {
 
 		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
 		$orders = array();
-		if (preg_match_all('/(^|[\(,;\.\s])#(\d+)\W/', $this->content, $matches)) {
+		if (preg_match_all('/(^|[\(,;\.\s])#(\d+)/', $this->content, $matches)) {
 			foreach ($matches[2] as $order) {
 				$orders[$order] += 1;
 			}
