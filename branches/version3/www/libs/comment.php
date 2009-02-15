@@ -165,7 +165,7 @@ class Comment {
 		} else {
 			echo _('hace').' '.txt_time_diff($this->date);
 		}
-		if (!$this->hidden && $this->type != 'admin') echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+		if (!$this->hidden && $this->type != 'admin' && $this->avatar) echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 		echo '</div></div>';
 		echo "</li>\n";
 	}
