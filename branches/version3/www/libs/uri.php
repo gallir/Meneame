@@ -24,9 +24,20 @@ function get_uri($title) {
 	$title = preg_replace('/\.+-|-\.+/', '-', $title);
 	$title = preg_replace('|-+|', '-', $title);
 	$title = remove_shorts($title);
-	$title = trim($title, '-');
 
-   	return substr($title, 0, 70);
+	$words = split("-", $title);
+	$uri = '';
+	foreach ($words as $word) {
+		if (!empty($word) && $word != '-' && (strlen($word) + strlen($uri)) < 65 ) {
+			$uri .= $word.'-';
+		}
+	}
+	if (strlen($uri) < 5 ) { // Just in case if there were no short words
+			$uri = substr($title, 0, 50); 
+	}
+	$uri = trim($uri, '-');
+
+   	return $uri;
 }
 
 function remove_accents($string) {
@@ -134,9 +145,10 @@ function remove_accents($string) {
 
 function remove_shorts($string) {
 	$shorts = array( _('a'), _('e'), _('o'), _('u'), _('y'),
-						_('el'), _('la'), _('le'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('es'), _('su'), _('te'),
-						_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus'), _('me'), _('mi')
-					);
+			_('el'), _('la'), _('le'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('si'), 
+			_('es'), _('su'), _('te'),
+			_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus'), _('me'), _('mi'),
+		);
 
 	$size = count($shorts);
 	for($i=0; $i<$size && strlen($string) > 30; $i++) {
