@@ -152,7 +152,7 @@ do_header($link->title, 'post');
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
 	echo '<script type="text/javascript">';
-	echo '$(function(){alert(\''._('comentario no insertado'). ":  $new_comment_error".'\')});';
+	echo '$(function(){alert(\''._('Aviso'). ": $new_comment_error".'\')});';
 	echo '</script>';
 }
 

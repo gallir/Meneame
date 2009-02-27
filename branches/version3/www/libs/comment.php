@@ -254,13 +254,20 @@ class Comment {
 		$localdomain = preg_quote(get_server_name(), '/');
 		preg_match_all('/([\(\[:\.\s]|^)(https*:\/\/[^ \t\n\r\]\(\)\&]{5,70}[^ \t\n\r\]\(\)]*[^ .\t,\n\r\(\)\"\'\]\?])/i', $this->content, $matches);
 		foreach ($matches[2] as $match) {
+			require_once(mnminclude.'ban.php');
 			$link=clean_input_url($match);
 			$components = parse_url($link);
+			$banned = check_ban($link, 'hostname', false, true);
 			if (! preg_match("/.*$localdomain$/", $components['host'])) {
 				$link = '//'.$components['host'].$components['path'];
 				$link=preg_replace('/(_%)/', "\$1", $link);
 				$link=$db->escape($link);
-				$count = max($count, (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'"));
+				$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'");
+				if ($banned) { 	
+					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($same_count)");
+					$same_count *= 2;
+				}
+				$count = max($count, $same_count);
 			}
 		}
 		return $count;
@@ -308,7 +315,7 @@ class Comment {
 		// Check the comment wasn't already stored
 		$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $this->link and comment_user_id = $this->author and comment_randkey = $this->randkey"));
 		if ($already_stored) {
-			return _('duplicado');
+			return _('comentario duplicado');
 		}
 
 		if ($this->type != 'admin') {
@@ -341,7 +348,6 @@ class Comment {
 				$annotation = new Annotation("karma-$user->id");
 				$annotation->append(_('texto repetido o abuso de enlaces en comentarios').": -$reduction, karma: $user->karma\n");
 				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
-
 			}
 		}
 		$this->store();
