@@ -345,7 +345,7 @@ $annotation = new Annotation('promote');
 $annotation->text = $output;
 $annotation->store();
 
-function print_row(&$link, $changes, &$log = '') {
+function print_row($link, $changes, $log = '') {
 	global $globals, $output;
 	static $row = 0;
 
@@ -379,7 +379,7 @@ function print_row(&$link, $changes, &$log = '') {
 }
 
 
-function publish(&$link) {
+function publish($link) {
 	global $globals, $db;
 	global $users_karma_avg;
 
