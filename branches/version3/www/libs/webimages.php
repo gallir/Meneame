@@ -78,7 +78,7 @@ class BasicThumb {
 		return false;
 	}
 
-	function fromstring($imgstr) {
+	function fromstring(&$imgstr) {
 		$this->checked = true;
 		$this->image = @imagecreatefromstring($imgstr);
 		if ($this->image !== false) {
@@ -235,7 +235,7 @@ class HtmlImages {
 			}
 		} elseif (preg_match('/text\/html/i', $res['content_type'])) {
 			$this->html = $res['content'];
-			$this->title = get_html_title(&$this->html);
+			$this->title = get_html_title($this->html);
 			if ($this->debug) echo "<!-- HTML $this->title -->\n";
 
 			// First check for thumbnail head metas
@@ -262,7 +262,7 @@ class HtmlImages {
 			}
 			$html_short = $this->shorten_html($this->html);
 			//  echo "<!-- $this->html -->\n";
-			$this->parse_img(&$html_short);
+			$this->parse_img($html_short);
 
 			// If there is no image or image is slow
 			// Check if there are players
@@ -287,7 +287,7 @@ class HtmlImages {
 		return $this->selected;
 	}
 
-	function shorten_html($html, $max = 80000) {
+	function shorten_html(&$html, $max = 80000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
@@ -300,7 +300,7 @@ class HtmlImages {
 			return $html;
 	}
 
-	function parse_img($html) {
+	function parse_img(&$html) {
 		$tags = array();
 		preg_match_all('/(<img\s.+?>)/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
@@ -802,7 +802,7 @@ function path_count($path) {
 	return count(explode('/', preg_replace('#^/+|/+$#', '', $path)));
 }
 
-function get_html_title($html) {
+function get_html_title(&$html) {
 	if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $html, $matches))
 		return $matches[1];
 	return false;

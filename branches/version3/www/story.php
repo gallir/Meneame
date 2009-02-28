@@ -112,11 +112,11 @@ switch ($url_args[1]) {
 if ($_POST['process']=='newcomment') {
 	require_once(mnminclude.'comment.php');
 	$comment = new Comment;
-	$new_comment_error = $comment->save_from_post(&$link);
+	$new_comment_error = $comment->save_from_post($link);
 }
 
 // Set globals
-$globals['link'] = &$link;
+$globals['link'] = $link;
 $globals['link_id'] = $link->id;
 $globals['link_permalink'] = $globals['link']->get_permalink();
 
