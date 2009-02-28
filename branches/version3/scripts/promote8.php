@@ -414,6 +414,8 @@ function publish(&$link) {
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($link, $short_url); 
 	}
+	// Recheck for images, some sites add images after the article has been published
+	if ($link->thumb_status != 'local' && $link->thumb_status != 'deleted') $link->get_thumb();
 
 }
 function twitter_post($link, $short_url) {

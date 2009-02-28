@@ -17,7 +17,7 @@ $db->query("delete from users where user_date < date_sub(now(), interval 12 hour
 $db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval 20 minute) and link_votes = 0");
 
 // send back to queue links with too many negatives
-$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 6 hour) and link_date < date_sub(now(), interval 10 minute) and link_negatives > link_votes / 8");
+$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 12 hour) and link_date < date_sub(now(), interval 10 minute) and link_negatives > link_votes / 8");
 
 
 if ($links) {

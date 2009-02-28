@@ -15,6 +15,10 @@ $db->query("delete from users where user_date < date_sub(now(), interval 24 hour
 // Delete old bad links
 $db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
+// Delete old conversations
+$db->query("delete from conversations where conversation_time < date_sub(now(), interval 15 day)");
+
+
 $db->barrier();
 // Delete email, names and url of invalidated users after three months
 $dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
@@ -131,7 +135,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 /////////////////////
 ////// Calculates karma received from votes to links
 
-		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from and link_status not in ('autodiscard')"));
+		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from"));
 		
 		if ($total_user_links > 0) {
 			$positive_karma_received = $negative_karma_received = 0;
@@ -142,7 +146,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 				}
 			}
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
-			if ($karmas) {
+			if ($karmas && $total_user_links > 1) { // don't penalize to users who sent just one link
 				foreach ($karmas as $k) {
 					$negative_karma_received += pow(min(1,$k/$max_avg_negative_received), 2) * 3;
 				}
@@ -274,20 +278,20 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 5 * comment_votes)");
 		if ($negative_abused_comment_votes_count > 3) {
 			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
-			$karma5 -= $karma0; // Take away karma0
+			$karma5 -= $karma0 / 2 ; // Take away half of karma0
 			if ($karma4 > 0) {
 				$karma5 -= $karma4 / 2; // Take away half karma4
 			}
 		}
 		if ($karma5 != 0) {
-			$penalized = +2;
+			$penalized = +1;
 			$output .= _('Exceso de votos negativos injustos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
 			$output .= sprintf("%4.2f\n", $karma5);	
 		}
 
 		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5;
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
-		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized) {
+		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized > 1) {
 			$karma_base_user = $karma_base;
 			if ($penalized > 2) {
 				$karma_extra = min($karma_extra, 1);
@@ -315,7 +319,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
-			if ($karma < $karma_base || $penalized) {
+			if ($karma < $karma_base || $penalized > 1) {
 				$user->karma = 0.7*$user->karma + 0.3*$karma; // In case of very low karma, penalized more
 			} else {
 				// Decrease very slowly
