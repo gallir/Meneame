@@ -749,11 +749,13 @@ function do_best_stories() {
 			$output .= '<div class="mnm-pop">'.($link->votes+$link->anonymous).'</div>';
 			if ($n == 0 && ! $link->has_thumb()) $output .= '<h5 style="font-size:100%">';
 			else $output .= '<h5>';
-			if ($link->has_thumb()) {
+			if ($n == 0 && $link->has_thumb()) {
+				/*
 				if ($n > 0) {
 					$link->thumb_x = (int) $link->thumb_x / 2;
 					$link->thumb_y = (int) $link->thumb_y / 2;
 				}
+				*/
 				$output .= "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 			}
 			$output .= '<a href="'.$url.'">'.$link->title.'</a></h5>';

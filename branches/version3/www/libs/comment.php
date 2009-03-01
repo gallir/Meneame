@@ -249,7 +249,7 @@ class Comment {
 	}
 
 	function same_links_count($min=30) {
-		global $db;
+		global $db, $current_user;
 		$count = 0;
 		$localdomain = preg_quote(get_server_name(), '/');
 		preg_match_all('/([\(\[:\.\s]|^)(https*:\/\/[^ \t\n\r\]\(\)\&]{5,70}[^ \t\n\r\]\(\)]*[^ .\t,\n\r\(\)\"\'\]\?])/i', $this->content, $matches);
@@ -258,13 +258,15 @@ class Comment {
 			$link=clean_input_url($match);
 			$components = parse_url($link);
 			$banned = check_ban($link, 'hostname', false, true);
+			if ($banned) $interval = $min * 2;
+			else $interval = $min;
 			if (! preg_match("/.*$localdomain$/", $components['host'])) {
 				$link = '//'.$components['host'].$components['path'];
 				$link=preg_replace('/(_%)/', "\$1", $link);
 				$link=$db->escape($link);
-				$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $min minute) and comment_content like '%$link%'");
+				$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $interval minute) and comment_content like '%$link%'");
 				if ($banned) { 	
-					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($same_count)");
+					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login, $same_count)");
 					$same_count *= 2;
 				}
 				$count = max($count, $same_count);

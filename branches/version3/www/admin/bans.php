@@ -94,7 +94,7 @@ function admin_bans($ban_type) {
 	echo '<input type="hidden" name="key" value="'.$key.'" />';
 	echo '<input type="text" name="s" ';
 	if ($_REQUEST["s"]) {
-		$_REQUEST["s"] = clean_input_string($_REQUEST["s"]);
+		$_REQUEST["s"] = clean_text($_REQUEST["s"]);
 		echo ' value="'.$_REQUEST["s"].'" '; 
 	} else { 
 		echo ' value="'._('buscar...').'" '; 
@@ -195,7 +195,10 @@ function admin_bans($ban_type) {
 			}
 		}
 		$where= "WHERE ban_type='".$ban_type."'";
-		if ($_REQUEST["s"]) { $where .=" AND ban_text LIKE '%".$_REQUEST["s"]."%' "; }
+		if ($_REQUEST["s"]) { 
+			$search_text = $db->escape($_REQUEST["s"]);
+			$where .=" AND (ban_text LIKE '%$search_text%' OR ban_comment LIKE '%$search_text%')"; 
+		}
 		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." $order LIMIT $offset,$page_size");
 		$rows = $db->get_var("SELECT count(*) FROM bans ".$where);
 		if ($bans) {

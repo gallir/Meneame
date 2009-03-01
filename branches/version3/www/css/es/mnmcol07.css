@@ -11,6 +11,7 @@ Comments: This file contains only colors or images. All images referenced by the
 body {
 background-color: #fff;
 background-image: url('../../img/common/bkg-01.png');
+color: #000;
 }
 
 a {
