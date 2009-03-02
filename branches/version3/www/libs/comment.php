@@ -264,7 +264,8 @@ class Comment {
 				if ($this->banned) { 	
 					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login)");
 				}
-				array_push($this->links, $components['host']);
+				if (array_search($components['host'], $this->links) === false)
+					array_push($this->links, $components['host']);
 			}
 		}
 	}
