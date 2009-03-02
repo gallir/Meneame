@@ -52,7 +52,7 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 }
 
 if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto'));
+	error(_('Usuario incorrecto, recargue la página para poder votar'));
 }
 
 $md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);
