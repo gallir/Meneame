@@ -72,6 +72,15 @@ function save_comment () {
 		$_POST['key']  == md5($comment->randkey.$site_key)  && 
 		strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
+
+		$comment->get_links();
+		if ($current_user->user_id == $comment->author && $comment->banned 
+				&& $current_user->user_level == 'normal' && $current_user->Date() > $globals['now'] - 86400) {
+			syslog(LOG_NOTICE, "Meneame: editcomment not stored, banned link ($current_user->user_login)");
+			echo _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
+			die;
+		}
+
 		if (strlen($comment->content) > 0 ) {
 			$comment->store();
 		}
