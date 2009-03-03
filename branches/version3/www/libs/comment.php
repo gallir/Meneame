@@ -249,6 +249,7 @@ class Comment {
 	}
 
 	function get_links() {
+		global $current_user;
 
 		$this->links = array();
 		$this->banned = false;

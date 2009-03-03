@@ -75,7 +75,7 @@ function save_comment () {
 
 		$comment->get_links();
 		if ($current_user->user_id == $comment->author && $comment->banned 
-				&& $current_user->user_level == 'normal' && $current_user->Date() > $globals['now'] - 86400) {
+				&& $current_user->Date() > $globals['now'] - 86400) {
 			syslog(LOG_NOTICE, "Meneame: editcomment not stored, banned link ($current_user->user_login)");
 			echo _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
 			die;
