@@ -27,7 +27,9 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 	$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250));
 	if (empty($words)) return $response;
 
-	if(preg_match('/^ *(\w+): *(.*)/', $words, $matches)) {
+	if (!empty($_REQUEST['p'])) {
+		$prefix = clean_input_url($_REQUEST['p']);
+	} elseif (preg_match('/^ *(\w+): *(.*)/', $words, $matches)) {
 		$prefix = $matches[1];
 		$words = $matches[2];
 	}
@@ -59,7 +61,7 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 
 	if ($field) {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
-		$cl->SetMatchMode (SPH_MATCH_EXTENDED);
+		$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 		$q = $cl->AddQuery ( "@$field \"$words\"", '*' );
 		array_push($queries, $q);
 	} elseif ($words_count < 2 || $by_date ) {
