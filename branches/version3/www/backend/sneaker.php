@@ -362,7 +362,7 @@ function get_comment($time, $type, $commentid, $userid) {
 	if (!$event) return;
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
-	$json['link'] = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $event->comment_order, $event->link_comments)."#comment-$event->comment_order";
+	$json['link'] = $foo_link->get_relative_permalink()."/000$event->comment_order";
 	$json['id'] = $commentid;
 	$json['status'] = get_status($event->link_status);
 	$json['ts'] = $time;

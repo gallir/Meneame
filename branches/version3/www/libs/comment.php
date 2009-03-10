@@ -111,7 +111,7 @@ class Comment {
 		}
 		$this->link_permalink =  $link->get_relative_permalink();
 		echo '<div class="'.$comment_class.'">';
-		echo '<a href="'.$this->link_permalink.get_comment_page_suffix($globals['comments_page_size'], $this->order, $globals['link']->comments).'#comment-'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
+		echo '<a href="'.$this->link_permalink.'/000'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
 
 		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';

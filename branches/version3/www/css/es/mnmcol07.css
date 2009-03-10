@@ -30,7 +30,7 @@ a:visited {
 color: #551a8b;
 }
 
-#wrap {
+#wrap, #newswrap, #singlewrap {
 background-color: #fff;
 }
 
