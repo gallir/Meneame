@@ -64,11 +64,13 @@ function save_comment () {
 	global $link, $db, $comment, $current_user, $globals, $site_key;
 
 
+	$user_id = intval($_POST['user_id']);
 	if(intval($_POST['id']) == $comment->id && $current_user->authenticated && 
 		// Allow the author of the post
-		((intval($_POST['user_id']) == $current_user->user_id &&
-		$current_user->user_id == $comment->author &&
-		time() - $comment->date < $globals['comment_edit_time'] * 1.1) || $current_user->user_level == 'god') &&
+		(($user_id == $current_user->user_id 
+			&& $current_user->user_id == $comment->author 
+			&& time() - $comment->date < $globals['comment_edit_time'] * 1.1) || 
+			($comment->author != $current_user->user_id && $current_user->user_level == 'god')) &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  && 
 		strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
