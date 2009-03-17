@@ -65,7 +65,7 @@ function htmlentities2unicodeentities ($input) {
 }
 
 function clean_input_url($string) {
-	$string = preg_replace('/ /', '+', trim(stripslashes($string)));
+	$string = preg_replace('/ /', '+', trim(stripslashes(mb_substr($string, 0, 512))));
 	return preg_replace('/[<>\r\n\t]/', '', $string);
 }
 
