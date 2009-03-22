@@ -95,7 +95,11 @@ if($current_user->user_id>0) {
 }
 
 if (!$link->insert_vote($value)) {
-	error(_('ya ha votado antes'));
+	if ($current_user->user_id > 0) {
+		error(_('ya se votó antes con el mismo usuario o IP'));
+	} else {
+		error(_('ya se votó antes desde la misma IP'));
+	}
 }
 
 if ($link->status == 'discard' && $current_user->user_id>0 && $link->votes > $link->negatives && $link->karma > 0) {

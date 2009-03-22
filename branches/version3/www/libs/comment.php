@@ -193,7 +193,7 @@ class Comment {
 		$vote->user=$current_user->user_id;
 		$vote->type='comments';
 		$vote->link=$this->id;
-		$this->voted = $vote->exists();
+		$this->voted = $vote->exists(false);
 		if ($this->voted) return $this->voted;
 	}
 
@@ -204,7 +204,7 @@ class Comment {
 		$vote->user = $current_user->user_id;
 		$vote->type='comments';
 		$vote->link=$this->id;
-		if ($vote->exists()) {
+		if ($vote->exists(true)) {
 			return false;
 		}
 		$vote->value = $current_user->user_karma;

@@ -69,7 +69,7 @@ if ($votes_freq > $freq && $current_user->user_karma > 4) {
 }
 
 if (!$link->insert_vote($value)) {
-	error(_('ya ha votado antes'));
+	error(_('ya se votó antes con el mismo usuario o IP'));
 }
 
 echo $link->json_votes_info(intval($value));

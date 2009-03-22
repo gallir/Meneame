@@ -684,7 +684,7 @@ class Link {
 		$vote = new Vote;
 		$vote->user=$user;
 		$vote->link=$this->id;
-		return $vote->exists();	
+		return $vote->exists(false);	
 	}
 	
 	function votes($user) {
@@ -703,7 +703,7 @@ class Link {
 		$vote = new Vote;
 		$vote->user=$current_user->user_id;
 		$vote->link=$this->id;
-		if ($vote->exists()) return false;
+		if ($vote->exists(true)) return false;
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {

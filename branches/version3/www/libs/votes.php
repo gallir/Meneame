@@ -32,9 +32,25 @@ class Vote {
 		return $where;
 	}
 
-	function exists() {
-		global $db;
-		$where = $this->get_where('');
+	function exists($check_ip = true) {
+		global $db, $globals;
+
+		if (! $check_ip) {
+			if ($this->user == 0 ) {
+				return 0;
+			} else {
+				$where .= " AND (vote_user_id=$this->user)";
+			}
+		} else  {
+			if (empty($this->ip)) $this->ip=$globals['user_ip_int'];
+			if($this->user > 0) {
+				$where .= " AND (vote_user_id=$this->user OR vote_ip_int=$this->ip)";
+			} elseif ($this->user == 0 ) {
+				$where .= " AND vote_ip_int=$this->ip";
+			}
+		}
+		$where = "vote_type='$this->type' AND vote_link_id=$this->link $where";
+
 		return $db->get_var("SELECT SQL_NO_CACHE vote_value FROM votes WHERE $where LIMIT 1");
 	}
 
