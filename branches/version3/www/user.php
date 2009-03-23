@@ -191,14 +191,19 @@ function do_profile() {
 		} else {
 			echo $user->username;
 		}
+		if (($current_user->user_level == 'god' || $current_user->user_level == 'admin') &&
+			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id")) > 0 ) {
+			echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
+			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones').'</a><sup>'.$nclones.'</sup>) ';
+		}
 		// Print friend icon
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
 			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.friend_teaser($current_user->user_id, $user->id).'</a>';
 		}
 		// Print user detailed info
 		if ($login===$current_user->user_login || $current_user->user_level == 'god') {
-			echo " (" . _('id'). ": <em>$user->id</em>)";
-			echo " (<em>$user->level</em>)";
+			echo " (" . _('id'). ": <em>$user->id</em>, ";
+			echo "<em>$user->level</em>)";
 		}
 		if($current_user->user_level=='god') {
 			echo " (<em>$user->username_register</em>)";
@@ -296,10 +301,6 @@ function do_profile() {
 
 		$clone_counter = 0;
 		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
-		if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
-			echo '<p><strong><a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
-			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones por IP').'</a></strong></p>';
-		}
 		$prev_address = '';
 		foreach ($addresses as $dbaddress) {
 			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
