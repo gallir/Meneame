@@ -296,6 +296,10 @@ function do_profile() {
 
 		$clone_counter = 0;
 		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
+		if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+			echo '<p><strong><a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
+			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones por IP').'</a></strong></p>';
+		}
 		$prev_address = '';
 		foreach ($addresses as $dbaddress) {
 			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
