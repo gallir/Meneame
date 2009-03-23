@@ -114,13 +114,29 @@ DROP TABLE IF EXISTS `chats`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `chats` (
-  `chat_time` int(10) unsigned NOT NULL default '0',
+  `chat_time` decimal(12,2) unsigned NOT NULL default '0.00',
   `chat_uid` int(10) unsigned NOT NULL default '0',
   `chat_room` enum('all','friends','admin') NOT NULL default 'all',
   `chat_user` char(32) NOT NULL,
   `chat_text` char(255) NOT NULL,
   KEY `chat_time` USING BTREE (`chat_time`)
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8 MAX_ROWS=1000;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `clones`
+--
+
+DROP TABLE IF EXISTS `clones`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `clones` (
+  `clon_from` int(10) unsigned NOT NULL,
+  `clon_to` int(10) unsigned NOT NULL,
+  `clon_ip` char(24) NOT NULL,
+  `clon_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`clon_from`,`clon_to`,`clon_ip`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -533,4 +549,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-01-20 16:34:05
+-- Dump completed on 2009-03-23 22:09:51
