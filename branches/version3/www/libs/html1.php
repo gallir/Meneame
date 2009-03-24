@@ -572,7 +572,7 @@ function do_vertical_tags($what=false) {
 			if ($globals['base_search_url']) {
 				$output .= $globals['base_url'].$globals['base_search_url'].'tag:';
 			} else {
-				$output .= $globals['base_url'].'search.php?p=tag&amp;q=';
+				$output .= $globals['base_url'].'search.php?p=tags&amp;q=';
 			}
 			$output .= urlencode($word).'">'.$word.'</a>  ';
 		}
