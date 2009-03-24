@@ -75,7 +75,6 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 			$f .= " $w";
 			$n++;
 		}
-		echo "F: $f<br>\n";
 		$q = $cl->AddQuery ( $f, '*' );
 		array_push($queries, $q);
 	}

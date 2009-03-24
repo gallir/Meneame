@@ -89,7 +89,7 @@ function print_search_form() {
 	echo '<input class="button" type="submit" value="'._('buscar').'" />';
 
 	// Print field options
-	echo '<br /><br /><select name="p">';
+	echo '<br /><select name="p">';
 	switch ($_REQUEST['p']) {
 		case 'url':
 		case 'tags':
