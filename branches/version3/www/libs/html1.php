@@ -655,7 +655,7 @@ function do_best_sites() {
 		foreach ($res as $site) {
 			$i++;
 			$parsed_url = parse_url($site->blog_url);
-			$output .= '<li><strong>'.$i.'. <a href="'.$globals['base_url'].'search.php?q=site:'.rawurlencode($site->blog_url).'+period:48+status:published" title="'._('votos 48 horas').': '.$site->total.' (coef: '.intval($site->coef).')">'.$parsed_url['host'].'</a></strong></li>'."\n";
+			$output .= '<li><strong>'.$i.'. <a href="'.$globals['base_url'].'search.php?q='.rawurlencode($site->blog_url).'&amp;p=site&amp;h=48&amp;s=published" title="'._('votos 48 horas').': '.$site->total.' (coef: '.intval($site->coef).')">'.$parsed_url['host'].'</a></strong></li>'."\n";
 		}
 		$output .= '</ul></div>';
 		echo $output;
