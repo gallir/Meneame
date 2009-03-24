@@ -90,7 +90,6 @@ do_tabs("main",_('noticia'), true);
 echo '<div id="newswrap">'."\n";
 $link->print_summary();
 
-do_comment_pages($link->comments, $current_page);
 
 echo '<div class="comments">';
 
@@ -115,6 +114,8 @@ if($link->date > $globals['now']-$globals['time_enabled_comments'] && $link->com
 	($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
         print_comment_form();
 }
+
+do_comment_pages($link->comments, $current_page);
 
 echo '</div>';
 
