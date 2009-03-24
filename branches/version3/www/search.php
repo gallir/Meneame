@@ -39,10 +39,8 @@ $globals['ads'] = true;
 
 $globals['noindex'] = true;
 
-$_REQUEST['q'] = trim(stripslashes($_REQUEST['q']));
 $response = get_search_links(false, $offset, $page_size);
-$search_txt = htmlspecialchars($_REQUEST['q']);
-do_header(_('búsqueda de'). ' "'.$search_txt.'"');
+do_header(_('búsqueda de'). ' "'.htmlspecialchars($_REQUEST['words']).'"');
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 
 /*** SIDEBAR ****/
@@ -54,11 +52,22 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-echo '<div style="background:#FFE2C5;margin:10px 0 5px 86px;font-size:100%;text-align:right;padding:5px;">'._('búsqueda'). ': <strong>'.$search_txt.'</strong>';
+// Search form
+echo '<div class="genericform" style="text-align: center">';
+echo '<fieldset>';
+
+print_search_form();
 if(!empty($_REQUEST['q'])) {
+	echo '<div style="font-size:85%;margin-top: 5px">';
+	echo _('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos');
 	echo '&nbsp;<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($_REQUEST['q']).'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" alt="rss2" height="12" width="12"  style="vertical-align:top"/></a>';
+	echo '</div>';
 }
-echo '&nbsp;&nbsp;&nbsp;'._('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos').'</div>';
+
+echo '</fieldset>';
+echo '</div>';
+
+
 $link = new Link;
 if ($response['ids']) {
 	$rows = min($response['rows'], 1000);
@@ -73,4 +82,84 @@ do_pages($rows, $page_size);
 echo '</div>';
 do_footer_menu();
 do_footer();
+
+function print_search_form() {
+	echo '<form id="thisform" action="">';
+	echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['words']).'" class="form-full"/>';
+	echo '<input class="button" type="submit" value="'._('buscar').'" />';
+
+	// Print field options
+	echo '<br /><br /><select name="p">';
+	switch ($_REQUEST['p']) {
+		case 'url':
+		case 'tags':
+		case 'title':
+		case 'site':
+			echo '<option value="'.$_REQUEST['p'].'" selected="selected">'.$_REQUEST['p'].'</option>';
+			break;
+		default:
+			echo '<option value="" selected="selected">'._('campos...').'</option>';
+			break;
+	}
+	foreach (array('url', 'tags', 'title', 'site') as $p) {
+		if ($p != $_REQUEST['p']) {
+			echo '<option value="'.$p.'">'.$p.'</option>';
+		}
+	}
+	echo '<option value="">'._('todo el texto').'</option>';
+	echo '</select>';
+
+	// Print status options
+	echo '&nbsp;&nbsp;<select name="s">';
+	switch ($_REQUEST['s']) {
+		case 'published':
+		case 'queued':
+		case 'discard':
+		case 'autodiscard':
+		case 'abuse':
+			echo '<option value="'.$_REQUEST['s'].'" selected="selected">'.$_REQUEST['s'].'</option>';
+			break;
+		default:
+			echo '<option value="" selected="selected">'._('estado...').'</option>';
+			break;
+	}
+	foreach (array('published', 'queued', 'discard', 'autodiscard', 'abuse') as $p) {
+		if ($p != $_REQUEST['s']) {
+			echo '<option value="'.$p.'">'.$p.'</option>';
+		}
+	}
+	echo '<option value="">'._('todas').'</option>';
+	echo '</select>';
+
+	// Select period
+	echo '&nbsp;&nbsp;<select name="h">';
+	if($_REQUEST['h'] > 0) {
+		$date = get_date(time()-$_REQUEST['h']*3600);
+		echo '<option value="'.$_REQUEST['h'].'" selected="selected">'.$date.'</option>';
+	} else {
+		echo '<option value="" selected="selected">'._('período...').'</option>';
+	}
+	echo '<option value="'.intval(24).'">'._('24 horas').'</option>';
+	echo '<option value="'.intval(48).'">'._('48 horas').'</option>';
+	echo '<option value="'.intval(24*7).'">'._('última semana').'</option>';
+	echo '<option value="'.intval(24*30).'">'._('última mes').'</option>';
+	echo '<option value="'.intval(24*180).'">'._('6 meses').'</option>';
+	echo '<option value="'.intval(24*365).'">'._('1 año').'</option>';
+	echo '<option value="">'._('todas').'</option>';
+	echo '</select>';
+
+
+	echo '&nbsp;&nbsp;<select name="o">';
+	if($_REQUEST['o'] == 'date') {
+		echo '<option value="date">'._('por fecha').'</option>';
+		echo '<option value="">'._('por relevancia').'</option>';
+	} else {
+		echo '<option value="">'._('por relevancia').'</option>';
+		echo '<option value="date">'._('por fecha').'</option>';
+	}
+	echo '</select>';
+
+	echo '</form>';
+}
+
 ?>

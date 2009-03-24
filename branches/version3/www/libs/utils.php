@@ -234,7 +234,7 @@ function get_current_page() {
 }
 
 function get_date($epoch) {
-    return date("Y-m-d e", $epoch);
+    return date("m-d-Y", $epoch);
 }
 
 function get_date_time($epoch) {

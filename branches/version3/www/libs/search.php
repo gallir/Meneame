@@ -2,9 +2,12 @@
 require_once (mnminclude.'sphinxapi.php');
 
 function get_search_links($by_date = false, $start = 0, $count = 50) {
-	$response = db_get_search_links($by_date, $start, $count);
-	if ($response) return $response;
-	return sphinx_get_search_links($by_date, $start, $count);
+	search_parse_query();
+	if ($_REQUEST['p'] == 'site' || $_REQUEST['p'] == 'url_db') {
+		return db_get_search_links($by_date, $start, $count);
+	} else {
+		return sphinx_get_search_links($by_date, $start, $count);
+	}
 
 }
 
@@ -24,72 +27,62 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 	$response['rows'] = 0;
 	$response['time'] = 0;
 
-	$words = $_REQUEST['q'] = trim(substr(strip_tags($_REQUEST['q']), 0, 250));
-	if (empty($words)) return $response;
+	if (empty($_REQUEST['words'])) return $response;
 
-	if (!empty($_REQUEST['p'])) {
-		$prefix = clean_input_url($_REQUEST['p']);
-	} elseif (preg_match('/^ *(\w+): *(.*)/', $words, $matches)) {
-		$prefix = $matches[1];
-		$words = $matches[2];
-	}
-	if (preg_match('/^http[s]*/', $prefix)) { // It's an url search
-		$words = "$prefix:$words";
-		$prefix = false;
-		$field = 'url';
-	}
-	if ($prefix) {
-		switch ($prefix) {
-			case 'date':
-				$by_date = true;
-				break;
-			case 'url';
-				$field = 'url';
-				break;
-			case 'title';
-				$field = 'title';
-				break;
-			case 'tag':
-			case 'tags':
-				$field = 'tags';
-				break;
-		}
+
+	$words_array = explode(" ", $_REQUEST['words']);
+	$words_count = count($words_array);
+	$words = $_REQUEST['words'];
+
+
+	if ($_REQUEST['h']) {
+		$max_date = time();
+		$min_date = $max_date - $_REQUEST['h'] * 3600;
+		$cl->SetFilterRange('date', $min_date, $max_date);
 	}
 
-	$words_count = count(explode(" ", $words));
+	if ($_REQUEST['s']) {
+		$cl->SetFilter('status', array($_REQUEST['s_id']));
+	} 
 
 
-	if ($field) {
+	if ($_REQUEST['p']) {
+		$f = '@'.$_REQUEST['p'];
+	} else {
+		$f = '@*';
+	}
+
+	if ($by_date || $_REQUEST['o'] == 'date') {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
-		$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
-		$q = $cl->AddQuery ( "@$field \"$words\"", '*' );
-		array_push($queries, $q);
-	} elseif ($words_count < 2 || $by_date ) {
-		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
-		$cl->SetMatchMode (SPH_MATCH_ALL);
-		$q = $cl->AddQuery ( $words, '*' );
-		array_push($queries, $q);
-	} else  {
-		if ($words_count > 2) {
-			$cl->SetMatchMode (SPH_MATCH_PHRASE);
-			//$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
-			$cl->SetSortMode (SPH_SORT_RELEVANCE);
-			$q = $cl->AddQuery ( $words, '*' );
-			array_push($queries, $q);
-		}
-		$cl->SetMatchMode (SPH_MATCH_ALL);
-		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
+	} else {
+		$cl->SetSortMode (SPH_SORT_TIME_SEGMENTS, 'date');
 		//$cl->SetSortMode (SPH_SORT_RELEVANCE);
-		$q = $cl->AddQuery ( $words, '*' );
-		array_push($queries, $q);
-		$cl->SetMatchMode (SPH_MATCH_ANY);
-		$cl->SetSortMode (SPH_SORT_RELEVANCE);
-		$q = $cl->AddQuery ( $words, '*' );
+	}
+
+	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
+	if ($_REQUEST['p'] == 'url') {
+		$q = $cl->AddQuery ( "$f \"$words\"", '*' );
+	} else {
+		$q = $cl->AddQuery ( "$f $words", '*' );
+	}
+	array_push($queries, $q);
+
+	// If there are no boolean opertions, add a new search for ANY of the terms
+	if (!preg_match('/( and | or | [\-\+\&\|])/i', $words) && $words_count > 1) {
+		$n = 0;
+		foreach ($words_array as $w) {
+			if ($n > 0) $f .= ' |';
+			$f .= " $w";
+			$n++;
+		}
+		echo "F: $f<br>\n";
+		$q = $cl->AddQuery ( $f, '*' );
 		array_push($queries, $q);
 	}
 
 
 	$results = $cl->RunQueries();
+
 
 	$n = 0;
 	$response['error'] = $results['error'];
@@ -116,32 +109,36 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 	global $db;
 	// For now it serves for search specific blogs (used from most voted sites)
-	if (!preg_match('/^site: *(http[^ ]+)/i', $_REQUEST['q'])) return false;
 
 	$response = array();
 	$start_time = microtime(true);
-	if (preg_match('/^site: *(http[^ ]+)/i', $_REQUEST['q'], $match)) {
-		$url = $db->escape($match[1]);
+	$url = $db->escape($_REQUEST['q']);
+	if ($_REQUEST['p'] == 'site') {
 		$site_ids = $db->get_col("select blog_id from blogs where blog_url like '$url%'");
 		if ($site_ids) {
 			$list = implode(',', $site_ids);
 			$from = "links";
 			$where = "link_blog in ($list)";
+			$order = "order by link_status, link_date desc";
 		}
+	} else {
+		$from = "links";
+		$where = "link_url like '$url%'";
+		$order = "order by link_id desc";
 	}
 
-	if (preg_match('/ status: *(\w+)/i', $_REQUEST['q'], $match)) {
-		$status = $db->escape($match[1]);
+	if ($_REQUEST['s']) {
+		$status = $db->escape($_REQUEST['s']);
 		$where .= " and link_status = '$status'";
 	}
 
-	if (preg_match('/ period: *(\d+)/i', $_REQUEST['q'], $match)) {
-		$hours = intval($match[1]);
+	if ($_REQUEST['f']) {
+		$hours = intval($_REQUEST['f']);
 		$where .= " and link_date > date_sub(now(), interval $hours hour)";
 	}
 	if ($where && $from) { 
-		$sql = "select link_id from $from where $where order by link_status, link_date desc limit $start,$count";
-		$response['rows'] = $db->get_var("select count(*)  from $from where $where");
+		$sql = "select link_id from $from where $where $order limit $start,$count";
+		$response['rows'] = $db->get_var("select count(*) from $from where $where");
 		if ($response['rows'] > 0) {
 			$response['ids'] = array();
 			$ids = $db->get_col($sql);
@@ -150,6 +147,57 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 	}
 	$response['time'] = microtime(true) - $start_time;
 	return $response;
+}
+
+function search_parse_query() {
+	global $db;
+
+	$_REQUEST['words'] = $_REQUEST['q'] = trim(substr(strip_tags(stripslashes($_REQUEST['q'])), 0, 250));
+
+	if (!empty($_REQUEST['p'])) {
+		$_REQUEST['p'] = clean_input_url($_REQUEST['p']);
+	} elseif (preg_match('/^ *(\w+): *(.*)/', $_REQUEST['q'], $matches)) {
+		$_REQUEST['words'] = $matches[2];
+		switch ($matches[1]) {
+			case 'http':
+			case 'https':
+				 $_REQUEST['words'] = $_REQUEST['q'];
+				$_REQUEST['o'] = 'date';
+				$_REQUEST['p'] = 'url_db';
+				break;
+			case 'date':
+				$_REQUEST['o'] = 'date';
+				break;
+			case 'url';
+				$_REQUEST['p'] = 'url';
+				break;
+			case 'title';
+				$_REQUEST['p'] = 'title';
+				break;
+			case 'tag':
+			case 'tags':
+				$_REQUEST['p'] = 'tags';
+				break;
+		}
+	} 
+
+
+	// Check filters and clean
+	if (isset($_REQUEST['h'])) $_REQUEST['h'] = intval($_REQUEST['h']);
+	if (isset($_REQUEST['p']) && ! preg_match('/^(url|tags|title|site|url_db)$/', $_REQUEST['p'])) unset($_REQUEST['p']);
+	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
+
+	if (isset($_REQUEST['s'])) {
+		// Retrieve available status values
+		$row = $db->get_row("SHOW COLUMNS FROM links like 'link_status'");
+		preg_match_all("/'(.*?)'/", $row->Type, $matches);
+		$i = array_search($_REQUEST['s'], $matches[1]);
+		if ($i !== false) {
+			$_REQUEST['s_id'] = $i+1;
+		} else {
+			unset($_REQUEST['s']);
+		}
+	}
 }
 
 ?>
