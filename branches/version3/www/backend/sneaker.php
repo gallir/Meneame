@@ -207,15 +207,12 @@ function get_chat() {
 	if (!$res) return;
 	foreach ($res as $event) {
 		$json['uid'] = $uid = $event->chat_uid;
-		$json['status'] = _('chat');
 		if ($uid != $current_user->user_id) {
 
 			// CHECK ADMIN MODE
 			// If the message is for admins check this user is also admin
-			if ($event->chat_room == 'admin') {
-				if (! $current_user->admin) continue;
-				$json['status'] = 'admin';
-			}
+			if ($event->chat_room == 'admin' && ! $current_user->admin) continue;
+
 			// If this user is in "admin" mode, check the sender is also admin
 			if (!empty($_REQUEST['admin']) && $current_user->admin) {
 				$user_level = $db->get_var("select user_level from users where user_id=$uid");
@@ -240,13 +237,20 @@ function get_chat() {
 						continue;
 				}
 			}
-		} else {
-			if ($event->chat_room == 'friends') {
-				$json['status'] = _('amigo');
-			} elseif ($event->chat_room == 'admin') {
-				$json['status'] = 'admin';
-			}
 		}
+
+		switch ($event->chat_room) {
+			case 'friends':
+				$json['status'] = _('amigo');
+				break;
+			case 'admin':
+				$json['status'] = 'admin';
+				break;
+			default:
+				$json['status'] = _('chat');
+				break;
+		}
+
 		$json['who'] = addslashes($event->chat_user);
 		$json['ts'] = intval($event->chat_time);
 		$json['type'] = 'chat';
