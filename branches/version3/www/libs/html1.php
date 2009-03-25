@@ -137,7 +137,7 @@ function do_header($title, $id='home') {
 	echo '<li class="noborder">' . "\n";
 	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
 	if (!empty($_REQUEST['q'])) {
-		echo '<input type="text" name="q" value="'.htmlspecialchars(strip_tags($_REQUEST['q'])).'" />';
+		echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['q']).'" />';
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
@@ -326,7 +326,7 @@ function do_rss_box() {
 	if(!empty($_REQUEST['q'])) {
 		$search =  htmlspecialchars($_REQUEST['q']);
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?q='.urlencode($search).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
+		echo '<a href="'.$globals['base_url'].'rss2.php?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
 		echo '</li>';
 	}
 
