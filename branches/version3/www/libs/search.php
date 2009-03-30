@@ -14,6 +14,8 @@ function get_search_links($by_date = false, $start = 0, $count = 50) {
 function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 	global $globals;
 
+	$start_time = microtime(true);
+
 	$cl = new SphinxClient ();
 	$cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
 	$cl->SetLimits ( $start, $count );
@@ -89,7 +91,7 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$res = $results[$q];
 		if ( is_array($res["matches"]) ) {
 			$response['rows'] += $res["total_found"];
-			$response['time'] += $res["time"];
+			// $response['time'] += $res["time"];
 			foreach ( $res["matches"] as $doc => $docinfo ) {
 				if (!$recorded[$doc]) {
 					$response['ids'][$n] = $doc;
@@ -101,6 +103,7 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 			}
 		}
 	}
+	$response['time'] = microtime(true) - $start_time;
 	return $response;
 }
 
@@ -131,8 +134,8 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$where .= " and link_status = '$status'";
 	}
 
-	if ($_REQUEST['f']) {
-		$hours = intval($_REQUEST['f']);
+	if ($_REQUEST['h']) {
+		$hours = intval($_REQUEST['h']);
 		$where .= " and link_date > date_sub(now(), interval $hours hour)";
 	}
 	if ($where && $from) { 
