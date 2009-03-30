@@ -9,7 +9,7 @@
 
 include_once('../config.php');
 
-if ($current_user->user_level != 'god' && $current_user->user_level != 'admin') {
+if (! $current_user->admin) {
 	echo _('usuario no autorizado');
 	die;
 }

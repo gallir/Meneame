@@ -97,7 +97,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		if ($link->date < (time() - 86400*15) && $urlfrom['host'] != get_server_name()) {
-			syslog(LOG_NOTICE, "Meneame: pingback, story is too old: $pagelinkedto");
+			syslog(LOG_NOTICE, "Meneame ($globals[user_ip]): pingback, story is too old: $pagelinkedto ($pagelinkedfrom )");
 	  		return new IXR_Error(33, 'Story is too old for pingbacks.');
 		}
 

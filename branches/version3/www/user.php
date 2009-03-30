@@ -191,7 +191,7 @@ function do_profile() {
 		} else {
 			echo $user->username;
 		}
-		if (($current_user->user_level == 'god' || $current_user->user_level == 'admin') &&
+		if ($current_user->admin &&
 			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id")) > 0 ) {
 			echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
 			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones').'</a><sup>'.$nclones.'</sup>) ';
@@ -281,7 +281,7 @@ function do_profile() {
 	}
 
 	// Show first numbers of the address if the user has god privileges
-	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // tops and admins know each other for sure, keep privacy
+	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gops and admins know each other for sure, keep privacy
 		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
