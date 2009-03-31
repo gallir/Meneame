@@ -92,7 +92,7 @@ if ($votes_info->comment_user_id == $current_user->user_id) {
 	error(_('no puedes votar a tus comentarios'));
 }
 
-if ($votes_info->date < time() - $globals['time_enabled_votes']) {
+if ($votes_info->date < time() - $globals['time_enabled_comments']) {
 	error(_('votos cerrados'));
 }
 
