@@ -246,6 +246,8 @@ class Post {
 	}
 	function print_shake_icons() {
 		global $globals, $current_user;
+
+		$this->voted = false;
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && $this->date > time() - $globals['time_enabled_votes'] && ! $this->vote_exists()) {  
 		 	echo '<span id="c-votes-'.$this->id.'">';
 			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
