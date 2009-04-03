@@ -31,7 +31,7 @@ $globals['db_password'] = '';
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
-$globals['top_logo'] = 'img/es/logo02.png';
+$globals['top_logo'] = 'img/mnm/eli.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
 // leave empty if you don't have the rewrite rule in apache
 
