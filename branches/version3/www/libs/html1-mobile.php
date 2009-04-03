@@ -87,7 +87,7 @@ function do_header($title, $id='home') {
 
 	do_css_includes();
 
-	echo '<meta name="generator" content="meneame" />' . "\n";
+	echo '<meta name="generator" content="meneame mobile" />' . "\n";
 	if (!empty($globals['noindex'])) {
 		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
 	}

@@ -123,6 +123,15 @@ function do_header($title, $id='home') {
 
 	do_js_includes();
 
+	if ($globals['thumbnail']) {
+		// WARN: It's assumed a thumbanil comes with base_url included
+    	$thumb = 'http://'.get_server_name().$globals['thumbnail'];
+	} else {
+		$thumb = 'http://'.get_server_name().$globals['base_url'].$globals['top_logo'];
+	}
+   	echo '<meta name="thumbnail_url" content="'.$thumb."\"/>\n";
+   	echo '<link rel="image_src" href="'.$thumb."\"/>\n";
+
 	if ($globals['extra_head']) echo $globals['extra_head'];
 
 	echo '</head>' . "\n";
