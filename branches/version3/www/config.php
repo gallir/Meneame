@@ -32,6 +32,7 @@ $globals['db_password'] = '';
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
+$globals['thumbnail_logo'] = 'img/mnm/eli-55x60.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
 // leave empty if you don't have the rewrite rule in apache
 
@@ -120,8 +121,8 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm08.css';
-$globals['css_color'] = 'css/es/mnmcol07.css';
+$globals['css_main'] = 'css/es/mnm09.css';
+$globals['css_color'] = 'css/es/mnmcol09.css';
 
 // Store access stats
 $globals['save_pageloads'] = false;
