@@ -137,7 +137,11 @@ if ($comments) {
 			if ($individual_user) continue;
 			else $comment->username = get_server_name();
 		}
-		$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($comment->content)));
+		if ($comment->user_level == 'disabled') {
+			$content = '['._('Usuario deshabilitado').']';
+		} else {
+			$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($comment->content)));
+		}
 		echo "	<item>\n";
 		$link_id = $link->id = $comment->link;
 		$link->read();
