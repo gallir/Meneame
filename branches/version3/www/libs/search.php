@@ -121,7 +121,7 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 			$list = implode(',', $site_ids);
 			$from = "links";
 			$where = "link_blog in ($list)";
-			$order = "order by link_status, link_date desc";
+			$order = "order by link_date desc";
 		}
 	} else {
 		$from = "links";
@@ -163,7 +163,7 @@ function search_parse_query() {
 		switch ($matches[1]) {
 			case 'http':
 			case 'https':
-				 $_REQUEST['words'] = $_REQUEST['q'];
+				$_REQUEST['words'] = $_REQUEST['q'];
 				$_REQUEST['o'] = 'date';
 				$_REQUEST['p'] = 'url_db';
 				break;
