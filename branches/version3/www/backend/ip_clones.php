@@ -8,6 +8,9 @@
 // The code below was made by Beldar <beldar at gmail dot com>
 
 include_once('../config.php');
+include_once('pager.php');
+
+header('Content-Type: text/html; charset=utf-8');
 
 if (! $current_user->admin) {
 	echo _('usuario no autorizado');
@@ -20,17 +23,43 @@ if (! $user_id > 0) {
 	die;
 }
 
+if (!isset($_GET['p']))  {
+    $users_page = 1;
+} else $users_page = intval($_GET['p']);
 
-$clones = $db->get_col("select distinct user_login from clones, users where clon_from = $user_id and user_id = clon_to order by clon_date desc limit 20");
+$users_page_size = 20;
+$users_offset=($users_page-1)*$users_page_size;
+
+
+$from = "and clon_date > date_sub(now(), interval 60 day)";
+
+$nclones = $db->get_var("select count(distinct user_id) from clones, users where clon_from = $user_id and user_id = clon_to $from");
+$clones = $db->get_results("select distinct user_id, user_login, user_avatar from clones, users where clon_from = $user_id and user_id = clon_to $from order by clon_date desc limit $users_offset,$users_page_size");
+
 if (! $clones) {
 	print _('no hay clones para este usuario');
 	die;
 }
 
-echo '<ul>';
+echo '<div style="padding-top: 20px">';
+echo '<div class="voters-list">';
+
 foreach ($clones as  $clon) {
-	echo '<li><a href="'.get_user_uri($clon).'">'.$clon."</a></li>\n";
+	$details = '';
+	$ips = $db->get_col("select distinct clon_ip from clones where clon_from = $user_id and clon_to = $clon->user_id $from");
+	foreach ($ips as $ip) {
+		$details .= preg_replace('/\.[0-9]+$/', '', $ip).', ';
+	}
+	echo '<div class="item">';
+	echo '<a '.$style.' href="'.get_user_uri($clon->user_login).'" title="'.$details.'" target="_blank">';
+	echo '<img src="'.get_avatar_url($clon->user_id, $clon->user_avatar, 20).'" width="20" height="20" alt=""/>';
+   	echo $clon->user_login.'</a>';
+	echo '</div>';
 }
-echo '</ul>';
+
+echo "</div>\n";
+
+do_contained_pages($user_id, $nclones, $users_page, $users_page_size, 'ip_clones.php', 'voters', 'modalContent');
+echo '</div>';
 
 ?>
