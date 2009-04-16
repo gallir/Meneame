@@ -220,21 +220,17 @@ function get_chat() {
 			} else  {
 				// CHECK FRIENDSHIP
 				$friendship = friend_exists($current_user->user_id, $uid);
-				// Ignore
-				if ($friendship < 0) continue;
+				$reverse_friendship = friend_exists($uid, $current_user->user_id);
 				// This user is ignored by the writer
-				if (friend_exists($uid, $current_user->user_id) < 0) continue;
+				if ($friendship < 0 || $reverse_friendship < 0) continue;
 
-				if ($event->chat_room == 'friends') {
-					// Check the user is a friend of the sender
-					if (friend_exists($uid, $current_user->user_id) <= 0) {
-						continue;
-					}
-					$json['status'] = _('amigo');
-				}
-				// Check the sender is a friend of the receiver
 				if (!empty($_REQUEST['friends']) && $friendship <= 0) {
 						continue;
+				}
+				// Check that both users are friends in case the chat is for friends
+				if ($event->chat_room == 'friends') {
+					if ($friendship <= 0 || $reverse_friendship <= 0) continue;
+					$json['status'] = _('amigo');
 				}
 			}
 		}
