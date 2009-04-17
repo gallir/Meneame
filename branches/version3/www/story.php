@@ -228,18 +228,26 @@ case 2:
 		echo '<div class="commentform warn">'."\n";
 		echo _('comentarios cerrados')."\n";
 		echo '</div>'."\n";
-	} elseif ($current_user->authenticated && 
-			($current_user->user_karma > $globals['min_karma_for_comments'] || 
-							$current_user->user_id == $link->author)) {
+	} elseif ($current_user->authenticated 
+				&& (($current_user->user_karma > $globals['min_karma_for_comments'] 
+						&& $current_user->user_date < $globals['now'] - $globals['min_time_for_comments']) 
+					|| $current_user->user_id == $link->author)) {
 		// User can comment
 		print_comment_form();
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 	} else {
 		// Not enough karma or anonymous user
 		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
-		if ($current_user->authenticated && $current_user->user_karma <= $globals['min_karma_for_comments']) {
+		if ($current_user->authenticated) {
+			if ($current_user->user_date >= $globals['now'] - $globals['min_time_for_comments']) {
+				$remaining = txt_time_diff($globals['now'], $current_user->user_date+$globals['min_time_for_comments']);
+				$msg = _('Debes esperar') . " $remaining " . _('para escribir el primer comentario');
+			}
+			if ($current_user->user_karma <= $globals['min_karma_for_comments']) {
+				$msg = _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma;
+			}
 			echo '<div class="commentform warn">'."\n";
-			echo _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma ."\n";
+			echo $msg . "\n";
 			echo '</div>'."\n";
 		} elseif (!$globals['bot']){
 			echo '<div class="commentform warn">'."\n";

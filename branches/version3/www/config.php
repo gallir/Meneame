@@ -84,6 +84,7 @@ $globals['min_karma_for_negatives'] = 5.5;
 $globals['min_user_votes'] = 0;  // For new users and also enable check of sent versus voted
 //$globals['min_karma_for_links'] = 4.9;
 //$globals['min_karma_for_comments'] = 4.9;
+$globals['min_time_for_comments'] = 3600; // Time to wait until first comment (from user_validated_date)
 //$globals['min_karma_for_posts'] = 6;
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;

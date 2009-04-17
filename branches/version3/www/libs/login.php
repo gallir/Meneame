@@ -30,40 +30,41 @@ class UserAuth {
 			if($_COOKIE['mnm_user'] === $userInfo[0]) {
 				$cookietime = (int) $userInfo[3];
 				$dbusername = $db->escape($_COOKIE['mnm_user']);
-				$dbuser=$db->get_row("SELECT SQL_CACHE user_id, user_pass, user_level, user_validated_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
+				$user=$db->get_row("SELECT SQL_CACHE user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
 
 				// We have two versions from now
 				// The second is more strong agains brute force md5 attacks
 				switch ($userInfo[2]) {
 					case '3':
 						if (($this->now - $cookietime) > 864000) $cookietime = 'expired'; // after 10 days expiration is forced
-						$key = md5($dbuser->user_email.$site_key.$dbusername.$dbuser->user_id.$cookietime);
+						$key = md5($user->user_email.$site_key.$dbusername.$user->user_id.$cookietime);
 						break;
 					case '2':
-						$key = md5($dbuser->user_email.$site_key.$dbusername.$dbuser->user_id);
+						$key = md5($user->user_email.$site_key.$dbusername.$user->user_id);
 						$cookietime = 0;
 						break;
 					default:
-						$key = md5($site_key.$dbusername.$dbuser->user_id);
+						$key = md5($site_key.$dbusername.$user->user_id);
 						$cookietime = 0;
 				}
 
-				if ( !$dbuser || !$dbuser->user_id > 0 || $key !== $userInfo[1] || 
-					$dbuser->user_level == 'disabled' || 
-					empty($dbuser->user_validated_date)) {
+				if ( !$user || !$user->user_id > 0 || $key !== $userInfo[1] || 
+					$user->user_level == 'disabled' || 
+					empty($user->user_date)) {
 						$this->Logout();
 						return;
 				}
 
-				$this->user_id = $dbuser->user_id;
+				$this->user_id = $user->user_id;
 				$this->user_login  = $userInfo[0];
-				$this->md5_pass = $dbuser->user_pass;
-				$this->user_level = $dbuser->user_level;
+				$this->md5_pass = $user->user_pass;
+				$this->user_level = $user->user_level;
 				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
-				$this->user_karma = $dbuser->user_karma;
-				$this->user_email = $dbuser->user_email;
-				$this->user_avatar = $dbuser->user_avatar;
-				$this->user_comment_pref = $dbuser->user_comment_pref;
+				$this->user_karma = $user->user_karma;
+				$this->user_email = $user->user_email;
+				$this->user_avatar = $user->user_avatar;
+				$this->user_comment_pref = $user->user_comment_pref;
+				$this->user_date = $user->user_date;
 				$this->authenticated = TRUE;
 
 				if ($userInfo[2] != '3') { // Update the cookie to version 3
@@ -100,23 +101,20 @@ class UserAuth {
 		}
 	}
 
-	function Authenticate($username, $password, $remember=false) {
+	function Authenticate($username, $hash, $remember=false) {
 		global $db;
 		$dbusername=$db->escape($username);
-		$user=$db->get_row("SELECT user_id, user_pass, user_level, user_validated_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
-		if ($user->user_level == 'disabled' || empty($user->user_validated_date)) return false;
-		if (strlen($password) != 32) { //migrate to md5
-			$password = md5($password);
-		}
-		$pass = $user->user_pass;
-		if ($user->user_id > 0 && $pass == $password) {
+		$user=$db->get_row("SELECT user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
+		if ($user->user_level == 'disabled' || ! $user->user_date) return false;
+		if ($user->user_id > 0 && $user->user_pass == $hash) {
 			$this->user_login = $username;
 			$this->user_id = $user->user_id;
 			$this->authenticated = TRUE;
-			$this->md5_pass = $pass;
+			$this->md5_pass = $user->user_pass;
 			$this->user_level = $user->user_level;
 			$this->user_email = $user->user_email;
 			$this->user_karma = $user->user_karma;
+			$this->user_date = $user->user_date;
 			$this->SetIDCookie(1, $remember);
 			return true;
 		}
@@ -139,7 +137,7 @@ class UserAuth {
 
 	function Date() {
 		global $db;
-		return (int) $db->get_var("select UNIX_TIMESTAMP(user_validated_date) from users where user_id=$this->user_id");
+		return (int) $this->user_date;
 	}
 }
 
