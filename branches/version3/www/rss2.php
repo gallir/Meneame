@@ -47,7 +47,6 @@ if(!empty($_REQUEST['time'])) {
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: favoritas de') . ' ' . $user_login;
-	$globals['show_original_link'] = true;
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['voted_by'])) {
 	// RSS for voted links
@@ -56,7 +55,6 @@ if(!empty($_REQUEST['time'])) {
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(vote_date) FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: votadas por') . ' ' . $user_login;
-	$globals['show_original_link'] = false;
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['friends_of'])) {
 	/////
@@ -67,7 +65,6 @@ if(!empty($_REQUEST['time'])) {
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: amigos de') . ' ' . $user_login;
-	$globals['show_original_link'] = false;
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['sent_by'])) {
 	/////
@@ -78,7 +75,6 @@ if(!empty($_REQUEST['time'])) {
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and link_votes > 0");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: noticias de') . ' ' . $user_login;
-	$globals['show_original_link'] = false;
 	$globals['redirect_feedburner'] = false;
 } else {
 	/////
@@ -240,9 +236,9 @@ if ($links) {
 			echo '<p><a href="'.$link->get_permalink().'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
 		}
 		
-		if ($link->status == 'published' || $globals['show_original_link']) {
-			echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."'>"._('noticia original')."</a></p>";
-		}
+		if ($link->status != 'published') $rel = 'rel="nofollow"';
+		else $rel = '';
+		echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."' $rel>"._('noticia original')."</a></p>";
 		echo "]]></description>\n";
 		if ($link->has_thumb()) {
 			echo '		<media:thumbnail url="http://'.get_server_name().$link->thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";

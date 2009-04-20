@@ -105,7 +105,9 @@ class Comment {
 		} else {
 			$comment_meta_class = 'comment-meta';
 			$comment_class = 'comment-body';
-			if ($this->karma > 80) {
+			if ($this->type == 'admin') {
+				$comment_class .= ' admin';
+			} elseif ($this->karma > 80) {
 				$comment_class .= ' high';
 			}
 		}

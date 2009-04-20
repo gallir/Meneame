@@ -471,6 +471,12 @@ color: #303030;
 border-color: #FF6400;
 }
 
+.comment-body.admin {
+background: #FFC8A6;
+border-color: #FF9400;
+color: #000;
+}
+
 .comment-body.high {
 background: #FFC8A6 url(../../img/common/comment-high.png) right bottom no-repeat;
 border-color: #FF9400;
