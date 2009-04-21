@@ -56,6 +56,9 @@ $globals['memcache_port'] = 11211; // optional
 $globals['comments_page_size'] = 100;
 $globals['comments_page_threshold'] = 1.10;
 
+// Min karma to highlights comments
+$globals['comment_highlight_karma'] = 100;
+
 
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;

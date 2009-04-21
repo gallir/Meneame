@@ -97,7 +97,8 @@ class Comment {
 
 		echo '<li id="ccontainer-'.$this->id.'">';
 
-		$this->hidden = $this->karma < -80 || ($this->user_level == 'disabled' && $this->type != 'admin');
+		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
+						|| ($this->user_level == 'disabled' && $this->type != 'admin');
 
 		if ($this->hidden)  {
 			$comment_meta_class = 'comment-meta-hidden';
@@ -107,7 +108,7 @@ class Comment {
 			$comment_class = 'comment-body';
 			if ($this->type == 'admin') {
 				$comment_class .= ' admin';
-			} elseif ($this->karma > 80) {
+			} elseif ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
 				$comment_class .= ' high';
 			}
 		}
