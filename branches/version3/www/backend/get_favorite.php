@@ -23,6 +23,12 @@ if ($user != $current_user->user_id) {
 	error(_('usuario incorrecto'));
 }
 
+// The security key comes in the "page" argument
+if ($_REQUEST['p'] != get_security_key()) {
+	error(_('clave de control incorrecta'));
+}
+
+
 echo favorite_add_delete($user, $link);
 
 function error($mess) {

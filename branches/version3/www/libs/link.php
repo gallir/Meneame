@@ -526,7 +526,7 @@ class Link {
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
+			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',\''.get_security_key().'\',\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
 		// Print meta and category

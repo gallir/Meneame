@@ -240,8 +240,4 @@ function print_expiration_dates() {
 	echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
 }
 
-function get_security_key() {
-	global $globals, $current_user, $site_key;
-	return md5($globals['user_ip'].$current_user->user_id.$site_key);
-}
 ?>

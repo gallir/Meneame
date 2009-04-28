@@ -317,6 +317,12 @@ function utf8_substr($str,$start)
 	}
 }
 
+// Simple key generator for use in GET requests
+function get_security_key() {
+	global $globals, $current_user, $site_key;
+	return md5($globals['user_ip'].$current_user->user_id.$site_key);
+}
+
 function not_found($mess = '') {
 	header("HTTP/1.0 404 Not Found");
 	header("Status: 404 Not Found");
