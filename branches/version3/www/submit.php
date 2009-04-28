@@ -292,10 +292,6 @@ function do_submit1() {
 		if ($linkres->ban['expire'] > 0) {
 			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($linkres->ban['expire']).'</p>';
 		}
-		// If the domain is banned, decrease user's karma
-		if ($linkres->banned && $current_user->user_level == 'normal') {
-			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
-		}
 		print_empty_submit_form();
 		echo '</div>'. "\n";
 		return;
@@ -341,6 +337,12 @@ function do_submit1() {
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
 		print_empty_submit_form();
 		echo '</div>'. "\n";
+		/*
+		// If the domain is banned, decrease user's karma
+		if ($linkres->banned && $current_user->user_level == 'normal') {
+			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
+		}
+		*/
 		return;
 	}
 
