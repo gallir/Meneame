@@ -3,15 +3,15 @@ VOTES FUNCTIONS
 BASIC FUNCTIONS
 ************************************/
 
-function menealo(user, id, htmlid, md5)
+function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&md5=" + md5;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key;
 	url = url + "?" + content;
 	disable_vote_link(id, "...", '#FFC8AF');
 	$.getJSON(url,  
 		 function(data) {
-				parseLinkAnswer(htmlid, data);
+				parseLinkAnswer(id, data);
 		}
 	);
 	reportAjaxStats('vote', 'link');
@@ -20,7 +20,7 @@ function menealo(user, id, htmlid, md5)
 function menealo_comment(user, id, value)
 {
 	var url = base_url + "backend/menealo_comment.php";
-	var content = "id=" + id + "&user=" + user + "&value=" + value;
+	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
 	var myid = 'comment-'+id;
 	url = url + "?" + content;
 	$.getJSON(url, 
@@ -43,7 +43,7 @@ function menealo_comment(user, id, value)
 function menealo_post(user, id, value)
 {
 	var url = base_url + "backend/menealo_post.php";
-	var content = "id=" + id + "&user=" + user + "&value=" + value;
+	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
 	var myid = 'comment-'+id;
 	url = url + "?" + content;
 	$.getJSON(url,
@@ -164,14 +164,14 @@ function check_checkfield(fieldname, mess) {
 	}
 }
 
-function report_problem(frm, user, id, md5 /*id, code*/) {
+function report_problem(frm, user, id) {
 	if (frm.ratings.value == 0)
 		return;
 	if (! confirm("¿Seguro que desea votar '" + frm.ratings.options[frm.ratings.selectedIndex].text +"'?") ) {
 		frm.ratings.selectedIndex=0;
 		return false;
 	}
-	var content = "id=" + id + "&user=" + user + "&md5=" + md5 + '&value=' +frm.ratings.value;
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key;
 	var url=base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
@@ -185,7 +185,7 @@ function report_problem(frm, user, id, md5 /*id, code*/) {
 // Get voters by Beldar <beldar.cat at gmail dot com>
 // Generalized for other uses (gallir at gmail dot com)
 function get_votes(program,type,container,page,id) {
-	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type;
+	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type+"&key="+base_key;
 	$('#'+container).load(url);
 	reportAjaxStats('html', program);
 }

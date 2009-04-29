@@ -28,6 +28,10 @@ if($current_user->user_id != $_REQUEST['user']) {
 	error(_('Usuario incorrecto, recargue la página para poder votar'));
 }
 
+if (!check_security_key($_REQUEST['key'])) {
+	error(_('clave de control incorrecta'));
+}
+
 if (empty($_REQUEST['value']) || ! is_numeric($_REQUEST['value'])) {
 	error(_('Falta valor del voto'));
 }

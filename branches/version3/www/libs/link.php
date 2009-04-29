@@ -526,7 +526,7 @@ class Link {
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',\''.get_security_key().'\',\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
+			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id).'</a></span>';
 		}
 
 		// Print meta and category
@@ -620,7 +620,7 @@ class Link {
 			if ($this->votes_enabled == false) {
 				echo '<span>'._('cerrado').'</span>';
 			} elseif( !$this->voted) {
-				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
+				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
 			} else {
 				if ($this->voted > 0) $mess = _('&#161;chachi!');
 				else $mess = ':-(';
@@ -668,7 +668,7 @@ class Link {
 
 		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
 		echo '<select '.$status.' name="ratings"  onchange="';
-		echo 'report_problem(this.form,'."$current_user->user_id, $this->id, "."'".$this->md5."'".')';
+		echo 'report_problem(this.form,'."$current_user->user_id, $this->id".')';
 		echo '">';
 		echo '<option value="0" selected="selected">'._('problema').'</option>';
 		foreach (array_keys($globals['negative_votes_values']) as $pvalue) {

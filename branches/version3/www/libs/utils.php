@@ -317,10 +317,21 @@ function utf8_substr($str,$start)
 	}
 }
 
-// Simple key generator for use in GET requests
-function get_security_key() {
+// Simple unified key generator for use in GET requests
+function get_security_key($time = false) {
 	global $globals, $current_user, $site_key;
-	return md5($globals['user_ip'].$current_user->user_id.$current_user->user_date.$site_key);
+	if (!$time) $time = $globals['now'];
+
+	return $time.'-'.sha1($time.$globals['user_ip'].$current_user->user_id.$site_key);
+}
+
+function check_security_key($key) {
+	global $globals, $current_user, $site_key;
+
+	$time_key = split('-', $key);
+	if (count($time_key) != 2) return false;
+	if ($globals['now'] - intval($time_key[0]) > 7200) return false;
+	return $key == get_security_key($time_key[0]);
 }
 
 function not_found($mess = '') {

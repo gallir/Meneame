@@ -37,9 +37,8 @@ if($current_user->user_id != $user_id) {
 	error(_('Usuario incorrecto, recargue la página para poder votar'));
 }
 
-$md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);
-if($md5 !== $_REQUEST['md5']){
-	error(_('Clave de control incorrecta'));
+if (!check_security_key($_REQUEST['key'])) {
+	error(_('clave de control incorrecta'));
 }
 
 if(! $link->negatives_allowed()) {

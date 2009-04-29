@@ -24,8 +24,18 @@ if(empty($_REQUEST['user']) && $_REQUEST['user'] !== '0' ) {
 	error(_('Falta el código de usuario'));
 }
 
-if (empty($_REQUEST['md5'])) {
-	error(_('Falta la clave de control'));
+if (!check_security_key($_REQUEST['key'])) {
+	error(_('clave de control incorrecta'));
+}
+
+$link = new Link;
+$link->id=$id;
+if(!$link->read_basic()) {
+	error(_('Artículo inexistente'));
+}
+
+if(!$link->is_votable()) {
+	error(_('votos cerrados'));
 }
 
 $link = new Link;
@@ -53,11 +63,6 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 
 if($current_user->user_id != $_REQUEST['user']) {
 	error(_('Usuario incorrecto, recargue la página para poder votar'));
-}
-
-$md5=md5($current_user->user_id.$id.$link->randkey.$globals['user_ip']);
-if($md5 !== $_REQUEST['md5']){
-	error(_('clave de control incorrecta'));
 }
 
 if ($current_user->user_id == 0) $ip_check = 'and vote_ip_int = '.$globals['user_ip_int'];

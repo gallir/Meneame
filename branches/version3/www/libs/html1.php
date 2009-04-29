@@ -208,16 +208,19 @@ function do_css_includes() {
 }
 
 function do_js_includes() {
-	global $globals;
+	global $globals, $current_user;
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";</script>'."\n";
+	echo '<script type="text/javascript">';
+	echo 'var base_url="'.$globals['base_url'].'";';
+	echo 'var base_key="'.get_security_key().'";';
+	echo '</script>'."\n";
 	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
 	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
 	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_url'].'js/jquery.simplemodal-1.2.2.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_url'].'js/general06.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/general07.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";
 	if ($globals['extra_js_text']) {

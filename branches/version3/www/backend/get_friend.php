@@ -23,8 +23,7 @@ if ($src != $current_user->user_id) {
 	error(_('usuario incorrecto'). " ($src, $current_user->user_id)");
 }
 
-// The secutiry key comes in the "page" argument
-if ($_REQUEST['p'] != get_security_key()) {
+if (!check_security_key($_REQUEST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
