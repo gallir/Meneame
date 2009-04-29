@@ -68,8 +68,8 @@ function admin_bans($ban_type) {
 	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length, $current_user;
 	require_once(mnminclude.'ban.php');
 
-	if (!empty($key)) $key = get_security_key();
-	if ($current_user->user_level=="god" && $_REQUEST["key"] == $key) {
+	$key = get_security_key();
+	if ($current_user->user_level=="god" && check_security_key($_REQUEST["key"])) {
 		if (!empty($_REQUEST["new_ban"])) {
 			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
 		} elseif (!empty($_REQUEST["edit_ban"])) {
