@@ -11,11 +11,14 @@ echo '<html><head><title>promote8.php</title></head><body>';
 ob_end_flush();
 
 $min_karma_coef = 0.87;
+$bonus_coef = 1.5;
 define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.11);
+define (PUB_PERC, 0.10);
+
+
 
 
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status in ('published', 'queued')");
@@ -67,7 +70,7 @@ $past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) fro
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
-$last_resort_karma = (int) $past_karma * 0.65;
+$last_resort_karma = (int) $past_karma * 0.70;
 
 
 //////////////
@@ -219,10 +222,10 @@ if ($links) {
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
 		if (abs($karma_neg_user)/$karma_pos_user < 0.05 && $now - $link->date < 7200 && $now - $link->date > 600) { 
-			$link->new_coef = 2 - ($now-$link->date)/7200;
+			$link->new_coef = $bonus_coef - ($now-$link->date)/7200;
 			// It applies the same meta coefficient to the bonus'
-			// Check 1 <= bonus <= 2
-			$link->new_coef = max(min($link->new_coef, 2), 1);
+			// Check 1 <= bonus <= $bonus_coef
+			$link->new_coef = max(min($link->new_coef, $bonus_coef), 1);
 			// if it's has bonus and therefore time-related, use the base min_karma
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
