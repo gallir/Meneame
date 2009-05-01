@@ -6,7 +6,7 @@ BASIC FUNCTIONS
 function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&key=" + base_key;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
 	url = url + "?" + content;
 	disable_vote_link(id, "...", '#FFC8AF');
 	$.getJSON(url,  
@@ -171,7 +171,7 @@ function report_problem(frm, user, id) {
 		frm.ratings.selectedIndex=0;
 		return false;
 	}
-	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key;
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key + "&u=" + document.referrer;
 	var url=base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
