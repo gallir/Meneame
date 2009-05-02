@@ -141,7 +141,9 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals;
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;</script>'."\n";
+	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;';
+	echo 'var base_key="'.get_security_key().'";';
+	echo '</script>'."\n";
 	echo '<script src="'.$globals['base_url'].'js/mobile02.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";

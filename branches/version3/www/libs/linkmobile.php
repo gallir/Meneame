@@ -15,7 +15,6 @@ class LinkMobile extends Link{
 		if(!$this->read) return;
 		if($this->is_votable()) {
 			$this->voted = $this->vote_exists($current_user->user_id);
-			if (!$this->voted) $this->md5 = md5($current_user->user_id.$this->id.$this->randkey.$globals['user_ip']);
 		}
 
 		echo '<div class="news-summary">';
@@ -125,20 +124,18 @@ class LinkMobile extends Link{
 		echo '<div class="'.$box_class.'">';
 		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.($this->votes+$this->anonymous).'</a></div>';
 
-		if ($globals['link']) {
-			echo '<div class="menealo" id="a-va-'.$this->id.'">';
+		echo '<div class="menealo" id="a-va-'.$this->id.'">';
 
-			if ($this->votes_enabled == false) {
-				echo '<span>'._('cerrado').'</span>';
-			} elseif( !$this->voted) {
-				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id,$this->id,"."'".$this->md5."'".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
-			} else {
-				if ($this->voted > 0) $mess = _('&#161;chachi!');
-				else $mess = ':-(';
-				echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
-			}
-			echo '</div>'."\n";
+		if ($this->votes_enabled == false) {
+			echo '<span>'._('cerrado').'</span>';
+		} elseif( !$this->voted) {
+			echo '<a href="javascript:menealo('."$current_user->user_id,$this->id".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
+		} else {
+			if ($this->voted > 0) $mess = _('&#161;chachi!');
+			else $mess = ':-(';
+			echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
 		}
+		echo '</div>'."\n";
 		echo '</div>'."\n";
 	}
 
@@ -179,7 +176,7 @@ class LinkMobile extends Link{
 
 		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
 		echo '<select '.$status.' name="ratings"  onchange="';
-		echo 'report_problem(this.form,'."$current_user->user_id, $this->id, "."'".$this->md5."'".')';
+		echo 'report_problem(this.form,'."$current_user->user_id, $this->id".')';
 		echo '">';
 		echo '<option value="0" selected="selected">'._('problema').'</option>';
 		foreach (array_keys($globals['negative_votes_values']) as $pvalue) {
