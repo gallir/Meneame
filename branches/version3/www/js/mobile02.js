@@ -18,15 +18,15 @@ function getJSON(url, fn) {
 		});
 }
 
-function menealo(user, id, htmlid, md5)
+function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&md5=" + md5;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
 	url = url + "?" + content;
 	disable_vote_link(id, "...", '#FFC8AF');
 	getJSON(url,  
 		 function(data) {
-				parseLinkAnswer(htmlid, data);
+				parseLinkAnswer(id, data);
 		}
 	);
 }
