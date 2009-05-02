@@ -89,7 +89,7 @@ class User {
 		$user_email = $db->escape($this->email);
 		$user_names = $db->escape($this->names);
 		$user_public_info = $db->escape(htmlentities($this->public_info));
-		$user_url = $db->escape(htmlentities($this->url));
+		$user_url = $db->escape(htmlspecialchars($this->url));
 		$user_adcode = $db->escape($this->adcode);
 		$user_adchannel = $db->escape($this->adchannel);
 		$user_phone = $db->escape($this->phone);
