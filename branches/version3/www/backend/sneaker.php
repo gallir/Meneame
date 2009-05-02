@@ -336,8 +336,9 @@ function get_votes($dbtime) {
 
 function get_story($time, $type, $linkid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link;
-	$event = $db->get_row("select SQL_CACHE user_login, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments from links, users where link_id = $linkid and user_id=$userid");
+	$event = $db->get_row("select SQL_CACHE user_login, user_level, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments, link_author from links, users where link_id = $linkid and user_id=$userid");
 	if (!$event) return;
+
 	$foo_link->id=$linkid;
 	$foo_link->uri=$event->link_uri;
 	$json['link'] = $foo_link->get_relative_permalink();
@@ -348,9 +349,18 @@ function get_story($time, $type, $linkid, $userid) {
 	$json['votes'] = $event->link_votes+$event->link_anonymous;
 	$json['com'] = $event->link_comments;
 	$json['title'] = addslashes($event->link_title);
-	$json['who'] = addslashes($event->user_login);
-	$json['uid'] = $userid;
-	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+
+	if ($type == 'discarded' && $event->link_status == 'abuse' && $event->link_auhtor != $userid 
+		&& ($event->user_level == 'admin' || $event->user_level == 'god')) {
+		// Discarded by abuse, don't show the author
+		$json['uid'] = 0;
+		$json['who'] = 'admin';
+	} else {
+		$json['who'] = addslashes($event->user_login);
+		$json['uid'] = $userid;
+		if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+	}
+
 	$key = $time . ':'.$type.':'.$linkid;
 	$events[$key] = json_encode_single($json);
 	if($time > $last_timestamp) $last_timestamp = $time;
