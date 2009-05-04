@@ -70,7 +70,7 @@ $past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) fro
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
-$last_resort_karma = (int) $past_karma * 0.70;
+$last_resort_karma = (int) $past_karma * 0.75;
 
 
 //////////////
@@ -201,8 +201,8 @@ if ($links) {
 		// Allowed difference up to 3%
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min($karma_pos_user_high * 1.07, $karma_pos_user_low);
 
-		// Small punishment for link having too many negatives
-		if (abs($karma_neg_user)/$karma_pos_user > 0.05) {
+		// Small quadratic punishment for links having too many negatives
+		if (abs($karma_neg_user)/$karma_pos_user > 0.075) {
 			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.35); 
 			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
 		}
@@ -280,20 +280,20 @@ if ($links) {
 			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
 		}
 
-		// Check if the user is banned disabled
+		// Check if the  domain is banned
 		if(check_ban($link->url, 'hostname', false, true)) {
-			$dblink->karma *= 0.66;
+			$dblink->karma *= 0.5;
 			$link->message .= '<br/>Domain banned. ';
 		}
 
-		// Check if the  domain is banned
+		// Check if the user is banned disabled
 		if ($user->level == 'disabled' ) {
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
 				$link->message .= "<br/>$user->username disabled herself, penalized.";
 			} else {
 				$link->message .= "<br/>$user->username disabled, probably due to abuses, penalized.";
 			}
-			$dblink->karma *= 0.66;
+			$dblink->karma *= 0.5;
 		}
 
 		//echo "pos: $karma_pos_user_high, $karma_pos_user_low -> $karma_pos_user -> $dblink->karma\n";

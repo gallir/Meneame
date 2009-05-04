@@ -38,7 +38,7 @@ if ($dbusers) {
 $db->query("update users set user_karma = 6 where user_level='disabled' and user_karma > 6 ");
 
 $karma_base=6;
-$karma_base_max=8; // If not penalised, older users can get up to this value as base for the calculus
+$karma_base_max=9; // If not penalised, older users can get up to this value as base for the calculus
 $min_karma=1;
 $max_karma=20;
 $now = "'".$db->get_var("select now()")."'";
@@ -46,7 +46,8 @@ $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = 2;
 $points_given = 8;
-$comment_votes = 8;
+// Nota: Volver a 7
+$comment_votes = 7;
 
 // Following lines are for negative points given to links
 // It takes in account just votes during 24 hours
@@ -275,12 +276,14 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma > 5 * comment_votes)");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma >= 5 * comment_votes)");
 		if ($negative_abused_comment_votes_count > 3) {
-			$karma5 = max(-$comment_votes, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
-			$karma5 -= $karma0 / 2 ; // Take away half of karma0
-			if ($karma4 > 0) {
-				$karma5 -= $karma4 / 2; // Take away half karma4
+			$karma5 = max(-$comment_votes/2, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
+			if ($negative_abused_comment_votes_count > 5 ) {
+				$karma5 -= $karma0 / 2 ; // Take away half of karma0
+				if ($karma4 > 0) {
+					$karma5 -= $karma4 / 2; // Take away half karma4
+				}
 			}
 		}
 		if ($karma5 != 0) {
