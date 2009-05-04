@@ -6,7 +6,7 @@ include_once(mnminclude.'log.php');
 include_once(mnminclude.'ban.php');
 include_once(mnminclude.'annotation.php');
 
-define('DEBUG', true);
+define('DEBUG', false);
 
 header("Content-Type: text/html");
 echo '<html><head><title>promote9.php</title></head><body>';
@@ -168,7 +168,7 @@ if ($links) {
 
 		$previous_karma = $link->karma;
 		// Calculate the real karma for the link
-		$db->query("LOCK TABLES votes, users READ");
+		//$db->query("LOCK TABLES votes, users READ, links WRITE, logs WRITE");
 		$link->calculate_karma();
 
 		if ($link->coef > 1) {
@@ -186,6 +186,7 @@ if ($links) {
 		$karma_new = $link->karma;
 		$link->message = '';
 		$changes = 0;
+$link->message .= "<br>Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
 		if (DEBUG ) $link->message .= "<br>Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
 
 		// Verify last published from the same site
@@ -224,19 +225,19 @@ if ($links) {
 		//echo "pos: $karma_pos_user_high, $karma_pos_user_low -> $karma_pos_user -> $karma_new\n";
 
 		// check differences, if > 4 store it
-		if (abs($link->karma - $karma_new) > 4) {
-			$link->message = sprintf ("<br/>updated karma: %6d (%d, %d, %d) -> %-6d (%d, %d, %d)\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($karma_new), $votes_pos, $votes_pos_anon, $votes_neg) . $link->message;
-			if ($link->karma > $karma_new) 
-				$changes = 1; // to show a "decrease" later	
+		if (abs($previous_karma - $karma_new) > 4) {
+			$link->message = sprintf ("<br/>updated karma: %6d (%d, %d, %d) -> %-6d\n", $link->karma, $link->votes, $link->anonymous, $link->negatives, round($karma_new) ) . $link->message;
+			if ($link->karma > $karma_new) $changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			$link->karma = round($karma_new);
 			if (! DEBUG) {
 				$link->store_basic();
+				$link->message .= "Storing: previous: $previous_karma new: $link->karma<br>\n";
 			} else {
 				$link->message .= "To store: previous: $previous_karma new: $link->karma<br>\n";
 			}
 		}
-		$db->query("UNLOCK TABLES");
+		//$db->query("UNLOCK TABLES");
 
 
 		if (! DEBUG && $link->thumb_status == 'unknown') $link->get_thumb();
@@ -318,6 +319,7 @@ function publish($link) {
 	global $globals, $db;
 	global $users_karma_avg;
 
+	//return;
 	if (DEBUG) return;
 
 	// Calculate votes average
