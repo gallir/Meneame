@@ -765,8 +765,14 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id) {
-			if(($this->author == $current_user->user_id && $this->status != 'published' && $this->status != 'abuse' && $globals['now'] - $this->sent_date < 1800)
-			|| ($this->author != $current_user->user_id && $current_user->user_level == 'special' && $globals['now'] - $this->sent_date < 10400)
+			if(($this->author == $current_user->user_id 
+					&& $this->status != 'published' 
+					&& $this->status != 'abuse' 
+					&& $globals['now'] - $this->sent_date < 1800)
+			|| ($this->author != $current_user->user_id 
+					&& $current_user->user_level == 'special' 
+					&& $this->status == 'queued'
+					&& $globals['now'] - $this->sent_date < 10400)
 			|| $current_user->admin) {
 				return true;
 			}
@@ -778,8 +784,11 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id ==  0) return false;
-		if( ($this->author == $current_user->user_id && $current_user->user_level == 'normal' && $globals['now'] - $this->sent_date < 9800) 
-					|| ($current_user->user_level == 'special' && $globals['now'] - $this->sent_date < 14400)
+		if( ($this->author == $current_user->user_id 
+				&& $current_user->user_level == 'normal' 
+				&& $globals['now'] - $this->sent_date < 9800) 
+			|| ($current_user->user_level == 'special' 
+				&& $globals['now'] - $this->sent_date < 14400) 
 			|| $current_user->admin) {
 				return true;
 			}
