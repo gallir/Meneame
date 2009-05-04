@@ -954,6 +954,7 @@ class Link {
 				}
 			}
 		}
+		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
@@ -964,17 +965,15 @@ class Link {
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%$karma_pos_user_high
-		syslog(LOG_INFO, "karmas: $karma_pos_user_high $karma_pos_user_low $karma_neg_user");
+		syslog(LOG_INFO, "karmas: $karma_pos_user $karma_pos_user_high $karma_pos_user_low $karma_neg_user $this->coef");
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
 
 		// Small quadratic punishment for links having too many negatives
-		if (abs($karma_neg_user)/$karma_pos_user > 0.075) {
+		if ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user) && abs($karma_neg_user)/$karma_pos_user > 0.075) {
 			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.35); 
 			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
 		}
 	
-		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
-
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
 		if (abs($karma_neg_user)/$karma_pos_user < 0.05 && $globals['now'] - $this->date < 7200 && $globals['now'] - $this->date > 600) { 
@@ -983,15 +982,18 @@ class Link {
 			// Check 1 <= bonus <= $bonus_coef
 			$this->coef = max(min($this->coef, $globals['bonus_coef']), 1);
 			// if it's has bonus and therefore time-related, use the base min_karma
-		} else {
+		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
 			$diff = max(0, $globals['now'] - ($this->date + 9*3600)); // 9 hours without decreasing
 			$oldd = 1 - $diff/(3600*54);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
+		} else {
+			$this->coef = 1;
 		}
-		$this->karma = (($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user);
+		syslog(LOG_INFO, "karmas 2: $karma_pos_user $karma_pos_user_high $karma_pos_user_low $karma_pos_ano $karma_neg_user $this->coef");
+		$this->karma = round(($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user);
 	}
 
 	// Read affinity values using annotations
