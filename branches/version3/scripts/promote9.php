@@ -232,7 +232,6 @@ if ($links) {
 			else $changes = 2; // increase
 			if (! DEBUG) {
 				$link->store_basic();
-				$link->message .= "Storing: previous: $previous_karma new: $link->karma<br>\n";
 			} else {
 				$link->message .= "To store: previous: $previous_karma new: $link->karma<br>\n";
 			}
@@ -330,7 +329,8 @@ function publish($link) {
 
 	$link->status = 'published';
 	$link->date = $link->published_date=time();
-	$link->store_basic();
+	//$link->store_basic();
+	$db->query("update links set link_status='published', link_date=now() where link_id=$link->id");
 
 	// Increase user's karma
 	$user = new User;
