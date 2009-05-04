@@ -930,6 +930,7 @@ class Link {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
+		$db->query("LOCK TABLES votes, users READ");
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
@@ -955,6 +956,7 @@ class Link {
 			}
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+		$db->query("UNLOCK TABLES");
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
@@ -965,8 +967,8 @@ class Link {
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%$karma_pos_user_high
-		syslog(LOG_INFO, "karmas: $karma_pos_user $karma_pos_user_high $karma_pos_user_low $karma_neg_user $this->coef");
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
+		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
 
 		// Small quadratic punishment for links having too many negatives
 		if ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user) && abs($karma_neg_user)/$karma_pos_user > 0.075) {
@@ -976,27 +978,44 @@ class Link {
 	
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if (abs($karma_neg_user)/$karma_pos_user < 0.05 && $globals['now'] - $this->date < 7200 && $globals['now'] - $this->date > 600) { 
-			$this->coef = $globals['bonus_coef'] - ($globals['now']-$this->date)/7200;
+		if (abs($karma_neg_user)/$karma_pos_user < 0.05 
+			&& $globals['now'] - $this->sent_date < 7200 
+			&& $globals['now'] - $this->sent_date > 600) { 
+			$this->coef = $globals['bonus_coef'] - ($globals['now']-$this->sent_date)/7200;
 			// It applies the same meta coefficient to the bonus'
 			// Check 1 <= bonus <= $bonus_coef
 			$this->coef = max(min($this->coef, $globals['bonus_coef']), 1);
 			// if it's has bonus and therefore time-related, use the base min_karma
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
-			$diff = max(0, $globals['now'] - ($this->date + 9*3600)); // 9 hours without decreasing
-			$oldd = 1 - $diff/(3600*54);
+			$diff = max(0, $globals['now'] - ($this->sent_date + 9*3600)); // 9 hours without decreasing
+			$oldd = 1 - $diff/(3600*48);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
 		} else {
 			$this->coef = 1;
 		}
-		syslog(LOG_INFO, "karmas 2: $karma_pos_user $karma_pos_user_high $karma_pos_user_low $karma_pos_ano $karma_neg_user $this->coef");
-		$this->karma = round(($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user);
+
+		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;
+		$meta_coef = $this->metas_coef_get();
+		if ($this->coef >= 1.0 && $meta_coef && $meta_coef[$this->meta_id]) {
+			$this->karma *= $meta_coef[$this->meta_id];
+		}
+		$this->karma = round($this->karma);
 	}
 
 	// Read affinity values using annotations
+
+	function metas_coef_get() {
+		require_once(mnminclude.'annotation.php');
+
+		$log = new Annotation("metas-coef");
+		if (!$log->read()) return false;
+		$dict = unserialize($log->text);
+		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
+		return $dict; // Asked for the whole dict
+	}
 
 	// $this->author is the key in annotations
 	function affinity_get($from = false) {

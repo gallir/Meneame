@@ -113,7 +113,12 @@ foreach ($meta_coef as $m => $v) {
 	}
 	$output .= "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br/>";
 	// Store current coef in DB
-	$db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
+	if (! DEBUG) {
+		$db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
+	}
+	$log = new Annotation("metas-coef");
+	$log->text = serialize($meta_coef);
+	$log->store();
 }
 
 
@@ -159,15 +164,13 @@ if ($links) {
 		$karma_pos_ano = 0;
 
 
-
-
-		// Calculate the real karma for the link
-		//echo "Call for $link->author $link->uri\n";
-
 		$affinity = check_affinity($link->author, $past_karma*0.3);
 
 		$previous_karma = $link->karma;
+		// Calculate the real karma for the link
+		$db->query("LOCK TABLES votes, users READ");
 		$link->calculate_karma();
+
 		if ($link->coef > 1) {
 			if ($decay > 1) 
 				$karma_threshold = $past_karma;
@@ -179,10 +182,11 @@ if ($links) {
 		}
 
 
-		$karma_new = $link->karma * $meta_coef[$dblink->parent];
-		if (DEBUG ) echo "Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
-		$changes = 0;
+		//$karma_new = $link->karma * $meta_coef[$dblink->parent];
+		$karma_new = $link->karma;
 		$link->message = '';
+		$changes = 0;
+		if (DEBUG ) $link->message .= "<br>Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
 
 		// Verify last published from the same site
 		$hours = 8;
@@ -195,32 +199,26 @@ if ($links) {
 		}
 
 		
-		// Check domain and user punishments
-		if (check_ban($link->url, 'punished_hostname', false, true)) {
-			$karma_new *= 0.75;
-			$link->message .= '<br/>' . $globals['ban_message'];
-		}
-
-		// check if it's "media" and the metacategory coefficient is low
-		if ($meta_coef[$dblink->parent] < 1.02 && ($link->content_type == 'image')) {
-			$karma_new *= 0.9;
-			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
-		}
-
-		// Check if the  domain is banned
 		if(check_ban($link->url, 'hostname', false, true)) {
+			// Check if the  domain is banned
 			$karma_new *= 0.5;
 			$link->message .= '<br/>Domain banned. ';
-		}
-
-		// Check if the user is banned disabled
-		if ($user->level == 'disabled' ) {
+		} elseif ($user->level == 'disabled' ) {
+			// Check if the user is banned disabled
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
 				$link->message .= "<br/>$user->username disabled herself, penalized.";
 			} else {
 				$link->message .= "<br/>$user->username disabled, probably due to abuses, penalized.";
 			}
 			$karma_new *= 0.5;
+		} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
+			// Check domain and user punishments
+			$karma_new *= 0.75;
+			$link->message .= '<br/>' . $globals['ban_message'];
+		} elseif ($meta_coef[$dblink->parent] < 1.02 && ($link->content_type == 'image')) {
+			// check if it's "media" and the metacategory coefficient is low
+			$karma_new *= 0.9;
+			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
 		}
 
 		//echo "pos: $karma_pos_user_high, $karma_pos_user_low -> $karma_pos_user -> $karma_new\n";
@@ -235,15 +233,15 @@ if ($links) {
 			if (! DEBUG) {
 				$link->store_basic();
 			} else {
-				echo "To store: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
+				$link->message .= "To store: previous: $previous_karma new: $link->karma<br>\n";
 			}
-
 		}
+		$db->query("UNLOCK TABLES");
 
 
 		if (! DEBUG && $link->thumb_status == 'unknown') $link->get_thumb();
 
-		if (! DEBUG && $link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
+		if ($link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			$link->karma = round($karma_new);
 			publish($link);
