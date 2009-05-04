@@ -913,6 +913,87 @@ class Link {
 		}
 	}
 
+	// Calculate real karma of the link
+	function calculate_karma() {
+		global $db, $globals;
+
+		require_once(mnminclude.'log.php');
+		require_once(mnminclude.'ban.php');
+		require_once(mnminclude.'annotation.php');
+
+		$users_karma_avg = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
+
+		// Read the stored affinity for the author
+		$affinity = $this->affinity_get();
+
+		// high =~ users with higher karma greater than average
+		// low =~ users with higher karma less-equal than average
+		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
+
+		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+
+		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
+		foreach ($votes as $vote) {
+			if ($vote->vote_value > 0) {
+				$votes_pos++;
+				if ($affinity && $affinity[$vote->user_id] > 0) {
+					// Change vote_value if there is affinity
+					//echo "$vote->vote_value -> ";
+					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
+					//echo "$vote->vote_value ($this->author -> $vote->user_id)\n";
+				} 
+				if ($vote->vote_value >=  $users_karma_avg) $karma_pos_user_high += $vote->vote_value;
+				else $karma_pos_user_low += $vote->vote_value;
+			} else {
+				$votes_neg++;
+				if ($affinity && $affinity[$vote->user_id] < 0) {
+					$karma_neg_user += min(-6, $vote->user_karma *  $affinity[$vote->user_id]/100);
+					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
+				} else {
+					$karma_neg_user -= $vote->user_karma;
+				}
+			}
+		}
+
+		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
+			$this->votes = $votes_pos;
+			$this->anonymous = $votes_pos_anon;
+			$this->negatives = $votes_neg;
+			//$this->store_basic();
+		}
+
+		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
+		// Allowed difference up to 3%$karma_pos_user_high
+		syslog(LOG_INFO, "karmas: $karma_pos_user_high $karma_pos_user_low $karma_neg_user");
+		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
+
+		// Small quadratic punishment for links having too many negatives
+		if (abs($karma_neg_user)/$karma_pos_user > 0.075) {
+			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.35); 
+			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
+		}
+	
+		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+
+		// BONUS
+		// Give more karma to news voted very fast during the first two hours (ish)
+		if (abs($karma_neg_user)/$karma_pos_user < 0.05 && $globals['now'] - $this->date < 7200 && $globals['now'] - $this->date > 600) { 
+			$this->coef = $globals['bonus_coef'] - ($globals['now']-$this->date)/7200;
+			// It applies the same meta coefficient to the bonus'
+			// Check 1 <= bonus <= $bonus_coef
+			$this->coef = max(min($this->coef, $globals['bonus_coef']), 1);
+			// if it's has bonus and therefore time-related, use the base min_karma
+		} else {
+			// Aged karma
+			$diff = max(0, $globals['now'] - ($this->date + 9*3600)); // 9 hours without decreasing
+			$oldd = 1 - $diff/(3600*54);
+			$oldd = max(0.4, $oldd);
+			$oldd = min(1, $oldd);
+			$this->coef = $oldd;
+		}
+		$this->karma = (($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user);
+	}
+
 	// Read affinity values using annotations
 
 	// $this->author is the key in annotations
