@@ -64,7 +64,7 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, UNIX_TIMESTAMP(comment_date) as date, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
 			$this->type = $link->comment_type;
 			$this->author=$link->comment_user_id;
 			$this->username=$link->user_login;
@@ -79,8 +79,7 @@ class Comment {
 			$this->ip=$link->comment_ip;
 			$this->avatar=$link->user_avatar;
 			$this->content=$link->comment_content;
-			$date=$link->comment_date;
-			$this->date=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");
+			$this->date=$link->date;
 			$this->read = true;
 			if($this->order == 0) $this->update_order();
 			return true;

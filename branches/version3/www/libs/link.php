@@ -269,7 +269,6 @@ class Link {
 	function store() {
 		global $db, $current_user;
 
-		$this->store_basic();
 		$link_url = $db->escape($this->url);
 		$link_uri = $db->escape($this->uri);
 		$link_url_title = $db->escape($this->url_title);
@@ -280,7 +279,10 @@ class Link {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
+		$db->query("LOCK TABLES links WRITE");
+		$this->store_basic();
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
+		$db->query("UNLOCK TABLES");
 	}
 
 	function store_basic() {
@@ -726,6 +728,7 @@ class Link {
 		}
 		$vote->value=$value;
 		if($vote->insert()) {
+			$db->query("LOCK TABLES links WRITE");
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			} else {
@@ -733,6 +736,7 @@ class Link {
 				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
 			$new = $db->get_row("select link_votes, link_anonymous, link_negatives, link_karma from links where link_id = $this->id");
+			$db->query("UNLOCK TABLES");
 			$this->votes = $new->link_votes;
 			$this->anonymous = $new->link_anonymous;
 			$this->negatives = $new->link_negatives;
