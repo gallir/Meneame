@@ -1047,7 +1047,7 @@ class Link {
 		$dict['karma'] = $this->karma;
 		$dict['coef'] = sprintf("%.2f",$this->coef);
 		$dict['annotation'] = $this->annotation;
-		array_push($array, $dict);
+		array_unshift($array, $dict);
 		$log->text = serialize($array);
 		$log->store();
 
