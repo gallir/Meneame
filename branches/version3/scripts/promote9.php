@@ -124,10 +124,9 @@ foreach ($meta_coef as $m => $v) {
 
 // Karma average:  It's used for each link to check the balance of users' votes
 
-global $users_karma_avg;
-$users_karma_avg = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
+$globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 
-$output .= "Karma average for each link: $users_karma_avg, Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br/>\n";
+$output .= "Karma average for each link: ".$globals['users_karma_avg'].", Past karma. Long term: $past_karma_long, Short term: $past_karma_short, Average: <b>$past_karma</b><br/>\n";
 $output .= "<b>Current MIN karma: $min_karma</b>, absolute min karma: $min_past_karma, analizing from $limit_karma<br/>\n";
 $output .= "</p>\n";
 
@@ -318,7 +317,6 @@ function print_row($link, $changes, $log = '') {
 
 function publish($link) {
 	global $globals, $db;
-	global $users_karma_avg;
 
 	//return;
 	if (DEBUG) return;
@@ -326,13 +324,13 @@ function publish($link) {
 	// Calculate votes average
 	// it's used to calculate and check future averages
 	$votes_avg = (float) $db->get_var("select SQL_NO_CACHE avg(vote_value) from votes, users where vote_type='links' AND vote_link_id=$link->id and vote_user_id > 0 and vote_value > 0 and vote_user_id = user_id and user_level !='disabled'");
-	if ($votes_avg < $users_karma_avg) $link->votes_avg = max($votes_avg, $users_karma_avg*0.97);
+	if ($votes_avg < $globals['users_karma_avg']) $link->votes_avg = max($votes_avg, $globals['users_karma_avg']*0.97);
 	else $link->votes_avg = $votes_avg;
 
 	$link->status = 'published';
 	$link->date = $link->published_date=time();
 	//$link->store_basic();
-	$db->query("update links set link_status='published', link_date=now() where link_id=$link->id");
+	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
 
 	// Increase user's karma
 	$user = new User;
