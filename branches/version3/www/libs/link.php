@@ -1031,7 +1031,7 @@ class Link {
 		if (!$array || ! is_array($array)) $array = array();
 		$dict = array();
 		$dict['time'] = $globals['now'];
-		$dict['positives'] = $this->positives;
+		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
 		$dict['anonymous'] = $this->anonymous;
 		$dict['karma'] = $this->karma;
@@ -1041,6 +1041,17 @@ class Link {
 		$log->text = serialize($array);
 		$log->store();
 
+	}
+
+	function read_annotation($key) {
+		global $globals;
+		require_once(mnminclude.'annotation.php');
+
+		$key .= "-$this->id";
+		$log = new Annotation($key);
+		if ($log->read()) $array = unserialize($log->text);
+		if (!$array || ! is_array($array)) return false;
+		return $array;
 	}
 
 	// Read affinity values using annotations
