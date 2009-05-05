@@ -34,7 +34,7 @@ if ($current_user->user_id > 0) {
 	if ($friends) {
 		$i = 0;
 		foreach ($friends as $friend) {
-			echo "friend_nicks[$i] = '".mb_strtolower($friend)."';\n";
+			echo "friend_nicks.push('".mb_strtolower($friend)."');\n";
 			$i++;
 		}
 	}
