@@ -288,7 +288,7 @@ function print_row($link, $changes, $log = '') {
 
 	$output .= "<tr><td class='tnumber$mod'>".$link->votes."</td><td class='tnumber$mod'>".$link->anonymous."</td><td class='tnumber$mod'>".$link->negatives."</td><td class='tnumber$mod'>" . sprintf("%0.2f", $link->coef). "</td><td class='tnumber$mod'>".intval($link->karma)."</td>";
 	$output .= "<td class='tdata$mod'>$link->meta_name</td>\n";
-	$output .= "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
+	$output .= "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."/log'>$link->title</a>\n";
 	if (!empty($link->message)) {
 		$output .= "<br/>$link->message";
 	}
