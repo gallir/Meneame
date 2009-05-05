@@ -168,7 +168,6 @@ if ($links) {
 
 		$previous_karma = $link->karma;
 		// Calculate the real karma for the link
-		//$db->query("LOCK TABLES votes, users READ, links WRITE, logs WRITE");
 		$link->calculate_karma();
 
 		if ($link->coef > 1) {
@@ -186,7 +185,7 @@ if ($links) {
 		$karma_new = $link->karma;
 		$link->message = '';
 		$changes = 0;
-		if (DEBUG ) $link->message .= "<br>Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
+		if (DEBUG ) $link->message .= "Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
 
 		// Verify last published from the same site
 		$hours = 8;
@@ -195,49 +194,48 @@ if ($links) {
 		if ($last_site_published > 0) {
 			$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
 			$karma_new *= $pub_coef;
-			$link->message .= '<br/> Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.';
+			$link->message .= 'Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.<br/>';
 		}
 
 		
 		if(check_ban($link->url, 'hostname', false, true)) {
 			// Check if the  domain is banned
 			$karma_new *= 0.5;
-			$link->message .= '<br/>Domain banned. ';
+			$link->message .= 'Domain banned.<br/>';
+			$link->annotation .= _('Dominio baneado').": ".$globals['ban_message']."<br/>";
 		} elseif ($user->level == 'disabled' ) {
 			// Check if the user is banned disabled
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
-				$link->message .= "<br/>$user->username disabled herself, penalized.";
+				$link->message .= "$user->username disabled herself, penalized.<br/>";
 			} else {
-				$link->message .= "<br/>$user->username disabled, probably due to abuses, penalized.";
+				$link->message .= "$user->username disabled, probably due to abuses, penalized.<br/>";
 			}
 			$karma_new *= 0.5;
+			$link->annotation .= _('Cuenta deshabilitada'). "<br/>";
 		} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
 			// Check domain and user punishments
 			$karma_new *= 0.75;
-			$link->message .= '<br/>' . $globals['ban_message'];
+			$link->message .= $globals['ban_message'].'<br/>';
 		} elseif ($meta_coef[$dblink->parent] < 1.02 && ($link->content_type == 'image')) {
 			// check if it's "media" and the metacategory coefficient is low
 			$karma_new *= 0.9;
-			$link->message .= '<br/>Image/Video '.$meta_coef[$dblink->parent];
+			$link->message .= 'Image/Video '.$meta_coef[$dblink->parent].'<br/>';
 		}
-
-		//echo "pos: $karma_pos_user_high, $karma_pos_user_low -> $karma_pos_user -> $karma_new\n";
 
 		$link->karma = round($karma_new);
 
 		// check differences, if > 4 store it
 		if (abs($previous_karma - $link->karma) > 4) {
-			$link->message = sprintf ("<br/>updated karma: %6d (%d, %d, %d) -> %-6d\n", $previous_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
+			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $previous_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
 			if ($previous_karma > $link->karma) $changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			if (! DEBUG) {
 				$link->store_basic();
+				$link->save_annotation('link-karma');
 			} else {
 				$link->message .= "To store: previous: $previous_karma new: $link->karma<br>\n";
 			}
 		}
-		//$db->query("UNLOCK TABLES");
-
 
 		if (! DEBUG && $link->thumb_status == 'unknown') $link->get_thumb();
 
@@ -255,10 +253,12 @@ if ($links) {
 			}
 		}
 		print_row($link, $changes);
+
 		usleep(10000);
 		$i++;
 	}
-	if (! DEBUG && $published == 0 && $links_published_projection < $pub_estimation * 0.9 && $must_publish && $last_resort_id  > 0) {
+	if (! DEBUG && $published == 0 && $links_published_projection < $pub_estimation * 0.9 
+			&& $must_publish && $last_resort_id  > 0) {
 		// Publish last resort
 		$link = new Link;
 		$link->id = $last_resort_id;
@@ -290,9 +290,11 @@ function print_row($link, $changes, $log = '') {
 	$output .= "<td class='tdata$mod'>$link->meta_name</td>\n";
 	$output .= "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."'>$link->title</a>\n";
 	if (!empty($link->message)) {
-		$output .= "$link->message";
+		$output .= "<br/>$link->message";
 	}
 	$link->message = '';
+	if (DEBUG) $output .= "Annotation: $link->annotation";
+
 	$output .= "</td>\n";
 	$output .= "<td class='tnumber$mod'>";
 	switch ($changes) {
