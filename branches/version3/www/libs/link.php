@@ -927,6 +927,7 @@ class Link {
 
 		$users_karma_avg = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 
+		$this->annotation = '';
 		// Read the stored affinity for the author
 		$affinity = $this->affinity_get();
 
@@ -934,13 +935,16 @@ class Link {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
+		$db->query("LOCK TABLES votes READ, users READ");
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
+		$n = 0;
 		foreach ($votes as $vote) {
 			if ($vote->vote_value > 0) {
 				$votes_pos++;
 				if ($affinity && $affinity[$vote->user_id] > 0) {
+					$n++;
 					// Change vote_value if there is affinity
 					//echo "$vote->vote_value -> ";
 					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
@@ -951,6 +955,7 @@ class Link {
 			} else {
 				$votes_neg++;
 				if ($affinity && $affinity[$vote->user_id] < 0) {
+					$n++;
 					$karma_neg_user += min(-6, $vote->user_karma *  $affinity[$vote->user_id]/100);
 					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
 				} else {
@@ -958,7 +963,11 @@ class Link {
 				}
 			}
 		}
+		if ($n > $votes_pos/5) {
+			$this->annotation .= _('Muchos votos con afinidad elevada'). "<br/>";
+		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+		$db->query("UNLOCK TABLES");
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
@@ -969,6 +978,9 @@ class Link {
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%$karma_pos_user_high
+		if ($karma_pos_user_low/$karma_pos_user_high > 1.25) {
+			$this->annotation .= _('Demasiados votos con karma más bajos que la media'). "<br/>";
+		}
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
 		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
 
@@ -987,6 +999,7 @@ class Link {
 			// It applies the same meta coefficient to the bonus'
 			// Check 1 <= bonus <= $bonus_coef
 			$this->coef = max(min($this->coef, $globals['bonus_coef']), 1);
+			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 			// if it's has bonus and therefore time-related, use the base min_karma
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
@@ -995,6 +1008,7 @@ class Link {
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
+			$this->annotation .= _('Noticia "antigua"'). "<br/>";
 		} else {
 			$this->coef = 1;
 		}
@@ -1007,8 +1021,29 @@ class Link {
 		$this->karma = round($this->karma);
 	}
 
-	// Read affinity values using annotations
+	function save_annotation($key) {
+		global $globals;
+		require_once(mnminclude.'annotation.php');
 
+		$key .= "-$this->id";
+		$log = new Annotation($key);
+		if ($log->read()) $array = unserialize($log->text);
+		if (!$array || ! is_array($array)) $array = array();
+		$dict = array();
+		$dict['time'] = $globals['now'];
+		$dict['positives'] = $this->positives;
+		$dict['negatives'] = $this->negatives;
+		$dict['anonymous'] = $this->anonymous;
+		$dict['karma'] = $this->karma;
+		$dict['coef'] = sprintf("%.2f",$this->coef);
+		$dict['annotation'] = $this->annotation;
+		array_push($array, $dict);
+		$log->text = serialize($array);
+		$log->store();
+
+	}
+
+	// Read affinity values using annotations
 	function metas_coef_get() {
 		require_once(mnminclude.'annotation.php');
 
