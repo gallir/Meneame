@@ -925,8 +925,9 @@ class Link {
 		require_once(mnminclude.'ban.php');
 		require_once(mnminclude.'annotation.php');
 
-		$users_karma_avg = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
-
+		if (! $globals['users_karma_avg'] ) {
+			$globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
+		}
 		$this->annotation = '';
 		// Read the stored affinity for the author
 		$affinity = $this->affinity_get();
@@ -950,7 +951,7 @@ class Link {
 					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
 					//echo "$vote->vote_value ($this->author -> $vote->user_id)\n";
 				} 
-				if ($vote->vote_value >=  $users_karma_avg) {
+				if ($vote->vote_value >=  $globals['users_karma_avg']) {
 					$karma_pos_user_high += $vote->vote_value;
 					$vhigh++;
 				} else {
@@ -985,7 +986,7 @@ class Link {
 		// Allowed difference up to 3%$karma_pos_user_high
 		if ($karma_pos_user_low/$karma_pos_user_high > 1.15) {
 			$perc = intval($vlow/($vlow+$vhigh) * 100);
-			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($users_karma_avg,2).")<br/>";
+			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
 		}
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
 		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
