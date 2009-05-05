@@ -939,7 +939,7 @@ class Link {
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
-		$n = 0;
+		$n = $vlow = $vhigh = 0;
 		foreach ($votes as $vote) {
 			if ($vote->vote_value > 0) {
 				$votes_pos++;
@@ -950,8 +950,13 @@ class Link {
 					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
 					//echo "$vote->vote_value ($this->author -> $vote->user_id)\n";
 				} 
-				if ($vote->vote_value >=  $users_karma_avg) $karma_pos_user_high += $vote->vote_value;
-				else $karma_pos_user_low += $vote->vote_value;
+				if ($vote->vote_value >=  $users_karma_avg) {
+					$karma_pos_user_high += $vote->vote_value;
+					$vhigh++;
+				} else {
+					$karma_pos_user_low += $vote->vote_value;
+					$vlow++;
+				}
 			} else {
 				$votes_neg++;
 				if ($affinity && $affinity[$vote->user_id] < 0) {
@@ -978,8 +983,9 @@ class Link {
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		// Allowed difference up to 3%$karma_pos_user_high
-		if ($karma_pos_user_low/$karma_pos_user_high > 1.25) {
-			$this->annotation .= _('Demasiados votos con karma más bajos que la media'). "<br/>";
+		if ($karma_pos_user_low/$karma_pos_user_high > 1.15) {
+			$perc = intval($vlow/($vlow+$vhigh) * 100);
+			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($users_karma_avg,2).")<br/>";
 		}
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
 		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
@@ -999,7 +1005,6 @@ class Link {
 			// It applies the same meta coefficient to the bonus'
 			// Check 1 <= bonus <= $bonus_coef
 			$this->coef = max(min($this->coef, $globals['bonus_coef']), 1);
-			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 			// if it's has bonus and therefore time-related, use the base min_karma
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
@@ -1008,9 +1013,13 @@ class Link {
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
-			$this->annotation .= _('Noticia "antigua"'). "<br/>";
 		} else {
 			$this->coef = 1;
+		}
+		if ($this->coef < .99) {
+			$this->annotation .= _('Noticia "antigua"'). "<br/>";
+		} elseif ($this->coef > 1.01) {
+			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}
 
 		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;

@@ -302,7 +302,6 @@ case 4:
 	echo '<div id="voters-container">';
 	$logs = $db->get_results("select logs.*, user_id, user_login, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date asc");
 	if ($logs) {
-		//echo '<div class="voters-list">';
 		foreach ($logs as $log) {
 			echo '<div style="width:100%; display: block; clear: both; border-bottom: 1px solid #FFE2C5;">';
 			echo '<div style="width:30%; float: left;padding: 4px 0 4px 0;">'.$log->log_date.'</div>';
@@ -324,7 +323,6 @@ case 4:
 			echo '</div>';
 
 		}
-		//echo '</div>';
 	} else {
 		echo _('no hay registros');
 	}
