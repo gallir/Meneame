@@ -955,7 +955,6 @@ class Link {
 			} else {
 				$votes_neg++;
 				if ($affinity && $affinity[$vote->user_id] < 0) {
-					$n++;
 					$karma_neg_user += min(-6, $vote->user_karma *  $affinity[$vote->user_id]/100);
 					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
 				} else {
@@ -964,7 +963,8 @@ class Link {
 			}
 		}
 		if ($n > $votes_pos/5) {
-			$this->annotation .= _('Muchos votos con afinidad elevada'). "<br/>";
+			$perc = intval($n/$votes_pos * 100);
+			$this->annotation .= $perc. _('% de votos con afinidad elevada'). "<br/>";
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 		$db->query("UNLOCK TABLES");

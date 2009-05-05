@@ -328,7 +328,7 @@ case 4:
 	} else {
 		echo _('no hay registros');
 	}
-	echo '</div><br />';
+	echo '</div>';
 	echo '</fieldset>';
 	echo '</div>';
 
