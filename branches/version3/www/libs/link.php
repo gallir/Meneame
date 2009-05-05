@@ -1009,7 +1009,7 @@ class Link {
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
 			$diff = max(0, $globals['now'] - ($this->sent_date + 9*3600)); // 9 hours without decreasing
-			$oldd = 1 - $diff/(3600*48);
+			$oldd = 1 - $diff/(3600*60);
 			$oldd = max(0.4, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
