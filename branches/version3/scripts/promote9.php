@@ -222,10 +222,12 @@ if ($links) {
 		}
 
 		$link->karma = round($karma_new);
+		$previous_karma = round($previous_karma);
 
 		// check differences, if > 4 store it
 		if (abs($previous_karma - $link->karma) > 6) {
 			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $previous_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
+			$link->annotation .= _('ajuste'). ": $previous_karma -&gt; $link->karma <br/>";
 			if ($previous_karma > $link->karma) $changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			if (! DEBUG) {
