@@ -165,7 +165,6 @@ if ($links) {
 
 		$affinity = check_affinity($link->author, $past_karma*0.3);
 
-		$previous_karma = $link->karma;
 		// Calculate the real karma for the link
 		$link->calculate_karma();
 
@@ -184,7 +183,7 @@ if ($links) {
 		$karma_new = $link->karma;
 		$link->message = '';
 		$changes = 0;
-		if (DEBUG ) $link->message .= "Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $previous_karma calculated: $link->karma new: $karma_new<br>\n";
+		if (DEBUG ) $link->message .= "Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
 
 		// Verify last published from the same site
 		$hours = 8;
@@ -222,19 +221,18 @@ if ($links) {
 		}
 
 		$link->karma = round($karma_new);
-		$previous_karma = round($previous_karma);
 
 		// check differences, if > 4 store it
-		if (abs($previous_karma - $link->karma) > 6) {
-			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $previous_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
-			$link->annotation .= _('ajuste'). ": $previous_karma -&gt; $link->karma <br/>";
-			if ($previous_karma > $link->karma) $changes = 1; // to show a "decrease" later	
+		if (abs($link->old_karma - $link->karma) > 6) {
+			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $link->old_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
+			//$link->annotation .= _('ajuste'). ": $link->old_karma -&gt; $link->karma <br/>";
+			if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later	
 			else $changes = 2; // increase
 			if (! DEBUG) {
 				$link->store_basic();
 				$link->save_annotation('link-karma');
 			} else {
-				$link->message .= "To store: previous: $previous_karma new: $link->karma<br>\n";
+				$link->message .= "To store: previous: $link->old_karma new: $link->karma<br>\n";
 			}
 		}
 
