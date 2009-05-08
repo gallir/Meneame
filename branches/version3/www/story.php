@@ -337,7 +337,10 @@ case 4:
 		echo '<fieldset><legend>'._('registro de cálculos de karma').'</legend>';
 		echo "<table><tr class='thead'><th>hora</th><th>pos, anon, neg</th><th>coef</th><th>karma</th><th>notas</th></tr>\n";
 		foreach ($array as $log) {
-			echo "<tr><td>".get_date_time($log['time'])."</td><td>".$log['positives'].', '.$log['anonymous'].', '.$log['negatives']."</td><td>".$log['coef']."</td><td>".$log['karma']."</td><td>".$log['annotation']."</td></tr>\n";
+			echo "<tr><td>".get_date_time($log['time'])."</td><td>".$log['positives'].', '.$log['anonymous'].', '.$log['negatives']."</td><td>".$log['coef']."</td><td>";
+			if ($log['old_karma'] > 0)
+				echo $log['old_karma']. " -&gt; ";
+			echo $log['karma']."</td><td>".$log['annotation']."</td></tr>\n";
 
 		}
 		echo "</table>\n";
