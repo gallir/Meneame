@@ -925,6 +925,7 @@ class Link {
 		require_once(mnminclude.'ban.php');
 		require_once(mnminclude.'annotation.php');
 
+		$this->old_karma = round($this->karma);
 		if (! $globals['users_karma_avg'] ) {
 			$globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 		}
@@ -1044,6 +1045,7 @@ class Link {
 		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
 		$dict['anonymous'] = $this->anonymous;
+		$dict['old_karma'] = $this->old_karma;
 		$dict['karma'] = $this->karma;
 		$dict['coef'] = sprintf("%.2f",$this->coef);
 		$dict['annotation'] = $this->annotation;
