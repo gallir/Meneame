@@ -10,6 +10,7 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'user.php');
 include(mnminclude.'sneak.php');
+include(mnminclude.'ban.php');
 
 
 $foo_link = new Link;
@@ -143,6 +144,10 @@ function check_chat() {
 		if ($counter > 0) {
 			$comment = _('tranquilo charlatán').' ;-)';
 			send_chat_warn($comment);
+			return;
+		}
+		if(check_ban_proxy()) {
+			send_chat_warn(_('proxy abierto no permitido'));
 			return;
 		}
 
