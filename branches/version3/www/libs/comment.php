@@ -97,12 +97,11 @@ class Comment {
 		echo '<li id="ccontainer-'.$this->id.'">';
 
 		require_once(mnminclude.'user.php');
+		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && friend_exists($current_user->user_id, $this->author) < 0);
 		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
-						|| ($this->user_level == 'disabled' && $this->type != 'admin') 
-						|| ($current_user->user_id > 0 && $this->type != 'admin' && friend_exists($current_user->user_id, $this->author) < 0);
-;
+						|| ($this->user_level == 'disabled' && $this->type != 'admin');
 
-		if ($this->hidden)  {
+		if ($this->hidden || $this->ignored)  {
 			$comment_meta_class = 'comment-meta-hidden';
 			$comment_class = 'comment-body-hidden';
 		} else {
@@ -121,7 +120,7 @@ class Comment {
 		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
-		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
+		if ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
 		} else {
 			$this->print_text($length, $single_link);
