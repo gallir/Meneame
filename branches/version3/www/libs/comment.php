@@ -96,8 +96,11 @@ class Comment {
 
 		echo '<li id="ccontainer-'.$this->id.'">';
 
+		require_once(mnminclude.'user.php');
 		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
-						|| ($this->user_level == 'disabled' && $this->type != 'admin');
+						|| ($this->user_level == 'disabled' && $this->type != 'admin') 
+						|| ($current_user->user_id > 0 && $this->type != 'admin' && friend_exists($current_user->user_id, $this->author) < 0);
+;
 
 		if ($this->hidden)  {
 			$comment_meta_class = 'comment-meta-hidden';

@@ -90,19 +90,34 @@ class Post {
 
 		if(!$this->read) $this->read(); 
 
+		require_once(mnminclude.'user.php');
+		if ($this->karma < -50 || 
+			($current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0)) 
+			$this->hidden = true;
+		else $this->hidden = false;
+
 		echo '<li id="pcontainer-'.$this->id.'">';
 
-		$post_meta_class = 'comment-meta';
-		$post_class = 'comment-body';
-		if ($this->karma > 100) {
-			$post_class .= ' high';
+		if ($this->hidden)  {
+			$post_meta_class = 'comment-meta-hidden';
+			$post_class = 'comment-body-hidden';
+		} else {
+			$post_meta_class = 'comment-meta';
+			$post_class = 'comment-body';
+			if ($this->karma > 100) {
+				$post_class .= ' high';
+			}
 		}
 
-		echo '<div class="'.$post_class.'">';
+		echo '<div class="'.$post_class.'" id="pid-'.$this->id.'">';
 
-		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
 
-		$this->print_text($length);
+		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
+			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_post.php\',\'post\',\'pid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver texto').'">'._('ver texto').'</a>';
+		} else {
+			$this->print_user_avatar();
+			$this->print_text($length);
+		}
 		echo '</div>';
 
 
@@ -143,6 +158,10 @@ class Post {
 		}
 		echo '</div></div>';
 		echo "</li>\n";
+	}
+
+	function print_user_avatar() {
+		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
 	}
 
 	function print_text($length = 0) {
