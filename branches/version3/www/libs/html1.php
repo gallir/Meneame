@@ -214,7 +214,7 @@ function do_js_includes() {
 	echo 'var base_url="'.$globals['base_url'].'";';
 	echo 'var base_key="'.get_security_key().'";';
 	echo '</script>'."\n";
-	echo '<script src="'.$globals['base_url'].'js/jquery.pack.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
 	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
 	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
 	// Cache for Ajax
