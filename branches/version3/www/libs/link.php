@@ -205,7 +205,7 @@ class Link {
 			if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
 				$trackback=trim($matches2[1]);
 			}
-		}  elseif (preg_match('/(http:\/\/[^\s#]+\/trackback\/*)/i', $this->html, $matches)) {
+		}  elseif (preg_match('/(http:\/\/[^\s#]+\/trackback[\/\w]*)/i', $this->html, $matches)) {
 			$trackback=trim($matches[0]);
 		}
 
