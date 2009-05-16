@@ -74,6 +74,7 @@ if ($logs) {
 				if (empty($_REQUEST['nopublished'])) get_story($log->time, 'published', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_new':
+				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'comment', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_depublished':
@@ -87,9 +88,11 @@ if ($logs) {
 				if (empty($_REQUEST['nogeoedit']) && $current_user->admin) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
+				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'post_new':
+				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
 				break;
 		}
@@ -402,8 +405,6 @@ function get_post($time, $type, $postid, $userid) {
 	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
 	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
-	// Dont show her notes if the user ignored
-	if ($type == 'post' && friend_exists($current_user->user_id, $userid) < 0) return;
 	$json['link'] = post_get_base_url($event->user_login) . "/$postid";
 	$json['ts'] = $time;
 	$json['type'] = $type;
