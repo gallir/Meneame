@@ -322,8 +322,9 @@ class Comment {
 		if ($current_user->user_karma < $globals['min_karma_for_comments'] && $current_user->user_id != $link->author) {
 			return _('karma demasiado bajo');
 		}
-	
+
 		$this->link=$link->id;
+		$this->ip = $db->escape($globals['user_ip']);
 		$this->randkey=intval($_POST['randkey']);
 		$this->author=intval($_POST['user_id']);
 		$this->karma=round($current_user->user_karma);
@@ -332,7 +333,24 @@ class Comment {
 		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
 			$this->karma = 20;
 			$this->type = 'admin';
+		} 
+
+		// Basic check to avoid abuses from same IP
+		if (!$current_user->admin) { // Don't check in case of admin comments
+
+			// Avoid astroturfing from the same link's author
+			if ($link->ip == $globals['user_ip'] && $link->author != $this->author) {
+				$db->query("REPLACE INTO clones (clon_from, clon_to, clon_ip) VALUES ($this->author, $link->author, '$link->ip')");
+				return _('no se puede comentar desde la misma IP del autor del envío');
+			}
+
+			// Avoid floods with clones from the same IP
+			$same_ip_comments = $db->get_var("select count(*) from comments where comment_link_id = $link->id and comment_ip='$this->ip' and comment_user_id != $this->author");
+			if ($same_ip_comments > 1) {
+				return _('demasiados comentarios desde la misma IP con usuarios diferentes');
+			}
 		}
+
 
 		if (mb_strlen($this->content) < 5 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			return _('texto muy breve o caracteres no válidos');

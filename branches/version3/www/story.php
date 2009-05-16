@@ -390,7 +390,6 @@ case 7:
 	echo '</div>';
 	break;
 }
-// echo '<div class="story-vertical-completion">&nbsp</div>';
 echo '</div>';
 
 echo '<!--'."\n".'<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
