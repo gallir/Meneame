@@ -240,7 +240,7 @@ function get_date($epoch) {
 function get_date_time($epoch) {
 		global $globals;
 	    //return date("Y-m-d H:i", $epoch);
-		if ($globals['now'] - $epoch < 43200) // Difference is less than 12 hours
+		if (abs($globals['now'] - $epoch) < 43200) // Difference is less than 12 hours
 	    	return date(" H:i e", $epoch);
 		else
 	    	return date(" d-m-Y H:i e", $epoch);
