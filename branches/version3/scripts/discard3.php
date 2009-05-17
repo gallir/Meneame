@@ -76,7 +76,7 @@ foreach ($negatives as $negative) {
 }
 
 
-function punish_comments($hours = 6) {
+function punish_comments($hours = 2) {
 	global $globals, $db;
 
 
@@ -95,7 +95,7 @@ function punish_comments($hours = 6) {
 
 	echo "Starting karma_comments...\n";
 
-	$users = "SELECT SQL_NO_CACHE distinct comment_user_id as user_id from comments, users where comment_date > from_unixtime($comments_from) and comment_karma < -50 and comment_user_id = user_id and user_level != 'disabled' and user_karma >= $min_karma";
+	$users = "SELECT SQL_NO_CACHE distinct comment_user_id as user_id from comments, users where comment_date > from_unixtime($comments_from) and comment_karma < -70 and comment_user_id = user_id and user_level != 'disabled' and user_karma >= $min_karma";
 	$result = $db->get_results($users);
 
 	$log->store();
@@ -121,10 +121,10 @@ function punish_comments($hours = 6) {
 		if ($punish < -0.1) {
 			echo "comments: $comments_count votes distinct: $distinct_votes_count karma: $votes_karma coef: $comment_coeff -> $punish\n";
 			$user->karma += $punish;
-			//$user->store();
+			$user->store();
 			$annotation = new Annotation("karma-$user->id");
-			//$annotation->append(_('Penalización por comentarios').": $punish, nuevo karma: $user->karma\n");
-			echo(_('Penalización por comentarios').": $punish, nuevo karma: $user->karma\n");
+			$annotation->append(_('Penalización por comentarios').": $punish, nuevo karma: $user->karma\n");
+			echo(_('Penalización por negativos en comentarios').": $punish, nuevo karma: $user->karma\n");
 			$log->append(_('Penalización')." $user->username: $punish, nuevo karma: $user->karma\n");
 		}
 		$db->barrier();
