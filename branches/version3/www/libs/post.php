@@ -91,14 +91,12 @@ class Post {
 		if(!$this->read) $this->read(); 
 
 		require_once(mnminclude.'user.php');
-		if ($this->karma < -50 || 
-			($current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0)) 
-			$this->hidden = true;
-		else $this->hidden = false;
+		$this->hidden = $this->karma < -50;
+		$this->ignored = $current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0;
 
 		echo '<li id="pcontainer-'.$this->id.'">';
 
-		if ($this->hidden)  {
+		if ($this->hidden || $this->ignored)  {
 			$post_meta_class = 'comment-meta-hidden';
 			$post_class = 'comment-body-hidden';
 		} else {
@@ -112,7 +110,8 @@ class Post {
 		echo '<div class="'.$post_class.'" id="pid-'.$this->id.'">';
 
 
-		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
+		if ($this->ignored 
+				|| ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_post.php\',\'post\',\'pid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver texto').'">'._('ver texto').'</a>';
 		} else {
 			$this->print_user_avatar();
