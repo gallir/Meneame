@@ -37,8 +37,9 @@ switch ($type) {
 			echo _('dirección de correo no válida');
 			return;
 		}
-		if(!($current_user->user_id > 0 && $current_user->user_email == $name) && email_exists($name)) {
-			echo _('ya existe otro usuario con esa dirección de correo');
+		if(!($current_user->user_id > 0 && $current_user->user_email == $name) 
+			&& email_exists($name, $current_user->user_id == 0)) { // Only check for previuos used if the user is not authenticated
+			echo _('dirección de correo duplicada, o fue usada recientemente');
 			return;
 		}
 		echo "OK";

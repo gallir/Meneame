@@ -90,7 +90,7 @@ function user_exists($username) {
 	return false;
 }
 
-function email_exists($email) {
+function email_exists($email, $check_previous_registered = true) {
 	global $db;
 
 	$parts = explode('@', $email);
@@ -101,6 +101,11 @@ function email_exists($email) {
 	$domain = $db->escape($domain);
 	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email = '$user@$domain' or user_email LIKE '$user+%@$domain'");
 	if ($res>0) return $res;
+	if ($check_previous_registered) {
+		// Check the same email wasn't used recently for another account
+		$res=$db->get_var("SELECT count(*) FROM users WHERE (user_email_register = '$user@$domain' or user_email_register LIKE '$user+%@$domain') and user_date > date_sub(now(), interval 1 year)");
+		if ($res>0) return $res;
+	}
 	return false;
 }
 

@@ -241,7 +241,7 @@ function save_profile() {
 	if($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
 		$messages .= '<p class="form-error">'._('el correo electrónico no es correcto').'</p>';
 		$errors++;
-	} elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']))) {
+	} elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']), false)) {
 		$messages .= '<p class="form-error">'. _('ya existe otro usuario con esa dirección de correo'). '</p>';
 		$errors++;
 	} else {

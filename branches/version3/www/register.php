@@ -12,6 +12,10 @@ include(mnminclude.'ts.php');
 include(mnminclude.'ban.php');
 include(mnminclude.'log.php');
 
+if ($current_user->user_id > 0) {
+	header("Location: " . get_user_uri($current_user->user_login));
+}
+
 do_header(_("registro"), "post");
 
 echo '<div class="genericform">'."\n";
@@ -155,7 +159,7 @@ function check_user_fields() {
 		$error=true;
 	}
 	if(email_exists(trim($_POST["email"])) ) {
-		register_error(_("Ya existe otro usuario con esa dirección de correo"));
+		register_error(_("Dirección de correo duplicada, o fue usada recientemente"));
 		$error=true;
 	}
 	if(preg_match('/[ \']/', $_POST["password"]) || preg_match('/[ \']/', $_POST["password2"]) ) {
