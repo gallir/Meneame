@@ -65,8 +65,8 @@ switch ($option) {
 	case '_conversation':
 		if ($current_user->user_id > 0) {
 			$tab_option = 6;
-			$sql = "SELECT conversation_from as post_id FROM conversations WHERE conversation_user_to=$current_user->user_id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size";
-			$rows =  $db->get_var("SELECT count(*) FROM conversations WHERE conversation_user_to=$current_user->user_id and conversation_type='post'");
+			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
+			$rows =  $db->get_var("SELECT count(*) FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ");
 		} else {
 			$tab_option = 1;	
 			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
