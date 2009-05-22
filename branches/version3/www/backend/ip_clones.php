@@ -31,7 +31,7 @@ $users_page_size = 20;
 $users_offset=($users_page-1)*$users_page_size;
 
 
-$from = "and clon_date > date_sub(now(), interval 60 day)";
+$from = "and clon_date > date_sub(now(), interval 30 day)";
 
 $nclones = $db->get_var("select count(distinct user_id) from clones, users where clon_from = $user_id and user_id = clon_to $from");
 $clones = $db->get_results("select distinct user_id, user_login, user_avatar from clones, users where clon_from = $user_id and user_id = clon_to $from order by clon_date desc limit $users_offset,$users_page_size");

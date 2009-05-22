@@ -76,15 +76,23 @@ switch ($option) {
 		break;
 	default:
 		$tab_option = 4;
-		$user->username = $db->escape($option);
-		if(!$user->read()) {
-			not_found();
-		}
 		$rss_option="?user_id=$user->id";
 		if ( $post_id > 0 ) {
+			$user->id = $db->get_var("select post_user_id from posts where post_id=$post_id");
+			if(!$user->read()) {
+				not_found();
+			}
+			if ($user->username != $option) { // $option == username
+				header('Location: '.post_get_base_url($user->username).'/'.$post_id);
+				die;
+			}
 			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
 			$rows = 1;
 		} else {
+			$user->username = $db->escape($option);
+			if(!$user->read()) {
+				not_found();
+			}
 			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
 		}

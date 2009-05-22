@@ -191,8 +191,9 @@ function do_profile() {
 		} else {
 			echo $user->username;
 		}
+		$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
 		if ($current_user->admin &&
-			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id")) > 0 ) {
+			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from")) > 0 ) {
 			echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
 			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones').'</a><sup>'.$nclones.'</sup>) ';
 		}
