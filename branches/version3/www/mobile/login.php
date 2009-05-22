@@ -55,7 +55,7 @@ function do_login() {
 		if ($previous_login_failed > 2  && !ts_is_human()) {
 			log_insert('login_failed', $globals['original_user_ip_int'], 0);
 			recover_error(_('El código de seguridad no es correcto!'));
-		} elseif ($current_user->Authenticate($username, $password, $persistent) == false) {
+		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
 			log_insert('login_failed', $globals['original_user_ip_int'], 0);
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
