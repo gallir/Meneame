@@ -35,6 +35,7 @@ var server_name = '<? echo get_server_name(); ?>';
 var base_url = '<? echo $globals['base_url'];?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
 var mykey = <? echo rand(100,999); ?>;
+var is_admin = <? if ($current_user->admin) echo 'true'; else echo 'false'; ?>;
 
 
 var default_gravatar = 'http://'+server_name+'/img/common/no-gravatar-2-20.jpg';
@@ -251,6 +252,9 @@ function to_html(data) {
 function check_user_ping(str) {
 	myuser = readCookie('mnm_user');
 	if (myuser != null) {
+		if (is_admin) {
+			myuser = "(" + myuser + "|admin|admins|administrador)";
+		}
 		re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])'+myuser+'([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
 		if (str.match(re)) {
 			return true;
