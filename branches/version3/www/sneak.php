@@ -134,7 +134,7 @@ function to_html(data) {
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (check_user_ping(data.title)) {
 				text_style = 'style="font-weight: bold;"';
-			}
+			} 
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
@@ -156,7 +156,7 @@ function to_html(data) {
 				// The sender is a friend and sent the message only to friends
 				chat_class = 'sneaker-chat-friends'
 			}
-			if (check_user_ping(data.title)) {
+			if (check_user_ping(data.title)  || (is_admin && data.status != 'admin' && check_admin_ping(data.title))) {
 				text_style += 'font-weight: bold;';
 			}
 			if (text_style.length > 0) {
@@ -252,15 +252,17 @@ function to_html(data) {
 function check_user_ping(str) {
 	myuser = readCookie('mnm_user');
 	if (myuser != null) {
-		if (is_admin) {
-			myuser = "(" + myuser + "|admin|admins|administrador)";
-		}
 		re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])'+myuser+'([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
 		if (str.match(re)) {
 			return true;
 		}
 	}
 	return false;
+}
+
+function check_admin_ping(str) {
+	re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])(admin|admins|administradora{0,1}|administrador[ae]s)([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
+	return str.match(re);
 }
 
 function put_smiley(str) {
