@@ -37,7 +37,7 @@ function save_post ($post_id) {
 
 
 	$post = new Post;
-	$_POST['post'] = clean_text($_POST['post'], 0, false, 300);
+	$_POST['post'] = clean_text($_POST['post'], 0, false, $globals['posts_len']);
 	if (mb_strlen($_POST['post']) < 5) {
 		echo 'ERROR: ' . _('texto muy corto');
 		die;

@@ -196,8 +196,8 @@ class Post {
 		echo '<input type="hidden" name="key" value="'.$this->randkey.'" />'."\n";
 		echo '<input type="hidden" name="post_id" value="'.$this->id.'" />'."\n";
 		echo '<input type="hidden" name="user_id" value="'.$this->author.'" />'."\n";
-		echo '<textarea name="post" rows="3" cols="40" id="post" onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,300)" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,300)">'.$this->content.'</textarea>'."\n";
-		$body_left = 300 - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
+		echo '<textarea name="post" rows="3" cols="40" id="post" onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')">'.$this->content.'</textarea>'."\n";
+		$body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 		echo '<br /><input readonly type="text" name="postcounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>';
 		echo '&nbsp;&nbsp;&nbsp;';
 		echo '<input class="button" type="submit" value="'._('guardar').'" />'."\n";
@@ -224,7 +224,7 @@ class Post {
 		echo '<div id="addpost">';
 		// Print "new note" is the user is authenticated
 		if ($current_user->user_id > 0) {
-			if (!$this->read_last($current_user->user_id) || time() - $this->date > 60) {
+			if (!$this->read_last($current_user->user_id) || time() - $this->date > $globals['posts_period']) {
 				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_url'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			} else {
 				echo '<img src="'.$globals['base_url'].'img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';

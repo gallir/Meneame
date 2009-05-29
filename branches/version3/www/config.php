@@ -96,6 +96,10 @@ $globals['min_time_for_comments'] = 3600; // Time to wait until first comment (f
 //$globals['min_karma_for_posts'] = 6;
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;
+
+$globals['posts_len'] = 500;
+$globals['posts_period'] = 60;
+
 // Ensure you have a avar dir writeable by the web server
 //$globals['avatars_dir'] = 'avatars-local';
 // Changed to a global cache directory
