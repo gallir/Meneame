@@ -101,7 +101,7 @@ function admin_bans($ban_type) {
 	}
 	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';" />';
 	
-	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_url'].'img/common/search-01.gif" />';
+	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['static_server'].$globals['base_url'].'img/common/search-01.gif" />';
 	echo '</form>';
 	echo '</div>'; 
 
@@ -213,9 +213,9 @@ function admin_bans($ban_type) {
 				echo '<td>'.$ban->ban_expire.'</td>';
 				echo '<td>';
 				if ($current_user->user_level=="god") {
-					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
+					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
 					echo '&nbsp;/&nbsp;';
-					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'&amp;key='.$key.'" title="'._('Eliminar').'"><img src="'.$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
+					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'&amp;key='.$key.'" title="'._('Eliminar').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
 				}
 				echo '</td>';
 				echo '</tr>';
