@@ -187,7 +187,7 @@ function do_header($title) {
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
 	echo'	<link>http://'.get_server_name().'</link>'."\n";
-	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name()."</link><url>http://".get_server_name().$globals['base_url']."img/mnm/eli-rss.png</url></image>\n";
+	echo"	<image><title>".get_server_name()."</title><link>http://".get_server_name()."</link><url>http://".get_static_server_name().$globals['base_url']."img/mnm/eli-rss.png</url></image>\n";
 	echo'	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo'	<generator>http://blog.meneame.net/</generator>'."\n";

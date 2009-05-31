@@ -28,6 +28,10 @@ $globals['db_name'] = 'meneame';
 $globals['db_user'] = 'meneame';
 $globals['db_password'] = '';
 
+//Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
+$globals['static_server'] = '';
+//$globals['static_server'] = 'http://static.meneame.net:81';
+
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';

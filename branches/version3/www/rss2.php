@@ -227,7 +227,7 @@ if ($links) {
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
 		if ($link->has_thumb()) {
-			echo "<img src='http://".get_server_name()."$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+			echo "<img src='http://".get_static_server_name()."$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
 		}
 		echo '<p>'.$content.'</p>';
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
@@ -283,7 +283,7 @@ function do_header($title) {
 	echo'	<title>'.$title.'</title>'."\n";
 	echo '	<atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
 	echo'	<link>http://'.get_server_name().$home.'</link>'."\n";
-	echo"	<image><title>$title</title><link>http://".get_server_name().$home."</link><url>http://".get_server_name().$globals['base_url']."img/mnm/eli-rss.png</url></image>\n";
+	echo"	<image><title>$title</title><link>http://".get_server_name().$home."</link><url>http://".get_static_server_name().$globals['base_url']."img/mnm/eli-rss.png</url></image>\n";
 	echo'	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";
 	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo'	<generator>http://blog.meneame.net/</generator>'."\n";

@@ -60,7 +60,7 @@ print_search_form();
 if(!empty($_REQUEST['q'])) {
 	echo '<div style="font-size:85%;margin-top: 5px">';
 	echo _('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos');
-	echo '&nbsp;<a href="'.$globals['base_url'].'rss2.php?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss"><img src="'.$globals['base_url'].'img/common/feed-icon-12x12.png" alt="rss2" height="12" width="12"  style="vertical-align:top"/></a>';
+	echo '&nbsp;<a href="'.$globals['base_url'].'rss2.php?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/feed-icon-12x12.png" alt="rss2" height="12" width="12"  style="vertical-align:top"/></a>';
 	echo '</div>';
 }
 

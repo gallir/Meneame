@@ -32,13 +32,14 @@ if (!empty($_REQUEST['friends'])) {
 var my_version = '<? echo $sneak_version; ?>';
 var ts=<? echo (time()-3600); ?>; // just due a freaking IE cache problem
 var server_name = '<? echo get_server_name(); ?>';
+var static_server_name = '<? echo get_static_server_name(); ?>';
 var base_url = '<? echo $globals['base_url'];?>';
 var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
 var mykey = <? echo rand(100,999); ?>;
 var is_admin = <? if ($current_user->admin) echo 'true'; else echo 'false'; ?>;
 
 
-var default_gravatar = 'http://'+server_name+'/img/common/no-gravatar-2-20.jpg';
+var default_gravatar = 'http://'+static_server_name+base_url+'img/common/no-gravatar-2-20.jpg';
 var do_animation = true;
 var animating = false;
 var animation_colors = Array("#ffc387", "#ffc891", "#ffcd9c", "#ffd2a6", "#ffd7b0", "#ffddba", "#ffe7cf", "#ffecd9", "#fff1e3", "#fff6ed", "#fffbf7", "transparent");
@@ -59,15 +60,13 @@ $(function(){start_sneak()});
 
 function play_pause() {
 	if (is_playing()) {
-		document.images['play-pause-img'].src = "img/common/sneak-play01.png";
-		//document.getElementById('play-pause').innerHTML = '<img src="img/common/play.png">';
+		document.images['play-pause-img'].src = 'http://'+static_server_name+base_url+"img/common/sneak-play01.png";
 		if( document.getElementById('comment-input'))
 			document.getElementById('comment-input').disabled=true;
 		do_pause();
 		
 	} else {
-		document.images['play-pause-img'].src = "img/common/sneak-pause01.png";
-		//document.getElementById('play-pause').innerHTML = '<img src="img/common/pause.png">';
+		document.images['play-pause-img'].src = 'http://'+static_server_name+base_url+"img/common/sneak-pause01.png";
 		if (document.getElementById('comment-input'))
 			document.getElementById('comment-input').disabled=false;
 		do_play();
@@ -130,7 +129,7 @@ function to_html(data) {
 	switch (data.type) {
 		case 'post':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-newnotame01.png" width="21" height="17" alt="<?echo _('nótame');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-newnotame01.png" width="21" height="17" alt="<?echo _('nótame');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (check_user_ping(data.title)) {
 				text_style = 'style="font-weight: bold;"';
@@ -147,7 +146,7 @@ function to_html(data) {
 			return html;
 			break;
 		case 'chat':
-			html += '<img src="img/common/sneak-chat01.png" width="21" height="17" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-chat01.png" width="21" height="17" alt="<?echo _('mensaje');?>" title="<?echo _('mensaje');?>" '+tooltip_ajax_call+'/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			// Change the style
 			if (global_options.show_admin || data.status == 'admin') {
@@ -180,41 +179,41 @@ function to_html(data) {
 		case 'vote':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
 			if (data.status == '<? echo _('publicada');?>')
-				html += '<img src="img/common/sneak-vote-published01.png" width="21" height="17" alt="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-vote-published01.png" width="21" height="17" alt="<?echo _('voto');?>" '+tooltip_ajax_call+'/><\/div>';
 			else
-				html += '<img src="img/common/sneak-vote01.png" width="21" height="17" alt="<?echo _('voto');?>"  '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-vote01.png" width="21" height="17" alt="<?echo _('voto');?>"  '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'problem':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-problem01.png" width="21" height="17" alt="<?echo _('problema');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-problem01.png" width="21" height="17" alt="<?echo _('problema');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'comment':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-comment01.png" width="21" height="17" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-comment01.png" width="21" height="17" alt="<?echo _('comentario');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'new':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-new01.png" width="21" height="17" alt="<?echo _('nueva');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-new01.png" width="21" height="17" alt="<?echo _('nueva');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'published':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-published01.png" width="21" height="17" alt="<?echo _('publicada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-published01.png" width="21" height="17" alt="<?echo _('publicada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'discarded':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="img/common/sneak-reject01.png" width="21" height="17" alt="<?echo _('descartada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-reject01.png" width="21" height="17" alt="<?echo _('descartada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'edited':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-edit-notice01.png" width="21" height="17" alt="<?echo _('editada');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-edit-notice01.png" width="21" height="17" alt="<?echo _('editada');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'cedited':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-edit-comment01.png" width="21" height="17" alt="<?echo _('comentario editado');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-edit-comment01.png" width="21" height="17" alt="<?echo _('comentario editado');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		case 'geo_edited':
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
-			html += '<img src="img/common/sneak-geo01.png" width="21" height="17" alt="<?echo _('geo editado');?>" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="http://'+static_server_name+base_url+'img/common/sneak-geo01.png" width="21" height="17" alt="<?echo _('geo editado');?>" '+tooltip_ajax_call+'/><\/div>';
 			break;
 		default:
 			html += data.type+'<\/div>';
@@ -228,7 +227,7 @@ function to_html(data) {
 	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';
-		html += '<img src="'+base_url+'img/mnm/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
+		html += '<img src="http://'+static_server_name+base_url+'img/mnm/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
 		html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
@@ -266,25 +265,25 @@ function check_admin_ping(str) {
 }
 
 function put_smiley(str) {
-	str=str.replace(/(\s|^):-{0,1}\)/gi, ' <img src="img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
-	str=str.replace(/(\s|^);-{0,1}\)/gi, ' <img src="img/smileys/wink.gif" alt=";)" title=";)" />');
-	str=str.replace(/(\s|^):-{0,1}&gt;/gi, ' <img src="img/smileys/cheesy.gif" alt=":->" title=":->" />');
-	str=str.replace(/(\s|^):-{0,1}D|:grin:/gi, ' <img src="img/smileys/grin.gif" alt=":-D" title=":-D"/>');
-	str=str.replace(/:oops:|&lt;:\(/gi, ' <img src="img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" />');
-	str=str.replace(/(\s|^)&gt;:-{0,1}\(/gi, ' <img src="img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-(" />');
-	str=str.replace(/(\s|^)\?(:-){0,1}\(/gi, ' <img src="img/smileys/huh.gif" alt="?(" title="?(" />');
-	str=str.replace(/(\s|^):-{0,1}\(/gi, ' <img src="img/smileys/sad.gif" alt=":-(" title=":-(" />');
-	str=str.replace(/(\s|^):-{0,1}O/g, ' <img src="img/smileys/shocked.gif" alt=":-O" title=":-O" />');
-	str=str.replace(/(\s|^)8-{0,1}[D\)]|:cool:/g, ' <img src="img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/>');
-	str=str.replace(/:roll:/gi, ' <img src="img/smileys/rolleyes.gif" alt=":roll:" title=":roll:" />');
-	str=str.replace(/(\s|^):-{0,1}P/gi, ' <img src="img/smileys/tongue.gif" alt=":-P" title=":-P" />');
-	str=str.replace(/(\s|^):-{0,1}x/gi, ' <img src="img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" />');
-	str=str.replace(/(\s|^):-{0,1}\//gi, ' <img src="img/smileys/undecided.gif" alt=":-/" title=":-/ :/" />');
-	str=str.replace(/(\s|^):'\(|:cry:/gi, ' <img src="img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" />');
-	str=str.replace(/(\s|^)[xX]D+|:lol:/g, ' <img src="img/smileys/laugh.gif" alt="xD" title=":lol: xD" />');
-	str=str.replace(/(\s|^):-{0,1}S/gi, ' <img src="img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
-	str=str.replace(/(\s|^):-{0,1}\|/gi, ' <img src="img/smileys/blank.gif" alt=":-|" title=":-| :|"/>');
-	str=str.replace(/(\s|^):-{0,1}\*/gi, ' <img src="img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
+	str=str.replace(/(\s|^):-{0,1}\)/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
+	str=str.replace(/(\s|^);-{0,1}\)/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/wink.gif" alt=";)" title=";)" />');
+	str=str.replace(/(\s|^):-{0,1}&gt;/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/cheesy.gif" alt=":->" title=":->" />');
+	str=str.replace(/(\s|^):-{0,1}D|:grin:/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/grin.gif" alt=":-D" title=":-D"/>');
+	str=str.replace(/:oops:|&lt;:\(/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" />');
+	str=str.replace(/(\s|^)&gt;:-{0,1}\(/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-(" />');
+	str=str.replace(/(\s|^)\?(:-){0,1}\(/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/huh.gif" alt="?(" title="?(" />');
+	str=str.replace(/(\s|^):-{0,1}\(/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/sad.gif" alt=":-(" title=":-(" />');
+	str=str.replace(/(\s|^):-{0,1}O/g, ' <img src="http://'+static_server_name+base_url+'img/smileys/shocked.gif" alt=":-O" title=":-O" />');
+	str=str.replace(/(\s|^)8-{0,1}[D\)]|:cool:/g, ' <img src="http://'+static_server_name+base_url+'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/>');
+	str=str.replace(/:roll:/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:" />');
+	str=str.replace(/(\s|^):-{0,1}P/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/tongue.gif" alt=":-P" title=":-P" />');
+	str=str.replace(/(\s|^):-{0,1}x/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" />');
+	str=str.replace(/(\s|^):-{0,1}\//gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/undecided.gif" alt=":-/" title=":-/ :/" />');
+	str=str.replace(/(\s|^):'\(|:cry:/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" />');
+	str=str.replace(/(\s|^)[xX]D+|:lol:/g, ' <img src="http://'+static_server_name+base_url+'img/smileys/laugh.gif" alt="xD" title=":lol: xD" />');
+	str=str.replace(/(\s|^):-{0,1}S/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
+	str=str.replace(/(\s|^):-{0,1}\|/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/blank.gif" alt=":-|" title=":-| :|"/>');
+	str=str.replace(/(\s|^):-{0,1}\*/gi, ' <img src="http://'+static_server_name+base_url+'img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
 
 	return str;
 }
@@ -460,20 +459,20 @@ if ($current_user->user_id > 0) {
 echo '<div class="sneaker" style="margin-top: 5px">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
 echo '<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">';
-echo '<img id="play-pause-img" onclick="play_pause()" src="img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
-echo '<label><input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control(\'pubvotes\')" /><img src="img/common/sneak-vote-published01.png" width="21" height="17" title="'._('votos de publicadas').'" alt="'._('votos de publicadas').'" /></label>';
-echo '<label><input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control(\'vote\')" /><img src="img/common/sneak-vote01.png" width="21" height="17" title="'._('meneos').'" alt="'._('meneos').'" /></label>';
-echo '<label><input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control(\'problem\')" /><img src="img/common/sneak-problem01.png" width="21" height="17" alt="'._('problema').'" title="'._('problema').'"/></label>';
-echo '<label><input type="checkbox" checked="checked" name="sneak-comment" id="comment-status" onclick="toggle_control(\'comment\')" /><img src="img/common/sneak-comment01.png" width="21" height="17" alt="'._('comentario').'" title="'._('comentario').'"/></label>';
-echo '<label><input type="checkbox" checked="checked" name="sneak-new" id="new-status" onclick="toggle_control(\'new\')" /><img src="img/common/sneak-new01.png" width="21" height="17" alt="'._('nueva').'" title="'._('nueva').'"/></label>';
-echo '<label><input type="checkbox" checked="checked" name="sneak-published" id="published-status" onclick="toggle_control(\'published\')" /><img src="img/common/sneak-published01.png" width="21" height="17" alt="'._('publicada').'" title="'._('publicada').'"/></label>';
+echo '<img id="play-pause-img" onclick="play_pause()" src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
+echo '<label><input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control(\'pubvotes\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-vote-published01.png" width="21" height="17" title="'._('votos de publicadas').'" alt="'._('votos de publicadas').'" /></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control(\'vote\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-vote01.png" width="21" height="17" title="'._('meneos').'" alt="'._('meneos').'" /></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control(\'problem\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-problem01.png" width="21" height="17" alt="'._('problema').'" title="'._('problema').'"/></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-comment" id="comment-status" onclick="toggle_control(\'comment\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-comment01.png" width="21" height="17" alt="'._('comentario').'" title="'._('comentario').'"/></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-new" id="new-status" onclick="toggle_control(\'new\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-new01.png" width="21" height="17" alt="'._('nueva').'" title="'._('nueva').'"/></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-published" id="published-status" onclick="toggle_control(\'published\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-published01.png" width="21" height="17" alt="'._('publicada').'" title="'._('publicada').'"/></label>';
 
 // Only registered users can see the chat messages
 if ($current_user->user_id > 0) {
 	$chat_checked = 'checked="checked"';
-	echo '<label><input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /><img src="img/common/sneak-chat01.png" width="21" height="17" alt="'._('mensaje').'" title="'._('mensaje').'"/></label>';
+	echo '<label><input type="checkbox" '.$chat_checked.' name="sneak-chat" id="chat-status" onclick="toggle_control(\'chat\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-chat01.png" width="21" height="17" alt="'._('mensaje').'" title="'._('mensaje').'"/></label>';
 }
-echo '<label><input type="checkbox" checked="checked" name="sneak-post" id="post-status" onclick="toggle_control(\'post\')" /><img src="img/common/sneak-newnotame01.png" width="21" height="17" alt="'._('nótame').'" title="'._('nótame').'"/></label>';
+echo '<label><input type="checkbox" checked="checked" name="sneak-post" id="post-status" onclick="toggle_control(\'post\')" /><img src="'.$globals['static_server'].$globals['base_url'].'img/common/sneak-newnotame01.png" width="21" height="17" alt="'._('nótame').'" title="'._('nótame').'"/></label>';
 
 
 echo '<abbr title="'._('total&nbsp;(registrados+jabber+anónimos)').'">'._('fisgonas').'</abbr>: <strong><span id="ccnt"> </span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -522,7 +521,7 @@ function print_sneak_tabs($option) {
 	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
 		echo '<li'.$active[3].'><a href="'.$globals['base_url'].'sneak.php?admin=1">'._('admin').'</a></li>' . "\n";
 	}
-	echo '<li><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
+	echo '<li><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";
 
 	echo '</ul>' . "\n";
 }

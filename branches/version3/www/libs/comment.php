@@ -146,7 +146,7 @@ class Comment {
 			// Add the icon to show votes
 			if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
 				echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_c_v.php?id='.$this->id.'\')">';
-				echo '<img src="'.$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
+				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
 				echo '</a>';
 			}
 			echo '</div>';
@@ -185,14 +185,14 @@ class Comment {
 		$this->vote_exists();
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 	 		echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
-	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_url'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
+			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
+	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
 	 		echo '</span>';
 	 	} else {
 	 		if ($this->voted > 0) {
-				echo '<img src="'.$globals['base_url'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
+				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
 			} elseif ($this->voted<0 ) {
-				echo '<img src="'.$globals['base_url'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
+				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
 			}
 		}
 	}
@@ -230,7 +230,7 @@ class Comment {
 		if (($this->author == $current_user->user_id &&
 			$globals['now'] - $this->date < $globals['comment_edit_time']) || 
 			($this->author != $current_user->user_id && $current_user->user_level == 'god') ) { // gods can always edit 
-			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['static_server'].$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));

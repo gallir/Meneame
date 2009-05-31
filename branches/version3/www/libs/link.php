@@ -465,14 +465,14 @@ class Link {
 
 		// Content type (for video and images)
 		if ($this->content_type == 'image') {
-			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="'._('imagen').'" title="'._('imagen').'" />';
+			echo '&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="'._('imagen').'" title="'._('imagen').'" />';
 		} elseif ($this->content_type == 'video') {
-			echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('vídeo').'" />';
+			echo '&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('vídeo').'" />';
 		}
 		echo '</h1>';
 
 		if ($this->has_thumb()) {
-			echo "<img src='$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
+			echo "<img src='".$globals['static_server']."$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 		}
 
 		if (! $globals['bot']) {
@@ -500,10 +500,10 @@ class Link {
 			echo text_to_html($this->content);
 			if ($type != 'preview' ) {
 				if ($this->is_editable()) {
-					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
+					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['static_server'].$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
 				}
 				if ($this->geo && $this->is_map_editable()) {
-					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img class="mini-icon-text" src="'.$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
+					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img class="mini-icon-text" src="'.$globals['static_server'].$globals['base_url'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
 				}
 			}
 			echo '</p>';
@@ -897,10 +897,10 @@ class Link {
 		echo '&nbsp;'._('texto').'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 		echo '<input type="radio" '.$type['image'].' name="type" value="image"/>';
-		echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
 		echo '<input type="radio" '.$type['video'].' name="type" value="video"/>';
-		echo '&nbsp;<img src="'.$globals['base_url'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._('¿es un vídeo?').'" title="'._('¿es un vídeo?').'" />';
+		echo '&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._('¿es un vídeo?').'" title="'._('¿es un vídeo?').'" />';
 	}
 
 	function read_content_type_buttons($type) {
