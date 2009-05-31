@@ -1012,7 +1012,7 @@ class Link {
 			// Aged karma
 			$diff = max(0, $globals['now'] - ($this->sent_date + 9*3600)); // 9 hours without decreasing
 			$oldd = 1 - $diff/(3600*60);
-			$oldd = max(0.4, $oldd);
+			$oldd = max(0.25, $oldd);
 			$oldd = min(1, $oldd);
 			$this->coef = $oldd;
 		} else {

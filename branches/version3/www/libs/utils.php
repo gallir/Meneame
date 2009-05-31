@@ -21,7 +21,7 @@ $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 
 $globals['now'] = time();
 
-$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('provocación'), -8 => _('errónea'),  -9 => _('copia/plagio'));
+$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
 
 
 $globals['extra_js'] = Array();
