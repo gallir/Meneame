@@ -453,6 +453,7 @@ function put_smileys($str) {
 define('META_YES', '<img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
 define('META_NO', '<img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/fix-02.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
 
+
 function meta_get_current() {
 	global $globals, $db, $current_user;
 

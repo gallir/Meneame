@@ -31,6 +31,11 @@ $globals['db_password'] = '';
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
+
+//Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
+$globals['static_server'] = '';
+//$globals['static_server'] = 'http://static.meneame.net';
+
 //$globals['legal'] = globals['base_url'].'libs/ads/legal-meneame.php';
 // leave empty if you don't have the rewrite rule in apache
 
@@ -98,6 +103,8 @@ if (!preg_match('/utf-8/i', setlocale(LC_CTYPE, 0)))  {
 @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 //ob_start();
+$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+
 include mnminclude.'db.php';
 include mnminclude.'utils.php';
 include mnminclude.'login.php';

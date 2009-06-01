@@ -6,8 +6,8 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-define('FAV_YES', '<img src="'.$globals['base_url'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" title="'._('en favoritos').'"/>');
-define('FAV_NO', '<img src="'.$globals['base_url'].'img/common/icon_favourites_no.gif" alt="del" width="16" height="16" title="'._('agregar a favoritos').'"/>');
+define('FAV_YES', '<img src="'.$globals['base_static'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" title="'._('en favoritos').'"/>');
+define('FAV_NO', '<img src="'.$globals['base_static'].'img/common/icon_favourites_no.gif" alt="del" width="16" height="16" title="'._('agregar a favoritos').'"/>');
 
 function favorite_exists($user, $link) {
 		global $db;

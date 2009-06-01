@@ -509,7 +509,7 @@ echo "</div>\n";
 do_footer();
 
 function print_sneak_tabs($option) {
-	global $current_user;
+	global $current_user, $globals;
 	$active = array();
 	$active[$option] = ' class="tabmain-this"';
 	echo '<ul class="tabmain">' . "\n";

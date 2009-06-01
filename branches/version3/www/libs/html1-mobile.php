@@ -95,8 +95,8 @@ function do_header($title, $id='home') {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
-	echo '<link rel="icon" href="'.$globals['base_url'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
-	echo '<link rel="apple-touch-icon" href="'.$globals['base_url'].'img/favicons/apple-touch-icon.png"/>' . "\n";
+	echo '<link rel="icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
+	echo '<link rel="apple-touch-icon" href="'.$globals['base_static'].'img/favicons/apple-touch-icon.png"/>' . "\n";
 
 	do_js_includes();
 
@@ -128,29 +128,33 @@ function do_css_includes() {
 	global $globals;
 
 	if ($globals['css_main']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].$globals['css_main'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_main'].'" />' . "\n";
 	}
 	if ($globals['css_color']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].$globals['css_color'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_color'].'" />' . "\n";
 	}
 	foreach ($globals['extra_css'] as $css) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_url'].'css/'.$css.'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/'.$css.'" />' . "\n";
 	}
 }
 
 function do_js_includes() {
 	global $globals;
 
-	echo '<script type="text/javascript">var base_url="'.$globals['base_url'].'";mobile_version = true;';
-	echo 'var base_key="'.get_security_key().'";';
+	echo '<script type="text/javascript">'."\n";
+	echo 'if(top.location != self.location)top.location = self.location;'."\n";
+	echo 'var base_url="'.$globals['base_url'].'";'."\n";
+	echo 'var mobile_version = true;'."\n";
+	echo 'var base_static="'.$globals['base_static'].'";'."\n";
+	echo 'var base_key="'.get_security_key().'";'."\n";
 	echo '</script>'."\n";
-	echo '<script src="'.$globals['base_url'].'js/mobile02.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/mobile02.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
-	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";
 	if ($globals['extra_js_text']) {
-		 echo $globals['extra_js_text']."\n";
+		echo '<script type="text/javascript">'."\n";
+		echo $globals['extra_js_text']."\n";
+		echo '</script>'."\n";
 	}
-	echo '</script>'."\n";
 }
 
 function do_js_from_array($array) {
@@ -159,6 +163,8 @@ function do_js_from_array($array) {
 	foreach ($array as $js) {
 		if (preg_match('/^http|^\//', $js)) {
 			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
+		} elseif (preg_match('/\.js$/', $js))  {
+			echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
 		} else {
 			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
 		}

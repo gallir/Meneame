@@ -12,23 +12,23 @@ function geo_get_marker(point, icon) {
 	switch (icon) {
 		case 'geo':
 		case 'geo_edit':
-			baseicon.image = base_url+"img/geo/common/geo-geo01.png";
+			baseicon.image = base_static+"img/geo/common/geo-geo01.png";
 			break;
 		case 'queued':
-			baseicon.image = base_url+"img/geo/common/geo-new01.png";
+			baseicon.image = base_static+"img/geo/common/geo-new01.png";
 			break;
 		case 'published':
-			baseicon.image = base_url+"img/geo/common/geo-published01.png";
+			baseicon.image = base_static+"img/geo/common/geo-published01.png";
 			break;
 		case 'comment':
-			baseicon.image = base_url+"img/geo/common/geo-comment01.png";
+			baseicon.image = base_static+"img/geo/common/geo-comment01.png";
 			break;
 		case 'post':
-			baseicon.image = base_url+"img/geo/common/geo-newnotame01.png";
+			baseicon.image = base_static+"img/geo/common/geo-newnotame01.png";
 			break;
 		case 'user':
 		default:
-			baseicon.image = base_url+"img/geo/common/geo-user01.png";
+			baseicon.image = base_static+"img/geo/common/geo-user01.png";
 			break;
 	}
 	return new GMarker(point, baseicon);

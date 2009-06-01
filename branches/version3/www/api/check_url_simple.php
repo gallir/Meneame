@@ -8,7 +8,9 @@
 
 if(empty($_GET['url'])) die;
 
-$mnm_image = "/img/es/mnm-over-01.png";
+include('../config.php');
+
+$mnm_image = $globals['base_static']."img/mnm/api/mnm-over-01.png";
 header('Content-Type: text/html; charset=UTF-8');
 
 echo '<html>'."\n";

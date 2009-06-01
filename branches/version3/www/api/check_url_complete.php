@@ -8,13 +8,14 @@
 
 include('../config.php');
 
-$mnm_over = "/img/mnm/api/mnm-over-01.png";
-$mnm_vote = "/img/mnm/api/mnm-vote-01.png";
-$mnm_add = "/img/mnm/api/mnm-add-01.png";
+$mnm_over = $globals['base_static']."img/mnm/api/mnm-over-01.png";
+$mnm_vote = $globals['base_static']."img/mnm/api/mnm-vote-01.png";
+$mnm_add = $globals['base_static']."img/mnm/api/mnm-add-01.png";
 
 if(empty($_GET['url'])) die;
 
 header('Content-Type: text/html; charset=UTF-8');
+stats_increment('ajax', true);
 
 echo '<html>'."\n";
 
