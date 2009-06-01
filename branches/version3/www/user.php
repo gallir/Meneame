@@ -325,8 +325,8 @@ function do_history () {
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
-		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?sent_by='.$user->id.'" title="'._('obtener historial en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=history" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?sent_by='.$user->id.'" title="'._('obtener historial en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
@@ -344,8 +344,8 @@ function do_favorites () {
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=favorites&amp;url=source" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
-		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?favorites='.$user->id.'" title="'._('obtener favoritos en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=favorites&amp;url=source" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?favorites='.$user->id.'" title="'._('obtener favoritos en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach($links as $link_id) {
 			$link->id=$link_id;
@@ -365,8 +365,8 @@ function do_shaken () {
 	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
-		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?voted_by='.$user->id.'" title="'._('noticias votadas en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?voted_by='.$user->id.'" title="'._('noticias votadas en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach($links as $linkdb) {
 			$link->id=$linkdb->link_id;
@@ -394,8 +394,8 @@ function do_commented () {
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<div style="margin-left: 0px">';
-		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" style="margin-left: 0px"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
-		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=commented" title="'._('exportar bookmarks en formato Mozilla').'" style="margin-left: 0px"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
+		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'comments_rss2.php?user_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		print_comment_list($comments, $user);
 	}
@@ -410,7 +410,7 @@ function do_conversation () {
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM conversations, comments, links WHERE conversation_user_to=$user->id and conversation_type='comment' and comment_id=conversation_from and link_id=comment_link_id ORDER BY conversation_time desc LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<div style="margin-left: 0px">';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?answers_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?answers_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		print_comment_list($comments, $user);
 	}
@@ -503,7 +503,7 @@ function do_friends() {
 	global $db, $user, $globals;
 
 	echo '<div style="margin-left: 0px; margin-bottom:20px">';
-	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
+	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 	echo '</div>';
 
 	echo '<div style="width: 48%; display: block; float: left; border: 1px solid #ff6400;padding: 5px 0px 10px 5px">';
@@ -538,7 +538,7 @@ function do_user_tabs($option, $user) {
 	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
 	echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
 	echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
-	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['static_server'].$globals['base_url'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
+	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
 	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
 	if (! $globals['bot']) {
 		echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';

@@ -49,7 +49,7 @@ function preload_indicators() {
 
 	echo '<SCRIPT type="text/javascript">'."\n";
 	echo '<!--'."\n";
-	echo 'var img_src1=\''.$globals['static_server'].$globals['base_url'].'img/common/indicator_orange.gif\''."\n";;
+	echo 'var img_src1=\''.$globals['base_static'].'img/common/indicator_orange.gif\''."\n";;
 	echo 'var img1= new Image(); '."\n";
 	echo 'img1.src = img_src1;'."\n";
 	echo '//-->'."\n";

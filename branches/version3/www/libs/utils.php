@@ -307,7 +307,7 @@ function get_avatar_url($user, $avatar, $size) {
 		//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 		$file_path = mnmpath.'/'.$file;
 		if (@filemtime($file_path) >= $avatar) {
-			return $globals['static_server'] . $globals['base_url'] . $file;
+			return $globals['base_static'] . $file;
 		} else {
 			return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
 		}
@@ -317,7 +317,7 @@ function get_avatar_url($user, $avatar, $size) {
 
 function get_no_avatar_url($size) {
 	global $globals;
-	return $globals['static_server'] . $globals['base_url'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
+	return $globals['base_static'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
 }
 
 function utf8_substr($str,$start)
@@ -358,7 +358,7 @@ function not_found($mess = '') {
     echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
     echo "<title>". _('error') . "</title>\n";
     echo '<meta name="generator" content="meneame" />' . "\n";
-    echo '<link rel="icon" href="'.$globals['static_server'].$globals['base_url'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
+    echo '<link rel="icon" href="'.$globals['base_static'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
     echo '</head>' . "\n";
     echo "<body>\n";
 	if (empty($mess)) {
@@ -417,8 +417,8 @@ function print_simpleformat_buttons($textarea_id) {
 	// To avoid too many bolds and italics from new users and trolls
 	if ($current_user->user_karma < 6.001) return;
 
-	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'*\');" src="'.$globals['static_server'].$globals['base_url'].'img/common/richeditor-bold-01.png" alt="bold" class="rich-edit-key" />';
-	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['static_server'].$globals['base_url'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
+	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'*\');" src="'.$globals['base_static'].'img/common/richeditor-bold-01.png" alt="bold" class="rich-edit-key" />';
+	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['base_static'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
 }
 
 function put_smileys($str) {
@@ -426,32 +426,32 @@ function put_smileys($str) {
 
 	if ($globals['bot']) return $str;
 
-	$str=preg_replace('/(\s|^):-{0,1}\)(\s|$)/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />$1', $str);
-	$str=preg_replace('/(\s|^);-{0,1}\)(\s|$)/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />$1', $str);
-	$str=preg_replace('/(\s|^):-{0,1}&gt;/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}D|:grin:/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):oops:|&lt;:\(/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15" />', $str);
-	$str=preg_replace('/&gt;:-{0,1}\((\s|$)/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("  width="15" height="15" />$1', $str);
-	$str=preg_replace('/(\s|^)\?(:-){0,1}\((\s|$)/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" />$1', $str);
-	$str=preg_replace('/(\s|^):-{0,1}\((\s|$)/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/sad.gif" alt=":-(" title=":-("  width="15" height="15" />$1', $str);
-	$str=preg_replace('/(\s|^):-{0,1}O/', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^)8-{0,1}[D\)]|(\s|^):cool:/', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):roll:/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}P/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}x/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}\//i', '$1 <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):\'\(|(\s|^):cry:/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^)x-{0,1}D+|(\s|^):lol:/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}S/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}\|/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}\*/i', ' <img src="'.$globals['static_server'].$globals['base_url'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />$1', $str);
+	$str=preg_replace('/(\s|^);-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />$1', $str);
+	$str=preg_replace('/(\s|^):-{0,1}&gt;/i', ' <img src="'.$globals['base_static'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}D|:grin:/i', ' <img src="'.$globals['base_static'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):oops:|&lt;:\(/i', ' <img src="'.$globals['base_static'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15" />', $str);
+	$str=preg_replace('/&gt;:-{0,1}\((\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("  width="15" height="15" />$1', $str);
+	$str=preg_replace('/(\s|^)\?(:-){0,1}\((\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" />$1', $str);
+	$str=preg_replace('/(\s|^):-{0,1}\((\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/sad.gif" alt=":-(" title=":-("  width="15" height="15" />$1', $str);
+	$str=preg_replace('/(\s|^):-{0,1}O/', ' <img src="'.$globals['base_static'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^)8-{0,1}[D\)]|(\s|^):cool:/', ' <img src="'.$globals['base_static'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):roll:/i', ' <img src="'.$globals['base_static'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}P/i', ' <img src="'.$globals['base_static'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}x/i', ' <img src="'.$globals['base_static'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}\//i', '$1 <img src="'.$globals['base_static'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):\'\(|(\s|^):cry:/i', ' <img src="'.$globals['base_static'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^)x-{0,1}D+|(\s|^):lol:/i', ' <img src="'.$globals['base_static'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}S/i', ' <img src="'.$globals['base_static'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}\|/i', ' <img src="'.$globals['base_static'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}\*/i', ' <img src="'.$globals['base_static'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" />', $str);
 	return $str;
 }
 
 
 // Meta categories helpers
-define('META_YES', '<img class="tabsub-shakeit-icon" src="'.$globals['static_server'].$globals['base_url'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
-define('META_NO', '<img class="tabsub-shakeit-icon" src="'.$globals['static_server'].$globals['base_url'].'img/common/fix-02.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
+define('META_YES', '<img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
+define('META_NO', '<img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/fix-02.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
 
 function meta_get_current() {
 	global $globals, $db, $current_user;

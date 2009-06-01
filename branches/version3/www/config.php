@@ -211,4 +211,6 @@ include mnminclude.'login.php';
 // For production servers
 $db->hide_errors();
 
+$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+
 ?>

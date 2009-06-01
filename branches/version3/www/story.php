@@ -366,7 +366,7 @@ case 7:
 	echo '<div class="voters" id="voters">';
 
 	print_story_tabs($tab_option);
-	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
+	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_static'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
 
 	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
 	echo '<ul class="tab-trackback">';

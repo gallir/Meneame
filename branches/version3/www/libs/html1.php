@@ -113,7 +113,7 @@ function do_header($title, $id='home') {
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('comentarios').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php" />'."\n";
 
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
-	echo '<link rel="shortcut icon" href="'.$globals['static_server'].$globals['base_url'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
+	echo '<link rel="shortcut icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
 
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
@@ -150,23 +150,23 @@ function do_header($title, $id='home') {
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['static_server'].$globals['base_url'].'img/common/search-03.png" id="submit_image"/></a>';
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image"/></a>';
 	echo '</form>';
 	echo '</li>' . "\n";
 	// form
 
-	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/help-bt.png" alt="help button" title="'._('ayuda').'" width="16" height="16" /></a></li>';
+	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_static'].'img/common/help-bt.png" alt="help button" title="'._('ayuda').'" width="16" height="16" /></a></li>';
 	if ($current_user->admin) {
-		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/tools-bt.png" alt="tools button" title="herramientas" width="19" height="16" /> </a></li>' . "\n";
+		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_static'].'img/common/tools-bt.png" alt="tools button" title="herramientas" width="19" height="16" /> </a></li>' . "\n";
 	}
 
 	if($current_user->authenticated) {
     	$randhello = array_rand($greetings, 1);
  		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['static_server'].$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {
   		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['static_server'].$globals['base_url'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
@@ -191,18 +191,18 @@ function do_css_includes() {
 	global $globals;
 
 	if ($globals['css_main']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['static_server'].$globals['base_url'].$globals['css_main'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_main'].'" />' . "\n";
 	}
 	if ($globals['css_color']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['static_server'].$globals['base_url'].$globals['css_color'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_color'].'" />' . "\n";
 	}
 	foreach ($globals['extra_css'] as $css) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['static_server'].$globals['base_url'].'css/'.$css.'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/'.$css.'" />' . "\n";
 	}
 	// IE6 hacks
 	echo '<!--[if lte IE 6]>'."\n";
 	//echo '<style type="text/css" media="all">@import "'.$globals['base_url'].'css/ie6-hacks.css";</style>'."\n";
-	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['static_server'].$globals['base_url'].'css/ie6-hacks.css" />'."\n";
+	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/ie6-hacks.css" />'."\n";
 	echo '<![endif]-->'."\n";
 
 }
@@ -212,15 +212,16 @@ function do_js_includes() {
 
 	echo '<script type="text/javascript">';
 	echo 'var base_url="'.$globals['base_url'].'";';
+	echo 'var base_static="'.$globals['base_static'].'";';
 	echo 'var base_key="'.get_security_key().'";';
 	echo '</script>'."\n";
-	echo '<script src="'.$globals['static_server'].$globals['base_url'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
 	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
 	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
 	// Cache for Ajax
-	echo '<script src="'.$globals['static_server'].$globals['base_url'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['static_server'].$globals['base_url'].'js/jquery.simplemodal-1.2.2.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['static_server'].$globals['base_url'].'js/general07.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/jquery.simplemodal-1.2.2.pack.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/general07.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	echo '<script type="text/javascript">if(top.location != self.location)top.location = self.location;'."\n";
 	if ($globals['extra_js_text']) {
@@ -236,7 +237,7 @@ function do_js_from_array($array) {
 		if (preg_match('/^http|^\//', $js)) {
 			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
 		} elseif (preg_match('/\.js$/', $js))  {
-			echo '<script src="'.$globals['static_server'].$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
+			echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
 		} else {
 			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
 		}
@@ -392,9 +393,9 @@ function get_toggler_plusminus($container_id, $enabled = false) {
 	static $n = 0;
 
 	if ($enabled) {
-		$image = $globals['static_server'].$globals['base_url'].'img/common/minus-01.png';
+		$image = $globals['base_static'].'img/common/minus-01.png';
 	} else {
-		$image = $globals['static_server'].$globals['base_url'].'img/common/plus-01.png';
+		$image = $globals['base_static'].'img/common/plus-01.png';
 	}
 	echo "<script type=\"text/javascript\">";
 	if ($n == 0) {

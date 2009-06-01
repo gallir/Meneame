@@ -137,7 +137,7 @@ class Post {
 		// Add the icon to show votes
 		if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
 			echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_p_v.php?id='.$this->id.'\')">';
-			echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
+			echo '<img src="'.$globals['base_static'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
 			echo '</a>';
 		}
 
@@ -169,7 +169,7 @@ class Post {
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < 3600 ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
-			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['static_server'].$globals['base_url'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		}
 
@@ -225,14 +225,14 @@ class Post {
 		// Print "new note" is the user is authenticated
 		if ($current_user->user_id > 0) {
 			if (!$this->read_last($current_user->user_id) || time() - $this->date > $globals['posts_period']) {
-				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_static'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			} else {
-				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+				echo '<img src="'.$globals['base_static'].'img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			}
 		}
 
-		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/rss-button01.png" alt="rss2"/></a>';
-		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/jabber-button01.png" alt="jabber"/></a>';
+		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_static'].'img/common/jabber-button01.png" alt="jabber"/></a>';
 		echo '</div>'."\n";
 		if ($current_user->user_id > 0) {
 			echo '<ol class="comments-list" id="newpost"></ol>'."\n";
@@ -271,14 +271,14 @@ class Post {
 		$this->vote_exists();
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 		 	echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
-		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
+			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_static'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
+		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_static'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
 		 	echo '</span>';
 		 } else {
 		 	if ($this->voted > 0) {
-				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
 			} elseif ($this->voted<0 ) {
-				echo '<img src="'.$globals['static_server'].$globals['base_url'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
 			}
 		}
 	}
