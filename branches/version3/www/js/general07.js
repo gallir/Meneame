@@ -481,3 +481,15 @@ function bindTogglePlusMinus(img_id, link_id, container_id) {
 		);
 	});
 }
+if (location.href.match(/#(comment-\d+)$/)) {
+	c = RegExp.$1;
+	$(function () {
+		div = $('#'+c);
+		//div.animate( { "fontColor": "#ff0000"}, 1000 )
+		div.fadeOut(0, function () {
+			div.fadeIn(2000);
+		});
+
+	});
+}
+

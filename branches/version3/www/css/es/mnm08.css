@@ -454,7 +454,7 @@ font-weight: normal;
 
 #footthingy {
 clear: both;
-margin: 1em 20px 0 20px;
+margin: 5em 20px 0 20px;
 padding: 0 1em 0 60px;
 /* margin-top: -5em; hack ie7 */
 }
