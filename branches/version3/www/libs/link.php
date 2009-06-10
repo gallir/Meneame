@@ -1011,10 +1011,10 @@ class Link {
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
 			$diff = max(0, $globals['now'] - ($this->sent_date + 9*3600)); // 9 hours without decreasing
-			$oldd = 1 - $diff/(3600*60);
-			$oldd = max(0.25, $oldd);
-			$oldd = min(1, $oldd);
-			$this->coef = $oldd;
+			$c = 1 - $diff/(3600*60);
+			$c = max(0.25, $c);
+			$c = min(1, $c);
+			$this->coef = $c;
 		} else {
 			$this->coef = 1;
 		}
@@ -1024,12 +1024,30 @@ class Link {
 			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}
 
+		$c = $this->calculate_source_bonus();
+		if ($c > 1) {
+			$this->coef = min($globals['bonus_coef'], $this->coef*$c);
+			$c = round($c, 2);
+			$this->annotation .= _('Bonus por fuente esporádica'). " ($c)<br/>";
+		}
+
 		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;
 		$meta_coef = $this->metas_coef_get();
-		if ($this->coef >= 1.0 && $meta_coef && $meta_coef[$this->meta_id]) {
+		if ($meta_coef && $meta_coef[$this->meta_id]) {
 			$this->karma *= $meta_coef[$this->meta_id];
 		}
 		$this->karma = round($this->karma);
+	}
+
+	// Bonus for sources than are not frequently sent
+	function calculate_source_bonus() {
+		global $db, $globals;
+		$hours = $db->get_var("select ($this->date - unix_timestamp(link_date))/3600 from links where link_blog=$this->blog and link_id < $this->id order by link_id desc limit 1");
+		if (!isset($hours) || $hours > $globals['new_source_max_hours']) $hours = $globals['new_source_max_hours'];
+		if ($hours >= 24) {
+			return 1 + ($globals['new_source_bonus'] - 1) * ($hours - $globals['new_source_min_hours']) / ($globals['new_source_max_hours'] - $globals['new_source_min_hours']);
+		} 
+		return 0;
 	}
 
 	function save_annotation($key) {

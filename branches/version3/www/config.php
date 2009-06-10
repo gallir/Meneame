@@ -38,6 +38,7 @@ $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
+//$globals['news_meta'] = 102; // The code of the "last news" meta category, other has a longer no decreasing period
 // leave empty if you don't have the rewrite rule in apache
 
 //RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
@@ -180,6 +181,11 @@ $greetings = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español',
 
 // Bonus applied to new links
 $globals['bonus_coef'] = 1.5;
+// Bonus applied to sources that are not frequent
+$globals['new_source_bonus'] = 1.05;
+$globals['new_source_max_hours'] = 240;
+$globals['new_source_min_hours'] = 48;
+
 
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
