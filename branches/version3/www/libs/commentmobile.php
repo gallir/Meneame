@@ -14,7 +14,7 @@ class CommentMobile extends Comment{
 
 		if(!$this->read) return;
 
-		echo '<li id="ccontainer-'.$this->id.'">';
+		echo '<li id="c-'.$this->order.'">';
 
 		$this->hidden = $this->karma < -80 || ($this->user_level == 'disabled' && $this->type != 'admin');
 

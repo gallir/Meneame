@@ -94,7 +94,10 @@ class Comment {
 		if(!$this->read) return;
 
 
-		echo '<li id="ccontainer-'.$this->id.'">';
+		if ($single_link) $html_id = $this->order;
+		else $html_id = $this->id;
+
+		echo '<li id="c-'.$html_id.'">';
 
 		require_once(mnminclude.'user.php');
 		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && friend_exists($current_user->user_id, $this->author) < 0);
@@ -123,7 +126,7 @@ class Comment {
 		if ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
 		} else {
-			$this->print_text($length, $single_link);
+			$this->print_text($length, $html_id);
 		}
 		if ($single_link) echo '</span>';
 		echo '</span></div>';
@@ -224,13 +227,15 @@ class Comment {
 	}
 
 
-	function print_text($length = 0, $single_link=true) {
+	function print_text($length = 0, $html_id=false) {
 		global $current_user, $globals;
+
+		if (!$html_id) $html_id = $this->id;
 
 		if (($this->author == $current_user->user_id &&
 			$globals['now'] - $this->date < $globals['comment_edit_time']) || 
 			($this->author != $current_user->user_id && $current_user->user_level == 'god') ) { // gods can always edit 
-			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'ccontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));

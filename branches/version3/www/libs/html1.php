@@ -697,7 +697,7 @@ function do_best_comments() {
 		$output .= '<div class="sidebox"><h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
 			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'#comment-'.$comment->comment_order;
+			$link = $foo_link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $comment->link_comments).'/000'.$comment->comment_order;
 			$output .= '<li><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
 		}
 		$output .= '</ul></div>';
@@ -726,7 +726,7 @@ function do_best_story_comments($link) {
 	if ($res) {
 		$output .= '<div class="sidebox"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4><ul class="topcommentsli">'."\n";
 		foreach ($res as $comment) {
-			$url = $link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $link->comments).'#comment-'.$comment->comment_order;
+			$url = $link->get_relative_permalink().get_comment_page_suffix($globals['comments_page_size'], $comment->comment_order, $link->comments).'/000'.$comment->comment_order;
 			$output .= '<li><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 50).'</em></a></li>'."\n";
 		}
 		$output .= '</ul></div>';

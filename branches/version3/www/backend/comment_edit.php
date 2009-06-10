@@ -86,7 +86,7 @@ function save_comment () {
 		if (strlen($comment->content) > 0 ) {
 			$comment->store();
 		}
-		header('Location: '.$link->get_permalink() . '#comment-'.$comment->order);
+		header('Location: '.$link->get_permalink() . '#c-'.$comment->order);
 		die;
 	} else {
 		echo _('error actualizando, probablemente tiempo de edición excedido');

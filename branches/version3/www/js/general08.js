@@ -21,7 +21,6 @@ function menealo_comment(user, id, value)
 {
 	var url = base_url + "backend/menealo_comment.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
-	var myid = 'comment-'+id;
 	url = url + "?" + content;
 	$.getJSON(url, 
 		 function(data) {
@@ -44,7 +43,6 @@ function menealo_post(user, id, value)
 {
 	var url = base_url + "backend/menealo_post.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
-	var myid = 'comment-'+id;
 	url = url + "?" + content;
 	$.getJSON(url,
 		 function(data) {

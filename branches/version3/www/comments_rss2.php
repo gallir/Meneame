@@ -148,10 +148,10 @@ if ($comments) {
 		$link_title = $db->get_var("select link_title from links where link_id = $link_id");
 		// Title must not carry htmlentities
 		echo "		<title>#$comment->order ".htmlentities2unicodeentities($link_title)."</title>\n";
-		echo "		<link>".$link->get_permalink()."#comment-".$comment->order."</link>\n";
+		echo "		<link>".$link->get_permalink()."/000".$comment->order."</link>\n";
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";
-		echo "		<guid>".$link->get_permalink()."#comment-".$comment->order."</guid>\n";
+		echo "		<guid>".$link->get_permalink()."/000".$comment->order."</guid>\n";
 		echo "		<description><![CDATA[<p>$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$comment->username.'</strong></p>';
 		echo "]]></description>\n";

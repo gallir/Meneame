@@ -51,7 +51,7 @@ if ($last_arg > 0) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^000/', $url_args[$last_arg])) {
 		if ($url_args[$last_arg] > 0) {
-			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#comment-'.(int) $url_args[$last_arg]);
+			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#c-'.(int) $url_args[$last_arg]);
 		} else {
 			header('Location: ' . $link->get_permalink());
 		}
@@ -265,7 +265,7 @@ case 2:
 	// Highlight a comment if it is referenced by the URL.
 	// currently double border, width must be 3 at least
 	echo '<script type="text/javascript">';
-	echo 'if(location.href.match(/#(comment-\d+)$/)){$("#"+RegExp.$1).parent().css("border-style","double").css("border-width","3px")}';
+	echo 'if(location.href.match(/#(c-\d+)$/)){$("#"+RegExp.$1+">:first").css("border-style","double").css("border-width","3px")}';
 	echo "</script>\n";
 	break;
 
