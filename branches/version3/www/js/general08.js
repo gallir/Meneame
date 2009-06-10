@@ -362,15 +362,13 @@ tooltip.c_show = function (event, type, element, link) {
 		return;
 	}
 	if (type == 'id') {
-		target_text = 'comment-' + element;
-		target_author = 'cauthor-'+element;
-		target = document.getElementById(target_text);
-		author_target = document.getElementById(target_author);
-		if (! target || ! author_target)  {
+		target = $('#c-'+element+'>:first');
+		author_target = $('#cauthor-'+element);
+		if (target.length == 0 || author_target.length == 0)  {
 			this.ajax_delayed(event,'get_comment_tooltip.php',element+"&link="+link);
 			return;
 		}
-		text = '<strong>'+author_target.innerHTML+'</strong><br/>'+target.innerHTML;
+		text = '<strong>'+author_target.html()+'</strong><br/>'+target.html();
 	} else if (type == 'order') {
 		this.ajax_delayed(event,'get_comment_tooltip.php',element+"&link="+link);
 		return;

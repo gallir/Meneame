@@ -120,7 +120,6 @@ class Comment {
 		echo '<div class="'.$comment_class.'">';
 		echo '<a href="'.$this->link_permalink.'/000'.$this->order.'"><strong>#'.$this->order.'</strong></a>';
 
-		if ($single_link) echo '<span id="comment-'.$this->order.'">';
 		echo '&nbsp;&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
 
 		if ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
@@ -128,7 +127,6 @@ class Comment {
 		} else {
 			$this->print_text($length, $html_id);
 		}
-		if ($single_link) echo '</span>';
 		echo '</span></div>';
 
 
