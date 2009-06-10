@@ -222,7 +222,7 @@ function do_js_includes() {
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_static'].'js/jsoc-0.12.0.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_static'].'js/jquery.simplemodal-1.2.3.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_static'].'js/general07.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/general08.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	if ($globals['extra_js_text']) {
 		echo '<script type="text/javascript">'."\n";
