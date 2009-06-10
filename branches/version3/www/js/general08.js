@@ -218,6 +218,140 @@ function textCounter(field,cntfield,maxlimit) {
 }
 
 
+
+/************************
+Simple format functions
+**********************************/
+/*
+  Code from http://www.gamedev.net/community/forums/topic.asp?topic_id=400585
+  strongly improved by Juan Pedro López for http://meneame.net
+  2006/10/01, jotape @ http://jplopez.net
+*/
+
+function applyTag(id, tag) {
+	obj = document.getElementById(id);
+	if (obj) wrapText(obj, tag, tag);
+}
+
+function wrapText(obj, tag) {
+	if(typeof obj.selectionStart == 'number') {
+		// Mozilla, Opera and any other true browser
+		var start = obj.selectionStart;
+		var end   = obj.selectionEnd;
+
+		if (start == end || end < start) return false;
+		obj.value = obj.value.substring(0, start) +  replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
+	} else if(document.selection) {
+		// Damn Explorer
+		// Checking we are processing textarea value
+		obj.focus();
+		var range = document.selection.createRange();
+		if(range.parentElement() != obj) return false;
+		if (range.text == "") return false;
+		if(typeof range.text == 'string')
+	        document.selection.createRange().text =  replaceText(range.text, tag);
+	} else
+		obj.value += text;
+}
+
+function replaceText(text, tag) {
+		text = text.replace(/(^|\s)[\*_]([^\s]+)[\*_]/gm, '$1$2')
+		text = text.replace(/([^\s]+)/gm, tag+"$1"+tag)
+		return text;
+}
+
+
+// This function report the ajax request to stats events if enabled in your account
+// http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
+function reportAjaxStats(category, action) {
+	if (pageTracker._trackEvent) {
+		pageTracker._trackEvent(category, action);
+	}
+}
+
+function bindTogglePlusMinus(img_id, link_id, container_id) {
+	$(document).ready(function (){ 
+		$('#'+link_id).bind('click',
+			function() {
+				if ($('#'+img_id).attr("src") == plus){
+					$('#'+img_id).attr("src", minus);
+				}else{
+					$('#'+img_id).attr("src", plus);
+				}
+				$('#'+container_id).slideToggle("fast");
+				return false;
+			}
+		);
+	});
+}
+
+
+/*/  
+ *  JSOC - An object Cache framework for JavaScript
+ *  version 0.12.0 [beta]
+ * http://dev.webframeworks.com/dist/JSOC-license.txt
+ * version: 0.12.0
+/*/
+
+JSOC = function(){
+    var Cache = {};
+    return {
+        "get":function(n){
+            var obj = {}, val = Cache[n];
+            obj[n] = val;
+            if(val) return obj;
+        },
+        "getMulti":function(l){
+            var a = [];
+            for (var k in l) a.push(this.get(l[k]));
+            return a;
+        },
+        "getType":function(t){
+            var a = [];
+            for (var o in Cache) if(typeof(Cache[o])==t.toLowerCase()){a.push(this.get(o))}
+            return a;
+        },
+        "set":function(n,v){
+            if(Cache[n]) delete(Cache[n]);
+            Cache[n]=v;
+            if (arguments[2]){
+                var ttl = arguments[2].ttl || null;
+                if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+            }
+            return (Cache[n])?1:0;
+        },
+        "add":function(n,v){
+            if(!Cache[n]){
+                Cache[n]=v;
+                if (arguments[2]){
+                    var ttl = arguments[2].ttl || null;
+                    if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+                }
+                return (Cache[n])?1:0;
+            }
+        },
+        "replace":function(n,v){
+            if(Cache[n]){
+                delete(Cache[n]);
+                Cache[n]=v;
+                if (arguments[2]){
+                    var ttl = arguments[2].ttl || null;
+                    if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+                }
+                return (Cache[n])?1:0;
+            }
+        },
+        "remove":function(n){
+            delete(Cache[n]);
+            return (!Cache[n])?1:0;
+        },
+        "flush_all":function(){
+            for(var k in Cache) delete(Cache[k]);
+            return 1;
+        }
+    }
+}
+
 /**************************************
 Tooltips functions
 ***************************************/
@@ -226,8 +360,6 @@ Tooltips functions
   	Ricardo Galli
   From http://ljouanneau.com/softs/javascript/tooltip.php
  */
-
-
 
 if (typeof(JSOC) != "undefined") {
 	// create the tooltip object
@@ -255,8 +387,6 @@ if (typeof(JSOC) != "undefined") {
 	else tooltip.ie5 = false;
 	tooltip.dom2 = ((document.getElementById) && !(tooltip.ie5))? true:false; // check the W3C DOM level2 compliance. ie4, ie5, ns4 are not dom level2 compliance !! grrrr >:-(
 }
-
-
 
 
 /**
@@ -411,70 +541,3 @@ tooltip.ajax_request = function(script, id, maxcache) {
 	});
 	reportAjaxStats('tooltip', 'ajax');
 }
-
-/************************
-Simple format functions
-**********************************/
-/*
-  Code from http://www.gamedev.net/community/forums/topic.asp?topic_id=400585
-  strongly improved by Juan Pedro López for http://meneame.net
-  2006/10/01, jotape @ http://jplopez.net
-*/
-
-function applyTag(id, tag) {
-	obj = document.getElementById(id);
-	if (obj) wrapText(obj, tag, tag);
-}
-
-function wrapText(obj, tag) {
-	if(typeof obj.selectionStart == 'number') {
-		// Mozilla, Opera and any other true browser
-		var start = obj.selectionStart;
-		var end   = obj.selectionEnd;
-
-		if (start == end || end < start) return false;
-		obj.value = obj.value.substring(0, start) +  replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
-	} else if(document.selection) {
-		// Damn Explorer
-		// Checking we are processing textarea value
-		obj.focus();
-		var range = document.selection.createRange();
-		if(range.parentElement() != obj) return false;
-		if (range.text == "") return false;
-		if(typeof range.text == 'string')
-	        document.selection.createRange().text =  replaceText(range.text, tag);
-	} else
-		obj.value += text;
-}
-
-function replaceText(text, tag) {
-		text = text.replace(/(^|\s)[\*_]([^\s]+)[\*_]/gm, '$1$2')
-		text = text.replace(/([^\s]+)/gm, tag+"$1"+tag)
-		return text;
-}
-
-
-// This function report the ajax request to stats events if enabled in your account
-// http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
-function reportAjaxStats(category, action) {
-	if (pageTracker._trackEvent) {
-		pageTracker._trackEvent(category, action);
-	}
-}
-
-function bindTogglePlusMinus(img_id, link_id, container_id) {
-	$(document).ready(function (){ 
-		$('#'+link_id).bind('click',
-			function() {
-				if ($('#'+img_id).attr("src") == plus){
-					$('#'+img_id).attr("src", minus);
-				}else{
-					$('#'+img_id).attr("src", plus);
-				}
-				$('#'+container_id).slideToggle("fast");
-				return false;
-			}
-		);
-	});
-}
-
