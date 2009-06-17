@@ -298,13 +298,13 @@ function print_row($link, $changes, $log = '') {
 	$output .= "<td class='tnumber$mod'>";
 	switch ($changes) {
 		case 1:
-			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
+			$output .= '<img src="'.$globals['base_static'].'img/common/sneak-problem01.png" width="21" height="17" alt="'. _('descenso') .'"/>';
 			break;
 		case 2:
-			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
+			$output .= '<img src="'.$globals['base_static'].'img/common/sneak-vote01.png" width="21" height="17" alt="'. _('ascenso') .'"/>';
 			break;
 		case 3:
-			$output .= '<img src="'.$globals['base_url'].'img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
+			$output .= '<img src="'.$globals['base_static'].'img/common/sneak-published01.png" width="21" height="17" alt="'. _('publicada') .'"/>';
 			break;
 	}
 	$output .= "</td>";

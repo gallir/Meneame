@@ -7,7 +7,7 @@ header("Content-Type: text/plain");
 
 // Delete old logs
 $db->query("delete from logs where log_type in ('comment_new','login_failed') and log_date < date_sub(now(), interval 24 hour)");
-$db->query("delete from logs where log_date < date_sub(now(), interval 30 day)");
+$db->query("delete from logs where log_date < date_sub(now(), interval 60 day)");
 
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
@@ -16,7 +16,10 @@ $db->query("delete from users where user_date < date_sub(now(), interval 24 hour
 $db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
 // Delete old conversations
-$db->query("delete from conversations where conversation_time < date_sub(now(), interval 15 day)");
+$db->query("delete from conversations where conversation_time < date_sub(now(), interval 30 day)");
+
+// Delete old annotations
+$db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
 
 
 $db->barrier();
@@ -46,8 +49,8 @@ $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = 2;
 $points_given = 8;
-// Nota: Volver a 7
-$comment_votes = 7;
+$comment_votes = 5;
+$post_votes = 1;
 
 // Following lines are for negative points given to links
 // It takes in account just votes during 24 hours
@@ -102,7 +105,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 	$user->read();
 	printf ("%07d  %s\n", $user->id, $user->username);
 
-	$total_comments = $sent_links = $karma0 = $karma1 = $karma2 = $karma3 = $karma4 = $karma5 = $penalized = 0;
+	$total_comments = $sent_links = $karma0 = $karma1 = $karma2 = $karma3 = $karma4 = $karma5 = $karma6 = $karma7 = $penalized = 0;
 	$output = '';
 
 	//Base karma for the user
@@ -114,7 +117,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma_base_user = $karma_base;
 	}
 
-	$n = $db->get_var("SELECT SQL_NO_CACHE count(*) FROM  votes  WHERE vote_type in ('links', 'comments') and vote_user_id = $user->id and vote_date > $history_from");
+	$n = $db->get_var("SELECT SQL_NO_CACHE count(*) FROM  votes  WHERE vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id and vote_date > $history_from");
 	$n_events = $db->get_var("select SQL_NO_CACHE count(*) from logs where log_date > $history_from and log_user_id=$user->id");
 	if ($n > 3 || $n_events > 0) {
 		$output .= _('Eventos').': '._('votos').': '. "$n, logs: $n_events\n";
@@ -133,10 +136,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 		$calculated++;
 
-/////////////////////
-////// Calculates karma received from votes to links
+		/////////////////////
+		////// Calculates karma received from votes to links
+		/////////////////////
 
-		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > $history_from"));
+		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > date_sub(now(), interval 1 year)"));
 		
 		if ($total_user_links > 0) {
 			$positive_karma_received = $negative_karma_received = 0;
@@ -169,6 +173,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$output .= _('Karma recibido en envíos propios').",  karma1: ";
 			$output .= sprintf("%4.2f\n", $karma1);
 		} 
+
+		///////////////////////////////
+		/////// Karma for votes to links
+		//////////////////////////////
 
 		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and link_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < link_date and link_author != $user->id");
 		$published_points = (int) $user_votes->points;
@@ -254,6 +262,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$output .= sprintf("%4.2f\n", $karma3);
 		}
 
+		//////////////////////////////////////
+		/////// Karma for comments' votes
+		//////////////////////////////////////
 		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
 		if ($comment_votes_count > 10)  {
 			// It calculates a coefficient for the karma, 
@@ -292,7 +303,50 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$output .= sprintf("%4.2f\n", $karma5);	
 		}
 
-		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5;
+
+		////////////////////////////////////
+		// Karma for posts votes
+		////////////////////////////////////
+
+		$post_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
+		if ($post_votes_count > 0)  {
+			// It calculates a coefficient for the karma, 
+			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
+			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct post_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
+			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
+			$posts_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from posts where post_user_id = $user->id and post_date > $history_from");
+			$post_coeff =  min($posts_count/10, 1) * min($distinct_votes_count/($posts_count*0.75), 1) * $distinct_user_votes_count/$post_votes_count;
+
+			$post_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
+			$karma6 = max(-$post_votes, min($post_votes_sum / ($post_votes_count*10) * $post_votes, $post_votes)) * $post_coeff ;
+            //echo "Post new coef: $karma6 $post_coeff ($distinct_votes_count,  $distinct_user_votes_count, $posts_count)\n";
+		}
+
+        // Limit karma to users that do not have other activity
+		if ($karma6 > 0 && ($karma0+$karma1+$karma2+$karma3+$karma4+$karma5) < 1 ) $karma6 = 0;
+		if ($karma6 != 0) {
+			$output .= _('Votos a notas recibidos').": $post_votes_count (karma: $post_votes_sum), karma6: ";
+			$output .= sprintf("%4.2f\n", $karma6);
+		}
+
+        // Penalize to unfair negative comments' votes
+		$negative_abused_post_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, posts where vote_type='posts' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and post_id = vote_link_id and ((post_karma-vote_value)/(post_votes-1)) > 0 and (post_votes < 5 or post_karma >= 5 * post_votes)");
+		if ($negative_abused_post_votes_count > 5) {
+			$karma7 = max(-$post_votes/2, -$post_votes * 2 * $negative_abused_post_votes_count / /*$max_negative_post_votes*/ 20);
+		}
+		if ($karma7 != 0) {
+			// Commented out to avoid further penalization, yet
+            // $penalized = +1;
+			$output .= _('Exceso de votos negativos injustos a notas').": $negative_abused_post_votes_count, karma7: ";
+			$output .= sprintf("%4.2f\n", $karma7);
+		}
+
+
+
+		///////////////////////////////////////////
+		// Summary
+		///////////////////////////////////////////
+		$karma_extra = $karma0+$karma1+$karma2+$karma3+$karma4+$karma5+$karma6+$karma7;
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
 		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized > 1) {
 			$karma_base_user = $karma_base;
