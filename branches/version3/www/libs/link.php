@@ -513,7 +513,7 @@ class Link {
 		if ($karma_best_comment > 0 && 
 			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment order by comment_karma desc limit 1"))) {
 			echo '<div style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
-			$link = $this->get_permalink().get_comment_page_suffix($globals['comments_page_size'], $best_comment->comment_order, $this->comments).'#c-'.$best_comment->comment_order;
+			$link = $this->get_permalink().'/000'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
 			echo ':&nbsp;'.text_to_summary($best_comment->comment_content, 200).'</div>';
 		}
