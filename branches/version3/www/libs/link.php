@@ -998,6 +998,9 @@ class Link {
 			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
 		}
 	
+		// Get met categories coefficientes that will be used below
+		$meta_coef = $this->metas_coef_get();
+
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
 		if (abs($karma_neg_user)/$karma_pos_user < 0.05 
@@ -1010,7 +1013,12 @@ class Link {
 			// if it's has bonus and therefore time-related, use the base min_karma
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
-			$diff = max(0, $globals['now'] - ($this->sent_date + 9*3600)); // 9 hours without decreasing
+			if ($globals['news_meta'] > 0 && $this->meta_id != $globals['news_meta']) {
+				$plain_hours = 10;
+			} else {
+				$plain_hours = 8; // 8 hours without decreasing
+			}
+			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
 			$c = 1 - $diff/(3600*60);
 			$c = max(0.25, $c);
 			$c = min(1, $c);
@@ -1032,7 +1040,6 @@ class Link {
 		}
 
 		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;
-		$meta_coef = $this->metas_coef_get();
 		if ($meta_coef && $meta_coef[$this->meta_id]) {
 			$this->karma *= $meta_coef[$this->meta_id];
 		}
