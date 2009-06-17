@@ -209,6 +209,7 @@ function send_chat_warn($mess) {
 function get_chat() {
 	global $db, $events, $last_timestamp, $max_items, $current_user, $time_f;
 
+	if (!empty($_REQUEST['admin'])) $anonimizer = 'http://anonym.to/?';
 	if (!empty($_REQUEST['admin']) || !empty($_REQUEST['friends'])) $chat_items = $max_items * 2;
 	else $chat_items = $max_items;
 	$res = $db->get_results("select * from chats where chat_time > $time_f order by chat_time desc limit $chat_items");
@@ -261,7 +262,24 @@ function get_chat() {
 		$json['votes'] = 0;
 		$json['com'] = 0;
 		$json['link'] = 0;
-		$json['title'] = addslashes(text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text))));
+
+
+		$chat_text = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text)));
+
+		// Add the anonimizer for links to external pages if in admin room
+		if ($anonimizer) {
+			if (preg_match_all('/href="(http.+?)"/', $chat_text, $matches)) {
+				foreach ($matches[1] as $url) {
+					$parsed = parse_url($url);
+					if ($parsed['host'] != get_server_name()) {
+						$anon = preg_replace('{href="'.preg_quote($url).'"}', "href=\"$anonimizer$url\"", $chat_text);
+						if ($anon) $chat_text = $anon;
+					}
+				}
+			}
+		}
+
+		$json['title'] = addslashes($chat_text);
 		if ($uid >0) $json['icon'] = get_avatar_url($uid, -1, 20);
 		$key = $event->chat_time . ':chat:'.$uid;
 
