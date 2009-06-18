@@ -25,11 +25,13 @@ var ccnt = 0; 	// Connected counter
 
 var play = true;
 
+var user_login = '';
 var recent_nicks = new Array();
 var friend_nicks = new Array();
 
 <?
 if ($current_user->user_id > 0) {
+	echo "user_login = '$current_user->user_login';\n";
 	$friends = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from = $current_user->user_id and friend_value > 0 and user_id = friend_to");
 	if ($friends) {
 		$i = 0;
@@ -309,7 +311,7 @@ function set_options_from_string(string) {
 
 function set_options_cookie() {
 	var options = get_options_string();
-	createCookie('mnm-sneak-options', options,1000);
+	createCookie('mnm-sneak-options', options,10);
 }
 
 function get_options_cookie() {

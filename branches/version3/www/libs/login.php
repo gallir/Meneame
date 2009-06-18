@@ -19,17 +19,22 @@ class UserAuth {
 	var $user_karma=0;
 	var $user_avatar=0;
 	var $user_comment_pref=0;
+	var $mnm_user = False;
 
 
 	function UserAuth() {
 		global $db, $site_key, $globals;
 
 		$this->now = $globals['now'];
-		if(!empty($_COOKIE['mnm_user']) && !empty($_COOKIE['mnm_key'])) {
-			$userInfo=explode(":", base64_decode($_REQUEST['mnm_key']));
-			if($_COOKIE['mnm_user'] === $userInfo[0]) {
+		if(!empty($_COOKIE['mnm_user'])) {
+			$this->mnm_user=explode(":", $_COOKIE['mnm_user']);
+		}
+
+		if($this->mnm_user[0] && !empty($_COOKIE['mnm_key'])) {
+			$userInfo=explode(":", base64_decode($_COOKIE['mnm_key']));
+			if($this->mnm_user[0] === $userInfo[0]) {
 				$cookietime = (int) $userInfo[3];
-				$dbusername = $db->escape($_COOKIE['mnm_user']);
+				$dbusername = $db->escape($this->mnm_user[0]);
 				$user=$db->get_row("SELECT SQL_CACHE user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
 
 				// We have two versions from now
@@ -81,10 +86,12 @@ class UserAuth {
 		global $site_key, $globals;
 		switch ($what) {
 			case 0:	// Borra cookie, logout
-				setcookie ("mnm_user", "", $this->now - 3600, $globals['base_url']); // Expiramos el cookie
-				setcookie ("mnm_key", "", $this->now - 3600, $globals['base_url']); // Expiramos el cookie
+				setcookie ("mnm_key", '', $this->now - 3600, $globals['base_url']); // Expiramos el cookie
+				$this->SetUserCookie(false);
 				break;
 			case 1: // Usuario logeado, actualiza el cookie
+				$this->AddClone();
+				$this->SetUserCookie(true);
 			case 2: // Only update the key
 				// Atencion, cambiar aquí cuando se cambie el password de base de datos a MD5
 				if($remember) $time = $this->now + 3600000; // Valid for 1000 hours
@@ -95,7 +102,6 @@ class UserAuth {
 						.'3'.':' // Version number
 						.$this->now.':'
 						.$time);
-				if ($what == 1) setcookie("mnm_user", $this->user_login, $time, $globals['base_url']);
 				setcookie("mnm_key", $strCookie, $time, $globals['base_url'].'; HttpOnly');
 				break;
 		}
@@ -138,6 +144,38 @@ class UserAuth {
 	function Date() {
 		global $db;
 		return (int) $this->user_date;
+	}
+
+	function SetUserCookie($do_login) {
+		global $globals;
+		if ($do_login) {
+			setcookie("mnm_user", $this->user_login.':'.$this->mnm_user[1], $this->now + 3600000, $globals['base_url']);
+		} else {
+			setcookie("mnm_user", '_:'.$this->mnm_user[1], $this->now + 360000, $globals['base_url']);
+		}
+	}
+	function AddClone() {
+			if (!empty($this->mnm_user[1])) {
+				$ids = explode("x", $this->mnm_user[1]);
+				while(count($ids) > 4) {
+					array_shift($ids);
+				}
+			} else {
+				$ids = array();
+			}
+			array_push($ids, $this->user_id);
+			$this->mnm_user[1] = implode('x', $ids);
+	}
+
+	function GetClones() {
+		$clones = array();
+		foreach (explode('x', $this->mnm_user[1]) as $id) {
+			$id = intval($id);
+			if ($id > 0 && $id != $this->user_id) {
+				array_push($clones, $id);
+			}
+		}
+		return $clones;
 	}
 }
 

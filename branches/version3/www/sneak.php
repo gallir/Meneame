@@ -247,12 +247,9 @@ function to_html(data) {
 
 
 function check_user_ping(str) {
-	myuser = readCookie('mnm_user');
-	if (myuser != null) {
-		re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])'+myuser+'([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
-		if (str.match(re)) {
-			return true;
-		}
+	if (user_login != '') {
+		re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])'+user_login+'([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
+		return str.match(re);
 	}
 	return false;
 }
