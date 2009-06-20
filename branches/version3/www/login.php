@@ -101,7 +101,7 @@ function do_login() {
 		} else {
 			// User authenticated, store clones
 			foreach ($current_user->GetClones() as $id) {
-				insert_clon($current_user->user_id, $id, $globals['user_ip']);
+				insert_clon($current_user->user_id, $id, 'COOK:'.$globals['user_ip']);
 			}
 
 			if(!empty($_REQUEST['return'])) {
