@@ -176,13 +176,16 @@ class WebThumb extends BasicThumb {
 	}
 
 
-	function good() {
+	function good($strict = false) {
 		if ($this->candidate && ! $this->checked) {
 			if (!$this->get()) return false;
 			$x = $this->html_x;
 			$y = $this->html_y;
 		}
-		if (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
+		if ($strict) {
+			$min_size = 300;
+			$min_surface = 120000;
+		} elseif (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
 			$min_surface = 35000;
 			$this->weight = 0.75; // Prefer JPGs over GIFs
@@ -313,13 +316,25 @@ class HtmlImages {
 		if (! count($tags)) return false;
 		$this->images_count =  count($tags);
 
-		if (!$this->get_other_html()) return false;
+		/*
+		if (!$this->get_other_html()) {
+			if ($this->debug) {
+				echo "<!-- No other html to compare -->\n";
+			}
+			return false;
+		}
+		*/
+
+		$other_html = $this->get_other_html();
+		if (!$other_html && $this->debug) {
+			echo "<!-- No other html to compare -->\n";
+		}
 
 		$goods = $n = 0;
 		foreach ($tags as $match) {
 			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
-			if ($img->candidate && $img->good()) {
+			if ($img->candidate && $img->good($other_html == false)) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
 				if ($this->debug)

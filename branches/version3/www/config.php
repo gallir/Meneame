@@ -134,6 +134,9 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 // Websnapr.com previews
 $globals['do_websnapr'] = false;
 
+// Automatic thumbnails size
+$globals['thumb_size'] = 70;
+
 // Put here the pathname of the file where you store your karma.log file
 $globals['karma_log'] = mnmpath . '/../../karma.log';
 

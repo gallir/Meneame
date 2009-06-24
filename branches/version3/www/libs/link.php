@@ -1167,7 +1167,7 @@ class Link {
 			@chmod($filepath, 0777);
 			$filepath .= "/$this->id.jpg";
 			if ($img->type == 'local') {
-				$img->scale(65);
+				$img->scale($globals['thumb_size']);
 				if($img->save($filepath)) {
 					@chmod($filepath, 0777);
 					$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
