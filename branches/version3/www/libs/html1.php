@@ -105,6 +105,12 @@ function do_header($title, $id='home') {
 	if (!empty($globals['tags'])) {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
+	if(!empty($globals['link'])) {
+		echo '<meta name="description" content="'.text_sub_text($globals['link']->content, 300).'" />' . "\n";
+		// Pingback autodiscovery
+		// http://www.hixie.ch/specs/pingback/pingback
+		echo '<link rel="pingback" href="http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php"/>'."\n";
+	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
 	echo '<link rel="search" type="application/opensearchdescription+xml" title="'._("menéame search").'" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>'."\n";
 
@@ -115,11 +121,6 @@ function do_header($title, $id='home') {
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
 	echo '<link rel="shortcut icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
 
-	if(!empty($globals['link_id'])) {
-		// Pingback autodiscovery
-		// http://www.hixie.ch/specs/pingback/pingback
-		echo '<link rel="pingback" href="http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php"/>'."\n";
-	}
 
 	do_js_includes();
 

@@ -161,8 +161,8 @@ function txt_time_diff($from, $now=0){
 }
 
 function txt_shorter($string, $len=70) {
-	if (strlen($string) > $len)
-		$string = substr($string, 0, $len-3) . "...";
+	if (mb_strlen($string) > $len)
+		$string = mb_substr($string, 0, $len-3) . "...";
 	return $string;
 }
 
@@ -190,8 +190,12 @@ function save_text_to_html($string) {
 	return $string;
 }
 
+function text_sub_text($string, $length=70) {
+	return preg_replace('/\. [^\.]{1,50}$/', '.', preg_replace('/&\w*$/', '', mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length)));
+}
+
 function text_to_summary($string, $length=50) {
-	return text_to_html(preg_replace('/&\w*$/', '', mb_substr(preg_replace("/^(.{1,$length}[^\&;])([\s].*$|$)/", '$1', preg_replace("/[\r\n\t]+/", ' ', $string)), 0, $length)), false).' ...';
+	return text_to_html(text_sub_text($string, $length), false).' ...';
 }
 
 function text_to_html($string, $do_links = true) {
