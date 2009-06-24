@@ -569,21 +569,25 @@ class Link {
 					$tags_counter++;
 				}
 
-				// Share icons
-				echo '&nbsp;&nbsp;<strong>'._('compartir').'</strong>:';
-				$short_link = $this->get_short_permalink();
-				// Share it in Twitter
-				echo '&nbsp;&nbsp;<a href="http://twitter.com/home?status='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/twitter.gif" alt="twitter" title="'._('compartir en twitter').'" width="16" height="16"/></a>';
-				// Share it in Facebook
-				echo '&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/fb.gif" alt="facebook" title="'._('compartir en facebook').'" width="16" height="16"/></a>';
-
 				echo '</div>'."\n";
 			}
 			if ($type != 'short') {
 				echo '<div class="news-details">';
-				echo '<strong>'._('votos negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
+				echo '<strong>'._('negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
 				echo '<strong>'._('usuarios').'</strong>: <span id="a-usu-'.$this->id.'">'.$this->votes.'</span>&nbsp;&nbsp;';
 				echo '<strong>'._('anónimos').'</strong>: <span id="a-ano-'.$this->id.'">'.$this->anonymous.'</span>&nbsp;&nbsp;';
+
+				echo '<span class="tool">';
+				// Share icons
+				echo '<strong>'._('compartir').'</strong>:';
+				$short_link = urlencode($this->get_short_permalink());
+				// Share it in Twitter
+				echo '&nbsp;&nbsp;<a href="http://twitter.com/home?status='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/twitter.gif" alt="twitter" title="'._('compartir en twitter').'" width="16" height="16"/></a>';
+				// Share it in Facebook
+				echo '&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/fb.gif" alt="facebook" title="'._('compartir en facebook').'" width="16" height="16"/></a>';
+				// Share it in Friendfeed
+				echo '&nbsp;&nbsp;<a href="http://friendfeed.com/?url='.$short_link.'&amp;title='.$this->title.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/ff.png" alt="friendfeed" title="'._('compartir en friendfeed').'" width="16" height="16"/></a>';
+				echo '</span>';
 				echo '</div>' . "\n";
 			}
 		} else {
