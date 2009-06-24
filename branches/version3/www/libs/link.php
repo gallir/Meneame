@@ -568,6 +568,15 @@ class Link {
 					echo $tag_url.'">'.$tag_item.'</a>';
 					$tags_counter++;
 				}
+
+				// Share icons
+				echo '&nbsp;&nbsp;<strong>'._('compartir').'</strong>:';
+				$short_link = $this->get_short_permalink();
+				// Share it in Twitter
+				echo '&nbsp;&nbsp;<a href="http://twitter.com/home?status='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/twitter.gif" alt="twitter" title="'._('compartir en twitter').'" width="16" height="16"/></a>';
+				// Share it in Facebook
+				echo '&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/fb.gif" alt="facebook" title="'._('compartir en facebook').'" width="16" height="16"/></a>';
+
 				echo '</div>'."\n";
 			}
 			if ($type != 'short') {
@@ -842,6 +851,15 @@ class Link {
 		$this->uri = $new_uri;
 	}
 	
+	function get_short_permalink() {
+		global $globals;
+		if ($globals['base_story_url']) {
+			return 'http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].'0'.$this->id;
+		} else {
+			return get_permalink();
+		}
+	}
+
 	function get_relative_permalink() {
 		global $globals;
 		if (!empty($this->uri) && !empty($globals['base_story_url']) ) {

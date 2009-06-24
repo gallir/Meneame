@@ -16,6 +16,16 @@ $link = new Link;
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	array_shift($url_args); // The first element is always a "/"
+
+	// If the first argument are only numbers, redirect to the story with that id
+	if (preg_match('/^0\d+$/', $url_args[0])) {
+			$link->id = intval($url_args[0]);
+			if ($link->read('id')) {
+				header('Location: ' . $link->get_permalink());
+				die;
+			}
+	}
+
 	$link->uri = $db->escape($url_args[0]);
 	if (! $link->read('uri') ) {
 		not_found();
