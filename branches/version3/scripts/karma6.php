@@ -77,12 +77,12 @@ $max_avg_negative_received = min(intval($max_avg_negative_received), -20);
 
 
 // "Unfair" negative votes max
-$max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) as count from votes, comments where vote_type='comments' and vote_date > date_sub(now(), interval 30 hour) and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 group by vote_user_id order by count desc limit 1");
-$max_negative_comment_votes  = max($max_negative_comment_votes, 40);
+//$max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) as count from votes, comments where vote_type='comments' and vote_date > date_sub(now(), interval 30 hour) and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 group by vote_user_id order by count desc limit 1");
+//$max_negative_comment_votes  = max($max_negative_comment_votes, 40);
 
 print "Number of published links in period: $published_links\n";
 print "Pos (top 10 average): $max_avg_positive_received, Neg: $max_avg_negative_received\n";
-print "Max unfair comment votes: $max_negative_comment_votes\n";
+//print "Max unfair comment votes: $max_negative_comment_votes\n";
 
 
 /////////////////////////
@@ -265,32 +265,34 @@ while ($dbuser = mysql_fetch_object($result)) {
 		//////////////////////////////////////
 		/////// Karma for comments' votes
 		//////////////////////////////////////
-		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
-		if ($comment_votes_count > 10)  {
+		$comments_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1");
+		if ($comments_count > 0)  {
+			$comments_total = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from");
+			$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
 			// It calculates a coefficient for the karma, 
 			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
-			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
-			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
-			$comments_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from");
-			$comment_coeff =  min($comments_count/10, 1) * min($distinct_votes_count/($comments_count*0.75), 1) * $distinct_user_votes_count/$comment_votes_count;
-			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count)\n";
+			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
+			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
 
-			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
+			$comment_coeff =  min(max(0.2, $comments_count/$comments_total), 1) * min($distinct_votes_count/$comments_count, 1) * $distinct_user_votes_count/$comment_votes_count;
+
+			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
+			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count, $comment_votes_count, $comment_votes_sum)\n";
 			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes)) * $comment_coeff ;
 		}
 		
 		// Limit karma to users that does not send links and does not vote
 		if ( $karma4 > 0 && $karma1 == 0 && $karma2 == 0 && $karma3 == 0 ) $karma4 = $karma4 * 0.5;
 		if ($karma4 != 0) {
-			$output .= _('Votos a comentarios recibidos').": $comment_votes_count (karma: $comment_votes_sum), karma4: ";
+			$output .= _('Votos a comentarios contabilizados').": $comment_votes_count (karma: $comment_votes_sum), karma4: ";
 			$output .= sprintf("%4.2f\n", $karma4);	
 		}
 
 		// Penalize to unfair negative comments' votes
 		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma >= 5 * comment_votes)");
 		if ($negative_abused_comment_votes_count > 3) {
-			$karma5 = max(-$comment_votes/2, -$comment_votes * 2 * $negative_abused_comment_votes_count / $max_negative_comment_votes);
-			if ($negative_abused_comment_votes_count > 5 ) {
+			$karma5 = max(-$comment_votes/2, -$comment_votes * $negative_abused_comment_votes_count/20);
+			if ($negative_abused_comment_votes_count > 8 ) {
 				$karma5 -= $karma0 / 2 ; // Take away half of karma0
 				if ($karma4 > 0) {
 					$karma5 -= $karma4 / 2; // Take away half karma4
@@ -308,31 +310,32 @@ while ($dbuser = mysql_fetch_object($result)) {
 		// Karma for posts votes
 		////////////////////////////////////
 
-		$post_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
-		if ($post_votes_count > 0)  {
+		$posts_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1");
+		if ($posts_count > 0)  {
+			$posts_total = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from posts where post_user_id = $user->id and post_date > $history_from");
+			$post_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
 			// It calculates a coefficient for the karma, 
 			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
-			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct post_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
-			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
-			$posts_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from posts where post_user_id = $user->id and post_date > $history_from");
-			$post_coeff =  min($posts_count/10, 1) * min($distinct_votes_count/($posts_count*0.75), 1) * $distinct_user_votes_count/$post_votes_count;
+			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct post_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
+			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
+			$post_coeff =  min(max(0.2, $posts_count/$posts_total), 1) * min($distinct_votes_count/$posts_count, 1) * $distinct_user_votes_count/$post_votes_count;
 
-			$post_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, posts where post_user_id = $user->id and post_date > $history_from and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
-			$karma6 = max(-$post_votes, min($post_votes_sum / ($post_votes_count*10) * $post_votes, $post_votes)) * $post_coeff ;
-            //echo "Post new coef: $karma6 $post_coeff ($distinct_votes_count,  $distinct_user_votes_count, $posts_count)\n";
+			$post_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
+			$karma6 = max(-$post_votes, min($post_votes_sum / $post_votes_count * $post_votes, $post_votes)) * $post_coeff ;
+            //echo "Post new coef: $karma6 $post_coeff ($distinct_votes_count, $distinct_user_votes_count, $posts_count)\n";
 		}
 
         // Limit karma to users that do not have other activity
 		if ($karma6 > 0 && ($karma0+$karma1+$karma2+$karma3+$karma4+$karma5) < 1 ) $karma6 = 0;
 		if ($karma6 != 0) {
-			$output .= _('Votos a notas recibidos').": $post_votes_count (karma: $post_votes_sum), karma6: ";
+			$output .= _('Votos a notas contabilizados').": $post_votes_count (karma: $post_votes_sum), karma6: ";
 			$output .= sprintf("%4.2f\n", $karma6);
 		}
 
         // Penalize to unfair negative comments' votes
 		$negative_abused_post_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, posts where vote_type='posts' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and post_id = vote_link_id and ((post_karma-vote_value)/(post_votes-1)) > 0 and (post_votes < 5 or post_karma >= 5 * post_votes)");
 		if ($negative_abused_post_votes_count > 5) {
-			$karma7 = max(-$post_votes/2, -$post_votes * 2 * $negative_abused_post_votes_count / /*$max_negative_post_votes*/ 20);
+			$karma7 = max(-$post_votes/2, -$post_votes * $negative_abused_post_votes_count / 20);
 		}
 		if ($karma7 != 0) {
 			// Commented out to avoid further penalization, yet
@@ -370,10 +373,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karma = $user->karma;
 		}
 	}
+
+	$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 	$karma = round($karma, 2);
 
 	if ($user->karma != $karma) {
-		$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
 			if ($karma < $karma_base || $penalized > 1) {
