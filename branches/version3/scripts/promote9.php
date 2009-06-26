@@ -345,7 +345,11 @@ function publish($link) {
 	// Add the publish event/log
 	log_insert('link_publish', $link->id, $link->author);
 
-	$short_url = fon_gs($link->get_permalink());
+	if ($globals['url_shortener']) {
+		$short_url = $link->get_short_permalink();
+	} else {
+		$short_url = fon_gs($link->get_permalink());
+	}
 	if ($globals['twitter_user'] && $globals['twitter_password']) {
 		twitter_post($link, $short_url); 
 	}
@@ -359,7 +363,7 @@ function publish($link) {
 function twitter_post($link, $short_url) {
 	global $globals;
 
-	$t_status = urlencode($link->title. ' ' . $short_url);
+	$t_status = urlencode(text_sub_text($link->title, 114) . ' ' . $short_url);
 	syslog(LOG_NOTICE, "Meneame: twitter updater called, id=$link->id");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
