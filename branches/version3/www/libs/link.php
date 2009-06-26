@@ -851,8 +851,14 @@ class Link {
 	
 	function get_short_permalink() {
 		global $globals;
+
+		if ($globals['url_shortener']) {
+			$server_name = $globals['url_shortener'] . '/';
+		} else {
+			$server_name = get_server_name().$globals['base_url'].$globals['base_story_url'].'0';
+		}
 		if ($globals['base_story_url']) {
-			return 'http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].'0'.$this->id;
+			return 'http://'.$server_name.$this->id;
 		} else {
 			return get_permalink();
 		}

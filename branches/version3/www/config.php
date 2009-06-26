@@ -32,6 +32,11 @@ $globals['db_password'] = '';
 $globals['static_server'] = '';
 //$globals['static_server'] = 'http://static.meneame.net';
 
+//URL shortener (used in menea.me)
+//$globals['url_shortener'] = 'menea.me';
+//$globals['url_shortener_to'] = 'meneame.net';
+
+
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
