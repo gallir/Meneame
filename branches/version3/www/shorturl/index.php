@@ -19,8 +19,12 @@ $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 
 // If the first argument are only numbers, redirect to the story with that id
 $link = new Link;
-if (preg_match('/^\d+$/', $url_args[1])) {
-	$link->id = intval($url_args[1]);
+if (preg_match('/^[\da-z]+$/', $url_args[1])) {
+	if (preg_match('/[a-z]/', $url_args[1])) {
+		$link->id = intval(base_convert($url_args[1], 36, 10));
+	} else {
+		$link->id = intval($url_args[1]);
+	}
 	if ($link->read('id')) {
 		header('Location: http://' . $server_to . $link->get_relative_permalink());
 		die;

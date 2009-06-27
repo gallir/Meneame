@@ -854,11 +854,13 @@ class Link {
 
 		if ($globals['url_shortener']) {
 			$server_name = $globals['url_shortener'] . '/';
+			$id = base_convert($this->id, 10, 36);
 		} else {
 			$server_name = get_server_name().$globals['base_url'].$globals['base_story_url'].'0';
+			$id = $this->id;
 		}
 		if ($globals['base_story_url']) {
-			return 'http://'.$server_name.$this->id;
+			return 'http://'.$server_name.$id;
 		} else {
 			return get_permalink();
 		}

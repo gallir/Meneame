@@ -76,7 +76,6 @@ switch ($option) {
 		break;
 	default:
 		$tab_option = 4;
-		$rss_option="?user_id=$user->id";
 		if ( $post_id > 0 ) {
 			$user->id = $db->get_var("select post_user_id from posts where post_id=$post_id");
 			if(!$user->read()) {
@@ -96,6 +95,7 @@ switch ($option) {
 			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
 		}
+		$rss_option="?user_id=$user->id";
 }
 
 $globals['ads'] = true;
