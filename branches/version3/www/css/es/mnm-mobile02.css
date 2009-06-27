@@ -146,7 +146,7 @@ background: #feefe5;
 
 #footthingy {
 clear: both;
-margin: 2em 10px 0 10px;
+margin: 2em 10px 2em 10px;
 }
 
 #footthingy li {
@@ -240,6 +240,7 @@ border-left-color: #FF6400;
 .news-details .comments {
 border-left: none;
 font-weight: bold;
+font-size: 110%;
 }
 
 /* Counter box */
@@ -449,7 +450,7 @@ margin: 2px 2px;
 .pages {
 margin: 15px 0 25px 0;
 clear: left;
-font-size: 9pt;
+font-size: 125%;
 border-top-color: #FF6400;
 }
 

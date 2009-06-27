@@ -76,23 +76,27 @@ class LinkMobile extends Link{
 		} else  {
 			$comments_mess = _('sin comentarios');
 		}
-		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
+		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a> </span>';
+		echo '&nbsp;<span class="tool"><a href="http://'.preg_replace('/^m\./', '', get_server_name()).$this->get_relative_permalink().'"><strong>'._('versión estándar').'&nbsp;&#187;</strong></a></span>';
 	
+/*
+ * Disabled, it does not give too much information and is hidden to the right (at least in Android)
 		if ($globals['link']) {
 			// Print meta and category
 			echo ' <span class="tool">'._('en').': ';
 			echo $this->meta_name.', ';
 			echo $this->category_name;
 			echo '</span>';
-			echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 		}
+*/
 
-			echo '</div>'."\n";
-			// End news details
+		echo '</div>'."\n";
+		// End news details
 
 		if ($globals['link']) {
 			echo '<div class="news-details">';
-			echo '<strong>'._('votos negativos').'</strong>: '.$this->negatives.'&nbsp;&nbsp;';
+			echo '<strong>karma</strong>: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span>&nbsp;&nbsp;';
+			echo '<strong>'._('negativos').'</strong>: '.$this->negatives.'&nbsp;&nbsp;';
 			echo '<strong>'._('usuarios').'</strong>: '.$this->votes.'&nbsp;&nbsp;';
 			echo '<strong>'._('anónimos').'</strong>: '.$this->anonymous.'&nbsp;&nbsp;';
 			echo '</div>' . "\n";

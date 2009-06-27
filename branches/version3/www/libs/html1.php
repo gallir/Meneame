@@ -861,9 +861,9 @@ function print_share_icons($full_link, $short_link = false, $title = '') {
 	// Share it in Twitter
 	echo '&nbsp;&nbsp;<a href="http://twitter.com/home?status='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/twitter.gif" alt="twitter" title="'._('compartir en twitter').'" width="16" height="16"/></a>';
    	// Share it in Facebook
-	echo '&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u='.$full_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/fb.gif" alt="facebook" title="'._('compartir en facebook').'" width="16" height="16"/></a>';
+	echo '&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u='.$short_link.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/fb.gif" alt="facebook" title="'._('compartir en facebook').'" width="16" height="16"/></a>';
 	// Share it in Friendfeed
-	echo '&nbsp;&nbsp;<a href="http://friendfeed.com/?url='.$full_link.'&amp;title='.$title.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/ff.png" alt="friendfeed" title="'._('compartir en friendfeed').'" width="16" height="16"/></a>';
+	echo '&nbsp;&nbsp;<a href="http://friendfeed.com/?url='.$short_link.'&amp;title='.$title.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/ff.png" alt="friendfeed" title="'._('compartir en friendfeed').'" width="16" height="16"/></a>';
 }
 
 ?>

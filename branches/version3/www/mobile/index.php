@@ -12,7 +12,7 @@ include(mnminclude.'linkmobile.php');
 
 $globals['ads'] = true;
 
-$page_size = 15;
+$page_size = 10;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
 $globals['ads'] = true;
