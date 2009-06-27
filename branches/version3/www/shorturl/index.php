@@ -31,7 +31,7 @@ if (preg_match('/^[\da-z]+$/', $url_args[1])) {
 	}
 }
 
-header('Location: http://'.$server_to);
+not_found('Link not found');
 die;
 
 ?>
