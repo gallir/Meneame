@@ -76,7 +76,7 @@ function do_login() {
 	if ($previous_login_failed > 2) {
 		ts_print_form();
 	}
-	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
+	echo '<p><input type="submit" value="login" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</form>'."\n";
@@ -114,12 +114,12 @@ function do_recover() {
 	if (!$sent) {
 		echo '<form action="login.php" method="post">'."\n";
 		echo '<label for="name">'._('introduce nombre de usuario o email').':</label><br />'."\n";
-		echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.$username.'" />'."\n";
+		echo '<input type="text" name="username" size="25" id="name" value="'.$username.'" />'."\n";
 		echo '<p>'._('(recibirás un e-mail para cambiar la contraseña)').'</p>';
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
 		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 		ts_print_form();
-		echo '<br /><input type="submit" value="'._('recibir e-mail').'" class="button" />'."\n";
+		echo '<br /><input type="submit" value="'._('recibir e-mail').'"/>'."\n";
 		echo '</form>'."\n";
 	}
 }

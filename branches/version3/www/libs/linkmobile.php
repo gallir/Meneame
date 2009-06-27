@@ -43,6 +43,7 @@ class LinkMobile extends Link{
 
 		if ($globals['link']) {
 			echo '<div class="news-submitted">';
+			echo '<strong>'.txt_shorter($this->url, 40).'</strong><br/>';
 			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 			// Print dates
 			if ($globals['now'] - $this->date > 604800) { // 7 days

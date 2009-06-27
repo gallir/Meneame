@@ -203,8 +203,8 @@ function print_comment_form() {
 	echo '<form action="" method="post">'."\n";
 	echo '<fieldset>'."\n";
 	echo '<label for="comment">'. _('texto del comentario').'</label>'."\n";
-	echo '<div><textarea name="comment_content" id="comment" cols="60" rows="8"></textarea></div>'."\n";
-	echo '<input class="button" type="submit" name="submit" value="'._('enviar').'" />'."\n";
+	echo '<div><textarea style="width:100%" name="comment_content" id="comment" rows="8"></textarea></div>'."\n";
+	echo '<input type="submit" name="submit" value="'._('enviar').'" />'."\n";
 	// Allow gods to put "admin" comments which does not allow votes
 	if ($current_user->user_level == 'god') {
 		echo '&nbsp;&nbsp;<label>'._('admin').' <input name="type" type="checkbox" value="admin"/></label>'."\n";

@@ -519,6 +519,9 @@ color: #FFE2C5;
 
 
 /* Form defaults */
+textarea, input[type="text"], input[type="password"] {
+width:100%;
+}
 
 input, textarea {
 margin: 0 0 10px 0;
@@ -532,16 +535,17 @@ background: #FFF;
 color: #FF7C00;
 }
 
-.button, button {
+button, input[type="submit"] {
 border: 1px solid;
 font-weight: bold;
 margin: 4px 0 4px 0;
-padding: 0 4px 0 4px;
+padding: 2px 4px 2px 4px;
 border-color: #FF6400;
 color: #FF6400;
+font-size: 120%;
 }
 
-.button:hover, button:hover {
+button:hover, input[type="submit"]:hover {
 background: #fff;
 }
 

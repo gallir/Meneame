@@ -95,7 +95,7 @@ function show_profile() {
 	if (is_avatars_enabled()) {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
 		echo '<p><label>'._('avatar').':</label><br/>';
-		echo '<input type="file" class="button" autocomplete="off" name="image" />';
+		echo '<input type="file" autocomplete="off" name="image" />';
 		echo '</p>';
 	}
 
@@ -107,7 +107,7 @@ function show_profile() {
 	echo '<p><label for="verify">' . _("repite la clave") . ': </label><br />' . "\n";
 	echo '<input type="password" autocomplete="off" id="verify" name="password2" size="25" onkeyup="checkEqualFields(this.form.password2, this.form.password)"/></p>' . "\n";
 
-	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'" class="button" /></p>';
+	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'"/></p>';
 	echo '</fieldset>';
 	echo "</form></div>\n";
 	
