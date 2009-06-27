@@ -35,6 +35,7 @@ $globals['static_server'] = '';
 //URL shortener (used in menea.me)
 //$globals['url_shortener'] = 'menea.me';
 //$globals['url_shortener_to'] = 'meneame.net';
+//$globals['url_shortener_mobile_to'] = 'm.meneame.net'; // Automatic redirection to mobile version
 
 
 // Specify you base url, "/" if is the root document

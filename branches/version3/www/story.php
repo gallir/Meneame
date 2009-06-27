@@ -79,7 +79,8 @@ switch ($url_args[1]) {
 		$order_field = 'comment_order';
 
 		// Geo check
-		if($globals['google_maps_api']) {
+		// Don't show it if it's a mobile browser
+		if(!$globals['mobile'] && $globals['google_maps_api']) {
 			$link->geo = true;
 			$link->latlng = $link->get_latlng();
 			if ($link->latlng) {

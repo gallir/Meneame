@@ -54,6 +54,11 @@ if (preg_match('/(bot|slurp|wget|libwww|\Wjava|\Wphp)\W/i', $_SERVER['HTTP_USER_
 	$globals['bot'] = true;
 }
 
+// Check mobile versions
+if (preg_match('/SymbianOS|BlackBerry|iPhone|Mobile|IEMobile|Opera Mini|J2ME\/MIDP/', $_SERVER['HTTP_USER_AGENT'])) {
+	$globals['mobile'] = true;
+}
+
 function htmlentities2unicodeentities ($input) {
 	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
 	$entitiesDecoded = array_keys  (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
