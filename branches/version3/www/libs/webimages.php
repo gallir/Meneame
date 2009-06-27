@@ -138,7 +138,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/logo|header|rss/i', $this->url)) {
+		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/logo|header|rss|advertising/i', $this->url)) {
 			$this->candidate = true;
 		}
 	}
@@ -483,8 +483,8 @@ class HtmlImages {
 					// Check if it has the same title
 					if (empty($this->title) || $this->title == get_html_title($res['content'])) {
 						$same_title++;
-						// Next iff we found less that 2 pages, otherwise we asume all pages have same title
-						if ($same_title < 2 || $other_title) {
+						// Next iff we found less that 3 pages, otherwise we asume all pages have same title
+						if ($same_title < 3 || $other_title) {
 							echo "<!-- Skipping: same title $url -->\n";
 							continue;
 						}

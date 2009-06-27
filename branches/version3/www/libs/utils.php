@@ -354,7 +354,10 @@ function get_security_key($time = false) {
 	global $globals, $current_user, $site_key;
 	if (!$time) $time = $globals['now'];
 
-	return $time.'-'.sha1($time.$globals['user_ip'].$current_user->user_id.$site_key);
+	// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
+	$ip_key = $globals['user_ip_int']>>8;
+
+	return $time.'-'.sha1($time.$ip_key.$current_user->user_id.$site_key);
 }
 
 function check_security_key($key) {
