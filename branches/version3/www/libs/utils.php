@@ -55,7 +55,7 @@ if (preg_match('/(bot|slurp|wget|libwww|\Wjava|\Wphp)\W/i', $_SERVER['HTTP_USER_
 }
 
 // Check mobile versions
-if (preg_match('/SymbianOS|BlackBerry|iPhone|Mobile|IEMobile|Opera Mini|J2ME\/MIDP/', $_SERVER['HTTP_USER_AGENT'])) {
+if (preg_match('/SymbianOS|BlackBerry|iPhone|Mobile|Opera Mini|\/MIDP|Portable/', $_SERVER['HTTP_USER_AGENT'])) {
 	$globals['mobile'] = true;
 }
 
