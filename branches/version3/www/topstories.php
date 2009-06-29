@@ -50,7 +50,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 	// Itr's not in cache, or memcache is disabled
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
 	if ($rows == 0) {
-		not_found();
+		do_error(_('no hay noticias seleccionads'), 500);
 	}
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {

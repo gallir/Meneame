@@ -28,7 +28,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 
 	$link->uri = $db->escape($url_args[0]);
 	if (! $link->read('uri') ) {
-		not_found();
+		do_error(_('noticia no encontrada'), 404);
 	}
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);
@@ -41,7 +41,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 			die;
 		}
 	} else {
-		not_found();
+		do_error(_('argumentos no reconocidos'), 404);
 	}
 }
 
@@ -116,7 +116,7 @@ switch ($url_args[1]) {
 		$tab_option = 7;
 		break;
 	default:
-		not_found();
+		do_error(_('página inexistente'), 404);
 }
 
 // Check for comment post

@@ -866,9 +866,16 @@ function print_share_icons($full_link, $short_link = false, $title = '') {
 	echo '&nbsp;&nbsp;<a href="http://friendfeed.com/?url='.$short_link.'&amp;title='.$title.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/ff.png" alt="friendfeed" title="'._('compartir en friendfeed').'" width="16" height="16"/></a>';
 }
 
-function do_error($mess = false, $error = false) {
+function do_error($mess = false, $error = false, $send_status = true) {
 	global $globals;
+	$globals['ads'] = false;
+
 	if (! $mess ) $mess = _('algún error nos ha petado');
+
+	if ($error && $send_status) {
+		header("HTTP/1.0 $error $mess");
+		header("Status: $error $mess");
+	}
 
 	do_header(_('Error'));
 	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
@@ -884,5 +891,6 @@ function do_error($mess = false, $error = false) {
 
 	do_footer_menu();
 	do_footer();
+	die;
 }
 ?>

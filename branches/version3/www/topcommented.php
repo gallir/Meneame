@@ -64,7 +64,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 		$rows = min(100, $db->get_var("SELECT count(*) FROM links"));
 	}
 	if ($rows == 0) {
-		not_found();
+		do_error(_('no hay noticias seleccionads'), 500);
 	}
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {

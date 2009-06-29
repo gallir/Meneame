@@ -34,6 +34,6 @@ switch($errn) {
 	$errp = false;
 }
 
-do_error($errp, $errn);
+do_error($errp, $errn, false);
 
 ?>

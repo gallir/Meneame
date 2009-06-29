@@ -44,7 +44,7 @@ if(empty($login)){
 $user=new User();
 $user->username = $db->escape($login);
 if(!$user->read()) {
-	not_found();
+	do_error(_('usuario inexistente'), 404);
 }
 
 // For editing notes
@@ -75,6 +75,7 @@ if ($user->level != 'disabled' && $view == 'profile' && $globals['google_maps_ap
 	$globals['do_geo'] = true;
 }
 
+// Check if it should be index AND if they are valids options, otherwise call do_error()
 switch ($view) {
 	case 'categories':
 	case 'history':
@@ -84,10 +85,16 @@ switch ($view) {
 	case 'friends':
 	case 'favorites':
 		$globals['noindex'] = true;
+		breaK;
+	case 'profile':
+		$globals['noindex'] = false;
+		breaK;
+	default:
+		do_error(_('opción inexistente'), 404);
+		break;
 }
 
 do_header($login);
-
 echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 
 $url_login = urlencode($login);
@@ -133,9 +140,11 @@ switch ($view) {
 		do_pages($rows, $page_size, false);
 		break;
 	case 'profile':
-	default:
 		do_user_tabs(1, $login);
 		do_profile();
+		break;
+	default:
+		do_error(_('opción inexistente'), 404);
 		break;
 }
 

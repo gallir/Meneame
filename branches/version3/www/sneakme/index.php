@@ -79,7 +79,7 @@ switch ($option) {
 		if ( $post_id > 0 ) {
 			$user->id = $db->get_var("select post_user_id from posts where post_id=$post_id");
 			if(!$user->read()) {
-				not_found();
+				do_error(_('usuario no encontrado'), 404);
 			}
 			if ($user->username != $option) { // $option == username
 				header('Location: '.post_get_base_url($user->username).'/'.$post_id);
@@ -90,7 +90,7 @@ switch ($option) {
 		} else {
 			$user->username = $db->escape($option);
 			if(!$user->read()) {
-				not_found();
+				do_error(_('usuario no encontrado'), 404);
 			}
 			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
