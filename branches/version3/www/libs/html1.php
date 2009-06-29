@@ -866,4 +866,23 @@ function print_share_icons($full_link, $short_link = false, $title = '') {
 	echo '&nbsp;&nbsp;<a href="http://friendfeed.com/?url='.$short_link.'&amp;title='.$title.'" target="_blank"><img src="'.$globals['base_static'].'img/favicons/ff.png" alt="friendfeed" title="'._('compartir en friendfeed').'" width="16" height="16"/></a>';
 }
 
+function do_error($mess = false, $error = false) {
+	global $globals;
+	if (! $mess ) $mess = _('algún error nos ha petado');
+
+	do_header(_('Error'));
+	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
+	echo '<!--'."\n";
+	echo '.errt { text-align:center; padding-top:50px; font-size:300%; color:#FF6400;}'."\n";
+	echo '.errl { text-align:center; margin-top:50px; margin-bottom:100px; }'."\n";
+	echo '-->'."\n";
+	echo '</STYLE>'."\n";
+
+	echo '<p class="errt">'.$mess.'<br />'."\n";
+	if ($error) echo _('(error').' '.$error.')</p>'."\n";
+	echo '<div class="errl"><img src="'.$globals['base_url'].'img/mnm/lame_excuse_01.png" width="362" height="100" alt="ooops logo" /></div>'."\n";
+
+	do_footer_menu();
+	do_footer();
+}
 ?>
