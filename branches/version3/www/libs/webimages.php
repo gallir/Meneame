@@ -191,7 +191,7 @@ class WebThumb extends BasicThumb {
 			$this->weight = 0.75; // Prefer JPGs over GIFs
 		} else {
 			$min_size = 100;
-			$min_surface = 21000;
+			$min_surface = 16500;
 		}
 		return $x >= $min_size && $y >= $min_size && ( 
 			(($x*$y) > $min_surface && $this->ratio() < 3.5) || 
