@@ -180,7 +180,7 @@ function send_chat(form) {
 		alert("<? echo _('tiene deshabilitado los comentarios'); ?>");
 		return false;
 	}
-	if(form.comment.value.length < 4) {
+	if(!form.comment.value.match(/^!/) && form.comment.value.length < 4) {
 		alert("<? echo _('mensaje demasiado corto'); ?>");
 		return false;
 	}

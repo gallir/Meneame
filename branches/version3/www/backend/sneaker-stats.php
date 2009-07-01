@@ -23,6 +23,7 @@ function check_stats($string) {
 	if (preg_match('/^!webstats/', $string)) return 'http://www.quantcast.com/'.get_server_name();
 	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
 	if (preg_match('/^!admins/', $string)) return do_admins($string);
+	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
 	return false;
 }
 
@@ -168,6 +169,26 @@ function do_ignore($string) {
 		}
 	}
 	return $comment;
+}
+
+function do_fon_gs($string) {
+	$array = preg_split('/\s+/', $string);
+	if (count($array) >= 2 && preg_match('/https*:\/\/.+/',$array[1])) {
+		if ($array[2]) {
+			$tag = '&linkname='.$array[2];
+		} else {
+			$tag = '';
+		}
+		$url = 'http://fon.gs/create.php?url='.$array[1].$tag;
+		$res = get_url($url);
+		if ($res && $res['content']) {
+			return $res['content'];
+		} else {
+			return _('<strong>Error</strong> en la comunicación con fon.gs, inténtalo otra vez');
+		}
+	} else {
+		return _('<strong>Error</strong>, el segundo argumento debe ser un URL válido: <em>!gs url [nombre]</em>');
+	}
 }
 
 ?>
