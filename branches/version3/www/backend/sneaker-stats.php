@@ -175,11 +175,11 @@ function do_fon_gs($string) {
 	$array = preg_split('/\s+/', $string);
 	if (count($array) >= 2 && preg_match('/https*:\/\/.+/',$array[1])) {
 		if ($array[2]) {
-			$tag = '&linkname='.$array[2];
+			$tag = '&linkname='.urlencode($array[2]);
 		} else {
 			$tag = '';
 		}
-		$url = 'http://fon.gs/create.php?url='.$array[1].$tag;
+		$url = 'http://fon.gs/create.php?url='.urlencode($array[1]).$tag;
 		$res = get_url($url);
 		if ($res && $res['content']) {
 			return $res['content'];
