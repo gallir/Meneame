@@ -50,6 +50,12 @@ function print_edit_form() {
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
 	echo '<div style="clear: right"><textarea name="comment_content" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
+	// Allow gods to put "admin" comments which does not allow votes
+	if ($current_user->user_level == 'god') {
+		if ($comment->type == 'admin') $checked = 'checked="true"';
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin" '.$checked.'/></label>'."\n";
+	}
+
 	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
 	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";
 	echo '<input type="hidden" name="id" value="'.$comment->id.'" />'."\n";
@@ -64,18 +70,31 @@ function save_comment () {
 	global $link, $db, $comment, $current_user, $globals, $site_key;
 
 
+	// Warning, trillion of checkings :-(
+
 	$user_id = intval($_POST['user_id']);
 	if(intval($_POST['id']) == $comment->id && $current_user->authenticated && 
 		// Allow the author of the post
 		(($user_id == $current_user->user_id 
-			&& $current_user->user_id == $comment->author 
-			&& time() - $comment->date < $globals['comment_edit_time'] * 1.1) || 
-			($comment->author != $current_user->user_id && $current_user->user_level == 'god')) &&
+				&& $current_user->user_id == $comment->author 
+				&& time() - $comment->date < $globals['comment_edit_time'] * 1.1) 
+			|| (($comment->author != $current_user->user_id || $comment->type == 'admin') 
+				&& $current_user->user_level == 'god')) &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  && 
 		strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
 
-		$comment->get_links();
+		if ($current_user->user_level == 'god') {
+			if ($_POST['type'] == 'admin') {
+				$comment->type = 'admin';
+			} else {
+				$comment->type = 'normal';
+			}
+		}
+				
+
+		if (! $current_user->admin) $comment->get_links();
+
 		if ($current_user->user_id == $comment->author && $comment->banned 
 				&& $current_user->Date() > $globals['now'] - 86400) {
 			syslog(LOG_NOTICE, "Meneame: editcomment not stored, banned link ($current_user->user_login)");

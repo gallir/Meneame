@@ -230,9 +230,10 @@ class Comment {
 
 		if (!$html_id) $html_id = $this->id;
 
-		if (($this->author == $current_user->user_id &&
-			$globals['now'] - $this->date < $globals['comment_edit_time']) || 
-			($this->author != $current_user->user_id && $current_user->user_level == 'god') ) { // gods can always edit 
+		if (($this->author == $current_user->user_id 
+					&& $globals['now'] - $this->date < $globals['comment_edit_time']) 
+				|| (($this->author != $current_user->user_id || $this->type == 'admin')
+					&& $current_user->user_level == 'god') ) { // gods can always edit 
 			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
@@ -334,7 +335,6 @@ class Comment {
 		$this->content=clean_text($_POST['comment_content'], 0, false, 10000);
 		// Check if is an admin comment
 		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
-			$this->karma = 20;
 			$this->type = 'admin';
 		} 
 
@@ -367,7 +367,7 @@ class Comment {
 			return _('comentario duplicado');
 		}
 
-		if ($this->type != 'admin') {
+		if (! $current_user->admin) {
 			$this->get_links();
 			if ($this->banned && $current_user->Date() > $globals['now'] - 86400) {
 				syslog(LOG_NOTICE, "Meneame: comment not inserted, banned link ($current_user->user_login)");
