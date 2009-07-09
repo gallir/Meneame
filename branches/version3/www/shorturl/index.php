@@ -15,6 +15,11 @@ if ($globals['url_shortener_mobile_to'] && $globals['mobile']) {
 	$server_to = $globals['url_shortener_to'];
 }
 
+if (! $_SERVER['PATH_INFO'] || $_SERVER['PATH_INFO'] == '/') {
+	header('Location: http://' . $server_to);
+	die;
+}
+
 $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 
 // If the first argument are only numbers, redirect to the story with that id
@@ -25,7 +30,7 @@ if (preg_match('/^[\da-z]+$/', $url_args[1])) {
 	} else {
 		$link->id = intval($url_args[1]);
 	}
-	if ($link->read('id')) {
+	if ($link->read_basic('id')) {
 		header('Location: http://' . $server_to . $link->get_relative_permalink());
 		die;
 	}

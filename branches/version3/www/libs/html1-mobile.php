@@ -98,6 +98,7 @@ function do_header($title, $id='home') {
 	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
 	echo '<link rel="icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
 	echo '<link rel="apple-touch-icon" href="'.$globals['base_static'].'img/favicons/apple-touch-icon.png"/>' . "\n";
+	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 
 	do_js_includes();
 

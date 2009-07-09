@@ -45,13 +45,17 @@ echo '<div style="padding-top: 20px">';
 echo '<div class="voters-list">';
 
 foreach ($clones as  $clon) {
+	$highlight = '';
 	$details = '';
 	$ips = $db->get_col("select distinct clon_ip from clones where clon_from = $user_id and clon_to = $clon->user_id $from");
 	foreach ($ips as $ip) {
 		$details .= preg_replace('/\.[0-9]+$/', '', $ip).', ';
+		if (preg_match('/COOK:/', $ip)) {
+			$highlight = 'style="color:#ff0000"';
+		}
 	}
-	echo '<div class="item">';
-	echo '<a '.$style.' href="'.get_user_uri($clon->user_login).'" title="'.$details.'" target="_blank">';
+	echo '<div class="item" '.$highlight.'>';
+	echo '<a '.$highlight.' href="'.get_user_uri($clon->user_login).'" title="'.$details.'" target="_blank">';
 	echo '<img src="'.get_avatar_url($clon->user_id, $clon->user_avatar, 20).'" width="20" height="20" alt=""/>';
    	echo $clon->user_login.'</a>';
 	echo '</div>';

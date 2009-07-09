@@ -203,8 +203,8 @@ if ($links) {
 
 		// Title must not carry htmlentities
 		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
-		echo "		<link>".$link->get_permalink()."</link>\n";
-		echo "		<comments>".$link->get_permalink()."</comments>\n";
+		echo "		<link>".$link->get_short_permalink()."</link>\n";
+		echo "		<comments>".$link->get_short_permalink()."</comments>\n";
 		if (!empty($link_date))
 			echo "		<pubDate>".date("r", $link->$link_date)."</pubDate>\n";
 		else echo "      <pubDate>".date("r", $link->date)."</pubDate>\n";
@@ -218,7 +218,7 @@ if ($links) {
 				echo "		<category><![CDATA[".$tag_item."]]></category>\n";
 			}
 		}
-		echo "		<guid>".$link->get_permalink()."</guid>\n";
+		echo "		<guid>".$link->get_short_permalink()."</guid>\n";
 		// Insert GEO
 		if (($latlng = geo_latlng('link', $link->id))) {
 			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
@@ -233,7 +233,7 @@ if ($links) {
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
 
 		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-			echo '<p><a href="'.$link->get_permalink().'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
+			echo '<p><a href="'.$link->get_short_permalink().'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
 		}
 		
 		if ($link->status != 'published') $rel = 'rel="nofollow"';
