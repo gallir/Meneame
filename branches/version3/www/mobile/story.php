@@ -90,6 +90,7 @@ do_tabs("main",_('noticia'), true);
 echo '<div id="newswrap">'."\n";
 $link->print_summary();
 
+do_comment_pages($link->comments, $current_page);
 
 echo '<div class="comments">';
 
