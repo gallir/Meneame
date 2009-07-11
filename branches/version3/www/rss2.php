@@ -129,6 +129,9 @@ if(!empty($_REQUEST['time'])) {
 		You have been warned ******/
 
 	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta']) && empty($_REQUEST['personal'])) {
+		if ($status == 'published') {
+			$globals['main_published_rss'] = true;
+		}
 		check_redirect_to_feedburner($status);
 	}
 	
@@ -288,6 +291,9 @@ function do_header($title) {
 	echo'	<pubDate>'.date("r", $last_modified).'</pubDate>'."\n";
 	echo'	<generator>http://blog.meneame.net/</generator>'."\n";
 	echo'	<language>'.$dblang.'</language>'."\n";
+	if ($globals['pubsub'] && $globals['main_published_rss']) {
+		echo '	<atom:link rel="hub" href="'.$globals['pubsub'].'"/>'."\n";
+	}
 }
 
 function do_footer() {

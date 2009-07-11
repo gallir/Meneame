@@ -136,6 +136,9 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 //$globals['jaiku_user'] = '';
 //$globals['jaiku_key'] = '';
 
+// posthubsubbub
+//$globals['pubsub'] = 'http://pubsubhubbub.appspot.com/';
+
 
 // Websnapr.com previews
 $globals['do_websnapr'] = false;
