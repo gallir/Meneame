@@ -372,7 +372,7 @@ function do_shaken () {
 
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id");
-	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
+	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';

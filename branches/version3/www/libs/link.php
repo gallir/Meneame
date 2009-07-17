@@ -1039,10 +1039,10 @@ class Link {
 			// Aged karma
 			if ($globals['news_meta'] > 0 && $this->meta_id != $globals['news_meta']) {
 				$plain_hours = 10;
-				$max_hours = 60;
+				$max_hours = 54;
 			} else {
 				$plain_hours = 7; // 7 hours without decreasing
-				$max_hours = 48;
+				$max_hours = 42;
 			}
 			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
 			$c = 1 - $diff/(3600*$max_hours);
