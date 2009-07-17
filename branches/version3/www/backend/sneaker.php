@@ -428,7 +428,7 @@ function get_post($time, $type, $postid, $userid) {
 	$json['type'] = $type;
 	$json['who'] = addslashes($event->user_login);
 	$json['status'] = _('nótame');
-	$json['title'] = addslashes(text_to_summary($event->post_content,130));
+	$json['title'] = addslashes(text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130));
 	$json['votes'] = 0;
 	$json['com'] = 0;
 	$json['uid'] = $userid;

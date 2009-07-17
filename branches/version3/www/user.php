@@ -48,8 +48,9 @@ if(!$user->read()) {
 }
 
 // For editing notes
-if ($current_user->user_id == $user->id) {
+if ($current_user->user_id == $user->id || $current_user->admin) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
+    array_push($globals['extra_js'], 'posts01.js');
 }
 
 // Enable user AdSense

@@ -11,8 +11,10 @@ include(mnminclude.'user.php');
 include(mnminclude.'post.php');
 include(mnminclude.'html1.php');
 
-array_push($globals['extra_js'], 'jquery-form.pack.js');
-array_push($globals['extra_js'], 'posts01.js');
+if ($current_user->user_id > 0) {
+	array_push($globals['extra_js'], 'jquery-form.pack.js');
+	array_push($globals['extra_js'], 'posts01.js');
+}
 
 $user=new User();
 
