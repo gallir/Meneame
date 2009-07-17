@@ -47,5 +47,6 @@ function post_add_form_text(text, tries) {
 	if (oldtext.match(re)) return false;
 	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') oldtext = oldtext + ' ';
 	textarea.val(oldtext + text);	
+	textarea.get(0).focus();
 }
 
