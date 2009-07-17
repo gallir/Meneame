@@ -335,7 +335,8 @@ class Post {
 		$references = array();
 		if (preg_match_all('/(^|\s)@([\S\.\-]+[\w])/u', $this->content, $matches)) {
 			foreach ($matches[2] as $reference) {
-				$references[$db->escape($reference)] += 1;
+				$user = preg_replace('/,\d+$/', '', $reference);
+				$references[$db->escape($user)] += 1;
 			}
 		}
 		foreach ($references as $user => $val) {
