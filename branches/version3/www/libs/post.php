@@ -155,6 +155,12 @@ class Post {
 		} else {
 			echo _('hace').' '.txt_time_diff($this->date);
 		}
+
+		// Reply button
+		if ($current_user->user_id > 0) {
+			echo '&nbsp;<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="15" height="10"/></a>';
+		}
+
 		echo '</div></div>';
 		echo "</li>\n";
 	}
@@ -169,7 +175,7 @@ class Post {
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < 3600 ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
-			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:get_votes(\'post_edit.php\',\'edit_post\',\'pcontainer-'.$this->id.'\',0,'.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
 
 		}
 
@@ -178,7 +184,22 @@ class Post {
 	}
 
 	function put_tooltips ($str) {
-		return preg_replace('/(^|\s)@([\S\.\-]+[\w])/u', "$1<a class='tt' href='/".$globals['base_url']."backend/get_post_url.php?id=$2-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$2".'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$2</a>", $str);
+		return preg_replace_callback('/(^|\s)@([\S\.\-]+\w)/u', array($this, 'replace_post_link'), $str);
+	}
+
+	function replace_post_link($matches) {
+			global $globals;
+
+			$pre = $matches[1];
+			$a = explode(',', $matches[2]);
+			if (count($a) > 1) {
+				$user = $a[0];
+				$id = ','.$a[1];
+			} else {
+				$user = $matches[2];
+				$id = '';
+			}
+			return "$pre<a class='tt' href='".$globals['base_url']."backend/get_post_url.php?id=$user$id-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$user".$id.'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$user</a>";
 	}
 
 	function print_edit_form() {
@@ -225,7 +246,7 @@ class Post {
 		// Print "new note" is the user is authenticated
 		if ($current_user->user_id > 0) {
 			if (!$this->read_last($current_user->user_id) || time() - $this->date > $globals['posts_period']) {
-				echo '<a href="javascript:get_votes(\'post_edit.php\',\'edit_comment\',\'addpost\',0,0)" title="'._('insertar una nota').'"><img src="'.$globals['base_static'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+				echo '<a href="javascript:post_new()" title="'._('insertar una nota').'"><img src="'.$globals['base_static'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			} else {
 				echo '<img src="'.$globals['base_static'].'img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 			}
@@ -328,3 +349,5 @@ class Post {
 	}
 
 }
+
+

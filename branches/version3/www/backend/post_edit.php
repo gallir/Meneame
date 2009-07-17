@@ -27,8 +27,14 @@ if (!empty($_REQUEST['user_id'])) {
 		if ($post->read()) $post->print_edit_form();
 	} else {
 		// A new post
-		$post->author=$current_user->user_id;
-		$post->print_edit_form();
+		if (!$post->read_last($current_user->user_id) || time() - $post->date > $globals['posts_period']) {
+			$post = new Post;
+			$post->author=$current_user->user_id;
+			$post->print_edit_form();
+		} else {
+			echo 'Error: ' . _('debe esperar entre notas');
+			die;
+		}
 	}
 }
 

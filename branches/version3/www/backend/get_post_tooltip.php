@@ -16,9 +16,27 @@ include_once(mnminclude.'post.php');
 
 if (!empty($_GET['id'])) {
 	if (preg_match('/(.+)-(\d+)/u', $_GET['id'], $matches) > 0) {
-		$user = $db->escape($matches[1]);
+		$id = 0;
 		$date = $matches[2];
-		$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_date < FROM_UNIXTIME($date) order by post_date desc limit 1");
+		$user_id = explode(',', $matches[1]);
+		if (count($user_id) == 2) {
+			$user = $db->escape($user_id[0]);
+			$post_id = $user_id[1];
+		} else {
+			$user = $db->escape($matches[1]);
+			$date = $matches[2];
+			$post_id = 0;
+		}
+
+		if ($post_id) {
+			$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_id = $post_id order by post_date desc limit 1");
+		}
+
+		// In case of not found in previous case or postid was not given
+		if (! $id) {
+			$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_date < FROM_UNIXTIME($date) order by post_date desc limit 1");
+		}
+
 		if (!$id > 0) {
 			echo '<strong>Error: </strong>' . _('usuario o nota no encontrada');
 			die;
@@ -37,5 +55,5 @@ if(!$post->read) die;
 if ($post->avatar)
     echo '<img src="'.get_avatar_url($post->author, $post->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 5px 0;"/>';
 echo '<strong>' . $post->username . '</strong> ('.$post->src.')<br/>';
-echo put_smileys(save_text_to_html($post->content));
+echo $post->print_text();
 ?>
