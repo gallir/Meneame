@@ -101,7 +101,7 @@ function admin_bans($ban_type) {
 	}
 	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';" />';
 	
-	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_static'].'img/common/search-01.gif" />';
+	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" />';
 	echo '</form>';
 	echo '</div>'; 
 
