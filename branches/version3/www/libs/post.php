@@ -187,6 +187,11 @@ class Post {
 		return preg_replace_callback('/(^|\s)@([\S\.\-]+\w)/u', array($this, 'replace_post_link'), $str);
 	}
 
+	function clean_content() {
+		// Clean other post references
+		return preg_replace('/(@[\S.-]+)(,\d+)/','$1',$this->content);
+	}
+
 	function replace_post_link($matches) {
 			global $globals;
 

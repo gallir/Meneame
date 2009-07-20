@@ -835,11 +835,14 @@ function do_best_posts() {
 	if(memcache_mprint('best_posts_4')) return;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
-	$res = $db->get_results("select post_id, post_content, user_login from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
+	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
 	if ($res) {
 		$output .= '<div class="sidebox"><h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4><ul class="topcommentsli">'."\n";
-		foreach ($res as $post) {
-			$output .= '<li><strong>'.$post->user_login.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->post_id.'\', 10000);" href="'.post_get_base_url($post->user_login).'/'.$post->post_id.'"><em>'.text_to_summary($post->post_content, 50).'</em></a></li>'."\n";
+		foreach ($res as $p) {
+			$post = new Post;
+			$post->id = $p->post_id;
+			$post->read();
+			$output .= '<li><strong>'.$post->username.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->id.'\', 10000);" href="'.post_get_base_url($post->username).'/'.$post->id.'"><em>'.text_to_summary($post->clean_content(), 80).'</em></a></li>'."\n";
 		}
 		$output .= '</ul></div>';
 		echo $output;

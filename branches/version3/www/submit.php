@@ -371,7 +371,7 @@ function do_submit1() {
 		if ($image_links > $sents * 0.3) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes o vídeos').'</strong></p> ';
-			echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
+			//echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
 			return;
