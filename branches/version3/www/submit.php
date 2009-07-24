@@ -368,7 +368,7 @@ function do_submit1() {
 	// they think this is a fotolog
 	if ($sents > 5 && ($linkres->content_type == 'image' || $linkres->content_type == 'video')) {
 		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video')"));
-		if ($image_links > $sents * 0.3) {
+		if ($image_links > $sents * 0.7) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $linkres->url");
 			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes o vídeos').'</strong></p> ';
 			//echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
@@ -402,9 +402,10 @@ function do_submit1() {
 		return;
 	}
 
-	// Avoid spam, count links in last three months
+	// Avoid spam, count links in last two months
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog");
 
+	/************** DISABLED, better control in link_clones
 	// Check if the domain should be banned
 	$check_history =  $sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
 
@@ -424,7 +425,7 @@ function do_submit1() {
 			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*30);
 			$banned_host = $ban->ban_text;
 			echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong>, ";
-			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a></p>';
+			echo '<a href="'.$globals['base_url'].'legal.php">'._('normas de uso del menáme').'</a></p>';
 			syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to user clones ($current_user->user_login): $banned_host  <- $linkres->url");
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
@@ -497,6 +498,7 @@ function do_submit1() {
 			}
 		}
 	}
+	**********************/
 
 
 

@@ -510,8 +510,9 @@ class Link {
 		}
 
 		// Print a summary of the best comment
+		// with a least one vote
 		if ($karma_best_comment > 0 && 
-			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment order by comment_karma desc limit 1"))) {
+			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
 			echo '<div style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
 			$link = $this->get_permalink().'/000'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
@@ -584,8 +585,6 @@ class Link {
 				echo '</span>';
 				echo '</div>' . "\n";
 			}
-		} else {
-			echo "<!--tags: $this->tags-->\n";
 		}
 
 		echo '</div>'."\n";
@@ -1058,11 +1057,14 @@ class Link {
 			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}
 
-		$c = $this->calculate_source_bonus();
-		if ($c > 1) {
-			$this->coef = min($globals['bonus_coef'], $this->coef*$c);
-			$c = round($c, 2);
-			$this->annotation .= _('Bonus por fuente esporádica'). " ($c)<br/>";
+		// Give the "new source" only if if has less than %5 of negative karma
+		if (abs($karma_neg_user)/$karma_pos_user < 0.05) {
+			$c = $this->calculate_source_bonus();
+			if ($c > 1) {
+				$this->coef = min($globals['bonus_coef'], $this->coef*$c);
+				$c = round($c, 2);
+				$this->annotation .= _('Bonus por fuente esporádica'). " ($c)<br/>";
+			}
 		}
 
 		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;
