@@ -340,18 +340,17 @@ class Post {
 		$references = array();
 		if (preg_match_all('/(^|\s)@([\S\.\-]+[\w])/u', $this->content, $matches)) {
 			foreach ($matches[2] as $reference) {
-				$user = preg_replace('/,\d+$/', '', $reference);
+				if (!$this->date) $this->date = time();
+				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
+				$to = $db->get_var("select user_id from users where user_login = '$user'");
+				$id = intval(preg_replace('/[^\d]+,(\d+)$/', '$1', $reference));
+				if (! $id > 0) {
+					$id = (int) $db->get_var("select post_id from posts where user_login = '$user' and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
+				}
+				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
 				$references[$db->escape($user)] += 1;
 			}
 		}
-		foreach ($references as $user => $val) {
-			$to = $db->get_row("select user_id from users where user_login = '$user'");
-			if ($to && $to->user_id != $this->author) {
-				if (!$this->date) $this->date = time();
-				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'post', from_unixtime($this->date), $this->id, 0)");
-			}
-		}
-
 	}
 
 }
