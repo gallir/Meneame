@@ -165,6 +165,25 @@ function onLoad(lat, lng, zoom, icon) {
 			}
 		}
 		echo "</ol>\n";
+
+		// Print "conversation" for a given note
+		if ($post_id > 0) {
+			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
+			$answers = $db->get_results($sql);
+			if ($answers) {
+				$answer = new Post;
+				echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
+				echo '<h3>'._('Respuestas').'</h3>';
+				echo '<ol class="comments-list">';
+				foreach ($answers as $dbanswer) {
+					$answer->id = $dbanswer->post_id;
+					$answer->read();
+					$answer->print_summary();
+				}
+				echo "</ol>\n";
+				echo '</div>'."\n";
+			}
+		}
 	}
 	echo '</div>';
 	do_pages($rows, $page_size);
