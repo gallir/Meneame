@@ -54,7 +54,7 @@ class UserAuth {
 				}
 
 				if ( !$user || !$user->user_id > 0 || $key !== $userInfo[1] || 
-					$user->user_level == 'disabled' || 
+					$user->user_level == 'disabled' || $user->user_level == 'autodisabled' || 
 					empty($user->user_date)) {
 						$this->Logout();
 						return;
@@ -111,7 +111,7 @@ class UserAuth {
 		global $db;
 		$dbusername=$db->escape($username);
 		$user=$db->get_row("SELECT user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
-		if ($user->user_level == 'disabled' || ! $user->user_date) return false;
+		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
 		if ($user->user_id > 0 && $user->user_pass == $hash) {
 			$this->user_login = $username;
 			$this->user_id = $user->user_id;

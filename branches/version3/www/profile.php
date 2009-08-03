@@ -15,7 +15,7 @@ include(mnminclude.'avatars.php');
 // We need it because we modify headers
 ob_start();
 
-$user_levels = array ('disabled', 'normal', 'special', 'admin', 'god');
+$user_levels = array ('autodisabled', 'disabled', 'normal', 'special', 'admin', 'god');
 
 // User recovering her password
 if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
@@ -204,7 +204,7 @@ function save_profile() {
 	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
 		$old_user_login = $user->username;
 		$old_user_id = $user->id;
-		$user->disable();
+		$user->disable(true);
 		require_once(mnminclude.'log.php');
 		log_insert('user_delete', $old_user_id, $old_user_id );
 		syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ");
@@ -254,7 +254,7 @@ function save_profile() {
 	if (!empty($_POST['public_info'])) {
 		$_POST['public_info']  = htmlspecialchars(clean_input_url($_POST['public_info']));
 		$public = $db->escape($_POST['public_info']);
-		$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_public_info='$public'"));
+		$im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_public_info='$public'"));
 		if ($im_count > 0) {
 			$messages .= '<p class="form-error">'. _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'). '</p>';
 			$_POST['public_info'] = '';
@@ -274,7 +274,7 @@ function save_profile() {
 				$errors++;
 			} else {
 				$phone = $db->escape($_POST['phone']);
-				$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_phone='$phone'"));
+				$phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_phone='$phone'"));
 				if ($phone_count > 0) {
 					$messages .= '<p class="form-error">'. _('ya hay otro usuario con el mismo número, no se ha grabado'). '</p>';
 					$_POST['phone'] = '';
@@ -296,7 +296,7 @@ function save_profile() {
 				$_POST['adcode'] = '';
 				$errors++;
 			} else {
-				$adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_adcode='".$_POST['adcode']."'"));
+				$adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_adcode='".$_POST['adcode']."'"));
 				if ($adcode_count > 0) {
 					$messages .= '<p class="form-error">'. _('ya hay otro usuario con la misma cuenta, no se ha grabado'). '</p>';
 					$_POST['adcode'] = '';

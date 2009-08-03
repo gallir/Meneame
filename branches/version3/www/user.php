@@ -67,7 +67,10 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
 // Load Google GEO
-if ($user->level != 'disabled' && $view == 'profile' && $globals['google_maps_api'] && (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
+if (! $user->disabled()
+		&& $view == 'profile' 
+		&& $globals['google_maps_api'] 
+		&& (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
 	if ($current_user->user_id == $user->id) {
 		geo_init('geo_coder_editor_load', $globals['latlng'], 7, 'user');
 	} else {

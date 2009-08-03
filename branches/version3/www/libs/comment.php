@@ -140,8 +140,10 @@ class Comment {
 			if ($current_user->user_id > 0 
 						&& $this->author != $current_user->user_id 
 						&& $single_link
-						&& $this->date > $globals['now'] - $globals['time_enabled_comments'])
+						&& $this->date > $globals['now'] - $globals['time_enabled_comments']
+						&& $this->level != 'autodisabled') {
 				$this->print_shake_icons();
+			}
 
 			echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
 			// Add the icon to show votes

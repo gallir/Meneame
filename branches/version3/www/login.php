@@ -155,7 +155,7 @@ function do_recover() {
 				recover_error(_('el usuario o email no existe'));
 				return false;
 			}
-			if($user->level == 'disabled') {
+			if($user->disabled()) {
 				recover_error(_('cuenta deshabilitada'));
 				return false;
 			}

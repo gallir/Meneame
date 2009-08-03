@@ -38,7 +38,11 @@ class User {
 		}
 	}
 
-	function disable() {
+	function disabled() {
+		return $this->level == 'disabled' || $this->level == 'autodisabled';
+	}
+
+	function disable($auto = false) {
 		global $db;
 
 		require_once(mnminclude.'avatars.php');
@@ -57,7 +61,8 @@ class User {
 		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";
 		$this->url = '';
-		$this->level = 'disabled';
+		if ($auto) $this->level = 'autodisabled';
+		else $this->level = 'disabled';
 		$this->names = 'disabled';
 		$this->public_info = '';
 		$this->adcode = '';
