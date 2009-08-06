@@ -111,10 +111,7 @@ $globals['min_karma_for_comment_votes'] = 5.5;
 $globals['posts_len'] = 500;
 $globals['posts_period'] = 60;
 
-// Ensure you have a avar dir writeable by the web server
-//$globals['avatars_dir'] = 'avatars-local';
-// Changed to a global cache directory
-
+// Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
 //$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
 $globals['sphinx_server'] = 'localhost';
@@ -123,6 +120,10 @@ $globals['sphinx_port'] = 3312;
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_files_per_dir'] = 1000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
+
+
+$globals['show_popular_queued'] = true;
+$globals['show_popular_published'] = true;
 
 // Recaptcha settings
 // Put your keys en to enable recaptcha

@@ -173,7 +173,7 @@ function onLoad(lat, lng, zoom, icon) {
 			if ($answers) {
 				$answer = new Post;
 				echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
-				echo '<h3>'._('Respuestas').'</h3>';
+				//echo '<h3>'._('Respuestas').'</h3>';
 				echo '<ol class="comments-list">';
 				foreach ($answers as $dbanswer) {
 					$answer->id = $dbanswer->post_id;

@@ -52,7 +52,7 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_best_stories();
+if ($globals['show_popular_published']) do_best_stories();
 do_best_sites();
 do_categories_cloud('published');
 if ($page < 2) {

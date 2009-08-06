@@ -84,7 +84,7 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_best_queued();
+if ($globals['show_popular_queued']) do_best_queued();
 do_categories_cloud('queued', 24);
 do_best_comments();
 do_vertical_tags('queued');
@@ -151,10 +151,10 @@ function print_shakeit_tabs($option=-1) {
 		}
 	}
 
+	echo '<li '.$active[3].'><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('candidatas'). '</a>'.$toggle_active[3].'</li>'."\n";
 	if ($current_user->user_id > 0) {
 		echo '<li '.$active[2].'><a href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a>'.$toggle_active[2].'</li>'."\n";
 	}
-	echo '<li '.$active[3].'><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('popular'). '</a>'.$toggle_active[3].'</li>'."\n";
 	if (!$globals['bot']) {
 		echo '<li '.$active[5].'><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a>'.$toggle_active[5].'</li>'."\n";
 	}
