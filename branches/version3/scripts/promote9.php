@@ -73,7 +73,7 @@ $past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(link_karma) fro
 
 $past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
 $min_past_karma = (int) ($past_karma * $min_karma_coef);
-$last_resort_karma = (int) $past_karma * 0.75;
+$last_resort_karma = (int) $past_karma * 0.8;
 
 
 //////////////
@@ -99,13 +99,16 @@ foreach ($db_metas as $dbmeta) {
 	$meta_names[$meta] = $dbmeta->category_name;
 	$x = (int) $db->get_var("select SQL_NO_CACHE count(*) from links, categories where link_status = 'published' and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
 	$y = (int) $db->get_var("select SQL_NO_CACHE count(*) from links, categories where link_status in ('published', 'queued') and link_date > date_sub(now(), interval $days day) and link_category = category_id and category_parent = $meta");
+	if ($y == 0) $y = 1;
 	$meta_coef[$meta] = $x/$y;
+	if ($total_published == 0) $total_published = 1;
 	$meta_coef[$meta] = 0.7 * $meta_coef[$meta] + 0.3 * $x / $total_published / count($db_metas) ;
 	$meta_avg += $meta_coef[$meta] / count($db_metas);
 	$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br/>";
 	//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 }
 foreach ($meta_coef as $m => $v) {
+	if ($v == 0) $v = 1;
 	$meta_coef[$m] = max(min($meta_avg/$v, 1.4), 0.7);
 	if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
@@ -196,11 +199,11 @@ if ($links) {
 		}
 
 		
-		if(check_ban($link->url, 'hostname', false, true)) {
+		if(($ban = check_ban($link->url, 'hostname', false, true))) {
 			// Check if the  domain is banned
 			$karma_new *= 0.5;
 			$link->message .= 'Domain banned.<br/>';
-			$link->annotation .= _('Dominio baneado').": ".$globals['ban_message']."<br/>";
+			$link->annotation .= _('Dominio baneado').": ".$ban['comment']."<br/>";
 		} elseif ($user->level == 'disabled' ) {
 			// Check if the user is banned disabled
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
@@ -356,6 +359,9 @@ function publish($link) {
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($link, $short_url); 
 	}
+	if ($globals['pubsub']) {
+		pubsub_post();
+	}
 	// Recheck for images, some sites add images after the article has been published
 	if ($link->thumb_status != 'local' && $link->thumb_status != 'deleted') $link->get_thumb();
 
@@ -363,7 +369,7 @@ function publish($link) {
 function twitter_post($link, $short_url) {
 	global $globals;
 
-	$t_status = urlencode(text_sub_text($link->title, 114) . ' ' . $short_url);
+	$t_status = urlencode(text_sub_text($link->title, 115) . ' ' . $short_url);
 	syslog(LOG_NOTICE, "Meneame: twitter updater called, id=$link->id");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
@@ -402,7 +408,7 @@ function jaiku_post($link, $short_url) {
 	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
 	$postdata .= "&personal_key=" . $globals['jaiku_key'];
 	$postdata .= "&icon=337"; // Event
-	$postdata .= "&message=" . urlencode(html_entity_decode($link->title). ' ' . $short_url);
+	$postdata .= "&message=" . urlencode(text_sub_text(html_entity_decode($link->title), 115). ' ' . $short_url);
 
 	$session = curl_init();
 	curl_setopt($session, CURLOPT_URL, $url);
@@ -437,6 +443,21 @@ function fon_gs($url) {
 		return $array[1];
 	} else return $url;
 }
+
+function pubsub_post() {
+	require_once(mnminclude.'pubsubhubbub/publisher.php');
+	global $globals;
+
+	if (! $globals['pubsub']) return false;
+	$rss = 'http://'.get_server_name().$globals['base_url'].'rss2.php';
+	$p = new Publisher($globals['pubsub']);
+	if ($p->publish_update($rss)) {
+		syslog(LOG_NOTICE, "Meneame: posted to pubsub ($rss)");
+	} else {
+		syslog(LOG_NOTICE, "Meneame: failed to post to pubsub ($rss)");
+	}
+}
+
 
 function check_affinity($uid, $min_karma) {
 	global $globals, $db;
