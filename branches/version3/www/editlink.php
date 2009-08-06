@@ -167,9 +167,8 @@ function do_save() {
 	$linkres->content = clean_text($_POST['bodytext']);
 	$linkres->tags = tags_normalize_string($_POST['tags']);
 	// change the status
-	if (($current_user->user_level == 'god' || $linkres->status != 'published') && 
-		($_POST['status'] == 'queued' || $_POST['status'] == 'discard' || $_POST['status'] == 'abuse' || $_POST['status'] == 'autodiscard')) {
-		if (!$linkres->is_discarded() && ($_POST['status'] == 'discard' || $_POST['status'] == 'abuse' || $_POST['status'] == 'autodiscard')) {
+	if ($_POST['status'] != $linkres->status) {
+		if (preg_match('/discard|abuse|duplicated|autodiscard/', $_POST['status'])) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;
 		}

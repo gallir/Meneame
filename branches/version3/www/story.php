@@ -317,14 +317,15 @@ case 4:
 	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
 
 	echo '<div id="voters-container">';
-	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
+	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_level, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
 	if ($logs) {
 		foreach ($logs as $log) {
 			echo '<div style="width:100%; display: block; clear: both; border-bottom: 1px solid #FFE2C5;">';
 			echo '<div style="width:30%; float: left;padding: 4px 0 4px 0;">'.get_date_time($log->ts).'</div>';
 			echo '<div style="width:24%; float: left;padding: 4px 0 4px 0;"><strong>'.$log->log_type.'</strong></div>';
 			echo '<div style="width:45%; float: left;padding: 4px 0 4px 0;">';
-			if ($log->log_type == 'link_discard' &&  $link->author != $log->user_id) { // It was discarded by an admin
+			if ($link->author != $log->user_id  && ($log->user_level == 'admin' || $log->user_level == 'god')) { 
+				// It was edited by an admin
 				echo '<img src="'.get_no_avatar_url(20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
 				echo ('admin');
 				if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {

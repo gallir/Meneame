@@ -376,9 +376,8 @@ function get_story($time, $type, $linkid, $userid) {
 	$json['com'] = $event->link_comments;
 	$json['title'] = addslashes($event->link_title);
 
-	if ($type == 'discarded' && $event->link_status == 'abuse' && $event->link_auhtor != $userid 
-		&& ($event->user_level == 'admin' || $event->user_level == 'god')) {
-		// Discarded by abuse, don't show the author
+	if ($event->link_author != $userid && ($event->user_level == 'admin' || $event->user_level == 'god')) {
+		// Edited by admin, don't show the author
 		$json['uid'] = 0;
 		$json['who'] = 'admin';
 	} else {
