@@ -23,6 +23,7 @@ function check_stats($string) {
 	if (preg_match('/^!webstats/', $string)) return 'http://www.quantcast.com/'.get_server_name();
 	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
 	if (preg_match('/^!admins/', $string)) return do_admins($string);
+	if (preg_match('/^!last/', $string)) return do_last($string);
 	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
 	return false;
 }
@@ -30,7 +31,7 @@ function check_stats($string) {
 function do_admins($string) {
 	global $db, $current_user;
 
-	if ($current_user->user_level != 'admin' && $current_user->user_level != 'god') return false;
+	if (! $current_user->admin) return false;
 	foreach (array('god', 'admin') as $level) {
 		$res = $db->get_col("select user_login from users where user_level = '$level' and user_id != $current_user->user_id order by user_login asc");
 		if ($res) {
@@ -42,6 +43,20 @@ function do_admins($string) {
 		$comment .= "<br>";
 	}
 	return $comment;
+}
+
+function do_last($string) {
+	global $db, $current_user;
+
+	if (! $current_user->admin) return false;
+	$list = '';
+	$res = $db->get_col("select user_login from users order by user_id desc limit 20");
+	if ($res) {
+		foreach ($res as $user) {
+			$list .= 'http://'.get_server_name().get_user_uri($user) . ' ';
+		}
+	}
+	return $list;
 }
 
 function do_stats1($string) {
