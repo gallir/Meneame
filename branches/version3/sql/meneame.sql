@@ -182,7 +182,8 @@ CREATE TABLE `conversations` (
   `conversation_to` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`conversation_user_to`,`conversation_type`,`conversation_time`),
   KEY `conversation_type` (`conversation_type`,`conversation_from`),
-  KEY `conversation_time` (`conversation_time`)
+  KEY `conversation_time` (`conversation_time`),
+  KEY `conversation_type_2` (`conversation_type`,`conversation_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
@@ -195,10 +196,11 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `favorites` (
   `favorite_user_id` int(10) unsigned NOT NULL,
+  `favorite_type` enum('link','post','comment') NOT NULL default 'link',
   `favorite_link_id` int(10) unsigned NOT NULL,
   `favorite_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  UNIQUE KEY `favorite_user_id` (`favorite_user_id`,`favorite_link_id`),
-  KEY `favorite_link_id` (`favorite_link_id`)
+  UNIQUE KEY `favorite_user_id_2` (`favorite_user_id`,`favorite_type`,`favorite_link_id`),
+  KEY `favorite_type` (`favorite_type`,`favorite_link_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
@@ -471,7 +473,7 @@ SET character_set_client = utf8;
 CREATE TABLE `users` (
   `user_id` int(20) NOT NULL auto_increment,
   `user_login` char(32) collate utf8_spanish_ci NOT NULL,
-  `user_level` enum('disabled','normal','special','blogger','admin','god') collate utf8_spanish_ci NOT NULL default 'normal',
+  `user_level` enum('autodisabled','disabled','normal','special','blogger','admin','god') character set utf8 NOT NULL default 'normal',
   `user_avatar` int(10) unsigned NOT NULL default '0',
   `user_modification` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `user_date` timestamp NOT NULL default '0000-00-00 00:00:00',
@@ -497,7 +499,8 @@ CREATE TABLE `users` (
   KEY `user_public_info` (`user_public_info`),
   KEY `user_phone` (`user_phone`),
   KEY `user_date` (`user_date`),
-  KEY `user_modification` (`user_modification`)
+  KEY `user_modification` (`user_modification`),
+  KEY `user_email_register` (`user_email_register`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 SET character_set_client = @saved_cs_client;
 
@@ -549,4 +552,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-03-23 22:09:51
+-- Dump completed on 2009-08-15 19:45:06
