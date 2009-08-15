@@ -47,12 +47,14 @@ switch ($option) {
 		$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts");
 		break;
+
 	case '_best':
 		$tab_option = 2;
 		$min_date = date("Y-m-d H:00:00", time() - 86400); //  about 24 hours
 		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
 		break;
+
 	case '_friends':
 		if ($current_user->user_id > 0) {
 			$tab_option = 3;
@@ -65,6 +67,20 @@ switch ($option) {
 		}
 		$rss_option="?friends_of=$current_user->user_id";
 		break;
+
+	case '_favorites':
+		if ($current_user->user_id > 0) {
+			$tab_option = 7;
+			$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY post_id DESC LIMIT $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post'");
+		} else {
+			$tab_option = 1;	
+			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+			$rows = $db->get_var("SELECT count(*) FROM posts");
+		}
+		$rss_option="?favorites_of=$current_user->user_id";
+		break;
+
 	case '_conversation':
 		if ($current_user->user_id > 0) {
 			$tab_option = 6;
@@ -77,6 +93,7 @@ switch ($option) {
 		}
 		$rss_option="?conversation_of=$current_user->user_id";
 		break;
+
 	default:
 		$tab_option = 4;
 		if ( $post_id > 0 ) {
@@ -222,6 +239,13 @@ function do_posts_tabs($tab_selected, $username) {
 		echo '<li'.$active.'><a href="'.post_get_base_url('_best').'" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
 	} else {
 		echo '<li><a href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
+	}
+
+	// favorites
+	if ($tab_selected == 7) {
+		echo '<li'.$active.'><a href="'.post_get_base_url('_favorites').'" title="'.$reload_text.'">&nbsp;'.FAV_YES.'&nbsp;</a></li>' . "\n";
+	} elseif ($current_user->user_id > 0) {
+		echo '<li><a href="'.post_get_base_url('_favorites').'">&nbsp;'.FAV_YES.'&nbsp;</a></li>' . "\n";
 	}
 
 	// Conversation

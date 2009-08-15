@@ -13,7 +13,7 @@ switch ($option) {
 		do_footer();
 		break;
 	case 'favorites':
-		$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_link_id=link_id  ORDER BY link_id DESC LIMIT 1000";
+		$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_type='link' AND favorite_link_id=link_id  ORDER BY link_id DESC LIMIT 1000";
 		do_header(_('favoritos'));
 		do_link_item($sql);
 		do_footer();

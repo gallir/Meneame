@@ -44,6 +44,15 @@ if(!empty($_GET['user_id'])) {
 	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 ORDER BY post_date DESC LIMIT 1");
 	$title = _('Nótame: notas amigos de ') . $username;
+} elseif (!empty($_REQUEST['favorites_of'])) {
+	/////
+	// users' favorites
+	/////
+	$user_id = guess_user_id($_REQUEST['favorites_of']);
+	$username = $db->get_var("select user_login from users where user_id=$id");
+	$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY favorite_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='post'");
+	$title = _('Nótame: favoritos de ') . $username;
 } elseif(!empty($_REQUEST['conversation_of'])) {
 	//
 	// Conversation posts

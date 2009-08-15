@@ -353,8 +353,8 @@ function do_favorites () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id");
-	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
+	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
+	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=favorites&amp;url=source" title="'._('formato Mozilla bookmarks').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';

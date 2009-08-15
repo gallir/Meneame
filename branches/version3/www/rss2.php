@@ -43,8 +43,8 @@ if(!empty($_REQUEST['time'])) {
 	// RSS for users' favorites
 	/////
 	$user_id = guess_user_id($_REQUEST['favorites']);
-	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id");
+	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='link'");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = _('Menéame: favoritas de') . ' ' . $user_login;
 	$globals['redirect_feedburner'] = false;

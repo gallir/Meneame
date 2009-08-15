@@ -6,6 +6,8 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+require_once(mnminclude.'favorites.php');
+
 class Post {
 	var $id = 0;
 	var $randkey = 0;
@@ -141,6 +143,11 @@ class Post {
 			echo '</a>';
 		}
 
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '&nbsp;&nbsp;<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_post.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this->id, 'post').'</a>';
+		}
+
 		echo '</div>';
 
 		// Print comment info (right)
@@ -148,6 +155,7 @@ class Post {
 		echo '<a href="'.post_get_base_url($this->username).'">'. _('nota de') . ' ' . $this->username.'</a> ';
 		echo '('.$this->src.') ';
 		echo '(<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink">#</a>) ';
+
 		
 		// Print dates
 		if (time() - $this->date > 604800) { // 7 days
