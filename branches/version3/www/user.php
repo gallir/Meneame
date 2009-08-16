@@ -215,7 +215,7 @@ function do_profile() {
 			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.friend_teaser($current_user->user_id, $user->id).'</a>';
 		}
 		// Print user detailed info
-		if ($login===$current_user->user_login || $current_user->user_level == 'god') {
+		if ($login===$current_user->user_login || $current_user->admin) {
 			echo " (" . _('id'). ": <em>$user->id</em>, ";
 			echo "<em>$user->level</em>)";
 		}

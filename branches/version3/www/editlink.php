@@ -169,7 +169,7 @@ function do_save() {
 	// change the status
 	if ($_POST['status'] != $linkres->status
 		&& preg_match('/^[a-z]{4,}$/', $_POST['status'])
-		&& ($_POST['status'] == 'autodiscard' || $current_user->admin)) {
+		&& ( ! $linkres->is_discarded() || $current_user->admin)) {
 		if (preg_match('/discard|abuse|duplicated|autodiscard/', $_POST['status'])) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;

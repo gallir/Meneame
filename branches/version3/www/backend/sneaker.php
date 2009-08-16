@@ -464,11 +464,11 @@ function error($mess) {
 }
 
 function update_sneakers() {
-	global $db, $globals, $now, $current_user;
+	global $db, $globals, $current_user;
 	$key = $globals['user_ip'] . '-' . intval($_REQUEST['k']);
-	$db->query("replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', $now, $current_user->user_id)");
-	if($_REQUEST['r'] % 10 == 0) {
-		$from = $now-120;
+	$db->query("replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', unix_timestamp(now()), $current_user->user_id)");
+	if($_REQUEST['r'] % 37 == 0) {
+		$from = $globals['now']-120;
 		$db->query("delete from sneakers where sneaker_time < $from");
 	}
 }
