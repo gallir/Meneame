@@ -19,6 +19,27 @@ font-size: 87.5%; /* font size 14px */
 text-align: center;
 }
 
+/* Rounded boxes, CSS3 and temporary non-standar moz and webkit properties */
+.tabmain li a, .tabsub li a {
+border-radius-topright: 3px;
+-moz-border-radius-topright: 3px;
+-webkit-border-top-right-radius: 3px;
+}
+
+/* All 3 px */
+.sneaker-legend, #simplemodal-container, #map, #tooltip-text, .tags-box, .comment-body-hidden, .comment-body, .commentform.warn, .thumbnail, .warn, .box, fieldset, label {
+border-radius: 3px;
+-moz-border-radius: 3px;
+}
+
+/* All 2 px */
+.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .mnm-pop, .button, input, textarea, legend, button {
+border-radius: 2px;
+-moz-border-radius: 2px;
+}
+
+/* END roundboxes */
+
 a {
 text-decoration: none;
 outline: none;
@@ -768,18 +789,7 @@ text-decoration: none;
 vertical-align: bottom;
 }
 
-.mnm-published {
-display: block;
-padding: 4px 0 4px 0;
-}
-
-.mnm-queued {
-display: block;
-border: 1px solid;
-padding: 4px 0 4px 0;
-}
-
-.mnm-discarded {
+.mnm-published, .mnm-queued, .mnm-discarded {
 display: block;
 border: 1px solid;
 padding: 4px 0 4px 0;

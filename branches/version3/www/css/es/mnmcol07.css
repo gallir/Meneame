@@ -343,6 +343,7 @@ color: #FFF;
 
 .mnm-published {
 background: #FF6400 url(../../img/mnm/elmnm-p03.png) top left no-repeat;
+border-color: #FF6400;
 }
 
 .mnm-queued, .mnm-queued a, .mnm-queued a:visited {
