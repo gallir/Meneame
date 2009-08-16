@@ -30,12 +30,14 @@ border-radius-topright: 3px;
 .sneaker-legend, #simplemodal-container, #map, #tooltip-text, .tags-box, .comment-body-hidden, .comment-body, .commentform.warn, .thumbnail, .warn, .box, fieldset, label {
 border-radius: 3px;
 -moz-border-radius: 3px;
+-webkit-border-radius: 3px;
 }
 
 /* All 2 px */
 .menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .mnm-pop, .button, input, textarea, legend, button {
 border-radius: 2px;
 -moz-border-radius: 2px;
+-webkit-border-radius: 2px;
 }
 
 /* END roundboxes */
