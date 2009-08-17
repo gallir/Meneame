@@ -188,7 +188,11 @@ sub InMessage {
 	if ( $type ne 'chat' ) {
 		print "Error type '$type' from $from\n";
 		if ( $type eq 'error' ) {
-			$Users->delete($user);
+			print "Error " . $message->GetErrorCode() . ": ". $message->GetError() . "\n";
+			if ($message->GetErrorCode() != 503) { # A common error in Gtalk
+				print "Removing $user\n";
+				$Users->delete($user);
+			}
 		}
 		return;
 	}

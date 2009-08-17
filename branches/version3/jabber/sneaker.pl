@@ -119,12 +119,14 @@ sub ReadEvents {
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
 	my $prompt;
 	my $other_relation;
+	my $relationship;
 	while ($hash = $sth->fetchrow_hashref) {
 		$content = MnmDB::utf8($hash->{chat_text});
 		$content = MnmDB::clean_pseudotags(decode_entities($content));
 		$poster = new MnmUser(user=>MnmDB::utf8($hash->{chat_user}));
 		$chat_timestamp = $hash->{chat_time};
 		foreach my $u ($jabber->users()) {
+			$relationship = $u->friend($poster);
 			$other_relation = $poster->friend($u);
 			if (!$u->get_pref('jabber-off') && $u->get_pref('jabber-chat') && $u != $poster) {
 				if ($hash->{chat_room} eq 'admin') {
@@ -132,12 +134,13 @@ sub ReadEvents {
 						$prompt = '##'.$poster->{user};
 						$jabber->SendMessage($u, "$prompt: $content");
 					}
-				} elsif ($u->friend($poster) >= 0 && $other_relation >= 0 && ($hash->{chat_room} eq 'all' || $other_relation > 0 )) {
-					if ($hash->{chat_room} eq 'friends') {
+				} elsif ($hash->{chat_room} eq 'friends') {
+					if ($relationship > 0 && $other_relation > 0) {
 						$prompt = '@@'.$poster->{user};
-					} else {
-						$prompt = $poster->{user};
+						$jabber->SendMessage($u, "$prompt: $content");
 					}
+				} elsif ($relationship >= 0 && $other_relation >= 0) {
+					$prompt = $poster->{user};
 					$jabber->SendMessage($u, "$prompt: $content");
 				}
 			}

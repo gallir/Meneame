@@ -46,6 +46,7 @@ sub ReadPosts {
 		$poster = new MnmUser(user=>$username);
 		$timestamp = $date;
 		foreach my $u ($jabber->users()) {
+			next if $u->get_pref('posts-off');
 			my $username = $u->{user};
 			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
 			if ($u->friend($poster) > 0 || $u == $poster || $content =~ /(^|\W)\@$username\W/i) {
@@ -79,8 +80,8 @@ sub InMessage {
 		$jabber->SendMessage($poster, "mensaje muy corto o sin caracteres válidos");
 		return;
 	}
-	if (length($body) > 300) {
-		$jabber->SendMessage($poster, "mensaje demasiado largo (long max: 300)");
+	if (length($body) > 500) {
+		$jabber->SendMessage($poster, "mensaje demasiado largo (long max: 500)");
 		return;
 	}
 
@@ -113,7 +114,13 @@ sub ExecuteCommand {
 	$_ =~ s/^ +//;
 
 	if (/^!help/) {
-		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto (la etiqueta es opcional)");
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!off: deshabilita la recepción de todas las notas\n!on: vuelve a habilitar la recepción de las notas \n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto (la etiqueta es opcional)");
+	} elsif (/^!off/) {
+		$poster->store_prefs('posts-off', 1);
+		$jabber->SendMessage($poster, '»» recepción de mensajes deshabilitados');
+	} elsif (/^!on/) {
+		$poster->store_prefs('posts-off', '');
+		$jabber->SendMessage($poster, '»» recepción de mensajes habilitados');
 	} elsif (/^!whoami/) {
 		$jabber->SendMessage($poster, "»» " . $poster->{user});
 	} elsif (/^!gs/) {

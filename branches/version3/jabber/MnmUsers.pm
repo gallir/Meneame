@@ -62,6 +62,7 @@ sub get {
 	if ($self->{'jid'}{$jid}) {
 		if( ! $self->{'jid'}{$jid}->check()) {
 			delete $self->{'jid'}{$jid};
+			return 0;
 		}
 	}
 	return $self->{'jid'}{$jid};

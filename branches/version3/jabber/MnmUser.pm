@@ -72,9 +72,7 @@ sub read {
 	$hash = MnmDB::row_hash($sql);
 	if ($hash->{user_id} > 0) {
 		$self->{id} = $hash->{user_id};
-		if (!defined($self->{user})) {
-			$self->{user} = $hash->{user_login};
-		}
+		$self->{user} = $hash->{user_login};
 		if (!defined($self->{jid})) {
 			$self->{jid} = $hash->{user_public_info};
 		}
@@ -127,7 +125,7 @@ sub get_pref {
 
 sub check {
 	my $self = shift;
-	if (time - $self->{timestamp} > 60) { # Read every  60 seconds
+	if (time - $self->{timestamp} > 10) { # Read every  10 seconds
 		$self->{id} = 0;
 		$self->read;
 	}
