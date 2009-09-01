@@ -41,9 +41,9 @@ class LinkMobile extends Link{
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 		echo '</h1>';
 
+		echo '<div class="news-submitted">';
+		echo '<strong>'.txt_shorter($this->url, 40).'</strong><br/>';
 		if ($globals['link']) {
-			echo '<div class="news-submitted">';
-			echo '<strong>'.txt_shorter($this->url, 40).'</strong><br/>';
 			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 			// Print dates
 			if ($globals['now'] - $this->date > 604800) { // 7 days
@@ -57,8 +57,8 @@ class LinkMobile extends Link{
 				else
 					echo _('hace').txt_time_diff($this->sent_date);
 			}
-			echo "</div>\n";
 		}
+		echo "</div>\n";
 
 		$text = text_to_html($this->content);
 

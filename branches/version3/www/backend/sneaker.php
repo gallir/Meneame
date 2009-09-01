@@ -106,8 +106,9 @@ if ($current_user->user_id > 0 && empty($_REQUEST['nochat'])) {
 }
 $db->barrier();
 
-if($last_timestamp == 0) $last_timestamp = $now_f;
 
+if($last_timestamp == 0) $last_timestamp = $now_f;
+if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
 $ccntu = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
 $ccntj = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
 $ccnta = $db->get_var("select count(*) from sneakers where sneaker_user = 0");
@@ -129,7 +130,6 @@ foreach ($events as $key => $val) {
 	}
 }
 echo "]);";
-if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
 
 function check_chat() {
 	global $db, $current_user, $now, $now_f, $globals, $events;
@@ -467,7 +467,7 @@ function update_sneakers() {
 	global $db, $globals, $current_user;
 	$key = $globals['user_ip'] . '-' . intval($_REQUEST['k']);
 	$db->query("replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', unix_timestamp(now()), $current_user->user_id)");
-	if($_REQUEST['r'] % 37 == 0) {
+	if($_REQUEST['r'] % 100 == 0) {
 		$from = $globals['now']-120;
 		$db->query("delete from sneakers where sneaker_time < $from");
 	}
