@@ -144,6 +144,13 @@ $rows = $db->num_rows;
 if (!$rows) {
 	$output .= "There are no articles<br/>\n";
 	$output .= "--------------------------<br/>\n";
+	echo $output;
+	echo "</body></html>\n";
+	if (! DEBUG) {
+		$annotation = new Annotation('promote');
+		$annotation->text = $output;
+		$annotation->store();
+	}
 	die;
 }
 	

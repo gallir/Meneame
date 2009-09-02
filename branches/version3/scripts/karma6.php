@@ -24,7 +24,7 @@ $db->query("delete from annotations where annotation_time  < date_sub(now(), int
 
 $db->barrier();
 // Delete email, names and url of invalidated users after three months
-$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level = 'disabled' and user_modification < date_sub(now(), interval 3 month)");
+$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level in ('disabled', 'autodisabled') and user_modification < date_sub(now(), interval 3 month)");
 if ($dbusers) {
 	foreach ($dbusers as $id) {
 		$user = new User;
@@ -38,7 +38,7 @@ if ($dbusers) {
 }
 
 // Lower karma of disabled users
-$db->query("update users set user_karma = 6 where user_level='disabled' and user_karma > 6 ");
+$db->query("update users set user_karma = 6 where user_level in ('disabled', 'autodisabled') and user_karma > 6 ");
 
 $karma_base=6;
 $karma_base_max=9; // If not penalised, older users can get up to this value as base for the calculus
@@ -48,7 +48,7 @@ $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = 2;
-$points_given = 8;
+$points_given = 3;
 $comment_votes = 5;
 $post_votes = 1;
 
@@ -95,7 +95,7 @@ $calculated = 0;
 
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select fails miserably with about 40.000 users.
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_level != 'disabled' order by user_modification desc";
+$users = "SELECT SQL_NO_CACHE user_id from users where user_level not in ('disabled', 'autodisabled') order by user_modification desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, votes where vote_type in ('comments', 'links') and vote_date > $history_from and vote_user_id = user_id and user_level != 'disabled' order by user_id desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
 $result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
@@ -147,13 +147,13 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
 			if ($karmas) {
 				foreach ($karmas as $k) {
-					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 2) * 4;
+					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 3) * 4;
 				}
 			}
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
 			if ($karmas && $total_user_links > 1) { // don't penalize to users who sent just one link
 				foreach ($karmas as $k) {
-					$negative_karma_received += pow(min(1,$k/$max_avg_negative_received), 2) * 3;
+					$negative_karma_received += pow(min(1,$k/$max_avg_negative_received), 2) * 2;
 				}
 			}
 			$karma_received = $positive_karma_received - $negative_karma_received;
@@ -218,7 +218,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$penalized += 1;
 			if ($total_comments == 0 && $sent_links == 0) {
 				$output .= _('Coeficiente de votos muy bajos, posible bot, penalizado');
-				$punish_coef = 5;
+				$punish_coef = 3;
 			} else {
 				$output .= _('Coeficiente de votos muy bajos, ¿"karmawhore"?, penalizado');
 				$punish_coef = 1;
@@ -274,7 +274,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
 			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
 
-			$comment_coeff =  min(max(0.2, $comments_count/$comments_total), 1) * min($distinct_votes_count/$comments_count, 1) * $distinct_user_votes_count/$comment_votes_count;
+			$comment_coeff =  min(max(0.2, $comments_count/$comments_total), 0.5) * min($distinct_votes_count/$comments_count, 1) * $distinct_user_votes_count/$comment_votes_count;
 
 			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
 			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count, $comment_votes_count, $comment_votes_sum)\n";
@@ -289,8 +289,8 @@ while ($dbuser = mysql_fetch_object($result)) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma >= 5 * comment_votes)");
-		if ($negative_abused_comment_votes_count > 3) {
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and comment_votes < 10 and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma >= 5 * comment_votes)");
+		if ($negative_abused_comment_votes_count > 4) {
 			$karma5 = max(-$comment_votes/2, -$comment_votes * $negative_abused_comment_votes_count/20);
 			if ($negative_abused_comment_votes_count > 8 ) {
 				$karma5 -= $karma0 / 2 ; // Take away half of karma0

@@ -17,14 +17,14 @@ $db->query("delete from users where user_date < date_sub(now(), interval 12 hour
 $db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval 20 minute) and link_votes = 0");
 
 // send back to queue links with too many negatives
-$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 12 hour) and link_date < date_sub(now(), interval 6 minute) and link_negatives > link_votes / 8");
+$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval 6 minute) and link_negatives > link_votes / 8");
 
 
 if ($links) {
 	foreach ($links as $link) {
 		// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
 		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6");
-		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7");
+		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.5");
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
 		if (($negatives > $link->link_karma/6 || $link->link_negatives > $link->link_votes/6 ) && $negatives > $positives) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
@@ -34,11 +34,11 @@ if ($links) {
 			$user = new User();
 			$user->id = $link->link_author;
 			if ($user->read()) {
-				$user->karma -= 1;
+				$user->karma -= 1.2;
 				echo "$user->username: $user->karma\n";
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('Noticia retirada de portada').": -1, karma: $user->karma\n");
+				$annotation->append(_('Noticia retirada de portada').": -1.2, karma: $user->karma\n");
 			}
 		}
 	}
