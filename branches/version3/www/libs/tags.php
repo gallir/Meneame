@@ -8,6 +8,7 @@
 
 
 function tags_normalize_string($string) {
+	$string = clear_whitespace($string);
 	$string = html_entity_decode(trim($string), ENT_COMPAT, 'UTF-8');
 	$string = preg_replace('/-+/', '-', $string); // Don't allow a sequence of more than a "-"
 	$string = preg_replace('/ +,/', ',', $string); // Avoid errors like " ,"

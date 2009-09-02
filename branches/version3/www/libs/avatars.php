@@ -48,7 +48,7 @@ function avatars_manage_upload($user, $name) {
 function avatars_remove_user_files($user) {
 	global $globals;
 	$subdir = @get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
-	if ( $subdir && ($handle = opendir( $subdir )) ) {
+	if ( $subdir && ($handle = @opendir( $subdir )) ) {
 		while ( false !== ($file = readdir($handle))) {
 			if ( preg_match("/^$user-/", $file) ) {
 				@unlink($subdir . '/' . $file);

@@ -135,6 +135,7 @@ function check_chat() {
 	global $db, $current_user, $now, $now_f, $globals, $events;
 	if(empty($_POST['chat'])) return;
 	$comment = trim(preg_replace("/[\r\n\t]/", ' ', $_REQUEST['chat']));
+	$comment = clear_whitespace($comment);
 	if ($current_user->user_id > 0 && strlen($comment) > 2) {
 		// Sends a message back if the user has a very low karma
 		if ($globals['min_karma_for_sneaker'] > 0 && $current_user->user_karma < $globals['min_karma_for_sneaker']) {

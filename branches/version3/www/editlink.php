@@ -102,6 +102,7 @@ function do_edit() {
 		} else {
 			if($current_user->user_level == 'god') {
 				echo '<option value="abuse">'.$linkres->get_status_text('abuse').'</option>';
+				echo '<option value="autodiscard">'.$linkres->get_status_text('autodiscard').'</option>';
 			}
 		}
 

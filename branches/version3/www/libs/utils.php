@@ -174,6 +174,7 @@ function txt_shorter($string, $len=70) {
 // Used to get the text content for stories and comments
 function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	$string = stripslashes(trim($string));
+	$string = clear_whitespace($string);
 	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
 	// Replace two "-" by a single longer one, to avoid problems with xhtml comments
 	//$string = preg_replace('/--/', '–', $string);
@@ -270,8 +271,11 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $server_name;
-	if($_SERVER['SERVER_NAME']) return $_SERVER['SERVER_NAME'];
-	else {
+	$server_port = '';
+	if($_SERVER['SERVER_PORT'] != '80') $server_port = ':' . $_SERVER['SERVER_PORT'];
+	if($_SERVER['SERVER_NAME']) {
+		return $_SERVER['SERVER_NAME'] . $server_port;
+	} else {
 		if ($server_name) return $server_name;
 		else return 'meneame.net'; // Warn: did you put the right server name?
 	}
@@ -725,4 +729,74 @@ function gzBody($gzData){
     }
     else return false;
 }
+
+function clear_invisible_unicode($input){
+	$invisible = array(
+	"\0",
+	"\xc2\xad", // 'SOFT HYPHEN' (U+00AD)
+	"\xcc\xb7", // 'COMBINING SHORT SOLIDUS OVERLAY' (U+0337)
+	"\xcc\xb8", // 'COMBINING LONG SOLIDUS OVERLAY' (U+0338)
+	"\xcd\x8f", // 'COMBINING GRAPHEME JOINER' (U+034F)
+	"\xe1\x85\x9f", // 'HANGUL CHOSEONG FILLER' (U+115F)
+	"\xe1\x85\xa0", // 'HANGUL JUNGSEONG FILLER' (U+1160)
+	"\xe2\x80\x8b", // 'ZERO WIDTH SPACE' (U+200B)
+	"\xe2\x80\x8c", // 'ZERO WIDTH NON-JOINER' (U+200C)
+	"\xe2\x80\x8d", // 'ZERO WIDTH JOINER' (U+200D)
+	"\xe2\x80\x8e", // 'LEFT-TO-RIGHT MARK' (U+200E)
+	"\xe2\x80\x8f", // 'RIGHT-TO-LEFT MARK' (U+200F)
+	"\xe2\x80\xaa", // 'LEFT-TO-RIGHT EMBEDDING' (U+202A)
+	"\xe2\x80\xab", // 'RIGHT-TO-LEFT EMBEDDING' (U+202B)
+	"\xe2\x80\xac", // 'POP DIRECTIONAL FORMATTING' (U+202C)
+	"\xe2\x80\xad", // 'LEFT-TO-RIGHT OVERRIDE' (U+202D)
+	"\xe2\x80\xae", // 'RIGHT-TO-LEFT OVERRIDE' (U+202E)
+	"\xe3\x85\xa4", // 'HANGUL FILLER' (U+3164)
+	"\xef\xbb\xbf", // 'ZERO WIDTH NO-BREAK SPACE' (U+FEFF)
+	"\xef\xbe\xa0", // 'HALFWIDTH HANGUL FILLER' (U+FFA0)
+	"\xef\xbf\xb9", // 'INTERLINEAR ANNOTATION ANCHOR' (U+FFF9)
+	"\xef\xbf\xba", // 'INTERLINEAR ANNOTATION SEPARATOR' (U+FFFA)
+	"\xef\xbf\xbb", // 'INTERLINEAR ANNOTATION TERMINATOR' (U+FFFB)
+	);
+
+	return str_replace($invisible, '', $input);
+
+}
+
+function clear_unicode_spaces($input){
+	$spaces = array(
+	"\x9", // 'CHARACTER TABULATION' (U+0009)
+	//  "\xa", // 'LINE FEED (LF)' (U+000A)
+	"\xb", // 'LINE TABULATION' (U+000B)
+	"\xc", // 'FORM FEED (FF)' (U+000C)
+	//  "\xd", // 'CARRIAGE RETURN (CR)' (U+000D)
+	"\x20", // 'SPACE' (U+0020)
+	"\xc2\xa0", // 'NO-BREAK SPACE' (U+00A0)
+	"\xe1\x9a\x80", // 'OGHAM SPACE MARK' (U+1680)
+	"\xe1\xa0\x8e", // 'MONGOLIAN VOWEL SEPARATOR' (U+180E)
+	"\xe2\x80\x80", // 'EN QUAD' (U+2000)
+	"\xe2\x80\x81", // 'EM QUAD' (U+2001)
+	"\xe2\x80\x82", // 'EN SPACE' (U+2002)
+	"\xe2\x80\x83", // 'EM SPACE' (U+2003)
+	"\xe2\x80\x84", // 'THREE-PER-EM SPACE' (U+2004)
+	"\xe2\x80\x85", // 'FOUR-PER-EM SPACE' (U+2005)
+	"\xe2\x80\x86", // 'SIX-PER-EM SPACE' (U+2006)
+	"\xe2\x80\x87", // 'FIGURE SPACE' (U+2007)
+	"\xe2\x80\x88", // 'PUNCTUATION SPACE' (U+2008)
+	"\xe2\x80\x89", // 'THIN SPACE' (U+2009)
+	"\xe2\x80\x8a", // 'HAIR SPACE' (U+200A)
+	"\xe2\x80\xa8", // 'LINE SEPARATOR' (U+2028)
+	"\xe2\x80\xa9", // 'PARAGRAPH SEPARATOR' (U+2029)
+	"\xe2\x80\xaf", // 'NARROW NO-BREAK SPACE' (U+202F)
+	"\xe2\x81\x9f", // 'MEDIUM MATHEMATICAL SPACE' (U+205F)
+	"\xe3\x80\x80", // 'IDEOGRAPHIC SPACE' (U+3000)
+	);
+	
+	return str_replace($spaces, ' ', $input);
+}
+
+function clear_whitespace($input){
+	$input = clear_unicode_spaces(clear_invisible_unicode($input));
+	return ereg_replace('/  +/', ' ', $input);
+}
+
+
 ?>

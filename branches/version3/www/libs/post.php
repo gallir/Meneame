@@ -30,7 +30,7 @@ class Post {
 		$post_karma = $this->karma;
 		$post_date = $this->date;
 		$post_randkey = $this->randkey;
-		$post_content = $db->escape(clean_lines($this->content));
+		$post_content = $db->escape(clean_lines(clear_whitespace($this->content)));
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
 			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");

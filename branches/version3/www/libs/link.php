@@ -778,6 +778,7 @@ class Link {
 			if(($this->author == $current_user->user_id 
 					&& $this->status != 'published' 
 					&& $this->status != 'abuse' 
+					&& $this->status != 'autodiscard'
 					&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id 
 					&& $current_user->user_level == 'special' 

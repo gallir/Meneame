@@ -713,8 +713,7 @@ function check_link_key() {
 	return $_POST['key'] == md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 }
 
-function link_errors($linkres)
-{
+function link_errors($linkres) {
 	$error = false;
 	// Errors
 	if(! check_link_key() || intval($_POST['randkey']) != $linkres->randkey) {
