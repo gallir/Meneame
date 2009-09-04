@@ -166,7 +166,8 @@ function do_profile() {
 		else $url = $user->url;
 	}
 	$post = new Post;
-	if ($post->read_last($user->id)) {   
+	if ($post->read_last($user->id)) {
+		echo '<div id="addpost"></div>';
 		echo '<ol class="comments-list" id="last_post">';   
 		$post->print_summary();   
 		echo "</ol>\n";
