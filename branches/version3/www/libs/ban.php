@@ -42,13 +42,14 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 		case 'ip':
 		case 'proxy':
 			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
-			if ($check_valid  && ! preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}\d{1,3}$/s', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^\d+\.[\d\.]+$/s', $ban_text)) {
 				$ban = array();
 				$ban['match'] =  $ban_text;
 				$ban['comment'] =_('No es una IP válida');
 				return $ban;
 			}
-			$where="ban_text='$ban_text' AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now())"; 
+			$list = subclasses_list($ban_text);
+			$where="ban_text IN ($list) AND ban_type='$ban_type' AND (ban_expire IS null OR ban_expire > now())"; 
 			break;
 		default:
 			return false;
@@ -66,6 +67,21 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 		return $ban;
 	}
 	return false;
+}
+
+function subclasses_list($ip) {
+	$list = "'$ip'";
+	$array = explode('.', $ip);
+	$size = count($array) - 1;
+	while ($size > 1)  {
+		$new_class = $array[0];
+		for ($i=1; $i < $size; $i++) {
+			$new_class .= '.' . $array[$i];
+		}
+		$list .= ",'$new_class'";
+		$size--;
+	}
+	return $list;
 }
 
 function subdomains_list($domain_path, $first_level = false) {
