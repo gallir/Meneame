@@ -539,10 +539,10 @@ class Link {
 		echo '</span>';
 		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
 
-		if(!$this->voted &&  
-				$this->negatives_allowed() && 
-				$type != 'preview' &&
-				$this->votes_enabled /*&& $this->author != $current_user->user_id*/) {
+		if(!$this->voted &&
+				$this->votes_enabled &&
+				$this->negatives_allowed($globals['link_id'] > 0) && 
+				$type != 'preview' /*&& $this->author != $current_user->user_id*/) {
 				$this->print_problem_form();
 		}
 
@@ -818,10 +818,15 @@ class Link {
 		return $this->votes_enabled;
 	}
 
-	function negatives_allowed() {
+	function negatives_allowed($extended = false) {
 		global $globals, $current_user;
 
 
+		if ($extended) {
+			$period = 86400;
+		} else {
+			$period = 3600;
+		}
 		return  $current_user->user_id > 0  &&
 				$this->votes > 0 &&
 				$this->status != 'abuse' && $this->status != 'autodiscard' &&
@@ -829,7 +834,7 @@ class Link {
 				($this->status != 'published' || 
 				// Allows to vote negative to published with high ratio of negatives
 				// or a link recently published
-					$this->status == 'published' && ($this->date > $globals['now'] - 3600 || $this->negatives > $this->votes/10) 
+					$this->status == 'published' && ($this->date > $globals['now'] - $period || $this->negatives > $this->votes/10) 
 					|| $this->warned);
 	}
 

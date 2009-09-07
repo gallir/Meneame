@@ -291,16 +291,21 @@ class Comment {
 
 	function same_links_count($min=30) {
 		global $db, $current_user;
+
+		if ($this->id > 0) {
+			$not_me = "and comment_id != $this->id";
+		} else {
+			$not_me = '';
+		}
+
 		$count = 0;
-		$localdomain = preg_quote(get_server_name(), '/');
-		preg_match_all('/([\(\[:\.\s]|^)(https*:\/\/[^ \t\n\r\]\(\)\&]{5,70}[^ \t\n\r\]\(\)]*[^ .\t,\n\r\(\)\"\'\]\?])/i', $this->content, $matches);
 		foreach ($this->links as $host) {
 			if ($this->banned) $interval = $min * 2;
 			else $interval = $min;
 			$link = '://'.$host;
 			$link=preg_replace('/([_%])/', "\$1", $link);
 			$link=$db->escape($link);
-			$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $interval minute) and comment_content like '%$link%'");
+			$same_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author and comment_date > date_sub(now(), interval $interval minute) and comment_content like '%$link%' $not_me");
 			$count = max($count, $same_count);
 		}
 		return $count;
@@ -316,7 +321,7 @@ class Comment {
 		if(check_ban_proxy()) return _('dirección IP no permitida');
 
 		// Check if is a POST of a comment
-		if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments'] && 
+		if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments_status'][$link->status]*1.01 && 
 				$link->comments < $globals['max_comments'] &&
 				intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
 				intval($_POST['user_id']) == $current_user->user_id &&

@@ -41,7 +41,7 @@ if (!check_security_key($_REQUEST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
-if(! $link->negatives_allowed()) {
+if(! $link->negatives_allowed(true)) {
 	error(_('ya no se puede votar negativo'));
 }
 
