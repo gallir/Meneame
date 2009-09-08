@@ -119,6 +119,12 @@ switch ($url_args[1]) {
 		do_error(_('página inexistente'), 404);
 }
 
+// Change to a min_value is times is changed for the current link_status
+if ($globals['time_enabled_comments_status'][$link->status]) {
+	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
+											$globals['time_enabled_comments']);
+}
+
 // Check for comment post
 if ($_POST['process']=='newcomment') {
 	require_once(mnminclude.'comment.php');
@@ -130,11 +136,6 @@ if ($_POST['process']=='newcomment') {
 $globals['link'] = $link;
 $globals['link_id'] = $link->id;
 $globals['link_permalink'] = $globals['link']->get_permalink();
-// Change to a min_value is times is changed for the current link_status
-if ($globals['time_enabled_comments_status'][$link->status]) {
-	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
-											$globals['time_enabled_comments']);
-}
 
 // to avoid search engines penalisation
 if ($tab_option != 1 || $link->status == 'discard') {
