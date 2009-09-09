@@ -358,10 +358,15 @@ function get_security_key($time = false) {
 	global $globals, $current_user, $site_key;
 	if (!$time) $time = $globals['now'];
 
-	// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
-	$ip_key = $globals['user_ip_int']>>8;
+	if ($current_user->user_id > 0) {
+		// For users of balanced connections and 3G we avoid using the IP
+		return $time.'-'.sha1($time.$current_user->user_id.$current_user->user_date.$site_key);
+	} else {
+		// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
+		$ip_key = $globals['user_ip_int']>>8;
+		return $time.'-'.sha1($time.$ip_key.$site_key);
+	}
 
-	return $time.'-'.sha1($time.$ip_key.$current_user->user_id.$site_key);
 }
 
 function check_security_key($key) {
