@@ -823,7 +823,7 @@ class Link {
 
 
 		if ($extended) {
-			$period = 86400;
+			$period = $globals['time_enabled_votes'];
 		} else {
 			$period = 3600;
 		}
