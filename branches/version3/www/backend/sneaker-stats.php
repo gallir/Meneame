@@ -219,9 +219,16 @@ function do_rae($string) {
 			$str = preg_replace('/<b>\~<\/b>.*$/', '', $str); // Delete normally long examples
 			$str = preg_replace('/<TITLE>.+<\/TITLE>/i', '', $str); // Remove the title
 			$str = preg_replace('/<\/p>/i', '[br/]', $str); // Add marker for newlines (br)
+			$str = preg_replace('/<!\-\-.+?\-\->/', '', $str); // Remove comments
 			$str = strip_tags($str);
+			$str = preg_replace('/[\n\r]/', '', $str); 
+			$str = preg_replace('/"/', '&quot;', $str);
 			$str = preg_replace('/\[br\/\]/i', '<br/>', $str); // Replace marker for <br/>
-			return $str;
+			if (strlen($str) > 0) {
+				return $str;
+			} else {
+				return _('<strong>Error</strong> en la búsqueda');
+			}
 		} else {
 			return _('<strong>Error</strong> en la comunicación con buscon.rae.es, inténtalo otra vez');
 		}
