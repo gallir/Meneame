@@ -25,6 +25,7 @@ function check_stats($string) {
 	if (preg_match('/^!admins/', $string)) return do_admins($string);
 	if (preg_match('/^!last/', $string)) return do_last($string);
 	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
+	if (preg_match('/^!rae/', $string)) return do_rae($string);
 	return false;
 }
 
@@ -203,6 +204,29 @@ function do_fon_gs($string) {
 		}
 	} else {
 		return _('<strong>Error</strong>, el segundo argumento debe ser un URL válido: <em>!gs url [nombre]</em>');
+	}
+}
+
+function do_rae($string) {
+	$array = preg_split('/\s+/', $string);
+	require_once(mnminclude.'uri.php'); // For remove_accents
+	if (count($array) == 2 && preg_match('/^\w+$/',remove_accents($array[1]))) {
+		$url = 'http://buscon.rae.es/draeI/SrvltGUIBusUsual?origen=RAE&TIPO_BUS=3&LEMA='.urlencode($array[1]);
+		$res = get_url($url);
+		if ($res && $res['content']) {
+			//return $res['content'];
+			$str = $res['content'];
+			$str = preg_replace('/<b>\~<\/b>.*$/', '', $str); // Delete normally long examples
+			$str = preg_replace('/<TITLE>.+<\/TITLE>/i', '', $str); // Remove the title
+			$str = preg_replace('/<\/p>/i', '[br/]', $str); // Add marker for newlines (br)
+			$str = strip_tags($str);
+			$str = preg_replace('/\[br\/\]/i', '<br/>', $str); // Replace marker for <br/>
+			return $str;
+		} else {
+			return _('<strong>Error</strong> en la comunicación con buscon.rae.es, inténtalo otra vez');
+		}
+	} else {
+		return _('<strong>Error</strong>, el segundo argumento debe ser una palabra: <em>!rae palabra</em>');
 	}
 }
 
