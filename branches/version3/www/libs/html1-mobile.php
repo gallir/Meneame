@@ -20,6 +20,8 @@ if (!empty($globals['lounge'])) {
 $globals['start_time'] = microtime(true);
 
 header('Content-type: text/html; charset=utf-8');
+
+header('Cache-Control: max-age=900'); // mobile browsers tends to cache for a long time
 if ($current_user->user_id) {
 	header('Cache-Control: private');
 }

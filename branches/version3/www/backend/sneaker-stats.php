@@ -216,8 +216,9 @@ function do_rae($string) {
 		if ($res && $res['content']) {
 			//return $res['content'];
 			$str = $res['content'];
-			$str = preg_replace('/<b>\~<\/b>.*$/', '', $str); // Delete normally long examples
+			$str = preg_replace('/<span class="eFCompleja">.*$/', '', $str); // Delete normally long examples
 			$str = preg_replace('/<TITLE>.+<\/TITLE>/i', '', $str); // Remove the title
+			$str = preg_replace('/>Real Academia Espa[^<]+©[^<]+</', '><', $str); // Remove footer with copyright announcement
 			$str = preg_replace('/<\/p>/i', '[br/]', $str); // Add marker for newlines (br)
 			$str = preg_replace('/<!\-\-.+?\-\->/', '', $str); // Remove comments
 			$str = strip_tags($str);
