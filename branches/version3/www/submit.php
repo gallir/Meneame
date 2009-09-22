@@ -579,9 +579,13 @@ function do_submit1() {
 	echo '<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span>&nbsp;&nbsp;';
 	echo '</div>';
 
-	echo '<p><label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
-	echo '<br /><span class="note">'._('describe la noticia con tus palabras. entre dos y cinco frases es suficiente. sé cuidadoso.').'</span>'."\n";
-	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"></textarea>'."\n";
+	echo '<label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
+	echo '<p><span class="note"><strong>'._('describe la noticia en castellano. entre dos y cinco frases es suficiente. no deformes el contenido.').'</strong></span>'."\n";
+	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">';
+	if (mb_strlen($linkres->url_description) > 40) {
+		echo $linkres->url_description;
+	}
+	echo '</textarea>'."\n";
 	echo '</p>'."\n";
 
 	print_categories_form();

@@ -187,6 +187,17 @@ class Link {
 				$this->url_title=$url_title;
 			}
 		}
+
+		if(preg_match('/< *meta +name=[\'"]description[\'"] +content=[\'"]([^<>]+)[\'"] *\/*>/si', $this->html, $matches)) {
+			$url_description=clean_text($matches[1]);
+			// Further clean up to eliminate links and tags inside the description
+			$url_description = html_entity_decode($url_description, ENT_COMPAT, 'UTF-8');
+			$url_description = strip_tags($url_description);
+			$url_description = @htmlspecialchars($url_description, ENT_COMPAT, 'UTF-8');
+			if (mb_strlen($url_description) > 20) {
+				$this->url_description=text_sub_text($url_description, 400);
+			}
+		}
 		return true;
 	}
 
