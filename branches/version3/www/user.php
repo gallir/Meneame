@@ -176,9 +176,9 @@ function do_profile() {
 	echo '<fieldset><legend>';
 	echo _('información personal');
 	if($login===$current_user->user_login) {
-		echo ' (<a href="'.$globals['base_url'].'profile.php">'._('modificar').'</a>)';
+		echo ' [<a href="'.$globals['base_url'].'profile.php">'._('modificar').'</a>]';
 	} elseif ($current_user->user_level == 'god') {
-		echo ' (<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>)';
+		echo ' [<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>]';
 	}
 	echo '</legend>';
 

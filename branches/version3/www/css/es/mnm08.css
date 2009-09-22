@@ -1516,6 +1516,10 @@ font-weight: bold;
 padding: 0 5px;
 }
 
+legend a {
+text-decoration: underline;
+}
+
 fieldset dl {
 margin: 0;
 padding: 0;

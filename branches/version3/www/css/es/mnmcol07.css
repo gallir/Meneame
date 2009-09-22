@@ -698,8 +698,7 @@ label {
 color: #FF6400;
 }
 
-textarea,
-input  {
+textarea, input  {
 background: #fff;
 border: 1px solid #FF6400;
 color: #303030;
@@ -715,9 +714,13 @@ border-color: #FF6400;
 background: #FEEFE5;
 }
 
-legend, legend a {
+legend, legend a, legend a:visited {
 background: #FF6400;
 color: #fff;
+}
+
+legend a:hover {
+color: #888;
 }
 
 .button, button {

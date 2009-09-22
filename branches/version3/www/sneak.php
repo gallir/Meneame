@@ -431,7 +431,7 @@ function flipChar(c) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php" charset="utf-8"></script>
 <?
 
 

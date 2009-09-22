@@ -460,6 +460,9 @@ class Link {
 
 		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
 		else $nofollow = '';
+
+		if($globals['ads']) echo "<!-- google_ad_section_start -->\n";
+
 		echo '<h1>';
 		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
 
@@ -548,6 +551,7 @@ class Link {
 
 		echo '</div>'."\n";
 		// End news details
+		if($globals['ads']) echo "<!-- google_ad_section_end -->\n";
 
 		// Displayed only in a story page
 		// and tags in sent/voted listing
