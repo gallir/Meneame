@@ -1062,7 +1062,7 @@ class Link {
 				$max_hours = 54;
 			} else {
 				$plain_hours = 7; // 7 hours without decreasing
-				$max_hours = 42;
+				$max_hours = 36;
 			}
 			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
 			$c = 1 - $diff/(3600*$max_hours);
@@ -1088,7 +1088,7 @@ class Link {
 			}
 		}
 
-		$this->karma = ($karma_pos_user+$karma_pos_ano)*$this->coef + $karma_neg_user;
+		$this->karma = ($karma_pos_user+$karma_pos_ano+$karma_neg_user)*$this->coef;
 		if ($meta_coef && $meta_coef[$this->meta_id]) {
 			$this->karma *= $meta_coef[$this->meta_id];
 		}
