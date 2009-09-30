@@ -59,6 +59,14 @@ function do_banner_right() { // side banner A
 	}
 }
 
+function do_banner_promotions() { 
+	global $globals;
+	if($globals['external_ads'] && $globals['ads']) {
+		@include('ads/promotions.inc');
+	}
+}
+
+
 function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
 	// IMPORTANT: legal note only for our servers, CHANGE IT!!

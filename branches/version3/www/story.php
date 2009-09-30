@@ -203,6 +203,7 @@ if (! $current_user->user_id) {
 	do_best_stories();
 }
 do_rss_box();
+do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 

@@ -32,7 +32,6 @@ foreach ($matches[2] as $match) {
 	$tb->link_id=$link->id;
 	$tb->author=$link->author;
 	if(!$tb->read()) {
-		echo "No está $match\n";
 		$tmp = new Link;
 		if(!$tmp->get($match, 2000, false)) {
 			echo "couldn't get $match\n";

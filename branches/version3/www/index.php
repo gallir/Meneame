@@ -73,6 +73,7 @@ if ($page < 2) {
 	do_best_comments();
 }
 do_vertical_tags('published');
+do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
