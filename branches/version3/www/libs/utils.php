@@ -272,7 +272,8 @@ function get_date_time($epoch) {
 function get_server_name() {
 	global $server_name;
 	$server_port = '';
-	if($_SERVER['SERVER_PORT'] != '80') $server_port = ':' . $_SERVER['SERVER_PORT'];
+	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
+	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) $server_port = ':' . $_SERVER['SERVER_PORT'];
 	if($_SERVER['SERVER_NAME']) {
 		return $_SERVER['SERVER_NAME'] . $server_port;
 	} else {

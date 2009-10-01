@@ -50,6 +50,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	if(is_numeric($url_args[0]) && $link->read('id') ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
+			header ('HTTP/1.1 301 Moved Permanently');
 			if (!empty($url_args[1])) $extra_url = '/' . urlencode($url_args[1]);
 			header('Location: ' . $link->get_permalink(). $extra_url);
 			die;
@@ -74,6 +75,7 @@ $last_arg = count($url_args)-1;
 if ($last_arg > 0) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^000/', $url_args[$last_arg])) {
+		header ('HTTP/1.1 301 Moved Permanently');
 		if ($url_args[$last_arg] > 0) {
 			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#c-'.(int) $url_args[$last_arg]);
 		} else {
