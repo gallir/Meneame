@@ -288,6 +288,30 @@ function get_static_server_name() {
 	else return get_server_name();
 }
 
+function get_auth_link() {
+	global $globals;
+	if ($globals['ssl_server']) return 'https://'.get_server_name().$globals['base_url'];
+	else return $globals['base_url'];
+}
+
+function check_auth_page() {
+	global $globals;
+
+	// If it's not a page that need SSL, redirect to the standard server
+	if ($globals['ssl_server']) {
+		if (!$globals['secure_page'] && $_SERVER['HTTPS'] == 'on') {
+			header('HTTP/1.1 301 Moved');
+			header('Location: http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
+			die;
+		}
+		if ($globals['secure_page'] && $_SERVER['HTTPS'] != 'on') {
+			header('HTTP/1.1 301 Moved');
+			header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
+			die;
+		}
+	}
+}
+
 function get_user_uri($user, $view='') {
 	global $globals;
 

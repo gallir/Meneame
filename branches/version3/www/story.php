@@ -285,7 +285,7 @@ case 2:
 			echo '</div>'."\n";
 		} elseif (!$globals['bot']){
 			echo '<div class="commentform warn">'."\n";
-			echo '<a href="'.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>'."\n";
+			echo '<a href="'.get_auth_link().'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>'."\n";
 			echo '</div>'."\n";
 		}
 	}

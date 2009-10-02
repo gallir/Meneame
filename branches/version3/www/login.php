@@ -26,6 +26,7 @@ if($_GET["op"] === 'logout') {
 // We need it because we modify headers
 ob_start();
 
+$globals['secure_page'] = True;
 do_header("login");
 echo '<div id="singlewrap">' . "\n";
 
@@ -105,9 +106,9 @@ function do_login() {
 			}
 
 			if(!empty($_REQUEST['return'])) {
-				header('Location: '.$_REQUEST['return']);
-			} else {
-				header('Location: ./');
+				header('Location: http://'.get_server_name().$_REQUEST['return']);
+ 			} else {
+				header('Location: http://'.get_server_name().$globals['base_url']);
 			}
 			die;
 		}

@@ -32,6 +32,7 @@ $dblang			= 'es';
 $page_size		= 30;
 $anonnymous_vote = true;
 $external_ads = true;
+$globals['ssl_server'] = False; //Secure server must have the same name and base
 
 //Configuration values
 //$globals['external_ads'] = false;

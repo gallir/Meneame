@@ -83,6 +83,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals, $greetings;
 
+	check_auth_page();
+
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
 		// http://www.hixie.ch/specs/pingback/pingback
@@ -166,8 +168,8 @@ function do_header($title, $id='home') {
  		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {
-  		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
+  		echo '<li><a href="'.get_auth_link().'register.php">' . _('registrarse') . '</a></li>' . "\n";
+  		echo '<li class="noborder"><a href="'.get_auth_link().'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
@@ -465,7 +467,7 @@ function force_authentication() {
 	global $current_user;
 
 	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI']);
+		header('Location: '.get_auth_link().'login.php?return='.$_SERVER['REQUEST_URI']);
 		die;
 	}
 	return true;

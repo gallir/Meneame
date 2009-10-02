@@ -16,6 +16,7 @@ if ($current_user->user_id > 0) {
 	header("Location: " . get_user_uri($current_user->user_login));
 }
 
+$globals['secure_page'] = True;
 do_header(_("registro"), "post");
 
 echo '<div class="genericform">'."\n";

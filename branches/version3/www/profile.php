@@ -66,6 +66,7 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 
 $save_messages = save_profile();
+$globals['secure_page'] = True;
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
 echo $save_messages; // We do it later because teh profile could change header's info
 show_profile();
