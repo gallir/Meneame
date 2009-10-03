@@ -657,11 +657,14 @@ class Link {
 	function print_warn() {
 		global $db, $globals;
 
+		if ($this->stattus == 'published') $neg_percent = 10;
+		else $neg_percent = 20;
 		if ($this->status == 'abuse') {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
 			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
 			echo "</div>\n";
-		} elseif ( $this->votes_enabled  && !$this->is_discarded() &&  $this->negatives > 3 && $this->negatives > $this->votes/10 ) {
+		} elseif ( $this->votes_enabled && !$this->is_discarded()
+					&& $this->negatives > 4 && $this->negatives > $this->votes/$neg_percent ) {
 			$this->warned = true;
 			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
 			if ($this->status == 'published') {

@@ -11,7 +11,7 @@ include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 include(mnminclude.'log.php');
 
-$globals['ads'] = true;
+//$globals['ads'] = true;
 // We use the original IP to avoid cheating by httheaders
 $globals['original_user_ip_int'] = sprintf("%u", ip2long($_SERVER["REMOTE_ADDR"]));
 

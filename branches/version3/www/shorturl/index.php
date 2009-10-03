@@ -31,7 +31,7 @@ if (preg_match('/^[\da-z]+$/', $url_args[1])) {
 		$link->id = intval($url_args[1]);
 	}
 	if ($link->read_basic('id')) {
-		header ('HTTP/1.1 301 Moved Permanently');
+		header ('HTTP/1.1 301 Moved');
 		header('Location: http://' . $server_to . $link->get_relative_permalink());
 		die;
 	}
