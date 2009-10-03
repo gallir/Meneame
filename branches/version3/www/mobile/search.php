@@ -14,7 +14,7 @@ include(mnminclude.'search.php');
 
 $page_size = 10;
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 $globals['noindex'] = true;
 

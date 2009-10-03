@@ -11,7 +11,7 @@ include(mnminclude.'linkmobile.php');
 include(mnminclude.'commentmobile.php');
 include(mnminclude.'html1-mobile.php');
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 $link = new LinkMobile;
 
@@ -42,9 +42,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 if ($link->is_discarded()) {
 	// Dont allow indexing of discarded links
 	if ($globals['bot']) not_found();
-} else {
-	//Only shows ads in non discarded images
-	$globals['ads'] = true;
+	$globals['ads'] = false;
 }
 
 

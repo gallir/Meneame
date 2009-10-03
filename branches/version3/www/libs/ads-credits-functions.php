@@ -42,7 +42,7 @@ function do_banner_top_mobile () {
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['ads']) {
-		@include('ads/mobile.inc');
+		@include('ads/mobile-01.inc');
 	}
 }
 

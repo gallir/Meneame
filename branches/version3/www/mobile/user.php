@@ -109,7 +109,7 @@ function do_profile() {
 	echo '<dt>'._('ranking').':</dt><dd>#'.$user->ranking().'</dd>';
 
 	$user->all_stats();
-	echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
+	echo '<dt>'._('enviadas').':</dt><dd>'.$user->total_links.'</dd>';
 	if ($user->total_links > 0 && $user->published_links > 0) {
 		$percent = intval($user->published_links/$user->total_links*100);
 	} else {
@@ -119,10 +119,10 @@ function do_profile() {
 		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
 		echo '<dt><em>'._('entropía').'</em>:</dt><dd>'.$entropy.'%</dd>';
 	}
-	echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
+	echo '<dt>'._('publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
 	echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
 	echo '<dt>'._('notas').':</dt><dd>'.$user->total_posts.'</dd>';
-	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
+	echo '<dt>'._('votos').':</dt><dd>'.$user->total_votes.'</dd>';
 
 	echo '</dl>';
 

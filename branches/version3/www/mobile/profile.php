@@ -12,6 +12,8 @@ include(mnminclude.'linkmobile.php');
 include(mnminclude.'user.php');
 include(mnminclude.'avatars.php');
 
+$globals['ads'] = false;
+
 // We need it because we modify headers
 ob_start();
 
@@ -51,7 +53,6 @@ if(!$user->read()) {
 	not_found();
 }
 
-$globals['ads'] = true;
 
 $save_messages = save_profile();
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);

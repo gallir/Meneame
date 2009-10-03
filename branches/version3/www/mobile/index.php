@@ -10,12 +10,11 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 $page_size = 10;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
-$globals['ads'] = true;
 
 $cat=$_REQUEST['category'];
 

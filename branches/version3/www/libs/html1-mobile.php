@@ -102,8 +102,6 @@ function do_header($title, $id='home') {
 	echo '<link rel="apple-touch-icon" href="'.$globals['base_static'].'img/favicons/apple-touch-icon.png"/>' . "\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
 
-	do_js_includes();
-
 	if ($globals['extra_head']) echo $globals['extra_head'];
 
 	echo '</head>' . "\n";
@@ -116,7 +114,7 @@ function do_header($title, $id='home') {
  	echo '<li><a href="'.$globals['base_url'].'search.php">'. _('buscar').'</a></li>';
 	if($current_user->authenticated) {
   		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('logout').'</a></li>';
- 		echo '<li class="noborder"><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>';
+ 		echo '<li class="noborder"><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'"/></a></li>';
 	} else {
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').'</a></li>';
 	}
@@ -145,13 +143,6 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals;
 
-	echo '<script type="text/javascript">'."\n";
-	echo 'if(top.location != self.location)top.location = self.location;'."\n";
-	echo 'var base_url="'.$globals['base_url'].'";'."\n";
-	echo 'var mobile_version = true;'."\n";
-	echo 'var base_static="'.$globals['base_static'].'";'."\n";
-	echo 'var base_key="'.get_security_key().'";'."\n";
-	echo '</script>'."\n";
 	echo '<script src="'.$globals['base_static'].'js/mobile02.js" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	if ($globals['extra_js_text']) {
@@ -159,6 +150,13 @@ function do_js_includes() {
 		echo $globals['extra_js_text']."\n";
 		echo '</script>'."\n";
 	}
+	echo '<script type="text/javascript">'."\n";
+	echo 'if(top.location != self.location)top.location = self.location;'."\n";
+	echo 'var base_url="'.$globals['base_url'].'";'."\n";
+	echo 'var mobile_version = true;'."\n";
+	echo 'var base_static="'.$globals['base_static'].'";'."\n";
+	echo 'var base_key="'.get_security_key().'";'."\n";
+	echo '</script>'."\n";
 }
 
 function do_js_from_array($array) {
@@ -180,6 +178,7 @@ function do_footer($credits = true) {
 
 	echo "</div>\n";
 	if($credits) @do_credits_mobile();
+	do_js_includes();
 	do_js_from_array($globals['post_js']);
 
 	// warn warn warn 

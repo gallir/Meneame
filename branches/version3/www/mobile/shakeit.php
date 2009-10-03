@@ -12,7 +12,7 @@ include(mnminclude.'linkmobile.php');
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 
 $order_by = " ORDER BY link_date DESC ";

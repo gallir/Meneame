@@ -3,14 +3,10 @@ Licence: Affero GPL License (http://meneame.net/COPYING)
 Comments: This file contains only styles without colors or images. A separate file with colors and images is available.
 */
 
-html * {
-margin: 0;
-padding: 0;
-}
-
 body {
 font-family: sans-serif;
-margin: 0 0px 0 0px;
+margin: 0;
+padding: 0;
 background-color: #fff;
 }
 
@@ -72,6 +68,8 @@ background: #ff6400 url('../../img/mnm/logobg01.png') no-repeat left top;
 text-align: right;
 vertical-align: middle;
 white-space: nowrap;
+margin: 0;
+padding: 0;
 }
 
 #headtools li {
@@ -588,12 +586,11 @@ padding: 0;
 fieldset dt {
 clear: left;
 float: left;
-text-align: right;
 padding: 0 10px 4px 5px;
 }
 
 fieldset dd {
-padding: 0 0 4px 0;
+padding: 0 0 4px 4px;
 font-weight: bold;
 }
 
