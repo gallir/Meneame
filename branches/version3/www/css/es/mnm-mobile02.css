@@ -108,6 +108,7 @@ clear:both;
 
 #newswrap, #singlewrap {
 font-size: small;
+padding-right: 2px;
 }
 
 .tabmain {
