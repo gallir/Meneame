@@ -153,7 +153,7 @@ function do_header($title, $id='home') {
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image"/></a>';
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image" width="14" height="14"/></a>';
 	echo '</form>';
 	echo '</li>' . "\n";
 	// form
@@ -213,12 +213,6 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals, $current_user;
 
-	echo '<script type="text/javascript">'."\n";
-	echo 'if(top.location != self.location)top.location = self.location;'."\n";
-	echo 'var base_url="'.$globals['base_url'].'";'."\n";
-	echo 'var base_static="'.$globals['base_static'].'";'."\n";
-	echo 'var base_key="'.get_security_key().'";'."\n";
-	echo '</script>'."\n";
 	echo '<script src="'.$globals['base_static'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
 	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
 	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
@@ -231,6 +225,12 @@ function do_js_includes() {
 		echo $globals['extra_js_text']."\n";
 		echo '</script>'."\n";
 	}
+	echo '<script type="text/javascript">'."\n";
+	echo 'if(top.location != self.location)top.location = self.location;'."\n";
+	echo 'var base_url="'.$globals['base_url'].'";'."\n";
+	echo 'var base_static="'.$globals['base_static'].'";'."\n";
+	echo 'var base_key="'.get_security_key().'";'."\n";
+	echo '</script>'."\n";
 }
 
 function do_js_from_array($array) {

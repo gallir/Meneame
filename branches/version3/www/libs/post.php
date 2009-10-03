@@ -183,7 +183,7 @@ class Post {
 		if (($this->author == $current_user->user_id &&
 			time() - $this->date < 3600 ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
-			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit"/></a>';
+			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
 		}
 
