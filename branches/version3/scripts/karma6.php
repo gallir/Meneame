@@ -16,7 +16,7 @@ $db->query("delete from users where user_date < date_sub(now(), interval 24 hour
 $db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
 // Delete old conversations
-$db->query("delete from conversations where conversation_time < date_sub(now(), interval 30 day)");
+$db->query("delete from conversations where conversation_time < date_sub(now(), interval 180 day)");
 
 // Delete old annotations
 $db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
@@ -96,6 +96,7 @@ $calculated = 0;
 // We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select fails miserably with about 40.000 users.
 
 $users = "SELECT SQL_NO_CACHE user_id from users where user_level not in ('disabled', 'autodisabled') order by user_modification desc";
+//$users = "SELECT SQL_NO_CACHE user_id from users where user_id in (7966, 98342, 21061, 8147)";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, votes where vote_type in ('comments', 'links') and vote_date > $history_from and vote_user_id = user_id and user_level != 'disabled' order by user_id desc";
 //$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
 $result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
@@ -144,10 +145,11 @@ while ($dbuser = mysql_fetch_object($result)) {
 		
 		if ($total_user_links > 0) {
 			$positive_karma_received = $negative_karma_received = 0;
-			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
+			//$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
+			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma*(1-(link_negatives/link_votes*4)) FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_votes>link_negatives*4 and link_status in ('published', 'queued')");
 			if ($karmas) {
 				foreach ($karmas as $k) {
-					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 3) * 4;
+					$positive_karma_received += pow(min(1,$k/$max_avg_positive_received), 2) * 4;
 				}
 			}
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
@@ -218,7 +220,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 			$penalized += 1;
 			if ($total_comments == 0 && $sent_links == 0) {
 				$output .= _('Coeficiente de votos muy bajos, posible bot, penalizado');
-				$punish_coef = 3;
+				$punish_coef = 2;
 			} else {
 				$output .= _('Coeficiente de votos muy bajos, ¿"karmawhore"?, penalizado');
 				$punish_coef = 1;
