@@ -461,6 +461,8 @@ class Link {
 
 		$url = htmlspecialchars($this->url);
 
+		$this->permalink = $this->get_permalink();
+
 		echo '<div class="news-summary">';
 		echo '<div class="news-body">';
 		if ($type != 'preview' && !empty($this->title) && !empty($this->content)) {
@@ -528,7 +530,7 @@ class Link {
 		if ($karma_best_comment > 0 && 
 			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
 			echo '<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
-			$link = $this->get_permalink().'/000'.$best_comment->comment_order;
+			$link = $this->permalink.'/000'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
 			echo ':&nbsp;'.text_to_summary($best_comment->comment_content, 200).'</div>';
 		}
@@ -595,8 +597,11 @@ class Link {
 
 				echo '<span class="tool">';
 				// Share icons
-				echo '<strong>'._('compartir').'</strong>:';
-				print_share_icons($this->get_permalink(), $this->get_short_permalink(), $this->title);
+				$short_permalink = $this->get_short_permalink();
+				echo '<strong>';
+				echo '<a href="'.$short_permalink.'" title="'._('enlace corto').'">'._('compartir').'</a>';
+				echo '</strong>:';
+				print_share_icons($this->permalink, $short_permalink, $this->title);
 				echo '</span>';
 				echo '</div>' . "\n";
 			}
