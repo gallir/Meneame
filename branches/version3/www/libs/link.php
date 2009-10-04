@@ -885,7 +885,7 @@ class Link {
 		if ($globals['base_story_url']) {
 			return 'http://'.$server_name.$id;
 		} else {
-			return get_permalink();
+			return $this->get_permalink();
 		}
 	}
 
