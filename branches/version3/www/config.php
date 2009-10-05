@@ -60,6 +60,7 @@ $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
 
+$globals['min_decay'] = 0.25; 
 $globals['karma_start_decay'] = 10; // In hours, when a link start to decrease its karma
 $globals['karma_decay'] = 54; // In hours, when it reach its minimum
 //$globals['news_meta'] = 102; // The code of the "last news" meta category, other has a longer no decreasing period

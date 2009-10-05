@@ -1072,9 +1072,10 @@ class Link {
 				$plain_hours = $globals['karma_news_start_decay'];
 				$max_hours = $globals['karma_news_decay'];
 			}
+			$d = 3600*$max_hours*(1+$globals['min_decay']);
 			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
-			$c = 1 - $diff/(3600*$max_hours);
-			$c = max(0.25, $c);
+			$c = 1 - $diff/$d;
+			$c = max($globals['min_decay'], $c);
 			$c = min(1, $c);
 			$this->coef = $c;
 		} else {
