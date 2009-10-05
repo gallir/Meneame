@@ -662,7 +662,7 @@ class Link {
 	function print_warn() {
 		global $db, $globals;
 
-		if ($this->stattus == 'published') $neg_percent = 0.1;
+		if ($this->status == 'published') $neg_percent = 0.1;
 		else $neg_percent = 0.2;
 		if ($this->status == 'abuse') {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
