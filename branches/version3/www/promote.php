@@ -10,7 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'annotation.php');
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 promote_style();
 do_header(_('promote') . ' | men&eacute;ame');
 echo '<div id="singlewrap">'."\n";
