@@ -59,7 +59,16 @@ $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
+
+$globals['karma_start_decay'] = 10; // In hours, when a link start to decrease its karma
+$globals['karma_decay'] = 54; // In hours, when it reach its minimum
 //$globals['news_meta'] = 102; // The code of the "last news" meta category, other has a longer no decreasing period
+// Similar values for "news_meta", used if the previous is defined
+$globals['karma_news_start_decay'] =  7;
+$globals['karma_news_decay'] = 42;
+
+
+
 // leave empty if you don't have the rewrite rule in apache
 
 //RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]

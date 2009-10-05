@@ -1066,11 +1066,11 @@ class Link {
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
 			if ($globals['news_meta'] > 0 && $this->meta_id != $globals['news_meta']) {
-				$plain_hours = 10;
-				$max_hours = 54;
+				$plain_hours = $globals['karma_start_decay'];
+				$max_hours = $globals['karma_decay'];
 			} else {
-				$plain_hours = 7; // 7 hours without decreasing
-				$max_hours = 36;
+				$plain_hours = $globals['karma_news_start_decay'];
+				$max_hours = $globals['karma_news_decay'];
 			}
 			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
 			$c = 1 - $diff/(3600*$max_hours);
