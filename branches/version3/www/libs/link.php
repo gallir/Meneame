@@ -607,6 +607,9 @@ class Link {
 			}
 		}
 
+		// Include post text ads
+		do_banner_story();
+
 		echo '</div>'."\n";
 		echo '</div>'."\n";
 
