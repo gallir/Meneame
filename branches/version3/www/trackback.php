@@ -82,8 +82,8 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 		trackback_response(1, 'We already have a ping from that URI for this post.');
 	}
   
-	$contents=@file_get_contents($tb_url);
-	if(!$contents) {
+	$response = get_url($tb_url);
+	if(!$response || empty($result['content'])) {
 		syslog(LOG_NOTICE, "Meneame: The provided URL does not seem to work: $tb_url");
 		trackback_response(1, 'The provided URL does not seem to work.');
 	}
@@ -92,7 +92,7 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	$permalink=$link->get_permalink();
     $permalink_q=preg_quote($permalink,'/');
 	$pattern="/<\s*a.*href\s*=[\"'\s]*".$permalink_q."[#\/0-9a-z\-]*[\"'\s]*.*>.*<\s*\/\s*a\s*>/i";
-	if(!preg_match($pattern,$contents)) {
+	if(!preg_match($pattern,$response['content'])) {
 		syslog(LOG_NOTICE, "Meneame: The provided URL does not have a link back to us: $tb_url");
 		trackback_response(1, 'The provided URL does not have a link back to us.');
 	}

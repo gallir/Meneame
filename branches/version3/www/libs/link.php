@@ -663,7 +663,7 @@ class Link {
 		global $db, $globals;
 
 		if ($this->status == 'published') $neg_percent = 0.1;
-		else $neg_percent = 0.2;
+		else $neg_percent = 0.1;
 		if ($this->status == 'abuse') {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
 			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';

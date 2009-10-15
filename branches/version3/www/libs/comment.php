@@ -299,9 +299,12 @@ class Comment {
 		}
 
 		$count = 0;
+		$localdomain = preg_quote(get_server_name(), '/');
 		foreach ($this->links as $host) {
 			if ($this->banned) $interval = $min * 2;
+			elseif (preg_match("/.*$localdomain$/", $host)) $interval = $min / 3; // For those pointing to dupes
 			else $interval = $min;
+
 			$link = '://'.$host;
 			$link=preg_replace('/([_%])/', "\$1", $link);
 			$link=$db->escape($link);

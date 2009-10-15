@@ -146,7 +146,7 @@ function do_credits() {
 		echo '<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('gráficos').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</a></li>';
 		echo '<li><a href="http://svn.meneame.net/index.cgi/branches/version3/">'._('descargar').'</a></li>';
-		echo '<li>alojamiento en <a href="http://www.ferca.com">Ferca Network</a></li>';
+		#echo '<li>alojamiento en <a href="http://www.ferca.com">Ferca Network</a></li>';
 	} else {
 		echo '<li>link to code and licenses here (please respect the menéame Affero license and publish your own code!)</li>';
 		echo '<li><a href="">contact here</a></li>';
