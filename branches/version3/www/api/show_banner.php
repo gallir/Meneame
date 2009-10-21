@@ -69,22 +69,22 @@ switch ($format) {
 }
 
 ?>
-<div style="padding: 0 0 0 0 ; font-family: Verdana, Arial, sans-serif ; font-size: <? echo $font_pt;?>pt; line-height: 1.1em; color : #<? echo $color_text;?>; background: #<?echo $color_bg ?>; border: 1px solid #<?echo $color_border?>; width: <? echo $width-2; ?>px; height: <? echo $height-2; ?>px; ">
+<div style="padding: 0 0 0 0 ; font-family: sans-serif ; font-size: <? echo $font_pt;?>pt; line-height: 1.1em; color : #<? echo $color_text;?>; background: #<?echo $color_bg ?>; border: 1px solid #<?echo $color_border?>; width: <? echo $width-2; ?>px; height: <? echo $height-2; ?>px; ">
 
 <?echo $div1;?>
-<a href="<? echo $url['published']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Última publicada'); ?></a><br />
+<a href="<? echo $url['published']?>" style="color: #<? echo $color_link;?>" target="_parent"><strong><? echo _('Última publicada'); ?></strong></a><br />
 <? echo $title['published'] ?>
 </div>
 <?echo $div2;?>
-<a href="<? echo $url['sent']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Última enviada'); ?> </a><br />
+<a href="<? echo $url['sent']?>" style="color: #<? echo $color_link;?>" target="_parent"><strong><? echo _('Última enviada'); ?></strong></a><br />
 <? echo $title['sent'] ?>
 </div>
 <?echo $div3;?>
-<a href="<? echo $url['most']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Meneándose'); ?></a><br />
+<a href="<? echo $url['most']?>" style="color: #<? echo $color_link;?>" target="_parent"><strong><? echo _('Meneándose'); ?></strong></a><br />
 <? echo $title['most'] ?>
 </div>
 <?echo $div4;?>
-<a href="<? echo $url['commented']?>" style="color: #<? echo $color_link;?>" target="_parent"><? echo _('Última comentada'); ?></a><br />
+<a href="<? echo $url['commented']?>" style="color: #<? echo $color_link;?>" target="_parent"><strong><? echo _('Última comentada'); ?></strong></a><br />
 <? echo $title['commented'] ?>
 </div>
 
