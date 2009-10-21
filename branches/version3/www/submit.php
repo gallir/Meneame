@@ -402,103 +402,24 @@ function do_submit1() {
 		return;
 	}
 
-	// Avoid spam, count links in last two months
+	// Avoid spam (autobombo), count links in last two months
 	$same_blog = $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog=$linkres->blog");
 
-	/************** DISABLED, better control in link_clones
-	// Check if the domain should be banned
-	$check_history =  $sents > 2 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
-
-	// check clones also for new users
-	if ($sents == 0 || $check_history) {
-		// Count unique users 
-		// TODO: we should discard users with the same IP (clones)
-		$unique_users = (int) $db->get_var("select count(distinct link_author) from links, users, votes where link_blog=$blog->id  and link_date > date_sub(now(), interval 30 day) and user_id = link_author and user_level != 'disabled' and vote_type='links' and vote_link_id = link_id and vote_user_id = link_author and vote_ip_int != ".$globals['user_ip_int']);
-
-		// Check for user clones
-		$clones = $db->get_var("select count(distinct link_author) from links, votes where link_author!=$current_user->user_id and link_date > date_sub(now(), interval 20 day) and link_blog=$linkres->blog link_votes > 0 and vote_type='links' and vote_link_id=link_id and link_author = vote_user_id and vote_ip_int = ".$globals['user_ip_int']);
-
-		if ($clones > 0 && $unique_users < 3) {
-			// we detected that another user has sent to the same URL from the same IP
-			echo '<p class="error"><strong>'._('se han detectado usuarios clones que envían al sitio')." $blog->url".'</strong></p> ';
-			$ban_period_txt = _('un mes');
-			$ban = insert_ban('hostname', $blog_url, _('usuarios clones'). " $current_user->user_login ($blog_url)", time() + 86400*30);
-			$banned_host = $ban->ban_text;
-			echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong>, ";
-			echo '<a href="'.$globals['base_url'].'legal.php">'._('normas de uso del menáme').'</a></p>';
-			syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to user clones ($current_user->user_login): $banned_host  <- $linkres->url");
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
-		}
-		// end clones
-	}
-
+	$check_history =  $sents > 3 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
 	if ($check_history) {
-		// Calculate ban period according to previous karma
-		$avg_karma = (int) $db->get_var("select avg(link_karma) from links where link_blog=$blog->id and link_date > date_sub(now(), interval 30 day)");
-		// This is the case of unique/few users sending just their site and take care of choosing goog titles and text
-		// the condition is stricter, more links and higher ratio
-		if (($sents > 3 && $ratio > 0.9) || ($sents > 6 && $ratio > 0.8) || ($sents > 12 && $ratio > 0.6)) {
-			if ($unique_users < 3) {
-				if ($avg_karma < -10) {
-					$ban_period = 86400*30;
-					$ban_period_txt = _('un mes');
-				} else {
-					$ban_period = 86400*7;
-					$ban_period_txt = _('una semana');
-				}
-				syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and few users ($unique_users), going to ban $blog->url ($current_user->user_login)");
-			}
-		// Otherwise check previous karma
-		} elseif ($sents > 4 && $avg_karma < 30) {
-			if ($avg_karma < -40) {
-				$ban_period = 86400*30;
-				$ban_period_txt = _('un mes');
-			} elseif ($avg_karma < -10) {
-				$ban_period = 86400*7;
-				$ban_period_txt = _('una semana');
-			} elseif ($avg_karma < 10) {
-				$ban_period = 86400;
-				$ban_period_txt = _('un día');
-			} else {
-				$ban_period = 7200;
-				$ban_period_txt = _('dos horas');
-			}
-			syslog(LOG_NOTICE, "Meneame, high ratio ($ratio) and low karma ($avg_karma), going to ban $blog->url ($current_user->user_login)");
-		}
-		if ($ban_period > 0) {
-			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
-			echo '<p class="error-text">'._('varía tus fuentes, es para evitar abusos y enfados por votos negativos') . ', ';
-			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a>, ';
-			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
-
-			if (!empty($blog_url)) {
-				$ban = insert_ban('hostname', $blog_url, _('envíos excesivos de'). " $current_user->user_login", time() + $ban_period);
-				$banned_host = $ban->ban_text;
-				echo '<p class="error-text"><strong>'._('el dominio'). " '$banned_host' ". _('ha sido baneado por')." $ban_period_txt</strong></p> ";
-				syslog(LOG_NOTICE, "Meneame, banned '$ban_period_txt' due to high ratio ($current_user->user_login): $banned_host  <- $linkres->url");
-			} else {
-				syslog(LOG_NOTICE, "Meneame, error parsing during ban: $blog->id, $blog->url ($current_user->user_login)");
-			}
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
+		echo '<p class="error"><strong>'._('has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
+		if ($sents > 5 && $ratio > 0.75) {
+			echo '<p class="error-text">'._('has superado los límites de envíos de este sitio').'</p>';
+			// don't allow to continue
+			syslog(LOG_NOTICE, "Meneame, warn, high ratio, process interrumped ($current_user->user_login): $linkres->url");
 			return;
-		} elseif ($sents > 0) {  // Just in case check again sent (paranoia setting)
-			echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
-			echo '<p class="error-text">'._('el sitio podría ser baneado automáticamente si continúas enviando').', ';
-			echo '<a href="'.$globals['base_url'].'libs/ads/legal-meneame.php">'._('normas de uso del menáme').'</a>, ';
+		} else {
+			echo '<p class="error-text">'._('continúa, pero ten en cuenta podría recibir votos negativos').', ';
+			echo '<a href="'.$globals['base_url'].'legal.php">'._('normas de uso del menáme').'</a>, ';
 			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
-			if ($sents > 5 && $ratio > 0.75) {
-				// don't allow to continue
-				syslog(LOG_NOTICE, "Meneame, warn, high ratio, process interrumped ($current_user->user_login): $linkres->url");
-				return;
-			} else {
-				syslog(LOG_NOTICE, "Meneame, warn, high ratio, continue ($current_user->user_login): $linkres->url");
-			}
+			syslog(LOG_NOTICE, "Meneame, warn, high ratio, continue ($current_user->user_login): $linkres->url");
 		}
 	}
-	**********************/
 
 
 
