@@ -49,8 +49,9 @@ function do_login() {
 
 	$previous_login_failed =  log_get_date('login_failed', $globals['original_user_ip_int'], 0, 90);
 
-	if($previous_login_failed < 3 && empty($_POST["processlogin"])) {
-		echo '<div class="faq" style="float:left; width:65%; margin-top: 10px;">'."\n";
+	// Show menéame intro only if first try and the there were not previous logins
+	if($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
+		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
 			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
@@ -81,7 +82,7 @@ function do_login() {
 		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
 		echo '</div>'."\n";
 		
-		echo '<div class="genericform" style="float:right; width:30%; margin: 0">'."\n";	
+		echo '<div class="genericform" style="float:left; width:40%; margin: 0">'."\n";	
 	} else {
 		echo '<div class="genericform" style="float:auto;">'."\n";	
 	}
