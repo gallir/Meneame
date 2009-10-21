@@ -104,7 +104,7 @@ class Trackback {
 		// Send standard old trackback
         $title = urlencode($link->title);
 		// Convert everything to HTML and the strip all html tags.
-        $excerpt = urlencode(strip_tags(text_to_html($link->content)));
+        $excerpt = urlencode(strip_tags(text_to_summary($link->content, 250)));
 
         $blog_name = urlencode(get_server_name());
         $tb_url = $this->url;

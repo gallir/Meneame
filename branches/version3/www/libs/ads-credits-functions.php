@@ -69,9 +69,7 @@ function do_banner_promotions() {
 function do_banner_story() {
 	global $globals, $current_user;
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
-		echo '<div style="margin-top: 10px">' . "\n";
 		@include('ads/adsense-middle.inc');
-		echo '</div>' . "\n";
 	}
 }
 
