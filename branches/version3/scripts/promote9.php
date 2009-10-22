@@ -19,7 +19,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.10);
+define (PUB_PERC, 0.11);
 
 
 
@@ -85,7 +85,7 @@ else $max_to_publish = 1;
 $min_votes = 5;
 /////////////
 
-$limit_karma = round(min($past_karma,$min_karma) * 0.65);
+$limit_karma = round(min($past_karma,$min_karma) * 0.60);
 $bonus_karma = round(min($past_karma,$min_karma) * 0.40);
 
 
@@ -109,7 +109,7 @@ foreach ($db_metas as $dbmeta) {
 }
 foreach ($meta_coef as $m => $v) {
 	if ($v == 0) $v = 1;
-	$meta_coef[$m] = max(min($meta_avg/$v, 1.4), 0.7);
+	$meta_coef[$m] = max(min($meta_avg/$v, 1.5), 0.7);
 	if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
 		//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
 		$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
@@ -224,7 +224,7 @@ if ($links) {
 			// Check domain and user punishments
 			$karma_new *= 0.75;
 			$link->message .= $globals['ban_message'].'<br/>';
-		} elseif ($meta_coef[$dblink->parent] < 1.02 && ($link->content_type == 'image')) {
+		} elseif ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image')) {
 			// check if it's "media" and the metacategory coefficient is low
 			$karma_new *= 0.9;
 			$link->message .= 'Image/Video '.$meta_coef[$dblink->parent].'<br/>';
