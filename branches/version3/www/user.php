@@ -23,10 +23,16 @@ if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 	array_shift($url_args); // The first element is always a "/"
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
 	$_REQUEST['view'] = $url_args[1];
+	$_REQUEST['uid'] = intval($url_args[2]);
 } else {
 	$_REQUEST['login'] = clean_input_string($_REQUEST['login']);
+	$_REQUEST['uid'] = intval($_REQUEST['uid']);
 	if (!empty($globals['base_user_url']) && !empty($_REQUEST['login'])) {
-		header('Location: ' . get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])));
+		if ($current_user->admin) {
+			header('Location: ' . get_user_uri_by_uid($_REQUEST['login'], $_REQUEST['uid'], clean_input_string($_REQUEST['view'])));
+		} else {
+			header('Location: ' . get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])));
+		}
 		die;
 	}
 }
@@ -41,8 +47,36 @@ if(empty($login)){
 		die;
 	}
 }
+
+$view = clean_input_string($_REQUEST['view']);
+if(empty($view)) $view = 'profile';
+
+$uid = $_REQUEST['uid']; // Should be clean before
+$login = $db->escape($login);
+
 $user=new User();
-$user->username = $db->escape($login);
+
+if ($current_user->admin) {
+		// Check if it's used UID
+		if($uid > 0) {
+			$user->id = $uid;
+		} else if (is_numeric($view)) {
+			$uid = $view;
+			$user->id = $uid;
+			$view = 'profile';
+		} else {
+			$user->username = $login;
+			if(!$user->read()) {
+				do_error(_('usuario inexistente'), 404);
+			} else {
+				header('Location: ' . get_user_uri_by_uid($user->username, $user->id, $view));
+				die;
+			}
+		}
+} else {
+		$user->username = $login;
+}
+
 if(!$user->read()) {
 	do_error(_('usuario inexistente'), 404);
 }
@@ -50,21 +84,18 @@ if(!$user->read()) {
 // For editing notes
 if ($current_user->user_id == $user->id || $current_user->admin) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
-    array_push($globals['extra_js'], 'posts01.js');
+	array_push($globals['extra_js'], 'posts01.js');
 }
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
 // 100 if the user is the current one
 if($globals['external_user_ads'] && !empty($user->adcode)) {
-    $globals['user_adcode'] = $user->adcode;
-    $globals['user_adchannel'] = $user->adchannel;
+	$globals['user_adcode'] = $user->adcode;
+	$globals['user_adchannel'] = $user->adchannel;
 	if ($current_user->user_id == $user->id || $current_user->admin) $globals['do_user_ad']  = 100; 
 	else $globals['do_user_ad'] = $user->karma * 2;
 }
-
-$view = clean_input_string($_REQUEST['view']);
-if(empty($view)) $view = 'profile';
 
 // Load Google GEO
 if (! $user->disabled()
@@ -98,9 +129,14 @@ switch ($view) {
 		break;
 }
 
-do_header($login);
+if($login != $user->username){
+	do_header( $login . " (" . $user->username . ")" );
+}else{
+	do_header($login);
+}
 echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 
+$login = $user->username;
 $url_login = urlencode($login);
 switch ($view) {
 	case 'history':
@@ -582,7 +618,7 @@ function do_categories() {
 }
 
 function print_categories_checkboxes($user) {
-    global $db, $current_user;
+	global $db, $current_user;
 
 	if ($user->id != $current_user->user_id) $disabled = 'disabled="true"';
 	else $disabled = false;

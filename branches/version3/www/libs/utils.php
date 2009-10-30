@@ -325,6 +325,22 @@ function get_user_uri($user, $view='') {
 	return $uri;
 }
 
+function get_user_uri_by_uid($user, $uid, $view='') {
+	global $globals;
+
+	if (!empty($globals['base_user_url'])) {
+		$uri= $globals['base_url'] . $globals['base_user_url'] . htmlspecialchars($user);
+		if (!empty($view) && $view != "profile") $uri .= "/$view";
+		$uri .= "/$uid";
+	} else {
+		$uri = $globals['base_url'].'user.php?login='.htmlspecialchars($user);
+		if (!empty($view)) $uri .= "&amp;view=$view";
+		$uri .= "&amp;uid=$uid";
+	}
+
+	return $uri;
+}
+
 function post_get_base_url($option='') {
 	global $globals;
 	if (empty($globals['base_sneakme_url'])) {
