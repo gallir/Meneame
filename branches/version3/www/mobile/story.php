@@ -58,7 +58,7 @@ if ($last_arg > 0) {
 $order_field = 'comment_order';
 
 if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
-	if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
+	if (!$current_page) $current_page = 1; // previously: ceil($link->comments/$globals['comments_page_size']);
 	$offset=($current_page-1)*$globals['comments_page_size'];
 	$limit = "LIMIT $offset,".$globals['comments_page_size'];
 } 
@@ -130,12 +130,12 @@ if (!empty($new_comment_error)) {
 
 
 
-function do_comment_pages($total, $current, $reverse = true) {
+function do_comment_pages($total, $current) {
 	global $db, $globals;
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 	
-	if ($globals['base_story_url'] = 'story/') {
+	if (! empty($globals['base_story_url'])) {
 		$query = $globals['link_permalink'];
 	} else {
 		$query=preg_replace('/\/[0-9]+(#.*)$/', '', $_SERVER['QUERY_STRING']);
@@ -146,10 +146,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 	}
 
 	$total_pages=ceil($total/$globals['comments_page_size']);
-	if (! $current) {
-		if ($reverse) $current = $total_pages;
-		else $current = 1;
-	}
+	if (! $current) $current = 1;
 	
 	echo '<div class="pages">';
 
@@ -191,7 +188,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 function get_comment_page_url($i, $total, $query) {
 	global $globals;
-	if ($i == $total) return $query;
+	if ($i == 1) return $query;
 	else return $query.'/'.$i;
 }
 
