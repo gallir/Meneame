@@ -19,7 +19,7 @@ function is_avatars_enabled() {
 
 function avatars_manage_upload($user, $name) {
 	global $globals;
-	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
+	$subdir = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
 	$time = $globals['now'];
 	$file_base = $subdir . "/$user-$time";
 	@mkdir(get_avatars_dir());
@@ -48,7 +48,7 @@ function avatars_manage_upload($user, $name) {
 
 function avatars_remove_user_files($user) {
 	global $globals;
-	$subdir = @get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
+	$subdir = @get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
 	if ( $subdir && ($handle = @opendir( $subdir )) ) {
 		while ( false !== ($file = readdir($handle))) {
 			if ( preg_match("/^$user-/", $file) ) {
@@ -87,7 +87,7 @@ function avatar_get_from_file($user, $size) {
 
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	if(! $time > 0) return false;
-	$file = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']) . "/$user-$time-$size.jpg";
+	$file = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']) . "/$user-$time-$size.jpg";
 	if (is_readable($file)) {
 		return  file_get_contents($file);
 	} else {
@@ -103,7 +103,7 @@ function avatar_get_from_db($user, $size=0) {
 		return false;
 	}
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
-	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
+	$subdir = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
 	$file_base = $subdir . "/$user-$time";
 	@mkdir(get_avatars_dir());
 	@mkdir($subdir);
