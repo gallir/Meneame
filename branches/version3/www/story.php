@@ -346,7 +346,7 @@ case 4:
 				// It was edited by an admin
 				echo '<img src="'.get_no_avatar_url(20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
 				echo ('admin');
-				if ($current_user->user_level == 'god' || $current_user->user_level == 'admin') {
+				if ($current_user->admin) {
 					echo '&nbsp;('.$log->user_login.')';
 				}
 			} else {

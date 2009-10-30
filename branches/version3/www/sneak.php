@@ -20,7 +20,7 @@ init_sneak();
 array_push($globals['extra_css'], 'es/sneakcol.css');
 if (!empty($_REQUEST['friends'])) {
 	do_header(_('amigos en la fisgona'));
-} elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+} elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {
 	do_header(_('admin'));
 } else {
 	do_header(_('fisgona'));
@@ -440,7 +440,7 @@ if ($current_user->user_id > 0) {
 	if (!empty($_REQUEST['friends'])) {
 		$taboption = 2;
 		echo '<script type="text/javascript">global_options.show_friends = true;</script>';
-	} elseif (!empty($_REQUEST['admin']) && $current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+	} elseif (!empty($_REQUEST['admin']) && $current_user->user_id > 0 && ($current_user->admin)) {
 		$taboption = 3;
 		echo '<script type="text/javascript">global_options.show_admin = true;</script>';
 	} else {
@@ -513,7 +513,7 @@ function print_sneak_tabs($option) {
 
 	echo '<li'.$active[1].'><a href="'.$globals['base_url'].'sneak.php">'._('todos').'</a></li>' . "\n";
 	echo '<li'.$active[2].'><a href="'.$globals['base_url'].'sneak.php?friends=1">'._('amigos').'</a></li>' . "\n";
-	if ($current_user->user_id > 0 && ($current_user->user_level == 'admin' || $current_user->user_level == 'god')) {
+	if ($current_user->user_id > 0 && $current_user->admin) {
 		echo '<li'.$active[3].'><a href="'.$globals['base_url'].'sneak.php?admin=1">'._('admin').'</a></li>' . "\n";
 	}
 	echo '<li><a href="'.$globals['base_url'].'telnet.php">&nbsp;<img src="'.$globals['base_static'].'img/common/konsole.png" alt="telnet"/>&nbsp;</a></li>' . "\n";

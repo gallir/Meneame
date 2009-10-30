@@ -19,7 +19,7 @@ $offset=(get_current_page()-1)*$page_size;
 $ban_text_length=64; // Cambiar también en checkfield.php
 $ban_comment_length=120;
 
-if ($current_user->user_level=="god" || $current_user->user_level=="admin") {
+if ($current_user->admin) {
 	if (!$_REQUEST["admin"]) {
 		$_REQUEST["admin"] = 'hostname';
 	} else {

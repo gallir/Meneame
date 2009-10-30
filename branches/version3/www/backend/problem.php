@@ -49,7 +49,7 @@ $votes_freq = $db->get_var("select count(*) from votes where vote_type='links' a
 
 
 if ($current_user->user_id > 0) {
-	if ($current_user->user_level == 'admin' || $current_user->user_level == 'god') $freq = 5;
+	if ($current_user->admin) $freq = 5;
 	else $freq = 2;
 } else $freq = 2;
 
