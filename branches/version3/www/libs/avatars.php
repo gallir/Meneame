@@ -9,7 +9,7 @@
 
 function get_avatars_dir() {
 	global $globals;
-	return mnmpath.'/'.$globals['cache_dir'].'/avatars';
+	return mnmpath.'/'.$globals['cache_dir'].'/'.$globals['avatars_dir'];
 }
 
 function is_avatars_enabled() {
@@ -19,12 +19,16 @@ function is_avatars_enabled() {
 
 function avatars_manage_upload($user, $name) {
 	global $globals;
-	$subdir = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
+
 	$time = $globals['now'];
-	$file_base = $subdir . "/$user-$time";
+
+	$chain = get_cache_dir_chain($user);
 	@mkdir(get_avatars_dir());
-	@mkdir($subdir);
+	create_cache_dir_chain(get_avatars_dir(), $chain);
+	$subdir = get_avatars_dir() . '/'. $chain;
 	if (!is_writable($subdir)) return false;
+	$file_base = $subdir . "/$user-$time";
+
 	avatars_remove_user_files($user);
 	move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
 	$size = @getimagesize("$file_base-orig.img");
@@ -48,7 +52,7 @@ function avatars_manage_upload($user, $name) {
 
 function avatars_remove_user_files($user) {
 	global $globals;
-	$subdir = @get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
+	$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
 	if ( $subdir && ($handle = @opendir( $subdir )) ) {
 		while ( false !== ($file = readdir($handle))) {
 			if ( preg_match("/^$user-/", $file) ) {
@@ -87,7 +91,7 @@ function avatar_get_from_file($user, $size) {
 
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	if(! $time > 0) return false;
-	$file = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']) . "/$user-$time-$size.jpg";
+	$file = get_avatars_dir() . '/'. get_cache_dir_chain($user) . "/$user-$time-$size.jpg";
 	if (is_readable($file)) {
 		return  file_get_contents($file);
 	} else {
@@ -103,11 +107,14 @@ function avatar_get_from_db($user, $size=0) {
 		return false;
 	}
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
-	$subdir = get_avatars_dir() . '/'. intval($user%$globals['avatars_files_per_dir']);
-	$file_base = $subdir . "/$user-$time";
+
+	$chain = get_cache_dir_chain($user);
 	@mkdir(get_avatars_dir());
-	@mkdir($subdir);
+	create_cache_dir_chain(get_avatars_dir(), $chain);
+	$subdir = get_avatars_dir() . '/'. $chain;
 	if (!is_writable($subdir)) return false;
+	$file_base = $subdir . "/$user-$time";
+
 	file_put_contents ($file_base . '-80.jpg', $img);
 	if ($size > 0 && $size != 80 && in_array($size, $globals['avatars_allowed_sizes'])) {
 		avatar_resize("$file_base-80.jpg", "$file_base-$size.jpg", $size);

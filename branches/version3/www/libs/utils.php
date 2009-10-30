@@ -338,6 +338,21 @@ function post_get_base_url($option='') {
 	}
 }
 
+function get_cache_dir_chain($key) {
+	// Very fast cache dir generator for two levels
+	// mask == 2^8 - 1 or 1 << 8 -1
+	return sprintf("%02x/%02x", ($key >> 8) & 255, $key & 255);
+}
+
+function create_cache_dir_chain($base, $chain) {
+	// Helper function for get_cache_dir_chain
+	$dirs = explode('/', $chain);
+	for ($i=0; $i < count($dirs); $i++) {
+		$base .= '/'.$dirs[$i];
+		@mkdir($base);
+	}
+}
+
 function get_avatar_url($user, $avatar, $size) {
 	global $globals, $db; 
 
@@ -347,7 +362,7 @@ function get_avatar_url($user, $avatar, $size) {
 	}
 
 	if ($avatar > 0 && $globals['cache_dir']) {
-		$file = $globals['cache_dir'] . '/avatars/'. intval($user%$globals['avatars_files_per_dir']) . "/$user-$avatar-$size.jpg";
+		$file = $globals['cache_dir'] . '/'.$globals['avatars_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
 		// Don't check every time, but 1/10, decrease VM pressure 
 		// Disabled for the moment, it fails just too much for size 40
 		//if (rand(0, 10) < 10) return $globals['base_url'] . $file;

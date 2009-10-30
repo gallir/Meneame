@@ -142,8 +142,8 @@ $globals['cache_dir'] = 'cache';
 $globals['sphinx_server'] = 'localhost';
 $globals['sphinx_port'] = 3312;
 
+$globals['avatars_dir'] = 'avatar';
 $globals['avatars_max_size'] = 200000;
-$globals['avatars_files_per_dir'] = 1000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 
