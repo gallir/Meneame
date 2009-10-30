@@ -441,18 +441,6 @@ color: #FFF;
 border-color: #FFF;
 }
 
-/*
-.commentform textarea {
-color: #303030;
-background: #FFE2C5;
-border-color: #FF9400;
-}
-
-.commentform label {
-color: #FF6400;
-}
-*/
-
 .commentform.warn {
 background: #FF6400;
 color: #FFF;

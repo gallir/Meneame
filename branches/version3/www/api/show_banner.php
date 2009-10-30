@@ -43,8 +43,8 @@ if ($res) {
 	$title['sent'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
 	$url['sent'] = "http://".get_server_name()."/story.php?id=$res->link_id";
 }
-
-$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links, comments where link_id = comment_link_id  order by comment_id desc limit 1");
+$last_comment = (int) $db->get_var("select comment_link_id from comments order by comment_id desc limit 1");
+$res = $db->get_row("select link_id, link_title, link_votes, link_anonymous from links where link_id = $last_comment");
 
 if ($res) {
 	$title['commented'] = text_to_summary($res->link_title, 70) . ' <span style="font-size: 90%;">['.($res->link_votes+$res->link_anonymous)."&nbsp;"._('votos')."]</span>";
