@@ -325,19 +325,17 @@ function get_user_uri($user, $view='') {
 	return $uri;
 }
 
-function get_user_uri_by_uid($user, $uid, $view='') {
+function get_user_uri_by_uid($user, $view='') {
 	global $globals;
 
+	$uid = guess_user_id($user);
+	if ($uid == 0) $uid = -1; // User does not exist, ensure it will give error later
+	$uri = get_user_uri($user, $view);
 	if (!empty($globals['base_user_url'])) {
-		$uri= $globals['base_url'] . $globals['base_user_url'] . htmlspecialchars($user);
-		if (!empty($view) && $view != "profile") $uri .= "/$view";
 		$uri .= "/$uid";
 	} else {
-		$uri = $globals['base_url'].'user.php?login='.htmlspecialchars($user);
-		if (!empty($view)) $uri .= "&amp;view=$view";
 		$uri .= "&amp;uid=$uid";
 	}
-
 	return $uri;
 }
 
@@ -490,7 +488,7 @@ function guess_user_id ($str) {
 		// It's a number, return it as id
 		return (int) $str;
 	} else {
-		$str = $db->escape($str);
+		$str = $db->escape(mb_substr($str,0,64));
 		$id = (int) $db->get_var("select user_id from users where user_login = '$str'");
 		return $id;
 	}

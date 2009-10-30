@@ -24,15 +24,16 @@ if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
 	$_REQUEST['view'] = $url_args[1];
 	$_REQUEST['uid'] = intval($url_args[2]);
+	if (! $_REQUEST['uid'] && is_numeric($_REQUEST['view'])) {
+		// This is a empty view but an user_id, change it
+		$_REQUEST['uid'] = intval($_REQUEST['view']);
+		$_REQUEST['view'] = '';
+	}
 } else {
 	$_REQUEST['login'] = clean_input_string($_REQUEST['login']);
 	$_REQUEST['uid'] = intval($_REQUEST['uid']);
 	if (!empty($globals['base_user_url']) && !empty($_REQUEST['login'])) {
-		if ($current_user->admin) {
-			header('Location: ' . get_user_uri_by_uid($_REQUEST['login'], $_REQUEST['uid'], clean_input_string($_REQUEST['view'])));
-		} else {
-			header('Location: ' . get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])));
-		}
+		header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view']))));
 		die;
 	}
 }
@@ -40,7 +41,7 @@ if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 $login = $_REQUEST['login'];
 if(empty($login)){
 	if ($current_user->user_id > 0) {
-		header('Location: ' . get_user_uri($current_user->user_login));
+		header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login)));
 		die;
 	} else {
 		header('Location: '.$globals['base_url']);
@@ -48,8 +49,6 @@ if(empty($login)){
 	}
 }
 
-$view = clean_input_string($_REQUEST['view']);
-if(empty($view)) $view = 'profile';
 
 $uid = $_REQUEST['uid']; // Should be clean before
 $login = $db->escape($login);
@@ -58,28 +57,28 @@ $user=new User();
 
 if ($current_user->admin) {
 		// Check if it's used UID
-		if($uid > 0) {
+		if($uid) {
 			$user->id = $uid;
-		} else if (is_numeric($view)) {
-			$uid = $view;
-			$user->id = $uid;
-			$view = 'profile';
 		} else {
-			$user->username = $login;
-			if(!$user->read()) {
-				do_error(_('usuario inexistente'), 404);
-			} else {
-				header('Location: ' . get_user_uri_by_uid($user->username, $user->id, $view));
-				die;
-			}
+			header('Location: ' . html_entity_decode(get_user_uri_by_uid($login, $_REQUEST['view'])));
+			die;
 		}
 } else {
+		if($uid > 0) {
+			// Avoid anonymous and non admins users to use the id, it's a "duplicated" page
+			header('Location: ' . html_entity_decode(get_user_uri($login, $_REQUEST['view'])));
+			die;
+		}
 		$user->username = $login;
 }
 
 if(!$user->read()) {
 	do_error(_('usuario inexistente'), 404);
 }
+
+$view = clean_input_string($_REQUEST['view']);
+if(empty($view)) $view = 'profile';
+
 
 // For editing notes
 if ($current_user->user_id == $user->id || $current_user->admin) {

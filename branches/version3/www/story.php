@@ -498,10 +498,10 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 	
-	if ($globals['base_story_url'] = 'story/') {
+	if ( ! empty($globals['base_story_url'])) {
 		$query = $globals['link_permalink'];
 	} else {
-		$query=preg_replace('/\/[0-9]+(#.*)$/', '', $_SERVER['QUERY_STRING']);
+		$query=preg_replace('/\/[0-9]+(#.*)*$/', '', $_SERVER['QUERY_STRING']);
 		if(!empty($query)) {
 			$query = htmlspecialchars($query);
 			$query = "?$query";
