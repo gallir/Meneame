@@ -20,7 +20,8 @@ function is_avatars_enabled() {
 function avatars_manage_upload($user, $name) {
 	global $globals;
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
-	$file_base = $subdir . '/' . $user;
+	$time = $globals['now'];
+	$file_base = $subdir . "/$user-$time";
 	@mkdir(get_avatars_dir());
 	@mkdir($subdir);
 	if (!is_writable($subdir)) return false;
@@ -29,7 +30,7 @@ function avatars_manage_upload($user, $name) {
 	$size = @getimagesize("$file_base-orig.img");
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
-	if (!($size[0] == 80 && $size[1] == 80 && ($mtime = avatars_db_store($user, "$file_base-80.jpg")))) {
+	if (!($size[0] == 80 && $size[1] == 80 && ($mtime = avatars_db_store($user, "$file_base-80.jpg", $time)))) {
 		// Mark FALSE in DB
 		avatars_db_remove($user);
 		avatars_remove_user_files($user);
@@ -63,11 +64,10 @@ function avatars_check_upload_size($name) {
 	return $_FILES[$name]['size'] < $globals['avatars_max_size'];
 }
 
-function avatars_db_store($user, $file) {
+function avatars_db_store($user, $file, $now) {
 	global $db;
 	$bytes = file_get_contents($file);
 	if (strlen($bytes)>0 && strlen($bytes) < 30000) {
-		$now = time();
 		$bytes = addslashes($bytes);
 		$db->query("replace into avatars set avatar_id = $user, avatar_image='$bytes'");
 		$db->query("update users set user_avatar = $now  where user_id=$user");
@@ -97,11 +97,12 @@ function avatar_get_from_file($user, $size, $mtime = 0) {
 function avatar_get_from_db($user, $size=0) {
 	global $db, $globals;
 	$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
+	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	if (!strlen($img) > 0) {
 		return false;
 	}
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
-	$file_base = $subdir . '/' . $user;
+	$file_base = $subdir . "/$user-$time";
 	@mkdir(get_avatars_dir());
 	@mkdir($subdir);
 	if (!is_writable($subdir)) return false;

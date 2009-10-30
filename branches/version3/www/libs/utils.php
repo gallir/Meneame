@@ -347,12 +347,12 @@ function get_avatar_url($user, $avatar, $size) {
 	}
 
 	if ($avatar > 0 && $globals['cache_dir']) {
-		$file = $globals['cache_dir'] . '/avatars/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
+		$file = $globals['cache_dir'] . '/avatars/'. intval($user/$globals['avatars_files_per_dir']) . "/$user-$avatar-$size.jpg";
 		// Don't check every time, but 1/10, decrease VM pressure 
 		// Disabled for the moment, it fails just too much for size 40
 		//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 		$file_path = mnmpath.'/'.$file;
-		if (@filemtime($file_path) >= $avatar) {
+		if (file_exists($file_path)) {
 			return $globals['base_static'] . $file;
 		} else {
 			return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
