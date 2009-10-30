@@ -12,7 +12,7 @@ $size = intval($_GET['size']);
 $time = intval($_GET['time']);
 if (!$size > 0) $size = 80;
 
-if (!($img=avatar_get_from_file($id, $size, $time))) {
+if (!($img=avatar_get_from_file($id, $size))) {
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {
 		if (is_writable($globals['avatars_dir'])) {

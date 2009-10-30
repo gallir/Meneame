@@ -82,11 +82,13 @@ function avatars_db_remove($user) {
 	$db->query("update users set user_avatar = 0  where user_id=$user");
 }
 
-function avatar_get_from_file($user, $size, $mtime = 0) {
-	global $globals;
+function avatar_get_from_file($user, $size) {
+	global $globals, $db;
 
-	$file = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']) . '/' . $user . "-$size.jpg";
-	if (($mtime > 0 && @filemtime($file) >= $mtime) || ($mtime == 0 && is_readable($file))) {
+	$time = $db->get_var("select user_avatar from users where user_id=$user");
+	if(! $time > 0) return false;
+	$file = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']) . "/$user-$time-$size.jpg";
+	if (is_readable($file)) {
 		return  file_get_contents($file);
 	} else {
 		return false;
@@ -97,10 +99,10 @@ function avatar_get_from_file($user, $size, $mtime = 0) {
 function avatar_get_from_db($user, $size=0) {
 	global $db, $globals;
 	$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
-	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	if (!strlen($img) > 0) {
 		return false;
 	}
+	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	$subdir = get_avatars_dir() . '/'. intval($user/$globals['avatars_files_per_dir']);
 	$file_base = $subdir . "/$user-$time";
 	@mkdir(get_avatars_dir());
