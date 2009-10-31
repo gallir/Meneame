@@ -118,19 +118,18 @@ class Trackback {
         $http_request .= "User-Agent: MNM (http://meneame.net) ";
         $http_request .= "\r\n\r\n";
         $http_request .= $query_string;
-        if ( '' == $trackback_url['port'] )
-                $trackback_url['port'] = 80;
+        if (empty($trackback_url['port'])) $trackback_url['port'] = 80;
         $fs = @fsockopen($trackback_url['host'], $trackback_url['port'], $errno, $errstr, 5);
 		if($fs && ($res=@fputs($fs, $http_request)) ) {
-		/*********** DEBUG **********
-        $debug_file = '/tmp/trackback.log';
-        $fp = fopen($debug_file, 'a');
-        fwrite($fp, "\n*****\nRequest:\n\n$http_request\n\nResponse:\n\n");
-        while(!@feof($fs)) {
-                fwrite($fp, @fgets($fs, 4096));
-        }
-        fwrite($fp, "\n\n");
-        fclose($fp);
+		/*********** DEBUG **********/
+			$debug_file = '/tmp/trackback.log';
+			$fp = fopen($debug_file, 'a');
+			fwrite($fp, "\n*****\nRequest:\n\n$http_request\n\nResponse:\n\n");
+			while(!@feof($fs)) {
+				fwrite($fp, @fgets($fs, 4096));
+			}
+			fwrite($fp, "\n\n");
+			fclose($fp);
 		/*********** DEBUG ************/
         	@fclose($fs);
 			$this->status='ok';
