@@ -265,7 +265,7 @@ table img {
 border-color: #ccc;
 }
 
-th, td {
+th, td, table.decorated th, table.decorated td {
 border-bottom-color: #ddd;
 }
 

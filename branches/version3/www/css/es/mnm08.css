@@ -612,7 +612,7 @@ font-weight: bold;
 margin: 5px 0 3px 0;
 }
 
-table {
+table.decorated {
 border-collapse: collapse;
 width: 100%;
 margin-bottom: 16px;
@@ -623,7 +623,7 @@ table img {
 border: 1px solid;
 }
 
-th, td {
+table.decorated th, table.decorated td {
 text-align: left;
 font-size: 85%;
 padding: 6px;
