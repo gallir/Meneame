@@ -496,10 +496,10 @@ class Link {
 			if ($type != 'short') {
 				echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
 			}
-			echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."<br />\n";
+			echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."&nbsp;<br />\n";
 			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 			// Print dates
-			if ($globals['now'] - $this->date > 604800) { // 7 days
+			if ($globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT'])) { // 7 days or user agent is empty
 				echo _('el').get_date_time($this->sent_date);
 				if($this->status == 'published')
 					echo ', '  ._('publicado el').get_date_time($this->date);

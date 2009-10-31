@@ -315,8 +315,8 @@ function do_submit1() {
 	$linkres->status='discard';
 	$linkres->author=$current_user->user_id;
 
-	if (!$linkres->trackback()) {
-		$linkres->pingback();
+	if (!$linkres->pingback()) {
+		$linkres->trackback();
 	}
 	$trackback=htmlspecialchars($linkres->trackback);
 	$linkres->create_blog_entry();
@@ -620,10 +620,9 @@ function do_submit3() {
 			$trackres->url=clean_input_url($_POST['trackback']);
 			$trackres->link_id=$linkres->id;
 			$trackres->link=$linkres->url;
-			//$trackres->title=$linkres->title;
 			$trackres->author=$linkres->author;
-			//$trackres->content=$linkres->content;
-			$res = $trackres->send($linkres);
+			$trackres->status = 'pendent';
+			$trackres->store();
 		}
 		fork("backend/send_pingbacks.php?id=$linkres->id");
 	}

@@ -121,7 +121,7 @@ class Trackback {
         if (empty($trackback_url['port'])) $trackback_url['port'] = 80;
         $fs = @fsockopen($trackback_url['host'], $trackback_url['port'], $errno, $errstr, 5);
 		if($fs && ($res=@fputs($fs, $http_request)) ) {
-		/*********** DEBUG **********/
+		/*********** DEBUG *********
 			$debug_file = '/tmp/trackback.log';
 			$fp = fopen($debug_file, 'a');
 			fwrite($fp, "\n*****\nRequest:\n\n$http_request\n\nResponse:\n\n");
