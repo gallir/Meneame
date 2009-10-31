@@ -67,7 +67,7 @@ do_header(_('usuarios') . ' | men&eacute;ame');
 echo '<div id="singlewrap">' . "\n";
 echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>';
 
-echo '<table><tr>';
+echo '<table class="decorated"><tr>';
 
 // Print headers
 for($i=0; $i<count($items); $i++) {
