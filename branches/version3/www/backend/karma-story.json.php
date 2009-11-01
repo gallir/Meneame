@@ -5,10 +5,10 @@
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-
-
 include('../config.php');
 include(mnminclude.'link.php');
+
+$colors = array('negatives' => '#CB4B4B', 'positives' => '#4DA74D', 'anonymous' => '#AFD8F8', 'karma' => '#FF6400');
 
 header('Content-Type: text/x-json; charset=utf-8');
 //header('Content-Type: text/plain; charset=utf-8');
@@ -20,9 +20,9 @@ $link->id=$id;
 $link->read();
 if(!$link->read) die;
 if ( ($array = $link->read_annotation("link-karma")) != false ) {
+	$data['anonymous'] = array();
 	$data['positives'] = array();
 	$data['negatives'] = array();
-	$data['anonymous'] = array();
 	$data['karma'] = array();
 
 	$array = array_reverse($array);
@@ -39,6 +39,9 @@ foreach (array_keys($data) as $key) {
 	echo "{\n";
 	echo "label: '$key',\n";
 	if ($key == 'karma') echo "yaxis: 2,\n";
+	if (!empty($colors[$key])) {
+		echo "color: '$colors[$key]',\n";
+	}
 	echo "data: [";
 	foreach ($data[$key] as $d) {
 		echo "[$d[0], $d[1]], ";
