@@ -1049,8 +1049,8 @@ class Link {
 
 		// Small quadratic punishment for links having too many negatives
 		if ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user) && abs($karma_neg_user)/$karma_pos_user > 0.075) {
-			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.35); 
-			$karma_neg_user = $karma_neg_user * pow((1+$r), 2);
+			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.4); 
+			$karma_neg_user = max(-($karma_pos_user+$karma_pos_ano), $karma_neg_user * pow((1+$r), 2));
 		}
 	
 		// Get met categories coefficientes that will be used below
