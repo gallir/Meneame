@@ -18,7 +18,9 @@ function chart_link_karma_history($link_id) {
 	echo 'lines: { show: true },'."\n";
 	echo 'points: { show: true },'."\n";
 	echo 'legend: { position: "nw" },'."\n";
-	echo 'xaxis: { mode: "time", minTickSize: [1, "hour"], }'."\n";
+	echo 'xaxis: { mode: "time", minTickSize: [1, "hour"], },'."\n";
+	echo 'yaxis: { min: 0 },'."\n";
+	echo 'y2axis: { min: 0 },'."\n";
 	echo '};'."\n";
 	echo 'var data = [];'."\n";
 	echo 'var placeholder = $("#flot");'."\n";

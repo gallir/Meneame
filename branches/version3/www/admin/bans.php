@@ -115,7 +115,7 @@ function admin_bans($ban_type) {
 		echo '<input type="hidden" name="key" value="'.$key.'" />';
 	}
 
-	echo '<table style="font-size: 10pt">';
+	echo '<table class="decorated" style="font-size: 10pt">';
 	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;'; 
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_text">'.$ban_type.'</a></th>';

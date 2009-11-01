@@ -485,7 +485,7 @@ class Link {
 		} elseif ($this->content_type == 'video') {
 			echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('vídeo').'" />';
 		}
-		echo '</h1>';
+		echo '</h1> ';
 
 		if ($this->has_thumb()) {
 			echo "<img src='".$globals['static_server']."$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
@@ -1127,7 +1127,7 @@ class Link {
 		if ($log->read()) $array = unserialize($log->text);
 		if (!$array || ! is_array($array)) $array = array();
 		$dict = array();
-		$dict['time'] = $globals['now'];
+		$dict['time'] = time();
 		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
 		$dict['anonymous'] = $this->anonymous;
@@ -1138,7 +1138,7 @@ class Link {
 		array_unshift($array, $dict);
 		$log->text = serialize($array);
 		$log->store();
-
+		$this->annotation = '';
 	}
 
 	function read_annotation($key) {
