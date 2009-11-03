@@ -44,12 +44,12 @@ $(function () {
 				var txt = '<strong>'+item.series.label+':</strong> ' + item.datapoint[1];
 				if (item.series.label == 'karma') {
 					var ktime = item.datapoint[0]/1000; // to epoch time
-					if (k_old[ktime] > 0) {
+					if (k_old[ktime] != 0) {
 						if (item.datapoint[1] > k_old[ktime]) txt = txt + '&nbsp;<img src="'+base_static + 'img/common/vote-up01.png"/>';
-						else txt = txt + '&nbsp;<img src="'+base_static + 'img/common/vote-down01.png"/>';
+						else if (item.datapoint[1] < k_old[ktime]) txt = txt + '&nbsp;<img src="'+base_static + 'img/common/vote-down01.png"/>';
 						txt = txt + '<br/><strong>previous karma:</strong> '+k_old[ktime];
 					}
-					txt = txt + '<br/><strong>coefficient:</strong> '+k_coef[ktime];
+					if (k_coef[ktime] != 0) txt = txt + '<br/><strong>coefficient:</strong> '+k_coef[ktime];
 					if (k_annotation[ktime] != '') txt = txt + '<br><strong>notes</strong><br/>'+k_annotation[ktime];
 				}
 				$("#tooltip").remove();

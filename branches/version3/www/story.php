@@ -374,7 +374,7 @@ case 4:
 		echo 'var k_coef = new Array(); var k_old = new Array(); var k_annotation = new Array();'."\n";
 		foreach ($array as $log) {
 			// To make clear "javascript lines"
-			$k_time = $log['time']; $k_coef = $log['coef']; $k_old = $log['old_karma']; $k_annotation = $log['annotation'];
+			$k_time = $log['time']; $k_coef = $log['coef']; $k_old = intval($log['old_karma']); $k_annotation = $log['annotation'];
 			// Generate arrays that will be used for the tooltip
 			echo "k_coef[$k_time] = $k_coef; k_old[$k_time] = $k_old;\n";
 			echo "if (typeof k_annotation[$k_time] == 'undefined')  k_annotation[$k_time] = '$k_annotation';";
