@@ -369,13 +369,29 @@ case 4:
 
 	// Show karma logs from annotations
 	if ( ($array = $link->read_annotation("link-karma")) != false ) {
+
+		echo '<script type="text/javascript">'."\n//<!--\n";
+		echo 'var k_coef = new Array(); var k_old = new Array(); var k_annotation = new Array();'."\n";
+		foreach ($array as $log) {
+			// To make clear "javascript lines"
+			$k_time = $log['time']; $k_coef = $log['coef']; $k_old = $log['old_karma']; $k_annotation = $log['annotation'];
+			// Generate arrays that will be used for the tooltip
+			echo "k_coef[$k_time] = $k_coef; k_old[$k_time] = $k_old;\n";
+			echo "if (typeof k_annotation[$k_time] == 'undefined')  k_annotation[$k_time] = '$k_annotation';";
+			echo "else k_annotation[$k_time] = k_annotation[$k_time] + '$k_annotation';\n";
+
+		}
+		echo "//-->\n</script>\n";
+
 		echo '<div class="voters">';
 		echo '<fieldset><legend>'._('registro de cálculos de karma').'</legend>';
 
 		// Call to generate HMTL and javascript for the Flot chart
-		require_once(mnminclude.'charts.php');
-		chart_link_karma_history($link->id);
+		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
+		echo '<div id="flot" style="width:500px;height:250px;"></div>'."\n";
+		@include (mnminclude.'foreign/chart_link_karma_history.js');
 
+		/**************
 		echo "<table class='decorated'><tr class='thead'><th>hora</th><th>pos, anon, neg</th><th>coef</th><th>karma</th><th>notas</th></tr>\n";
 		foreach ($array as $log) {
 			echo "<tr><td>".get_date_time($log['time'])."</td><td>".$log['positives'].', '.$log['anonymous'].', '.$log['negatives']."</td><td>".$log['coef']."</td><td>";
@@ -384,6 +400,7 @@ case 4:
 			echo $log['karma']."</td><td>".$log['annotation']."</td></tr>\n";
 		}
 		echo "</table>\n";
+		**************/
 		echo '</fieldset>';
 		echo '</div>';
 	}
