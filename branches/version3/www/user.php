@@ -38,7 +38,7 @@ if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
-$login = $_REQUEST['login'];
+$login = clean_input_string($_REQUEST['login']);
 if(empty($login)){
 	if ($current_user->user_id > 0) {
 		header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login)));
@@ -51,7 +51,6 @@ if(empty($login)){
 
 
 $uid = $_REQUEST['uid']; // Should be clean before
-$login = $db->escape($login);
 
 $user=new User();
 
@@ -75,6 +74,7 @@ if ($current_user->admin) {
 if(!$user->read()) {
 	do_error(_('usuario inexistente'), 404);
 }
+$login = $user->username; // Just in case, we user the database username
 
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
@@ -128,14 +128,13 @@ switch ($view) {
 		break;
 }
 
-if($login != $user->username){
-	do_header( $login . " (" . $user->username . ")" );
-}else{
+if (!empty($user->names)) {
+	do_header("$login ($user->names)");
+} else {
 	do_header($login);
 }
 echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 
-$login = $user->username;
 $url_login = urlencode($login);
 switch ($view) {
 	case 'history':
@@ -153,13 +152,6 @@ switch ($view) {
 		do_shaken();
 		do_pages($rows, $page_size);
 		break;
-	// Disabls becuase affiliation was also disabled
-	/**********
-	case 'preferred':
-		do_user_tabs(5, $login);
-		do_voters_preferred();
-		break;
-	***********/
 	case 'friends':
 		do_user_tabs(7, $login);
 		do_friends();
@@ -210,7 +202,7 @@ function do_profile() {
 
 	echo '<fieldset><legend>';
 	echo _('información personal');
-	if($login == $current_user->user_login) {
+	if($user->id == $current_user->user_id) {
 		echo ' [<a href="'.$globals['base_url'].'profile.php">'._('modificar').'</a>]';
 	} elseif ($current_user->user_level == 'god') {
 		echo ' [<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>]';
