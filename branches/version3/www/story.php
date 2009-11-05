@@ -250,7 +250,7 @@ case 2:
 		foreach($comments as $comment_id) {
 			$comment->id=$comment_id;
 			$comment->read();
-			$comment->print_summary($link, 1500, true);
+			$comment->print_summary($link, 2500, true);
 			echo "\n";
 		}
 		echo "</ol>\n";

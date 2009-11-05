@@ -291,6 +291,7 @@ function to_hoygan(str)
 	str=str.replace(/ó/gi, 'o');
 	str=str.replace(/ú/gi, 'u');
 
+	str=str.replace(/igo(\s|$)/gi, 'ijo$1');
 	str=str.replace(/yo/gi, 'io');
 	str=str.replace(/m([pb])/gi, 'n$1');
 	str=str.replace(/qu([ei])/gi, 'k$1');

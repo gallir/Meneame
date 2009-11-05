@@ -12,7 +12,6 @@ $(function () {
 	};
 	var data = [];
 	var placeholder = $("#flot");
-	$.plot(placeholder, data, options);
 	$.getJSON(base_url+"backend/karma-story.json.php?id=<?echo $link->id?>", 
 		function (json) {
 			for (i=0; i<json.length; i++) {
