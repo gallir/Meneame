@@ -80,11 +80,13 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
 
+/********** Disabled showing last note for the user
 // For editing notes
 if ($current_user->user_id == $user->id || $current_user->admin) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
 	array_push($globals['extra_js'], 'posts01.js');
 }
+********************/
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
@@ -192,6 +194,7 @@ function do_profile() {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
+	/********** Disabled showing last note
 	$post = new Post;
 	if ($post->read_last($user->id)) {
 		echo '<div id="addpost"></div>';
@@ -199,6 +202,7 @@ function do_profile() {
 		$post->print_summary();   
 		echo "</ol>\n";
 	}   
+	******************/
 
 	echo '<fieldset><legend>';
 	echo _('información personal');
@@ -208,6 +212,7 @@ function do_profile() {
 		echo ' [<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>]';
 	}
 	echo '</legend>';
+
 
 	// Avatar
 	echo '<img class="thumbnail" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
@@ -322,8 +327,19 @@ function do_profile() {
 		echo '</div>';
 	}
 
+	// Print a chart of the last 30 days activity
+	if ($current_user->user_id == $user->id || $current_user->admin) {
+		echo '<fieldset><legend>'._('actividad últimos 30 días').'</legend>';
+		// Call to generate HMTL and javascript for the Flot chart
+		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
+		//echo '<div id="flot" style="width:600px;height:150px;"></div>'."\n";
+		echo '<div id="flot" style="width:100%;height:150px;"></div>'."\n";
+		@include (mnminclude.'foreign/chart_user_votes_history.js');
+		echo '</fieldset>';
+	}
+
 	// Show first numbers of the address if the user has god privileges
-	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gops and admins know each other for sure, keep privacy
+	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gods and admins know each other for sure, keep privacy
 		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
