@@ -388,7 +388,7 @@ case 4:
 
 		// Call to generate HMTL and javascript for the Flot chart
 		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
-		echo '<div id="flot" style="width:500px;height:250px;"></div>'."\n";
+		echo '<div id="flot" style="width:100%;height:250px;"></div>'."\n";
 		@include (mnminclude.'foreign/chart_link_karma_history.js');
 
 		/**************

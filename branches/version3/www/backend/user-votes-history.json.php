@@ -17,8 +17,10 @@ if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
 $user = new User;
 $user->id=$id;
+if($current_user->user_id != $user->id && ! $current_user->admin) die;
 $user->read();
 if(!$user->read) die;
+
 if (($res = $db->get_results("select floor(unix_timestamp(vote_date)/3600)*3600 as t, vote_type, count(*) as n from votes where vote_user_id = $user->id and vote_date > date_sub(now(), interval 1 month) and vote_type in ('links', 'comments', 'posts') group by vote_type, t"))) {
 	$data['links'] = array();
 	$data['comments'] = array();

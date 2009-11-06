@@ -80,13 +80,11 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
 
-/********** Disabled showing last note for the user
 // For editing notes
 if ($current_user->user_id == $user->id || $current_user->admin) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
 	array_push($globals['extra_js'], 'posts01.js');
 }
-********************/
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
@@ -194,7 +192,8 @@ function do_profile() {
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
-	/********** Disabled showing last note
+
+	// Print last user's note
 	$post = new Post;
 	if ($post->read_last($user->id)) {
 		echo '<div id="addpost"></div>';
@@ -202,7 +201,6 @@ function do_profile() {
 		$post->print_summary();   
 		echo "</ol>\n";
 	}   
-	******************/
 
 	echo '<fieldset><legend>';
 	echo _('información personal');
@@ -329,7 +327,7 @@ function do_profile() {
 
 	// Print a chart of the last 30 days activity
 	if ($current_user->user_id == $user->id || $current_user->admin) {
-		echo '<fieldset><legend>'._('actividad últimos 30 días').'</legend>';
+		echo '<fieldset><legend>'._('votos/día últimos 30 días').'</legend>';
 		// Call to generate HMTL and javascript for the Flot chart
 		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
 		//echo '<div id="flot" style="width:600px;height:150px;"></div>'."\n";
