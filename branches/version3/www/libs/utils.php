@@ -630,8 +630,11 @@ function insert_clon($last, $previous, $ip='') {
 function check_clon_votes($from, $id, $days=7, $type='links') {
 	// Return the count of cookies clones that voted before a given link, comment, note
 	global $db;
-	syslog(LOG_INFO, "select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
-    return (int) $db->get_var("select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
+    $c = (int) $db->get_var("select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
+	if ($c > 0) {
+		syslog(LOG_INFO, "Meneame: clon vote $type, id: $id, user: $from ");
+	}
+	return $c;
 }
 
 function fork($uri) {
