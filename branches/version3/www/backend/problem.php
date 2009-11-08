@@ -67,6 +67,13 @@ if ($votes_freq > $freq && $current_user->user_karma > 4) {
 	error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 }
 
+// Check the user is not a clon by cookie of others that voted the same link
+if ($current_user->user_id > 0) {
+    if (check_clon_votes($current_user->user_id, $link->id, 7, 'links') > 0) {
+        error(_('no se puede votar con clones'));
+    }
+}
+
 if (!$link->insert_vote($value)) {
 	error(_('ya se votó antes con el mismo usuario o IP'));
 }

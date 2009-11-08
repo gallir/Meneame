@@ -627,6 +627,13 @@ function insert_clon($last, $previous, $ip='') {
 	$db->query("INSERT IGNORE INTO clones (clon_to, clon_from, clon_ip) VALUES ($last, $previous, '$ip')");
 }
 
+function check_clon_votes($from, $id, $days=7, $type='links') {
+	// Return the count of cookies clones that voted before a given link, comment, note
+	global $db;
+	syslog(LOG_INFO, "select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
+    return (int) $db->get_var("select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
+}
+
 function fork($uri) {
 	global $globals;
 

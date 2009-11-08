@@ -38,16 +38,6 @@ if(!$link->is_votable()) {
 	error(_('votos cerrados'));
 }
 
-$link = new Link;
-$link->id=$id;
-if(!$link->read_basic()) {
-	error(_('Artículo inexistente'));
-}
-
-if(!$link->is_votable()) {
-	error(_('votos cerrados'));
-}
-
 // Only if the link has been not published, let them play
 if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 	if (! $anonnymous_vote) {
@@ -68,6 +58,13 @@ if($current_user->user_id != $_REQUEST['user']) {
 if ($current_user->user_id == 0) $ip_check = 'and vote_ip_int = '.$globals['user_ip_int'];
 else $ip_check = '';
 $votes_freq = $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') $ip_check");
+
+// Check the user is not a clon by cookie of others that voted the same link
+if ($current_user->user_id > 0 && $link->status != 'published') {
+	if (check_clon_votes($current_user->user_id, $link->id, 7, 'links') > 0) {
+		error(_('no se puede votar con clones'));
+	}
+}
 
 if ($current_user->user_id > 0) $freq = 3;
 else $freq = 2;
