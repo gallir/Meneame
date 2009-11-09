@@ -364,10 +364,10 @@ function publish($link) {
 		$short_url = fon_gs($link->get_permalink());
 	}
 	if ($globals['twitter_user'] && $globals['twitter_password']) {
-		twitter_post($link, $short_url); 
+		twitter_post($link->title, $short_url); 
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-		jaiku_post($link, $short_url); 
+		jaiku_post($link->title, $short_url); 
 	}
 	if ($globals['pubsub']) {
 		pubsub_post();
