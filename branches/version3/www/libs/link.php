@@ -1103,6 +1103,10 @@ class Link {
 		$this->karma = ($karma_pos_user+$karma_pos_ano+$karma_neg_user)*$this->coef;
 		if ($meta_coef && $meta_coef[$this->meta_id]) {
 			$this->karma *= $meta_coef[$this->meta_id];
+			// Annotate meta's coeeficient if the variation > 5%
+			if (abs(1 - $meta_coef[$this->meta_id]) > 0.05) {
+				$this->annotation .= _('Coeficiente categoría').': '.round($meta_coef[$this->meta_id], 2)."<br/>";
+			}
 		}
 		$this->karma = round($this->karma);
 	}

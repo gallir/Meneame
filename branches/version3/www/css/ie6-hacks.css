@@ -8,6 +8,18 @@ Licence: Affero GPL License (http://meneame.net/COPYING)
 Comments: This file contains styles and colors & images.
 */
 
+html .tabmain li a:hover {
+background: #fff;
+}
+
+* html .tabmain li.tabmain-this a:hover {
+background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
+}
+
+* html .tabsub li a:hover {
+background: #fff;
+}
+
 
 #wrap { /* Code to get min and max width on IE6 */
 width: expression(documentElement.clientWidth > 1200 ?  "1200px":

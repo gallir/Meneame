@@ -694,7 +694,7 @@ color: #303030;
 
 select {
 background: #FFF;
-color: #FF7C00;
+color: #FF6400;
 }
 
 fieldset {
@@ -734,16 +734,3 @@ border-color: #ff9400;
 color: #FF9400;
 }
 
-/* Hacks IE6*/
-
-* html .tabmain li a:hover {
-background: #fff;
-}
-
-* html .tabmain li.tabmain-this a:hover {
-background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 6px;
-}
-
-* html .tabsub li a:hover {
-background: #fff;
-}

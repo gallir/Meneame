@@ -326,7 +326,7 @@ function do_profile() {
 	}
 
 	// Print a chart of the last 30 days activity
-	if ($current_user->user_id == $user->id || $current_user->admin) {
+	if ($user->total_votes > 20 && ($current_user->user_id == $user->id || $current_user->admin)) {
 		echo '<fieldset><legend>'._('votos/día últimos 30 días').'</legend>';
 		// Call to generate HMTL and javascript for the Flot chart
 		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
