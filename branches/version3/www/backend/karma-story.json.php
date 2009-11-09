@@ -10,8 +10,7 @@ include(mnminclude.'link.php');
 
 $colors = array('negatives' => '#CB4B4B', 'positives' => '#4DA74D', 'anonymous' => '#AFD8F8', 'karma' => '#FF6400');
 
-header('Content-Type: text/x-json; charset=utf-8');
-//header('Content-Type: text/plain; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
 if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
