@@ -354,6 +354,8 @@ function publish($link) {
 
 	// Add the publish event/log
 	log_insert('link_publish', $link->id, $link->author);
+	$link->annotation .= _('Publicación'). "<br/>";
+	$link->save_annotation('link-karma');
 
 	if ($globals['url_shortener']) {
 		$short_url = $link->get_short_permalink();

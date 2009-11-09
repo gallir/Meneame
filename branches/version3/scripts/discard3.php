@@ -3,6 +3,7 @@ include('../config.php');
 include(mnminclude.'user.php');
 include(mnminclude.'log.php');
 include(mnminclude.'annotation.php');
+include(mnminclude.'link.php');
 
 header("Content-Type: text/plain");
 
@@ -24,11 +25,22 @@ if ($links) {
 	foreach ($links as $link) {
 		// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
 		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.0");
-		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.2");
+		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.4");
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
-		if (($negatives > $link->link_karma/6 || $link->link_negatives > $link->link_votes/6 ) && $negatives > $positives) {
+		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 && $negatives > $positives) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
-			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=link_karma/20 where link_id = $link->link_id");
+			$karma_old = $link->link_karma;
+			$karma_new = intval($link->link_karma/20);
+			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $link->link_id");
+
+			// Add an annotation to show it in the logs
+			$l= new Link;
+			$l->id = $link->link_id;
+			if ($l->read()) {
+				$l->karma_old = $karma_old;
+				$l->annotation = _('Quitada de portada por votos negativos');
+				$l->save_annotation('link-karma');
+			}
 			log_insert('link_depublished', $link->link_id, $link->link_author);
 			// Add the discard to log/event
 			$user = new User();
@@ -48,7 +60,7 @@ if ($links) {
 punish_comments();
 
 // Discard links
-$negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and (link_date < $max_date or link_karma < -100) and link_karma < link_votes*2 and link_karma < 0 and (link_negatives > 20 or (link_negatives > 3 and link_negatives > link_votes) )");
+$negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and (link_date < $max_date or link_karma < -100) and link_karma < -link_votes*2 and link_karma < 0 and (link_negatives > 20 or (link_negatives > 3 and link_negatives > link_votes) )");
 
 //$db->debug();
 if( !$negatives) { 

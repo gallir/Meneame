@@ -23,6 +23,21 @@ $db->query("delete from annotations where annotation_time  < date_sub(now(), int
 
 
 $db->barrier();
+
+// Delete email, names and url of autodisabled users in the last hours
+$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level in ('autodisabled') and user_modification > date_sub(now(), interval 48 hour)");
+if ($dbusers) {
+	foreach ($dbusers as $id) {
+		$user = new User;
+		$user->id = $id;
+		$user->read();
+		if ($user->level == 'autodisabled') { // Double check
+			$user->disable(true);
+			echo "Executing auto disabling: $id - $user->username\n";
+		}
+	}
+}
+
 // Delete email, names and url of invalidated users after three months
 $dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level in ('disabled', 'autodisabled') and user_modification < date_sub(now(), interval 3 month)");
 if ($dbusers) {
