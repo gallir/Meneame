@@ -7,11 +7,11 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-function twitter_post($link, $short_url) {
+function twitter_post($text, $short_url) {
 	global $globals;
 
-	$t_status = urlencode(text_sub_text($link->title, 115) . ' ' . $short_url);
-	syslog(LOG_NOTICE, "Meneame: twitter updater called, id=$link->id");
+	$t_status = urlencode(text_sub_text($text, 115) . ' ' . $short_url);
+	syslog(LOG_NOTICE, "Meneame: twitter updater called, $short_url");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
 	if (!function_exists('curl_init')) {
@@ -33,10 +33,10 @@ function twitter_post($link, $short_url) {
 }
 
 
-function jaiku_post($link, $short_url) {
+function jaiku_post($text, $short_url) {
 	global $globals;
 
-	syslog(LOG_NOTICE, "Meneame: jaiku updater called, id=$link->id");
+	syslog(LOG_NOTICE, "Meneame: jaiku updater called, $short_url");
 	$url = "http://api.jaiku.com/json";
 
 	if (!function_exists('curl_init')) {
@@ -49,7 +49,7 @@ function jaiku_post($link, $short_url) {
 	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
 	$postdata .= "&personal_key=" . $globals['jaiku_key'];
 	$postdata .= "&icon=337"; // Event
-	$postdata .= "&message=" . urlencode(text_sub_text(html_entity_decode($link->title), 115). ' ' . $short_url);
+	$postdata .= "&message=" . urlencode(text_sub_text(html_entity_decode($text), 115). ' ' . $short_url);
 
 	$session = curl_init();
 	curl_setopt($session, CURLOPT_URL, $url);
