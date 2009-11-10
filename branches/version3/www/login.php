@@ -102,8 +102,15 @@ function do_login() {
 			$previous_login_failed++;
 		} else {
 			// User authenticated, store clones
-			foreach ($current_user->GetClones() as $id) {
-				insert_clon($current_user->user_id, $id, 'COOK:'.$globals['user_ip']);
+			$clones = array_reverse($current_user->GetClones()); // First item is the current login, second is the previous
+			if (count($clones) > 1 && $clones[0] != $clones[1]) { // Ignore if last two logins are the same user
+				$visited = array();
+				foreach ($clones as $id) {
+					if ($current_user->user_id != $id && !in_array($id, $visited)) {
+						array_push($visited, $id);
+						insert_clon($current_user->user_id, $id, 'COOK:'.$globals['user_ip']);
+					}
+				}
 			}
 
 			if(!empty($_REQUEST['return'])) {

@@ -171,7 +171,7 @@ class UserAuth {
 		$clones = array();
 		foreach (explode('x', $this->mnm_user[1]) as $id) {
 			$id = intval($id);
-			if ($id > 0 && $id != $this->user_id) {
+			if ($id > 0) {
 				array_push($clones, $id);
 			}
 		}

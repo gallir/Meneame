@@ -623,6 +623,7 @@ function meta_teaser_item() {
 
 function insert_clon($last, $previous, $ip='') {
 	global $globals, $db;
+	if ($last == $previous) return false;
 	$db->query("REPLACE INTO clones (clon_from, clon_to, clon_ip) VALUES ($last, $previous, '$ip')");
 	$db->query("INSERT IGNORE INTO clones (clon_to, clon_from, clon_ip) VALUES ($last, $previous, '$ip')");
 }
