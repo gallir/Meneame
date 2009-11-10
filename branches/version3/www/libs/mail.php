@@ -16,7 +16,8 @@ function send_recover_mail ($user) {
 	$url = 'http://'.get_server_name().$globals['base_url'].'profile.php?login='.$user->username.'&t='.$now.'&k='.$key;
 	//echo "$user->username, $user->email, $url<br />";
 	$to      = $user->email;
-	$subject = _('Recuperación o verificación de la contraseña de '). get_server_name();
+	$subject = _('Recuperación o verificación de contraseña de '). get_server_name();
+	$subject = mb_encode_mimeheader($subject,"UTF-8", "B", "\n");
 	$message = $to . _(': para poder acceder sin la clave, conéctate a la siguiente dirección en menos de dos horas:') . "\n\n$url\n\n";
 	$message .= _('Pasado este tiempo puedes volver a solicitar acceso en: ') . "\nhttp://".get_server_name().$globals['base_url']."login.php?op=recover\n\n";
 	$message .= _('Una vez en tu perfil, puedes cambiar la clave de acceso.') . "\n" . "\n";
@@ -27,6 +28,7 @@ function send_recover_mail ($user) {
 				'From: '._('Avisos').' '.get_server_name().' <'._('no_contestar').'@'.get_server_name().">\n".
 				'Reply-To: '._('no_contestar').'@'.get_server_name()."\n".
 				'X-Mailer: meneame.net/PHP/' . phpversion(). "\n";
+	$headers .= 'MIME-Version: 1.0' . "\n";
 	//$pars = '-fweb@'.get_server_name();
 	mail($to, $subject, $message, $headers);
 	echo '<p><strong>' ._ ('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.') . '</strong></p>';
