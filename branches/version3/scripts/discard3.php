@@ -27,7 +27,8 @@ if ($links) {
 		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.0");
 		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.4");
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
-		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 && $negatives > $positives) {
+		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 
+			&& ($negatives > $positives || $negatives > $link->link_karma) ) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
 			$karma_old = $link->link_karma;
 			$karma_new = intval($link->link_karma/20);
