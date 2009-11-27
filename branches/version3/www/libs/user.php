@@ -114,6 +114,7 @@ class User {
 		elseif(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
 		elseif(!empty($this->email)) $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled'";
 
+		$this->stats = false;
 		if(!empty($where) && ($user = $db->get_row("SELECT SQL_CACHE * FROM users WHERE $where limit 1"))) {
 			$this->id =$user->user_id;
 			$this->username = $user->user_login;
@@ -148,7 +149,7 @@ class User {
 	function all_stats() {
 		global $db;
 
-		if ($this->stats_done) return;
+		if ($this->stats) return;
 		if(!$this->read) $this->read();
 
 		$this->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
@@ -156,7 +157,7 @@ class User {
 		$this->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
 		$this->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
 		$this->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
-		$this->stats_done = true;
+		$this->stats = true;
 	}
 
 	function print_medals() {
