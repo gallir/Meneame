@@ -192,6 +192,14 @@ class User {
 		elseif ($this->published_links > 50) $medal = $medals['silver'];
 		elseif ($this->published_links > 20 || ($this->published_links > 10 && $ratio > 0.05)) $medal = $medals['bronze'];
 		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
+
+		// Number of friends
+		$medal = '';
+		$friends = $db->get_var("select count(*) from friends where friend_to = $this->id");
+		if ($friends > 200) $medal = $medals['gold'];
+		elseif ($friends > 100) $medal = $medals['silver'];
+		elseif ($friends > 50) $medal = $medals['bronze'];
+		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('amigos')." ($friends)".'"/>';
 	}
 
 	function ranking() {
