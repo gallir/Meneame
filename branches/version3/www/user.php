@@ -235,6 +235,9 @@ function do_profile() {
 		} else {
 			echo $user->username;
 		}
+
+		$user->print_medals();
+
 		$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
 		if ($current_user->admin &&
 			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from")) > 0 ) {

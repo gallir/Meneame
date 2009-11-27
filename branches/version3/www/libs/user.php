@@ -148,6 +148,7 @@ class User {
 	function all_stats() {
 		global $db;
 
+		if ($this->stats_done) return;
 		if(!$this->read) $this->read();
 
 		$this->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
@@ -155,6 +156,39 @@ class User {
 		$this->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
 		$this->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
 		$this->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
+		$this->stats_done = true;
+	}
+
+	function print_medals() {
+		global $globals, $db;
+		echo "\n<!-- Credits: using some famfamfam silk free icons -->\n";
+		$medals = array('gold' => 'medal_gold_1.png', 'silver' => 'medal_silver_1.png', 'bronze' => 'medal_bronze_1.png');
+
+		$this->all_stats();
+		// Users "seniority"
+		$medal = '';
+		$years = intval(($globals['now'] - $this->date) / (86400*365));
+		if ($years > 2) $medal = $medals['gold'];
+		elseif ($years > 1) $medal = $medals['silver'];
+		elseif ($years > 0) $medal = $medals['bronze'];
+		if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
+
+		// Published ratio links
+		if ($this->total_links > 20 && $this->published_links > 2) {
+			$medal = '';
+			$ratio = round($this->published_links / $this->total_links, 2);
+			if ($ratio > 0.15) $medal = $medals['gold'];
+			elseif ($ratio > 0.10) $medal = $medals['silver'];
+			elseif ($ratio > 0.08) $medal = $medals['bronze'];
+			if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('porcentaje publicadas')." ($ratio)".'"/>';
+		}
+
+		// Published links
+		$medal = '';
+		if ($this->published_links > 200) $medal = $medals['gold'];
+		elseif ($this->published_links > 50) $medal = $medals['silver'];
+		elseif ($this->published_links > 20) $medal = $medals['bronze'];
+		if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
 	}
 
 	function ranking() {
