@@ -167,12 +167,14 @@ class User {
 
 		$this->all_stats();
 		// Users "seniority"
-		$medal = '';
-		$years = intval(($globals['now'] - $this->date) / (86400*365));
-		if ($years > 2) $medal = $medals['gold'];
-		elseif ($years > 1) $medal = $medals['silver'];
-		elseif ($years > 0) $medal = $medals['bronze'];
-		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
+		if ($this->total_votes > 20 || $this->total_links > 20) {
+			$medal = '';
+			$years = intval(($globals['now'] - $this->date) / (86400*365));
+			if ($years > 2) $medal = $medals['gold'];
+			elseif ($years > 1) $medal = $medals['silver'];
+			elseif ($years > 0) $medal = $medals['bronze'];
+			if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
+		}
 
 		// Published ratio links
 		if ($this->total_links > 20 && $this->published_links > 2) {
