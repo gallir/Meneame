@@ -188,7 +188,7 @@ class User {
 		$medal = '';
 		if ($this->published_links > 200) $medal = $medals['gold'];
 		elseif ($this->published_links > 50) $medal = $medals['silver'];
-		elseif ($this->published_links > 20) $medal = $medals['bronze'];
+		elseif ($this->published_links > 20 || ($this->published_links > 10 && $ratio > 0.05)) $medal = $medals['bronze'];
 		if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
 	}
 
