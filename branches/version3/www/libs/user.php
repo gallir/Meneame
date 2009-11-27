@@ -172,7 +172,7 @@ class User {
 		if ($years > 2) $medal = $medals['gold'];
 		elseif ($years > 1) $medal = $medals['silver'];
 		elseif ($years > 0) $medal = $medals['bronze'];
-		if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
+		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
 
 		// Published ratio links
 		if ($this->total_links > 20 && $this->published_links > 2) {
@@ -181,7 +181,7 @@ class User {
 			if ($ratio > 0.15) $medal = $medals['gold'];
 			elseif ($ratio > 0.10) $medal = $medals['silver'];
 			elseif ($ratio > 0.08) $medal = $medals['bronze'];
-			if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('porcentaje publicadas')." ($ratio)".'"/>';
+			if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('porcentaje publicadas')." ($ratio)".'"/>';
 		}
 
 		// Published links
@@ -189,7 +189,7 @@ class User {
 		if ($this->published_links > 200) $medal = $medals['gold'];
 		elseif ($this->published_links > 50) $medal = $medals['silver'];
 		elseif ($this->published_links > 20 || ($this->published_links > 10 && $ratio > 0.05)) $medal = $medals['bronze'];
-		if ($medal) echo '<img src="'.$globals['base_url'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
+		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
 	}
 
 	function ranking() {
