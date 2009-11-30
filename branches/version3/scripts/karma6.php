@@ -307,9 +307,9 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		// Penalize to unfair negative comments' votes
 		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and comment_votes < 10 and ((comment_karma-vote_value)/(comment_votes-1)) > 0 and (comment_votes < 5 or comment_karma >= 5 * comment_votes)");
-		if ($negative_abused_comment_votes_count > 4) {
+		if ($negative_abused_comment_votes_count > 5) {
 			$karma5 = max(-$comment_votes/2, -$comment_votes * $negative_abused_comment_votes_count/20);
-			if ($negative_abused_comment_votes_count > 8 ) {
+			if ($negative_abused_comment_votes_count > 10 ) {
 				$karma5 -= $karma0 / 2 ; // Take away half of karma0
 				if ($karma4 > 0) {
 					$karma5 -= $karma4 / 2; // Take away half karma4

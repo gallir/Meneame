@@ -4,6 +4,7 @@ include(mnminclude.'user.php');
 include(mnminclude.'log.php');
 include(mnminclude.'annotation.php');
 include(mnminclude.'link.php');
+include(mnminclude.'external_post.php');
 
 header("Content-Type: text/plain");
 
@@ -28,7 +29,7 @@ if ($links) {
 		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.4");
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
 		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 
-			&& ($negatives > $positives || $negatives > $link->link_karma / 2) ) {
+			&& ($negatives > $positives || ($negatives > $link->link_karma/2 && $negatives > $positives/2) )) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
 			$karma_old = $link->link_karma;
 			$karma_new = intval($link->link_karma/20);
@@ -52,6 +53,21 @@ if ($links) {
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
 				$annotation->append(_('Noticia retirada de portada').": -1.2, karma: $user->karma\n");
+			}
+
+			if ($globals['twitter_user'] || $globals['jaiku_user']) {
+				if ($globals['url_shortener']) {
+					$short_url = $l->get_short_permalink();
+				} else {
+					$short_url = fon_gs($l->get_permalink());
+				}
+				$text = _('Retirada de portada') . ': ';
+				if ($globals['twitter_user'] && $globals['twitter_password']) {
+					twitter_post($text, $short_url);
+				}
+				if ($globals['jaiku_user'] && $globals['jaiku_key']) {
+					jaiku_post($text, $short_url);
+				}
 			}
 		}
 	}
