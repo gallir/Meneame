@@ -216,9 +216,9 @@ echo '
 }
 
 echo '				
-				'._("Un \"nuevo usuario\" solo podrá enviar ") . $globals['user_new_links_limit'] . _(" historias cada ") . print_time($globals['user_new_links_interval']) . ' ('._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'). ').<br />
+				'._("Un \"nuevo usuario\" solo podrá enviar ") . $globals['new_user_links_limit'] . _(" historias cada ") . print_time($globals['new_user_links_interval']) . ' ('._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'). ').<br />
 				<br />
-				'._("Un \"nuevo usuario\" con envíos recientes ( &lt; ") . print_time($globals['user_new_links_interval']) . _(") y karma &lt; ") . $globals['karma_propaganda'] ._(" no podrá enviar si esos envíos han tenido más de 10 negativos y los neg. > (pos. * 1,5)") . '.<br />
+				'._("Un \"nuevo usuario\" con envíos recientes ( &lt; ") . print_time($globals['new_user_links_interval']) . _(") y karma &lt; ") . $globals['karma_propaganda'] ._(" no podrá enviar si esos envíos han tenido más de 10 negativos y los neg. > (pos. * 1,5)") . '.<br />
 		</fieldset>';
 
 
