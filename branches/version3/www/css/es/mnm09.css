@@ -619,10 +619,6 @@ margin-bottom: 16px;
 clear: both;
 }
 
-table img {
-border: 1px solid;
-}
-
 table.decorated th, table.decorated td {
 text-align: left;
 font-size: 85%;

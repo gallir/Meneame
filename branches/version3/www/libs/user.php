@@ -162,6 +162,9 @@ class User {
 
 	function print_medals() {
 		global $globals, $db;
+
+		if ($this->level == 'disabled' || $this->level == 'autodisabled') return;
+
 		echo "\n<!-- Credits: using some famfamfam silk free icons -->\n";
 		$medals = array('gold' => 'medal_gold_1.png', 'silver' => 'medal_silver_1.png', 'bronze' => 'medal_bronze_1.png');
 

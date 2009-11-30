@@ -94,8 +94,10 @@ if ($users) {
 		$user->read();
 		$user->all_stats();
 		echo '<tr>';
-		echo '<td><a href="'.get_user_uri($user->username).'"><img src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$user->id.');" onmouseout="tooltip.clear(event);" />'.$user->username.'</a></td>';
-		echo '<td class="short">'.$user->karma.'</td>';
+		echo '<td style="font-size:100%"><a href="'.get_user_uri($user->username).'"><img src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$user->id.');" onmouseout="tooltip.clear(event);&nbsp;" />'.$user->username.'</a></td>';
+		echo '<td class="short">'.$user->karma.'&nbsp;';
+		$user->print_medals();
+		echo '</td>';
 		echo '<td class="short">'.$user->total_links.'</td>';
 		if($user->total_links>0) 
 			echo '<td class="short">'.$user->published_links.'&nbsp;('.intval($user->published_links/$user->total_links*100).'%)</td>';
