@@ -93,7 +93,7 @@ class Post {
 		if(!$this->read) $this->read(); 
 
 		require_once(mnminclude.'user.php');
-		$this->hidden = $this->karma < -50;
+		$this->hidden = $this->karma < $globals['post_hide_karma'];
 		$this->ignored = $current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0;
 
 		echo '<li id="pcontainer-'.$this->id.'">';
@@ -104,7 +104,7 @@ class Post {
 		} else {
 			$post_meta_class = 'comment-meta';
 			$post_class = 'comment-body';
-			if ($this->karma > 100) {
+			if ($this->karma > $globals['post_highlight_karma']) {
 				$post_class .= ' high';
 			}
 		}
@@ -174,6 +174,7 @@ class Post {
 	}
 
 	function print_user_avatar() {
+		global $globals;
 		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
 	}
 
@@ -181,8 +182,8 @@ class Post {
 		global $current_user, $globals;
 
 		if (($this->author == $current_user->user_id &&
-			time() - $this->date < 3600 ) ||
-			 ($current_user->user_level == 'god' && time() - $this->date < 864000)) { // Admins can edit up to 10 days
+			time() - $this->date < $globals['posts_edit_time'] ) ||
+			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] )) { // Admins can edit up to 10 days
 			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
 		}

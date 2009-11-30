@@ -851,7 +851,7 @@ class Link {
 		if ($extended) {
 			$period = $globals['time_enabled_votes'];
 		} else {
-			$period = 3600;
+			$period = $globals['time_enabled_negative_votes'];
 		}
 		return  $current_user->user_id > 0  &&
 				$this->votes > 0 &&

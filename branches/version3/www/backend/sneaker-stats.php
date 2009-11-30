@@ -26,6 +26,7 @@ function check_stats($string) {
 	if (preg_match('/^!last/', $string)) return do_last($string);
 	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
 	if (preg_match('/^!rae/', $string)) return do_rae($string);
+	if (preg_match('/^!values/', $string)) return do_values();
 	return false;
 }
 
@@ -58,6 +59,14 @@ function do_last($string) {
 		}
 	}
 	return $list;
+}
+
+function do_values() {
+	global $db, $current_user, $globals;
+
+	if (! $current_user->admin) return false;
+
+	return 'http://' . get_server_name().$globals['base_url']. 'values.php'; 
 }
 
 function do_stats1($string) {

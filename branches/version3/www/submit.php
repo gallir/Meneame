@@ -156,7 +156,7 @@ function do_submit1() {
 	}
 
 	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute)");
-	if ($current_user->user_karma > 10) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
+	if ($current_user->user_karma > $globals['limit_3_minutes_karma']) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
 	else $enqueued_limit = $globals['limit_3_minutes'];
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
@@ -168,8 +168,9 @@ function do_submit1() {
 	}
 
 	// Check the user does not have too many drafts
-	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes = 0");
-	if ($drafts > 3) {
+	$minutes = intval($globals['draft_time'] / 60) + 10;
+	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval $minutes minute) and link_status='discard' and link_votes = 0");
+	if ($drafts > $globals['draft_limit']) {
 		echo '<p class="error"><strong>'._('Demasiados borradores').':</strong></p>';
 		echo '<p>'._('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>';
 		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): $_POST[url]");
@@ -205,13 +206,13 @@ function do_submit1() {
 	}
 
 	$register_date = $current_user->Date();
-	if ($globals['now'] - $register_date < 86400*3) {
+	if ($globals['now'] - $register_date < $globals['new_user_time'] ) {
 		$new_user = true;
 	}
 
 	// check that a new user also votes, not only sends links
 	// it requires $globals['min_user_votes'] votes
-	if ($new_user && $globals['min_user_votes'] > 0 && $current_user->user_karma < 6.1) {
+	if ($new_user && $globals['min_user_votes'] > 0 && $current_user->user_karma < $globals['new_user_karma']) {
 		$user_votes_total = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_user_id=$current_user->user_id");
 		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 72 hour) and vote_user_id=$current_user->user_id");
 		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
@@ -244,11 +245,11 @@ function do_submit1() {
 	// avoid spams, an extra security check
 	// it counts the numbers of links in the last hours
 	if ($new_user) {
-		$user_links_limit = 1;
-		$user_links_interval = 1;
+		$user_links_limit = $globals['new_user_links_limit'];
+		$user_links_interval = intval($globals['new_user_links_interval'] / 3600);
 	} else {
-		$user_links_limit = 5;
-		$user_links_interval = 2;
+		$user_links_limit = $globals['user_links_limit'];
+		$user_links_interval = intval($globals['user_links_interval'] / 3600);
 	}
 	$same_user = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author=$current_user->user_id") - $drafts;
 	$same_ip = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_ip = '".$globals['user_ip']."'") - $drafts;
@@ -259,9 +260,9 @@ function do_submit1() {
 		return;
 	}
 
-	// avoid users sending continuous "rubbsih" or "propaganda", specially new users
+	// avoid users sending continuous "rubbish" or "propaganda", specially new users
 	// it takes in account the number of positive votes in the last six hours
-	if ($same_user > 1 && $current_user->user_karma < 12) {
+	if ($same_user > 1 && $current_user->user_karma < $globals['karma_propaganda']) {
 		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {

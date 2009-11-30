@@ -24,7 +24,7 @@ define("mnmpath", dirname(__FILE__));
 define("mnminclude", dirname(__FILE__).'/libs/');
 ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
-// IMPORTANTE: Do local modification in "hostname-local.php"
+// IMPORTANT: Do local modification in "hostname-local.php"
 // and/or "local.php"
 // They are automatically included
 //$server_name	= $_SERVER['SERVER_NAME'];
@@ -103,8 +103,36 @@ $globals['comment_edit_time'] = 240;
 // How many *global* links for last 3 minutes
 // If user->karma > 10 then limit = limit*1.5
 $globals['limit_3_minutes'] = 10;
+$globals['limit_3_minutes_karma'] = 10;
 
 $globals['limit_user_24_hours'] = 12;
+
+$globals['karma_propaganda'] = 12; // min user karma to avoid extra spam/propaganda checks in the submits
+
+
+$globals['karma_base']=6;
+$globals['karma_base_max']=9; // If not penalised, older users can get up to this value as base for the calculus
+$globals['min_karma']=1; //min user karma
+$globals['max_karma']=20; //max user karma
+$globals['special_karma_gain']=17; //karma to gain 'special' status (max * 0.85)
+$globals['special_karma_loss']=12; //karma to loss 'special' status (max * 0.6)
+
+$globals['comment_votes_multiplier'] = 5; //'importance' in karma calculations of comment votes
+$globals['post_votes_multiplier'] = 1; //'importance' in karma calculations of post votes
+
+$globals['instant_karma_per_published'] = 1; //karma added when published
+$globals['instant_karma_per_depublished'] = 1.2; //karma substracted when depublished
+$globals['instant_karma_per_discard'] = 0.2; //karma substracted when discarded
+$globals['karma_points_per_published'] = 2; //karma added by each published when recalculating new karma (max 4)
+$globals['karma_points_per_published_max'] = 4;
+$globals['depublish_karma_divisor'] = 20; //karma is divided by this when depublish
+
+
+$globals['depublish_negative_karma'] = 6.0; //minimun karma of the vote to get it counted by discard.php
+$globals['depublish_positive_karma'] = 7.4; //minimun karma of the vote to get it counted by discard.php 
+
+
+
 
 //$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
 $globals['max_sneakers'] = 250;
@@ -113,8 +141,9 @@ $globals['time_enabled_comments'] = 604800; // 7 days
 $globals['time_enabled_comments_status']['queued'] = 259200; // 3 days
 $globals['time_enabled_comments_status']['discard'] = 86400; // 1 day
 $globals['time_enabled_comments_status']['autodiscard'] = 86400; // 1 day
-$globals['time_enabled_comments_status']['abuse'] = 33200; // 1/2 day
+$globals['time_enabled_comments_status']['abuse'] = 43200; // 1/2 day
 $globals['time_enabled_votes'] = 345600; // 4 days
+$globals['time_enabled_negative_votes'] = 3600; // 1 hour
 $globals['mysql_persistent'] = true;
 $globals['mysql_master_persistent'] = false;
 // Enable or disable the detecttion of real IP behind transparents proxies
@@ -126,6 +155,8 @@ $globals['check_behind_proxy'] = false;
 //$globals['show_negatives'] = 0;
 $globals['min_karma_for_negatives'] = 5.5;
 $globals['min_user_votes'] = 0;  // For new users and also enable check of sent versus voted
+$globals['new_user_time'] = 259200; // 3 days. Time from registry date the user is considered "new user"
+$globals['new_user_karma'] = 6.1; // min karma to check new users
 //$globals['min_karma_for_links'] = 4.9;
 //$globals['min_karma_for_comments'] = 4.9;
 $globals['min_time_for_comments'] = 3600; // Time to wait until first comment (from user_validated_date)
@@ -133,8 +164,25 @@ $globals['min_time_for_comments'] = 3600; // Time to wait until first comment (f
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;
 
+
+
+$globals['new_user_links_limit'] = 1; //links allowed to submit in interval for new users
+$globals['new_user_links_interval'] = 3600; 
+$globals['user_links_limit'] = 5;
+$globals['user_links_interval'] = 7200;
+
+
+//sneakme
 $globals['posts_len'] = 500;
 $globals['posts_period'] = 60;
+$globals['posts_edit_time'] = 3600;
+$globals['posts_edit_time_admin'] = 864000;
+$globals['post_highlight_karma'] = 100;
+$globals['post_hide_karma'] = -50;
+
+$globals['draft_time'] = 1200; // Time unsent drafts will be kept (20 minutes)
+$globals['draft_limit'] = 3; // Max unset drafts at the same time
+
 
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
