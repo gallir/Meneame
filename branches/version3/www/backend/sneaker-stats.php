@@ -64,8 +64,6 @@ function do_last($string) {
 function do_values() {
 	global $db, $current_user, $globals;
 
-	if (! $current_user->admin) return false;
-
 	return 'http://' . get_server_name().$globals['base_url']. 'values.php'; 
 }
 
