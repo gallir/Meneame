@@ -347,10 +347,10 @@ function publish($link) {
 	$user = new User;
 	$user->id = $link->author;
 	if ($user->read()) {
-		$user->karma = min(20, $user->karma + 1);
+		$user->karma = min(20, $user->karma + $globals['instant_karma_per_published']);
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Noticia publicada').": +1, karma: $user->karma\n");
+		$annotation->append(_('Noticia publicada').": +". $globals['instant_karma_per_published'] .", karma: $user->karma\n");
 	}
 
 	// Add the publish event/log

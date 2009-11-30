@@ -13,7 +13,8 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 60 day)")
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
 
 // Delete old bad links
-$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval 20 minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
+$minutes = intval($globals['draft_time'] / 60);
+$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval $minutes minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
 // Delete old conversations
 $db->query("delete from conversations where conversation_time < date_sub(now(), interval 180 day)");
@@ -55,17 +56,20 @@ if ($dbusers) {
 // Lower karma of disabled users
 $db->query("update users set user_karma = 6 where user_level in ('disabled', 'autodisabled') and user_karma > 6 ");
 
-$karma_base=6;
-$karma_base_max=9; // If not penalised, older users can get up to this value as base for the calculus
-$min_karma=1;
-$max_karma=20;
+$karma_base=$globals['karma_base'];
+$karma_base_max=$globals['karma_base_max']; // If not penalised, older users can get up to this value as base for the calculus
+$min_karma=$globals['min_karma'];
+$max_karma=$globlals['max_karma'];
+$special_karma_gain=$globlals['special_karma_gain'];
+$special_karma_loss=$globlals['special_karma_loss'];
 $now = "'".$db->get_var("select now()")."'";
 $history_from = "date_sub($now, interval 48 hour)";
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
-$points_per_published = 2;
+$points_per_published = $globals['karma_points_per_published'];
+$points_per_published_max = $globals['karma_points_per_published_max'];
 $points_given = 3;
-$comment_votes = 5;
-$post_votes = 1;
+$comment_votes = $globals['comment_votes_multiplier'];
+$post_votes = $globals['post_votes_multiplier'];
 
 // Following lines are for negative points given to links
 // It takes in account just votes during 24 hours
@@ -146,7 +150,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		$karma0 = $points_per_published * $n_published;
 		// Max: 4 published
-		$karma0 = min($points_per_published * 4, $karma0);
+		$karma0 = min($points_per_published * $points_per_published_max, $karma0);
 		if ($karma0 > 0) {
 			$output .= _('Publicadas').": $n_published karma: $karma0\n";
 		}
@@ -407,10 +411,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 			// Increase/decrease faster
 			$user->karma = 0.8*$user->karma + 0.2*$karma;
 		}
-		if ($user->karma > $max_karma * 0.85 && $user->level == 'normal') {
+		if ($user->karma > $special_karma_gain && $user->level == 'normal') {
 			$user->level = 'special';
 		} else {
-			if ($user->level == 'special' && $user->karma < $max_karma * 0.6) {
+			if ($user->level == 'special' && $user->karma < $special_karma_loss) {
 				$user->level = 'normal';
 			}
 		}

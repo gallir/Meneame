@@ -6,6 +6,8 @@ include(mnminclude.'annotation.php');
 include(mnminclude.'link.php');
 include(mnminclude.'external_post.php');
 
+global $globals;
+
 header("Content-Type: text/plain");
 
 $now = time();
@@ -16,7 +18,8 @@ $min_date = "date_sub(now(), interval 24 hour)";
 $db->query("delete from users where user_date < date_sub(now(), interval 12 hour) and user_date > date_sub(now(), interval 24 hour) and user_validated_date is null");
 
 // Delete old bad links
-$db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval 20 minute) and link_votes = 0");
+$minutes = intval($globals['draft_time'] / 60);
+$db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
 
 // send back to queue links with too many negatives
 $links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 2 day) and link_date < date_sub(now(), interval 8 minute) and link_negatives > link_votes / 8");
@@ -25,14 +28,14 @@ $links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, 
 if ($links) {
 	foreach ($links as $link) {
 		// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
-		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 6.0");
-		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > 7.4");
+		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
+		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
 		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 
 			&& ($negatives > $positives || ($negatives > $link->link_karma/2 && $negatives > $positives/2) )) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
 			$karma_old = $link->link_karma;
-			$karma_new = intval($link->link_karma/20);
+			$karma_new = intval($link->link_karma/ $globals['depublish_karma_divisor'] );
 			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $link->link_id");
 
 			// Add an annotation to show it in the logs
@@ -48,11 +51,11 @@ if ($links) {
 			$user = new User();
 			$user->id = $link->link_author;
 			if ($user->read()) {
-				$user->karma -= 1.2;
+				$user->karma -= $globals['instant_karma_per_depublished'];
 				echo "$user->username: $user->karma\n";
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('Noticia retirada de portada').": -1.2, karma: $user->karma\n");
+				$annotation->append(_('Noticia retirada de portada').": -". $globals['instant_karma_per_depublished'] .", karma: $user->karma\n");
 			}
 
 			if ($globals['twitter_user'] || $globals['jaiku_user']) {
@@ -90,11 +93,11 @@ foreach ($negatives as $negative) {
 	$user = new User();
 	$user->id = $negative->link_author;
 	if ($user->read()) {
-		$user->karma -= 0.20;
+		$user->karma -= $globals['instant_karma_per_discard'];
 		echo "$user->username: $user->karma\n";
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Noticia descartada').": -0.20, karma: $user->karma\n");
+		$annotation->append(_('Noticia descartada').": -". $globals['instant_karma_per_discard'] .", karma: $user->karma\n");
 	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event
