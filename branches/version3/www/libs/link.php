@@ -535,7 +535,7 @@ class Link {
 			echo ':&nbsp;'.text_to_summary($best_comment->comment_content, 200).'</div>';
 		}
 
-		echo '<div class="news-details">';
+		echo '<div class="news-details main">';
 		if($this->comments > 0) {
 			$comments_mess = $this->comments . ' ' . _('comentarios');
 		} else  {

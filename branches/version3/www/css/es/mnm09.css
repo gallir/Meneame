@@ -734,6 +734,10 @@ overflow: hidden;
 white-space: nowrap;
 }
 
+.news-details.main {
+font-size: 110%;
+}
+
 .news-details span {
 margin: 0;
 vertical-align: top;
