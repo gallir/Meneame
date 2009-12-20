@@ -156,7 +156,7 @@ function print_search_form() {
 	echo '<option value="'.intval(24).'">'._('24 horas').'</option>';
 	echo '<option value="'.intval(48).'">'._('48 horas').'</option>';
 	echo '<option value="'.intval(24*7).'">'._('última semana').'</option>';
-	echo '<option value="'.intval(24*30).'">'._('última mes').'</option>';
+	echo '<option value="'.intval(24*30).'">'._('último mes').'</option>';
 	echo '<option value="'.intval(24*180).'">'._('6 meses').'</option>';
 	echo '<option value="'.intval(24*365).'">'._('1 año').'</option>';
 	echo '<option value="">'._('todas').'</option>';

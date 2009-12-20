@@ -140,9 +140,9 @@ if(!empty($_REQUEST['time'])) {
 	
 	
 	if($status == 'all' || $status == 'all_local') {
-		$from_where = "FROM links WHERE link_status in  ('published', 'queued') AND link_date > date_sub(now(), interval 2 day) ";
+		$from_where = "FROM links WHERE link_status in  ('published', 'queued') AND link_date > date_sub(now(), interval 7 day) ";
 	} else {
-		$from_where = "FROM links WHERE link_status='$status' AND link_date > date_sub(now(), interval 2 day) ";
+		$from_where = "FROM links WHERE link_status='$status' AND link_date > date_sub(now(), interval 7 day) ";
 	}
 
 	// Check if it's search
