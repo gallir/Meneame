@@ -12,8 +12,6 @@ include(mnminclude.'ts.php');
 include(mnminclude.'log.php');
 
 //$globals['ads'] = true;
-// We use the original IP to avoid cheating by httheaders
-$globals['original_user_ip_int'] = sprintf("%u", ip2long($_SERVER["REMOTE_ADDR"]));
 
 // Clean return variable
 if(!empty($_REQUEST['return']))
@@ -26,7 +24,10 @@ if($_GET["op"] === 'logout') {
 // We need it because we modify headers
 ob_start();
 
-$globals['secure_page'] = True;
+if ($_POST["processlogin"] == 1) {
+	$globals['secure_page'] = True;
+}
+
 do_header("login");
 echo '<div id="singlewrap">' . "\n";
 
@@ -47,7 +48,8 @@ do_footer();
 function do_login() {
 	global $current_user, $globals;
 
-	$previous_login_failed =  log_get_date('login_failed', $globals['original_user_ip_int'], 0, 90);
+	$form_ip_check = check_form_auth_ip();
+	$previous_login_failed =  log_get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
 	if($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
@@ -86,18 +88,25 @@ function do_login() {
 	} else {
 		echo '<div class="genericform" style="float:auto;">'."\n";	
 	}
-	echo '<form action="login.php" id="thisform" method="post">'."\n";
-	
+	echo '<form action="'.get_auth_link().'login.php" id="thisform" method="post">'."\n";
 	
 	if($_POST["processlogin"] == 1) {
+		// Check the IP, otherwise redirect
+		if (!$form_ip_check) {
+			header("Location: http://".get_server_name().$globals['base_url']."login.php");
+			die;
+		}
+
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
+
+	
 		if ($previous_login_failed > 2  && !ts_is_human()) {
-			log_insert('login_failed', $globals['original_user_ip_int'], 0);
-			recover_error(_('El código de seguridad no es correcto!'));
+			log_insert('login_failed', $globals['form_user_ip_int'], 0);
+			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
-			log_insert('login_failed', $globals['original_user_ip_int'], 0);
+			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
 		} else {
@@ -131,6 +140,7 @@ function do_login() {
 	if ($previous_login_failed > 2) {
 		ts_print_form();
 	}
+	get_form_auth_ip();
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";

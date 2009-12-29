@@ -12,6 +12,10 @@ function send_recover_mail ($user) {
 	require_once(mnminclude.'user.php');
 
 	$now = time();
+
+	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
+	else $domain = get_server_name();
+
 	$key = md5($user->id.$user->pass.$now.$site_key.get_server_name());
 	$url = 'http://'.get_server_name().$globals['base_url'].'profile.php?login='.$user->username.'&t='.$now.'&k='.$key;
 	//echo "$user->username, $user->email, $url<br />";
@@ -25,8 +29,8 @@ function send_recover_mail ($user) {
 	$message .= "-- \n  " . _('el equipo de menéame');
 	$message = wordwrap($message, 70);
 	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" . 
-				'From: '._('Avisos').' '.get_server_name().' <'._('no_contestar').'@'.get_server_name().">\n".
-				'Reply-To: '._('no_contestar').'@'.get_server_name()."\n".
+				'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
+				'Reply-To: '._('no_contestar')."@$domain\n".
 				'X-Mailer: meneame.net/PHP/' . phpversion(). "\n";
 	$headers .= 'MIME-Version: 1.0' . "\n";
 	//$pars = '-fweb@'.get_server_name();

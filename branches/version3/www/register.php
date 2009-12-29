@@ -16,12 +16,20 @@ if ($current_user->user_id > 0) {
 	header("Location: " . get_user_uri($current_user->user_login));
 }
 
-$globals['secure_page'] = True;
+if(isset($_POST["process"])) {
+	$globals['secure_page'] = True;
+}
+
 do_header(_("registro"), "post");
 
 echo '<div class="genericform">'."\n";
 
 if(isset($_POST["process"])) {
+	// Check the IP is right
+	if (!check_form_auth_ip()) {
+		header("Location: http://".get_server_name().$globals['base_url']."login.php");
+		die;
+	}
 	switch (intval($_POST["process"])) {
 		case 1:
 			do_register1();
@@ -41,7 +49,7 @@ exit;
 function do_register0() {
 	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></h4></div>';
 
-	echo '<form action="register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de legales de uso').'\')">' . "\n";
+	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de legales de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
 	echo '<legend><span class="sign">' . _("registro") . '</span></legend>' . "\n";
 	echo '<p><label for="name">' . _("nombre de usuario") . ':</label><br />' . "\n";
@@ -71,6 +79,7 @@ function do_register0() {
 	echo '<input type="hidden" name="process" value="1"/>' . "\n";
 
 	echo '</fieldset>' . "\n";
+	get_form_auth_ip();
 	echo '</form>' . "\n";
 }
 
@@ -85,7 +94,7 @@ function do_register1() {
 	echo '<br style="clear:both" />';
 
 
-	echo '<form action="register.php" method="post" id="thisform">' . "\n";
+	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform">' . "\n";
 	echo '<fieldset><legend><span class="sign">'._('validación').'</span></legend>'."\n";
 	ts_print_form();
 	echo '<input type="submit" name="submit" class="button" value="'._('continuar').'" />';
@@ -94,6 +103,7 @@ function do_register1() {
 	echo '<input type="hidden" name="username" value="'.clean_input_string($_POST["username"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="password" value="'.clean_input_string($_POST["password"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="password2" value="'.clean_input_string($_POST["password2"]).'" />'; // extra sanity, in fact not needed
+	get_form_auth_ip();
 	echo '</fieldset></form>'."\n";
 }
 
@@ -111,7 +121,7 @@ function do_register2() {
 	$password=md5(trim($_POST['password']));
 	$email=clean_input_string(trim($_POST['email'])); // sanity check
 	$dbemail=$db->escape($email); // sanity check
-	$user_ip = $globals['user_ip'];
+	$user_ip = $globals['form_user_ip'];
 	if (!user_exists($username)) {
 		if ($db->query("INSERT INTO users (user_login, user_login_register, user_email, user_email_register, user_pass, user_date, user_ip) VALUES ('$dbusername', '$dbusername', '$dbemail', '$dbemail', '$password', now(), '$user_ip')")) {
 			echo '<fieldset>'."\n";
@@ -124,6 +134,7 @@ function do_register2() {
 			} else {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
+				$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
 				log_insert('user_new', $user->id, $user->id);
 			}
 			echo '</fieldset>'."\n";
@@ -177,7 +188,7 @@ function check_user_fields() {
 	}
 
 	// Check registers from the same IP network
-	$user_ip = $globals['user_ip'];
+	$user_ip = $globals['form_user_ip'];
 	$ip_classes = explode(".", $user_ip);
 
 	// From the same IP

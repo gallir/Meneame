@@ -65,8 +65,18 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 }
 
 
-$save_messages = save_profile();
-$globals['secure_page'] = True;
+
+if (isset($_POST['process'])) {
+	if (!check_form_auth_ip()) {
+		header("Location: http://".get_server_name().$globals['base_url']."profile.php");
+		die;
+	}
+	$globals['secure_page'] = True;
+	$save_messages = save_profile();
+} else {
+	$globals['secure_page'] = False;
+}
+
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
 echo $save_messages; // We do it later because teh profile could change header's info
 show_profile();
@@ -77,14 +87,15 @@ function show_profile() {
 	global $user, $admin_mode, $user_levels, $globals, $site_key, $current_user;
 
 	echo '<div class="genericform" style="margin: 0 50px">';
-	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
+	echo '<form  enctype="multipart/form-data" action="'.get_auth_link().'profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<fieldset><legend>';
 	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
 
 	echo '<img class="thumbnail" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" />';
 	echo '<input type="hidden" name="process" value="1" />';
 	echo '<input type="hidden" name="user_id" value="'.$user->id.'" />';
-	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.$globals['user_ip']) .'" />';
+	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.mnminclude) .'" />';
+	get_form_auth_ip();
 	if ($admin_mode)
 		echo '<input type="hidden" name="login" value="'.$user->username.'" />';
 
@@ -201,7 +212,7 @@ function save_profile() {
 	$pass_changed=false;
 	$messages = '';
 	
-	$form_hash = md5($site_key.$user->id.$globals['user_ip']);
+	$form_hash = md5($site_key.$user->id.mnminclude);
 	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
 		$old_user_login = $user->username;
 		$old_user_id = $user->id;

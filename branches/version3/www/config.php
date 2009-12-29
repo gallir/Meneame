@@ -32,7 +32,9 @@ $dblang			= 'es';
 $page_size		= 30;
 $anonnymous_vote = true;
 $external_ads = true;
+$globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
 $globals['ssl_server'] = False; //Secure server must have the same name and base
+//$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails from web, if not defined it uses server_name
 
 //Configuration values
 //$globals['external_ads'] = false;
@@ -42,6 +44,7 @@ $globals['db_server'] = 'localhost';
 $globals['db_name'] = 'meneame';
 $globals['db_user'] = 'meneame';
 $globals['db_password'] = '';
+$globals['db_use_transactions'] = false;
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 $globals['static_server'] = '';
@@ -188,7 +191,7 @@ $globals['draft_limit'] = 3; // Max unset drafts at the same time
 $globals['cache_dir'] = 'cache';
 //$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
 $globals['sphinx_server'] = 'localhost';
-$globals['sphinx_port'] = 3312;
+$globals['sphinx_port'] = 9312;
 
 $globals['avatars_dir'] = 'avatar';
 $globals['avatars_max_size'] = 200000;
@@ -225,8 +228,8 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm10.css';
-$globals['css_color'] = 'css/es/mnmcol09.css';
+$globals['css_main'] = 'css/es/mnm11.css';
+$globals['css_color'] = 'css/es/mnmcol10.css';
 
 // Store access stats
 $globals['save_pageloads'] = false;

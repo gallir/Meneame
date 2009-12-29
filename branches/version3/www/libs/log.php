@@ -9,7 +9,12 @@
 function log_insert($type, $ref_id, $user_id=0) {
 	global $db, $globals;
 
-	$ip = $globals['user_ip'];
+	if ($globals['behind_load_balancer'] && $globals['form_user_ip']) {
+		// If the page stored the "real IP" in a form
+		$ip = $globals['form_user_ip']; 
+	} else {
+		$ip = $globals['user_ip'];
+	}
 	return $db->query("insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) values (now(), '$type', $ref_id, $user_id, '$ip')");
 }
 

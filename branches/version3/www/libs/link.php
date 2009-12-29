@@ -278,7 +278,7 @@ class Link {
 	}
 
 	function store() {
-		global $db, $current_user;
+		global $db, $current_user, $globals;
 
 		$link_url = $db->escape($this->url);
 		$link_uri = $db->escape($this->uri);
@@ -290,10 +290,18 @@ class Link {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
-		$db->query("LOCK TABLES links WRITE");
+		if ($globals['db_use_transactions']) {
+			$db->query("START TRANSACTION");
+		} else {
+			$db->query("LOCK TABLES links WRITE");
+		}
 		$this->store_basic();
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
-		$db->query("UNLOCK TABLES");
+		if ($globals['db_use_transactions']) {
+			$db->query("COMMIT");
+		} else {
+			$db->query("UNLOCK TABLES");
+		}
 	}
 
 	function store_basic() {
@@ -491,30 +499,28 @@ class Link {
 			echo "<img src='".$globals['static_server']."$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 		}
 
-		if (! $globals['bot']) {
-			echo '<div class="news-submitted">';
-			if ($type != 'short') {
-				echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
-			}
-			echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."&nbsp;<br />\n";
-			echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
-			// Print dates
-			if ($globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT'])) { // 7 days or user agent is empty
-				echo _('el').get_date_time($this->sent_date);
-				if($this->status == 'published')
-					echo ', '  ._('publicado el').get_date_time($this->date);
-			} else {
-				echo _('hace').txt_time_diff($this->sent_date);
-				if($this->status == 'published')
-					echo ', '  ._('publicado hace').txt_time_diff($this->date);
-			}
-			echo "</div>\n";
+		echo '<div class="news-submitted">';
+		if ($type != 'short') {
+			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
 		}
+		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."&nbsp;<br />\n";
+		echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
+		// Print dates
+		if ($globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT'])) { // 7 days or user agent is empty
+			echo _('el').get_date_time($this->sent_date);
+			if($this->status == 'published')
+				echo ', '  ._('publicado el').get_date_time($this->date);
+		} else {
+			echo _('hace').txt_time_diff($this->sent_date);
+			if($this->status == 'published')
+				echo ', '  ._('publicado hace').txt_time_diff($this->date);
+		}
+		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
 			echo '<p>';
 			echo text_to_html($this->content);
-			if ($type != 'preview' ) {
+			if ($globals['link'] && $type != 'preview' ) {
 				if ($this->is_editable()) {
 					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 				}
@@ -731,7 +737,7 @@ class Link {
 	}
 
 	function insert_vote($value) {
-		global $db, $current_user;
+		global $db, $current_user, $globals;
 		require_once(mnminclude.'votes.php');
 
 		$vote = new Vote;
@@ -760,7 +766,11 @@ class Link {
 		}
 		$vote->value=$value;
 		if($vote->insert()) {
-			$db->query("LOCK TABLES links WRITE");
+			if ($globals['db_use_transactions']) {
+				$db->query("START TRANSACTION");
+			} else {
+				$db->query("LOCK TABLES links WRITE");
+			}
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			} else {
@@ -768,7 +778,11 @@ class Link {
 				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
 			$new = $db->get_row("select link_votes, link_anonymous, link_negatives, link_karma from links where link_id = $this->id");
-			$db->query("UNLOCK TABLES");
+			if ($globals['db_use_transactions']) {
+				$db->query("COMMIT");
+			} else {
+				$db->query("UNLOCK TABLES");
+			}
 			$this->votes = $new->link_votes;
 			$this->anonymous = $new->link_anonymous;
 			$this->negatives = $new->link_negatives;
@@ -992,7 +1006,11 @@ class Link {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
-		$db->query("LOCK TABLES votes READ, users READ");
+		if ($globals['db_use_transactions']) {
+			$db->query("START TRANSACTION");
+		} else {
+			$db->query("LOCK TABLES votes READ, users READ");
+		}
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
@@ -1029,7 +1047,11 @@ class Link {
 			$this->annotation .= $perc. _('% de votos con afinidad elevada'). "<br/>";
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
-		$db->query("UNLOCK TABLES");
+		if ($globals['db_use_transactions']) {
+			$db->query("COMMIT");
+		} else {
+			$db->query("UNLOCK TABLES");
+		}
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
@@ -1200,7 +1222,9 @@ class Link {
 		$this->image_parser = new HtmlImages($this->url, $site);
 		$this->image_parser->debug = $debug;
 		$this->image_parser->referer = $this->get_permalink();
+		echo "<!-- Meneame, before image_parser -->\n";
 		$img = $this->image_parser->get();
+		echo "<!-- Meneame, after image_parser -->\n";
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
 		if ($img) {

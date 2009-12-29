@@ -51,6 +51,7 @@ if(!empty($_REQUEST['time'])) {
 } elseif (!empty($_REQUEST['voted_by'])) {
 	// RSS for voted links
 	$user_id = guess_user_id($_REQUEST['voted_by']);
+	if (! $user_id > 0) die;
 	$sql = "SELECT vote_link_id FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(vote_date) FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
