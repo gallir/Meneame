@@ -15,7 +15,8 @@ padding: 0;
 
 body {
 font-family: sans-serif;
-font-size: 87.5%; /* font size 14px */
+/*font-size: 87.5%; /* font size 14px */
+font-size: 0.84em;
 text-align: center;
 }
 
@@ -185,12 +186,12 @@ padding-top: 12px;
 
 #newswrap {
 margin: 10px 345px 0 10px;
-font-size: small;
+/*font-size: small;*/
 }
 
 #singlewrap {
 margin: 0 10px 0 10px;
-font-size: small;
+/*font-size: small;*/
 }
 
 #map {
@@ -217,7 +218,7 @@ padding-left: 8px;
 }
 
 .tabmain li a {
-font-size: .93em;
+font-size: .95em;
 font-weight: bold;
 display: block;
 float: left;
@@ -238,7 +239,7 @@ height: 25px;
 
 .tabmain li.tabmain-this a {
 font-style: oblique;
-font-size: 1.07em;
+font-size: 1em;
 padding: 2px 24px 0 5px;
 height: 22px;
 }
@@ -251,7 +252,7 @@ font-weight: bold;
 height: 25px !important;
 clear: both;
 padding-left: 180px;
-font-size: 11pt;
+font-size: 1em;
 }
 
 .tabsub-shakeit li {
@@ -337,7 +338,7 @@ font-weight: bold;
 .catsub-block {
 border-bottom: 1px dotted;
 padding: 3px 25px;
-font-size: 8.5pt;
+font-size: 0.8em;
 }
 
 .catsub-block li {
@@ -356,7 +357,7 @@ text-decoration: underline;
 #sidebar h4 {
 text-align: center;
 font-weight: bold;
-font-size: 130%;
+font-size: 1.15em;
 font-family: sans-serif;
 padding: 0 0 0.25em 0;
 }
@@ -375,7 +376,7 @@ margin-bottom: 25px;
 
 .sidebox h5 {
 margin: .5em 5px .6em 48px;
-font-size: .85em;
+font-size: .87em;
 }
 
 
@@ -389,7 +390,7 @@ float: left;
 width: 40px;
 height: 20px;
 text-align: center;
-font-size: .95em;
+font-size: 90%;
 font-weight: bold;
 overflow: visible;
 margin: .6em 0;
@@ -420,7 +421,7 @@ line-height: 1.75em;
 list-style-type: none;
 border-bottom: 1px solid;
 padding: .35em 0;
-font-size: .85em;
+font-size: 90%;
 }
 
 #sidebar .storyrsslist li {
@@ -436,7 +437,7 @@ clear: both;
 float: left;
 padding: 0 22px;
 border-left: 1px dotted;
-font-size: .75em;
+font-size: 85%;
 margin-bottom: 20px;
 }
 
@@ -471,7 +472,7 @@ border-right: 1px dotted;
 }
 
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
-font-size: 1.5em;
+font-size: 120%;
 font-weight: normal;
 }
 
@@ -485,7 +486,7 @@ padding: 0 1em 0 60px;
 #footthingy li {
 display: inline;
 list-style-type: none;
-font-size: .75em;
+font-size: 85%;
 }
 
 #footthingy p {
@@ -750,7 +751,7 @@ vertical-align: text-bottom;
 
 .news-details select {
 border: none;
-font-size: 9pt;
+font-size: 85%;
 letter-spacing: 0px;
 max-width: 7.5em;
 vertical-align: top;
@@ -1374,7 +1375,7 @@ margin: 0;
 z-index:10000;
 border: 1px solid;
 padding: 10px;
-font-size: 90%;
+font-size: 95%;
 overflow: hidden;
 width: 44em;
 max-height: 45ex;

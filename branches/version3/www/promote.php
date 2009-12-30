@@ -36,7 +36,6 @@ p {
     font-size: 90%;
 }
 table {
-    font-size: 110%;
     margin: 0px;
     padding: 4px;
 }
