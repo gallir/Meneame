@@ -41,7 +41,7 @@ class Comment {
 			// Insert comment_new event into logs
 			log_insert('comment_new', $this->id, $current_user->user_id);
 		} else {
-			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
+			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_modified=now(), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
 			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
 		}
@@ -64,7 +64,7 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, UNIX_TIMESTAMP(comment_date) as date, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
 			$this->type = $link->comment_type;
 			$this->author=$link->comment_user_id;
 			$this->username=$link->user_login;
@@ -80,6 +80,7 @@ class Comment {
 			$this->avatar=$link->user_avatar;
 			$this->content=$link->comment_content;
 			$this->date=$link->date;
+			$this->modified=$link->modified;
 			$this->read = true;
 			if($this->order == 0) $this->update_order();
 			return true;
@@ -177,6 +178,12 @@ class Comment {
 		} else {
 			echo _('hace').' '.txt_time_diff($this->date);
 		}
+		if ($this->modified > $this->date + 1) {
+			$txt = _('editado').' '.txt_time_diff($this->date, $this->modified).' '._('después');
+			echo '<strong title="'.$txt.'">&nbsp;*&nbsp;</strong>';
+		}
+
+
 		if (!$this->hidden && $this->type != 'admin' && $this->avatar) echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 		echo '</div></div>';
 		echo "</li>\n";

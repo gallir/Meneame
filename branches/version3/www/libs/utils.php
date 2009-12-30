@@ -150,6 +150,7 @@ function txt_time_diff($from, $now=0){
 	$hours=intval($diff/3600);
 	$diff=$diff%3600;
 	$minutes=intval($diff/60);
+	$secs=$diff%60;
 
 	if($days>1) $txt  .= " $days "._('días');
 	else if ($days==1) $txt  .= " $days "._('día');
@@ -160,7 +161,7 @@ function txt_time_diff($from, $now=0){
 	if($minutes>1) $txt .= " $minutes "._('minutos');
 	else if ($minutes==1) $txt  .= " $minutes "._('minuto');
 
-	if($txt=='') $txt = ' '. _('pocos segundos');
+	if($txt=='') $txt = " $secs ". _('segundos');
 	return $txt;
 }
 

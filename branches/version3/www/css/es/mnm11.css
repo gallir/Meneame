@@ -985,10 +985,6 @@ font-size: 90%;
 overflow: hidden;
 }
 
-.comment-body strong {
-font-weight: bold;
-}
-
 .comment-body .avatar {
 float: left;
 margin: 2px 10px 2px 0;
