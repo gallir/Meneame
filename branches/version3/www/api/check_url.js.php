@@ -11,7 +11,7 @@ header('Cache-Control: max-age=3600');
 ?>
 
 var url_clean =document.URL.replace(/(#.*$)/, '');
-var url = 'http://<? echo $_SERVER['SERVER_NAME']; ?>/api/check_url.php?url='+encodeURIComponent(url_clean);
+var url = 'http://<? echo $_SERVER['HTTP_HOST']; ?>/api/check_url.php?url='+encodeURIComponent(url_clean);
 
 function write_iframe() {
 	var span = document.getElementById("meneame");

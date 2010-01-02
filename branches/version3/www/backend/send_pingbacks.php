@@ -4,7 +4,7 @@ include(mnminclude.'link.php');
 include(mnminclude.'trackback.php');
 
 $remote = $_SERVER["REMOTE_ADDR"];
-$local_ips = gethostbynamel($_SERVER["SERVER_NAME"]);
+$local_ips = gethostbynamel($_SERVER["HTTP_HOST"]);
 
 if(!isPrivateIP($remote)  && !in_array($remote, $local_ips)) {
 	syslog(LOG_NOTICE, "Meneame: send_pingback remote address $_SERVER[REMOTE_ADDR] is no local address ($_SERVER[SERVER_ADDR]).");

@@ -37,7 +37,7 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 
 // Check the user's referer.
 if( !empty($_SERVER['HTTP_REFERER'])) {
-	if (preg_match('/http:\/\/'.preg_quote($_SERVER['SERVER_NAME']).'/', $_SERVER['HTTP_REFERER'])) {
+	if (preg_match('/http:\/\/'.preg_quote($_SERVER['HTTP_HOST']).'/', $_SERVER['HTTP_REFERER'])) {
 		$globals['referer'] = 'local';
 	} elseif (preg_match('/q=|search/', $_SERVER['HTTP_REFERER']) ) {
 		$globals['referer'] = 'search';
@@ -274,8 +274,8 @@ function get_server_name() {
 	$server_port = '';
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) $server_port = ':' . $_SERVER['SERVER_PORT'];
-	if($_SERVER['SERVER_NAME']) {
-		return $_SERVER['SERVER_NAME'] . $server_port;
+	if($_SERVER['HTTP_HOST']) {
+		return $_SERVER['HTTP_HOST'] . $server_port;
 	} else {
 		if ($server_name) return $server_name;
 		else return 'meneame.net'; // Warn: did you put the right server name?
@@ -301,12 +301,12 @@ function check_auth_page() {
 	if ($globals['ssl_server']) {
 		if (!$globals['secure_page'] && $_SERVER['HTTPS'] == 'on') {
 			header('HTTP/1.1 301 Moved');
-			header('Location: http://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
+			header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 			die;
 		}
 		if ($globals['secure_page'] && $_SERVER['HTTPS'] != 'on') {
 			header('HTTP/1.1 301 Moved');
-			header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
+			header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 			die;
 		}
 	}

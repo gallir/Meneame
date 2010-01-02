@@ -27,7 +27,7 @@ ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 // IMPORTANT: Do local modification in "hostname-local.php"
 // and/or "local.php"
 // They are automatically included
-//$server_name	= $_SERVER['SERVER_NAME'];
+//$server_name	= $_SERVER['HTTP_HOST'];
 $dblang			= 'es';
 $page_size		= 30;
 $anonnymous_vote = true;
