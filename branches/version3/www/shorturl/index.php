@@ -15,7 +15,7 @@ if ($globals['url_shortener_mobile_to'] && $globals['mobile']) {
 	$server_to = $globals['url_shortener_to'];
 }
 
-if (! $_SERVER['PATH_INFO'] || $_SERVER['PATH_INFO'] == '/') {
+if (preg_match('/^\/*$/', $_SERVER['PATH_INFO'])) {
 	header('Location: http://' . $server_to);
 	die;
 }

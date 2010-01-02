@@ -299,12 +299,12 @@ function check_auth_page() {
 
 	// If it's not a page that need SSL, redirect to the standard server
 	if ($globals['ssl_server']) {
-		if (!$globals['secure_page'] && $_SERVER['HTTPS'] == 'on') {
+		if (!$globals['secure_page'] && ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on')) {
 			header('HTTP/1.1 301 Moved');
 			header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 			die;
 		}
-		if ($globals['secure_page'] && $_SERVER['HTTPS'] != 'on') {
+		if ($globals['secure_page'] && ($_SERVER["SERVER_PORT"] != 443  && $_SERVER['HTTPS'] != 'on')) {
 			header('HTTP/1.1 301 Moved');
 			header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 			die;
@@ -494,6 +494,21 @@ function do_modified_headers($time, $tag) {
 	header('Last-Modified: ' . date('r', $time));
 	header('ETag: "'.$tag.'"');
 	header('Cache-Control: max-age=5');
+}
+
+
+if (!function_exists("apache_request_headers")){
+	function apache_request_headers() {
+		$headers = array();
+		foreach ($_SERVER as $key => $value) {
+			if (substr($key, 0, 5) != 'HTTP_') {
+				continue;
+			}
+			$headername = strtr(ucwords(strtolower(strtr(substr($key, 5), '_', ' '))), ' ', '-');
+			$headers[$headername] = $value;
+		}
+		return $headers;
+	}
 }
 
 function get_if_modified() {

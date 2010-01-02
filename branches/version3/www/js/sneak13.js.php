@@ -125,7 +125,7 @@ function received_data(data) {
 	if (ping_time == 0) 
 		ping_time = date_object.getTime() - ping_start -15; // 15 ms is the smallest error in fastest machines
 	else
-		ping_time = parseInt(0.6 * ping_time + 0.4 * (date_object.getTime() - ping_start - 15)); // 15 ms also
+		ping_time = parseInt(0.7 * ping_time + 0.3 * (date_object.getTime() - ping_start - 15)); // 15 ms also
 
 	$('#ping').html(ping_time);
 

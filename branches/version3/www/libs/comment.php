@@ -179,7 +179,7 @@ class Comment {
 			echo _('hace').' '.txt_time_diff($this->date);
 		}
 		if ($this->modified > $this->date + 1) {
-			$txt = _('editado').' '.txt_time_diff($this->date, $this->modified).' '._('después');
+			$txt = _('editado').txt_time_diff($this->date, $this->modified).' '._('después');
 			echo '<strong title="'.$txt.'">&nbsp;*&nbsp;</strong>';
 		}
 
