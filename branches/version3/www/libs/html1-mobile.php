@@ -78,6 +78,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
+	check_auth_page();
+
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">' . "\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'">' . "\n";

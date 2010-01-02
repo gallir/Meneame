@@ -24,7 +24,7 @@ class CommentMobile extends Comment{
 		} else {
 			$comment_meta_class = 'comment-meta';
 			$comment_class = 'comment-body';
-			if ($this->karma > 80) {
+			if ($this->karma > $globals['comment_highlight_karma']) {
 				$comment_class .= ' high';
 			}
 		}

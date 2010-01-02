@@ -164,7 +164,7 @@ function do_header($title, $id='home') {
 	}
 
 	if($current_user->authenticated) {
-    	$randhello = array_rand($greetings, 1);
+		$randhello = array_rand($greetings, 1);
  		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
   		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
 	} else {

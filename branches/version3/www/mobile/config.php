@@ -73,6 +73,11 @@ $globals['check_behind_proxy'] = false;
 $globals['min_karma_for_negatives'] = 5.5;
 $globals['min_user_votes'] = 0;  // For new users and also enable check of sent versus voted
 
+// Min karma to highlights comments
+// The negative is used to hide comments
+$globals['comment_highlight_karma'] = 100;
+
+
 $globals['cache_dir'] = 'cache';
 
 // Recaptcha settings

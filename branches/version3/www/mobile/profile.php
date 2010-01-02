@@ -54,7 +54,17 @@ if(!$user->read()) {
 }
 
 
-$save_messages = save_profile();
+if (isset($_POST['process'])) {
+	if (!check_form_auth_ip()) {
+		header("Location: http://".get_server_name().$globals['base_url']."profile.php");
+		die;
+	}
+	$globals['secure_page'] = True;
+	$save_messages = save_profile();
+} else {
+	$globals['secure_page'] = False;
+}
+
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
 echo '<div id="singlewrap">'."\n";
 echo $save_messages; // We do it later because teh profile could change header's info
@@ -67,14 +77,15 @@ function show_profile() {
 	global $user, $user_levels, $globals, $site_key, $current_user;
 
 	echo '<div>';
-	echo '<form  enctype="multipart/form-data" action="profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
+	echo '<form  enctype="multipart/form-data" action="'.get_auth_link().'profile.php" method="post" id="thisform" AUTOCOMPLETE="off">';
 	echo '<fieldset><legend>';
 	echo '<span class="sign">'._('opciones de usuario') . " <a href='".get_user_uri($user->username)."'>$user->username</a>: $user->level</span></legend>";
 
 	echo '<img class="thumbnail" src="'.$globals['base_url'] . 'backend/get_avatar.php?id='.$user->id.'&amp;size=80&amp;t='.time().'" width="80" height="80" alt="'.$user->username.'" />';
 	echo '<input type="hidden" name="process" value="1" />';
 	echo '<input type="hidden" name="user_id" value="'.$user->id.'" />';
-	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.$globals['user_ip']) .'" />';
+	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.mnminclude) .'" />';
+	get_form_auth_ip();
 
 	echo '<p><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'"/>';
@@ -121,7 +132,7 @@ function save_profile() {
 	$pass_changed=false;
 	$messages = '';
 	
-	$form_hash = md5($site_key.$user->id.$globals['user_ip']);
+	$form_hash = md5($site_key.$user->id.mnminclude);
 
 	if(!isset($_POST['save_profile']) || !isset($_POST['process']) || 
 		($_POST['user_id'] != $current_user->user_id) ) return;
