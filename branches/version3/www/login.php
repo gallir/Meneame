@@ -117,7 +117,9 @@ function do_login() {
 				foreach ($clones as $id) {
 					if ($current_user->user_id != $id && !in_array($id, $visited)) {
 						array_push($visited, $id);
-						insert_clon($current_user->user_id, $id, 'COOK:'.$globals['user_ip']);
+						if ($globals['form_user_ip']) $ip = $globals['form_user_ip'];
+						else $ip = $globals['user_ip'];
+						insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
 					}
 				}
 			}
