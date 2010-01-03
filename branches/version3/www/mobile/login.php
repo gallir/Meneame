@@ -70,6 +70,7 @@ function do_login() {
 			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
 		} else {
+			check_clon_from_cookies();
 			if(!empty($_REQUEST['return'])) {
 				header('Location: '.$_REQUEST['return']);
 			} else {

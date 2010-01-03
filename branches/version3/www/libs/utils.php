@@ -680,6 +680,23 @@ function check_clon_votes($from, $id, $days=7, $type='links') {
 	return $c;
 }
 
+function check_clon_from_cookies() {
+	global $current_user, $globals;
+	// Check the cookies and store clones
+	$clones = array_reverse($current_user->GetClones()); // First item is the current login, second is the previous
+	if (count($clones) > 1 && $clones[0] != $clones[1]) { // Ignore if last two logins are the same user
+		$visited = array();
+		foreach ($clones as $id) {
+			if ($current_user->user_id != $id && !in_array($id, $visited)) {
+				array_push($visited, $id);
+				if ($globals['form_user_ip']) $ip = $globals['form_user_ip']; // Used in SSL forms
+				else $ip = $globals['user_ip'];
+				insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
+			}
+		}
+	}
+}
+
 function fork($uri) {
 	global $globals;
 
