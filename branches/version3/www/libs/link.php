@@ -533,7 +533,7 @@ class Link {
 
 		// Print a summary of the best comment
 		// with a least one vote
-		if ($karma_best_comment > 0 && 
+		if ($this->comments > 0 && $karma_best_comment > 0 && 
 			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
 			echo '<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
 			$link = $this->permalink.'/000'.$best_comment->comment_order;
