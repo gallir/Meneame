@@ -782,7 +782,6 @@ function do_best_stories() {
 			$output .= '<a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
 			$n++;
-			echo "\n<!-- regenerating cache $key-->\n";
 		}
 		$output .= '</div>'."\n";
 		echo $output;
