@@ -23,6 +23,8 @@
 include('config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'html1.php');
+include(mnminclude.'comment.php');
+include(mnminclude.'trackback.php');
 
 $link = new Link;
 
@@ -143,7 +145,6 @@ if ($globals['time_enabled_comments_status'][$link->status]) {
 
 // Check for comment post
 if ($_POST['process']=='newcomment') {
-	require_once(mnminclude.'comment.php');
 	$comment = new Comment;
 	$new_comment_error = $comment->save_from_post($link);
 }
@@ -228,7 +229,6 @@ case 2:
 		if ($trackbacks) {
 			echo '<fieldset><legend><a href="'.$globals['link_permalink'].'/trackbacks">'._('últimas relacionadas').'</a></legend>';
 			echo '<ul class="tab-trackback">';
-			require_once(mnminclude.'trackback.php');
 			$trackback = new Trackback;
 			foreach($trackbacks as $trackback_id) {
 				$trackback->id=$trackback_id;
@@ -245,7 +245,6 @@ case 2:
 	$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
 	if ($comments) {
 		echo '<ol class="comments-list">';
-		require_once(mnminclude.'comment.php');
 		$comment = new Comment;
 		foreach($comments as $comment_id) {
 			$comment->id=$comment_id;
@@ -430,7 +429,6 @@ case 7:
 
 	$trackbacks = $db->get_col("SELECT SQL_CACHE trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
 	if ($trackbacks) {
-		require_once(mnminclude.'trackback.php');
 		$trackback = new Trackback;
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
