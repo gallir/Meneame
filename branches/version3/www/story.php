@@ -181,6 +181,8 @@ if ($link->has_thumb()) {
 	$globals['thumbnail'] = $link->thumb;
 }
 
+$globals['description'] = text_sub_text($link->content, 300);
+
 do_header($link->title, 'post');
 
 // Show the error if the comment couldn't be inserted

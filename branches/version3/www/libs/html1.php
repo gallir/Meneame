@@ -101,16 +101,16 @@ function do_header($title, $id='home') {
 	do_css_includes();
 
 	echo '<meta name="generator" content="meneame" />' . "\n";
-	if (!empty($globals['noindex'])) {
+	if ($globals['noindex']) {
 		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
 	}
-	if (!empty($globals['tags'])) {
+	if ($globals['tags']) {
 		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
 	}
-	if(!empty($globals['link'])) {
-		echo '<meta name="description" content="'.text_sub_text($globals['link']->content, 300).'" />' . "\n";
-		// Pingback autodiscovery
-		// http://www.hixie.ch/specs/pingback/pingback
+	if ($globals['description']) {
+		echo '<meta name="description" content="'.$globals['description'].'" />' . "\n";
+	}
+	if ($globals['link']) {
 		echo '<link rel="pingback" href="http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php"/>'."\n";
 	}
 	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
@@ -120,7 +120,7 @@ function do_header($title, $id='home') {
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
 	echo '<link rel="alternate" type="application/rss+xml" title="'._('comentarios').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php" />'."\n";
 
-	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
+	if (! $globals['favicon']) $globals['favicon'] = 'img/favicons/favicon4.ico';
 	echo '<link rel="shortcut icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
 
 

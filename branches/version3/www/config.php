@@ -78,6 +78,9 @@ $globals['karma_news_decay'] = 42;
 //RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
 $globals['base_story_url'] = 'story/';
 
+//RewriteRule ^/c/(.+)$ /comment.php/$1  [L,NS]
+$globals['base_comment_url'] = 'c/';
+
 //RewriteRule ^/search(/.*)$ /search.php$1 [L,NS,NE,PT]
 //$globals['base_search_url'] = 'search/';
 

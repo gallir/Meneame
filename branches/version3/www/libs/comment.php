@@ -89,10 +89,18 @@ class Comment {
 		return false;
 	}
 
-	function print_summary($link, $length = 0, $single_link=true) {
+	function print_summary($link = 0, $length = 0, $single_link=true) {
 		global $current_user, $globals;
 
 		if(!$this->read) return;
+
+		if (! $link && $this->link > 0) {
+			include_once(mnminclude.'link.php');
+			$link = new Link;
+			$link->id = $this->link;
+			$link->read();
+			$this->link_object = $link;
+		}
 
 
 		if ($single_link) $html_id = $this->order;
@@ -172,6 +180,8 @@ class Comment {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		}
 
+		echo '(<a href="'.$this->get_relative_individual_permalink().'" title="permalink">#</a>) ';
+
 		// Print dates
 		if ($globals['now'] - $this->date > 604800) { // 7 days
 			echo _('el').get_date_time($this->date);
@@ -184,7 +194,9 @@ class Comment {
 		}
 
 
-		if (!$this->hidden && $this->type != 'admin' && $this->avatar) echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
+			echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+		}
 		echo '</div></div>';
 		echo "</li>\n";
 	}
@@ -455,5 +467,16 @@ class Comment {
 		}
 
 	}
+
+	function get_relative_individual_permalink() {
+		// Permalink of the "comment page"
+		global $globals;
+		if ($globals['base_comment_url']) {
+			return $globals['base_url'] . $globals['base_comment_url'] . $this->id;
+		} else {
+			return $globals['base_url'] . 'comment.php?id=' . $this->id;
+		}
+	}
+
 }
 ?>
