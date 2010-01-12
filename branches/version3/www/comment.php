@@ -37,7 +37,7 @@ $globals['ads'] = true;
 $globals['description'] = text_sub_text($comment->content, 300);
 
 
-do_header(_('comentario de') . ' ' . $comment->username() . ' | men&eacute;ame');
+do_header(_('comentario de') . ' ' . $comment->username() . ' (' . $comment->id .') | men&eacute;ame');
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
@@ -55,7 +55,7 @@ echo "\n";
 echo "</ol>\n";
 
 // Print answers to the comment
-$sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $comment_id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
+$sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $comment->id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
 $answers = $db->get_results($sql);
 if ($answers) {
 	$answer = new Comment;
