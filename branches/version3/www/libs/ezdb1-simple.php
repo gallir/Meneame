@@ -97,11 +97,11 @@
 			}
 
 			if ( ! $this->dbh ) {
-				echo _('Error conectando a la BBDD, el Cabal nos castigará, pero ya volvemos en unos segundos, seguramente una actualización de seguridad de la BBDD'). "\n";
+				echo _('Error conectando a la BBDD, volvemos en unos segundos, seguramente estamos actualizando el sistema'). "\n";
 				die;
 			}
+			mysql_set_charset($this->dbh, 'utf8');
 			if (!empty($this->dbname)) $this->select($this->dbname);
-			$this->query("SET NAMES 'utf8'");
 		}
 
 		// ==================================================================
