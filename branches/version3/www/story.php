@@ -32,7 +32,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	array_shift($url_args); // The first element is always a "/"
 
 	// If the first argument are only numbers, redirect to the story with that id
-	if (is_int($url_args[0])) {
+	if (is_numeric($url_args[0]) && $url_args[0] > 0) {
 			$link = Link::from_db(intval($url_args[0]));
 			if ($link) {
 				header('Location: ' . $link->get_permalink());
@@ -46,7 +46,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	if(is_int($url_args[0]) && ($link = Link::from_db(intval($url_args[0]))) ) {
+	if(is_numeric($url_args[0]) && $url_args[0] > 0 && ($link = Link::from_db(intval($url_args[0]))) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
 			header ('HTTP/1.1 301 Moved Permanently');
