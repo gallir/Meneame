@@ -51,7 +51,7 @@ class Link {
 	static function from_db($id) {
 		global $db, $current_user;
 
-		if ($id > 0) $selector = " link_id = $id ";
+		if (is_numeric($id) && $id > 0) $selector = " link_id = $id ";
 		else $selector = " link_uri = '$id' ";
 
 		if(($object = $db->get_object("SELECT SQL_CACHE".Link::SQL."WHERE $selector AND user_id=link_author", 'Link'))) {
