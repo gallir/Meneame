@@ -35,7 +35,7 @@ class UserAuth {
 			if($this->mnm_user[0] === $userInfo[0]) {
 				$cookietime = (int) $userInfo[3];
 				$dbusername = $db->escape($this->mnm_user[0]);
-				$user=$db->get_row("SELECT SQL_CACHE user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
+				$user=$db->get_row("SELECT SQL_CACHE user_id, user_pass as md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_login = '$dbusername'");
 
 				// We have two versions from now
 				// The second is more strong agains brute force md5 attacks
@@ -60,16 +60,9 @@ class UserAuth {
 						return;
 				}
 
-				$this->user_id = $user->user_id;
+				foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
 				$this->user_login  = $userInfo[0];
-				$this->md5_pass = $user->user_pass;
-				$this->user_level = $user->user_level;
 				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
-				$this->user_karma = $user->user_karma;
-				$this->user_email = $user->user_email;
-				$this->user_avatar = $user->user_avatar;
-				$this->user_comment_pref = $user->user_comment_pref;
-				$this->user_date = $user->user_date;
 				$this->authenticated = TRUE;
 
 				if ($userInfo[2] != '3') { // Update the cookie to version 3
@@ -110,17 +103,12 @@ class UserAuth {
 	function Authenticate($username, $hash, $remember=false) {
 		global $db;
 		$dbusername=$db->escape($username);
-		$user=$db->get_row("SELECT user_id, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
+		$user=$db->get_row("SELECT user_id, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
 		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
-		if ($user->user_id > 0 && $user->user_pass == $hash) {
+		if ($user->user_id > 0 && $user->md5_pass == $hash) {
+			foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
 			$this->user_login = $username;
-			$this->user_id = $user->user_id;
 			$this->authenticated = TRUE;
-			$this->md5_pass = $user->user_pass;
-			$this->user_level = $user->user_level;
-			$this->user_email = $user->user_email;
-			$this->user_karma = $user->user_karma;
-			$this->user_date = $user->user_date;
 			$this->SetIDCookie(1, $remember);
 			return true;
 		}

@@ -20,6 +20,17 @@ class Comment {
 	var $read = false;
 	var $ip = '';
 
+	static function from_db($id) {
+		global $db, $current_user;
+		if(($result = $db->get_object("SELECT SQL_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments, users WHERE comment_id = $id and user_id = comment_user_id", 'Comment'))) {
+			$result->order = $result->c_order; // Order is a reserved word in SQL
+			$result->read = true;
+			if($result->order == 0) $result->update_order();
+			return $result;
+		}
+		return false;
+	}
+
 	function store() {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
@@ -64,23 +75,9 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT SQL_CACHE comments.*, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, users.user_login, users.user_avatar, users.user_email, user_karma, user_level FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
-			$this->type = $link->comment_type;
-			$this->author=$link->comment_user_id;
-			$this->username=$link->user_login;
-			$this->email=$link->user_email;
-			$this->user_karma=$link->user_karma;
-			$this->user_level=$link->user_level;
-			$this->randkey=$link->comment_randkey;
-			$this->link=$link->comment_link_id;
-			$this->order=$link->comment_order;
-			$this->votes=$link->comment_votes;
-			$this->karma=$link->comment_karma;
-			$this->ip=$link->comment_ip;
-			$this->avatar=$link->user_avatar;
-			$this->content=$link->comment_content;
-			$this->date=$link->date;
-			$this->modified=$link->modified;
+		if(($result = $db->get_row("SELECT SQL_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments, users WHERE comment_id = $id and user_id = comment_user_id"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
+			$this->order = $this->c_order; // Order is a reserved word in SQL
 			$this->read = true;
 			if($this->order == 0) $this->update_order();
 			return true;

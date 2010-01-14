@@ -274,6 +274,20 @@
 		// ==================================================================
 		//	Get one row from the DB - see docs for more detail
 
+		function get_object($query,$class) {
+
+			$this->result = @mysql_query($query,$this->dbh);
+			// If there is an error then take note of it..
+			if ( mysql_error() ) {
+				$this->print_error();
+				return false;
+			}
+			$object = @mysql_fetch_object($this->result, $class);
+			@mysql_free_result($this->result);
+
+			return $object?$object:null;
+		}
+
 		function get_row($query=null,$y=0) {
 
 			// If there is a query then perform it if not then use cached results..

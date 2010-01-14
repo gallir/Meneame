@@ -247,10 +247,8 @@ case 2:
 	$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
 	if ($comments) {
 		echo '<ol class="comments-list">';
-		$comment = new Comment;
 		foreach($comments as $comment_id) {
-			$comment->id=$comment_id;
-			$comment->read();
+			$comment = Comment::from_db($comment_id);
 			$comment->print_summary($link, 2500, true);
 			echo "\n";
 		}

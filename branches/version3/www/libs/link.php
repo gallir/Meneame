@@ -43,6 +43,19 @@ class Link {
 	var $banned = false;
 	var $thumb_status = 'unknown';
 
+	static function from_db($id) {
+		global $db, $current_user;
+		if(($object = $db->get_object("SELECT SQL_CACHE link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links, users WHERE link_id = $id AND user_id=link_author", 'Link'))) {
+			if ($object->category > 0) {
+				$result = $db->get_row("SELECT SQL_CACHE categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $object->category AND meta.category_id = categories.category_parent");
+				foreach(get_object_vars($result) as $var => $value) $object->$var = $value;
+			}
+			$object->read = true;
+			return $object;
+		}
+		return false;
+	}
+
 	function json_votes_info($value=false) {
 		$dict = array();
 		$dict['id'] = $this->id;
@@ -353,27 +366,8 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT SQL_CACHE link_id, link_author, link_blog, link_status, link_votes, link_negatives, link_anonymous, link_votes_avg, link_comments, link_karma, link_randkey, link_category, link_uri, link_title, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, link_content_type, link_ip  FROM links WHERE $cond"))) {
-			$this->id=$link->link_id;
-			$this->author=$link->link_author;
-			$this->blog=$link->link_blog;
-			$this->status=$link->link_status;
-			$this->votes=$link->link_votes;
-			$this->negatives=$link->link_negatives;
-			$this->anonymous=$link->link_anonymous;
-			$this->votes_avg=$link->link_votes_avg;
-			$this->comments=$link->link_comments;
-			$this->karma=$link->link_karma;
-			$this->randkey=$link->link_randkey;
-			$this->category=$link->link_category;
-			$this->uri= $link->link_uri;
-			$this->title=$link->link_title;
-			$this->date=$link->link_ts;
-			$this->sent_date=$link->sent_ts;
-			$this->published_date=$link->published_ts;
-			$this->modified=$link->modified_ts;
-			$this->ip=$link->link_ip;
-			$this->content_type=$link->content_type;
+		if(($result = $db->get_row("SELECT SQL_CACHE link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}
 		return false;
@@ -394,47 +388,11 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($link = $db->get_row("SELECT SQL_CACHE links.*, UNIX_TIMESTAMP(link_date) as link_ts,  UNIX_TIMESTAMP(link_sent_date) as sent_ts, UNIX_TIMESTAMP(link_published_date) as published_ts, UNIX_TIMESTAMP(link_modified) as modified_ts, users.user_login, users.user_email, users.user_avatar, users.user_karma, users.user_level, users.user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
-			$this->id=$link->link_id;
-			$this->author=$link->link_author;
-			$this->username=$link->user_login;
-			$this->user_level=$link->user_level;
-			$this->user_karma=$link->user_karma;
-			$this->anonymous=$link->link_anonymous;
-			$this->votes_avg=$link->link_votes_avg;
-			$this->user_adcode=$link->user_adcode;
-			$this->avatar=$link->user_avatar;
-			$this->email=$link->user_email;
-			$this->blog=$link->link_blog;
-			$this->status=$link->link_status;
-			$this->votes=$link->link_votes;
-			$this->negatives=$link->link_negatives;
-			$this->comments=$link->link_comments;
-			$this->karma=$link->link_karma;
-			$this->randkey=$link->link_randkey;
-			$this->category=$link->link_category;
-			$this->url= $link->link_url;
-			$this->uri= $link->link_uri;
-			$this->url_title=$link->link_url_title;
-			$this->title=$link->link_title;
-			$this->tags=$link->link_tags;
-			$this->content=$link->link_content;
-			$this->date=$link->link_ts;
-			$this->sent_date=$link->sent_ts;
-			$this->published_date=$link->published_ts;
-			$this->modified=$link->modified_ts;
-			$this->ip=$link->link_ip;
-			$this->content_type=$link->link_content_type;
-			$this->thumb_status = $link->link_thumb_status;
-			$this->thumb_x = $link->link_thumb_x;
-			$this->thumb_y = $link->link_thumb_y;
-			$this->thumb = $link->link_thumb;
+		if(($result = $db->get_row("SELECT SQL_CACHE link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links, users WHERE $cond AND user_id=link_author"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			if ($this->category > 0) {
-				$meta_info = $db->get_row("SELECT SQL_CACHE categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
-				$this->category_name=$meta_info->category_name;
-				$this->meta_name=$meta_info->meta_name;
-				$this->meta_uri=$meta_info->meta_uri;
-				$this->meta_id=$meta_info->meta_id;
+				$result = $db->get_row("SELECT SQL_CACHE categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta  WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
+				foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			}
 			$this->read = true;
 			return true;

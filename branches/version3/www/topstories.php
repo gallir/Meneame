@@ -76,12 +76,9 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-
-$link = new Link;
 if ($links) {
 	foreach($links as $dblink) {
-		$link->id=$dblink->link_id;
-		$link->read();
+		$link = Link::from_db($dblink->link_id);
 		$link->print_summary();
 	}
 }

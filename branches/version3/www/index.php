@@ -84,14 +84,12 @@ if($cat) {
 }
 $order_by = " ORDER BY link_date DESC ";
 
-$link = new Link;
 $rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
 
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {
-		$link->id=$link_id;
-		$link->read();
+		$link = Link::from_db($link_id);
 		$link->print_summary();
 	}
 }
