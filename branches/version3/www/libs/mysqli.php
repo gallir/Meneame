@@ -24,10 +24,6 @@
 	//define("EZSQL_DB_HOST", $globals['db_server']);	// <-- mysql server host
 
 	// ==================================================================
-	//	ezSQL Constants
-	define("EZSQL_VERSION","1.5");
-
-	// ==================================================================
 	//	The Main Class
 
 	class db {
@@ -218,20 +214,6 @@
 				// Return number fo rows affected
 				$return_val = $this->rows_affected;
 			} else {
-			// Query was an select
-				
-				/*
-				*** WARN WARN
-				*** We don't use col info
-				*** Commented out meanwhile
-				// Take note of column info	
-				$i=0;
-				while ($i < @mysql_num_fields($this->result)) {
-					$this->col_info[$i] = @mysql_fetch_field($this->result);
-					$i++;
-				}
-				*/
-				
 				// Store Query Results	
 				$num_rows=0;
 				while ( $row = @mysqli_fetch_object($this->result) ) {
@@ -276,7 +258,7 @@
 
 		function get_object($query,$class) {
 
-			if (!$this->dbh) $this->connect($is_update);
+			if (!$this->dbh) $this->connect();
 
 			$this->result = @mysqli_query($this->dbh, $query);
 			// If there is an error then take note of it..
@@ -339,7 +321,6 @@
 		// see docs for more info and usage
 
 		function get_col_info($info_type="name",$col_offset=-1) {
-
 			if ( $this->col_info ) {
 				if ( $col_offset == -1 ) {
 					$i=0;
