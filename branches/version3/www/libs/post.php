@@ -20,6 +20,20 @@ class Post {
 	var $src = 'web';
 	var $read = false;
 
+	const SQL = " post_user_id as author, user_login as username, user_karma, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date FROM posts, users ";
+
+	static function from_db($id) {
+		global $db, $current_user;
+		if(($result = $db->get_object("SELECT".Post::SQL."WHERE post_id = $id and user_id = post_user_id", 'Post'))) {
+			if ($result->src == 'im') {
+				$result->src = 'jabber';
+			}
+			$result->read = true;
+			return $result;
+		}
+		return null;
+	}
+
 	function store() {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
@@ -49,18 +63,8 @@ class Post {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($link = $db->get_row("SELECT posts.*, UNIX_TIMESTAMP(posts.post_date) as date, users.user_login, users.user_avatar, user_karma FROM posts, users WHERE post_id = $id and user_id = post_user_id"))) {
-			$this->author=$link->post_user_id;
-			$this->username=$link->user_login;
-			$this->user_karma=$link->user_karma;
-			$this->randkey=$link->post_randkey;
-			$this->votes=$link->post_votes;
-			$this->karma=$link->post_karma;
-			$this->src=$link->post_src;
-			$this->ip=$link->post_ip_int;
-			$this->avatar=$link->user_avatar;
-			$this->content=$link->post_content;
-			$this->date=$link->date;
+		if(($result = $db->get_row("SELECT".Post::SQL."WHERE post_id = $id and user_id = post_user_id"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			if ($this->src == 'im') {
 				$this->src = 'jabber';
 			}
@@ -92,7 +96,7 @@ class Post {
 
 		if(!$this->read) $this->read(); 
 
-		require_once(mnminclude.'user.php');
+		include_once(mnminclude.'user.php');
 		$this->hidden = $this->karma < $globals['post_hide_karma'];
 		$this->ignored = $current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0;
 

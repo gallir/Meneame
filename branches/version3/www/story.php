@@ -26,30 +26,27 @@ include(mnminclude.'html1.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'trackback.php');
 
-$link = new Link;
-
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	array_shift($url_args); // The first element is always a "/"
 
 	// If the first argument are only numbers, redirect to the story with that id
-	if (preg_match('/^0\d+$/', $url_args[0])) {
-			$link->id = intval($url_args[0]);
-			if ($link->read('id')) {
+	if (is_int($url_args[0])) {
+			$link = Link::from_db(intval($url_args[0]));
+			if ($link) {
 				header('Location: ' . $link->get_permalink());
 				die;
 			}
 	}
 
-	$link->uri = $db->escape($url_args[0]);
-	if (! $link->read('uri') ) {
+	$link = Link::from_db($db->escape($url_args[0]));
+	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);
 	}
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	$link->id=intval($url_args[0]);
-	if(is_numeric($url_args[0]) && $link->read('id') ) {
+	if(is_int($url_args[0]) && ($link = Link::from_db(intval($url_args[0]))) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
 			header ('HTTP/1.1 301 Moved Permanently');

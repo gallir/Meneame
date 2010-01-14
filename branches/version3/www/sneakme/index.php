@@ -45,7 +45,9 @@ switch ($option) {
 	case '_all':
 		$tab_option = 1;
 		$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
-		$rows = $db->get_var("SELECT count(*) FROM posts");
+		//$rows = $db->get_var("SELECT count(*) FROM posts");
+		$min_date = date("Y-m-d 00:00:00", time() - 86400*10); 
+		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
 		break;
 
 	case '_best':
@@ -174,8 +176,7 @@ function onLoad(lat, lng, zoom, icon) {
 	if ($posts) {
 		echo '<ol class="comments-list">';
 		foreach ($posts as $dbpost) {
-			$post->id = $dbpost->post_id;
-			$post->read();
+			$post = Post::from_db($dbpost->post_id);
 			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
 				echo '<li>'. _('Error: nota no existente') . '</li>';
 			} else {
