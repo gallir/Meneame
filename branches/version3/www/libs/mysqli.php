@@ -201,7 +201,7 @@
 			$this->num_queries++;
 
 			// If there is an error then take note of it..
-			if ( mysqli_error() ) {
+			if ( mysqli_error($this->dbh) ) {
 				$this->print_error();
 				return false;
 			}
@@ -276,9 +276,11 @@
 
 		function get_object($query,$class) {
 
+			if (!$this->dbh) $this->connect($is_update);
+
 			$this->result = @mysqli_query($this->dbh, $query);
 			// If there is an error then take note of it..
-			if ( mysqli_error() ) {
+			if ( mysqli_error($this->dbh) ) {
 				$this->print_error();
 				return false;
 			}

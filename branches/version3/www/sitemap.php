@@ -74,9 +74,9 @@ function do_published($page) {
 	$db->get_var("select count(*) from users");
 
 	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' order by link_date asc limit $start, $index_size";
-	$result = mysql_query($sql,  $db->dbh) or die('Query failed: ' . mysql_error());
+	$result = mysqli_query($db->dbh, $sql) or die('Query failed: ' . mysqli_error($db->dbh));
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
-	while ($res = mysql_fetch_object($result)) {
+	while ($res = mysqli_fetch_object($result)) {
     	echo '<url>'."\n";
 		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$res->link_uri.'</loc>'."\n";
 		echo '</url>'."\n";
