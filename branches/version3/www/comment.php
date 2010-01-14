@@ -39,22 +39,22 @@ $link->id=$comment->link;
 $link->read();
 
 $globals['ads'] = true;
-$globals['description'] = text_sub_text($comment->content, 300);
+$globals['description'] = _('Autor') . ": $comment->username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
 
-do_header(_('comentario de') . ' ' . $comment->username() . ' (' . $comment->id .') | men&eacute;ame');
+do_header(_('comentario de') . ' ' . $comment->username . ' (' . $comment->id .') | men&eacute;ame');
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
 //do_best_stories();
-do_best_comments();
+//do_best_comments();
 do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">'."\n";
 
-echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a> ['.$link->comments.']</h3>';
+echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
 echo '<ol class="comments-list">';
 $comment->print_summary($link, 10000, true);

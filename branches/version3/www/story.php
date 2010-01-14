@@ -181,7 +181,7 @@ if ($link->has_thumb()) {
 	$globals['thumbnail'] = $link->thumb;
 }
 
-$globals['description'] = text_sub_text($link->content, 300);
+$globals['description'] = _('Autor') . ": $link->username, " . _('Resumen') . ': '. text_sub_text($link->content, 250);
 
 do_header($link->title, 'post');
 
