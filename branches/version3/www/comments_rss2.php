@@ -119,8 +119,6 @@ if(!empty($_GET['id'])) {
 
 
 
-$comment = new Comment;
-$link = new Link;
 $comments = $db->get_col($sql);
 
 if ( !$comments && $if_modified) {
@@ -131,8 +129,7 @@ do_header($title);
 
 if ($comments) {
 	foreach($comments as $comment_id) {
-		$comment->id=$comment_id;
-		$comment->read();
+		$comment = Comment::from_db($comment_id);
 		if ($comment->type == 'admin') {
 			if ($individual_user) continue;
 			else $comment->username = get_server_name();
@@ -143,8 +140,7 @@ if ($comments) {
 			$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($comment->content)));
 		}
 		echo "	<item>\n";
-		$link_id = $link->id = $comment->link;
-		$link->read();
+		$link = Link::from_db($comment->link);
 		$link_title = $db->get_var("select link_title from links where link_id = $link_id");
 		// Title must not carry htmlentities
 		echo "		<title>#$comment->order ".htmlentities2unicodeentities($link_title)."</title>\n";

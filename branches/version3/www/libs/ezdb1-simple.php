@@ -100,7 +100,7 @@
 				echo _('Error conectando a la BBDD, volvemos en unos segundos, seguramente estamos actualizando el sistema'). "\n";
 				die;
 			}
-			mysql_set_charset($this->dbh, 'utf8');
+			mysql_set_charset('utf8', $this->dbh);
 			if (!empty($this->dbname)) $this->select($this->dbname);
 		}
 

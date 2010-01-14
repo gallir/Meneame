@@ -104,6 +104,7 @@ function do_footer_plus_meneame() {
 	echo '<h5>+menéame</h5>'."\n";
 	echo '<ul id="moremenelist">'."\n";
 	echo '<li><a href="http://m.meneame.net/">'._('versión móvil').'</a></li>'."\n";
+	echo '<li><a href="http://tv.meneame.net/">'._('menéame TV').'</a></li>'."\n";
 	echo '<li><a href="http://twitter.com/meneame_net">'._('síguenos en twitter').'</a></li>'."\n";
 	echo '<li><a href="http://meneame.jaiku.com/">'._('síguenos en jaiku').'</a></li>'."\n";
 	echo '<li><a href="/notame/">'._('nótame').'</a></li>'."\n";

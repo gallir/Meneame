@@ -186,13 +186,11 @@ if(!empty($_REQUEST['time'])) {
 
 do_header($title);
 
-$link = new Link;
 $links = $db->get_col($sql);
 
 if ($links) {
 	foreach($links as $link_id) {
-		$link->id=$link_id;
-		$link->read();
+		$link = Link::from_db($link_id);
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$content = text_to_html(htmlentities2unicodeentities($link->content));
 		echo "	<item>\n";
