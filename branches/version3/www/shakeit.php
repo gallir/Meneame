@@ -75,15 +75,13 @@ switch ($globals['meta']) {
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = " ORDER BY link_date DESC ";
-		//$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*5).'"'; // x days
-		//$from_time = 'date_sub(now(), interval 10 day)';
 		if ($globals['meta_current'] > 0) {
 			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
-			$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-			//$from_where = "FROM links WHERE link_status='queued'";
+			$rows = Link::count('queued');
+			$from_where = "FROM links WHERE link_status='queued'";
 			$tab = 1;
 		}
 		break;
@@ -108,12 +106,14 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-
 if($cat) {
 	$from_where .= " AND link_category=$cat ";
 }
 
-$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
+if (!$rows) {
+		// It was not calculated before
+		$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
+}
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {

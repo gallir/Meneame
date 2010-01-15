@@ -54,6 +54,7 @@ if ($globals['meta_current'] > 0) {
 		break;
 		default:
 			print_index_tabs(0); // All
+			$rows = Link::count('published');
 			$from_where = "FROM links WHERE link_status='published' ";
 	}
 } else {
@@ -84,7 +85,7 @@ if($cat) {
 }
 $order_by = " ORDER BY link_date DESC ";
 
-$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
+if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
 
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {

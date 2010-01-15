@@ -980,4 +980,17 @@ function check_ip_behind_proxy() {
 	$last_seen = $_SERVER["REMOTE_ADDR"];
 	return $last_seen;
 }
+
+// Used to store countes, in order to avoid expensives select count(*)
+function get_count($key, $seconds = 7200) { // Every two hours by default
+	global $db;
+	$res = $db->get_row("select `count` from counts where `key` = '$key' and date > date_sub(now(), interval $seconds second)");
+	if ($res) return $res->count;
+	else return false;
+}
+
+function set_count($key, $count) {
+	global $db;
+	return $db->query("REPLACE INTO counts (`key`, `count`) VALUES ('$key', $count)");
+}
 ?>

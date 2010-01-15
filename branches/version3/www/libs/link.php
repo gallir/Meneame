@@ -65,6 +65,25 @@ class Link {
 		return false;
 	}
 
+	static function count($status='', $cat='', $force = false) {
+		global $db;
+
+		if (!$status) return Link::count('published', $cat, $force) +
+							Link::count('queued', $cat, $force) +
+							Link::count('discard', $cat, $force) +
+							Link::count('abuse', $cat, $force) +
+							Link::count('autodiscard', $cat, $force);
+
+
+		$count = get_count("$status.$cat");
+		if ($count === false || $force) {
+			if ($cat) $cond = " and link_category = $cat ";
+			$count = $db->get_var("select count(*) from links where link_status = '$status' $cond");
+			set_count("$status.$cat", $count);
+		}
+		return $count;
+	}
+
 	function json_votes_info($value=false) {
 		$dict = array();
 		$dict['id'] = $this->id;
@@ -440,7 +459,7 @@ class Link {
 
 		echo '<div class="news-summary">';
 		echo '<div class="news-body">';
-		if ($type != 'preview' && !empty($this->title) && !empty($this->content)) {
+		if ($type != 'preview' && $this->title && $this->content) {
 			$this->print_shake_box();
 		}
 
@@ -1239,5 +1258,6 @@ class Link {
 	function has_thumb() {
 		return $this->thumb && $this->thumb_x > 0 && $this->thumb_y > 0;
 	}
+
 
 }
