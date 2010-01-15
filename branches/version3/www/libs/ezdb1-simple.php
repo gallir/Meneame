@@ -276,6 +276,7 @@
 
 		function get_object($query,$class) {
 
+			if (!$this->dbh )  $this->connect();
 			$this->result = @mysql_query($query,$this->dbh);
 			// If there is an error then take note of it..
 			if ( mysql_error() ) {
