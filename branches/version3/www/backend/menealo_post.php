@@ -10,7 +10,7 @@ include('../config.php');
 include(mnminclude.'comment.php');
 include(mnminclude.'ban.php');
 
-header('Content-Type: text/plain; charset=UTF-8');
+header('Content-Type: application/json; charset=UTF-8');
 
 if(check_ban_proxy()) {
 	error(_('IP no permitida'));
@@ -104,13 +104,13 @@ $dict['votes'] = $votes_info->post_votes;
 $dict['value'] = $vote->value;
 $dict['karma'] = $votes_info->post_karma;
 
-echo json_encode_single($dict);
+echo json_encode($dict);
 
 $db->query("update posts set post_votes=post_votes+1, post_karma=post_karma+$vote->value, post_date=post_date where post_id=$id and post_user_id != $current_user->user_id");
 
 function error($mess) {
 	$dict['error'] = $mess;
-	echo json_encode_single($dict);
+	echo json_encode($dict);
 	die;
 }
 

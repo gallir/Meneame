@@ -191,15 +191,15 @@ function send_string($mess) {
 	global $current_user, $now, $globals, $events;
 
 	$key = $now . ':chat:'.$id;
-	$json['who'] = addslashes($current_user->user_login);
+	$json['who'] = $current_user->user_login;
 	$json['uid'] = $current_user->user_id;
 	$json['ts'] = $now;
 	$json['status'] =  _('chat');
 	$json['type'] =  'chat';
 	$json['votes'] = 0;
 	$json['com'] = 0;
-	$json['title'] = addslashes(text_to_html($mess));
-	$events[$key] = json_encode_single($json);
+	$json['title'] = text_to_html($mess);
+	$events[$key] = json_encode($json);
 }
 
 function send_chat_warn($mess) {
@@ -257,7 +257,7 @@ function get_chat() {
 				break;
 		}
 
-		$json['who'] = addslashes($event->chat_user);
+		$json['who'] = $event->chat_user;
 		$json['ts'] = intval($event->chat_time);
 		$json['type'] = 'chat';
 		$json['votes'] = 0;
@@ -280,11 +280,11 @@ function get_chat() {
 			}
 		}
 
-		$json['title'] = addslashes($chat_text);
+		$json['title'] = $chat_text;
 		if ($uid >0) $json['icon'] = get_avatar_url($uid, -1, 20);
 		$key = $event->chat_time . ':chat:'.$uid;
 
-		$events[$key] = json_encode_single($json);
+		$events[$key] = json_encode($json);
 		if($event->chat_time > $last_timestamp) $last_timestamp = $event->chat_time;
 	}
 }
@@ -349,13 +349,13 @@ function get_votes($dbtime) {
 		$json['votes'] = $event->link_votes+$event->link_anonymous;
 		$json['com'] = $event->link_comments;
 		$json['link'] = $foo_link->get_relative_permalink();
-		$json['title'] = addslashes($event->link_title);
-		$json['who'] = addslashes($who);
+		$json['title'] = $event->link_title;
+		$json['who'] = $who;
 		$json['uid'] = $event->vote_user_id;
 		$json['id'] = $event->link_id;
 		if ($event->vote_user_id >0) $json['icon'] = get_avatar_url($event->vote_user_id, -1, 20);
 		$key = $event->timestamp . ':votes:'.$event->vote_id;;
-		$events[$key] = json_encode_single($json);
+		$events[$key] = json_encode($json);
 		if($event->timestamp > $last_timestamp) $last_timestamp = $event->timestamp;
 	}
 }
@@ -375,20 +375,20 @@ function get_story($time, $type, $linkid, $userid) {
 	$json['type'] = $type;
 	$json['votes'] = $event->link_votes+$event->link_anonymous;
 	$json['com'] = $event->link_comments;
-	$json['title'] = addslashes($event->link_title);
+	$json['title'] = $event->link_title;
 
 	if ($event->link_author != $userid && ($event->user_level == 'admin' || $event->user_level == 'god')) {
 		// Edited by admin, don't show the author
 		$json['uid'] = 0;
 		$json['who'] = 'admin';
 	} else {
-		$json['who'] = addslashes($event->user_login);
+		$json['who'] = $event->user_login;
 		$json['uid'] = $userid;
 		if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	}
 
 	$key = $time . ':'.$type.':'.$linkid;
-	$events[$key] = json_encode_single($json);
+	$events[$key] = json_encode($json);
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -405,17 +405,17 @@ function get_comment($time, $type, $commentid, $userid) {
 	$json['type'] = $type;
 	$json['votes'] = $event->link_votes+$event->link_anonymous;
 	$json['com'] = $event->link_comments;
-	$json['title'] = addslashes($event->link_title);
+	$json['title'] = $event->link_title;
 	if ( $event->comment_type == 'admin') {
 		$json['who'] = get_server_name();
 		$userid = 0;
 	} else {
-		$json['who'] = addslashes($event->user_login);
+		$json['who'] = $event->user_login;
 	}
 	$json['uid'] = $userid;
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$commentid;
-	$events[$key] = json_encode_single($json);
+	$events[$key] = json_encode($json);
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 
@@ -426,16 +426,16 @@ function get_post($time, $type, $postid, $userid) {
 	$json['link'] = post_get_base_url($event->user_login) . "/$postid";
 	$json['ts'] = $time;
 	$json['type'] = $type;
-	$json['who'] = addslashes($event->user_login);
+	$json['who'] = $event->user_login;
 	$json['status'] = _('nótame');
-	$json['title'] = addslashes(text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130));
+	$json['title'] = text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130);
 	$json['votes'] = 0;
 	$json['com'] = 0;
 	$json['uid'] = $userid;
 	$json['id'] = $postid;
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	$key = $time . ':'.$type.':'.$postid;
-	$events[$key] = json_encode_single($json);
+	$events[$key] = json_encode($json);
 	if($time > $last_timestamp) $last_timestamp = $time;
 }
 

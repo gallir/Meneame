@@ -728,7 +728,7 @@ function json_encode_single($dict) {
 	$passed = 0;
 	foreach ($dict as $key => $val) {
 		if ($passed) $item .= ',';
-		$item .= $key . ':"' . $val . '"';
+		$item .= "\"$key\": \"$val\"";
 		$passed = 1;
 	}
 	return $item . '}';

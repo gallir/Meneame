@@ -10,7 +10,7 @@ include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'ban.php');
 
-header('Content-Type: text/plain; charset=UTF-8');
+header('Content-Type: application/json; charset=UTF-8');
 
 if(check_ban_proxy()) {
 	error(_('IP no permitida'));
@@ -114,7 +114,7 @@ echo $link->json_votes_info(intval($value));
 
 function error($mess) {
 	$dict['error'] = $mess;
-	echo json_encode_single($dict);
+	echo json_encode($dict);
 	die;
 }
 ?>

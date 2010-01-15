@@ -92,7 +92,7 @@ class Link {
 		$dict['anonymous'] = $this->anonymous;
 		$dict['negatives'] = $this->negatives;
 		$dict['karma'] = intval($this->karma);
-		return json_encode_single($dict);
+		return json_encode($dict);
 	}
 
 	function print_html() {

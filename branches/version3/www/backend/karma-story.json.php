@@ -31,23 +31,17 @@ if ( ($array = $link->read_annotation("link-karma")) != false ) {
 			array_push($data[$key], $item);
 		}
 	}
+
+	$objects = array();
+	foreach (array_keys($data) as $key) {
+		$obj = array();
+		$obj['label'] = $key;
+		if ($key == 'karma') $obj['yaxis'] = 2;
+		if (!empty($colors[$key])) $obj['color'] = $colors[$key];
+		$obj['data'] = $data[$key];
+		array_push($objects, $obj);
+    }
+	echo json_encode($objects);
 }
-// Generate the JSON array
-echo "[\n";
-foreach (array_keys($data) as $key) {
-	echo "{\n";
-	echo "label: '$key',\n";
-	if ($key == 'karma') echo "yaxis: 2,\n";
-	if (!empty($colors[$key])) {
-		echo "color: '$colors[$key]',\n";
-	}
-	echo "data: [";
-	foreach ($data[$key] as $d) {
-		echo "[$d[0], $d[1]], ";
-	}
-	echo "]\n";
-	echo "},\n";
-}
-echo "]\n";
 ?>
 

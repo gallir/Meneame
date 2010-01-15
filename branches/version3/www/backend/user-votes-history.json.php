@@ -26,23 +26,18 @@ if (($res = $db->get_results("select floor(unix_timestamp(vote_date)/3600)*3600 
 	$data['posts'] = array();
 	foreach ($res as $vote) {
 		foreach (array_keys($data) as $key) {
-			$item = array($vote->t*1000, $vote->n);
+			$item = array($vote->t*1000, (int) $vote->n);
 			array_push($data[$vote->vote_type], $item);
 		}
 	}
-}
-// Generate the JSON array
-echo "[\n";
-foreach (array_keys($data) as $key) {
-	echo "{\n";
-	echo "label: '$key',\n";
-	echo "data: [";
-	foreach ($data[$key] as $d) {
-		echo "[$d[0], $d[1]], ";
+	$objects = array();
+	foreach (array_keys($data) as $key) {
+		$obj = array();
+		$obj['label'] = $key;
+		$obj['data'] = $data[$key];
+		array_push($objects, $obj);
 	}
-	echo "]\n";
-	echo "},\n";
 }
-echo "]\n";
+echo json_encode($objects);
 ?>
 

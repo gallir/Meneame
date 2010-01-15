@@ -213,9 +213,9 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals, $current_user;
 
-	echo '<script src="'.$globals['base_static'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
+	//echo '<script src="'.$globals['base_static'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
 	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
-	//echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>' . "\n";
+	echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>' . "\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_static'].'js/jquery.simplemodal-1.2.3.pack.js" type="text/javascript"></script>' . "\n";
 	echo '<script src="'.$globals['base_static'].'js/general09.js" type="text/javascript" charset="utf-8"></script>' . "\n";
