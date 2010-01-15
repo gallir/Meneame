@@ -70,19 +70,16 @@ function do_values() {
 function do_stats1($string) {
 	global $db;
 
-	$published = $db->get_var('select count(*) from links where link_status="published"');
-	$queued = $db->get_var('select count(*) from links where link_status="queued"');
-	$discarded = $db->get_var('select count(*) from links where link_status in ("discard","abuse")');
-	$total = $published+$queued+$discarded+$db->get_var('select count(*) from links where link_status not in ("published", "queued", "discard","abuse")');
-
 	$comment = '<strong>'._('Estadísticas globales'). '</strong>. ';
 	$comment .= _('usuarios activos') . ':&nbsp;' . $db->get_var("select count(*) from users where user_level not in ('disabled', 'autodisabled')") . ', ';
-	$votes = (int) $db->get_var('select count(*) from votes') + (int) $db->get_var('select sum(votes_count) from votes_summary');
+	$votes = (int) $db->get_var('select count(*) from votes where vote_type in ("link", "comment", "post")') + (int) $db->get_var('select sum(votes_count) from votes_summary');
 	$comment .= _('votos') . ':&nbsp;' . $votes . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . $total . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $published . ', ';
-	$comment .= _('pendientes') . ':&nbsp;' . $queued . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . $discarded . ', ';
+	$comment .= _('artículos') . ':&nbsp;' . Link::count() . ', ';
+	$comment .= _('publicados') . ':&nbsp;' . Link::count('published') . ', ';
+	$comment .= _('pendientes') . ':&nbsp;' . Link::count('queued') . ', ';
+	$comment .= _('descartados') . ':&nbsp;' . intval(Link::count('discard')) . ', ';
+	$comment .= _('auto descartados') . ':&nbsp;' . intval(Link::count('autodiscard')) . ', ';
+	$comment .= _('abuso') . ':&nbsp;' . intval(Link::count('abuse')) . ', ';
 	// Disabled because is too slow for InnoDB
 	//$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments');
 	return $comment;
