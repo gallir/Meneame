@@ -53,7 +53,7 @@ class Link {
 		if (is_numeric($id) && $id > 0) $selector = " link_id = $id ";
 		else $selector = " link_uri = '$id' ";
 
-		if(($object = $db->get_object("SELECT SQL_CACHE".Link::SQL."WHERE $selector AND user_id=link_author", 'Link'))) {
+		if(($object = $db->get_object("SELECT".Link::SQL."WHERE $selector AND user_id=link_author", 'Link'))) {
 			$object->read = true;
 			return $object;
 		}
@@ -389,7 +389,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($result = $db->get_row("SELECT SQL_CACHE link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
+		if(($result = $db->get_row("SELECT link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}
@@ -411,7 +411,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($result = $db->get_row("SELECT SQL_CACHE".Link::SQL."WHERE $cond AND user_id=link_author"))) {
+		if(($result = $db->get_row("SELECT".Link::SQL."WHERE $cond AND user_id=link_author"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->read = true;
 			return true;
@@ -511,7 +511,7 @@ class Link {
 		// Print a summary of the best comment
 		// with a least one vote
 		if ($this->comments > 0 && $karma_best_comment > 0 && 
-			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
+			($best_comment = $db->get_row("select comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
 			echo '<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
 			$link = $this->permalink.'/000'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
