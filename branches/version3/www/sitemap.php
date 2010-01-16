@@ -47,7 +47,7 @@ function do_master($size) {
 function do_statics() {
 	global $globals;
 
-	$urls = Array('shakeit.php', 'sneaker.php', 'geovision.php', 'notame/', 'cloud.php', 'topstories.php', 'topcommented.php', 
+	$urls = Array('shakeit.php', 'sneak.php', 'geovision.php', 'notame/', 'cloud.php', 'topstories.php', 'topcommented.php', 
 			'topcomments.php', 'sitescloud.php', 'topusers.php', 'map.php', 'faq-es.php', 'wii/', 'nds/');
 
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";

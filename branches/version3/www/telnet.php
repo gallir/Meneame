@@ -35,7 +35,7 @@ echo "<body>\n";
 var my_version = '<? echo $sneak_version; ?>';
 var ts=<? echo (time()-3600); ?>; // just due a freaking IE cache problem
 var server_name = '<? echo get_server_name(); ?>';
-var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
+var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker2.php';
 var mykey = <? echo rand(100,999); ?>;
 
 var do_animation = false;
@@ -118,7 +118,7 @@ function to_html(data) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak14.js.php"></script>
 <?
 
 echo '<div class="sneaker">';

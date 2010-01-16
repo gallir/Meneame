@@ -32,7 +32,7 @@ if (!empty($_REQUEST['friends'])) {
 var my_version = '<? echo $sneak_version; ?>';
 var ts=<? echo (time()-3600); ?>; // just due a freaking IE cache problem
 var server_name = '<? echo get_server_name(); ?>';
-var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker.php';
+var sneak_base_url = 'http://'+'<? echo get_server_name().$globals['base_url'];?>'+'backend/sneaker2.php';
 var mykey = <? echo rand(100,999); ?>;
 var is_admin = <? if ($current_user->admin) echo 'true'; else echo 'false'; ?>;
 
@@ -432,7 +432,7 @@ function flipChar(c) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak13.js.php" charset="utf-8"></script>
+<script type="text/javascript" src="http://<? echo get_server_name().$globals['base_url']; ?>js/sneak14.js.php" charset="utf-8"></script>
 <?
 
 
