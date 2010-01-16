@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'link.php');
 
-$index_size = 5000;
+$index_size = 1000;
 
 header('Content-Type: text/xml');
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -34,7 +34,7 @@ function do_master($size) {
 	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?statics</loc>'."\n";
 	echo '</sitemap>'."\n";
 
-	$count = (int) $db->get_var("select count(*) from links where link_status = 'published'");
+	$count = (int) Link::count('published');
 	$indexes = ceil($count/$size);
 	for ($i = 0; $i < $indexes; $i++) {
 		echo '<sitemap>'."\n";
@@ -68,17 +68,18 @@ function do_statics() {
 
 function do_published($page) {
 	global $globals, $index_size, $db;
-	$start = 1 + $page * $index_size;
+	$start = $page * $index_size;
 
 	// Force to open DB connection
 	$db->get_var("select count(*) from users");
 
 	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' order by link_date asc limit $start, $index_size";
-	$result = mysqli_query($db->dbh, $sql) or die('Query failed: ' . mysqli_error($db->dbh));
+	$result = $db->get_col($sql);
+	if (!$result) return;
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
-	while ($res = mysqli_fetch_object($result)) {
+	foreach ($result as $uri) {
     	echo '<url>'."\n";
-		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$res->link_uri.'</loc>'."\n";
+		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
