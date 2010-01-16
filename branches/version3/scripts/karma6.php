@@ -63,7 +63,11 @@ $max_karma=$globals['max_karma'];
 $special_karma_gain=$globals['special_karma_gain'];
 $special_karma_loss=$globals['special_karma_loss'];
 $now = "'".$db->get_var("select now()")."'";
-$history_from = "date_sub($now, interval 48 hour)";
+
+$history_hours = 48;
+$history_from = "date_sub($now, interval $history_hours hour)";
+$history_from_ts = time() - $history_hours*3600;
+
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = $globals['karma_points_per_published'];
 $points_per_published_max = $globals['karma_points_per_published_max'];
@@ -95,10 +99,6 @@ $max_avg_negative_received = min(intval($max_avg_negative_received), -20);
 
 
 
-// "Unfair" negative votes max
-//$max_negative_comment_votes = (int) $db->get_var("select SQL_NO_CACHE count(*) as count from votes, comments where vote_type='comments' and vote_date > date_sub(now(), interval 30 hour) and vote_value < 0 and comment_id = vote_link_id and ((comment_karma-vote_value)/(comment_votes-1)) > 0 group by vote_user_id order by count desc limit 1");
-//$max_negative_comment_votes  = max($max_negative_comment_votes, 40);
-
 print "Number of published links in period: $published_links\n";
 print "Pos (top 10 average): $max_avg_positive_received, Neg: $max_avg_negative_received\n";
 //print "Max unfair comment votes: $max_negative_comment_votes\n";
@@ -112,18 +112,15 @@ echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
 
-// We use mysql functions directly because  EZDB cannot hold all IDs in memory and the select fails miserably with about 40.000 users.
+// select users that voted during last 10 days, also her last vote's day
+$users = "select sql_no_cache user_id, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 10 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
 
-$users = "SELECT SQL_NO_CACHE user_id from users where user_level not in ('disabled', 'autodisabled') order by user_modification desc";
-//$users = "SELECT SQL_NO_CACHE user_id from users where user_id in (7966, 98342, 21061, 8147)";
-//$users = "SELECT SQL_NO_CACHE distinct user_id from users, votes where vote_type in ('comments', 'links') and vote_date > $history_from and vote_user_id = user_id and user_level != 'disabled' order by user_id desc";
-//$users = "SELECT SQL_NO_CACHE distinct user_id from users, links where user_level != 'disabled' and link_author=user_id and link_date > date_sub(now(), interval 36 hour) order by user_id desc";
-$result = mysql_query($users, $db->dbh) or die('Query failed: ' . mysql_error());
-while ($dbuser = mysql_fetch_object($result)) {
+// Main loop
+$res = $db->get_results($users);
+foreach ($res as $dbuser) {
 	$user = new User;
 	$user->id=$dbuser->user_id;
 	$user->read();
-	printf ("%07d  %s\n", $user->id, $user->username);
 
 	$total_comments = $sent_links = $karma0 = $karma1 = $karma2 = $karma3 = $karma4 = $karma5 = $karma6 = $karma7 = $penalized = 0;
 	$output = '';
@@ -137,13 +134,10 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma_base_user = $karma_base;
 	}
 
-	$n = $db->get_var("SELECT SQL_NO_CACHE count(*) FROM  votes  WHERE vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id and vote_date > $history_from");
-	$n_events = $db->get_var("select SQL_NO_CACHE count(*) from logs where log_date > $history_from and log_user_id=$user->id");
-	if ($n > 3 || $n_events > 0) {
-		$output .= _('Eventos').': '._('votos').': '. "$n, logs: $n_events\n";
-
-		// Count the number of published links during the last period
-		//$n_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'published'");
+	if ($dbuser->ts >= $history_from_ts) {
+		//$output .= _('Eventos').': '._('votos').': '. "$n, logs: $n_events\n";
+		printf ("%07d  %s %s (active)\n", $user->id, $user->username, get_date_time($dbuser->ts));
+		$output .= _('Último voto').': '. get_date_time($dbuser->ts) . "\n";
 
 		// Test with published during last three days
 		$n_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > date_sub($now, interval 3 day) and link_status = 'published'");
@@ -230,7 +224,6 @@ while ($dbuser = mysql_fetch_object($result)) {
 
 		}
 
-		//echo "Published giveN: $published_given Published links: $published_links No published: $nopublished_given Comments: $total_comments Links: $sent_links Average: $published_average\n";
 		// Bot and karmawhoring warning!!!
 		if ($karma2 > 0 && $published_given > $published_links/10 && $published_given > $nopublished_given*1.5 &&
 				($published_average < 0.50 || 
@@ -382,6 +375,7 @@ while ($dbuser = mysql_fetch_object($result)) {
 		$karma = max($karma_base_user+$karma_extra, $min_karma);
 		$karma = min($karma, $max_karma);
 	} else {
+		printf ("%07d  %s %s (inactive)\n", $user->id, $user->username, get_date_time($dbuser->ts));
 		$no_calculated++;
 		$output = '';
 		if (abs($user->karma - $karma_base) < 0.1) {
@@ -434,7 +428,6 @@ while ($dbuser = mysql_fetch_object($result)) {
 	$db->barrier();
 	echo $output;
 }
-mysql_free_result($result);
 if ($annotation) $annotation->optimize();
 echo "Calculated: $calculated, Ignored: $no_calculated\n";
 ?>
