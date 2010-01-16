@@ -20,7 +20,7 @@ class Post {
 	var $src = 'web';
 	var $read = false;
 
-	const SQL = " post_id as id, post_user_id as author, user_login as username, user_karma, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date FROM posts, users ";
+	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date FROM posts, users ";
 
 	static function from_db($id) {
 		global $db, $current_user;

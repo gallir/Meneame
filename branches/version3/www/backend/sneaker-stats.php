@@ -72,7 +72,7 @@ function do_stats1($string) {
 
 	$comment = '<strong>'._('Estadísticas globales'). '</strong>. ';
 	$comment .= _('usuarios activos') . ':&nbsp;' . $db->get_var("select count(*) from users where user_level not in ('disabled', 'autodisabled')") . ', ';
-	$votes = (int) $db->get_var('select count(*) from votes where vote_type in ("link", "comment", "post")') + (int) $db->get_var('select sum(votes_count) from votes_summary');
+	$votes = (int) $db->get_var('select count(*) from votes where vote_type in ("links", "comments", "posts") and vote_link_id > 0') + (int) $db->get_var('select sum(votes_count) from votes_summary');
 	$comment .= _('votos') . ':&nbsp;' . $votes . ', ';
 	$comment .= _('artículos') . ':&nbsp;' . Link::count() . ', ';
 	$comment .= _('publicados') . ':&nbsp;' . Link::count('published') . ', ';
