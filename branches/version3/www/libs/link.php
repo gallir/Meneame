@@ -44,9 +44,8 @@ class Link {
 	var $thumb_status = 'unknown';
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links, users ";
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name FROM links LEFT JOIN categories as cat on (cat.category_id = links.link_category) left join categories as meta on (meta.category_id = cat.category_parent), users "; 
 
-	const SQLCATEGORY = " categories.category_name, categories.category_uri, meta.category_name as meta_name, meta.category_uri as meta_uri, meta.category_id as meta_id FROM categories, categories as meta ";
 
 	static function from_db($id) {
 		global $db, $current_user;
@@ -55,10 +54,6 @@ class Link {
 		else $selector = " link_uri = '$id' ";
 
 		if(($object = $db->get_object("SELECT SQL_CACHE".Link::SQL."WHERE $selector AND user_id=link_author", 'Link'))) {
-			if ($object->category > 0) {
-				$result = $db->get_row("SELECT SQL_CACHE".Link::SQLCATEGORY."WHERE categories.category_id = $object->category AND meta.category_id = categories.category_parent");
-				foreach(get_object_vars($result) as $var => $value) $object->$var = $value;
-			}
 			$object->read = true;
 			return $object;
 		}
@@ -418,10 +413,6 @@ class Link {
 		}
 		if(($result = $db->get_row("SELECT SQL_CACHE".Link::SQL."WHERE $cond AND user_id=link_author"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
-			if ($this->category > 0) {
-				$result = $db->get_row("SELECT SQL_CACHE".Link::SQLCATEGORY."WHERE categories.category_id = $this->category AND meta.category_id = categories.category_parent");
-				foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
-			}
 			$this->read = true;
 			return true;
 		}
