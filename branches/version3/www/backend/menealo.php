@@ -107,9 +107,11 @@ if (!$link->insert_vote($value)) {
 }
 
 if ($link->status == 'discard' && $current_user->user_id>0 && $link->votes > $link->negatives && $link->karma > 0) {
+	$db->transaction();
 	$link->read_basic();
 	$link->status = 'queued';
 	$link->store_basic();
+	$db->commit();
 }
 	
 echo $link->json_votes_info(intval($value));

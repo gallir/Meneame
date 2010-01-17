@@ -754,12 +754,12 @@ class Link {
 				if ($current_user->user_id > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
-			$this->read_basic();
 			if ($globals['db_use_transactions']) {
 				$db->commit();
 			} else {
 				$db->query("UNLOCK TABLES");
 			}
+			$this->read_basic();
 			return $value;
 		}
 		return false;
