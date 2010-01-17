@@ -12,6 +12,9 @@ if (! defined('mnmpath')) {
 	include_once(mnminclude.'post.php');
 } 
 
+array_push($globals['cache-control'], 'no-cache');
+http_cache();
+
 $post = new Post;
 if (!empty($_REQUEST['user_id'])) {
 	$post_id = intval($_REQUEST['post_id']);

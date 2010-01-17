@@ -19,13 +19,10 @@ if ($globals['check_behind_proxy']) {
 $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 
 $globals['now'] = time();
+$globals['cache-control'] = Array();
 
 $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
 
-
-$globals['extra_js'] = Array();
-$globals['extra_css'] = Array();
-$globals['post_js'] = Array();
 
 // For PHP < 5
 if ( !function_exists('htmlspecialchars_decode') ) {
@@ -493,9 +490,7 @@ function get_uppercase_ratio($str) {
 function do_modified_headers($time, $tag) {
 	header('Last-Modified: ' . date('r', $time));
 	header('ETag: "'.$tag.'"');
-	header('Cache-Control: max-age=5');
 }
-
 
 if (!function_exists("apache_request_headers")){
 	function apache_request_headers() {
@@ -979,6 +974,16 @@ function check_ip_behind_proxy() {
 
 	$last_seen = $_SERVER["REMOTE_ADDR"];
 	return $last_seen;
+}
+
+function http_cache() {
+	// Send cache control
+	global $globals, $current_user;
+
+	if ($current_user->user_id) array_push($globals['cache-control'], 's-maxage=0, private, community="'.$current_user->user_login.'"');
+
+	if ($globals['cache-control']) header('Cache-Control: ' . implode(', ', $globals['cache-control']));
+	else header('Cache-Control: s-maxage=30');
 }
 
 // Used to store countes, in order to avoid expensives select count(*)

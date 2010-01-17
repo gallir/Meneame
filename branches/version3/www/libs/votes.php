@@ -37,14 +37,13 @@ class Vote {
 
 		if (! $this->ip) $this->ip=$globals['user_ip_int'];
 		if($this->user > 0) {
-			if (! $check_ip) $where .= " AND (vote_user_id=$this->user)";
-			else $where .= " AND (vote_user_id=$this->user OR vote_ip_int=$this->ip)";
+			if (! $check_ip) $where = " AND vote_user_id=$this->user";
+			else $where = " AND (vote_user_id=$this->user OR vote_ip_int=$this->ip)";
 		} else {
-			$where .= " AND vote_ip_int=$this->ip";
+			$where = " AND vote_ip_int=$this->ip";
 		}
-		$where = "vote_type='$this->type' AND vote_link_id=$this->link $where";
 
-		return $db->get_var("SELECT SQL_NO_CACHE vote_value FROM votes WHERE $where LIMIT 1");
+		return $db->get_var("SELECT SQL_NO_CACHE vote_value FROM votes WHERE vote_type='$this->type' AND vote_link_id=$this->link $where LIMIT 1");
 	}
 
 	function count($value="> 0") {

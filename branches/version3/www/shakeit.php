@@ -24,9 +24,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'link.php');
 
-//header('Cache-Control: max-age=0, must-revalidate');
-header('Cache-Control: no-cache');
-
 meta_get_current();
 
 $offset=(get_current_page()-1)*$page_size;

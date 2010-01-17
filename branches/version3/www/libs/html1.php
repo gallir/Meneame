@@ -17,12 +17,11 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
-$globals['start_time'] = microtime(true);
+$globals['extra_js'] = Array();
+$globals['extra_css'] = Array();
+$globals['post_js'] = Array();
 
-header('Content-type: text/html; charset=utf-8');
-if ($current_user->user_id) {
-	header('Cache-Control: private');
-}
+$globals['start_time'] = microtime(true);
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -84,6 +83,9 @@ function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals, $greetings;
 
 	check_auth_page();
+	header('Content-Type: text/html; charset=utf-8');
+	http_cache();
+
 
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery

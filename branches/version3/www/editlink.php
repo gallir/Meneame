@@ -12,6 +12,7 @@ include(mnminclude.'tags.php');
 
 force_authentication();
 
+array_push($globals['cache-control'], 'no-cache');
 do_header(_("editar noticia"), "post");
 
 echo '<div id="singlewrap">'."\n";

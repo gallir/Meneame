@@ -11,6 +11,8 @@ include(mnminclude.'link.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
+array_push($globals['cache-control'], 'no-cache');
+http_cache();
 
 if(check_ban_proxy()) {
 	error(_('IP no permitida'));

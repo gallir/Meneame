@@ -17,14 +17,11 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
+$globals['extra_js'] = Array();
+$globals['extra_css'] = Array();
+$globals['post_js'] = Array();
+
 $globals['start_time'] = microtime(true);
-
-header('Content-type: text/html; charset=utf-8');
-
-header('Cache-Control: max-age=900'); // mobile browsers tends to cache for a long time
-if ($current_user->user_id) {
-	header('Cache-Control: private');
-}
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -79,6 +76,9 @@ function do_header($title, $id='home') {
 	global $current_user, $dblang, $globals;
 
 	check_auth_page();
+	header('Content-type: text/html; charset=utf-8');
+	http_cache();
+
 
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">' . "\n";

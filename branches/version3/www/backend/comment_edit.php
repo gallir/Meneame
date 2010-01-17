@@ -13,6 +13,9 @@ if (! defined('mnmpath')) {
 	require_once(mnminclude.'comment.php');
 } 
 
+array_push($globals['cache-control'], 'no-cache');
+http_cache();
+
 if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	$comment = new Comment;
 	$comment->id = intval($_REQUEST['id']);

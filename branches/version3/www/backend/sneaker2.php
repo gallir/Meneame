@@ -23,6 +23,8 @@ if (!empty($_REQUEST['getv'])) {
 }
 
 header('Content-Type: application/json; charset=UTF-8');
+array_push($globals['cache-control'], 'no-cache, no-store');
+http_cache();
 
 $now = $globals['now'];
 $now_f = round(microtime(true), 2);

@@ -509,13 +509,13 @@ class Link {
 		}
 
 		// Print a summary of the best comment
-		// with a least one vote
-		if ($this->comments > 0 && $karma_best_comment > 0 && 
-			($best_comment = $db->get_row("select comment_id, comment_order, comment_content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
+		// with a least one vote and younger than a day
+		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 20 && $globals['now'] - $this->date < 86400 &&
+			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, substr(comment_content, 1, 225) as content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
 			echo '<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
 			$link = $this->permalink.'/000'.$best_comment->comment_order;
 			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
-			echo ':&nbsp;'.text_to_summary($best_comment->comment_content, 200).'</div>';
+			echo ':&nbsp;'.text_to_summary($best_comment->content, 200).'</div>';
 		}
 
 		echo '<div class="news-details main">';
