@@ -44,7 +44,7 @@ $globals['db_server'] = 'localhost';
 $globals['db_name'] = 'meneame';
 $globals['db_user'] = 'meneame';
 $globals['db_password'] = '';
-$globals['db_use_transactions'] = false;
+$globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have high loads
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 $globals['static_server'] = '';

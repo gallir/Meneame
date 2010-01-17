@@ -52,11 +52,30 @@
 			$this->dbname = $dbname;
 			$this->dbhost = $dbhost;
 			$this->dbmaster = $dbmaster;
+			$this->in_transaction = 0;
 			if ( $dbmaster && $dbmaster != $dbhost ) {
 				$this->dbmaster = $dbmaster;
 			} else {
 				$this->dbmaster = false;
 			}
+		}
+
+		function transaction() {
+			if ($this->in_transaction == 0) {
+				$this->query('SET AUTOCOMMIT=0');
+      			$this->query('START TRANSACTION');
+			}
+			$this->in_transaction++;
+			return $this->in_transaction;
+		}
+
+		function commit() {
+			$this->in_transaction--;
+			if ($this->in_transaction == 0) {
+      			$this->query('COMMIT');
+				$this->query('SET AUTOCOMMIT=1');
+			}
+			return $this->in_transaction;
 		}
 
 		// Reset the connection to the slave if it was using the master

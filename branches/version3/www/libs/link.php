@@ -327,14 +327,14 @@ class Link {
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
 		if ($globals['db_use_transactions']) {
-			$db->query("START TRANSACTION");
+			$db->transaction();
 		} else {
 			$db->query("LOCK TABLES links WRITE");
 		}
 		$this->store_basic();
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
 		if ($globals['db_use_transactions']) {
-			$db->query("COMMIT");
+			$db->commit();
 		} else {
 			$db->query("UNLOCK TABLES");
 		}
@@ -744,7 +744,7 @@ class Link {
 		$vote->value=$value;
 		if($vote->insert()) {
 			if ($globals['db_use_transactions']) {
-				$db->query("START TRANSACTION");
+				$db->transaction();
 			} else {
 				$db->query("LOCK TABLES links WRITE");
 			}
@@ -756,7 +756,7 @@ class Link {
 			}
 			$this->read_basic();
 			if ($globals['db_use_transactions']) {
-				$db->query("COMMIT");
+				$db->commit();
 			} else {
 				$db->query("UNLOCK TABLES");
 			}
@@ -980,7 +980,7 @@ class Link {
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
 		if ($globals['db_use_transactions']) {
-			$db->query("START TRANSACTION");
+			$db->transaction();
 		} else {
 			$db->query("LOCK TABLES votes READ, users READ");
 		}
@@ -1021,7 +1021,7 @@ class Link {
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 		if ($globals['db_use_transactions']) {
-			$db->query("COMMIT");
+			$db->commit();
 		} else {
 			$db->query("UNLOCK TABLES");
 		}

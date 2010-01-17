@@ -607,8 +607,10 @@ function do_submit3() {
 		$linkres->status='queued';
 		$linkres->sent_date = $linkres->date=time();
 		$linkres->get_uri();
+		$db->transaction();
 		$linkres->store();
 		$linkres->insert_vote($current_user->user_karma);
+		$db->commit();
 
 		// Add the new link log/event
 		require_once(mnminclude.'log.php');

@@ -46,6 +46,7 @@ class Comment {
 		$comment_content = $db->escape(clean_lines($this->content));
 		if ($this->type == 'admin') $comment_type = 'admin';
 		else $comment_type = 'normal';
+		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content) VALUES ($comment_author, $comment_link, '$comment_type', $comment_karma, '$this->ip', FROM_UNIXTIME($comment_date), $comment_randkey, '$comment_content')");
@@ -60,6 +61,7 @@ class Comment {
 		}
 		$this->update_order();
 		$this->update_conversation();
+		$db->commit();
 	}
 
 	function update_order() {
@@ -437,9 +439,11 @@ class Comment {
 				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
 			}
 		}
+		$db->transaction();
 		$this->store();
 		$this->insert_vote();
 		$link->update_comments();
+		$db->commit();
 		return $error;
 	}
 

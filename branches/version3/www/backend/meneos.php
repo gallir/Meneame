@@ -36,21 +36,12 @@ $votes_page_size = 20;
 $votes_offset=($votes_page-1)*$votes_page_size;
 
 
-if ($globals['db_use_transactions']) {
-	$db->query("START TRANSACTION");
-} else {
-	$db->query("LOCK TABLES votes READ");
-}
+$db->transaction();
 $votes_users = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id!=0");
 $votes_users_positive = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id!=0 and vote_value > 0");
 $votes_anon = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_link_id=".$globals['link_id']." AND vote_user_id=0");
 
 $negatives = $db->get_results("select vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=".$globals['link_id']." and vote_value < 0 group by vote_value order by count desc");
-if ($globals['db_use_transactions']) {
-	$db->query("COMMIT");
-} else {
-	$db->query("UNLOCK TABLES");
-}
 
 $total_negatives = 0;
 
@@ -73,6 +64,7 @@ if ($globals['link'] && $globals['link']->votes > 0 &&  //Make sure we have read
 	$globals['link']->anonymous = $votes_anon;
 	$globals['link']->store_basic();
 }
+$db->commit();
 
 
 if ($no_show_voters) {
