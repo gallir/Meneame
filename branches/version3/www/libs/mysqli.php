@@ -77,7 +77,9 @@
 					return;
 				} else {
 					if ($this->master_persistent) {
-						$this->dbh_update = @mysqli_connect('p:'.$this->dbmaster, $this->dbuser,$this->dbpassword);
+						// PHP 5.2 does not support mysqli persistent connections, so we use the standard
+						//$this->dbh_update = @mysqli_connect('p:'.$this->dbmaster, $this->dbuser,$this->dbpassword);
+						$this->dbh_update = @mysqli_connect($this->dbmaster, $this->dbuser,$this->dbpassword);
 					} else {
 						$this->dbh_update = @mysqli_connect($this->dbmaster, $this->dbuser,$this->dbpassword);
 					}
@@ -85,7 +87,9 @@
 				}
 			} else { 
 				if ($this->persistent) {
-					$this->dbh_select = @mysqli_connect('p:'.$this->dbhost, $this->dbuser,$this->dbpassword);
+					// PHP 5.2 does not support mysqli persistent connections, so we use the standard
+					//$this->dbh_select = @mysqli_connect('p:'.$this->dbhost, $this->dbuser,$this->dbpassword);
+					$this->dbh_select = @mysqli_connect($this->dbhost, $this->dbuser,$this->dbpassword);
 				} else {
 					$this->dbh_select = @mysqli_connect($this->dbhost, $this->dbuser,$this->dbpassword);
 				}
