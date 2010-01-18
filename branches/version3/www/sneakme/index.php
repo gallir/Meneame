@@ -8,6 +8,7 @@
 
 include('../config.php');
 include(mnminclude.'html1.php');
+include(mnminclude.'favorites.php');
 
 if ($current_user->user_id > 0) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');

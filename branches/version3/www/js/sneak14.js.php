@@ -105,12 +105,13 @@ function get_data() {
 	options.v=my_version;
 	options.r=total_requests;
 	var date_object = new Date();
-	ping_start = date_object.getTime();
 	if(comment.length > 0) {
 		options.chat = comment;
+		ping_start = 0;
 		xmlhttp=$.post(sneak_base_url, options, received_data);
 		comment = '';
 	} else {
+		ping_start = date_object.getTime();
 		xmlhttp=$.get(sneak_base_url, options, received_data);
 	}
 	requests++;
@@ -120,14 +121,14 @@ function get_data() {
 
 function received_data(data) {
 	// Check version
-	if (data.v != my_version)  window.location.reload(true);
+	if (typeof(data.v) != "undefined" && data.v != my_version)  window.location.reload(true);
 
 	xmlhttp = undefined;
 	// Update ping time
 	var date_object = new Date();
 	if (ping_time == 0) 
 		ping_time = date_object.getTime() - ping_start -15; // 15 ms is the smallest error in fastest machines
-	else
+	else if (ping_start > 0)
 		ping_time = parseInt(0.7 * ping_time + 0.3 * (date_object.getTime() - ping_start - 15)); // 15 ms also
 
 	$('#ping').html(ping_time);
