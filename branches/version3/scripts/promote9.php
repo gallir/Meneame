@@ -24,7 +24,6 @@ define (PUB_PERC, 0.11);
 
 
 
-
 $links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_status in ('published', 'queued')");
 $links_queue_all = $db->get_var("SELECT SQL_NO_CACHE count(*) from links WHERE link_date > date_sub(now(), interval 24 hour) and link_votes > 0");
 
@@ -33,6 +32,7 @@ $pub_estimation = intval(max(min($links_queue * PUB_PERC, PUB_MAX), PUB_MIN));
 $interval = intval(86400 / $pub_estimation);
 
 $now = time();
+echo "BEGIN\n";
 $output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br/>\n";
 
 $from_time = "date_sub(now(), interval 5 day)";
@@ -125,7 +125,7 @@ foreach ($meta_coef as $m => $v) {
 	$log->store();
 }
 
-
+echo "DONE METAS\n";
 // Karma average:  It's used for each link to check the balance of users' votes
 
 $globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
@@ -142,6 +142,7 @@ $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from links, users, categories where $where $sort LIMIT 30");
 $rows = $db->num_rows;
+echo "SELECTED $rows ARTICLES\n";
 if (!$rows) {
 	$output .= "There are no articles<br/>\n";
 	$output .= "--------------------------<br/>\n";
@@ -151,6 +152,8 @@ if (!$rows) {
 		$annotation = new Annotation('promote');
 		$annotation->text = $output;
 		$annotation->store();
+	} else {
+		echo "OUTPUT:\n$output\n";
 	}
 	die;
 }
@@ -165,7 +168,9 @@ if ($links) {
 	foreach($links as $dblink) {
 		$link = new Link;
 		$link->id=$dblink->link_id;
+		$db->transaction();
 		$link->read();
+		echo "START WITH $link->uri\n";
 		$user = new User;
 		$user->id = $link->author;
 		$user->read();
@@ -246,12 +251,16 @@ if ($links) {
 				$link->message .= "To store: previous: $link->old_karma new: $link->karma<br>\n";
 			}
 		}
+		$db->commit();
 
-		if (! DEBUG && $link->thumb_status == 'unknown') $link->get_thumb();
+		if (! DEBUG && $link->thumb_status == 'unknown') {
+			echo "GETTING THUMB\n";
+			$link->get_thumb(true);
+			echo "DONE GETTING THUMB\n";
+		}
 
 		if ($link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
-			$link->karma = round($karma_new);
 			publish($link);
 			$changes = 3; // to show a "published" later	
 		} else {
@@ -288,6 +297,8 @@ if (! DEBUG) {
 	$annotation = new Annotation('promote');
 	$annotation->text = $output;
 	$annotation->store();
+} else {
+	echo "OUTPUT:\n$output\n";
 }
 
 function print_row($link, $changes, $log = '') {

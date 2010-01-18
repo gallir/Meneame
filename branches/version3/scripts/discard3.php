@@ -22,7 +22,7 @@ $minutes = intval($globals['draft_time'] / 60);
 $db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
 
 // send back to queue links with too many negatives
-$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 2 day) and link_date < date_sub(now(), interval 8 minute) and link_negatives > link_votes / 8");
+$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 6 day) and link_date < date_sub(now(), interval 8 minute) and link_negatives > link_votes / 8");
 
 
 if ($links) {
