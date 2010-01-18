@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('/home/gallir/Proyectos/meneame/dev/mobile/config.php');
+include('../config.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');

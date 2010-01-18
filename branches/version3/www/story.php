@@ -23,6 +23,8 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+array_push($globals['cache-control'], 'max-age=30');
+
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	array_shift($url_args); // The first element is always a "/"
