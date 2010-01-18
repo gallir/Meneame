@@ -1,9 +1,6 @@
 <?
 include('../config.php');
-include(mnminclude.'user.php');
 include(mnminclude.'log.php');
-include(mnminclude.'annotation.php');
-include(mnminclude.'link.php');
 include(mnminclude.'external_post.php');
 
 global $globals;

@@ -1,11 +1,8 @@
 <?
 include('../config.php');
 include(mnminclude.'external_post.php');
-include(mnminclude.'link.php');
-include(mnminclude.'user.php');
 include_once(mnminclude.'log.php');
 include_once(mnminclude.'ban.php');
-include_once(mnminclude.'annotation.php');
 
 define('DEBUG', false);
 
@@ -141,7 +138,7 @@ $where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min
 $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from links, users, categories where $where $sort LIMIT 30");
-$rows = $db->num_rows;
+$rows = $db->affected_rows;
 echo "SELECTED $rows ARTICLES\n";
 if (!$rows) {
 	$output .= "There are no articles<br/>\n";

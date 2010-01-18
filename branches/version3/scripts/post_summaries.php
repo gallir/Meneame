@@ -2,8 +2,6 @@
 // Post to Twitter/Jaiku the most voted and commented during last 24 hr
 include('../config.php');
 include(mnminclude.'external_post.php');
-include(mnminclude.'link.php');
-include(mnminclude.'comment.php');
 
 if ($_SERVER['argv'] && intval($_SERVER['argv'][1]) > 0) {
 	$hours = intval($_SERVER['argv'][1]);

@@ -20,7 +20,7 @@ $from_time = "date_sub(now(), interval 2 day)";
 
 
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id from links where link_date > $from_time AND link_status != 'published' and link_karma < 150");
-$rows = $db->num_rows;
+$rows = $db->affected_rows;
 if (!$rows) {
 	echo "There is no articles\n";
 	echo "--------------------------\n";

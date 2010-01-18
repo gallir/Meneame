@@ -1,7 +1,5 @@
 <?
 include('../config.php');
-include(mnminclude.'user.php');
-include(mnminclude.'annotation.php');
 
 header("Content-Type: text/plain");
 
