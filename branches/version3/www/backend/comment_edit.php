@@ -9,8 +9,6 @@
 if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
-	include(mnminclude.'link.php');
-	require_once(mnminclude.'comment.php');
 } 
 
 array_push($globals['cache-control'], 'no-cache');

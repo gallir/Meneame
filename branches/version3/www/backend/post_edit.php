@@ -9,7 +9,6 @@
 if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
-	include_once(mnminclude.'post.php');
 } 
 
 array_push($globals['cache-control'], 'no-cache');
@@ -93,7 +92,6 @@ function save_post ($post_id) {
 
 			$same_links = $post->same_links_count();
 			if ($same_links > 2) {
-				require_once(mnminclude.'user.php');
 				$user = new User;
 				$user->id = $current_user->user_id;
 				$user->read();
@@ -102,7 +100,6 @@ function save_post ($post_id) {
 				syslog(LOG_NOTICE, "Meneame: post_edit decreasing $reduction of karma to $user->username (now $user->karma)");
 				$user->store();
 
-				require_once(mnminclude.'annotation.php');
 				$annotation = new Annotation("karma-$user->id");
 				$annotation->append(_('demasiados enlaces al mismo dominio en las notas').": -$reduction, karma: $user->karma\n");
 

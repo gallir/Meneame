@@ -7,14 +7,11 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Vote {
-	var $type='links';
-	var $user=-1;
-	var $value=1;
-	var $link;
-	var $ip='';
-	
-	function Vote() {
-		return;
+
+	function __construct($type='links', $link=0, $user=-1) {
+		$this->type = $type;
+		$this->link = $link;
+		$this->user = $user;
 	}
 
 	function get_where($value='> 0') {

@@ -9,8 +9,6 @@
 
 @include mnminclude.'ads-credits-functions.php';
 
-include_once(mnminclude.'post.php');
-
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
 	header('Location: http://'.get_server_name().$globals['base_url'].$globals['lounge']);

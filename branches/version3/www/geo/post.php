@@ -12,8 +12,6 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 	stats_increment('ajax');
 }
-include_once(mnminclude.'post.php');
-
 
 if (!empty($_GET['id'])) {
 	if (preg_match('/([\w\.\-_]+)-(\d+)/', $_GET['id'], $matches) > 0) {

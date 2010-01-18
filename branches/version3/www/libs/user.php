@@ -6,6 +6,12 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+global $globals;
+// Following functions are related to users but not done as a class so can be easily used with User and UserAuth
+define('FRIEND_YES', '<img src="'.$globals['base_static'].'img/common/icon_heart.gif" alt="del" width="16" height="16" title="'._('amigo').'"/>');
+define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_no.gif" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
+define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
+
 class User {
 	var $read = false;
 	var $id = 0;
@@ -229,57 +235,53 @@ class User {
 	}
 
 
-}
-
-// Following functions are related to users but not done as a class so can be easily used with User and UserAuth
-define('FRIEND_YES', '<img src="'.$globals['base_static'].'img/common/icon_heart.gif" alt="del" width="16" height="16" title="'._('amigo').'"/>');
-define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_no.gif" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
-define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
-
-
-function friend_exists($from, $to) {
-	global $db;
-	if ($from == $to) return 0;
-	return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
-}
-
-function friend_insert($from, $to, $value = 1) {
-	global $db;
-	if ($from == $to) return 0;
-	if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) return false;
-	return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
-}
-
-function friend_delete($from, $to) {
-	global $db;
-	return $db->query("DELETE FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to");
-}
-
-function friend_add_delete($from, $to) {
-	if ($from == $to) return '';
-	switch (friend_exists($from, $to)) {
-		case 0:
-			friend_insert($from, $to);
-			return FRIEND_YES;
-		case 1:
-			friend_insert($from, $to, -1);
-			return FRIEND_IGNORE;
-		case -1:
-			friend_delete($from, $to);
-			return FRIEND_NO;
+	static function friend_exists($from, $to) {
+		global $db;
+		if ($from == $to) return 0;
+		return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
 	}
-}
 
-
-function friend_teaser($from, $to) {
-	if ($from == $to) return '';
-	switch (friend_exists($from, $to)) {
-		case 0:
-			return FRIEND_NO;
-		case 1:
-			return FRIEND_YES;
-		case -1:
-			return FRIEND_IGNORE;
+	static function friend_insert($from, $to, $value = 1) {
+		global $db;
+		if ($from == $to) return 0;
+		if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) return false;
+		return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
 	}
+
+	static function friend_delete($from, $to) {
+		global $db;
+		return $db->query("DELETE FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to");
+	}
+
+	static function friend_add_delete($from, $to) {
+		if ($from == $to) return '';
+		switch (self::friend_exists($from, $to)) {
+			case 0:
+				self::friend_insert($from, $to);
+				return FRIEND_YES;
+			case 1:
+				self::friend_insert($from, $to, -1);
+				return FRIEND_IGNORE;
+			case -1:
+				self::friend_delete($from, $to);
+				return FRIEND_NO;
+		}
+	}
+
+
+	static function friend_teaser($from, $to) {
+		if ($from == $to) return '';
+		switch (self::friend_exists($from, $to)) {
+			case 0:
+				return FRIEND_NO;
+			case 1:
+				return FRIEND_YES;
+			case -1:
+				return FRIEND_IGNORE;
+		}
+	}
+
+
 }
+
 ?>

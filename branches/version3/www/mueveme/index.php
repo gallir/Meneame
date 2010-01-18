@@ -7,7 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'link.php');
 
 $page_size = 30;
 $link = new Link;

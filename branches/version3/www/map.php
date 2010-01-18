@@ -8,7 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
 include(mnminclude.'geo.php');
 
 $globals['ads'] = true;

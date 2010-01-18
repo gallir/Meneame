@@ -20,10 +20,6 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-define("mnmpath", dirname(__FILE__));
-define("mnminclude", dirname(__FILE__).'/libs/');
-ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
-
 // IMPORTANT: Do local modification in "hostname-local.php"
 // and/or "local.php"
 // They are automatically included
@@ -286,30 +282,41 @@ $site_key = 12345679;
 // Check this
 $anon_karma	= 4;
 
-// Don't touch behind this
+
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
 
 // Send logs to "log_user", is windows compatible
 openlog(false, LOG_ODELAY, LOG_USER);
 
+//////////////////////////////////////
+// Don't touch behind this
+//////////////////////////////////////
 // Set an utf-8 locale if there is no utf-8 defined
 if (!preg_match('/utf-8/i', setlocale(LC_CTYPE, 0)))  {
 	setlocale(LC_CTYPE, "en_US.UTF-8");
 }
 
-@include('local.php');
-@include($_SERVER['SERVER_NAME'].'-local.php');
-@include($_SERVER['SERVER_ADDR'].'-local.php');
+// There is another config file, this is called for defaults (used by mobile)
+if (! $globals['basic_config'] ) {
+	define("mnmpath", dirname(__FILE__));
+	define("mnminclude", dirname(__FILE__).'/libs/');
+	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
-//ob_start();
-$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+	@include('local.php');
+	@include($_SERVER['SERVER_NAME'].'-local.php');
+	@include($_SERVER['SERVER_ADDR'].'-local.php');
 
-include mnminclude.'db.php';
-include mnminclude.'utils.php';
-include mnminclude.'login.php';
+	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
 
-// For production servers
-$db->hide_errors();
+	include mnminclude.'db.php';
+	include mnminclude.'utils.php';
+	include mnminclude.'login.php';
+
+	// For production servers
+	$db->hide_errors();
+}
+
+
 
 
 ?>

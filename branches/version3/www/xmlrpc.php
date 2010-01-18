@@ -9,9 +9,7 @@
 // This file is based on Wordpress' xmlrpc.php
 
 include('config.php');
-include(mnminclude.'trackback.php');
 include(mnminclude.'IXR_Library.inc.php');
-include(mnminclude.'link.php');
 include(mnminclude.'ban.php');
 
 // Some browser-embedded clients send cookies. We don't want them.

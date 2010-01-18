@@ -7,7 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'user.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
 
@@ -27,7 +26,7 @@ if (!check_security_key($_REQUEST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
-echo friend_add_delete($src, $to);
+echo User::friend_add_delete($src, $to);
 
 function error($mess) {
 	echo "ERROR: $mess\n";

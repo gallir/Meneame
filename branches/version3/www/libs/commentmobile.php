@@ -6,8 +6,6 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once(mnminclude . 'comment.php');
-
 class CommentMobile extends Comment{
 	function print_summary($link, $length = 0) {
 		global $current_user, $globals;

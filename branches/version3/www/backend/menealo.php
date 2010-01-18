@@ -6,8 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
-include(mnminclude.'link.php');
+include('/home/gallir/Proyectos/meneame/dev/mobile/config.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -77,8 +76,6 @@ if ($votes_freq > $freq) {
 	if ($current_user->user_id > 0 && $current_user->user_karma > 4 && $link->status != 'published') {
     	// Crazy votes attack, decrease karma
 		// she does not deserve it :-)
-    	require_once(mnminclude.'user.php');
-    	require_once(mnminclude.'annotation.php');
     	$user = new User;
     	$user->id = $current_user->user_id;
     	$user->read();

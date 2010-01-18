@@ -6,7 +6,6 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 include('../config.php');
-include(mnminclude.'user.php');
 
 $colors = array('negatives' => '#CB4B4B', 'positives' => '#4DA74D');
 

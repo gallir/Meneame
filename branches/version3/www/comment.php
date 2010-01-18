@@ -8,8 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'comment.php');
-include(mnminclude.'link.php');
 
 
 $page_size = 50;

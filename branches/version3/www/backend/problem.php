@@ -7,7 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'link.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -57,8 +56,6 @@ if ($current_user->user_id > 0) {
 
 if ($votes_freq > $freq && $current_user->user_karma > 4) {
 	// Typical "negative votes" attack, decrease karma
-	require_once(mnminclude.'user.php');
-	require_once(mnminclude.'annotation.php');
 	$user = new User;
 	$user->id = $current_user->user_id;
 	$user->read();

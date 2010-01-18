@@ -23,7 +23,6 @@ if ($type == 'user') {
 		error(_('usuario incorrecto'));
 	}
 } elseif ($type == 'link') {
-	require_once(mnminclude.'link.php');
 	$link = new Link;
 	$link->id = $id;
 	if ( ! $link->read() ) {

@@ -9,8 +9,6 @@
 function send_recover_mail ($user) {
 	global $site_key, $globals;
 
-	require_once(mnminclude.'user.php');
-
 	$now = time();
 
 	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];

@@ -151,7 +151,6 @@ function do_recover() {
 		if (!ts_is_human()) {
 			recover_error(_('El código de seguridad no es correcto!'));
 		} else {
-			require_once(mnminclude.'user.php');
 			$user=new User();
 			if (preg_match('/.+@.+/', $_POST['username'])) {
 				// It's an email address

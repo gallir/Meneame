@@ -7,8 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'link.php');
-include(mnminclude.'user.php');
 include(mnminclude.'sneak.php');
 include(mnminclude.'ban.php');
 
@@ -56,7 +54,7 @@ if ($logs) {
 		if ($current_user->user_id > 0) {
 			if(!empty($_REQUEST['friends']) && $log->log_user_id != $current_user->user_id) {
 				// Check the user is a friend
-				if (friend_exists($current_user->user_id, $log->log_user_id) <= 0) continue;
+				if (User::friend_exists($current_user->user_id, $log->log_user_id) <= 0) continue;
 			} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
 				$user_level = $db->get_var("select user_level from users where user_id=$log->log_user_id");
 				if ($user_level != 'admin' && $user_level != 'god') continue;
@@ -71,7 +69,7 @@ if ($logs) {
 				if (empty($_REQUEST['nopublished'])) get_story($log->time, 'published', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_new':
-				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
+				if (User::friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'comment', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_depublished':
@@ -85,11 +83,11 @@ if ($logs) {
 				if (empty($_REQUEST['nogeoedit']) && $current_user->admin) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'comment_edit':
-				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
+				if (User::friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nocomment'])) get_comment($log->time, 'cedited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'post_new':
-				if (friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
+				if (User::friend_exists($current_user->user_id, $log->log_user_id) < 0) continue;
 				if (empty($_REQUEST['nopost'])) get_post($log->time, 'post', $log->log_ref_id, $log->log_user_id);
 				break;
 		}
@@ -219,8 +217,8 @@ function get_chat() {
 				if ($user_level != 'admin' && $user_level != 'god') continue;
 			} else  {
 				// CHECK FRIENDSHIP
-				$friendship = friend_exists($current_user->user_id, $uid);
-				$reverse_friendship = friend_exists($uid, $current_user->user_id);
+				$friendship = User::friend_exists($current_user->user_id, $uid);
+				$reverse_friendship = User::friend_exists($uid, $current_user->user_id);
 				// This user is ignored by the writer
 				if ($friendship < 0 || $reverse_friendship < 0) continue;
 
@@ -290,11 +288,11 @@ function get_votes($dbtime) {
 		if ($current_user->user_id > 0) {
 			if (!empty($_REQUEST['friends']) && $event->vote_user_id != $current_user->user_id) {
 				// Check the user is a friend
-				if (friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
+				if (User::friend_exists($current_user->user_id, $event->vote_user_id) <= 0) {
 					continue;
 				} elseif ($event->vote_value < 0) {
 					// If the vote is negative, verify also the other user has selected as friend to the current one
-					if (friend_exists($event->vote_user_id, $current_user->user_id) <= 0) {
+					if (User::friend_exists($event->vote_user_id, $current_user->user_id) <= 0) {
 						continue;
 					}
 				}

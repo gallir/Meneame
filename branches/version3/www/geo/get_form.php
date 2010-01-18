@@ -20,7 +20,6 @@ $type = clean_input_string($_REQUEST['type']);
 $icontype = clean_input_string($_REQUEST['icon']);
 
 if ($type == 'link') {
-	require_once(mnminclude.'link.php');
 	$link = new Link;
 	$link->id = $id;
 	if ( ! $link->read() ) {

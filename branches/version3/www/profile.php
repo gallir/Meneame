@@ -8,8 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
-include(mnminclude.'user.php');
 include(mnminclude.'avatars.php');
 
 // We need it because we modify headers

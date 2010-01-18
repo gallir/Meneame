@@ -1,6 +1,5 @@
 <?php
 include_once('../config.php');
-include(mnminclude.'annotation.php');
 
 if (empty($current_user->user_login)) {
 	echo _('usuario no identificado');

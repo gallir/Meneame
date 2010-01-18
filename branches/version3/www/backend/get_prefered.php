@@ -11,7 +11,6 @@ if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
 }
-include_once(mnminclude.'user.php');
 include_once('pager.php');
 
 global $db;

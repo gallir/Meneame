@@ -126,7 +126,6 @@ function do_register2() {
 		if ($db->query("INSERT INTO users (user_login, user_login_register, user_email, user_email_register, user_pass, user_date, user_ip) VALUES ('$dbusername', '$dbusername', '$dbemail', '$dbemail', '$password', now(), '$user_ip')")) {
 			echo '<fieldset>'."\n";
 			echo '<legend><span class="sign">'._("registro de usuario").'</span></legend>'."\n";
-			require_once(mnminclude.'user.php');
 			$user=new User();
 			$user->username=$username;
 			if(!$user->read()) {

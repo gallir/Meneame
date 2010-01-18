@@ -22,7 +22,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
 
 meta_get_current();
 

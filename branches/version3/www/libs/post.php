@@ -96,9 +96,8 @@ class Post {
 
 		if(!$this->read) $this->read(); 
 
-		include_once(mnminclude.'user.php');
 		$this->hidden = $this->karma < $globals['post_hide_karma'];
-		$this->ignored = $current_user->user_id > 0 && friend_exists($current_user->user_id, $this->author) < 0;
+		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
 		echo '<li id="pcontainer-'.$this->id.'">';
 
@@ -281,21 +280,14 @@ class Post {
 
 	function vote_exists() {
 		global $current_user;
-		require_once(mnminclude.'votes.php');
-		$vote = new Vote;
-		$vote->user=$current_user->user_id;
-		$vote->type='posts';
-		$vote->link=$this->id;
+		$vote = new Vote('posts', $this->id, $current_user->user_id);
 		$this->voted = $vote->exists(false);
 		if ($this->voted) return $this->voted;
 	}
 
 	function insert_vote() {
 		global $current_user;
-		require_once(mnminclude.'votes.php');
-		$vote = new Vote;
-		$vote->user = $current_user->user_id;
-		$vote->type='posts';
+		$vote = new Vote('posts', $this->id, $current_user->user_id);
 		$vote->link=$this->id;
 		if ($vote->exists(true)) {
 			return false;

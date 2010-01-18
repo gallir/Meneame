@@ -8,10 +8,8 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
-include(mnminclude.'comment.php');
-include(mnminclude.'user.php');
 include(mnminclude.'geo.php');
+include(mnminclude.'favorites.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
@@ -246,7 +244,7 @@ function do_profile() {
 		}
 		// Print friend icon
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
-			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.friend_teaser($current_user->user_id, $user->id).'</a>';
+			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.User::friend_teaser($current_user->user_id, $user->id).'</a>';
 		}
 		// Print user detailed info
 		if ($login===$current_user->user_login || $current_user->admin) {

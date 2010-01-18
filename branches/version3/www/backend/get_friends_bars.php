@@ -11,7 +11,6 @@ if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
 }
-include_once(mnminclude.'user.php');
 include_once('pager.php');
 
 global $db, $current_user;
@@ -51,7 +50,7 @@ if ($dbusers) {
 		echo '<img src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
 		echo $friend->username.'</a>&nbsp;';
 		if ($current_user->user_id > 0 && $current_user->user_id != $friend->id) {
-			echo '<a id="friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'\',0,\''.$friend->id.'\')">'.friend_teaser($current_user->user_id, $friend->id).'</a>';
+			echo '<a id="friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$prefered_type.'-'.$current_user->user_id.'-'.$friend->id.'\',0,\''.$friend->id.'\')">'.User::friend_teaser($current_user->user_id, $friend->id).'</a>';
 		}
 		echo '</div>';
 	}

@@ -11,8 +11,6 @@ if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
 }
-include_once(mnminclude.'user.php');
-include_once(mnminclude.'post.php');
 include_once(mnminclude.'geo.php');
 
 
@@ -28,7 +26,7 @@ echo '<strong>' . _('usuario') . ':</strong>&nbsp;' . $user->username;
 $user->print_medals();
 
 if ($current_user->user_id > 0 && $current_user->user_id  != $user->id)  {
-	echo '&nbsp;' . friend_teaser($current_user->user_id, $user->id);
+	echo '&nbsp;' . User::friend_teaser($current_user->user_id, $user->id);
 }
 echo '<br/>';
 if ($user->names) echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';

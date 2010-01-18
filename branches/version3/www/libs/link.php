@@ -287,7 +287,6 @@ class Link {
 	}
 
 	function create_blog_entry() {
-		require_once(mnminclude.'blog.php');
 		$blog = new Blog();
 		$blog->analyze_html($this->url, $this->html);
 		if(!$blog->read('key')) {
@@ -300,7 +299,6 @@ class Link {
 	function type() {
 		if (empty($this->type)) {
 			if ($this->blog > 0) {
-				require_once(mnminclude.'blog.php');
 				$blog = new Blog();
 				$blog->id = $this->blog;
 				if($blog->read()) {
@@ -697,29 +695,19 @@ class Link {
 	}
 
 	function vote_exists($user) {
-		require_once(mnminclude.'votes.php');
-		$vote = new Vote;
-		$vote->user=$user;
-		$vote->link=$this->id;
+		$vote = new Vote('links', $this->id, $user);
 		return $vote->exists(false);	
 	}
 	
 	function votes($user) {
-		require_once(mnminclude.'votes.php');
-
-		$vote = new Vote;
-		$vote->user=$user;
-		$vote->link=$this->id;
+		$vote = new Vote('links', $this->id, $user);
 		return $vote->count();
 	}
 
 	function insert_vote($value) {
 		global $db, $current_user, $globals;
-		require_once(mnminclude.'votes.php');
 
-		$vote = new Vote;
-		$vote->user=$current_user->user_id;
-		$vote->link=$this->id;
+		$vote = new Vote('links', $this->id, $current_user->user_id);
 		if ($vote->exists(true)) return false;
 		// For karma calculation
 		if ($this->status != 'published') {
@@ -965,7 +953,6 @@ class Link {
 
 		require_once(mnminclude.'log.php');
 		require_once(mnminclude.'ban.php');
-		require_once(mnminclude.'annotation.php');
 
 		$this->old_karma = round($this->karma);
 		if (! $globals['users_karma_avg'] ) {
@@ -1119,7 +1106,6 @@ class Link {
 
 	function save_annotation($key) {
 		global $globals;
-		require_once(mnminclude.'annotation.php');
 
 		$key .= "-$this->id";
 		$log = new Annotation($key);
@@ -1142,7 +1128,6 @@ class Link {
 
 	function read_annotation($key) {
 		global $globals;
-		require_once(mnminclude.'annotation.php');
 
 		$key .= "-$this->id";
 		$log = new Annotation($key);
@@ -1153,8 +1138,6 @@ class Link {
 
 	// Read affinity values using annotations
 	function metas_coef_get() {
-		require_once(mnminclude.'annotation.php');
-
 		$log = new Annotation("metas-coef");
 		if (!$log->read()) return false;
 		$dict = unserialize($log->text);
@@ -1165,8 +1148,6 @@ class Link {
 	// $this->author is the key in annotations
 	function affinity_get($from = false) {
 		global $current_user;
-
-		require_once(mnminclude.'annotation.php');
 
 		$log = new Annotation("affinity-$this->author");
 		if (!$log->read()) return false;
@@ -1181,8 +1162,7 @@ class Link {
 
 	function get_thumb($debug = false) {
 		global $globals;
-		require_once(mnminclude.'webimages.php');
-		require_once(mnminclude.'blog.php');
+
 		$site = false;
 		if (empty($this->url)) {
 			if (!$this->read()) return false;

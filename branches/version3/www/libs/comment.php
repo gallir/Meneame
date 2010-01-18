@@ -96,7 +96,6 @@ class Comment {
 		if(!$this->read) return;
 
 		if (! $link && $this->link > 0) {
-			include_once(mnminclude.'link.php');
 			$link = new Link;
 			$link->id = $this->link;
 			$link->read();
@@ -109,8 +108,7 @@ class Comment {
 
 		echo '<li id="c-'.$html_id.'">';
 
-		require_once(mnminclude.'user.php');
-		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && friend_exists($current_user->user_id, $this->author) < 0);
+		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
 		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
 						|| ($this->user_level == 'disabled' && $this->type != 'admin');
 
@@ -222,22 +220,14 @@ class Comment {
 
 	function vote_exists() {
 		global $current_user;
-		require_once(mnminclude.'votes.php');
-		$vote = new Vote;
-		$vote->user=$current_user->user_id;
-		$vote->type='comments';
-		$vote->link=$this->id;
+		$vote = new Vote('comments', $this->id, $current_user->user_id);
 		$this->voted = $vote->exists(false);
 		if ($this->voted) return $this->voted;
 	}
 
 	function insert_vote() {
 		global $current_user;
-		require_once(mnminclude.'votes.php');
-		$vote = new Vote;
-		$vote->user = $current_user->user_id;
-		$vote->type='comments';
-		$vote->link=$this->id;
+		$vote = new Vote('comments', $this->id, $current_user->user_id);
 		if ($vote->exists(true)) {
 			return false;
 		}
@@ -418,7 +408,6 @@ class Comment {
 
 		$comment_limit = round(min($current_user->user_karma/6, 2) * 2.5);
 		if ($comment_count > $comment_limit || $same_count > 2) {
-			require_once(mnminclude.'user.php');
 			$reduction = 0;
 			if ($comment_count > $comment_limit) {
 				$reduction += ($comment_count-3) * 0.1;
@@ -433,7 +422,6 @@ class Comment {
 				$user->karma = $user->karma - $reduction;
 				syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
 				$user->store();
-				require_once(mnminclude.'annotation.php');
 				$annotation = new Annotation("karma-$user->id");
 				$annotation->append(_('texto repetido o abuso de enlaces en comentarios').": -$reduction, karma: $user->karma\n");
 				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');

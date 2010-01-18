@@ -9,8 +9,6 @@
 
 @include mnminclude.'ads-credits-functions.php';
 
-include_once(mnminclude.'post.php');
-
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
 	header('Location: http://'.get_server_name().$globals['base_url'].$globals['lounge']);
@@ -686,7 +684,6 @@ function do_best_sites() {
 
 function do_best_comments() {
 	global $db, $globals, $dblang;
-	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 	$output = '';
 
@@ -746,7 +743,6 @@ function do_best_stories() {
 	$key = 'best_stories_4_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
 
-	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
@@ -793,7 +789,6 @@ function do_best_stories() {
 
 function do_best_queued() {
 	global $db, $globals, $dblang;
-	require_once(mnminclude.'link.php');
 	$foo_link = new Link();
 
 	if(memcache_mprint('best_queued_4_'.$globals['meta_current'])) return;

@@ -7,7 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'comment.php');
 include(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -47,10 +46,7 @@ if ($value != -1 && $value != 1) {
 	error(_('Valor del voto incorrecto'));
 }
 
-require_once(mnminclude.'votes.php');
-$vote = new Vote;
-$vote->user=$current_user->user_id;
-$vote->type='posts';
+$vote = new Vote('posts', $id, $current_user->user_id);
 $vote->link=$id;
 if ($vote->exists()) {
 	error(_('ya se votó antes con el mismo usuario o IP'));
@@ -66,7 +62,6 @@ if ($votes_freq > $freq) {
 	if ($current_user->user_id > 0 && $current_user->user_karma > 4) {
     	// Crazy votes attack, decrease karma
 		// she does not deserve it :-)
-    	require_once(mnminclude.'user.php');
     	$user = new User;
     	$user->id = $current_user->user_id;
     	$user->read();

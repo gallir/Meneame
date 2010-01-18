@@ -8,8 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-//include(mnminclude.'link.php');
-include(mnminclude.'user.php');
 
 $globals['ads'] = true;
 $page_size = 30;

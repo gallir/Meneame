@@ -12,8 +12,6 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 	stats_increment('ajax');
 }
-include_once(mnminclude.'link.php');
-
 
 if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);

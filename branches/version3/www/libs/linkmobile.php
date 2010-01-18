@@ -6,8 +6,6 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once(mnminclude.'link.php');
-
 class LinkMobile extends Link{
 	function print_summary($type='full', $karma_best_comment = 0, $show_tags = true) {
 		global $current_user, $current_user, $globals, $db;

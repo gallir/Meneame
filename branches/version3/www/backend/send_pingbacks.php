@@ -1,7 +1,5 @@
 <?php
 include('../config.php');
-include(mnminclude.'link.php');
-include(mnminclude.'trackback.php');
 
 $remote = $_SERVER["REMOTE_ADDR"];
 $local_ips = gethostbynamel($_SERVER["HTTP_HOST"]);

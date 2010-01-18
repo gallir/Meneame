@@ -8,9 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1-mobile.php');
-include(mnminclude.'linkmobile.php');
-include(mnminclude.'commentmobile.php');
-include(mnminclude.'user.php');
 
 
 $offset=(get_current_page()-1)*$page_size;

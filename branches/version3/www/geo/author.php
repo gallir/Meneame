@@ -12,8 +12,6 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 	stats_increment('ajax');
 }
-include_once(mnminclude.'user.php');
-include_once(mnminclude.'post.php');
 include_once(mnminclude.'geo.php');
 
 

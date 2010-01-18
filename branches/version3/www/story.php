@@ -21,11 +21,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
-include(mnminclude.'link.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'comment.php');
-include(mnminclude.'trackback.php');
-
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);

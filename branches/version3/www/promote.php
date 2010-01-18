@@ -8,7 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'annotation.php');
 
 $globals['ads'] = false;
 promote_style();

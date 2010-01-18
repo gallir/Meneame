@@ -117,7 +117,6 @@ function do_stats3($string) {
 
 function do_statsu($string) {
 	global $db, $current_user;
-	require_once(mnminclude.'user.php');
 	$array = preg_split('/\s+/', $string);
 	if (count($array) >= 2) {
 		$user_login = $db->escape($array[1]);
@@ -147,7 +146,6 @@ function do_statsu($string) {
 }
 
 function do_top($string) {
-	require_once(mnminclude.'link.php');
 	global $db, $globals;
 	$rank = "<strong>Top</strong> ";
 	$sql = "select link_id from links where link_date > date_sub(now(), interval 4 day) and link_status='queued' order by link_karma desc limit 3";
@@ -177,13 +175,12 @@ function do_ojo($string) {
 
 function do_ignore($string) {
 	global $db, $current_user;
-	require_once(mnminclude.'user.php');
 	$array = preg_split('/\s+/', $string);
 	if (count($array) >= 2) {
 		$user_login = $db->escape($array[1]);
 		$user_id = $db->get_var("select user_id from users where user_login='$user_login'");
 		if ($user_id > 0 && $user_id != $current_user->user_id) {
-			friend_insert($current_user->user_id, $user_id, -1);
+			User::friend_insert($current_user->user_id, $user_id, -1);
 			$comment = _('Usuario') . ' <em>' . htmlentities($array[1]). '</em> ' . _('agregado a la lista de ignorados');
 		}
 	} else {

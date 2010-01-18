@@ -8,8 +8,6 @@
 
 include('config.php');
 include(mnminclude.'html1-mobile.php');
-include(mnminclude.'linkmobile.php');
-include(mnminclude.'user.php');
 include(mnminclude.'avatars.php');
 
 $globals['ads'] = false;

@@ -8,10 +8,8 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
 include(mnminclude.'tags.php');
 include(mnminclude.'ban.php');
-include(mnminclude.'blog.php');
 
 $globals['ads'] = false;
 
@@ -618,7 +616,6 @@ function do_submit3() {
 
 		$db->query("delete from links where link_author = $linkres->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
 		if(!empty($_POST['trackback'])) {
-			require_once(mnminclude.'trackback.php');
 			$trackres = new Trackback;
 			$trackres->url=clean_input_url($_POST['trackback']);
 			$trackres->link_id=$linkres->id;

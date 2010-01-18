@@ -10,10 +10,6 @@
 include_once('../config.php');
 header('Content-Type: text/html; charset=utf-8');
 
-include_once(mnminclude.'user.php');
-include_once(mnminclude.'post.php');
-
-
 if (empty($_GET['id'])) {
 	echo _('¿usuario?');
 	die;

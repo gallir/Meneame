@@ -8,8 +8,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'comment.php');
-include(mnminclude.'link.php');
 header('Content-Type: text/html; charset=utf-8');
 stats_increment('ajax');
 
