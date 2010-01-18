@@ -6,6 +6,7 @@
 function __autoload($class) {
 	static $classfiles = array(
 				'db' => 'mysqli.php',
+				'RGDB' => 'rgdb.php',
 				'Link' => 'link.php',
 				'LinkMobile' => 'linkmobile.php',
 				'Comment' => 'comment.php',
@@ -25,9 +26,9 @@ function __autoload($class) {
 }
 
 global $globals;
-$db = new db($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server'], $globals['db_master']);
+$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
 // we now do "lazy connection.
 $db->persistent = $globals['mysql_persistent'];
-$db->master_persistent = $globals['mysql_master_persistent'];
+//$db->master_persistent = $globals['mysql_master_persistent'];
 
 ?>
