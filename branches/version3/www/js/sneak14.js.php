@@ -59,6 +59,7 @@ function start_sneak() {
 	$.ajaxSetup({
 		timeout: 10000,
 		async: true,
+		cache: false,
 		error: function (req, error) { 
 			$('#ping').html(error+'... retrying');
 			xmlhttp = undefined;
