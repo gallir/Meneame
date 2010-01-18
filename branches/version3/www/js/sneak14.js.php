@@ -56,11 +56,14 @@ global_options.show_admin = false;
 
 
 function start_sneak() {
-	$.ajaxSetup({timeout: 10000, async: true});
-
-	$(document).ajaxError(function (request, settings) {
-		data_timer = setTimeout('get_data()', next_update/2);
-		xmlhttp = undefined;
+	$.ajaxSetup({
+		timeout: 10000,
+		async: true,
+		error: function (req, error) { 
+			$('#ping').html(error+'... retrying');
+			xmlhttp = undefined;
+			data_timer = setTimeout('get_data()', 3000);
+		} 
 	});
 
 	if (!get_options_cookie()) {
