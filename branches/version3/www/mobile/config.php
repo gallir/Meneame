@@ -33,6 +33,7 @@ $globals['base_story_url'] = 'story/';
 $globals['base_user_url'] = 'user/';
 
 $globals['css_main'] = 'css/es/mnm-mobile02.css';
+$globals['css_color'] = '';
 
 
 @include('local.php');
