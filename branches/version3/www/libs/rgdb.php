@@ -77,7 +77,7 @@ class RGDB extends mysqli {
 	}
 
 	function query($query) {
-		$is_select = preg_match("/^ *select\s/i",$query);
+		$is_select = preg_match("/^ *(select|show)\s/i",$query);
 
 		$this->connect();
 		
