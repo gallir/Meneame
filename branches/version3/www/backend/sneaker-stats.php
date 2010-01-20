@@ -27,7 +27,22 @@ function check_stats($string) {
 	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
 	if (preg_match('/^!rae/', $string)) return do_rae($string);
 	if (preg_match('/^!values/', $string)) return do_values();
+	if (preg_match('/^!load/', $string)) return do_load();
 	return false;
+}
+
+function do_load() {
+	global $db, $current_user;
+	$annotation = new Annotation('ec2-autoscaler');
+	if (!$annotation->read()) {
+		return _('no hay estadísticas disponibles');
+	}
+	$group = unserialize($annotation->text);
+	$str = "web instances: $group->instances, ";
+	$str .= "cpu average load: ".round($group->load, 2) . "%, ";
+	$str .= "cpu max average ($group->measures periods): ".round($group->load_max, 2)."%, ";
+	$str .= "stored at: ". get_date_time($annotation->time);
+	return $str;
 }
 
 function do_admins($string) {
