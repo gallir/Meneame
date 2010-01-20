@@ -23,7 +23,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-array_push($globals['cache-control'], 'max-age=30');
+array_push($globals['cache-control'], 'max-age=10');
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);

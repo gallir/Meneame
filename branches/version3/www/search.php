@@ -22,7 +22,6 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-include(mnminclude.'link.php');
 include(mnminclude.'search.php');
 
 // Manage "search" url and redirections accordingly

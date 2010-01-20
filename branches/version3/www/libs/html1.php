@@ -572,6 +572,9 @@ function do_vertical_tags($what=false) {
 	$max_pts = 30;
 	$line_height = $max_pts * 0.70;
 
+	// Delete old tags, they are not used anywhere else
+	$db->query("delete from tags where tag_lang = '$dblang' and tag_date < date_sub(now(), interval 8 day)");
+
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
 	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);

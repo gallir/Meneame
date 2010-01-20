@@ -169,6 +169,7 @@ function do_save() {
 	$linkres->tags = tags_normalize_string($_POST['tags']);
 	// change the status
 	if ($_POST['status'] != $linkres->status
+		&& ($_POST['status'] == 'autodiscard' || $current_user->admin)
 		&& preg_match('/^[a-z]{4,}$/', $_POST['status'])
 		&& ( ! $linkres->is_discarded() || $current_user->admin)) {
 		if (preg_match('/discard|abuse|duplicated|autodiscard/', $_POST['status'])) {
