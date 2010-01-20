@@ -22,7 +22,20 @@ function __autoload($class) {
 				'HtmlImages' => 'webimages.php',
 				'Trackback' => 'trackback.php',
 	);
-	require_once(mnminclude.$classfiles[$class]);
+	if ($classfiles[$class] && file_exists(mnminclude.$classfiles[$class])) {
+		require_once(mnminclude.$classfiles[$class]);
+	} else {
+		// Build the include for "standards" frameworks wich uses path1_path2_classnameclassName
+		$filePath = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+		$includePaths = explode(PATH_SEPARATOR, get_include_path());
+		foreach($includePaths as $includePath){
+			if(file_exists($includePath . DIRECTORY_SEPARATOR . $filePath)){
+				require_once $filePath;
+				return;
+			}
+		}
+		require_once($class.".php");
+	}
 }
 
 global $globals;
