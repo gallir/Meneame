@@ -216,7 +216,8 @@ class Post {
 				$user = $matches[2];
 				$id = '';
 			}
-			return "$pre<a class='tt' href='".$globals['base_url']."backend/get_post_url.php?id=$user$id-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$user".$id.'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$user</a>";
+			$user_url = urlencode($user);
+			return "$pre<a class='tt' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$user_url".$id.'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$user</a>";
 	}
 
 	function print_edit_form() {
