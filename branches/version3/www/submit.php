@@ -602,10 +602,10 @@ function do_submit3() {
 	if(!check_link_key() || !$linkres->read()) die;
 	// Check it is not in the queue already
 	if($linkres->votes == 0 && $linkres->status != 'queued') {
+		$db->transaction();
 		$linkres->status='queued';
 		$linkres->sent_date = $linkres->date=time();
 		$linkres->get_uri();
-		$db->transaction();
 		$linkres->store();
 		$linkres->insert_vote($current_user->user_karma);
 		$db->commit();
