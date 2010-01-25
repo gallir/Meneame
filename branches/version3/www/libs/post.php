@@ -38,6 +38,7 @@ class Post {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
+		$db->transaction();
 		if(!$this->date) $this->date=time();
 		$post_author = $this->author;
 		$post_src = $this->src;
@@ -50,6 +51,8 @@ class Post {
 			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
 			$this->id = $db->insert_id;
 
+			$this->insert_vote($post_author);
+
 			// Insert post_new event into logs
 			log_insert('post_new', $this->id, $post_author);
 		} else {
@@ -58,6 +61,7 @@ class Post {
 			log_conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
 		$this->update_conversation();
+		$db->commit();
 	}
 
 	function read() {
@@ -286,9 +290,12 @@ class Post {
 		if ($this->voted) return $this->voted;
 	}
 
-	function insert_vote() {
+	function insert_vote($user_id = false) {
 		global $current_user;
-		$vote = new Vote('posts', $this->id, $current_user->user_id);
+
+		if (! $user_id) $user_id = $current_user->user_id;
+
+		$vote = new Vote('posts', $this->id, $user_id);
 		$vote->link=$this->id;
 		if ($vote->exists(true)) {
 			return false;
