@@ -88,7 +88,7 @@ if(!empty($_REQUEST['time'])) {
 		if($_REQUEST['q']) {
 			$status = 'all';
 			include(mnminclude.'search.php');
-			$search_ids = get_search_links(true);
+			$search_ids = do_search(true);
 			if ($search_ids['ids']) {
 				$search = ' link_id in (';
 				foreach ($search_ids['ids'] as $lid) {

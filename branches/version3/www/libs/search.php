@@ -1,20 +1,22 @@
 <?
 require_once (mnminclude.'sphinxapi.php');
 
-function get_search_links($by_date = false, $start = 0, $count = 50) {
+function do_search($by_date = false, $start = 0, $count = 50) {
 	search_parse_query();
-	if ($_REQUEST['p'] == 'site' || $_REQUEST['p'] == 'url_db') {
+	if ($_REQUEST['w'] == 'links' && ($_REQUEST['p'] == 'site' || $_REQUEST['p'] == 'url_db')) {
 		return db_get_search_links($by_date, $start, $count);
 	} else {
-		return sphinx_get_search_links($by_date, $start, $count);
+		return sphinx_do_search($by_date, $start, $count);
 	}
 
 }
 
-function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
+function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 	global $globals;
 
 	$start_time = microtime(true);
+
+	$indices = $_REQUEST['w'].' '.$_REQUEST['w'].'_delta';
 
 	$cl = new SphinxClient ();
 	$cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
@@ -43,12 +45,11 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$cl->SetFilterRange('date', $min_date, $max_date);
 	}
 
-	if ($_REQUEST['s']) {
+	if ($_REQUEST['w'] == 'links' && $_REQUEST['s']) {
 		$cl->SetFilter('status', array($_REQUEST['s_id']));
-	} 
+	}
 
-
-	if ($_REQUEST['p']) {
+	if ($_REQUEST['w'] == 'links' && $_REQUEST['p']) {
 		$f = '@'.$_REQUEST['p'];
 	} else {
 		$f = '@*';
@@ -63,9 +64,9 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 	if ($_REQUEST['p'] == 'url') {
-		$q = $cl->AddQuery ( "$f \"$words\"", 'links links_delta' );
+		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
 	} else {
-		$q = $cl->AddQuery ( "$f $words", 'links links_delta' );
+		$q = $cl->AddQuery ( "$f $words", $indices );
 	}
 	array_push($queries, $q);
 
@@ -77,7 +78,7 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 			$f .= " $w";
 			$n++;
 		}
-		$q = $cl->AddQuery ( $f, 'links links_delta' );
+		$q = $cl->AddQuery ( $f, $indices );
 		array_push($queries, $q);
 	}
 
@@ -154,6 +155,17 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 function search_parse_query() {
 	global $db;
 
+	// Check what should be searched
+	switch ($_REQUEST['w']) {
+		case 'posts':
+		case 'comments':
+		case 'links':
+			break;
+		default:
+			$_REQUEST['w'] = 'links';
+	}
+
+
 	$_REQUEST['words'] = $_REQUEST['q'] = trim(substr(strip_tags(stripslashes($_REQUEST['q'])), 0, 250));
 
 	if (!empty($_REQUEST['p'])) {
@@ -189,7 +201,7 @@ function search_parse_query() {
 	if (isset($_REQUEST['p']) && ! preg_match('/^(url|tags|title|site|url_db)$/', $_REQUEST['p'])) unset($_REQUEST['p']);
 	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
 
-	if (isset($_REQUEST['s'])) {
+	if ($_REQUEST['w'] == 'links' && isset($_REQUEST['s'])) {
 		// Retrieve available status values
 		$row = $db->get_row("SHOW COLUMNS FROM links like 'link_status'");
 		preg_match_all("/'(.*?)'/", $row->Type, $matches);

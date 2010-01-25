@@ -30,6 +30,11 @@ a:visited {
 color: #551a8b;
 }
 
+input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly] 
+{ 
+color: #ccc; 
+}
+
 #wrap, #newswrap, #singlewrap {
 background-color: #fff;
 }

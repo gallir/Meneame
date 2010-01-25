@@ -19,7 +19,7 @@ $globals['ads'] = false;
 $globals['noindex'] = true;
 
 $_REQUEST['q'] = trim(stripslashes($_REQUEST['q']));
-$response = get_search_links(false, $offset, $page_size);
+$response = do_search(false, $offset, $page_size);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(_('búsqueda de'). ' "'.$search_txt.'"');
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));

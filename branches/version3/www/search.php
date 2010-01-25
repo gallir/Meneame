@@ -52,7 +52,7 @@ $globals['ads'] = true;
 
 $globals['noindex'] = true;
 
-$response = get_search_links(false, $offset, $page_size);
+$response = do_search(false, $offset, $page_size);
 do_header(_('búsqueda de'). ' "'.htmlspecialchars($_REQUEST['words']).'"');
 do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 
@@ -80,14 +80,25 @@ if(!empty($_REQUEST['q'])) {
 echo '</fieldset>';
 echo '</div>';
 
+switch ($_REQUEST['w']) {
+	case 'posts':
+		$obj = new Post;
+		break;
+	case 'comments':
+		$obj = new Comment;
+		break;
+	case 'links':
+	default:
+		$obj = new Link;
+}
 
-$link = new Link;
+
 if ($response['ids']) {
 	$rows = min($response['rows'], 1000);
-	foreach($response['ids'] as $link_id) {
-		$link->id=$link_id;
-		$link->read();
-		$link->print_summary('full', $link->status == 'published' ? 100 : 20);
+	foreach($response['ids'] as $id) {
+		$obj->id=$id;
+		$obj->read();
+		$obj->print_summary();
 	}
 }
 
@@ -102,7 +113,30 @@ function print_search_form() {
 	echo '<input class="button" type="submit" value="'._('buscar').'" />';
 
 	// Print field options
-	echo '<br /><select name="p">';
+	echo '<br />';
+
+
+	echo '<select name="w" id="w">';
+	switch ($_REQUEST['w']) {
+		case 'posts':
+		case 'comments':
+			echo '<option value="'.$_REQUEST['w'].'" selected="selected">'.$_REQUEST['w'].'</option>';
+			$what = $_REQUEST['w'];
+			break;
+		case 'links':
+		default:
+			$what = 'links';
+			echo '<option value="" selected="selected">'.$what.'</option>';
+	}
+	foreach (array('links', 'posts', 'comments') as $w) {
+		if ($w != $what) {
+			echo '<option value="'.$w.'">'.$w.'</option>';
+		}
+	}
+	echo '</select>';
+		
+	$visibility = $_REQUEST['w'] != 'links' ? 'disabled="true"' : '';
+	echo '<select name="p" id="p" '.$visibility.'>';
 	switch ($_REQUEST['p']) {
 		case 'url':
 		case 'tags':
@@ -123,7 +157,7 @@ function print_search_form() {
 	echo '</select>';
 
 	// Print status options
-	echo '&nbsp;&nbsp;<select name="s">';
+	echo '&nbsp;&nbsp;<select name="s" id="s"'.$visibility.'>';
 	switch ($_REQUEST['s']) {
 		case 'published':
 		case 'queued':
@@ -143,6 +177,7 @@ function print_search_form() {
 	}
 	echo '<option value="">'._('todas').'</option>';
 	echo '</select>';
+	echo '</span>';
 
 	// Select period
 	echo '&nbsp;&nbsp;<select name="h">';
@@ -171,8 +206,19 @@ function print_search_form() {
 		echo '<option value="date">'._('por fecha').'</option>';
 	}
 	echo '</select>';
-
 	echo '</form>';
+
+	echo '<script type="text/javascript">';
+	echo '$(document).ready(function() {';
+	echo '    $("#w").change(function() {'; 
+	echo '        type = $("#w").val();';
+//	echo '        if (type == "links") $("#link_options").css("visibility", "visible");';
+//	echo '        else $("#link_options").css("visibility", "hidden");';
+	echo '        if (type == "links") { $("#p").attr("disabled", false); $("#s").attr("disabled", false); }';
+	echo '        else { $("#p").attr("disabled", true); $("#s").attr("disabled", true); }';
+	echo '    });';
+	echo '});';
+	echo '</script>';
 }
 
 ?>
