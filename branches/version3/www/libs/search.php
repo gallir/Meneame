@@ -77,7 +77,7 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 			$f .= " $w";
 			$n++;
 		}
-		$q = $cl->AddQuery ( $f, '*' );
+		$q = $cl->AddQuery ( $f, 'links links_delta' );
 		array_push($queries, $q);
 	}
 
