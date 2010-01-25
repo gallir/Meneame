@@ -63,9 +63,9 @@ function sphinx_get_search_links($by_date = false, $start = 0, $count = 50) {
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 	if ($_REQUEST['p'] == 'url') {
-		$q = $cl->AddQuery ( "$f \"$words\"", '*' );
+		$q = $cl->AddQuery ( "$f \"$words\"", 'links links_delta' );
 	} else {
-		$q = $cl->AddQuery ( "$f $words", '*' );
+		$q = $cl->AddQuery ( "$f $words", 'links links_delta' );
 	}
 	array_push($queries, $q);
 
