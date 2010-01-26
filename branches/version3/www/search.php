@@ -146,7 +146,7 @@ function print_search_form() {
 	}
 	echo '</select>';
 		
-	$visibility = $_REQUEST['w'] != 'links' ? 'disabled="true"' : '';
+	$visibility = $_REQUEST['w'] != 'links' ? ' disabled="disabled"' : '';
 	echo '<select name="p" id="p" '.$visibility.'>';
 	switch ($_REQUEST['p']) {
 		case 'url':
@@ -188,7 +188,6 @@ function print_search_form() {
 	}
 	echo '<option value="">'._('todas').'</option>';
 	echo '</select>';
-	echo '</span>';
 
 	// Select period
 	echo '&nbsp;&nbsp;<select name="h">';
