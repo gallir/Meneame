@@ -244,7 +244,9 @@ case 2:
 		echo '<ol class="comments-list">';
 		foreach($comments as $comment_id) {
 			if (($comment = Comment::from_db($comment_id))) {
+				echo '<li>';
 				$comment->print_summary($link, 2500, true);
+				echo '</li>';
 			}
 			echo "\n";
 		}

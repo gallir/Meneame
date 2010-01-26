@@ -98,7 +98,18 @@ if ($response['ids']) {
 	foreach($response['ids'] as $id) {
 		$obj->id=$id;
 		$obj->read();
-		$obj->print_summary();
+		$obj->basic_summary = true; 
+		switch ($_REQUEST['w']) {
+			case 'posts':
+				$obj->print_summary(300);
+				break;
+			case 'comments':
+				$obj->print_summary(false, 300);
+				break;
+			case 'links':
+			default:
+				$obj->print_summary();
+		}
 	}
 }
 

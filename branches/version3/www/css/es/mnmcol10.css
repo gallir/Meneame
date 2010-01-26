@@ -32,7 +32,7 @@ color: #551a8b;
 
 input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly] 
 { 
-color: #ccc; 
+color: #aaa; 
 }
 
 #wrap, #newswrap, #singlewrap {

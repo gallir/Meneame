@@ -186,17 +186,17 @@ function clean_lines($string) {
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function save_text_to_html($string) {
+function save_text_to_html(&$string, $hashtype = false) {
 	//$string = strip_tags(trim($string));
 	//$string= htmlspecialchars(trim($string));
-	$string= text_to_html($string);
-	$string = preg_replace("/\r\n|\r|\n/", "\n<br />\n", $string);
-	return $string;
+	$str= text_to_html($string, $hashtype);
+	$str = preg_replace("/\r\n|\r|\n/", "\n<br />\n", $str);
+	return $str;
 }
 
-function text_sub_text($string, $length=70) {
-	$len = mb_strlen($string);
-	$string = preg_replace("/[\r\n\t]+/", ' ', $string);
+function text_sub_text(&$str, $length=70) {
+	$len = mb_strlen($str);
+	$string = preg_replace("/[\r\n\t]+/", ' ', $str);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
 		$string = preg_replace('/ *[\w&;]*$/', '', $string);
@@ -206,20 +206,23 @@ function text_sub_text($string, $length=70) {
 	return $string;
 }
 
-function text_to_summary($string, $length=50) {
-	return text_to_html(text_sub_text($string, $length), false);
+function text_to_summary(&$string, $length=50) {
+	return text_to_html(text_sub_text($string, $length), false, false);
 }
 
-function text_to_html($string, $do_links = true) {
-	// Dirty trick to allow tagging consecutives words 
-	//$string = preg_replace('/([_*[0-9]) ([#_*])/', "$1  $2", $string);
+function text_to_html($str, $hashtype = false, $do_links = true) {
+	global $globals;
 
 	if ($do_links) {
-		$string = preg_replace('/(\b)(https*:\/\/)([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $string);
+		$str = preg_replace('/(\b)(https*:\/\/)([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $str);
 	}
-	$string = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $string);
-	$string = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $string);
-	return $string;
+	if ($hashtype) {
+		// Add links to hashtags
+		$str = preg_replace('/(^|\s)#([\S\.\-]+\w)/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
+	}
+	$str = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $str);
+	$str = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $str);
+	return $str;
 }
 
 // Clean all special chars and html/utf entities

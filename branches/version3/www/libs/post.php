@@ -103,7 +103,7 @@ class Post {
 		$this->hidden = $this->karma < $globals['post_hide_karma'];
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
-		echo '<li id="pcontainer-'.$this->id.'">';
+		echo '<div id="pcontainer-'.$this->id.'">';
 
 		if ($this->hidden || $this->ignored)  {
 			$post_meta_class = 'comment-meta-hidden';
@@ -177,7 +177,7 @@ class Post {
 		}
 
 		echo '</div></div>';
-		echo "</li>\n";
+		echo "</div>\n";
 	}
 
 	function print_user_avatar() {
@@ -188,18 +188,22 @@ class Post {
 	function print_text($length = 0) {
 		global $current_user, $globals;
 
-		if (($this->author == $current_user->user_id &&
+		if (!$this->basic_summary && (($this->author == $current_user->user_id &&
 			time() - $this->date < $globals['posts_edit_time'] ) ||
-			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] )) { // Admins can edit up to 10 days
+			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] ))) { // Admins can edit up to 10 days
 			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
+		} elseif ($length > 0) {
+			$this->content = text_sub_text($this->content, $length);
 		}
 
-		echo put_smileys($this->put_tooltips(save_text_to_html($this->content))) . $expand;
+		echo put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
 		echo "\n";
 	}
 
 	function put_tooltips ($str) {
+		global $globals;
+		// add links for hashtags
 		return preg_replace_callback('/(^|\s)@([\S\.\-]+\w)/u', array($this, 'replace_post_link'), $str);
 	}
 
@@ -278,7 +282,7 @@ class Post {
 		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_static'].'img/common/jabber-button01.png" alt="jabber"/></a>';
 		echo '</div>'."\n";
 		if ($current_user->user_id > 0) {
-			echo '<ol class="comments-list" id="newpost"></ol>'."\n";
+			echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
 		}
 	}
 

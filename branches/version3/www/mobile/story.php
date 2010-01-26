@@ -100,7 +100,9 @@ if ($comments) {
 	foreach($comments as $comment_id) {
 		$comment->id=$comment_id;
 		$comment->read();
+		echo '<li>';
 		$comment->print_summary($link, 700, true);
+		echo '</li>';
 		echo "\n";
 	}
 	echo "</ol>\n";

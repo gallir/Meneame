@@ -10,10 +10,13 @@ include('../config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'favorites.php');
 
+$globals['search_options'] = array('w' => 'posts');
+
 if ($current_user->user_id > 0) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
 	array_push($globals['extra_js'], 'posts01.js');
 }
+
 
 $user=new User();
 
@@ -179,7 +182,9 @@ function onLoad(lat, lng, zoom, icon) {
 			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
 				echo '<li>'. _('Error: nota no existente') . '</li>';
 			} else {
+				echo '<li>';
 				$post->print_summary();
+				echo '</li>';
 			}
 		}
 		echo "</ol>\n";
@@ -196,7 +201,9 @@ function onLoad(lat, lng, zoom, icon) {
 				foreach ($answers as $dbanswer) {
 					$answer->id = $dbanswer->post_id;
 					$answer->read();
+					echo '<li>';
 					$answer->print_summary();
+					echo '</li>';
 				}
 				echo "</ol>\n";
 				echo '</div>'."\n";

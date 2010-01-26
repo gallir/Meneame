@@ -153,7 +153,14 @@ function do_header($title, $id='home') {
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image" width="14" height="14"/></a>';
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image" width="14" height="14"/></a>'."\n";
+	
+	if ($globals['search_options']) {
+		foreach ($globals['search_options'] as $name => $value) {
+			echo '<input type="hidden" name="'.$name.'" value="'.$value.'"/>'."\n";
+		}
+	}
+
 	echo '</form>';
 	echo '</li>' . "\n";
 	// form

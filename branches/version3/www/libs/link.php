@@ -494,7 +494,7 @@ class Link {
 
 		if($type=='full' || $type=='preview') {
 			echo '<p>';
-			echo text_to_html($this->content);
+			echo text_to_html($this->content, 'links');
 			if ($globals['link'] && $type != 'preview' ) {
 				if ($this->is_editable()) {
 					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';

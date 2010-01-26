@@ -106,7 +106,7 @@ class Comment {
 		if ($single_link) $html_id = $this->order;
 		else $html_id = $this->id;
 
-		echo '<li id="c-'.$html_id.'">';
+		echo '<div id="c-'.$html_id.'">';
 
 		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
 		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
@@ -197,7 +197,7 @@ class Comment {
 			echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 		}
 		echo '</div></div>';
-		echo "</li>\n";
+		echo "</div>\n";
 	}
 
 	function print_shake_icons() {
@@ -242,19 +242,19 @@ class Comment {
 
 		if (!$html_id) $html_id = $this->id;
 
-		if (($this->author == $current_user->user_id 
-					&& $globals['now'] - $this->date < $globals['comment_edit_time']) 
-				|| (($this->author != $current_user->user_id || $this->type == 'admin')
-					&& $current_user->user_level == 'god') ) { // gods can always edit 
+		if (!$this->basic_summary && (
+					($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time']) 
+					|| (($this->author != $current_user->user_id || $this->type == 'admin')
+					&& $current_user->user_level == 'god')) ) { // gods can always edit 
 			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
-		} elseif ($length>0 && mb_strlen($this->content) > $length + $length/2) {
+		} elseif ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
-			$expand = '...&nbsp;&nbsp;' .
+			$expand = '&nbsp;&nbsp;' .
 				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
 		}
 
-		echo put_smileys($this->put_comment_tooltips(save_text_to_html($this->content))) . $expand;
+		echo put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments'))) . $expand;
 		echo "\n";
 	}
 

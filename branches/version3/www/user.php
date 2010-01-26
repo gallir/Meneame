@@ -196,7 +196,9 @@ function do_profile() {
 	if ($post->read_last($user->id)) {
 		echo '<div id="addpost"></div>';
 		echo '<ol class="comments-list" id="last_post">';   
-		$post->print_summary();   
+		echo '<li>';
+		$post->print_summary();
+		echo '</li>';
 		echo "</ol>\n";
 	}   
 
@@ -492,7 +494,9 @@ function print_comment_list($comments, $user) {
 		}
 		$comment->read();
 		echo '<ol class="comments-list">';
+		echo '<li>';
 		$comment->print_summary($link, 2000, false);
+		echo '</li>';
 		echo "</ol>\n";
 	}
 }

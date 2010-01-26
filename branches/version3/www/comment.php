@@ -55,8 +55,9 @@ echo '<div id="newswrap">'."\n";
 echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
 echo '<ol class="comments-list">';
+echo '<li>';
 $comment->print_summary($link, 10000, true);
-echo "\n";
+echo "</li>\n";
 echo "</ol>\n";
 
 // Print answers to the comment
@@ -69,7 +70,9 @@ if ($answers) {
 	foreach ($answers as $dbanswer) {
 		$answer->id = $dbanswer->comment_id;
 		$answer->read();
+		echo '<li>';
 		$answer->print_summary($link);
+		echo '</li>';
 	}
 	echo "</ol>\n";
 	echo '</div>'."\n";

@@ -49,8 +49,10 @@ if ($comments) {
 			echo '<a href="'.$link->get_relative_permalink().'">'. $link->title. '</a>';
 			echo '</h3>';
 		}
-			echo '<ol class="comments-list">';
+		echo '<ol class="comments-list">';
+		echo '<li>';
 		$comment->print_summary($link, 2000, false);
+		echo '</li>';
 		if ($last_link != $link->id) {
 			$last_link = $link->id;
 			$counter++;
