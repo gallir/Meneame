@@ -22,7 +22,7 @@ $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 $globals['now'] = time();
 $globals['cache-control'] = Array();
 
-$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('amarillista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
+$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
 
 
 // For PHP < 5
@@ -218,7 +218,7 @@ function text_to_html($str, $hashtype = false, $do_links = true) {
 	}
 	if ($hashtype) {
 		// Add links to hashtags
-		$str = preg_replace('/(^|\s)#([\S\.\-]+\w)/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
+		$str = preg_replace('/(^|\s)#([^\d]\S+\w)/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
 	}
 	$str = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $str);
 	$str = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $str);
@@ -299,17 +299,15 @@ function check_auth_page() {
 	global $globals;
 
 	// If it's not a page that need SSL, redirect to the standard server
-	if ($globals['ssl_server']) {
-		if (!$globals['secure_page'] && ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on')) {
-			header('HTTP/1.1 301 Moved');
-			header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
-			die;
-		}
-		if ($globals['secure_page'] && ($_SERVER["SERVER_PORT"] != 443  && $_SERVER['HTTPS'] != 'on')) {
-			header('HTTP/1.1 301 Moved');
-			header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
-			die;
-		}
+	if (!$globals['secure_page'] && ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on')) {
+		header('HTTP/1.1 301 Moved');
+		header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+		die;
+	}
+	if ($globals['ssl_server'] && $globals['secure_page'] && ($_SERVER["SERVER_PORT"] != 443  && $_SERVER['HTTPS'] != 'on')) {
+		header('HTTP/1.1 301 Moved');
+		header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+		die;
 	}
 }
 
