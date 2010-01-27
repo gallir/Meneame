@@ -332,6 +332,8 @@ class HtmlImages {
 
 		$goods = $n = 0;
 		foreach ($tags as $match) {
+			if ($this->debug)
+				echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
 			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good($other_html == false)) {
@@ -434,6 +436,8 @@ class HtmlImages {
 				$paths = array();
 				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
 				foreach ($selection as $url) {
+					if ($this->debug)
+						echo "<!-- Checking: $url -->\n";
 					if ($checked > 10) break;
 
 					$parsed = parse_url($url);
@@ -447,8 +451,6 @@ class HtmlImages {
 						continue;
 					}
 
-					if ($this->debug)
-						echo "<!-- Checking: $url -->\n";
 					$checked ++;
 					$res = get_url($url, $this->url);
 
@@ -508,7 +510,8 @@ class HtmlImages {
 
 	function check_in_other($str) {
 		if (preg_match('/'.preg_quote($str,'/').'/', $this->other_html)) {
-				//echo "<!-- Skip: " . htmlentities($str). "-->\n";
+				if ($this->debug)
+					echo "<!-- Skip: " . htmlentities($str). "-->\n";
 				return true;
 		}
 		return false;
@@ -805,6 +808,11 @@ function path_sub_path($path, $level = -1) {
 }
 
 function path_equals($path1, $path2) {
+	// Eliminate large "only numbers" path if they have also "semantic" parts
+	$path1 = preg_replace('#([^\d]+/)[/\d]{6,}(/[^\d]{40,})#', '$1$2', $path1);
+	$path2 = preg_replace('#([^\d]+/)[/\d]{6,}(/[^\d]{40,})#', '$1$2', $path2);
+
+
 	$parts1 = explode('/', preg_replace('#^/+|/+$#', '', $path1));
 	$parts2 = explode('/', preg_replace('#^/+|/+$#', '', $path2));
 	$n = 0;
