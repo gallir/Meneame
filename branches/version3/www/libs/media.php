@@ -21,6 +21,7 @@ class Media {
 	public static function put($file, $type, $name = false) {
 		global $globals;
 		if (!$name) $name = baseName($file);
+		if (empty($type)) $type = 'notype';
 		$uri = "$type/$name";
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
 		if (S3::putObjectFile($file, $globals['Amazon_S3_media_bucket'], $uri, S3::ACL_PUBLIC_READ, array(), array(

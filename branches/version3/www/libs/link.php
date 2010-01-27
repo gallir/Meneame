@@ -314,6 +314,7 @@ class Link {
 	function store() {
 		global $db, $current_user, $globals;
 
+		$db->transaction();
 		$link_url = $db->escape($this->url);
 		$link_uri = $db->escape($this->uri);
 		$link_url_title = $db->escape($this->url_title);
@@ -324,18 +325,9 @@ class Link {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
-		if ($globals['db_use_transactions']) {
-			$db->transaction();
-		} else {
-			$db->query("LOCK TABLES links WRITE");
-		}
 		$this->store_basic();
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
-		if ($globals['db_use_transactions']) {
-			$db->commit();
-		} else {
-			$db->query("UNLOCK TABLES");
-		}
+		$db->commit();
 	}
 
 	function store_basic() {
@@ -448,7 +440,8 @@ class Link {
 
 		echo '<div class="news-summary">';
 		echo '<div class="news-body">';
-		if ($type != 'preview' && $this->title && $this->content) {
+		if ($type != 'preview' && $this->title && $this->content 
+				&& ($this->votes > 0 || $current_user->user_id == $this->author) ) {
 			$this->print_shake_box();
 		}
 
@@ -731,22 +724,14 @@ class Link {
 		}
 		$vote->value=$value;
 		if($vote->insert()) {
-			if ($globals['db_use_transactions']) {
-				$db->transaction();
-			} else {
-				$db->query("LOCK TABLES links WRITE");
-			}
+			$db->transaction();
 			if ($value < 0) {
 				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			} else {
 				if ($current_user->user_id > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
-			if ($globals['db_use_transactions']) {
-				$db->commit();
-			} else {
-				$db->query("UNLOCK TABLES");
-			}
+			$db->commit();
 			$this->read_basic();
 			return $value;
 		}
@@ -966,11 +951,7 @@ class Link {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
-		if ($globals['db_use_transactions']) {
-			$db->transaction();
-		} else {
-			$db->query("LOCK TABLES votes READ, users READ");
-		}
+		$db->transaction();
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
@@ -1007,11 +988,7 @@ class Link {
 			$this->annotation .= $perc. _('% de votos con afinidad elevada'). "<br/>";
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
-		if ($globals['db_use_transactions']) {
-			$db->commit();
-		} else {
-			$db->query("UNLOCK TABLES");
-		}
+		$db->commit();
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
