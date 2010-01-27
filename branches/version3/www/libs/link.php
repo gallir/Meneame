@@ -1201,7 +1201,7 @@ class Link {
 					$this->thumb_y = $img->y;
 					// Upload to S3
 					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs')) {
-							$this->thumb = 'http://'.$globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
+							$this->thumb = $globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
 							$this->thumb_status = 'remote';
 					} else {
 						$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
