@@ -193,6 +193,7 @@ $globals['sphinx_server'] = 'localhost';
 $globals['sphinx_port'] = 9312;
 
 $globals['avatars_dir'] = 'avatar';
+$globals['avatars_check_always'] = false;
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
@@ -221,6 +222,13 @@ $globals['do_websnapr'] = false;
 
 // Automatic thumbnails size
 $globals['thumb_size'] = 70;
+
+// Amazon setup
+//$globals['Amazon_access_key'] = '';
+//$globals['Amazon_secret_key'] = '';
+//$globals['Amazon_S3_media_bucket'] = '';
+//$globals['Amazon_S3_media_url'] = '';
+
 
 // Put here the pathname of the file where you store your karma.log file
 $globals['karma_log'] = mnmpath . '/../../karma.log';

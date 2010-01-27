@@ -471,7 +471,8 @@ class Link {
 		echo '</h1> ';
 
 		if ($this->has_thumb()) {
-			echo "<img src='".$globals['static_server']."$this->thumb' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
+			$src = ($this->link_thumb_status == 'local') ? $globals['static_server'].$this->thumb : $this->thumb;
+			echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 		}
 
 		echo '<div class="news-submitted">';
@@ -1196,11 +1197,17 @@ class Link {
 				$img->scale($globals['thumb_size']);
 				if($img->save($filepath)) {
 					@chmod($filepath, 0777);
-					$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
-					$this->thumb .= "/$l1/$l2/$this->id.jpg";
 					$this->thumb_x = $img->x;
 					$this->thumb_y = $img->y;
-					$this->thumb_status='local';
+					// Upload to S3
+					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs')) {
+							$this->thumb = 'http://'.$globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
+							$this->thumb_status = 'remote';
+					} else {
+						$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
+						$this->thumb .= "/$l1/$l2/$this->id.jpg";
+						$this->thumb_status='local';
+					}
 					syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
 					if ($debug)
 						echo "<!-- Meneame, new thumbnail $img->url -->\n";
@@ -1220,6 +1227,18 @@ class Link {
 		global $db;
 		$this->thumb = $db->escape($this->thumb);
 		$db->query("update links set link_content_type = '$this->content_type', link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
+	}
+
+	function delete_thumb() {
+		global $globals;
+		$this->thumb = '';
+		$this->thumb_status = 'deleted';
+		$this->thumb_x = 0;
+		$this->thumb_y = 0;
+		$this->store_thumb();
+		if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url']) {
+			Media::rm("thumbs/$this->id*");
+		}
 	}
 
 	function has_thumb() {

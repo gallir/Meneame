@@ -40,12 +40,9 @@ function avatars_manage_upload($user, $name) {
 		avatars_remove_user_files($user);
 		return false;
 	}
-	/*
-	// Upload to DB and mark TRUE
 	avatar_resize("$file_base-orig.img", "$file_base-20.jpg", 20);
 	avatar_resize("$file_base-orig.img", "$file_base-25.jpg", 25);
 	avatar_resize("$file_base-orig.img", "$file_base-40.jpg", 40);
-	*/
 	unlink("$file_base-orig.img");
 	return $mtime;
 }

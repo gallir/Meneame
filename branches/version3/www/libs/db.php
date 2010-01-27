@@ -21,6 +21,8 @@ function __autoload($class) {
 				'WebThumb' => 'webimages.php',
 				'HtmlImages' => 'webimages.php',
 				'Trackback' => 'trackback.php',
+				'Media' => 'media.php',
+				'S3' => 'S3.php',
 	);
 	if ($classfiles[$class] && file_exists(mnminclude.$classfiles[$class])) {
 		require_once(mnminclude.$classfiles[$class]);

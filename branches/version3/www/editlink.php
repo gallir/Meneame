@@ -154,11 +154,7 @@ function do_save() {
 			$linkres->url = clean_input_url($_POST['url']);
 		}
 		if ($_POST['thumb_delete']) {
-			$linkres->thumb = '';
-			$linkres->thumb_status = 'deleted';
-			$linkres->thumb_x = 0;
-			$linkres->thumb_y = 0;
-			$linkres->store_thumb();
+			$linkres->delete_thumb();
 		}
 		if ($_POST['thumb_get']) {
 			$linkres->get_thumb();
