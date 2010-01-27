@@ -218,7 +218,7 @@ function text_to_html($str, $hashtype = false, $do_links = true) {
 	}
 	if ($hashtype) {
 		// Add links to hashtags
-		$str = preg_replace('/(^|\W)\#([^\d][^\s\.\,\:\;\¡\!\)]{1,32})/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
+		$str = preg_replace('/(^|\W)\#([^\d][^\s\.\,\:\;\¡\!\)\-]{1,32})/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
 	}
 	$str = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $str);
 	$str = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $str);
