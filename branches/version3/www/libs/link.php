@@ -470,8 +470,7 @@ class Link {
 		}
 		echo '</h1> ';
 
-		if ($this->has_thumb()) {
-			$src = ($this->link_thumb_status == 'local') ? $globals['static_server'].$this->thumb : $this->thumb;
+		if (($src = $this->has_thumb())) {
 			echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 		}
 
@@ -1242,7 +1241,11 @@ class Link {
 	}
 
 	function has_thumb() {
-		return $this->thumb && $this->thumb_x > 0 && $this->thumb_y > 0;
+		global $globals;
+		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
+			return ($this->link_thumb_status == 'local') ? $globals['static_server'].$this->thumb : $this->thumb;
+		}
+		return false;
 	}
 
 

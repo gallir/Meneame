@@ -172,9 +172,7 @@ if (!empty($link->tags))
 // add also a rel to the comments rss
 $globals['extra_head'] = '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";
 
-if ($link->has_thumb()) {
-	$globals['thumbnail'] = $link->thumb;
-}
+$globals['thumbnail'] = $link->has_thumb();
 
 $globals['description'] = _('Autor') . ": $link->username, " . _('Resumen') . ': '. text_sub_text($link->content, 250);
 
