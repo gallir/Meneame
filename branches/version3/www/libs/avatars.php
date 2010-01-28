@@ -51,19 +51,17 @@ function avatars_manage_upload($user, $name) {
 
 	// Store in S3 the other images and a higher quality one
 	if ($globals['Amazon_S3_media_bucket']) {
-		$max_size = min($original_size[0], $original_size[1], 400);
+		$max_size = min($original_size[0], $original_size[1], 200);
 		avatar_resize("$file_base-orig.img", "$file_base.jpg", $max_size);
 		if ( Media::put("$file_base-20.jpg", 'avatars')
 				&& Media::put("$file_base-25.jpg", 'avatars')
 				&& Media::put("$file_base-40.jpg", 'avatars')
 				&& Media::put("$file_base.jpg", 'avatars') ) {
-			/*
 			unlink("$file_base-20.jpg");
 			unlink("$file_base-25.jpg");
 			unlink("$file_base-40.jpg");
 			unlink("$file_base-80.jpg");
 			unlink("$file_base.jpg");
-			*/
 		}
 	}
 	unlink("$file_base-orig.img");
@@ -138,10 +136,6 @@ function avatar_get_from_file($user, $size) {
 
 function avatar_get_from_db($user, $size=0) {
 	global $db, $globals;
-	$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
-	if (!strlen($img) > 0) {
-		return false;
-	}
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
 
 	if ($globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
@@ -154,8 +148,14 @@ function avatar_get_from_db($user, $size=0) {
 	}
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
+	if (!is_readable($file_base . '-80.jpg')) {
+		$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
+		if (!strlen($img) > 0) {
+			return false;
+		}
+		file_put_contents ($file_base . '-80.jpg', $img);
+	}
 
-	file_put_contents ($file_base . '-80.jpg', $img);
 	if ($size > 0 && $size != 80 && in_array($size, $globals['avatars_allowed_sizes'])) {
 		avatar_resize("$file_base-80.jpg", "$file_base-$size.jpg", $size);
 		return file_get_contents("$file_base-$size.jpg");
