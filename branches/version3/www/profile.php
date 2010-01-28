@@ -147,6 +147,9 @@ function show_profile() {
 		echo '<p><label>'._('avatar').':</label><br/>';
 		echo '<span class="note">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 100 KB, sin transparencias') . '</span><br/>';
 		echo '<input type="file" class="button" autocomplete="off" name="image" />';
+		if ($user->avatar > 0) {
+			echo '&nbsp;&nbsp;&nbsp;'._('Eliminar avatar').': <input type="checkbox" name="avatar_delete" value="1"/>';
+		}
 		echo '</p>';
 	}
 
@@ -271,8 +274,8 @@ function save_profile() {
 			$errors++;
 		}
 	}
-		$user->phone = $_POST['phone'];
-		$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
+	$user->phone = $_POST['phone'];
+	$user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
 	// End check IM address
 
 	if ($user->id  == $current_user->user_id) {
@@ -364,6 +367,10 @@ function save_profile() {
 			$errors = 1;
 			$user->avatar = 0;
 		}
+	} elseif ($_POST['avatar_delete']) {
+		$user->avatar = 0;
+		avatars_db_remove($user->id);
+		avatars_remove_user_files($user->id);
 	}
 
 	if (!$errors) {

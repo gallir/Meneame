@@ -14,7 +14,7 @@ function get_avatars_dir() {
 
 function is_avatars_enabled() {
 	global $globals;
-	return !empty($globals['cache_dir']) && is_writable(get_avatars_dir());
+	return $globals['Amazon_S3_media_url'] || ($globals['cache_dir'] && is_writable(get_avatars_dir()));
 }
 
 function avatars_manage_upload($user, $name) {
@@ -22,16 +22,21 @@ function avatars_manage_upload($user, $name) {
 
 	$time = $globals['now'];
 
-	$chain = get_cache_dir_chain($user);
-	@mkdir(get_avatars_dir());
-	create_cache_dir_chain(get_avatars_dir(), $chain);
-	$subdir = get_avatars_dir() . '/'. $chain;
+
+	if ($globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
+		$subdir = '/tmp';
+	} else {
+		$chain = get_cache_dir_chain($user);
+		@mkdir(get_avatars_dir());
+		create_cache_dir_chain(get_avatars_dir(), $chain);
+		$subdir = get_avatars_dir() . '/'. $chain;
+	}
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
 
 	avatars_remove_user_files($user);
 	move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
-	$size = @getimagesize("$file_base-orig.img");
+	$original_size = @getimagesize("$file_base-orig.img");
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
 	if (!($size[0] == 80 && $size[1] == 80 && ($mtime = avatars_db_store($user, "$file_base-80.jpg", $time)))) {
@@ -43,20 +48,42 @@ function avatars_manage_upload($user, $name) {
 	avatar_resize("$file_base-orig.img", "$file_base-20.jpg", 20);
 	avatar_resize("$file_base-orig.img", "$file_base-25.jpg", 25);
 	avatar_resize("$file_base-orig.img", "$file_base-40.jpg", 40);
+
+	// Store in S3 the other images and a higher quality one
+	if ($globals['Amazon_S3_media_bucket']) {
+		$max_size = min($original_size[0], $original_size[1], 400);
+		avatar_resize("$file_base-orig.img", "$file_base.jpg", $max_size);
+		if ( Media::put("$file_base-20.jpg", 'avatars')
+				&& Media::put("$file_base-25.jpg", 'avatars')
+				&& Media::put("$file_base-40.jpg", 'avatars')
+				&& Media::put("$file_base.jpg", 'avatars') ) {
+			/*
+			unlink("$file_base-20.jpg");
+			unlink("$file_base-25.jpg");
+			unlink("$file_base-40.jpg");
+			unlink("$file_base-80.jpg");
+			unlink("$file_base.jpg");
+			*/
+		}
+	}
 	unlink("$file_base-orig.img");
 	return $mtime;
 }
 
 function avatars_remove_user_files($user) {
 	global $globals;
-	$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
-	if ( $subdir && ($handle = @opendir( $subdir )) ) {
-		while ( false !== ($file = readdir($handle))) {
-			if ( preg_match("/^$user-/", $file) ) {
-				@unlink($subdir . '/' . $file);
+	if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url']) {
+		Media::rm("avatars/$user-*");
+	} else {
+		$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
+		if ( $subdir && ($handle = @opendir( $subdir )) ) {
+			while ( false !== ($file = readdir($handle))) {
+				if ( preg_match("/^$user-/", $file) ) {
+					@unlink($subdir . '/' . $file);
+				}
 			}
+			closedir($handle);
 		}
-		closedir($handle);
 	}
 }
 
@@ -66,7 +93,19 @@ function avatars_check_upload_size($name) {
 }
 
 function avatars_db_store($user, $file, $now) {
-	global $db;
+	global $db, $globals;
+
+	// Store in S3
+	if ($globals['Amazon_S3_media_bucket']) {
+		if (Media::put($file, 'avatars')) {
+			$db->query("update users set user_avatar = $now  where user_id=$user");
+			return $now;
+		} else {
+			return false;
+		}
+	}
+
+	// Store locally
 	$bytes = file_get_contents($file);
 	if (strlen($bytes)>0 && strlen($bytes) < 30000) {
 		$bytes = addslashes($bytes);
@@ -80,7 +119,7 @@ function avatars_db_store($user, $file, $now) {
 function avatars_db_remove($user) {
 	global $db;
 	$db->query("delete from avatars where avatar_id=$user");
-	$db->query("update users set user_avatar = 0  where user_id=$user");
+	$db->query("update users set user_avatar = 0 where user_id=$user");
 }
 
 function avatar_get_from_file($user, $size) {
@@ -105,10 +144,14 @@ function avatar_get_from_db($user, $size=0) {
 	}
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
 
-	$chain = get_cache_dir_chain($user);
-	@mkdir(get_avatars_dir());
-	create_cache_dir_chain(get_avatars_dir(), $chain);
-	$subdir = get_avatars_dir() . '/'. $chain;
+	if ($globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
+		$subdir = '/tmp';
+	} else {
+		$chain = get_cache_dir_chain($user);
+		@mkdir(get_avatars_dir());
+		create_cache_dir_chain(get_avatars_dir(), $chain);
+		$subdir = get_avatars_dir() . '/'. $chain;
+	}
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
 

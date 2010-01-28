@@ -401,20 +401,24 @@ function get_avatar_url($user, $avatar, $size) {
 		$avatar = (int) $db->get_var("select user_avatar from users where user_id = $user");
 	}
 
-	if ($avatar > 0 && $globals['cache_dir']) {
-		$file = $globals['cache_dir'] . '/'.$globals['avatars_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
-		// Don't check every time, but 1/10, decrease VM pressure 
-		// Disabled for the moment, it fails just too much for size 40
-		//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
-		$file_path = mnmpath.'/'.$file;
-		if ($globals['avatars_check_always']) {
-			if (is_readable($file_path)) {
-				return $globals['base_static'] . $file;
+	if ($avatar > 0) {
+		if ($globals['Amazon_S3_media_url']) {
+			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
+		} elseif ($globals['cache_dir']) {
+			$file = $globals['cache_dir'] . '/'.$globals['avatars_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
+			// Don't check every time, but 1/10, decrease VM pressure 
+			// Disabled for the moment, it fails just too much for size 40
+			//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
+			$file_path = mnmpath.'/'.$file;
+			if ($globals['avatars_check_always']) {
+				if (is_readable($file_path)) {
+					return $globals['base_static'] . $file;
+				} else {
+					return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
+				}
 			} else {
-				return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
+				return $globals['base_static'] . $file;
 			}
-		} else {
-			return $globals['base_static'] . $file;
 		}
 	} 
 	return get_no_avatar_url($size);
