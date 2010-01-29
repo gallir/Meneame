@@ -227,8 +227,8 @@ if ($links) {
 		echo '		<description><![CDATA[';
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
-		if ($link->has_thumb()) {
-			echo "<img src='http://".get_static_server_name()."$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+		if (($thumb = $link->has_thumb())) {
+			echo "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
 		}
 		echo '<p>'.$content.'</p>';
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
@@ -241,8 +241,8 @@ if ($links) {
 		else $rel = '';
 		echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."' $rel>"._('noticia original')."</a></p>";
 		echo "]]></description>\n";
-		if ($link->has_thumb()) {
-			echo '		<media:thumbnail url="http://'.get_server_name().$link->thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
+		if ($thumb) {
+			echo '		<media:thumbnail url="'.$link->thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
 		}
 		//echo '<wfw:comments>'.$link->comments().'</wfw:comments>';
 		// echo "		<trackback:ping>".get_trackback($link->id)."</trackback:ping>\n";  // no standard

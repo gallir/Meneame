@@ -46,10 +46,10 @@ switch ($option) {
 	case '':
 	case '_all':
 		$tab_option = 1;
-		$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+		$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
 		//$rows = $db->get_var("SELECT count(*) FROM posts");
 		$min_date = date("Y-m-d 00:00:00", time() - 86400*10); 
-		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
+		$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
 		break;
 
 	case '_best':

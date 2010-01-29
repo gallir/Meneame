@@ -205,5 +205,5 @@ function avatar_resize($infile,$outfile,$size) {
 	}
 	$dst_img = ImageCreateTrueColor($size,$size);
 	imagecopyresampled($dst_img,$src_img,0,0,0,0,$size,$size,imagesx($src_img),imagesy($src_img));
-	imagejpeg($dst_img,$outfile,80);
+	imagejpeg($dst_img,$outfile,85);
 }
