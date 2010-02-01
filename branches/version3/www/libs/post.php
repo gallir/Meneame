@@ -123,7 +123,7 @@ class Post {
 				|| ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_post.php\',\'post\',\'pid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver texto').'">'._('ver texto').'</a>';
 		} else {
-			$this->print_user_avatar();
+			$this->print_user_avatar(40);
 			$this->print_text($length);
 		}
 		echo '</div>';
@@ -176,13 +176,15 @@ class Post {
 			echo '&nbsp;<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="15" height="10"/></a>';
 		}
 
+		//$this->print_user_avatar(20);
+
 		echo '</div></div>';
 		echo "</div>\n";
 	}
 
-	function print_user_avatar() {
+	function print_user_avatar($size=40) {
 		global $globals;
-		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 40).'" width="40" height="40" alt="'.$this->username.'"/></a>';
+		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, $size).'" width="'.$size.'" height="'.$size.'" alt="'.$this->username.'"/></a>';
 	}
 
 	function print_text($length = 0) {

@@ -17,8 +17,14 @@ include(mnminclude.'log.php');
 if(!empty($_REQUEST['return']))
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
 
-if($_GET["op"] === 'logout') {
-	$current_user->Logout($_REQUEST['return']);
+if($_GET["op"] == 'logout') {
+	// check the user is really authenticated (to avoid bucles due to bad caching)
+	if ($current_user->user_id > 0) {
+		$current_user->Logout($_REQUEST['return']);
+	} else {
+		header("Location: http://".get_server_name().$globals['base_url']);
+		die;
+	}
 }
 
 // We need it because we modify headers

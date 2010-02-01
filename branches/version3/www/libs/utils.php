@@ -298,14 +298,15 @@ function get_auth_link() {
 function check_auth_page() {
 	global $globals;
 
-	// If it's not a page that need SSL, redirect to the standard server
-	if (!$globals['secure_page'] && ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on')) {
-		header('HTTP/1.1 301 Moved');
-		header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
-		die;
-	}
-	if ($globals['ssl_server'] && $globals['secure_page'] && ($_SERVER["SERVER_PORT"] != 443  && $_SERVER['HTTPS'] != 'on')) {
-		header('HTTP/1.1 301 Moved');
+	if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
+		// If it's not a page that need SSL, redirect to the standard server
+		if (!$globals['secure_page']) {
+			header('HTTP/1.1 302 Moved');
+			header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+			die;
+		}
+	} elseif ($globals['ssl_server'] && $globals['secure_page']) {
+		header('HTTP/1.1 302 Moved');
 		header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 		die;
 	}
