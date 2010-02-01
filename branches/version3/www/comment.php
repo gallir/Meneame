@@ -37,10 +37,12 @@ $link->id=$comment->link;
 $link->read();
 
 $globals['ads'] = true;
-$globals['description'] = _('Autor') . ": $comment->username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
+
+$username = $comment->type == 'admin'?'admin':$comment->username;
+$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
 
-do_header(_('comentario de') . ' ' . $comment->username . ' (' . $comment->id .') | men&eacute;ame');
+do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
