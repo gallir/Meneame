@@ -56,16 +56,17 @@ function avatars_manage_upload($user, $name) {
 		if ( Media::put("$file_base-20.jpg", 'avatars')
 				&& Media::put("$file_base-25.jpg", 'avatars')
 				&& Media::put("$file_base-40.jpg", 'avatars')
-				&& Media::put("$file_base.jpg", 'avatars') 
-				&& ! $globals['Amazon_S3_local_cache'] ) {
-			unlink("$file_base-20.jpg");
-			unlink("$file_base-25.jpg");
-			unlink("$file_base-40.jpg");
-			unlink("$file_base-80.jpg");
-			unlink("$file_base.jpg");
+				&& Media::put("$file_base.jpg", 'avatars') ) {
+			@unlink("$file_base.jpg");
+			if (! $globals['Amazon_S3_local_cache']) {
+				@unlink("$file_base-20.jpg");
+				@unlink("$file_base-25.jpg");
+				@unlink("$file_base-40.jpg");
+				@unlink("$file_base-80.jpg");
+			}
 		}
 	}
-	unlink("$file_base-orig.img");
+	@unlink("$file_base-orig.img");
 	return $mtime;
 }
 
@@ -122,6 +123,7 @@ function avatar_get_from_db($user, $size=0) {
 			return file_get_contents("$file_base-$size.jpg");
 		}
 	 	if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
+			$delete_it = true;
 			$original = "$file_base-orig.jpg";
 		} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) || Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
 			$original = $file_base . '-80.jpg';
@@ -145,6 +147,7 @@ function avatar_get_from_db($user, $size=0) {
 
 	if ($size > 0 && $size != 80 ) {
 		avatar_resize($original, "$file_base-$size.jpg", $size);
+		if ($delete_it) @unlink($original);
 	}
 
 	return file_get_contents("$file_base-$size.jpg");
