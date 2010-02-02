@@ -369,8 +369,7 @@ function save_profile() {
 		}
 	} elseif ($_POST['avatar_delete']) {
 		$user->avatar = 0;
-		avatars_db_remove($user->id);
-		avatars_remove_user_files($user->id);
+		avatars_remove($user->id);
 	}
 
 	if (!$errors) {

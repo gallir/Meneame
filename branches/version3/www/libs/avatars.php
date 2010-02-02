@@ -23,7 +23,7 @@ function avatars_manage_upload($user, $name) {
 	$time = $globals['now'];
 
 
-	if ($globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
+	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
 		$subdir = '/tmp';
 	} else {
 		$chain = get_cache_dir_chain($user);
@@ -56,7 +56,8 @@ function avatars_manage_upload($user, $name) {
 		if ( Media::put("$file_base-20.jpg", 'avatars')
 				&& Media::put("$file_base-25.jpg", 'avatars')
 				&& Media::put("$file_base-40.jpg", 'avatars')
-				&& Media::put("$file_base.jpg", 'avatars') ) {
+				&& Media::put("$file_base.jpg", 'avatars') 
+				&& ! $globals['Amazon_S3_local_cache'] ) {
 			unlink("$file_base-20.jpg");
 			unlink("$file_base-25.jpg");
 			unlink("$file_base-40.jpg");
@@ -66,23 +67,6 @@ function avatars_manage_upload($user, $name) {
 	}
 	unlink("$file_base-orig.img");
 	return $mtime;
-}
-
-function avatars_remove_user_files($user) {
-	global $globals;
-	if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url']) {
-		Media::rm("avatars/$user-*");
-	} else {
-		$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
-		if ( $subdir && ($handle = @opendir( $subdir )) ) {
-			while ( false !== ($file = readdir($handle))) {
-				if ( preg_match("/^$user-/", $file) ) {
-					@unlink($subdir . '/' . $file);
-				}
-			}
-			closedir($handle);
-		}
-	}
 }
 
 function avatars_check_upload_size($name) {
@@ -114,10 +98,56 @@ function avatars_db_store($user, $file, $now) {
 	return false;
 }
 
-function avatars_db_remove($user) {
-	global $db;
-	$db->query("delete from avatars where avatar_id=$user");
-	$db->query("update users set user_avatar = 0 where user_id=$user");
+function avatar_get_from_db($user, $size=0) {
+	global $db, $globals;
+
+	if (! in_array($size, $globals['avatars_allowed_sizes'])) return false;
+
+	$time = $db->get_var("select user_avatar from users where user_id=$user");
+
+	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
+		$subdir = '/tmp';
+	} else {
+		$chain = get_cache_dir_chain($user);
+		@mkdir(get_avatars_dir());
+		create_cache_dir_chain(get_avatars_dir(), $chain);
+		$subdir = get_avatars_dir() . '/'. $chain;
+	}
+	if (!is_writable($subdir)) return false;
+	$file_base = $subdir . "/$user-$time";
+
+	if ($globals['Amazon_S3_media_bucket']) {
+		// Get avatar from S3
+		if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
+			return file_get_contents("$file_base-$size.jpg");
+		}
+	 	if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
+			$original = "$file_base-orig.jpg";
+		} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) || Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
+			$original = $file_base . '-80.jpg';
+		} else {
+			avatars_remove($user);
+			return false;
+		}
+
+	} else {
+		//Get from DB
+		if (!is_readable($file_base . '-80.jpg')) {
+			$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
+			if (!strlen($img) > 0) {
+				avatars_remove($user);
+				return false;
+			}
+			file_put_contents ($file_base . '-80.jpg', $img);
+			$original = $file_base . '-80.jpg';
+		}
+	}
+
+	if ($size > 0 && $size != 80 ) {
+		avatar_resize($original, "$file_base-$size.jpg", $size);
+	}
+
+	return file_get_contents("$file_base-$size.jpg");
 }
 
 function avatar_get_from_file($user, $size) {
@@ -133,36 +163,6 @@ function avatar_get_from_file($user, $size) {
 	}
 
 }
-
-function avatar_get_from_db($user, $size=0) {
-	global $db, $globals;
-	$time = $db->get_var("select user_avatar from users where user_id=$user");
-
-	if ($globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
-		$subdir = '/tmp';
-	} else {
-		$chain = get_cache_dir_chain($user);
-		@mkdir(get_avatars_dir());
-		create_cache_dir_chain(get_avatars_dir(), $chain);
-		$subdir = get_avatars_dir() . '/'. $chain;
-	}
-	if (!is_writable($subdir)) return false;
-	$file_base = $subdir . "/$user-$time";
-	if (!is_readable($file_base . '-80.jpg')) {
-		$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
-		if (!strlen($img) > 0) {
-			return false;
-		}
-		file_put_contents ($file_base . '-80.jpg', $img);
-	}
-
-	if ($size > 0 && $size != 80 && in_array($size, $globals['avatars_allowed_sizes'])) {
-		avatar_resize("$file_base-80.jpg", "$file_base-$size.jpg", $size);
-		return file_get_contents("$file_base-$size.jpg");
-	}
-	return $img;
-}
-
 
 function avatar_resize($infile,$outfile,$size) {
 	$image_info = getImageSize($infile);
@@ -207,3 +207,34 @@ function avatar_resize($infile,$outfile,$size) {
 	imagecopyresampled($dst_img,$src_img,0,0,0,0,$size,$size,imagesx($src_img),imagesy($src_img));
 	imagejpeg($dst_img,$outfile,85);
 }
+
+function avatars_remove($user) {
+	avatars_remove_user_files($user);
+	avatars_db_remove($user);
+}
+
+function avatars_db_remove($user) {
+	global $db;
+	$db->query("delete from avatars where avatar_id=$user");
+	$db->query("update users set user_avatar = 0 where user_id=$user");
+}
+
+function avatars_remove_user_files($user) {
+	global $globals;
+	if ($globals['Amazon_S3_media_bucket']) {
+		Media::rm("avatars/$user-*");
+	}
+
+	if ($globals['Amazon_S3_local_cache'] || ! $globals['Amazon_S3_media_bucket'] ) {
+		$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
+		if ( $subdir && ($handle = @opendir( $subdir )) ) {
+			while ( false !== ($file = readdir($handle))) {
+				if ( preg_match("/^$user-/", $file) ) {
+					@unlink($subdir . '/' . $file);
+				}
+			}
+			closedir($handle);
+		}
+	}
+}
+?>

@@ -16,7 +16,7 @@ if (!($img=avatar_get_from_file($id, $size))) {
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {
 		if (is_writable($globals['avatars_dir'])) {
-			$user=$db->get_row("select user_avatar, user_email from users where user_id=$id");
+			$user=$db->get_row("select user_avatar from users where user_id=$id");
 			if ($user) {
 				header('Location: ' . get_avatar_url($id, $user->user_avatar, $size));
 			}

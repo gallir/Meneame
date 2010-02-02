@@ -53,8 +53,7 @@ class User {
 
 		require_once(mnminclude.'avatars.php');
 		require_once(mnminclude.'geo.php');
-		avatars_db_remove($this->id);
-		avatars_remove_user_files($this->id);
+		avatars_remove($this->id);
 		geo_delete('user', $this->id);
 
 		// Delete relationships

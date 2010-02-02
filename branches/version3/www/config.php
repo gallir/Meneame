@@ -192,8 +192,8 @@ $globals['cache_dir'] = 'cache';
 $globals['sphinx_server'] = 'localhost';
 $globals['sphinx_port'] = 9312;
 
-$globals['avatars_dir'] = 'avatar';
-$globals['avatars_check_always'] = false;
+$globals['avatars_dir'] = 'avatars';
+$globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 200000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
@@ -228,6 +228,7 @@ $globals['thumb_size'] = 70;
 //$globals['Amazon_secret_key'] = '';
 //$globals['Amazon_S3_media_bucket'] = '';
 //$globals['Amazon_S3_media_url'] = '';
+$globals['Amazon_S3_local_cache'] = true;
 
 
 // Put here the pathname of the file where you store your karma.log file

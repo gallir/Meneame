@@ -34,19 +34,16 @@ class Media {
 		return false;
 	}
 
-/*
-	public static function put($file, $type, $name = false) {
+	public static function get($file, $type, $output = false) {
 		global $globals;
+		$uri = "$type/$file";
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
-		if (! self::put_simple($file, $type, $name) ) {
-			if (S3::putBucket($type, S3::ACL_PUBLIC_READ) ) {
-				syslog(LOG_NOTICE, "Created S3 bucket $type");
-				return self::put_object($file, $type, $name);
-			}
+		if ( ($object = @S3::getObject($globals['Amazon_S3_media_bucket'], $uri, $output)) ) {
+			return $object;
 		}
-		return true;
+		syslog(LOG_NOTICE, "Meneame, failed to get $uri from S3");
+		return false;
 	}
-*/
 
 	public static function ls($pattern = null) {
 		global $globals;
@@ -69,6 +66,10 @@ class Media {
 	}
 }
 
+class S3Images extends Media {
+
+
+}
 
 
 

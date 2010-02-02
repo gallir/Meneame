@@ -403,7 +403,7 @@ function get_avatar_url($user, $avatar, $size) {
 	}
 
 	if ($avatar > 0) {
-		if ($globals['Amazon_S3_media_url']) {
+		if ($globals['Amazon_S3_media_url'] && !$globals['Amazon_S3_local_cache']) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
 			$file = $globals['cache_dir'] . '/'.$globals['avatars_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";

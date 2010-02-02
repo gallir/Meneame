@@ -18,6 +18,6 @@ $post = new Post;
 $post->id=$id;
 if (! $post->read()) die;
 if(!$post->read) die;
-$post->print_user_avatar(25);
+$post->print_user_avatar(40);
 $post->print_text(0);
 ?>
