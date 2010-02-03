@@ -62,8 +62,32 @@ class BasicThumb {
 		return false;
 	}
 
+	function round_corners() {
+		$white = imagecolorallocate($this->image, 255, 255, 255);
+		$semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 63);
+		if (!$white) return;
+		// Top left
+		imagesetpixel($this->image, 0, 0, $white);
+		imagesetpixel($this->image, 1, 0, $semi_white);
+		imagesetpixel($this->image, 0, 1, $semi_white);
+		// Top right
+		imagesetpixel($this->image, $this->x-1, 0, $white);
+		imagesetpixel($this->image, $this->x-2, 0, $semi_white);
+		imagesetpixel($this->image, $this->x-1, 1, $semi_white);
+		// Bottom left
+		imagesetpixel($this->image, 0, $this->y-1, $white);
+		imagesetpixel($this->image, 0, $this->y-2, $semi_white);
+		imagesetpixel($this->image, 1, $this->y-1, $semi_white);
+		// Bottom right
+		imagesetpixel($this->image, $this->x-1, $this->y-1, $white);
+		imagesetpixel($this->image, $this->x-1, $this->y-2, $semi_white);
+		imagesetpixel($this->image, $this->x-2, $this->y-1, $semi_white);
+		
+	}
+
 	function save($filename) {
 		if (!$this->image) return false;
+		$this->round_corners();
 		return imagejpeg($this->image, $filename);
 	}
 
