@@ -9,9 +9,11 @@
 
 mb_internal_encoding('UTF-8');
 
-// Use proxy detection
+// Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
 	$globals['user_ip'] = check_ip_behind_proxy();
+} elseif ($globals['behind_load_balancer']) {
+	$globals['user_ip'] = check_ip_behind_load_balancer();
 } else {
 	$globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
 }
@@ -958,24 +960,34 @@ function isPrivateIP($ip) {
         return false;
 }
 
+function check_ip_behind_load_balancer() {
+	// It's similar to behind_proxy but faster and only takes in account
+	// the last IP in the list.
+	// Used to get the real IP behind a load balancer like Amazon ELB
+	// WARN: does not check for valid IP, it must be a trusted proxy/load balancer
+	if ($_SERVER["HTTP_X_FORWARDED_FOR"]) {
+		$ips = preg_split('/[, ]/', $_SERVER["HTTP_X_FORWARDED_FOR"], -1, PREG_SPLIT_NO_EMPTY);
+		$ip = array_pop($ips);
+		if ($ip) return $ip;
+	}
+	return $_SERVER["REMOTE_ADDR"];
+}
+
 function check_ip_behind_proxy() {
 	static $last_seen = '';
 
-	// Temporalely disabled, not useful
-	// return $_SERVER["REMOTE_ADDR"];
-	
 	if(!empty($last_seen) ) return $last_seen;
 
-	if (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+	if ($_SERVER["HTTP_X_FORWARDED_FOR"]) {
 		$user_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-	} else if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
+	} else if ($_SERVER["HTTP_CLIENT_IP"]) {
 		$user_ip = $_SERVER["HTTP_CLIENT_IP"];
 	} else {
 		$last_seen = $_SERVER["REMOTE_ADDR"];
 		return $last_seen;
 	}
 
-	$ips = preg_split('/[, ]/', $user_ip);
+	$ips = preg_split('/[, ]/', $user_ip, -1, PREG_SPLIT_NO_EMPTY);
 	foreach ($ips as $last_seen) {
 		if (preg_match('/^[1-9]\d{0,2}\.(\d{1,3}\.){2}[1-9]\d{0,2}$/s', $last_seen)
 			&& !isPrivateIP($last_seen) ) {
