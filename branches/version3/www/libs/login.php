@@ -102,7 +102,6 @@ class UserAuth {
 		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
 		if ($user->user_id > 0 && $user->md5_pass == $hash) {
 			foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
-			$this->user_login = $username;
 			$this->authenticated = TRUE;
 			$this->SetIDCookie(1, $remember);
 			return true;
