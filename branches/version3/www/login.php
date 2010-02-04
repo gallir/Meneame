@@ -155,32 +155,37 @@ function do_recover() {
 
 	if(!empty($_POST['recover'])) {
 		if (!ts_is_human()) {
-			recover_error(_('El código de seguridad no es correcto!'));
+			recover_error(_('el código de seguridad no es correcto'));
 		} else {
+			$error = false;
 			$user=new User();
-			if (preg_match('/.+@.+/', $_POST['username'])) {
+			if (preg_match('/.+@.+/', $_POST['email'])) {
 				// It's an email address
-				$user->email=$_POST['username'];
+				$user->email=$_POST['email'];
 			} else {
-				$user->username=$_POST['username'];
+				recover_error(_('el email no es válido'));
+				$error = true;
 			}
-			if(!$user->read()) {
-				recover_error(_('el usuario o email no existe'));
-				return false;
+
+			if(!$error && !$user->read()) {
+				recover_error(_('el email no está relacionado con ninguna cuenta'));
+				$error = true;
 			}
-			if($user->disabled()) {
+			if(!$error && $user->disabled()) {
 				recover_error(_('cuenta deshabilitada'));
-				return false;
+				$error = true;
 			}
-			require_once(mnminclude.'mail.php');
-			$sent = send_recover_mail($user);
+			if (!$error) {
+				require_once(mnminclude.'mail.php');
+				$sent = send_recover_mail($user);
+			}
 		}
 	}
 	if (!$sent) {
 		echo '<form action="login.php" id="thisform-recover" method="post">'."\n";
-		echo '<label for="name">'._('introduce nombre de usuario o email').':</label><br />'."\n";
-		echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.$username.'" />'."\n";
-		echo '<p>'._('(recibirás un e-mail para cambiar la contraseña)').'</p>';
+		echo '<label for="name" style="font-size:120%">'._('indica el email de la cuenta').':</label><br />'."\n";
+		echo '<input type="text" name="email" size="25" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" />'."\n";
+		echo '<p>'._('(recibirás un e-mail que te permitirá editar tus datos)').'</p>&nbsp;<br/>';
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
 		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 		ts_print_form();
@@ -193,7 +198,7 @@ function do_recover() {
 
 function recover_error($message) {
 	echo '<div class="form-error">';
-	echo "<p>$message</p>";
+	echo "$message";
 	echo "</div>\n";
 }
 

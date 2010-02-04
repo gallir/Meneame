@@ -209,7 +209,7 @@ border-color: #FF6400;
 
 .error {
 font-weight: bold;
-font-size: 140%;
+font-size: 120%;
 margin: 5px 0 0 0;
 padding: 25px 0 0 0;
 color: #FF6400;
@@ -218,7 +218,7 @@ background: url(../../img/common/error.png) no-repeat;
 
 .error-text {
 font-size: 100%;
-color: #FF9400;
+color: #FF6400;
 }
 
 /* news */

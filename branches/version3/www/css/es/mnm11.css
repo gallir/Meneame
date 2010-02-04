@@ -687,10 +687,10 @@ font-size: 100%;
 }
 
 .form-error, .form-error-submit {
-font-size: 120%;
+font-size: 110%;
 font-weight: bold;
-margin: 20px 0 0 20px;
-padding: 5px 0 0 30px;
+margin: 20px 0 10px 20px;
+padding: 5px 0 10px 30px;
 }
 
 .form-error-submit {
