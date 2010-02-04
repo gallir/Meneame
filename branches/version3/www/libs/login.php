@@ -90,7 +90,7 @@ class UserAuth {
 						.'4'.':' // Version number
 						.$this->now.':'
 						.$time);
-				setcookie("mnm_key", $strCookie, $time, $globals['base_url'], null, null, true);
+				setcookie("mnm_key", $strCookie, $time, $globals['base_url']);
 				break;
 		}
 	}
@@ -98,7 +98,7 @@ class UserAuth {
 	function Authenticate($username, $hash, $remember=false) {
 		global $db;
 		$dbusername=$db->escape($username);
-		$user=$db->get_row("SELECT user_id, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
+		$user=$db->get_row("SELECT user_id, user_login, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
 		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
 		if ($user->user_id > 0 && $user->md5_pass == $hash) {
 			foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
@@ -141,7 +141,7 @@ class UserAuth {
 					$this->user_id.
 					':'.$this->mnm_user[1].
 					':'.$this->signature($this->user_id.$this->mnm_user[1]), 
-					$expiration, $globals['base_url'], null, null, true);
+					$expiration, $globals['base_url']);
 	}
 
 	function AddClone() {
