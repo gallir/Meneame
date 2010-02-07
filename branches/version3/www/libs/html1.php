@@ -907,4 +907,22 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	do_footer();
 	die;
 }
+
+function do_subheader($button_content, $button_selected) { // arguments: array with "button text", "button URI"; Nº of the selected button by default
+	echo '<ul class="subheader">'."\n";
+	if (!empty($button_selected)) do_subheader_button($button_content, $button_selected);
+	echo '</ul>'."\n";
+}
+
+function do_subheader_button($button_content, $button_selected) {
+	foreach ($button_content as $key => $bt) {
+	  if ($key % 2 == 0) {
+	    $button_n++;
+	    if ($button_selected == $button_n) $class_b = ' class = "subheader-selected"'; else $class_b='';
+	    echo '<li'.$class_b.'>'."\n";
+	    echo '<a href="'.$button_content[$key+1].'">'.$bt."\n";
+	    echo '</li>'."\n";
+	  }
+	}
+}
 ?>

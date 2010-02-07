@@ -173,7 +173,7 @@ class Post {
 
 		// Reply button
 		if ($current_user->user_id > 0) {
-			echo '&nbsp;<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="15" height="10"/></a>';
+			echo '&nbsp;<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10"/></a>';
 		}
 
 		//$this->print_user_avatar(20);

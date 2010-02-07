@@ -41,8 +41,8 @@ $globals['ads'] = true;
 $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
-
 do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
+do_subheader(array("prova-1","#","prova-2","#","prova-3","prova","prova-4","asd","prova-5","aaaa"), 3);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();

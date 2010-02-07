@@ -735,3 +735,21 @@ border-color: #ff9400;
 color: #FF9400;
 }
 
+.subheader {
+background: #feefe5;
+}
+
+.subheader a {
+color: #ff6400;
+background-color: #fff;
+}
+
+.subheader a:hover {
+color: #fff;
+background-color: #ffccab;
+}
+
+.subheader-selected a {
+color: #fff;
+background-color: #ff6400;
+}

@@ -8,11 +8,11 @@
 
 global $globals;
 
-define('FAV_YES', '<img src="'.$globals['base_static'].'img/common/icon_favourites.gif" alt="del" width="16" height="16" title="'._('en favoritos').'"/>');
-define('FAV_NO', '<img src="'.$globals['base_static'].'img/common/icon_favourites_no.gif" alt="del" width="16" height="16" title="'._('agregar a favoritos').'"/>');
+define('FAV_YES', '<img src="'.$globals['base_static'].'img/common/icon_favourites.png" alt="del" width="16" height="16" title="'._('en favoritos').'"/>');
+define('FAV_NO', '<img src="'.$globals['base_static'].'img/common/icon_favourites_no.png" alt="del" width="16" height="16" title="'._('agregar a favoritos').'"/>');
 
-define('FAV_POST_YES', '<img src="'.$globals['base_static'].'img/common/favourites_note_on-01.png" alt="del" width="15" height="10" title="'._('en favoritos').'"/>');
-define('FAV_POST_NO', '<img src="'.$globals['base_static'].'img/common/favourites_note_off-01.png" alt="del" width="15" height="10" title="'._('agregar a favoritos').'"/>');
+define('FAV_POST_YES', '<img src="'.$globals['base_static'].'img/common/favourites_note_on-01.png" alt="del" width="12" height="12" title="'._('en favoritos').'"/>');
+define('FAV_POST_NO', '<img src="'.$globals['base_static'].'img/common/favourites_note_off-01.png" alt="del" width="12" height="12" title="'._('agregar a favoritos').'"/>');
 
 function favorite_icon($status, $type='link') {
 	switch ($type) {
