@@ -65,7 +65,7 @@ class BasicThumb {
 	function round_corners() {
 		$white = imagecolorallocate($this->image, 255, 255, 255);
 		$semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 63);
-		if (!$white) return;
+		if (!$white || !$semi_white) return;
 		// Top left
 		imagesetpixel($this->image, 0, 0, $white);
 		imagesetpixel($this->image, 1, 0, $semi_white);
