@@ -290,8 +290,9 @@ class Comment {
 			$link=clean_input_url($match);
 			$components = parse_url($link);
 			if ($components && ! preg_match("/.*$localdomain$/", $components['host'])) {
-				$this->banned |= check_ban($link, 'hostname', false, true); // Mark this comment as containing a banned link
-				if ($this->banned) { 	
+				$link_ban = check_ban($link, 'hostname', false, true); // Mark this comment as containing a banned link
+				$this->banned |= $link_ban;
+				if ($link_ban) { 	
 					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login)");
 				}
 				if (array_search($components['host'], $this->links) === false)
