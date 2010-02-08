@@ -107,7 +107,7 @@ function do_login() {
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
 
-		77 Check form
+		// Check form
 		if (($previous_login_failed > 2 || ! UserAuth::user_cookie_data() ) && !ts_is_human()) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
