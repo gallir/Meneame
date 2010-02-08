@@ -53,7 +53,7 @@ function do_login() {
 
 	echo '<form action="'.get_auth_link().'login.php" id="xxxthisform" method="post">'."\n";
 	
-	if($_POST["processlogin"] == 1) {
+	if ($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
 			header("Location: http://".get_server_name().$globals['base_url']."login.php");
@@ -62,7 +62,9 @@ function do_login() {
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
-		if ($previous_login_failed > 2  && !ts_is_human()) {
+
+		// Check form
+		if (($previous_login_failed > 2 || ! UserAuth::user_cookie_data() ) && !ts_is_human()) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
@@ -84,10 +86,14 @@ function do_login() {
 	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
-	if ($previous_login_failed > 2) {
+
+	// Print captcha
+	if ($previous_login_failed > 2 || ! UserAuth::user_cookie_data()) {
 		ts_print_form();
 	}
+
 	get_form_auth_ip();
+
 	echo '<p><input type="submit" value="login" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";

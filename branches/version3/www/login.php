@@ -58,7 +58,7 @@ function do_login() {
 	$previous_login_failed =  log_get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
-	if($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
+	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
 		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
@@ -107,8 +107,8 @@ function do_login() {
 		$password = trim($_POST['password']);
 		$persistent = $_POST['persistent'];
 
-	
-		if ($previous_login_failed > 2  && !ts_is_human()) {
+		77 Check form
+		if (($previous_login_failed > 2 || ! UserAuth::user_cookie_data() ) && !ts_is_human()) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
@@ -132,10 +132,14 @@ function do_login() {
 	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
-	if ($previous_login_failed > 2) {
+
+	// Print captcha
+	if ($previous_login_failed > 2 || ! UserAuth::user_cookie_data()) {
 		ts_print_form();
 	}
+
 	get_form_auth_ip();
+
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
