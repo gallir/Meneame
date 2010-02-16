@@ -458,7 +458,7 @@ class Comment {
 
 		if (! $current_user->admin) {
 			$comment->get_links();
-			if ($this->banned && $current_user->Date() > $globals['now'] - 86400) {
+			if ($comment->banned && $current_user->Date() > $globals['now'] - 86400) {
 				syslog(LOG_NOTICE, "Meneame: comment not inserted, banned link ($current_user->user_login)");
 				return _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
 			}
@@ -468,7 +468,7 @@ class Comment {
 			// Check the text is not the same
 			$same_count = $comment->same_text_count();
 			$same_links_count = $comment->same_links_count();
-			if ($this->banned) $same_links_count *= 2;
+			if ($comment->banned) $same_links_count *= 2;
 			$same_count += $same_links_count;
 		} else {
 			$comment_count  = $same_count = 0;

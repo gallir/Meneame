@@ -103,7 +103,7 @@ function do_submit0() {
 	echo '<li><strong>'._('contenido externo').':</strong> '._('Menéame no es un sitio para generar noticias, ni un sistema de <em>microblogging</em>').'</li>';
 	echo '<li><strong>'._('contenido interesante').':</strong> '._('¿interesará a una cantidad razonable de lectores?').'</li>';
 	echo '<li><strong>'._('enlaza la fuente original').':</strong> '._('no enlaces a sitios intermedios que no añaden nada al original').'</li>';
-	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar noticias').'</li>';
+	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar historias').'</li>';
 	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica el enlace de forma fidedigna, no distorsiones').'</li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos te pueden afectar personalmente, es mejor que no envíes la noticia').'</li>';
 	echo '<li><strong>¿'._('has leído las').' <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a></strong>?</li>';
@@ -135,7 +135,7 @@ function do_submit1() {
 	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
-		echo '<p class="error">'._('Debes esperar, tienes demasiadas noticias en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
+		echo '<p class="error">'._('Debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
 		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): $_POST[url]");
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
@@ -159,7 +159,7 @@ function do_submit1() {
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
 		echo '<p class="error"><strong>'._('Exceso de envíos').':</strong></p>';
-		echo '<p>'._('Se han enviado demasiadas noticias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
+		echo '<p>'._('Se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
 		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
 		echo '</div>'. "\n";
 		return;
@@ -230,7 +230,7 @@ function do_submit1() {
 				echo '<p class="error-text">'._('necesitas como mínimo'). " <strong>$needed " . _('votos') . '</strong><br/>';
 			} else {
 				echo '<strong>'._('no tienes el mínimo de votos necesarios para enviar una nueva historia').'</strong></p> ';
-				echo '<p class="error-text">'._('necesitas votar como mínimo a'). " <strong>$needed " . _('noticias') . '</strong><br/>';
+				echo '<p class="error-text">'._('necesitas votar como mínimo a'). " <strong>$needed " . _('envíos') . '</strong><br/>';
 			}
 			echo '<strong>'._('no votes de forma apresurada, penaliza el karma').'</strong><br/>';
 			echo '<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a></p>';
@@ -428,7 +428,7 @@ function do_submit1() {
 	$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_blog=$linkres->blog and link_status in ('queued', 'published')"));
 	if ($site_links > 5 && $site_links > $links_12hs * 0.04) { // Only 4% from the same site
 		syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $linkres->url");
-		echo '<p class="error"><strong>'._('ya se han enviado demasiadas noticias del mismo sitio, espera unos minutos por favor').'</strong></p> ';
+		echo '<p class="error"><strong>'._('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor').'</strong></p> ';
 		echo '<p class="error-text">'._('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";

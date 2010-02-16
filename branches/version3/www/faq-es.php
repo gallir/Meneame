@@ -24,7 +24,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Cómo promover las historias?</h4>
-<p>Selecciona la opción <a href="shakeit.php"><em>menear noticias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
+<p>Selecciona la opción <a href="shakeit.php"><em>menear historias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
 <p>No te olvides de leer las <a href="http://meneame.net/legal.php">condiciones de uso</a>.</p>
 </li>
 
@@ -62,12 +62,12 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>No puedo votar negativo ni/o los comentarios</h4>
-<p>Hace falta un karma mínimo para votar negativo las noticias y otro para cualquier voto a los comentarios.  En <a href="http://meneame.wikispaces.com/Karma">el Wiki</a> informamos del karma mínimo del momento --puede variar-- para estos votos.</p>
+<p>Hace falta un karma mínimo para votar negativo y otro para cualquier voto a los comentarios.  En <a href="http://meneame.wikispaces.com/Karma">el Wiki</a> informamos del karma mínimo del momento --puede variar-- para estos votos.</p>
 </li>
 
 
 <li id="<? echo "q$q";$q++;?>">
-<h4>¿Cómo se seleccionan las noticias que se publican en la portada?</h4>
+<h4>¿Cómo se seleccionan las historias que se publican en la portada?</h4>
 <p>Lo hace un proceso que se ejecuta cada cinco minutos.</p>
 
 <p>Primero calcula cuál es el karma mínimo que tienen que tener las noticias. Este valor depende de la media del karma de las noticias que fueron promovidas en las últimas dos semanas, más un coeficiente que depende del tiempo transcurrido desde la publicación de la última noticia. Este coeficiente decrece a medida que pasa el tiempo y se hace uno (1) cuando ha pasado una hora. Eso quiere decir que pasada una hora, cuando el coeficiente se hizo uno, cualquier noticia que tenga un karma igual o superior a la media será promovida. Esto tiene dos objetivos, por un lado se persigue que si la <em>calidad</em> es constante se promoverá una media de una noticia por hora, pero las que reciban más votos (se espera que sea incremental) serán publicadas antes.
@@ -120,7 +120,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <p>Porque era un buen punto de partida, la interfaz e interacción con el usuario era simple y efectiva. ¿Por qué reinventar la rueda desde cero si ya está bastante redonda?</p>
 
-<p>De todas formas el objetivo del menéame es distinto. No sólo se dan cuenta los que pueden votar anónimamente, también los autores de los apuntes enlazados que reciben notificación inmediata (<em>trackbacks</em>) y especialmente los autores que envían noticias. Estos últimos notan las diferencias fundamentales, y cómo está todo pensado para facilitar el <em>meneos</em> de blogs más que de sitios genéricos.</p>
+<p>De todas formas el objetivo del menéame es distinto. No sólo se dan cuenta los que pueden votar anónimamente, también los autores de los apuntes enlazados que reciben notificación inmediata (<em>trackbacks</em>) y especialmente los autores que envían historias. Estos últimos notan las diferencias fundamentales, y cómo está todo pensado para facilitar el <em>meneos</em> de blogs más que de sitios genéricos.</p>
 
 <p>El objetivo fundamental y diferencias con Digg están explicadas en <a href="http://mnm.uib.es/gallir/posts/2005/12/08/535/"><em>¿Qué y porqué el menéame?</em></a></p>
 </li>
