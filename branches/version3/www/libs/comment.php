@@ -22,6 +22,7 @@ class Comment {
 
 	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments, users ";
 
+
 	static function from_db($id) {
 		global $db, $current_user;
 		if(($result = $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id and user_id = comment_user_id", 'Comment'))) {
@@ -333,13 +334,69 @@ class Comment {
 		return $count;
 	}
 
-	function save_from_post($link) {
+	// Static function to print comment form
+	static function print_form($link, $rows=12) {
+		global $current_user, $globals;
+
+		if (!$link->votes > 0) return;
+		if($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
+			// Comments already closed
+			echo '<div class="commentform warn">'."\n";
+			echo _('comentarios cerrados')."\n";
+			echo '</div>'."\n";
+		} elseif ($current_user->authenticated 
+					&& (($current_user->user_karma > $globals['min_karma_for_comments'] 
+							&& $current_user->user_date < $globals['now'] - $globals['min_time_for_comments']) 
+						|| $current_user->user_id == $link->author)) {
+			// User can comment
+			echo '<div class="commentform">'."\n";
+			echo '<form action="" method="post">'."\n";
+			echo '<fieldset>'."\n";
+			echo '<legend>'._('envía un comentario').'</legend>'."\n";
+			print_simpleformat_buttons('comment');
+			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
+			echo '<div><textarea name="comment_content" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
+			echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
+			// Allow gods to put "admin" comments which does not allow votes
+			if ($current_user->user_level == 'god') {
+				echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin"/></label>'."\n";
+			}
+			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
+			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
+			echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";
+			echo '<input type="hidden" name="user_id" value="'.$current_user->user_id.'" />'."\n";
+			echo '</fieldset>'."\n";
+			echo '</form>'."\n";
+			echo "</div>\n";
+		} else {
+			// Not enough karma or anonymous user
+			if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+			if ($current_user->authenticated) {
+				if ($current_user->user_date >= $globals['now'] - $globals['min_time_for_comments']) {
+					$remaining = txt_time_diff($globals['now'], $current_user->user_date+$globals['min_time_for_comments']);
+					$msg = _('Debes esperar') . " $remaining " . _('para escribir el primer comentario');
+				}
+				if ($current_user->user_karma <= $globals['min_karma_for_comments']) {
+					$msg = _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma;
+				}
+				echo '<div class="commentform warn">'."\n";
+				echo $msg . "\n";
+				echo '</div>'."\n";
+			} elseif (!$globals['bot']){
+				echo '<div class="commentform warn">'."\n";
+				echo '<a href="'.get_auth_link().'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>'."\n";
+				echo '</div>'."\n";
+			}
+		}
+	}
+
+
+	static function save_from_post($link) {
 		global $db, $current_user, $globals;
 
-		$error = '';
-
-
 		require_once(mnminclude.'ban.php');
+
+		$error = '';
 		if(check_ban_proxy()) return _('dirección IP no permitida');
 
 		// Check if is a POST of a comment
@@ -357,48 +414,50 @@ class Comment {
 			return _('karma demasiado bajo');
 		}
 
-		$this->link=$link->id;
-		$this->ip = $db->escape($globals['user_ip']);
-		$this->randkey=intval($_POST['randkey']);
-		$this->author=intval($_POST['user_id']);
-		$this->karma=round($current_user->user_karma);
-		$this->content=clean_text($_POST['comment_content'], 0, false, 10000);
+		$comment = new Comment;
+
+		$comment->link=$link->id;
+		$comment->ip = $db->escape($globals['user_ip']);
+		$comment->randkey=intval($_POST['randkey']);
+		$comment->author=intval($_POST['user_id']);
+		$comment->karma=round($current_user->user_karma);
+		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
 		// Check if is an admin comment
 		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
-			$this->type = 'admin';
+			$comment->type = 'admin';
 		} 
 
 		// Basic check to avoid abuses from same IP
 		if (!$current_user->admin && $current_user->user_karma < 6.2) { // Don't check in case of admin comments or higher karma
 
 			// Avoid astroturfing from the same link's author
-			if ($link->status != 'published' && $link->ip == $globals['user_ip'] && $link->author != $this->author) {
-				insert_clon($this->author, $link->author, $link->ip);
+			if ($link->status != 'published' && $link->ip == $globals['user_ip'] && $link->author != $comment->author) {
+				insert_clon($comment->author, $link->author, $link->ip);
 				syslog(LOG_NOTICE, "Meneame, comment-link astroturfing ($current_user->user_login, $link->ip): ".$link->get_permalink());
 				return _('no se puede comentar desde la misma IP del autor del envío');
 			}
 
 			// Avoid floods with clones from the same IP
-			if (intval($db->get_var("select count(*) from comments where comment_link_id = $link->id and comment_ip='$this->ip' and comment_user_id != $this->author")) > 1) {
-				syslog(LOG_NOTICE, "Meneame, comment astroturfing ($current_user->user_login, $this->ip)");
+			if (intval($db->get_var("select count(*) from comments where comment_link_id = $link->id and comment_ip='$comment->ip' and comment_user_id != $comment->author")) > 1) {
+				syslog(LOG_NOTICE, "Meneame, comment astroturfing ($current_user->user_login, $comment->ip)");
 				return _('demasiados comentarios desde la misma IP con usuarios diferentes');
 			}
 		}
 
 
-		if (mb_strlen($this->content) < 5 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
+		if (mb_strlen($comment->content) < 5 || ! preg_match('/[a-zA-Z:-]/', $_POST['comment_content'])) { // Check there are at least a valid char
 			return _('texto muy breve o caracteres no válidos');
 		}
 
 
 		// Check the comment wasn't already stored
-		$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $this->link and comment_user_id = $this->author and comment_randkey = $this->randkey"));
+		$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
 		if ($already_stored) {
 			return _('comentario duplicado');
 		}
 
 		if (! $current_user->admin) {
-			$this->get_links();
+			$comment->get_links();
 			if ($this->banned && $current_user->Date() > $globals['now'] - 86400) {
 				syslog(LOG_NOTICE, "Meneame: comment not inserted, banned link ($current_user->user_login)");
 				return _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
@@ -407,8 +466,8 @@ class Comment {
 			// Lower karma to comments' spammers
 			$comment_count = (int) $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval 3 minute)");
 			// Check the text is not the same
-			$same_count = $this->same_text_count();
-			$same_links_count = $this->same_links_count();
+			$same_count = $comment->same_text_count();
+			$same_links_count = $comment->same_links_count();
 			if ($this->banned) $same_links_count *= 2;
 			$same_count += $same_links_count;
 		} else {
@@ -437,11 +496,14 @@ class Comment {
 			}
 		}
 		$db->transaction();
-		$this->store();
-		$this->insert_vote();
+		$comment->store();
+		$comment->insert_vote();
 		$link->update_comments();
 		$db->commit();
-		return $error;
+		// Comment stored, just redirect to it page
+		header('Location: '.$link->get_permalink() . '#c-'.$comment->order);
+		die;
+		//return $error;
 	}
 
 	function update_conversation() {
@@ -454,14 +516,14 @@ class Comment {
 				$orders[$order] += 1;
 			}
 		}
+		if (!$this->date) $this->date = time();
 		foreach ($orders as $order => $val) {
 			if ($order == 0) {
 				$to = $db->get_row("select 0 as id, link_author as user_id from links where link_id = $this->link");
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
-			if ($to && $to->user_id != $this->author) {
-				if (!$this->date) $this->date = time();
+			if ($to /*&& $to->user_id != $this->author*/) {
 				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
 			}
 		}

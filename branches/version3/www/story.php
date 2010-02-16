@@ -86,6 +86,17 @@ if ($last_arg > 0) {
 	}
 }
 
+// Change to a min_value is times is changed for the current link_status
+if ($globals['time_enabled_comments_status'][$link->status]) {
+	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
+											$globals['time_enabled_comments']);
+}
+
+// Check for comment post
+if ($_POST['process']=='newcomment') {
+	$new_comment_error = Comment::save_from_post($link);
+}
+
 switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;	
@@ -130,18 +141,6 @@ switch ($url_args[1]) {
 		break;
 	default:
 		do_error(_('página inexistente'), 404);
-}
-
-// Change to a min_value is times is changed for the current link_status
-if ($globals['time_enabled_comments_status'][$link->status]) {
-	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
-											$globals['time_enabled_comments']);
-}
-
-// Check for comment post
-if ($_POST['process']=='newcomment') {
-	$comment = new Comment;
-	$new_comment_error = $comment->save_from_post($link);
 }
 
 // Set globals
@@ -251,39 +250,8 @@ case 2:
 		echo "</ol>\n";
 	}
 
-	if($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
-		// Comments already closed
-		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
-		echo '<div class="commentform warn">'."\n";
-		echo _('comentarios cerrados')."\n";
-		echo '</div>'."\n";
-	} elseif ($current_user->authenticated 
-				&& (($current_user->user_karma > $globals['min_karma_for_comments'] 
-						&& $current_user->user_date < $globals['now'] - $globals['min_time_for_comments']) 
-					|| $current_user->user_id == $link->author)) {
-		// User can comment
-		print_comment_form();
-		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
-	} else {
-		// Not enough karma or anonymous user
-		if($tab_option == 1) do_comment_pages($link->comments, $current_page);
-		if ($current_user->authenticated) {
-			if ($current_user->user_date >= $globals['now'] - $globals['min_time_for_comments']) {
-				$remaining = txt_time_diff($globals['now'], $current_user->user_date+$globals['min_time_for_comments']);
-				$msg = _('Debes esperar') . " $remaining " . _('para escribir el primer comentario');
-			}
-			if ($current_user->user_karma <= $globals['min_karma_for_comments']) {
-				$msg = _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma;
-			}
-			echo '<div class="commentform warn">'."\n";
-			echo $msg . "\n";
-			echo '</div>'."\n";
-		} elseif (!$globals['bot']){
-			echo '<div class="commentform warn">'."\n";
-			echo '<a href="'.get_auth_link().'login.php?return='.$_SERVER['REQUEST_URI'].'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí</a>'."\n";
-			echo '</div>'."\n";
-		}
-	}
+	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+	Comment::print_form($link);
 	echo '</div>' . "\n";
 
 	// Highlight a comment if it is referenced by the URL.
@@ -455,32 +423,6 @@ echo '</rdf:RDF>'."\n".'-->'."\n";
 
 $globals['tag_status'] = $globals['link']->status;
 do_footer();
-
-function print_comment_form() {
-	global $link, $current_user, $globals;
-
-	if (!$link->votes > 0) return;
-	echo '<div class="commentform">'."\n";
-	echo '<form action="" method="post">'."\n";
-	echo '<fieldset>'."\n";
-	echo '<legend>'._('envía un comentario').'</legend>'."\n";
-	print_simpleformat_buttons('comment');
-	echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-	echo '<div><textarea name="comment_content" id="comment" cols="75" rows="12"></textarea></div>'."\n";
-	echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
-	// Allow gods to put "admin" comments which does not allow votes
-	if ($current_user->user_level == 'god') {
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin"/></label>'."\n";
-	}
-	echo '<input type="hidden" name="process" value="newcomment" />'."\n";
-	echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
-	echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";
-	echo '<input type="hidden" name="user_id" value="'.$current_user->user_id.'" />'."\n";
-	echo '</fieldset>'."\n";
-	echo '</form>'."\n";
-	echo "</div>\n";
-
-}
 
 
 function print_story_tabs($option) {

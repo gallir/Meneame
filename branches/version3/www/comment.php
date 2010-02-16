@@ -9,6 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+$globals['ads'] = true;
 
 $page_size = 50;
 $comment = new Comment;
@@ -35,8 +36,20 @@ if (!$comment->read()) {
 $link = new Link;
 $link->id=$comment->link;
 $link->read();
+$globals['link'] = $link;
 
-$globals['ads'] = true;
+// Change to a min_value is times is changed for the current link_status
+if ($globals['time_enabled_comments_status'][$link->status]) {
+	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
+											$globals['time_enabled_comments']);
+}
+
+// Check for comment post
+if ($_POST['process']=='newcomment') {
+	$new = new Comment;
+	$new_comment_error = $new->save_from_post($link);
+}
+
 
 $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
@@ -79,8 +92,14 @@ if ($answers) {
 	echo '</div>'."\n";
 }
 
-
+Comment::print_form($link, 8);
 echo '</div>';
+// Show the error if the comment couldn't be inserted
+if (!empty($new_comment_error)) {
+	echo '<script type="text/javascript">';
+	echo '$(function(){alert(\''._('Aviso'). ": $new_comment_error".'\')});';
+	echo '</script>';
+}
 do_footer();
 ?>
 
