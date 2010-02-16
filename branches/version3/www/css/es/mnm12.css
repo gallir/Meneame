@@ -971,7 +971,7 @@ margin-bottom: 10px;
 }
 
 .comment-body {
-padding: 5px 50px 5px 10px;
+padding: 5px 5px 5px 10px;
 line-height: 130%;
 overflow: hidden;
 border: 1px dotted;
@@ -980,7 +980,7 @@ min-height: 25px;
 
 .comment-body-hidden {
 border: 1px dotted;
-padding: 3px 50px 3px 10px;
+padding: 3px 5px 3px 10px;
 font-size: 90%;
 overflow: hidden;
 }

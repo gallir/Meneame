@@ -14,7 +14,6 @@ $globals['search_options'] = array('w' => 'posts');
 
 if ($current_user->user_id > 0) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
-	array_push($globals['extra_js'], 'posts01.js');
 }
 
 

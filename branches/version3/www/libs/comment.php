@@ -135,7 +135,14 @@ class Comment {
 		} else {
 			$this->print_text($length, $html_id);
 		}
-		echo '</span></div>';
+		echo '</span>';
+
+		if ($current_user->user_id > 0 && $globals['link']) {
+			echo '<br/><a href="javascript:comment_reply('.$this->order.')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10" style="float:right;"/></a>';
+		}
+
+		echo '</div>';
+
 
 
 		// The comments info bar
@@ -192,10 +199,10 @@ class Comment {
 			echo '<strong title="'.$txt.'">&nbsp;*&nbsp;</strong>';
 		}
 
-
 		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
 			echo '<img src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 		}
+
 		echo '</div></div>';
 		echo "</div>\n";
 	}
