@@ -133,18 +133,16 @@ class Comment {
 
 		if ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
 			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
+		echo '</span>';
 		} else {
 			$this->print_text($length, $html_id);
+			echo '</span>';
+			// Add the reply button
+			if ($current_user->user_id > 0 && $globals['link']) {
+				echo '<br/><a href="javascript:comment_reply('.$this->order.')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10" style="float:right;"/></a>';
+			}
 		}
-		echo '</span>';
-
-		if ($current_user->user_id > 0 && $globals['link']) {
-			echo '<br/><a href="javascript:comment_reply('.$this->order.')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10" style="float:right;"/></a>';
-		}
-
 		echo '</div>';
-
-
 
 		// The comments info bar
 		echo '<div class="'.$comment_meta_class.'">';
