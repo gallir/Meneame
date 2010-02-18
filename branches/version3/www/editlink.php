@@ -179,16 +179,18 @@ function do_save() {
 		$linkres->store();
 		tags_insert_string($linkres->id, $dblang, $linkres->tags, $linkres->date);
 
-		// Insert edit log/event
-		require_once(mnminclude.'log.php');
-		if ($insert_discard_log) {
-			// Insert always a link and discard event if the status has been changed to discard
-			log_insert('link_discard', $linkres->id, $current_user->user_id);
-			if ($linkres->author == $current_user->user_id) { // Don't save edit log if it's discarded by an admin
-				log_insert('link_edit', $linkres->id, $current_user->user_id);
+		// Insert edit log/event if the link it's newer than 15 days
+		if ($globals['now'] - $linkres->date < 86400*15) {
+			require_once(mnminclude.'log.php');
+			if ($insert_discard_log) {
+				// Insert always a link and discard event if the status has been changed to discard
+				log_insert('link_discard', $linkres->id, $current_user->user_id);
+				if ($linkres->author == $current_user->user_id) { // Don't save edit log if it's discarded by an admin
+					log_insert('link_edit', $linkres->id, $current_user->user_id);
+				}
+			} elseif ($linkres->votes > 0) {
+				log_conditional_insert('link_edit', $linkres->id, $current_user->user_id, 60);
 			}
-		} elseif ($linkres->votes > 0) {
-			log_conditional_insert('link_edit', $linkres->id, $current_user->user_id, 60);
 		}
 
 		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia actualizada").'</div>'."\n";
