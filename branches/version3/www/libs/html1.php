@@ -911,23 +911,23 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	die;
 }
 
-function do_subheader($button_content, $button_selected) { // arguments: array with "button text", "button URI"; Nº of the selected button by default.  When -1 no array, only text in header.
+function do_subheader($content, $selected = false) { 
+// arguments: hash array with "button text" => "button URI"; Nº of the selected button 
 	echo '<ul class="subheader">'."\n";
-	if (!empty($button_selected)) {
-	    if ($button_selected = -1) echo '<h1>'.$button_content.'</h1>'; else do_subheader_button($button_content, $button_selected);
+	if (is_array($content)) {
+		$n = 0;
+		foreach ($content as $text => $url) {
+	   		if ($selected == $n) $class_b = ' class = "subheader-selected"'; 
+			else $class_b='';
+	   		echo '<li'.$class_b.'>'."\n";
+	   		echo '<a href="'.$url.'">'.$text."\n";
+	   		echo '</li>'."\n";
+	   		$n++;
+		}
+	} else {
+	    echo '<h1>'.$content.'</h1>'; 
 	}
 	echo '</ul>'."\n";
 }
 
-function do_subheader_button($button_content, $button_selected) {
-	foreach ($button_content as $key => $bt) {
-	  if ($key % 2 == 0) {
-	    $button_n++;
-	    if ($button_selected == $button_n) $class_b = ' class = "subheader-selected"'; else $class_b='';
-	    echo '<li'.$class_b.'>'."\n";
-	    echo '<a href="'.$button_content[$key+1].'">'.$bt."\n";
-	    echo '</li>'."\n";
-	  }
-	}
-}
 ?>
