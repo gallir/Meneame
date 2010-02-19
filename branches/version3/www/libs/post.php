@@ -160,9 +160,8 @@ class Post {
 		// Print comment info (right)
 		echo '<div class="comment-info">';
 		echo '<a href="'.post_get_base_url($this->username).'">'. _('nota de') . ' ' . $this->username.'</a> ';
-		echo '('.$this->src.') ';
-		echo '(<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink">#</a>) ';
-
+		echo '('.$this->src.')';
+		echo '<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="17" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
 		
 		// Print dates
 		if (time() - $this->date > 604800) { // 7 days
