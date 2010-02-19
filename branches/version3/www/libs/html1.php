@@ -911,9 +911,11 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	die;
 }
 
-function do_subheader($button_content, $button_selected) { // arguments: array with "button text", "button URI"; Nº of the selected button by default
+function do_subheader($button_content, $button_selected) { // arguments: array with "button text", "button URI"; Nº of the selected button by default.  When -1 no array, only text in header.
 	echo '<ul class="subheader">'."\n";
-	if (!empty($button_selected)) do_subheader_button($button_content, $button_selected);
+	if (!empty($button_selected)) {
+	    if ($button_selected = -1) echo '<h1>'.$button_content.'</h1>'; else do_subheader_button($button_content, $button_selected);
+	}
 	echo '</ul>'."\n";
 }
 

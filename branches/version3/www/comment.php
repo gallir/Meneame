@@ -55,6 +55,7 @@ $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
 do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
+do_subheader(_('comentario de') . ' ' . $username, -1);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
@@ -102,4 +103,3 @@ if (!empty($new_comment_error)) {
 }
 do_footer();
 ?>
-

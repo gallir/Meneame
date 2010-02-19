@@ -177,15 +177,15 @@ class Comment {
 		if ($this->type == 'admin') {
 			echo '<strong>'._('admin').'</strong> ';
 			if ($current_user->admin) {
-				echo ' ('.$this->username.') ';
+				echo ' ('.$this->username.')';
 			}
 		} elseif ($single_link) {
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a> ';
+			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a>';
 		} else {
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
+			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
 		}
 
-		echo '(<a href="'.$this->get_relative_individual_permalink().'" title="permalink">#</a>) ';
+		echo '<a href="'.$this->get_relative_individual_permalink().'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="17" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
 
 		// Print dates
 		if ($globals['now'] - $this->date > 604800) { // 7 days

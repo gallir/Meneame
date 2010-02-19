@@ -515,7 +515,7 @@ class Link {
 		} else  {
 			$comments_mess = _('sin comentarios');
 		}
-		echo '<span class="comments">&nbsp;<a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
+		echo '<span class="comments-counter">&nbsp;<a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
