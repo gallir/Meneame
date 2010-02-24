@@ -79,6 +79,9 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
+
+do_banner_top_news();
+
 if($cat) {
 	$from_where .= " AND link_category=$cat ";
 }

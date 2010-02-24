@@ -66,13 +66,17 @@ function do_banner_promotions() {
 	}
 }
 
+function do_banner_top_news() {
+	global $globals;
+	@include('ads/top-news.inc');
+}
+
 function do_banner_story() {
 	global $globals, $current_user;
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
 		@include('ads/adsense-middle.inc');
 	}
 }
-
 
 function do_legal($legal_name, $target = '', $show_abuse = true) {
 	global $globals;
