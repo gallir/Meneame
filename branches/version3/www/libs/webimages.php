@@ -293,7 +293,7 @@ class HtmlImages {
 
 			// If there is no image or image is slow
 			// Check if there are players
-			if ((!$this->selected || $this->selected->surface() < 75000)
+			if ((!$this->selected || $this->selected->surface() < 120000)
 					&& $this->other_html 
 					&& preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
 				if ($this->debug)
@@ -314,7 +314,7 @@ class HtmlImages {
 		return $this->selected;
 	}
 
-	function shorten_html(&$html, $max = 80000) {
+	function shorten_html(&$html, $max = 200000) {
 			$html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
 			$html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
 			$html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
@@ -389,6 +389,8 @@ class HtmlImages {
 		$this->other_html = false;
 		$this->path_query = unify_path_query($this->parsed_url['path'], $this->parsed_url['query']);
 		if ($this->html) {
+			if ($this->debug)
+					echo "<!-- Analyzing html: ". strlen($this->html). " bytes -->\n";
 			$regexp = '[a-z]+?:\/\/'.preg_quote($this->parsed_url['host']).'\/[^\"\'>]+?';
 			if ($this->site) {
 				$parsed = parse_url($this->site);
@@ -413,6 +415,8 @@ class HtmlImages {
 					$url = preg_replace('/&amp;/i', '&', $match[1]);
 					$url = preg_replace('/#.+/i', '', $url);
 					$url = build_full_url(trim($url), $this->url);
+					if ($this->debug)
+						echo "<!-- Adding before analyzing: $url -->\n";
 					if (!$url) continue;
 
 					$parsed_match = parse_url($url);
