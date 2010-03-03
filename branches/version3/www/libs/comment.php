@@ -185,7 +185,7 @@ class Comment {
 			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
 		}
 
-		echo '<a href="'.$this->get_relative_individual_permalink().'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="17" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
+		echo '<a href="'.$this->get_relative_individual_permalink().'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="15" height="13" alt="link" title="'._('enlace permanente').'"/></a>';
 
 		// Print dates
 		if ($globals['now'] - $this->date > 604800) { // 7 days
