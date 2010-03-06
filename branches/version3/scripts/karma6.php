@@ -15,7 +15,9 @@ $minutes = intval($globals['draft_time'] / 60);
 $db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval $minutes minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
 
 // Delete old conversations
-$db->query("delete from conversations where conversation_time < date_sub(now(), interval 180 day)");
+///
+// $db->query("delete from conversations where conversation_time < date_sub(now(), interval 180 day)");
+///
 
 // Delete old annotations
 $db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
@@ -253,10 +255,16 @@ foreach ($res as $dbuser) {
 
 		$negative_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status in ('discard', 'autodiscard', 'abuse') and TIMESTAMPDIFF(MINUTE, link_date, vote_date) < 15 ");
 
-		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and link_negatives < link_votes/15");
+		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and (link_negatives < 3 or link_negatives < link_votes/15)");
+		if ($negative_no_discarded > 3) {
+			$users_negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct link_author) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and (link_negatives < 3 or link_negatives < link_votes/15)");
+			$negative_user_ratio = $negative_no_discarded / ($users_negative_no_discarded * 1.5);
+		} else {
+			$negative_user_ratio = 1;
+		}
 
 		if ($negative_no_discarded > $negative_discarded/4) { // To fight against karma whores and bots
-			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded);
+			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded * $negative_user_ratio);
 		} 
 		
 		if ($karma3 != 0) {
@@ -265,7 +273,7 @@ foreach ($res as $dbuser) {
 		}
 
 		// Check the user don't abuse voting only negative
-		$max_allowed_negatives = round(($nopublished_given + $published_given + $negative_discarded) * $user->karma / 10);
+		$max_allowed_negatives = round(($nopublished_given + $published_given + $negative_discarded * 2) * $user->karma / 10);
 		if($negative_no_discarded > 10 && $negative_no_discarded > $max_allowed_negatives) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			$karma3 -= $punishment;
