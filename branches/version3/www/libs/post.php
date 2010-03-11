@@ -365,8 +365,10 @@ class Post {
 				if (! $id > 0) {
 					$id = (int) $db->get_var("select post_id from posts where post_user_id = $to and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
 				}
-				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
-				$references[$db->escape($user)] += 1;
+				if (! $references[$id]) {
+					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
+					$references[$id] += true;
+				}
 			}
 		}
 	}

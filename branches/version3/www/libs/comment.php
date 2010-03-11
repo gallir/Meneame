@@ -515,14 +515,18 @@ class Comment {
 			}
 		}
 		if (!$this->date) $this->date = time();
+		$references = array();
 		foreach ($orders as $order => $val) {
 			if ($order == 0) {
 				$to = $db->get_row("select 0 as id, link_author as user_id from links where link_id = $this->link");
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
-			if ($to /*&& $to->user_id != $this->author*/) {
-				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
+			if ($to) {
+				if (!$references[$to]) {
+					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
+				}
+				$references[$to] = true;
 			}
 		}
 
