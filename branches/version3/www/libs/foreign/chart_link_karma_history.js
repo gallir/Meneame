@@ -6,8 +6,8 @@ $(function () {
 		points: { show: true },
 		legend: { position: "nw" },
 		xaxis: { mode: "time", minTickSize: [1, "hour"], },
-		yaxis: { min: 0 },
-		y2axis: { min: 0 },
+		//yaxis: { min: 0 },
+		//y2axis: { min: 0 },
 		grid: { hoverable: true },
 	};
 	var data = [];

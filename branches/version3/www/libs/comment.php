@@ -523,10 +523,10 @@ class Comment {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
 			if ($to) {
-				if (!$references[$to]) {
+				if (!$references[$to->id]) {
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
+					$references[$to->id] = true;
 				}
-				$references[$to] = true;
 			}
 		}
 
