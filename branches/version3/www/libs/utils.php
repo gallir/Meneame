@@ -224,6 +224,7 @@ function text_to_html($str, $hashtype = false, $do_links = true) {
 	}
 	$str = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $str);
 	$str = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $str);
+	$str = preg_replace('/(^|[\(¡;,:¿\s])\-([^\s<>]+)\-/', "$1<strike>$2</strike>", $str);
 	return $str;
 }
 
