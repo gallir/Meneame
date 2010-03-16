@@ -53,9 +53,9 @@ function favorite_add_delete($user, $link, $type='link') {
 	}
 }
 
-function favorite_teaser($user, $link, $type='link') {
+function favorite_teaser($user, $object, $type='link') {
 	global $globals;
-	if (favorite_exists($user, $link, $type)) {
+	if ($object->favorite) {
 		return favorite_icon(true, $type);
 	} else {
 		return favorite_icon(false, $type);

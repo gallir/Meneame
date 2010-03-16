@@ -33,6 +33,8 @@ class UserAuth {
 					$user->user_level == 'disabled' || $user->user_level == 'autodisabled' || 
 					empty($user->user_date)) {
 						$this->Logout();
+						// Make sure mysql @user_id is reset
+						$db->query("set @user_id = 0");
 						return;
 				}
 
@@ -53,6 +55,8 @@ class UserAuth {
 			$this->authenticated = false;
 			$this->admin = false;
 		}
+		// Mysql variable to use en join queries
+		$db->query("set @user_id = $this->user_id");
 	}
 
 
