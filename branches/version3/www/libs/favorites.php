@@ -17,6 +17,7 @@ define('FAV_POST_NO', '<img src="'.$globals['base_static'].'img/common/favourite
 function favorite_icon($status, $type='link') {
 	switch ($type) {
 		case 'post':
+		case 'comment':
 			if ($status) return FAV_POST_YES;
 			else return FAV_POST_NO;
 			break;

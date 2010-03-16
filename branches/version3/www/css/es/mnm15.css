@@ -1307,7 +1307,7 @@ display: block;
 overflow: hidden;
 height: 25px;
 white-space: nowrap;
-width: 48%;
+width: 24%;
 height: 30px;
 font-size: 85%;
 white-space: nowrap;
@@ -1553,9 +1553,9 @@ vertical-align: middle;
 height: 25px !important;
 clear: both;
 padding-left: 25px;
-font-size: 0.8em;
+font-size: 0.9em;
 padding-top: 5px;
-margin-bottom: 15px;
+margin-bottom: 20px;
 }
 
 .subheader li {

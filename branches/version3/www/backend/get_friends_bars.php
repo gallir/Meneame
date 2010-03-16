@@ -23,21 +23,25 @@ else $prefered_page = intval($_GET['p']);
 
 if (!isset($prefered_type) && !empty($_GET['type'])) $prefered_type = $_GET['type'];
 
-$prefered_page_size = 20;
+$prefered_page_size = 40;
 $prefered_offset=($prefered_page-1)*$prefered_page_size;
 switch ($prefered_type) {
 	case 'from':
-		if ($prefered_id != $current_user->user_id) {
-			$friend_value = 'AND friend_value > 0';
-		} else {
-			$friend_value = '';
-		}
+		$friend_value = 'AND friend_value > 0';
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
 		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 	case 'to':
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_to=$prefered_id AND friend_from != 0 and friend_value > 0");
 		$dbusers = $db->get_results("SELECT friend_from as who FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from and friend_value > 0 order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		break;
+	case 'ignored':
+		if ($prefered_id != $current_user->user_id && ! $current_user->admin) {
+			return;
+		}
+		$friend_value = 'AND friend_value < 0';
+		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
+		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 }
 if ($dbusers) {
@@ -56,5 +60,6 @@ if ($dbusers) {
 	}
 	echo "<br clear='left'/>\n";
 	do_contained_pages($prefered_id, $prefered_total, $prefered_page, $prefered_page_size, 'get_friends_bars.php', $prefered_type, $prefered_type.'-container');
+	echo "<br clear='all'/>\n";
 }
 ?>

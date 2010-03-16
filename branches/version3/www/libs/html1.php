@@ -920,7 +920,7 @@ function do_subheader($content, $selected = false) {
 	   		if ($selected == $n) $class_b = ' class = "subheader-selected"'; 
 			else $class_b='';
 	   		echo '<li'.$class_b.'>'."\n";
-	   		echo '<a href="'.$url.'">'.$text."\n";
+	   		echo '<a href="'.$url.'">'.$text."</a>\n";
 	   		echo '</li>'."\n";
 	   		$n++;
 		}

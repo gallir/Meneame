@@ -17,8 +17,7 @@ $globals['ads'] = true;
 
 
 if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	array_shift($url_args); // The first element is always a "/"
+	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
 	$_REQUEST['view'] = $url_args[1];
 	$_REQUEST['uid'] = intval($url_args[2]);
@@ -115,7 +114,10 @@ switch ($view) {
 	case 'conversation':
 	case 'shaken':
 	case 'friends':
+	case 'friend_of':
+	case 'ignored':
 	case 'favorites':
+	case 'favorite_comments':
 		$globals['noindex'] = true;
 		breaK;
 	case 'profile':
@@ -136,27 +138,40 @@ echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 $url_login = urlencode($login);
 switch ($view) {
 	case 'history':
-		do_user_tabs(2, $login);
+		do_user_tabs(2, $login, true);
 		do_history();
 		do_pages($rows, $page_size);
 		break;
 	case 'commented':
-		do_user_tabs(3, $login);
+		do_user_tabs(3, $login, true);
 		do_commented();
 		do_pages($rows, $page_size, false);
 		break;
 	case 'shaken':
-		do_user_tabs(4, $login);
+		do_user_tabs(2, $login, true);
 		do_shaken();
 		do_pages($rows, $page_size);
 		break;
 	case 'friends':
-		do_user_tabs(7, $login);
-		do_friends();
+		do_user_tabs(7, $login, true);
+		do_friends(0);
+		break;
+	case 'friend_of':
+		do_user_tabs(7, $login, true);
+		do_friends(1);
+		break;
+	case 'ignored':
+		do_user_tabs(7, $login, true);
+		do_friends(2);
 		break;
 	case 'favorites':
-		do_user_tabs(6, $login);
+		do_user_tabs(2, $login, true);
 		do_favorites();
+		do_pages($rows, $page_size);
+		break;
+	case 'favorite_comments':
+		do_user_tabs(6, $login, true);
+		do_favorite_comments();
 		do_pages($rows, $page_size);
 		break;
 	case 'categories':
@@ -164,7 +179,7 @@ switch ($view) {
 		do_categories();
 		break;
 	case 'conversation':
-		do_user_tabs(9, $login);
+		do_user_tabs(9, $login, true);
 		do_conversation();
 		do_pages($rows, $page_size, false);
 		break;
@@ -378,6 +393,7 @@ function do_profile() {
 function do_history () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 0);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -397,6 +413,7 @@ function do_history () {
 function do_favorites () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 2);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -418,6 +435,7 @@ function do_shaken () {
 
 	if ($globals['bot']) return;
 
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 1);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id");
 	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
@@ -446,8 +464,7 @@ function do_shaken () {
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	if ($globals['bot']) return;
-
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0);
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -462,8 +479,7 @@ function do_commented () {
 function do_conversation () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	if ($globals['bot']) return;
-
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1);
 	$rows = $db->get_var("SELECT count(*) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM conversations, comments, links WHERE conversation_user_to=$user->id and conversation_type='comment' and comment_id=conversation_from and link_id=comment_link_id ORDER BY conversation_time desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -471,6 +487,26 @@ function do_conversation () {
 		echo '<a href="'.$globals['base_url'].'comments_rss2.php?answers_id='.$user->id.'" title="'._('obtener comentarios en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		print_comment_list($comments, $user);
+	}
+}
+
+function do_favorite_comments () {
+	global $db, $rows, $user, $offset, $page_size, $globals;
+
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
+	$comment = new Comment;
+	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='comment'");
+	$comments = $db->get_col("SELECT comment_id FROM comments, favorites WHERE favorite_user_id=$user->id AND favorite_type='comment' AND favorite_link_id=comment_id ORDER BY comment_id DESC LIMIT $offset,$page_size");
+	if ($comments) {
+		echo '<ol class="comments-list">';
+		foreach($comments as $comment_id) {
+			$comment->id=$comment_id;
+			$comment->read();
+			echo '<li>';
+			$comment->print_summary($link, 2000, false);
+			echo '</li>';
+		}
+		echo "</ol>\n";
 	}
 }
 
@@ -559,52 +595,56 @@ function do_voters_preferred() {
 }
 ***************/
 
-function do_friends() {
+function do_friends($option) {
 	global $db, $user, $globals;
 
-	echo '<div style="margin-left: 0px; margin-bottom:20px">';
-	echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
-	echo '</div>';
+	
+	do_subheader(array(_('mis amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'), _('ignorados') => get_user_uri($user->username, 'ignored')), $option);
 
-	echo '<div style="width: 48%; display: block; float: left; border: 1px solid #ff6400;padding: 5px 0px 10px 5px">';
-	echo '<h3>'._('amigos').'</h3>';
 	$prefered_id = $user->id;
-	$prefered_type = 'from';
-	echo '<div id="from-container">'. "\n";
+	switch ($option) {
+		case 2:
+			$prefered_type = 'ignored';
+			break;
+		case 1:
+			$prefered_type = 'to';
+			break;
+		default:
+			$prefered_type = 'from';
+	}
+	echo '<div style="padding: 5px 0px 10px 5px">';
+	echo '<div id="'.$prefered_type.'-container">'. "\n";
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
 	echo '</div>'. "\n";
 
-
-	echo '<div style="width: 48%; display: block; float: right; border: 1px solid #ff6400;padding: 5px 0px 10px 5px">';
-	echo '<h3>'._('elegido por').'</h3>';;
-	$prefered_id = $user->id;
-	$prefered_type = 'to';
-	echo '<div id="to-container">'. "\n";
-	require('backend/get_friends_bars.php');
-	echo '</div>'. "\n";
-	echo '</div>'. "\n";
-
-	echo '<br clear="all" />';
+    // Print RSS button
+	if ($option == 0) {
+		echo '<div style="margin-left: 0px; margin-bottom:20px">';
+		echo '<a href="'.$globals['base_url'].'rss2.php?friends_of='.$user->id.'" title="'._('noticias de amigos en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
+		echo '</div>';
+	}
 }
 
-function do_user_tabs($option, $user) {
+function do_user_tabs($option, $user, $has_subheader = false) {
 	global $globals, $current_user;
 
 	$active = array();
 	$active[$option] = ' class="tabsub-this"';
 
-	echo '<ul class="tabsub">'."\n";
+	if ($has_subheader) {
+		echo '<ul class="tabsub" style="margin-bottom: 0">'."\n";
+	} else {
+		echo '<ul class="tabsub">'."\n";
+	}
 	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
 	echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
-	echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
+	//echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
 	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
-	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enviadas'). '</a></li>';
-	if (! $globals['bot']) {
-		echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
-		echo '<li'.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
-		echo '<li'.$active[4].'><a href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
-	}
+	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enlaces'). '</a></li>';
+	//echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
+	echo '<li'.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
+	//echo '<li'.$active[4].'><a href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
 	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '</a></li>';
 	echo '</ul>';
 }

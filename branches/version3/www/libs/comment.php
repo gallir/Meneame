@@ -20,7 +20,7 @@ class Comment {
 	var $read = false;
 	var $ip = '';
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments, users ";
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id), users ";
 
 
 	static function from_db($id) {
@@ -147,9 +147,9 @@ class Comment {
 		// The comments info bar
 		echo '<div class="'.$comment_meta_class.'">';
 		// Check that the user can vote
+		echo '<div class="comment-votes-info">';
 		if ($this->type != 'admin' && $this->user_level != 'disabled') {
 			// Print the votes info (left)
-			echo '<div class="comment-votes-info">';
 
 			if ($current_user->user_id > 0 
 						&& $this->author != $current_user->user_id 
@@ -166,8 +166,13 @@ class Comment {
 				echo '<img src="'.$globals['base_static'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
 				echo '</a>';
 			}
-			echo '</div>';
 		}
+		// If the user is authenticated, show favorite box
+		if ($current_user->user_id > 0)  {
+			echo '&nbsp;&nbsp;<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_comment.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'comment').'</a>';
+		}
+		echo '</div>';
+
 
 
 		// Print comment info (right)
