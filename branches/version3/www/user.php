@@ -599,7 +599,7 @@ function do_friends($option) {
 	global $db, $user, $globals;
 
 	
-	do_subheader(array(_('mis amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'), _('ignorados') => get_user_uri($user->username, 'ignored')), $option);
+	do_subheader(array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'), _('ignorados') => get_user_uri($user->username, 'ignored')), $option);
 
 	$prefered_id = $user->id;
 	switch ($option) {
