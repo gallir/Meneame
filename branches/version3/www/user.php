@@ -170,7 +170,7 @@ switch ($view) {
 		do_pages($rows, $page_size);
 		break;
 	case 'favorite_comments':
-		do_user_tabs(6, $login, true);
+		do_user_tabs(3, $login, true);
 		do_favorite_comments();
 		do_pages($rows, $page_size);
 		break;
@@ -179,7 +179,7 @@ switch ($view) {
 		do_categories();
 		break;
 	case 'conversation':
-		do_user_tabs(9, $login, true);
+		do_user_tabs(3, $login, true);
 		do_conversation();
 		do_pages($rows, $page_size, false);
 		break;
