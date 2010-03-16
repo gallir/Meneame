@@ -602,6 +602,7 @@ function do_friends($option) {
 	do_subheader(array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'), _('ignorados') => get_user_uri($user->username, 'ignored')), $option);
 
 	$prefered_id = $user->id;
+	$prefered_admin = $user->admin;
 	switch ($option) {
 		case 2:
 			$prefered_type = 'ignored';

@@ -36,7 +36,7 @@ switch ($prefered_type) {
 		$dbusers = $db->get_results("SELECT friend_from as who FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from and friend_value > 0 order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 	case 'ignored':
-		if ($prefered_id != $current_user->user_id && ! $current_user->admin) {
+		if ($prefered_id != $current_user->user_id) {
 			return;
 		}
 		$friend_value = 'AND friend_value < 0';
