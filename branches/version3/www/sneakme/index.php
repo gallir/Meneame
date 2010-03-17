@@ -139,6 +139,7 @@ echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">'."\n";
+do_pages($rows, $page_size);
 
 echo '<div class="notes">';
 $post = new Post;
