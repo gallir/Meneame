@@ -142,7 +142,7 @@ function do_header($title, $id='home') {
 	echo '<div id="wrap">' . "\n";
 
 	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('lazo negro por el manifestointernet.org').'" id="logo">'._("menéame").'</a>'."\n";
+	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
 	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
@@ -185,7 +185,7 @@ function do_header($title, $id='home') {
 
 	echo '</ul>' . "\n";
 	echo '</div>' . "\n";
-	echo '<a id="eli" href="'.$globals['base_url'].'" title="'._('inicio').'">'._("Eli").'</a>'."\n";
+	echo '<a id="eli" href="'.$globals['base_url'].'" title="'._('lazo negro por manifestointernet.org').'">'._("Eli").'</a>'."\n";
 	echo '<div id="naviwrap">'."\n";
 	echo '<ul id="navigation">'."\n";
 	echo '<li class="first"><a href="'.$globals['base_url'].'submit.php">enviar noticia</a></li>'."\n";
