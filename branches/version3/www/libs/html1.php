@@ -142,7 +142,7 @@ function do_header($title, $id='home') {
 	echo '<div id="wrap">' . "\n";
 
 	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
+	echo '<a href="'.$globals['base_url'].'" title="'._('lazo negro por el manifestointernet.org').'" id="logo">'._("menéame").'</a>'."\n";
 	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
