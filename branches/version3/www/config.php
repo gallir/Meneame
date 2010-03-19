@@ -55,7 +55,7 @@ $globals['static_server'] = '';
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
-$globals['top_logo'] = 'img/mnm/eli.png';
+$globals['top_logo'] = 'img/mnm/eli_black_ribbon.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
 
@@ -237,7 +237,7 @@ $globals['karma_log'] = mnmpath . '/../../karma.log';
 
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm15.css';
-$globals['css_color'] = 'css/es/mnmcol11.css';
+$globals['css_color'] = 'css/es/mnmcol12.css';
 
 // Store access stats
 $globals['save_pageloads'] = false;
