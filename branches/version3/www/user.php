@@ -128,6 +128,9 @@ switch ($view) {
 		break;
 }
 
+// Add canonical address
+$globals['extra_head'] = '<link rel="canonical" href="http://'.get_server_name().get_user_uri($user->username).'" />'."\n";
+
 if (!empty($user->names)) {
 	do_header("$login ($user->names)");
 } else {
