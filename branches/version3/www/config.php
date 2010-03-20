@@ -55,7 +55,7 @@ $globals['static_server'] = '';
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
-$globals['top_logo'] = 'img/mnm/eli_black.png';
+$globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = $globals['base_url'].'legal.php';
 
