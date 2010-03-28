@@ -406,7 +406,7 @@ class HtmlImages {
 			$visited = array();
 			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
-					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar)($|\s)/i', $match[1]) 
+					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar|tif)($|\s)/i', $match[1]) 
 						|| preg_match('/^#/', $match[1])
 						|| preg_match('/(feed|rss|atom|trackback|search|download)\W/i', $match[1])) {
 						continue;
