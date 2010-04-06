@@ -1160,15 +1160,9 @@ class Link {
 		if ($img) {
 			$filepath = mnmpath.'/'.$globals['cache_dir'].'/thumbs';
 			@mkdir($filepath);
-			$l1 = intval($this->id / 100000);
-			$l2 = intval(($this->id % 100000) / 1000);
-			$filepath .= "/$l1";
-			@mkdir($filepath);
-			@chmod($filepath, 0777);
-			$filepath .= "/$l2";
-			@mkdir($filepath);
-			@chmod($filepath, 0777);
-			$filepath .= "/$this->id.jpg";
+			$chain = get_cache_dir_chain($this->id);
+			create_cache_dir_chain($filepath, $chain);
+			$filepath .= "/$chain/$this->id.jpg";
 			if ($img->type == 'local') {
 				$img->scale($globals['thumb_size']);
 				if($img->save($filepath)) {
@@ -1181,7 +1175,7 @@ class Link {
 							$this->thumb_status = 'remote';
 					} else {
 						$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
-						$this->thumb .= "/$l1/$l2/$this->id.jpg";
+						$this->thumb .= "/$chain/$this->id.jpg";
 						$this->thumb_status='local';
 					}
 					syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
@@ -1220,8 +1214,19 @@ class Link {
 	function has_thumb() {
 		global $globals;
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
-			return ($this->link_thumb_status == 'local') ? $globals['static_server'].$this->thumb : $this->thumb;
-		}
+			$chain = get_cache_dir_chain($this->id);
+			$file = $globals['cache_dir']."/thumbs/$chain/$this->id.jpg";
+			$filepath = mnmpath."/$file";
+			if (is_readable($filepath)) {
+				return $globals['base_static'] . $file;
+			} elseif ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
+				create_cache_dir_chain(mnmpath.'/'.$globals['cache_dir']."/thumbs", $chain);
+        		// Get thumbnail from S3
+				if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
+					return $globals['base_static'] . $file;
+				}
+			}
+        }
 		return false;
 	}
 

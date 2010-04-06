@@ -394,6 +394,7 @@ function create_cache_dir_chain($base, $chain) {
 	for ($i=0; $i < count($dirs); $i++) {
 		$base .= '/'.$dirs[$i];
 		@mkdir($base);
+		@chmod($base, 0777);
 	}
 }
 
