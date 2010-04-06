@@ -42,6 +42,7 @@ class Media {
 			return $object;
 		}
 		syslog(LOG_NOTICE, "Meneame, failed to get $uri from S3");
+		@unlink($output);
 		return false;
 	}
 
@@ -63,6 +64,12 @@ class Media {
 			}
 		}
 		S3::deleteObject($globals['Amazon_S3_media_bucket'], $pattern);
+	}
+
+	public static function buckets($detailed = false) {
+		global $globals;
+		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
+		return S3::listBuckets($detailed);
 	}
 }
 
