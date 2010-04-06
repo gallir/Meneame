@@ -216,7 +216,7 @@ function text_to_html($str, $hashtype = false, $do_links = true) {
 	global $globals;
 
 	if ($do_links) {
-		$str = preg_replace('/(\b)(https*:\/\/)([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/u', '$1<a href="$2$3$4$5" title="$2$3$4$5" rel="nofollow">$3$5</a>', $str);
+		$str = preg_replace('/(\b)(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/u', '$1<a href="$2$3$4$5$6" title="$2$3$4$5$6" rel="nofollow">$4$6</a>', $str);
 	}
 	if ($hashtype) {
 		// Add links to hashtags
