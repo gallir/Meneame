@@ -21,6 +21,7 @@ $db->query("delete from links where link_status='discard' and link_date < date_s
 
 // Delete old annotations
 $db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
+$db->query("delete from annotations where annotation_expire is not null and annotation_expire < now()");
 
 
 $db->barrier();
@@ -87,7 +88,7 @@ $sql_points_calc = 'sum((unix_timestamp(link_date) - unix_timestamp(vote_date))/
 
 
 $db->barrier();
-$published_links = intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > $history_from"));
+$published_links = max(1, intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > $history_from")));
 
 $sum=0; $i=0;
 
@@ -429,7 +430,7 @@ foreach ($res as $dbuser) {
 	if (!empty($output)) {
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->text = $output;
-		$annotation->store();
+		$annotation->store(time() + 86400*90);
 	}
 	$db->barrier();
 	echo $output;
