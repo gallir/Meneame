@@ -16,14 +16,16 @@ class Annotation {
 		return;
 	}
 
-	function store() {
+	function store($expire = false) {
 		global $db;
 
 		if (empty($this->key)) return false;
 
+		if (! $expire) $expire = 'null';
+		else $expire = "FROM_UNIXTIME($expire)";
 		$key = $db->escape($this->key);
 		$text = $db->escape($this->text);
-		$db->query("REPLACE INTO annotations (annotation_key, annotation_text) VALUES ('$key', '$text')");
+		$db->query("REPLACE INTO annotations (annotation_key, annotation_text, annotation_expire) VALUES ('$key', '$text', $expire)");
 	}
 
 	function read($key = false) {
@@ -33,8 +35,9 @@ class Annotation {
 		if (empty($this->key)) return false;
 
 		$key =  $db->escape($this->key);
-		if(($record = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, annotation_text as text FROM annotations WHERE annotation_key = '$key'"))) {
+		if(($record = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())"))) {
 			$this->time = $record->time;
+			$this->expire = $record->expire;
 			$this->text = $record->text;
 			return true;
 		}
