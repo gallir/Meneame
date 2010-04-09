@@ -13,31 +13,31 @@ define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_
 define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
 
 class User {
-	var $read = false;
-	var $id = 0;
-	var $username = '';
-	var $level = 'normal';
-	var $admin = false; 
-	var $modification = false;
-	var $date = false;
-	var $ip = '';
-	var $pass = '';
-	var $email = '';
-	var $avatar = 0;
-	var $names = '';
-	var $lang = 1;
-	var $comment_pref = 0;
-	var $karma = 10;
-	var $url = '';
-	// For stats
-	var $total_votes;
-	var $total_links;
-	var $published_links;
-	var $total_comments;
-	var $total_posts;
-	
-
-	function User($id=0) {
+	function __construct($id = 0) {
+		$this->read = false;
+		$this->id = 0;
+		$this->username = '';
+		$this->level = 'normal';
+		$this->admin = false; 
+		$this->modification = false;
+		$this->date = false;
+		$this->ip = '';
+		$this->pass = '';
+		$this->email = '';
+		$this->avatar = 0;
+		$this->names = '';
+		$this->lang = 1;
+		$this->comment_pref = 0;
+		$this->karma = 6;
+		$this->url = '';
+		/*
+		// For stats
+		$this->total_votes;
+		$this->total_links;
+		$this->published_links;
+		$this->total_comments;
+		$this->total_posts;
+		*/
 		if ($id>0) {
 			$this->id = $id;
 			$this->read();
@@ -97,6 +97,7 @@ class User {
 		$user_pass = $db->escape($this->pass);
 		$user_lang = $this->lang;
 		$user_email = $db->escape($this->email);
+		$user_email_register = $db->escape($this->email_register);
 		$user_names = $db->escape($this->names);
 		$user_public_info = $db->escape(htmlentities($this->public_info));
 		$user_url = $db->escape(htmlspecialchars($this->url));
@@ -104,11 +105,11 @@ class User {
 		$user_adchannel = $db->escape($this->adchannel);
 		$user_phone = $db->escape($this->phone);
 		if($this->id===0) {
-			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_names, user_public_info, user_url, user_adcode, user_adchannel, user_phone) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$usr_names',  '$user_url', '$user_adcode', '$user_phone'");
+			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_email_register, user_names, user_public_info, user_url, user_adcode, user_adchannel, user_phone) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$user_email_register', '$user_names', '$user_public_info', '$user_url', '$user_adcode', '$user_adchannel', '$user_phone')");
 			$this->id = $db->insert_id;
 		} else {
 			if ($full_save) $modification = ', user_modification = now() ' ;
-			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel', user_phone='$user_phone' $modification  WHERE user_id=$this->id");
+			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_email_register='$user_email_register', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel', user_phone='$user_phone' $modification  WHERE user_id=$this->id");
 		}
 	}
 	
