@@ -77,6 +77,7 @@ class OAuthBase {
 		} else {
 			$user->username = $this->username;
 		}
+		$user->username_register = $user->username;
 		if (! $user->pass || preg_match('/$\$/', $user->pass) ) {
 			$user->pass = "\$$this->service\$$this->secret";
 		}

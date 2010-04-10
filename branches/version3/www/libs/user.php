@@ -88,6 +88,7 @@ class User {
 		}
 		*/
 		$user_login = $db->escape($this->username);
+		$user_login_register = $db->escape($this->username_register);
 		$user_level = $this->level;
 		$user_comment_pref = $this->comment_pref;
 		$user_karma = $this->karma;
@@ -105,7 +106,7 @@ class User {
 		$user_adchannel = $db->escape($this->adchannel);
 		$user_phone = $db->escape($this->phone);
 		if($this->id===0) {
-			$db->query("INSERT INTO users (user_login, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_email_register, user_names, user_public_info, user_url, user_adcode, user_adchannel, user_phone) VALUES ('$user_login', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$user_email_register', '$user_names', '$user_public_info', '$user_url', '$user_adcode', '$user_adchannel', '$user_phone')");
+			$db->query("INSERT INTO users (user_login, user_login_register, user_level, user_karma, user_date, user_ip, user_pass, user_lang, user_email, user_email_register, user_names, user_public_info, user_url, user_adcode, user_adchannel, user_phone) VALUES ('$user_login', '$user_login_register', '$user_level', $user_karma, FROM_UNIXTIME($user_date), '$user_ip', '$user_pass', $user_lang, '$user_email', '$user_email_register', '$user_names', '$user_public_info', '$user_url', '$user_adcode', '$user_adchannel', '$user_phone')");
 			$this->id = $db->insert_id;
 		} else {
 			if ($full_save) $modification = ', user_modification = now() ' ;
