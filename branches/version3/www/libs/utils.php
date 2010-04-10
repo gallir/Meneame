@@ -1023,4 +1023,26 @@ function set_count($key, $count) {
 	global $db;
 	return $db->query("REPLACE INTO counts (`key`, `count`) VALUES ('$key', $count)");
 }
+
+function print_oauth_icons($return = false) {
+	global $globals, $current_user;
+
+	if ($globals['oauth']['twitter']['consumer_key']) {
+		if (! $return) $return = urlencode($_SERVER['REQUEST_URI']);
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('twitter')) {
+				$title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
+				$text = _('asociar a Twitter');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Twitter');
+			$text = _('login con Twitter');
+		}
+		if ($title) {
+			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&op=init&return='.$return.'" title="'.$title.'">';
+			echo '<img style="vertical-align:middle" src="'.$globals['base_static'].'img/external/signin-twitter.png" width="126" height="16" alt=""/></a>'."\n";
+		}
+	}
+}
 ?>

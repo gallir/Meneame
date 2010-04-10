@@ -141,11 +141,16 @@ function do_login() {
 	get_form_auth_ip();
 
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
+
+	echo '<div align="center">';
+	print_oauth_icons($_REQUEST['return']);
+	echo '</div>'."\n";
+
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</fieldset>'. "\n";
 	echo '</form>'."\n";
-	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></h4></div>'."\n";
+	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
 	echo '</div>'."\n";
 	echo '<br clear="all"/>&nbsp;';
 }

@@ -36,7 +36,7 @@ function __autoload($class) {
 				return;
 			}
 		}
-		require_once($class.".php");
+		@require_once($class.".php");
 	}
 }
 

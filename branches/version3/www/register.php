@@ -78,9 +78,15 @@ function do_register0() {
 	echo '<p><input type="submit" class="button" disabled="disabled" name="submit" value="'._('crear usuario').'" class="log2" tabindex="6" /></p>' . "\n";
 	echo '<input type="hidden" name="process" value="1"/>' . "\n";
 
+	echo '<div style="margin-top: 20px" align="center">';
+	print_oauth_icons($_REQUEST['return']);
+	echo '</div>'."\n";
+
 	echo '</fieldset>' . "\n";
 	get_form_auth_ip();
 	echo '</form>' . "\n";
+
+
 }
 
 function do_register1() {

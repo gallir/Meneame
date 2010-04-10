@@ -34,6 +34,7 @@ $globals['base_user_url'] = 'user/';
 
 $globals['css_main'] = 'css/es/mnm-mobile02.css';
 $globals['css_color'] = '';
+$globals['html_main'] = 'html1-mobile.php';
 
 
 @include('local.php');

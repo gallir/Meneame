@@ -157,6 +157,17 @@ class UserAuth {
 		return $clones;
 	}
 
+	function GetOAuthIds($service = false) {
+		global $db;
+		if (! $this->user_id) return false;
+		if (! $service) {
+			$sql = "select service, uid from auths where user_id = $this->user_id";
+		} else {
+			$sql = "select service, uid from auths where user_id = $this->user_id and service = '$service'";
+		}
+		return $db->get_results($sql);
+	}
+
 	static function signature($str) {
 		global $site_key;
 		return substr(md5($str.$site_key), 0, 8);

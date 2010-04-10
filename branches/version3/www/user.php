@@ -336,8 +336,15 @@ function do_profile() {
 
 	echo '</dl>';
 
+	if ($user->id == $current_user->user_id) {
+		echo '<div style="margin-top: 20px" align="center">';
+		print_oauth_icons($_REQUEST['return']);
+		echo '</div>'."\n";
+	}
+
 	echo '</div>';
 	echo '</fieldset>';
+
 
 	// Print GEO form
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
