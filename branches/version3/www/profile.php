@@ -371,6 +371,8 @@ function save_profile() {
 		$user->avatar = 0;
 		avatars_remove($user->id);
 	}
+	// Reset avatar for the logged user
+	if ($current_user->user_id == $user->id) $current_user->user_avatar = $user->avatar;
 
 	if (!$errors) {
 		if (empty($user->ip)) {

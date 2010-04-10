@@ -17,11 +17,26 @@ function is_avatars_enabled() {
 	return $globals['Amazon_S3_media_url'] || ($globals['cache_dir'] && is_writable(get_avatars_dir()));
 }
 
-function avatars_manage_upload($user, $name) {
+function avatars_get_from_url($user, $url) {
+	$res = get_url($url, $url, 1000000);
+	if ($res && strlen($res['content']) < 1000000) { // Image is smaller than our limit
+		$tmpfname = tempnam('/tmp', 'avatar');
+		if ($tmpfname) {
+			$bytes = file_put_contents($tmpfname, $res['content']);
+			if($bytes) {
+				avatars_manage_upload($user, false, $tmpfname);
+			}
+			@unlink($tmpfname);
+			return true;
+		}
+	}
+	return false;
+}
+
+function avatars_manage_upload($user, $name, $filename = false) {
 	global $globals;
 
 	$time = $globals['now'];
-
 
 	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
 		$subdir = '/tmp';
@@ -35,7 +50,12 @@ function avatars_manage_upload($user, $name) {
 	$file_base = $subdir . "/$user-$time";
 
 	avatars_remove_user_files($user);
-	move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
+	if ($name) {
+		// If $name is provided, the file was uploaded from a form
+		move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
+	} elseif ($filename) {
+		rename($filename, $file_base . '-orig.img');
+	}
 	$original_size = @getimagesize("$file_base-orig.img");
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");

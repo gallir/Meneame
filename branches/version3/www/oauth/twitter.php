@@ -82,6 +82,7 @@ class TwitterOAuth extends OAuthBase {
 
 			if($data){
 				$response_info = $this->oauth->getLastResponse();
+				$response = json_decode($response_info);
 				$this->url = $response->url;
 				$this->names = $response->name;
 				$this->avatar = $response->profile_image_url;
