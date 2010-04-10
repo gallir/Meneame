@@ -1041,7 +1041,24 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&op=init&return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle" src="'.$globals['base_static'].'img/external/signin-twitter.png" width="126" height="16" alt=""/></a>'."\n";
+			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter.png" width="126" height="16" alt=""/></a>&nbsp;&nbsp;'."\n";
+		}
+	}
+	if ($globals['facebook_key']) {
+		if (! $return) $return = urlencode($_SERVER['REQUEST_URI']);
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('facebook')) {
+				$title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
+				$text = _('asociar a Facebook');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Facebook');
+			$text = _('login con Facebook');
+		}
+		if ($title) {
+			echo '<a href="'.$globals['base_url'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
+			echo '<img style="vertical-align:middle" src="'.$globals['base_static'].'img/external/signin-fb.gif" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
 }
