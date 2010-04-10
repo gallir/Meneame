@@ -68,7 +68,7 @@ class FBConnect extends OAuthBase {
 		$this->token = $user_details[0]['uid'];
 		$this->secret = $user_details[0]['uid'];
 		$this->uid = $user_details[0]['uid'];
-		$this->username = preg_replace('/.+?\/([^\/]+)$/', '$1', $user_details[0]['profile_url']);
+		$this->username = preg_replace('/.+?\/.*?(\w+)$/', '$1', $user_details[0]['profile_url']);
 		if (!$this->user_exists()) {
 			$this->url = $user_details[0]['profile_url'];
 			$this->names = $user_details[0]['name'];
