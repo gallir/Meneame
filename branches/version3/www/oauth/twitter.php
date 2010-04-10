@@ -25,7 +25,7 @@ require_once('base.php');
 class TwitterOAuth extends OAuthBase {
 	const request_token_url = 'http://twitter.com/oauth/request_token';
 	const access_token_url = 'http://twitter.com/oauth/access_token';
-	const authorize_url =  'http://twitter.com/oauth/authorize';
+	const authorize_url =  'http://twitter.com/oauth/authenticate';
 	const credentials_url = 'http://twitter.com/account/verify_credentials.json';
 
 	function __construct() {
@@ -55,7 +55,6 @@ class TwitterOAuth extends OAuthBase {
 	function authorize() {
 		$oauth_token = clean_input_string($_GET['oauth_token']);
 		$request_token_secret = $_COOKIE['oauth_token_secret'];
-
 
 		if(!empty($oauth_token) && !empty($request_token_secret) ){
 			$this->oauth->setToken($oauth_token, $request_token_secret);

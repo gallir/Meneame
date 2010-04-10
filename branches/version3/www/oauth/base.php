@@ -34,10 +34,14 @@ class OAuthBase {
 	function user_exists() {
 		global $db, $current_user;
 
-		if ($this->uid) $sql = "select user_id from auths where service='$this->service' and uid = $this->uid";
-		else $sql = "select user_id from auths where service='$this->service' and name = '$this->username'";
-		$this->id = $db->get_var($sql);
-		if ($this->id) {
+		if ($this->uid) $sql = "select user_id, token, secret from auths where service='$this->service' and uid = $this->uid";
+		else $sql = "select user_id, token, secret from auths where service='$this->service' and name = '$this->username'";
+		$res = $db->get_row($sql);
+		if ($res) {
+			$this->id = $res->user_id;
+			$this->token = $res->token;
+			$this->secret = $res->secret;
+
 			$this->user = new User($this->id);
 
 			if ($current_user->user_id && $current_user->user_id != $this->id) {
@@ -105,13 +109,19 @@ class OAuthBase {
 		//print_r($this->user);
 		$current_user->Authenticate($user->username, $user->pass, false);
 		check_clon_from_cookies();
+		$this->user_return();
+	}
+
+	function user_return() {
+		global $globals;
+
 		setcookie('return', '', time() - 10000);
 		if(!empty($this->return)) {
 			header('Location: http://'.get_server_name().$this->return);
 		} else {
 			header('Location: http://'.get_server_name().$globals['base_url']);
 		}
-
+		exit;
 	}
 }
 ?>
