@@ -13,6 +13,14 @@ define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_
 define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
 
 class User {
+	static function get_valid_username($name) {
+		$name = strip_tags($name);
+		$name = preg_replace('/&.+?;/', '', $name); // kill entities
+		$name = preg_replace('/\s/', '_', $name); 
+		return substr($name, 0, 24);
+	}
+
+
 	function __construct($id = 0) {
 		$this->read = false;
 		$this->id = 0;

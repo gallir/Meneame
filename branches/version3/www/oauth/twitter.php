@@ -74,7 +74,7 @@ class TwitterOAuth extends OAuthBase {
 		$this->token = $access_token_info['oauth_token'];
 		$this->secret = $access_token_info['oauth_token_secret'];
 		$this->uid = $access_token_info['user_id'];
-		$this->username = $access_token_info['screen_name'];
+		$this->username = User::get_valid_username($access_token_info['screen_name']);
 		if (!$this->user_exists()) {
 			$this->oauth->setToken($access_token_info['oauth_token'], $access_token_info['oauth_token_secret']);
 			try {

@@ -72,9 +72,8 @@ class FBConnect extends OAuthBase {
 		// Most Facebook users don't have a name, only profile number
 		if (!$this->username || preg_match('/^\d+$/', $this->username)) {
 			// Create a name like a uri used in stories
-			if ($user_details[0]['name']) {
-				require_once(mnminclude.'uri.php');
-				$this->username = substr(get_uri($user_details[0]['name']), 0, 20);
+			if (strlen($user_details[0]['name']) > 2) {
+				$this->username = User::get_valid_username($user_details[0]['name']);
 			} else {
 				$this->username = 'fb'.$this->username;
 			}
