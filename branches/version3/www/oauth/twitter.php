@@ -40,16 +40,20 @@ class TwitterOAuth extends OAuthBase {
 
 	function authRequest() {
 		global $globals;
-		if (($request_token_info = $this->oauth->getRequestToken(self::request_token_url))) {
-			setcookie('oauth_token', $request_token_info['oauth_token'], $globals['now'] + 3600);
-			setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], $globals['now'] + 3600);
-			$this->token_secret = $request_token_info['oauth_token_secret'];
-			$this->token = $request_token_info['oauth_token'];
-		} else {
-			do_error(_('error de obteniendo tokens'), false, false);	
+		try {
+			if (($request_token_info = $this->oauth->getRequestToken(self::request_token_url))) {
+				setcookie('oauth_token', $request_token_info['oauth_token'], $globals['now'] + 3600);
+				setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], $globals['now'] + 3600);
+				$this->token_secret = $request_token_info['oauth_token_secret'];
+				$this->token = $request_token_info['oauth_token'];
+				header("Location: ".self::authorize_url."?oauth_token=$this->token");
+				exit;
+			} else {
+				do_error(_('error de obteniendo tokens'), false, false);	
+			}
+		} catch (Exception $e) {
+				do_error(_('error de conexión a') . " $this->service", false, false);	
 		}
-		header("Location: ".self::authorize_url."?oauth_token=$this->token");
-		exit;
 	}
 
 	function authorize() {
