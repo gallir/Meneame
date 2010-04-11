@@ -250,7 +250,7 @@ if ($links) {
 		}
 		$db->commit();
 
-		if (! DEBUG && $link->thumb_status == 'unknown') {
+		if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 			echo "GETTING THUMB\n";
 			$link->get_thumb(true);
 			echo "DONE GETTING THUMB\n";

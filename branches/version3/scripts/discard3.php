@@ -77,7 +77,7 @@ if ($links) {
 punish_comments();
 
 // Discard links
-$negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and (link_date < $max_date or link_karma < -100) and link_karma < -link_votes*2 and link_karma < 0 and (link_negatives > 20 or (link_negatives > 3 and link_negatives > link_votes) )");
+$negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or link_negatives > 20) and link_karma < 0 and (link_negatives > 20 or (link_negatives > 3 and link_negatives > link_votes) )");
 
 //$db->debug();
 if( !$negatives) { 
