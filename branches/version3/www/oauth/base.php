@@ -106,10 +106,11 @@ class OAuthBase {
 
 	function user_login() {
 		global $current_user, $globals;
-		$user = $this->user;
-		//print_r($this->user);
-		$current_user->Authenticate($user->username, $user->pass, false);
-		check_clon_from_cookies();
+		if (!$current_user->user_id) {
+			$user = $this->user;
+			$current_user->Authenticate($user->username, $user->pass, false);
+			check_clon_from_cookies();
+		}
 		$this->user_return();
 	}
 
