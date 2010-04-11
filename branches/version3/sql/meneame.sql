@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5-log
+-- Server version	5.1.37-1ubuntu5.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,10 +23,33 @@ DROP TABLE IF EXISTS `annotations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `annotations` (
-  `annotation_key` char(40) NOT NULL,
+  `annotation_key` char(64) NOT NULL,
   `annotation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `annotation_expire` timestamp NULL DEFAULT NULL,
   `annotation_text` text,
-  PRIMARY KEY (`annotation_key`)
+  PRIMARY KEY (`annotation_key`),
+  KEY `annotation_expire` (`annotation_expire`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `auths`
+--
+
+DROP TABLE IF EXISTS `auths`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `auths` (
+  `user_id` int(10) unsigned NOT NULL,
+  `service` char(32) NOT NULL,
+  `uid` int(10) unsigned NOT NULL,
+  `username` char(32) NOT NULL DEFAULT '''''',
+  `token` char(64) NOT NULL DEFAULT '''''',
+  `secret` char(64) NOT NULL DEFAULT '''''',
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `service` (`service`,`uid`),
+  KEY `user_id` (`user_id`),
+  KEY `service_2` (`service`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -181,10 +204,10 @@ CREATE TABLE `conversations` (
   `conversation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `conversation_from` int(10) unsigned NOT NULL,
   `conversation_to` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`conversation_user_to`,`conversation_type`,`conversation_time`),
   KEY `conversation_type` (`conversation_type`,`conversation_from`),
   KEY `conversation_time` (`conversation_time`),
-  KEY `conversation_type_2` (`conversation_type`,`conversation_to`)
+  KEY `conversation_type_2` (`conversation_type`,`conversation_to`),
+  KEY `conversation_user_to` (`conversation_user_to`,`conversation_type`,`conversation_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -586,4 +609,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-01-15  0:58:06
+-- Dump completed on 2010-04-11 23:35:28
