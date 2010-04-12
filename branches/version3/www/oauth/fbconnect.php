@@ -68,7 +68,7 @@ class FBConnect extends OAuthBase {
 		$this->token = $user_details[0]['uid'];
 		$this->secret = $user_details[0]['uid'];
 		$this->uid = $user_details[0]['uid'];
-		$this->username = preg_replace('/.+?\/.*?(\w+)$/', '$1', $user_details[0]['profile_url']);
+		$this->username = preg_replace('/.+?\/.*?([\w\.\-_]+)$/', '$1', $user_details[0]['profile_url']);
 		// Most Facebook users don't have a name, only profile number
 		if (!$this->username || preg_match('/^\d+$/', $this->username)) {
 			// Create a name like a uri used in stories

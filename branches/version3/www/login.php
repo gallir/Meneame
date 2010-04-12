@@ -168,7 +168,7 @@ function do_recover() {
 		} else {
 			$error = false;
 			$user=new User();
-			if (preg_match('/.+@.+/', $_POST['email'])) {
+			if (preg_match('/.+@.+\..+$/', $_POST['email'])) {
 				// It's an email address
 				$user->email=$_POST['email'];
 			} else {

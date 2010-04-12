@@ -194,7 +194,7 @@ $globals['sphinx_port'] = 9312;
 
 $globals['avatars_dir'] = 'avatars';
 $globals['avatars_check_always'] = true;
-$globals['avatars_max_size'] = 200000;
+$globals['avatars_max_size'] = 400000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 

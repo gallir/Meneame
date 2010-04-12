@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'geo.php');
+include(mnminclude.'ban.php');
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
@@ -185,13 +186,23 @@ if(!empty($_REQUEST['time'])) {
 
 do_header($title);
 
-$links = $db->get_col($sql);
+// Don't allow banned IPs o proxies
+if(! check_ban($globals['user_ip'], 'ip', true) && ! check_ban_proxy() ) {
+	$links = $db->get_col($sql);
+} else {
+	$links = false;
+}
 
 if ($links) {
 	foreach($links as $link_id) {
 		$link = Link::from_db($link_id);
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$content = text_to_html(htmlentities2unicodeentities($link->content));
+		if (isset($_REQUEST['local']) || $globals['bot']) {
+			$permalink = $link->get_permalink();
+		} else {
+			$permalink = $link->get_short_permalink();
+		}
 		echo "	<item>\n";
 
 		// Meneame own namespace
@@ -204,8 +215,8 @@ if ($links) {
 
 		// Title must not carry htmlentities
 		echo "		<title>".htmlentities2unicodeentities($link->title)."</title>\n";
-		echo "		<link>".$link->get_short_permalink()."</link>\n";
-		echo "		<comments>".$link->get_short_permalink()."</comments>\n";
+		echo "		<link>$permalink</link>\n";
+		echo "		<comments>$permalink</comments>\n";
 		if (!empty($link_date))
 			echo "		<pubDate>".date("r", $link->$link_date)."</pubDate>\n";
 		else echo "      <pubDate>".date("r", $link->date)."</pubDate>\n";
@@ -219,7 +230,7 @@ if ($links) {
 				echo "		<category><![CDATA[".$tag_item."]]></category>\n";
 			}
 		}
-		echo "		<guid>".$link->get_short_permalink()."</guid>\n";
+		echo "		<guid>$permalink</guid>\n";
 		// Insert GEO
 		if (($latlng = geo_latlng('link', $link->id))) {
 			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
@@ -234,7 +245,7 @@ if ($links) {
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
 
 		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-			echo '<p><a href="'.$link->get_short_permalink().'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
+			echo '<p><a href="'.$permalink.'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
 		}
 		
 		if ($link->status != 'published') $rel = 'rel="nofollow"';
@@ -301,7 +312,7 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (isset($_REQUEST['local']) || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	if (isset($_REQUEST['local']) || $globals['bot'] || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
 	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
 	switch ($status) {
