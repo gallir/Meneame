@@ -57,6 +57,8 @@ class TwitterOAuth extends OAuthBase {
 	}
 
 	function authorize() {
+		global $globals, $db;
+
 		$oauth_token = clean_input_string($_GET['oauth_token']);
 		$request_token_secret = $_COOKIE['oauth_token_secret'];
 
@@ -90,9 +92,13 @@ class TwitterOAuth extends OAuthBase {
 				$this->names = $response->name;
 				$this->avatar = $response->profile_image_url;
 			}
+			$db->transaction();
 			$this->store_user();
+		} else {
+			$db->transaction();
 		}
 		$this->store_auth();
+		$db->commit();
 		$this->user_login();
 	}
 }

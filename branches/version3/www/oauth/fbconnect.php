@@ -53,7 +53,7 @@ class FBConnect extends OAuthBase {
 	}
 
 	function authorize() {
-		global $globals;
+		global $globals, $db;
 
 		$fb = new Facebook($globals['facebook_key'], $globals['facebook_secret']);
 		$fb->require_login();
@@ -78,6 +78,7 @@ class FBConnect extends OAuthBase {
 				$this->username = 'fb'.$this->username;
 			}
 		}
+		$db->transaction();
 		if (!$this->user_exists()) {
 			$this->url = $user_details[0]['profile_url'];
 			$this->names = $user_details[0]['name'];
@@ -85,6 +86,7 @@ class FBConnect extends OAuthBase {
 			$this->store_user();
 		}
 		$this->store_auth();
+		$db->commit();
 		$this->user_login();
 	}
 }
