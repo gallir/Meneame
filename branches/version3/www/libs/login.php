@@ -162,10 +162,12 @@ class UserAuth {
 		if (! $this->user_id) return false;
 		if (! $service) {
 			$sql = "select service, uid from auths where user_id = $this->user_id";
+			$res = $db->get_results($sql);
 		} else {
-			$sql = "select service, uid from auths where user_id = $this->user_id and service = '$service'";
+			$sql = "select uid from auths where user_id = $this->user_id and service = '$service'";
+			$res = $db->get_var($sql);
 		}
-		return $db->get_results($sql);
+		return $res;
 	}
 
 	static function signature($str) {
