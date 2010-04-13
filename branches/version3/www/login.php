@@ -105,7 +105,11 @@ function do_login() {
 
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
-		$persistent = $_POST['persistent'];
+		if ($_POST['persistent']) {
+			$persistent = 3600000; // 1000 hours
+		} else {
+			$persistent = 0;
+		}
 
 		// Check form
 		if (($previous_login_failed > 2 || ! UserAuth::user_cookie_data() ) && !ts_is_human()) {

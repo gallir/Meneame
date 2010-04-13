@@ -43,10 +43,10 @@ class UserAuth {
 				$this->authenticated = true;
 
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
-					$this->SetIDCookie(2, $userInfo[4] > 0 ? true : false);
+					$this->SetIDCookie(2, $userInfo[4]);
 					$this->SetUserCookie();
 				} elseif ($globals['now'] - $cookietime > 3600) { // Update the time each hour
-					$this->SetIDCookie(2, $userInfo[4] > 0 ? true : false);
+					$this->SetIDCookie(2, $userInfo[4]);
 				}
 			}
 		} else {
@@ -72,7 +72,7 @@ class UserAuth {
 				$this->AddClone();
 				$this->SetUserCookie();
 			case 2: // Only update the key
-				if($remember) $time = $globals['now'] + 3600000; // Valid for 1000 hours
+				if($remember > 0) $time = $globals['now'] + $remember; // Valid for 1000 hours
 				else $time = 0;
 				$strCookie=base64_encode(
 						$this->user_id.':'
@@ -85,7 +85,7 @@ class UserAuth {
 		}
 	}
 
-	function Authenticate($username, $hash, $remember=false) {
+	function Authenticate($username, $hash, $remember=0/* Just this session */) {
 		global $db, $globals;
 		$dbusername=$db->escape($username);
 		$user=$db->get_row("SELECT user_id, user_login, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
