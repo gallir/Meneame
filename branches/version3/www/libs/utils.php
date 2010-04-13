@@ -1042,7 +1042,7 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&op=init&return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter.png" width="126" height="16" alt=""/></a>&nbsp;&nbsp;'."\n";
+			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
 	if ($globals['facebook_key']) {
