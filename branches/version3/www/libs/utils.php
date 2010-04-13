@@ -1041,7 +1041,7 @@ function print_oauth_icons($return = false) {
 			$text = _('login con Twitter');
 		}
 		if ($title) {
-			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&op=init&return='.$return.'" title="'.$title.'">';
+			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
 			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
