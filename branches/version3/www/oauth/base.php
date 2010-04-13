@@ -28,7 +28,7 @@ class OAuthBase {
 
 	function __construct() {
 		if ($_COOKIE['return']) $this->return = $_COOKIE['return'];
-		elseif ($_GET['return']) setcookie('return', $_GET['return'], time() + 3600);
+		elseif ($_GET['return']) setcookie('return', $_GET['return'], 0);
 	}
 
 	function user_exists() {

@@ -20,7 +20,10 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+
+$base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that works with symbolic links
+include("$base/config.php");
+
 include('base.php');
 include_once(mnminclude.'fbconnect/facebook.php');
 
@@ -31,10 +34,13 @@ class FBConnect extends OAuthBase {
 		global $globals;
 		$this->service = 'facebook';
 
+		if ($globals['mobile_version']) $server = 'm.facebook.com';
+		else $server = 'www.facebook.com';
+
 		// Store de FB URL for login
 		$location_ok = urlencode('http://'.  get_server_name() . $globals['base_url'] . 'oauth/fbconnect.php?op=ok'.'&t='.time());
 		$location_cancel = urlencode('http://'.  get_server_name() . $globals['base_url'] . 'oauth/fbconnect.php?op=cancel'.'&t='.time());
-		$this->authorize_url = 'http://www.facebook.com/login.php?api_key='.$globals['facebook_key'].'&extern=1&fbconnect=1&return_session=1&v=1.0&next='.$location_ok.'&cancel_url='.$location_ok;
+		$this->authorize_url = "http://$server/login.php?api_key=".$globals['facebook_key'].'&extern=1&fbconnect=1&return_session=1&v=1.0&next='.$location_ok.'&cancel_url='.$location_ok;
 		parent::__construct();
 	}
 

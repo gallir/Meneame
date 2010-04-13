@@ -20,7 +20,8 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+$base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that works with symbolic links
+include("$base/config.php");
 
 $service = clean_input_string($_GET['service']);
 $op = clean_input_string($_GET['op']);

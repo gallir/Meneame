@@ -103,6 +103,10 @@ function do_login() {
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</form>'."\n";
 	echo '<div><strong><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></strong></div>'."\n";
+	echo '<div style="margin-top: 30px">';
+	print_oauth_icons($_REQUEST['return']);
+  	echo '</div>'."\n";
+
 }
 
 function do_recover() {

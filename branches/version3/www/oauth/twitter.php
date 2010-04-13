@@ -23,13 +23,17 @@
 require_once('base.php');
 
 class TwitterOAuth extends OAuthBase {
-	const request_token_url = 'http://twitter.com/oauth/request_token';
-	const access_token_url = 'http://twitter.com/oauth/access_token';
-	const authorize_url =  'http://twitter.com/oauth/authenticate';
-	const credentials_url = 'http://twitter.com/account/verify_credentials.json';
 
 	function __construct() {
 		global $globals;
+
+		if ($globals['mobile_version']) $server = 'm.twitter.com';
+		else $server = 'twitter.com';
+		$this->request_token_url = "http://$server/oauth/request_token";
+		$this->access_token_url = "http://$server/oauth/access_token";
+		$this->authorize_url =  "http://$server/oauth/authenticate";
+		$this->credentials_url = "http://$server/account/verify_credentials.json";
+
 		if (! $globals['oauth']['twitter']['consumer_key'] || ! $globals['oauth']['twitter']['consumer_secret']) {
 			$oauth = null;
 		}
@@ -41,12 +45,15 @@ class TwitterOAuth extends OAuthBase {
 	function authRequest() {
 		global $globals;
 		try {
-			if (($request_token_info = $this->oauth->getRequestToken(self::request_token_url))) {
-				setcookie('oauth_token', $request_token_info['oauth_token'], $globals['now'] + 3600);
-				setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], $globals['now'] + 3600);
+			if (($request_token_info = 
+					$this->oauth->getRequestToken($this->request_token_url,
+						'http://'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
+				// if [oauth_callback_confirmed] => true then is oauth 1.0a
+				setcookie('oauth_token', $request_token_info['oauth_token'], 0);
+				setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], 0);
 				$this->token_secret = $request_token_info['oauth_token_secret'];
 				$this->token = $request_token_info['oauth_token'];
-				header("Location: ".self::authorize_url."?oauth_token=$this->token");
+				header("Location: ".$this->authorize_url."?oauth_token=$this->token");
 				exit;
 			} else {
 				do_error(_('error de obteniendo tokens'), false, false);	
@@ -65,7 +72,7 @@ class TwitterOAuth extends OAuthBase {
 		if(!empty($oauth_token) && !empty($request_token_secret) ){
 			$this->oauth->setToken($oauth_token, $request_token_secret);
 			try {
-				$access_token_info = $this->oauth->getAccessToken(self::access_token_url);
+				$access_token_info = $this->oauth->getAccessToken($this->access_token_url);
 			} catch (Exception $e) {
 				do_error(_('error de conexión a') . " $this->service", false, false);	
 			}
@@ -80,7 +87,7 @@ class TwitterOAuth extends OAuthBase {
 		if (!$this->user_exists()) {
 			$this->oauth->setToken($access_token_info['oauth_token'], $access_token_info['oauth_token_secret']);
 			try {
-				$data = $this->oauth->fetch(self::credentials_url);
+				$data = $this->oauth->fetch($this->credentials_url);
 			} catch (Exception $e) {
 				do_error(_('error de conexión a') . " $this->service", false, false);	
 			}
