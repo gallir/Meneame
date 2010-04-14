@@ -91,6 +91,10 @@ class OAuthBase {
 		}
 		syslog(LOG_NOTICE, "Meneame new user from $this->service: $user->username, $user->names");
 		$user->store();
+
+		include_once(mnminclude.'log.php');
+		log_insert('user_new', $user->id, $user->id);
+
 		$db->query("update users set user_validated_date = now() where user_id = $user->id and user_validated_date is null");
 		if ($this->avatar) {
 			require_once(mnminclude.'avatars.php');
