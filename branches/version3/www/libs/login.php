@@ -42,7 +42,7 @@ class UserAuth {
 				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
 				$this->authenticated = true;
 
-				if ($userInfo[4] > 0) $expiration = 86400*7;
+				if ($userInfo[4] > 0) $expiration = min(864000, $userInfo[4] - $globals['now']);
 				else $expiration = 0;
 
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
