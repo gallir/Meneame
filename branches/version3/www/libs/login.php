@@ -42,11 +42,14 @@ class UserAuth {
 				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
 				$this->authenticated = true;
 
+				if ($userInfo[4] > 0) $expiration = 86400*7;
+				else $expiration = 0;
+
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
-					$this->SetIDCookie(2, $userInfo[4]);
+					$this->SetIDCookie(2, $expiration);
 					$this->SetUserCookie();
-				} elseif ($globals['now'] - $cookietime > 3600) { // Update the time each hour
-					$this->SetIDCookie(2, $userInfo[4]);
+				} elseif ($globals['now'] - $cookietime > 7200) { // Update the time each 2 hours
+					$this->SetIDCookie(2, $expiration);
 				}
 			}
 		} else {
