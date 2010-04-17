@@ -260,6 +260,10 @@ function check_admin_ping(str) {
 }
 
 function put_smiley(str) {
+	str=str.replace(/(\s|^):palm:/gi, ' <img src="'+base_static+'img/smileys/palm.gif" alt=":palm:" title=":palm:"/>');
+	str=str.replace(/(\s|^)o_o|:wow:/gi, ' <img src="'+base_static+'img/smileys/wow.gif" alt="o_o" title="o_o :wow:"/>');
+	str=str.replace(/(\s|^)¬¬|:shame:/gi, ' <img src="'+base_static+'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:"/>');
+
 	str=str.replace(/(\s|^):-{0,1}\)/gi, ' <img src="'+base_static+'img/smileys/smiley.gif" alt=":-)" title=":-)"/>');
 	str=str.replace(/(\s|^);-{0,1}\)/gi, ' <img src="'+base_static+'img/smileys/wink.gif" alt=";)" title=";)" />');
 	str=str.replace(/(\s|^):-{0,1}&gt;/gi, ' <img src="'+base_static+'img/smileys/cheesy.gif" alt=":->" title=":->" />');
@@ -271,12 +275,12 @@ function put_smiley(str) {
 	str=str.replace(/(\s|^):-{0,1}O/g, ' <img src="'+base_static+'img/smileys/shocked.gif" alt=":-O" title=":-O" />');
 	str=str.replace(/(\s|^)8-{0,1}[D\)]|:cool:/g, ' <img src="'+base_static+'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/>');
 	str=str.replace(/:roll:/gi, ' <img src="'+base_static+'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:" />');
-	str=str.replace(/(\s|^):-{0,1}P/gi, ' <img src="'+base_static+'img/smileys/tongue.gif" alt=":-P" title=":-P" />');
+	str=str.replace(/(\s|^):-{0,1}P(\s|$)/gi, ' <img src="'+base_static+'img/smileys/tongue.gif" alt=":-P" title=":-P" />');
 	str=str.replace(/(\s|^):-{0,1}x/gi, ' <img src="'+base_static+'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" />');
 	str=str.replace(/(\s|^):-{0,1}\//gi, ' <img src="'+base_static+'img/smileys/undecided.gif" alt=":-/" title=":-/ :/" />');
 	str=str.replace(/(\s|^):'\(|:cry:/gi, ' <img src="'+base_static+'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" />');
 	str=str.replace(/(\s|^)[xX]D+|:lol:/g, ' <img src="'+base_static+'img/smileys/laugh.gif" alt="xD" title=":lol: xD" />');
-	str=str.replace(/(\s|^):-{0,1}S/gi, ' <img src="'+base_static+'img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
+	str=str.replace(/(\s|^):-{0,1}S(\s|$)/gi, ' <img src="'+base_static+'img/smileys/confused.gif" alt=":-S" title=":-S :S"/>');
 	str=str.replace(/(\s|^):-{0,1}\|/gi, ' <img src="'+base_static+'img/smileys/blank.gif" alt=":-|" title=":-| :|"/>');
 	str=str.replace(/(\s|^):-{0,1}\*/gi, ' <img src="'+base_static+'img/smileys/kiss.gif" alt=":-*" title=":-* :*"/>');
 
