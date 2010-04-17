@@ -561,6 +561,9 @@ function put_smileys($str) {
 
 	if ($globals['bot']) return $str;
 
+	$str=preg_replace('/(\s|^):palm:/i', ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^)o_o|:wow:/i', ' <img src="'.$globals['base_static'].'img/smileys/wow.gif" alt="o_o" title="o_o :wow:" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^)¬¬|:shame:/i', ' <img src="'.$globals['base_static'].'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />$1', $str);
 	$str=preg_replace('/(\s|^);-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" />$1', $str);
 	$str=preg_replace('/(\s|^):-{0,1}&gt;/i', ' <img src="'.$globals['base_static'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"  width="15" height="15" />', $str);
@@ -572,12 +575,12 @@ function put_smileys($str) {
 	$str=preg_replace('/(\s|^):-{0,1}O/', ' <img src="'.$globals['base_static'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)8-{0,1}[D\)]|(\s|^):cool:/', ' <img src="'.$globals['base_static'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):roll:/i', ' <img src="'.$globals['base_static'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}P/i', ' <img src="'.$globals['base_static'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}P(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}x/i', ' <img src="'.$globals['base_static'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\//i', '$1 <img src="'.$globals['base_static'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):\'\(|(\s|^):cry:/i', ' <img src="'.$globals['base_static'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("  width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)x-{0,1}D+|(\s|^):lol:/i', ' <img src="'.$globals['base_static'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):-{0,1}S/i', ' <img src="'.$globals['base_static'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):-{0,1}S(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\|/i', ' <img src="'.$globals['base_static'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\*/i', ' <img src="'.$globals['base_static'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" />', $str);
 	return $str;
