@@ -367,7 +367,7 @@ class Post {
 				}
 				if (! $references[$id]) {
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
-					$references[$id] += true;
+					$references[$id] = true;
 				}
 			}
 		}
