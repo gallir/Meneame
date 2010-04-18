@@ -782,14 +782,12 @@ function do_best_stories() {
 			$output .= '<div class="mnm-pop">'.($link->votes+$link->anonymous).'</div>';
 			if ($n == 0 && ! $thumb) $output .= '<h5 style="font-size:100%">';
 			else $output .= '<h5>';
-			if ($n == 0 && $thumb) {
-				/*
+			if ($thumb) {
 				if ($n > 0) {
 					$link->thumb_x = (int) $link->thumb_x / 2;
 					$link->thumb_y = (int) $link->thumb_y / 2;
 				}
-				*/
-				$output .= "<img src='$thumb' alt='' class='thumbnail'/>";
+				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y alt='' class='thumbnail'/>";
 			}
 			$output .= '<a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
@@ -797,7 +795,7 @@ function do_best_stories() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd($key, $output, 300);
+		memcache_madd($key, $output, 180);
 	}
 }
 
@@ -838,7 +836,7 @@ function do_best_queued() {
 		}
 		$output .= '</div>'."\n";
 		echo $output;
-		memcache_madd('best_queued_4_'.$globals['meta_current'], $output, 300);
+		memcache_madd('best_queued_4_'.$globals['meta_current'], $output, 180);
 	}
 }
 

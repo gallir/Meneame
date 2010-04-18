@@ -198,14 +198,18 @@ if ($links) {
 		$link = Link::from_db($link_id);
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$content = text_to_html(htmlentities2unicodeentities($link->content));
+		$permalink = $link->get_short_permalink();
+		/*
 		if (isset($_REQUEST['local']) || $globals['bot']) {
 			$permalink = $link->get_permalink();
 		} else {
 			$permalink = $link->get_short_permalink();
 		}
+		*/
 		echo "	<item>\n";
 
 		// Meneame own namespace
+		echo "		<meneame:link_id>$link->id</meneame:link_id>\n";
 		echo "		<meneame:user>$link->username</meneame:user>\n";
 		echo "		<meneame:votes>".intval($link->votes+$link->anonymous)."</meneame:votes>\n";
 		echo "		<meneame:negatives>$link->negatives</meneame:negatives>\n";
@@ -239,7 +243,7 @@ if ($links) {
 		// In case of meta, only sends votes and karma
 		// developed for alianzo.com
 		if (($thumb = $link->has_thumb())) {
-			echo "<img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+			echo "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
 		}
 		echo '<p>'.$content.'</p>';
 		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
@@ -253,7 +257,7 @@ if ($links) {
 		echo "<p>&#187;&nbsp;<a href='".htmlspecialchars($link->url)."' $rel>"._('noticia original')."</a></p>";
 		echo "]]></description>\n";
 		if ($thumb) {
-			echo '		<media:thumbnail url="'.$link->thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
+			echo '		<media:thumbnail url="'.$thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
 		}
 		//echo '<wfw:comments>'.$link->comments().'</wfw:comments>';
 		// echo "		<trackback:ping>".get_trackback($link->id)."</trackback:ping>\n";  // no standard
