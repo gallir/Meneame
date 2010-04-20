@@ -17,6 +17,13 @@ class RGDB extends mysqli {
 		$this->show_errors = true;
 	}
 
+	function __destruct() {
+		// Commit dangling transactions
+		if ($this->in_transaction > 0) {
+    			parent::commit();
+		}
+	}
+
 	function hide_errors() {
 		$this->show_errors = false;
 	}

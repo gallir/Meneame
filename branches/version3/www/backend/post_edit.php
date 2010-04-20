@@ -82,6 +82,7 @@ function save_post ($post_id) {
 		$post->randkey=intval($_POST['key']);
 		$post->author=$current_user->user_id ;
 		$post->content=$_POST['post'];
+		$db->transaction();
 		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 12 hour) and post_randkey = $post->randkey")) + $post->same_text_count();
 		if (!$already_stored) {
 			// Verify that there are a period of 1 minute between posts.
@@ -109,6 +110,7 @@ function save_post ($post_id) {
 			echo 'ERROR: ' . _('comentario grabado previamente');
 			die;
 		}
+		$db->commit();
 	}
 	$post->print_summary();
 }
