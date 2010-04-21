@@ -427,11 +427,22 @@ class HtmlImages {
 
 					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
 
-					// Penalize with up to two levels if urls has same "dates"
-					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)
-							&& preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
-							preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
-						$equals = max(0, $equals-2);
+					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)) {
+							// TODO: convert these checks in one iteration
+							if (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+								// Penalize with up to four levels if urls has same "dates"
+								preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+								$c = 4;
+							} elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+								// Penalize with up to three levels if urls has same "dates"
+								preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+								$c = 3;
+							} elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+								// Penalize with up to two levels if urls has same "dates"
+								preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+								$c = 2;
+							} 
+						$equals = max(0, $equals-$c);
 					}
 
 					// Penalize with a level if one has query and the other does not
