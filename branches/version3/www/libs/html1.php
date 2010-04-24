@@ -484,6 +484,20 @@ function force_authentication() {
 	return true;
 }
 
+function mobile_redirect() {
+	global $globals;
+
+	if ($globals['mobile'] && $globals['url_shortener_mobile_to'] && 
+			(! $_SERVER['HTTP_REFERER'] || 
+			// Check if the user comes from our own domain
+			// If so, don't redirect her
+			! preg_match('/^https*:\/\/.*?'.preg_quote(preg_replace('/.+?\.(.+?\..+?)$/', "$1", get_server_name())).'/i', $_SERVER['HTTP_REFERER'])) 
+		) {
+		header('Location: http://'.$globals['url_shortener_mobile_to'].$_SERVER['REQUEST_URI']);
+		die;
+	}
+}
+
 function do_pages($total, $page_size=25, $margin = true) {
 	global $db;
 

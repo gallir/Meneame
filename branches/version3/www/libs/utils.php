@@ -275,15 +275,20 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $globals;
+	static $server_name;
+
+	if ($server_name) return $server_name;
+
 	$server_port = '';
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) $server_port = ':' . $_SERVER['SERVER_PORT'];
 	if($_SERVER['HTTP_HOST']) {
-		return $_SERVER['HTTP_HOST'] . $server_port;
+		$server_name = $_SERVER['HTTP_HOST'] . $server_port;
 	} else {
-		if ($globals['server_name']) return $globals['server_name'];
-		else return 'meneame.net'; // Warn: did you put the right server name?
+		if ($globals['server_name']) $server_name = $globals['server_name'];
+		else $server_name = 'meneame.net'; // Warn: did you put the right server name?
 	}
+	return $server_name;
 }
 
 function get_static_server_name() {

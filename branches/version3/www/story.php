@@ -23,7 +23,9 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-array_push($globals['cache-control'], 'max-age=5');
+mobile_redirect();
+
+array_push($globals['cache-control'], 'max-age=3');
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
