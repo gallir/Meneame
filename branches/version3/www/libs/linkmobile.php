@@ -76,7 +76,7 @@ class LinkMobile extends Link{
 			$comments_mess = _('sin comentarios');
 		}
 		echo '<span class="comments"><a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a> </span>';
-		echo '&nbsp;<span class="tool"><a href="http://'.preg_replace('/([\.|^])m\./', '$1', get_server_name()).$this->get_relative_permalink().'"><strong>'._('versión estándar').'&nbsp;&#187;</strong></a></span>';
+		echo '&nbsp;<span class="tool"><a href="http://'.preg_replace('/(\.|^)m\./', '$1', get_server_name()).$this->get_relative_permalink().'"><strong>'._('versión estándar').'&nbsp;&#187;</strong></a></span>';
 	
 /*
  * Disabled, it does not give too much information and is hidden to the right (at least in Android)
