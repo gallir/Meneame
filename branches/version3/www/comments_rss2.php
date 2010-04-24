@@ -139,6 +139,14 @@ if ($comments) {
 		}
 		echo "	<item>\n";
 		$link = Link::from_db($comment->link);
+		echo "		<meneame:comment_id>$comment->id</meneame:comment_id>\n";
+		echo "		<meneame:link_id>$comment->link</meneame:link_id>\n";
+		echo "		<meneame:order>$comment->c_order</meneame:order>\n";
+		echo "		<meneame:user>$comment->username</meneame:user>\n";
+		echo "		<meneame:votes>".intval($comment->votes)."</meneame:votes>\n";
+		echo "		<meneame:karma>".intval($comment->karma)."</meneame:karma>\n";
+		echo "		<meneame:url>".'http://'.get_server_name().$comment->get_relative_individual_permalink()."</meneame:url>\n";
+
 		// Title must not carry htmlentities
 		echo "		<title>#$comment->order ".htmlentities2unicodeentities($link->title)."</title>\n";
 		echo "		<link>".$link->get_permalink()."/000".$comment->order."</link>\n";
@@ -176,6 +184,7 @@ function do_header($title) {
 	echo '     xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
 	echo '     xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
 	echo '     xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
+	echo '     xmlns:meneame="http://meneame.net/faq-es.php"'."\n";
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo'	<title>'.$title.'</title>'."\n";
