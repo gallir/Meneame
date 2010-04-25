@@ -55,7 +55,7 @@ foreach ($clones as  $clon) {
 		}
 	}
 	echo '<div class="item" '.$highlight.'>';
-	echo '<a '.$highlight.' href="'.get_user_uri($clon->user_login).'" title="'.$details.'" target="_blank">';
+	echo '<a '.$highlight.' href="'.get_user_uri($clon->user_login).'/'.$clon->user_id.'" title="'.$details.'" target="_blank">';
 	echo '<img src="'.get_avatar_url($clon->user_id, $clon->user_avatar, 20).'" width="20" height="20" alt=""/>';
    	echo $clon->user_login.'</a>';
 	echo '</div>';
