@@ -381,7 +381,7 @@ function publish($link) {
 		pubsub_post();
 	}
 	// Recheck for images, some sites add images after the article has been published
-	if ($link->thumb_status != 'local' && $link->thumb_status != 'deleted') $link->get_thumb();
+	if ($link->thumb_status != 'local' && $link->thumb_status != 'remote' && $link->thumb_status != 'deleted') $link->get_thumb();
 
 }
 
@@ -398,7 +398,7 @@ function check_affinity($uid, $min_karma) {
 	$link_ids = $db->get_col("SELECT SQL_NO_CACHE link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
 	$nlinks = count($link_ids);
 	if ($nlinks < 5) {
-		$log->store();
+		$log->store(time() + 86400*15);
 		return false;
 	}
 
@@ -407,7 +407,7 @@ function check_affinity($uid, $min_karma) {
 	if ($votes) {
 		foreach ($votes as $vote) {
 			if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
-				$c = $vote->count/$nlinks * 0.70;
+				$c = $vote->count/$nlinks * 0.80;
 				if ($vote->count > 0) {
 					$affinity[$vote->id] = round((1 - $c)*100);  // store as int (percent) to save space,
 				} else {
@@ -420,7 +420,7 @@ function check_affinity($uid, $min_karma) {
 	} else {
 		$affinity = false;
 	}
-	$log->store();
+	$log->store(time() + 86400*15); // Expire in 15 days
 	return $affinity;
 
 }

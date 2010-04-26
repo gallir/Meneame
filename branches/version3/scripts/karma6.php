@@ -113,8 +113,8 @@ echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
 
-// select users that voted during last 10 days, also her last vote's day
-$users = "select sql_no_cache user_id, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 10 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
+// select users that voted during last 15 days, also her last vote's day
+$users = "select sql_no_cache user_id, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
 
 // Main loop
 $res = $db->get_results($users);
@@ -430,7 +430,7 @@ foreach ($res as $dbuser) {
 	if (!empty($output)) {
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->text = $output;
-		$annotation->store(time() + 86400*90);
+		$annotation->store(time() + 86400*60);
 	}
 	$db->barrier();
 	echo $output;
