@@ -636,39 +636,64 @@ class Link {
 		echo '</div>'."\n";
 	}
 
-	function print_warn() {
+	function check_warn() {
 		global $db, $globals;
 
 		if ($this->status == 'published') $neg_percent = 0.1;
 		else $neg_percent = 0.1;
+		if (!$this->votes_enabled || $this->negatives < 4 || $this->negatives < $this->votes * $neg_percent ) {
+			$this->warned = false;
+			return $this->warned;
+		}
+		// Dont do further analisys for published or discarded links
+		if ($this->status == 'published' || $this->is_discarded() || $globals['now'] - $this->date > 86400*3) {
+			$this->warned = true;
+			return $this->warned;
+		}
+		// Check positive and negative karmas
+		$pos = $db->get_row("select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0");
+		$neg = $db->get_row("select sum(user_karma) as karma, avg(user_karma) as avg from votes, users where vote_type = 'links' and vote_link_id = $this->id and vote_value < 0 and user_id = vote_user_id");
+		$karma_neg_corrected = $neg->karma * $neg->avg/$pos->avg; // Adjust to averages for each type
+		//echo "Pos: $pos->karma avg: $pos->avg Neg: $neg->karma avg: $neg->avg Corrected: $karma_neg_corrected<br/>\n";
+		if ($karma_neg_corrected < $pos->karma*$neg_percent) {
+			$this->warned = false;
+			return $this->warned;
+		}
+		$this->warned = true;
+		return $this->warned;
+	}
+
+	function print_warn() {
+		global $db, $globals;
+
+
 		if ($this->status == 'abuse') {
 			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
 			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
 			echo "</div>\n";
-		} elseif ( $this->votes_enabled && !$this->is_discarded()
-					&& $this->negatives > 4 && $this->negatives > $this->votes * $neg_percent ) {
-			$this->warned = true;
-			echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
-			if ($this->status == 'published') {
-				echo _('noticia errónea o controvertida, por favor lee los comentarios.');
-			} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
-					echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
-			} else {
-				// Only says "what" if most votes are "wrong" or "duplicated" 
-				$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
-				if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-					echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
-				} else {
-					echo _('Esta noticia tiene varios votos negativos.');
-				}
-				if(!$this->voted ) {
-					echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
-				}
-			}
-			echo "</div>\n";
-		} else {
-			$this->warned = false;
+			return;
 		}
+		if (!$this->check_warn() || $this->is_discarded()) return;
+
+
+		echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
+		if ($this->status == 'published') {
+			echo _('noticia errónea o controvertida, por favor lee los comentarios.');
+		} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
+				echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
+		} else {
+			// Only says "what" if most votes are "wrong" or "duplicated" 
+			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
+			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
+				echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
+			} else {
+				echo _('Esta noticia tiene varios votos negativos.');
+			}
+			if(!$this->voted ) {
+				echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
+			}
+		}
+		echo "</div>\n";
 	}
 
 	function print_problem_form() {
