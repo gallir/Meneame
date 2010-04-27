@@ -364,8 +364,8 @@ class HtmlImages {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
 				if ($this->debug)
-					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.4)." -->\n";
-				if (!$this->selected || ($this->selected->coef < $img->coef/1.4)) {
+					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
+				if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
 					$this->selected = $img;
 					$n++;
 					if ($this->debug)
