@@ -54,8 +54,8 @@ text-decoration: underline;
 }
 
 #wrap {
-min-width: 68em; /* 952px */
-max-width: 85.72em; /* 1200px */
+min-width: 952px;
+max-width: 1200px;
 margin: 0 auto;
 text-align: left;
 }
@@ -162,7 +162,7 @@ text-decoration: underline;
 .banner-top {
 float: left;
 margin: 0.36em;
-width: 730px;
+width: 740px;
 height: 92px;
 }
 
