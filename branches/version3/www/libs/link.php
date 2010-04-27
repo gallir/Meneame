@@ -689,8 +689,8 @@ class Link {
 			} else {
 				echo _('Esta noticia tiene varios votos negativos.');
 			}
-			if(!$this->voted ) {
-				echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
+			if(!$this->voted && ! $globals['link']) {
+				echo ' <a href="'.$this->get_relative_permalink().'">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
 			}
 		}
 		echo "</div>\n";

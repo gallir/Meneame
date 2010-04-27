@@ -142,41 +142,6 @@ class LinkMobile extends Link{
 		echo '</div>'."\n";
 	}
 
-	function print_warn() {
-		global $db, $globals;
-
-		if ($this->status == 'published') $neg_percent = 0.1;
-		else $neg_percent = 0.2;
-		if ($this->status == 'abuse') {
-			echo '<div class="warn">';
-			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
-			echo "</div>\n";
-		} elseif ( $this->votes_enabled && !$this->is_discarded()
-					&& $this->negatives > 4 && $this->negatives > $this->votes * $neg_percent) {
-			$this->warned = true;
-			echo '<div class="warn">';
-			if ($this->status == 'published') {
-				echo _('noticia errónea o controvertida, por favor lee los comentarios.');
-			} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
-					echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
-			} else {
-				// Only says "what" if most votes are "wrong" or "duplicated" 
-				$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
-				if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-					echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
-				} else {
-					echo _('Esta noticia tiene varios votos negativos.');
-				}
-				if(!$this->voted ) {
-					echo ' <a href="'.$this->get_relative_permalink().'/voters">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
-				}
-			}
-			echo "</div>\n";
-		} else {
-			$this->warned = false;
-		}
-	}
-
 	function print_problem_form() {
 		global $current_user, $db, $anon_karma, $anonnymous_vote, $globals, $site_key;
 
