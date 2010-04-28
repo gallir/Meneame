@@ -137,6 +137,8 @@ $output .= "</p>\n";
 $where = "link_date > $from_time AND link_status = 'queued' AND link_votes>=$min_votes  AND (link_karma > $limit_karma or (link_date > date_sub(now(), interval 2 hour) and link_karma > $bonus_karma)) and user_id = link_author and category_id = link_category";
 $sort = "ORDER BY link_karma DESC, link_votes DESC";
 
+$thumbs_queue = array();
+
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from links, users, categories where $where $sort LIMIT 30");
 $rows = $db->affected_rows;
 echo "SELECTED $rows ARTICLES\n";
@@ -250,10 +252,10 @@ if ($links) {
 		}
 		$db->commit();
 
+		echo "THUMB: $link->uri $link->thumb_status $link->karma > $limit_karma\n";
 		if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
-			echo "GETTING THUMB\n";
-			$link->get_thumb(true);
-			echo "DONE GETTING THUMB\n";
+			echo "Adding $link->id to thumb queue\n";
+			array_push($thumbs_queue, $link->id);
 		}
 
 		if ($link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
@@ -282,6 +284,12 @@ if ($links) {
 			$link->message = "Last resort: selected with the best karma";
 			print_row($link, 3);
 			publish($link);
+			// Recheck for images, some sites add images after the article has been published
+			if ($link->thumb_status != 'local' && $link->thumb_status != 'remote' 
+					&& $link->thumb_status != 'deleted' && ! in_array($link->id, $thumbs_queue) ) {
+				echo "Adding $link->id to thumb queue\n";
+				array_push($thumbs_queue, $link->id);
+			}
 		}
 	}
 	//////////
@@ -297,6 +305,17 @@ if (! DEBUG) {
 } else {
 	echo "OUTPUT:\n$output\n";
 }
+
+// Get THUMBS
+foreach($thumbs_queue as $id) {
+	$link = new Link;
+	$link->id=$id;
+	$link->read();
+	echo "GETTING THUMB $link->id\n";
+	$link->get_thumb(true);
+	echo "DONE GETTING THUMB\n";
+}
+
 
 function print_row($link, $changes, $log = '') {
 	global $globals, $output;
@@ -380,8 +399,6 @@ function publish($link) {
 	if ($globals['pubsub']) {
 		pubsub_post();
 	}
-	// Recheck for images, some sites add images after the article has been published
-	if ($link->thumb_status != 'local' && $link->thumb_status != 'remote' && $link->thumb_status != 'deleted') $link->get_thumb();
 
 }
 
