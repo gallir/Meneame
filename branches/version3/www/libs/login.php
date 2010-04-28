@@ -178,6 +178,7 @@ class UserAuth {
 		return substr(md5($str.$site_key), 0, 8);
 	}
 
+
 	static function user_cookie_data() {
 		// Return an array with mnm_user only if the signature is valid
 		if ($_COOKIE['mnm_user'] && ($mnm_user = explode(":", $_COOKIE['mnm_user']))
@@ -186,6 +187,58 @@ class UserAuth {
 		}
 		return false;
 	}
+
+	function get_clones($hours=24, $all = false) {
+		// Return the count of cookies clones that voted before a given link, comment, note
+		global $db;
+
+		if (! $all) $extra = "and clon_ip like 'COOK:%'";
+		else $extra = '';
+
+		// This as from 
+		$a = $db->get_col("select clon_to as clon from clones where clon_from = $this->user_id and clon_date > date_sub(now(), interval $hours hour) $extra");
+		// This as to
+		$b = $db->get_col("select clon_from as clon from clones where clon_to = $this->user_id and clon_date > date_sub(now(), interval $hours hour) $extra");
+		return array_unique(array_merge($a, $b));
+	}
+
+	static function check_clon_from_cookies() {
+		global $current_user, $globals;
+		// Check the cookies and store clones
+		$clones = array_reverse($current_user->GetClones()); // First item is the current login, second is the previous
+		if (count($clones) > 1 && $clones[0] != $clones[1]) { // Ignore if last two logins are the same user
+			$visited = array();
+			foreach ($clones as $id) {
+				if ($current_user->user_id != $id && !in_array($id, $visited)) {
+					array_push($visited, $id);
+					if ($globals['form_user_ip']) $ip = $globals['form_user_ip']; // Used in SSL forms
+					else $ip = $globals['user_ip'];
+					UserAuth::insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
+				}
+			}
+		}
+	}
+
+	static function insert_clon($last, $previous, $ip='') {
+		global $globals, $db;
+		if ($last == $previous) return false;
+		$db->query("REPLACE INTO clones (clon_from, clon_to, clon_ip) VALUES ($last, $previous, '$ip')");
+		$db->query("INSERT IGNORE INTO clones (clon_to, clon_from, clon_ip) VALUES ($last, $previous, '$ip')");
+	}
+
+	static function check_clon_votes($from, $id, $days=7, $type='links') {
+		// Return the count of cookies clones that voted before a given link, comment, note
+		global $db;
+
+		$c = (int) $db->get_var("select count(*) from votes, clones where vote_type='$type' and vote_link_id = $id and clon_from = $from and clon_to = vote_user_id and clon_date > date_sub(now(), interval $days day) and clon_ip like 'COOK:%'");
+		if ($c > 0) {
+			syslog(LOG_INFO, "Meneame: clon vote $type, id: $id, user: $from ");
+		}
+		return $c;
+	}
+
+
+
 }
 
 $current_user = new UserAuth();

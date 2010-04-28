@@ -155,7 +155,9 @@ class RGDB extends mysqli {
 		}
 
 		// Extract the column values
-		for ( $i=0; $i < count($this->last_result); $i++ ) {
+		$new_array = array();
+		$n = count($this->last_result);
+		for ( $i=0; $i < $n; $i++ ) {
 			$new_array[$i] = $this->get_var(null,$x,$i);
 		}
 		return $new_array;

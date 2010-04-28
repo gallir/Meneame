@@ -439,7 +439,7 @@ class Comment {
 
 			// Avoid astroturfing from the same link's author
 			if ($link->status != 'published' && $link->ip == $globals['user_ip'] && $link->author != $comment->author) {
-				insert_clon($comment->author, $link->author, $link->ip);
+				UserAuth::insert_clon($comment->author, $link->author, $link->ip);
 				syslog(LOG_NOTICE, "Meneame, comment-link astroturfing ($current_user->user_login, $link->ip): ".$link->get_permalink());
 				return _('no se puede comentar desde la misma IP del autor del envío');
 			}

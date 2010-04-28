@@ -132,6 +132,22 @@ function do_submit1() {
 		return;
 	}
 
+	// Don't allow to send a link by a clone
+	$hours = intval($globals['user_links_clon_interval']);
+	$clones = $current_user->get_clones($hours+1);
+	if ($hours > 0 && $clones) {
+		$l = implode(',', $clones);
+		$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
+		if ($c > 0) {
+			echo '<p class="error">'._('Ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'). ' </p>';
+			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): $_POST[url]");
+			echo '<br style="clear: both;" />' . "\n";
+			echo '</div>'. "\n";
+			return;
+		}
+	}
+
+	// Check the number of links sent by a user
 	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {

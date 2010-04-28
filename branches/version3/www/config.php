@@ -172,6 +172,7 @@ $globals['new_user_links_limit'] = 1; //links allowed to submit in interval for 
 $globals['new_user_links_interval'] = 3600; 
 $globals['user_links_limit'] = 5;
 $globals['user_links_interval'] = 7200;
+$globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
 
 
 //sneakme

@@ -62,7 +62,7 @@ $votes_freq = $db->get_var("select count(*) from votes where vote_type='links' a
 
 // Check the user is not a clon by cookie of others that voted the same link
 if ($current_user->user_id > 0 && $link->status != 'published') {
-	if (check_clon_votes($current_user->user_id, $link->id, 5, 'links') > 0) {
+	if (UserAuth::check_clon_votes($current_user->user_id, $link->id, 5, 'links') > 0) {
 		error(_('no se puede votar con clones'));
 	}
 }

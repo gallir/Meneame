@@ -25,7 +25,7 @@ function get_uri($title) {
 	$title = preg_replace('|-+|', '-', $title);
 	$title = remove_shorts($title);
 
-	$words = split("-", $title);
+	$words = preg_split('/-/', $title);
 	$uri = '';
 	foreach ($words as $word) {
 		if (!empty($word) && $word != '-' && (strlen($word) + strlen($uri)) < 65 ) {

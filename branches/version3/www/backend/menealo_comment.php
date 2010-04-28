@@ -57,7 +57,7 @@ if ($vote->exists(true)) {
 }
 
 // Check the user is not a clon by cookie of others that voted the same cooemnt
-if (check_clon_votes($current_user->user_id, $id, 5, 'comments') > 0) {
+if (UserAuth::check_clon_votes($current_user->user_id, $id, 5, 'comments') > 0) {
 	error(_('no se puede votar con clones'));
 }
 
