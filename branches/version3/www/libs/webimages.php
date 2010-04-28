@@ -269,8 +269,9 @@ class HtmlImages {
 			if ($this->debug) echo "<!-- HTML $this->title -->\n";
 
 			// First check for thumbnail head metas
-			if (preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
-				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $this->html, $match)) {
+			if ((preg_match('/<link +rel=[\'"]image_src[\'"] +href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta +name=[\'"]thumbnail_url[\'"] +content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
+				&& ! preg_match('/meneame/i', $match[1])) { // a bad thumbnail meta in aldea-irreductible
 				$url = $match[1];
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
