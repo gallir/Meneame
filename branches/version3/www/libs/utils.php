@@ -188,7 +188,7 @@ function clean_lines($string) {
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function save_text_to_html(&$string, $hashtype = false) {
+function save_text_to_html($string, $hashtype = false) {
 	//$string = strip_tags(trim($string));
 	//$string= htmlspecialchars(trim($string));
 	$str= text_to_html($string, $hashtype);
@@ -196,7 +196,7 @@ function save_text_to_html(&$string, $hashtype = false) {
 	return $str;
 }
 
-function text_sub_text(&$str, $length=70) {
+function text_sub_text($str, $length=70) {
 	$len = mb_strlen($str);
 	$string = preg_replace("/[\r\n\t]+/", ' ', $str);
 	$string = mb_substr($string,  0, $length);
@@ -208,7 +208,7 @@ function text_sub_text(&$str, $length=70) {
 	return $string;
 }
 
-function text_to_summary(&$string, $length=50) {
+function text_to_summary($string, $length=50) {
 	return text_to_html(text_sub_text($string, $length), false, false);
 }
 
@@ -470,7 +470,7 @@ function get_security_key($time = false) {
 function check_security_key($key) {
 	global $globals, $current_user, $site_key;
 
-	$time_key = split('-', $key);
+	$time_key = preg_split('/-/', $key);
 	if (count($time_key) != 2) return false;
 	if ($globals['now'] - intval($time_key[0]) > 7200) return false;
 	return $key == get_security_key($time_key[0]);
@@ -942,7 +942,7 @@ function clear_unicode_spaces($input){
 
 function clear_whitespace($input){
 	$input = clear_unicode_spaces(clear_invisible_unicode($input));
-	return ereg_replace('/  +/', ' ', $input);
+	return preg_replace('/  +/', ' ', $input);
 }
 
 
@@ -951,9 +951,9 @@ function clear_whitespace($input){
 function isIPIn($ip,$net,$mask) {
         $lnet=ip2long($net);
         $lip=ip2long($ip);
-        $binnet=str_pad( decbin($lnet),32,"0","STR_PAD_LEFT" );
+        $binnet=str_pad( decbin($lnet),32,"0", STR_PAD_LEFT);
         $firstpart=substr($binnet,0,$mask);
-        $binip=str_pad( decbin($lip),32,"0","STR_PAD_LEFT" );
+        $binip=str_pad( decbin($lip),32,"0", STR_PAD_LEFT);
         $firstip=substr($binip,0,$mask);
         return(strcmp($firstpart,$firstip)==0);
 }
@@ -962,7 +962,7 @@ function isIPIn($ip,$net,$mask) {
 function isPrivateIP($ip) {
         $privates = array ("127.0.0.0/24", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16");
         foreach ( $privates as $k ) {
-                list($net,$mask)=split("/",$k);
+                list($net,$mask)=preg_split("#/#",$k);
                 if (isIPIn($ip,$net,$mask)) {
                         return true;
                 }

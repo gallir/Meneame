@@ -231,10 +231,6 @@ $globals['thumb_size'] = 70;
 $globals['Amazon_S3_local_cache'] = true;
 
 
-// Put here the pathname of the file where you store your karma.log file
-$globals['karma_log'] = mnmpath . '/../../karma.log';
-
-
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm15.css';
 $globals['css_color'] = 'css/es/mnmcol13.css';
