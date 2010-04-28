@@ -583,6 +583,9 @@ class Link {
 
 		// Include post text ads
 		do_banner_story();
+		if ($globals['link'] && $this->category == 27) {
+			@include('ads/kalooga.inc');
+		}
 
 		echo '</div>'."\n";
 		echo '</div>'."\n";

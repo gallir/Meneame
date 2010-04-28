@@ -202,13 +202,15 @@ class WebThumb extends BasicThumb {
 
 	function good($strict = false) {
 		if ($this->candidate && ! $this->checked) {
-			if (!$this->get()) return false;
+			if (!$this->get()) {
+				return false;
+			}
 			$x = $this->html_x;
 			$y = $this->html_y;
 		}
 		if ($strict) {
-			$min_size = 300;
-			$min_surface = 120000;
+			$min_size = 220;
+			$min_surface = 110000;
 		} elseif (preg_match('/\/gif/i', $this->content_type) || preg_match('/\.gif/', $this->url)) {
 			$min_size = 140;
 			$min_surface = 35000;
@@ -217,6 +219,7 @@ class WebThumb extends BasicThumb {
 			$min_size = 100;
 			$min_surface = 16500;
 		}
+		echo "<!-- x:$x y:$y minsize: $min_size -->\n";
 		return $x >= $min_size && $y >= $min_size && ( 
 			(($x*$y) > $min_surface && $this->ratio() < 3.5) || 
 			( $x > $min_size*4 && ($x*$y) > $min_surface*3 && $this->ratio() < 4.6)); // For panoramic photos
@@ -408,6 +411,7 @@ class HtmlImages {
 				foreach ($matches as $match) {
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar|tif)($|\s)/i', $match[1]) 
 						|| preg_match('/^#/', $match[1])
+						|| preg_match('/\?cat=\d+$/i', $match[1])
 						|| preg_match('/(feed|rss|atom|trackback|search|download)\W/i', $match[1])) {
 						continue;
 					}

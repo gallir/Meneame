@@ -10,7 +10,7 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
-$globals['ads'] = false;
+$globals['ads'] = true;
 
 $page_size = 15;
 
