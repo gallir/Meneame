@@ -174,6 +174,8 @@ $globals['user_links_limit'] = 5;
 $globals['user_links_interval'] = 7200;
 $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
 
+$globals['user_comments_clon_interval'] = 0; // hours forbidden to comment with a clone
+
 
 //sneakme
 $globals['posts_len'] = 500;

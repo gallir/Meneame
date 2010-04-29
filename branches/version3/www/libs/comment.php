@@ -434,6 +434,20 @@ class Comment {
 			$comment->type = 'admin';
 		} 
 
+		// Don't allow to comment with a clone
+		$hours = intval($globals['user_comments_clon_interval']);
+		if ($hours > 0) {
+			$clones = $current_user->get_clones($hours+1);
+			if ( $clones) {
+				$l = implode(',', $clones);
+				$c = (int) $db->get_var("select count(*) from comments where comment_date > date_sub(now(), interval $hours hour) and comment_user_id in ($l)");
+				if ($c > 0) {
+					syslog(LOG_NOTICE, "Meneame, clon comment ($current_user->user_login, $comment->ip) in $link->uri");
+					return _('ya hizo un comentario con usuarios clones');
+				}
+			}
+		}
+
 		// Basic check to avoid abuses from same IP
 		if (!$current_user->admin && $current_user->user_karma < 6.2) { // Don't check in case of admin comments or higher karma
 
