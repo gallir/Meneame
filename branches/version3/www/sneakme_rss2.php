@@ -48,7 +48,7 @@ if(!empty($_GET['user_id'])) {
 	// users' favorites
 	/////
 	$user_id = guess_user_id($_REQUEST['favorites_of']);
-	$username = $db->get_var("select user_login from users where user_id=$id");
+	$username = $db->get_var("select user_login from users where user_id=$user_id");
 	$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY favorite_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='post'");
 	$title = _('Nótame: favoritos de ') . $username;

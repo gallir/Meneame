@@ -31,6 +31,7 @@ if (!empty($_GET['id'])) {
 
 		// In case of not found in previous case or postid was not given
 		if (! $id) {
+			if (!$date) $date = $globals['now'];
 			$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_date < FROM_UNIXTIME($date) order by post_date desc limit 1");
 		}
 

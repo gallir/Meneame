@@ -312,7 +312,7 @@ if (! $globals['basic_config'] ) {
 	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 	@include('local.php');
-	@include($_SERVER['SERVER_NAME'].'-local.php');
+	@include($_SERVER['HTTP_HOST'].'-local.php');
 	@include($_SERVER['SERVER_ADDR'].'-local.php');
 
 	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];

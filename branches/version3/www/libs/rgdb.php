@@ -54,10 +54,9 @@ class RGDB extends mysqli {
 
 	function connect() {
 		if ($this->connected) return;
-		if ($this->persistent) {
-			// PHP 5.2 does not support mysqli persistent connections, so we use the standard
-			//$this->dbh_select = @mysqli_connect('p:'.$this->dbhost, $this->dbuser,$this->dbpassword);
-			@parent::__construct($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+		// PHP 5.2 does not support mysqli persistent connections, so we use the standard
+		if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
+			@parent::__construct('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		} else {
 			@parent::__construct($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		}
@@ -77,7 +76,7 @@ class RGDB extends mysqli {
 
 	function print_error($str = "") {
 		if ($this->show_errors) echo "$str ($this->error)\n";
-		syslog(LOG_NOTICE, "Meneame: db error $str ($this->error)");
+		syslog(LOG_NOTICE, "Meneame: db error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 	}
 
 	function flush() {
