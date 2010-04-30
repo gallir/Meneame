@@ -362,7 +362,8 @@ class Post {
 				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
 				$to = $db->get_var("select user_id from users where user_login = '$user'");
 				$id = intval(preg_replace('/[^\s]+,(\d+)$/', '$1', $reference));
-				if (! $id > 0) {
+				if (! $to > 0) continue;
+				if ($id > 0) {
 					$id = (int) $db->get_var("select post_id from posts where post_user_id = $to and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
 				}
 				if (! $references[$id]) {

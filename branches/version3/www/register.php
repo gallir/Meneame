@@ -20,16 +20,17 @@ if(isset($_POST["process"])) {
 	$globals['secure_page'] = True;
 }
 
+// Check the IP is right
+if(isset($_POST["process"]) && !check_form_auth_ip()) {
+	header("Location: http://".get_server_name().$globals['base_url']."login.php");
+	die;
+}
+
 do_header(_("registro"), "post");
 
 echo '<div class="genericform">'."\n";
 
 if(isset($_POST["process"])) {
-	// Check the IP is right
-	if (!check_form_auth_ip()) {
-		header("Location: http://".get_server_name().$globals['base_url']."login.php");
-		die;
-	}
 	switch (intval($_POST["process"])) {
 		case 1:
 			do_register1();

@@ -14,6 +14,8 @@ class UserAuth {
 	function __construct() {
 		global $db, $site_key, $globals;
 
+		$this->user_id = 0;
+
 		if($_COOKIE['mnm_key'] && $_COOKIE['mnm_user']
 					&& ($this->mnm_user = explode(":", $_COOKIE['mnm_user']))
 					&& $this->mnm_user[0] > 0
@@ -53,7 +55,6 @@ class UserAuth {
 				}
 			}
 		} else {
-			$this->user_id = 0;
 			$this->user_login = '';
 			$this->authenticated = false;
 			$this->admin = false;

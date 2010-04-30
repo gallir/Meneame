@@ -543,10 +543,10 @@ function guess_user_id ($str) {
 
 	if (preg_match('/^[0-9]+$/', $str)) {
 		// It's a number, return it as id
-		return (int) $str;
+		return intval($str);
 	} else {
 		$str = $db->escape(mb_substr($str,0,64));
-		$id = (int) $db->get_var("select user_id from users where user_login = '$str'");
+		$id = intval($db->get_var("select user_id from users where user_login = '$str'"));
 		return $id;
 	}
 }

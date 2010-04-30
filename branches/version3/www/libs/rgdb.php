@@ -77,6 +77,7 @@ class RGDB extends mysqli {
 
 	function print_error($str = "") {
 		if ($this->show_errors) echo "$str ($this->error)\n";
+		syslog(LOG_NOTICE, "Meneame: db error $str ($this->error)");
 	}
 
 	function flush() {
@@ -94,7 +95,7 @@ class RGDB extends mysqli {
 		$result = @parent::query($query);
 
 		if (!$result) {
-			$this->print_error();
+			$this->print_error('error in query: ' . $query);
 			return false;
 		}
 		
@@ -130,7 +131,7 @@ class RGDB extends mysqli {
 		$this->connect();
 		$result = parent::query($query);
 		if ( ! $result ) {
-			$this->print_error();
+			$this->print_error('error un get_object');
 			return false;
 		}
 		$object = $result->fetch_object($class);
