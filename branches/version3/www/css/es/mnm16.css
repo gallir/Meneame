@@ -1366,6 +1366,8 @@ font-size: 95%;
 overflow: hidden;
 width: 44em;
 max-height: 45ex;
+background: #FFEEC7;
+border-color: #e2d3b0;
 /* CSS3 */
 opacity: 0.95;
 border-radius: 5px;

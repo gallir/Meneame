@@ -225,7 +225,7 @@ function do_js_includes() {
 	echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>' . "\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_static'].'js/jquery.simplemodal-1.2.3.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_static'].'js/general09.js" type="text/javascript" charset="utf-8"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/general10.js" type="text/javascript" charset="utf-8"></script>' . "\n";
 	if ($current_user->user_id > 0) {
 		echo '<script src="'.$globals['base_static'].'js/users01.js" type="text/javascript" charset="utf-8"></script>' . "\n";
 	}
