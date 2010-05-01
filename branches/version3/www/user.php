@@ -605,10 +605,15 @@ function do_voters_preferred() {
 ***************/
 
 function do_friends($option) {
-	global $db, $user, $globals;
+	global $db, $user, $globals, $current_user;
 
 	
-	do_subheader(array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'), _('ignorados') => get_user_uri($user->username, 'ignored')), $option);
+	$header_options = array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'));
+	if ($user->id == $current_user->user_id) {
+		$header_options[_('ignorados')] = get_user_uri($user->username, 'ignored');
+	}
+
+	do_subheader($header_options, $option);
 
 	$prefered_id = $user->id;
 	$prefered_admin = $user->admin;

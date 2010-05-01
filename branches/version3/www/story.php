@@ -358,17 +358,6 @@ case 4:
 		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
 		echo '<div id="flot" style="width:100%;height:250px;"></div>'."\n";
 		@include (mnminclude.'foreign/chart_link_karma_history.js');
-
-		/**************
-		echo "<table class='decorated'><tr class='thead'><th>hora</th><th>pos, anon, neg</th><th>coef</th><th>karma</th><th>notas</th></tr>\n";
-		foreach ($array as $log) {
-			echo "<tr><td>".get_date_time($log['time'])."</td><td>".$log['positives'].', '.$log['anonymous'].', '.$log['negatives']."</td><td>".$log['coef']."</td><td>";
-			if ($log['old_karma'] > 0)
-				echo $log['old_karma']. " -&gt; ";
-			echo $log['karma']."</td><td>".$log['annotation']."</td></tr>\n";
-		}
-		echo "</table>\n";
-		**************/
 		echo '</fieldset>';
 		echo '</div>';
 	}
