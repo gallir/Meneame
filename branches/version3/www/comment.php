@@ -55,7 +55,7 @@ $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
 do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
-do_subheader(_('comentario de') . ' ' . $username);
+//do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
@@ -67,7 +67,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
+echo '<h3 style="text-shadow: 1px 1px 1px #bbb"><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
 echo '<ol class="comments-list">';
 echo '<li>';

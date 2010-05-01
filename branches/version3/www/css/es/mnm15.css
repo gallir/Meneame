@@ -360,6 +360,7 @@ font-weight: bold;
 font-size: 1.15em;
 font-family: sans-serif;
 padding: 0 0 0.25em 0;
+text-shadow: 1px 1px 1px #bbbbbb;
 }
 
 #sidebar h4 a {
@@ -474,6 +475,7 @@ border-right: 1px dotted;
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
 font-size: 120%;
 font-weight: normal;
+text-shadow: 1px 1px 1px #bbbbbb;
 }
 
 #footthingy {
@@ -766,6 +768,7 @@ padding: 0 4px 0 6px;
 .news-details .comments-counter {
 padding: 0 6px 0 22px ;
 border-left: none;
+text-shadow: 1px 1px 1px #ccc;
 }
 
 /* Counter box */
