@@ -32,7 +32,7 @@ function tags_insert_string($link, $lang, $string, $date = 0) {
 	if ($words) {
 		$db->query("delete from tags where tag_link_id = $link");
 		foreach ($words as $word) {
-			$word=trim($word);
+			$word=$db->escape(trim($word));
 			if (mb_strlen($word) >= 2 && !$inserted[$word] && !empty($word)) {
 				$db->query("insert into tags (tag_link_id, tag_lang, tag_words, tag_date) values ($link, '$lang', '$word', from_unixtime($date))");
 				$inserted[$word] = true;
