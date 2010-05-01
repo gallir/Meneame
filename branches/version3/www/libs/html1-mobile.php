@@ -84,7 +84,6 @@ function do_header($title, $id='home') {
 	echo '<head>' . "\n";
 	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
 	echo '<meta name="ROBOTS" content="NOARCHIVE" />'."\n";
-	//echo '<meta name="viewport" content="width=320"/>' . "\n";
 	echo '<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>' . "\n";
 	echo "<title>$title</title>\n";
 
