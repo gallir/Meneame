@@ -553,9 +553,9 @@ margin: 4px 0 4px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 0 0 8px rgba(0,0,0,0.5); 
--moz-box-shadow: 0 0 8px rgba(0,0,0,0.5); 
--webkit-box-shadow: 0 0 8px rgba(0,0,0,0.5); 
+box-shadow: 0 0 6px rgba(0,0,0,0.4); 
+-moz-box-shadow: 0 0 6px rgba(0,0,0,0.4); 
+-webkit-box-shadow: 0 0 6px rgba(0,0,0,0.4); 
 }
 
 .news-submitted img {
