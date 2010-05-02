@@ -13,7 +13,6 @@ margin: 0;
 padding: 0;
 }
 
-
 body {
 font-family: sans-serif;
 /*font-size: 87.5%; /* font size 14px */
@@ -581,7 +580,6 @@ text-decoration: underline;
 color: #FF6400;
 }
 
-
 .nube {
 padding: 0 1em 1.5em 1em;
 line-height: 1.75em;
@@ -709,6 +707,12 @@ margin: 0 5px;
 }
 
 /*** LEGACY STYLES ***/
+
+/* references in comments and posts */
+.tt {
+color: #C85000;
+}
+
 dl.categorylist {
 float: left;
 width: auto;
