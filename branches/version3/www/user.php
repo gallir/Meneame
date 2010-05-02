@@ -112,6 +112,7 @@ switch ($view) {
 	case 'commented':
 	case 'conversation':
 	case 'shaken':
+	case 'shaken_comments':
 	case 'friends':
 	case 'friend_of':
 	case 'ignored':
@@ -174,6 +175,11 @@ switch ($view) {
 	case 'favorite_comments':
 		do_user_tabs(3, $login, true);
 		do_favorite_comments();
+		do_pages($rows, $page_size);
+		break;
+	case 'shaken_comments':
+		do_user_tabs(3, $login, true);
+		do_shaken_comments();
 		do_pages($rows, $page_size);
 		break;
 	case 'categories':
@@ -446,16 +452,17 @@ function do_shaken () {
 
 	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 1);
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id");
-	$links = $db->get_results("SELECT link_id, vote_value FROM links, votes WHERE vote_type='links' and vote_user_id=$user->id AND vote_link_id=link_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
+	$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		echo '<div style="margin-left: 13px">';
 		echo '<a href="'.$globals['base_url'].'link_bookmark.php?user_id='.$user->id.'&amp;option=shaken" title="'._('exportar bookmarks en formato Mozilla').'"><img src="'.$globals['base_static'].'img/common/bookmarks-export-01.png" alt="Mozilla bookmark"/></a>';
 		echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'rss2.php?voted_by='.$user->id.'" title="'._('noticias votadas en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
 		echo '</div>';
 		foreach($links as $linkdb) {
-			$link->id=$linkdb->link_id;
+			$link->id=$linkdb->id;
 			$link->read();
+			if ($link->author == $user->id) continue;
 			echo '<div style="max-width: 60em">';
 			$link->print_summary('short', 0, false);
 			if ($linkdb->vote_value < 0) {
@@ -473,7 +480,7 @@ function do_shaken () {
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0);
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0);
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -488,7 +495,7 @@ function do_commented () {
 function do_conversation () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1);
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1);
 	$rows = $db->get_var("SELECT count(*) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM conversations, comments, links WHERE conversation_user_to=$user->id and conversation_type='comment' and comment_id=conversation_from and link_id=comment_link_id ORDER BY conversation_time desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -502,7 +509,7 @@ function do_conversation () {
 function do_favorite_comments () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 3);
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='comment'");
 	$comments = $db->get_col("SELECT comment_id FROM comments, favorites WHERE favorite_user_id=$user->id AND favorite_type='comment' AND favorite_link_id=comment_id ORDER BY comment_id DESC LIMIT $offset,$page_size");
@@ -514,6 +521,29 @@ function do_favorite_comments () {
 			echo '<li>';
 			$comment->print_summary($link, 2000, false);
 			echo '</li>';
+		}
+		echo "</ol>\n";
+	}
+}
+
+function do_shaken_comments () {
+	global $db, $rows, $user, $offset, $page_size, $globals;
+
+	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
+
+	$comment = new Comment;
+	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='comments' and vote_user_id=$user->id");
+	$comments = $db->get_col("SELECT vote_link_id as id FROM votes WHERE vote_type='comments' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+	if ($comments) {
+		echo '<ol class="comments-list">';
+		foreach($comments as $id) {
+			$comment->id=$id;
+			$comment->read();
+			if ($comment->author != $user->id && ! $comment->admin) {
+				echo '<li>';
+				$comment->print_summary($link, 2000, false);
+				echo '</li>';
+			}
 		}
 		echo "</ol>\n";
 	}

@@ -735,6 +735,7 @@ background-color: #ffccab;
 .subheader-selected a {
 color: #fff;
 background-color: #ff6400;
+text-shadow: 1px 1px rgba(0,0,0,0.4);
 }
 
 .subheader h1 {
