@@ -345,7 +345,7 @@ function do_rss() {
 	echo '</ul>' . "\n";
 }
 
-function do_rss_box() {
+function do_rss_box($search_rss = 'rss2.php') {
 	global $globals, $current_user;
 
 
@@ -355,7 +355,7 @@ function do_rss_box() {
 	if(!empty($_REQUEST['q'])) {
 		$search =  htmlspecialchars($_REQUEST['q']);
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'rss2.php?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
+		echo '<a href="'.$globals['base_url'].$search_rss.'?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
 		echo '</li>';
 	}
 

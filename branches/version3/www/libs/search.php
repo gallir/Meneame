@@ -39,9 +39,15 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 	$words = $_REQUEST['words'];
 
 
+	if ($_REQUEST['t']) {
+		$max_date = time();
+		$min_date = intval($_REQUEST['t']);
+		$cl->SetFilterRange('date', $min_date, $max_date);
+	}
+
 	if ($_REQUEST['h']) {
 		$max_date = time();
-		$min_date = $max_date - $_REQUEST['h'] * 3600;
+		$min_date = $max_date - intval($_REQUEST['h']) * 3600;
 		$cl->SetFilterRange('date', $min_date, $max_date);
 	}
 

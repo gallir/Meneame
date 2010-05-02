@@ -21,7 +21,19 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 }
 
 $individual_user = false;
-if(!empty($_GET['id'])) {
+if ($_REQUEST['q']) {
+	include(mnminclude.'search.php');
+	if ($if_modified) {
+		$_REQUEST['t'] = $if_modified;
+	}
+	$_REQUEST['w'] = 'comments';
+	$search_ids = do_search(true);
+	$ids = implode(",", $search_ids['ids']);
+	$sql = "SELECT comment_id FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT 1");
+	$title = _('Menéame: búsqueda en comentarios') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
+	$globals['redirect_feedburner'] = false;
+} elseif(!empty($_GET['id'])) {
 	//
 	// Link comments
 	//

@@ -635,6 +635,7 @@ width: 13%;
 #footcol5 {
 width: 9%;
 border-right: 1px dotted;
+border-color: #ff6400;
 }
 
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
