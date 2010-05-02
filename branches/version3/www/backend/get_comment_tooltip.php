@@ -30,7 +30,7 @@ $comment->read();
 if(!$comment->read) die;
 if ( $comment->type != 'admin') {
 	if ($comment->avatar) {
-    	echo '<img src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
+    	echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
 	}
 	echo '<strong>' . $comment->username . '</strong>, karma: '.$comment->karma.'<br/>';
 } else {

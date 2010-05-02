@@ -28,7 +28,7 @@ border-radius-topright: 3px;
 }
 
 /* All 3 px */
-.sneaker-legend, #simplemodal-container, #map, .tags-box, .commentform.warn, .thumbnail, .warn, .box, fieldset, label {
+.sneaker-legend, #simplemodal-container, #map, .tags-box, .commentform.warn, .warn, .box, fieldset, label {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
@@ -384,6 +384,7 @@ font-size: .87em;
 .mini-pop {
 clear: both;
 border-bottom: 1px solid;
+margin-bottom: 4px;
 }
 
 .mnm-pop {
@@ -546,16 +547,18 @@ padding-bottom: 0;
 }
 
 .thumbnail {
-border: 1px solid;
 overflow: hidden;
-padding: 2px;
 float: right;
-margin-left: 4px;
-margin-bottom: 4px;
+margin: 4px 0 4px 4px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+box-shadow: 0 0 8px rgba(0,0,0,0.5); 
+-moz-box-shadow: 0 0 8px rgba(0,0,0,0.5); 
+-webkit-box-shadow: 0 0 8px rgba(0,0,0,0.5); 
 }
 
 .news-submitted img {
-border: 1px solid;
 float: left;
 margin-right: 4px;
 vertical-align: bottom;
@@ -565,6 +568,12 @@ abbr { cursor: help; }
 
 img {
 border: none;
+}
+
+.shadowed, .avatar, .news-submitted img {
+box-shadow: 0 0 3px rgba(0,0,0,0.4); 
+-moz-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
+-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
 }
 
 /* End holygrail */
@@ -987,10 +996,13 @@ font-size: 90%;
 overflow: hidden;
 }
 
+.comment-info .avatar {
+margin: 2px 0 0 4px;
+}
 .comment-body .avatar {
 float: left;
 margin: 2px 10px 2px 0;
-} * html .comment-body .avatar { float:none; vertical-align: baseline;}
+}
 
 .comment-meta, .comment-meta-hidden {
 font-size: 85%;

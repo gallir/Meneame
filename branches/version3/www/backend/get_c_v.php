@@ -49,7 +49,7 @@ if ($votes) {
 		if ($vote->vote_value<0) $style = 'style="color: #f00"';
 		else $style = '';
 		echo '<a '.$style.' href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'" target="_blank">';
-		echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
+		echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
 		echo $vote->user_login.'</a>';
 		echo '</div>';
 	}

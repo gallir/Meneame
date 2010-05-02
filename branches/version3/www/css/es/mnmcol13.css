@@ -396,12 +396,6 @@ color: #666;
 color: #666;
 }
 
-/* gravatar */
-
-.news-submitted img {
-border-color: #FFE2C5;
-}
-
 /* trackback */
 
 .tab-trackback-url {
@@ -503,12 +497,6 @@ color: #FF9400;
 
 .comments-list ul {
 background: #FFF;
-}
-
-/* gravatar */
-
-.thumbnail {
-border-color: #FFE2C5;
 }
 
 /* pagination */

@@ -82,7 +82,7 @@ if ($no_show_voters) {
 		if ($vote->vote_value>0) {
 			$vote_detail .= ' '._('valor').":&nbsp;$vote->vote_value";
 			echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
-			echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
+			echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
 			echo $vote->user_login.'</a>';
 		} else {
 			if($globals['show_negatives'] > 0 && $vote->ts > $globals['show_negatives']) {

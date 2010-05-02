@@ -798,10 +798,10 @@ function do_best_stories() {
 			else $output .= '<h5>';
 			if ($thumb) {
 				if ($n > 0) {
-					$link->thumb_x = (int) $link->thumb_x / 2;
-					$link->thumb_y = (int) $link->thumb_y / 2;
+					$link->thumb_x = round($link->thumb_x / 2);
+					$link->thumb_y = round($link->thumb_y / 2);
 				}
-				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y alt='' class='thumbnail'/>";
+				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 			}
 			$output .= '<a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '<div class="mini-pop"></div>'."\n";
@@ -841,8 +841,8 @@ function do_best_queued() {
 			$url = $link->get_relative_permalink();
 			$output .= '<div class="mnm-pop queued">'.($link->votes+$link->anonymous).'</div>';
 			if (($thumb = $link->has_thumb())) {
-				$link->thumb_x = (int) $link->thumb_x / 2;
-				$link->thumb_y = (int) $link->thumb_y / 2;
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
 				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 			}
 			$output .= '<h5><a href="'.$url.'">'.$link->title.'</a></h5>';

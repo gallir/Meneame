@@ -45,7 +45,7 @@ if ($dbusers) {
 		$friend->read();
 		echo '<div class="item">';
 		echo '<a href="'.get_user_uri($friend->username).'" title="'.$value.' %">';
-		echo '<img src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
+		echo '<img class="avatar" src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
 		echo $friend->username.'</a>';
 		echo '</div>';
 		echo "\n";
