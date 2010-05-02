@@ -318,7 +318,7 @@ vertical-align: middle;
 
 .tabmain {
 height: 24px !important;
-margin: 10px 0 0 0;
+margin: 15px 0 0 0;
 padding-left: 96px;
 border-bottom: 1px solid;
 border-color: #ff6400;
@@ -327,7 +327,7 @@ border-color: #ff6400;
 .tabmain li {
 float: left;
 list-style-type: none;
-margin-right: 4px;
+margin-right: 6px;
 height: 24px;
 }
 
@@ -337,7 +337,7 @@ font-weight: bold;
 display: block;
 float: left;
 height: 20px;
-padding: 3px 8px 0 6px;
+padding: 3px 6px 0 6px;
 border-top: 1px solid;
 border-right: 1px solid;
 border-left: 1px solid;
