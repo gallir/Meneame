@@ -76,6 +76,9 @@ function do_banner_story() {
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
 		@include('ads/adsense-middle.inc');
 	}
+	if ($globals['link'] && $globals['link']->category == 27) {
+		@include('ads/kalooga.inc');
+	}
 }
 
 function do_legal($legal_name, $target = '', $show_abuse = true) {
