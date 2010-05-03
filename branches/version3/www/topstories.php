@@ -48,13 +48,12 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
 	// Itr's not in cache, or memcache is disabled
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
-	if ($rows == 0) {
-		do_error(_('no hay noticias seleccionads'), 500);
-	}
-	$links = $db->get_results("$sql LIMIT $offset,$page_size");
-	if ($memcache_key) {
-		memcache_madd($memcache_key.'rows', $rows, 1800);
-		memcache_madd($memcache_key, $links, 1800);
+	if ($rows > 0) {
+		$links = $db->get_results("$sql LIMIT $offset,$page_size");
+		if ($memcache_key) {
+			memcache_madd($memcache_key.'rows', $rows, 1800);
+			memcache_madd($memcache_key, $links, 1800);
+		}
 	}
 }
 
@@ -91,9 +90,9 @@ function print_period_tabs() {
 	global $globals, $current_user, $range_values, $range_names, $month, $year;
 
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
-	echo '<ul class="tabsub-shakeit">'."\n";
+	echo '<ul class="subheader">'."\n";
 	if ($month> 0 && $year > 0) {
-		echo '<li class="tabsub-this"><a href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
+		echo '<li class="selected"><a href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
 		$current_range = -1;
 	} elseif(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) {
 		$current_range = 0;
@@ -101,7 +100,7 @@ function print_period_tabs() {
 
 	for($i=0; $i<count($range_values) /* && $range_values[$i] < 60 */; $i++) {
 		if($i == $current_range)  {
-			$active = ' class="tabsub-this"';
+			$active = ' class="selected"';
 		} else {
 			$active = "";
 		}

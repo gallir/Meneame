@@ -927,11 +927,11 @@ function do_error($mess = false, $error = false, $send_status = true) {
 
 function do_subheader($content, $selected = false) { 
 // arguments: hash array with "button text" => "button URI"; Nº of the selected button 
-	echo '<ul class="subheader">'."\n";
+	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-	   		if ($selected == $n) $class_b = ' class = "subheader-selected"'; 
+	   		if ($selected == $n) $class_b = ' class = "selected"'; 
 			else $class_b='';
 	   		echo '<li'.$class_b.'>'."\n";
 	   		echo '<a href="'.$url.'">'.$text."</a>\n";

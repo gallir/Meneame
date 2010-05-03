@@ -134,37 +134,37 @@ function print_shakeit_tabs($option=-1) {
 	$active = array();
 	$toggle_active = array();
 	if ($option > 0) {
-		$active[$option] = 'class="tabsub-this"';
+		$active[$option] = 'class="selected"';
 		$toggle_active[$option] = &$toggler;
 	}
 
-	echo '<ul class="tabsub-shakeit">'."\n";
+	echo '<ul class="subheader">'."\n";
 	if ($current_user->has_personal) {
-		echo '<li '.$active[7].'><a href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a>'.$toggle_active[7].'</li>'."\n";
+		echo '<li '.$active[7].'><span><a href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a>'.$toggle_active[7].'</span></li>'."\n";
 	}
-	echo '<li '.$active[1].'><a href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[1].'</li>'."\n";
+	echo '<li '.$active[1].'><span><a href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[1].'</span></li>'."\n";
 	// Do metas' list
 	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) {
-				$active_meta = 'class="tabsub-this"';
+				$active_meta = 'class="selected"';
 				$globals['meta_current_name'] = $meta->category_name;
 				$toggle = &$toggler;
 			} else {
 				$active_meta = '';
 				$toggle = '';
 			}
-			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</li>'."\n";
+			echo '<li '.$active_meta.'><span><a href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</span></li>'."\n";
 		}
 	}
 
-	echo '<li '.$active[3].'><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('candidatas'). '</a>'.$toggle_active[3].'</li>'."\n";
+	echo '<li '.$active[3].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('candidatas'). '</a>'.$toggle_active[3].'</span></li>'."\n";
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[2].'><a href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a>'.$toggle_active[2].'</li>'."\n";
+		echo '<li '.$active[2].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a>'.$toggle_active[2].'</span></li>'."\n";
 	}
 	if (!$globals['bot']) {
-		echo '<li '.$active[5].'><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a>'.$toggle_active[5].'</li>'."\n";
+		echo '<li '.$active[5].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a>'.$toggle_active[5].'</span></li>'."\n";
 	}
 	if ($current_user->user_id == 0) {
 		meta_teaser_item();
@@ -173,13 +173,13 @@ function print_shakeit_tabs($option=-1) {
 	// Print RSS teasers
 	switch ($option) {
 		case 1: // All, queued
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 			break;
 		case 7: // Personalised, queued
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 			break;
 		default:
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

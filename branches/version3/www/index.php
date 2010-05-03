@@ -112,32 +112,33 @@ function print_index_tabs($option=-1) {
 	$active = array();
 	$toggle_active = array();
 	if ($option >= 0) {
-		$active[$option] = 'class="tabsub-this"';
+		$active[$option] = 'class="selected"';
 		$toggle_active[$option] = &$toggler;
 	}
 
-	echo '<ul class="tabsub-shakeit">'."\n";
+	echo '<ul class="subheader" style="padding-left: 100px">'."\n";
 	if ($current_user->has_personal) {
-		echo '<li '.$active[7].'><a href="'.$globals['base_url'].'">'._('personal'). '</a>'.$toggle_active[7].'</li>'."\n";
+		echo '<li '.$active[7].'><span><a href="'.$globals['base_url'].'">'._('personal'). '</a>'.$toggle_active[7].'</span></li>'."\n";
 	}
-	echo '<li '.$active[0].'><a href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[0].'</li>'."\n";
+	echo '<li '.$active[0].'><span><a href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[0].'</span></li>'."\n";
 	// Do metacategories list
 	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			if ($meta->category_id == $globals['meta_current']) {
-				$active_meta = 'class="tabsub-this"';
+				$active_meta = 'class="selected"';
 				$globals['meta_current_name'] = $meta->category_name;
 				$toggle = &$toggler;
 			} else {
 				$active_meta = '';
 				$toggle = '';
 			}
-			echo '<li '.$active_meta.'><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</li>'."\n";
+			echo '<li '.$active_meta.'><span><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</span></li>'."\n";
 		}
 	}
+
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[1].'><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a>'.$toggle_active[1].'</li>'."\n";
+		echo '<li '.$active[1].'><span><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a>'.$toggle_active[1].'</span></li>'."\n";
 	} else {
 		meta_teaser_item();
 	}
@@ -145,13 +146,13 @@ function print_index_tabs($option=-1) {
 	// Print RSS teasers
 	switch ($option) {
 		case 0: // All, published
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 			break;
 		case 7: // Personalised, published
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 			break;
 		default:
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";
