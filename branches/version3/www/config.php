@@ -235,8 +235,8 @@ $globals['Amazon_S3_local_cache'] = true;
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm20.css';
-//$globals['css_color'] = 'css/es/mnmcol17.css';
+$globals['css_main'] = 'css/es/mnm20newtabs.css';
+//$globals['css_color'] = 'css/es/mnmcol17.css'; // Unified 
 $globals['html_main'] = 'html1.php';
 
 // Store access stats

@@ -466,7 +466,7 @@ function do_shaken () {
 			echo '<div style="max-width: 60em">';
 			$link->print_summary('short', 0, false);
 			if ($linkdb->vote_value < 0) {
-				echo '<div class="box" style="z-index:20000;margin:0 0 -5x 0;background:#FF3333;position:relative;top:-5px;left:85px;width:8em;padding: 1px 1px 1px 1px;border-color:#f00;opacity:0.9;text-align:center;text-shadow: 0 1px 1px #fff">';
+				echo '<div class="box" style="z-index:20000;margin:0 0 -5x 0;background:#FF3333;position:relative;top:-5px;left:85px;width:8em;padding: 1px 1px 1px 1px;border-color:#f00;opacity:0.9;text-align:center;font-size:0.9em;color:#fff;text-shadow: 0 1px 1px #000">';
 				echo get_negative_vote($linkdb->vote_value);
 				echo "</div>\n";
 			}
@@ -543,7 +543,7 @@ function do_shaken_comments () {
 			$comment->read();
 			if ($comment->author != $user->id && ! $comment->admin) {
 				echo '<li>';
-				$comment->print_summary($link, 2000, false);
+				$comment->print_summary(false, 1000, false);
 				echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-24px;left:0px;width:30px;height:12px;border-color:'.$color.';opacity: 0.7"></div>';
 				echo '</li>';
 			}

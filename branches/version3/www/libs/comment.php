@@ -262,9 +262,10 @@ class Comment {
 					&& $current_user->user_level == 'god')) ) { // gods can always edit 
 			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
-		} elseif ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
+		} 
+		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
-			$expand = '&nbsp;&nbsp;' .
+			$expand .= '&nbsp;&nbsp;' .
 				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
 		}
 
