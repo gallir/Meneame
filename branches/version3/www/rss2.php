@@ -83,8 +83,7 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	// The link_status to search
 	if(!empty($_REQUEST['status'])) {
-		$status = preg_replace('/\?.*$/', '', $_REQUEST['status']);
-		$status = $db->escape(clean_input_string(trim($status)));
+		$status = $db->escape(clean_input_string(trim($_REQUEST['status'])));
 	} else {
 		// By default it searches on all
 		if($_REQUEST['q']) {
@@ -116,7 +115,7 @@ if(!empty($_REQUEST['time'])) {
 			$link_date = "date";
 			$home = "/shakeit.php";
 			// disable feedburner for queued
-			//$globals['redirect_feedburner'] = false;
+			$globals['redirect_feedburner'] = false;
 			break;
 		case 'all':
 		case 'all_local':
@@ -185,7 +184,6 @@ if(!empty($_REQUEST['time'])) {
 		$from_where .= " AND $order_field > FROM_UNIXTIME($if_modified)";
 	}
 	$sql = "SELECT link_id $from_where $order_by LIMIT $rows";
-	echo $sql ."\n";
 }
 
 do_header($title);

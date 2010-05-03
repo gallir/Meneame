@@ -658,7 +658,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 		else  $page = $globals['base_url'].'?category=';
 
 		$output = '<div class="tags-box">';
-		$output .= '<h4>'._('categorías más populares').'</h4><p class="nube">'."\n";
+		$output .= '<h4>'._('categorías populares').'</h4><p class="nube">'."\n";
 
 		$counts = array();
 		$names = array();
@@ -777,7 +777,7 @@ function do_best_stories() {
 			$title = _('populares de').' <em>'.$globals['meta_current_name'].'</em>';
 	} else {
 		$category_list  = '';
-		$title = _('noticias más votadas');
+		$title = _('populares');
 	}
 	$output = '<div class="sidebox"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4>';
 
