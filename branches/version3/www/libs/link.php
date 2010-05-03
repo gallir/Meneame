@@ -463,10 +463,6 @@ class Link {
 		}
 		echo '</h1> ';
 
-		if (($src = $this->has_thumb())) {
-			echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
-		}
-
 		echo '<div class="news-submitted">';
 		if ($type != 'short') {
 			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
@@ -487,6 +483,11 @@ class Link {
 
 		if($type=='full' || $type=='preview') {
 			echo '<p>';
+
+			if (($src = $this->has_thumb())) {
+				echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
+			}
+
 			echo text_to_html($this->content, 'links');
 			if ($globals['link'] && $type != 'preview' ) {
 				if ($this->is_editable()) {

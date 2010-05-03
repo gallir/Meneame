@@ -733,7 +733,7 @@ padding-bottom: 0;
 .thumbnail {
 overflow: hidden;
 float: right;
-margin: 4px 0 4px 4px;
+margin: 0 4px 2px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
