@@ -275,7 +275,7 @@ text-decoration: underline;
 
 .banner-top {
 float: left;
-margin: 0.36em;
+margin: 0.36em 0 1em 0.4em;
 width: 740px;
 height: 92px;
 }
@@ -318,7 +318,7 @@ vertical-align: middle;
 
 .tabmain {
 height: 24px !important;
-margin: 15px 0 0 0;
+margin: 10px 0 0 0;
 padding-left: 96px;
 border-bottom: 1px solid;
 border-color: #ff6400;
@@ -358,7 +358,7 @@ background: #fff;
 }
 
 .tabmain li.tabmain-this a {
-text-shadow: 1px 0 #ccc;
+text-shadow: 0 1px #ccc;
 font-size: 1em;
 padding: 2px 24px 0 6px;
 height: 22px;
@@ -737,9 +737,9 @@ margin: 4px 0 4px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
--moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
--webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
+box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
+-moz-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
+-webkit-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
 }
 
 .news-submitted img {
