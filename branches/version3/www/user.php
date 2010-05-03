@@ -466,9 +466,9 @@ function do_shaken () {
 			echo '<div style="max-width: 60em">';
 			$link->print_summary('short', 0, false);
 			if ($linkdb->vote_value < 0) {
-				echo '<div style="color: #f00; margin: -5px 0 0 86px; font-size: 120%"><strong>';
+				echo '<div class="box" style="z-index:20000;margin:0 0 -5x 0;background:#FF3333;position:relative;top:-5px;left:85px;width:8em;padding: 1px 1px 1px 1px;border-color:#f00;opacity:0.9;text-align:center;text-shadow: 0 1px 1px #fff">';
 				echo get_negative_vote($linkdb->vote_value);
-				echo "</strong></div>\n";
+				echo "</div>\n";
 			}
 			echo "</div>\n";
 		}
@@ -533,15 +533,18 @@ function do_shaken_comments () {
 
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='comments' and vote_user_id=$user->id");
-	$comments = $db->get_col("SELECT vote_link_id as id FROM votes WHERE vote_type='comments' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+	$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes WHERE vote_type='comments' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<ol class="comments-list">';
-		foreach($comments as $id) {
-			$comment->id=$id;
+		foreach($comments as $c) {
+			$comment->id=$c->id;
+			if ($c->value > 0) $color = '#36B405';
+			else $color = '#f00';
 			$comment->read();
 			if ($comment->author != $user->id && ! $comment->admin) {
 				echo '<li>';
 				$comment->print_summary($link, 2000, false);
+				echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-24px;left:0px;width:30px;height:12px;border-color:'.$color.';opacity: 0.7"></div>';
 				echo '</li>';
 			}
 		}

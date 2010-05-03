@@ -204,8 +204,11 @@ class Comment {
 		}
 
 		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
-			echo '<img class="avatar" src="'.get_avatar_url($this->author, $this->avatar, 20).'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+			$avatar = get_avatar_url($this->author, $this->avatar, 20);
+		} else {
+			$avatar = get_no_avatar_url(20);
 		}
+		echo '<img class="avatar" src="'.$avatar.'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 
 		echo '</div></div>';
 		echo "</div>\n";
