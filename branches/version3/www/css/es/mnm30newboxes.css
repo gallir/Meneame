@@ -142,14 +142,14 @@ border-radius-topleft: 3px;
 }
 
 /* All 3 px */
-.sneaker-legend, #simplemodal-container, #map, .tags-box, .commentform.warn, .warn, .box, fieldset, label {
+.sneaker-legend, #simplemodal-container, #map, .commentform.warn, .warn, .box, fieldset, label {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
 /* All 2 px */
-.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .mnm-pop, .button, input, textarea, legend, button {
+.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .button, input, textarea, legend, button {
 border-radius: 2px;
 -moz-border-radius: 2px;
 -webkit-border-radius: 2px;
@@ -283,7 +283,7 @@ height: 92px;
 .banner-right {
 width: 100%;
 height: 252px;
-margin: 10px 0 10px 0;
+margin: 10px 0 20px 0;
 }
 
 #container {
@@ -451,26 +451,22 @@ text-decoration: underline;
 
 /**** SIDEBAR BOXES ************/
 
+.sidebox {
+font-family:Helvetica, Arial, sans-serif;
+margin-bottom:20px;
+background: #FFF2E3 url(../../img/common/sidebar-header01.png) repeat-x;
+border:1px solid #FFC07E;
+border-radius: 5px;
+-moz-border-radius: 5px; 
+-webkit-border-radius: 5px;
+}
+
 .sidebox .header a {
 color:#fff;
 }
 
-.sidebox {
-font-family:Helvetica, Arial, sans-serif;
-margin-bottom:10px;
-background-color:#FFF2E3;
-margin-left: auto;
-margin-right: auto;
-border:1px solid #FFC07E;
-border-radius: 5px; 
--moz-border-radius: 5px; 
--webkit-border-radius: 5px;  
-}
-
 .sidebox .header {
 height:22px;
-background-image:url(../../img/common/sidebar-header01.png);
-background-color:#F60;
 }
 
 .sidebox h4 {
@@ -533,13 +529,14 @@ font-size: 0.87em;
 font-weight: bold;
 color:#333;
 display:block;
-padding: 5px 0px 5px 8px;
+padding: 4px 0px 4px 8px;
 }
 
 .sidebox .tagcloud {
 color:#039;
 margin:0px;
 text-align: center;
+line-height: 1.75em;
 }
 
 .sidebox .comments ul {
@@ -551,22 +548,13 @@ padding: 0px;
 font-size: 90%;
 color:#039;
 display:block;
-margin: 10px 10px 10px 0px;
+margin: 8px 10px 8px 0px;
 }
-
 
 .sidebox .rss {
 list-style-type: none;
 padding: 0
 }
-
-/**
-border-bottom: 1px solid;
-padding: .35em 0;
-font-size: 90%;
-border-color: #ffcbaa;
-color: #03a;
-***/
 
 .sidebox .rss li {
 font-size: 90%;
@@ -577,11 +565,7 @@ background: url(../../img/common/feed-icon-12x12.png) no-repeat 5px 0px;
 margin: 10px 10px 10px 0px;
 }
 
-.sidebox, .banner-right  {
-margin-bottom: 25px;
-}
-
-/**** SIDEBAR BOXES ************/
+/**** END SIDEBAR BOXES ************/
 
 
 #footwrap {
