@@ -792,12 +792,12 @@ function get_url($url, $referer = false, $max=200000) {
 	curl_setopt($session, CURLOPT_URL, $url);
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
 	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 
-	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_HEADER , true );
 	curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
 	curl_setopt($session, CURLOPT_MAXREDIRS, 20);
-	curl_setopt($session, CURLOPT_TIMEOUT, 20);
+	curl_setopt($session, CURLOPT_TIMEOUT, 25);
 	curl_setopt($session, CURLOPT_FAILONERROR, true);
 	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
@@ -807,6 +807,7 @@ function get_url($url, $referer = false, $max=200000) {
 	//curl_setopt($session,CURLOPT_RANGE,"0-$max"); // It gives error with some servers
 	$response = @curl_exec($session);
 	if (!$response) {
+			syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
 			echo "<! -- CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session) . " -->\n";
 			return false;
 	}
