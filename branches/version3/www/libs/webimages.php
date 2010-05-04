@@ -63,32 +63,41 @@ class BasicThumb {
 	}
 
 	function round_corners() {
-		$white = imagecolorallocate($this->image, 255, 255, 255);
-		$semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 63);
+		$white = imagecolorallocatealpha($this->image, 255, 255, 255, 0);
+		$semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 27);
+		$semi_semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 87);
 		if (!$white || !$semi_white) return;
 		// Top left
 		imagesetpixel($this->image, 0, 0, $white);
 		imagesetpixel($this->image, 1, 0, $semi_white);
 		imagesetpixel($this->image, 0, 1, $semi_white);
+		imagesetpixel($this->image, 2, 0, $semi_semi_white);
+		imagesetpixel($this->image, 0, 2, $semi_semi_white);
 		// Top right
 		imagesetpixel($this->image, $this->x-1, 0, $white);
 		imagesetpixel($this->image, $this->x-2, 0, $semi_white);
 		imagesetpixel($this->image, $this->x-1, 1, $semi_white);
+		imagesetpixel($this->image, $this->x-3, 0, $semi_semi_white);
+		imagesetpixel($this->image, $this->x-1, 2, $semi_semi_white);
 		// Bottom left
 		imagesetpixel($this->image, 0, $this->y-1, $white);
 		imagesetpixel($this->image, 0, $this->y-2, $semi_white);
 		imagesetpixel($this->image, 1, $this->y-1, $semi_white);
+		imagesetpixel($this->image, 0, $this->y-3, $semi_semi_white);
+		imagesetpixel($this->image, 2, $this->y-1, $semi_semi_white);
 		// Bottom right
 		imagesetpixel($this->image, $this->x-1, $this->y-1, $white);
 		imagesetpixel($this->image, $this->x-1, $this->y-2, $semi_white);
 		imagesetpixel($this->image, $this->x-2, $this->y-1, $semi_white);
+		imagesetpixel($this->image, $this->x-1, $this->y-3, $semi_semi_white);
+		imagesetpixel($this->image, $this->x-3, $this->y-1, $semi_semi_white);
 		
 	}
 
 	function save($filename) {
 		if (!$this->image) return false;
 		$this->round_corners();
-		return imagejpeg($this->image, $filename);
+		return imagejpeg($this->image, $filename, 80);
 	}
 
 	function get() {
