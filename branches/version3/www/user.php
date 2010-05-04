@@ -538,7 +538,7 @@ function do_shaken_comments () {
 		echo '<ol class="comments-list">';
 		foreach($comments as $c) {
 			$comment->id=$c->id;
-			if ($c->value > 0) $color = '#36B405';
+			if ($c->value > 0) $color = '#00d';
 			else $color = '#f00';
 			$comment->read();
 			if ($comment->author != $user->id && ! $comment->admin) {

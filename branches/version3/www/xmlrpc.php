@@ -108,13 +108,14 @@ class Xmlrpc_server extends IXR_Server {
 	  		return new IXR_Error(33, 'Don\'t send so many pings.');
 		}
 
+		// very stupid, but gives time to the 'from' server to publish !
+		sleep(1);
+
 		$dupe = $trackres->read();
 		if ( $dupe ) {
 			syslog(LOG_NOTICE, "Meneame: pingback, we already have a ping from that URI for this post: $pagelinkedfrom - $pagelinkedto");
 	  		return new IXR_Error(48, 'The pingback has already been registered.');
 		}
-		// very stupid, but gives time to the 'from' server to publish !
-		sleep(1);
 
 		// Let's check the remote site
 		if(version_compare(phpversion(), '5.1.0') >= 0) {

@@ -482,12 +482,11 @@ class Link {
 		echo "</div>\n";
 
 		if($type=='full' || $type=='preview') {
-			echo '<p>';
-
 			if (($src = $this->has_thumb())) {
 				echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
 			}
 
+			echo '<p>';
 			echo text_to_html($this->content, 'links');
 			if ($globals['link'] && $type != 'preview' ) {
 				if ($this->is_editable()) {

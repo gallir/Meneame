@@ -32,9 +32,11 @@ if ($_REQUEST['q']) {
 	}
 	$_REQUEST['w'] = 'posts';
 	$search_ids = do_search(true);
-	$ids = implode(",", $search_ids['ids']);
-	$sql = "SELECT post_id FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT 1");
+	if ($search_ids['ids']) {
+		$ids = implode(",", $search_ids['ids']);
+		$sql = "SELECT post_id FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT $rows";
+		$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT 1");
+	}
 	$title = _('Menéame: búsqueda en notas') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_GET['user_id'])) {

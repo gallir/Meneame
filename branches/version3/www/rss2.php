@@ -91,12 +91,7 @@ if(!empty($_REQUEST['time'])) {
 			include(mnminclude.'search.php');
 			$search_ids = do_search(true);
 			if ($search_ids['ids']) {
-				$search = ' link_id in (';
-				foreach ($search_ids['ids'] as $lid) {
-					$search .= $lid . ',';
-				}
-				$search = preg_replace('/,$/', '', $search);
-				$search .= ')';
+				$search = ' link_id in (' . implode(',', $search_ids['ids']) . ')';
 			}
 		} else {
 			$status = 'published';
