@@ -112,7 +112,8 @@ function do_login() {
 		}
 
 		// Check form
-		if (($previous_login_failed > 2 || ! UserAuth::user_cookie_data() ) && !ts_is_human()) {
+		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) 
+				&& !ts_is_human()) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
@@ -138,7 +139,7 @@ function do_login() {
 	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
 
 	// Print captcha
-	if ($previous_login_failed > 2 || ! UserAuth::user_cookie_data()) {
+	if ($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) {
 		ts_print_form();
 	}
 

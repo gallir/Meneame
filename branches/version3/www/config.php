@@ -205,6 +205,7 @@ $globals['show_popular_queued'] = true;
 $globals['show_popular_published'] = true;
 
 // Recaptcha settings
+$globals['captcha_first_login'] = false;
 // Put your keys en to enable recaptcha
 //$globals['recaptcha_public_key'] = '';
 //$globals['recaptcha_private_key'] = '';
