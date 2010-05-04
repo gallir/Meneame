@@ -532,8 +532,8 @@ function do_shaken_comments () {
 	do_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
 
 	$comment = new Comment;
-	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='comments' and vote_user_id=$user->id");
-	$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes WHERE vote_type='comments' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+	$rows = $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
+	$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id  and comment_id = vote_link_id and comment_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<ol class="comments-list">';
 		foreach($comments as $c) {
