@@ -67,7 +67,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-echo '<h3 style="text-shadow: 0 1px 2px #bbb"><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
+echo '<h3 style="text-shadow: 0 1px #ccc"><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
 echo '<ol class="comments-list">';
 echo '<li>';

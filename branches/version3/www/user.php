@@ -466,7 +466,7 @@ function do_shaken () {
 			echo '<div style="max-width: 60em">';
 			$link->print_summary('short', 0, false);
 			if ($linkdb->vote_value < 0) {
-				echo '<div class="box" style="z-index:20000;margin:0 0 -5x 0;background:#FF3333;position:relative;top:-5px;left:85px;width:8em;padding: 1px 1px 1px 1px;border-color:#f00;opacity:0.9;text-align:center;font-size:0.9em;color:#fff;text-shadow: 0 1px 1px #000">';
+				echo '<div class="box" style="z-index:20000;margin:0 0 -5x 0;background:#FF3333;position:relative;top:-5px;left:85px;width:8em;padding: 1px 1px 1px 1px;border-color:#f00;opacity:0.9;text-align:center;font-size:0.9em;color:#fff;text-shadow: 0 1px 0 #000">';
 				echo get_negative_vote($linkdb->vote_value);
 				echo "</div>\n";
 			}

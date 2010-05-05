@@ -66,6 +66,7 @@ padding: 0 4px 0 4px;
 background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 border-color: #FF6400;
 color: #FF6400;
+text-shadow: 0 1px #fff;
 }
 
 .button:hover, button:hover {
@@ -358,7 +359,7 @@ background: #fff;
 }
 
 .tabmain li.tabmain-this a {
-text-shadow: 0 1px #ccc;
+text-shadow: 0 1px #fff;
 font-size: 1em;
 padding: 2px 24px 0 6px;
 height: 22px;
@@ -367,6 +368,7 @@ background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 5px;
 
 .tabsub-this {
 font-weight: bold;
+text-shadow: 0 1px #ccc;
 }
 
 .tabsub {
@@ -624,7 +626,7 @@ border-color: #ff6400;
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
 font-size: 120%;
 font-weight: normal;
-text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+text-shadow: 0 1px #ccc;
 color: #ff6400;
 }
 
@@ -1899,7 +1901,7 @@ background-color: #ffccab;
 .subheader .selected * {
 color: #fff !important;
 background-color: #ff6400 !important;
-text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+text-shadow: 0 1px rgba(0,0,0,0.4);
 }
 
 .subheader .icon {
