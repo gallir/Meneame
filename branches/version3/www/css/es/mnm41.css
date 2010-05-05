@@ -454,6 +454,7 @@ text-decoration: underline;
 .sidebox {
 font-family:Helvetica, Arial, sans-serif;
 margin-bottom:20px;
+padding-bottom:6px;
 background: #FEF3EC url(../../img/common/sidebar-header01.png) repeat-x;
 border:1px solid #FFC07E;
 border-radius: 5px;
@@ -520,8 +521,8 @@ background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 
 .sidebox .mainsites ul {
 list-style-type: none;
-padding: 0px;
-margin: 0px;
+padding: 0;
+margin: 0;
 }
 
 .sidebox .mainsites ul li {
@@ -529,7 +530,7 @@ font-size: 0.87em;
 font-weight: bold;
 color:#333;
 display:block;
-padding: 4px 0px 4px 8px;
+padding: 4px 0 4px 8px;
 }
 
 .sidebox .tagcloud {
@@ -541,19 +542,20 @@ line-height: 1.75em;
 
 .sidebox .comments ul {
 list-style-type: none;
-padding: 0px;
+padding: 0;
 }
 
 .sidebox .comments li{
+clear: left;
+display:block;
 font-size: 90%;
 color:#039;
-display:block;
-margin: 8px 10px 8px 0px;
+margin: 2px 10px 12px 0;
 }
 
 .sidebox .comments li img {
 float:left;
-margin: 2px 4px 0 0;
+margin: 2px 4px 2px 0;
 }
 
 .sidebox .rss {
