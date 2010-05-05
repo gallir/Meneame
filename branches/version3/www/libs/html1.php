@@ -766,7 +766,9 @@ function do_best_story_comments($link) {
 		}
 		$output .= '</ul></div></div>';
 		echo $output;
-		memcache_madd($key, $output, 300);
+		if($do_cache) {
+			memcache_madd($key, $output, 300);
+		}
 	}
 }
 
