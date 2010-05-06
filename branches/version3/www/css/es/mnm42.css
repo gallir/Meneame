@@ -459,9 +459,9 @@ margin-bottom:20px;
 padding-bottom:6px;
 background: #FEF3EC url(../../img/common/sidebar-header01.png) repeat-x;
 border:1px solid #FFC07E;
-border-radius: 5px;
--moz-border-radius: 5px; 
--webkit-border-radius: 5px;
+border-radius: 3px;
+-moz-border-radius: 3px; 
+-webkit-border-radius: 3px;
 }
 
 .sidebox .header a {
