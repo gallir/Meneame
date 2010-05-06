@@ -730,7 +730,7 @@ function do_best_comments() {
 			$foo_link->uri = $comment->link_uri;
 			$link = $foo_link->get_relative_permalink().'/000'.$comment->comment_order;
 			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 25).'" alt="'.$comment->user_login.'" width="25" height="25" class="avatar"/>';
-			$output .= '<strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></li>'."\n";
+			$output .= '<p><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></p></li>'."\n";
 		}
 		$output .= '</ul></div></div>';
 		echo $output;
@@ -762,7 +762,7 @@ function do_best_story_comments($link) {
 		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4></div><div class="comments"><ul>'."\n";
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().'/000'.$comment->comment_order;
-			$output .= '<li><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></a></li>'."\n";
+			$output .= '<li><p><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></a></p></li>'."\n";
 		}
 		$output .= '</ul></div></div>';
 		echo $output;
@@ -880,7 +880,7 @@ function do_best_posts() {
 			$post->id = $p->post_id;
 			$post->read();
 			$output .= '<li><img src="'.get_avatar_url($post->author, $post->avatar, 25).'" alt="'.$post->username.'" width="25" height="25" class="avatar"/>';
-			$output .= '<strong>'.$post->username.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->id.'\', 10000);" href="'.post_get_base_url($post->username).'/'.$post->id.'"><em>'.text_to_summary($post->clean_content(), 80).'</em></a></li>'."\n";
+			$output .= '<p><strong>'.$post->username.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->id.'\', 10000);" href="'.post_get_base_url($post->username).'/'.$post->id.'"><em>'.text_to_summary($post->clean_content(), 80).'</em></a></p></li>'."\n";
 		}
 		$output .= '</ul></div></div>';
 		echo $output;
