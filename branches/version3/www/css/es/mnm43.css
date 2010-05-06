@@ -1,11 +1,9 @@
 /*
-Description: Menéame main CSS file
-Version: 4.0
-Last updated: 22:32 19/06/2008
+Description: Menéame CSS file
+Version: 5
 Site URI: http://meneame.net
-Authors: Ricardo Galli and Benjamí Villoslada. CSS by Damián Vila
+Authors: Ricardo Galli, Benjamí Villoslada, Damián Vila, Aníbal De Castro
 Licence: Affero GPL License (http://meneame.net/COPYING)
-Comments: This file contains only styles without colors or images. A separate file with colors and images is available.
 */
 
 html * {
@@ -496,6 +494,9 @@ margin-left:50px;
 
 .sidebox .thumbnail {
 margin:0px 0px 10px 10px;
+box-shadow: 0 0 5px rgba(0,0,0,0.5);    
+-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);    
+-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5); 
 }
 
 .sidebox .votes {
@@ -726,9 +727,9 @@ margin: 0 4px 2px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
--moz-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
--webkit-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
+box-shadow: 0 0 7px rgba(0,0,0,0.5); 
+-moz-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
+-webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
 }
 
 .news-submitted img {
