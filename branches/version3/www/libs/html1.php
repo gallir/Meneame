@@ -593,16 +593,15 @@ function do_vertical_tags($what=false) {
 	if(memcache_mprint($cache_key)) return;
 
 	$min_pts = 8;
-	$max_pts = 30;
-	$line_height = $max_pts * 0.70;
+	$max_pts = 22;
 
 	// Delete old tags, they are not used anywhere else
 	$db->query("delete from tags where tag_lang = '$dblang' and tag_date < date_sub(now(), interval 8 day)");
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
 	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond GROUP BY tag_words";
-	$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
-	$coef = ($max_pts - $min_pts)/($max-1);
+	$max = 3;
+	//$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 
 	$res = $db->get_results("select lower(tag_words) as word, count(*) as count $from_where order by count desc limit 20");
 	if ($res) {
@@ -610,11 +609,14 @@ function do_vertical_tags($what=false) {
 		$output .= '<div class="header"><h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4></div><div class="cell"><p class="tagcloud">'."\n";
 		foreach ($res as $item) {
 			$words[$item->word] = $item->count;
+			if ($item->count > $max) $max = $item->count;
 		}
+		$coef = ($max_pts - $min_pts)/($max-1);
 		ksort($words);
 		foreach ($words as $word => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
-			$output .= '<a style="font-size: '.$size.'pt" href="';
+			$op = round(0.4 + 0.6*$count/$max, 2);
+			$output .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
 			if ($globals['base_search_url']) {
 				$output .= $globals['base_url'].$globals['base_search_url'].'tag:';
 			} else {
@@ -643,8 +645,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 
 
 	$min_pts = 8;
-	$max_pts = 30;
-	$line_height = $max_pts * 0.70;
+	$max_pts = 22;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600); 
 	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id group by category_name";
@@ -676,7 +677,8 @@ function do_categories_cloud($what=false, $hours = 48) {
 		foreach ($names as $name => $id) {
 			$count = $counts[$id];
 			$size = round($min_pts + ($count-1)*$coef, 1);
-			$output .= '<a style="font-size: '.$size.'pt" href="'.$page.$id.'">'.$name.'</a> ';
+			$op = round(0.3 + 0.7*$count/$max, 2);
+			$output .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="'.$page.$id.'">'.$name.'</a> ';
 		}
 		$output .= '</p></div></div>';
 		echo $output;
@@ -694,7 +696,7 @@ function do_best_sites() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select sum(link_votes+link_anonymous-link_negatives)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes+link_anonymous-link_negatives) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
+	$res = $db->get_results("select sum(link_votes-link_negatives)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
 ");
 	if ($res) {
 		$i = 0;
