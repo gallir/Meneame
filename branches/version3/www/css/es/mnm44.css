@@ -1,11 +1,9 @@
 /*
-Description: Menéame main CSS file
-Version: 4.0
-Last updated: 22:32 19/06/2008
+Description: Menéame CSS file
+Version: 5
 Site URI: http://meneame.net
-Authors: Ricardo Galli and Benjamí Villoslada. CSS by Damián Vila
+Authors: Ricardo Galli, Benjamí Villoslada, Damián Vila, Aníbal De Castro
 Licence: Affero GPL License (http://meneame.net/COPYING)
-Comments: This file contains only styles without colors or images. A separate file with colors and images is available.
 */
 
 html * {
@@ -66,6 +64,7 @@ padding: 0 4px 0 4px;
 background: #fff url(../../img/common/menealo-background.png) bottom left repeat-x;
 border-color: #FF6400;
 color: #FF6400;
+text-shadow: 0 1px #fff;
 }
 
 .button:hover, button:hover {
@@ -358,7 +357,7 @@ background: #fff;
 }
 
 .tabmain li.tabmain-this a {
-text-shadow: 0 1px #ccc;
+text-shadow: 0 1px #fff;
 font-size: 1em;
 padding: 2px 24px 0 6px;
 height: 22px;
@@ -367,6 +366,7 @@ background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 5px;
 
 .tabsub-this {
 font-weight: bold;
+text-shadow: 0 1px #ccc;
 }
 
 .tabsub {
@@ -454,11 +454,12 @@ text-decoration: underline;
 .sidebox {
 font-family:Helvetica, Arial, sans-serif;
 margin-bottom:20px;
+padding-bottom:6px;
 background: #FEF3EC url(../../img/common/sidebar-header01.png) repeat-x;
 border:1px solid #FFC07E;
-border-radius: 5px;
--moz-border-radius: 5px; 
--webkit-border-radius: 5px;
+border-radius: 3px;
+-moz-border-radius: 3px; 
+-webkit-border-radius: 3px;
 }
 
 .sidebox .header a {
@@ -474,11 +475,12 @@ font-size: 16px;
 text-align:left;
 color:#fff;
 padding-left: 10px;
-margin: 0;
+margin: 2px 0 0 0;
+text-align: left;
 }
 
 .sidebox .cell {
-margin:10px;
+margin: 5px 10px 5px 10px;
 min-height:32px;
 clear: both;
 }
@@ -491,7 +493,13 @@ margin-left:50px;
 }
 
 .sidebox .thumbnail {
+border-radius: 3px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
 margin:0px 0px 10px 10px;
+box-shadow: 0 0 5px rgba(0,0,0,0.5);    
+-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);    
+-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5); 
 }
 
 .sidebox .votes {
@@ -502,12 +510,11 @@ text-align: center;
 font-size: 90%;
 font-weight: bold;
 overflow: visible;
-margin: .6em 0;
+margin: 2px 0 10px 0;
 padding-top: 6px;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
-border: 1px solid;
-border-color: #ff6400;
+border: #ff6400 1px solid;
 border-radius: 3px; 
 -moz-border-radius: 3px; 
 -webkit-border-radius: 3px;  
@@ -520,35 +527,44 @@ background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
 
 .sidebox .mainsites ul {
 list-style-type: none;
-padding: 0px;
-margin: 0px;
+padding: 0;
+margin: 6px 0 0 0;
 }
 
 .sidebox .mainsites ul li {
 font-size: 0.87em;
 font-weight: bold;
-color:#333;
+color:#333333;
 display:block;
-padding: 4px 0px 4px 8px;
+padding: 6px 0 6px 8px;
 }
 
 .sidebox .tagcloud {
 color:#039;
 margin:0px;
 text-align: center;
-line-height: 1.75em;
 }
 
 .sidebox .comments ul {
 list-style-type: none;
-padding: 0px;
+padding: 0;
 }
 
 .sidebox .comments li{
+clear: left;
+display:block;
 font-size: 90%;
 color:#039;
-display:block;
-margin: 8px 10px 8px 0px;
+margin: 0px 10px 10px 0;
+}
+
+.sidebox .comments li img {
+float:left;
+margin: 3px 0 8px 0;
+}
+
+.sidebox .comments li p {
+margin-left: 28px;
 }
 
 .sidebox .rss {
@@ -617,7 +633,7 @@ border-color: #ff6400;
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
 font-size: 120%;
 font-weight: normal;
-text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+text-shadow: 0 1px #ccc;
 color: #ff6400;
 }
 
@@ -713,9 +729,9 @@ margin: 0 4px 2px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
--moz-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
--webkit-box-shadow: 1px 1px 6px rgba(0,0,0,0.5); 
+box-shadow: 0 0 7px rgba(0,0,0,0.5); 
+-moz-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
+-webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
 }
 
 .news-submitted img {
@@ -1892,7 +1908,7 @@ background-color: #ffccab;
 .subheader .selected * {
 color: #fff !important;
 background-color: #ff6400 !important;
-text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+text-shadow: 0 1px rgba(0,0,0,0.4);
 }
 
 .subheader .icon {
