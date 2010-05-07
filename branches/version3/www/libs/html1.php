@@ -796,7 +796,6 @@ function do_best_stories() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
-		$n = 0;
 		$link = new Link();
 		foreach ($res as $l) {
 			$output .= '<div class="cell">';
@@ -806,14 +805,11 @@ function do_best_stories() {
 			$thumb = $link->has_thumb();
 			$output .= '<div class="votes">'.($link->votes+$link->anonymous).'</div>';
 			if ($thumb) {
-				if ($n > 0) {
-					$link->thumb_x = round($link->thumb_x / 2);
-					$link->thumb_y = round($link->thumb_y / 2);
-				}
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
 				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 			}
 			$output .= '<h5><a href="'.$url.'">'.$link->title.'</a></h5>';
-			$n++;
 			$output .= '</div>'; // class="cell";
 
 		}

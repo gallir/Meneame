@@ -493,6 +493,9 @@ margin-left:50px;
 }
 
 .sidebox .thumbnail {
+border-radius: 3px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
 margin:0px 0px 10px 10px;
 box-shadow: 0 0 5px rgba(0,0,0,0.5);    
 -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);    
@@ -507,12 +510,11 @@ text-align: center;
 font-size: 90%;
 font-weight: bold;
 overflow: visible;
-margin: .6em 0;
+margin: 2px 0 10px 0;
 padding-top: 6px;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
-border: 1px solid;
-border-color: #ff6400;
+border: #ff6400 1px solid;
 border-radius: 3px; 
 -moz-border-radius: 3px; 
 -webkit-border-radius: 3px;  
@@ -558,7 +560,7 @@ margin: 0px 10px 10px 0;
 
 .sidebox .comments li img {
 float:left;
-margin-top: 2px;
+margin: 3px 0 8px 0;
 }
 
 .sidebox .comments li p {
