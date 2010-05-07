@@ -137,8 +137,9 @@ class WebThumb extends BasicThumb {
 		if (!$imgtag) return;
 		$this->tag = $imgtag;
 		
-		if (!preg_match('/src *=["\'](.+?)["\']/i', $this->tag, $matches) 
-			&& !preg_match('/src *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
+		// poster captures also HTML5 video thumbnails
+		if (!preg_match('/(?:src|poster) *=["\'](.+?)["\']/i', $this->tag, $matches) 
+			&& !preg_match('/(?:src|poster) *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
 			if (!preg_match('/["\']((http:){0,1}[\.\d\w\-\/]+\.jpg)["\']/i', $this->tag, $matches)) {
 				return;
 			}
@@ -343,6 +344,9 @@ class HtmlImages {
 	function parse_img(&$html) {
 		$tags = array();
 		preg_match_all('/(<img\s.+?>)/is', $html, $matches);
+		$tags = array_merge($tags, $matches[1]);
+		// Check also HTML5 video (for poster parameter)
+		preg_match_all('/(<video\s.+?poster.+?>)/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Try with plain links in javascripts (RTVE uses it...)
 		preg_match_all('/["\']image["\'][, ]+(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\'])/is', $html, $matches);
