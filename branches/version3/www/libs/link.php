@@ -1251,7 +1251,8 @@ class Link {
 					return $globals['base_static'] . $file;
 				} else {
 					// Do extra check, if S3 is working, mark thumb as deleted
-					if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)) {
+					if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
+							&& is_writable(mnmpath.'/'.$globals['cache_dir']."/thumbs")) { // Double check
 						syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for $this->id");
 						$this->delete_thumb();
 					}
