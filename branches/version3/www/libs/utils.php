@@ -396,6 +396,7 @@ function get_cache_dir_chain($key) {
 
 function create_cache_dir_chain($base, $chain) {
 	// Helper function for get_cache_dir_chain
+	@mkdir($base); // try to create the base dir, so it's able to recreate a empty cache
 	$dirs = explode('/', $chain);
 	for ($i=0; $i < count($dirs); $i++) {
 		$base .= '/'.$dirs[$i];
