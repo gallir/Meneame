@@ -248,7 +248,7 @@ class Post {
 		echo '<input type="hidden" name="key" value="'.$this->randkey.'" />'."\n";
 		echo '<input type="hidden" name="post_id" value="'.$this->id.'" />'."\n";
 		echo '<input type="hidden" name="user_id" value="'.$this->author.'" />'."\n";
-		echo '<textarea name="post" rows="6" cols="40" id="post" onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')">'.$this->content.'</textarea>'."\n";
+		echo '<textarea style="clear: both" name="post" rows="6" cols="40" id="post" onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')">'.$this->content.'</textarea>'."\n";
 		$body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 		echo '<div style="margin-top:-7px"><input readonly type="text" name="postcounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span></div>';
 		echo '<input class="button" type="submit" value="'._('guardar').'" />'."\n";
