@@ -231,6 +231,7 @@ Simple format functions
 function applyTag(id, tag) {
 	obj = document.getElementById(id);
 	if (obj) wrapText(obj, tag, tag);
+	return false;
 }
 
 function wrapText(obj, tag) {
@@ -255,7 +256,7 @@ function wrapText(obj, tag) {
 }
 
 function replaceText(text, tag) {
-		text = text.replace(/(^|\s)[\*_]([^\s]+)[\*_]/gm, '$1$2')
+		text = text.replace(/(^|\s)[\*_\-]([^\s]+)[\*_\-]/gm, '$1$2')
 		text = text.replace(/([^\s]+)/gm, tag+"$1"+tag)
 		return text;
 }

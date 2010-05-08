@@ -115,17 +115,15 @@ function do_edit() {
 	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
-	echo '<div style="float: right;">';
 	print_simpleformat_buttons('bodytext');
-	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-	echo '<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span>&nbsp;&nbsp;';
-	echo '</div>';
 
+	$body_left = 550 - mb_strlen(html_entity_decode($link_content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 	echo '<p><label for="bodytext" accesskey="4">'._('descripción de la noticia').':</label>'."\n";
 	echo '<br /><span class="note">'._('describe con fidelidad el contenido del enlace.').'</span>'."\n";
 	echo '<br/><textarea name="bodytext" rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">'.$link_content.'</textarea>'."\n";
 	echo '</p>'."\n";
+	echo '<div style="margin-top:-7px"><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span></div>';
 
 	print_categories_form($linkres->category);
 

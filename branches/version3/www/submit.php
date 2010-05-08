@@ -510,10 +510,7 @@ function do_submit1() {
 	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
-	echo '<div style="float: right;">';
 	print_simpleformat_buttons('bodytext');
-	echo '<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span>&nbsp;&nbsp;';
-	echo '</div>';
 
 	echo '<label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
 	echo '<p><span class="note"><strong>'._('describe la noticia en castellano. entre dos y cinco frases es suficiente. no deformes el contenido.').'</strong></span>'."\n";
@@ -522,6 +519,8 @@ function do_submit1() {
 		echo $linkres->url_description;
 	}
 	echo '</textarea>'."\n";
+
+	echo '<div style="margin-top:-7px"><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span></div>';
 	echo '</p>'."\n";
 
 	print_categories_form();

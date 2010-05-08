@@ -1799,8 +1799,12 @@ text-align: right;
 }
 
 .rich-edit-key {
-padding-right: 5px;
-margin-bottom: 3px; /* when edit */
+color: #000;
+font-size: 10pt;
+text-align: center;
+padding: 2pt 0 1.5pt 0;
+width: 1.8em;
+margin-left: 5px;
 float: right;
 }
 

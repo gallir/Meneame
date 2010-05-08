@@ -558,8 +558,9 @@ function print_simpleformat_buttons($textarea_id) {
 	// To avoid too many bolds and italics from new users and trolls
 	if ($current_user->user_karma < 6.001) return;
 
-	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'*\');" src="'.$globals['base_static'].'img/common/richeditor-bold-01.png" alt="bold" class="rich-edit-key" />';
-	echo '<img onclick="applyTag(\''.$textarea_id.'\', \'_\');" src="'.$globals['base_static'].'img/common/richeditor-italic-01.png" alt="italic" class="rich-edit-key" />';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'-\');" class="rich-edit-key"><strike>D</strike></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'_\');" class="rich-edit-key"><em>I</em></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'*\');" class="rich-edit-key"><strong>B</string></button>';
 }
 
 function put_smileys($str) {
