@@ -162,9 +162,11 @@ class WebThumb extends BasicThumb {
 
 		if(preg_match('/[ "]width *[=:][ \'"]*(\d+)/i', $this->tag, $match)) {
 			$this->html_x = $this->x = intval($match[1]);
+			$this->weight *= 1.5; // Give preference to images with img attributes
 		}
 		if(preg_match('/[ "]height *[=:][ \'"]*(\d+)/i', $this->tag, $match)) {
 			$this->html_y = $this->y = intval($match[1]);
+			$this->weight *= 1.5; // Give preference to images with img attributes
 		}
 
 		// First filter to avoid downloading very small images
