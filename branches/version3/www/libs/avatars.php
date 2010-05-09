@@ -49,18 +49,25 @@ function avatars_manage_upload($user, $name, $filename = false) {
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
 
-	avatars_remove_user_files($user);
+	// First check the image is valid before moving and deleting
+	// If $name is provided, the file was uploaded from a form
 	if ($name) {
-		// If $name is provided, the file was uploaded from a form
-		move_uploaded_file($_FILES[$name]['tmp_name'], $file_base . '-orig.img');
-	} elseif ($filename) {
-		rename($filename, $file_base . '-orig.img');
+		$filename = $_FILES[$name]['tmp_name'];
+	}
+	$original_size = @getimagesize($filename);
+	if ($original_size == false) {
+		@unlink($filename);
+		return false;
 	}
 
+	avatars_remove_user_files($user);
 
-	$original_size = @getimagesize("$file_base-orig.img");
-	if ($original_size == false) return false;
-
+	// If $name is provided, the file was uploaded from a form
+	if($name) {
+		move_uploaded_file($filename, $file_base . '-orig.img');
+	} else {
+		rename($filename, $file_base . '-orig.img');
+	}
 
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
