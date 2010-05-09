@@ -802,4 +802,3 @@ function select_meta(input, meta) {
 	return false;
 }
 </script>
-?>
