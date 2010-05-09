@@ -5,7 +5,6 @@
 // You can get copies of the licenses here:
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
@@ -80,6 +79,7 @@ if(empty($view)) $view = 'profile';
 // For editing notes
 if ($current_user->user_id == $user->id || $current_user->admin) {
 	array_push($globals['extra_js'], 'jquery-form.pack.js');
+	array_push($globals['extra_js'], 'ajaxupload.min.js');
 }
 
 // Enable user AdSense
@@ -136,6 +136,7 @@ if (!empty($user->names)) {
 } else {
 	do_header($login);
 }
+
 echo '<div id="singlewrap" style="margin: 0 50px; padding-top: 30px">'."\n";
 
 $url_login = urlencode($login);
@@ -236,7 +237,27 @@ function do_profile() {
 
 
 	// Avatar
-	echo '<img class="thumbnail" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
+	echo '<div style="float:right;text-align:center">';
+	echo '<img id="avatar" class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
+
+	// Print the button and associated div to change the avatar
+	if ($current_user->user_id == $user->id) {
+		echo '<div id="avatar_indicator" style="margin:0;padding:0;height:12px"></div>';
+		echo '<button id="avatar_upload" style="margin:0" title="'._('imagen cuadrada de no más de 400 KB, sin transparencias').'">'._('cambiar avatar').'</button>'."\n";
+		echo '<script type="text/javascript">'."\n";
+		echo '$(document).ready(function() {'."\n";
+		echo '	new AjaxUpload("avatar_upload", {name: "image",'."\n";
+		echo '		action: "'.$globals['base_url'].'backend/avatar_upload.php",'."\n";
+		echo '		responseType: "json",'."\n";
+		echo '		onChange: function () {avatar_preupload()},'."\n";
+		echo '		onComplete: function (f, r) {avatar_uploaded(f, r)}'."\n";
+		echo '	});'."\n";
+		echo '});'."\n";
+		echo '</script>'."\n";
+	}
+	echo '</div>';
+
+
 	// Geo div
 	echo '<div style="width:140px; float:left;">';
 	if($globals['do_geo']) {
@@ -754,8 +775,25 @@ function print_categories_checkboxes($user) {
 		echo '<input class="button" type="submit" value="'._('grabar').'"/>';
 	}
 	echo '</form>';
+}
 ?>
 <script type="text/javascript">
+function avatar_preupload() {
+	$('#avatar_upload').attr("disabled", true);
+	$('#avatar_indicator').html('<img src="'+base_static+'img/common/indicator_horizontal.gif"/>');
+}
+
+function avatar_uploaded(file, response) {
+	if (response.error) {
+		alert(response.error);
+	} 
+	if (response.avatar_url.length > 0) { 
+		$("#avatar").attr("src",response.avatar_url);
+	}
+	$('#avatar_indicator').html('');
+	$('#avatar_upload').attr("disabled", false);
+}
+
 function select_meta(input, meta) {
 	if (input.checked) new_value = true;
 	else new_value = false;
@@ -764,6 +802,4 @@ function select_meta(input, meta) {
 	return false;
 }
 </script>
-<?
-}
 ?>

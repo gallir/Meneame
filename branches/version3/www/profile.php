@@ -145,7 +145,7 @@ function show_profile() {
 	if (is_avatars_enabled()) {
 		echo '<input type="hidden" name="MAX_FILE_SIZE" value="400000" />';
 		echo '<p><label>'._('avatar').':</label><br/>';
-		echo '<span class="note">' . _('el avatar debe ser una imagen cuadrada en jpeg, gif o png de no más de 400 KB, sin transparencias') . '</span><br/>';
+		echo '<span class="note">' . _('imagen cuadrada de no más de 400 KB, sin transparencias') . '</span><br/>';
 		echo '<input type="file" class="button" autocomplete="off" name="image" />';
 		if ($user->avatar > 0) {
 			echo '&nbsp;&nbsp;&nbsp;'._('Eliminar avatar').': <input type="checkbox" name="avatar_delete" value="1"/>';

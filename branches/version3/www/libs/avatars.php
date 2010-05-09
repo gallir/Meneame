@@ -56,9 +56,16 @@ function avatars_manage_upload($user, $name, $filename = false) {
 	} elseif ($filename) {
 		rename($filename, $file_base . '-orig.img');
 	}
+
+
 	$original_size = @getimagesize("$file_base-orig.img");
+	if ($original_size == false) return false;
+
+
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
 	$size = @getimagesize("$file_base-80.jpg");
+
+
 	if (!($size[0] == 80 && $size[1] == 80 && ($mtime = avatars_db_store($user, "$file_base-80.jpg", $time)))) {
 		// Mark FALSE in DB
 		avatars_db_remove($user);
