@@ -9,7 +9,7 @@
 
 function get_avatars_dir() {
 	global $globals;
-	return mnmpath.'/'.$globals['cache_dir'].'/'.$globals['avatars_dir'];
+	return mnmpath.'/'.$globals['cache_dir'];
 }
 
 function is_avatars_enabled() {
@@ -130,7 +130,6 @@ function avatar_get_from_db($user, $size=0) {
 		$subdir = '/tmp';
 	} else {
 		$chain = get_cache_dir_chain($user);
-		@mkdir(get_avatars_dir());
 		create_cache_dir_chain(get_avatars_dir(), $chain);
 		$subdir = get_avatars_dir() . '/'. $chain;
 	}

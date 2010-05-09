@@ -417,7 +417,7 @@ function get_avatar_url($user, $avatar, $size) {
 		if ($globals['Amazon_S3_media_url'] && !$globals['Amazon_S3_local_cache']) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
-			$file = $globals['cache_dir'] . '/'.$globals['avatars_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
+			$file = $globals['cache_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
 			// Don't check every time, but 1/10, decrease VM pressure 
 			// Disabled for the moment, it fails just too much for size 40
 			//if (rand(0, 10) < 10) return $globals['base_url'] . $file;

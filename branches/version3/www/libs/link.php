@@ -1183,11 +1183,11 @@ class Link {
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
 		if ($img) {
-			$filepath = mnmpath.'/'.$globals['cache_dir'].'/thumbs';
+			$filepath = mnmpath.'/'.$globals['cache_dir'];
 			@mkdir($filepath);
 			$chain = get_cache_dir_chain($this->id);
 			create_cache_dir_chain($filepath, $chain);
-			$filepath .= "/$chain/$this->id.jpg";
+			$filepath .= "/$chain/thumb-$this->id.jpg";
 			if ($img->type == 'local') {
 				$img->scale($globals['thumb_size']);
 				if($img->save($filepath)) {
@@ -1195,7 +1195,7 @@ class Link {
 					$this->thumb_x = $img->x;
 					$this->thumb_y = $img->y;
 					// Upload to S3
-					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs')) {
+					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
 							//$this->thumb = $globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
 							$this->thumb_status = 'remote';
 					} else {
@@ -1240,19 +1240,19 @@ class Link {
 		global $globals;
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			$chain = get_cache_dir_chain($this->id);
-			$file = $globals['cache_dir']."/thumbs/$chain/$this->id.jpg";
+			$file = $globals['cache_dir']."/$chain/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
 			if (is_readable($filepath)) {
 				return $globals['base_static'] . $file;
 			} elseif ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
-				create_cache_dir_chain(mnmpath.'/'.$globals['cache_dir']."/thumbs", $chain);
+				create_cache_dir_chain(mnmpath.'/'.$globals['cache_dir'], $chain);
         		// Get thumbnail from S3
 				if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
 					return $globals['base_static'] . $file;
 				} else {
 					// Do extra check, if S3 is working, mark thumb as deleted
 					if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
-							&& is_writable(mnmpath.'/'.$globals['cache_dir']."/thumbs")) { // Double check
+							&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
 						syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for $this->id");
 						$this->delete_thumb();
 					}
