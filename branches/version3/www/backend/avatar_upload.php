@@ -20,24 +20,27 @@ if (!$current_user->user_id) error(_('usuario no autentificado'));
 $user = new User($current_user->user_id);
 syslog(LOG_INFO, "Meneame: avatar uploading for $user->username");
 
+$error = false;
 // Manage avatars upload
 if (!empty($_FILES['image']['tmp_name']) ) {
 	if (avatars_check_upload_size('image')) {
 		$avatar_mtime = avatars_manage_upload($user->id, 'image');
 		if (!$avatar_mtime) {
-			json_error(_('error guardando la imagen'));
+			$error = _('error guardando la imagen');
 		}
 	} else {
-		json_error(_('el tamaño de la imagen excede el límite'));
+		$error = _('el tamaño de la imagen excede el límite');
 	}
 } else {
-	json_error(_('datos recibidos incorrectamente'));
+	$error =_('datos recibidos incorrectamente');
 }
 
-$user->avatar = $avatar_mtime;
-$user->store();
+if ($avatar_mtime) {
+	$user->avatar = $avatar_mtime;
+	$user->store();
+}
 $dict['avatar_url'] = get_avatar_url($user->id, $user->avatar, 80);
-$dict['error'] = false;
+$dict['error'] = $error;
 echo json_encode($dict);
 
 
