@@ -18,7 +18,6 @@ http_cache();
 if (!$current_user->user_id) error(_('usuario no autentificado'));
 
 $user = new User($current_user->user_id);
-syslog(LOG_INFO, "Meneame: avatar uploading for $user->username");
 
 $error = false;
 // Manage avatars upload

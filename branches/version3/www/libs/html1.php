@@ -765,7 +765,7 @@ function do_best_story_comments($link) {
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().'/000'.$comment->comment_order;
 			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
-			$output .= '<p><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></p></a></li>'."\n";
+			$output .= '<p><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></a></p></li>'."\n";
 		}
 		$output .= '</ul></div></div>';
 		echo $output;

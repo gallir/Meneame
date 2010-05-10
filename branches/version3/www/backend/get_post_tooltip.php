@@ -19,7 +19,7 @@ if (!empty($_GET['id'])) {
 		$user_id = explode(',', $matches[1]);
 		if (count($user_id) == 2) {
 			$user = $db->escape($user_id[0]);
-			$post_id = $user_id[1];
+			$post_id = intval($user_id[1]);
 		} else {
 			$user = $db->escape($matches[1]);
 			$date = $matches[2];

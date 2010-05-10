@@ -71,10 +71,10 @@ do_banner_right();
 do_banner_promotions();
 if ($globals['show_popular_published']) do_best_stories();
 do_best_sites();
-do_categories_cloud('published');
 if ($page < 2) {
 	do_best_comments();
 }
+do_categories_cloud('published');
 do_vertical_tags('published');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/

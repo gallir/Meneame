@@ -93,8 +93,8 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 echo '<div id="sidebar">';
 do_banner_right();
 if ($globals['show_popular_queued']) do_best_queued();
+//do_best_comments();
 do_categories_cloud('queued', 24);
-do_best_comments();
 do_vertical_tags('queued');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
