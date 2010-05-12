@@ -792,7 +792,7 @@ class Link {
 					&& $this->status != 'autodiscard'
 					&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id 
-					&& $current_user->user_level == 'special' 
+					&& $current_user->special 
 					&& $this->status == 'queued'
 					&& $globals['now'] - $this->sent_date < 10400)
 			|| $current_user->admin) {
@@ -809,7 +809,7 @@ class Link {
 		if( ($this->author == $current_user->user_id 
 				&& $current_user->user_level == 'normal' 
 				&& $globals['now'] - $this->sent_date < 9800) 
-			|| ($current_user->user_level == 'special' 
+			|| ($current_user->special 
 				&& $globals['now'] - $this->sent_date < 14400) 
 			|| $current_user->admin) {
 				return true;

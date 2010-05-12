@@ -13,7 +13,7 @@ include(mnminclude.'avatars.php');
 // We need it because we modify headers
 ob_start();
 
-$user_levels = array ('autodisabled', 'disabled', 'normal', 'special', 'admin', 'god');
+$user_levels = array ('autodisabled', 'disabled', 'normal', 'special', 'blogger', 'admin', 'god');
 
 // User recovering her password
 if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {

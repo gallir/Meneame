@@ -42,6 +42,7 @@ class UserAuth {
 
 				foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
 				if ($this->user_level == 'admin' || $this->user_level == 'god') $this->admin = true;
+				elseif ($this->user_level == 'special' || $this->user_level == 'blogger') $this->special = true;
 				$this->authenticated = true;
 
 				if ($userInfo[4] > 0) $expiration = min(864000, $userInfo[4] - $globals['now']);
