@@ -23,6 +23,7 @@ function check_stats($string) {
 	if (preg_match('/^!webstats/', $string)) return 'http://www.quantcast.com/'.get_server_name();
 	if (preg_match('/^!ignore/', $string)) return do_ignore($string);
 	if (preg_match('/^!admins/', $string)) return do_admins($string);
+	if (preg_match('/^!bloggers/', $string)) return do_bloggers($string);
 	if (preg_match('/^!last/', $string)) return do_last($string);
 	if (preg_match('/^!gs/', $string)) return do_fon_gs($string);
 	if (preg_match('/^!rae/', $string)) return do_rae($string);
@@ -50,6 +51,23 @@ function do_admins($string) {
 
 	if (! $current_user->admin) return false;
 	foreach (array('god', 'admin') as $level) {
+		$res = $db->get_col("select user_login from users where user_level = '$level' and user_id != $current_user->user_id order by user_login asc");
+		if ($res) {
+			$comment .= "<strong>$level</strong>: ";
+			foreach ($res as $user) {
+				$comment .= $user . ' ';
+			}
+		}
+		$comment .= "<br>";
+	}
+	return $comment;
+}
+
+function do_bloggers($string) {
+	global $db, $current_user;
+
+	if (! $current_user->admin) return false;
+	foreach (array('blogger') as $level) {
 		$res = $db->get_col("select user_login from users where user_level = '$level' and user_id != $current_user->user_id order by user_login asc");
 		if ($res) {
 			$comment .= "<strong>$level</strong>: ";
