@@ -1213,8 +1213,11 @@ class Link {
 				}
 			}
 			if ($img->video) $this->content_type = 'video';
+			$this->store_thumb();
+		} elseif ($this->thumb_x || $this->thumb_y) {
+			$this->delete_thumb();
+			return false;
 		}
-		$this->store_thumb();
 		return $this->has_thumb();
 	}
 

@@ -375,8 +375,8 @@ class HtmlImages {
 
 		$goods = $n = 0;
 		foreach ($tags as $match) {
-			if ($this->debug)
-				echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
+			//if ($this->debug)
+			//	echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
 			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good($other_html == false)) {
@@ -491,17 +491,25 @@ class HtmlImages {
 			}
 
 			if (count($selection) > 2) { // we avoid those simple pages with few links to other pages
+				$max_to_check = max(2, min(4, count($selection) / 5));
 				$n = $checked = $same_title = $other_title = $images_total = 0;
 				$paths = array();
+				$paths_visited = array();
 				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
 				foreach ($selection as $url) {
-					if ($this->debug)
-						echo "<!-- Checking: $url -->\n";
 					if ($checked > 10) break;
 
 					$parsed = parse_url($url);
 					$unified = unify_path_query($parsed['path'], $parsed['query']);
 					$first_paths = path_sub_path($unified, 2);
+
+					$paths_visited[$first_paths] += 1;
+					if ($paths_visited[$first_paths] > 2) {
+						if ($this->debug)
+							echo "<!-- Ignoring $url by equal path: ".$first_paths." -->\n";
+						continue;
+					}
+
 					$paths_len = path_count($unified);
 					if ($paths[$first_paths] && $paths_len < $paths[$first_paths]) {
 						// Don't get twice a page with similar but shorter paths
@@ -509,6 +517,9 @@ class HtmlImages {
 							echo "<!-- Ignoring $url by previous path: $first_paths and lenght: $paths_len] -->\n";
 						continue;
 					}
+
+					if ($this->debug)
+						echo "<!-- Checking: $url -->\n";
 
 					$checked ++;
 					$res = get_url($url, $this->url);
@@ -558,7 +569,7 @@ class HtmlImages {
 					$paths[$first_paths] = max($paths_len, $paths[$first_paths]);
 					$n++;
 					$this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
-					if ($n > 2 || $images_total > $this->images_count) {
+					if ($n > $max_to_check || $images_total > $this->images_count * 2) {
 						break;
 					}
 				}
