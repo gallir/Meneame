@@ -725,6 +725,7 @@ function json_encode_single($dict) {
 //
 // Memcache functions
 //
+// Uses also xcache if enabled and available
 
 $memcache = false;
 
@@ -746,21 +747,46 @@ function memcache_minit () {
 }
 
 function memcache_mget ($key) {
-	global $memcache;
+	global $memcache, $globals;
 
+	// Use xcache vars if enabled and available
+	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+		return unserialize(xcache_get($key));
+	}
+
+	// Check for memcache
 	if (memcache_minit()) return $memcache->get($key);
 	return false;
 }
 
 
 function memcache_madd ($key, $str, $expire=0) {
-	global $memcache;
+	global $memcache, $globals;
+
+	// Use xcache vars if enabled and available
+	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+		$str = serialize($str);
+		return xcache_set($key, $str, $expire);
+	}
+
+	// Check for memcache
 	if (memcache_minit()) return $memcache->add($key, $str, false, $expire);
 	return false;
 }
 
 function memcache_mprint ($key) {
-	global $memcache;
+	global $memcache, $globals;
+
+	// Use xcache vars if enabled and available
+	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+		if (xcache_isset($key)) {
+			echo unserialize(xcache_get($key));
+			return true;
+		}
+		return false;
+	}
+
+	// Check for memcache
 	if (memcache_minit() && ($value = $memcache->get($key))) {
 		echo $value;
 		return true;

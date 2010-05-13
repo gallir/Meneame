@@ -89,6 +89,7 @@ $globals['base_sneakme_url'] = 'notame/';
 // Memcache, set hostname if enabled
 //$globals['memcache_host'] = 'localhost'; 
 $globals['memcache_port'] = 11211; // optional
+$globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 
 // Comment pages
 $globals['comments_page_size'] = 100;
