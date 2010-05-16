@@ -422,6 +422,7 @@ class HtmlImages {
 			}
 			$regexp .= '|[\/\.][^\"\']+?|\w[^\"\':]+?';
 		
+			$seen = array();
 			$visited = array();
 			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
@@ -434,10 +435,14 @@ class HtmlImages {
 					$weight = 1;
 					$url = preg_replace('/&amp;/i', '&', $match[1]);
 					$url = preg_replace('/#.+/i', '', $url);
+					$url = preg_replace('/[\?&]\s*$/i', '', $url); // Some urls with void &'s at the end
 					$url = build_full_url(trim($url), $this->url);
+					if (!$url) continue;
+
+					if ($seen[$url]) continue;
+					$seen[$url] = true;
 					if ($this->debug)
 						echo "<!-- Adding before analyzing: $url -->\n";
-					if (!$url) continue;
 
 					$parsed_match = parse_url($url);
 					$path_query_match = unify_path_query($parsed_match['path'], $parsed_match['query']);
