@@ -572,7 +572,7 @@ function put_smileys($str) {
 	if ($globals['bot']) return $str;
 
 	$str=preg_replace('/(\s|^):palm:/i', ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" />', $str);
-	$str=preg_replace('/(\s|^):goatse:/i', ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title=":goatse:" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):goatse:/i', ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title="goat-ish" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)o_o|:wow:/i', ' <img src="'.$globals['base_static'].'img/smileys/wow.gif" alt="o_o" title="o_o :wow:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)¬¬|:shame:/i', ' <img src="'.$globals['base_static'].'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />$1', $str);
@@ -751,7 +751,7 @@ function memcache_mget ($key) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
 		return unserialize(xcache_get($key));
 	}
 
@@ -765,7 +765,7 @@ function memcache_madd ($key, $str, $expire=0) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
 		$str = serialize($str);
 		return xcache_set($key, $str, $expire);
 	}
@@ -779,7 +779,7 @@ function memcache_mprint ($key) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined("XC_TYPE_VAR") && XC_TYPE_VAR) {
+	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
 		if (xcache_isset($key)) {
 			echo unserialize(xcache_get($key));
 			return true;
