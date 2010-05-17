@@ -572,6 +572,7 @@ function put_smileys($str) {
 	if ($globals['bot']) return $str;
 
 	$str=preg_replace('/(\s|^):palm:/i', ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" />', $str);
+	$str=preg_replace('/(\s|^):goatse:/i', ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title=":goatse:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)o_o|:wow:/i', ' <img src="'.$globals['base_static'].'img/smileys/wow.gif" alt="o_o" title="o_o :wow:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^)¬¬|:shame:/i', ' <img src="'.$globals['base_static'].'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:" width="15" height="15" />', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\)(\s|$)/i', ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" />$1', $str);

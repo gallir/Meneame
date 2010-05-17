@@ -260,6 +260,7 @@ function check_admin_ping(str) {
 }
 
 function put_smiley(str) {
+	str=str.replace(/(\s|^):goatse:/gi, ' <img src="'+base_static+'img/smileys/goat.gif" alt=":goatse:" title=":goatse:"/>');
 	str=str.replace(/(\s|^):palm:/gi, ' <img src="'+base_static+'img/smileys/palm.gif" alt=":palm:" title=":palm:"/>');
 	str=str.replace(/(\s|^)o_o|:wow:/gi, ' <img src="'+base_static+'img/smileys/wow.gif" alt="o_o" title="o_o :wow:"/>');
 	str=str.replace(/(\s|^)¬¬|:shame:/gi, ' <img src="'+base_static+'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:"/>');
