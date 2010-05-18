@@ -24,6 +24,7 @@ function twitter_post($text, $short_url) {
 	curl_setopt($session, CURLOPT_HEADER, false);
 	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($session, CURLOPT_TIMEOUT, 20);
 	curl_setopt($session, CURLOPT_USERPWD, $globals['twitter_user'] . ":" . $globals['twitter_password']);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_POST, 1);

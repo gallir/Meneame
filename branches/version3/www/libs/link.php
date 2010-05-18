@@ -787,9 +787,7 @@ class Link {
 
 		if($current_user->user_id) {
 			if(($this->author == $current_user->user_id 
-					&& $this->status != 'published' 
-					&& $this->status != 'abuse' 
-					&& $this->status != 'autodiscard'
+					&& $this->status == 'queued'
 					&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id 
 					&& $current_user->special 
@@ -1213,11 +1211,11 @@ class Link {
 				}
 			}
 			if ($img->video) $this->content_type = 'video';
-			$this->store_thumb();
 		} elseif ($this->thumb_x || $this->thumb_y) {
 			$this->delete_thumb();
 			return false;
 		}
+		$this->store_thumb();
 		return $this->has_thumb();
 	}
 
