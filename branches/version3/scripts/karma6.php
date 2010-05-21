@@ -114,7 +114,7 @@ $no_calculated = 0;
 $calculated = 0;
 
 // select users that voted during last 15 days, also her last vote's day
-$users = "select sql_no_cache user_id, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
+$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
 
 // Main loop
 $res = $db->get_results($users);
@@ -128,7 +128,7 @@ foreach ($res as $dbuser) {
 
 	//Base karma for the user
 	$first_published = $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(min(link_date)) from links where link_author = $user->id and link_status='published';");
-	if ($first_published > 0) {
+	if ($first_published > 0 && $dbuser->user_karma > 6.1) {
 		$karma_base_user = min($karma_base_max, $karma_base + ($karma_base_max - $karma_base) * (time()-$first_published)/(86400*365*2));
 		$karma_base_user = round($karma_base_user, 2);
 	} else {
