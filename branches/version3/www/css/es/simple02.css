@@ -4,7 +4,6 @@ font-size: medium;
 
 @media print {
 body { font-size: small }
-.banner-top { display: none }
 }
 
 #wrap {
@@ -22,4 +21,8 @@ margin: 5px 5px 0px 5px;
 #footwrap {
 margin: 5em 5px 0 5px;
 clear: both;
+}
+
+.banner-top {
+width: 470px;
 }

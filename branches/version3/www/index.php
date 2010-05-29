@@ -23,8 +23,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-mobile_redirect(); 
-
 meta_get_current();
 
 
