@@ -275,7 +275,7 @@ text-decoration: underline;
 .banner-top {
 float: left;
 margin: 0.36em 0 1em 0.4em;
-width: 740px;
+min-width: 300px;
 height: 92px;
 }
 

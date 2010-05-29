@@ -14,6 +14,8 @@ header('Cache-Control: max-age=10, must-revalidate');
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 
 $width = intval($_GET['width']);
+if ($globals['mobile']) $width = min(400, $width);
+
 $height = intval($_GET['height']);
 $format = clean_input_string($_GET['format']);
 $color_border = get_hex_color($_GET['color_border']);

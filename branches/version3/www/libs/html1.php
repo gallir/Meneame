@@ -201,17 +201,20 @@ function do_css_includes() {
 	global $globals;
 
 	if ($globals['css_main']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_main'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].$globals['css_main'].'"/>' . "\n";
 	}
 	if ($globals['css_color']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_color'].'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].$globals['css_color'].'"/>' . "\n";
 	}
 	foreach ($globals['extra_css'] as $css) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/'.$css.'" />' . "\n";
+		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].'css/'.$css.'"/>' . "\n";
+	}
+	// For printing, mobile and tablets
+	if ($globals['css_simple']) {
+		echo '<link rel="stylesheet" type="text/css" media="print,tv,handheld,all and (max-device-width: 780px)" href="'.$globals['base_static'].$globals['css_simple'].'"/>' . "\n";
 	}
 	// IE6 hacks
 	echo '<!--[if lte IE 6]>'."\n";
-	//echo '<style type="text/css" media="all">@import "'.$globals['base_url'].'css/ie6-hacks.css";</style>'."\n";
 	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/ie6-hacks.css" />'."\n";
 	echo '<![endif]-->'."\n";
 
@@ -348,6 +351,7 @@ function do_rss() {
 function do_rss_box($search_rss = 'rss2.php') {
 	global $globals, $current_user;
 
+	if ($globals['mobile']) return;
 
 	echo '<div class="sidebox"><div class="header"><h4>'._('suscripciones por RSS').'</h4></div>'."\n";
 	echo '<div class="rss"><ul>'."\n";
@@ -580,6 +584,8 @@ function print_categories_form($selected = 0) {
 function do_vertical_tags($what=false) {
 	global $db, $globals, $dblang;
 
+	if ($globals['mobile']) return;
+
 	if (!empty($what)) {
 		$status = '= "'.$what. '"';
 	} else {
@@ -688,6 +694,9 @@ function do_categories_cloud($what=false, $hours = 48) {
 
 function do_best_sites() {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
 	$output = '';
 
 	$key = 'best_sites_'.$globals['css_main'].'_'.$globals['meta_current'];
@@ -714,6 +723,9 @@ function do_best_sites() {
 
 function do_best_comments() {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
 	$foo_link = new Link();
 	$output = '';
 
@@ -742,6 +754,8 @@ function do_best_comments() {
 
 function do_best_story_comments($link) {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
 
 	$do_cache = false;
 	$output = '';
@@ -777,6 +791,8 @@ function do_best_story_comments($link) {
 
 function do_best_stories() {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
 
 	$key = 'best_stories_'.$globals['css_main'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
@@ -822,6 +838,9 @@ function do_best_stories() {
 
 function do_best_queued() {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
 	$foo_link = new Link();
 
 	$key = 'best_queued_'.$globals['css_main'].'_'.$globals['meta_current'];
@@ -865,6 +884,9 @@ function do_best_queued() {
 
 function do_best_posts() {
 	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
 	$output = '';
 
 	$key = 'best_posts_'.$globals['css_main'];
