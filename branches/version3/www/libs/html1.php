@@ -506,7 +506,7 @@ function mobile_redirect() {
 function do_pages($total, $page_size=25, $margin = true) {
 	global $db;
 
-	if ($total < $page_size) return;
+	if ($total > 0 && $total < $page_size) return;
 
 	$index_limit = 5;
 
@@ -535,24 +535,36 @@ function do_pages($total, $page_size=25, $margin = true) {
 		echo '<a href="?page='.$i.$query.'">&#171; '._('anterior').'</a>';
 	}
 
-	if($start>1) {
-		$i = 1;
-		echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
-		echo '<span>...</span>';
-	}
-	for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
-		if($i==$current) {
-			echo '<span class="current">'.$i.'</span>';
-		} else {
+	if ($total_pages > 0) {
+
+		if($start>1) {
+			$i = 1;
+			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			echo '<span>...</span>';
+		}
+
+		for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
+			if($i==$current) {
+				echo '<span class="current">'.$i.'</span>';
+			} else {
+				echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			}
+		}
+
+		if($total_pages>$end) {
+			$i = $total_pages;
+			echo '<span>...</span>';
 			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 		}
+	} else {
+		if($current>2) {
+			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
+			echo '<span>...</span>';
+		}
+		echo '<span class="current">'.$current.'</span>';
 	}
-	if($total_pages>$end) {
-		$i = $total_pages;
-		echo '<span>...</span>';
-		echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
-	}
-	if($current<$total_pages) {
+
+	if($total < 0 || $current<$total_pages) {
 		$i = $current+1;
 		echo '<a href="?page='.$i.$query.'">&#187; '._('siguiente').'</a>';
 	} else {

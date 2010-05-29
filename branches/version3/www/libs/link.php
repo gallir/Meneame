@@ -509,6 +509,8 @@ class Link {
 			echo ':&nbsp;'.text_to_summary($best_comment->content, 200).'</div>';
 		}
 
+		if ($this->do_inline_friend_votes) $this->inline_friend_votes();
+
 		echo '<div class="news-details main">';
 		if($this->comments > 0) {
 			$comments_mess = $this->comments . ' ' . _('comentarios');
@@ -597,6 +599,24 @@ class Link {
 		}
 
 	}
+
+	function inline_friend_votes() {
+		global $db, $current_user;
+
+		$votes = $db->get_results("SELECT vote_user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
+		if ($votes) {
+			echo '<div style="padding: 3px 0 2px 0;">';
+			foreach ( $votes as $vote ){
+				$vote_detail .= ' '._('valor').":&nbsp;$vote->vote_value";
+				echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
+				echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 40).'" width="40" height="40" alt=""/>';
+				echo '</a>&nbsp;&nbsp;';
+				$items++;
+			}
+			echo '</div>';
+		}
+	}
+
 	
 	function print_shake_box() {
 		global $current_user, $anonnymous_vote, $site_key, $globals;
