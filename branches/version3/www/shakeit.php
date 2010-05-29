@@ -76,7 +76,6 @@ switch ($globals['meta']) {
 			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
-			$rows = Link::count('queued');
 			$from_where = "FROM links WHERE link_status='queued'";
 			$tab = 1;
 		}
@@ -106,10 +105,6 @@ if($cat) {
 	$from_where .= " AND link_category=$cat ";
 }
 
-if (!$rows) {
-		// It was not calculated before
-		$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
-}
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {
@@ -121,7 +116,7 @@ if ($links) {
 		}
 	}
 }
-do_pages($rows, $page_size);
+do_pages(-1, $page_size);
 echo '</div>'."\n";
 
 do_footer_menu();
