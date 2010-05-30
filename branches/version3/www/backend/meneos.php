@@ -62,7 +62,7 @@ if ($globals['link'] && $globals['link']->votes > 0 &&  //Make sure we have read
 	$globals['link']->votes =  $votes_users_positive;
 	$globals['link']->negatives = $total_negatives;
 	$globals['link']->anonymous = $votes_anon;
-	$globals['link']->store_basic();
+	$globals['link']->update_votes();
 }
 
 

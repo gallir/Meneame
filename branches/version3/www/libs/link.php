@@ -337,10 +337,7 @@ class Link {
 		$link_author = $this->author;
 		$link_blog = $this->blog;
 		$link_status = $db->escape($this->status);
-		$link_votes = $this->votes;
-		$link_negatives = $this->negatives;
 		$link_anonymous = $this->anonymous;
-		$link_comments = $this->comments;
 		$link_karma = $this->karma;
 		$link_votes_avg = $this->votes_avg;
 		$link_randkey = $this->randkey;
@@ -351,17 +348,25 @@ class Link {
 		$link_content_type = $db->escape($this->content_type);
 		$link_ip = $db->escape($this->ip);
 		if($this->id===0) {
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_votes, link_negatives, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_votes, $link_negatives, $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
+			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_votes=$link_votes, link_negatives=$link_negatives, link_comments=$link_comments, link_karma=$link_karma, link_anonymous=$link_anonymous, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
+			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
 		}
 		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
 			// This is a new link, add it to the events, it an additional control
 			// just in case the user dind't do the last submit phase and voted later
 			log_conditional_insert('link_new', $this->id, $this->author);
-		} 
+		}
+
+		$this->update_votes(); 
+		$this->update_comments(); 
+	}
+
+	function update_votes() {
+		global $db;
+		$db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
 	}
 	
 	function read_basic($key='id') {
@@ -769,14 +774,8 @@ class Link {
 		}
 		$vote->value=$value;
 		if($vote->insert()) {
-			$db->transaction();
-			if ($value < 0) {
-				$db->query("update links set link_negatives=link_negatives+1, link_karma=link_karma+$karma_value where link_id = $this->id");
-			} else {
-				if ($current_user->user_id > 0)  $db->query("update links set link_votes = link_votes+1, link_karma=link_karma+$karma_value where link_id = $this->id");
-				else  $db->query("update links set link_anonymous = link_anonymous+1, link_karma=link_karma+$karma_value where link_id = $this->id");
-			}
-			$db->commit();
+			$db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
+			$this->update_votes();
 			$this->read_basic();
 			return $value;
 		}
@@ -1037,7 +1036,6 @@ class Link {
 			$this->votes = $votes_pos;
 			$this->anonymous = $votes_pos_anon;
 			$this->negatives = $votes_neg;
-			//$this->store_basic();
 		}
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
