@@ -55,17 +55,6 @@ if ($negatives) {
 }
 echo '</div>';
 
-// Check for consistency of votes' counters
-if ($globals['link'] && $globals['link']->votes > 0 &&  //Make sure we have read the link object
-	($globals['link']->votes !=  $votes_users_positive || $globals['link']->negatives != $total_negatives || $globals['link']->anonymous != $votes_anon)) {
-	syslog(LOG_NOTICE, "Meneame: differences in votes link ".$globals['link']->id." (".$globals['link']->votes.", ".$globals['link']->negatives.", ".$globals['link']->anonymous." -> $votes_users_positive, $total_negatives, $votes_anon)");
-	$globals['link']->votes =  $votes_users_positive;
-	$globals['link']->negatives = $total_negatives;
-	$globals['link']->anonymous = $votes_anon;
-	$globals['link']->update_votes();
-}
-
-
 if ($no_show_voters) {
 	// don't show voters if the user votes the link
 	echo '<br /><br />&#187;&nbsp;' . '<a href="javascript:get_votes(\'meneos.php\',\'voters\',\'voters-container\',1,'.$globals['link_id'].')" title="'._('quiénes han votado').'">'._('ver quiénes han votado').'</a>';
