@@ -314,7 +314,6 @@ class Link {
 	function store() {
 		global $db, $current_user, $globals;
 
-		$db->transaction();
 		$link_url = $db->escape($this->url);
 		$link_uri = $db->escape($this->uri);
 		$link_url_title = $db->escape($this->url_title);
@@ -325,6 +324,7 @@ class Link {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
+		$db->transaction();
 		$this->store_basic();
 		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
 		$db->commit();

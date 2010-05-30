@@ -22,10 +22,12 @@ if (!$current_user->user_id) {
 
 
 $friends = $db->get_col("select friend_to from friends where friend_type = 'manual' and friend_from = $current_user->user_id and friend_value > 0");
-$friends_list = implode(',', $friends);
-$sql = "select distinct vote_link_id as link_id from votes where vote_type = 'links' and vote_user_id in ($friends_list) and vote_value > 0 order by vote_link_id desc";
+if ($friends) {
+	$friends_list = implode(',', $friends);
+	$sql = "select distinct vote_link_id as link_id from votes where vote_type = 'links' and vote_user_id in ($friends_list) and vote_value > 0 order by vote_link_id desc";
 
-$links = $db->get_results("$sql LIMIT $offset,$page_size");
+	$links = $db->get_results("$sql LIMIT $offset,$page_size");
+}
 
 do_header(_('votadas por amigos') . ' | men&eacute;ame');
 $globals['tag_status'] = 'published';
