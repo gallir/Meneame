@@ -174,7 +174,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/logo|header|rss|advertising/i', $this->url)) {
+		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/ad\/|\/logo|header|rss|advertising/i', $this->url)) {
 			$this->candidate = true;
 		}
 	}

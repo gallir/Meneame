@@ -209,10 +209,6 @@ function do_css_includes() {
 	foreach ($globals['extra_css'] as $css) {
 		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].'css/'.$css.'"/>' . "\n";
 	}
-	// For printing, mobile and tablets
-	if ($globals['css_simple']) {
-		echo '<link rel="stylesheet" type="text/css" media="print,tv,handheld,all and (max-device-width: 780px)" href="'.$globals['base_static'].$globals['css_simple'].'"/>' . "\n";
-	}
 	// IE6 hacks
 	echo '<!--[if lte IE 6]>'."\n";
 	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/ie6-hacks.css" />'."\n";
@@ -491,7 +487,7 @@ function force_authentication() {
 function mobile_redirect() {
 	global $globals;
 
-	if ($globals['mobile'] && ! preg_match('/(pad|tablet)\W/i', $_SERVER['HTTP_USER_AGENT']) &&
+	if ($globals['mobile'] && ! preg_match('/(pad|tablet|wii|tv)\W/i', $_SERVER['HTTP_USER_AGENT']) &&
 			$globals['url_shortener_mobile_to'] && 
 			(! $_SERVER['HTTP_REFERER'] || 
 			// Check if the user comes from our own domain
