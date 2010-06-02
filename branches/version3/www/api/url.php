@@ -8,10 +8,15 @@
 
 include('../config.php');
 
-if (isset($_GET['json']))  {
+if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;
 	$dict = array();
 	header('Content-Type: application/json; charset=utf-8');
+	if ($_GET['jsonp']) {
+		$jsonp = preg_replace('/[^\w\d]/', '', $_GET['jsonp']);
+		echo $jsonp . '(';
+		$ending = ')';
+	} else $ending = '';
 } else {
 	$json = false;
 	header('Content-Type: text/plain; charset=UTF-8');
@@ -25,6 +30,7 @@ if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['ho
 	if ($json) {
 		$dict['status'] = 'KO';
 		echo json_encode($dict);
+		echo $ending;
 	} else echo 'KO';
 	die;
 }
@@ -58,5 +64,8 @@ if ($links) {
 	} else echo 'KO http://'.get_server_name().'/submit.php?url='.$url;
 }
 
-if ($json) echo json_encode($dict);
+if ($json) {
+		echo json_encode($dict);
+		echo $ending;
+}
 ?>
