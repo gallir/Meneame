@@ -29,6 +29,7 @@ $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
 
+$rows = -1; // Don't show page numbers by default
 $cat = $_REQUEST['category'];
 
 switch ($globals['meta']) {
@@ -76,6 +77,7 @@ switch ($globals['meta']) {
 			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
+			$rows = Link::count('queued');
 			$from_where = "FROM links WHERE link_status='queued'";
 			$tab = 1;
 		}
@@ -116,7 +118,7 @@ if ($links) {
 		}
 	}
 }
-do_pages(-1, $page_size);
+do_pages($rows, $page_size);
 echo '</div>'."\n";
 
 do_footer_menu();
