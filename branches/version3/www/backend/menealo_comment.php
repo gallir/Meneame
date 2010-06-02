@@ -51,9 +51,18 @@ if ($value < 0 && $current_user->user_id == (int) $db->get_var("select link_auth
 	error(_('no votes negativo a comentarios de tus envíos'));
 }
 
-$vote = new Vote('comments', $id, $current_user->user_id);
-if ($vote->exists(true)) {
-	error(_('ya se votó antes con el mismo usuario o IP'));
+$comment = new Comment();
+$comment->id = $id;
+if (!$comment->read_basic()) {
+	error(_('comentario inexistente'));
+}
+
+if ($comment->author == $current_user->user_id) {
+	error(_('no puedes votar a tus comentarios'));
+}
+
+if ($comment->date < time() - $globals['time_enabled_comments']) {
+	error(_('votos cerrados'));
 }
 
 // Check the user is not a clon by cookie of others that voted the same cooemnt
@@ -86,35 +95,22 @@ if ($votes_freq > $freq) {
 	}
 }
 
-$vote->value = $value * $current_user->user_karma;
-$votes_info = $db->get_row("select comment_user_id, comment_votes, comment_karma, UNIX_TIMESTAMP(comment_date) as date from comments where comment_id=$id");
-
-if ($votes_info->comment_user_id == $current_user->user_id) {
-	error(_('no puedes votar a tus comentarios'));
+$value = round($value * $current_user->user_karma);
+if (!$comment->insert_vote($value)) {
+	error(_('ya se votó antes con el mismo usuario o IP'));
 }
 
-if ($votes_info->date < time() - $globals['time_enabled_comments']) {
-	error(_('votos cerrados'));
-}
-
-if (!$vote->insert()) {
-	error(_('ya ha votado antes'));
-}
-
-
-$votes_info->comment_votes++;
-$votes_info->comment_karma += $vote->value;
-if ($vote->value > 0) $dict['image'] = $globals['base_static'].'img/common/vote-up-gy01.png';
+$comment->votes++;
+$comment->karma += $value;
+if ($value > 0) $dict['image'] = $globals['base_static'].'img/common/vote-up-gy01.png';
 else $dict['image'] = $globals['base_static'].'img/common/vote-down-gy01.png';
 
 $dict['id'] = $id;
-$dict['votes'] = $votes_info->comment_votes;
-$dict['value'] = $vote->value;
-$dict['karma'] = $votes_info->comment_karma;
+$dict['votes'] = $comment->votes;
+$dict['value'] = $value;
+$dict['karma'] = $comment->karma;
 
 echo json_encode($dict);
-
-$db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$vote->value, comment_date=comment_date where comment_id=$id and comment_user_id != $current_user->user_id");
 
 function error($mess) {
 	$dict['error'] = $mess;

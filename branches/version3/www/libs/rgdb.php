@@ -18,10 +18,8 @@ class RGDB extends mysqli {
 	}
 
 	function __destruct() {
-		// Commit dangling transactions
-		if ($this->in_transaction > 0) {
-    			parent::commit();
-		}
+		// Rollback dangling transactions
+    	$this->rollback();
 	}
 
 	function hide_errors() {
@@ -34,7 +32,7 @@ class RGDB extends mysqli {
 
 	function transaction() {
 		if ($this->in_transaction == 0) {
-    			$this->query('START TRANSACTION');
+    		$this->query('START TRANSACTION');
 		}
 		$this->in_transaction++;
 		return $this->in_transaction;
@@ -43,7 +41,15 @@ class RGDB extends mysqli {
 	function commit() {
 		$this->in_transaction--;
 		if ($this->in_transaction == 0) {
-    			parent::commit();
+			parent::commit();
+		}
+		return $this->in_transaction;
+	}
+
+	function rollback() {
+		if ($this->in_transaction > 0) {
+			parent::rollback();
+			$this->in_transaction = 0;
 		}
 		return $this->in_transaction;
 	}

@@ -20,7 +20,9 @@ class Comment {
 	var $read = false;
 	var $ip = '';
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id), users ";
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id), users ";
+
+	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
 
 
 	static function from_db($id) {
@@ -90,6 +92,21 @@ class Comment {
 		$this->read = false;
 		return false;
 	}
+
+	function read_basic() {
+		global $db, $current_user;
+		$id = $this->id;
+		if(($result = $db->get_row("SELECT".Comment::SQL_BASIC."WHERE comment_id = $id"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
+			$this->order = $this->c_order; // Order is a reserved word in SQL
+			$this->read = true;
+			if($this->order == 0) $this->update_order();
+			return true;
+		}
+		$this->read = false;
+		return false;
+	}
+
 
 	function print_summary($link = 0, $length = 0, $single_link=true) {
 		global $current_user, $globals;
@@ -217,7 +234,6 @@ class Comment {
 	function print_shake_icons() {
 		global $globals, $current_user;
 
-		$this->vote_exists();
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 	 		echo '<span id="c-votes-'.$this->id.'">';
 			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('informativo, opinión razonada, buen humor...').'"><img src="'.$globals['base_static'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
@@ -239,15 +255,26 @@ class Comment {
 		if ($this->voted) return $this->voted;
 	}
 
-	function insert_vote() {
-		global $current_user;
+	function insert_vote($value = 0) {
+		global $current_user, $db;
+
+		if (!$value) $value = $current_user->user_karma;
+
 		$vote = new Vote('comments', $this->id, $current_user->user_id);
 		if ($vote->exists(true)) {
 			return false;
 		}
-		$vote->value = $current_user->user_karma;
-		if($vote->insert()) return true;
-		return false;
+		$vote->value = $value;
+		$db->transaction();
+		if($vote->insert()) {
+			if ($current_user->user_id != $this->author) {
+				$db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
+			}
+		} else {
+			$vote->value = false;
+		}
+		$db->commit();
+		return $vote->value;
 	}
 
 

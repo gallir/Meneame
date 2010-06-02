@@ -776,13 +776,16 @@ class Link {
 			$karma_value = 0;
 		}
 		$vote->value=$value;
+		$db->transaction();
 		if($vote->insert()) {
 			$db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
 			$this->update_votes();
 			$this->read_basic();
-			return $value;
+		} else {
+			$value = false;
 		}
-		return false;
+		$db->commit();
+		return $value;
 	}
 
 	function publish() {
