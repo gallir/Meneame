@@ -30,8 +30,7 @@ if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['ho
 }
 
 $url = preg_replace('/\/$/', '', $url);
-$all = intval($_GET['all']);
-if ($all == '1') {
+if (isset($_GET['all'])) {
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url%' order by link_date DESC limit 100");
 } else {
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url in ('$url', '$url/')");
