@@ -178,7 +178,7 @@ if ($links) {
 		$karma_pos_ano = 0;
 
 
-		$affinity = check_affinity($link->author, $past_karma*0.3);
+		$affinity = User::calculate_affinity($link->author, $past_karma*0.3);
 
 		// Calculate the real karma for the link
 		$link->calculate_karma();
@@ -402,43 +402,4 @@ function publish($link) {
 
 }
 
-
-function check_affinity($uid, $min_karma) {
-	global $globals, $db;
-
-	$affinity = array();
-	$log = new Annotation("affinity-$uid");
-	if ($log->read() && $log->time > time() - 3600*4) {
-		return unserialize($log->text);
-	}
-	$db->query("delete from annotations where annotation_key like 'affinity-%' and annotation_time < date_sub(now(), interval 15 day)");
-	$link_ids = $db->get_col("SELECT SQL_NO_CACHE link_id FROM links WHERE link_date > date_sub(now(), interval 30 day) and link_author = $uid and link_karma > $min_karma");
-	$nlinks = count($link_ids);
-	if ($nlinks < 5) {
-		$log->store(time() + 86400*15);
-		return false;
-	}
-
-	$links = implode(',', $link_ids);
-	$votes = $db->get_results("select SQL_NO_CACHE vote_user_id as id, sum(vote_value/abs(vote_value)) as count from votes where vote_link_id in ($links) and vote_type='links' group by vote_user_id");
-	if ($votes) {
-		foreach ($votes as $vote) {
-			if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
-				$c = $vote->count/$nlinks * 0.80;
-				if ($vote->count > 0) {
-					$affinity[$vote->id] = round((1 - $c)*100);  // store as int (percent) to save space,
-				} else {
-					$affinity[$vote->id] = round((-1 - $c)*100);  // store as int (percent) to save space,
-				}
-			
-			}
-		}
-		$log->text = serialize($affinity);
-	} else {
-		$affinity = false;
-	}
-	$log->store(time() + 86400*15); // Expire in 15 days
-	return $affinity;
-
-}
 ?>
