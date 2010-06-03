@@ -178,7 +178,7 @@ if ($links) {
 		$karma_pos_ano = 0;
 
 
-		$affinity = User::calculate_affinity($link->author, $past_karma*0.3);
+		User::calculate_affinity($link->author, $past_karma*0.3);
 
 		// Calculate the real karma for the link
 		$link->calculate_karma();
