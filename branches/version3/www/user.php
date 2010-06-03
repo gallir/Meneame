@@ -360,6 +360,13 @@ function do_profile() {
 	echo '<dt>'._('notas').':</dt><dd>'.$user->total_posts.'</dd>';
 	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
 
+	// Print affinity to this user
+	if ($current_user->user_id && ($aff_to = User::get_affinity($user->id, $current_user->user_id))) {
+		$aff_to = round($aff_to/100, 2);
+		echo '<dt><strong>'._('afinidad con este usuario').'</strong>:</dt><dd>'.$aff_to .'</dd>';
+	}
+
+
 	echo '</dl>';
 
 	if ($user->id == $current_user->user_id) {
