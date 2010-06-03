@@ -20,7 +20,7 @@ class User {
 		return substr($name, 0, 24);
 	}
 
-	static function calculate_affinity($uid, $min_karma = 100) {
+	static function calculate_affinity($uid, $min_karma = 200) {
 		global $globals, $db;
 
 		$affinity = array();
@@ -38,7 +38,9 @@ class User {
 			if ($votes) {
 				foreach ($votes as $vote) {
 					if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
-						$c = $vote->count/$nlinks * 0.80;
+						$w = min(1, $nlinks/10);
+						$w = max(0.7, $w);
+						$c = $vote->count/$nlinks * $w;
 						if ($vote->count > 0) {
 							$affinity[$vote->id] = round((1 - $c)*100);  // store as int (percent) to save space,
 						} else {
@@ -50,7 +52,7 @@ class User {
 		}
 
 		// Check vote-to-comments affinity
-		$comment_ids = $db->get_col("SELECT SQL_NO_CACHE comment_id FROM comments WHERE comment_date > date_sub(now(), interval 3 day) and comment_user_id = $uid and comment_karma > 30");
+		$comment_ids = $db->get_col("SELECT SQL_NO_CACHE comment_id FROM comments WHERE comment_date > date_sub(now(), interval 3 day) and comment_user_id = $uid and comment_votes > 1");
 		$ncomments = count($comment_ids);
 		if ($ncomments > 4) {
 			$comments = implode(',', $comment_ids);
@@ -81,7 +83,6 @@ class User {
 		if (count($affinity) > 0) {
 			$log->text = serialize($affinity);
 		} else {
-			$log->text = '';
 			$affinity = false;
 		}
 		$log->store(time() + 86400*15); // Expire in 15 days

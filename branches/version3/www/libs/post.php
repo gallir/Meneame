@@ -265,7 +265,6 @@ class Post {
 			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
 		}
 		// wait for the DOM to be loaded 
-		echo '$(function() { $("#post").rte(); });'."\n";
 		echo'$(\'#thisform'.$this->id.'\').ajaxForm(options);' ."\n";
 		echo '</script>'."\n";
 	}
