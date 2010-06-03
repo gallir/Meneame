@@ -256,6 +256,7 @@ class Post {
 		echo '</fieldset>'."\n";
 		echo '</div>'."\n";
 
+
 		echo'<script type="text/javascript">'."\n";
 		// prepare Options Object 
 		if ($this->id == 0) {
@@ -264,6 +265,7 @@ class Post {
 			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
 		}
 		// wait for the DOM to be loaded 
+		echo '$(function() { $("#post").rte(); });'."\n";
 		echo'$(\'#thisform'.$this->id.'\').ajaxForm(options);' ."\n";
 		echo '</script>'."\n";
 	}

@@ -104,7 +104,6 @@ if (!$link->insert_vote($value)) {
 }
 
 if ($link->status == 'discard' && $current_user->user_id>0 && $link->votes > $link->negatives && $link->karma > 0) {
-	$link->read_basic();
 	$link->status = 'queued';
 	$link->store_basic();
 }

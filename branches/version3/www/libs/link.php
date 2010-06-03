@@ -759,14 +759,14 @@ class Link {
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
 				if ($current_user->user_id != $this->author && 
-						($affinity = $this->affinity_get($current_user->user_id)) <  0 ) {
+						($affinity = User::get_affinity($this->author, $current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
 				} else {
 					$karma_value = round(-$current_user->user_karma);
 				}
 			} else {
 				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author && 
-						($affinity = $this->affinity_get($current_user->user_id)) > 0 ) {
+						($affinity = User::get_affinity($this->author, $current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
 				} else {
 					$karma_value=round($value);
@@ -996,7 +996,7 @@ class Link {
 		}
 		$this->annotation = '';
 		// Read the stored affinity for the author
-		$affinity = $this->affinity_get();
+		$affinity = User::get_affinity($this->author);
 
 		// high =~ users with higher karma greater than average
 		// low =~ users with higher karma less-equal than average
@@ -1170,19 +1170,6 @@ class Link {
 		$dict = unserialize($log->text);
 		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
 		return $dict; // Asked for the whole dict
-	}
-
-	// $this->author is the key in annotations
-	function affinity_get($from = false) {
-		global $current_user;
-
-		$log = new Annotation("affinity-$this->author");
-		if (!$log->read()) return false;
-		$dict = unserialize($log->text);
-		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
-		if (!$from) return $dict; // Asked for the whole dict
-		if (abs($dict[$from]) <= 100) return intval($dict[$from]); // Asked just a value;
-		return false; // Nothing found
 	}
 
 	// Thumbnails management
