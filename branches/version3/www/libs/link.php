@@ -72,7 +72,7 @@ class Link {
 
 		$count = get_count("$status.$cat");
 		if ($count === false || $force) {
-			if ($cat) $cond = " and link_category = $cat ";
+			if ($cat) $cond = " and link_category in ($cat) ";
 			$count = $db->get_var("select count(*) from links where link_status = '$status' $cond");
 			set_count("$status.$cat", $count);
 		}

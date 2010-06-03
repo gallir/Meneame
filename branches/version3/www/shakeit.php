@@ -37,7 +37,6 @@ switch ($globals['meta']) {
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
-		//$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 7;
 		break;
@@ -63,18 +62,20 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$globals['ads'] = false;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status in ('discard', 'abuse', 'autodiscard') and (link_votes >0 || link_author = $current_user->user_id)";
+		$from_where = "FROM links WHERE link_status in ('discard', 'abuse', 'autodiscard')";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 5;
 		$globals['tag_status'] = 'discard';
+		$rows = Link::count('discard') + Link::count('autodiscard') + Link::count('abuse');
 		break;
 	case '_all':
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = " ORDER BY link_date DESC ";
-		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*5).'"'; // x days
 		if ($globals['meta_current'] > 0) {
-			$from_where = "FROM links WHERE link_status='queued' and link_date > $from_time and link_category in (".$globals['meta_categories'].") ";
+			if ($cat) $rows = Link::count('queued', $cat);
+			else $rows = Link::count('queued', $globals['meta_categories']);
+			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
 			$rows = Link::count('queued');
@@ -83,6 +84,11 @@ switch ($globals['meta']) {
 		}
 		break;
 }
+
+if($cat) {
+	$from_where .= " AND link_category=$cat ";
+}
+
 
 do_header(_('noticias pendientes') . ' | men&eacute;ame');
 do_tabs("main","shakeit");
@@ -103,14 +109,11 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-if($cat) {
-	$from_where .= " AND link_category=$cat ";
-}
-
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
 	foreach($links as $link_id) {
 		$link = Link::from_db($link_id);
+		if ($link->votes == 0 && $link->author != $current_user->user_id) continue;
 		if ($offset < 1000) {
 			$link->print_summary('full', 16);
 		} else {
