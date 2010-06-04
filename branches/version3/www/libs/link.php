@@ -778,10 +778,22 @@ class Link {
 		$vote->value=$value;
 		$db->transaction();
 		if($vote->insert()) {
-			if ($karma_value != 0) {
+			// For published links we update counter fields
+			if ($this->status == 'published') {
+				if ($vote->user > 0) {
+					if ($value > 0) {
+						$db->query("update links set link_votes=link_votes+1 where link_id = $this->id");
+					} else {
+						$db->query("update links set link_negatives=link_negatives+1 where link_id = $this->id");
+					}
+				} else {
+					$db->query("update links set link_anonymous=link_anonymous+1 where link_id = $this->id");
+				}
+			} else {
+				// If not published we update karma and count all votes
 				$db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
+				$this->update_votes();
 			}
-			$this->update_votes();
 			$db->commit();
 			$this->read_basic();
 		} else {
