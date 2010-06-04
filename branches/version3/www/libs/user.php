@@ -52,7 +52,7 @@ class User {
 		}
 
 		// Check vote-to-comments affinity
-		$comment_ids = $db->get_col("SELECT SQL_NO_CACHE comment_id FROM comments WHERE comment_date > date_sub(now(), interval 3 day) and comment_user_id = $uid and comment_votes > 1");
+		$comment_ids = $db->get_col("SELECT SQL_NO_CACHE comment_id FROM comments WHERE comment_date > date_sub(now(), interval 3 day) and comment_user_id = $uid and comment_votes > 2");
 		$ncomments = count($comment_ids);
 		if ($ncomments > 4) {
 			$comments = implode(',', $comment_ids);
@@ -84,6 +84,7 @@ class User {
 			$log->text = serialize($affinity);
 		} else {
 			$affinity = false;
+			$log->text = '';
 		}
 		$log->store(time() + 86400*15); // Expire in 15 days
 		return $affinity;
