@@ -268,10 +268,10 @@ class Comment {
 		// Affinity
 		if ($current_user->user_id != $this->author
 				&& ($affinity = User::get_affinity($this->author, $current_user->user_id)) ) {
-			if ($value < -2 && $affinity < 0) {
-					$value = round(min(-2, $value *  $affinity/100));
-			} elseif ($value > 2 && $affinity > 0) {
-					$value = round(max($value * $affinity/100, 2));
+			if ($value < -1 && $affinity < 0) {
+					$value = round(min(-1, $value *  $affinity/100));
+			} elseif ($value > 1 && $affinity > 0) {
+					$value = round(max($value * $affinity/100, 1));
 			}
 		}
 
