@@ -397,7 +397,7 @@ class Comment {
 			echo '<div class="commentform">'."\n";
 			echo '<form action="" method="post">'."\n";
 			echo '<fieldset>'."\n";
-			echo '<legend>'._('envía un comentario').'</legend>'."\n";
+			echo '<legend>'._('envía un comentario'). ' <em style="font-size:80%">'._('porque alguien en Internet está equivocado').'</em></legend>'."\n";
 			print_simpleformat_buttons('comment');
 			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 			echo '<div><textarea name="comment_content" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
