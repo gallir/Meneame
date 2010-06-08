@@ -114,7 +114,7 @@ function print_index_tabs($option=-1) {
 		$toggle_active[$option] = &$toggler;
 	}
 
-	echo '<ul class="subheader" style="padding-left: 100px">'."\n";
+	echo '<ul class="subheader">'."\n";
 	if ($current_user->has_personal) {
 		echo '<li '.$active[7].'><span><a href="'.$globals['base_url'].'">'._('personal'). '</a>'.$toggle_active[7].'</span></li>'."\n";
 	}

@@ -264,7 +264,7 @@ background-color: #ff6400;
 #naviwrap li a{
 text-decoration: none;
 color: inherit;
-margin-left: 5px;
+margin-left: 8px;
 text-transform: capitalize;
 line-height: 20px;
 }
@@ -1875,7 +1875,7 @@ vertical-align: middle;
 .subheader {
 height: 25px !important;
 clear: both;
-padding-left: 100px;
+padding-left: 97px;
 font-size: 0.9em;
 padding-top: 5px;
 background: #feefe5;

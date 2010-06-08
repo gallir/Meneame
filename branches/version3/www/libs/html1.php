@@ -738,7 +738,7 @@ function do_best_comments() {
 
 	if ($globals['mobile']) return;
 
-	$foo_link = new Link();
+	$foo = new Comment();
 	$output = '';
 
 	$key = 'best_comments_'.$globals['css_main'];
@@ -753,8 +753,8 @@ function do_best_comments() {
 	if ($res) {
 		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4></div><div class="comments"><ul>'."\n";
 		foreach ($res as $comment) {
-			$foo_link->uri = $comment->link_uri;
-			$link = $foo_link->get_relative_permalink().'/000'.$comment->comment_order;
+			$foo->id = $comment->comment_id;
+			$link = $foo->get_relative_individual_permalink();
 			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
 			$output .= '<p><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></p></li>'."\n";
 		}
