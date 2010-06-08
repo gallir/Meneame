@@ -91,7 +91,7 @@ class User {
 	}
 
 	// $user_id is the key in annotations
-	function get_affinity($id, $from = false) {
+	static function get_affinity($id, $from = false) {
 		global $current_user;
 
 		$log = new Annotation("affinity-$id");
