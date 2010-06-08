@@ -13,7 +13,7 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$dict = array();
 	header('Content-Type: application/json; charset=utf-8');
 	if ($_GET['jsonp']) {
-		$jsonp = preg_replace('/[^\w\d]/', '', $_GET['jsonp']);
+		$jsonp = preg_replace('/[^\w\d\.\-]/', '', $_GET['jsonp']);
 		echo $jsonp . '(';
 		$ending = ')';
 	} else $ending = '';
