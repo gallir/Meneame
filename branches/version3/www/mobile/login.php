@@ -73,7 +73,7 @@ function do_login() {
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
-			recover_error(_('usuario inexistente, sin validar, o clave incorrecta'));
+			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
 		} else {
 			UserAuth::check_clon_from_cookies();
@@ -85,7 +85,7 @@ function do_login() {
 			die;
 		}
 	}
-	echo '<p><label for="name">'._('usuario').':</label><br />'."\n";
+	echo '<p><label for="name">'._('usuario o email').':</label><br />'."\n";
 	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.htmlentities($username).'" /></p>'."\n";
 	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
