@@ -146,14 +146,15 @@ function do_header($title, $id='home') {
 	echo '<ul id="headtools">' . "\n";
 
 	// Main search form
-	echo '<li class="noborder">' . "\n";
+	echo '<li class="searchbox">' . "\n";
 	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
+	echo '<img src="'.$globals['base_static'].'img/common/search-left-04.png" width="6" height="22"/>';
 	if (!empty($_REQUEST['q'])) {
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['q']).'" />';
 	} else {
 		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" id="submit_image" width="14" height="14"/></a>'."\n";
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-04.png" id="submit_image" width="28" height="22"/></a>'."\n";
 	
 	if ($globals['search_options']) {
 		foreach ($globals['search_options'] as $name => $value) {
@@ -165,33 +166,31 @@ function do_header($title, $id='home') {
 	echo '</li>' . "\n";
 	// form
 
-	echo '<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="'.$globals['base_static'].'img/common/help-bt.png" alt="help button" title="'._('ayuda').'" width="16" height="16" /></a></li>';
+	echo '<li><a href="http://meneame.wikispaces.com/Comenzando">'._('ayuda').' <img src="'.$globals['base_static'].'img/common/help-bt-02.png" alt="help button" title="'._('ayuda').'" width="13" height="16" /></a></li>';
 	if ($current_user->admin) {
-		echo '<li><a href="'.$globals['base_url'].'admin/bans.php"><img src="'.$globals['base_static'].'img/common/tools-bt.png" alt="tools button" title="herramientas" width="19" height="16" /> </a></li>' . "\n";
+		echo '<li><a href="'.$globals['base_url'].'admin/bans.php">admin <img src="'.$globals['base_static'].'img/common/tools-bt-02.png" alt="tools button" title="herramientas" width="16" height="16" /> </a></li>' . "\n";
 	}
 
 	if($current_user->authenticated) {
 		$randhello = array_rand($greetings, 1);
- 		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="15" height="15" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /></a></li>' . "\n";
+ 		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
+  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/logout-bt-02.png" alt="" title="logout" width="22" height="16" /></a></li>' . "\n";
 	} else {
-  		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . '</a></li>' . "\n";
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt.png" alt="login button" title="login" width="16" height="16" /> </a></li>' . "\n";
+  		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . ' <img src="'.$globals['base_static'].'img/common/register-bt-02.png" alt="" title="register" width="16" height="18" /></a></li>' . "\n";
+  		echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt-02.png" alt="" title="login" width="22" height="16" /></a></li>' . "\n";
 	}
 
 	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
 
-	
-
 	echo '</ul>' . "\n";
 	echo '</div>' . "\n";
-	echo '<a id="eli" href="'.$globals['base_url'].'" title="'._('inicio').'">'._("Eli").'</a>'."\n";
+
 	echo '<div id="naviwrap">'."\n";
-	echo '<ul id="navigation">'."\n";
-	echo '<li class="first"><a href="'.$globals['base_url'].'submit.php">enviar noticia</a></li>'."\n";
-	echo '<li class="second"><a href="'.$globals['base_url'].'shakeit.php">pendientes</a></li>'."\n";
-	echo '<li class="third"><a href="'.$globals['base_url'].'sneak.php">fisgona</a></li>'."\n";
-	echo '<li class="fourth"><a href="'.$globals['base_url'].'notame/">nótame</a></li>'."\n";
+	echo '<ul>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'submit.php">'._('enviar noticia').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('pendientes').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'sneak.php">'._('fisgona').'</a></li>'."\n";
+	echo '<li><a href="'.$globals['base_url'].'notame/">'._('nótame').'</a></li>'."\n";
 	echo '</ul></div>'."\n";
 	do_banner_top();
 	echo '<div id="container">'."\n";
