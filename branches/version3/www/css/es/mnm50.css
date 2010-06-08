@@ -169,7 +169,7 @@ background-color: #fff;
 #header{
 position: relative;
 height: 36px;
-background-color: #FF6400;
+background: #FF6400 url(../../img/common/header-bckg-02.png) repeat-x;
 font-family: arial, helvetica, sans serif;
 font-size: 14px;
 }
