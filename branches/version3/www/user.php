@@ -112,6 +112,7 @@ switch ($view) {
 	case 'commented':
 	case 'conversation':
 	case 'shaken':
+	case 'friends_shaken':
 	case 'shaken_comments':
 	case 'friends':
 	case 'friend_of':
@@ -155,6 +156,11 @@ switch ($view) {
 		do_user_tabs(2, $login, true);
 		do_shaken();
 		do_pages($rows, $page_size);
+		break;
+	case 'friends_shaken':
+		do_user_tabs(2, $login, true);
+		do_friends_shaken();
+		do_pages(-1, $page_size);
 		break;
 	case 'friends':
 		do_user_tabs(7, $login, true);
@@ -436,7 +442,7 @@ function do_profile() {
 function do_history () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 0);
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 0);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -456,7 +462,7 @@ function do_history () {
 function do_favorites () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 2);
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 2);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -478,7 +484,7 @@ function do_shaken () {
 
 	if ($globals['bot']) return;
 
-	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites')), 1);
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 1);
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
 	$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
@@ -502,6 +508,31 @@ function do_shaken () {
 		}
 		echo '<br/><span style="color: #FF6400;"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 	}
+}
+
+function do_friends_shaken () {
+	global $db, $rows, $user, $offset, $page_size, $globals;
+
+	if ($globals['bot']) return;
+
+	do_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 3);
+
+	$friends = $db->get_col("select friend_to from friends where friend_type = 'manual' and friend_from = $user->id and friend_value > 0");
+	if ($friends) {
+		$friends_list = implode(',', $friends);
+		$sql = "select distinct vote_link_id as link_id from votes where vote_type = 'links' and vote_user_id in ($friends_list) and vote_value > 0 order by vote_link_id desc";
+
+		$links = $db->get_results("$sql LIMIT $offset,$page_size");
+	}
+
+	if ($links) {
+		foreach($links as $dblink) {
+			$link = Link::from_db($dblink->link_id);
+			$link->do_inline_friend_votes = true;
+			$link->print_summary();
+		}
+	}
+
 }
 
 
