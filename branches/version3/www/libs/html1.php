@@ -148,7 +148,7 @@ function do_header($title, $id='home') {
 	// Main search form
 	echo '<li class="searchbox">' . "\n";
 	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
-	echo '<img src="'.$globals['base_static'].'img/common/search-left-04.png" width="6" height="22"/>';
+	echo '<img src="'.$globals['base_static'].'img/common/search-left-04.png" width="6" height="22" alt=""/>';
 	if (!empty($_REQUEST['q'])) {
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['q']).'" />';
 	} else {

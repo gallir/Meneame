@@ -250,16 +250,7 @@ function do_profile() {
 	if ($current_user->user_id == $user->id) {
 		echo '<div id="avatar_indicator" style="margin:0;padding:0;height:12px"></div>';
 		echo '<button id="avatar_upload" style="margin:0" title="'._('imagen cuadrada de no más de 400 KB, sin transparencias').'">'._('cambiar avatar').'</button>'."\n";
-		echo '<script type="text/javascript">'."\n";
-		echo '$(document).ready(function() {'."\n";
-		echo '	new AjaxUpload("avatar_upload", {name: "image",'."\n";
-		echo '		action: "'.$globals['base_url'].'backend/avatar_upload.php",'."\n";
-		echo '		responseType: "json",'."\n";
-		echo '		onChange: function () {avatar_preupload()},'."\n";
-		echo '		onComplete: function (f, r) {avatar_uploaded(f, r)}'."\n";
-		echo '	});'."\n";
-		echo '});'."\n";
-		echo '</script>'."\n";
+		@include(mnminclude.'foreign/avatar_upload.html');
 	}
 	echo '</div>';
 
@@ -815,28 +806,3 @@ function print_categories_checkboxes($user) {
 	echo '</form>';
 }
 ?>
-<script type="text/javascript">
-function avatar_preupload() {
-	$('#avatar_upload').attr("disabled", true);
-	$('#avatar_indicator').html('<img src="'+base_static+'img/common/indicator_horizontal.gif"/>');
-}
-
-function avatar_uploaded(file, response) {
-	if (response.error) {
-		alert(response.error);
-	} 
-	if (response.avatar_url.length > 0) { 
-		$("#avatar").attr("src",response.avatar_url);
-	}
-	$('#avatar_indicator').html('');
-	$('#avatar_upload').attr("disabled", false);
-}
-
-function select_meta(input, meta) {
-	if (input.checked) new_value = true;
-	else new_value = false;
-	meta_id = '#meta-'+meta;
-	$(meta_id+' input').attr({checked: new_value});
-	return false;
-}
-</script>
