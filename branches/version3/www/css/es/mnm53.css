@@ -295,8 +295,7 @@ padding-top: 12px;
 }
 
 #newswrap {
-margin: 10px 330px 0 10px;
-/*font-size: small;*/
+margin: 10px 330px 0 5px;
 }
 
 #singlewrap {
@@ -582,7 +581,7 @@ margin: 10px 10px 10px 0px;
 
 
 #footwrap {
-margin: 5em 100px 0 100px;
+margin: 5em 87px 0 87px;
 clear: both;
 }
 
@@ -927,7 +926,7 @@ position: relative;
 }
 
 .news-body {
-padding-left: 85px;
+padding-left: 80px;
 padding-right: 5px;
 }
 
@@ -988,7 +987,7 @@ color: #f00;
 .news-shakeit {
 position: absolute;
 top: 10px;
-left: 12px;
+left: 7px;
 width: 65px;
 text-align: center;
 font-size: 8.2pt;
@@ -1874,7 +1873,7 @@ vertical-align: middle;
 .subheader {
 height: 25px !important;
 clear: both;
-padding-left: 97px;
+padding-left: 87px;
 font-size: 0.9em;
 padding-top: 5px;
 background: #feefe5;
