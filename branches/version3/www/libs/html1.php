@@ -233,9 +233,6 @@ function do_js_includes() {
 		echo $globals['extra_js_text']."\n";
 		echo '</script>'."\n";
 	}
-	//echo '<link rel="stylesheet" href="'.$globals['base_static'].'js/jquery.wysiwyg.css" type="text/css" />'."\n";
-	//echo '<script type="text/javascript" src="'.$globals['base_static'].'js/jquery.wysiwyg.js"></script>'."\n";
-	echo '<script type="text/javascript" src="'.$globals['base_static'].'js/jquery.rte.js"></script>'."\n";
 
 	echo '<script type="text/javascript">'."\n";
 	echo 'if(top.location != self.location)top.location = self.location;'."\n";
