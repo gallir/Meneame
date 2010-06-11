@@ -17,6 +17,7 @@ if ($current_user->user_id > 0) {
 }
 
 
+
 $user=new User();
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
@@ -32,8 +33,10 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
+$page_title = _('nótame') . ' | men&eacute;ame';
 switch ($option) {
 	case '_geo':
+		$page_title = _('nótame') . ' geo | men&eacute;ame';
 		require_once(mnminclude.'geo.php');
 		$tab_option = 5;
 		if ($current_user->user_id > 0 && ($latlng = geo_latlng('user', $current_user->user_id))) {
@@ -52,6 +55,7 @@ switch ($option) {
 		break;
 
 	case '_best':
+		$page_title = _('mejores notas') . ' | men&eacute;ame';
 		$tab_option = 2;
 		$min_date = date("Y-m-d H:00:00", time() - 86400); //  about 24 hours
 		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
@@ -60,11 +64,12 @@ switch ($option) {
 
 	case '_friends':
 		if ($current_user->user_id > 0) {
+			$page_title = _('amigos de') . ' '. $current_user->user_login;
 			$tab_option = 3;
 			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0 ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0");
 		} else {
-			$tab_option = 1;	
+			$tab_option = 1;
 			$sql = "SELECT post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts");
 		}
@@ -73,6 +78,7 @@ switch ($option) {
 
 	case '_favorites':
 		if ($current_user->user_id > 0) {
+			$page_title = _('favoritas de') . ' '. $current_user->user_login;
 			$tab_option = 7;
 			$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY post_id DESC LIMIT $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post'");
@@ -86,6 +92,7 @@ switch ($option) {
 
 	case '_conversation':
 		if ($current_user->user_id > 0) {
+			$page_title = _('conversación de') . ' ' . $current_user->user_login;
 			$tab_option = 6;
 			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
 			$rows =  $db->get_var("SELECT count(*) FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ");
@@ -108,6 +115,7 @@ switch ($option) {
 				header('Location: '.post_get_base_url($user->username).'/'.$post_id);
 				die;
 			}
+			$page_title = _('nota de') . ' ' . $current_user->user_login . " ($post_id)";
 			array_push($globals['search_options']['u'] = $user->username);
 			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
 			$rows = 1;
@@ -116,6 +124,7 @@ switch ($option) {
 			if(!$user->read()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
+			$page_title = _('notas de') . ' ' . $current_user->user_login;
 			array_push($globals['search_options']['u'] = $user->username);
 			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
@@ -125,7 +134,7 @@ switch ($option) {
 
 $globals['ads'] = true;
 
-do_header(_('nótame') . ' | men&eacute;ame');
+do_header($page_title);
 do_posts_tabs($tab_option, $user->username);
 
 /*** SIDEBAR ****/
