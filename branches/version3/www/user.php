@@ -72,6 +72,8 @@ if(!$user->read()) {
 }
 $login = $user->username; // Just in case, we user the database username
 
+$globals['search_options'] = array('u' => $user->username);
+
 $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 

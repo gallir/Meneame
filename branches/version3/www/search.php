@@ -81,7 +81,7 @@ echo '</div>' . "\n";
 echo '<div id="newswrap">'."\n";
 
 // Search form
-echo '<div class="genericform" style="text-align: center">';
+echo '<div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">';
 echo '<fieldset>';
 
 print_search_form();
@@ -150,7 +150,7 @@ function print_search_form() {
 	echo '</select>';
 		
 	$visibility = $_REQUEST['w'] != 'links' ? ' disabled="disabled"' : '';
-	echo '<select name="p" id="p" '.$visibility.'>';
+	echo '&nbsp;&nbsp;<select name="p" id="p" '.$visibility.'>';
 	switch ($_REQUEST['p']) {
 		case 'url':
 		case 'tags':
@@ -219,6 +219,9 @@ function print_search_form() {
 		echo '<option value="date">'._('por fecha').'</option>';
 	}
 	echo '</select>';
+	echo ' &nbsp;&nbsp;';
+	echo '<label for="u">' . _("usuario") . ':</label>';
+	echo '<input type="text" name="u" value="'.htmlentities($_REQUEST['u']).'" size="12" style="font-weight: bold;"/>';
 	echo '</form>';
 
 	echo '<script type="text/javascript">';

@@ -52,6 +52,7 @@ if ($_POST['process']=='newcomment') {
 
 
 $username = $comment->type == 'admin'?'admin':$comment->username;
+$globals['search_options'] = array('w' => 'comments', 'u' => $comment->username);
 $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_sub_text($comment->content, 250);
 
 do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
