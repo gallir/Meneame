@@ -115,7 +115,7 @@ switch ($option) {
 				header('Location: '.post_get_base_url($user->username).'/'.$post_id);
 				die;
 			}
-			$page_title = _('nota de') . ' ' . $current_user->user_login . " ($post_id)";
+			$page_title = _('nota de') . ' ' . $user->username . " ($post_id)";
 			array_push($globals['search_options']['u'] = $user->username);
 			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
 			$rows = 1;
