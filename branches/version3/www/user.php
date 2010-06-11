@@ -111,16 +111,19 @@ if (! $user->disabled()
 switch ($view) {
 	case 'categories':
 	case 'history':
-	case 'commented':
-	case 'conversation':
 	case 'shaken':
 	case 'friends_shaken':
-	case 'shaken_comments':
 	case 'friends':
 	case 'friend_of':
 	case 'ignored':
 	case 'favorites':
+		$globals['noindex'] = true;
+		breaK;
+	case 'commented':
+	case 'conversation':
+	case 'shaken_comments':
 	case 'favorite_comments':
+		$globals['search_options']['w'] = 'comments';
 		$globals['noindex'] = true;
 		breaK;
 	case 'profile':
