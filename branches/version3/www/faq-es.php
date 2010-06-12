@@ -37,7 +37,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Sólo cuenta el número de votos?</h4>
-<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://websvn.meneame.net/filedetails.php?repname=meneame&path=%2Fbranches%2Fversion3%2Fscripts%2Fpromote9.php">El algoritmo es bastante complejo.</a>.
+<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://websvn.meneame.net/filedetails.php?repname=meneame&path=%2Fbranches%2Fversion3%2Fscripts%2Fpromote9.php">El algoritmo es bastante complejo</a>.
 </p>
 </li>
 
