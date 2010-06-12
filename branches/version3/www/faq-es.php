@@ -25,7 +25,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Cómo promover las historias?</h4>
 <p>Selecciona la opción <a href="shakeit.php"><em>menear historias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
-<p>No te olvides de leer las <a href="http://meneame.net/legal.php">condiciones de uso</a>.</p>
+<p>No te olvides de leer las <a href="http://www.meneame.net/legal.php">condiciones de uso</a>.</p>
 </li>
 
 
@@ -37,7 +37,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Sólo cuenta el número de votos?</h4>
-<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://websvn.meneame.net/filedetails.php?repname=meneame&path=%2Fbranches%2Fversion3%2Fscripts%2Fpromote9.php">El algoritmo es bastante complejo</a>.
+<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://blog.meneame.net/2009/05/07/explicacion-simple-del-algoritmo-de-promocion-de-noticias-promote/">El algoritmo es bastante complejo</a>.
 </p>
 </li>
 
@@ -102,7 +102,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4><a name="we"></a>¿Quién está detrás del menéame?</h4>
-<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://gallir.wordpress.com/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://notame.net">notame.net</a>.
+<p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://gallir.wordpress.com/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://www.meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://www.notame.net">notame.net</a>.
 </p>
 <p>
 Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.net/legal.php#contact">la página de condiciones legales</a>.
@@ -158,14 +158,14 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Dónde notificamos errores, problemas o sugerencias?</h4>
-<p>Ver la <a href="http://meneame.net/legal.php#contact">sección de contacto</a> en la condiciones legales y de uso.
+<p>Ver la <a href="http://www.meneame.net/legal.php#contact">sección de contacto</a> en la condiciones legales y de uso.
 </p>
 </li>
 
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Dónde podemos seguir la evolución de los cambios al menéame?</h4>
-<p>En <a href="http://svn.meneame.net">el SVN</a>.</p>
+<p>En <a href="http://websvn.meneame.net/">el SVN</a>.</p>
 </li>
 
 <li id="<? echo "q$q";$q++;?>">
