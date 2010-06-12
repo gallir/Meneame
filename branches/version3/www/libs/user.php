@@ -13,6 +13,9 @@ define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_
 define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
 
 class User {
+
+	const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
+
 	static function get_valid_username($name) {
 		$name = strip_tags($name);
 		$name = preg_replace('/&.+?;/', '', $name); // kill entities
@@ -209,33 +212,12 @@ class User {
 		$id = $this->id;
 		if($this->id>0) $where = "user_id = $id";
 		elseif(!empty($this->username)) $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
-		elseif(!empty($this->email)) $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled'";
+		elseif(!empty($this->email)) $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
 
 		$this->stats = false;
-		if(!empty($where) && ($user = $db->get_row("SELECT SQL_CACHE * FROM users WHERE $where limit 1"))) {
-			$this->id =$user->user_id;
-			$this->username = $user->user_login;
-			$this->username_register = $user->user_login_register;
-			$this->level = $user->user_level;
+		if(!empty($where) && ($result = $db->get_row("SELECT ".User::SQL." FROM users WHERE $where limit 1"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			if ($this->level == 'admin' || $this->level == 'god') $this->admin = true;
-			$this->comment_pref = $user->user_comment_pref;
-			$date=$user->user_date;
-			$this->date=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");
-			$this->ip = $user->user_ip;
-			$date=$user->user_modification;
-			$this->modification=$db->get_var("SELECT UNIX_TIMESTAMP('$date')");
-			$this->pass = $user->user_pass;
-			$this->email = $user->user_email;
-			$this->email_register = $user->user_email_register;
-			$this->names = $user->user_names;
-			$this->lang = $user->user_lang;
-			$this->karma = $user->user_karma;
-			$this->avatar = $user->user_avatar;
-			$this->public_info = $user->user_public_info;
-			$this->url = $user->user_url;
-			$this->adcode = $user->user_adcode;
-			$this->adchannel = $user->user_adchannel;
-			$this->phone = $user->user_phone;
 			$this->read = true;
 			return true;
 		}
