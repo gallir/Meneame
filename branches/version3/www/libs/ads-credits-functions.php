@@ -76,7 +76,8 @@ function do_banner_story() {
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
 		@include('ads/adsense-middle.inc');
 	}
-	if ($globals['link'] && $globals['link']->category == 27) {
+	if ($globals['link'] && $globals['kalooga_categories'] 
+			&& in_array($globals['link']->category, $globals['kalooga_categories']) ) {
 		@include('ads/kalooga.inc');
 	}
 }

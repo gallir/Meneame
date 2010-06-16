@@ -224,6 +224,10 @@ $globals['captcha_first_login'] = false;
 // Websnapr.com previews
 $globals['do_websnapr'] = false;
 
+// Kalooga related images
+// Example
+//$globals['kalooga_categories'] = array(27, 28);
+
 // Automatic thumbnails size
 $globals['thumb_size'] = 70;
 
