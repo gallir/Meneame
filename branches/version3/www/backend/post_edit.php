@@ -82,9 +82,9 @@ function save_post ($post_id) {
 		$post->randkey=intval($_POST['key']);
 		$post->author=$current_user->user_id ;
 		$post->content=$_POST['post'];
-		$db->transaction();
-		$already_stored = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 12 hour) and post_randkey = $post->randkey")) + $post->same_text_count();
-		if (!$already_stored) {
+
+		$dupe = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 1 hour) and post_randkey = $post->randkey"));
+		if (! $dupe && ! $post->same_text_count() ) {
 			// Verify that there are a period of 1 minute between posts.
 			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 1 minute)"))> 0) {
 				echo 'ERROR: ' . _('debe esperar 1 minuto entre notas');
@@ -105,8 +105,12 @@ function save_post ($post_id) {
 				$annotation->append(_('demasiados enlaces al mismo dominio en las notas').": -$reduction, karma: $user->karma\n");
 
 			}
-			$post->store();
-			$db->commit();
+
+			// Check again for last seconds, ajax calls sometimes add two posts
+			$dupe = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 10 second) and post_randkey = $post->randkey"));
+			if (!$dupe) {
+				$post->store();
+			}
 		} else {
 			echo 'ERROR: ' . _('comentario grabado previamente');
 			die;
