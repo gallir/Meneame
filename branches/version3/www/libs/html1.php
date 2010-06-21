@@ -382,7 +382,7 @@ function do_rss_box($search_rss = 'rss2.php') {
 
 	if($globals['link_id']) {
 		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios <em>de esta noticia</em>').'</a>';
+		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios de esta noticia').'</a>';
 		echo '</li>' . "\n";
 	}
 
@@ -959,7 +959,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	echo '</STYLE>'."\n";
 
 	echo '<p class="errt">'.$mess.'<br />'."\n";
-	if ($error) echo _('(error').' '.$error.')</p>'."\n";
+	if ($error) echo '('._('error').' '.$error.')</p>'."\n";
 	echo '<div class="errl"><img src="'.$globals['base_url'].'img/mnm/lame_excuse_01.png" width="362" height="100" alt="ooops logo" /></div>'."\n";
 
 	do_footer_menu();

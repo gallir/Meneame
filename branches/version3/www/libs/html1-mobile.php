@@ -257,7 +257,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	echo '</STYLE>'."\n";
 
 	echo '<div class="errt">'.$mess.'<br />'."\n";
-	if ($error) echo _('(error').' '.$error.')</div>'."\n";
+	if ($error) echo '('._('error').' '.$error.')</div>'."\n";
 
 	do_footer_menu();
 	do_footer();
