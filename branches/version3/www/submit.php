@@ -18,12 +18,12 @@ if(isset($_POST["phase"])) {
 	force_authentication();
 	switch ($_POST["phase"]) {
 		case 1:
-			do_header(_("enviar noticia 2/3"), "post");
+			do_header(_("enviar noticia") . " 2/3", "post");
 			echo '<div id="singlewrap">' . "\n";
 			do_submit1();
 			break;
 		case 2:
-			do_header(_("enviar noticia 3/3"), "post");
+			do_header(_("enviar noticia") . " 3/3", "post");
 			echo '<div id="singlewrap">' . "\n";
 			do_submit2();
 			break;
@@ -34,7 +34,7 @@ if(isset($_POST["phase"])) {
 } else {
 	check_already_sent();
 	force_authentication();
-	do_header(_("enviar noticia 1/3"), "post");
+	do_header(_("enviar noticia") . " 1/3", "post");
 	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
@@ -552,6 +552,8 @@ function do_submit2() {
 	$linkres->id=$link_id = intval($_POST['id']);
 	$linkres->read();
 
+	if(report_dupe($linkres->url)) return;
+
 	$linkres->read_content_type_buttons($_POST['type']);
 
 	// Check if the title contains [IMG], [IMGs], (IMG)... and mark it as image
@@ -617,8 +619,19 @@ function do_submit3() {
 	$linkres=new Link;
 
 	$linkres->id=$link_id = intval($_POST['id']);
+
 	if(!check_link_key() || !$linkres->read()) die;
+
 	// Check it is not in the queue already
+	if ($linkres->duplicates($linkres->url)) {
+		// Write headers, they were not printed yet
+		do_header(_("enviar noticia"), "post");
+		echo '<div id="singlewrap">' . "\n";
+		report_dupe($linkres->url);
+		return;
+	}
+
+	// Check this one was not already queued
 	if($linkres->votes == 0 && $linkres->status != 'queued') {
 		$db->transaction();
 		$linkres->status='queued';
@@ -717,8 +730,8 @@ function report_dupe($url) {
 		$dupe = new Link;
 		$dupe->id = $found;
 		$dupe->read();
-		echo '<p class="error"><strong>'._('noticia repetida!').'</strong></p> ';
-		echo '<p class="error-text">'._('lo sentimos').'</p>';
+		echo '<p class="error"><strong>'._('noticia repetida').'</strong></p> ';
+		echo '<p class="error-text">'._('disculpas').'</p>';
 		$dupe->print_summary();
 		echo '<br style="clear: both;" /><br/>' . "\n";
 		echo '<form class="genericform" action="">';
