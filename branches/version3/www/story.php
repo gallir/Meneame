@@ -394,9 +394,9 @@ case 7:
 			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
 		}
 	}
-	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link_permalink']).'">'._('Technorati').'</a></li>' . "\n";
-	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link_permalink']).'">'._('Google').'</a></li>' . "\n";
-	echo '<li class="tab-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link_permalink']).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">'._('Ask.com').'</a></li>' . "\n";
+	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link_permalink']).'">Technorati</a></li>' . "\n";
+	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link_permalink']).'">Google</a></li>' . "\n";
+	echo '<li class="tab-trackback-askcom"><a href="http://es.ask.com/blogsearch?q='.urlencode($globals['link_permalink']).'&amp;t=a&amp;search=Buscar&amp;qsrc=2101&amp;bql=any">Ask.com</a></li>' . "\n";
 
 	echo '</ul>';
 	echo '</fieldset>';

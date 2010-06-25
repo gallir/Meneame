@@ -26,7 +26,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-echo '<div class="topheading"><h2>noticias de las últimas 24 horas</h2></div>';
+echo '<div class="topheading"><h2>'._('noticias de las últimas 24 horas').'</h2></div>';
 
 echo '<div style="margin:0 0 10px 20px; text-align:center">';
 
@@ -36,7 +36,7 @@ echo '<label>'._('publicadas').'&nbsp;<img src="'.$globals['base_static'].'img/g
 echo '&nbsp;&nbsp;&nbsp;';
 echo '<label>'._('pendientes').'&nbsp;<img src="'.$globals['base_static'].'img/geo/common/geo-new01.png" width="20" height="25" alt="'._('pendientes').'" title="'._('pendientes').'"/><input type="checkbox" checked="checked"  id="queued" onclick="toggle(\'queued\')" /></label>';
 echo '&nbsp;&nbsp;&nbsp;';
-echo '<label>'._('autores').'&nbsp;<img src="'.$globals['base_static'].'img/geo/common/geo-user01.png" width="20" height="25" alt="'._('autores').'" title="'._('authors').'"/><input type="checkbox"  id="author" onclick="toggle(\'author\')" /></label>';
+echo '<label>'._('autores').'&nbsp;<img src="'.$globals['base_static'].'img/geo/common/geo-user01.png" width="20" height="25" alt="'._('autores').'" title="'._('autores').'"/><input type="checkbox"  id="author" onclick="toggle(\'author\')" /></label>';
 
 
 echo '</form>';
