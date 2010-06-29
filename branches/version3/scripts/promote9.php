@@ -215,7 +215,7 @@ if ($links) {
 			// Check if the  domain is banned
 			$karma_new *= 0.5;
 			$link->message .= 'Domain banned.<br/>';
-			$link->annotation .= _('Dominio baneado').": ".$ban['comment']."<br/>";
+			$link->annotation .= _('dominio baneado').": ".$ban['comment']."<br/>";
 		} elseif ($user->level == 'disabled' ) {
 			// Check if the user is banned disabled
 			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
@@ -224,7 +224,7 @@ if ($links) {
 				$link->message .= "$user->username disabled, probably due to abuses, penalized.<br/>";
 			}
 			$karma_new *= 0.5;
-			$link->annotation .= _('Cuenta deshabilitada'). "<br/>";
+			$link->annotation .= _('cuenta deshabilitada'). "<br/>";
 		} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
 			// Check domain and user punishments
 			$karma_new *= 0.75;
@@ -377,12 +377,12 @@ function publish($link) {
 		$user->karma = min(20, $user->karma + $globals['instant_karma_per_published']);
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Noticia publicada').": +". $globals['instant_karma_per_published'] .", karma: $user->karma\n");
+		$annotation->append(_('noticia publicada').": +". $globals['instant_karma_per_published'] .", karma: $user->karma\n");
 	}
 
 	// Add the publish event/log
 	log_insert('link_publish', $link->id, $link->author);
-	$link->annotation .= _('Publicación'). "<br/>";
+	$link->annotation .= _('publicación'). "<br/>";
 	$link->save_annotation('link-karma');
 
 	if ($globals['url_shortener']) {

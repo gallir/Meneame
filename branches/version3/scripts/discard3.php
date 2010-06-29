@@ -40,7 +40,7 @@ if ($links) {
 			$l->id = $link->link_id;
 			if ($l->read()) {
 				$l->karma_old = $karma_old;
-				$l->annotation = _('Quitada de portada por votos negativos');
+				$l->annotation = _('Retirada de portada');
 				$l->save_annotation('link-karma');
 			}
 			log_insert('link_depublished', $link->link_id, $link->link_author);
@@ -52,7 +52,7 @@ if ($links) {
 				echo "$user->username: $user->karma\n";
 				$user->store();
 				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('Noticia retirada de portada').": -". $globals['instant_karma_per_depublished'] .", karma: $user->karma\n");
+				$annotation->append(_('Retirada de portada').": -". $globals['instant_karma_per_depublished'] .", karma: $user->karma\n");
 			}
 
 			if ($globals['twitter_user'] || $globals['jaiku_user']) {

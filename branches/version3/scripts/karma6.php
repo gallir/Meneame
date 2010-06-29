@@ -147,7 +147,7 @@ foreach ($res as $dbuser) {
 		// Max: 4 published
 		$karma0 = min($points_per_published * $points_per_published_max, $karma0);
 		if ($karma0 > 0) {
-			$output .= _('Publicadas').": $n_published karma: $karma0\n";
+			$output .= _('publicadas').": $n_published karma: $karma0\n";
 		}
 		$calculated++;
 
@@ -235,7 +235,7 @@ foreach ($res as $dbuser) {
 				$output .= _('Coeficiente de votos muy bajos, posible bot, penalizado');
 				$punish_coef = 2;
 			} else {
-				$output .= _('Coeficiente de votos muy bajos, ¿"karmawhore"?, penalizado');
+				$output .= _('Coeficiente de votos muy bajos, ¿«karmawhore»?, penalizado');
 				$punish_coef = 1;
 			}
 			$punishment = -$published_average * $punish_coef;
@@ -279,7 +279,7 @@ foreach ($res as $dbuser) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			$karma3 -= $punishment;
 			$penalized += 1;
-			$output .= _('Exceso de votos negativos a enlaces')." ($negative_no_discarded > $max_allowed_negatives), "._('penalización').": $punishment, karma3: ";
+			$output .= _('Exceso de votos negativos a enlaces')." ($negative_no_discarded > $max_allowed_negatives), "._('Penalización').": $punishment, karma3: ";
 			$output .= sprintf("%4.2f\n", $karma3);
 		}
 
