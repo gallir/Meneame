@@ -50,7 +50,7 @@ exit;
 function do_register0() {
 	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></h4></div>';
 
-	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de legales de uso').'\')">' . "\n";
+	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
 	echo '<legend><span class="sign">' . _("registro") . '</span></legend>' . "\n";
 	echo '<p><label for="name">' . _("nombre de usuario") . ':</label><br />' . "\n";

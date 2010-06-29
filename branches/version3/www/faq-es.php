@@ -1,7 +1,7 @@
 <?
 	include('config.php');
 	include(mnminclude.'html1.php');
-	do_header(_('FAQ') . ' | men&eacute;ame');
+	do_header(_('FAQ') . ' | ' . _('menéame'));
 	$q = 1;
 ?>
 <div id="singlewrap">

@@ -18,11 +18,11 @@ if(check_ban_proxy()) {
 }
 
 if(!($id=check_integer('id'))) {
-	error(_('Falta el ID del artículo'));
+	error(_('falta el ID del artículo'));
 }
 
 if(empty($_REQUEST['user']) && $_REQUEST['user'] !== '0' ) {
-	error(_('Falta el código de usuario'));
+	error(_('falta el código de usuario'));
 }
 
 if (!check_security_key($_REQUEST['key'])) {
@@ -32,7 +32,7 @@ if (!check_security_key($_REQUEST['key'])) {
 $link = new Link;
 $link->id=$id;
 if(!$link->read_basic()) {
-	error(_('Artículo inexistente'));
+	error(_('artículo inexistente'));
 }
 
 if(!$link->is_votable()) {
@@ -53,7 +53,7 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 }
 
 if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto, recargue la página para poder votar'));
+	error(_('usuario incorrecto'));
 }
 
 if ($current_user->user_id == 0) $ip_check = 'and vote_ip_int = '.$globals['user_ip_int'];
@@ -82,8 +82,8 @@ if ($votes_freq > $freq) {
     	$user->karma = $user->karma - 0.2;
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Voto cowboy').": -0.2, karma: $user->karma\n");
-		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
+		$annotation->append(_('voto cowboy').": -0.2, karma: $user->karma\n");
+		error(_('¡tranquilo cowboy!'). ', ' . _('tu karma ha bajado: ') . $user->karma);
 	} else  {
 		error(_('¡tranquilo cowboy!'));
 	}

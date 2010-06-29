@@ -19,7 +19,7 @@ $order_by = " ORDER BY link_date DESC ";
 $from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 864000).'"'; // Ten days
 $from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
 
-do_header(_('noticias pendientes') . ' | men&eacute;ame mobile');
+do_header(_('noticias pendientes') . ' | ' . _('menéame mobile'));
 do_tabs("main","shakeit");
 
 echo '<div id="newswrap">'."\n";

@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class CommentMobile extends Comment{
-	function print_summary($link, $length = 0) {
+	function print_summary($link = 0, $length = 0, $single_link=true) {
 		global $current_user, $globals;
 
 		if(!$this->read) return;
@@ -59,7 +59,7 @@ class CommentMobile extends Comment{
 		echo "</li>\n";
 	}
 
-	function print_text($length = 0) {
+	function print_text($length = 0, $html_id=false) {
 		global $current_user, $globals;
 
 		if ($length>0 && mb_strlen($this->content) > $length + $length/2) {

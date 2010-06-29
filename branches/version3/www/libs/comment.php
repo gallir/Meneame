@@ -194,7 +194,6 @@ class Comment {
 
 		// Print comment info (right)
 		echo '<div class="comment-info">';
-		echo _('por'). ' ';
 
 		if ($this->type == 'admin') {
 			echo '<strong>'._('admin').'</strong> ';
@@ -420,10 +419,10 @@ class Comment {
 			if ($current_user->authenticated) {
 				if ($current_user->user_date >= $globals['now'] - $globals['min_time_for_comments']) {
 					$remaining = txt_time_diff($globals['now'], $current_user->user_date+$globals['min_time_for_comments']);
-					$msg = _('Debes esperar') . " $remaining " . _('para escribir el primer comentario');
+					$msg = _('debes esperar') . " $remaining " . _('para escribir el primer comentario');
 				}
 				if ($current_user->user_karma <= $globals['min_karma_for_comments']) {
-					$msg = _('No tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma;
+					$msg = _('no tienes el mínimo karma requerido')." (" . $globals['min_karma_for_comments'] . ") ". _('para comentar'). ": ".$current_user->user_karma;
 				}
 				echo '<div class="commentform warn">'."\n";
 				echo $msg . "\n";

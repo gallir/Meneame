@@ -19,6 +19,6 @@ $ban=new Ban();
 $ban->ban_id=$id;
 if (! $ban->read())  die; 
 echo '<strong>' . _($ban->ban_type) . ':</strong>&nbsp;' . $ban->ban_text . '<br/>';
-if ($ban->ban_comment) echo '<strong>' . _('Comentario') . ':</strong>&nbsp;' . $ban->ban_comment . '<br/>';
-if ($ban->ban_expire)  echo '<strong>' . _('Expira') . ':</strong>&nbsp;' . $ban->ban_expire . '<br/>';
+if ($ban->ban_comment) echo '<strong>' . _('comentario') . ':</strong>&nbsp;' . $ban->ban_comment . '<br/>';
+if ($ban->ban_expire)  echo '<strong>' . _('caduca') . ':</strong>&nbsp;' . $ban->ban_expire . '<br/>';
 ?>

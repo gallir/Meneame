@@ -120,7 +120,7 @@ function admin_bans($ban_type) {
 	echo 'orderby=ban_text">'.$ban_type.'</a></th>';
 	echo '<th width="30%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_comment">'._('Comentario').'</a></th>';
+	echo 'orderby=ban_comment">'._('comentario').'</a></th>';
 	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_date">'._('Fecha creación').'</a></th>';

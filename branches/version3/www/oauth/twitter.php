@@ -56,7 +56,7 @@ class TwitterOAuth extends OAuthBase {
 				header("Location: ".$this->authorize_url."?oauth_token=$this->token");
 				exit;
 			} else {
-				do_error(_('error de obteniendo tokens'), false, false);	
+				do_error(_('error obteniendo tokens'), false, false);	
 			}
 		} catch (Exception $e) {
 				do_error(_('error de conexión a') . " $this->service", false, false);	

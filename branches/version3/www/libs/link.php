@@ -476,7 +476,10 @@ class Link {
 			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
 		}
 		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."&nbsp;<br />\n";
-		echo _('por').' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
+
+		// Allow to invert user in japanese translations
+		printf (_('por %s'), ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ');
+
 		// Print dates
 		if ($globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT'])) { // 7 days or user agent is empty
 			echo _('el').get_date_time($this->sent_date);
@@ -713,7 +716,7 @@ class Link {
 			// Only says "what" if most votes are "wrong" or "duplicated" 
 			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-				echo _('Esta noticia podría ser <strong>'). get_negative_vote($negatives->vote_value) . '</strong>. ';
+				echo _('Esta noticia podría ser').' <strong>'. get_negative_vote($negatives->vote_value) . '</strong>. ';
 			} else {
 				echo _('Esta noticia tiene varios votos negativos.');
 			}
@@ -1106,7 +1109,7 @@ class Link {
 			$this->coef = 1;
 		}
 		if ($this->coef < .99) {
-			$this->annotation .= _('Noticia "antigua"'). "<br/>";
+			$this->annotation .= _('Noticia «antigua»'). "<br/>";
 		} elseif ($this->coef > 1.01) {
 			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}

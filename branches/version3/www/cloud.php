@@ -38,7 +38,7 @@ $max = max($db->get_var("select count(*) as words $from_where order by words des
 $coef = ($max_pts - $min_pts)/($max-1);
 
 
-do_header(_('nube de etiquetas') . ' | men&eacute;ame');
+do_header(_('nube de etiquetas') . ' | '._('menéame'));
 do_tabs('main', _('etiquetas'), true);
 print_period_tabs();
 

@@ -46,7 +46,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('populares').' '.$range_names[$from].' | men&eacute;ame mobile');
+do_header(_('populares').' '.$range_names[$from].' | ' . _('menéame mobile'));
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 

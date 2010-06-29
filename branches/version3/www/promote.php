@@ -11,7 +11,7 @@ include(mnminclude.'html1.php');
 
 $globals['ads'] = false;
 promote_style();
-do_header(_('promote') . ' | men&eacute;ame');
+do_header(_('promote') . ' | ' . _('menéame'));
 echo '<div id="singlewrap">'."\n";
 
 $annotation = new Annotation('promote');

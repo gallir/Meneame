@@ -266,7 +266,7 @@ function do_profile() {
 		echo '<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
 		if ($current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
 			$distance = (int) geo_distance($my_latlng, $globals['latlng']);
-			echo '<p style="color: #FF9400; font-size: 90%">'._('estás a')." <strong>$distance kms</strong> "._('de').' '.$user->username.'</p>';
+			echo '<p style="color: #FF9400; font-size: 90%">'."$user->username "._('está a')." <strong>$distance kms</strong></p>";
 		}
 	}
 	echo '&nbsp;</div>';

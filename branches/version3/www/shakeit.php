@@ -90,7 +90,7 @@ if($cat) {
 }
 
 
-do_header(_('noticias pendientes') . ' | men&eacute;ame');
+do_header(_('noticias pendientes') . ' | ' . _('menéame'));
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 

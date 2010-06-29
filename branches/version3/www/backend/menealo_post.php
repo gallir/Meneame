@@ -16,15 +16,15 @@ if(check_ban_proxy()) {
 }
 
 if(!($id=check_integer('id'))) {
-	error(_('Falta el ID del comentario'));
+	error(_('falta el ID del comentario'));
 }
 
 if(empty($_REQUEST['user'])) {
-	error(_('Falta el código de usuario'));
+	error(_('falta el código de usuario'));
 }
 
 if($current_user->user_id != $_REQUEST['user']) {
-	error(_('Usuario incorrecto'). $current_user->user_id . '-'. htmlspecialchars($_REQUEST['user']));
+	error(_('usuario incorrecto'). $current_user->user_id . '-'. htmlspecialchars($_REQUEST['user']));
 }
 
 if (!check_security_key($_REQUEST['key'])) {
@@ -33,17 +33,17 @@ if (!check_security_key($_REQUEST['key'])) {
 
 
 if (empty($_REQUEST['value']) || ! is_numeric($_REQUEST['value'])) {
-	error(_('Falta valor del voto'));
+	error(_('falta valor del voto'));
 }
 
 if ($current_user->user_karma < $globals['min_karma_for_post_votes']) {
-	error(_('Karma bajo para votar comentarios'));
+	error(_('karma bajo para votar comentarios'));
 }
 
 $value = intval($_REQUEST['value']);
 
 if ($value != -1 && $value != 1) {
-	error(_('Valor del voto incorrecto'));
+	error(_('valor del voto incorrecto'));
 }
 
 $vote = new Vote('posts', $id, $current_user->user_id);

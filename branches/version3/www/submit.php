@@ -106,7 +106,7 @@ function do_submit0() {
 	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar historias').'</li>';
 	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica el enlace de forma fidedigna, no distorsiones').'</li>';
 	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos te pueden afectar personalmente, es mejor que no envíes la noticia').'</li>';
-	echo '<li><strong>¿'._('has leído las').' <a href="libs/ads/legal-meneame.php#tos" target="_blank">'._('condiciones de uso').'</a></strong>?</li>';
+	echo '<li><strong>¿'._('has leído las').' <a href="legal.php#tos" target="_blank">'._('condiciones de uso').'</a></strong>?</li>';
 	echo '</ul></div>'."\n";
 	print_empty_submit_form();
 }
@@ -142,7 +142,7 @@ function do_submit1() {
 		$l = implode(',', $clones);
 		$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
 		if ($c > 0) {
-			echo '<p class="error">'._('Ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'). ' </p>';
+			echo '<p class="error">'._('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'). ' </p>';
 			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): $_POST[url]");
 			echo '<br style="clear: both;" />' . "\n";
 			echo '</div>'. "\n";
@@ -154,7 +154,7 @@ function do_submit1() {
 	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
-		echo '<p class="error">'._('Debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
+		echo '<p class="error">'._('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
 		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): $_POST[url]");
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
@@ -178,7 +178,7 @@ function do_submit1() {
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
 		echo '<p class="error"><strong>'._('Exceso de envíos').':</strong></p>';
-		echo '<p>'._('Se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
+		echo '<p>'._('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
 		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
 		echo '</div>'. "\n";
 		return;
@@ -188,8 +188,8 @@ function do_submit1() {
 	$minutes = intval($globals['draft_time'] / 60) + 10;
 	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval $minutes minute) and link_status='discard' and link_votes = 0");
 	if ($drafts > $globals['draft_limit']) {
-		echo '<p class="error"><strong>'._('Demasiados borradores').':</strong></p>';
-		echo '<p>'._('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>';
+		echo '<p class="error"><strong>'._('demasiados borradores').':</strong></p>';
+		echo '<p>'._('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>';
 		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): $_POST[url]");
 		echo '</div>'. "\n";
 		return;
@@ -202,7 +202,7 @@ function do_submit1() {
 
 	// Check for banned IPs
 	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
-		echo '<p class="error"><strong>'._('Dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].'</p>';
+		echo '<p class="error"><strong>'._('dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].'</p>';
 		echo '<p><strong>'._('Razón').'</strong>: '.$ban['comment'].'</p>';
 		if ($ban['expire'] > 0) {
 			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
@@ -327,7 +327,7 @@ function do_submit1() {
 			print_empty_submit_form();
 			return;
 		}
-		echo '<p>'._('No es válido, está fuera de línea, o tiene mecanismos antibots. <strong>Continúa</strong>, pero asegúrate que sea correcto').'</p>';
+		echo '<p>'._('no es válido, está fuera de línea, o tiene mecanismos antibots. <strong>Continúa</strong>, pero asegúrate que sea correcto').'</p>';
 	}
 
 	$linkres->status='discard';
@@ -348,7 +348,7 @@ function do_submit1() {
 	// it's done because there could be banned blogs like http://lacotelera.com/something
 	if(($ban = check_ban($blog->url, 'hostname', false, true))) {
 		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('El sitio').' '.$ban['match'].' '. _('está deshabilitado'). ' ('. $ban['comment'].') </p>';
+		echo '<p>'._('el sitio').' '.$ban['match'].' '. _('está deshabilitado'). ' ('. $ban['comment'].') </p>';
 		if ($ban['expire'] > 0) {
 			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
 		}
@@ -413,7 +413,7 @@ function do_submit1() {
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $linkres->url");
 		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
-		echo '<p class="error-text">'._('debes esperar'). " $minutes " . _(' minutos entre cada envío al mismo sitio.') . ', ';
+		echo '<p class="error-text">'._('debes esperar'). " $minutes " . _('minutos entre cada envío al mismo sitio.') . ', ';
 		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
 		echo '<br style="clear: both;" />' . "\n";
 		echo '</div>'. "\n";
@@ -433,7 +433,7 @@ function do_submit1() {
 			return;
 		} else {
 			echo '<p class="error-text">'._('continúa, pero ten en cuenta podría recibir votos negativos').', ';
-			echo '<a href="'.$globals['base_url'].'legal.php">'._('normas de uso del menáme').'</a>, ';
+			echo '<a href="'.$globals['base_url'].'legal.php">'._('condiciones de uso').'</a>, ';
 			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
 			syslog(LOG_NOTICE, "Meneame, warn, high ratio, continue ($current_user->user_login): $linkres->url");
 		}
@@ -536,7 +536,7 @@ function do_submit1() {
 		echo '<span class="note">'.$trackback.'</span>'."\n";
 		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
 	}
-	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />&nbsp;&nbsp;'."\n";
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'" />&nbsp;&nbsp;'."\n";
 	echo '<input class="button" type="submit" value="'._('continuar &#187;').'" />'."\n";
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
@@ -572,7 +572,7 @@ function do_submit2() {
 	$linkres->content = clean_text($_POST['bodytext']);
 	if (link_errors($linkres)) {
 		echo '<form class="genericform">'."\n";
-		echo '<p><input class="button" type=button onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/></p>'."\n";
+		echo '<p><input class="button" type=button onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/></p>'."\n";
 		echo '</form>'."\n";
 		echo '</div>'."\n"; // opened in print_form_submit_error
 		return;
@@ -592,7 +592,7 @@ function do_submit2() {
 	echo '<form action="submit.php" method="post" class="genericform" onSubmit="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">'."\n";
 	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
 
-	echo '<div class="genericformtxt"><label>'._('ATENCIÓN: esto es sólo una muestra!').'</label>&nbsp;&nbsp;<br/>'._('Ahora puedes 1) ').'<label>'._('retroceder').'</label>'._(' o 2)  ').'<label>'._('enviar a la cola y finalizar').'</label>'._('. Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> elefantes (o no).').'</div>';	
+	echo '<div class="genericformtxt"><label>'._('ATENCIÓN: esto es sólo una muestra!').'</label>&nbsp;&nbsp;<br/>'._('Ahora puedes 1) ').'<label>'._('retroceder').'</label>'._(' o 2)  ').'<label>'._('enviar a la cola y finalizar').'</label>. '._('Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> elefantes (o no).').'</div>';	
 
 	echo '<div class="formnotice">'."\n";
 	$linkres->print_summary('preview');
@@ -605,7 +605,7 @@ function do_submit2() {
 	echo '<input type="hidden" name="trackback" value="'.htmlspecialchars(trim($_POST['trackback'])).'" />'."\n";
 
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
-	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'"/>&nbsp;&nbsp;'."\n";
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/>&nbsp;&nbsp;'."\n";
 	echo '<input class="button" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</fieldset>'."\n";
@@ -735,7 +735,7 @@ function report_dupe($url) {
 		$dupe->print_summary();
 		echo '<br style="clear: both;" /><br/>' . "\n";
 		echo '<form class="genericform" action="">';
-		echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; retroceder').'" />';
+		echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'" />';
 		echo '</form>'. "\n";
 		echo '</div>'. "\n";
 		return true;

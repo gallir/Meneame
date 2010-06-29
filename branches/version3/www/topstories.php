@@ -60,7 +60,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('más votadas') . ' | men&eacute;ame');
+do_header(_('más votadas') . ' | ' . _('menéame'));
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 print_period_tabs();

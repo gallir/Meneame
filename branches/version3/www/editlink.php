@@ -63,7 +63,7 @@ function do_edit() {
 
 	if($current_user->admin) {
 		echo '<label for="url" accesskey="1">'._('url de la noticia').':</label>'."\n";
-		echo '<p><span class="note">'._('url de la noticia.').'</span>'."\n";
+		echo '<p><span class="note">'._('url de la noticia').'</span>'."\n";
 		echo '<br/><input type="url" id="url" name="url" value="'.htmlspecialchars($link_url).'" size="80" />';
 		echo '</p>'."\n";
 	}
@@ -135,7 +135,7 @@ function do_edit() {
 		}
 	}
 
-	echo '<input class="button" type="submit" value="'._('guardar &#187;').'" />'."\n";
+	echo '<input class="button" type="submit" value="'._('guardar').' &#187;" />'."\n";
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 	echo '</div>'."\n";
@@ -202,7 +202,7 @@ function do_save() {
 
 	echo '<form class="note" method="GET" action="story.php" >';
 	echo '<input type="hidden" name="id" value="'.$linkres->id.'" />'."\n";
-	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="'._('&#171; modificar').'">&nbsp;&nbsp;'."\n";;
+	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('modificar').'">&nbsp;&nbsp;'."\n";;
 	echo '<input class="button" type="submit" value="'._('ir a la noticia').'" />'."\n";
 	echo '</form>'. "\n";
 }
@@ -217,34 +217,34 @@ function link_edit_errors($linkres) {
 		$error = true;
 	}
 	if($_POST['key'] !== md5($_POST['timestamp'].$linkres->randkey)) {
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('Clave incorrecta').'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('clave incorrecta').'</div>';
 		$error = true;
 	}
 	if(time() - $_POST['timestamp'] > 900) {
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('Tiempo excedido').'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._('tiempo excedido').'</div>';
 		$error = true;
 	}
 	if(strlen($linkres->title) < 10  || strlen($linkres->content) < 30 ) {
 		//echo '<br style="clear: both;" />';
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("Título o texto incompletos").'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("título o texto incompletos").'</div>';
 		$error = true;
 	}
 	if(mb_strlen(html_entity_decode($linkres->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($linkres->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("Título o texto demasiado largos").'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("título o texto demasiado largos").'</div>';
 		$error = true;
 	}
 	if(strlen($linkres->tags) < 3 ) {
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("No has puesto etiquetas").'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("no has puesto etiquetas").'</div>';
 		$error = true;
 	}
 	if(preg_match('/.*http:\//', $linkres->title)) {
 		//echo '<br style="clear: both;" />';
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("Por favor, no pongas URLs en el título, no ofrece información").'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("por favor, no pongas URLs en el título, no ofrece información").'</div>';
 		$error = true;
 	}
 	if(!$linkres->category > 0) {
 		//echo '<br style="clear: both;" />';
-		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("Categoría no seleccionada").'</div>';
+		echo '<div class="form-error-submit">&nbsp;&nbsp;'._("categoría no seleccionada").'</div>';
 		$error = true;
 	}
 	return $error;

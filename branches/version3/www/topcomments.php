@@ -11,8 +11,8 @@ include(mnminclude.'html1.php');
 
 $globals['ads'] = true;
 
-do_header(_('mejores comentarios en 24 horas') . ' | men&eacute;ame');
-do_tabs('main', _('+ comentarios'), true);
+do_header(_('mejores comentarios en 24 horas') . ' | ' . _('menéame'));
+do_tabs('main', '+ ' . _('comentarios'), true);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';

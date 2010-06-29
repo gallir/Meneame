@@ -21,7 +21,7 @@ function print_time($secs) {
 	else return $secs . ' ' . _("segundos");
 }
 
-do_header(_('Información sobre valores de karma y límites') . ' | men&eacute;ame');
+do_header(_('Información sobre valores de karma y límites') . ' | ' . _('menéame'));
 echo '<div id="singlewrap">'."\n";
 
 
@@ -132,15 +132,15 @@ echo '
 echo '
 		<fieldset>
 			<legend>'._('envíos').'</legend>
-				'._("Límite de envíos global para usuarios con karma") . ' &lt;= ' . $globals['limit_3_minutes_karma'] . ' ('. _('Se han enviado demasiadas noticias en los últimos 3 minutos') ."): " . $globals['limit_3_minutes'] . ' ' . _("meneos cada 3 minutos") . '.<br />
+				'._("Límite de envíos global para usuarios con karma") . ' &lt;= ' . $globals['limit_3_minutes_karma'] . ' ('. _('se han enviado demasiadas historias en los últimos 3 minutos') ."): " . $globals['limit_3_minutes'] . ' ' . _("meneos cada 3 minutos") . '.<br />
 				<br />
-				'._("Límite de envíos global para usuarios con karma") . ' > ' . $globals['limit_3_minutes_karma'] .' ('. _('Se han enviado demasiadas noticias en los últimos 3 minutos') ."): " . ($globals['limit_3_minutes'] * 1.5) . ' ' . _("meneos cada 3 minutos") . '.<br />
+				'._("Límite de envíos global para usuarios con karma") . ' > ' . $globals['limit_3_minutes_karma'] .' ('. _('se han enviado demasiadas historias en los últimos 3 minutos') ."): " . ($globals['limit_3_minutes'] * 1.5) . ' ' . _("meneos cada 3 minutos") . '.<br />
 				<br />
-				'._("Límite de envíos por usuario en las últimas 24 horas") . ' (' . _('Debes esperar, tienes demasiadas noticias en cola de las últimas 24 horas') . "): " .$globals['limit_user_24_hours'] . _(" envíos") .'.<br />
+				'._("Límite de envíos por usuario en las últimas 24 horas") . ' (' . _('debes esperar, tienes demasiadas noticias en cola de las últimas 24 horas') . "): " .$globals['limit_user_24_hours'] . ' ' ._("envíos") .'.<br />
 				<br />
 				'._("Tiempo que tarda un borrador en eliminarse automáticamente") . ': ' . print_time($globals['draft_time']) . '.<br />
 				<br />
-				'._("Máximo de borradores por usuario") . ' (' . _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . " " . _('cola de descartadas') . '): ' . $globals['draft_limit'] . '.<br />
+				'._("Máximo de borradores por usuario") . ' (' . _('has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . " " . _('cola de descartadas') . '): ' . $globals['draft_limit'] . '.<br />
 				<br />
 				'._("Porcentaje de karma de historia que sufre un «depublish» y vuelve a pendientes"). ': ' . intval(100 / $globals['depublish_karma_divisor']) . '.<br />
 		</fieldset>';

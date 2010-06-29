@@ -25,7 +25,7 @@ switch ($option) {
 		break;
 	case 'history':
 		$sql = "SELECT link_id FROM links WHERE link_author=$user_id ORDER BY link_id DESC LIMIT 1000";
-		do_header(_('envíadas'));
+		do_header(_('enviadas'));
 		do_link_item($sql);
 		do_footer();
 		break;

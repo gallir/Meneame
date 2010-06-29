@@ -107,11 +107,11 @@ function do_stats1($string) {
 	$comment .= _('usuarios activos') . ':&nbsp;' . $db->get_var("select count(*) from users where user_level not in ('disabled', 'autodisabled')") . ', ';
 	$votes = (int) $db->get_var('select count(*) from votes where vote_type in ("links", "comments", "posts") and vote_link_id > 0') + (int) $db->get_var('select sum(votes_count) from votes_summary');
 	$comment .= _('votos') . ':&nbsp;' . $votes . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . Link::count() . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . Link::count('published') . ', ';
+	$comment .= _('historias') . ':&nbsp;' . Link::count() . ', ';
+	$comment .= _('publicadas') . ':&nbsp;' . Link::count('published') . ', ';
 	$comment .= _('pendientes') . ':&nbsp;' . Link::count('queued') . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . intval(Link::count('discard')) . ', ';
-	$comment .= _('auto descartados') . ':&nbsp;' . intval(Link::count('autodiscard')) . ', ';
+	$comment .= _('descartadas') . ':&nbsp;' . intval(Link::count('discard')) . ', ';
+	$comment .= _('auto descartadas') . ':&nbsp;' . intval(Link::count('autodiscard')) . ', ';
 	$comment .= _('abuso') . ':&nbsp;' . intval(Link::count('abuse')) . ', ';
 	// Disabled because is too slow for InnoDB
 	//$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments');
@@ -135,9 +135,9 @@ function do_stats2($string) {
 	$comment .= _('votos') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('votos comentarios') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='comments' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('votos notas') . ':&nbsp;' . $db->get_var("select count(*) from votes where vote_type='posts' and vote_date > date_sub(now(), interval $hours hour)") . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour)") . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_date > date_sub(now(), interval $hours hour)") . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('historias') . ':&nbsp;' . $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('publicadas') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='published' and link_date > date_sub(now(), interval $hours hour)") . ', ';
+	$comment .= _('descartadas') . ':&nbsp;' . $db->get_var("select count(*) from links where link_status='discard' and link_date > date_sub(now(), interval $hours hour)") . ', ';
 	$comment .= _('comentarios') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'comment_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';
 	$comment .= _('notas') . ':&nbsp;' . $db->get_var("select count(*) from logs where log_type = 'post_new' and log_date > date_sub(now(), interval $hours hour)")  . ', ';
 	$comment .= _('usuarios nuevos') . ':&nbsp;' . $db->get_var("select count(*) from logs, users where log_type = 'user_new' and log_date > date_sub(now(), interval $hours hour) and user_id = log_ref_id and user_validated_date is not null");
@@ -170,10 +170,10 @@ function do_statsu($string) {
 		$comment .= _('entropía') . ':&nbsp;' . intval(($user->blogs() - 1) / ($user->total_links - 1) * 100) . '%, ';
 	}
 	$comment .= _('votos') . ':&nbsp;' . $user->total_votes . ', ';
-	$comment .= _('artículos') . ':&nbsp;' . $user->total_links . ', ';
-	$comment .= _('publicados') . ':&nbsp;' . $user->published_links . ', ';
+	$comment .= _('historias') . ':&nbsp;' . $user->total_links . ', ';
+	$comment .= _('publicadas') . ':&nbsp;' . $user->published_links . ', ';
 	$comment .= _('pendientes') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="queued" and link_author='.$user_id) . ', ';
-	$comment .= _('descartados') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_author='.$user_id) . ', ';
+	$comment .= _('descartadas') . ':&nbsp;' . $db->get_var('select count(*) from links where link_status="discard" and link_author='.$user_id) . ', ';
 	$comment .= _('comentarios') . ':&nbsp;' . $user->total_comments;
 	return $comment;
 }

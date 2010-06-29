@@ -25,7 +25,7 @@ if ($link->avatar) {
 	echo '<img class="avatar" src="'.get_avatar_url($link->author, $link->avatar, 40).'" width="40" height="40" alt="avatar"  style="float:left; margin: 0 5px 0 0;"/>';
 }
 echo '<strong>' . $link->title . '</strong><br/>';
-echo _('por').'&nbsp;<strong>' . $user_login . '</strong><br/>';
-echo _('en').'&nbsp;'.$link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</p>';
+echo '<strong>' . $user_login . '</strong><br/>';
+echo $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</p>';
 echo text_to_html($link->content);
 ?>

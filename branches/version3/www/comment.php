@@ -55,7 +55,7 @@ $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username);
 $globals['description'] = _('autor') . ": $username, " . _('resumen') . ': '. text_sub_text($comment->content, 250);
 
-do_header(_('comentario de') . ' ' . $username . ' (' . $comment->id .') | men&eacute;ame');
+do_header(sprintf(_('comentario de %s'), $username) . ' (' . $comment->id .') | '._('menéame'));
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';

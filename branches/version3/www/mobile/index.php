@@ -18,7 +18,7 @@ $offset=($page-1)*$page_size;
 
 $cat=$_REQUEST['category'];
 
-do_header('men&eacute;ame mobile');
+do_header('menéame mobile');
 do_tabs('main','published');
 
 $from_where = "FROM links WHERE link_status='published' ";
