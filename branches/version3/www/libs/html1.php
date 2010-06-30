@@ -859,7 +859,7 @@ function do_best_queued() {
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = _('candidatas en').' <em>'.$globals['meta_current_name'].'</em>';
+			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
 	} else {
 		$category_list  = '';
 		$title = _('candidatas');
