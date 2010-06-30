@@ -37,7 +37,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql .= "link_date > FROM_UNIXTIME($from) AND ";
 	$sql .= "link_status = 'published' ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
-	$title = _('Menéame: más votadas en') . ' ' . txt_time_diff($from);
+	$title = _('Menéame').': '.sprintf(_('más votadas en %s'), txt_time_diff($from));
 } elseif (!empty($_REQUEST['favorites'])) {
 	/////
 	// RSS for users' favorites
@@ -46,7 +46,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='link'");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame: favoritas de') . ' ' . $user_login;
+	$title = _('Menéame').': '.sprintf(_('favoritas de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['voted_by'])) {
 	// RSS for voted links
@@ -55,7 +55,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT vote_link_id FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(vote_date) FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame: votadas por') . ' ' . $user_login;
+	$title = _('Menéame').': '.sprintf(_('votadas por %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['friends_of'])) {
 	/////
@@ -65,7 +65,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame: amigos de') . ' ' . $user_login;
+	$title = _('Menéame').': '.sprintf(_('amigos de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['sent_by'])) {
 	/////
@@ -75,7 +75,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links WHERE link_author=$user_id and link_votes > 0 ORDER BY link_id DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and link_votes > 0");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame: noticias de') . ' ' . $user_login;
+	$title = _('Menéame').': '.sprintf(_('noticias de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } else {
 	/////
@@ -102,10 +102,10 @@ if(!empty($_REQUEST['time'])) {
 		case 'published':
 			$order_field = 'link_date';
 			$link_date = 'date';
-			$title = _('Menéame: publicadas');
+			$title = _('Menéame').': '._('publicadas');
 			break;
 		case 'queued':
-			$title = _('Menéame: en cola');
+			$title = _('Menéame').': '._('en cola');
 			$order_field = 'link_date';
 			$link_date = "date";
 			$home = "/shakeit.php";
@@ -115,7 +115,7 @@ if(!empty($_REQUEST['time'])) {
 		case 'all':
 		case 'all_local':
 		default:
-			$title = _('Menéame: todas');
+			$title = _('Menéame').': '._('todas');
 			$order_field = 'link_date';
 			$link_date = "date";
 			break;
@@ -193,6 +193,7 @@ if(! check_ban($globals['user_ip'], 'ip', true) && ! check_ban_proxy() ) {
 if ($links) {
 	foreach($links as $link_id) {
 		$link = Link::from_db($link_id);
+		if (!$link) continue;
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$content = text_to_html(htmlentities2unicodeentities($link->content));
 		$permalink = $link->get_short_permalink();

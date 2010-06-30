@@ -112,7 +112,7 @@ function do_edit() {
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="3">'._('etiquetas').':</label>'."\n";
-	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
+	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por «,» (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
 	print_simpleformat_buttons('bodytext');

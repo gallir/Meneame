@@ -248,7 +248,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 		header("Status: $error $mess");
 	}
 
-	do_header(_('Error'));
+	do_header(_('error'));
 	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
 	echo '<!--'."\n";
 	echo '.errt { text-align:center; padding-top:20px; font-size:150%; color:#FF6400;}'."\n";

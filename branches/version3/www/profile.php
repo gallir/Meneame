@@ -191,7 +191,7 @@ function show_profile() {
 
 	// Disable the account
 	if ($user->id  == $current_user->user_id) {
-		echo '<br/><fieldset><legend>'._('deshabilitar la cuenta') . '</legend>';
+		echo '<br/><fieldset><legend>'._('deshabilitar cuenta') . '</legend>';
 		echo '<p>'._('¡atención! la cuenta será deshabilitada.').'</p>';
 		echo '<p class="note">'._('se eliminarán automáticamente los datos personales.').'<br/>';
 		echo _('las notas serán eliminadas, los envíos y comentarios NO se borrarán.').'</p>';

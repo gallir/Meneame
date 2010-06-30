@@ -14,7 +14,7 @@ $globals['ads'] = true;
 geo_init('onLoad', false, 3);
 
 do_header(_('geovisión'));
-do_tabs('main', _('geo visión'), true);
+do_tabs('main', _('geovisión'), true);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';

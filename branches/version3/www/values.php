@@ -14,7 +14,7 @@ function print_time($secs) {
 	if ( $secs < 60 ) return $secs . ' ' . _("segundos");
 	elseif ( $secs == 60 ) return "1" . ' ' . _("minuto");
 	elseif ( $secs % 60 == 0 && $secs < 3600) return ($secs / 60) . ' ' ._("minutos");
-	elseif ( $secs == 3600) return "1" . _(" hora");
+	elseif ( $secs == 3600) return "1" . ' ' . _("hora");
 	elseif ( $secs % 3600 == 0 && $secs < 86400) return ($secs / 3600) . ' ' ._("horas");
 	elseif ( $secs == 86400) return "1" . ' ' . _("día");
 	elseif ( $secs % 86400 == 0 ) return ($secs / 86400) . ' ' ._("días");
@@ -156,11 +156,11 @@ echo '
 				<br />
 				'._("Las contraseñas deben ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números") .'.<br />
 				<br />
-				'._("Registros desde la misma IP") . ': ' . _("Para registrar otro usuario desde la misma dirección debes esperar 24 horas") . '.<br />
+				'._("Registros desde la misma IP") . ': ' . _("para registrar otro usuario desde la misma dirección debes esperar 24 horas") . '.<br />
 				<br />
-				'._("Registros desde la misma subred") . ' (xxx.yyy.zzz.*): ' . _("Para registrar otro usuario desde la misma red debes esperar 6 horas") . '.<br />
+				'._("Registros desde la misma subred") . ' (xxx.yyy.zzz.*): ' . _("para registrar otro usuario desde la misma red debes esperar 6 horas") . '.<br />
 				<br />
-				'._("Registros desde la misma subred") . ' (xxx.yyy.*.*): ' . _("Para registrar otro usuario desde la misma red debes esperar unos minutos") . ' ('. _("una hora") . ').<br />
+				'._("Registros desde la misma subred") . ' (xxx.yyy.*.*): ' . _("para registrar otro usuario desde la misma red debes esperar unos minutos") . ' ('. _("una hora") . ').<br />
 		</fieldset>';
 
 
@@ -209,7 +209,7 @@ echo '
 }
 
 echo '				
-				'._("Un «nuevo usuario» solo podrá enviar ") . $globals['new_user_links_limit'] . _(" historias cada ") . print_time($globals['new_user_links_interval']) . ' ('._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'). ').<br />
+				'._("Un «nuevo usuario» solo podrá enviar ") . $globals['new_user_links_limit'] . ' ' .  _("historias cada") . ' ' .print_time($globals['new_user_links_interval']) . ' ('._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'). ').<br />
 				<br />
 				'._("Un «nuevo usuario» con envíos recientes") . ' ( &lt; ' . print_time($globals['new_user_links_interval']) . ') ' . _("y karma") . ' &lt; ' . $globals['karma_propaganda'] ._(" no podrá enviar si esos envíos han tenido más de 10 negativos y los negativos") . ' > (positivos * 1,5).<br />
 		</fieldset>';

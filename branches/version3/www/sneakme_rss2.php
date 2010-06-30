@@ -37,7 +37,7 @@ if ($_REQUEST['q']) {
 		$sql = "SELECT post_id FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT $rows";
 		$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_id in ($ids) ORDER BY post_id DESC LIMIT 1");
 	}
-	$title = _('Menéame: búsqueda en notas') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
+	$title = _('Nótame').': '._('búsqueda en notas') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_GET['user_id'])) {
 	//
@@ -47,7 +47,7 @@ if ($_REQUEST['q']) {
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	$sql = "SELECT post_id FROM posts WHERE post_user_id=$id and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts WHERE post_user_id=$id ORDER BY post_date DESC LIMIT 1");
-	$title = _('Nótame: notas de ') . $username;
+	$title = _('Nótame').': '.sprintf(_('notas de %s'), $username);
 } elseif(!empty($_REQUEST['friends_of'])) {
 	//
 	// User's friend posts
@@ -56,7 +56,7 @@ if ($_REQUEST['q']) {
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 and $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts, friends WHERE friend_type='manual' and friend_from = $id and friend_to=post_user_id and friend_value > 0 ORDER BY post_date DESC LIMIT 1");
-	$title = _('Nótame: notas amigos de ') . $username;
+	$title = _('Nótame').': '.sprintf(_('amigos de %s'), $username);
 } elseif (!empty($_REQUEST['favorites_of'])) {
 	/////
 	// users' favorites
@@ -65,7 +65,7 @@ if ($_REQUEST['q']) {
 	$username = $db->get_var("select user_login from users where user_id=$user_id");
 	$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY favorite_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='post'");
-	$title = _('Nótame: favoritos de ') . $username;
+	$title = _('Nótame').': '.sprintf(_('favoritos de %s'), $username);
 } elseif(!empty($_REQUEST['conversation_of'])) {
 	//
 	// Conversation posts
@@ -74,7 +74,7 @@ if ($_REQUEST['q']) {
 	$username = $db->get_var("select user_login from users where user_id=$id");
 	$sql = "SELECT conversation_from as post_id FROM conversations WHERE conversation_user_to=$id and conversation_type='post' ORDER BY conversation_time desc LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(conversation_time) FROM conversations WHERE conversation_user_to=$id and conversation_type='post' ORDER BY conversation_time DESC LIMIT 1");
-	$title = _('Nótame: conversación de ') . $username;
+	$title = _('Nótame').': '.sprintf(_('conversación de %s'), $username);
 } else {
 	//
 	// All posts
@@ -82,7 +82,7 @@ if ($_REQUEST['q']) {
 	$id = 0;
 	$sql = "SELECT post_id FROM posts WHERE $from_time ORDER BY post_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(post_date) FROM posts ORDER BY post_date DESC LIMIT 1");
-	$title = _('Nótame: notas');
+	$title = _('Nótame').': '._('notas');
 }
 
 

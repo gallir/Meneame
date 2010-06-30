@@ -111,7 +111,7 @@ function do_stats1($string) {
 	$comment .= _('publicadas') . ':&nbsp;' . Link::count('published') . ', ';
 	$comment .= _('pendientes') . ':&nbsp;' . Link::count('queued') . ', ';
 	$comment .= _('descartadas') . ':&nbsp;' . intval(Link::count('discard')) . ', ';
-	$comment .= _('auto descartadas') . ':&nbsp;' . intval(Link::count('autodiscard')) . ', ';
+	$comment .= _('autodescartadas') . ':&nbsp;' . intval(Link::count('autodiscard')) . ', ';
 	$comment .= _('abuso') . ':&nbsp;' . intval(Link::count('abuse')) . ', ';
 	// Disabled because is too slow for InnoDB
 	//$comment .= _('comentarios') . ':&nbsp;' . $db->get_var('select count(*) from comments');
@@ -164,7 +164,7 @@ function do_statsu($string) {
 	$user->read();
 	$user->all_stats();
 	
-	$comment = '<strong>'._('Estadísticas de'). ' ' . $user_login. '</strong>. ';
+	$comment = '<strong>'.sprintf(_('Estadísticas de %s'), $user_login). '</strong>. ';
 	$comment .= _('karma') . ':&nbsp;' . $user->karma . ', ';
 	if ($user->total_links > 1) {
 		$comment .= _('entropía') . ':&nbsp;' . intval(($user->blogs() - 1) / ($user->total_links - 1) * 100) . '%, ';

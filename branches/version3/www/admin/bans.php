@@ -96,11 +96,11 @@ function admin_bans($ban_type) {
 		$_REQUEST["s"] = clean_text($_REQUEST["s"]);
 		echo ' value="'.$_REQUEST["s"].'" '; 
 	} else { 
-		echo ' value="'._('buscar...').'" '; 
+		echo ' value="'._('buscar').'..." '; 
 	}
-	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';" />';
+	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar').'...\';" onfocus="if(this.value==\''._('buscar').'...\') this.value=\'\';" />';
 	
-	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="'.$globals['base_static'].'img/common/search-03.png" />';
+	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="'._('buscar').'" alt="'._('buscar').'" src="'.$globals['base_static'].'img/common/search-03.png" />';
 	echo '</form>';
 	echo '</div>'; 
 
@@ -123,10 +123,10 @@ function admin_bans($ban_type) {
 	echo 'orderby=ban_comment">'._('comentario').'</a></th>';
 	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_date">'._('Fecha creación').'</a></th>';
+	echo 'orderby=ban_date">'._('fecha creación').'</a></th>';
 	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_expire">'._('Fecha expiración').'</a></th>';
+	echo 'orderby=ban_expire">'._('fecha caducidad').'</a></th>';
 	echo '<th>'._('Editar / Borrar').'</th></tr>';
 	
 	switch ($_REQUEST["op"]) {
@@ -229,7 +229,7 @@ function admin_bans($ban_type) {
 }
 
 function print_expiration_dates() {
-	echo '<option value="UNDEFINED">'._('Sin expiración').'</option>';
+	echo '<option value="UNDEFINED">'._('Sin caducidad').'</option>';
 	echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
 	echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 	echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';

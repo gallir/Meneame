@@ -82,13 +82,13 @@ function print_empty_submit_form() {
 	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
 	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
 	echo '<p><label for="url">'._('url').':</label><br />';
-	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" onblur="if(this.value==\'\') this.value=\'http://\';" onclick="if(this.value==\''._('http://').'\') this.value=\'\';"/></p>';
+	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" onblur="if(this.value==\'\') this.value=\'http://\';" onclick="if(this.value==\'http://\') this.value=\'\';"/></p>';
 	echo '<input type="hidden" name="phase" value="1" />';
 	$randkey = rand(10000,10000000);
 	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
 	echo '<input type="hidden" name="randkey" value="'.$randkey.'" />';
 	echo '<input type="hidden" name="id" value="c_1" />';
-	echo '<p><input class="button" type="submit" value="'._('continuar &#187;').'" ';
+	echo '<p><input class="button" type="submit" value="'._('continuar').' &#187;" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
 	echo '</form>';
 	echo '</fieldset>';
@@ -177,7 +177,7 @@ function do_submit1() {
 	else $enqueued_limit = $globals['limit_3_minutes'];
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
-		echo '<p class="error"><strong>'._('Exceso de envíos').':</strong></p>';
+		echo '<p class="error"><strong>'._('exceso de envíos').':</strong></p>';
 		echo '<p>'._('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
 		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
 		echo '</div>'. "\n";
@@ -510,7 +510,7 @@ function do_submit1() {
 	echo '</p>'."\n";
 
 	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
-	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por "," (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
+	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por «,» (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
 	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
 
 	print_simpleformat_buttons('bodytext');
@@ -537,7 +537,7 @@ function do_submit1() {
 		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
 	}
 	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'" />&nbsp;&nbsp;'."\n";
-	echo '<input class="button" type="submit" value="'._('continuar &#187;').'" />'."\n";
+	echo '<input class="button" type="submit" value="'._('continuar').' &#187;" />'."\n";
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 	echo '</div>'."\n";
@@ -606,7 +606,7 @@ function do_submit2() {
 
 	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
 	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/>&nbsp;&nbsp;'."\n";
-	echo '<input class="button" type="submit" value="'._('enviar a la cola y finalizar &#187;').'" ';
+	echo '<input class="button" type="submit" value="'._('enviar a la cola y finalizar').' &#187;" ';
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
@@ -677,34 +677,34 @@ function link_errors($linkres) {
 	}
 	if($linkres->status != 'discard') {
 		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("La historia ya está en cola").": $linkres->status");
+		print_form_submit_error(_("la historia ya está en cola").": $linkres->status");
 		$error = true;
 	}
 	if(strlen($linkres->title) < 10  || strlen($linkres->content) < 30 ) {
-		print_form_submit_error(_("Título o texto incompletos"));
+		print_form_submit_error(_("título o texto incompletos"));
 		$error = true;
 	}
 	if(get_uppercase_ratio($linkres->title) > 0.25  || get_uppercase_ratio($linkres->content) > 0.25 ) {
-		print_form_submit_error(_("Demasiadas mayúsculas en el título o texto"));
+		print_form_submit_error(_("demasiadas mayúsculas en el título o texto"));
 		$error = true;
 	}
 	if(mb_strlen(html_entity_decode($linkres->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($linkres->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
-		print_form_submit_error(_("Título o texto demasiado largos"));
+		print_form_submit_error(_("título o texto demasiado largos"));
 		$error = true;
 	}
 	if(strlen($linkres->tags) < 3 ) {
-		print_form_submit_error(_("No has puesto etiquetas"));
+		print_form_submit_error(_("no has puesto etiquetas"));
 		$error = true;
 	}
 
 	if(preg_match('/.*http:\//', $linkres->title)) {
 		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("Por favor, no pongas URLs en el título, no ofrece información"));
+		print_form_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
 		$error = true;
 	}
 	if(!$linkres->category > 0) {
 		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("Categoría no seleccionada"));
+		print_form_submit_error(_("categoría no seleccionada"));
 		$error = true;
 	}
 	return $error;

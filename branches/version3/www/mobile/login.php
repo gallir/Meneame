@@ -102,7 +102,7 @@ function do_login() {
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</form>'."\n";
-	echo '<div><strong><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></strong></div>'."\n";
+	echo '<div><strong><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></strong></div>'."\n";
 	echo '<div style="margin-top: 30px">';
 	print_oauth_icons($_REQUEST['return']);
   	echo '</div>'."\n";

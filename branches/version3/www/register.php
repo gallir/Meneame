@@ -48,7 +48,7 @@ do_footer();
 exit;
 
 function do_register0() {
-	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿Has olvidado la contraseña?').'</a></h4></div>';
+	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>';
 
 	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
@@ -117,7 +117,7 @@ function do_register1() {
 function do_register2() {
 	global $db, $current_user, $globals;
 	if ( !ts_is_human()) {
-		register_error(_('El código de seguridad no es correcto.'));
+		register_error(_('el código de seguridad no es correcto'));
 		return;
 	}
 
@@ -136,7 +136,7 @@ function do_register2() {
 			$user=new User();
 			$user->username=$username;
 			if(!$user->read()) {
-				register_error(_('Error insertando usuario en la base de datos'));
+				register_error(_('error insertando usuario en la base de datos'));
 			} else {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
@@ -145,10 +145,10 @@ function do_register2() {
 			}
 			echo '</fieldset>'."\n";
 		} else {
-			register_error(_("Error insertando usuario en la base de datos"));
+			register_error(_("error insertando usuario en la base de datos"));
 		}
 	} else {
-		register_error(_("El usuario ya existe"));
+		register_error(_("el usuario ya existe"));
 	}
 }
 
@@ -161,35 +161,35 @@ function check_user_fields() {
 		$error=true;
 	}
 	if(!isset($_POST["username"]) || strlen($_POST["username"]) < 3) {
-		register_error(_("Nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos"));
+		register_error(_("nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos"));
 		$error=true;
 	}
 	if(!check_username($_POST["username"])) {
-		register_error(_("Nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra"));
+		register_error(_("nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra"));
 		$error=true;
 	}
 	if(user_exists(trim($_POST["username"])) ) {
-		register_error(_("El usuario ya existe"));
+		register_error(_("el usuario ya existe"));
 		$error=true;
 	}
 	if(!check_email(trim($_POST["email"]))) {
-		register_error(_("El correo electrónico no es correcto"));
+		register_error(_("el correo electrónico no es correcto"));
 		$error=true;
 	}
 	if(email_exists(trim($_POST["email"])) ) {
-		register_error(_("Dirección de correo duplicada, o fue usada recientemente"));
+		register_error(_("dirección de correo duplicada, o fue usada recientemente"));
 		$error=true;
 	}
 	if(preg_match('/[ \']/', $_POST["password"]) || preg_match('/[ \']/', $_POST["password2"]) ) {
-		register_error(_("Caracteres inválidos en la clave"));
+		register_error(_("caracteres inválidos en la clave"));
 		$error=true;
 	}
 	if(! check_password($_POST["password"])) {
-		register_error(_("Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números."));
+		register_error(_("clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números"));
 		$error=true;
 	}
 	if($_POST["password"] !== $_POST["password2"] ) {
-		register_error(_("Las claves no coinciden"));
+		register_error(_("las claves no coinciden"));
 		$error=true;
 	}
 
@@ -201,7 +201,7 @@ function check_user_fields() {
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 24 hour) and log_type in ('user_new', 'user_delete') and log_ip = '$user_ip'");
 	if($registered > 0) {
 		syslog(LOG_NOTICE, "Meneame, register not accepted by IP address ($_POST[username]) $user_ip");
-		register_error(_("Para registrar otro usuario desde la misma dirección debes esperar 24 horas"));
+		register_error(_("para registrar otro usuario desde la misma dirección debes esperar 24 horas"));
 		$error=true;
 	}
 	if ($error) return false;
@@ -212,7 +212,7 @@ function check_user_fields() {
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 6 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 0) {
 		syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
-		register_error(_("Para registrar otro usuario desde la misma red debes esperar 6 horas"). " ($ip_class)");
+		register_error(_("para registrar otro usuario desde la misma red debes esperar 6 horas"). " ($ip_class)");
 		$error=true;
 	}
 	if ($error) return false;
@@ -223,7 +223,7 @@ function check_user_fields() {
 	$registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 1 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 	if($registered > 2) {
 		syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
-		register_error(_("Para registrar otro usuario desde la misma red debes esperar unos minutos") . " ($ip_class)");
+		register_error(_("para registrar otro usuario desde la misma red debes esperar unos minutos") . " ($ip_class)");
 		$error=true;
 	}
 	if ($error) return false;

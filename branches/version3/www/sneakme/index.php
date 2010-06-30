@@ -55,7 +55,7 @@ switch ($option) {
 		break;
 
 	case '_best':
-		$page_title = _('mejores notas') . ' | men&eacute;ame';
+		$page_title = _('mejores notas') . ' | ' . _('menéame');
 		$tab_option = 2;
 		$min_date = date("Y-m-d H:00:00", time() - 86400); //  about 24 hours
 		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
@@ -64,7 +64,7 @@ switch ($option) {
 
 	case '_friends':
 		if ($current_user->user_id > 0) {
-			$page_title = _('amigos de') . ' '. $current_user->user_login;
+			$page_title = sprintf(_('amigos de %s'), $current_user->user_login);
 			$tab_option = 3;
 			$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0 ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $current_user->user_id and friend_to=post_user_id and friend_value > 0");
@@ -78,7 +78,7 @@ switch ($option) {
 
 	case '_favorites':
 		if ($current_user->user_id > 0) {
-			$page_title = _('favoritas de') . ' '. $current_user->user_login;
+			$page_title = sprintf(_('favoritas de %s'), $current_user->user_login);
 			$tab_option = 7;
 			$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY post_id DESC LIMIT $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$current_user->user_id AND favorite_type='post'");
@@ -92,7 +92,7 @@ switch ($option) {
 
 	case '_conversation':
 		if ($current_user->user_id > 0) {
-			$page_title = _('conversación de') . ' ' . $current_user->user_login;
+			$page_title = sprintf(_('conversación de %s'), $current_user->user_login);
 			$tab_option = 6;
 			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
 			$rows =  $db->get_var("SELECT count(*) FROM conversations, posts WHERE conversation_user_to=$current_user->user_id and conversation_type='post' and post_id = conversation_from ");
@@ -115,7 +115,7 @@ switch ($option) {
 				header('Location: '.post_get_base_url($user->username).'/'.$post_id);
 				die;
 			}
-			$page_title = _('nota de') . ' ' . $user->username . " ($post_id)";
+			$page_title = sprintf(_('nota de %s'), $user->username) . " ($post_id)";
 			$globals['search_options']['u'] = $user->username;
 			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
 			$rows = 1;
@@ -124,7 +124,7 @@ switch ($option) {
 			if(!$user->read()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
-			$page_title = _('notas de') . ' ' . $user->username;
+			$page_title = sprintf(_('notas de %s'), $user->username);
 			$globals['search_options']['u'] = $user->username;
 			$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
 			$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
@@ -157,7 +157,7 @@ $post = new Post;
 $post->print_post_teaser($rss_option);
 
 if ($option == '_geo') {
-	echo '<div class="topheading"><h2>notas de las últimas 24 horas</h2></div>';
+	echo '<div class="topheading"><h2>'._('notas de las últimas 24 horas').'</h2></div>';
 	echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px;"></div></div>';
 ?>
 <script type="text/javascript">

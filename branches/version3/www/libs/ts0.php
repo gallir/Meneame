@@ -63,7 +63,7 @@ function ts_is_human() {
 
 function ts_print_form() {
 	$ts_random=rand();
-	echo _("introduce el código de la imagen:")."<br/>\n";
+	echo _("introduce el código de la imagen").":<br/>\n";
 //	echo '<table><tr><td>';
 	echo '<input type="hidden" name="ts_random" value="'.$ts_random.'" />';
 	echo '<div class="tc"><img src="ts_image.php?ts_random='.$ts_random.'" alt="code number"/></div>';

@@ -152,9 +152,9 @@ function do_header($title, $id='home') {
 	if (!empty($_REQUEST['q'])) {
 		echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['q']).'" />';
 	} else {
-		echo '<input name="q" value="'._('buscar...').'" type="text" onblur="if(this.value==\'\') this.value=\''._('buscar...').'\';" onfocus="if(this.value==\''._('buscar...').'\') this.value=\'\';"/>';
+		echo '<input name="q" value="'._('buscar').'..." type="text" onblur="if(this.value==\'\') this.value=\''._('buscar').'...\';" onfocus="if(this.value==\''._('buscar').'...\') this.value=\'\';"/>';
 	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="buscar" src="'.$globals['base_static'].'img/common/search-04.png" id="submit_image" width="28" height="22"/></a>'."\n";
+	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="'._('buscar').'" src="'.$globals['base_static'].'img/common/search-04.png" id="submit_image" width="28" height="22"/></a>'."\n";
 	
 	if ($globals['search_options']) {
 		foreach ($globals['search_options'] as $name => $value) {
@@ -812,7 +812,7 @@ function do_best_stories() {
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = _('populares de').' <em>'.$globals['meta_current_name'].'</em>';
+			$title = sprintf(_('populares de «%s»'), $globals['meta_current_name']);
 	} else {
 		$category_list  = '';
 		$title = _('populares');
@@ -952,7 +952,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 		header("Status: $error $mess");
 	}
 
-	do_header(_('Error'));
+	do_header(_('error'));
 	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
 	echo '<!--'."\n";
 	echo '.errt { text-align:center; padding-top:50px; font-size:300%; color:#FF6400;}'."\n";
