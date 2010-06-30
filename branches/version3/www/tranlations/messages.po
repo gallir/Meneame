@@ -3498,7 +3498,7 @@ msgid "noticias más comentadas"
 msgstr ""
 
 #: topcommented.php:66
-msgid "no hay noticias seleccionads"
+msgid "no hay noticias seleccionadas"
 msgstr ""
 
 #: opensearch_plugin.php:15
