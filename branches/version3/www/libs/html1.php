@@ -648,6 +648,8 @@ function do_vertical_tags($what=false) {
 function do_categories_cloud($what=false, $hours = 48) {
 	global $db, $globals, $dblang;
 
+	if ($globals['mobile']) return;
+
 	$cache_key = 'categories_cloud_'.$globals['css_main'].$what;
 	if(memcache_mprint($cache_key)) return;
 

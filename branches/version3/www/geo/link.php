@@ -21,9 +21,9 @@ $link->read();
 if(!$link->read) die;
 echo '<div style="font-size:8.5pt;width:250px; margin-right:15px">';
 if ($link->avatar) {
-	echo '<img src="http://'.get_server_name(). get_avatar_url($link->author, $link->avatar, 40).'" width="40" height="40" alt="avatar"  style="float:left; margin: 0 5px 4px 0;"/>';
+	echo '<img src="'.get_avatar_url($link->author, $link->avatar, 40).'" width="40" height="40" alt="avatar"  style="float:left; margin: 0 5px 4px 0;"/>';
 }
 echo '<a href="'.$link->get_permalink().'" target="_blank"><strong>'.$link->title.'</strong></a><br clear="all"/>';
-echo _('en').'&nbsp;: '.$link->meta_name.', '.$link->category_name.' | '._('comentarios').':&nbsp;'.$link->comments.' | karma:&nbsp;'. intval($link->karma). ' | '._('negativos').':&nbsp;'. $link->negatives;
+echo $link->meta_name.', '.$link->category_name.' | '._('comentarios').':&nbsp;'.$link->comments.' | karma:&nbsp;'. intval($link->karma). ' | '._('negativos').':&nbsp;'. $link->negatives;
 echo '</div>';
 ?>

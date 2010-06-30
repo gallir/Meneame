@@ -61,7 +61,7 @@ function do_banner_right() { // side banner A
 
 function do_banner_promotions() { 
 	global $globals;
-	if($globals['external_ads'] && $globals['ads']) {
+	if(! $globals['mobile'] && $globals['external_ads'] && $globals['ads']) {
 		@include('ads/promotions.inc');
 	}
 }

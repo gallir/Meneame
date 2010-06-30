@@ -506,7 +506,7 @@ tooltip.ajax_delayed = function (event, script, id, maxcache) {
 	if ((object = this.cache.get(script+id)) != undefined) {
 		tooltip.show(event, object[script+id]);
 	} else {
-		this.show(event, 'cargando...'); // Translate this to your language: it's "loading..." ;-)
+		this.show(event, 'loading...'); // Translate this to your language: it's "loading..." ;-)
 		this.timeout = setTimeout("tooltip.ajax_request('"+script+"', '"+id+"', "+maxcache+")", 100);
 	}
 }
