@@ -80,9 +80,7 @@ border: 1px solid;
 padding: 10px 10px;
 margin: 10px 0;
 border-color: #FF6400;
-background: #FFF1E2;
-/* Previous color */
-/* background: #FEEFE5; */
+background: #FEEFE5;
 }
 
 fieldset dl {
@@ -1202,6 +1200,16 @@ border-color: #FFF;
 .commentform a:hover {
 text-decoration: none;
 }
+
+/* Should be changed when buttons backgrounds
+.commentform fieldset {
+background-color: #FFEDC6;
+border-color: #FFEDC6;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+}
+*/
 
 .commentform textarea {
 display: block;
