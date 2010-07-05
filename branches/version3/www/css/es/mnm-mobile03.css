@@ -364,7 +364,7 @@ color: #666;
 
 .news-submitted a:link, .news-submitted a:visited {
 font-weight: bold;
-color: #666;
+color: #3D72C3;
 }
 
 .news-tags {
@@ -394,14 +394,13 @@ margin-bottom: 5px;
 padding: 5px;
 line-height: 130%;
 overflow: hidden;
-background: #feefe5;
-color: #303030;
+background: #FFF1E2;
+color: #202020;
 border-color: #FF6400;
 }
 
 .comment-body.high {
-background: #FFC8A6;
-border-color: #FF9400;
+background: #FFD5AD;
 }
 
 .comment-body-hidden {
@@ -430,12 +429,12 @@ font-size: 85%;
 line-height: 140%;
 padding: 0 0px 5px 0;
 white-space: nowrap;
-color: #FF6400;
+color: #666;
 }
 
 .comment-meta a {
 font-weight: bold;
-color: #FF9400;
+color: #3D72C3;
 }
 
 .comment-meta-hidden, .comment-meta-hidden a {

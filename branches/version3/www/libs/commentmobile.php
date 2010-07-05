@@ -44,15 +44,16 @@ class CommentMobile extends Comment{
 		echo '<div class="'.$comment_meta_class.'">';
 
 		if ($this->type == 'admin') {
-			echo '<strong>'._('admin').'</strong> ';
+			$author = '<strong>'._('admin').'</strong> ';
 		} else {
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		}
 
-		echo ' ('.get_date_time($this->date).')';
+		printf(_('por %s el %s'), $author, get_date_time($this->date));
+
 		// Check that the user can vote
 		if ($this->type != 'admin' && $this->user_level != 'disabled') {
-			echo '&nbsp;&nbsp;' . _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
+			echo '&nbsp;&nbsp;' . _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, '._('karma').': <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
 		}
 
 		echo '</div>';
