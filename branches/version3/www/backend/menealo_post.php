@@ -91,8 +91,8 @@ if (!$vote->insert()) {
 
 $votes_info->post_votes++;
 $votes_info->post_karma += $vote->value;
-if ($vote->value > 0) $dict['image'] = $globals['base_static'].'img/common/vote-up-gy01.png';
-else $dict['image'] = $globals['base_static'].'img/common/vote-down-gy01.png';
+if ($vote->value > 0) $dict['image'] = $globals['base_static'].'img/common/vote-up-gy02.png';
+else $dict['image'] = $globals['base_static'].'img/common/vote-down-gy02.png';
 
 $dict['id'] = $id;
 $dict['votes'] = $votes_info->post_votes;

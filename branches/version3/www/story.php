@@ -262,7 +262,7 @@ case 2:
 	// Highlight a comment if it is referenced by the URL.
 	// currently double border, width must be 3 at least
 	echo '<script type="text/javascript">';
-	echo 'if(location.href.match(/#(c-\d+)$/)){$("#"+RegExp.$1+">:first").css("border-style","double").css("border-width","3px")}';
+	echo 'if(location.href.match(/#(c-\d+)$/)){$("#"+RegExp.$1+">:first").css("border-style","solid").css("border-width","1px")}';
 	echo "</script>\n";
 	break;
 

@@ -214,7 +214,7 @@ class Comment {
 
 		// Print dates
 		if ($this->modified > $this->date + 1) {
-			$edited = sprintf('<strong title="'. _('editado %s después').'">&nbsp;*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
+			$edited = sprintf('<strong title="'. _('editado %s después').'">*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
 		} else $edited = '';
 
 		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
@@ -241,14 +241,14 @@ class Comment {
 
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 	 		echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('informativo, opinión razonada, buen humor...').'"><img src="'.$globals['base_static'].'img/common/vote-up02.png" width="18" height="16" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
-	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('abuso, insulto, acoso, spam, magufo...').'"><img src="'.$globals['base_static'].'img/common/vote-down02.png" width="16" height="16" alt="'._('voto negativo').'"/></a>&nbsp;';
+			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('informativo, opinión razonada, buen humor...').'"><img src="'.$globals['base_static'].'img/common/vote-up02.png" width="18" height="16" alt="'._('voto positivo').'"/></a>&nbsp;';
+	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('abuso, insulto, acoso, spam, magufo...').'"><img src="'.$globals['base_static'].'img/common/vote-down02.png" width="18" height="16" alt="'._('voto negativo').'"/></a>&nbsp;';
 	 		echo '</span>';
 	 	} else {
 	 		if ($this->voted > 0) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy02.png" width="18" height="16" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
 			} elseif ($this->voted<0 ) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy02.png" width="18" height="16" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
 			}
 		}
 	}

@@ -1093,7 +1093,7 @@ color: #666;
 
 .news-submitted a:link, .news-submitted a:visited {
 font-weight: bold;
-color: #666;
+color: #3D72C3;
 }
 
 .news-tags {
@@ -1297,15 +1297,11 @@ float: left;
 margin: 2px 10px 2px 0;
 }
 
-.comment-meta {
-min-height: 18px;
-}
-
 .comment-meta, .comment-meta-hidden {
 font-size: 90%;
-line-height: 160%;
-padding: 0 0px 5px 0;
+line-height: 180%;
 color: #666;
+padding: 0 0 5px 0;
 }
 
 .comment-meta-hidden, .comment-meta-hidden a {
@@ -1319,6 +1315,11 @@ font-weight: bold;
 .comment-info {
 text-align: right;
 }
+
+.comment-info a {
+color: #3D72C3;
+}
+
 
 .comment-votes-info {
 float: left;
