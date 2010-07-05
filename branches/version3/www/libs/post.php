@@ -146,34 +146,35 @@ class Post {
 
 		// Add the icon to show votes
 		if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
-			echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_p_v.php?id='.$this->id.'\')">';
-			echo '<img src="'.$globals['base_static'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
+			echo '<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_p_v.php?id='.$this->id.'\')">';
+			echo '<img src="'.$globals['base_static'].'img/common/vote-info02.png" width="18" height="16" alt="+ info" title="'._('¿quién ha votado?').'"/>';
 			echo '</a>';
 		}
 
+		// Reply button
+		if ($current_user->user_id > 0) {
+			echo '<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply02.png" width="18" height="16"/></a>';
+		}
+
+		// Permalink
+		echo '<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-02.png" width="18" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
+
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '&nbsp;&nbsp;<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_post.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'post').'</a>';
+			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_post.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'post').'</a>';
 		}
 
 		echo '</div>';
 
 		// Print comment info (right)
 		echo '<div class="comment-info">';
-		echo '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ';
-		echo '('.$this->src.')';
-		echo '<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="15" height="13" alt="link" title="'._('enlace permanente').'"/></a>';
+		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
 		
 		// Print dates
-		if (time() - $this->date > 604800) { // 7 days
-			echo _('el').get_date_time($this->date);
+		if ($globals['now'] - $this->date > 604800) { // 7 days
+			printf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
 		} else {
-			echo _('hace').' '.txt_time_diff($this->date);
-		}
-
-		// Reply button
-		if ($current_user->user_id > 0) {
-			echo '&nbsp;<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10"/></a>';
+			printf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
 		}
 
 		//$this->print_user_avatar(20);
@@ -331,14 +332,14 @@ class Post {
 
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 		 	echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_static'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
-		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_static'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
+			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_static'].'img/common/vote-up02.png" width="18" height="16" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
+		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_static'].'img/common/vote-down02.png" width="18" height="16" alt="'._('voto negativo').'"/></a>&nbsp;';
 		 	echo '</span>';
 		 } else {
 		 	if ($this->voted > 0) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy01.png" width="12" height="12" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy02.png" width="18" height="16" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
 			} elseif ($this->voted<0 ) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy01.png" width="12" height="12" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy02.png" width="18" height="16" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
 			}
 		}
 	}

@@ -154,10 +154,6 @@ class Comment {
 		} else {
 			$this->print_text($length, $html_id);
 			echo '</span>';
-			// Add the reply button
-			if ($current_user->user_id > 0 && $globals['link']) {
-				echo '<br/><a href="javascript:comment_reply('.$this->order.')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply01.png" width="13" height="10" style="float:right;"/></a>';
-			}
 		}
 		echo '</div>';
 
@@ -179,14 +175,24 @@ class Comment {
 			echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
 			// Add the icon to show votes
 			if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
-				echo '&nbsp;&nbsp;<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_c_v.php?id='.$this->id.'\')">';
-				echo '<img src="'.$globals['base_static'].'img/common/vote-info01.png" width="12" height="12" alt="+ info" title="'._('¿quién ha votado?').'"/>';
+				echo '<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_c_v.php?id='.$this->id.'\')">';
+				echo '<img src="'.$globals['base_static'].'img/common/vote-info02.png" width="18" height="16" alt="+ info" title="'._('¿quién ha votado?').'"/>';
 				echo '</a>';
 			}
 		}
+
+		// Comment reply
+		if ($current_user->user_id > 0 && $globals['link'] && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
+			echo '<a href="javascript:comment_reply('.$this->order.')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply02.png" width="18" height="16"/></a>';
+		}
+		
+		// Comment permalink
+		echo '<a href="'.$this->get_relative_individual_permalink().'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-02.png" width="18" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
+
+
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
-			echo '&nbsp;&nbsp;<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_comment.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'comment').'</a>';
+			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_comment.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'comment').'</a>';
 		}
 		echo '</div>';
 
@@ -196,35 +202,35 @@ class Comment {
 		echo '<div class="comment-info">';
 
 		if ($this->type == 'admin') {
-			echo '<strong>'._('admin').'</strong> ';
+			$author = '<strong>'._('admin').'</strong> ';
 			if ($current_user->admin) {
-				echo ' ('.$this->username.')';
+				$author .= ' ('.$this->username.')';
 			}
 		} elseif ($single_link) {
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a>';
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a>';
 		} else {
-			echo '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
 		}
-
-		echo '<a href="'.$this->get_relative_individual_permalink().'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-01.png" width="15" height="13" alt="link" title="'._('enlace permanente').'"/></a>';
 
 		// Print dates
-		if ($globals['now'] - $this->date > 604800) { // 7 days
-			echo _('el').get_date_time($this->date);
-		} else {
-			echo _('hace').' '.txt_time_diff($this->date);
-		}
 		if ($this->modified > $this->date + 1) {
-			$txt = _('editado').txt_time_diff($this->date, $this->modified).' '._('después');
-			echo '<strong title="'.$txt.'">&nbsp;*&nbsp;</strong>';
-		}
+			$edited = sprintf('<strong title="'. _('editado %s después').'">&nbsp;*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
+		} else $edited = '';
 
 		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
 			$avatar = get_avatar_url($this->author, $this->avatar, 20);
 		} else {
 			$avatar = get_no_avatar_url(20);
 		}
-		echo '<img class="avatar" src="'.$avatar.'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
+
+
+		if ($globals['now'] - $this->date > 604800) { // 7 days
+			printf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
+		} else {
+			printf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
+		}
+		
+		echo '<img src="'.$avatar.'" width="20" height="20" alt="" title="'.$this->username.',&nbsp;karma:&nbsp;'.$this->user_karma.'" />';
 
 		echo '</div></div>';
 		echo "</div>\n";
@@ -235,8 +241,8 @@ class Comment {
 
 		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
 	 		echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('informativo, opinión razonada, buen humor...').'"><img src="'.$globals['base_static'].'img/common/vote-up01.png" width="12" height="12" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
-	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('abuso, insulto, acoso, spam, magufo...').'"><img src="'.$globals['base_static'].'img/common/vote-down01.png" width="12" height="12" alt="'._('voto negativo').'"/></a>&nbsp;';
+			echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,1".')" title="'._('informativo, opinión razonada, buen humor...').'"><img src="'.$globals['base_static'].'img/common/vote-up02.png" width="18" height="16" alt="'._('voto positivo').'"/></a>&nbsp;&nbsp;&nbsp;';
+	 		echo '<a href="javascript:menealo_comment('."$current_user->user_id,$this->id,-1".')" title="'._('abuso, insulto, acoso, spam, magufo...').'"><img src="'.$globals['base_static'].'img/common/vote-down02.png" width="16" height="16" alt="'._('voto negativo').'"/></a>&nbsp;';
 	 		echo '</span>';
 	 	} else {
 	 		if ($this->voted > 0) {
