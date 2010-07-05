@@ -80,7 +80,9 @@ border: 1px solid;
 padding: 10px 10px;
 margin: 10px 0;
 border-color: #FF6400;
-background: #FEEFE5;
+background: #FFF1E2;
+/* Previous color */
+/* background: #FEEFE5; */
 }
 
 fieldset dl {
@@ -1251,7 +1253,7 @@ margin-bottom: 10px;
 }
 
 .comment-body {
-padding: 5px 5px 5px 10px;
+padding: 5px 5px 10px 10px;
 line-height: 130%;
 overflow: hidden;
 min-height: 25px;

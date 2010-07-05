@@ -142,7 +142,7 @@ class Post {
 				&&  $this->date > time() - $globals['time_enabled_votes'])
 			$this->print_shake_icons();
 
-		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, karma: <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
+		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, '._('karma').': <span id="vk-'.$this->id.'">'.$this->karma.'</span>&nbsp;';
 
 		// Add the icon to show votes
 		if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
