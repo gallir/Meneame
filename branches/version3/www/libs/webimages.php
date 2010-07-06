@@ -255,6 +255,26 @@ class HtmlImages {
 	}
 
 	function get() {
+
+		// Check first in these server using *only* the URL
+		$video_servers = array(
+						// 'video.google.com' => 'check_google_video',
+						'youtube.com' => 'check_youtube',
+						// 'metacafe.com' => 'check_metacafe',
+						// 'vimeo.com' => 'check_vimeo', 
+						// 'zappinternet.com' => 'check_zapp_internet',
+						// 'dailymotion.com' => 'check_daily_motion',
+				);
+		$base_host = preg_replace('/^www\./', '', $this->parsed_url['host']);
+		if ($video_servers[$base_host]) {
+			if ($this->debug) echo "<!-- Check video by URL: $video_servers[$base_host] -->\n";
+			if($this->$video_servers[$base_host]()) {
+				if ($this->debug) echo "<!-- Selected video by URL: $video_servers[$base_host] -->\n";
+				$this->selected->video = true;
+			}
+			return $this->selected;
+		}
+
 		$res = get_url($this->url, $this->referer);
 		if (!$res) {
 			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
