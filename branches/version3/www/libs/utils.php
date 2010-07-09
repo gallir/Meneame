@@ -628,7 +628,7 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^)\?(:-){0,1}\((\s|$)/i', '$1{huh}$2', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\((\s|$)/i', '$1{sad}$2', $str);
 	$str=preg_replace('/(\s|^):-{0,1}O/', '$1{shocked}', $str);
-	$str=preg_replace('/(\s|^)8-{0,1}[D\)]|(\s|^):cool:/', '$1{cool}', $str);
+	$str=preg_replace('/(\s|^)(8-{0,1}[D\)]|:cool:)/', '$1{cool}', $str);
 	$str=preg_replace('/(\s|^):roll:/i', '$1{roll}', $str);
 	$str=preg_replace('/(\s|^):-{0,1}P(\s|$)/i', '$1{tongue}$2', $str);
 	$str=preg_replace('/(\s|^):-{0,1}x/i', '$1{lipssealed}', $str);
