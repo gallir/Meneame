@@ -424,7 +424,7 @@ vertical-align: middle;
 
 .tabsub-this {
 font-weight: bold;
-text-shadow: 0 1px #ccc;
+background-color: #FFEDC6;
 }
 
 .tabsub {
@@ -450,21 +450,20 @@ padding: 3px 8px 0 6px;
 border-top: 1px solid;
 border-left: 1px solid;
 border-right: 1px solid;
-font-size: .9em;
+font-size: 12px;
 text-decoration: none;
-background: #fff;
 border-color: #ff6400;
 color: #ff6400;
 }
 
 .tabsub li a:hover {
 text-decoration: none;
-background: #feefe5;
+background-color: #FFEDC6;
 }
 
 .tabsub li.tabsub-this {
 height: 23px;
-background: #fff;
+background-color: #FFEDC6;
 }
 
 .tabsub li.tabsub-this a {
