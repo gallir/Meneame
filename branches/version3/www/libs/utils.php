@@ -191,9 +191,9 @@ function clean_lines($string) {
 function save_text_to_html($string, $hashtype = false) {
 	//$string = strip_tags(trim($string));
 	//$string= htmlspecialchars(trim($string));
-	$str= text_to_html($string, $hashtype);
-	$str = preg_replace("/\r\n|\r|\n/", "\n<br />\n", $str);
-	return $str;
+	//$str= text_to_html($string, $hashtype);
+	//$str = preg_replace("/\r\n|\r|\n/", "\n<br />\n", $str);
+	return text_to_html($string, $hashtype, true, true);
 }
 
 function text_sub_text($str, $length=70) {
@@ -212,21 +212,52 @@ function text_to_summary($string, $length=50) {
 	return text_to_html(text_sub_text($string, $length), false, false);
 }
 
-function text_to_html($str, $hashtype = false, $do_links = true) {
+function text_to_html($string, $hashtype = false, $do_links = true, $save_html = false) {
 	global $globals;
 
+	$regexp .= '_[^\s<>_]+_\b';
+	$regexp .= '|\*[^\s<>]+\*';
+	$regexp .= '|\-([^\s<>]+)\-';
+
 	if ($do_links) {
-		$str = preg_replace('/(\b)(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/u', '$1<a href="$2$3$4$5$6" title="$2$3$4$5$6" rel="nofollow">$4$6</a>', $str);
+		$regexp .= '|https*:\/\/[^ \t\n\r\]]{5,200}';
 	}
+
+	$globals['hashtype'] = $hashtype; // To pass the value to the callback
 	if ($hashtype) {
-		// Add links to hashtags
-		$str = preg_replace('/(^|\s)\#([^\d][^\s\.\,\:\;\¡\!\)\-]{1,42})/u', '$1<a href="'.$globals['base_url'].'search.php?w='.$hashtype.'&amp;q=%23$2&amp;o=date">#$2</a>', $str);
+		$regexp .= '|#[^\d][^\s\.\,\:\;\¡\!\)\-]{1,42}';
 	}
-	$str = preg_replace('/\b_([^\s<>_]+)_\b/', "<em>$1</em>", $str);
-	$str = preg_replace('/(^|[\(¡;,:¿\s])\*([^\s<>]+)\*/', "$1<strong>$2</strong>", $str);
-	$str = preg_replace('/(^| )\-([^\s<>]+)\-/', "$1<strike>$2</strike>", $str);
-	return $str;
+	if ($save_html) {
+		$regexp .= '|\n\r*';
+	}
+	return preg_replace_callback("/([\s\({¡;,:¿]|^)($regexp)/mu", 'text_to_html_callback', $string);
 }
+
+function text_to_html_callback($matches) {
+	global $globals;
+
+	if (preg_match('/[\n\r]/', $matches[1])) $matches[1] = "<br/>\n";
+	switch ($matches[2][0]) {
+		case '_':
+			return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
+		case '*':
+			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
+		case '-':
+			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
+		case "\r";
+		case "\n";
+			return $matches[1]."\n<br/>\n";
+		case '#';
+			if ($globals['hashtype']) {
+				return $matches[1].preg_replace('/\#([^\d][^\s\.\,\:\;\¡\!\)\-]{1,42})/u', '<a href="'.$globals['base_url'].'search.php?w='.$globals['hashtype'].'&amp;q=%23$1&amp;o=date">#$1</a>', $matches[2]);
+			}
+		case 'h':
+			return $matches[1].preg_replace('/(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/u', '<a href="$1$2$3$4$5" title="$1$2$3$4$5" rel="nofollow">$3$5</a>', $matches[2]);
+		
+	}
+	return $matches[1].$matches[2];
+}
+
 
 // Clean all special chars and html/utf entities
 function text_sanitize($string) {

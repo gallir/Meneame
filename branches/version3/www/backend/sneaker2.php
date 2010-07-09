@@ -156,9 +156,8 @@ function check_chat() {
 			$comment = preg_replace('/(^|[\s\.,¿#@])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
 		}
 
-		$from = $now - 1200;
+		$from = $now - 1500;
 		$db->query("delete from chats where chat_time < $from");
-		$comment = $db->escape(trim(normalize_smileys($comment)));
 		if ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && $current_user->admin) {
 			$room = 'admin';
 			$comment = preg_replace('/^# */', '', $comment);
@@ -169,6 +168,7 @@ function check_chat() {
 			$room = 'all';
 		}
 		if (strlen($comment)>0) {
+			$comment = $db->escape(trim(normalize_smileys($comment)));
 			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now_f, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
 		}
 
