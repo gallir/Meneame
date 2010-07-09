@@ -34,7 +34,7 @@ class Post {
 		return null;
 	}
 
-	function store() {
+	function store($full = true) {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
@@ -45,7 +45,7 @@ class Post {
 		$post_karma = $this->karma;
 		$post_date = $this->date;
 		$post_randkey = $this->randkey;
-		$post_content = $db->escape(clean_lines(clear_whitespace($this->content)));
+		$post_content = $db->escape($this->normalize_content());
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
 			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
@@ -54,13 +54,13 @@ class Post {
 			$this->insert_vote($post_author);
 
 			// Insert post_new event into logs
-			log_insert('post_new', $this->id, $post_author);
+			if ($full) log_insert('post_new', $this->id, $post_author);
 		} else {
 			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_ip_int = '$this->ip', post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			// Insert post_new event into logs
-			log_conditional_insert('post_edit', $this->id, $post_author, 30);
+			if ($full) log_conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
-		$this->update_conversation();
+		if ($full) $this->update_conversation();
 		$db->commit();
 	}
 
@@ -389,6 +389,11 @@ class Post {
 				}
 			}
 		}
+	}
+	
+	function normalize_content() {
+		$this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
+		return $this->content;
 	}
 
 }

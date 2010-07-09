@@ -134,7 +134,7 @@ function to_html(data) {
 			} 
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
-			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+put_smiley(data.title)+'<\/a><\/div>';
+			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			if (data.icon != undefined && data.icon.length > 0) {
 				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
@@ -165,7 +165,7 @@ function to_html(data) {
 			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1'); 
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
-			html += '<div class="'+chat_class+'" '+text_style+'>'+put_smiley(data.title)+'<\/div>';
+			html += '<div class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 			if (data.icon != undefined &&  data.icon.length > 0) {
 				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
@@ -257,36 +257,6 @@ function check_user_ping(str) {
 function check_admin_ping(str) {
 	re = new RegExp('(^|[\\s:,\\?¿!¡;<>\\(\\)])(admin|admins|administradora{0,1}|administrador[ae]s)([\\s:,\\?¿!¡;<>\\(\\).]|$)', "i");
 	return str.match(re);
-}
-
-function put_smiley(str) {
-	str=str.replace(/(\s|^):ffu:/gi, ' <img src="'+base_static+'img/smileys/fu.gif" alt=":ffu:" title=":ffu:"/> ');
-	str=str.replace(/(\s|^):goatse:/gi, ' <img src="'+base_static+'img/smileys/goat.gif" alt="goat" title="goat-ish"/> ');
-	str=str.replace(/(\s|^):palm:/gi, ' <img src="'+base_static+'img/smileys/palm.gif" alt=":palm:" title=":palm:"/> ');
-	str=str.replace(/(\s|^)o_o|:wow:/gi, ' <img src="'+base_static+'img/smileys/wow.gif" alt="o_o" title="o_o :wow:"/> ');
-	str=str.replace(/(\s|^)¬¬|:shame:/gi, ' <img src="'+base_static+'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:"/> ');
-
-	str=str.replace(/(\s|^):-{0,1}\)/gi, ' <img src="'+base_static+'img/smileys/smiley.gif" alt=":-)" title=":-)"/> ');
-	str=str.replace(/(\s|^);-{0,1}\)/gi, ' <img src="'+base_static+'img/smileys/wink.gif" alt=";)" title=";)" /> ');
-	str=str.replace(/(\s|^):-{0,1}&gt;/gi, ' <img src="'+base_static+'img/smileys/cheesy.gif" alt=":->" title=":->" /> ');
-	str=str.replace(/(\s|^):-{0,1}D|:grin:/gi, ' <img src="'+base_static+'img/smileys/grin.gif" alt=":-D" title=":-D"/> ');
-	str=str.replace(/:oops:|&lt;:\(/gi, ' <img src="'+base_static+'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" /> ');
-	str=str.replace(/(\s|^)&gt;:-{0,1}\(/gi, ' <img src="'+base_static+'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-(" /> ');
-	str=str.replace(/(\s|^)\?(:-){0,1}\(/gi, ' <img src="'+base_static+'img/smileys/huh.gif" alt="?(" title="?(" /> ');
-	str=str.replace(/(\s|^):-{0,1}\(/gi, ' <img src="'+base_static+'img/smileys/sad.gif" alt=":-(" title=":-(" /> ');
-	str=str.replace(/(\s|^):-{0,1}O/g, ' <img src="'+base_static+'img/smileys/shocked.gif" alt=":-O" title=":-O" /> ');
-	str=str.replace(/(\s|^)8-{0,1}[D\)]|:cool:/g, ' <img src="'+base_static+'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D"/> ');
-	str=str.replace(/:roll:/gi, ' <img src="'+base_static+'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:" /> ');
-	str=str.replace(/(\s|^):-{0,1}P(\s|$)/gi, ' <img src="'+base_static+'img/smileys/tongue.gif" alt=":-P" title=":-P" /> ');
-	str=str.replace(/(\s|^):-{0,1}x/gi, ' <img src="'+base_static+'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x" /> ');
-	str=str.replace(/(\s|^):-{0,1}\//gi, ' <img src="'+base_static+'img/smileys/undecided.gif" alt=":-/" title=":-/ :/" /> ');
-	str=str.replace(/(\s|^):'\(|:cry:/gi, ' <img src="'+base_static+'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'(" /> ');
-	str=str.replace(/(\s|^)[xX]D+|:lol:/g, ' <img src="'+base_static+'img/smileys/laugh.gif" alt="xD" title=":lol: xD" /> ');
-	str=str.replace(/(\s|^):-{0,1}S(\s|$)/gi, ' <img src="'+base_static+'img/smileys/confused.gif" alt=":-S" title=":-S :S"/> ');
-	str=str.replace(/(\s|^):-{0,1}\|/gi, ' <img src="'+base_static+'img/smileys/blank.gif" alt=":-|" title=":-| :|"/> ');
-	str=str.replace(/(\s|^):-{0,1}\*/gi, ' <img src="'+base_static+'img/smileys/kiss.gif" alt=":-*" title=":-* :*"/> ');
-
-	return str;
 }
 
 function to_hoygan(str) 

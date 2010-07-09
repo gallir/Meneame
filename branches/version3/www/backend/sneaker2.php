@@ -158,7 +158,7 @@ function check_chat() {
 
 		$from = $now - 1200;
 		$db->query("delete from chats where chat_time < $from");
-		$comment = $db->escape(trim($comment));
+		$comment = $db->escape(trim(normalize_smileys($comment)));
 		if ((!empty($_REQUEST['admin']) || preg_match('/^#/', $comment)) && $current_user->admin) {
 			$room = 'admin';
 			$comment = preg_replace('/^# */', '', $comment);
@@ -253,7 +253,7 @@ function get_chat() {
 		$json['link'] = 0;
 
 
-		$chat_text = text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text)));
+		$chat_text = put_smileys(text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text))));
 
 		// Add the anonymizer for links to external pages if in admin room
 		if ($anonymizer) {
@@ -416,7 +416,7 @@ function get_post($time, $type, $postid, $userid) {
 	$json['type'] = $type;
 	$json['who'] = $event->user_login;
 	$json['status'] = _('nótame');
-	$json['title'] = text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130);
+	$json['title'] = put_smileys(text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130));
 	$json['votes'] = 0;
 	$json['com'] = 0;
 	$json['uid'] = $userid;

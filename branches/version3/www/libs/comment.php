@@ -36,7 +36,7 @@ class Comment {
 		return false;
 	}
 
-	function store() {
+	function store($full = true) {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
@@ -46,7 +46,7 @@ class Comment {
 		$comment_karma = $this->karma;
 		$comment_date = $this->date;
 		$comment_randkey = $this->randkey;
-		$comment_content = $db->escape(clean_lines($this->content));
+		$comment_content = $db->escape($this->normalize_content());
 		if ($this->type == 'admin') $comment_type = 'admin';
 		else $comment_type = 'normal';
 		$db->transaction();
@@ -56,14 +56,16 @@ class Comment {
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
-			log_insert('comment_new', $this->id, $current_user->user_id);
+			if ($full) log_insert('comment_new', $this->id, $current_user->user_id);
 		} else {
 			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_modified=now(), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
-			log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+			if ($full) log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
 		}
-		$this->update_order();
-		$this->update_conversation();
+		if ($full) {
+			$this->update_order();
+			$this->update_conversation();
+		}
 		$db->commit();
 	}
 
@@ -613,5 +615,9 @@ class Comment {
 		}
 	}
 
+	function normalize_content() {
+		$this->content = clean_lines(normalize_smileys($this->content));
+		return $this->content;
+	}
 }
 ?>
