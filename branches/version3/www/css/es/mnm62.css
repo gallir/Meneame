@@ -130,7 +130,7 @@ color: #aaa;
 }
 
 /* Rounded boxes, CSS3 and temporary non-standar moz and webkit properties */
-.tabmain li a, .tabsub li a {
+.tabsub li a {
 border-radius-topright: 3px;
 -moz-border-radius-topright: 3px;
 -webkit-border-top-right-radius: 3px;
@@ -310,53 +310,116 @@ overflow: hidden;
 vertical-align: middle;
 }
 
-.tabmain {
-height: 24px !important;
-margin: 10px 0 0 0;
-padding-left: 120px;
-border-bottom: 1px solid;
-border-color: #ff6400;
-}
 
-.tabmain li {
-float: left;
+ul.tabmain{
 list-style-type: none;
-margin-right: 6px;
-height: 24px;
-}
-
-.tabmain li a {
-font-size: 0.95em;
-font-weight: bold;
-display: block;
-float: left;
-height: 20px;
-padding: 3px 6px 0 6px;
-border-top: 1px solid;
-border-right: 1px solid;
-border-left: 1px solid;
-background: #fff;
-border-color: #ff6400;
-color: #ff6400;
-text-decoration: none;
-}
-
-.tabmain li a:hover {
-text-decoration: none;
-background: #feefe5;
-}
-
-.tabmain li.tabmain-this {
+margin-top: 40px;
+border-bottom: solid 1px #FF7E12;
 height: 25px;
-background: #fff;
+padding-left: 106px;
+font-size: 13px;
 }
 
-.tabmain li.tabmain-this a {
-text-shadow: 0 1px #fff;
-font-size: 1em;
-padding: 2px 24px 0 6px;
-height: 22px;
-background: #feefe5 url('../../img/common/reload-bt.png') no-repeat right 5px;
+ul.tabmain li{
+float: left;
+margin-left: 4px;
+margin-right: 4px;
+padding-left: 8px;
+padding-right: 8px;
+padding-top: 2px;
+padding-bottom: 2px;
+border-right: solid 1px #FF7E12;
+border-left: solid 1px #FF7E12;
+border-top: solid 1px #FF7E12;
+-moz-border-radius-topright: 4px;
+-moz-border-radius-topleft: 4px;
+-webkit-border-top-right-radius: 4px;
+-webkit-border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-top-left-radius: 4px;
+height: 20px;
+line-height: 20px;
+}
+
+ul.tabmain li:hover{
+background-color: #FFEDC6;
+}
+
+ul.tabmain li a{
+color:#FF6400;
+float:left;
+font-weight:bold;
+text-transform: capitalize;
+text-decoration: none;
+}
+
+ul.tabmain li.tabmain-this{
+background-image:url("../../img/common/reload-bt-001.png");
+background-color: #FFEDC6;
+background-position: center right;
+background-repeat: no-repeat;
+padding-right: 25px;
+border-bottom: solid 1px #FFEDC6;
+}
+
+.subheader{
+background-color: #FFEDC6;
+height: 40px !important;
+list-style-type: none;
+padding-left: 15px;
+}
+
+.subheader li{
+float: left;
+padding-left: 5px;
+padding-right: 5px;
+margin-left: 5px;
+margin-right: 5px;
+height: 18px;
+line-height: 18px;
+border: solid 1px #FFFFFF;
+background-color: #FFFFFF;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+margin-top: 10px;
+}
+
+.subheader li.selected {
+border: solid 1px #FF7E12;
+background-color: #FF7E12;
+padding-right: 2px;
+}
+
+.subheader li:hover{
+border: solid 1px #FF7E12;
+}
+
+.subheader li a{
+color: #FF7E12;
+text-decoration: none;
+font-size: 12px;
+}
+
+.subheader li.selected a{
+color: #FFFFFF;
+font-weight: bold;
+}
+
+.subheader li.selected a:hover{
+text-decoration: underline;
+}
+
+.subheader li.icon{
+border: solid 1px #FF7E12;
+background-color: #FF7E12;
+padding-left: 1px;
+padding-right: 1px;
+}
+
+.toggler img{
+	margin: 0px 0px 2px 2px !important;
+	vertical-align: middle;
 }
 
 .tabsub-this {
@@ -414,7 +477,6 @@ background: #fff;
 }
 
 .tabsub a:visited,
-.tabmain a:visited,
 .tabsub-shakeit a:visited {
 color: #ff6400;
 }
@@ -435,14 +497,14 @@ display: inline;
 list-style-type: none;
 }
 
-.catsub-block li a {
-text-decoration: none;
-color: #5073c5;
+.catsub-block {
+border-bottom: solid 2px #FFEDC6;
+padding-top: 5px;
+padding-bottom: 5px;
+font-size: 12px;
+color: #1051B5 !important;
 }
 
-.catsub-block li a:hover {
-text-decoration: underline;
-}
 
 /**** SIDEBAR BOXES ************/
 
@@ -746,9 +808,6 @@ box-shadow: 0 0 3px rgba(0,0,0,0.4);
 -moz-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
 }
-
-/* End holygrail */
-
 
 .tt {
 cursor: pointer;
@@ -1547,9 +1606,8 @@ font-size: 95%;
 .sneaker-legend {
 font-size: 9pt;
 text-align: center;
-padding: 3px 0 5px 0;
-margin: 0px;
-border-bottom: 1px solid;
+padding: 8px 0 2px 0;
+margin: 0;
 }
 
 .sneaker-legend img {
@@ -1871,64 +1929,6 @@ font-weight: normal;
 color: #FF9400;
 }
 
-.toggler img {
-border: none;
-margin: 0 0 2px 6px;
-vertical-align: middle;
-}
-
-.subheader {
-height: 25px !important;
-clear: both;
-padding-left: 87px;
-font-size: 0.9em;
-padding-top: 5px;
-background: #feefe5;
-}
-
-.subheader li {
-float: left;
-list-style-type: none;
-margin-right: 15px;
-margin-top: 4px;
-}
-
-.subheader li > *, .subheader li a {
-color: #ff6400;
-}
-
-.subheader li > * {
-padding: 1px 5px 2px 5px;
-color: #ff6400;
-background-color: #fff;
-border-radius: 3px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-}
-
-.subheader > li > *:hover {
-text-decoration: none;
-color: #fff;
-background-color: #ffccab;
-}
-
-.subheader .selected * {
-color: #fff !important;
-background-color: #ff6400 !important;
-text-shadow: 0 1px rgba(0,0,0,0.4);
-}
-
-.subheader li.icon {
-padding: 0;
-background: #feefe5;
-}
-
-.subheader h1 {
-font-size: 150%;
-font-weight: bold;
-padding-top: 1px;
-color: #ff6400;
-}
 
 .link-icon {
 vertical-align: middle;

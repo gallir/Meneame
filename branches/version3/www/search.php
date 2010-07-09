@@ -89,7 +89,7 @@ print_search_form();
 if(!empty($_REQUEST['q'])) {
 	echo '<div style="font-size:85%;margin-top: 5px">';
 	echo _('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos');
-	echo '&nbsp;<a href="'.$globals['base_url'].$rss_program.'?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" alt="rss2" height="12" width="12"  style="vertical-align:top"/></a>';
+	echo '&nbsp;<a href="'.$globals['base_url'].$rss_program.'?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>';
 	echo '</div>';
 }
 

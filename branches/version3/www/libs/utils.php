@@ -599,8 +599,8 @@ function put_smileys($str) {
 
 
 // Meta categories helpers
-define('META_YES', '<img src="'.$globals['base_static'].'img/common/fix-01.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
-define('META_NO', '<img src="'.$globals['base_static'].'img/common/fix-02.png" alt="del" width="12" height="12" title="'._('filtrar como tema por defecto').'"/>');
+define('META_YES', '<img src="'.$globals['base_static'].'img/common/fix-001.png" alt="del" width="18" height="18" title="'._('filtrar como tema por defecto').'"/>');
+define('META_NO', '<img src="'.$globals['base_static'].'img/common/fix-002.png" alt="del" width="18" height="18" title="'._('filtrar como tema por defecto').'"/>');
 
 
 function meta_get_current() {

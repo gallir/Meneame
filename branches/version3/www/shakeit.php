@@ -166,20 +166,17 @@ function print_shakeit_tabs($option=-1) {
 	if (!$globals['bot']) {
 		echo '<li '.$active[5].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a>'.$toggle_active[5].'</span></li>'."\n";
 	}
-	if ($current_user->user_id == 0) {
-		meta_teaser_item();
-	}
 
 	// Print RSS teasers
 	switch ($option) {
 		case 1: // All, queued
-			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		case 7: // Personalised, queued
-			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		default:
-			echo '<li><a class="icon" href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

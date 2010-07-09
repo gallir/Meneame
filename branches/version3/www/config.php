@@ -240,7 +240,7 @@ $globals['Amazon_S3_local_cache'] = true;
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm61.css';
+$globals['css_main'] = 'css/es/mnm62.css';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

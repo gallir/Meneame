@@ -135,20 +135,18 @@ function print_index_tabs($option=-1) {
 	}
 	if ($current_user->user_id > 0) {
 		echo '<li '.$active[1].'><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a>'.$toggle_active[1].'</li>'."\n";
-	} else {
-		meta_teaser_item();
 	}
 
 	// Print RSS teasers
 	switch ($option) {
 		case 0: // All, published
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		case 7: // Personalised, published
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		default:
-			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-12x12.png" width="12" height="12" alt="rss2"/></a></li>';
+			echo '<li><a class="teaser" href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img class="tabsub-shakeit-icon" src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

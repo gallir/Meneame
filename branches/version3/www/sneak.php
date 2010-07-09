@@ -17,7 +17,7 @@ $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 init_sneak();
 
 // Start html
-array_push($globals['extra_css'], 'es/sneakcol.css');
+array_push($globals['extra_css'], 'es/sneak01.css');
 if (!empty($_REQUEST['friends'])) {
 	do_header(_('amigos en la fisgona'));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {
@@ -458,7 +458,7 @@ if ($current_user->user_id > 0) {
 //////
 
 
-echo '<div class="sneaker" style="margin-top: 5px">';
+echo '<div class="sneaker">';
 echo '<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">';
 echo '<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">';
 echo '<img id="play-pause-img" onclick="play_pause()" src="'.$globals['base_static'].'img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;';
