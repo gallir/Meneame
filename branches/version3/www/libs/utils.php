@@ -569,7 +569,7 @@ function put_smileys($str) {
 	global $globals;
 
 	if ($globals['bot']) return $str;
-	$str = preg_replace_callback('/\{([a-z]+)\}/', 'put_smileys_callback', $str);
+	$str = preg_replace_callback('/\{([a-z]{3,10})\}/', 'put_smileys_callback', $str);
 	return $str;
 }
 
