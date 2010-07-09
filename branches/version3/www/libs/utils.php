@@ -189,10 +189,6 @@ function clean_lines($string) {
 }
 
 function save_text_to_html($string, $hashtype = false) {
-	//$string = strip_tags(trim($string));
-	//$string= htmlspecialchars(trim($string));
-	//$str= text_to_html($string, $hashtype);
-	//$str = preg_replace("/\r\n|\r|\n/", "\n<br />\n", $str);
 	return text_to_html($string, $hashtype, true, true);
 }
 
