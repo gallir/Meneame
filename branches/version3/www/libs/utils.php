@@ -214,23 +214,29 @@ function text_to_summary($string, $length=50) {
 
 function text_to_html($string, $hashtype = false, $do_links = true, $save_html = false) {
 	global $globals;
+	static $regexp = false, $p_hashtype = false, $p_do_links = false, $p_save_html = false;
 
-	$regexp .= '_[^\s<>_]+_\b';
-	$regexp .= '|\*[^\s<>]+\*';
-	$regexp .= '|\-([^\s<>]+)\-';
+	// Check if the regexp must change, otherwise use the previous one
+	if (! $regexp || $p_hashtype != $hashtype || $p_do_links != $do_links || $p_save_html != $save_html) {
+		$p_hashtype = $hashtype; $p_do_links = $do_links; $p_save_html = $save_html;
+		$regexp = '_[^\s<>_]+_\b';
+		$regexp .= '|\*[^\s<>]+\*';
+		$regexp .= '|\-([^\s<>]+)\-';
 
-	if ($do_links) {
-		$regexp .= '|https*:\/\/[^ \t\n\r\]]{5,200}';
-	}
+		if ($do_links) {
+			$regexp .= '|https{0,1}:\/\/[^ \t\n\r\]]{5,200}';
+		}
 
-	$globals['hashtype'] = $hashtype; // To pass the value to the callback
-	if ($hashtype) {
-		$regexp .= '|#[^\d][^\s\.\,\:\;\¡\!\)\-]{1,42}';
+		$globals['hashtype'] = $hashtype; // To pass the value to the callback
+		if ($hashtype) {
+			$regexp .= '|#\D[^\s\.\,\:\;\¡\!\)\-]{1,42}';
+		}
+		if ($save_html) {
+			$regexp .= '|\n\r*';
+		}
+		$regexp = '/([\s\({¡;,:¿]|^)('.$regexp.')/Smu';
 	}
-	if ($save_html) {
-		$regexp .= '|\n\r*';
-	}
-	return preg_replace_callback("/([\s\({¡;,:¿]|^)($regexp)/mu", 'text_to_html_callback', $string);
+	return preg_replace_callback($regexp, 'text_to_html_callback', $string);
 }
 
 function text_to_html_callback($matches) {
@@ -238,18 +244,18 @@ function text_to_html_callback($matches) {
 
 	if (preg_match('/[\n\r]/', $matches[1])) $matches[1] = "<br/>\n";
 	switch ($matches[2][0]) {
+		case "\r";
+		case "\n";
+			return $matches[1]."\n<br/>\n";
 		case '_':
 			return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
 		case '*':
 			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
 		case '-':
 			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
-		case "\r";
-		case "\n";
-			return $matches[1]."\n<br/>\n";
 		case '#';
 			if ($globals['hashtype']) {
-				return $matches[1].preg_replace('/\#([^\d][^\s\.\,\:\;\¡\!\)\-]{1,42})/u', '<a href="'.$globals['base_url'].'search.php?w='.$globals['hashtype'].'&amp;q=%23$1&amp;o=date">#$1</a>', $matches[2]);
+				return $matches[1].'<a href="'.$globals['base_url'].'search.php?w='.$globals['hashtype'].'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
 			}
 		case 'h':
 			return $matches[1].preg_replace('/(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r\]]*)([^ :.\t,\n\r\(\)\"\'\]\?])/u', '<a href="$1$2$3$4$5" title="$1$2$3$4$5" rel="nofollow">$3$5</a>', $matches[2]);
