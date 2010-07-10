@@ -190,6 +190,7 @@ if (!empty($new_comment_error)) {
 }
 
 do_tabs("main",_('noticia'), true);
+print_story_tabs($tab_option);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -216,10 +217,6 @@ switch ($tab_option) {
 case 1:
 case 2:
 	echo '<div class="comments">';
-
-	// Print tabs
-	print_story_tabs($tab_option);
-
 
 	// If option is "normal comments", show also last trackbakcs and pingbacks
 	// TB are shown only in the last page
@@ -270,7 +267,6 @@ case 3:
 	// Show voters
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	echo '<div id="voters-container" style="padding: 10px;">';
 	if ($globals['link']->sent_date < $globals['now'] - 60*86400) { // older than 60 days
 		echo _('Noticia antigua, datos de votos archivados');
@@ -285,8 +281,6 @@ case 6:
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
-
 	echo '<fieldset>';
 	echo '<div id="voters-container">';
 	include(mnmpath.'/backend/get_link_favorites.php');
@@ -299,7 +293,6 @@ case 4:
 	// Show logs
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
 
 	echo '<div id="voters-container">';
@@ -368,7 +361,6 @@ case 5:
 	// Micro sneaker
 	echo '<div class="mini-sneaker">';
 
-	print_story_tabs($tab_option);
 	echo '<fieldset>';
 	include(mnmpath.'/libs/link_sneak.php');
 	echo '</fieldset>';
@@ -379,7 +371,6 @@ case 7:
 	// Show trackback
 	echo '<div class="voters" id="voters">';
 
-	print_story_tabs($tab_option);
 	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_static'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
 
 	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
@@ -423,9 +414,9 @@ function print_story_tabs($option) {
 	global $globals;
 
 	$active = array();
-	$active[$option] = ' class="tabsub-this"';
+	$active[$option] = ' class="selected"';
 
-	echo '<ul class="tabsub">'."\n";
+	echo '<ul class="subheader">'."\n";
 	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
 	echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
