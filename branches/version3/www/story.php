@@ -218,24 +218,6 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
-	// If option is "normal comments", show also last trackbakcs and pingbacks
-	// TB are shown only in the last page
-	if ($tab_option == 1 && ! $requested_page) {
-		$trackbacks = $db->get_col("SELECT SQL_CACHE trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 10");
-		if ($trackbacks) {
-			echo '<fieldset><legend><a href="'.$globals['link_permalink'].'/trackbacks">'._('últimas relacionadas').'</a></legend>';
-			echo '<ul class="tab-trackback">';
-			$trackback = new Trackback;
-			foreach($trackbacks as $trackback_id) {
-				$trackback->id=$trackback_id;
-				$trackback->read();
-				echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
-			}
-			echo '</ul>';
-			echo '</fieldset>';
-		}
-	}
-
 	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 
 	$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
@@ -411,7 +393,7 @@ do_footer();
 
 
 function print_story_tabs($option) {
-	global $globals;
+	global $globals, $db, $link;
 
 	$active = array();
 	$active[$option] = ' class="selected"';
@@ -419,18 +401,23 @@ function print_story_tabs($option) {
 	echo '<ul class="subheader">'."\n";
 	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
-		echo '<li'.$active[6].'><a href="'.$globals['link_permalink'].'/favorites">&nbsp;'.FAV_YES.'&nbsp;</a></li>'."\n";
+		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
+			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('cálculos'). '</a></li>'."\n";
+		}
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
 			echo '<li'.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 		}
-		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
-			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('log'). '</a></li>'."\n";
-		}
+
+	}
+	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
+		echo '<li'.$active[6].'><a href="'.$globals['link_permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
+	}
+	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
+		echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
 	}
 	echo '</ul>'."\n";
 }
