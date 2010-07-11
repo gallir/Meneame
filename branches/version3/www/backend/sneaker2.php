@@ -152,7 +152,7 @@ function check_chat() {
 			}
 			return;
 		} else {
-			$comment = htmlspecialchars($comment);
+			$comment = clean_text_with_tags($comment);
 			$comment = preg_replace('/(^|[\s\.,¿#@])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
 		}
 
