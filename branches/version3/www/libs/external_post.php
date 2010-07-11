@@ -10,7 +10,7 @@
 function twitter_post($text, $short_url) {
 	global $globals;
 
-	$t_status = urlencode(text_sub_text($text, 115) . ' ' . $short_url);
+	$t_status = urlencode(text_to_summary($text, 115) . ' ' . $short_url);
 	syslog(LOG_NOTICE, "Meneame: twitter updater called, $short_url");
 	$t_url = "http://twitter.com/statuses/update.xml";
 
@@ -50,7 +50,7 @@ function jaiku_post($text, $short_url) {
 	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
 	$postdata .= "&personal_key=" . $globals['jaiku_key'];
 	$postdata .= "&icon=337"; // Event
-	$postdata .= "&message=" . urlencode(text_sub_text(html_entity_decode($text), 115). ' ' . $short_url);
+	$postdata .= "&message=" . urlencode(text_to_summary(html_entity_decode($text), 115). ' ' . $short_url);
 
 	$session = curl_init();
 	curl_setopt($session, CURLOPT_URL, $url);

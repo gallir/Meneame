@@ -83,7 +83,7 @@ function save_comment () {
 				&& $current_user->user_level == 'god')) &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  && 
 		strlen(trim($_POST['comment_content'])) > 2 ) {
-		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
+		$comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
 
 		if ($current_user->user_level == 'god') {
 			if ($_POST['type'] == 'admin') {

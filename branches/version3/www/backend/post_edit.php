@@ -45,7 +45,7 @@ function save_post ($post_id) {
 
 
 	$post = new Post;
-	$_POST['post'] = clean_text($_POST['post'], 0, false, $globals['posts_len']);
+	$_POST['post'] = clean_text_with_tags($_POST['post'], 0, false, $globals['posts_len']);
 	if (mb_strlen($_POST['post']) < 5) {
 		echo 'ERROR: ' . _('texto muy corto');
 		die;

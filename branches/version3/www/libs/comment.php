@@ -478,7 +478,7 @@ class Comment {
 		$comment->randkey=intval($_POST['randkey']);
 		$comment->author=intval($_POST['user_id']);
 		$comment->karma=round($current_user->user_karma);
-		$comment->content=clean_text($_POST['comment_content'], 0, false, 10000);
+		$comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
 		// Check if is an admin comment
 		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
 			$comment->type = 'admin';

@@ -197,7 +197,7 @@ class Post {
 			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
 		} elseif ($length > 0) {
-			$this->content = text_sub_text($this->content, $length);
+			$this->content = text_to_summary($this->content, $length);
 		}
 
 		echo put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;

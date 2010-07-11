@@ -223,9 +223,9 @@ function do_js_includes() {
 	echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>' . "\n";
 	// Cache for Ajax
 	echo '<script src="'.$globals['base_static'].'js/jquery.simplemodal-1.2.3.pack.js" type="text/javascript"></script>' . "\n";
-	echo '<script src="'.$globals['base_static'].'js/general11.js" type="text/javascript" charset="utf-8"></script>' . "\n";
+	echo '<script src="'.$globals['base_static'].'js/general12.js" type="text/javascript" charset="utf-8"></script>' . "\n";
 	if ($current_user->user_id > 0) {
-		echo '<script src="'.$globals['base_static'].'js/users01.js" type="text/javascript" charset="utf-8"></script>' . "\n";
+		echo '<script src="'.$globals['base_static'].'js/users02.js" type="text/javascript" charset="utf-8"></script>' . "\n";
 	}
 	do_js_from_array($globals['extra_js']);
 	if ($globals['extra_js_text']) {
@@ -784,11 +784,12 @@ function do_best_story_comments($link) {
 	}
 
 	$limit = min(15, intval($link->comments/5));
-	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, substring(comment_content, 1, 75) as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
+	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
 		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4></div><div class="comments"><ul>'."\n";
 		foreach ($res as $comment) {
 			$url = $link->get_relative_permalink().'/000'.$comment->comment_order;
+			$comment->content = text_to_summary($comment->content, 75);
 			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
 			$output .= '<p><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></a></p></li>'."\n";
 		}

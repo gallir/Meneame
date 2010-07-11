@@ -569,7 +569,7 @@ function do_submit2() {
 	$linkres->category=intval($_POST['category']);
 	$linkres->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$linkres->tags = tags_normalize_string($_POST['tags']);
-	$linkres->content = clean_text($_POST['bodytext']);
+	$linkres->content = clean_text_with_tags($_POST['bodytext']);
 	if (link_errors($linkres)) {
 		echo '<form class="genericform">'."\n";
 		echo '<p><input class="button" type=button onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/></p>'."\n";

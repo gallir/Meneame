@@ -178,7 +178,7 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 
 $globals['thumbnail'] = $link->has_thumb();
 
-$globals['description'] = _('Autor') . ": $link->username, " . _('Resumen') . ': '. text_sub_text($link->content, 250);
+$globals['description'] = _('Autor') . ": $link->username, " . _('Resumen') . ': '. text_to_summary($link->content, 250);
 
 do_header($link->title, 'post');
 

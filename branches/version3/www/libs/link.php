@@ -231,7 +231,7 @@ class Link {
 			$url_description = strip_tags($url_description);
 			$url_description = @htmlspecialchars($url_description, ENT_COMPAT, 'UTF-8');
 			if (mb_strlen($url_description) > 20) {
-				$this->url_description=text_sub_text($url_description, 400);
+				$this->url_description=text_to_summary($url_description, 400);
 			}
 		}
 		return true;

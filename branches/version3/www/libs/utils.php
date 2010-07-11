@@ -184,6 +184,61 @@ function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	return @htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
+function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) {
+	$string = add_tags(clean_text($string, $wrap, $replace_nl, $maxlength));
+	$string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', 'enable_tags_callback', $string);
+	$string = close_tags($string);
+	$string = preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", $string); // Deletes useless close+open tags
+	$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
+	return $string;
+}
+
+function enable_tags_callback($matches) {
+	global $globals;
+	static $open_tags = array();
+	
+	if (preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
+		if ($matches[1] == '/') {
+			if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] != $matches[2]) {
+				return $matches[0];
+			}
+			array_pop($open_tags);
+			return "</$matches[2]>";
+		}
+		array_push($open_tags, $matches[2]);
+		return "<$matches[2]>";
+	}
+	return $matches[0];
+}
+
+function close_tags($string) {
+	return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', 'close_tags_callback', $string);
+}
+
+function close_tags_callback($matches) {
+	static $open_tags = array();
+
+	if (empty($matches[0])) {
+		// End of text, close open tags
+		$end = '';
+		while (($t = array_pop($open_tags))) {
+			$end .= "</$t>";
+		}
+		if ($end) $end = "\n$end\n";
+		return $end;
+	}
+	if ($matches[1] && $matches[1][0] == '/') {
+		if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] == $matches[2]) {
+			array_pop($open_tags);
+		} else {
+			return ' '; // Don't allow misplaced or wrong tags
+		}
+	} else {
+		array_push($open_tags, $matches[2]);
+	}
+	return $matches[0];
+}
+
 function clean_lines($string) {
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
@@ -194,8 +249,14 @@ function save_text_to_html($string, $hashtype = false) {
 }
 
 function text_sub_text($str, $length=70) {
-	$len = mb_strlen($str);
-	$string = preg_replace("/[\r\n\t]+/", ' ', $str);
+	// Just in case, to maintain compatibility
+	return text_to_summary($str, $length);
+}
+
+function text_to_summary($string, $length=50) {
+	$string = strip_tags($string);
+	$len = mb_strlen($string);
+	$string = preg_replace("/[\r\n\t]+/", ' ', $string);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
 		$string = preg_replace('/ *[\w&;]*$/', '', $string);
@@ -205,9 +266,26 @@ function text_sub_text($str, $length=70) {
 	return $string;
 }
 
-function text_to_summary($string, $length=50) {
-	return text_to_html(text_sub_text($string, $length), false, false);
+function add_tags($string) {
+	// Convert to em, strong and strike tags
+	$regexp = '_[^\s<>_]+_\b|\*[^\s<>]+\*|\-([^\s\-<>]+)\-';
+	return preg_replace_callback('/([ \t\.\(\[{¡;,:¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
 }
+
+function add_tags_callback($matches) {
+	global $globals;
+
+	switch ($matches[2][0]) {
+		case '_':
+			return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
+		case '*':
+			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
+		case '-':
+			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';		
+	}
+	return $matches[1].$matches[2];
+}
+
 
 function text_to_html($string, $hashtype = false, $do_links = true) {
 	global $globals;
@@ -586,9 +664,9 @@ function print_simpleformat_buttons($textarea_id) {
 	if ($current_user->user_karma < 6.001) return;
 
 	echo '<div style="margin-bottom: 4px">';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'-\');" class="rich-edit-key"><strike>D</strike></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'_\');" class="rich-edit-key"><em>I</em></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'*\');" class="rich-edit-key"><strong>B</string></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'strike\');" class="rich-edit-key"><strike>D</strike></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'em\');" class="rich-edit-key"><em>I</em></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'strong\');" class="rich-edit-key"><strong>B</string></button>';
 	echo '</div>';
 }
 
@@ -1010,7 +1088,7 @@ function clear_unicode_spaces($input){
 
 function clear_whitespace($input){
 	$input = clear_unicode_spaces(clear_invisible_unicode($input));
-	return preg_replace('/  +/', ' ', $input);
+	return preg_replace('/ {5,}/', ' ', $input);
 }
 
 

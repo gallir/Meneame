@@ -159,7 +159,7 @@ function do_save() {
 		}
 	}
 	$linkres->title = clean_text($_POST['title'], 40);
-	$linkres->content = clean_text($_POST['bodytext']);
+	$linkres->content = clean_text_with_tags($_POST['bodytext']);
 	$linkres->tags = tags_normalize_string($_POST['tags']);
 	// change the status
 	if ($_POST['status'] != $linkres->status

@@ -247,6 +247,8 @@ $globals['html_main'] = 'html1.php';
 // Store access stats
 $globals['save_pageloads'] = false;
 
+$globals['enabled_tags'] = 'em|strong|strike'; // HTML tags allowed for comments and posts
+
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
 $greetings = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
