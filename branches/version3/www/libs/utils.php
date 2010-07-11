@@ -269,7 +269,7 @@ function text_to_summary($string, $length=50) {
 function add_tags($string) {
 	// Convert to em, strong and strike tags
 	$regexp = '_[^\s<>_]+_\b|\*[^\s<>]+\*|\-([^\s\-<>]+)\-';
-	return preg_replace_callback('/([ \t\.\(\[{¡;,:¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
+	return preg_replace_callback('/([ \t\r\n\.\(\[{¡;,:¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
 }
 
 function add_tags_callback($matches) {
