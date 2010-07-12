@@ -240,14 +240,14 @@ $globals['Amazon_S3_local_cache'] = true;
 
 
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm62.css';
+$globals['css_main'] = 'css/es/mnm63.css';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
 // Store access stats
 $globals['save_pageloads'] = false;
 
-$globals['enabled_tags'] = 'em|strong|strike'; // HTML tags allowed for comments and posts
+$globals['enabled_tags'] = 'b|i|em|strong|strike'; // HTML tags allowed for comments and posts
 
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()

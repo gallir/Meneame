@@ -189,7 +189,7 @@ function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) 
 	$string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', 'enable_tags_callback', $string);
 	$string = close_tags($string);
 	$string = preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", $string); // Deletes useless close+open tags
-	$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
+	//$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
 	return $string;
 }
 
@@ -670,8 +670,8 @@ function print_simpleformat_buttons($textarea_id) {
 
 	echo '<div style="margin-bottom: 4px">';
 	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'strike\');" class="rich-edit-key"><strike>D</strike></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'em\');" class="rich-edit-key"><em>I</em></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'strong\');" class="rich-edit-key"><strong>B</string></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'i\');" class="rich-edit-key"><i>I</i></button>';
+	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'b\');" class="rich-edit-key"><b>B</b></button>';
 	echo '</div>';
 }
 
