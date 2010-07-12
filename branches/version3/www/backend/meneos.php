@@ -32,7 +32,7 @@ if (!isset($_GET['p']))  {
 	$votes_page = 1;
 } else $votes_page = intval($_GET['p']);
 
-$votes_page_size = 20;
+$votes_page_size = 40;
 $votes_offset=($votes_page-1)*$votes_page_size;
 
 

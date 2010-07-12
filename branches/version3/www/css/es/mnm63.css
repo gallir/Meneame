@@ -1678,9 +1678,9 @@ margin: 0 0 10px 0;
 position: relative;
 padding: 2px 2px 2px 2px;
 float: left;
+min-height: 150px;
 width: 99%;
 overflow: hidden;
-height: 150px;
 border: 1px solid;
 margin: 0 0 5px 0;
 color: #FF6400;
@@ -1697,6 +1697,7 @@ width: 24%;
 height: 20%;
 font-size: 85%;
 white-space: nowrap;
+padding: 5px 0 5px 0;
 }
 
 .friends-item {
@@ -1731,10 +1732,7 @@ display: block;
 float: left;
 padding: 3px 5px 3px 5px;
 margin-right: 3px;
-border: 1px solid;
 color: #FF6400;
-border-color: #FFF;
-background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
 }
 
 .mini-pages span.current {
@@ -1756,6 +1754,9 @@ color: #FF6400;
 border: 1px solid;
 text-decoration: none;
 border-color: #FF6400;
+border-color: #FFF;
+background: #fff url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+border: 1px solid;
 }
 
 .mini-pages a:hover {
