@@ -415,15 +415,6 @@ color: #aaa;
 color: #aaa;
 }
 
-.comment-body strong {
-font-weight: bold;
-color: #FF6400;
-}
-
-.comment-body span strong {
-color: #000;
-}
-
 .comment-meta, .comment-meta-hidden {
 font-size: 85%;
 line-height: 140%;
