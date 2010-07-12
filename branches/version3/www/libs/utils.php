@@ -269,7 +269,7 @@ function text_to_summary($string, $length=50) {
 function add_tags($string) {
 	// Convert to em, strong and strike tags
 	$regexp = '_[^\s<>_]+_\b|\*[^\s<>]+\*|\-([^\s\-<>]+)\-';
-	return preg_replace_callback('/([ \t\r\n\.\(\[{¡;,:¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
+	return preg_replace_callback('/([ \t\r\n\(\[{¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
 }
 
 function add_tags_callback($matches) {
@@ -294,17 +294,22 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 	// Check if the regexp must change, otherwise use the previous one
 	if (! $regexp || $p_hashtype != $hashtype || $p_do_links != $do_links) {
 		$p_hashtype = $hashtype; $p_do_links = $do_links;
+
+		/*
 		$regexp = '_[^\s<>_]+_\b';
 		$regexp .= '|\*[^\s<>]+\*';
 		$regexp .= '|\-([^\s<>]+)\-';
+		*/
+		$regexp = '';
 
 		if ($do_links) {
-			$regexp .= '|https{0,1}:\/\/[^ \t\n\r]{5,200}';
+			$regexp .= 'https{0,1}:\/\/[^ \t\n\r<>]{5,200}';
 		}
 
 		$globals['hashtype'] = $hashtype; // To pass the value to the callback
 		if ($hashtype) {
-			$regexp .= '|#\D[^\s\.\,\:\;\¡\!\)\-]{1,42}';
+			if ($do_links) $regexp .= '|';
+			$regexp .= '#\D[^\s\.\,\:\;\¡\!\)\-]{1,42}';
 		}
 		$regexp = '/([\s\(\[{¡;,:¿]|^)('.$regexp.')/Smu';
 	}
