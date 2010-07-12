@@ -32,49 +32,38 @@ class Blog {
 	}
 
 	function analyze_html($url, $html) {
-		$rss_candidates = array();
+		$this->rss=$this->getShortestValFromExp('/<link[^>]+text\/xml[^>]+href=[^>]+>/i','/href="([^"]+)"/i',$html);
+		$this->atom=$this->getShortestValFromExp('/<link[^>]+application\/atom\+xml[^>]+>/i','/href="([^"]+)"/i',$html);
+		$this->rss2=$this->getShortestValFromExp('/<link[^>]+application\/rss\+xml[^>]+>/i','/href="([^"]+)"/i',$html);
+       
+		if($this->rss || $this->atom || $this->rss2) $this->type='blog';
 
-		if(preg_match_all('/<link[^>]+text\/xml[^>]+href=[^>]+>/i', $html, $matches)) {
-			for ($i=0; $i<count($matches[0]); $i++) {
-				if(preg_match('/href="([^"]+)"/i', $matches[0][$i], $matches2)) {
-					array_push($rss_candidates,$matches2[1]);
-					$this->type='blog';
-				}
-			}
-			$this->rss=$this->shortest_text($rss_candidates);
-		}
-
-		$rss_candidates = array();
-		if(preg_match_all('/<link[^>]+application\/atom\+xml[^>]+>/i', $html, $matches)) {
-			for ($i=0; $i<count($matches[0]); $i++) {
-				if(preg_match('/href="([^"]+)"/i', $matches[0][$i], $matches2)) {
-					array_push($rss_candidates,$matches2[1]);
-					$this->type='blog';
-				}
-			}
-			$this->atom=$this->shortest_text($rss_candidates);
-		}
-
-		$rss_candidates = array();
-		//if(preg_match('/<link[^>]+application\/rss\+xml[^>]+href=[^>]+>/i', $html, $matches)) {
-		if(preg_match_all('/<link[^>]+application\/rss\+xml[^>]+>/i', $html, $matches)) {
-			for ($i=0; $i<count($matches[0]); $i++) {
-				if(preg_match('/href="([^"]+)"/i', $matches[0][$i], $matches2)) {
-					array_push($rss_candidates,$matches2[1]);
-					$this->type='blog';
-				}
-			}
-			$this->rss2=$this->shortest_text($rss_candidates);
-		}
 		// Last try to find a rss
 		if($this->type!='blog' && preg_match('/<a[^>]+href="(http[^>]+\.rdf)"/i', $html, $matches2)) {
-				$rss=$this->rss=$matches2[1];
-				$this->type='blog';
+			$rss=$this->rss=$matches2[1];
+			$this->type='blog';
 		}
 
 		$this->find_base_url($url);
 		$this->calculate_key();
 		return $this->type;
+		
+	}
+
+	function getShortestValFromExp($match,$secondMatch,$text){
+		$value=false;
+
+		if(preg_match_all($match, $text, $matches)) {
+			$candidates=array();
+			foreach ($matches[0] as $m){
+				if(preg_match($secondMatch, $m, $matches2)) {
+					array_push($candidates,$matches2[1]);
+				}
+			}
+			$value=$this->shortest_text($candidates);
+		}
+
+		return ($value) ? $value : '';
 	}
 
 	function find_base_url($url) {
@@ -126,18 +115,14 @@ class Blog {
 		$this->url=$scheme.'://'.$host.$path;
 	}
 
-	function shortest_text($array) {
-		$txt = false;
-		// Find the shorter rss
-		// There are sites with unordered rss's
-		if (count($array) > 0) {
-			for ($i=0; $i<count($array); $i++) {
-				if (!$txt || strlen($array[$i]) < strlen($txt)) {
-					$txt=$array[$i];
-				}
+	function shortest_text($strArray) {
+		$shortest=false;
+		foreach ($strArray as $s){
+			if (!$shortest || strlen($s) < strlen($shortest)) {
+				$shortest=$s;
 			}
-			return $txt;
-		} else return '';
+		}
+		return $shortest;
 	}
 
 	function store() {
