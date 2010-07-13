@@ -1323,6 +1323,10 @@ border-radius: 5px;
 -webkit-border-radius: 5px;
 }
 
+.comment-body a strong {
+color: #FF6400;
+}
+
 .comment-body.admin {
 background: #FFD5AD;
 color: #000;

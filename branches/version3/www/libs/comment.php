@@ -309,7 +309,7 @@ class Comment {
 
 		} 
 		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
+			$this->content = preg_replace('/&\w*$|<\w{1,6}>([^<>]*)$/', "$1", mb_substr($this->content, 0 , $length));
 			$expand .= '&nbsp;&nbsp;' .
 				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
 		}

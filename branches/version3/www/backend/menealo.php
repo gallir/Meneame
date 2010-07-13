@@ -45,7 +45,7 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 		error(_('Los votos anónimos están temporalmente deshabilitados'));
 	} else {
 		// Check that there are not too much annonymous votes
-		if ($link->status == 'published') $anon_to_user_votes = max(3, $anon_to_user_votes); // Allow more ano votes if published. 
+		if ($link->status == 'published') $anon_to_user_votes = max(4, $anon_to_user_votes); // Allow more ano votes if published. 
 		if ($link->anonymous >  $link->votes * $anon_to_user_votes) {
 			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 		}
