@@ -25,7 +25,6 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
-$url = addcslashes($url, '%_');
 if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['host']) < 5) {
 	if ($json) {
 		$dict['status'] = 'KO';
@@ -37,6 +36,7 @@ if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['ho
 
 $url = preg_replace('/\/$/', '', $url);
 if (isset($_GET['all'])) {
+	$url = addcslashes($url, '%_');
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url%' order by link_date DESC limit 100");
 } else {
     $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url in ('$url', '$url/')");

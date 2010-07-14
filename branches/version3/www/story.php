@@ -406,7 +406,7 @@ function print_story_tabs($option) {
 			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
 		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
-			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('cálculos'). '</a></li>'."\n";
+			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('registros'). '</a></li>'."\n";
 		}
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
 			echo '<li'.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
