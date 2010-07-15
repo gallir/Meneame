@@ -880,12 +880,19 @@ function do_best_queued() {
 			$link->read();
 			$url = $link->get_relative_permalink();
 			$output .= '<div class="votes queued">'.($link->votes+$link->anonymous).'</div>';
-			if (($thumb = $link->has_thumb())) {
-				$link->thumb_x = round($link->thumb_x / 2);
-				$link->thumb_y = round($link->thumb_y / 2);
-				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
+			if ($link->negatives >= $link->votes/10) {
+				// add the warn icon if it has 10% negatives
+				$warn = 'style="padding-left:20px;background: url(../../img/common/error_s.png) no-repeat left center"';
+			} else {
+				$warn = '';
+				// Show the thumbnail only if it has less than 10% negatives
+				if (($thumb = $link->has_thumb())) {
+					$link->thumb_x = round($link->thumb_x / 2);
+					$link->thumb_y = round($link->thumb_y / 2);
+					$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
+				}
 			}
-			$output .= '<h5><a href="'.$url.'">'.$link->title.'</a></h5>';
+			$output .= '<h5 '.$warn.'><a href="'.$url.'">'.$link->title.'</a></h5>';
 			$output .= '</div>'; // class="cell";
 		}
 		$output .= '</div>'."\n";
