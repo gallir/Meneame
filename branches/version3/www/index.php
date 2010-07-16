@@ -33,7 +33,7 @@ $globals['ads'] = true;
 
 $cat=$_REQUEST['category'];
 
-do_header('Men&eacute;ame');
+do_header(_('Menéame'));
 do_tabs('main','published');
 if ($globals['meta_current'] > 0) {
 	$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
