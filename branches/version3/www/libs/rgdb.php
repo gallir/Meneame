@@ -67,7 +67,7 @@ class RGDB extends mysqli {
 			@parent::__construct($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		}
 		if ($this->connect_error) {
-			$this->print_error( _('Error conectando a la BBDD, volvemos en unos segundos, seguramente estamos actualizando el sistema'));
+			$this->print_error( _('error temporal'));
 			die;
 		}
 		$this->connected = true;
