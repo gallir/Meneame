@@ -239,8 +239,10 @@ $globals['thumb_size'] = 70;
 $globals['Amazon_S3_local_cache'] = true;
 
 
+// Main javascript file
+$globals['js_main'] = 'general01.js.php';
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm63.css';
+$globals['css_main'] = 'css/es/mnm64.css';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

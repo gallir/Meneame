@@ -1,7 +1,7 @@
 <?
 include('../config.php');
 include(mnminclude.'sneak.php');
-header('Content-Type: text/javascript; charset=UTF-8');
+header('Content-Type: application/x-javascript; charset=utf-8');
 header('Cache-Control: max-age=3600');
 
 ?>

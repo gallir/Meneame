@@ -82,7 +82,14 @@ class Link {
 	function json_votes_info($value=false) {
 		$dict = array();
 		$dict['id'] = $this->id;
-		if ($value) $dict['value'] = $value;
+		if ($value) {
+			$dict['value'] = $value;
+			if ($value < 0) {
+				$dict['vote_description'] = get_negative_vote($value);
+			} else {
+				$dict['vote_description'] = _('¡chachi!');
+			}
+		}
 		$dict['votes'] = $this->votes;
 		$dict['anonymous'] = $this->anonymous;
 		$dict['negatives'] = $this->negatives;
@@ -658,9 +665,14 @@ class Link {
 			} elseif( !$this->voted) {
 				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
 			} else {
-				if ($this->voted > 0) $mess = _('&#161;chachi!');
-				else $mess = ':-(';
-				echo '<span id="a-shake-'.$this->id.'">'.$mess.'</span>';
+				if ($this->voted > 0) {
+					$mess = _('¡chachi!');
+					$sty = '';
+				} else {
+					$mess = get_negative_vote($this->voted);
+					$sty = 'class="negative"';
+				}
+				echo '<span id="a-shake-'.$this->id.'" '.$sty.'>'.$mess.'</span>';
 			}
 			echo '</div>'."\n";
 		}

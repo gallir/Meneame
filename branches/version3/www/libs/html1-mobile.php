@@ -142,7 +142,7 @@ function do_css_includes() {
 function do_js_includes() {
 	global $globals;
 
-	echo '<script src="'.$globals['base_static'].'js/mobile02.js" type="text/javascript"></script>' . "\n";
+	echo '<script src="'.$globals['base_url'].'js/'.$globals['js_main'].'" type="text/javascript"></script>' . "\n";
 	do_js_from_array($globals['extra_js']);
 	if ($globals['extra_js_text']) {
 		echo '<script type="text/javascript">'."\n";
@@ -151,9 +151,6 @@ function do_js_includes() {
 	}
 	echo '<script type="text/javascript">'."\n";
 	echo 'if(top.location != self.location)top.location = self.location;'."\n";
-	echo 'var base_url="'.$globals['base_url'].'";'."\n";
-	echo 'var mobile_version = true;'."\n";
-	echo 'var base_static="'.$globals['base_static'].'";'."\n";
 	echo 'var base_key="'.get_security_key().'";'."\n";
 	echo '</script>'."\n";
 }
