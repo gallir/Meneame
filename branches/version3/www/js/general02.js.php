@@ -12,7 +12,5 @@ echo "\n\n";
 include('general.js');
 echo "\n\n";
 
-if ($current_user->user_id > 0) {
-	include('users.js');
-}
+include('users.js');
 ?>
