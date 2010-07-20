@@ -743,7 +743,7 @@ function do_user_tabs($option, $user, $has_subheader = false) {
 	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
 	echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
 	//echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
-	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_heart_bi.gif" alt="amigos e ignorados" width="16" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
+	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_friend_bi_00.png" alt="amigos e ignorados" width="18" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
 	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enlaces'). '</a></li>';
 	//echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
 	echo '<li'.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
@@ -810,4 +810,5 @@ function print_categories_checkboxes($user) {
 	}
 	echo '</form>';
 }
+
 ?>

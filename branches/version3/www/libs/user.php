@@ -8,9 +8,11 @@
 
 global $globals;
 // Following functions are related to users but not done as a class so can be easily used with User and UserAuth
-define('FRIEND_YES', '<img src="'.$globals['base_static'].'img/common/icon_heart.gif" alt="del" width="16" height="16" title="'._('amigo').'"/>');
-define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_heart_no.gif" alt="add" width="16" height="16" title="'._('agregar lista amigos').'"/>');
-define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_heart_ignore.gif" alt="add" width="16" height="16" title="'._('ignorar').'"/>');
+define('FRIEND_YES', '<img src="'.$globals['base_static'].'img/common/icon_friend_00.png" alt="del" width="18" height="16" title="'._('amigo').'"/>');
+define('FRIEND_BOTH', '<img src="'.$globals['base_static'].'img/common/icon_friend_bi_00.png" alt="del" width="18" height="16" title="'._('amigos').'"/>');
+define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_friend_no_00.png" alt="add" width="18" height="16" title="'._('agregar lista amigos').'"/>');
+define('FRIEND_OTHER', '<img src="'.$globals['base_static'].'img/common/icon_friend_other_00.png" alt="add" width="18" height="16" title="'._('elegidp').'"/>');
+define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_friend_ignore_00.png" alt="add" width="18" height="16" title="'._('ignorar').'"/>');
 
 class User {
 
@@ -331,13 +333,15 @@ class User {
 		switch (self::friend_exists($from, $to)) {
 			case 0:
 				self::friend_insert($from, $to);
-				return FRIEND_YES;
+				if (self::friend_exists($to, $from)) return FRIEND_BOTH;
+				else return FRIEND_YES;
 			case 1:
 				self::friend_insert($from, $to, -1);
 				return FRIEND_IGNORE;
 			case -1:
 				self::friend_delete($from, $to);
-				return FRIEND_NO;
+				if (self::friend_exists($to, $from)) return FRIEND_OTHER;
+				else return FRIEND_NO;
 		}
 	}
 
@@ -346,9 +350,11 @@ class User {
 		if ($from == $to) return '';
 		switch (self::friend_exists($from, $to)) {
 			case 0:
-				return FRIEND_NO;
+				if (self::friend_exists($to, $from)) return FRIEND_OTHER;
+				else return FRIEND_NO;
 			case 1:
-				return FRIEND_YES;
+				if (self::friend_exists($to, $from)) return FRIEND_BOTH;
+				else return FRIEND_YES;
 			case -1:
 				return FRIEND_IGNORE;
 		}
