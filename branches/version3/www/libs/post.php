@@ -207,7 +207,7 @@ class Post {
 	function put_tooltips ($str) {
 		global $globals;
 		// add links for hashtags
-		return preg_replace_callback('/(^|\s)@([\S\.\-]+\w)/u', array($this, 'replace_post_link'), $str);
+		return preg_replace_callback('/(^|\W)@([\S\.\-]+\w)/u', array($this, 'replace_post_link'), $str);
 	}
 
 	function clean_content() {
