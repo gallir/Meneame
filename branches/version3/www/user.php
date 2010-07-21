@@ -248,11 +248,6 @@ function do_profile() {
 
 	echo '<fieldset><legend>';
 	echo _('información personal');
-	if($user->id == $current_user->user_id) {
-		echo ' [<a href="'.$globals['base_url'].'profile.php">'._('modificar').'</a>]';
-	} elseif ($current_user->user_level == 'god') {
-		echo ' [<a href="'.$globals['base_url'].'profile.php?login='.urlencode($login).'">'._('modificar').'</a>]';
-	}
 	echo '</legend>';
 
 
@@ -673,7 +668,7 @@ function do_user_tabs($option, $user, $has_subheader = false) {
 	} else {
 		echo '<ul class="tabsub">'."\n";
 	}
-	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('perfil'). '</a></li>';
+	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('personal'). '</a></li>';
 	// echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
 	//echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
 	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_friend_bi_00.png" alt="amigos e ignorados" width="18" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
@@ -707,9 +702,7 @@ function do_categories() {
 			}
 		}
 	}
-	echo '<div class="genericform">';
 	print_categories_checkboxes($user);
-	echo '</div>';
 }
 
 function print_categories_checkboxes($user) {
@@ -752,6 +745,7 @@ function print_categories_checkboxes($user) {
 	}
 	echo '</form>';
 }
+
 function do_user_subheader($content, $selected = false, $rss = false, $rss_title = '') {
 	global $globals;
 	 

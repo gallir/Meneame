@@ -82,8 +82,10 @@ if (isset($_POST['process'])) {
 }
 
 do_header(_('edición del perfil del usuario'). ': ' . $user->username);
+echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 30px">'."\n";
 echo $save_messages; // We do it later because teh profile could change header's info
 show_profile();
+echo '</div>';
 do_footer();
 
 
