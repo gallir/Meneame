@@ -36,13 +36,19 @@ if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
 }
 //// End recovery
 
-if ($current_user->user_id > 0 && $current_user->authenticated && empty($_REQUEST['login'])) {
+// Check user, admin and authenticated user
+if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login'] == $current_user->user_login) ) {
 		$login=$current_user->user_login;
 } elseif (!empty($_REQUEST['login']) && $current_user->user_level == 'god') {
 	$login=$db->escape($_REQUEST['login']);
 	$admin_mode = true;
 } else {
-	header("Location: ./login.php");
+	if ($current_user->user_id > 0) {
+		$fallback = get_user_uri($current_user->user_login);
+	} else {
+		$fallback = $globals['base_url'].'login.php';
+	}
+	header("Location: $fallback");
 	die;
 }
 

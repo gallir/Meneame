@@ -145,7 +145,7 @@ function print_index_tabs($option=-1) {
 			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		case 7: // Personalised, published
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
+			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss" title="'._('categorías personalizadas').'"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
 			break;
 		default:
 			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
