@@ -34,6 +34,12 @@ class Post {
 		return null;
 	}
 
+	static function can_add($userid) {
+		// Check an user can add a new post
+		global $globals, $current_user, $db;
+		return ! $db->get_var("select post_id from posts where post_user_id=$userid and post_date > date_sub(now(), interval ".$globals['posts_period']." second) order by post_id desc limit 1") > 0;
+	}
+
 	function store($full = true) {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
@@ -157,7 +163,7 @@ class Post {
 		}
 
 		// Permalink
-		echo '<a href="'.post_get_base_url($this->username).'/'.$this->id.'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-02.png" width="18" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
+		echo '<a href="'.post_get_base_url($this->id).'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-02.png" width="18" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
 
 		// If the user is authenticated, show favorite box
 		if ($current_user->user_id > 0)  {
@@ -270,29 +276,6 @@ class Post {
 		echo'$(\'#thisform'.$this->id.'\').ajaxForm(options);' ."\n";
 		echo '</script>'."\n";
 	}
-
-	function print_post_teaser($rss_option) {
-		global $globals, $current_user;
-
-
-		echo '<div id="addpost">';
-		// Print "new note" is the user is authenticated
-		if ($current_user->user_id > 0) {
-			if (!$this->read_last($current_user->user_id) || time() - $this->date > $globals['posts_period']) {
-				echo '<a href="javascript:post_new()" title="'._('insertar una nota').'"><img src="'.$globals['base_static'].'img/common/add-notame01.png" alt="'._("insertar una nota").'"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			} else {
-				echo '<img src="'.$globals['base_static'].'img/common/add-notame02.png" alt="'._("espera unos minutos para entrar otra nota").'"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-			}
-		}
-
-		echo '<a href="'.$globals['base_url'].'sneakme_rss2.php'.$rss_option.'" title="'._('obtener notas en rss2').'"><img src="'.$globals['base_static'].'img/common/rss-button01.png" alt="rss2"/></a>';
-		echo '&nbsp;<a href="http://meneame.wikispaces.com/Notame" title="'._('jabber/google talk para leer y escribir en nótame').'"><img src="'.$globals['base_static'].'img/common/jabber-button01.png" alt="jabber"/></a>';
-		echo '</div>'."\n";
-		if ($current_user->user_id > 0) {
-			echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
-		}
-	}
-
 
 	function vote_exists() {
 		global $current_user;
