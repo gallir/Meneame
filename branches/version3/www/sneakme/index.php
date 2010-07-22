@@ -124,20 +124,24 @@ do_header($page_title);
 do_posts_tabs($tab_option, $user->username);
 $post = new Post;
 
-if ($tab_option == 4 || ($tab_option == 1 && $current_user->user_id > 0)) {
-	if ($tab_option == 1 && $current_user->user_id > 0) $username = $current_user->user_login;
-	else $username = $user->username;
+if ($tab_option == 4) {
 	$options = array(
-		_('todas') => post_get_base_url($username),
-		_('amigos') => post_get_base_url("$username/_friends"),
-		_('favoritos') => post_get_base_url("$username/_favorites"),
-		_('conversación') => post_get_base_url("$username/_conversation"),
+		_('todas') => post_get_base_url($user->username),
+		_('amigos') => post_get_base_url("$user->username/_friends"),
+		_('favoritos') => post_get_base_url("$user->username/_favorites"),
+		_('conversación') => post_get_base_url("$user->username/_conversation"),
+		
+	);
+}  elseif ($tab_option == 1 && $current_user->user_id > 0) {
+	$options = array(
+		_('amigos') => post_get_base_url("$current_user->user_login/_friends"),
+		_('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
+		_('conversación') => post_get_base_url("$current_user->user_login/_conversation"),
 		
 	);
 } else $options = false;
 do_post_subheader($options, $view, $rss_option);
 
-//$post->print_post_teaser($rss_option);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
