@@ -11,7 +11,7 @@ global $globals;
 define('FRIEND_YES', '<img src="'.$globals['base_static'].'img/common/icon_friend_00.png" alt="del" width="18" height="16" title="'._('amigo').'"/>');
 define('FRIEND_BOTH', '<img src="'.$globals['base_static'].'img/common/icon_friend_bi_00.png" alt="del" width="18" height="16" title="'._('amigos').'"/>');
 define('FRIEND_NO', '<img src="'.$globals['base_static'].'img/common/icon_friend_no_00.png" alt="add" width="18" height="16" title="'._('agregar lista amigos').'"/>');
-define('FRIEND_OTHER', '<img src="'.$globals['base_static'].'img/common/icon_friend_other_00.png" alt="add" width="18" height="16" title="'._('elegidp').'"/>');
+define('FRIEND_OTHER', '<img src="'.$globals['base_static'].'img/common/icon_friend_other_00.png" alt="add" width="18" height="16" title="'._('elegido').'"/>');
 define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_friend_ignore_00.png" alt="add" width="18" height="16" title="'._('ignorar').'"/>');
 
 class User {
