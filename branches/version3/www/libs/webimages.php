@@ -331,7 +331,7 @@ class HtmlImages {
 			// Check if there are players
 			if ((!$this->selected || $this->selected->surface() < 120000)
 					&& $this->other_html 
-					&& preg_match('/((<|&lt;)embed|(<|&lt;)object|(<|&lt;)param|\.flv)/i', $this->html)) {
+					&& preg_match('/(< *(?:embed|iframe|object|param))|\.flv/i', $this->html)) {
 				if ($this->debug)
 					echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
@@ -653,7 +653,7 @@ class HtmlImages {
 	// Youtube detection
 	function check_youtube() {
 		if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-			(preg_match('/http:\/\/www\.youtube\.com\/v\/(.+?)[\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1]))) {
+			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/(\w+?)[\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			if ($this->debug)
 				echo "<!-- Detect Youtube, id: $video_id -->\n";
