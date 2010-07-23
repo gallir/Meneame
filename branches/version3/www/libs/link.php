@@ -874,8 +874,8 @@ class Link {
 		global $globals;
 
 		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' || 
-				// Close the votes if the user disabled her account
-				$this->user_level == 'autodisabled' || 
+				// Close the votes after x hours if the user disabled her account
+				($this->user_level == 'autodisabled' && $this->date < $globals['now'] - 3600*6) || 
 				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
