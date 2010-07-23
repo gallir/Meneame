@@ -873,7 +873,9 @@ class Link {
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' ||
+		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' || 
+				// Close the votes if the user disabled her account
+				$this->user_level == 'autodisabled' || 
 				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
