@@ -130,6 +130,7 @@ if ($tab_option == 4) {
 		_('amigos') => post_get_base_url("$user->username/_friends"),
 		_('favoritos') => post_get_base_url("$user->username/_favorites"),
 		_('conversación') => post_get_base_url("$user->username/_conversation"),
+		sprintf(_('perfil de %s').'&nbsp;&rarr;', $user->username) => get_user_uri($user->username),
 		
 	);
 }  elseif ($tab_option == 1 && $current_user->user_id > 0) {
