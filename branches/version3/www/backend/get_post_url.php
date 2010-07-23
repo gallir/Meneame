@@ -53,7 +53,7 @@ if(!$post->read) {
 	not_found('<strong>Error: </strong>' . _('usuario o nota no encontrada'));
 	die;
 }
-header('Location:  http://'.get_server_name().post_get_base_url($post->username) . "/$post->id");
+header('Location:  http://'.get_server_name().post_get_base_url() . "$post->id");
 echo $link;
 
 ?>
