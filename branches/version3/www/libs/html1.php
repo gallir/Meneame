@@ -710,7 +710,7 @@ function do_best_sites() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select sum(link_votes-link_negatives)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
+	$res = $db->get_results("select sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
 ");
 	if ($res) {
 		$i = 0;
