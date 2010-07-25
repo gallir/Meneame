@@ -150,18 +150,32 @@ function avatar_get_from_db($user, $size=0) {
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
 
+	$delete = false;
+	$original = false;
 	if ($globals['Amazon_S3_media_bucket']) {
 		// Get avatar from S3
-		if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
-			return file_get_contents("$file_base-$size.jpg");
+		// Try up to 3 times to download from Amazon
+		$try = 0;
+		while ($original == false && $try < 3) {
+			if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
+				return file_get_contents("$file_base-$size.jpg");
+			}
+	 		if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
+				$delete_it = true;
+				$original = "$file_base-orig.jpg";
+			} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) 
+						|| Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
+				$original = $file_base . '-80.jpg';
+			} else {
+				$try++;
+				usleep(rand(1,20)); // Wait a little to minimize race-conditions
+			}
 		}
-	 	if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
-			$delete_it = true;
-			$original = "$file_base-orig.jpg";
-		} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) || Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
-			$original = $file_base . '-80.jpg';
-		} else {
-			avatars_remove($user);
+		if (! $original) { // The images were not found in S3
+			if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
+					&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
+				avatars_remove($user);
+			}
 			return false;
 		}
 
@@ -170,7 +184,9 @@ function avatar_get_from_db($user, $size=0) {
 		if (!is_readable($file_base . '-80.jpg')) {
 			$img = $db->get_var("select avatar_image from avatars where avatar_id=$user");
 			if (!strlen($img) > 0) {
-				avatars_remove($user);
+				if (is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
+					avatars_remove($user);
+				}
 				return false;
 			}
 			file_put_contents ($file_base . '-80.jpg', $img);
