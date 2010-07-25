@@ -17,7 +17,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.11);
+define (PUB_PERC, 0.10);
 
 
 
@@ -32,7 +32,9 @@ $now = time();
 echo "BEGIN\n";
 $output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br/>\n";
 
-$from_time = "date_sub(now(), interval 5 day)";
+//$from_time = "date_sub(now(), interval 9 day)";
+$hours = intval($globals['time_enabled_votes']/3600);
+$from_time = "date_sub(now(), interval $hours hour)";
 #$from_where = "FROM votes, links WHERE  
 
 
@@ -367,7 +369,6 @@ function publish($link) {
 
 	$link->status = 'published';
 	$link->date = $link->published_date=time();
-	//$link->store_basic();
 	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
 
 	// Increase user's karma

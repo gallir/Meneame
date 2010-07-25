@@ -72,7 +72,7 @@ $history_from_ts = time() - $history_hours*3600;
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = $globals['karma_points_per_published'];
 $points_per_published_max = $globals['karma_points_per_published_max'];
-$points_given = 3;
+$points_given = 4;
 $comment_votes = $globals['comment_votes_multiplier'];
 $post_votes = $globals['post_votes_multiplier'];
 
@@ -300,6 +300,23 @@ foreach ($res as $dbuser) {
 			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
 			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count, $comment_votes_count, $comment_votes_sum)\n";
 			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes)) * $comment_coeff ;
+
+
+			// Count low karma comments
+			$comments_low_karma = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and comment_karma < ".intval($globals['comment_hidden_karma']/2));
+			if ($comments_low_karma > 3) {
+				$comments_low_karma_links = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_link_id) from comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and comment_karma < ".intval($globals['comment_hidden_karma']/2));
+				if($comments_low_karma_links > 3) {
+					$penalized += round($comments_low_karma_links/4);
+				}
+				$karma4_coef = ($comments_low_karma+$comments_low_karma_links)/7;
+				$old_karma4 = $karma4;
+				if ($karma4 > 0) $karma4 /= $karma4_coef;
+				else $karma4 *= $karma4_coef;
+				$output .= sprintf("%s: %d %6.2f -> %6.2f\n", _('Penalización por comentarios karma negativo'), $comments_low_karma, $old_karma4, $karma4);	
+				
+			}
+
 		}
 		
 		// Limit karma to users that does not send links and does not vote
@@ -321,7 +338,7 @@ foreach ($res as $dbuser) {
 			}
 		}
 		if ($karma5 != 0) {
-			$penalized = +1;
+			$penalized += 1;
 			$output .= _('Exceso de votos negativos injustos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
 			$output .= sprintf("%4.2f\n", $karma5);	
 		}
@@ -349,7 +366,7 @@ foreach ($res as $dbuser) {
         // Limit karma to users that do not have other activity
 		if ($karma6 > 0 && ($karma0+$karma1+$karma2+$karma3+$karma4+$karma5) < 1 ) $karma6 = 0;
 		if ($karma6 != 0) {
-			$output .= _('Votos a notas contabilizados').": $post_votes_count (karma: $post_votes_sum), karma6: ";
+			$output .= _('Votos a notas contabilizados').": $post_votes_count users: $distinct_user_votes_count karma: $post_votes_sum, karma6: ";
 			$output .= sprintf("%4.2f\n", $karma6);
 		}
 
@@ -359,8 +376,6 @@ foreach ($res as $dbuser) {
 			$karma7 = max(-$post_votes/2, -$post_votes * $negative_abused_post_votes_count / 20);
 		}
 		if ($karma7 != 0) {
-			// Commented out to avoid further penalization, yet
-            // $penalized = +1;
 			$output .= _('Exceso de votos negativos injustos a notas').": $negative_abused_post_votes_count, karma7: ";
 			$output .= sprintf("%4.2f\n", $karma7);
 		}
@@ -374,9 +389,10 @@ foreach ($res as $dbuser) {
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
 		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized > 1) {
 			$karma_base_user = $karma_base;
+			$output .= _('Limitación karma base por penalizaciones').": $karma_base_user\n"; 
 			if ($penalized > 2) {
 				$karma_extra = min($karma_extra, 1);
-				$output .= _('Karma extra máximo por penalizaciones o abusos').": 1\n"; 
+				$output .= _('Karma extra máximo por penalizaciones').": 1\n"; 
 			}
 		}
 		$karma = max($karma_base_user+$karma_extra, $min_karma);
