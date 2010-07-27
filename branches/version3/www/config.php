@@ -98,6 +98,7 @@ $globals['comments_page_threshold'] = 1.10;
 // Min karma to highlights comments
 // The negative is used to hide comments
 $globals['comment_highlight_karma'] = 100;
+$globals['comment_hidden_karma'] = -100;
 
 
 // Give 4 minutes to edit a comment

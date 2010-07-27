@@ -30,16 +30,6 @@ array_push($globals['cache-control'], 'max-age=3');
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 	array_shift($url_args); // The first element is always a "/"
-
-	// If the first argument are only numbers, redirect to the story with that id
-	if (is_numeric($url_args[0]) && $url_args[0] > 0) {
-			$link = Link::from_db(intval($url_args[0]));
-			if ($link) {
-				header('Location: ' . $link->get_permalink());
-				die;
-			}
-	}
-
 	$link = Link::from_db($db->escape($url_args[0]));
 	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);

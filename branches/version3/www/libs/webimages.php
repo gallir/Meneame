@@ -330,8 +330,8 @@ class HtmlImages {
 			// If there is no image or image is slow
 			// Check if there are players
 			if ((!$this->selected || $this->selected->surface() < 120000)
-					&& $this->other_html 
-					&& preg_match('/(< *(?:embed|iframe|object|param))|\.flv/i', $this->html)) {
+					//&& $this->other_html 
+					&& preg_match('/(< *(?:embed|iframe|object|param))[^>]*>|\.flv/i', $this->html)) {
 				if ($this->debug)
 					echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
