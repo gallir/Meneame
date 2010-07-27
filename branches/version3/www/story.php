@@ -28,15 +28,14 @@ mobile_redirect();
 array_push($globals['cache-control'], 'max-age=3');
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	array_shift($url_args); // The first element is always a "/"
-	$link = Link::from_db($db->escape($url_args[0]));
+	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);
+	$link = Link::from_db($url_args[0], 'uri');
 	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);
 	}
 } else {
-	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	if(is_numeric($url_args[0]) && $url_args[0] > 0 && ($link = Link::from_db(intval($url_args[0]))) ) {
+	$url_args = preg_split('/\/+/', $_REQUEST['id'], 3, PREG_SPLIT_NO_EMPTY);
+	if(is_numeric($url_args[0]) && $url_args[0] > 0 && ($link = Link::from_db($url_args[0])) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
 			header ('HTTP/1.1 301 Moved Permanently');
