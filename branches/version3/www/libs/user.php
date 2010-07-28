@@ -333,14 +333,14 @@ class User {
 		switch (self::friend_exists($from, $to)) {
 			case 0:
 				self::friend_insert($from, $to);
-				if (self::friend_exists($to, $from)) return FRIEND_BOTH;
+				if (self::friend_exists($to, $from) > 0) return FRIEND_BOTH;
 				else return FRIEND_YES;
 			case 1:
 				self::friend_insert($from, $to, -1);
 				return FRIEND_IGNORE;
 			case -1:
 				self::friend_delete($from, $to);
-				if (self::friend_exists($to, $from)) return FRIEND_OTHER;
+				if (self::friend_exists($to, $from) > 0) return FRIEND_OTHER;
 				else return FRIEND_NO;
 		}
 	}
@@ -350,10 +350,10 @@ class User {
 		if ($from == $to) return '';
 		switch (self::friend_exists($from, $to)) {
 			case 0:
-				if (self::friend_exists($to, $from)) return FRIEND_OTHER;
+				if (self::friend_exists($to, $from) > 0) return FRIEND_OTHER;
 				else return FRIEND_NO;
 			case 1:
-				if (self::friend_exists($to, $from)) return FRIEND_BOTH;
+				if (self::friend_exists($to, $from) > 0) return FRIEND_BOTH;
 				else return FRIEND_YES;
 			case -1:
 				return FRIEND_IGNORE;
