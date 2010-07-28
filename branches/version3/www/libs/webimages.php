@@ -427,6 +427,7 @@ class HtmlImages {
 		// Tries to find an alternate page to check for "common images" and ignore them
 		$this->other_html = false;
 		$this->path_query = unify_path_query($this->parsed_url['path'], $this->parsed_url['query']);
+		$my_path_len = path_count($this->path_query);
 		if ($this->html) {
 			if ($this->debug)
 					echo "<!-- Analyzing html: ". strlen($this->html). " bytes -->\n";
@@ -466,13 +467,20 @@ class HtmlImages {
 
 					$parsed_match = parse_url($url);
 					$path_query_match = unify_path_query($parsed_match['path'], $parsed_match['query']);
+					$other_path_len = path_count($path_query_match);
 
 					if ($visited[$path_query_match] || $this->path_query == $path_query_match) continue;
 					$visited[$path_query_match] = true;
 
-					$equals = min(path_equals($path_query_match, $this->path_query), path_count($path_query_match)-1);
+					if ($my_path_len > 2 && $my_path_len < $other_path_len
+						&& strcmp($this->path_query, $path_query_match, strlen($this->path_query)) == 0 ) {
+						if ($this->debug) echo "<!-- Skipped because it is a subpage-->\n";
+						continue;
+					}
+						
+					$equals = min(path_equals($path_query_match, $this->path_query), $other_path_len-1);
 
-					if ($equals > 0 && path_count($path_query_match) != path_count($this->path_query)) {
+					if ($equals > 0 && $other_path_len != $my_path_len) {
 							// TODO: convert these checks in one iteration
 							if (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
 								// Penalize with up to four levels if urls has same "dates"
@@ -520,7 +528,7 @@ class HtmlImages {
 				$n = $checked = $same_title = $other_title = $images_total = 0;
 				$paths = array();
 				$paths_visited = array();
-				$paths[path_sub_path($this->path_query, 2)] =  path_count($this->path_query);
+				$paths[path_sub_path($this->path_query, 2)] =  $my_path_len;
 				foreach ($selection as $url) {
 					if ($checked > 10) break;
 
@@ -564,7 +572,7 @@ class HtmlImages {
 							if ($this->debug)
 								echo "<!-- Redirected to same address: ".$res['location'].", skipping -->\n";
 							continue;
-						} elseif (path_count($location_unified) < path_count($this->path_query) 
+						} elseif (path_count($location_unified) <  $my_path_len
 									&& path_count($location_unified) < path_count($unified) ) {
 							if ($this->debug)
 								echo "<!-- Redirected to a shorter path: $url -> ".$res['location'].", skipping -->\n";
