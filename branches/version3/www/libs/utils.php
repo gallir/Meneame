@@ -70,7 +70,13 @@ function htmlentities2unicodeentities ($input) {
 
 function clean_input_url($string) {
 	$string = preg_replace('/ /', '+', trim(stripslashes(mb_substr($string, 0, 512))));
-	return preg_replace('/[<>\r\n\t]/', '', $string);
+	$string = preg_replace('/[<>\r\n\t]/', '', $string);
+	$string = preg_replace('/utm_\w+?=[^&]*/', '', $string); // Delete common variables  for Analitycs
+	$string = preg_replace('/&{2,}/', '&', $string); // Delete duplicates &
+	$string = preg_replace('/&+$/', '', $string); // Delete useless & at the end
+	$string = preg_replace('/\?&+/', '?', $string); // Delete useless & after ?
+	$string = preg_replace('/\?&*$/', '', $string); // Delete empty queries
+	return $string;
 }
 
 function clean_input_string($string) {
@@ -123,11 +129,6 @@ function check_email($email) {
 
 	if(check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
 	return true;
-}
-
-function url_clean($url) {
-	$array = explode('#', $url, 1);
-	return $array[0];
 }
 
 function check_username($name) {
