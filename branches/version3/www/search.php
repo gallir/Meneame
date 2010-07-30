@@ -107,6 +107,7 @@ if ($response['ids']) {
 				$obj->print_summary(300);
 				break;
 			case 'comments':
+				if ($obj->type == 'admin' && !$current_user->admin) continue;
 				$obj->print_summary(false, 300);
 				break;
 			case 'links':
