@@ -84,6 +84,21 @@ class Link {
 		return $count;
 	}
 
+	static function duplicates($url) {
+		global $db;
+		$trimmed = $db->escape(preg_replace('/\/$/', '', $url));
+		$list = "'$trimmed', '$trimmed/'";
+		if (preg_match('/^http:\/\/www\./', $trimmed)) {
+			$link_alternative = preg_replace('/^http:\/\/www\./', 'http://', $trimmed);
+		} else {
+			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
+		}
+		$list .= ", '$link_alternative', '$link_alternative/'";
+		// If it was abuse o autodiscarded allow other to send it again
+		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
+		return $found;
+	}
+
 	function json_votes_info($value=false) {
 		$dict = array();
 		$dict['id'] = $this->id;
@@ -428,21 +443,6 @@ class Link {
 		}
 		$this->read = false;
 		return false;
-	}
-
-	function duplicates($url) {
-		global $db;
-		$trimmed = $db->escape(preg_replace('/\/$/', '', $url));
-		$list = "'$trimmed', '$trimmed/'";
-		if (preg_match('/^http:\/\/www\./', $trimmed)) {
-			$link_alternative = preg_replace('/^http:\/\/www\./', 'http://', $trimmed);
-		} else {
-			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
-		}
-		$list .= ", '$link_alternative', '$link_alternative/'";
-		// If it was abuse o autodiscarded allow other to send it again
-		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
-		return $found;
 	}
 
 	function print_summary($type='full', $karma_best_comment = 0, $show_tags = true) {

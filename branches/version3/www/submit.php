@@ -58,11 +58,11 @@ function check_already_sent() {
 	global $db;
 	// Check if the url has been sent already
 	if (!empty($_GET['url'])) {
-		$linkres = new Link;
-		if (($found = $linkres->duplicates($_GET['url']))) {
-			$linkres->id = $found;
-			if($linkres->read()) {
-				header('Location: ' . $linkres->get_permalink());
+		if (($found = Link::duplicates($_GET['url']))) {
+			$link = new Link;
+			$link->id = $found;
+			if($link->read()) {
+				header('Location: ' . $link->get_permalink());
 				die;
 			}
 		}
@@ -295,7 +295,7 @@ function do_submit1() {
 
 	$edit = false;
 
-	if(report_dupe($url)) return;
+	if(report_duplicated($url)) return;
 
 
 	if(!$linkres->check_url($url, true, true) || !$linkres->get($url)) {
@@ -316,7 +316,7 @@ function do_submit1() {
 	}
 
 	// If the URL has changed, check again is not dupe
-	if($linkres->url != $url && report_dupe($linkres->url)) return;
+	if($linkres->url != $url && report_duplicated($linkres->url)) return;
 
 	$linkres->randkey = intval($_POST['randkey']);
 	if(!$linkres->valid) {
@@ -552,7 +552,7 @@ function do_submit2() {
 	$linkres->id=$link_id = intval($_POST['id']);
 	$linkres->read();
 
-	if(report_dupe($linkres->url)) return;
+	if(report_duplicated($linkres->url)) return;
 
 	$linkres->read_content_type_buttons($_POST['type']);
 
@@ -623,11 +623,11 @@ function do_submit3() {
 	if(!check_link_key() || !$linkres->read()) die;
 
 	// Check it is not in the queue already
-	if ($linkres->duplicates($linkres->url)) {
+	if (Link::duplicates($linkres->url)) {
 		// Write headers, they were not printed yet
 		do_header(_("enviar noticia"), "post");
 		echo '<div id="singlewrap">' . "\n";
-		report_dupe($linkres->url);
+		report_duplicated($linkres->url);
 		return;
 	}
 
@@ -722,11 +722,10 @@ function print_form_submit_error($mess) {
 	echo '<div class="form-error-submit">&nbsp;&nbsp;'._($mess).'</div>'."\n";
 }
 
-function report_dupe($url) {
+function report_duplicated($url) {
 	global $globals;
 
-	$link = new Link;
-	if(($found = $link->duplicates($url))) {
+	if(($found = Link::duplicates($url))) {
 		$dupe = new Link;
 		$dupe->id = $found;
 		$dupe->read();
