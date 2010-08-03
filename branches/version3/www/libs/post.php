@@ -23,7 +23,7 @@ class Post {
 	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted FROM posts LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id), users ";
 
 	// Regular expression to detect referencies to other post, like @user,post_id
-	const REF_PREG = "/(^|\W)@([^\s<>;\.\:]+)/u";
+	const REF_PREG = "/(^|\W)@([^\s<>;:,]+(?:,\d+){0,1})/u";
 
 	static function from_db($id) {
 		global $db, $current_user;
