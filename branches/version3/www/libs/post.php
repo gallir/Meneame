@@ -22,6 +22,9 @@ class Post {
 
 	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted FROM posts LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id), users ";
 
+	// Regular expression to detect referencies to other post, like @user,post_id
+	const REF_PREG = "/(^|\W)@([^\s<>;\.\:]+)/u";
+
 	static function from_db($id) {
 		global $db, $current_user;
 		if(($result = $db->get_object("SELECT".Post::SQL."WHERE post_id = $id and user_id = post_user_id", 'Post'))) {
@@ -213,7 +216,7 @@ class Post {
 	function put_tooltips ($str) {
 		global $globals;
 		// add links for hashtags
-		return preg_replace_callback('/(^|\W)@([\w,\.\-]+)/u', array($this, 'replace_post_link'), $str);
+		return preg_replace_callback(Post::REF_PREG, array($this, 'replace_post_link'), $str);
 	}
 
 	function clean_content() {
@@ -356,7 +359,7 @@ class Post {
 
 		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
 		$references = array();
-		if (preg_match_all('/(^|\s)@([\S\.\-]+[\w])/u', $this->content, $matches)) {
+		if (preg_match_all(Post::REF_PREG, $this->content, $matches)) {
 			foreach ($matches[2] as $reference) {
 				if (!$this->date) $this->date = time();
 				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
