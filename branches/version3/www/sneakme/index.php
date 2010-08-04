@@ -295,7 +295,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	}
 
 	if ($current_user->user_id > 0 ) {
-		if (Post::can_add($current_user->user_id)) {
+		if (Post::can_add()) {
 			echo '<li class="selected"><span><a class="toggler" href="javascript:post_new()" title="'._('nueva nota').'">'._('nueva nota').'&nbsp;<img src="'.$globals['base_static'].'img/common/icon_add_post_002.png" alt="" width="13" height="12"/></a></span></li>';
 		} else {
 			echo '<li><span><a href="javascript:return false;">'._('nueva nota').'</a></span></li>';

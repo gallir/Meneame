@@ -37,10 +37,11 @@ class Post {
 		return null;
 	}
 
-	static function can_add($userid) {
+	static function can_add() {
 		// Check an user can add a new post
 		global $globals, $current_user, $db;
-		return ! $db->get_var("select post_id from posts where post_user_id=$userid and post_date > date_sub(now(), interval ".$globals['posts_period']." second) order by post_id desc limit 1") > 0;
+		return (!$globals['min_karma_for_posts'] || $current_user->user_karma >= $globals['min_karma_for_posts'])
+				&& !$db->get_var("select post_id from posts where post_user_id=$current_user->user_id and post_date > date_sub(now(), interval ".$globals['posts_period']." second) order by post_id desc limit 1") > 0;
 	}
 
 	function store($full = true) {
