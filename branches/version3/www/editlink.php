@@ -158,7 +158,7 @@ function do_save() {
 			$linkres->get_thumb();
 		}
 	}
-	$linkres->title = clean_text($_POST['title'], 40);
+	$linkres->title = clean_text($_POST['title'], 50);
 	$linkres->content = clean_text_with_tags($_POST['bodytext']);
 	$linkres->tags = tags_normalize_string($_POST['tags']);
 	// change the status
