@@ -1,4 +1,4 @@
-<div id="pcontainer{{ self.id }}">
+<div id="pcontainer-{{ self.id }}">
 	<div class="{{ post_class }}" id="pid-{{ self.id }}">
 	{% if self.is_disabled %}
 		&#187;&nbsp;<a href="javascript:get_votes('get_post.php','post','pid-{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver texto') %}">{% trans _('ver texto') %}</a>
