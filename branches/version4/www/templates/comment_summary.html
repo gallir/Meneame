@@ -47,7 +47,7 @@
 		{% endif %}
 
 		{% if self.has_votes_info %}
-			<a href="javascript:modal_from_ajax('{% get_static_url 'backend/get_c_v.php?id=' self.id %}')">
+			<a href="javascript:modal_from_ajax('{% get_url 'backend/get_c_v.php?id=' self.id %}')">
 				<img src="{% get_static_url 'img/common/vote-info02.png' %}" width="18" height="16" alt="+ info" title="{% trans _('¿quién ha votado?') %}"/>
 			</a>
 		{% endif %}
