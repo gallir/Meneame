@@ -1,0 +1,80 @@
+<div id="c-{{html_id}}">
+	<div class="{{ self.comment_class }}">
+		<a href="{{ self.link_permalink }}/000{{ self.order }}"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;&nbsp;
+		<span  id="cid-{{ self.id }}">
+	{% if self.hide_comment %}
+		&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
+	{% else %}
+		{# print text {{{ #}
+
+		{{ self.txt_content }}
+		{% if self.can_edit %}
+		&nbsp;&nbsp;<a href="javascript:get_votes('comment_edit.php','edit_comment','c-{{ html_id }}',0, {{ self.id }})" title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{% get_static_url 'img/common/edit-misc01.png' %}" alt="edit" width="18" height="12"/></a>
+		{% endif %}
+
+		{% if self.is_truncated %}
+		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.id}}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
+		{% endif %}
+
+		{# print text }}} #}
+	{% endif %}
+		</span>
+	</div>
+	<div class="{{ self.comment_meta_class }}">
+		<div class="comment-votes-info">
+		{% if self.type != 'admin' && self.user_level != 'disabled' %}
+			{% if self.can_vote %}
+				{% if self.user_can_vote %}
+	 				<span id="c-votes-{{ self.id }}">
+					<a href="javascript:menealo_comment({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada, buen humor...') %}">
+						<img src="{% get_static_url 'img/common/vote-up02.png' %}" width="18" height="16" alt="{% trans _('voto positivo') %}"/>
+					</a>&nbsp;
+	 				<a href="javascript:menealo_comment({{current_user.user_id}},{{self.id}},-1)" title="{% trans _('abuso, insulto, acoso, spam, magufo...') %}">
+						<img src="{% get_static_url 'img/common/vote-down02.png' %}" width="18" height="16" alt="{% trans _('voto negativo') %}"/>
+					</a>&nbsp;
+	 				</span>
+				{% else %}
+					{% if self.voted >  0 %}
+					<img src="{% get_static_url 'img/common/vote-up-gy02.png'%}" width="18" height="16" alt="{% trans _('votado positivo') %}" title="{% trans _('votado positivo') %}"/>
+					{% else %}{% if self.voted < 0 %}
+					<img src="{% get_static_url 'img/common/vote-down-gy02.png'%}" width="18" height="16" alt="{% trans _('votado negativo') %}" title="{% trans _('votado negativo') %}"/>
+					{% endif %}{% endif %}
+				{% endif %}
+			{% endif %}
+
+			{% trans _('votos') %}: <span id="vc-{{ self.id }}">{{ self.votes }}</span>, {% trans _('karma') %}: <span id="vk-{{ self.id }}">{{ self.karma }}</span>&nbsp;
+
+		{% endif %}
+
+		{% if self.has_votes_info %}
+			<a href="javascript:modal_from_ajax('{% get_static_url 'backend/get_c_v.php?id=' self.id %}')">
+				<img src="{% get_static_url 'img/common/vote-info02.png' %}" width="18" height="16" alt="+ info" title="{% trans _('¿quién ha votado?') %}"/>
+			</a>
+		{% endif %}
+
+		{% if self.can_reply %}
+			<a href="javascript:comment_reply({{ self.order }})" title="{% trans _('responder') %}">
+				<img src="{% get_static_url 'img/common/reply02.png' %}" width="18" height="16"/>
+			</a>
+		{% endif %}
+
+		<a href="{% exec self.get_relative_individual_permalink %}" title="permalink">
+			<img class="link-icon" src="{% get_static_url 'img/common/link-02.png'%}" width="18" height="16" alt="link" title="{% trans _('enlace permanente') %}"/>
+		</a>
+
+		{% if current_user.user_id > 0 %}
+		<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite_comment.php','{{ current_user.user_id }}','fav-{{ self.id }}',0,'{{ self.id }}')">
+			{% exec favorite_teaser current_user.user_id self 'comment' %}
+		</a>
+		{% endif %}
+		</div>
+
+		<div class="comment-info">
+
+		{{ self.author_info }}
+
+		<img src="{{ self.avatar_img }}" width="20" height="20" title="{{ self.username }}&nbsp;&nbsp;karma&nbsp;&nbsp;{{ self.user_karma}}" />
+
+		</div>
+	</div>
+</div>
