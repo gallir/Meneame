@@ -193,6 +193,12 @@ $globals['draft_limit'] = 3; // Max unset drafts at the same time
 
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
+
+
+// Haanga templates configuration
+$globals['haanga_cache'] = '/var/tmp';
+$globals['haanga_templates'] = 'templates';
+
 //$globals['lucene_dir'] = mnmpath.'/'.$globals['cache_dir'].'/lucene_links';
 $globals['sphinx_server'] = 'localhost';
 $globals['sphinx_port'] = 9312;

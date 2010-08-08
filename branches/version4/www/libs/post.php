@@ -105,9 +105,9 @@ class Post {
 		return false;
 	}
 
-	function print_summary_tpl($length=0)
-	{
+	function print_summary($length=0) {
 		global $current_user, $globals;
+
 		if(!$this->read) $this->read(); 
 		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
 				$this->user_level == 'disabled';
@@ -143,99 +143,6 @@ class Post {
 		$vars['self'] = $this;
 
 		return Haanga::Load('post_summary.html', $vars);
-	}
-
-	function print_summary($length = 0) {
-		global $current_user, $globals;
-
-		if (isset($_GET['haanga'])) {
-			return $this->print_summary_tpl($length);
-		}
-
-		if(!$this->read) $this->read(); 
-
-
-		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
-				$this->user_level == 'disabled';
-		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
-
-		echo '<div id="pcontainer-'.$this->id.'">';
-
-		if ($this->hidden || $this->ignored)  {
-			$post_meta_class = 'comment-meta-hidden';
-			$post_class = 'comment-body-hidden';
-		} else {
-			$post_meta_class = 'comment-meta';
-			$post_class = 'comment-body';
-			if ($this->karma > $globals['post_highlight_karma']) {
-				$post_class .= ' high';
-			}
-		}
-
-		echo '<div class="'.$post_class.'" id="pid-'.$this->id.'">';
-
-
-		if ($this->ignored 
-				|| ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) {
-			echo '&#187;&nbsp;<a href="javascript:get_votes(\'get_post.php\',\'post\',\'pid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver texto').'">'._('ver texto').'</a>';
-		} else {
-			$this->print_user_avatar(40);
-			$this->print_text($length);
-		}
-		echo '</div>';
-
-
-
-		// The comments info bar
-		echo '<div class="'.$post_meta_class.'">';
-
-		// Print the votes info (left)
-		echo '<div class="comment-votes-info">';
-
-		// Check that the user can vote
-		if ($current_user->user_id > 0 && $this->author != $current_user->user_id 
-				&&  $this->date > time() - $globals['time_enabled_votes'])
-			$this->print_shake_icons();
-
-		echo _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, '._('karma').': <span id="vk-'.$this->id.'">'.$this->karma.'</span>&nbsp;';
-
-		// Add the icon to show votes
-		if ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) { // Show votes if newer than 30 days
-			echo '<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_p_v.php?id='.$this->id.'\')">';
-			echo '<img src="'.$globals['base_static'].'img/common/vote-info02.png" width="18" height="16" alt="+ info" title="'._('¿quién ha votado?').'"/>';
-			echo '</a>';
-		}
-
-		// Reply button
-		if ($current_user->user_id > 0) {
-			echo '<a href="javascript:post_reply('.$this->id.',\''.$this->username.'\')" title="'._('responder').'"><img src="'.$globals['base_static'].'img/common/reply02.png" width="18" height="16"/></a>';
-		}
-
-		// Permalink
-		echo '<a href="'.post_get_base_url($this->id).'" title="permalink"><img class="link-icon" src="'.$globals['base_static'].'img/common/link-02.png" width="18" height="16" alt="link" title="'._('enlace permanente').'"/></a>';
-
-		// If the user is authenticated, show favorite box
-		if ($current_user->user_id > 0)  {
-			echo '<a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite_post.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this, 'post').'</a>';
-		}
-
-		echo '</div>';
-
-		// Print comment info (right)
-		echo '<div class="comment-info">';
-		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
-		
-		// Print dates
-		if ($globals['now'] - $this->date > 604800) { // 7 days
-			printf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
-		} else {
-			printf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
-		}
-
-		//$this->print_user_avatar(20);
-
-		echo '</div></div>';
-		echo "</div>\n";
 	}
 
 	function print_user_avatar($size=40) {
@@ -357,23 +264,6 @@ class Post {
 		}
 		$db->commit();
 		return $vote->value;
-	}
-
-	function print_shake_icons() {
-		global $globals, $current_user;
-
-		if ( $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted) {  
-		 	echo '<span id="c-votes-'.$this->id.'">';
-			echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,1".')" title="'._('voto positivo').'"><img src="'.$globals['base_static'].'img/common/vote-up02.png" width="18" height="16" alt="'._('voto positivo').'"/></a>&nbsp;';
-		 	echo '<a href="javascript:menealo_post('."$current_user->user_id,$this->id,-1".')" title="'._('voto negativo').'"><img src="'.$globals['base_static'].'img/common/vote-down02.png" width="18" height="16" alt="'._('voto negativo').'"/></a>&nbsp;';
-		 	echo '</span>';
-		 } else {
-		 	if ($this->voted > 0) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-up-gy02.png" width="18" height="16" alt="'._('votado positivo').'" title="'._('votado positivo').'"/>';
-			} elseif ($this->voted<0 ) {
-				echo '<img src="'.$globals['base_static'].'img/common/vote-down-gy02.png" width="18" height="16" alt="'._('votado negativo').'" title="'._('votado negativo').'"/>';
-			}
-		}
 	}
 
 	function same_text_count($min=30) {

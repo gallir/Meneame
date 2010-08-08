@@ -1,5 +1,6 @@
 <?php
 
+global $globals;
 // autoloaded clasess
 // Should be defined after mnminclude
 // and before de database
@@ -50,8 +51,7 @@ function haanga_bootstrap()
 
 /* Load template engine here */
 $config = array(
-	'template_dir' => dirname(__FILE__).'/../templates/',
-	'cache_dir'	=> mnmpath.'/'.$globals['cache_dir'].'/Haanga/'.$_SERVER['HTTP_HOST'],
+	'template_dir' => mnmpath.'/'.$globals['haanga_templates'],
 	'autoload'	 => FALSE, /* Don't use Haanga's autoloader */
 	'bootstrap'	=> 'haanga_bootstrap',
 	'compiler' => array( /* opts for the tpl compiler */
@@ -69,6 +69,14 @@ $config = array(
 	'use_hash_filename' => FALSE, /* don't use hash filename for generated php */
 );
 
+// Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
+if (substr($globals['haanga_cache'], 0, 1) == '/') {
+	$config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
+} else {
+	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
+}
+
+
 if (is_callable('xcache_isset')) {
 	/* don't check for changes in the template for the next 5 min */
 	//$config['check_ttl'] = 300;
@@ -80,8 +88,6 @@ require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 
-
-global $globals;
 $db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
 // we now do "lazy connection.
 $db->persistent = $globals['mysql_persistent'];
