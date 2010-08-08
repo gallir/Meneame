@@ -15,6 +15,7 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
+
 $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
 $globals['post_js'] = Array();
@@ -90,6 +91,12 @@ function do_header($title, $id='home') {
 		// http://www.hixie.ch/specs/pingback/pingback
 		header('X-Pingback: http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php');
 	}
+
+    $security_key = get_security_key();
+
+    $vars = compact('globals', 'title', 'dblang', 'greetings', 'current_user', 'security_key','id');
+
+
 	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
 	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
 	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";

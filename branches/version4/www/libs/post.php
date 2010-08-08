@@ -105,10 +105,55 @@ class Post {
 		return false;
 	}
 
+	function print_summary_tpl($length=0)
+	{
+		global $current_user, $globals;
+		if(!$this->read) $this->read(); 
+		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
+				$this->user_level == 'disabled';
+		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
+
+		if ($this->hidden || $this->ignored)  {
+			$post_meta_class = 'comment-meta-hidden';
+			$post_class = 'comment-body-hidden';
+		} else {
+			$post_meta_class = 'comment-meta';
+			$post_class = 'comment-body';
+			if ($this->karma > $globals['post_highlight_karma']) {
+				$post_class .= ' high';
+			}
+		}
+
+		$this->is_disabled   = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'];
+		$this->user_can_vote =  $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
+		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
+
+		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
+		
+		// Print dates
+		if ($globals['now'] - $this->date > 604800) { // 7 days
+			$this->comment_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
+		} else {
+			$this->comment_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
+		}
+
+		$vars = compact('post_meta_class', 'post_class', 'length');
+		/* reference $this to use in the template */
+		$vars['self'] = $this;
+
+		return Haanga::Load('post_summary.html', $vars);
+	}
+
 	function print_summary($length = 0) {
 		global $current_user, $globals;
 
+		if (isset($_GET['haanga'])) {
+			return $this->print_summary_tpl($length);
+		}
+
 		if(!$this->read) $this->read(); 
+
 
 		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
 				$this->user_level == 'disabled';
@@ -353,7 +398,7 @@ class Post {
 			}
 		}
 		return $count;
-    }
+	}
 
 	function update_conversation() {
 		global $db, $globals;

@@ -109,9 +109,102 @@ class Comment {
 		return false;
 	}
 
+	function print_summary_tpl($link=0, $length=0, $single_link=true)
+	{
+		global $current_user, $globals;
+
+		if(!$this->read) return;
+
+		if (! $link && $this->link > 0) {
+			$link = new Link;
+			$link->id = $this->link;
+			$link->read();
+			$this->link_object = $link;
+		}
+		
+		if ($single_link) $html_id = $this->order;
+		else $html_id = $this->id;
+
+
+		/* pickup the correct css for comments */
+		if ($this->hidden || $this->ignored)  {
+			$this->comment_meta_class = 'comment-meta-hidden';
+			$this->comment_class = 'comment-body-hidden';
+		} else {
+			$this->comment_meta_class = 'comment-meta';
+			$this->comment_class = 'comment-body';
+			if ($this->type == 'admin') {
+				$this->comment_class .= ' admin';
+			} elseif ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
+				$this->comment_class .= ' high';
+			}
+		}
+
+		/* Get info about the comment and author */
+		$this->ignored		= ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
+		$this->hidden		 = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
+						|| ($this->user_level == 'disabled' && $this->type != 'admin');
+		$this->link_permalink =  $link->get_relative_permalink();
+		$this->hide_comment   = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+		$this->can_edit	   =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+		$this->can_vote 	  = $current_user->user_id > 0  && $this->author != $current_user->user_id  && $single_link && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->level != 'autodisabled';
+		$this->user_can_vote  = $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
+		$this->modified_time  = txt_time_diff($this->date, $this->modified);
+		$this->is_truncated   = FALSE;
+
+		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
+			$this->is_truncated = TRUE;
+			$this->content = preg_replace('/[&<\{]\w*$/', '', mb_substr($this->content, 0 , $length));
+			if (preg_match('/<\w+>/', $this->content)) {
+				$this->content = close_tags($this->content);
+			}
+			$this->content = preg_replace('/&\w*$|<\w{1,6}>([^<>]*)$/', "$1", mb_substr($this->content, 0 , $length));
+		}
+
+		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
+		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
+		$this->can_reply = $current_user->user_id > 0 && $globals['link'] && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
+
+		if ($this->type == 'admin') {
+			$author = '<strong>'._('admin').'</strong> ';
+			if ($current_user->admin) {
+				$author .= ' ('.$this->username.')';
+			}
+		} elseif ($single_link) {
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a>';
+		} else {
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
+		}
+
+		if ($this->modified > $this->date + 1) {
+			$edited = sprintf('<strong title="'. _('editado %s después').'">*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
+		} else $edited = '';
+
+		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
+			$this->avatar_img = get_avatar_url($this->author, $this->avatar, 20);
+		} else {
+			$this->avatar_img = get_no_avatar_url(20);
+		}
+
+		if ($globals['now'] - $this->date > 604800) {
+			$this->author_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
+		} else {
+			$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
+		}
+
+		$vars = array('self' => $this, 'html_id' => $html_id, 'single_link' => $single_link);
+
+		return Haanga::Load('comment_summary.html', $vars);
+	}
+
 
 	function print_summary($link = 0, $length = 0, $single_link=true) {
 		global $current_user, $globals;
+
+		if (isset($_GET['haanga'])) {
+			return $this->print_summary_tpl($link, $length, $single_link);
+		}
+		
 
 		if(!$this->read) return;
 
