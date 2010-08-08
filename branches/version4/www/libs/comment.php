@@ -125,6 +125,13 @@ class Comment {
 		else $html_id = $this->id;
 
 
+		/* Get info about the comment and author */
+		$this->link_permalink =  $link->get_relative_permalink();
+		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
+		$this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
+						|| ($this->user_level == 'disabled' && $this->type != 'admin');
+		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+
 		/* pickup the correct css for comments */
 		if ($this->hidden || $this->ignored)  {
 			$this->comment_meta_class = 'comment-meta-hidden';
@@ -139,13 +146,6 @@ class Comment {
 			}
 		}
 
-		/* Get info about the comment and author */
-		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
-		$this->hidden = ($globals['comment_highlight_karma'] > 0 && $this->karma < -$globals['comment_highlight_karma'])
-						|| ($this->user_level == 'disabled' && $this->type != 'admin');
-
-		$this->link_permalink =  $link->get_relative_permalink();
-		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
 
 		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
 
