@@ -295,12 +295,6 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 	// Check if the regexp must change, otherwise use the previous one
 	if (! $regexp || $p_hashtype != $hashtype || $p_do_links != $do_links) {
 		$p_hashtype = $hashtype; $p_do_links = $do_links;
-
-		/*
-		$regexp = '_[^\s<>_]+_\b';
-		$regexp .= '|\*[^\s<>]+\*';
-		$regexp .= '|\-([^\s<>]+)\-';
-		*/
 		$regexp = '';
 
 		if ($do_links) {
@@ -310,7 +304,7 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 		$globals['hashtype'] = $hashtype; // To pass the value to the callback
 		if ($hashtype) {
 			if ($do_links) $regexp .= '|';
-			$regexp .= '#\D[^\s\.\,\:\;\¡\!\)\-]{1,42}';
+			$regexp .= '#\D[^\s\.\,\:\;\¡\!\)\- ]{1,42}';
 		}
 		$regexp = '/([\s\(\[{¡;,:¿]|^)('.$regexp.')/Smu';
 	}
