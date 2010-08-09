@@ -85,176 +85,21 @@ function do_header($title, $id='home') {
 	header('Content-Type: text/html; charset=utf-8');
 	http_cache();
 
-
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
 		// http://www.hixie.ch/specs/pingback/pingback
 		header('X-Pingback: http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php');
 	}
 
-    $security_key = get_security_key();
+    $globals['security_key'] = get_security_key();
+    if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
+    $globals['uri'] = $_SERVER['REQUEST_URI'];
 
-    $vars = compact('globals', 'title', 'dblang', 'greetings', 'current_user', 'security_key','id');
-
-
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
-	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . "\n";
-	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
-	echo '<head>' . "\n";
-	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-	echo '<meta name="ROBOTS" content="NOARCHIVE" />'."\n";
-	echo "<title>$title</title>\n";
-
-	do_css_includes();
-
-	echo '<meta name="generator" content="meneame" />' . "\n";
-	if ($globals['noindex']) {
-		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
-	}
-	if ($globals['tags']) {
-		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
-	}
-	if ($globals['description']) {
-		echo '<meta name="description" content="'.$globals['description'].'" />' . "\n";
-	}
-	if ($globals['link']) {
-		echo '<link rel="pingback" href="http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php"/>'."\n";
-	}
-	echo '<link rel="microsummary" type="application/x.microsummary+xml" href="'.$globals['base_url'].'microsummary.xml" />' . "\n";
-	echo '<link rel="search" type="application/opensearchdescription+xml" title="'._("menéame search").'" href="http://'.get_server_name().$globals['base_url'].'opensearch_plugin.php"/>'."\n";
-
-	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
-	echo '<link rel="alternate" type="application/rss+xml" title="'._('pendientes').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php?status=queued" />'."\n";
-	echo '<link rel="alternate" type="application/rss+xml" title="'._('comentarios').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php" />'."\n";
-
-	if (! $globals['favicon']) $globals['favicon'] = 'img/favicons/favicon4.ico';
-	echo '<link rel="shortcut icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
-
-
-	do_js_includes();
-
-	if ($globals['thumbnail']) {
-		// WARN: It's assumed a thumbanil comes with base_url included
-    	$thumb = $globals['thumbnail'];
-	} else {
-		$thumb = 'http://'.get_static_server_name().$globals['base_url'].$globals['thumbnail_logo'];
-	}
-   	echo '<meta name="thumbnail_url" content="'.$thumb."\"/>\n";
-   	echo '<link rel="image_src" href="'.$thumb."\"/>\n";
-
-	if ($globals['extra_head']) echo $globals['extra_head'];
-
-	echo '</head>' . "\n";
-	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
-	echo '<div id="wrap">' . "\n";
-
-	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
-	echo '<ul id="headtools">' . "\n";
-
-	// Main search form
-	echo '<li class="searchbox">' . "\n";
-	echo '<form action="'.$globals['base_url'].'search.php" method="get" name="top_search">' . "\n";
-	echo '<img src="'.$globals['base_static'].'img/common/search-left-04.png" width="6" height="22" alt=""/>';
-	if (!empty($_REQUEST['q'])) {
-		echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['q']).'" />';
-	} else {
-		echo '<input name="q" value="'._('buscar').'..." type="text" onblur="if(this.value==\'\') this.value=\''._('buscar').'...\';" onfocus="if(this.value==\''._('buscar').'...\') this.value=\'\';"/>';
-	}
-	echo '<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="'._('buscar').'" src="'.$globals['base_static'].'img/common/search-04.png" id="submit_image" width="28" height="22"/></a>'."\n";
+	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
+	else $greeting = _('hola');
 	
-	if ($globals['search_options']) {
-		foreach ($globals['search_options'] as $name => $value) {
-			echo '<input type="hidden" name="'.$name.'" value="'.$value.'"/>'."\n";
-		}
-	}
-
-	echo '</form>';
-	echo '</li>' . "\n";
-	// form
-
-	echo '<li><a href="http://meneame.wikispaces.com/Comenzando">'._('ayuda').' <img src="'.$globals['base_static'].'img/common/help-bt-02.png" alt="help button" title="'._('ayuda').'" width="13" height="16" /></a></li>';
-	if ($current_user->admin) {
-		echo '<li><a href="'.$globals['base_url'].'admin/bans.php">admin <img src="'.$globals['base_static'].'img/common/tools-bt-02.png" alt="tools button" title="herramientas" width="16" height="16" /> </a></li>' . "\n";
-	}
-
-	if($current_user->authenticated) {
-		$randhello = array_rand($greetings, 1);
- 		echo '<li><a href="'.get_user_uri($current_user->user_login).'" title="'._('menéame te saluda en ').$greetings[$randhello].'">'.$randhello.'&nbsp;'.$current_user->user_login.'&nbsp;<img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'"/></a></li>' . "\n";
-  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('cerrar sesión').' <img src="'.$globals['base_static'].'img/common/logout-bt-02.png" alt="" title="logout" width="22" height="16" /></a></li>' . "\n";
-	} else {
-  		echo '<li><a href="'.$globals['base_url'].'register.php">' . _('registrarse') . ' <img src="'.$globals['base_static'].'img/common/register-bt-02.png" alt="" title="register" width="16" height="18" /></a></li>' . "\n";
-  		echo '<li><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').' <img src="'.$globals['base_static'].'img/common/login-bt-02.png" alt="" title="login" width="22" height="16" /></a></li>' . "\n";
-	}
-
-	//echo '<li><a href="'.$globals['base_url'].'faq-'.$dblang.'.php">' . _('acerca de menéame').'</a></li>' . "\n";
-
-	echo '</ul>' . "\n";
-	echo '</div>' . "\n";
-
-	echo '<div id="naviwrap">'."\n";
-	echo '<ul>'."\n";
-	echo '<li><a href="'.$globals['base_url'].'submit.php">'._('enviar noticia').'</a></li>'."\n";
-	echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('pendientes').'</a></li>'."\n";
-	echo '<li><a href="'.$globals['base_url'].'sneak.php">'._('fisgona').'</a></li>'."\n";
-	echo '<li><a href="'.$globals['base_url'].'notame/">'._('nótame').'</a></li>'."\n";
-	echo '</ul></div>'."\n";
-	do_banner_top();
-	echo '<div id="container">'."\n";
-}
-
-function do_css_includes() {
-	global $globals;
-
-	if ($globals['css_main']) {
-		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].$globals['css_main'].'"/>' . "\n";
-	}
-	if ($globals['css_color']) {
-		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].$globals['css_color'].'"/>' . "\n";
-	}
-	foreach ($globals['extra_css'] as $css) {
-		echo '<link rel="stylesheet" type="text/css" media="all" href="'.$globals['base_static'].'css/'.$css.'"/>' . "\n";
-	}
-	// IE6 hacks
-	echo '<!--[if lte IE 6]>'."\n";
-	echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/ie6-hacks.css" />'."\n";
-	echo '<![endif]-->'."\n";
-
-}
-
-function do_js_includes() {
-	global $globals, $current_user;
-
-	//echo '<script src="'.$globals['base_static'].'js/jquery-1.3.2.min.js" type="text/javascript"></script>' . "\n";
-	// See http://code.google.com/apis/ajaxlibs/documentation/#jquery
-	echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>' . "\n";
-	// Cache for Ajax
-	echo '<script src="'.$globals['base_url'].'js/'.$globals['js_main'].'" type="text/javascript" charset="utf-8"></script>' . "\n";
-	do_js_from_array($globals['extra_js']);
-	if ($globals['extra_js_text']) {
-		echo '<script type="text/javascript">'."\n";
-		echo $globals['extra_js_text']."\n";
-		echo '</script>'."\n";
-	}
-
-	echo '<script type="text/javascript">'."\n";
-	echo 'if(top.location != self.location)top.location = self.location;'."\n";
-	echo 'var base_key="'.get_security_key().'";'."\n";
-	echo '</script>'."\n";
-}
-
-function do_js_from_array($array) {
-	global $globals;
-
-	foreach ($array as $js) {
-		if (preg_match('/^http|^\//', $js)) {
-			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
-		} elseif (preg_match('/\.js$/', $js))  {
-			echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
-		} else {
-			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
-		}
-	}
+    $vars = compact('title', 'greeting', 'id');
+    return Haanga::Load('header.html', $vars);
 }
 
 function do_footer($credits = true) {

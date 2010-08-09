@@ -24,10 +24,10 @@
 // and/or "local.php"
 // They are automatically included
 //$globals['server_name']	= $_SERVER['HTTP_HOST'];
-$dblang			= 'es';
-$page_size		= 30;
-$anonnymous_vote = true;
-$external_ads = true;
+$globals['lang'] = $dblang	= 'es';
+$globals['page_size'] = $page_size	= 30;
+$globals['anonnymous_vote'] = $anonnymous_vote = true;
+$globals['external_ads'] = $external_ads = true;
 $globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
 $globals['ssl_server'] = False; //Secure server must have the same name and base
 //$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails from web, if not defined it uses server_name
@@ -260,7 +260,7 @@ $globals['enabled_tags'] = 'b|i|em|strong|strike'; // HTML tags allowed for comm
 
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
-$greetings = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
+$global['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
 		'apa'=>'catalán','com va'=>'catalán','va bé?'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
 		'aupa'=>'español','ieup'=>'vasco','gñap'=>'gñapés','aiya'=>'sindarin','hello'=>'inglés',
 		'uep com anam'=>'catalán','hey'=>'inglés','hi'=>'inglés','hunga hunga'=>'troglodita',
@@ -331,7 +331,6 @@ if (! $globals['basic_config'] ) {
 	@include($_SERVER['HTTP_HOST'].'-local.php');
 	@include($_SERVER['SERVER_ADDR'].'-local.php');
 
-	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
 
 	include mnminclude.'init.php';
 	include mnminclude.'utils.php';

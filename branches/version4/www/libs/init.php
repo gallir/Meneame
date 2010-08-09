@@ -1,6 +1,85 @@
 <?php
+// The source code packaged with this file is Free Software, Copyright (C) 2005-2010 by
+// Ricardo Galli <gallir at uib dot es>.
+// It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
+// You can get copies of the licenses here:
+// 		http://www.affero.org/oagpl.html
+// AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+
+// Basic initialization
+
+mb_internal_encoding('UTF-8');
 global $globals;
+$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+
+// Use proxy and load balancer detection
+if ($globals['check_behind_proxy']) {
+	$globals['user_ip'] = check_ip_behind_proxy();
+} elseif ($globals['behind_load_balancer']) {
+	$globals['user_ip'] = check_ip_behind_load_balancer();
+} else {
+	$globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
+}
+
+// Warn, we shoud printf "%u" because PHP on 32 bits systems fails with high unsigned numbers
+$globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
+
+$globals['now'] = time();
+$globals['cache-control'] = Array();
+
+
+// For PHP < 5
+if ( !function_exists('htmlspecialchars_decode') ) {
+	function htmlspecialchars_decode($text) {
+		return strtr($text, array_flip(get_html_translation_table(HTML_SPECIALCHARS)));
+	}
+}
+
+if($_SERVER['HTTP_HOST']) {
+	// Check bots
+	if (preg_match('/(bot|slurp|wget|libwww|\Wjava|\Wphp|wordpress)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
+		$globals['bot'] = true;
+	}
+
+	// Check mobile/TV versions
+	if (preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera Mini|\/MIDP|Portable|webOS/i', $_SERVER['HTTP_USER_AGENT'])) {
+		$globals['mobile'] = true;
+	}
+
+	// Check the user's referer.
+	if( !empty($_SERVER['HTTP_REFERER'])) {
+		if (preg_match('/http:\/\/'.preg_quote($_SERVER['HTTP_HOST']).'/', $_SERVER['HTTP_REFERER'])) {
+			$globals['referer'] = 'local';
+		} elseif (preg_match('/q=|search/', $_SERVER['HTTP_REFERER']) ) {
+			$globals['referer'] = 'search';
+		} else {
+			$globals['referer'] = 'remote';
+		}
+	} else {
+		$globals['referer'] = 'unknown';
+	}
+	
+	// Fill server names
+	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
+	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {
+		$globals['server_name'] = $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'];
+	} else {
+		$globals['server_name'] = $_SERVER['HTTP_HOST'] . $server_port;
+	}
+} else {
+	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
+}
+
+if (empty($globals['static_server_name'])) {
+	if ($globals['static_server']) $globals['static_server_name'] = preg_replace('/^http:\/\//', '', $globals['static_server']);
+	else $globals['static_server_name'] = $globals['server_name'];
+}
+
+// Votes' tags
+$globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
+
+
 // autoloaded clasess
 // Should be defined after mnminclude
 // and before de database

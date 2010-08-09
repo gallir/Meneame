@@ -45,8 +45,6 @@ $globals['html_main'] = 'html1-mobile.php';
 @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 
-$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
-
 include mnminclude.'init.php';
 include mnminclude.'utils.php';
 include mnminclude.'login.php';
