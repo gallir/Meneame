@@ -108,10 +108,10 @@ class Haanga
         foreach ($opts as $option => $value) {
             switch (strtolower($option)) {
             case 'cache_dir':
-                self::setCacheDir($value);
+        		self::$cache_dir = $value;
                 break;
             case 'template_dir':
-                self::setTemplateDir($value);
+        		self::$templates_dir = $value;
                 break;
             case 'bootstrap':
                 if (is_callable($value)) {
@@ -152,17 +152,18 @@ class Haanga
     }
     // }}}
 
-    // setCacheDir(string $dir) {{{
+    // checkCacheDir(string $dir) {{{
     /**
-     *  Set the directory where the compiled templates
+     *  Check the directory where the compiled templates
      *  are stored.
      *
      *  @param string $dir 
      *
      *  @return void
      */
-    public static function setCacheDir($dir)
+    public static function checkCacheDir()
     {
+        $dir = self::$cache_dir;
         if (!is_dir($dir)) { 
             $old = umask(0);
             if (!mkdir($dir, 0777, TRUE)) {
@@ -173,24 +174,6 @@ class Haanga
         if (!is_writable($dir)) {
             throw new Haanga_Exception("{$dir} can't be written");
         }
-        self::$cache_dir = $dir;
-    }
-    // }}}
-
-    // setTemplateDir(string $dir) {{{
-    /**
-     *  Set the directory where the templates are located.
-     *
-     *  @param string $dir
-     *
-     *  @return void
-     */
-    public static function setTemplateDir($dir)
-    {
-        if (!is_dir($dir)) {
-            throw new Haanga_Exception("{$dir} is not a valid directory");
-        }
-        self::$templates_dir = $dir;
     }
     // }}}
 
@@ -259,6 +242,7 @@ class Haanga
 
             /* recompile */
             if (!$compiler) {
+                self::checkCacheDir();
 
                 /* Load needed files (to avoid autoload as much as possible) */
                 $dir = dirname(__FILE__);
