@@ -85,6 +85,7 @@ function do_header($title, $id='home') {
 	header('Content-Type: text/html; charset=utf-8');
 	http_cache();
 
+
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
 		// http://www.hixie.ch/specs/pingback/pingback
@@ -100,6 +101,21 @@ function do_header($title, $id='home') {
 	
     $vars = compact('title', 'greeting', 'id');
     return Haanga::Load('header.html', $vars);
+}
+
+
+function do_js_from_array($array) {
+	global $globals;
+
+	foreach ($array as $js) {
+		if (preg_match('/^http|^\//', $js)) {
+			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
+		} elseif (preg_match('/\.js$/', $js))  {
+			echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
+		} else {
+			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
+		}
+	}
 }
 
 function do_footer($credits = true) {
