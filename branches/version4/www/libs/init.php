@@ -76,13 +76,14 @@ if (substr($globals['haanga_cache'], 0, 1) == '/') {
 	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
 }
 
-
+/*** Disabled, it's a little faster checking filetime directly
 if (is_callable('xcache_isset')) {
-	/* don't check for changes in the template for the next 5 min */
-	//$config['check_ttl'] = 300;
-	//$config['check_get'] = 'xcache_get';
-	//$config['check_set'] = 'xcache_set';
+	// don't check for changes in the template for the next 15 seconds
+	$config['check_ttl'] = 15;
+	$config['check_get'] = 'xcache_get';
+	$config['check_set'] = 'xcache_set';
 }
+*/
 
 require mnminclude.'Haanga.php';
 
