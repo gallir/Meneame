@@ -161,7 +161,7 @@ function do_credits() {
 		echo '<a href="'.$globals['base_url'].'COPYING">'._('código').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by-sa/2.5/">'._('gráficos').'</a>,&nbsp;';
 		echo '<a href="http://creativecommons.org/licenses/by/2.5/es/">'._('contenido').'</a></li>';
-		echo '<li><a href="http://websvn.meneame.net/listing.php?repname=meneame&amp;path=/branches/version3/">'._('descargar código').'</a></li>';
+		echo '<li><a href="http://websvn.meneame.net/listing.php?repname=meneame&amp;path=/branches/version4/">'._('descargar código').'</a></li>';
 	} else {
 		echo '<li>link to code and licenses here (please respect the menéame Affero license and publish your own code!)</li>';
 		echo '<li><a href="">contact here</a></li>';
