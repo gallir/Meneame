@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Length
 {
-    function generator($compiler, $args)
+    static function generator($compiler, $args)
     {
         if (Haanga_AST::is_str($args[0])) {
             return hexec('strlen', $args[0]);

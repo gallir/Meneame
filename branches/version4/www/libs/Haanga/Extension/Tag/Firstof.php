@@ -6,7 +6,7 @@ class Haanga_Extension_Tag_FirstOf
      *  firstof tag
      *
      */
-    function generator($cmp, $args)
+    static function generator($cmp, $args)
     {
         $count = count($args);
         $args  = array_reverse($args);

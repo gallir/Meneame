@@ -2,7 +2,7 @@
 %include {
 /*
   +---------------------------------------------------------------------------------+
-  | Copyright (c) 2010 Haanga                                                       |
+  | Copyright (c) 2010 César Rodas and Menéame Comunicacions S.L.                   |
   +---------------------------------------------------------------------------------+
   | Redistribution and use in source and binary forms, with or without              |
   | modification, are permitted provided that the following conditions are met:     |
@@ -40,13 +40,17 @@
 %declare_class { class Haanga_Compiler_Parser }
 %include_class {
     protected $lex;
-    function __construct($lex)
+    protected $file;
+
+    function __construct($lex, $file='')
     {
-        $this->lex = $lex;
+        $this->lex  = $lex;
+        $this->file = $file;
     }
 
-    function throwError($text)
+    function Error($text)
     {
+        throw new Compiler_Exception($text.' in '.$this->file.':'.$this->lex->getLine());
     }
 
 }
@@ -69,7 +73,7 @@
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    throw new Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
+    throw new Compiler_Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
 }
 
 
@@ -79,8 +83,8 @@ body(A) ::= body(B) code(C). { A=B; A[] = C; }
 body(A) ::= . { A = array(); }
 
 /* List of statements */
-code(A) ::= T_OPEN_TAG stmts(B). { A = B; }
-code(A) ::= T_HTML(B). { A = array('operation' => 'html', 'html' => B); }
+code(A) ::= T_OPEN_TAG stmts(B). { if (count(B)) B['line'] = $this->lex->getLine();  A = B; }
+code(A) ::= T_HTML(B). { A = array('operation' => 'html', 'html' => B, 'line' => $this->lex->getLine() ); }
 code(A) ::= T_COMMENT_OPEN T_COMMENT(B). { B=rtrim(B); A = array('operation' => 'comment', 'comment' => substr(B, 0, strlen(B)-2)); } 
 code(A) ::= T_PRINT_OPEN filtered_var(B) T_PRINT_CLOSE.  { A = array('operation' => 'print_var', 'variable' => B, 'line' => $this->lex->getLine() ); }
 
@@ -105,9 +109,9 @@ custom_tag(A) ::= T_CUSTOM_TAG(B) T_AS varname(C) T_CLOSE_TAG. { A = array('oper
 custom_tag(A) ::= T_CUSTOM_TAG(B) var_list(X) T_CLOSE_TAG. { A = array('operation' => 'custom_tag', 'name' => B, 'list' => X); }
 custom_tag(A) ::= T_CUSTOM_TAG(B) var_list(X) T_AS varname(C) T_CLOSE_TAG. { A = array('operation' => 'custom_tag', 'name' => B, 'as' => C, 'list' => X); }
 /* tags as blocks */
-custom_tag(A) ::= T_CUSTOM_BLOCK(B) T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('end'.B != C) { throw new Exception("Unexpected ".C); } A = array('operation' => 'custom_tag', 'name' => B, 'body' => X, 'list' => array());}
-custom_tag(A) ::= T_BUFFER varname(Y) T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('endbuffer' != C) { throw new Exception("Unexpected ".C); } A = array('operation' => 'buffer', 'name' => Y, 'body' => X);}
-custom_tag(A) ::= T_SPACEFULL T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('endspacefull' != C) { throw new Exception("Unexpected ".C); } A = array('operation' => 'spacefull', 'body' => X);}
+custom_tag(A) ::= T_CUSTOM_BLOCK(B) T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('end'.B != C) { $this->error("Unexpected ".C); } A = array('operation' => 'custom_tag', 'name' => B, 'body' => X, 'list' => array());}
+custom_tag(A) ::= T_BUFFER varname(Y) T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('endbuffer' != C) { $this->error("Unexpected ".C); } A = array('operation' => 'buffer', 'name' => Y, 'body' => X);}
+custom_tag(A) ::= T_SPACEFULL T_CLOSE_TAG body(X) T_OPEN_TAG T_CUSTOM_END(C) T_CLOSE_TAG. { if ('endspacefull' != C) { $this->error("Unexpected ".C); } A = array('operation' => 'spacefull', 'body' => X);}
 
 /* variable alias */
 alias(A) ::= T_WITH varname(B) T_AS varname(C) T_CLOSE_TAG body(X) T_OPEN_TAG T_ENDWITH T_CLOSE_TAG. { A = array('operation' => 'alias', 'var' => B, 'as' => C, 'body' => X); }
@@ -116,7 +120,7 @@ alias(A) ::= T_WITH varname(B) T_AS varname(C) T_CLOSE_TAG body(X) T_OPEN_TAG T_
 stmt(A) ::= regroup(B). { A = B; }
 stmt ::= T_LOAD string(B). {
     if (!is_file(B)) {
-        throw new Haanga_Compiler_Exception(B." is not a valid file"); 
+        $this->error(B." is not a valid file"); 
     } 
     require_once B;
 }

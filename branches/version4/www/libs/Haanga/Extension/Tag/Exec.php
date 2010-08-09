@@ -5,7 +5,7 @@ class Haanga_Extension_Tag_Exec
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $assign=NULL)
+    static function generator($cmp, $args, $assign=NULL)
     {
         if (!$cmp->getOption('allow_exec')) {
             throw new Haanga_Compiler_Exception("Tag exec is disabled for security reasons");

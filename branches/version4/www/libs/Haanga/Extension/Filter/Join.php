@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Join
 {
-    public function generator($compiler, $args)
+    public static function generator($compiler, $args)
     {
         if (count($args) == 1) {
             $args[1] = "";

@@ -8,7 +8,7 @@ class Haanga_Extension_Filter_Dictsort
      *  filter is included at rendering time, if you want 
      *  to see the generated version see tags/dictsort.php
      */
-    function main($array, $sort_by)
+    static function main($array, $sort_by)
     {
         $field = array();
         foreach ($array as $key => $item) {

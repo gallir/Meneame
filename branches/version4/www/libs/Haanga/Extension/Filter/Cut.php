@@ -16,7 +16,7 @@ Class Haanga_Extension_Filter_Cut
      *  or less django style).
      *  
      */
-    function generator($compiler, $args)
+    static function generator($compiler, $args)
     {
         return hexec('str_replace', $args[1], "", $args[0]);
     }

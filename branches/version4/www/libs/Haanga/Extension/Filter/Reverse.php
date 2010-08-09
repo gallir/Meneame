@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Reverse
 {
-    function generator($compiler, $args)
+    static function generator($compiler, $args)
     {
         if (count($args) != 1) {
             throw new Haanga_Compiler_Exception("Reverse only needs one parameter");

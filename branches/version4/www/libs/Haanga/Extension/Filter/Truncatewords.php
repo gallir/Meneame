@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Truncatewords
 {
-    function main($text, $limit)
+    static function main($text, $limit)
     {
         $words = explode(" ", $text, $limit+1);
         if (count($words) == $limit+1) {

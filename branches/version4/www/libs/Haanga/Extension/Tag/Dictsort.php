@@ -8,7 +8,7 @@ class Haanga_Extension_Tag_Dictsort
      *  property on each sub-array. , if you want 
      *  to see the original php file look filters/dictsort.php
      */
-    function generator($cmp, $args, $redirected)
+    static function generator($cmp, $args, $redirected)
     {
         if (!$redirected) {
             throw new Haanga_Compiler_Exception("dictsort must be redirected to a variable using AS <varname>");

@@ -1,7 +1,7 @@
 <?php
 /*
   +---------------------------------------------------------------------------------+
-  | Copyright (c) 2010 Haanga                                                       |
+  | Copyright (c) 2010 César Rodas and Menéame Comunicacions S.L.                   |
   +---------------------------------------------------------------------------------+
   | Redistribution and use in source and binary forms, with or without              |
   | modification, are permitted provided that the following conditions are met:     |
@@ -57,10 +57,10 @@ class Haanga_Compiler_Lexer
         $this->line     = 1;
     }
 
-    function init($template, $compiler)
+    static function init($template, $compiler, $file='')
     {
         $lexer  = new Haanga_Compiler_Lexer($template, $compiler);
-        $parser = new Haanga_Compiler_Parser($lexer);
+        $parser = new Haanga_Compiler_Parser($lexer, $file);
 
         $parser->compiler = $compiler;
 

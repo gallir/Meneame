@@ -13,16 +13,16 @@ class Haanga_Extension_Tag_Spaceless
     /**
      *  main() {{{
      *
-     *  This function contains the definition of spaceless
+     *  This static function contains the definition of spaceless
      *  tag, it is important not to refence to $compiler since it
      *  will copied and paste in the generated PHP code from the 
-     *  template as a function.
+     *  template as a static function.
      *
      *  It is also important to put the start and the end of the 
-     *  function in new lines.
+     *  static function in new lines.
      *
      *
-    static function main($html)
+    static static function main($html)
     {
         $regex = array(
             '/>[ \t\r\n]+</sU',
@@ -39,7 +39,7 @@ class Haanga_Extension_Tag_Spaceless
      *  calling Spaceless_Tag::main() at everytime.
      *
      */
-    function generator($compiler, $args)
+    static function generator($compiler, $args)
     {
         $regex = array('/>[ \t\r\n]+</sU','/^[ \t\r\n]+</sU','/>[ \t\r\n]+$/sU');
         $repl  = array('><', '<', '>');

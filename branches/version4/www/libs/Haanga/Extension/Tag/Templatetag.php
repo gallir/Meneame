@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Tag_Templatetag
 {
-    function generator($compiler, $args)
+    static function generator($compiler, $args)
     {
         if (count($args) != 1) {
             throw new Haanga_Compiler_Exception("templatetag only needs one parameter");

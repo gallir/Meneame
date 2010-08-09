@@ -4,7 +4,7 @@ class Haanga_Extension_Tag_Trans
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $rebuild)
+    static function generator($cmp, $args, $rebuild)
     {
         $code = hcode();
 

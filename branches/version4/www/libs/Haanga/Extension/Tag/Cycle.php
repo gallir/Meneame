@@ -4,7 +4,7 @@ class Haanga_Extension_Tag_Cycle
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $declared)
+    static function generator($cmp, $args, $declared)
     {
         static $cycle = 0;
         if (!isset($cmp->cycle)) {

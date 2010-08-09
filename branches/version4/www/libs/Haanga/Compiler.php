@@ -1,7 +1,7 @@
 <?php
 /*
   +---------------------------------------------------------------------------------+
-  | Copyright (c) 2010 Haanga                                                       |
+  | Copyright (c) 2010 César Rodas and Menéame Comunicacions S.L.                   |
   +---------------------------------------------------------------------------------+
   | Redistribution and use in source and binary forms, with or without              |
   | modification, are permitted provided that the following conditions are met:     |
@@ -206,11 +206,11 @@ class Haanga_Compiler
     // }}}
 
     // Compile ($code, $name=NULL) {{{
-    final function compile($code, $name=NULL)
+    final function compile($code, $name=NULL, $file=NULL)
     {
         $this->name = $name;
 
-        $parsed = Haanga_Compiler_Lexer::init($code, $this);
+        $parsed = Haanga_Compiler_Lexer::init($code, $this, $file);
         $code   = "";
         $this->subtemplate = FALSE;
 
@@ -294,12 +294,20 @@ class Haanga_Compiler
         if (!is_readable($file)) {
             throw new Haanga_Compiler_Exception("$file is not a file");
         }
+
+        if (count(self::$global_context) > 0) {
+            /* add global variables (if any) to the current context */
+            foreach (self::$global_context as $var) {
+                $context[$var] = &$GLOBALS[$var];
+            }
+        }
+
         $this->_base_dir      = dirname($file);
         $this->_file          = basename($file);
         $this->check_function = $safe;
         $this->context        = $context;
         $name                 = $this->set_template_name($file);
-        return $this->compile(file_get_contents($file), $name);
+        return $this->compile(file_get_contents($file), $name, $file);
     }
     // }}}
 
