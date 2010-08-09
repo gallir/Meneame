@@ -224,6 +224,10 @@ class Haanga_Compiler
             unset($parsed[0]);
         }
 
+        if (defined('HAANGA_VERSION')) {
+            $body->decl('HAANGA_VERSION', HAANGA_VERSION);
+        }
+
         if ($name) {
             $func_name = $this->get_function_name($name);
             if ($this->check_function) {

@@ -50,7 +50,7 @@
 
     function Error($text)
     {
-        throw new Compiler_Exception($text.' in '.$this->file.':'.$this->lex->getLine());
+        throw new Haanga_Compiler_Exception($text.' in '.$this->file.':'.$this->lex->getLine());
     }
 
 }
@@ -73,7 +73,7 @@
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    throw new Compiler_Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
+    throw new Haanga_Compiler_Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
 }
 
 

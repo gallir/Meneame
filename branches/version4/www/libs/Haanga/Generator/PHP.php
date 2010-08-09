@@ -515,7 +515,11 @@ class Haanga_Generator_PHP
      */
     protected function php_print($op)
     {
-        return 'echo '.$this->php_generate_stmt($op).';';
+        $output = $this->php_generate_stmt($op);
+        if ($output == "' '" && Haanga_Compiler::getOption('strip_whitespace')) {
+            return; /* ignore this */
+        }
+        return 'echo '.$output.';';
     }
     // }}}
 

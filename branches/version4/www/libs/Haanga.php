@@ -35,6 +35,8 @@
   +---------------------------------------------------------------------------------+
 */
 
+define('HAANGA_VERSION', '1.1.2');
+
 
 /**
  *  Haanga Runtime class
@@ -296,6 +298,11 @@ class Haanga
 
         if (!is_callable($callback)) {
             require $php;
+        }
+
+        if (!isset($HAANGA_VERSION) || $HAANGA_VERSION != HAANGA_VERSION) {
+            touch($php, 300, 300);
+            chmod($php, 0777);
         }
 
         return $callback($vars, $return, $blocks);
