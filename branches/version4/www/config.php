@@ -333,7 +333,6 @@ if (! $globals['basic_config'] ) {
 
 
 	include mnminclude.'init.php';
-	include mnminclude.'utils.php';
 	include mnminclude.'login.php';
 
 	// For production servers

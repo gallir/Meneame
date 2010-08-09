@@ -46,7 +46,6 @@ $globals['html_main'] = 'html1-mobile.php';
 
 
 include mnminclude.'init.php';
-include mnminclude.'utils.php';
 include mnminclude.'login.php';
 
 // For production servers
