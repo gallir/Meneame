@@ -35,6 +35,18 @@
   +---------------------------------------------------------------------------------+
 */
 
+// addslashes_ex($string) {{{
+/**
+ *  addslashes like function for single quote string ('foo')
+ *
+ *  @return string
+ */
+function addslashes_ex($string)
+{
+    return str_replace("'", "\\'", $string);
+}
+// }}}
+
 /**
  *  Haanga_Generator_PHP class
  *
@@ -436,7 +448,7 @@ class Haanga_Generator_PHP
                 } else {
                     $code .= "'";
                 }
-                $html = str_replace("'", "\\'", $value);
+                $html = addslashes_ex($value);
                 //$html  = addslashes($value);
                 //$html  = str_replace(array('$', "\r", "\t", "\n","\\'"), array('\\$', '\r', '\t', '\n',"'"), $html);
                 $code .= $html."'";
@@ -554,14 +566,14 @@ class Haanga_Generator_PHP
             $var_str = $this->php_get_varname($var[0]);
             for ($i=1; $i < count($var); $i++) {
                 if (is_string($var[$i])) {
-                    $var_str .= '["'.$var[$i].'"]';
+                    $var_str .= "['".addslashes_ex($var[$i])."']";
                 } else if (is_array($var[$i])) {
                     if (isset($var[$i]['var'])) {
                         /* index is a variable */
                         $var_str .= '['.$this->php_get_varname($var[$i]['var']).']';
                     } else if (isset($var[$i]['string'])) {
                         /* index is a string */
-                        $var_str .= '["'.addslashes($var[$i]['string']).'"]';
+                        $var_str .= "['".addslashes_ex($var[$i]['string'])."']";
                     } else if (isset($var[$i]['number'])) {
                         /* index is a number */
                         $var_str .= '['.$var[$i]['number'].']';

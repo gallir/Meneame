@@ -877,9 +877,6 @@ class Haanga_Compiler
 
         if (self::$strip_whitespace && Haanga_AST::is_str($stmt)) {
             $stmt['string'] = preg_replace('/\s+/', ' ', $stmt['string']); 
-            if (trim($stmt['string']) == "") {
-                return; /* avoid whitespaces */
-            }
         }
 
         if ($this->ob_start == 0) {
