@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{globals.lang}}" lang="{{globals.lang}}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="ROBOTS" content="NOARCHIVE" />
+<title>{{title}}</title>
+
+
+{% if globals.css_main %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>
+{% endif %}
+
+{% if globals.css_color %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}"/>
+{% endif %}
+
+{% for css in globals.extra_css %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
+{% endfor %}
+
+<!--[if lte IE 6]>
+<link rel="stylesheet" type="text/css" media="screen" href="{{globals.base_static}}css/ie6-hacks.css" />
+<![endif]-->
+
+<meta name="generator" content="meneame" />
+
+{% if global.noindex %}
+	<meta name="robots" content="noindex,follow"/>
+{% endif %}	
+
+{% if globals.tags %}
+	<meta name="keywords" content="{{globals.tags}}" />
+{% endif %}
+
+{% if globals.description %}
+	<meta name="description" content="{{globals.description}}" />
+{% endif %}
+
+{% if globals.link %}
+	<link rel="pingback" href="http://{{globals.server_name}}{{globals.base_url}}xmlrpc.php"/>
+{% endif %}
+
+<link rel="microsummary" type="application/x.microsummary+xml" href="{{globals.base_url}}microsummary.xml" />
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{globals.base_url}}opensearch_plugin.php"/>
+<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php?status=queued" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{globals.base_url}}comments_rss2.php" />
+
+{% if globals.favicon %}
+	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+{% else %}
+	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
+{% endif %}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
+<script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+
+{% for js in globals.extra_js %}
+	<script src="{{globals.base_static}}js/{{js}}" type="text/javascript"></script>
+{% endfor %}
+
+{% if globals.extra_js_text %}
+	<script type="text/javascript">
+	{{globals.extra_js_text}}
+	</script>
+{% endif %}
+
+<script type="text/javascript">
+if(top.location != self.location)top.location = self.location;
+var base_key="{{globals.security_key}}";
+</script>
+
+{% if globals.thumbnail %}
+	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
+{% else %}
+	<meta name="thumbnail_url" content="http://{{globals.static_server_name}}{{globals.base_url}}{{globals.thumbnail_logo}}"/>
+{% endif %}
+
+{% if globals.extra_head %}
+	{{ globals.extra_head}}
+{% endif %}
+
+</head>
+<body id="{{id}}" "{{globals.body_args}}">
+<div id="wrap">
+<div id="header">
+<a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
+<ul id="headtools">
+
+<li class="searchbox">
+<form action="{{globals.base_url}}search.php" method="get" name="top_search">
+<img src="{{globals.base_static}}img/common/search-left-04.png" width="6" height="22" alt=""/>
+{% if globals.q %}
+	<input type="text" name="q" value="{{globals.q|escape}}" />
+{% else %}
+	<input name="q" value="{% trans _('buscar')%}..." type="text" onblur="if(this.value=='') this.value='{% trans _('buscar')%}...';" onfocus="if(this.value=='{% trans _('buscar')%}...') this.value='';"/>
+{% endif %}
+
+<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="{% trans _('buscar')%}" src="{{globals.base_static}}img/common/search-04.png" id="submit_image" width="28" height="22"/></a>
+
+{% if globals.search_options %}
+	{% for name, value in globals.search_options %}
+		<input type="hidden" name="{{name}}" value="{{value}}"/>
+	{% endfor %}
+{% endif %}
+
+</form>
+</li>
+
+<li><a href="http://meneame.wikispaces.com/Comenzando">{% trans _('ayuda')%} <img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help button" title="{% trans _('ayuda') %}" width="13" height="16" /></a></li>
+{% if current_user.admin %}
+	<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('herramientas')%}" width="16" height="16" /> </a></li>
+{% endif %}
+
+{% if current_user.authenticated %}
+	<li><a href="{% exec get_user_uri current_user.user_login %}" title="{% trans _('menéame te saluda en') %}  {{greeting}}">{{greeting}}&nbsp;{{current_user.user_login}}&nbsp;<img src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
+	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="" title="logout" width="22" height="16" /></a></li>
+{% else %}
+	<li><a href="{{globals.base_url}}register.php"> {% trans _('registrarse') %} <img src="{{globals.base_static}}img/common/register-bt-02.png" alt="" title="register" width="16" height="18" /></a></li>
+	<li><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="" title="login" width="22" height="16" /></a></li>
+{% endif %}
+
+</ul></div>
+
+<div id="naviwrap">
+<ul>
+<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar noticia') %}</a></li>
+<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
+<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
+<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
+</ul></div>
+{% exec do_banner_top as foo%}
+<div id="container">
