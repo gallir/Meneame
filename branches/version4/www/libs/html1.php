@@ -79,7 +79,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals, $greetings;
+	global $current_user, $dblang, $globals;
 
 	check_auth_page();
 	header('Content-Type: text/html; charset=utf-8');
@@ -612,14 +612,22 @@ function do_best_comments() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users  where link_date > '$link_min_date' and comment_date > '$min_date' and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id order by value desc limit 12");
 	if ($res) {
-		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.$globals['base_url'].'topcomments.php">'._('mejores comentarios').'</a></h4></div><div class="comments"><ul>'."\n";
+		$objects = array();
+		$title = _('mejores comentarios');
+		$url = $globals['base_url'].'topcomments.php';
 		foreach ($res as $comment) {
-			$foo->id = $comment->comment_id;
-			$link = $foo->get_relative_individual_permalink();
-			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
-			$output .= '<p><strong>'.$comment->user_login.'</strong> '._('en').' <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$link.'">'.$comment->link_title.'</a></p></li>'."\n";
+			$obj = new stdClass();
+			$obj->id = $foo->id = $comment->comment_id;
+			$obj->link = $foo->get_relative_individual_permalink();
+			$obj->user_id = $comment->user_id;
+			$obj->avatar = $comment->user_avatar;
+			$obj->title = $comment->link_title;
+			$obj->username = $comment->user_login;
+			$obj->tooltip = 'get_comment_tooltip.php';
+			array_push($objects, $obj);
 		}
-		$output .= '</ul></div></div>';
+		$vars = compact('objects', 'title', 'url');
+		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 300);
 	}
@@ -648,14 +656,22 @@ function do_best_story_comments($link) {
 	$limit = min(15, intval($link->comments/5));
 	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
 	if ($res) {
-		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.$link->get_relative_permalink().'/best-comments">'._('mejores comentarios').'</a></h4></div><div class="comments"><ul>'."\n";
+		$objects = array();
+		$title = _('mejores comentarios');
+		$url = $link->get_relative_permalink().'/best-comments';
 		foreach ($res as $comment) {
-			$url = $link->get_relative_permalink().'/000'.$comment->comment_order;
-			$comment->content = text_to_summary($comment->content, 75);
-			$output .= '<li><img src="'.get_avatar_url($comment->user_id, $comment->user_avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
-			$output .= '<p><strong>'.$comment->user_login.':</strong> <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$comment->comment_id.'\', 10000);" href="'.$url.'"><em>'.text_to_summary($comment->content, 60).'</em></a></p></li>'."\n";
+			$obj = new stdClass();
+			$obj->id = $comment->comment_id;
+			$obj->link = $link->get_relative_permalink().'/000'.$comment->comment_order;
+			$obj->user_id = $comment->user_id;
+			$obj->avatar = $comment->user_avatar;
+			$obj->title = text_to_summary($comment->content, 75);
+			$obj->username = $comment->user_login;
+			$obj->tooltip = 'get_comment_tooltip.php';
+			array_push($objects, $obj);
 		}
-		$output .= '</ul></div></div>';
+		$vars = compact('objects', 'title', 'url');
+		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
 		if($do_cache) {
 			memcache_madd($key, $output, 300);
@@ -776,15 +792,25 @@ function do_best_posts() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
 	if ($res) {
-		$output .= '<div class="sidebox"><div class="header"><h4><a href="'.post_get_base_url('_best').'">'._('mejores notas').'</a></h4></div><div class="comments"><ul>'."\n";
+		$objects = array();
+		$title = _('mejores notas');
+		$url = post_get_base_url('_best');
 		foreach ($res as $p) {
+			$obj = new stdClass();
 			$post = new Post;
 			$post->id = $p->post_id;
 			$post->read();
-			$output .= '<li><img src="'.get_avatar_url($post->author, $post->avatar, 20).'" alt="" width="20" height="20" class="avatar"/>';
-			$output .= '<p><strong>'.$post->username.'</strong>: <a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_post_tooltip.php\', \''.$post->id.'\', 10000);" href="'.post_get_base_url($post->username).'/'.$post->id.'"><em>'.text_to_summary($post->clean_content(), 80).'</em></a></p></li>'."\n";
+			$obj->id = $post->id;
+			$obj->link = post_get_base_url($post->username).'/'.$post->id;
+			$obj->user_id = $post->author;
+			$obj->avatar = $post->avatar;
+			$obj->title = text_to_summary($post->clean_content(), 80);
+			$obj->username = $post->username;
+			$obj->tooltip = 'get_post_tooltip.php';
+			array_push($objects, $obj);
 		}
-		$output .= '</ul></div></div>';
+		$vars = compact('objects', 'title', 'url');
+		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 300);
 	}
