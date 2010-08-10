@@ -687,8 +687,6 @@ function do_best_stories() {
 	$key = 'best_stories_'.$globals['css_main'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
 
-	$foo_link = new Link();
-
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title = sprintf(_('populares de «%s»'), $globals['meta_current_name']);
@@ -696,31 +694,27 @@ function do_best_stories() {
 		$category_list  = '';
 		$title = _('populares');
 	}
-	$output = '<div class="sidebox"><div class="header"><h4><a href="'.$globals['base_url'].'topstories.php">'.$title.'</a></h4></div>';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours 
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
+		$links = array();
 		$link = new Link();
 		foreach ($res as $l) {
-			$output .= '<div class="cell">';
-			$link->id = $l->link_id;
-			$link->read();
-			$url = $link->get_relative_permalink();
-			$thumb = $link->has_thumb();
-			$output .= '<div class="votes">'.($link->votes+$link->anonymous).'</div>';
-			if ($thumb) {
+			$link = Link::from_db($l->link_id);
+			$link->url = $link->get_relative_permalink();
+			$link->thumb = $link->has_thumb();
+			$link->total_votes = $link->votes+$link->anonymous;
+			if ($link->thumb) {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
-				$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 			}
-			$output .= '<h5><a href="'.$url.'">'.$link->title.'</a></h5>';
-			$output .= '</div>'; // class="cell";
-
+			array_push($links, $link);
 		}
-		$output .= '</div>'."\n";
+		$vars = compact('links', 'title');
+		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
 	}
