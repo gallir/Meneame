@@ -482,8 +482,9 @@ function do_vertical_tags($what=false) {
 
 	$res = $db->get_results("select lower(tag_words) as word, count(*) as count $from_where order by count desc limit 20");
 	if ($res) {
-		$output = '<div class="sidebox">';
-		$output .= '<div class="header"><h4><a href="'.$globals['base_url'].'cloud.php">'._('etiquetas').'</a></h4></div><div class="cell"><p class="tagcloud">'."\n";
+		$url = $globals['base_url'].'cloud.php';
+		$title = _('etiquetas');
+		$content = '';
 		foreach ($res as $item) {
 			$words[$item->word] = $item->count;
 			if ($item->count > $max) $max = $item->count;
@@ -493,15 +494,16 @@ function do_vertical_tags($what=false) {
 		foreach ($words as $word => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$op = round(0.4 + 0.6*$count/$max, 2);
-			$output .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
+			$content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
 			if ($globals['base_search_url']) {
-				$output .= $globals['base_url'].$globals['base_search_url'].'tag:';
+				$content .= $globals['base_url'].$globals['base_search_url'].'tag:';
 			} else {
-				$output .= $globals['base_url'].'search.php?p=tags&amp;q=';
+				$content .= $globals['base_url'].'search.php?p=tags&amp;q=';
 			}
-			$output .= urlencode($word).'">'.$word.'</a>  ';
+			$content .= urlencode($word).'">'.$word.'</a>  ';
 		}
-		$output .= '</p></div></div>';
+		$vars = compact('content', 'title', 'url');
+		$output = Haanga::Load('tags_sidebox.html', $vars, true);
 		echo $output;
 		memcache_madd($cache_key, $output, 600);
 	}
@@ -537,8 +539,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 		if ($what == 'queued') $page = $globals['base_url'].'shakeit.php?category=';
 		else  $page = $globals['base_url'].'?category=';
 
-		$output = '<div class="sidebox">';
-		$output .= '<div class="header"><h4>'._('categorías populares').'</h4></div><div class="cell"><p class="tagcloud">'."\n";
+		$title = _('categorías populares');
 
 		$counts = array();
 		$names = array();
@@ -557,9 +558,10 @@ function do_categories_cloud($what=false, $hours = 48) {
 			$count = $counts[$id];
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$op = round(0.3 + 0.7*$count/$max, 2);
-			$output .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="'.$page.$id.'">'.$name.'</a> ';
+			$content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="'.$page.$id.'">'.$name.'</a> ';
 		}
-		$output .= '</p></div></div>';
+		$vars = compact('content', 'title', 'url');
+		$output = Haanga::Load('tags_sidebox.html', $vars, true);
 		echo $output;
 		memcache_madd($cache_key, $output, 600);
 	}

@@ -1,0 +1,19 @@
+<div class="sidebox">
+
+<div class="header">
+<h4>
+{% if url %}
+<a href="{{url}}">{{title}}</a>
+{% else %}
+{{title}}
+{% endif %}
+</h4>
+
+</div>
+<div class="cell">
+<p class="tagcloud">
+{{ content }}
+</p>
+</div>
+
+</div>
