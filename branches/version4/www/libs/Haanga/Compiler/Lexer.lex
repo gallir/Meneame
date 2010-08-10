@@ -103,7 +103,7 @@ class Haanga_Compiler_Lexer
 %line           $this->line
 alpha           = /([a-zA-Z_][a-zA-Z_0-9]*)/
 number          = /[0-9]/
-numerals        = /([0-9])+/
+numerals        = /[0-9]+(\.[0-9]+)?/
 whitespace      = /[ \r\t\n]+/
 html            = /([^{]+(.[^%{#])?)+/
 comment         = /([^\#]+\#\})+/

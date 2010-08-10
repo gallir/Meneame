@@ -757,7 +757,7 @@ class Haanga_Compiler
         $this->context[$varname] = $value;
     }
 
-    function var_is_object(Array $variable)
+    function var_is_object(Array $variable, $default=NULL)
     {
         $varname = $variable[0];
         switch ($varname) {
@@ -800,7 +800,7 @@ class Haanga_Compiler
             return $type;
         }
 
-        return self::$dot_as_object;
+        return $default===NULL ? self::$dot_as_object : $default;
     }
     // }}} 
 
@@ -908,6 +908,15 @@ class Haanga_Compiler
         $oldid       = $this->forid;
         $this->forid = $oldid+1;
         $this->forloop[$this->forid] = array();
+
+        /* Check if the array to iterate is an object */
+        $var = &$details['array'][0];
+        if (is_string($var) && $this->var_is_object(array($var), FALSE)) {
+            /* It is an object, call to get_object_vars */
+            $body->decl($var.'_arr', hexec('get_object_vars', hvar($var)));
+            $var .= '_arr';
+        }
+        unset($var);
 
         /* variables */
         $array = $this->get_filtered_var($details['array'], $varname);
