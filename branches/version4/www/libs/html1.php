@@ -701,6 +701,7 @@ function do_best_stories() {
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
 	if ($res) {
 		$links = array();
+		$url = $globals['base_url'].'topstories.php';
 		$link = new Link();
 		foreach ($res as $l) {
 			$link = Link::from_db($l->link_id);
@@ -711,9 +712,10 @@ function do_best_stories() {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
+			if ($link->negatives >= $link->votes/10) $link->warn = true;
 			array_push($links, $link);
 		}
-		$vars = compact('links', 'title');
+		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
@@ -724,8 +726,6 @@ function do_best_queued() {
 	global $db, $globals, $dblang;
 
 	if ($globals['mobile']) return;
-
-	$foo_link = new Link();
 
 	$key = 'best_queued_'.$globals['css_main'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
@@ -738,36 +738,29 @@ function do_best_queued() {
 		$title = _('candidatas');
 	}
 
-	$output = '<div class="sidebox"><div class="header"><h4><a href="'.$globals['base_url'].'promote.php">'.$title.'</a></h4></div>';
-
+	
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*4); // 4 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");
 	if ($res) {
+		$url = $globals['base_url'].'promote.php';
+		$links = array();
 		$link = new Link();
 		foreach ($res as $l) {
-			$output .= '<div class="cell">';
-			$link->id = $l->link_id;
-			$link->read();
-			$url = $link->get_relative_permalink();
-			$output .= '<div class="votes queued">'.($link->votes+$link->anonymous).'</div>';
-			if ($link->negatives >= $link->votes/10) {
-				// add the warn icon if it has 10% negatives
-				$warn = 'style="padding-left:20px;background: url(../../img/common/error_s.png) no-repeat left center"';
-			} else {
-				$warn = '';
-				// Show the thumbnail only if it has less than 10% negatives
-				if (($thumb = $link->has_thumb())) {
-					$link->thumb_x = round($link->thumb_x / 2);
-					$link->thumb_y = round($link->thumb_y / 2);
-					$output .= "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
-				}
+			$link = Link::from_db($l->link_id);
+			$link->url = $link->get_relative_permalink();
+			$link->thumb = $link->has_thumb();
+			$link->total_votes = $link->votes+$link->anonymous;
+			if ($link->thumb) {
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
 			}
-			$output .= '<h5 '.$warn.'><a href="'.$url.'">'.$link->title.'</a></h5>';
-			$output .= '</div>'; // class="cell";
+			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			array_push($links, $link);
 		}
-		$output .= '</div>'."\n";
+		$vars = compact('links', 'title', 'url');
+		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
 	}
