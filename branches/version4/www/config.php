@@ -260,7 +260,7 @@ $globals['enabled_tags'] = 'b|i|em|strong|strike'; // HTML tags allowed for comm
 
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
-$global['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
+$globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
 		'apa'=>'catalán','com va'=>'catalán','va bé?'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
 		'aupa'=>'español','ieup'=>'vasco','gñap'=>'gñapés','aiya'=>'sindarin','hello'=>'inglés',
 		'uep com anam'=>'catalán','hey'=>'inglés','hi'=>'inglés','hunga hunga'=>'troglodita',
