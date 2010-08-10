@@ -25,7 +25,9 @@ echo "<title>"._('fisgona')." // " . _('menéame') ." </title>\n";
 echo '<meta name="generator" content="meneame" />' . "\n";
 echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/es/telnet.css" />' . "\n";
 echo '<link rel="icon" href="'.$globals['base_static'].'img/common/konsole.png" type="image/x-icon" />' . "\n";
-do_js_includes();
+echo '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>' . "\n";
+    // Cache for Ajax
+echo '<script src="'.$globals['base_url'].'js/'.$globals['js_main'].'" type="text/javascript" charset="utf-8"></script>' . "\n";
 echo '</head>' . "\n";
 echo "<body>\n";
 
