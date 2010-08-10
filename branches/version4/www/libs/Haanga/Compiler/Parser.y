@@ -127,12 +127,27 @@ stmt ::= T_LOAD string(B). {
 
 /* FOR loop */
 for_def(A) ::= T_FOR varname(B) T_IN filtered_var(C) T_CLOSE_TAG . {
-    $this->compiler->set_context(B, array());
+    /* Try to get the variable */
+    $var = $this->compiler->get_context(is_array(C[0]) ? C[0] : array(C[0]));
+    if (is_array($var)) {
+        /* let's check if it is an object or array */
+        $this->compiler->set_context(B, current($var));
+    } else {
+        $this->compiler->set_context(B, array());
+    }
+
     A = array('operation' => 'loop', 'variable' => B, 'index' => NULL, 'array' => C);
 }
 
 for_def(A) ::= T_FOR varname(I) T_COMMA varname(B) T_IN filtered_var(C) T_CLOSE_TAG . {
-    $this->compiler->set_context(B, array());
+    /* Try to get the variable */
+    $var = $this->compiler->get_context(is_array(C[0]) ? C[0] : array(C[0]));
+    if (is_array($var)) {
+        /* let's check if it is an object or array */
+        $this->compiler->set_context(B, current($var));
+    } else {
+        $this->compiler->set_context(B, array());
+    }
     A = array('operation' => 'loop', 'variable' => B, 'index' => I, 'array' => C);
 }
 

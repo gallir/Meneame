@@ -757,6 +757,33 @@ class Haanga_Compiler
         $this->context[$varname] = $value;
     }
 
+    function get_context(Array $variable)
+    {
+        $varname = $variable[0];
+        if (isset($this->context[$varname])) {
+            if (count($variable) == 1) {
+                return $this->context[$varname];
+            }
+            $var = & $this->context[$varname];
+            foreach ($variable as $id => $part) {
+                if ($id != 0) {
+                    if (is_array($part) && isset($part['object'])) {
+                        $var = &$var->$part['object'];
+                    } else if (is_object($var)) {
+                        $var = &$var->$part;
+                    } else {
+                        $var = &$var[$part];
+                    }
+                }
+            }
+            $variable = $var;
+            unset($var);
+            return $variable;
+        }
+
+        return NULL;
+    }
+
     function var_is_object(Array $variable, $default=NULL)
     {
         $varname = $variable[0];
@@ -776,28 +803,7 @@ class Haanga_Compiler
         }
 
         if (isset($this->context[$varname])) {
-            if (count($variable) == 1) {
-                return is_object($this->context[$varname]);
-            }
-            $var = & $this->context[$varname];
-            foreach ($variable as $id => $part) {
-                if ($id != 0) {
-                    if (is_array($part) && isset($part['object'])) {
-                        $var = &$var->$part['object'];
-                    } else if (is_object($var)) {
-                        $var = &$var->$part;
-                    } else {
-                        $var = &$var[$part];
-                    }
-                }
-            }
-
-            $type = is_object($var);
-
-            /* delete reference */
-            unset($var);
-
-            return $type;
+            return is_object($this->get_context($variable));
         }
 
         return $default===NULL ? self::$dot_as_object : $default;
@@ -925,6 +931,8 @@ class Haanga_Compiler
         if ($this->is_safe(hvar($varname))) {
             $this->set_safe(hvar($details['variable']));
         }
+
+        /* check if the elements in the array is an array or object */
 
         $for_body = hcode();
         $this->generate_op_code($details['body'], $for_body);
