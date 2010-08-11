@@ -34,7 +34,11 @@
 
 
 {% for js in globals.post_js %}
-	<script src="{{globals.base_static}}js/{{js}}" type="text/javascript"></script>
+	{% if js|substr:"0, 4" == 'http' %}
+		<script src="{{js}}" type="text/javascript"></script>
+	{% else %}
+		<script src="{{globals.base_static}}js/{{js}}" type="text/javascript"></script>
+	{% endif %}
 {% endfor %}
 	
 {# warn warn warn 
