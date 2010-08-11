@@ -767,6 +767,28 @@ class Link {
 		return geo_latlng('link', $this->id);
 	}
 
+	function print_content_type_buttons() {
+		// Is it an image or video?
+		switch ($this->content_type) {
+			case 'image':
+			case 'video':
+			case 'text':
+				$type[$this->content_type] = 'checked="checked"';
+				break;
+			default:
+				$type['text'] = 'checked="checked"';
+		}
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<input type="radio" '.$type['text'].' name="type" value="text"/>';
+		echo '&nbsp;'._('texto').'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		echo '<input type="radio" '.$type['image'].' name="type" value="image"/>';
+		echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		echo '<input type="radio" '.$type['video'].' name="type" value="video"/>';
+		echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._('¿es un vídeo?').'" title="'._('¿es un vídeo?').'" />';
+	}
+
 	function read_content_type_buttons($type) {
 		switch ($type) {
 			case 'image':
