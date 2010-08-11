@@ -4,7 +4,7 @@ class Haanga_Extension_Tag_MeneameEndtime
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $assign=NULL)
+    static function generator($cmp, $args, $assign=NULL)
     {
         /* abs */
         $code = hcode();
@@ -25,7 +25,7 @@ class Haanga_Extension_Tag_GetURL
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $assign=NULL)
+    static function generator($cmp, $args, $assign=NULL)
     {
         $code = hcode();
 
@@ -56,7 +56,7 @@ class Haanga_Extension_Tag_GetStaticURL
 {
     public $is_block = FALSE;
 
-    function generator($cmp, $args, $assign=NULL)
+    static function generator($cmp, $args, $assign=NULL)
     {
         $code = hcode();
         if ($assign) {
