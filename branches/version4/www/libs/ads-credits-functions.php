@@ -13,10 +13,6 @@
 *****/
 
 
-if (preg_match('/meneame.net$/', get_server_name())) {
-	$globals['is_meneame']  = true;
-}
-
 function do_banner_top () { // top banner
 	global $globals, $dblang, $current_user;
 //
@@ -93,43 +89,6 @@ function do_legal($legal_name, $target = '', $show_abuse = true) {
 	// IMPORTANT: read above
 }
 
-function do_footer_help() {
-	global $globals;
-	if (! $globals['is_meneame']) return;
-	echo '<h5>ayuda</h5>'."\n";
-	echo '<ul id="helplist">'."\n";
-	echo '<li><a href="'.$globals['base_url'].'faq-es.php">'._('faq').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.wikispaces.com/Ayuda">'._('ayuda').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.wikispaces.com/">'._('wiki').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.wikispaces.com/Bugs">'._('avisar errores').'</a></li>'."\n";
-	echo '<li><a href="'.$globals['legal'].'#contact">'._('avisar abusos').'</a></li>'."\n";
-	echo '</ul>'."\n";
-}
-
-function do_footer_plus_meneame() {
-	global $globals;
-	if (! $globals['is_meneame']) return;
-	echo '<h5>+menéame</h5>'."\n";
-	echo '<ul id="moremenelist">'."\n";
-	echo '<li><a href="http://m.meneame.net/">'._('versión móvil').'</a></li>'."\n";
-	echo '<li><a href="http://tv.meneame.net/">'._('menéame TV').'</a></li>'."\n";
-	echo '<li><a href="http://twitter.com/meneame_net">'._('síguenos en twitter').'</a></li>'."\n";
-	echo '<li><a href="http://meneame.jaiku.com/">'._('síguenos en jaiku').'</a></li>'."\n";
-	echo '<li><a href="/notame/">'._('nótame').'</a></li>'."\n";
-	echo '<li><a href="http://blog.meneame.net/">'._('blog').'</a></li>'."\n";
-	echo '</ul>'."\n";
-}
-
-function do_footer_shop() {
-	global $globals;
-	if (! $globals['is_meneame']) return;
-	echo '<h5>tienda</h5>'."\n";
-	echo '<ul id="shoplift">'."\n";
-	echo '<li><a href="http://meneame.wikispaces.com/menechandising">'._('camisetas').'</a></li>'."\n";
-    echo '<li><a href="http://www.socialmediasl.com/">'._('publicidad').'</a></li>'."\n";
-	echo '</ul>'."\n";
-
-}
 function do_credits_mobile() {
 	global $dblang, $globals;
 
