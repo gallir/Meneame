@@ -322,7 +322,7 @@ if(stripos(setlocale(LC_CTYPE, 0), "utf-8") === false) {
 }
 
 // There is another config file, this is called for defaults (used by mobile)
-if (! $globals['basic_config'] ) {
+if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 	define("mnmpath", dirname(__FILE__));
 	define("mnminclude", dirname(__FILE__).'/libs/');
 	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);

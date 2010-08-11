@@ -186,6 +186,17 @@ class Haanga
     }
     // }}}
 
+    // safe_load(string $file, array $vars, bool $return, array $blocks) {{{
+    public static function Safe_Load($file, $vars = array(), $return=FALSE, $blocks=array())
+    {
+        try {
+            return self::Load($file, $vars, $return, $blocks);
+        } Catch (Exception $e) {
+            return "";
+        }
+    }
+    // }}}
+
     // load(string $file, array $vars, bool $return, array $blocks) {{{
     /**
      *  Load
