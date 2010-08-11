@@ -449,239 +449,74 @@ class Link {
 		global $current_user, $current_user, $globals, $db;
 
 		if(!$this->read) return;
-		if($this->is_votable()) {
+		
+		
+		if ($this->is_votable()) {
 			$this->voted = $this->vote_exists($current_user->user_id);
 			if (!$this->voted) $this->md5 = md5($current_user->user_id.$this->id.$this->randkey.$globals['user_ip']);
 		}
 
-		$url = htmlspecialchars($this->url);
-
-		$this->permalink = $this->get_permalink();
-
-		echo '<div class="news-summary">';
-		echo '<div class="news-body">';
-		if ($type != 'preview' && $this->title && $this->content 
-				&& ($this->votes > 0 || $current_user->user_id == $this->author) ) {
-			$this->print_shake_box();
-		}
-
-		$this->print_warn();
-
-		if ($this->status != 'published') $nofollow = ' rel="nofollow"';
-		else $nofollow = '';
-
-		if($globals['ads']) echo "<!-- google_ad_section_start -->\n";
-
-		echo '<h1>';
-		echo '<a href="'.$url.'"'.$nofollow.'>'. $this->title. '</a>';
-
-		// Content type (for video and images)
-		if ($this->content_type == 'image') {
-			echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="'._('imagen').'" title="'._('imagen').'" />';
-		} elseif ($this->content_type == 'video') {
-			echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video01.png" class="media-icon" width="18" height="15" alt="'._('vídeo').'" title="'._('vídeo').'" />';
-		}
-		echo '</h1> ';
-
-		echo '<div class="news-submitted">';
-		if ($type != 'short') {
-			echo '<a href="'.get_user_uri($this->username).'"><img src="'.get_avatar_url($this->author, $this->avatar, 25).'" width="25" height="25" alt="" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" /></a>';
-		}
-		echo '<strong>'.htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url))).'</strong>'."&nbsp;<br />\n";
-
-		// Allow to invert user in japanese translations
-		printf (_('por %s'), ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ');
-
-		// Print dates
-		if ($globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT'])) { // 7 days or user agent is empty
-			echo _('el').get_date_time($this->sent_date);
-			if($this->status == 'published')
-				echo ', '  ._('publicado el').get_date_time($this->date);
-		} else {
-			echo _('hace').txt_time_diff($this->sent_date);
-			if($this->status == 'published')
-				echo ', '  ._('publicado hace').txt_time_diff($this->date);
-		}
-		echo "</div>\n";
-
-		if($type=='full' || $type=='preview') {
-			if (($src = $this->has_thumb())) {
-				echo "<img src='$src' width='$this->thumb_x' height='$this->thumb_y' alt='' class='thumbnail'/>";
-			}
-
-			echo '<p>';
-			echo text_to_html($this->content, 'links');
-			if ($globals['link'] && $type != 'preview' ) {
-				if ($this->is_editable()) {
-					echo '&nbsp;&nbsp;<a href="'.$globals['base_url'].'editlink.php?id='.$this->id.'&amp;user='.$current_user->user_id.'" title="'._('editar noticia').' #'.$this->id.'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
-				}
-				if ($this->geo && $this->is_map_editable()) {
-					echo '&nbsp;&nbsp;<a href="#" onclick="$(\'#geoedit\').load(\''.$globals['base_url']."geo/get_form.php?id=$this->id&amp;type=link&amp;icon=$this->status".'\'); return false;"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-geo01.png" alt="edit" title="'._('editar geolocalización').'"/></a>';
-				}
-			}
-			echo '</p>';
-		}
-
-		// Print a summary of the best comment
-		// with a least one vote and younger than a day
-		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400 &&
-			($best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, substr(comment_content, 1, 225) as content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1"))) {
-			echo '<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">';
-			$link = $this->permalink.'/000'.$best_comment->comment_order;
-			echo '<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, \'get_comment_tooltip.php\', \''.$best_comment->comment_id.'\', 10000);" href="'.$link.'"><strong>'.$best_comment->comment_order.'</strong></a>';
-			echo ':&nbsp;'.text_to_summary($best_comment->content, 200).'</div>';
-		}
-
-		if ($this->do_inline_friend_votes) $this->inline_friend_votes();
-
-		echo '<div class="news-details main">';
-		if($this->comments > 0) {
-			$comments_mess = $this->comments . ' ' . _('comentarios');
-		} else  {
-			$comments_mess = _('sin comentarios');
-		}
-		echo '<span class="comments-counter">&nbsp;<a href="'.$this->get_relative_permalink().'">'.$comments_mess. '</a></span>';
-
-		// If the user is authenticated, show favorite box
-		if ($current_user->user_id > 0)  {
-			echo '<span class="tool"><a id="fav-'.$this->id.'" href="javascript:get_votes(\'get_favorite.php\',\''.$current_user->user_id.'\',\'fav-'.$this->id.'\',0,\''.$this->id.'\')">'.favorite_teaser($current_user->user_id, $this).'</a></span>';
-		}
-
-		// Print meta and category
-		echo ' <span class="tool">'._('en').': ';
-		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'" title="'._('meta').'">'.$this->meta_name.'</a>, ';
-		echo '<a href="'.$globals['base_url'].'?meta='.$this->meta_uri.'&amp;category='.$this->category.'" title="'._('categoría').'">'.$this->category_name.'</a>';
-		echo '</span>';
-		echo ' <span class="tool">karma: <span id="a-karma-'.$this->id.'">'.intval($this->karma).'</span></span>';
-
-		if(!$this->voted &&
-				$this->votes_enabled &&
+		$this->show_tags = $show_tags;
+		$this->total_votes   = $this->votes + $this->anonymous;
+		$this->permalink	 = $this->get_permalink();
+		$this->show_shakebox = $type != 'preview' && $this->title && $this->content 
+				&& ($this->votes > 0 || $current_user->user_id == $this->author);
+		$this->has_warning   = !(!$this->check_warn() || $this->is_discarded());
+		$this->is_editable   = $this->is_editable();
+		$this->url_str	   = htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url)));
+		$this->username_str  = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
+		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
+		$this->thumb_url	 = $this->has_thumb();
+		$this->content_txt   = text_to_html($this->content, 'links');
+		$this->map_editable = $this->geo && $this->is_map_editable();
+		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) && 
-				$type != 'preview' /*&& $this->author != $current_user->user_id*/) {
-				$this->print_problem_form();
+				$type != 'preview';
+
+
+        if ($this->status == 'abuse' || $this->has_warning) {
+            $this->negative_text = FALSE;
+			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
+
+			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
+                $this->negative_text = get_negative_vote($negatives->vote_value);
+            }
+        }
+
+		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
+			$this->best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, substr(comment_content, 1, 225) as content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1");
+		} else {
+			$this->best_comment  = FALSE;
 		}
 
-		echo '</div>'."\n";
-		// End news details
-		if($globals['ads']) echo "<!-- google_ad_section_end -->\n";
-
-		// Displayed only in a story page
-		// and tags in sent/voted listing
-		if ($globals['link'] || $type == 'short') {
-			if ($show_tags && !empty($this->tags)) {
-				echo '<div class="news-details">';
-				echo '<strong>'._('etiquetas').'</strong>:';
-				$tags_array = explode(",", $this->tags);
-				$tags_counter = 0;
-				foreach ($tags_array as $tag_item) {
-					$tag_item=trim($tag_item);
-					$tag_url = urlencode($tag_item);
-					if ($tags_counter > 0) echo ',';
-					if ($globals['base_search_url']) {
-						echo ' <a href="'.$globals['base_url'].$globals['base_search_url'].'tag:';
-					} else {
-						echo ' <a href="'.$globals['base_url'].'search.php?p=tag&amp;q=';
-					}
-					echo $tag_url.'">'.$tag_item.'</a>';
-					$tags_counter++;
-				}
-
-				echo '</div>'."\n";
-			}
-			if ($type != 'short') {
-				echo '<div class="news-details">';
-				echo '<strong>'._('negativos').'</strong>: <span id="a-neg-'.$this->id.'">'.$this->negatives.'</span>&nbsp;&nbsp;';
-				echo '<strong>'._('usuarios').'</strong>: <span id="a-usu-'.$this->id.'">'.$this->votes.'</span>&nbsp;&nbsp;';
-				echo '<strong>'._('anónimos').'</strong>: <span id="a-ano-'.$this->id.'">'.$this->anonymous.'</span>&nbsp;&nbsp;';
-
-				echo '<span class="tool">';
-				// Share icons
-				$short_permalink = $this->get_short_permalink();
-				echo '<strong>';
-				echo '<a href="'.$short_permalink.'" title="'._('enlace corto').'">'._('compartir').'</a>';
-				echo '</strong>:';
-				print_share_icons($this->permalink, $short_permalink, $this->title);
-				echo '</span>';
-				echo '</div>' . "\n";
-			}
+		if ($this->geo && $this->map_editable && $current_user->user_id == $this->author && $this->sent_date > $globals['now'] - 600 && !$this->latlng)  {
+			$this->add_geo = TRUE;
+		} else {
+			$this->add_geo = FALSE;
 		}
 
-		// Include post text ads
-		do_banner_story();
-
-		echo '</div>'."\n";
-		echo '</div>'."\n";
-
-		// Geo edit form div
-		if ($this->geo && $this->is_map_editable())  {
-			echo '<div id="geoedit" class="geoform" style="margin-left:20px">';
-			if ($current_user->user_id == $this->author && $this->sent_date > $globals['now'] - 600 && !$this->latlng)  {
-				geo_coder_print_form('link', $this->id, $globals['latlng'], _('ubica al origen de la noticia o evento (ciudad, país)'));
-			}
-			echo '</div>'."\n";
-		}
-
-	}
-
-	function inline_friend_votes() {
-		global $db, $current_user;
-
-		$votes = $db->get_results("SELECT vote_user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
-		if ($votes) {
-			echo '<div style="padding: 3px 0 2px 0;">';
-			foreach ( $votes as $vote ){
-				$vote_detail .= ' '._('valor').":&nbsp;$vote->vote_value";
-				echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
-				echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 40).'" width="40" height="40" alt=""/>';
-				echo '</a>&nbsp;&nbsp;';
-				$items++;
-			}
-			echo '</div>';
-		}
-	}
-
-	
-	function print_shake_box() {
-		global $current_user, $anonnymous_vote, $site_key, $globals;
-		
 		switch ($this->status) {
 			case 'queued': // another color box for not-published
-				$box_class = 'mnm-queued';
+				$this->box_class = 'mnm-queued';
 				break;
 			case 'abuse': // another color box for discarded
 			case 'autodiscard': // another color box for discarded
 			case 'discard': // another color box for discarded
-				$box_class = 'mnm-discarded';
+				$this->box_class = 'mnm-discarded';
 				break;
 			case 'published': // default for published
 			default:
-				$box_class = 'mnm-published';
+				$this->box_class = 'mnm-published';
 				break;
 		}
-		echo '<div class="news-shakeit">';
-		echo '<div class="'.$box_class.'">';
-		echo '<a id="a-votes-'.$this->id.'" href="'.$this->get_relative_permalink().'">'.($this->votes+$this->anonymous).'</a>'._('meneos').'</div>';
+		
+		if ($this->do_inline_friend_votes) 
+			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
 
-		if (! $globals['bot']) {
-			echo '<div class="menealo" id="a-va-'.$this->id.'">';
+		$vars = compact('type');
+		$vars['self'] = $this;
+		return Haanga::Load("link_summary.html", $vars);
 
-			if ($this->votes_enabled == false) {
-				echo '<span>'._('cerrado').'</span>';
-			} elseif( !$this->voted) {
-				echo '<a href="javascript:menealo('."$current_user->user_id,$this->id".')" id="a-shake-'.$this->id.'">'._('menéalo').'</a>';
-			} else {
-				if ($this->voted > 0) {
-					$mess = _('¡chachi!');
-					$sty = '';
-				} else {
-					$mess = get_negative_vote($this->voted);
-					$sty = 'class="negative"';
-				}
-				echo '<span id="a-shake-'.$this->id.'" '.$sty.'>'.$mess.'</span>';
-			}
-			echo '</div>'."\n";
-		}
-		echo '</div>'."\n";
 	}
 
 	function check_warn() {
@@ -709,55 +544,6 @@ class Link {
 		}
 		$this->warned = true;
 		return $this->warned;
-	}
-
-	function print_warn() {
-		global $db, $globals;
-
-
-		if ($this->status == 'abuse') {
-			echo '<div class="warn"><strong>'._('Aviso').'</strong>: ';
-			echo _('noticia descartada por violar las').' <a href="'.$globals['legal'].'#tos">'._('normas de uso').'</a>';
-			echo "</div>\n";
-			return;
-		}
-		if (!$this->check_warn() || $this->is_discarded()) return;
-
-
-		echo '<div class="warn"><strong>'._('Aviso automático').'</strong>: ';
-		if ($this->status == 'published') {
-			echo _('noticia errónea o controvertida, por favor lee los comentarios.');
-		} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
-				echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
-		} else {
-			// Only says "what" if most votes are "wrong" or "duplicated" 
-			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
-			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-				echo _('Esta noticia podría ser').' <strong>'. get_negative_vote($negatives->vote_value) . '</strong>. ';
-			} else {
-				echo _('Esta noticia tiene varios votos negativos.');
-			}
-			if(!$this->voted && ! $globals['link']) {
-				echo ' <a href="'.$this->get_relative_permalink().'">' ._('Asegúrate').'</a> ' . _('antes de menear') . '.';
-			}
-		}
-		echo "</div>\n";
-	}
-
-	function print_problem_form() {
-		global $current_user, $db, $anon_karma, $anonnymous_vote, $globals, $site_key;
-
-		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
-		echo '<select '.$status.' name="ratings"  onchange="';
-		echo 'report_problem(this.form,'."$current_user->user_id, $this->id".')';
-		echo '">';
-		echo '<option value="0" selected="selected">'._('problema').'</option>';
-		foreach (array_keys($globals['negative_votes_values']) as $pvalue) {
-			echo '<option value="'.$pvalue.'">'.$globals['negative_votes_values'][$pvalue].'</option>';
-		}
-		echo '</select>';
-//		echo '<input type="hidden" name="return" value="" disabled />';
-		echo '</form>';
 	}
 
 	function vote_exists($user) {
@@ -979,28 +765,6 @@ class Link {
 	function get_latlng() {
 		require_once(mnminclude.'geo.php');
 		return geo_latlng('link', $this->id);
-	}
-
-	function print_content_type_buttons() {
-		// Is it an image or video?
-		switch ($this->content_type) {
-			case 'image':
-			case 'video':
-			case 'text':
-				$type[$this->content_type] = 'checked="checked"';
-				break;
-			default:
-				$type['text'] = 'checked="checked"';
-		}
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		echo '<input type="radio" '.$type['text'].' name="type" value="text"/>';
-		echo '&nbsp;'._('texto').'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-
-		echo '<input type="radio" '.$type['image'].' name="type" value="image"/>';
-		echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._('¿es una imagen?').'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-
-		echo '<input type="radio" '.$type['video'].' name="type" value="video"/>';
-		echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._('¿es un vídeo?').'" title="'._('¿es un vídeo?').'" />';
 	}
 
 	function read_content_type_buttons($type) {
