@@ -119,50 +119,11 @@ function do_js_from_array($array) {
 }
 
 function do_footer($credits = true) {
-	global $globals;
-
-	echo "</div><!--#container closed-->\n";
-	if($credits) @do_credits();
-	do_js_from_array($globals['post_js']);
-
-	// warn warn warn 
-	// dont do stats of password recovering pages
-	@include('ads/stats.inc');
-	printf("\n<!--Generated in %4.3f seconds-->\n", microtime(true) - $globals['start_time']);
-	echo "</div></body></html>\n";
+	return Haanga::Load('footer.html');
 }
 
 function do_footer_menu() {
     return Haanga::Load('footer_menu.html');
-}
-
-function do_rss() {
-	global $globals, $current_user;
-
-	echo '<h5>'._('suscripciones por RSS').'</h5>'."\n";
-	echo '<ul>'."\n";
-
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('publicadas').'</a>';
-	echo '</li>' . "\n";
-	
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
-	echo '</li>' . "\n";
-
-	if($current_user->user_id > 0) {
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('mis conversaciones').'</a>';
-		echo '</li>' . "\n";
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('comentarios a mis noticias').'</a>';
-		echo '</li>' . "\n";
-	}
-
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('todos los comentarios').'</a>';
-	echo '</li>' . "\n";
-	echo '</ul>' . "\n";
 }
 
 function do_rss_box($search_rss = 'rss2.php') {

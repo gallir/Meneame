@@ -57,7 +57,7 @@ $globals['static_server'] = '';
 $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
-$globals['legal'] = $globals['base_url'].'legal.php';
+$globals['legal'] = 'legal.php';
 
 $globals['min_decay'] = 0.25; 
 $globals['karma_start_decay'] = 10; // In hours, when a link start to decrease its karma
