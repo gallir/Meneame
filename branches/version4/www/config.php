@@ -218,7 +218,7 @@ $globals['captcha_first_login'] = false;
 //$globals['recaptcha_private_key'] = '';
 
 // Twitter settings
-$globals['twitter_user'] = 'meneame_net';
+//$globals['twitter_user'] = '';
 //$globals['twitter_password'] = '';
 // Jaiku settings
 //$globals['jaiku_user'] = '';
