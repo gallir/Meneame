@@ -118,7 +118,7 @@
 	{% if self.do_inline_friend_votes && self.friend_votes %}
 		<div style="padding: 3px 0 2px 0;">
 		{% for vote in self.friend_votes %}
-			<a href="{% exec get_user_uri vote->user_login %}" title="{{ vote->user_login }}: {% trans _('valor') %} {{vote->vote_value}}"><img class="avatar" src="{% exec get_avatar_url vote->user_id vote->user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
+			<a href="{% exec get_user_uri vote->user_login %}" title="{{ vote.user_login }}: {% trans _('valor') %} {{vote.vote_value}}"><img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
 		{% endfor %}
 		</div>
 	{% endif %}
