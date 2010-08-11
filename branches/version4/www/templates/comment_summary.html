@@ -22,7 +22,7 @@
 	</div>
 	<div class="{{ self.comment_meta_class }}">
 		<div class="comment-votes-info">
-		{% if self.type != 'admin' && self.user_level != 'disabled' %}
+		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
 			{% if self.can_vote %}
 				{% if self.user_can_vote %}
 	 				<span id="c-votes-{{ self.id }}">
