@@ -299,11 +299,26 @@ class Haanga
                 mkdir(dirname($php), 0777, TRUE);
                 umask($old);
             }
-
+            
+            $fp = fopen($php, "a+");
+            /* try to block PHP file */
+            if (!flock($fp, LOCK_EX | LOCK_NB)) {
+                /* couldn't block, another process is already compiling */
+                fclose($fp);
+                unset($fp);
+            }
 
             $code = $compiler->compile_file($tpl, FALSE, $vars);
 
-            file_put_contents($php, "<?php".$code, LOCK_EX);
+            if (isset($fp)) {
+                ftruncate($fp, 0); // truncate file
+                fwrite($fp, "<?php".$code);
+                flock($fp, LOCK_UN); // release the lock
+                fclose($fp);
+            } else {
+                /* local eval */
+                eval($code);
+            }
             self::$has_compiled = TRUE;
         }
 
