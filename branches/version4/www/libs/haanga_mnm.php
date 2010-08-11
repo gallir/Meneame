@@ -1,5 +1,26 @@
 <?php
 
+class Haanga_Extension_Tag_MeneameEndtime
+{
+    public $is_block = FALSE;
+
+    function generator($cmp, $args, $assign=NULL)
+    {
+        /* abs */
+        $code = hcode();
+        
+        /* llamar a la funcion */
+        $exec = hexec('sprintf', "<!--Generated in %4.3f seconds-->", 
+            hexpr( hexec('microtime', TRUE), '-', hvar('globals', 'start_time') )
+        );
+
+        /* imprimir la funcion */
+        $cmp->do_print($code, $exec);
+
+        return $code;
+    }
+}
+
 class Haanga_Extension_Tag_GetURL
 {
     public $is_block = FALSE;
