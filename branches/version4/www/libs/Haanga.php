@@ -253,6 +253,33 @@ class Haanga
                 throw new Exception("View {$file} doesn't exists");
             }
 
+            if (!is_dir(dirname($php))) {
+                $old = umask(0);
+                mkdir(dirname($php), 0777, TRUE);
+                umask($old);
+            }
+            
+            $fp = fopen($php, "a+");
+            /* try to block PHP file */
+            if (!flock($fp, LOCK_EX | LOCK_NB)) {
+                /* couldn't block, another process is already compiling */
+                fclose($fp);
+                if (is_file($php)) {
+                    /*
+                    ** if there is an old version of the cache 
+                    ** load it 
+                    */
+                    require $php;
+                    return $callback($vars, $return, $blocks);
+                }
+                /*
+                ** no luck, probably the template is new
+                ** the compilation will be done, but we won't
+                ** save
+                */
+                unset($fp);
+            }
+
             /* recompile */
             if (!$compiler) {
                 self::checkCacheDir();
@@ -292,20 +319,6 @@ class Haanga
 
             if (self::$debug) {
                 $compiler->setDebug($php.".dump");
-            }
-
-            if (!is_dir(dirname($php))) {
-                $old = umask(0);
-                mkdir(dirname($php), 0777, TRUE);
-                umask($old);
-            }
-            
-            $fp = fopen($php, "a+");
-            /* try to block PHP file */
-            if (!flock($fp, LOCK_EX | LOCK_NB)) {
-                /* couldn't block, another process is already compiling */
-                fclose($fp);
-                unset($fp);
             }
 
             $code = $compiler->compile_file($tpl, FALSE, $vars);
