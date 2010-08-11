@@ -132,8 +132,6 @@ for_def(A) ::= T_FOR varname(B) T_IN filtered_var(C) T_CLOSE_TAG . {
     if (is_array($var)) {
         /* let's check if it is an object or array */
         $this->compiler->set_context(B, current($var));
-    } else {
-        $this->compiler->set_context(B, array());
     }
 
     A = array('operation' => 'loop', 'variable' => B, 'index' => NULL, 'array' => C);
@@ -145,8 +143,6 @@ for_def(A) ::= T_FOR varname(I) T_COMMA varname(B) T_IN filtered_var(C) T_CLOSE_
     if (is_array($var)) {
         /* let's check if it is an object or array */
         $this->compiler->set_context(B, current($var));
-    } else {
-        $this->compiler->set_context(B, array());
     }
     A = array('operation' => 'loop', 'variable' => B, 'index' => I, 'array' => C);
 }

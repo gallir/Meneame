@@ -20,6 +20,9 @@ class Haanga_Extension_Tag_Dictsort
         if (!Haanga_AST::is_var($args[0])) {
             throw new Haanga_Compiler_Exception("Dictsort: First parameter must be an array");
         }
+        
+        $var = $cmp->get_context($args[0]['var']);
+        $cmp->set_context($redirected, $var);
 
         $redirected = hvar($redirected);
         $field      = hvar('field');

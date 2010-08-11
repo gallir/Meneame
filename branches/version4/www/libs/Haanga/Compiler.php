@@ -757,8 +757,11 @@ class Haanga_Compiler
         $this->context[$varname] = $value;
     }
 
-    function get_context(Array $variable)
+    function get_context($variable)
     {
+        if (!is_array($variable)) {
+            $variable = array($variable);
+        }
         $varname = $variable[0];
         if (isset($this->context[$varname])) {
             if (count($variable) == 1) {
