@@ -1,0 +1,53 @@
+
+<div class="sidebox">
+    <div class="header">
+        <h4>{% trans _('suscripciones por RSS') %}</h4>
+    </div>
+	<div class="rss">
+        <ul>
+        {% if _REQUEST.q %}
+            <li>
+                <a href="{{globals.base_url}}{{search_rss}}?{{ _SERVER.QUERY_STRING|escape}}" rel="rss">{% trans _('búsqueda') %}: {{ _REQUEST.q|escape }}</a>
+            </li>
+        {% endif %}
+        {% if globals.link %}
+            {% if globals.link.meta_name %}
+            <li>
+			    <a href="{{globals.base_url}}rss2.php?meta={{globals.link.meta_id}}&amp;status=all" rel="rss">{% trans _('temática') %}: <em>{{ globals.link.meta_name }}</em></a>
+            </li>
+            {% endif %}
+            {% if globals.link.category_name %}
+            <li>
+			    <a href="{{globals.base_url}}rss2.php?category={{globals.link.category}}&amp;status=all" rel="rss">{% trans _('categoría') %}: <em>{% trans globals.link.category_name %}</em></a>
+            </li>
+            {% endif %}
+        {% endif %}
+        <li>
+	        <a href="{{globals.base_url}}rss2.php" rel="rss">{% trans _('publicadas') %}</a>
+        </li>
+        <li>
+	        <a href="{{globals.base_url}}rss2.php?status=queued" rel="rss">{% trans _('en cola') %}</a>
+        </li>
+        {% if globals.link_id %}
+		<li>
+		<a href="{{globals.base_url}}comments_rss2.php?id={{globals.link_id}}" rel="rss">
+            {% trans _('comentarios de esta noticia') %}
+        </a>
+		</li>
+        {% endif %}
+        {% if current_user.user_id > 0 %}
+        <li>
+		<a href="{{globals.base_url}}comments_rss2.php?conversation_id={{current_user.user_id}}" rel="rss" title="{% trans _('comentarios de las noticias donde has comentado') %}">
+            {% trans _('mis conversaciones') %}
+        </a>
+        </li>
+        <li>
+		    <a href="{{globals.base_url}}comments_rss2.php?author_id={{current_user.user_id}}" rel="rss">{% trans _('comentarios a mis noticias') %}</a>
+        </li>
+        {% endif %}
+	    <li>
+	        <a href="{{ globals.base_url }}comments_rss2.php" rel="rss">{% trans _('todos los comentarios') %}</a>
+	    </li>
+        </ul>
+    </div>
+</div>

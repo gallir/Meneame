@@ -131,56 +131,7 @@ function do_rss_box($search_rss = 'rss2.php') {
 
 	if ($globals['mobile']) return;
 
-	echo '<div class="sidebox"><div class="header"><h4>'._('suscripciones por RSS').'</h4></div>'."\n";
-	echo '<div class="rss"><ul>'."\n";
-
-	if(!empty($_REQUEST['q'])) {
-		$search =  htmlspecialchars($_REQUEST['q']);
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].$search_rss.'?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss">'._("búsqueda").': '. htmlspecialchars($_REQUEST['q'])."</a>\n";
-		echo '</li>';
-	}
-
-	// RSS related to a single link
-	if ($globals['link']) {
-		if(!empty($globals['link']->meta_name)) {
-			echo '<li>';
-			echo '<a href="'.$globals['base_url'].'rss2.php?meta='.$globals['link']->meta_id.'&amp;status=all" rel="rss">'._('temática').': <em>'.$globals['link']->meta_name."</em></a>\n";
-			echo '</li>';
-		}
-		if(!empty($globals['link']->category_name)) {
-			echo '<li>';
-			echo '<a href="'.$globals['base_url'].'rss2.php?category='.$globals['link']->category.'&amp;status=all" rel="rss">'._('categoría').': <em>'.$globals['link']->category_name."</em></a>\n";
-			echo '</li>';
-		}
-	}
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php" rel="rss">'._('publicadas').'</a>';
-	echo '</li>' . "\n";
-	
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss">'._('en cola').'</a>';
-	echo '</li>' . "\n";
-
-	if($globals['link_id']) {
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?id='.$globals['link_id'].'" rel="rss">'._('comentarios de esta noticia').'</a>';
-		echo '</li>' . "\n";
-	}
-
-	if($current_user->user_id > 0) {
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?conversation_id='.$current_user->user_id.'" rel="rss" title="'._('comentarios de las noticias donde has comentado').'">'._('mis conversaciones').'</a>';
-		echo '</li>' . "\n";
-		echo '<li>';
-		echo '<a href="'.$globals['base_url'].'comments_rss2.php?author_id='.$current_user->user_id.'" rel="rss">'._('comentarios a mis noticias').'</a>';
-		echo '</li>' . "\n";
-	}
-
-	echo '<li>';
-	echo '<a href="'.$globals['base_url'].'comments_rss2.php" rel="rss">'._('todos los comentarios').'</a>';
-	echo '</li>' . "\n";
-	echo '</ul></div></div>' . "\n";
+    return Haanga::Load('rss_box.html', compact('search_rss'));
 }
 
 function get_toggler_plusminus($container_id, $enabled = false) {
