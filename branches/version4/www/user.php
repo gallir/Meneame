@@ -257,9 +257,13 @@ function do_profile() {
 
 	// Print the button and associated div to change the avatar
 	if ($current_user->user_id == $user->id) {
+		/*
 		echo '<div id="avatar_indicator" style="margin:0;padding:0;height:12px"></div>';
 		echo '<button id="avatar_upload" style="margin:0" title="'._('imagen cuadrada de no más de 400 KB, sin transparencias').'">'._('cambiar avatar').'</button>'."\n";
 		@include(mnminclude.'foreign/avatar_upload.html');
+		* */
+		Haanga::Load('user/avatar_upload.html');
+		
 	}
 	echo '</div>';
 
@@ -394,13 +398,8 @@ function do_profile() {
 
 	// Print a chart of the last 30 days activity
 	if ($user->total_votes > 20 && ($current_user->user_id == $user->id || $current_user->admin)) {
-		echo '<fieldset><legend>'._('votos/hora últimos 30 días').'</legend>';
-		// Call to generate HMTL and javascript for the Flot chart
-		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
-		//echo '<div id="flot" style="width:600px;height:150px;"></div>'."\n";
-		echo '<div id="flot" style="width:100%;height:150px;"></div>'."\n";
-		@include (mnminclude.'foreign/chart_user_votes_history.js');
-		echo '</fieldset>';
+		$vars = compact('user');
+		return Haanga::Load("user/chart_votes.html", $vars);
 	}
 
 	// Show first numbers of the address if the user has god privileges

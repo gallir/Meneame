@@ -1,3 +1,7 @@
+<div id="avatar_indicator" style="margin:0;padding:0;height:12px"></div>
+<button id="avatar_upload" style="margin:0" title="{% trans _('imagen cuadrada de no más de 400 KB, sin transparencias') %}">{% trans _('cambiar avatar') %}</button>
+
+{% spacefull %}
 <script type="text/javascript"> 
 //<![CDATA[
 $(document).ready(function() {
@@ -34,3 +38,4 @@ function select_meta(input, meta) {
 }
 //]]>
 </script>
+{% endspacefull %}

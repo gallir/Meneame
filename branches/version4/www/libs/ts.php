@@ -128,7 +128,7 @@ function ts_print_form() {
 		echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
 	} else {
 	// reCaptcha
-		include ('foreign/recaptcha.html');
+		Haanga::Load('recaptcha.html');
 		echo recaptcha_get_html($globals['recaptcha_public_key'],null);
 	}
 }

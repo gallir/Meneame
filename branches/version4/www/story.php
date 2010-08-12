@@ -262,71 +262,13 @@ case 6:
 
 case 4:
 	// Show logs
-	echo '<div class="voters" id="voters">';
-
-	echo '<fieldset><legend>'._('registro de eventos de la noticia').'</legend>';
-
-	echo '<div id="voters-container">';
 	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_level, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
-	if ($logs) {
-		foreach ($logs as $log) {
-			echo '<div style="width:100%; display: block; clear: both; border-bottom: 1px solid #FFE2C5;">';
-			echo '<div style="width:30%; float: left;padding: 4px 0 4px 0;">'.get_date_time($log->ts).'</div>';
-			echo '<div style="width:24%; float: left;padding: 4px 0 4px 0;"><strong>'.$log->log_type.'</strong></div>';
-			echo '<div style="width:45%; float: left;padding: 4px 0 4px 0;">';
-			if ($link->author != $log->user_id  && ($log->user_level == 'admin' || $log->user_level == 'god')) { 
-				// It was edited by an admin
-				echo '<img src="'.get_no_avatar_url(20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
-				echo ('admin');
-				if ($current_user->admin) {
-					echo '&nbsp;('.$log->user_login.')';
-				}
-			} else {
-				echo '<a href="'.get_user_uri($log->user_login).'" title="'.$log->date.'">';
-				echo '<img src="'.get_avatar_url($log->log_user_id, $log->user_avatar, 20).'" width="20" height="20" alt="'.$log->user_login.'"/>&nbsp;';
-				echo $log->user_login;
-				echo '</a>';
-			}
-			echo '</div>';
-			echo '</div>';
-
-		}
-	} else {
-		echo _('no hay registros');
-	}
-	echo '</div>';
-	echo '</fieldset>';
-	echo '</div>';
-
 
 	// Show karma logs from annotations
-	if ( ($array = $link->read_annotation("link-karma")) != false ) {
+	$annotations = $link->read_annotation("link-karma");
 
-		echo '<script type="text/javascript">'."\n//<!--\n";
-		echo 'var k_coef = new Array(); var k_old = new Array(); var k_annotation = new Array();'."\n";
-		foreach ($array as $log) {
-			// To make clear "javascript lines"
-			$k_time = $log['time']; $k_coef = $log['coef']; $k_old = intval($log['old_karma']); $k_annotation = $log['annotation'];
-			// Generate arrays that will be used for the tooltip
-			echo "k_coef[$k_time] = $k_coef; k_old[$k_time] = $k_old;\n";
-			echo "if (typeof k_annotation[$k_time] == 'undefined')  k_annotation[$k_time] = '$k_annotation';";
-			echo "else k_annotation[$k_time] = k_annotation[$k_time] + '$k_annotation';\n";
-
-		}
-		echo "//-->\n</script>\n";
-
-		echo '<div class="voters">';
-		echo '<fieldset><legend>'._('registro de cálculos de karma').'</legend>';
-
-		// Call to generate HMTL and javascript for the Flot chart
-		echo '<script src="'.$globals['base_static'].'js/jquery.flot.min.js" type="text/javascript"></script>'."\n";
-		echo '<div id="flot" style="width:100%;height:250px;"></div>'."\n";
-		@include (mnminclude.'foreign/chart_link_karma_history.js');
-		echo '</fieldset>';
-		echo '</div>';
-	}
-
-
+	$vars = compact('link', 'logs', 'annotations');
+	return Haanga::Load("story/link_logs.html", $vars);
 	break;
 case 5:
 	// Micro sneaker
