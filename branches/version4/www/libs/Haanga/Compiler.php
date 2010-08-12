@@ -47,6 +47,8 @@ class Haanga_Compiler
     protected $name;
     protected $check_function = FALSE;
     protected $blocks=array();
+    protected $line=0;
+    protected $file;
     /**
      *  number of blocks :-)
      */
@@ -233,8 +235,8 @@ class Haanga_Compiler
             if ($this->check_function) {
                 $body->do_if(hexpr(hexec('function_exists', $func_name), '===', FALSE));
             }
-            if (isset($this->_file)) {
-                $body->comment("Generated from ".realpath($this->_base_dir.'/'.$this->_file));
+            if (!empty($this->file)) {
+                $body->comment("Generated from ".$this->file);
             }
 
             $body->declare_function($func_name);
@@ -284,6 +286,11 @@ class Haanga_Compiler
     }
     // }}}
 
+    public function Error($err)
+    {
+        throw new Haanga_Compiler_Exception("{$err} in {$this->file}:$this->line");
+    }
+
     // compile_file($file) {{{
     /**
      *  Compile a file
@@ -307,7 +314,8 @@ class Haanga_Compiler
         }
 
         $this->_base_dir      = dirname($file);
-        $this->_file          = basename($file);
+        $this->file           = realpath($file);
+        $this->line           = 0;
         $this->check_function = $safe;
         $this->context        = $context;
         $name                 = $this->set_template_name($file);
@@ -354,7 +362,7 @@ class Haanga_Compiler
     function get_base_template($base)
     {
         if (!Haanga_AST::is_str($base)) {
-            throw new Haanga_Compiler_Exception("Dynamic inheritance is not supported for compilated templates");
+            $this->Error("Dynamic inheritance is not supported for compilated templates");
         }
         $file = $base['string'];
         list($this->subtemplate, $new_code) = $this->compile_required_template($file);
@@ -365,7 +373,7 @@ class Haanga_Compiler
     // {% base "foo.html" %} {{{
     protected function generate_op_base()
     {
-        throw new exception("{% base %} can be only as first statement");
+        $this->Error("{% base %} can be only as first statement");
     }
     // }}}
 
@@ -373,22 +381,27 @@ class Haanga_Compiler
     protected function generate_op_code($parsed, &$body)
     {
         if (!is_array($parsed)) {
-            throw new Haanga_Compiler_Exception("Invalid \$parsed array");
+            $this->Error("Invalid \$parsed array");
         }
         foreach ($parsed as $op) {
             if (!is_array($op)) {
                 continue;
             }
             if (!isset($op['operation'])) {
-                throw new Haanga_Compiler_Exception("Malformed array:".print_r($op, TRUE));
+                $this->Error("Malformed array:".print_r($op, TRUE));
             }
+            if (isset($op['line'])) {
+                $this->line = $op['line'];
+            }
+
             if ($this->subtemplate && $this->in_block == 0 && $op['operation'] != 'block') {
                 /* ignore most of tokens in subtemplates */
                 continue;
             }
+
             $method = "generate_op_".$op['operation'];
             if (!is_callable(array($this, $method))) {
-                throw new Haanga_Compiler_Exception("Compiler: Missing method $method");
+                $this->Error("Compiler: Missing method $method");
             }
             $this->$method($op, $body);
         }
@@ -498,7 +511,7 @@ class Haanga_Compiler
             }
         }
         if (!is_file($file)) {
-            throw new Haanga_Compiler_Exception("can't find {$file} file template");
+           $this->Error("can't find {$file} file template");
         }
         $class = get_class($this);
         $comp  = new  $class;
@@ -512,7 +525,7 @@ class Haanga_Compiler
     protected function generate_op_include($details, &$body)
     {
         if (!$details[0]['string']) {
-            throw new Haanga_Compiler_Exception("Dynamic inheritance is not supported for compilated templates");
+            $this->Error("Dynamic inheritance is not supported for compilated templates");
         }
         list($name,$code) = $this->compile_required_template($details[0]['string']);
         $this->append .= "\n\n{$code}";
@@ -554,7 +567,7 @@ class Haanga_Compiler
             
             if (!Haanga_AST::is_var($target)) {
                 /* block.super can't have any filter */
-                throw new Haanga_Compiler_Exception("This variable can't have any filter");
+                $this->Error("This variable can't have any filter");
             }
 
             for ($i=1; $i < $count; $i++) {
@@ -577,7 +590,7 @@ class Haanga_Compiler
                 /* generate_variable_name didn't replied a variable, weird case
                     currently just used for {{block.super}}.
                 */
-                throw new Haanga_Compiler_Exception("Invalid variable name {$variable[0]}");
+                $this->Error("Invalid variable name {$variable[0]}");
             }
         }
 
@@ -641,7 +654,7 @@ class Haanga_Compiler
                     } elseif (isset($part['object'])) {
                         $name .= "{$part['object']}";
                     } else {
-                        throw new Haanga_Compiler_Exception("Invalid blockname");
+                        $this->Error("Invalid blockname");
                     }
                 }
                 $name .= ".";
@@ -820,7 +833,7 @@ class Haanga_Compiler
             switch ($variable[0]) {
             case 'forloop':
                 if (!$this->forid) {
-                    throw new Haanga_Compiler_Exception("Invalid forloop reference outside of a loop");
+                    $this->Error("Invalid forloop reference outside of a loop");
                 }
                 switch ($variable[1]) {
                 case 'counter':
@@ -856,17 +869,17 @@ class Haanga_Compiler
                     $this->forid++;
                     break;
                 default:
-                    throw new Haanga_Compiler_Exception("Unexpected forloop.{$variable[1]}");
+                    $this->Error("Unexpected forloop.{$variable[1]}");
                 }
                 /* no need to escape it */
                 $this->var_is_safe = TRUE;
                 break;
             case 'block':
                 if ($this->in_block == 0) {
-                    throw new Haanga_Compiler_Exception("Can't use block.super outside a block");
+                    $this->Error("Can't use block.super outside a block");
                 }
                 if (!$this->subtemplate) {
-                    throw new Haanga_Compiler_Exception("Only subtemplates can call block.super");
+                    $this->Error("Only subtemplates can call block.super");
                 }
                 /* no need to escape it */
                 $this->var_is_safe = TRUE;
@@ -1041,7 +1054,7 @@ class Haanga_Compiler
             /* beauty :-) */
             foreach ($details['check'] as $id=>$type) {
                 if (!Haanga_AST::is_var($type)) {
-                    throw new Haanga_Compiler_Exception("Unexpected string {$type['string']}, expected a varabile");
+                    $this->Error("Unexpected string {$type['string']}, expected a varabile");
                 }
 
                 $this_expr = hexpr(hexpr(
@@ -1141,7 +1154,7 @@ class Haanga_Compiler
             if ($tags->hasGenerator($tag_name)) {
                 $exec = $tags->generator($tag_name, $this, array($target));
                 if (!$exec InstanceOf Haanga_AST) {
-                    throw new Haanga_Compiler_Exception("Invalid output of custom filter {$tag_name}");
+                    $this->Error("Invalid output of custom filter {$tag_name}");
                 }
             } else {
                 $exec = hexec($function, $target);
@@ -1167,7 +1180,7 @@ class Haanga_Compiler
                     return;
                 }
             } else {
-                throw new Haanga_Compiler_Exception("Invalid output of the custom tag {$tag_name}");
+                $this->Error("Invalid output of the custom tag {$tag_name}");
             }
         } else {
             $fnc  = array_shift($args);
@@ -1225,7 +1238,7 @@ class Haanga_Compiler
         }
 
         if (!$filter->isValid($name)) {
-            throw new Haanga_Compiler_Exception("{$name} is an invalid filter");
+            $this->Error("{$name} is an invalid filter");
         }
 
         if ($filter->hasGenerator($name)) {

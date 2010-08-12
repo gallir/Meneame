@@ -8,7 +8,7 @@ class Haanga_Extension_Tag_Exec
     static function generator($cmp, $args, $assign=NULL)
     {
         if (!$cmp->getOption('allow_exec')) {
-            throw new Haanga_Compiler_Exception("Tag exec is disabled for security reasons");
+            $cmp->Error("Tag exec is disabled for security reasons");
         }
 
 
@@ -18,7 +18,7 @@ class Haanga_Extension_Tag_Exec
         } else if (Haanga_AST::is_str($args[0])) {
             $args[0] = $args[0]['string'];
         } else {
-            throw new Haanga_Compiler_Exception("invalid param");
+            $cmp->Error("invalid param");
         }
 
         $exec = hexec($args[0]);

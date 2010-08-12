@@ -5,13 +5,13 @@ class Haanga_Extension_Tag_Templatetag
     static function generator($compiler, $args)
     {
         if (count($args) != 1) {
-            throw new Haanga_Compiler_Exception("templatetag only needs one parameter");
+            $compiler->Error("templatetag only needs one parameter");
         }
 
         if (Haanga_AST::is_var($args[0])) {
             $type = $args[0]['var'];
             if (!is_string($type)) {
-                throw new Haanga_Compiler_Exception("Invalid parameter");
+                $compiler->Error("Invalid parameter");
             }
         } else if (Haanga_AST::is_str($args[0])) {
             $type = $args[0]['string'];
@@ -44,7 +44,7 @@ class Haanga_Extension_Tag_Templatetag
             $str = '#}';
             break;
         default:
-            throw new Haanga_Compiler_Exception("Invalid parameter");
+            $compiler->Error("Invalid parameter");
             break;
         }
 

@@ -5,7 +5,7 @@ class Haanga_Extension_Tag_Tryinclude
     static function generator($cmp, $args, $declared)
     {
         if ($declared) {
-            throw new Haanga_Compiler_Exception("try_include can't be redirected to a variable");
+            $cmp->Error("try_include can't be redirected to a variable");
         }
 
         $code = hcode();
