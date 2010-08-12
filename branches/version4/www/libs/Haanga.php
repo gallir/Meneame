@@ -190,10 +190,16 @@ class Haanga
     public static function Safe_Load($file, $vars = array(), $return=FALSE, $blocks=array())
     {
         try {
-            return self::Load($file, $vars, $return, $blocks);
+
+            $tpl = self::$templates_dir.'/'.$file;
+            if (file_exists($tpl)) {
+                /* call load if the tpl file exists */
+                return self::Load($file, $vars, $return, $blocks);
+            }
         } Catch (Exception $e) {
-            return "";
         }
+        /* some error but we don't care at all */
+        return "";
     }
     // }}}
 
