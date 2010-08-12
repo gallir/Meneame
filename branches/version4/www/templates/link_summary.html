@@ -28,7 +28,7 @@
 		</div>
 	{% endif %}
 
-	{% if self.status == 'abuso' OR self.has_warning %}
+	{% if self.status == 'abuse' OR self.has_warning %}
 		{% if self.status == 'abuse' %}
 			<div class="warn"><strong>{% trans _('Aviso') %}</strong>
 				{% trans _('noticia descartada por violar las') %}
