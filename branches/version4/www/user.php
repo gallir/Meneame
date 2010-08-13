@@ -399,7 +399,7 @@ function do_profile() {
 	// Print a chart of the last 30 days activity
 	if ($user->total_votes > 20 && ($current_user->user_id == $user->id || $current_user->admin)) {
 		$vars = compact('user');
-		return Haanga::Load("user/chart_votes.html", $vars);
+		Haanga::Load("user/chart_votes.html", $vars);
 	}
 
 	// Show first numbers of the address if the user has god privileges

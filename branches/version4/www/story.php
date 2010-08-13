@@ -268,7 +268,7 @@ case 4:
 	$annotations = $link->read_annotation("link-karma");
 
 	$vars = compact('link', 'logs', 'annotations');
-	return Haanga::Load("story/link_logs.html", $vars);
+	Haanga::Load("story/link_logs.html", $vars);
 	break;
 case 5:
 	// Micro sneaker
