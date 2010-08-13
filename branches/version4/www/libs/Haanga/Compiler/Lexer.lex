@@ -203,6 +203,11 @@ html {
 "not" token_end {
     $this->token = HG_Parser::T_NOT;
 }
+
+"NOT" token_end {
+    $this->token = HG_Parser::T_NOT;
+}
+    
     
 "!" token_end {
     $this->token = HG_Parser::T_NOT;

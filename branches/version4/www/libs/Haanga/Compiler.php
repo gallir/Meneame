@@ -272,7 +272,9 @@ class Haanga_Compiler
             $body = $this->prepend_op;
         }
 
-        $op_code = $body->getArray(TRUE); 
+        $op_code = $body->getArray(TRUE);
+
+
         $code   .= $this->generator->getCode($op_code);
         if (!empty($this->append)) {
             $code .= $this->append;
@@ -285,11 +287,6 @@ class Haanga_Compiler
         return $code;
     }
     // }}}
-
-    public function Error($err)
-    {
-        throw new Haanga_Compiler_Exception("{$err} in {$this->file}:$this->line");
-    }
 
     // compile_file($file) {{{
     /**
@@ -320,6 +317,46 @@ class Haanga_Compiler
         $this->context        = $context;
         $name                 = $this->set_template_name($file);
         return $this->compile(file_get_contents($file), $name, $file);
+    }
+    // }}}
+
+    // getOpCodes($code, $file='') {{{
+    /**
+     *  Compile the $code and return the "opcodes" 
+     *  (the Abstract syntax tree).
+     *
+     *  @param string $code Template content
+     *  @param string $file File path (used for erro reporting)
+     *
+     *  @return Haanga_AST
+     *
+     */
+    public function getOpCodes($code, $file)
+    {
+        $oldfile    = $this->file;
+        $this->file = $file;
+        $parsed = Haanga_Compiler_Lexer::init($code, $this, $file);
+        $body = new Haanga_AST;
+        if (isset($parsed[0]) && $parsed[0]['operation'] == 'base') {
+            $this->Error("{% base is not supported on inlines %}");
+        }
+        $body = new Haanga_AST;
+        $this->generate_op_code($parsed, $body);
+        $this->file = $oldfile;
+        return $body;
+    }
+    // }}}
+
+    // Error($errtxt) {{{
+    /**
+     *  Throw an exception and appends information about the template (the path and
+     *  the last processed line).
+     *
+     *  
+     */
+    public function Error($err)
+    {
+        throw new Haanga_Compiler_Exception("{$err} in {$this->file}:$this->line");
     }
     // }}}
 
@@ -462,6 +499,7 @@ class Haanga_Compiler
         $this->generate_op_code($details['body'], $body);
         $body->decl($details['name'], hvar('buffer'.$this->ob_start));
         $this->ob_start--;
+        $this->set_safe($details['name']);
     }
     // }}}
 

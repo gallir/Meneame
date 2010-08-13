@@ -87,6 +87,11 @@ class Haanga
         return FALSE;
     }
 
+    public static function getTemplateDir()
+    {
+        return self::$templates_dir; 
+    }
+
     // configure(Array $opts) {{{
     /**
      *  Configuration to load Haanga

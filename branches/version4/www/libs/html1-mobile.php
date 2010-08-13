@@ -77,111 +77,17 @@ function do_header($title, $id='home') {
 	header('Content-type: text/html; charset=utf-8');
 	http_cache();
 
+    $vars = compact('title', 'id');
 
-	//echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">' . "\n";
-	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'">' . "\n";
-	echo '<head>' . "\n";
-	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-	echo '<meta name="ROBOTS" content="NOARCHIVE" />'."\n";
-	echo '<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>' . "\n";
-	echo "<title>$title</title>\n";
-
-	do_css_includes();
-
-	echo '<meta name="generator" content="meneame mobile" />' . "\n";
-	if (!empty($globals['noindex'])) {
-		echo '<meta name="robots" content="noindex,follow"/>' . "\n";
-	}
-	if (!empty($globals['tags'])) {
-		echo '<meta name="keywords" content="'.$globals['tags'].'" />' . "\n";
-	}
-	if (empty($globals['favicon'])) $globals['favicon'] = 'img/favicons/favicon4.ico';
-	echo '<link rel="icon" href="'.$globals['base_static'].$globals['favicon'].'" type="image/x-icon"/>' . "\n";
-	echo '<link rel="apple-touch-icon" href="'.$globals['base_static'].'img/favicons/apple-touch-icon.png"/>' . "\n";
-	echo '<link rel="alternate" type="application/rss+xml" title="'._('publicadas').'" href="http://'.get_server_name().$globals['base_url'].'rss2.php" />'."\n";
-
-	if ($globals['extra_head']) echo $globals['extra_head'];
-
-	echo '</head>' . "\n";
-	echo "<body id=\"$id\" ". $globals['body_args']. ">\n";
-
-	echo '<div id="header">' . "\n";
-	echo '<a href="'.$globals['base_url'].'" title="'._('inicio').'" id="logo">'._("menéame").'</a>'."\n";
-	echo '<ul id="headtools">';
-
- 	echo '<li><a href="'.$globals['base_url'].'search.php">'. _('buscar').'</a></li>';
-	if($current_user->authenticated) {
-  		echo '<li><a href="'.$globals['base_url'].'login.php?op=logout&amp;return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('logout').'</a></li>';
- 		echo '<li class="noborder"><a href="'.get_user_uri($current_user->user_login).'" title="'.$current_user->user_login.'"><img src="'.get_avatar_url($current_user->user_id, $current_user->user_avatar, 20).'" width="20" height="20" alt="'.$current_user->user_login.'"/></a></li>';
-	} else {
-  		echo '<li class="noborder"><a href="'.$globals['base_url'].'login.php?return='.urlencode($_SERVER['REQUEST_URI']).'">'. _('login').'</a></li>';
-	}
-
-
-	echo '</ul>' . "\n";
-	echo '</div>' . "\n";
-	do_banner_top_mobile();
-	echo '<div id="container">'."\n";
-}
-
-function do_css_includes() {
-	global $globals;
-
-	if ($globals['css_main']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_main'].'" />' . "\n";
-	}
-	if ($globals['css_color']) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].$globals['css_color'].'" />' . "\n";
-	}
-	foreach ($globals['extra_css'] as $css) {
-		echo '<link rel="stylesheet" type="text/css" media="screen" href="'.$globals['base_static'].'css/'.$css.'" />' . "\n";
-	}
-}
-
-function do_js_includes() {
-	global $globals;
-
-	echo '<script src="'.$globals['base_url'].'js/'.$globals['js_main'].'" type="text/javascript"></script>' . "\n";
-	do_js_from_array($globals['extra_js']);
-	if ($globals['extra_js_text']) {
-		echo '<script type="text/javascript">'."\n";
-		echo $globals['extra_js_text']."\n";
-		echo '</script>'."\n";
-	}
-	echo '<script type="text/javascript">'."\n";
-	echo 'if(top.location != self.location)top.location = self.location;'."\n";
-	echo 'var base_key="'.get_security_key().'";'."\n";
-	echo '</script>'."\n";
-}
-
-function do_js_from_array($array) {
-	global $globals;
-
-	foreach ($array as $js) {
-		if (preg_match('/^http|^\//', $js)) {
-			echo '<script src="'.$js.'" type="text/javascript"></script>' . "\n";
-		} elseif (preg_match('/\.js$/', $js))  {
-			echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
-		} else {
-			echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>' . "\n";
-		}
-	}
+    return Haanga::Load("mobile/header.html", $vars);
 }
 
 function do_footer($credits = true) {
 	global $globals;
 
-	echo "</div>\n";
-	if($credits) @do_credits_mobile();
-	do_js_includes();
-	do_js_from_array($globals['post_js']);
-
-	// warn warn warn 
-	// dont do stats of password recovering pages
-	@include('ads/stats-mobile.inc');
-	printf("\n<!--Generated in %4.3f seconds-->\n", microtime(true) - $globals['start_time']);
-	echo "</body></html>\n";
+    $globals['security_key'] = get_security_key();
+    $vars = compact('credits');
+    return Haanga::Load('mobile/footer.html', $vars);
 }
 
 function do_footer_menu() {
