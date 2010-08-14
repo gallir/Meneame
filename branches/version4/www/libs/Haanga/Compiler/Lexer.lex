@@ -207,7 +207,14 @@ html {
 "NOT" token_end {
     $this->token = HG_Parser::T_NOT;
 }
+
+"TRUE" token_end {
+    $this->token = HG_Parser::T_TRUE;
+}
     
+"FALSE" token_end {
+    $this->token = HG_Parser::T_FALSE;
+}
     
 "!" token_end {
     $this->token = HG_Parser::T_NOT;

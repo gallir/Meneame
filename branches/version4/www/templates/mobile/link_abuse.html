@@ -1,0 +1,29 @@
+{% if self.status == 'abuse' %}
+    <div class="warn"><strong>{% trans _('Aviso') %}</strong>: 
+	    {% trans _('noticia descartada por violar las') %} 
+        <a href="{{globals.legal}}#tos">{% trans _('normas de uso') %}</a>
+	</div>
+{% endif %}
+{% if self.has_warning %}
+	<div class="warn">
+        <strong>{% trans _('Aviso automático') %}</strong>: 
+        {% if self.status == 'published' %}
+            {% trans  _('noticia errónea o controvertida, por favor lee los comentarios.') %}
+        {% else %}
+            {% if self.author == current_user.user_id AND self.is_editable %}
+			    {% trans _('Esta noticia tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
+            {% else %}
+				{% if self.negative_text %}
+					{% trans  _('Esta noticia podría ser') %} <strong>{{ self.negative_text }}</strong>
+                {% else %}
+					{% trans _('Esta noticia tiene varios votos negativos.') %}
+                {% endif %}
+            {% endif %}
+            {% if NOT self.voted AND NOT globals.link %}
+			    <a href="{% exec self.get_relative_permalink %}">
+                    {% trans _('Asegúrate') %}
+                </a> {% trans _('antes de menear') %}.
+            {% endif %}
+        {% endif %}
+    </div>
+{% endif %}

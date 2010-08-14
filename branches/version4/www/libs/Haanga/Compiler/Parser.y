@@ -220,6 +220,7 @@ var_or_string(A) ::= string(B).     { A = array('string' => B); }
 
 fvar_or_string(A) ::= filtered_var(B).  { A = array('var_filter' => B); }  
 fvar_or_string(A) ::= T_NUMERIC(B).     { A = array('number' => B); }  
+fvar_or_string(A) ::= T_TRUE|T_FALSE(B).   { A = trim(@B); }  
 fvar_or_string(A) ::= string(B).        { A = array('string' => B); }
 
 /* */

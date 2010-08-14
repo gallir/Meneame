@@ -462,12 +462,11 @@ class Link {
 		$this->show_shakebox = $type != 'preview' && $this->title && $this->content 
 				&& ($this->votes > 0 || $current_user->user_id == $this->author);
 		$this->has_warning   = !(!$this->check_warn() || $this->is_discarded());
-		$this->is_editable   = $this->is_editable();
+		$this->is_editable  = $this->is_editable();
 		$this->url_str	   = htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url)));
-		$this->username_str  = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
+		$this->username_str = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
-		$this->thumb_url	 = $this->has_thumb();
-		$this->content_txt   = text_to_html($this->content, 'links');
+		$this->thumb_url    = $this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) && 

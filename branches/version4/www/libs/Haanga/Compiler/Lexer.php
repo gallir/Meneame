@@ -322,18 +322,20 @@ class Haanga_Compiler_Lexer
               59 => 0,
               60 => 0,
               61 => 0,
-              62 => 1,
-              64 => 0,
-              65 => 0,
-              66 => 1,
-              68 => 2,
-              71 => 1,
-              73 => 0,
+              62 => 0,
+              63 => 0,
+              64 => 1,
+              66 => 0,
+              67 => 0,
+              68 => 1,
+              70 => 2,
+              73 => 1,
+              75 => 0,
             );
         if ($this->N >= strlen($this->data)) {
             return false; // end of input
         }
-        $yy_global_pattern = "/^(%\\})|^(->)|^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)/";
+        $yy_global_pattern = "/^(%\\})|^(->)|^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)/";
 
         do {
             if (preg_match($yy_global_pattern, substr($this->data, $this->N), $yymatches)) {
@@ -373,74 +375,76 @@ class Haanga_Compiler_Lexer
                     // skip this token
                     continue;
                 } else {                    $yy_yymore_patterns = array(
-        1 => array(0, "^(->)|^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        2 => array(0, "^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        3 => array(0, "^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        4 => array(0, "^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        5 => array(0, "^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        6 => array(0, "^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        7 => array(0, "^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        8 => array(0, "^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        9 => array(0, "^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        10 => array(0, "^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        11 => array(0, "^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        12 => array(0, "^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        13 => array(0, "^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        14 => array(0, "^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        15 => array(0, "^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        16 => array(0, "^(NOT[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        17 => array(0, "^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        18 => array(0, "^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        19 => array(0, "^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        20 => array(0, "^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        21 => array(0, "^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        22 => array(0, "^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        23 => array(0, "^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        24 => array(0, "^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        25 => array(0, "^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        26 => array(0, "^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        27 => array(0, "^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        28 => array(0, "^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        29 => array(0, "^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        30 => array(0, "^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        31 => array(0, "^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        32 => array(0, "^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        33 => array(0, "^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        34 => array(0, "^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        35 => array(0, "^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        36 => array(0, "^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        37 => array(0, "^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        38 => array(0, "^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        39 => array(0, "^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        40 => array(0, "^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        41 => array(0, "^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        42 => array(0, "^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        43 => array(0, "^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        44 => array(0, "^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        45 => array(0, "^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        46 => array(0, "^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        47 => array(0, "^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        48 => array(0, "^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        49 => array(0, "^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        50 => array(0, "^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        51 => array(0, "^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        52 => array(0, "^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        53 => array(0, "^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        54 => array(0, "^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        55 => array(0, "^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        56 => array(0, "^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        57 => array(0, "^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        58 => array(0, "^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        59 => array(0, "^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        60 => array(0, "^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        61 => array(0, "^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        62 => array(1, "^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        64 => array(1, "^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        65 => array(1, "^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        66 => array(2, "^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        68 => array(4, "^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
-        71 => array(5, "^([ \r\t\n]+)"),
-        73 => array(5, ""),
+        1 => array(0, "^(->)|^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        2 => array(0, "^(\\.)|^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        3 => array(0, "^(buffer[^a-zA-Z0-9_\.])|^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        4 => array(0, "^(for[^a-zA-Z0-9_\.])|^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        5 => array(0, "^(empty[^a-zA-Z0-9_\.])|^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        6 => array(0, "^(load[^a-zA-Z0-9_\.])|^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        7 => array(0, "^(block[^a-zA-Z0-9_\.])|^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        8 => array(0, "^(&&)|^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        9 => array(0, "^(AND[^a-zA-Z0-9_\.])|^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        10 => array(0, "^(\\|\\|)|^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        11 => array(0, "^(OR[^a-zA-Z0-9_\.])|^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        12 => array(0, "^(==)|^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        13 => array(0, "^(!=)|^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        14 => array(0, "^(>=)|^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        15 => array(0, "^(not[^a-zA-Z0-9_\.])|^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        16 => array(0, "^(NOT[^a-zA-Z0-9_\.])|^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        17 => array(0, "^(TRUE[^a-zA-Z0-9_\.])|^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        18 => array(0, "^(FALSE[^a-zA-Z0-9_\.])|^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        19 => array(0, "^(![^a-zA-Z0-9_\.])|^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        20 => array(0, "^(\\[)|^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        21 => array(0, "^(\\])|^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        22 => array(0, "^(>)|^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        23 => array(0, "^(<)|^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        24 => array(0, "^(=<)|^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        25 => array(0, "^(\\|)|^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        26 => array(0, "^(:)|^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        27 => array(0, "^(filter[^a-zA-Z0-9_\.])|^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        28 => array(0, "^(regroup[^a-zA-Z0-9_\.])|^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        29 => array(0, "^(endfilter[^a-zA-Z0-9_\.])|^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        30 => array(0, "^(autoescape[^a-zA-Z0-9_\.])|^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        31 => array(0, "^(spacefull[^a-zA-Z0-9_\.])|^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        32 => array(0, "^(endautoescape[^a-zA-Z0-9_\.])|^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        33 => array(0, "^(endblock[^a-zA-Z0-9_\.])|^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        34 => array(0, "^(ifchanged[^a-zA-Z0-9_\.])|^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        35 => array(0, "^(ifequal[^a-zA-Z0-9_\.])|^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        36 => array(0, "^(endifequal[^a-zA-Z0-9_\.])|^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        37 => array(0, "^(ifnotequal[^a-zA-Z0-9_\.])|^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        38 => array(0, "^(endifnotequal[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        39 => array(0, "^(else[^a-zA-Z0-9_\.])|^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        40 => array(0, "^(endifchanged[^a-zA-Z0-9_\.])|^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        41 => array(0, "^(in[^a-zA-Z0-9_\.])|^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        42 => array(0, "^(endfor[^a-zA-Z0-9_\.])|^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        43 => array(0, "^(with[^a-zA-Z0-9_\.])|^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        44 => array(0, "^(endwith[^a-zA-Z0-9_\.])|^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        45 => array(0, "^(as)|^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        46 => array(0, "^(on)|^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        47 => array(0, "^(off)|^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        48 => array(0, "^(by)|^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        49 => array(0, "^(if[^a-zA-Z0-9_\.])|^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        50 => array(0, "^(else[^a-zA-Z0-9_\.])|^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        51 => array(0, "^(endif[^a-zA-Z0-9_\.])|^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        52 => array(0, "^(_\\()|^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        53 => array(0, "^(\\()|^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        54 => array(0, "^(\\))|^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        55 => array(0, "^(%)|^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        56 => array(0, "^(,)|^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        57 => array(0, "^(\\+)|^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        58 => array(0, "^(-)|^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        59 => array(0, "^(\\*)|^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        60 => array(0, "^(\/)|^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        61 => array(0, "^(')|^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        62 => array(0, "^(\")|^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        63 => array(0, "^(end([a-zA-Z][a-zA-Z0-9]*))|^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        64 => array(1, "^(extends[^a-zA-Z0-9_\.])|^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        66 => array(1, "^(include[^a-zA-Z0-9_\.])|^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        67 => array(1, "^([0-9]+(\\.[0-9]+)?)|^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        68 => array(2, "^([0-9]+(\\.[0-9]+)?\\.[0-9]+(\\.[0-9]+)?)|^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        70 => array(4, "^(([a-zA-Z_][a-zA-Z_0-9]*))|^([ \r\t\n]+)"),
+        73 => array(5, "^([ \r\t\n]+)"),
+        75 => array(5, ""),
     );
 
                     // yymore is needed
@@ -586,256 +590,266 @@ class Haanga_Compiler_Lexer
     function yy_r2_18($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_NOT;
+    $this->token = HG_Parser::T_TRUE;
     }
     function yy_r2_19($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_BRACKETS_OPEN;
+    $this->token = HG_Parser::T_FALSE;
     }
     function yy_r2_20($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_BRACKETS_CLOSE;
+    $this->token = HG_Parser::T_NOT;
     }
     function yy_r2_21($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_GT;
+    $this->token = HG_Parser::T_BRACKETS_OPEN;
     }
     function yy_r2_22($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_LT;
+    $this->token = HG_Parser::T_BRACKETS_CLOSE;
     }
     function yy_r2_23($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_LE;
+    $this->token = HG_Parser::T_GT;
     }
     function yy_r2_24($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_PIPE;
+    $this->token = HG_Parser::T_LT;
     }
     function yy_r2_25($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_COLON;
+    $this->token = HG_Parser::T_LE;
     }
     function yy_r2_26($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_FILTER;
+    $this->token = HG_Parser::T_PIPE;
     }
     function yy_r2_27($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_REGROUP;
+    $this->token = HG_Parser::T_COLON;
     }
     function yy_r2_28($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_END_FILTER;
+    $this->token = HG_Parser::T_FILTER;
     }
     function yy_r2_29($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_AUTOESCAPE;
+    $this->token = HG_Parser::T_REGROUP;
     }
     function yy_r2_30($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_SPACEFULL;
+    $this->token = HG_Parser::T_END_FILTER;
     }
     function yy_r2_31($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_END_AUTOESCAPE;
+    $this->token = HG_Parser::T_AUTOESCAPE;
     }
     function yy_r2_32($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_END_BLOCK;
+    $this->token = HG_Parser::T_SPACEFULL;
     }
     function yy_r2_33($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_IFCHANGED;
+    $this->token = HG_Parser::T_END_AUTOESCAPE;
     }
     function yy_r2_34($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_IFEQUAL;
+    $this->token = HG_Parser::T_END_BLOCK;
     }
     function yy_r2_35($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_END_IFEQUAL;
+    $this->token = HG_Parser::T_IFCHANGED;
     }
     function yy_r2_36($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_IFNOTEQUAL;
+    $this->token = HG_Parser::T_IFEQUAL;
     }
     function yy_r2_37($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_END_IFNOTEQUAL;
+    $this->token = HG_Parser::T_END_IFEQUAL;
     }
     function yy_r2_38($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ELSE;
+    $this->token = HG_Parser::T_IFNOTEQUAL;
     }
     function yy_r2_39($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ENDIFCHANGED;
+    $this->token = HG_Parser::T_END_IFNOTEQUAL;
     }
     function yy_r2_40($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_IN;
+    $this->token = HG_Parser::T_ELSE;
     }
     function yy_r2_41($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_CLOSEFOR;
+    $this->token = HG_Parser::T_ENDIFCHANGED;
     }
     function yy_r2_42($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_WITH;
+    $this->token = HG_Parser::T_IN;
     }
     function yy_r2_43($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ENDWITH;
+    $this->token = HG_Parser::T_CLOSEFOR;
     }
     function yy_r2_44($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_AS;
+    $this->token = HG_Parser::T_WITH;
     }
     function yy_r2_45($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ON;
+    $this->token = HG_Parser::T_ENDWITH;
     }
     function yy_r2_46($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_OFF;
+    $this->token = HG_Parser::T_AS;
     }
     function yy_r2_47($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_BY;
+    $this->token = HG_Parser::T_ON;
     }
     function yy_r2_48($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_IF;
+    $this->token = HG_Parser::T_OFF;
     }
     function yy_r2_49($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ELSE;
+    $this->token = HG_Parser::T_BY;
     }
     function yy_r2_50($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_ENDIF;
+    $this->token = HG_Parser::T_IF;
     }
     function yy_r2_51($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_INTL;
+    $this->token = HG_Parser::T_ELSE;
     }
     function yy_r2_52($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_LPARENT;
+    $this->token = HG_Parser::T_ENDIF;
     }
     function yy_r2_53($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_RPARENT;
+    $this->token = HG_Parser::T_INTL;
     }
     function yy_r2_54($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_MOD;
+    $this->token = HG_Parser::T_LPARENT;
     }
     function yy_r2_55($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_COMMA;
+    $this->token = HG_Parser::T_RPARENT;
     }
     function yy_r2_56($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_PLUS;
+    $this->token = HG_Parser::T_MOD;
     }
     function yy_r2_57($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_MINUS;
+    $this->token = HG_Parser::T_COMMA;
     }
     function yy_r2_58($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_TIMES;
+    $this->token = HG_Parser::T_PLUS;
     }
     function yy_r2_59($yy_subpatterns)
     {
 
-    $this->token = HG_Parser::T_DIV;
+    $this->token = HG_Parser::T_MINUS;
     }
     function yy_r2_60($yy_subpatterns)
+    {
+
+    $this->token = HG_Parser::T_TIMES;
+    }
+    function yy_r2_61($yy_subpatterns)
+    {
+
+    $this->token = HG_Parser::T_DIV;
+    }
+    function yy_r2_62($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_STRING_SINGLE_INIT;
     $this->yypushstate(self::IN_STRING_SINGLE);
     }
-    function yy_r2_61($yy_subpatterns)
+    function yy_r2_63($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_STRING_DOUBLE_INIT;
     $this->yypushstate(self::IN_STRING_DOUBLE);
     }
-    function yy_r2_62($yy_subpatterns)
+    function yy_r2_64($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_CUSTOM_END;
     }
-    function yy_r2_64($yy_subpatterns)
+    function yy_r2_66($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_EXTENDS;
     }
-    function yy_r2_65($yy_subpatterns)
+    function yy_r2_67($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_INCLUDE;
-    }
-    function yy_r2_66($yy_subpatterns)
-    {
-
-    $this->token = HG_Parser::T_NUMERIC;
     }
     function yy_r2_68($yy_subpatterns)
     {
 
     $this->token = HG_Parser::T_NUMERIC;
     }
-    function yy_r2_71($yy_subpatterns)
+    function yy_r2_70($yy_subpatterns)
+    {
+
+    $this->token = HG_Parser::T_NUMERIC;
+    }
+    function yy_r2_73($yy_subpatterns)
     {
 
     $this->is_custom_tag();
     }
-    function yy_r2_73($yy_subpatterns)
+    function yy_r2_75($yy_subpatterns)
     {
 
     return FALSE;

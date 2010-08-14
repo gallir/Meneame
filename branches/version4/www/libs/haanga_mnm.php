@@ -1,12 +1,17 @@
 <?php
 
+class Haanga_Extension_Filter_TextToHTML
+{
+    public $php_alias = 'text_to_html';
+}
+
 class Haanga_Extension_Tag_MeneameEndtime
 {
     public $is_block = FALSE;
 
     static function generator($cmp, $args, $assign=NULL)
     {
-        /* abs */
+        /* ast */
         $code = hcode();
         
         /* llamar a la funcion */
@@ -18,6 +23,19 @@ class Haanga_Extension_Tag_MeneameEndtime
         $cmp->do_print($code, $exec);
 
         return $code;
+    }
+}
+
+class Haanga_Extension_Filter_TxtShorter
+{
+    public $is_block = FALSE;
+
+    static function generator($cmp, $args)
+    {
+        if (!isset($args[1])) {
+            $args[1] = 40; /* truncate to 40 letters by default */
+        }
+        return hexec('txt_shorter', $args[0], $args[1]);
     }
 }
 

@@ -92,7 +92,7 @@
 			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 		{% endif %}
 		<p>
-			{{ self.content_txt }}
+			{{ self.content|text_to_html:"links" }}
 			{% if (globals.link AND type != 'preview' ) %}
 				{% if self.is_editable %}
 					&nbsp;&nbsp;<a href="{% get_url 'editlink.php?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{% get_static_url 'img/common/edit-misc01.png' %}" alt="edit" width="18" height="12"/></a>
@@ -144,7 +144,7 @@
 			{{self.category_name}}</a>
 		</span>
 		<span class="tool">karma: <span id="a-karma-{{self.id}}">
-			{% exec intval self.karma %}
+			{{ self.karma|intval }}
 		</span></span>
 
 		{% if self.can_vote_negative %}
