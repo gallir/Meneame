@@ -21,11 +21,11 @@ function do_banner_top () { // top banner
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		Haanga::Load('meneame/ad-top.html');
+		Haanga::Safe_Load('meneame/ad-top.html');
 		//@include('ads/top.inc');
 	} else {
 		echo '<div class="banner-top">' . "\n";
-		Haanga::Load('meneame/ad-meneame.html');
+		Haanga::Safe_Load('meneame/ad-meneame.html');
 		//@include('ads/meneame-01.inc');
 		echo '</div>' . "\n";
 	}
@@ -53,7 +53,7 @@ function do_banner_right() { // side banner A
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		Haanga::Load('meneame/ad-right.html');
+		Haanga::Safe_Load('meneame/ad-right.html');
 		//@include('ads/right.inc');
 	}
 }
