@@ -15,7 +15,7 @@ class Haanga_Extension_Tag_MeneameEndtime
         $code = hcode();
         
         /* llamar a la funcion */
-        $exec = hexec('sprintf', "<!--Generated in %4.3f seconds-->", 
+        $exec = hexec('sprintf', "<!--Delivered to you in %4.3f seconds-->", 
             hexpr( hexec('microtime', TRUE), '-', hvar('globals', 'start_time') )
         );
 
