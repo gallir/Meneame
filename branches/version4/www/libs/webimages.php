@@ -62,6 +62,18 @@ class BasicThumb {
 		return false;
 	}
 
+	function is_not_black() {
+		// Check an image is not a background of the same color
+		if (!$this->image) return false;
+		$previous = false;
+		for ($i=0; $i < $this->x && $i < $this->y; $i++) {
+			$color = imagecolorat($this->image, $i, $i);
+			if ($previous !== false && $color != $previous) return true;
+			$previous = $color;
+		}
+		return false;
+	}
+
 	function round_corners() {
 		$white = imagecolorallocatealpha($this->image, 255, 255, 255, 0);
 		$semi_white = imagecolorallocatealpha($this->image, 255, 255, 255, 27);
@@ -217,8 +229,6 @@ class WebThumb extends BasicThumb {
 			if (!$this->get()) {
 				return false;
 			}
-			$x = $this->html_x;
-			$y = $this->html_y;
 		}
 		if ($strict) {
 			$min_size = 220;
@@ -229,12 +239,15 @@ class WebThumb extends BasicThumb {
 			$this->weight = 0.75; // Prefer JPGs over GIFs
 		} else {
 			$min_size = 100;
-			$min_surface = 16500;
+			$min_surface = 15000;
 		}
-		echo "<!-- x:$x y:$y minsize: $min_size -->\n";
-		return $x >= $min_size && $y >= $min_size && ( 
-			(($x*$y) > $min_surface && $this->ratio() < 3.5) || 
-			( $x > $min_size*4 && ($x*$y) > $min_surface*3 && $this->ratio() < 4.6)); // For panoramic photos
+		echo "<!-- x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size -->\n";
+		return min($this->html_x, $this->x)  >= $min_size 
+			&& min($this->html_y, $this->y) >= $min_size 
+			&& $this->is_not_black()
+			&& ( 
+			(($this->html_x*$this->html_y) > $min_surface && $this->ratio() < 3.5) || 
+			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $this->ratio() < 4.6)); // For panoramic photos
 	}
 
 }
