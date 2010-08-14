@@ -21,10 +21,12 @@ function do_banner_top () { // top banner
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		@include('ads/top.inc');
+		Haanga::Load('meneame/ad-top.html');
+		//@include('ads/top.inc');
 	} else {
 		echo '<div class="banner-top">' . "\n";
-		@include('ads/meneame-01.inc');
+		Haanga::Load('meneame/ad-meneame.html');
+		//@include('ads/meneame-01.inc');
 		echo '</div>' . "\n";
 	}
 }
@@ -51,7 +53,8 @@ function do_banner_right() { // side banner A
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
-		@include('ads/right.inc');
+		Haanga::Load('meneame/ad-right.html');
+		//@include('ads/right.inc');
 	}
 }
 
@@ -70,11 +73,13 @@ function do_banner_top_news() {
 function do_banner_story() {
 	global $globals, $current_user;
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
-		@include('ads/adsense-middle.inc');
+		//@include('ads/adsense-middle.inc');
+		Haanga::Load('meneame/ad-middle.html');
 	}
 	if ($globals['link'] && $globals['kalooga_categories'] 
 			&& in_array($globals['link']->category, $globals['kalooga_categories']) ) {
-		@include('ads/kalooga.inc');
+		//@include('ads/kalooga.inc');
+		Haanga::Load('meneame/kalooga.html');
 	}
 }
 
