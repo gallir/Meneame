@@ -1,0 +1,13 @@
+<script type="text/javascript">
+    var plus  = '{{globals.static_server}}' + base_url + 'img/common/plus-001.png';
+    var minus = '{{globals.static_server}}' + base_url + 'img/common/minus-001.png';
+	bindTogglePlusMinus('toggle_i_0', 'toggle_l_0', '{{container_id}}');
+</script>
+
+<a class='toggler' id='toggle_l_0' href=''>
+{% if toggle_enabled %}
+<img src='{{globals.base_static}}img/common/minus-001.png' id='toggle_i_0' alt='' width='18' height='18'/>
+{% else %}
+<img src='{{globals.base_static}}img/common/plus-001.png' id='toggle_i_0' alt='' width='18' height='18'/>
+{% endif %}
+</a>

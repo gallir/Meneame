@@ -35,7 +35,10 @@
   +---------------------------------------------------------------------------------+
 */
 
-define('HAANGA_VERSION', '1.1.3');
+if (!defined('HAANGA_VERSION')) {
+    /* anyone can override this value to force recompilation */
+    define('HAANGA_VERSION', '1.0.3');
+}
 
 
 /**
@@ -301,7 +304,7 @@ class Haanga
                 require_once "{$dir}/Haanga/Compiler.php";
                 require_once "{$dir}/Haanga/Compiler/Runtime.php";
                 require_once "{$dir}/Haanga/Compiler/Parser.php";
-                require_once "{$dir}/Haanga/Compiler/Lexer.php";
+                require_once "{$dir}/Haanga/Compiler/Tokenizer.php";
                 require_once "{$dir}/Haanga/Generator/PHP.php";
                 require_once "{$dir}/Haanga/Extension.php";
                 require_once "{$dir}/Haanga/Extension/Filter.php";
@@ -332,7 +335,16 @@ class Haanga
                 $compiler->setDebug($php.".dump");
             }
 
-            $code = $compiler->compile_file($tpl, FALSE, $vars);
+            try {
+                $code = $compiler->compile_file($tpl, FALSE, $vars);
+            } catch (Exception $e) {
+                if (isset($fp)) {
+                    fclose($fp);
+                    unlink($php);
+                }
+                /* re-throw exception */
+                throw $e;
+            }
 
             if (isset($fp)) {
                 ftruncate($fp, 0); // truncate file

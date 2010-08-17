@@ -410,7 +410,7 @@ class Haanga_Generator_PHP
      *
      *  @return string
      */
-    protected function php_generate_stmt($op)
+    protected function php_generate_stmt($op, $concat='.')
     {
         $code = "";
 
@@ -431,13 +431,13 @@ class Haanga_Generator_PHP
                 break;
             case 'function':
             case 'exec':
-                if (strlen($code) != 0 && $code[strlen($code) -1] != '.') {
-                    $code .= '.';
+                if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
+                    $code .= $concat;
                 }
 
                 $value = array('name' => $value, 'args' => $op[$i]['args']);
                 $code .= $this->php_exec($value, FALSE);
-                $code .= '.';
+                $code .= $concat;
                 break;
             case 'key':
                 $code .= $this->php_generate_stmt(array($value[0]))." => ".$this->php_generate_stmt(array($value[1]));
@@ -454,10 +454,10 @@ class Haanga_Generator_PHP
                 $code .= $html."'";
                 break;
             case 'var':
-                if (strlen($code) != 0 && $code[strlen($code) -1] != '.') {
-                    $code .= '.';
+                if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
+                    $code .= $concat;
                 }
-                $code .= $this->php_get_varname($value).'.';
+                $code .= $this->php_get_varname($value). $concat;
                 break;
             case 'number':
                 if (!is_numeric($value)) {
@@ -467,21 +467,21 @@ class Haanga_Generator_PHP
                 break;
             case 'op_expr':
                 if (strlen($code) != 0) {
-                    $code .= '.';
+                    $code .= $concat;
                 }
                 $code .= $this->php_generate_expr($op[$i]);
-                $code .= ".";
+                $code .= $concat;
                 break;
             case 'expr':
                 if (strlen($code) != 0) {
-                    $code .= '.';
+                    $code .= $concat;
                 }
                 $code .= $this->php_generate_expr($value);
-                $code .= ".";
+                $code .= $concat;
                 break;
             case 'expr_cond':
                 if (strlen($code) != 0) {
-                    $code .= '.';
+                    $code .= $concat;
                 }
                 $code .= "(";
                 $code .= $this->php_generate_expr($value);
@@ -489,17 +489,17 @@ class Haanga_Generator_PHP
                 $code .= $this->php_generate_stmt(array($op[$i]['true']));
                 $code .= " : ";
                 $code .= $this->php_generate_stmt(array($op[$i]['false']));
-                $code .= ").";
+                $code .= "){$concat}";
                 break;
             case 'constant':
                 $code = $value;
                 break;
             default:
-                throw new Exception("Don't know how to declare {$key} = {$value} (".print_r($op[$i], TRUE));
+                throw new Exception("Don't know how to declare {$key} = {$value} (".print_r($op, TRUE));
             }
         }
 
-        if ($code != "" && $code[strlen($code)-1] == '.') {
+        if ($code != "" && $code[strlen($code)-1] == $concat) {
             $code = substr($code, 0, -1);
         }
 
@@ -515,7 +515,7 @@ class Haanga_Generator_PHP
      */
     protected function php_print($op)
     {
-        $output = $this->php_generate_stmt($op);
+        $output = $this->php_generate_stmt($op, Haanga_Compiler::getOption('echo_concat'));
         if ($output == "' '" && Haanga_Compiler::getOption('strip_whitespace')) {
             return; /* ignore this */
         }
@@ -531,7 +531,7 @@ class Haanga_Generator_PHP
      */
     protected function php_inc($op)
     {
-        return $this->php_get_varname($op['name'])."++;";
+        return "++".$this->php_get_varname($op['name']);
     }
     // }}}
 

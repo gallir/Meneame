@@ -83,6 +83,8 @@ class Haanga_Compiler
     static protected $strip_whitespace = FALSE;
     static protected $is_exec_enabled  = FALSE;
     static protected $global_context = array();
+    static protected $echo_concat = '.';
+    static protected $enable_load = TRUE;
 
     /**
      *  Debug file
@@ -103,6 +105,9 @@ class Haanga_Compiler
     {
         $value = NULL;
         switch (strtolower($option)) {
+        case 'enable_load':
+            $value = self::$enable_load;
+            break;
         case 'if_empty':
             $value = self::$if_empty;
             break;
@@ -111,6 +116,9 @@ class Haanga_Compiler
             break;
         case 'dot_as_object':
             $value = self::$dot_as_object;
+            break;
+        case 'echo_concat':
+            $value = self::$echo_concat;
             break;
         case 'strip_whitespace':
             $value = self::$strip_whitespace;
@@ -139,6 +147,14 @@ class Haanga_Compiler
         case 'if_empty':
             self::$if_empty = (bool)$value;
             break;
+        case 'enable_load':
+            self::$enable_load = (bool)$value;
+        case 'echo_concat':
+            if ($value == '.' || $value == ',') {
+                self::$echo_concat = $value;
+            }
+            break;
+
         case 'autoescape':
             self::$autoescape = (bool)$value;
             break;
@@ -160,7 +176,7 @@ class Haanga_Compiler
             break;
         }
     }
-    // }}}
+    // }}} 
 
     // setDebug($file) {{{
     function setDebug($file)
@@ -212,7 +228,7 @@ class Haanga_Compiler
     {
         $this->name = $name;
 
-        $parsed = Haanga_Compiler_Lexer::init($code, $this, $file);
+        $parsed = Haanga_Compiler_Tokenizer::init($code, $this, $file);
         $code   = "";
         $this->subtemplate = FALSE;
 
@@ -335,7 +351,7 @@ class Haanga_Compiler
     {
         $oldfile    = $this->file;
         $this->file = $file;
-        $parsed = Haanga_Compiler_Lexer::init($code, $this, $file);
+        $parsed = Haanga_Compiler_Tokenizer::init($code, $this, $file);
         $body = new Haanga_AST;
         if (isset($parsed[0]) && $parsed[0]['operation'] == 'base') {
             $this->Error("{% base is not supported on inlines %}");
@@ -489,17 +505,6 @@ class Haanga_Compiler
                 $this->check_expr($expr['false']);
             }
         }
-    }
-    // }}}
-
-    // buffer <varname> {{{
-    public function generate_op_buffer($details, &$body)
-    {
-        $this->ob_start($body);
-        $this->generate_op_code($details['body'], $body);
-        $body->decl($details['name'], hvar('buffer'.$this->ob_start));
-        $this->ob_start--;
-        $this->set_safe($details['name']);
     }
     // }}}
 
@@ -1190,9 +1195,20 @@ class Haanga_Compiler
             $this->generate_op_code($details['body'], $body);
             $target = hvar('buffer'.$this->ob_start);
             if ($tags->hasGenerator($tag_name)) {
-                $exec = $tags->generator($tag_name, $this, array($target));
+                $args = array_merge(array($target), $details['list']);
+                $exec = $tags->generator($tag_name, $this, $args);
                 if (!$exec InstanceOf Haanga_AST) {
                     $this->Error("Invalid output of custom filter {$tag_name}");
+                }
+                if ($exec->stack_size() >= 2 || $exec->doesPrint) {
+                    /* 
+                        The generator returned more than one statement,
+                        so we assume the output is already handled
+                        by one of those stmts.
+                    */
+                    $body->append_ast($exec);
+                    $this->ob_start--;
+                    return;
                 }
             } else {
                 $exec = hexec($function, $target);

@@ -106,52 +106,43 @@ do_footer();
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
-	$toggler = get_toggler_plusminus('topcatlist', $_REQUEST['category']);
-	$active = array();
-	$toggle_active = array();
-	if ($option >= 0) {
-		$active[$option] = 'class="selected"';
-		$toggle_active[$option] = &$toggler;
-	}
-
-	echo '<ul class="subheader">'."\n";
+	$items = array();
 	if ($current_user->has_personal) {
-		echo '<li '.$active[7].'><span><a href="'.$globals['base_url'].'">'._('personal'). '</a>'.$toggle_active[7].'</span></li>'."\n";
+		$items[] = array('id' => 7, 'url' => '', 'title' => _('personal'));
 	}
-	echo '<li '.$active[0].'><span><a href="'.$globals['base_url'].$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[0].'</span></li>'."\n";
-	// Do metacategories list
+	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
 	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
-			if ($meta->category_id == $globals['meta_current']) {
-				$active_meta = 'class="selected"';
-				$globals['meta_current_name'] = $meta->category_name;
-				$toggle = &$toggler;
-			} else {
-				$active_meta = '';
-				$toggle = '';
-			}
-			echo '<li '.$active_meta.'><span><a href="'.$globals['base_url'].'?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</span></li>'."\n";
+			$items[] = array(
+				'id'  => 9999, /* fake number */
+				'url' =>'?meta='.$meta->category_uri,
+				'selected' => $meta->category_id == $globals['meta_current'],
+				'title' => $meta->category_name
+			);
 		}
+	}
+	// RSS teasers
+	switch ($option) {
+	case 0: // All, published
+		$feed = array("url" => "", "title" => "");
+		break;
+	case 7: // Personalised, published
+		$feed = array("url" => "?personal=".$current_user->user_id, "title" => _('categoría personalizadas'));
+		break;
+	default:
+		$feed = array("url" => "?meta=".$globals['meta_current'], "title" => "");
+		break;
 	}
 
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[1].'><span><a href="'.$globals['base_url'].'?meta=_friends">'._('amigos'). '</a>'.$toggle_active[1].'</span></li>'."\n";
+		$items[] = array('id' => 1, 'url' => '?meta=_friends', 'title' => _('amigos'));
 	}
 
-	// Print RSS teasers
-	switch ($option) {
-		case 0: // All, published
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-			break;
-		case 7: // Personalised, published
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?personal='.$current_user->user_id.'" rel="rss" title="'._('categorías personalizadas').'"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-			break;
-		default:
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-	}
-
-	echo '</ul>'."\n";
+	$vars = compact('items', 'option', 'feed');
+	$vars['container_id']   = 'topcatlist';
+	$vars['toggle_enabled'] = isset($_REQUEST['category']);
+	return Haanga::Load('print_tabs.html', $vars);
 }
 
 ?>

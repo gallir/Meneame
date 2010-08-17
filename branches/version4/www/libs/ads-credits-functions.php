@@ -74,12 +74,12 @@ function do_banner_story() {
 	global $globals, $current_user;
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link'] && ! $current_user->user_id) {
 		//@include('ads/adsense-middle.inc');
-		Haanga::Load('meneame/ad-middle.html');
+		Haanga::Safe_Load('meneame/ad-middle.html');
 	}
 	if ($globals['link'] && $globals['kalooga_categories'] 
 			&& in_array($globals['link']->category, $globals['kalooga_categories']) ) {
 		//@include('ads/kalooga.inc');
-		Haanga::Load('meneame/kalooga.html');
+		Haanga::Safe_Load('meneame/kalooga.html');
 	}
 }
 

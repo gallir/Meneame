@@ -1,0 +1,22 @@
+<ul class="subheader">
+{% for item in items %}
+    <li{% if item.id == option OR item.selected %} class="selected"{%endif%}>
+        <span>
+            <a href="{{globals.base_url}}{{item.url}}">{{ item.title }}</a>
+        {% if item.id == option OR item.selected %}
+            {% inline "get_toggler_plusminus.html" %}
+        {% endif %}
+        </span>
+    </li>
+{% endfor %}
+
+{% if feed %}
+    <li class="icon">
+        <a href="{{globals.base_url}}rss2.php{{feed.url}}" title="{{feed.title}}" rel="rss">
+            <img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/>
+        </a>
+    </li>
+{% endif %}
+
+</ul>
+

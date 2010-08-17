@@ -17,7 +17,7 @@
 
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//      http://www.affero.org/oagpl.html
+//	  http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -130,56 +130,50 @@ do_footer();
 function print_shakeit_tabs($option=-1) {
 	global $globals, $current_user, $db;
 
-	$toggler = get_toggler_plusminus('topcatlist', $_REQUEST['category']);
-	$active = array();
-	$toggle_active = array();
-	if ($option > 0) {
-		$active[$option] = 'class="selected"';
-		$toggle_active[$option] = &$toggler;
-	}
-
-	echo '<ul class="subheader">'."\n";
+	$items = array();
 	if ($current_user->has_personal) {
-		echo '<li '.$active[7].'><span><a href="'.$globals['base_url'].'shakeit.php">'._('personal'). '</a>'.$toggle_active[7].'</span></li>'."\n";
+		$items[] = array('id' => 7, 'url' => 'shakeit.php', 'title' => _('personal'));
 	}
-	echo '<li '.$active[1].'><span><a href="'.$globals['base_url'].'shakeit.php'.$globals['meta_skip'].'">'._('todas'). '</a>'.$toggle_active[1].'</span></li>'."\n";
-	// Do metas' list
+	$items[] = array('id' => 1, 'url' => 'shakeit.php'.$globals['meta_skip'], 'title' => _('todas'));
+
 	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
-			if ($meta->category_id == $globals['meta_current']) {
-				$active_meta = 'class="selected"';
-				$globals['meta_current_name'] = $meta->category_name;
-				$toggle = &$toggler;
-			} else {
-				$active_meta = '';
-				$toggle = '';
-			}
-			echo '<li '.$active_meta.'><span><a href="'.$globals['base_url'].'shakeit.php?meta='.$meta->category_uri.'">'.$meta->category_name. '</a>'.$toggle.'</span></li>'."\n";
+			$items[] = array(
+				'id'  => 9999, /* fake number */
+				'url' =>'shakeit.php?meta='.$meta->category_uri,
+				'selected' => $meta->category_id == $globals['meta_current'],
+				'title' => $meta->category_name
+			);
 		}
 	}
 
-	echo '<li '.$active[3].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_popular">'._('candidatas'). '</a>'.$toggle_active[3].'</span></li>'."\n";
+	$items[] = array('id' => 3, 'url' => 'shakeit.php?meta=_popular', 'title' => _('candidatas'));
+
 	if ($current_user->user_id > 0) {
-		echo '<li '.$active[2].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_friends">'._('amigos'). '</a>'.$toggle_active[2].'</span></li>'."\n";
+		$items[] = array('id' => 2, 'url' => 'shakeit.php?meta=_friends', 'title' => _('amigos'));
 	}
+
 	if (!$globals['bot']) {
-		echo '<li '.$active[5].'><span><a href="'.$globals['base_url'].'shakeit.php?meta=_discarded">'._('descartadas'). '</a>'.$toggle_active[5].'</span></li>'."\n";
+		$items [] = array('id' => 5, 'url' => 'shakeit.php?meta=_discarded', 'title' => _('descartadas'));
 	}
 
 	// Print RSS teasers
 	switch ($option) {
-		case 1: // All, queued
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-			break;
-		case 7: // Personalised, queued
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued&amp;personal='.$current_user->user_id.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-			break;
-		default:
-			echo '<li class="icon"><a href="'.$globals['base_url'].'rss2.php?status=queued&amp;meta='.$globals['meta_current'].'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
+	case 1: // All, queued
+		$feed = array("url" => "?status=queued", "title" => "");
+		break;
+	case 7: // Personalised, queued
+		$feed = array("url" => "?status=queued&amp;personal=".$current_user->user_id, "title" => "");
+		break;
+	default:
+		$feed = array("url" => "?status=queued&amp;meta=".$globals['meta_current'], "title" => "");
+		break;
 	}
-
-	echo '</ul>'."\n";
+	$vars = compact('items', 'option', 'feed');
+	$vars['container_id']   = 'topcatlist';
+	$vars['toggle_enabled'] = isset($_REQUEST['category']);
+	return Haanga::Load('print_tabs.html', $vars);
 }
 
 ?>
