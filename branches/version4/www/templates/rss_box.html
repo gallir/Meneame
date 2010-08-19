@@ -9,7 +9,7 @@
                 <a href="{{globals.base_url}}{{search_rss}}?{{ _SERVER.QUERY_STRING|escape}}" rel="rss">{% trans _('búsqueda') %}: {{ _REQUEST['q']|escape }}</a>
             </li>
         {% endif %}
-        {% if globals.link %}
+        {% if globals.link_id %}
             {% if globals.link.meta_name %}
             <li>
 			    <a href="{{globals.base_url}}rss2.php?meta={{globals.link.meta_id}}&amp;status=all" rel="rss">{% trans _('temática') %}: <em>{{ globals.link.meta_name }}</em></a>
