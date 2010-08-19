@@ -1295,6 +1295,12 @@ class Haanga_Compiler
             $this->Error("{$name} is an invalid filter");
         }
 
+        if ($filter->isSafe($name)) {
+            /* check if the filter is return HTML-safe data (to avoid double scape) */
+            $this->var_is_safe = TRUE;
+        }
+
+
         if ($filter->hasGenerator($name)) {
             return $filter->generator($name, $this, $args);
         }
@@ -1305,7 +1311,7 @@ class Haanga_Compiler
 
         $args = array_merge(array($fnc), $args);
         $exec = call_user_func_array('hexec', $args);
-
+        
         return $exec;
     }
 

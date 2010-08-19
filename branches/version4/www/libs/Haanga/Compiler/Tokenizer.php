@@ -41,6 +41,10 @@ class HG_Parser Extends Haanga_Compiler_Parser
 }
 
 
+/**
+ *  Hand-written Tokenizer class inspired by SQLite's tokenize.c
+ *
+ */
 class Haanga_Compiler_Tokenizer
 {
     /* they are case sensitive */
@@ -63,8 +67,8 @@ class Haanga_Compiler_Tokenizer
         'spacefull'     => HG_Parser::T_SPACEFULL,
         'autoescape'    => HG_Parser::T_AUTOESCAPE,
         'filter'        => HG_Parser::T_FILTER,
-        'in'            => HG_Parser::T_IN,
         'include'       => HG_Parser::T_INCLUDE,
+        'in'            => HG_Parser::T_IN,
         'as'            => HG_Parser::T_AS,
         'by'            => HG_Parser::T_BY,
         'extends'       => HG_Parser::T_EXTENDS,
@@ -76,8 +80,8 @@ class Haanga_Compiler_Tokenizer
     /* common operations */
     static $operations = array(
         '&&'    => HG_Parser::T_AND,
-        '=='    => HG_Parser::T_EQ,
         '==='   => HG_Parser::T_EQ,
+        '=='    => HG_Parser::T_EQ,
         '->'    => HG_Parser::T_OBJ,
         '||'    => HG_Parser::T_OR,
         '['     => HG_Parser::T_BRACKETS_OPEN,
@@ -117,7 +121,6 @@ class Haanga_Compiler_Tokenizer
     const IN_HTML    = 1;
     const IN_TAG     = 2;
     const IN_ECHO    = 3;
-    const IN_COMMENT = 4;
 
     function __construct($data, $compiler, $file)
     {
@@ -137,7 +140,7 @@ class Haanga_Compiler_Tokenizer
         $this->open_tags = array(
             self::$open_tag     => HG_Parser::T_OPEN_TAG,
             self::$open_print   => HG_Parser::T_PRINT_OPEN,
-            self::$open_comment => HG_Parser::T_COMMENT_OPEN,
+            self::$open_comment => HG_Parser::T_COMMENT,
         );
     }
 
@@ -167,8 +170,16 @@ class Haanga_Compiler_Tokenizer
                     case HG_Parser::T_OPEN_TAG:
                         $this->status = self::IN_TAG;
                         break;
-                    case HG_Parser::T_COMMENT_OPEN:
-                        $this->status = self::IN_COMMENT;
+                    case HG_Parser::T_COMMENT:
+                        $zdata = & $this->data;
+
+                        if (($pos=strpos($zdata, self::$end_comment, $i)) === FALSE) {
+                            $this->error("unexpected end");
+                        }
+
+                        $this->value  = substr($zdata, $i, $pos-2);
+                        $this->status = self::IN_NONE; 
+                        $i = $pos + 2;
                         break;
                     case HG_Parser::T_PRINT_OPEN:
                         $this->status = self::IN_ECHO;
@@ -186,18 +197,6 @@ class Haanga_Compiler_Tokenizer
             case self::IN_TAG:
             case self::IN_ECHO:
                 $this->yylex_main();
-                break;
-            case self::IN_COMMENT:
-                $data  = & $this->data;
-                $i     = & $this->N;
-
-                if (($pos=strpos($data, self::$end_comment, $i)) === FALSE) {
-                    $this->error("unexpected end");
-                }
-                $this->value  = substr($data, $i, $pos);
-                $this->token  = HG_Parser::T_COMMENT;
-                $this->status = self::IN_NONE; 
-                $i = $pos + 2;
                 break;
             default:
                 $this->yylex_html();
@@ -309,16 +308,16 @@ class Haanga_Compiler_Tokenizer
                         }
                         break;
                     default: 
-                        if (!$this->is_token_end($data[$i]) &&
-                            !isset(self::$operations[$data[$i]]) || $value[$e-1] == '.') {
-                            $this->error("Unexpected '{$data[$i]}'");
-                        }
-                        $this->value = $value;
-                        $this->token = HG_Parser::T_NUMERIC;
-                        break 4; /* break the main loop */
+                        break 2; /* break the main loop */
                     }
                 }
-                break;
+                if (!$this->is_token_end($data[$i]) &&
+                    !isset(self::$operations[$data[$i]]) || $value[$e-1] == '.') {
+                    $this->error("Unexpected '{$data[$i]}'");
+                }
+                $this->value = $value;
+                $this->token = HG_Parser::T_NUMERIC;
+                break 2;
             /* }}} */
 
             case "\n":
@@ -471,14 +470,23 @@ class Haanga_Compiler_Tokenizer
 
         $parser->compiler = $compiler;
 
-        for($i=0; ; $i++) {
-            if  (!$lexer->yylex()) {
-                break;
+        try {
+            for($i=0; ; $i++) {
+                if  (!$lexer->yylex()) {
+                    break;
+                }
+                $parser->doParse($lexer->token, $lexer->value);
             }
-            $parser->doParse($lexer->token, $lexer->value);
+        } catch (Exception $e) {
+            /* destroy the parser */
+            try {
+                $parser->doParse(0,0); 
+            } catch (Exception $e) {}
+            throw $e; /* re-throw exception */
         }
 
         $parser->doParse(0, 0);
+
         return (array)$parser->body;
 
     }

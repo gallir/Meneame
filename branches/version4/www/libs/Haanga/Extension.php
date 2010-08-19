@@ -86,6 +86,16 @@ Abstract Class Haanga_Extension
         return NULL;
     }
 
+    final public function isSafe($name)
+    {
+        if (!$this->isValid($name)) {
+            return NULL;
+        }
+        $zclass     = $this->getClassName($name);
+        $properties = get_class_vars($zclass);
+        return isset($properties['is_safe']) ? $properties['is_safe'] : FALSE;
+    }
+
     // generator(string $name, Haanga_Compiler $compiler, Array $args) {{{
     /**
      *  Executer the generator method of the extension. If 
