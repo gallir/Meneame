@@ -1,11 +1,10 @@
-
 <div class="sidebox">
     <div class="header">
         <h4>{% trans _('suscripciones por RSS') %}</h4>
     </div>
 	<div class="rss">
         <ul>
-        {% if _REQUEST.q %}
+        {% if _REQUEST['q'] %}
             <li>
                 <a href="{{globals.base_url}}{{search_rss}}?{{ _SERVER.QUERY_STRING|escape}}" rel="rss">{% trans _('búsqueda') %}: {{ _REQUEST.q|escape }}</a>
             </li>
