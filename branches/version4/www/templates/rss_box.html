@@ -6,7 +6,7 @@
         <ul>
         {% if _REQUEST['q'] %}
             <li>
-                <a href="{{globals.base_url}}{{search_rss}}?{{ _SERVER.QUERY_STRING|escape}}" rel="rss">{% trans _('búsqueda') %}: {{ _REQUEST.q|escape }}</a>
+                <a href="{{globals.base_url}}{{search_rss}}?{{ _SERVER.QUERY_STRING|escape}}" rel="rss">{% trans _('búsqueda') %}: {{ _REQUEST['q']|escape }}</a>
             </li>
         {% endif %}
         {% if globals.link %}
