@@ -134,6 +134,27 @@ function do_rss_box($search_rss = 'rss2.php') {
     return Haanga::Load('rss_box.html', compact('search_rss'));
 }
 
+function get_toggler_plusminus($container_id, $enabled = false) {
+    global $globals;
+ 
+    static $n = 0;
+ 
+    if ($enabled) {
+        $image = $globals['base_static'].'img/common/minus-001.png';
+    } else {
+        $image = $globals['base_static'].'img/common/plus-001.png';
+    }
+    echo "<script type=\"text/javascript\">";
+    if ($n == 0) {
+        echo "var plus = '".$globals['static_server']."' + base_url + 'img/common/plus-001.png';\n";
+        echo "var minus = '".$globals['static_server']."' + base_url + 'img/common/minus-001.png';\n";
+    }
+    echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
+    echo "</script>\n";
+    return "<a class='toggler' id='toggle_l_$n' href=''><img src='$image' id='toggle_i_$n' alt='' width='18' height='18'/></a>";
+    $n++;
+}
+
 function do_mnu_categories_horizontal($what_cat_id) {
 	global $db, $dblang, $globals;
 
