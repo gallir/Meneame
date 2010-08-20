@@ -228,6 +228,13 @@ class Haanga_Compiler
     {
         $this->name = $name;
 
+        if (count(self::$global_context) > 0) {
+            /* add global variables (if any) to the current context */
+            foreach (self::$global_context as $var) {
+                $this->set_context($var, $GLOBALS[$var]);
+            }
+        }
+
         $parsed = Haanga_Compiler_Tokenizer::init($code, $this, $file);
         $code   = "";
         $this->subtemplate = FALSE;
@@ -256,14 +263,16 @@ class Haanga_Compiler
             }
 
             $body->declare_function($func_name);
-            if (count(self::$global_context) > 0) {
-                $body->do_global(self::$global_context);
-            }
-            $body->do_exec('extract', hvar('vars'));
-            $body->do_if(hexpr(hvar('return'), '==', TRUE));
-            $body->do_exec('ob_start');
-            $body->do_endif();
         }
+        if (count(self::$global_context) > 0) {
+            $body->do_global(self::$global_context);
+        }
+
+
+        $body->do_exec('extract', hvar('vars'));
+        $body->do_if(hexpr(hvar('return'), '==', TRUE));
+        $body->do_exec('ob_start');
+        $body->do_endif();
 
 
         $this->generate_op_code($parsed, $body);
@@ -317,13 +326,6 @@ class Haanga_Compiler
     {
         if (!is_readable($file)) {
             throw new Haanga_Compiler_Exception("$file is not a file");
-        }
-
-        if (count(self::$global_context) > 0) {
-            /* add global variables (if any) to the current context */
-            foreach (self::$global_context as $var) {
-                $context[$var] = &$GLOBALS[$var];
-            }
         }
 
         $this->_base_dir      = dirname($file);

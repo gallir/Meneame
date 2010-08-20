@@ -194,6 +194,88 @@ class Haanga
     }
     // }}}
 
+    // getCompiler($checkdir=TRUE) {{{
+    /**
+     *  This function is a singleton for the Haanga_Compiler_Runtime class.
+     *  The instance is already set up properly and resetted.
+     *
+     *
+     *  @param bool  $checkdir TRUE
+     *
+     *  @return Haanga_Compiler_Runtime
+     */
+    protected static function getCompiler($checkdir=TRUE)
+    {
+        static $compiler;
+        static $has_checkdir = FALSE;
+
+        if (!$compiler) {
+
+            /* Load needed files (to avoid autoload as much as possible) */
+            $dir = dirname(__FILE__);
+            require_once "{$dir}/Haanga/AST.php";
+            require_once "{$dir}/Haanga/Compiler.php";
+            require_once "{$dir}/Haanga/Compiler/Runtime.php";
+            require_once "{$dir}/Haanga/Compiler/Parser.php";
+            require_once "{$dir}/Haanga/Compiler/Tokenizer.php";
+            require_once "{$dir}/Haanga/Generator/PHP.php";
+            require_once "{$dir}/Haanga/Extension.php";
+            require_once "{$dir}/Haanga/Extension/Filter.php";
+            require_once "{$dir}/Haanga/Extension/Tag.php";
+
+            /* load compiler (done just once) */
+            if (self::$use_autoload) {
+                spl_autoload_register(array(__CLASS__, 'AutoLoad'));
+            }
+
+            $compiler = new Haanga_Compiler_Runtime;
+
+            if (self::$bootstrap) {
+                /* call bootstrap hook, just the first time */
+                call_user_func(self::$bootstrap);
+            }
+
+            if (count(self::$compiler) != 0) {
+                foreach (self::$compiler as $opt => $value) {
+                    Haanga_Compiler::setOption($opt, $value);
+                }
+            }
+
+        }
+
+        if ($checkdir && !$has_checkdir) {
+            self::checkCacheDir();
+            $has_checkdir = TRUE; 
+        }
+
+        $compiler->reset();
+        return $compiler;
+    }
+    // }}}
+
+    // callback compile(string $tpl, $context=array()) {{{
+    /**
+     *  Compile one template and return a PHP function
+     *
+     *  @param string $tpl  Template body
+     *  @param array $context  Context variables useful to generate efficient code (for array, objects and array)
+     *
+     *  @return callback($vars=array(), $return=TRUE, $block=array())
+     */
+    public static function compile($tpl, $context=array())
+    {
+        $compiler = self::getCompiler(FALSE);
+
+        foreach ($context as $var => $value) {
+            $compiler->set_context($var, $value);
+        }
+
+        $code = $compiler->compile($tpl);
+
+        return create_function('$vars=array(), $return=TRUE, $blocks=array()', $code);
+    }
+    // }}}
+
     // safe_load(string $file, array $vars, bool $return, array $blocks) {{{
     public static function Safe_Load($file, $vars = array(), $return=FALSE, $blocks=array())
     {
@@ -230,7 +312,6 @@ class Haanga
      */
     public static function Load($file, $vars = array(), $return=FALSE, $blocks=array())
     {
-        static $compiler;
         if (empty(self::$cache_dir)) {
             throw new Haanga_Exception("Cache dir or template dir is missing");
         }
@@ -284,52 +365,20 @@ class Haanga
                     ** load it 
                     */
                     require $php;
-                    return $callback($vars, $return, $blocks);
+                    if (is_callable($callback)) {
+                        return $callback($vars, $return, $blocks);
+                    }
                 }
                 /*
                 ** no luck, probably the template is new
                 ** the compilation will be done, but we won't
-                ** save
+                ** save it (we'll use eval instead)
                 */
                 unset($fp);
             }
 
             /* recompile */
-            if (!$compiler) {
-                self::checkCacheDir();
-
-                /* Load needed files (to avoid autoload as much as possible) */
-                $dir = dirname(__FILE__);
-                require_once "{$dir}/Haanga/AST.php";
-                require_once "{$dir}/Haanga/Compiler.php";
-                require_once "{$dir}/Haanga/Compiler/Runtime.php";
-                require_once "{$dir}/Haanga/Compiler/Parser.php";
-                require_once "{$dir}/Haanga/Compiler/Tokenizer.php";
-                require_once "{$dir}/Haanga/Generator/PHP.php";
-                require_once "{$dir}/Haanga/Extension.php";
-                require_once "{$dir}/Haanga/Extension/Filter.php";
-                require_once "{$dir}/Haanga/Extension/Tag.php";
-
-                /* load compiler (done just once) */
-                if (self::$use_autoload) {
-                    spl_autoload_register(array(__CLASS__, 'AutoLoad'));
-                }
-
-                $compiler = new Haanga_Compiler_Runtime;
-
-                if (self::$bootstrap) {
-                    /* call bootstrap hook, just the first time */
-                    call_user_func(self::$bootstrap);
-                }
-
-                if (count(self::$compiler) != 0) {
-                    foreach (self::$compiler as $opt => $value) {
-                        Haanga_Compiler::setOption($opt, $value);
-                    }
-                }
-            }
-
-            $compiler->reset();
+            $compiler = self::getCompiler();
 
             if (self::$debug) {
                 $compiler->setDebug($php.".dump");
@@ -339,8 +388,12 @@ class Haanga
                 $code = $compiler->compile_file($tpl, FALSE, $vars);
             } catch (Exception $e) {
                 if (isset($fp)) {
-                    fclose($fp);
-                    unlink($php);
+                    /*
+                    ** set the $php file as old (to force future
+                    ** recompilation)
+                    */
+                    touch($php, 300, 300);
+                    chmod($php, 0777);
                 }
                 /* re-throw exception */
                 throw $e;
@@ -355,11 +408,22 @@ class Haanga
                 /* local eval */
                 eval($code);
             }
+
             self::$has_compiled = TRUE;
         }
 
         if (!is_callable($callback)) {
+            /* Load the cached PHP file */
             require $php;
+            if (!is_callable($callback)) {
+                /* 
+                   really weird case ($php is empty, another process is compiling
+                   the $tpl for the first time), so create a lambda function
+                   for the template
+                 */
+                $lambda= self::compile(file_get_contents($tpl), $vars);
+                return $lambda($vars, $return, $blocks);
+            }
         }
 
         if (!isset($HAANGA_VERSION) || $HAANGA_VERSION != HAANGA_VERSION) {
