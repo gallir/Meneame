@@ -64,9 +64,9 @@ if($_SERVER['HTTP_HOST']) {
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {
-		$globals['server_name'] = $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'];
+		$globals['server_name'] = strtolower($_SERVER['HTTP_HOST']) . ':' . $_SERVER['SERVER_PORT'];
 	} else {
-		$globals['server_name'] = $_SERVER['HTTP_HOST'] . $server_port;
+		$globals['server_name'] = strtolower($_SERVER['HTTP_HOST']) . $server_port;
 	}
 } else {
 	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
@@ -153,7 +153,7 @@ $config = array(
 if (substr($globals['haanga_cache'], 0, 1) == '/') {
 	$config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
 } else {
-	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
+	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$globals['server_name'];
 }
 
 /*** Disabled, it's a little faster checking filetime directly
