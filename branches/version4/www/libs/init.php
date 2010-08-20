@@ -150,8 +150,8 @@ $config = array(
 );
 
 // Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
-if (substr($globals['haanga_cache'], 0, 1) == '/') {
-	$config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.$_SERVER['HTTP_HOST'];
+if ($globals['haanga_cache'][0] == '/') {
+	$config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.$globals['server_name'];
 } else {
 	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$globals['server_name'];
 }
