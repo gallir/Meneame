@@ -66,7 +66,7 @@ if($_SERVER['HTTP_HOST']) {
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {
 		$globals['server_name'] = strtolower($_SERVER['HTTP_HOST']) . ':' . $_SERVER['SERVER_PORT'];
 	} else {
-		$globals['server_name'] = strtolower($_SERVER['HTTP_HOST']) . $server_port;
+		$globals['server_name'] = strtolower($_SERVER['HTTP_HOST']);
 	}
 } else {
 	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
