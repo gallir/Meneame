@@ -28,9 +28,11 @@ if ($_REQUEST['q']) {
 	}
 	$_REQUEST['w'] = 'comments';
 	$search_ids = do_search(true);
-	$ids = implode(",", $search_ids['ids']);
-	$sql = "SELECT comment_id FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT 1");
+	if (!empty($search_ids['ids'])) {
+		$ids = implode(",", $search_ids['ids']);
+		$sql = "SELECT comment_id FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT $rows";
+		$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT 1");
+	}
 	$title = _('Menéame').': '._('búsqueda en comentarios') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['id'])) {
@@ -129,7 +131,7 @@ if ($_REQUEST['q']) {
 
 
 
-$comments = $db->get_col($sql);
+if (!empty($sql)) $comments = $db->get_col($sql);
 
 if ( !$comments && $if_modified) {
 	header('HTTP/1.1 304 Not Modified');
