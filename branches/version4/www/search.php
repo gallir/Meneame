@@ -222,7 +222,7 @@ function print_search_form() {
 	echo '</select>';
 	echo ' &nbsp;&nbsp;';
 	echo '<label for="u">' . _("usuario") . ':</label>';
-	echo '<input type="text" name="u" value="'.htmlentities($_REQUEST['u']).'" size="12" style="font-weight: bold;"/>';
+	echo '<input type="text" name="u" id="u" value="'.htmlentities($_REQUEST['u']).'" size="12" style="font-weight: bold;"/>';
 	echo '</form>';
 
 	echo '<script type="text/javascript">';

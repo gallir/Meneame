@@ -2,5 +2,5 @@
 
 class Haanga_Extension_Filter_Escape
 {
-    public $php_alias = "htmlentities";
+    public $php_alias = "htmlspecialchars";
 }
