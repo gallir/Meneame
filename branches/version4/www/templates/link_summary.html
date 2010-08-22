@@ -75,14 +75,16 @@
 
 		{% trans _("por %s") self.username_str %}
 		{% if self.print_date %}
-			{% trans _('el') %} {% exec get_date_time self.sent_date %}
 			{% if self.status == 'published' %}
 				{% trans _('publicado el') %} {% exec txt_time_diff self.date %}
+            {% else %}
+			    {% trans _('el') %} {% exec get_date_time self.sent_date %}
 			{% endif %}
 		{% else %}
-			{% trans _('hace') %} {% exec txt_time_diff self.sent_date %}
 			{% if self.status == 'published' %}
 				{% trans _('publicado hace') %} {% exec txt_time_diff self.date %}
+            {% else %}
+			    {% trans _('hace') %} {% exec txt_time_diff self.sent_date %}
 			{% endif %}
 		{% endif %}
 	</div>
