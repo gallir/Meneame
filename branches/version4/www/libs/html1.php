@@ -454,14 +454,8 @@ function do_best_sites() {
 	$res = $db->get_results("select sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
 ");
 	if ($res) {
-		$i = 0;
-		$output .= '<div class="sidebox"><div class="header"><h4>'._('sitios más votados').'</h4></div><div class="mainsites"><ul>'."\n";
-		foreach ($res as $site) {
-			$i++;
-			$parsed_url = parse_url($site->blog_url);
-			$output .= '<li>'.$i.'. <a href="'.$globals['base_url'].'search.php?q='.rawurlencode($site->blog_url).'&amp;p=site&amp;h=48&amp;s=published" title="'._('votos 48 horas').': '.$site->total.' (coef: '.intval($site->coef).')">'.$parsed_url['host'].'</a></li>'."\n";
-		}
-		$output .= '</ul></div></div>';
+
+        $output = Haanga::Load("best_sites_posts.html", compact('res'), TRUE);
 		echo $output;
 		memcache_madd($key, $output, 300);
 	}
@@ -497,7 +491,7 @@ function do_best_comments() {
 			$obj->title = $comment->link_title;
 			$obj->username = $comment->user_login;
 			$obj->tooltip = 'get_comment_tooltip.php';
-			array_push($objects, $obj);
+            $objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
@@ -541,7 +535,7 @@ function do_best_story_comments($link) {
 			$obj->title = text_to_summary($comment->content, 75);
 			$obj->username = $comment->user_login;
 			$obj->tooltip = 'get_comment_tooltip.php';
-			array_push($objects, $obj);
+            $objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
@@ -586,7 +580,7 @@ function do_best_stories() {
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
-			array_push($links, $link);
+            $links[] = $link;
 		}
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
@@ -630,7 +624,7 @@ function do_best_queued() {
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
-			array_push($links, $link);
+            $links[] = $link;
 		}
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
@@ -667,7 +661,7 @@ function do_best_posts() {
 			$obj->title = text_to_summary($post->clean_content(), 80);
 			$obj->username = $post->username;
 			$obj->tooltip = 'get_post_tooltip.php';
-			array_push($objects, $obj);
+            $objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
