@@ -4,9 +4,9 @@
     </div>
     <div class="mainsites">
         <ul>
-        {% for i,site in res %}
-            <li>{{i}}
-                <a href="{{globals.base_url}}search.php?q={{site.blog_url|urlencode}}&amp;p=site&amp;h=48&amp;s=published" title="{% trans _('votos 48 horas') %}: {{site.total}} (coef: '.{{site.coef|intval}})">{{ site.blog_url|hostname }}</a>
+        {% for site in res %}
+            <li>{{forloop.counter}}.
+                <a href="{{globals.base_url}}search.php?q={{site.blog_url|urlencode}}&amp;p=site&amp;h=48&amp;s=published" title="{% trans _('votos 48 horas') %}: {{site.total}} (coef: {{site.coef|intval}})">{{ site.blog_url|hostname }}</a>
             </li>
         {% endfor %}
 		</ul>
