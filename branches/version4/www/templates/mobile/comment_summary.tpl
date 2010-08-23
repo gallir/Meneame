@@ -1,7 +1,6 @@
 <li id="c-{{self.order}}">
     <div class="{{comment_class}}">
-        <strong>#{{self.order}}</strong>
-		&nbsp;&nbsp;<span  id="cid-{{ self.id }}">
+        <strong>#{{self.order}}</strong>&nbsp;&nbsp;<span  id="cid-{{ self.id }}">
         {% if self.hidden %}
 			&#187;&nbsp;<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans _('ver comentario') %}">{% trans _('ver comentario') %}</a>
         {% else %}

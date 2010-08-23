@@ -42,7 +42,7 @@ class CommentMobile extends Comment{
 
         $vars = compact('comment_meta_class', 'comment_class', 'author');
         $vars['self'] = $this;
-        return Haanga::Load('mobile/comment.html', $vars);
+        return Haanga::Load('mobile/comment_summary.tpl', $vars);
 	}
 
 }
