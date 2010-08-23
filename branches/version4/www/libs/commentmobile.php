@@ -12,8 +12,6 @@ class CommentMobile extends Comment{
 
 		if(!$this->read) return;
 
-		echo '<li id="c-'.$this->order.'">';
-
 		$this->hidden = $this->karma < -80 || ($this->user_level == 'disabled' && $this->type != 'admin');
 
 		if ($this->hidden)  {
@@ -26,22 +24,15 @@ class CommentMobile extends Comment{
 				$comment_class .= ' high';
 			}
 		}
-		$this->link_permalink =  $link->get_relative_permalink();
-		echo '<div class="'.$comment_class.'">';
-		echo '<strong>#'.$this->order.'</strong>';
 
-		echo '&nbsp;&nbsp;<span  id="cid-'.$this->id.'">';
+		$this->hidden = $this->hidden && ($current_user->user_comment_pref & 1) == 0;
+        $this->truncate = $length>0 && mb_strlen($this->content) > $length + $length/2;
 
-		if ($this->hidden && ($current_user->user_comment_pref & 1) == 0) {
-			echo '&#187;&nbsp;<a href="javascript:load_html(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('ver comentario').'">'._('ver comentario').'</a>';
-		} else {
-			$this->print_text($length);
+		if ($this->truncate) {
+			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
 		}
-		echo '</span></div>';
 
-
-		// The comments info bar
-		echo '<div class="'.$comment_meta_class.'">';
+		$this->txt_content =  put_smileys(save_text_to_html($this->content));
 
 		if ($this->type == 'admin') {
 			$author = '<strong>'._('admin').'</strong> ';
@@ -49,28 +40,9 @@ class CommentMobile extends Comment{
 			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		}
 
-		printf(_('por %s el %s'), $author, get_date_time($this->date));
-
-		// Check that the user can vote
-		if ($this->type != 'admin' && $this->user_level != 'disabled') {
-			echo '&nbsp;&nbsp;' . _('votos').': <span id="vc-'.$this->id.'">'.$this->votes.'</span>, '._('karma').': <span id="vk-'.$this->id.'">'.$this->karma.'</span>';
-		}
-
-		echo '</div>';
-		echo "</li>\n";
-	}
-
-	function print_text($length = 0, $html_id=false) {
-		global $current_user, $globals;
-
-		if ($length>0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
-			$expand = '...&nbsp;&nbsp;' .
-				'<a href="javascript:load_html(\'get_commentmobile.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
-		}
-
-		echo put_smileys(save_text_to_html($this->content)) . $expand;
-		echo "\n";
+        $vars = compact('comment_meta_class', 'comment_class', 'author');
+        $vars['self'] = $this;
+        return Haanga::Load('mobile/comment.html', $vars);
 	}
 
 }
