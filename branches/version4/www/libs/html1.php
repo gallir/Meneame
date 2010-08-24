@@ -682,17 +682,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	}
 
 	do_header(_('error'));
-	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
-	echo '<!--'."\n";
-	echo '.errt { text-align:center; padding-top:50px; font-size:300%; color:#FF6400;}'."\n";
-	echo '.errl { text-align:center; margin-top:50px; margin-bottom:100px; }'."\n";
-	echo '-->'."\n";
-	echo '</STYLE>'."\n";
-
-	echo '<p class="errt">'.$mess.'<br />'."\n";
-	if ($error) echo '('._('error').' '.$error.')</p>'."\n";
-	echo '<div class="errl"><img src="'.$globals['base_url'].'img/mnm/lame_excuse_01.png" width="362" height="100" alt="ooops logo" /></div>'."\n";
-
+    Haanga::Load('error.html', compact('mess', 'error'));
 	do_footer_menu();
 	do_footer();
 	die;
