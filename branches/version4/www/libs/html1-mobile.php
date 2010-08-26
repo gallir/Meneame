@@ -28,46 +28,21 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {
-		echo '<ul class="tabmain">';
-
-		// url with parameters?
-		if (!empty($_SERVER['QUERY_STRING']))
-			$query = "?".htmlentities($_SERVER['QUERY_STRING']);
-
-		// START STANDARD TABS
-		// First the standard and always present tabs
-		// published tab
-		if ($tab_selected == 'published') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'" title="'.$reload_text.'">'._('portada').'</a></li>';
-		} else {
-			echo '<li><a  href="'.$globals['base_url'].'">'._('portada').'</a></li>';
-		}
-
-
-		// Most voted
-		if ($tab_selected == 'popular') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'topstories.php" title="'.$reload_text.'">'._('populares').'</a></li>';
-		} else {
-			echo '<li><a href="'.$globals['base_url'].'topstories.php">'._('populares').'</a></li>';
-		}
-
-		// shake it
-		if ($tab_selected == 'shakeit') {
-			echo '<li '.$active.'><a href="'.$globals['base_url'].'shakeit.php" title="'.$reload_text.'">'._('pendientes').'</a></li>';
-		} else {
-			echo '<li><a href="'.$globals['base_url'].'shakeit.php">'._('pendientes').'</a></li>';
-		}
-		// END STANDARD TABS
-
-		//Extra tab
+        $items = array(
+            array('url' => '', 'name' => 'published', 'title' => _('portada')),
+            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares')),
+            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes')),
+        );
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-			echo '<li '.$active.'><a href="'.$url.'" title="'.$reload_text.'">'.$tab_selected.'</a></li>';
-		}
-		echo '</ul>' . "\n";
-		echo '<div style="clear:left"></div>'; // Some browsers wrap the tabs
+            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
+        }
+        $tabname = 'tabmain';
 	}
+
+    $vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
+    return Haanga::Load('mobile/do_tabs.html', $vars);
 }
 
 function do_header($title, $id='home') {
