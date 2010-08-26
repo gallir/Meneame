@@ -274,21 +274,14 @@ function do_pages($total, $page_size=25, $margin = true) {
 //Used in editlink.php and submit.php
 function print_categories_form($selected = 0) {
 	global $db, $dblang;
-	echo '<fieldset style="clear: both;">';
-	echo '<legend>'._('selecciona la categoría más apropiada').'</legend>'."\n";
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
-	foreach ($metas as $meta) {
-		echo '<dl class="categorylist"><dt>'.$meta->category_name.'</dt>'."\n";
-		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
-		foreach ($categories as $category) {
-			echo '<dd><input name="category" type="radio" ';
-			if ($selected == $category->category_id) echo '  checked="true" ';
-			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</dd>'."\n";
-		}
-		echo '</dl>'."\n";
-	}
-	echo '<br style="clear: both;"/>' . "\n";
-	echo '</fieldset>';
+    foreach ($metas as &$meta) {
+        $meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC"); 
+    }
+    unset($meta);
+
+    $vars = compact('selected', 'metas');
+    return Haanga::Load('form_categories.html', $vars);
 }
 
 function do_vertical_tags($what=false) {
