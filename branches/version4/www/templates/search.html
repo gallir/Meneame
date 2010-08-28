@@ -44,11 +44,11 @@
     {% if _REQUEST.q %}
 	    <div style="font-size:85%;margin-top: 5px">
         {% trans _('encontrados') %}: {{response.rows}}, {% trans _('tiempo total') %}: {{ponse.time|stringformat:"%1.3f"}} {% trans _('segundos') %}
-	    <a href="{{globals.base_url}}{{rss_program}}?{{_SERVER.QUERY_STRING}}" rel="rss"><img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>
-	</div>
+	        <a href="{{globals.base_url}}{{rss_program}}?{{_SERVER.QUERY_STRING}}" rel="rss"><img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>
+	    </div>
     {% endif %}
     </fieldset>
+</div>
 
     {% exec print_result as dummy %}
-
 </div>
