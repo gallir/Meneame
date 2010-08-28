@@ -88,7 +88,7 @@ $options = array(
 
 $selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h']);
 
-Haanga::Load('search.html', compact('options', 'selected', 'response'));
+Haanga::Load('search.html', compact('options', 'selected', 'response', 'rss_program'));
 
 do_footer_menu();
 do_footer();
