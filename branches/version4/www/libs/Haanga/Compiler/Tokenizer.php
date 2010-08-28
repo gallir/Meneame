@@ -47,63 +47,68 @@ class HG_Parser Extends Haanga_Compiler_Parser
  */
 class Haanga_Compiler_Tokenizer
 {
-    /* they are case sensitive */
-    static $tags = array(
-        'block'         => HG_Parser::T_BLOCK,
-        'load'          => HG_Parser::T_LOAD,
-        'for'           => HG_Parser::T_FOR,
-        'empty'         => HG_Parser::T_EMPTY,
-        'TRUE'          => HG_Parser::T_TRUE,
-        'FALSE'         => HG_Parser::T_FALSE,
+    /* they are case sensitive and sorted! */
+    static $keywords = array(
         'AND'           => HG_Parser::T_AND,
-        'OR'            => HG_Parser::T_OR,
-        'not'           => HG_Parser::T_NOT,
+        'FALSE'         => HG_Parser::T_FALSE,
         'NOT'           => HG_Parser::T_NOT,
-        'if'            => HG_Parser::T_IF,
+        'OR'            => HG_Parser::T_OR,
+        'TRUE'          => HG_Parser::T_TRUE,
+        '_('            => HG_Parser::T_INTL,
+        'as'            => HG_Parser::T_AS,
+        'autoescape'    => HG_Parser::T_AUTOESCAPE,
+        'block'         => HG_Parser::T_BLOCK,
+        'by'            => HG_Parser::T_BY,
         'else'          => HG_Parser::T_ELSE,
+        'empty'         => HG_Parser::T_EMPTY,
+        'extends'       => HG_Parser::T_EXTENDS,
+        'filter'        => HG_Parser::T_FILTER,
+        'for'           => HG_Parser::T_FOR,
+        'if'            => HG_Parser::T_IF,
+        'ifchanged'     => HG_Parser::T_IFCHANGED,
         'ifequal'       => HG_Parser::T_IFEQUAL,
         'ifnotequal'    => HG_Parser::T_IFNOTEQUAL,
-        'ifchanged'     => HG_Parser::T_IFCHANGED,
-        'spacefull'     => HG_Parser::T_SPACEFULL,
-        'autoescape'    => HG_Parser::T_AUTOESCAPE,
-        'filter'        => HG_Parser::T_FILTER,
-        'include'       => HG_Parser::T_INCLUDE,
         'in'            => HG_Parser::T_IN,
-        'as'            => HG_Parser::T_AS,
-        'by'            => HG_Parser::T_BY,
-        'extends'       => HG_Parser::T_EXTENDS,
+        'include'       => HG_Parser::T_INCLUDE,
+        'load'          => HG_Parser::T_LOAD,
+        'not'           => HG_Parser::T_NOT,
         'regroup'       => HG_Parser::T_REGROUP,
+        'spacefull'     => HG_Parser::T_SPACEFULL,
         'with'          => HG_Parser::T_WITH,
-        '_('            => HG_Parser::T_INTL,
     );
 
     /* common operations */
-    static $operations = array(
-        '&&'    => HG_Parser::T_AND,
-        '==='   => HG_Parser::T_EQ,
-        '=='    => HG_Parser::T_EQ,
-        '->'    => HG_Parser::T_OBJ,
-        '||'    => HG_Parser::T_OR,
-        '['     => HG_Parser::T_BRACKETS_OPEN,
-        ']'     => HG_Parser::T_BRACKETS_CLOSE,
-        '-'     => HG_Parser::T_MINUS,
-        '+'     => HG_Parser::T_PLUS,
-        '*'     => HG_Parser::T_TIMES,
-        '/'     => HG_Parser::T_DIV, 
-        ':'     => HG_Parser::T_COLON, 
-        '.'     => HG_Parser::T_DOT,
-        '>='    => HG_Parser::T_GE,
-        '>'     => HG_Parser::T_GT,
-        '<='    => HG_Parser::T_LE,
-        '<'     => HG_Parser::T_LT,
-        '|'     => HG_Parser::T_PIPE,
-        '!='    => HG_Parser::T_NE,
+    static $operators_single = array(
         '!'     => HG_Parser::T_NOT,
+        '%'     => HG_Parser::T_MOD,
         '('     => HG_Parser::T_LPARENT,
         ')'     => HG_Parser::T_RPARENT,
+        '*'     => HG_Parser::T_TIMES,
+        '+'     => HG_Parser::T_PLUS,
         ','     => HG_Parser::T_COMMA,
-        '%'     => HG_Parser::T_MOD,
+        '-'     => HG_Parser::T_MINUS,
+        '.'     => HG_Parser::T_DOT,
+        '/'     => HG_Parser::T_DIV, 
+        ':'     => HG_Parser::T_COLON, 
+        '<'     => HG_Parser::T_LT,
+        '>'     => HG_Parser::T_GT,
+        '['     => HG_Parser::T_BRACKETS_OPEN,
+        ']'     => HG_Parser::T_BRACKETS_CLOSE,
+        '|'     => HG_Parser::T_PIPE,
     );
+    static $operators = array(
+        '!=='   => HG_Parser::T_NE,
+        '==='   => HG_Parser::T_EQ,
+        '!='    => HG_Parser::T_NE,
+        '&&'    => HG_Parser::T_AND,
+        '->'    => HG_Parser::T_OBJ,
+        '<='    => HG_Parser::T_LE,
+        '=='    => HG_Parser::T_EQ,
+        '>='    => HG_Parser::T_GE,
+        '||'    => HG_Parser::T_OR,
+    );
+
+    static $close_tags = array();
 
     static $open_tag     = "{%";
     static $end_tag      = "%}";
@@ -132,13 +137,19 @@ class Haanga_Compiler_Tokenizer
         $this->length   = strlen($data);
 
 
-        self::$operations = array_merge(array(
-                self::$end_tag   => HG_Parser::T_CLOSE_TAG,
-                self::$end_print => HG_Parser::T_PRINT_CLOSE,
-            ), self::$operations);
+        /* $tmp1 = self::$operators;
+        $tmp2 = $tmp1;
+        ksort($tmp2);
+        var_dump($tmp2, $tmp1 === $tmp2);die(); /**/
+
+        self::$close_tags =array(
+            self::$end_tag   => HG_Parser::T_TAG_CLOSE,
+            self::$end_print => HG_Parser::T_PRINT_CLOSE,
+        );
+
 
         $this->open_tags = array(
-            self::$open_tag     => HG_Parser::T_OPEN_TAG,
+            self::$open_tag     => HG_Parser::T_TAG_OPEN,
             self::$open_print   => HG_Parser::T_PRINT_OPEN,
             self::$open_comment => HG_Parser::T_COMMENT,
         );
@@ -167,7 +178,7 @@ class Haanga_Compiler_Tokenizer
                     $this->token  = $token;
                     $i += $len;
                     switch ($this->token) {
-                    case HG_Parser::T_OPEN_TAG:
+                    case HG_Parser::T_TAG_OPEN:
                         $this->status = self::IN_TAG;
                         break;
                     case HG_Parser::T_COMMENT:
@@ -201,6 +212,7 @@ class Haanga_Compiler_Tokenizer
             default:
                 $this->yylex_html();
         }
+
 
         if (empty($this->token)) {
             if ($this->status != self::IN_NONE && $this->status != self::IN_HTML) {
@@ -312,7 +324,7 @@ class Haanga_Compiler_Tokenizer
                     }
                 }
                 if (!$this->is_token_end($data[$i]) &&
-                    !isset(self::$operations[$data[$i]]) || $value[$e-1] == '.') {
+                    !isset(self::$operators_single[$data[$i]]) || $value[$e-1] == '.') {
                     $this->error("Unexpected '{$data[$i]}'");
                 }
                 $this->value = $value;
@@ -343,7 +355,7 @@ class Haanga_Compiler_Tokenizer
             }
         }
 
-        if ($this->token == HG_Parser::T_CLOSE_TAG ||
+        if ($this->token == HG_Parser::T_TAG_CLOSE ||
             $this->token == HG_Parser::T_PRINT_CLOSE) {
             $this->status = self::IN_NONE;
         }
@@ -356,12 +368,28 @@ class Haanga_Compiler_Tokenizer
 
         $i    = &$this->N;
         $data = substr($this->data, $i, 12);
-        foreach (self::$tags as $value => $token) {
+        foreach (self::$close_tags as $value => $token) {
             if (!isset($lencache[$value])) {
                 $lencache[$value] = strlen($value);
             }
             $len = $lencache[$value];
             if (strncmp($data, $value, $len) == 0) {
+                $this->token = $token;
+                $this->value = $value;
+                $i += $len;
+                return TRUE;
+            }
+        }
+
+        foreach (self::$keywords as $value => $token) {
+            if (!isset($lencache[$value])) {
+                $lencache[$value] = strlen($value);
+            }
+            $len = $lencache[$value];
+            switch (strncmp($data, $value, $len)) {
+            case -1:
+                break 2;
+            case 0: // match 
                 if (isset($data[$len]) && !$this->is_token_end($data[$len])) {
                     /* probably a variable name TRUEfoo (and not TRUE) */
                     continue;
@@ -391,20 +419,41 @@ class Haanga_Compiler_Tokenizer
     function getOperator()
     {
         static $lencache = array();
+
         $i    = &$this->N;
         $data = substr($this->data, $i, 12);
-        foreach (self::$operations as $value => $token) {
+
+        foreach (self::$operators as $value => $token) {
             if (!isset($lencache[$value])) {
                 $lencache[$value] = strlen($value);
             }
             $len = $lencache[$value];
-            if (strncmp($data, $value, $len) == 0) {
+            switch (strncmp($data, $value, $len)) {
+            case -1:
+                if (strlen($data) == $len) {
+                    break 2;
+                }
+                break;
+            case 0:
                 $this->token = $token;
                 $this->value = $value;
                 $i += $len;
                 return TRUE;
             }
         }
+
+        $data = $this->data[$i];
+        foreach (self::$operators_single as $value => $token) {
+            if ($value == $data) {
+                $this->token = $token;
+                $this->value = $value;
+                $i += 1;
+                return TRUE;
+            } else if ($value > $data) {
+                break;
+            }
+        }
+
 
         return FALSE;
     }

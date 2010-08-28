@@ -78,164 +78,45 @@ do_rss_box($rss_program);
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
+$options = array(
+    'w' => array('links', 'posts', 'comments'),
+    'p' => array('' => _('campos...'), 'url', 'tags', 'title', 'site'),
+    's' => array('' => _('estado...'), 'published', 'queued', 'discard', 'autodiscard', 'abuse'),
+    'h' => array('' => _('período...'), 24 => _('24 horas'), 48 => _('48 horas'), 24*7 => _('última semana'), 24*30 => _('último mes'), 24*180 => _('6 meses'), 24*365 => _('1 año')),
+    'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
+);
 
-// Search form
-echo '<div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">';
-echo '<fieldset>';
+$selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h']);
 
-print_search_form();
+Haanga::Load('search.html', compact('options', 'selected', 'response'));
 
-if(!empty($_REQUEST['q'])) {
-	echo '<div style="font-size:85%;margin-top: 5px">';
-	echo _('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos');
-	echo '&nbsp;<a href="'.$globals['base_url'].$rss_program.'?'.htmlspecialchars($_SERVER['QUERY_STRING']).'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>';
-	echo '</div>';
-}
-
-echo '</fieldset>';
-echo '</div>';
-
-if ($response['ids']) {
-	$rows = min($response['rows'], 1000);
-	foreach($response['ids'] as $id) {
-		$obj->id=$id;
-		$obj->read();
-		$obj->basic_summary = true; 
-		switch ($_REQUEST['w']) {
-			case 'posts':
-				$obj->print_summary(300);
-				break;
-			case 'comments':
-				if ($obj->type == 'admin' && !$current_user->admin) continue;
-				$obj->print_summary(false, 300);
-				break;
-			case 'links':
-			default:
-				$obj->print_summary();
-		}
-	}
-}
-
-do_pages($rows, $page_size);
-echo '</div>';
 do_footer_menu();
 do_footer();
 
-function print_search_form() {
-	echo '<form id="thisform" action="">';
-	echo '<input type="text" name="q" value="'.htmlspecialchars($_REQUEST['words']).'" class="form-full"/>';
-	echo '<input class="button" type="submit" value="'._('buscar').'" />';
-
-	// Print field options
-	echo '<br />';
-
-
-	echo '<select name="w" id="w">';
-	switch ($_REQUEST['w']) {
-		case 'posts':
-		case 'comments':
-			echo '<option value="'.$_REQUEST['w'].'" selected="selected">'.$_REQUEST['w'].'</option>';
-			$what = $_REQUEST['w'];
-			break;
-		case 'links':
-		default:
-			$what = 'links';
-			echo '<option value="" selected="selected">'.$what.'</option>';
+function print_result()
+{
+    global $response, $obj, $page_size;
+    if ($response['ids']) {
+	    $rows = min($response['rows'], 1000);
+	    foreach($response['ids'] as $id) {
+	    	$obj->id=$id;
+		    $obj->read();
+		    $obj->basic_summary = true; 
+		    switch ($_REQUEST['w']) {
+			    case 'posts':
+				    $obj->print_summary(300);
+				    break;
+			    case 'comments':
+				    if ($obj->type == 'admin' && !$current_user->admin) continue;
+				    $obj->print_summary(false, 300);
+				    break;
+			    case 'links':
+			    default:
+				    $obj->print_summary();
+		    }
+        }
 	}
-	foreach (array('links', 'posts', 'comments') as $w) {
-		if ($w != $what) {
-			echo '<option value="'.$w.'">'.$w.'</option>';
-		}
-	}
-	echo '</select>';
-		
-	$visibility = $_REQUEST['w'] != 'links' ? ' disabled="disabled"' : '';
-	echo '&nbsp;&nbsp;<select name="p" id="p" '.$visibility.'>';
-	switch ($_REQUEST['p']) {
-		case 'url':
-		case 'tags':
-		case 'title':
-		case 'site':
-			echo '<option value="'.$_REQUEST['p'].'" selected="selected">'.$_REQUEST['p'].'</option>';
-			break;
-		default:
-			echo '<option value="" selected="selected">'._('campos...').'</option>';
-			break;
-	}
-	foreach (array('url', 'tags', 'title', 'site') as $p) {
-		if ($p != $_REQUEST['p']) {
-			echo '<option value="'.$p.'">'.$p.'</option>';
-		}
-	}
-	echo '<option value="">'._('todo el texto').'</option>';
-	echo '</select>';
-
-	// Print status options
-	echo '&nbsp;&nbsp;<select name="s" id="s"'.$visibility.'>';
-	switch ($_REQUEST['s']) {
-		case 'published':
-		case 'queued':
-		case 'discard':
-		case 'autodiscard':
-		case 'abuse':
-			echo '<option value="'.$_REQUEST['s'].'" selected="selected">'.$_REQUEST['s'].'</option>';
-			break;
-		default:
-			echo '<option value="" selected="selected">'._('estado...').'</option>';
-			break;
-	}
-	foreach (array('published', 'queued', 'discard', 'autodiscard', 'abuse') as $p) {
-		if ($p != $_REQUEST['s']) {
-			echo '<option value="'.$p.'">'.$p.'</option>';
-		}
-	}
-	echo '<option value="">'._('todas').'</option>';
-	echo '</select>';
-
-	// Select period
-	echo '&nbsp;&nbsp;<select name="h">';
-	if($_REQUEST['h'] > 0) {
-		$date = get_date(time()-$_REQUEST['h']*3600);
-		echo '<option value="'.$_REQUEST['h'].'" selected="selected">'.$date.'</option>';
-	} else {
-		echo '<option value="" selected="selected">'._('período...').'</option>';
-	}
-	echo '<option value="'.intval(24).'">'._('24 horas').'</option>';
-	echo '<option value="'.intval(48).'">'._('48 horas').'</option>';
-	echo '<option value="'.intval(24*7).'">'._('última semana').'</option>';
-	echo '<option value="'.intval(24*30).'">'._('último mes').'</option>';
-	echo '<option value="'.intval(24*180).'">'._('6 meses').'</option>';
-	echo '<option value="'.intval(24*365).'">'._('1 año').'</option>';
-	echo '<option value="">'._('todas').'</option>';
-	echo '</select>';
-
-
-	echo '&nbsp;&nbsp;<select name="o">';
-	if($_REQUEST['o'] == 'date') {
-		echo '<option value="date">'._('por fecha').'</option>';
-		echo '<option value="">'._('por relevancia').'</option>';
-	} else {
-		echo '<option value="">'._('por relevancia').'</option>';
-		echo '<option value="date">'._('por fecha').'</option>';
-	}
-	echo '</select>';
-	echo ' &nbsp;&nbsp;';
-	echo '<label for="u">' . _("usuario") . ':</label>';
-	echo '<input type="text" name="u" id="u" value="'.htmlentities($_REQUEST['u']).'" size="12" style="font-weight: bold;"/>';
-	echo '</form>';
-
-	echo '<script type="text/javascript">';
-	echo '$(document).ready(function() {';
-	echo '    $("#w").change(function() {'; 
-	echo '        type = $("#w").val();';
-//	echo '        if (type == "links") $("#link_options").css("visibility", "visible");';
-//	echo '        else $("#link_options").css("visibility", "hidden");';
-	echo '        if (type == "links") { $("#p").attr("disabled", false); $("#s").attr("disabled", false); }';
-	echo '        else { $("#p").attr("disabled", true); $("#s").attr("disabled", true); }';
-	echo '    });';
-	echo '});';
-	echo '</script>';
+    do_pages($rows, $page_size);
 }
 
 ?>

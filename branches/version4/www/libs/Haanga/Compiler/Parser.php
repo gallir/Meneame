@@ -166,7 +166,7 @@ class Haanga_yyStackEntry
 **
 ** Each symbol here is a terminal symbol in the grammar.
 */
-    const T_OPEN_TAG                     =  1;
+    const T_TAG_OPEN                     =  1;
     const T_NOT                          =  2;
     const T_AND                          =  3;
     const T_OR                           =  4;
@@ -187,7 +187,7 @@ class Haanga_yyStackEntry
     const T_PRINT_OPEN                   = 19;
     const T_PRINT_CLOSE                  = 20;
     const T_EXTENDS                      = 21;
-    const T_CLOSE_TAG                    = 22;
+    const T_TAG_CLOSE                    = 22;
     const T_INCLUDE                      = 23;
     const T_AUTOESCAPE                   = 24;
     const T_CUSTOM_END                   = 25;
@@ -895,12 +895,12 @@ static public $yy_action = array(
      * @var array
      */
     static public $yyTokenName = array( 
-  '$',             'T_OPEN_TAG',    'T_NOT',         'T_AND',       
+  '$',             'T_TAG_OPEN',    'T_NOT',         'T_AND',       
   'T_OR',          'T_EQ',          'T_NE',          'T_GT',        
   'T_GE',          'T_LT',          'T_LE',          'T_IN',        
   'T_PLUS',        'T_MINUS',       'T_TIMES',       'T_DIV',       
   'T_MOD',         'T_HTML',        'T_COMMENT',     'T_PRINT_OPEN',
-  'T_PRINT_CLOSE',  'T_EXTENDS',     'T_CLOSE_TAG',   'T_INCLUDE',   
+  'T_PRINT_CLOSE',  'T_EXTENDS',     'T_TAG_CLOSE',   'T_INCLUDE',   
   'T_AUTOESCAPE',  'T_CUSTOM_END',  'T_CUSTOM_TAG',  'T_AS',        
   'T_CUSTOM_BLOCK',  'T_SPACEFULL',   'T_WITH',        'T_LOAD',      
   'T_FOR',         'T_COMMA',       'T_EMPTY',       'T_IF',        
@@ -926,51 +926,51 @@ static public $yy_action = array(
  /*   0 */ "start ::= body",
  /*   1 */ "body ::= body code",
  /*   2 */ "body ::=",
- /*   3 */ "code ::= T_OPEN_TAG stmts",
+ /*   3 */ "code ::= T_TAG_OPEN stmts",
  /*   4 */ "code ::= T_HTML",
  /*   5 */ "code ::= T_COMMENT",
  /*   6 */ "code ::= T_PRINT_OPEN filtered_var T_PRINT_CLOSE",
- /*   7 */ "stmts ::= T_EXTENDS var_or_string T_CLOSE_TAG",
- /*   8 */ "stmts ::= stmt T_CLOSE_TAG",
+ /*   7 */ "stmts ::= T_EXTENDS var_or_string T_TAG_CLOSE",
+ /*   8 */ "stmts ::= stmt T_TAG_CLOSE",
  /*   9 */ "stmts ::= for_stmt",
  /*  10 */ "stmts ::= ifchanged_stmt",
  /*  11 */ "stmts ::= block_stmt",
  /*  12 */ "stmts ::= filter_stmt",
  /*  13 */ "stmts ::= if_stmt",
- /*  14 */ "stmts ::= T_INCLUDE var_or_string T_CLOSE_TAG",
+ /*  14 */ "stmts ::= T_INCLUDE var_or_string T_TAG_CLOSE",
  /*  15 */ "stmts ::= custom_tag",
  /*  16 */ "stmts ::= alias",
  /*  17 */ "stmts ::= ifequal",
- /*  18 */ "stmts ::= T_AUTOESCAPE varname T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  19 */ "custom_tag ::= T_CUSTOM_TAG T_CLOSE_TAG",
- /*  20 */ "custom_tag ::= T_CUSTOM_TAG T_AS varname T_CLOSE_TAG",
- /*  21 */ "custom_tag ::= T_CUSTOM_TAG params T_CLOSE_TAG",
- /*  22 */ "custom_tag ::= T_CUSTOM_TAG params T_AS varname T_CLOSE_TAG",
- /*  23 */ "custom_tag ::= T_CUSTOM_BLOCK T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  24 */ "custom_tag ::= T_CUSTOM_BLOCK params T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  25 */ "custom_tag ::= T_SPACEFULL T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  26 */ "alias ::= T_WITH varname T_AS varname T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
+ /*  18 */ "stmts ::= T_AUTOESCAPE varname T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  19 */ "custom_tag ::= T_CUSTOM_TAG T_TAG_CLOSE",
+ /*  20 */ "custom_tag ::= T_CUSTOM_TAG T_AS varname T_TAG_CLOSE",
+ /*  21 */ "custom_tag ::= T_CUSTOM_TAG params T_TAG_CLOSE",
+ /*  22 */ "custom_tag ::= T_CUSTOM_TAG params T_AS varname T_TAG_CLOSE",
+ /*  23 */ "custom_tag ::= T_CUSTOM_BLOCK T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  24 */ "custom_tag ::= T_CUSTOM_BLOCK params T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  25 */ "custom_tag ::= T_SPACEFULL T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  26 */ "alias ::= T_WITH varname T_AS varname T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
  /*  27 */ "stmt ::= regroup",
  /*  28 */ "stmt ::= T_LOAD string",
- /*  29 */ "for_def ::= T_FOR varname T_IN filtered_var T_CLOSE_TAG",
- /*  30 */ "for_def ::= T_FOR varname T_COMMA varname T_IN filtered_var T_CLOSE_TAG",
- /*  31 */ "for_stmt ::= for_def body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  32 */ "for_stmt ::= for_def body T_OPEN_TAG T_EMPTY T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  33 */ "if_stmt ::= T_IF expr T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  34 */ "if_stmt ::= T_IF expr T_CLOSE_TAG body T_OPEN_TAG T_ELSE T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  35 */ "ifchanged_stmt ::= T_IFCHANGED T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  36 */ "ifchanged_stmt ::= T_IFCHANGED params T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  37 */ "ifchanged_stmt ::= T_IFCHANGED T_CLOSE_TAG body T_OPEN_TAG T_ELSE T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  38 */ "ifchanged_stmt ::= T_IFCHANGED params T_CLOSE_TAG body T_OPEN_TAG T_ELSE T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  39 */ "ifequal ::= T_IFEQUAL fvar_or_string fvar_or_string T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  40 */ "ifequal ::= T_IFEQUAL fvar_or_string fvar_or_string T_CLOSE_TAG body T_OPEN_TAG T_ELSE T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  41 */ "ifequal ::= T_IFNOTEQUAL fvar_or_string fvar_or_string T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  42 */ "ifequal ::= T_IFNOTEQUAL fvar_or_string fvar_or_string T_CLOSE_TAG body T_OPEN_TAG T_ELSE T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  43 */ "block_stmt ::= T_BLOCK varname T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  44 */ "block_stmt ::= T_BLOCK varname T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END varname T_CLOSE_TAG",
- /*  45 */ "block_stmt ::= T_BLOCK T_NUMERIC T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
- /*  46 */ "block_stmt ::= T_BLOCK T_NUMERIC T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_NUMERIC T_CLOSE_TAG",
- /*  47 */ "filter_stmt ::= T_FILTER filtered_var T_CLOSE_TAG body T_OPEN_TAG T_CUSTOM_END T_CLOSE_TAG",
+ /*  29 */ "for_def ::= T_FOR varname T_IN filtered_var T_TAG_CLOSE",
+ /*  30 */ "for_def ::= T_FOR varname T_COMMA varname T_IN filtered_var T_TAG_CLOSE",
+ /*  31 */ "for_stmt ::= for_def body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  32 */ "for_stmt ::= for_def body T_TAG_OPEN T_EMPTY T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  33 */ "if_stmt ::= T_IF expr T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  34 */ "if_stmt ::= T_IF expr T_TAG_CLOSE body T_TAG_OPEN T_ELSE T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  35 */ "ifchanged_stmt ::= T_IFCHANGED T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  36 */ "ifchanged_stmt ::= T_IFCHANGED params T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  37 */ "ifchanged_stmt ::= T_IFCHANGED T_TAG_CLOSE body T_TAG_OPEN T_ELSE T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  38 */ "ifchanged_stmt ::= T_IFCHANGED params T_TAG_CLOSE body T_TAG_OPEN T_ELSE T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  39 */ "ifequal ::= T_IFEQUAL fvar_or_string fvar_or_string T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  40 */ "ifequal ::= T_IFEQUAL fvar_or_string fvar_or_string T_TAG_CLOSE body T_TAG_OPEN T_ELSE T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  41 */ "ifequal ::= T_IFNOTEQUAL fvar_or_string fvar_or_string T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  42 */ "ifequal ::= T_IFNOTEQUAL fvar_or_string fvar_or_string T_TAG_CLOSE body T_TAG_OPEN T_ELSE T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  43 */ "block_stmt ::= T_BLOCK varname T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  44 */ "block_stmt ::= T_BLOCK varname T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END varname T_TAG_CLOSE",
+ /*  45 */ "block_stmt ::= T_BLOCK T_NUMERIC T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
+ /*  46 */ "block_stmt ::= T_BLOCK T_NUMERIC T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_NUMERIC T_TAG_CLOSE",
+ /*  47 */ "filter_stmt ::= T_FILTER filtered_var T_TAG_CLOSE body T_TAG_OPEN T_CUSTOM_END T_TAG_CLOSE",
  /*  48 */ "regroup ::= T_REGROUP filtered_var T_BY varname T_AS varname",
  /*  49 */ "filtered_var ::= filtered_var T_PIPE varname_args",
  /*  50 */ "filtered_var ::= varname_args",
