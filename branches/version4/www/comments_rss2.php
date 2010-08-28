@@ -142,6 +142,8 @@ do_header($title);
 if ($comments) {
 	foreach($comments as $comment_id) {
 		$comment = Comment::from_db($comment_id);
+		if (!$comment) continue;
+
 		if ($comment->type == 'admin') {
 			if ($individual_user) continue;
 			else $comment->username = get_server_name();

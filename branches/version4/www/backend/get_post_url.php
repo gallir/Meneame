@@ -26,7 +26,7 @@ if (!empty($_GET['id'])) {
 		}
 
 		if ($post_id) {
-			$id = (int) $db->get_var("select post_id from posts, users where user_login = '$user' and post_user_id = user_id and post_id = $post_id order by post_date desc limit 1");
+			$id = (int) $db->get_var("select post_id from posts where post_id = $post_id");
 		}
 
 		// In case of not found in previous case or postid was not given
