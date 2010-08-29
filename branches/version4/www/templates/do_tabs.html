@@ -2,11 +2,11 @@
 {% for item in items %}
     {% if tab_selected == item.name%}
     <li {{active}}>
-        <a href="{{globals.base_url}}{{item.url}}" title="{{reload_text}}">{{item.title}}</a>
+        <a href="{% if item.rel %}{{globals.base_url}}{% endif %}{{item.url}}" title="{{reload_text}}">{{item.title}}</a>
     </li>
     {% else %}
     <li>
-        <a href="{{globals.base_url}}{{item.url}}">{{item.title}}</a>
+        <a href="{% if item.rel %}{{globals.base_url}}{% endif %}{{item.url}}">{{item.title}}</a>
     </li>
     {% endif %}
 {% endfor %}

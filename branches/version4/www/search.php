@@ -86,7 +86,7 @@ $options = array(
     'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
 );
 
-$selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h']);
+$selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h'], 'o' => $_REQUEST['o']);
 
 Haanga::Load('search.html', compact('options', 'selected', 'response', 'rss_program'));
 

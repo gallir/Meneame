@@ -30,14 +30,14 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 
 	if ($tab_name == "main" ) {
         $items = array(
-            array('url' => '', 'name' => 'published', 'title' => _('portada')),
-            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares')),
-            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes')),
+            array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
+            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
         );
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
+            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected, 'rel'=>false);
         }
         $tabname = 'tabmain';
 	}
