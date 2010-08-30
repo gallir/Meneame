@@ -119,7 +119,7 @@ function get_toggler_plusminus($container_id, $enabled = false) {
     }
     echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
     echo "</script>\n";
-    return "<a class='toggler' id='toggle_l_$n' href=''><img src='$image' id='toggle_i_$n' alt='' width='18' height='18'/></a>";
+    return "<a class='toggler' id='toggle_l_$n' href='' title='+/-'><img src='$image' id='toggle_i_$n' alt='+/-' width='18' height='18'/></a>";
     $n++;
 }
 

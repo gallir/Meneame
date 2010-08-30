@@ -36,12 +36,8 @@ class Trackback {
 		$trackback_link = $db->escape(trim($this->link));
 		$trackback_title = $db->escape(trim($this->title));
 		$trackback_content = $db->escape(trim($this->content));
-		if($this->id===0) {
-			$db->query("INSERT INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_ip_int, trackback_status, trackback_link, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link_id, '$trackback_type', FROM_UNIXTIME($trackback_date), $trackback_ip_int, '$trackback_status', '$trackback_link', '$trackback_url', '$trackback_title', '$trackback_content')");
-			$this->id = $db->insert_id;
-		} else {
-			$db->query("UPDATE trackbacks set trackback_user_id=$trackback_author, trackback_link_id=$trackback_link_id, trackback_type='$trackback_type', trackback_date=FROM_UNIXTIME($trackback_date), trackback_ip_int=$trackback_ip_int, trackback_status='$trackback_status', trackback_link='$trackback_link', trackback_url='$trackback_url', trackback_title='$trackback_title', trackback_content='$trackback_content' WHERE trackback_id=$this->id");
-		}
+		$db->query("REPLACE INTO trackbacks (trackback_user_id, trackback_link_id, trackback_type, trackback_date, trackback_ip_int, trackback_status, trackback_link, trackback_url, trackback_title, trackback_content) VALUES ($trackback_author, $trackback_link_id, '$trackback_type', FROM_UNIXTIME($trackback_date), $trackback_ip_int, '$trackback_status', '$trackback_link', '$trackback_url', '$trackback_title', '$trackback_content')");
+		if (!$this->id && $db->insert_id > 0) $this->id = $db->insert_id;
 	}
 	
 	function read() {

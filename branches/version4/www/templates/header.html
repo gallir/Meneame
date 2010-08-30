@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{globals.lang}}" lang="{{globals.lang}}">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
 <meta name="ROBOTS" content="NOARCHIVE" />
 <title>{{title}}</title>
 
@@ -122,10 +123,10 @@ var base_key="{{globals.security_key}}";
 			 title="{% trans _('menéame te saluda en') %} {{globals.greetings[greeting]}}"
 		{% endif %}>
 	{{greeting}}&nbsp;{{current_user.user_login}}&nbsp;<img src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
-	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="" title="logout" width="22" height="16" /></a></li>
+	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="logout" title="logout" width="22" height="16" /></a></li>
 {% else %}
-	<li><a href="{{globals.base_url}}register.php"> {% trans _('registrarse') %} <img src="{{globals.base_static}}img/common/register-bt-02.png" alt="" title="register" width="16" height="18" /></a></li>
-	<li><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="" title="login" width="22" height="16" /></a></li>
+	<li><a href="{{globals.base_url}}register.php"> {% trans _('registrarse') %} <img src="{{globals.base_static}}img/common/register-bt-02.png" alt="register" title="register" width="16" height="18" /></a></li>
+	<li><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="login" title="login" width="22" height="16" /></a></li>
 {% endif %}
 
 </ul></div>

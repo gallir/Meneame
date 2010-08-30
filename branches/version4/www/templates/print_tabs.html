@@ -2,7 +2,7 @@
 {% for item in items %}
     <li{% if item.id == option OR item.selected %} class="selected"{%endif%}>
         <span>
-            <a href="{{globals.base_url}}{{item.url}}">{{ item.title }}</a>
+            <a href="{{globals.base_url}}{{item.url}}" title="+/-">{{ item.title }}</a>
         {% if item.id == option OR item.selected %}
             {% inline "get_toggler_plusminus.html" %}
         {% endif %}

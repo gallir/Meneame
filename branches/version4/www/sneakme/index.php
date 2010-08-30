@@ -312,7 +312,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	   		echo '</li>'."\n";
 	   		$n++;
 		}
-	} else {
+	} elseif (! empty($content)) {
 	    echo '<li>'.$content.'</li>'; 
 	}
 	echo '</ul>'."\n";
