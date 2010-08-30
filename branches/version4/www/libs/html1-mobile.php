@@ -29,9 +29,9 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 
 	if ($tab_name == "main" ) {
         $items = array(
-            array('url' => '', 'name' => 'published', 'title' => _('portada')),
-            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares')),
-            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes')),
+            array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
+            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
         );
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
