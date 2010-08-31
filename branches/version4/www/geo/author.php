@@ -25,7 +25,7 @@ if ($user->avatar)
 	echo '<div style="float: left;"><img hspace="4" src="'.get_avatar_url($user->id, $user->avatar, 40).'" width="40" height="40" alt="'.$user->username.'"/></div>';
 echo '<strong>' . _('usuario') . ':</strong>&nbsp;<a target="_blank" href="' . get_user_uri($user->username) .'">'. $user->username.'</a>';
 if ($current_user->user_id > 0 && $current_user->user_id  != $user->id)  {
-	echo '&nbsp;' . friend_teaser($current_user->user_id, $user->id);
+	echo '&nbsp;' . User::friend_teaser($current_user->user_id, $user->id);
 }
 echo '<br/>';
 if ($user->names) echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
