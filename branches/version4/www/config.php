@@ -217,9 +217,13 @@ $globals['captcha_first_login'] = false;
 //$globals['recaptcha_public_key'] = '';
 //$globals['recaptcha_private_key'] = '';
 
-// Twitter settings
-//$globals['twitter_user'] = '';
-//$globals['twitter_password'] = '';
+// Twitter settings, with oauth
+// Ensure you have pecl/oauth installed
+//$globals['twitter_consumer_key'] = 'xxxxxx';
+//$globals['twitter_consumer_secret'] = 'xxxxxx';
+//$globals['twitter_token'] = 'xxxxxx-xxxxxx';
+//$globals['twitter_token_secret'] = 'xxxxxx';
+
 // Jaiku settings
 //$globals['jaiku_user'] = '';
 //$globals['jaiku_key'] = '';

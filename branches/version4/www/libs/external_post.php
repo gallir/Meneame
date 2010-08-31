@@ -6,8 +6,43 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-
 function twitter_post($text, $short_url) {
+	global $globals;
+
+	if (!class_exists("OAuth")) {
+			syslog(LOG_NOTICE, "Meneame: pecl/oauth is not installed");
+			return;
+	}
+
+	if (! $globals['twitter_consumer_key'] || ! $globals['twitter_consumer_secret']
+		|| ! $globals['twitter_token'] || ! $globals['twitter_token_secret']) {
+			syslog(LOG_NOTICE, "Meneame: consumer_key, consumer_secret, token, or token_secret not defined");
+			return;
+	}
+
+	$msg = text_to_summary($text, 115) . ' ' . $short_url;
+	$req_url = 'http://twitter.com/oauth/request_token';
+	$acc_url = 'http://twitter.com/oauth/access_token';
+	$authurl = 'http://twitter.com/oauth/authorize';
+	$api_url = 'http://twitter.com/statuses/update.json';
+	$conskey = 'lFkApgDdsefj6X0EUOxKZQ';
+	$conssec = 'Lni0PYVuDT7xJM5ThWMJiaVXPDrdtAisrPYUvhSW4cI';
+            
+	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
+	$oauth->debug = 1;
+	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);
+            
+	$api_args = array("status" => $msg, "empty_param" => NULL);
+	/* No using geo yet
+	if (isset($entry['lat'])) {
+		$api_args['lat'] = $entry['lat'];
+		$api_args['long'] = $entry['long'];
+	}
+	*/
+	$oauth->fetch($api_url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
+}
+
+function twitter_post_basic($text, $short_url) {
 	global $globals;
 
 	$t_status = urlencode(text_to_summary($text, 115) . ' ' . $short_url);
