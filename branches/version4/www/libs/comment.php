@@ -109,6 +109,15 @@ class Comment {
 		return false;
 	}
 
+	function check_visibility() {
+		global $globals, $current_user;
+
+		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
+		$this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
+						|| ($this->user_level == 'disabled' && $this->type != 'admin');
+		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+	}
+
 	function print_summary($link=0, $length=0, $single_link=true) {
 		global $current_user, $globals;
 
@@ -127,10 +136,8 @@ class Comment {
 
 		/* Get info about the comment and author */
 		$this->link_permalink =  $link->get_relative_permalink();
-		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
-		$this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
-						|| ($this->user_level == 'disabled' && $this->type != 'admin');
-		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+
+		$this->check_visibility();
 
 		/* pickup the correct css for comments */
 		if ($this->hidden || $this->ignored)  {

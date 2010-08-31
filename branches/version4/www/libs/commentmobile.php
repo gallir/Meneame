@@ -12,7 +12,7 @@ class CommentMobile extends Comment{
 
 		if(!$this->read) return;
 
-		$this->hidden = $this->karma < -80 || ($this->user_level == 'disabled' && $this->type != 'admin');
+		$this->check_visibility();
 
 		if ($this->hidden)  {
 			$comment_meta_class = 'comment-meta-hidden';
@@ -25,7 +25,6 @@ class CommentMobile extends Comment{
 			}
 		}
 
-		$this->hidden = $this->hidden && ($current_user->user_comment_pref & 1) == 0;
         $this->truncate = $length>0 && mb_strlen($this->content) > $length + $length/2;
 
 		if ($this->truncate) {
