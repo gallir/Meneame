@@ -128,16 +128,8 @@
 	<div class="news-details main">
 		<span class="comments-counter">&nbsp;<a href="{{ self.permalink }}">{% if self.comments > 0 %}{% trans _("%d comentarios") self.comments %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
 
-		{% if current_user.user_id > 0 %}
-			<span class="tool">
-				<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">
-				{% exec favorite_teaser current_user.user_id self %}
-				</a>
-			</span>
-		{% endif %}
 
-
-		<span class="tool">{% trans _('en') %}:
+		<span class="tool">
 		<a href="{% get_url '?meta=' self.meta_uri %}" title="{% trans _('meta') %}">
 			{{ self.meta_name}}</a>,
 		<a href="{% get_url '?meta=' self.meta_uri '&amp;category=' self.category %}" title="{% trans _('categoría') %}">
@@ -178,6 +170,16 @@
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
+
+
+		{% if current_user.user_id > 0 %}
+			<span class="tool">
+				<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">
+				{% exec favorite_teaser current_user.user_id self %}
+				</a>
+			</span>
+		{% endif %}
+
 				<span class="tool">
 					{% exec self.get_short_permalink as shortlink %}
 					{% exec urlencode shortlink as enc_shortlink %}
