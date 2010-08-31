@@ -391,7 +391,7 @@ function publish($link) {
 	} else {
 		$short_url = fon_gs($link->get_permalink());
 	}
-	if ($globals['twitter_user'] && $globals['twitter_password']) {
+	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
 		twitter_post($link->title, $short_url); 
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
