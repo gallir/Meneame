@@ -10,6 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'tags.php');
 include(mnminclude.'ban.php');
+include(mnminclude.'search.php');
 
 $globals['ads'] = false;
 
@@ -610,7 +611,21 @@ function do_submit2() {
 	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
+
+	$_REQUEST['q'] = $linkres->title . ' ' . $link->content . ' ' . $linkres->tags;
+	$response = do_search(false, 0, 5);
+	if ($response['ids']) {
+		$related = array();
+		foreach($response['ids'] as $id) {
+			$l = Link::from_db($id);
+			$l->permalink = $l->get_permalink();
+			array_push($related, $l);
+		}
+		Haanga::Load("submit_related.html", compact('related'));
+	}
+
 	echo '</div>'."\n";
+
 }
 
 function do_submit3() {
