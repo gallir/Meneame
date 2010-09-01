@@ -164,11 +164,10 @@ class Comment {
 
 		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->is_truncated = TRUE;
-			$this->content = preg_replace('/[&<\{]\w*$/', '', mb_substr($this->content, 0 , $length));
+			$this->content = preg_replace('/(?:[&<\{]\w*|[^<>\s]{1,10})$/', '', mb_substr($this->content, 0 , $length));
 			if (preg_match('/<\w+>/', $this->content)) {
 				$this->content = close_tags($this->content);
 			}
-			$this->content = preg_replace('/&\w*$|<\w{1,6}>([^<>]*)$/', "$1", mb_substr($this->content, 0 , $length));
 		}
 
 		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
