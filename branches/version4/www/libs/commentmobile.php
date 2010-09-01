@@ -25,9 +25,9 @@ class CommentMobile extends Comment{
 			}
 		}
 
-        $this->truncate = $length>0 && mb_strlen($this->content) > $length + $length/2;
+		$this->truncate($length);
 
-		if ($this->truncate) {
+		if ($this->is_truncated) {
 			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
 		}
 

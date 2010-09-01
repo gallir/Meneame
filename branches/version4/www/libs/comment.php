@@ -118,6 +118,18 @@ class Comment {
 		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
 	}
 
+	function truncate($length) {
+		$this->is_truncated  = FALSE;
+		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
+			$this->is_truncated = TRUE;
+			$this->content = preg_replace('/(?:[&<\{]\w*|[^<>\s]{1,10})$/', '', mb_substr($this->content, 0 , $length));
+			if (preg_match('/<\w+>/', $this->content)) {
+				$this->content = close_tags($this->content);
+			}
+		}
+	}
+
+
 	function print_summary($link=0, $length=0, $single_link=true) {
 		global $current_user, $globals;
 
@@ -160,17 +172,11 @@ class Comment {
 
 		$this->user_can_vote = $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
 		$this->modified_time = txt_time_diff($this->date, $this->modified);
-		$this->is_truncated  = FALSE;
 
-		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->is_truncated = TRUE;
-			$this->content = preg_replace('/(?:[&<\{]\w*|[^<>\s]{1,10})$/', '', mb_substr($this->content, 0 , $length));
-			if (preg_match('/<\w+>/', $this->content)) {
-				$this->content = close_tags($this->content);
-			}
-		}
+		$this->truncate($length);
 
 		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
+
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && $globals['link'] && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
 
