@@ -27,10 +27,6 @@ class CommentMobile extends Comment{
 
 		$this->truncate($length);
 
-		if ($this->is_truncated) {
-			$this->content = preg_replace('/&\w*$/', '', mb_substr($this->content, 0 , $length));
-		}
-
 		$this->txt_content =  put_smileys(save_text_to_html($this->content));
 
 		if ($this->type == 'admin') {

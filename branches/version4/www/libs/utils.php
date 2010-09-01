@@ -247,7 +247,7 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 		$regexp = '';
 
 		if ($do_links) {
-			$regexp .= 'https{0,1}:\/\/[^ \t\n\r<>]{5,300}';
+			$regexp .= 'https{0,1}:\/\/[^ \t\n\r<>]{5,500}';
 		}
 
 		$globals['hashtype'] = $hashtype; // To pass the value to the callback
