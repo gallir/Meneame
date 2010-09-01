@@ -219,6 +219,8 @@ $globals['captcha_first_login'] = false;
 
 // Twitter settings, with oauth
 // Ensure you have pecl/oauth installed
+
+//$globals['twitter_user'] = 'xxx';
 //$globals['twitter_consumer_key'] = 'xxxxxx';
 //$globals['twitter_consumer_secret'] = 'xxxxxx';
 //$globals['twitter_token'] = 'xxxxxx-xxxxxx';

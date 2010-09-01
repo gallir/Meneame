@@ -188,7 +188,7 @@
 					</strong>:
 
 					{# Share icons #}
-					&nbsp;<a href="http://twitter.com/home?status={{ self.title }} {{ enc_shortlink }} (via @{{ globals.twitter_user }})" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
+					&nbsp;<a href="http://twitter.com/home?status={{ self.title }} {{ enc_shortlink }} {% if globals.twitter_user %}(via @{{ globals.twitter_user }}){% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
 					&nbsp;<a href="http://www.facebook.com/share.php?u={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/fb.gif" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
 					&nbsp;<a href="http://www.google.com/buzz/post?url={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/buzz.png" alt="buzz" title="{% trans _('compartir en %s') "buzz" %}" width="16" height="16"/></a>
 					&nbsp;<a href="http://friendfeed.com/?url={{ enc_shortlink }}&amp;title={{self.title|urlencode}}" target="_blank"><img src="{{ globals.base_static }}img/favicons/ff.png" alt="friendfeed" title="{% trans _('compartir en %s') "friendfeed" %}" width="16" height="16"/></a>
