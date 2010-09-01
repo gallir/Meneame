@@ -29,7 +29,7 @@
     {% else %}
 	<link rel="icon" href="{% get_static_url 'img/favicons/favicon4.ico'%}" type="image/x-icon"/>
     {% endif %}
-	<link rel="apple-touch-icon" href="{% get_static_url globals.base_static 'img/favicons/apple-touch-icon.png' %}"/>
+	<link rel="apple-touch-icon" href="{% get_static_url 'img/favicons/apple-touch-icon.png' %}"/>
     <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php" />
     {{ globals.extra_head|default:""}}
 </head>
