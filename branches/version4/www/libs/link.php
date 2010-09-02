@@ -1096,5 +1096,41 @@ class Link {
 		return false;
 	}
 
+	function get_related($max = 10) {
+		global $globals;
+
+
+		$related = array();
+		// Only work with sphinx
+		if (!$globals['sphinx_server']) return $related;
+
+		require(mnminclude.'search.php');
+		$text = '';
+
+		// Filter title
+		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»]+/u', $this->title, -1, PREG_SPLIT_NO_EMPTY);
+		foreach ($a as $w) {
+			if (mb_strlen($w) > 2 && ! preg_match("/$w /iu", $text)) $text .= "$w ";
+		}
+
+		// Filter content, check length and that it's begin con capital
+		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»]+/u', $this->content, -1, PREG_SPLIT_NO_EMPTY);
+		foreach ($a as $w) {
+			if (mb_strlen($w) > 3 && ! preg_match("/$w /iu", $text) && preg_match('/^[A-Z]/', $w) ) $text .= "$w ";
+		}
+
+		$_REQUEST['q'] = $text . ' ' . $this->tags;
+
+		$response = do_search(false, 0, $max);
+		if ($response && isset($response['ids'])) {
+			foreach($response['ids'] as $id) {
+				$l = Link::from_db($id);
+				if (empty($l->permalink)) $l->permalink = $l->get_permalink();
+				array_push($related, $l);
+        	}
+		}
+		return $related;
+	}
+
 
 }
