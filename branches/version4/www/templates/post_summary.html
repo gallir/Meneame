@@ -26,9 +26,9 @@
 			{% else %}
 				{% if self.voted > 0 %}
 					<img src="{% get_static_url 'img/common/vote-up-gy02.png' %}" width="18" height="16" alt="{% trans _('votado positivo') %}" title="{% trans _('votado positivo') %}"/>
-				{% else %}
+				{% else %}{% if self.voted < 0 %}
 					<img src="{% get_static_url 'img/common/vote-down-gy02.png' %}" width="18" height="16" alt="{% trans _('votado negativo') %}" title="{% trans _('votado negativo') %}"/>
-				{% endif %}
+				{% endif %}{% endif %}
 			{% endif %}
 		{% endif %}
 
