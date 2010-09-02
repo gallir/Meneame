@@ -131,7 +131,8 @@ function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	if ($wrap>0) $string = wordwrap($string, $wrap, " ", 1);
 	if ($replace_nl) $string = preg_replace('/[\n\t\r]+/s', ' ', $string);
 	if ($maxlength > 0) $string = mb_substr($string, 0, $maxlength);
-	return @htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+	$string = @htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+	return preg_replace('/(\d+) +(\d{3,})/', "$1&nbsp;$2", $string); // Avoid to wrap in the middle of numbers with thousands' space separator
 }
 
 function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) {
