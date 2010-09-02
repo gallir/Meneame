@@ -1108,15 +1108,15 @@ class Link {
 		$text = '';
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»]+/u', $this->title, -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/]+/u', $this->title, -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if (mb_strlen($w) > 2 && ! preg_match("/$w /iu", $text)) $text .= "$w ";
+			if (mb_strlen($w) > 2 && ! preg_match("/".preg_quote($w)." /iu", $text)) $text .= "$w ";
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»]+/u', $this->content, -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/]+/u', $this->content, -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if (mb_strlen($w) > 3 && ! preg_match("/$w /iu", $text) && preg_match('/^[A-Z]/', $w) ) $text .= "$w ";
+			if (mb_strlen($w) > 3 && ! preg_match("/".preg_quote($w)." /iu", $text) && preg_match('/^[A-Z]/', $w) ) $text .= "$w ";
 		}
 
 		$_REQUEST['q'] = $text . ' ' . $this->tags;
