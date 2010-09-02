@@ -102,8 +102,8 @@ switch ($argv[0]) {
 				case '_conversation':
 					$view = 3;
 					$page_title = sprintf(_('conversación de %s'), $user->username);
-					$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
-					$rows =  $db->get_var("SELECT count(*) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
+					$sql = "SELECT distinct conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
+					$rows =  $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
 					$rss_option="sneakme_rss2.php?conversation_of=$user->id";
 					break;
 
