@@ -11,7 +11,7 @@ function do_search($by_date = false, $start = 0, $count = 50) {
 
 }
 
-function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
+function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	global $globals;
 
 	$start_time = microtime(true);
@@ -34,7 +34,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 	if (empty($_REQUEST['words'])) return $response;
 
 
-	$words_array = explode(" ", $_REQUEST['words']);
+	$words_array = preg_split('/\s+/', $_REQUEST['words'], -1, PREG_SPLIT_NO_EMPTY);
 	$words_count = count($words_array);
 	$words = $_REQUEST['words'];
 
@@ -75,6 +75,23 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 		//$cl->SetSortMode (SPH_SORT_RELEVANCE);
 	}
 
+	// If there are no boolean opertions, add a new search for ANY of the terms
+	// Take in account phrases in between " and '
+	if (!preg_match('/( and | or | [\-\+\&\|])/i', $words) && $words_count > 1 && $_REQUEST['p'] != 'url') {
+		$words = '';
+		$quotes = 0;
+		$c = 0;
+		foreach ($words_array as $w) {
+			if ($c > 0 && $quotes == 0) {
+				$words .= ' | ';
+			}
+			if ($quotes == 0 && preg_match('/^["\']/', $w)) $quotes++;
+			elseif ($quotes > 0 && preg_match('/["\']$/', $w)) $quotes--;
+			$words .= " $w";
+			$c++;
+		}
+	}
+
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 	if ($_REQUEST['p'] == 'url') {
 		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
@@ -82,19 +99,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 		$q = $cl->AddQuery ( "$f $words", $indices );
 	}
 	array_push($queries, $q);
-
-	// If there are no boolean opertions, add a new search for ANY of the terms
-	if (!preg_match('/( and | or | [\-\+\&\|])/i', $words) && $words_count > 1) {
-		$n = 0;
-		foreach ($words_array as $w) {
-			if ($n > 0) $f .= ' |';
-			$f .= " $w";
-			$n++;
-		}
-		$q = $cl->AddQuery ( $f, $indices );
-		array_push($queries, $q);
-	}
-
 
 	$results = $cl->RunQueries();
 
@@ -105,7 +109,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 50) {
 		$res = $results[$q];
 		if ( is_array($res["matches"]) ) {
 			$response['rows'] += $res["total_found"];
-			// $response['time'] += $res["time"];
 			foreach ( $res["matches"] as $doc => $docinfo ) {
 				if (!$recorded[$doc]) {
 					$response['ids'][$n] = $doc;
