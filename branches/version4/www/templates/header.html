@@ -19,6 +19,13 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
 {% endfor %}
 
+{# Definitions for mobile, iPad and TVs #}
+{% if globals.mobile %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
+{% else %}
+<link rel="stylesheet" type="text/css" media="print,tv,handheld,all and (max-device-width: 780px)" href="{{globals.base_static}}css/handheld.css"/>
+{% endif %}
+
 <!--[if lte IE 6]>
 <link rel="stylesheet" type="text/css" media="screen" href="{{globals.base_static}}css/ie6-hacks.css" />
 <![endif]-->

@@ -1,0 +1,37 @@
+/* Definitions for mobile, iPad and TVs */
+
+body {
+font-size: medium;
+}
+
+.sneaker {
+font-size: small;
+}
+
+#wrap {
+min-width: 320px;
+}
+
+#sidebar {
+display:none;
+width: 0px;
+}
+
+#singlewrap, #newswrap {
+margin: 5px 5px 0px 5px;
+}
+
+.comment-body.high {
+background-image: none;
+}
+
+
+#footwrap {
+margin: 5em 5px 0 5px;
+clear: both;
+}
+
+.banner-top {
+width: 470px;
+}
+
