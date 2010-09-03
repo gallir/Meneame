@@ -34,7 +34,7 @@
 
 
 		{% trans _('votos') %}: <span id="vc-{{ self.id }}">{{ self.votes }}</span>, 
-		{% trans _('karma') %}: <span id="vk-{{ self.id }}">{{ self.karma }}</span>&nbsp;
+		{% trans _('karma') %}: <span id="vk-{{ self.id }}">{{ self.karma }}</span>
 
 		{% if self.show_votes %}
 			<a href="javascript:modal_from_ajax('{% get_url 'backend/get_p_v.php?id=' self.id %}')">

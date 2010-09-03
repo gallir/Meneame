@@ -1365,6 +1365,7 @@ font-size: 90%;
 line-height: 180%;
 color: #666;
 margin: 0 0 15px 0;
+white-space: nowrap;
 }
 
 .comment-meta-hidden, .comment-meta-hidden a {
@@ -1377,7 +1378,6 @@ font-weight: bold;
 
 .comment-info {
 text-align: right;
-white-space: nowrap;
 }
 
 .comment-info a {
@@ -1387,7 +1387,7 @@ color: #3D72C3;
 
 .comment-votes-info {
 float: left;
-max-width: 49%;
+max-width: 50%;
 display: inline;
 overflow: hidden;
 }
