@@ -11,27 +11,41 @@ function do_search($by_date = false, $start = 0, $count = 50) {
 
 }
 
+function sphinx_client() {
+	global $globals, $db;
+
+	static $cl = false;
+	if (!$cl) {
+		$cl = new SphinxClient ();
+		$cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
+
+		// Request for status values, it's used in other sites
+		$globals['status_values'] = $db->get_enum_values('links', 'link_status');
+	}
+	return $cl;
+}
+
 function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	global $globals;
+
+	$response = array();
+	$queries = array();
+	$recorded = array();
+
 
 	$start_time = microtime(true);
 
 	$indices = $_REQUEST['w'].' '.$_REQUEST['w'].'_delta';
 
-	$cl = new SphinxClient ();
-	$cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
+	$cl = sphinx_client();
+	if (!$cl) return $response;
+
 	$cl->SetLimits ( $start, $count );
-	// status, title, tags, url,  content
-	//$cl->SetWeights ( array ( 0, 4, 2, 1, 1 ) );
 	if ($_REQUEST['w'] == 'links') {
-		$cl->SetFieldWeights(array('title' => 4, 'tags' => 2, 'url' => 1, 'content' => 1));
+		$cl->SetFieldWeights(array('title' => 2, 'tags' => 2, 'url' => 1, 'content' => 1));
 	} else {
 		$cl->SetFieldWeights(array('content' => 1));
 	}
-
-	$response = array();
-	$queries = array();
-	$recorded = array();
 
 	$response['rows'] = 0;
 	$response['time'] = 0;
@@ -57,7 +71,26 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	}
 
 	if ($_REQUEST['w'] == 'links' && $_REQUEST['s']) {
-		$cl->SetFilter('status', array($_REQUEST['s_id']));
+		if (preg_match('/^ *! */', $_REQUEST['s'])) {
+			// Allows to reject a status
+			$_REQUEST['s'] = preg_replace('/^ *! */', '', $_REQUEST['s']);
+			$s_reject = true;
+		} else {
+			$s_reject = false;
+		}
+
+		// Allow multiple statuses
+		$statuses = preg_split('/\s+/', $_REQUEST['s'], -1, PREG_SPLIT_NO_EMPTY);
+
+		$s_id = array();
+		foreach ($statuses as $s) {
+			if (isset($globals['status_values'][$s])) {
+				array_push($s_id, $globals['status_values'][$s]);
+			}
+		}
+		if (count($s_id) > 0) {
+			$cl->SetFilter('status', $s_id, $s_reject);
+		}
 	}
 
 	if ($_REQUEST['u']) {
@@ -80,8 +113,17 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	} else {
 			//$cl->SetSortMode (SPH_SORT_TIME_SEGMENTS, 'date');
 			//$cl->SetSortMode(SPH_SORT_EXTENDED, "@weight DESC, id DESC");
-			$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (NOW() - date)/20000");
-			//$cl->SetSortMode(SPH_SORT_EXPR, "@weight");
+			//$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (NOW() - date)/20000");
+
+			// expressión to decrease weights logarimically
+
+			$p = $globals['status_values']['published'];
+			$q = $globals['status_values']['queued'];
+
+			$fp = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 15)"; // for published
+			$fq = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 13)"; // queued
+			$fo = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 10)"; // all others
+			$cl->SetSortMode(SPH_SORT_EXPR, "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))");
 	}
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
@@ -112,7 +154,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 			$words .= " $w";
 			$c++;
 		}
-		//echo "$f $words" . "<br/>";
 		$q = $cl->AddQuery ( "$f $words", $indices );
 		array_push($queries, $q);
 	}
@@ -140,6 +181,25 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	}
 	$response['time'] = microtime(true) - $start_time;
 	return $response;
+}
+
+function sphinx_doc_hits($q, $index = 'links') {
+	$cl = sphinx_client();
+	if (!$cl) return 0;
+
+	$hits = PHP_INT_MAX;
+	$keys = $cl->BuildKeywords ($q, $index, true);
+	foreach ($keys as $k) {
+		if ($k['hits'] > 0 && $k['hits'] < $hits) {
+			$hits = $k['hits'];
+		}
+	}
+	if (count($keys) >1) {
+		// Heuristic to reduce hits for a phrase
+		// because BuildKeywords always parses and splits words
+		$hits = $hits / (4 * count($keys));
+	}
+	return $hits;
 }
 
 
@@ -234,18 +294,6 @@ function search_parse_query() {
 	if (isset($_REQUEST['h'])) $_REQUEST['h'] = intval($_REQUEST['h']);
 	if (isset($_REQUEST['p']) && ! preg_match('/^(url|tags|title|site|url_db)$/', $_REQUEST['p'])) unset($_REQUEST['p']);
 	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance|pure)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
-
-	if ($_REQUEST['w'] == 'links' && isset($_REQUEST['s'])) {
-		// Retrieve available status values
-		$row = $db->get_row("SHOW COLUMNS FROM links like 'link_status'");
-		preg_match_all("/'(.*?)'/", $row->Type, $matches);
-		$i = array_search($_REQUEST['s'], $matches[1]);
-		if ($i !== false) {
-			$_REQUEST['s_id'] = $i+1;
-		} else {
-			unset($_REQUEST['s']);
-		}
-	}
 }
 
 ?>

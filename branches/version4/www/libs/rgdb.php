@@ -179,5 +179,19 @@ class RGDB extends mysqli {
 		return $this->last_result;
 	}
 
+	function get_enum_values($table, $column) {
+        // Retrieve available status values
+		$enum = array();
+        $row = $this->get_row("SHOW COLUMNS FROM `$table` like '$column'");
+        preg_match_all("/'(.*?)'/", $row->Type, $matches);
+		if ($matches[1]) {
+			foreach ($matches[1] as $v => $str) {
+				$enum[$str] = $v+1;
+			}
+		}
+		return $enum;
+
+	}
+
 }
 ?>

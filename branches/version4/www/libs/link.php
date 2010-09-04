@@ -1099,48 +1099,65 @@ class Link {
 	}
 
 	function get_related($max = 10) {
-		global $globals;
+		global $globals, $db;
 
 
 		$related = array();
 		// Only work with sphinx
 		if (!$globals['sphinx_server']) return $related;
-
 		require(mnminclude.'search.php');
 
+		$maxid = $db->get_var("select max(link_id) from links");
 		if ($this->status == 'published') {
-			$_REQUEST['s'] = 'published';
-			//$_REQUEST['o'] = 'pure';
+			$_REQUEST['s'] = '! discard abuse autodiscard';
 		}
 
-
-		$text = '';
+		$words = array();
 
 		// Filter title
 		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if ((mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
-				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) 
-				&& ! preg_match("/".preg_quote($w)." /iu", $text)) $text .= "$w ";
+			$wlower = mb_strtolower($w);
+			if ( ! isset($words[$wlower])
+				&& (mb_strlen($w) > 2 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
+				$h = sphinx_doc_hits($wlower);
+				$words[$wlower] = intval($h/3);
+			}
+		}
+
+		// Filter tags
+		$a = preg_split('/,+/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
+		foreach ($a as $w) {
+			$w = trim($w);
+			$wlower = mb_strtolower($w);
+			if (isset($words[$wlower])) continue;
+			if (preg_match('/\s/', $w)) $wlower = "\"$wlower\"";
+			$h = sphinx_doc_hits($wlower);
+			$words[$wlower] = intval($h/2);
 		}
 
 		// Filter content, check length and that it's begin con capital
 		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if ((mb_strlen($w) > 4  || preg_match('/^[A-Z]{2,}$/', $w))
-				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) 
-				&& !preg_match('/'.preg_quote($w).' /iu', $text) 
-				&& preg_match('/^[A-Z]/', $w) ) {
-				$text .= "$w ";
+			$wlower = mb_strtolower($w);
+			if ( ! isset($words[$wlower]) 
+				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
+				$h = sphinx_doc_hits($wlower);
+				if (preg_match('/^[A-Z]/', $w)) $coef = 3;
+				else $coef = 1;
+				$words[$wlower] = intval($h/$coef);
 			}
 		}
 
-		$a = preg_split('/,+/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
-		foreach ($a as $w) {
-			$w = trim($w);
-			if (preg_match("/".preg_quote($w)." /iu", $text)) continue;
-			if (! preg_match('/\s/', $w)) $text .= "$w ";
-			else $text .= "\"$w\" ";
+		asort($words);
+		$i = 0;
+		$text = '';
+		foreach ($words as $w => $v) {
+			$i++;
+			if ($i > 5 && $v > $maxid/1000) break;
+			$text .= "$w ";
 		}
 
 		echo "\n<!-- Search terms: $text -->\n";
