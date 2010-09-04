@@ -219,7 +219,7 @@ class Link {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-			preg_match_all('/(< *meta +http-equiv|< *iframe|< *frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(< *meta +http-equiv|< *iframe|< *frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/(< *a|<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}
@@ -1119,7 +1119,7 @@ class Link {
 		// Filter title
 		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if ((mb_strlen($w) > 3 || preg_match('/^[A-Z]+$/', $w))
+			if ((mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) 
 				&& ! preg_match("/".preg_quote($w)." /iu", $text)) $text .= "$w ";
 		}
@@ -1127,7 +1127,7 @@ class Link {
 		// Filter content, check length and that it's begin con capital
 		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if ((mb_strlen($w) > 3  || preg_match('/^[A-Z]+$/', $w))
+			if ((mb_strlen($w) > 4  || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) 
 				&& !preg_match('/'.preg_quote($w).' /iu', $text) 
 				&& preg_match('/^[A-Z]/', $w) ) {

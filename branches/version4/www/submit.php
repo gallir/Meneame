@@ -611,7 +611,7 @@ function do_submit2() {
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 
-	$related = $linkres->get_related(5);
+	$related = $linkres->get_related(6);
 	if ($related) {
 		Haanga::Load("submit_related.html", compact('related'));
 	}
