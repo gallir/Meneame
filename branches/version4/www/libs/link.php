@@ -1124,15 +1124,17 @@ class Link {
 				&& (mb_strlen($w) > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if ($h < 2) continue; // If 0 or 1 it won't help to the search
+				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 				if (preg_match('/^[A-Z]/', $w)) {
 					$coef = 2 * log10($maxid/$h);
-					// Incrase coefficient if a name appears also in tags
-					if (preg_match('/(^|[ ,])'.preg_quote($w).'([ ,]|$)/ui', $this->tags)) {
-							$coef *= 2;
-							if ($i == 0 || $i == $n - 1) $coef *= 2; // It's the first or last word
-					}
 				} else $coef = 2;
+
+				// Increase coefficient if a name appears also in tags
+				if (preg_match('/(^|[ ,])'.preg_quote($w).'([ ,]|$)/ui', $this->tags)) {
+					$coef *= 2;
+					if ($i == 0 || $i == $n - 1) $coef *= 2; // It's the first or last word
+				}
+
 				$words[$wlower] = intval($h/$coef);
 			}
 			$i++;
@@ -1146,7 +1148,7 @@ class Link {
 			if (isset($words[$wlower])) continue;
 			if (preg_match('/\s/', $w)) $wlower = "\"$wlower\"";
 			$h = sphinx_doc_hits($wlower);
-			if ($h < 2) continue; // If 0 or 1 it won't help to the search
+			if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 			$words[$wlower] = intval($h/2);
 		}
 
@@ -1158,7 +1160,7 @@ class Link {
 				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if ($h < 2) continue; // If 0 or 1 it won't help to the search
+				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/1000) $coef = max(log10($maxid/$h) - 1, 1);
 				else $coef = 1;
 				$words[$wlower] = intval($h/$coef);
@@ -1169,7 +1171,7 @@ class Link {
 		$i = 0;
 		$text = '';
 		foreach ($words as $w => $v) {
-			$i++;
+			if (!preg_match('/ /', $w)) $i++; // Don't count phrases
 			if ($i > 12 or ($i > 7 && $v > $maxid/2000)) break;
 			$text .= "$w ";
 		}
