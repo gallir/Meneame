@@ -109,14 +109,12 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 	if ($by_date || $_REQUEST['o'] == 'date') {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 	} elseif ($_REQUEST['o'] == 'pure') {
-			$cl->SetSortMode (SPH_SORT_RELEVANCE);
+		$cl->SetSortMode (SPH_SORT_RELEVANCE);
 	} else {
-			//$cl->SetSortMode (SPH_SORT_TIME_SEGMENTS, 'date');
-			//$cl->SetSortMode(SPH_SORT_EXTENDED, "@weight DESC, id DESC");
-			//$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (NOW() - date)/20000");
+		//$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (NOW() - date)/20000");
 
-			// expressión to decrease weights logarimically
-
+		// expressions to decrease weights logarimically
+		if ($_REQUEST['w'] == 'links') {
 			$p = $globals['status_values']['published'];
 			$q = $globals['status_values']['queued'];
 
@@ -124,6 +122,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 			$fq = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 13)"; // queued
 			$fo = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 10)"; // all others
 			$cl->SetSortMode(SPH_SORT_EXPR, "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))");
+		} else {
+			$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 20)");
+		}
 	}
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
