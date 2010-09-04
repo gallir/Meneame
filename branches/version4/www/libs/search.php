@@ -1,7 +1,7 @@
 <?
 require_once (mnminclude.'sphinxapi.php');
 
-function do_search($by_date = false, $start = 0, $count = 50) {
+function do_search($by_date = false, $start = 0, $count = 50, $proximity = true) {
 	search_parse_query();
 	if ($_REQUEST['w'] == 'links' && ($_REQUEST['p'] == 'site' || $_REQUEST['p'] == 'url_db')) {
 		return db_get_search_links($by_date, $start, $count);
@@ -25,7 +25,7 @@ function sphinx_client() {
 	return $cl;
 }
 
-function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
+function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity = true) {
 	global $globals;
 
 	$response = array();
@@ -128,6 +128,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 
+	if ($proximity) $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
+	else $cl->SetRankingMode(SPH_RANK_BM25);
+
 	if ($_REQUEST['p'] == 'url') {
 		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
 		array_push($queries, $q);
@@ -199,6 +202,7 @@ function sphinx_doc_hits($q, $index = 'links') {
 		// because BuildKeywords always parses and splits words
 		$hits = $hits / (4 * count($keys));
 	}
+	//echo "<!-- $q: $hits -->\n";
 	return $hits;
 }
 

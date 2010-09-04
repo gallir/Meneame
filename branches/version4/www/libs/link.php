@@ -1116,16 +1116,26 @@ class Link {
 
 		// Filter title
 		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
+		$i = 0;
+		$n = count($a);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
 			if ( ! isset($words[$wlower])
 				&& (mb_strlen($w) > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/100) $coef = 4;
-				else $coef = 2;
+				if ($h < 2) continue; // If 0 or 1 it won't help to the search
+				if (preg_match('/^[A-Z]/', $w)) {
+					$coef = 2 * log10($maxid/$h);
+					// Incrase coefficient if a name appears also in tags
+					if (preg_match('/(^|[ ,])'.preg_quote($w).'([ ,]|$)/ui', $this->tags)) {
+							$coef *= 2;
+							if ($i == 0 || $i == $n - 1) $coef *= 2; // It's the first or last word
+					}
+				} else $coef = 2;
 				$words[$wlower] = intval($h/$coef);
 			}
+			$i++;
 		}
 
 		// Filter tags
@@ -1136,6 +1146,7 @@ class Link {
 			if (isset($words[$wlower])) continue;
 			if (preg_match('/\s/', $w)) $wlower = "\"$wlower\"";
 			$h = sphinx_doc_hits($wlower);
+			if ($h < 2) continue; // If 0 or 1 it won't help to the search
 			$words[$wlower] = intval($h/2);
 		}
 
@@ -1147,7 +1158,8 @@ class Link {
 				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/100) $coef = 2;
+				if ($h < 2) continue; // If 0 or 1 it won't help to the search
+				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/1000) $coef = max(log10($maxid/$h) - 1, 1);
 				else $coef = 1;
 				$words[$wlower] = intval($h/$coef);
 			}
@@ -1165,7 +1177,7 @@ class Link {
 		echo "\n<!-- Search terms: $text -->\n";
 		$_REQUEST['q'] = $text;
 
-		$response = do_search(false, 0, $max);
+		$response = do_search(false, 0, $max, false);
 		if ($response && isset($response['ids'])) {
 			foreach($response['ids'] as $id) {
 				if ($id == $this->id) continue;
