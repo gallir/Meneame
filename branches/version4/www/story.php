@@ -130,6 +130,9 @@ switch ($url_args[1]) {
 	case 'trackbacks':
 		$tab_option = 7;
 		break;
+	case 'related':
+		$tab_option = 8;
+		break;
 	default:
 		do_error(_('página inexistente'), 404);
 }
@@ -306,6 +309,13 @@ case 7:
 	echo '</fieldset>';
 	echo '</div>';
 	break;
+
+case 8:
+	$related = $link->get_related(9);
+	if ($related) {
+		Haanga::Load("story/related.html", compact('related'));
+	}
+	break;
 }
 echo '</div>';
 
@@ -350,6 +360,7 @@ function print_story_tabs($option) {
 	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
 		echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
 	}
+	echo '<li'.$active[8].'><a href="'.$globals['link_permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>'."\n";
 }
 

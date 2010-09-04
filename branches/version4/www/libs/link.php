@@ -44,8 +44,7 @@ class Link {
 	var $thumb_status = 'unknown';
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, favorite_link_id as favorite FROM links LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id) LEFT JOIN categories as cat on (cat.category_id = links.link_category) LEFT JOIN categories as meta on (meta.category_id = cat.category_parent), users "; 
-
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, favorite_link_id as favorite FROM links LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id) LEFT JOIN categories as cat on (cat.category_id = links.link_category) LEFT JOIN categories as meta on (meta.category_id = cat.category_parent), users "; 
 
 	static function from_db($id, $key = 'id') {
 		global $db, $current_user;
@@ -457,7 +456,6 @@ class Link {
 		}
 
 		$this->show_tags = $show_tags;
-		$this->total_votes   = $this->votes + $this->anonymous;
 		$this->permalink	 = $this->get_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->title && $this->content 
 				&& ($this->votes > 0 || $current_user->user_id == $this->author);
@@ -494,6 +492,18 @@ class Link {
 			$this->add_geo = FALSE;
 		}
 
+		$this->get_box_class();
+		
+		if ($this->do_inline_friend_votes) 
+			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
+
+		$vars = compact('type');
+		$vars['self'] = $this;
+		return Haanga::Load("link_summary.html", $vars);
+
+	}
+
+	function get_box_class() {
 		switch ($this->status) {
 			case 'queued': // another color box for not-published
 				$this->box_class = 'mnm-queued';
@@ -508,14 +518,6 @@ class Link {
 				$this->box_class = 'mnm-published';
 				break;
 		}
-		
-		if ($this->do_inline_friend_votes) 
-			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
-
-		$vars = compact('type');
-		$vars['self'] = $this;
-		return Haanga::Load("link_summary.html", $vars);
-
 	}
 
 	function check_warn() {
@@ -1105,25 +1107,42 @@ class Link {
 		if (!$globals['sphinx_server']) return $related;
 
 		require(mnminclude.'search.php');
+
+		if ($this->status == 'published') {
+			$_REQUEST['s'] = 'published';
+			//$_REQUEST['o'] = 'pure';
+		}
+
+
 		$text = '';
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/]+/u', $this->title, -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if (mb_strlen($w) > 2 && ! preg_match("/".preg_quote($w)." /iu", $text)) $text .= "$w ";
+			if (mb_strlen($w) > 2 && !preg_match('/^\d{1,3}\D{0,1}$/', $w) && ! preg_match("/".preg_quote($w)." /iu", $text)) $text .= "$w ";
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/]+/u', $this->content, -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			if (mb_strlen($w) > 3 && ! preg_match("/".preg_quote($w)." /iu", $text) && preg_match('/^[A-Z]/', $w) ) $text .= "$w ";
+			if (mb_strlen($w) > 3 && !preg_match('/^\d{1,3}\D{0,1}$/', $w) && !preg_match('/'.preg_quote($w).' /iu', $text) && preg_match('/^[A-Z]/', $w) ) {
+				$text .= "$w ";
+			}
 		}
 
-		$_REQUEST['q'] = $text . ' ' . $this->tags;
+		$a = preg_split('/,+/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
+		foreach ($a as $w) {
+			$w = trim($w);
+			if (! preg_match('/\s/', $w)) $text .= "$w ";
+			else $text .= "\"$w\" ";
+		}
+
+		$_REQUEST['q'] = $text;
 
 		$response = do_search(false, 0, $max);
 		if ($response && isset($response['ids'])) {
 			foreach($response['ids'] as $id) {
+				if ($id == $this->id) continue;
 				$l = Link::from_db($id);
 				if (empty($l->permalink)) $l->permalink = $l->get_permalink();
 				array_push($related, $l);

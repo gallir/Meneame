@@ -22,7 +22,12 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 	$cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
 	$cl->SetLimits ( $start, $count );
 	// status, title, tags, url,  content
-	$cl->SetWeights ( array ( 0, 4, 2, 1, 1 ) );
+	//$cl->SetWeights ( array ( 0, 4, 2, 1, 1 ) );
+	if ($_REQUEST['w'] == 'links') {
+		$cl->SetFieldWeights(array('title' => 4, 'tags' => 2, 'url' => 1, 'content' => 1));
+	} else {
+		$cl->SetFieldWeights(array('content' => 1));
+	}
 
 	$response = array();
 	$queries = array();
@@ -70,10 +75,27 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 
 	if ($by_date || $_REQUEST['o'] == 'date') {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
+	} elseif ($_REQUEST['o'] == 'pure') {
+			$cl->SetSortMode (SPH_SORT_RELEVANCE);
 	} else {
-		$cl->SetSortMode (SPH_SORT_TIME_SEGMENTS, 'date');
-		//$cl->SetSortMode (SPH_SORT_RELEVANCE);
+			//$cl->SetSortMode (SPH_SORT_TIME_SEGMENTS, 'date');
+			//$cl->SetSortMode(SPH_SORT_EXTENDED, "@weight DESC, id DESC");
+			$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (NOW() - date)/20000");
+			//$cl->SetSortMode(SPH_SORT_EXPR, "@weight");
 	}
+
+	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
+
+	if ($_REQUEST['p'] == 'url') {
+		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
+		array_push($queries, $q);
+	} else {
+		if ($words_count < 5) {
+			$q = $cl->AddQuery ( "$f $words", $indices );
+			array_push($queries, $q);
+		}
+	}
+
 
 	// If there are no boolean opertions, add a new search for ANY of the terms
 	// Take in account phrases in between " and '
@@ -86,19 +108,14 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 				$words .= ' | ';
 			}
 			if ($quotes == 0 && preg_match('/^["\']/', $w)) $quotes++;
-			elseif ($quotes > 0 && preg_match('/["\']$/', $w)) $quotes--;
+			if ($quotes > 0 && preg_match('/["\']$/', $w)) $quotes--;
 			$words .= " $w";
 			$c++;
 		}
-	}
-
-	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
-	if ($_REQUEST['p'] == 'url') {
-		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
-	} else {
+		//echo "$f $words" . "<br/>";
 		$q = $cl->AddQuery ( "$f $words", $indices );
+		array_push($queries, $q);
 	}
-	array_push($queries, $q);
 
 	$results = $cl->RunQueries();
 
@@ -112,6 +129,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10) {
 			foreach ( $res["matches"] as $doc => $docinfo ) {
 				if (!$recorded[$doc]) {
 					$response['ids'][$n] = $doc;
+					$response['weights']["$doc"] = $docinfo['weight'];
 					$recorded[$doc] = true;
 					$n++;
 				} else {
@@ -182,7 +200,7 @@ function search_parse_query() {
 	}
 
 
-	$_REQUEST['words'] = $_REQUEST['q'] = trim(substr(strip_tags(stripslashes($_REQUEST['q'])), 0, 250));
+	$_REQUEST['words'] = $_REQUEST['q'] = trim(substr(strip_tags(stripslashes($_REQUEST['q'])), 0, 500));
 
 	if (!empty($_REQUEST['p'])) {
 		$_REQUEST['p'] = clean_input_url($_REQUEST['p']);
@@ -215,7 +233,7 @@ function search_parse_query() {
 	// Check filters and clean
 	if (isset($_REQUEST['h'])) $_REQUEST['h'] = intval($_REQUEST['h']);
 	if (isset($_REQUEST['p']) && ! preg_match('/^(url|tags|title|site|url_db)$/', $_REQUEST['p'])) unset($_REQUEST['p']);
-	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
+	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance|pure)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
 
 	if ($_REQUEST['w'] == 'links' && isset($_REQUEST['s'])) {
 		// Retrieve available status values
