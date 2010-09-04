@@ -1115,14 +1115,16 @@ class Link {
 		$words = array();
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
 			if ( ! isset($words[$wlower])
 				&& (mb_strlen($w) > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				$words[$wlower] = intval($h/3);
+				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/100) $coef = 4;
+				else $coef = 2;
+				$words[$wlower] = intval($h/$coef);
 			}
 		}
 
@@ -1138,14 +1140,14 @@ class Link {
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
 			if ( ! isset($words[$wlower]) 
 				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if (preg_match('/^[A-Z]/', $w)) $coef = 3;
+				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/100) $coef = 2;
 				else $coef = 1;
 				$words[$wlower] = intval($h/$coef);
 			}
@@ -1156,7 +1158,7 @@ class Link {
 		$text = '';
 		foreach ($words as $w => $v) {
 			$i++;
-			if ($i > 5 && $v > $maxid/1000) break;
+			if ($i > 12 or ($i > 7 && $v > $maxid/2000)) break;
 			$text .= "$w ";
 		}
 
