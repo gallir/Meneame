@@ -1109,7 +1109,7 @@ class Link {
 
 		$maxid = $db->get_var("select max(link_id) from links");
 		if ($this->status == 'published') {
-			$_REQUEST['s'] = '! discard abuse autodiscard';
+			$_REQUEST['s'] = '! abuse';
 		}
 
 		$words = array();
