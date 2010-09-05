@@ -37,7 +37,7 @@ foreach ($a as $w) {
 	$r = array();
 	$r['w'] = $w;
 	$r['len'] = mb_strlen($w);
-	$r['hits'] = $h = intval(sphinx_doc_hits($w));
+	$r['hits'] = $h = min($results['docs'], intval(sphinx_doc_hits($w)));
 	$r['freq'] = round(100*$h/$results['docs'],1);
 	if ($r['freq'] < $results['min_freq']) {
 		$results['min_freq'] = $r['freq'];

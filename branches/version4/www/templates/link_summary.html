@@ -166,6 +166,7 @@
 
 		{# Show link to analyze the tags #}
 		{% if self.is_editable %}
+		&nbsp;&nbsp;
 		[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('analizar') %}</strong></a>]
 		{% endif %}
 

@@ -30,10 +30,15 @@ caption {
 	- {% trans _('Todas las etiquetas son demasiado genéricas') %}<br/>
 	{% endif %}
 
-	{% if results.in_title == 0 %}
-	- {% trans _('Ninguna palabra del título aparece en las etiquetas') %}<br/>
-	{% endif %}
+{% endif %}
 
+{% if results.in_title == 0 %}
+	- {% trans _('Ninguna palabra del título aparece en las etiquetas') %}<br/>
+{% endif %}
+
+
+{% if results.tags > 5 %}
+	- {% trans _('Demasiadas etiquetas') %}<br/>
 {% endif %}
 
 <table class="decorated">
