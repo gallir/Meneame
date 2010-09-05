@@ -1133,7 +1133,8 @@ class Link {
 				} else $coef = 2;
 
 				// Increase coefficient if a name appears also in tags
-				if (preg_match('/(^|[ ,])'.preg_quote($w).'([ ,]|$)/ui', $this->tags)) {
+				// s{0,1} is a trick for plurals, until we use stemmed words
+				if (preg_match('/(^|[ ,])'.preg_quote($w).'s{0,1}([ ,]|$)/ui', $this->tags)) {
 					$coef *= 2;
 					if ($i == 0 || $i == $n - 1) $coef *= 2; // It's the first or last word
 				}

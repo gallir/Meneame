@@ -16,7 +16,7 @@ table.decorated td {
 <script>$("#modalTitle").html("{% trans _('diagnóstico de etiquetas') %}")</script>
 <strong>{% trans _('etiquetas') %}:</strong> «{{ results.str }}»<br/>
 <strong>{% trans _('resumen') %}:</strong> <br/>
-{% if results.phrases > 0 OR results.min_freq < 0.1 %}
+{% if results.phrases > 0 OR results.min_freq < 0.19 %}
 	{% if results.in_title > 0 AND results.phrases > 0 %}
 		- {% trans _('Etiquetas excelentes') %}<br/>
 	{% else %}
@@ -47,7 +47,7 @@ table.decorated td {
 	- {% trans _('Demasiadas etiquetas') %}<br/>
 {% endif %}
 
-{% if results.highs > results.tags/2 %}
+{% if results.highs > results.tags * 0.6 %}
 	- {% trans _('Demasiadas etiquetas genéricas') %}<br/>
 {% endif %}
 
@@ -72,15 +72,23 @@ table.decorated td {
 		{% if w.freq <= 2 %}
 			{% if w.freq < 0.3 OR w.phrase %}
 				{% if w.in_title %}
-					{% trans _('¡perfecta, con premio mayor!') %}
+					{% if w.phrase %}
+						{% trans _('¡perfecta, con premio mayor!') %}
+					{% else %}
+						{% trans _('¡perfecta!') %}
+					{% endif %}
 				{% else %}
-					{% trans _('¡perfecta!') %}
+					{% trans _('muy buena') %}
 				{% endif %}
 			{% else %}
-				{% if w.freq < 1 OR w.in_title %}
+				{% if w.freq < 1 %}
 					{% trans _('OK') %}
 				{% else %}
-					{% trans _('regular') %}
+					{% if w.in_title %}
+						{% trans _('OK') %} ({% trans _('en el título') %})
+					{% else %}
+						{% trans _('regular') %}
+					{% endif %}
 				{% endif %}
 			{% endif %}
 		{% else %}

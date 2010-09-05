@@ -208,6 +208,7 @@ function sphinx_doc_hits($q, $index = 'links') {
 		// because BuildKeywords always parses and splits words
 		$hits = $hits / (4 * count($keys));
 	}
+	if ($hits == PHP_INT_MAX) $hits = 0; // Not info retrieved, better be safe
 	//echo "<!-- $q: $hits -->\n";
 	return $hits;
 }
