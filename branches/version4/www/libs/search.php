@@ -199,7 +199,7 @@ function sphinx_doc_hits($q, $index = 'links') {
 	$hits = PHP_INT_MAX;
 	$keys = $cl->BuildKeywords ($q, $index, true);
 	foreach ($keys as $k) {
-		if ($k['docs'] > 0 && $k['docs'] < $hits) {
+		if ($k['docs'] >= 0 && $k['docs'] < $hits) {
 			$hits = $k['docs'];
 		}
 	}

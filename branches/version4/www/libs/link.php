@@ -641,7 +641,7 @@ class Link {
 					&& $this->status == 'queued'
 					&& $globals['now'] - $this->sent_date < 10400)
 			|| ($this->author != $current_user->user_id 
-					&& $current_user->status == 'blogger' 
+					&& $current_user->user_level == 'blogger' 
 					&& $globals['now'] - $this->date < 3600)
 			|| $current_user->admin) {
 				return true;
