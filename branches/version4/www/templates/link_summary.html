@@ -163,6 +163,12 @@
 			{% exec urlencode tag as tag_url %}{% if id > 0 %}, {% endif %}
 			{% if globals.base_search_url %}<a href="{% get_url globals.base_search_url "tag:" tag_url %}">{{ tag }}</a>{% else %}<a href='{% get_url "search.php?p=tag=&amp;q=" tag_url %}'>{{ tag }}</a>{% endif %}
 		{% endfor %}
+
+		{# Show link to analyze the tags #}
+		{% if self.is_editable %}
+		[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('analizar') %}</strong></a>]
+		{% endif %}
+
 		</div>
 		{% endif %}
 		{% if type!='short' %}

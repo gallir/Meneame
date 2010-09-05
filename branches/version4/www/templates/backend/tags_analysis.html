@@ -1,0 +1,77 @@
+<html>
+<head>
+<style type="text/css">
+caption {
+	font-size: 120%;
+}
+</style>
+</head>
+<body>
+<script>$("#modalTitle").html("{% trans _('diagnóstico de etiquetas') %}")</script>
+<strong>{% trans _('etiquetas') %}:</strong> «{{ results.str }}»<br/>
+<strong>{% trans _('diagnóstico general') %}:</strong><br>
+{% if results.phrases > 0 OR results.min_freq < 0.1 %}
+	{% if results.in_title > 0 AND results.phrases > 0 %}
+		- {% trans _('Etiquetas excelentes') %}<br/>
+	{% else %}
+		- {% trans _('Etiquetas adecuadas') %}<br/>
+	{% endif %}
+{% else %}
+	- {% trans _('Etiquetas genéricas') %}<br/>
+
+	{% if results.tags < 3 %}
+	- {% trans _('Muy pocas etiquetas') %}<br/>
+	{% endif %}
+
+	{% if results.phrases == 0 %}
+	- {% trans _('No contiene ninguna frase de la forma «palabra1 palabra2, otras»') %}<br/>
+	{% endif %}
+	{% if results.min_freq > 2 %}
+	- {% trans _('Todas las etiquetas son demasiado genéricas') %}<br/>
+	{% endif %}
+
+	{% if results.in_title == 0 %}
+	- {% trans _('Ninguna palabra del título aparece en las etiquetas') %}<br/>
+	{% endif %}
+
+{% endif %}
+
+<table class="decorated">
+<caption>{% trans _('Análisis de cada etiqueta') %}</caption>
+<tr class="header">
+<th>{% trans _('etiqueta') %}</th>
+<th><em>hits</em></th>
+<th>{% trans _('frecuencia') %}</th>
+<th>{% trans _('estado') %}</th>
+</tr>
+
+{% for w in words %}
+	<tr>
+	<th>{{ w.w }}</th>
+	<td>{{ w.hits }}</td>
+	<td>{{ w.freq }}%</td>
+	<td>
+		{% if w.freq <= 2 %}
+			{% if w.freq < 0.3 OR w.phrase %}
+				{% trans _('¡perfecta!') %}
+			{% else %}
+				{% if w.freq < 1 OR w.in_title %}
+					{% trans _('OK') %}
+				{% else %}
+					{% trans _('regular') %}
+				{% endif %}
+			{% endif %}
+		{% else %}
+			{% if w.freq > 4 %}{% trans _('demasiado genérica') %}
+			{% else %}
+				{% trans _('genérica') %}
+			{% endif %}
+		{% endif %}
+	</td>
+
+	</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>
