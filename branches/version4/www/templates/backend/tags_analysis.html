@@ -1,15 +1,21 @@
 <html>
 <head>
 <style type="text/css">
-caption {
-	font-size: 120%;
+table.decorated {
+	margin-top: 5px;
+}
+table.decorated th {
+	padding: 1px;
+}
+table.decorated td {
+	padding: 2px;
 }
 </style>
 </head>
 <body>
 <script>$("#modalTitle").html("{% trans _('diagnóstico de etiquetas') %}")</script>
 <strong>{% trans _('etiquetas') %}:</strong> «{{ results.str }}»<br/>
-<strong>{% trans _('diagnóstico general') %}:</strong><br>
+<strong>{% trans _('resumen') %}:</strong> <br/>
 {% if results.phrases > 0 OR results.min_freq < 0.1 %}
 	{% if results.in_title > 0 AND results.phrases > 0 %}
 		- {% trans _('Etiquetas excelentes') %}<br/>
@@ -33,16 +39,23 @@ caption {
 {% endif %}
 
 {% if results.in_title == 0 %}
-	- {% trans _('Ninguna palabra del título aparece en las etiquetas') %}<br/>
+	- {% trans _('Mejoraría si alguna palabra o frase del título estuviese en la etiqueta') %}<br/>
 {% endif %}
 
 
-{% if results.tags > 5 %}
+{% if results.tags > 6 %}
 	- {% trans _('Demasiadas etiquetas') %}<br/>
 {% endif %}
 
+{% if results.highs > results.tags/2 %}
+	- {% trans _('Demasiadas etiquetas genéricas') %}<br/>
+{% endif %}
+
+{% if results.highs == 0 %}
+	- {% trans _('Mejoraría con <b>una</b> etiqueta más genérica (para las etiquetas populares)') %}<br/>
+{% endif %}
+
 <table class="decorated">
-<caption>{% trans _('Análisis de cada etiqueta') %}</caption>
 <tr class="header">
 <th>{% trans _('etiqueta') %}</th>
 <th><em>hits</em></th>
