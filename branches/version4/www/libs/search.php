@@ -118,10 +118,17 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 			$p = $globals['status_values']['published'];
 			$q = $globals['status_values']['queued'];
 
-			$fp = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 15)"; // for published
-			$fq = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 13)"; // queued
-			$fo = "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 10)"; // all others
-			$cl->SetSortMode(SPH_SORT_EXPR, "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))");
+			$now = time();
+			$b = log(0.9)/720;
+			$fp = "@weight * max(0.5, exp($b*abs($now-date)/3600))";
+			$b = log(0.6)/720;
+			$fq = "@weight * max(0.4, exp($b*abs($now-date)/3600))";
+			$b = log(0.2)/720;
+			$fo = "@weight * max(0.1, exp($b*abs($now-date)/3600))";
+			$exp = "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))";
+
+			$cl->SetSortMode(SPH_SORT_EXPR, $exp);
+		
 		} else {
 			$cl->SetSortMode(SPH_SORT_EXPR, "@weight - (@weight * log10(ceil((NOW()-date)/10000)) / 20)");
 		}
@@ -129,8 +136,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 
-	if ($proximity) $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25);
-	else $cl->SetRankingMode(SPH_RANK_BM25);
+	if ($words_count == 1) $cl->SetRankingMode(SPH_RANK_NONE); // Don't use rank ofr one word
+	elseif ($proximity) $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25); // Default: freq and proximity
+	else $cl->SetRankingMode(SPH_RANK_BM25); // Used for related links
 
 	if ($_REQUEST['p'] == 'url') {
 		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
