@@ -71,7 +71,11 @@ table.decorated td {
 	<td>
 		{% if w.freq <= 2 %}
 			{% if w.freq < 0.3 OR w.phrase %}
-				{% trans _('¡perfecta!') %}
+				{% if w.in_title %}
+					{% trans _('¡perfecta, con premio mayor!') %}
+				{% else %}
+					{% trans _('¡perfecta!') %}
+				{% endif %}
 			{% else %}
 				{% if w.freq < 1 OR w.in_title %}
 					{% trans _('OK') %}
@@ -82,7 +86,11 @@ table.decorated td {
 		{% else %}
 			{% if w.freq > 4 %}{% trans _('demasiado genérica') %}
 			{% else %}
-				{% trans _('genérica') %}
+				{% if w.in_title %}
+					{% trans _('OK') %} ({% trans _('en el título') %})
+				{% else %}
+					{% trans _('genérica') %}
+				{% endif %}
 			{% endif %}
 		{% endif %}
 	</td>
