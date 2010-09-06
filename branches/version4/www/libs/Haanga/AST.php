@@ -189,6 +189,9 @@ class Haanga_AST
                 $var[$id] = $value;
             }
         }
+        if (count($var) == 1) {
+            $var = $var[0];
+        }
         $this->current = array('var' => $var);
 
         return $this;

@@ -226,215 +226,81 @@ function do_profile() {
 	if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
 		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
 	}
-	
-	do_user_subheader($options, 0, 'rss2.php?sent_by='.$user->id, _('envíos en rss2'));
 
+	$post = new Post;
+	if (!$post->read_last($user->id)) {
+        $post = NULL;
+    }
 	if(!empty($user->url)) {
 		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
 
-	// Print last user's note
-	$post = new Post;
-	if ($post->read_last($user->id)) {
-		echo '<div id="addpost"></div>';
-		echo '<ol class="comments-list" id="last_post">';   
-		echo '<li>';
-		$post->print_summary();
-		echo '</li>';
-		echo "</ol>\n";
-	}   
-
-	echo '<fieldset><legend>';
-	echo _('información personal');
-	echo '</legend>';
-
-
-	// Avatar
-	echo '<div style="float:right;text-align:center">';
-	echo '<img id="avatar" class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'" title="avatar" />';
-
-	// Print the button and associated div to change the avatar
-	if ($current_user->user_id == $user->id) {
-		/*
-		echo '<div id="avatar_indicator" style="margin:0;padding:0;height:12px"></div>';
-		echo '<button id="avatar_upload" style="margin:0" title="'._('imagen cuadrada de no más de 400 KB, sin transparencias').'">'._('cambiar avatar').'</button>'."\n";
-		@include(mnminclude.'foreign/avatar_upload.html');
-		* */
-		Haanga::Load('user/avatar_upload.html');
-		
-	}
-	echo '</div>';
-
-
-	// Geo div
-	echo '<div style="width:140px; float:left;">';
-	if($globals['do_geo']) {
-		echo '<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden; float:left"></div>';
-		if ($current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
-			$distance = (int) geo_distance($my_latlng, $globals['latlng']);
-			echo '<p style="color: #FF9400; font-size: 90%">'."$user->username "._('está a')." <strong>$distance kms</strong></p>";
-		}
-	}
-	echo '&nbsp;</div>';
-
-
-	echo '<div style="float:left;min-width:65%">';
-	echo '<dl>';	
-	if(!empty($user->username)) {
-		echo '<dt>'._('usuario').':</dt><dd>';
-		if (!empty($url)) {
-			echo '<a href="'.$url.'" '.$nofollow.'>'.$user->username.'</a>';
-		} else {
-			echo $user->username;
-		}
-
-		$user->print_medals();
-
-		$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
-		if ($current_user->admin &&
-			($nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from")) > 0 ) {
-			echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/ip_clones.php?id='.
-			$user->id.'\', \''. _('clones por IP'). '\')" title="'._('clones').'">'._('clones').'</a><sup>'.$nclones.'</sup>) ';
-		}
-		// Print friend icon
-		if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
-			echo '&nbsp;<a id="friend-'.$current_user->user_id.'-'.$user->id.'" href="javascript:get_votes(\'get_friend.php\',\''.$current_user->user_id.'\',\'friend-'.$current_user->user_id.'-'.$user->id.'\',0,\''.$user->id.'\')">'.User::friend_teaser($current_user->user_id, $user->id).'</a>';
-		}
-		// Print user detailed info
-		if ($user->id==$current_user->user_id || $current_user->admin) {
-			echo " (" . _('id'). ": <em>$user->id</em>, ";
-			echo "<em>$user->level</em>)";
-		}
-		if($current_user->user_level=='god') {
-			echo " (<em>$user->username_register</em>)";
-		}
-		echo '</dd>';
-	}
-
-	if(!empty($user->names)) {
-		echo '<dt>'._('nombre').':</dt><dd>'.$user->names.'</dd>';
-	}
-
-	// Show public info is it's a friend or god
-	if($current_user->user_id > 0 && !empty($user->public_info) && (
+    $selected  = 0;
+    $rss       = 'rss2.php?sent_by='.$user->id;
+    $rss_title = _('envíos en rss2');
+    $geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
+    $show_email = $current_user->user_id > 0 && !empty($user->public_info) && 
 			$current_user->user_id == $user->id
-			|| $current_user->user_level=='god' 
-			/*|| friend_exists($user->id, $current_user->user_id)*/ )) {  //friends cannot see the IM address (it was public before)
-		echo '<dt>'._('IM/email').':</dt><dd> '.$user->public_info.'</dd>';
+			|| $current_user->user_level=='god'; 
+
+	$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
+	if ($current_user->admin) {
+			$nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from");
 	}
-
-	if(!empty($url)) {
-		echo '<dt>'._('sitio web').':</dt><dd><a href="'.$url.'" '.$nofollow.'>'.$url.'</a></dd>';
-	}
-
-	echo '<dt>'._('desde').':</dt><dd>'.get_date_time($user->date).'</dd>';
-
-	if($current_user->user_level=='god') {
-		echo '<dt>'._('email').':</dt><dd>'.$user->email. " (<em>$user->email_register</em>)</dd>";
-	}
-
-	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-		echo '<dt>'._('clave API').':</dt><dd id="api-key"><a href="javascript:get_votes(\'get_user_api_key.php\',\'\',\'api-key\',0,\''.$user->id.'\')">'._('leer clave API').'</a> ('._('no la divulgues').')</dd>';
-		if(!empty($user->adcode)) {
-			echo '<dt>'._('Código AdSense').':</dt><dd>'.$user->adcode.'&nbsp;</dd>';
-			echo '<dt>'._('Canal AdSense').':</dt><dd>'.$user->adchannel.'&nbsp;</dd>';
-		}
-	}
-
-	echo '<dt>'._('karma').':</dt><dd>'.$user->karma;
-	// Karma details
-	if ($user->id == $current_user->user_id || $current_user->user_level=='god' ) {
-		echo ' (<a href="javascript:modal_from_ajax(\''.$globals['base_url'].'backend/get_karma_numbers.php?id='.$user->id.'\', \''.
-			_('cálculo del karma').
-			'\')" title="'._('detalles').'">'._('detalle cálculo').'</a>)';
-	}
-	echo '</dd>';
-
-	echo '<dt>'._('ranking').':</dt><dd>#'.$user->ranking().'</dd>';
 
 	$user->all_stats();
-	echo '<dt>'._('noticias enviadas').':</dt><dd>'.$user->total_links.'</dd>';
+
+	if ($user->total_links > 1) {
+		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
+    }
+
 	if ($user->total_links > 0 && $user->published_links > 0) {
 		$percent = intval($user->published_links/$user->total_links*100);
 	} else {
 		$percent = 0;
 	}
-	if ($user->total_links > 1) {
-		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
-		echo '<dt><em>'._('entropía').'</em>:</dt><dd>'.$entropy.'%</dd>';
-	}
-	echo '<dt>'._('noticias publicadas').':</dt><dd>'.$user->published_links.' ('.$percent.'%)</dd>';
-	echo '<dt>'._('comentarios').':</dt><dd>'.$user->total_comments.'</dd>';
-	echo '<dt>'._('notas').':</dt><dd>'.$user->total_posts.'</dd>';
-	echo '<dt>'._('número de votos').':</dt><dd>'.$user->total_votes.'</dd>';
 
-	// Print affinity to this user
-	if ($current_user->user_id && ($aff_to = User::get_affinity($user->id, $current_user->user_id))) {
-		$aff_to = round($aff_to/100, 2);
-		echo '<dt><strong>'._('afinidad con este usuario').'</strong>:</dt><dd>'.$aff_to .'</dd>';
-	}
-
-
-	echo '</dl>';
-
-	if ($user->id == $current_user->user_id) {
-		echo '<div style="margin-top: 20px" align="center">';
-		print_oauth_icons($_REQUEST['return']);
-		echo '</div>'."\n";
-	}
-
-	echo '</div>';
-	echo '</fieldset>';
-
-
-	// Print GEO form
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
-		echo '<div class="geoform">';
+        ob_start();
 		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'), 'user');
-		echo '</div>';
-	}
+        $geo_form = ob_get_clean();
+    }
 
-	// Print a chart of the last 30 days activity
-	if ($user->total_votes > 20 && ($current_user->user_id == $user->id || $current_user->admin)) {
-		$vars = compact('user');
-		Haanga::Load("user/chart_votes.html", $vars);
-	}
-
-	// Show first numbers of the address if the user has god privileges
 	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gods and admins know each other for sure, keep privacy
-		$addresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
+		$dbaddresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
-		if (! $addresses) {
-			$addresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
+		if (! $dbaddresses) {
+			$dbaddresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
 		}
 
-		if (! $addresses) {
+		if (! $dbaddresses) {
 			// Use register IP
-			$addresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
+			$dbaddresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
 		}
+    
+        $addresses    = array();
+        $prev_address = '';
+        foreach ($dbaddresses as $dbaddress) {
+            $ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
+            if($ip_pattern != $prev_address) {
+                $addresses[] = $ip_pattern;
+                $clone_counter++;
+                $prev_address = $ip_pattern;
+                if ($clone_counter >= 30) break;
+            }
+        }
+    }
 
-		// Not addresses to show
-		if (! $addresses) {
-			return;
-		}
+    $vars = compact(
+        'post', 'options', 'selected', 'rss', 'rss_title', 'current_user',
+        'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
+        'entropy', 'percent', 'geo_form', 'addresses'
+    );
 
-		$clone_counter = 0;
-		echo '<fieldset><legend>'._('últimas direcciones IP').'</legend>';
-		$prev_address = '';
-		foreach ($addresses as $dbaddress) {
-			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
-			if($ip_pattern != $prev_address) {
-				echo '<p>'. $ip_pattern . '</p>';
-				$clone_counter++;
-				$prev_address = $ip_pattern;
-				if ($clone_counter >= 30) break;
-			}
-		}
-		echo '</fieldset>';
-	}
+    return Haanga::Load('/user/profile.html', $vars);
 }
 
 

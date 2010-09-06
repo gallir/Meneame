@@ -931,6 +931,8 @@ class Haanga_Compiler
                 $this->var_is_safe = TRUE;
                 return Haanga_AST::str(self::$block_var);
                 break;
+            default:
+                break;
             } 
 
         } else if (isset($this->var_alias[$variable])) {
@@ -1180,6 +1182,13 @@ class Haanga_Compiler
             $tags = Haanga_Extension::getInstance('Tag');
         }
 
+        foreach ($details['list'] as $id => $arg) {
+            if (Haanga_AST::is_var($arg)) {
+                $details['list'][$id] = $this->generate_variable_name($arg['var']);
+            }
+        }
+
+
         $tag_name    = $details['name'];
         $tagFunction = $tags->getFunctionAlias($tag_name); 
 
@@ -1188,7 +1197,6 @@ class Haanga_Compiler
         } else {
             $function = $tagFunction;
         }
-
         if (isset($details['body'])) {
             /* 
                if the custom tag has 'body' 

@@ -1,0 +1,26 @@
+<ul class="subheader" style="margin-bottom: 20px">
+{% if rss %}
+	<li class="icon">
+        <a href="{{globals.base_url}}{{rss}}" title="{{rss_title}}" rel="rss">
+        <img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/>
+        </a>
+    </li>
+{% else %}
+    <li class="icon">
+        <img src="{{globals.base_static}}img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/>
+    </li>
+{% endif %}
+{% if options|is_array %}
+    {% for text,turl in options %}
+        {% if forloop.counter0 == selected %}
+            <li class="selected">
+        {% else %}
+            <li>
+        {% endif %}
+            <a href="{{turl}}">{{text}}</a>
+        </li>
+    {% endfor %}
+{% else %}
+    <h1>{{options}}</h1>
+{% endif %}
+</ul>

@@ -1,0 +1,108 @@
+{% inline "user/subheader.html" %}
+
+{% if post %}
+	<div id="addpost"></div>
+	<ol class="comments-list" id="last_post">
+	<li>
+        {% exec post.print_summary %}
+    </li>
+   </ol> 
+{% endif %}
+
+
+<fieldset>
+    <legend>{% trans _('información personal') %}</legend>
+	<div style="float:right;text-align:center">
+	    <img id="avatar" class="avatar" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{user.username}}" title="avatar" />
+        {% if current_user.user_id == user.id %}
+            {% inline 'user/avatar_upload.html' %}
+        {% endif %}
+    </div>
+	<div style="width:140px; float:left;">
+    {% if globals.do_geo %}
+		<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden; float:left"></div>
+        {% if geodiv %}
+            {% exec geo_distance my_latlng, globals.latlng as distance %}
+			<p style="color: #FF9400; font-size: 90%">{{user.username}} {% trans _('está a') %}<strong>{{distance|intval}} kms</strong></p>
+        {% endif %}
+    {% endif %}
+	</div>
+
+	<div style="float:left;min-width:65%">
+	<dl>
+    {% if user.username %}
+        <dt>{% trans _('usuario') %}:</dt>
+        <dd>
+        {% if url %}
+            <a href="{{url}}" {{nofollow}}>{{user.username}}</a>
+        {% else %}
+            {{ user.username }}
+        {% endif %}
+        {% exec user.print_medals %}
+
+        {% if current_user.admin AND nclones %}
+        (<a href="javascript:modal_from_ajax('{{globals.base_url}}backend/ip_clones.php?id={{user.id}}', '{% trans _('clones por IP') %}')" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{nclones }}</sup>)
+        {% endif %}
+
+        </dd>
+    {% endif %}
+    {% if user.names %}
+		<dt>{% trans _('nombre') %}:</dt><dd>{{user.names}}</dd>
+    {% endif %}
+    {% if show_email %}
+		<dt>{% trans _('IM/email') %}:</dt><dd> {{user.public_info}}</dd>
+    {% endif %}
+    {% if url %}
+		<dt>{% trans _('sitio web') %}</dt><dd><a href="{{url}}" {{nofollow}}>{{url}}</a></dd>
+    {% endif %}
+	    <dt>{% trans _('desde') %}:</dt><dd>{% exec get_date_time user.date %}</dd>
+    {% if current_user.user_level == 'god' %}
+		<dt>{% trans _('email') %}:</dt><dd>{{user.email}} (<em>{{user->email_register}}</em>)</dd>
+    {% endif %}
+    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+	    <dt>{% trans _('clave API') %}:</dt>
+        <dd id="api-key"><a href="javascript:get_votes('get_user_api_key.php','','api-key',0,'{{user.id}}')">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</dd>
+        {% if user.adcode %}
+			<dt>{% trans _('Código AdSense') %}:</dt><dd>{{user.adcode}}&nbsp;</dd>
+			<dt>{% trans _('Canal AdSense') %}:</dt><dd>{{user.adchannel}}&nbsp;</dd>
+        {% endif %}
+    {% endif %}
+	<dt>{% trans _('karma') %}:</dt><dd>{{user.karma}}
+    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+		(<a href="javascript:modal_from_ajax('{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}', '{% trans _('cálculo del karma')%}')" title="{% trans _('detalles') %}">{% trans _('detalle cálculo') %}</a>)
+    {% endif %}
+    </dd>
+	<dt>{% trans _('ranking') %}:</dt><dd>#{% exec user.ranking %}</dd>
+	<dt>{% trans _('noticias enviadas')%}:</dt><dd>{{user.total_links}}</dd>
+    {% if entropy %}
+		<dt><em>{% trans _('entropía') %}</em>:</dt><dd>{{entropy}}%</dd>
+    {% endif %}
+	<dt>{% trans _('noticias publicadas') %}:</dt><dd>{{user.published_links}} ({{percent}}%)</dd>
+	<dt>{% trans _('comentarios') %}:</dt><dd>{{user.total_comments}}</dd>
+	<dt>{% trans _('notas') %}:</dt><dd>{{user.total_posts}}</dd>
+	<dt>{% trans _('número de votos') %}:</dt><dd>{{user.total_votes}}</dd>
+    {% if user.id == current_user.user_id %}
+		<div style="margin-top: 20px" align="center">
+        {% exec print_oauth_icons _REQUEST.return as foo %}
+		</div>
+    {% endif %}
+    </dl>
+    </div>
+</fieldset>
+{% if geo_form %}
+    <div class="geoform">
+        {{geo_form}}
+    </div>
+{% endif %}
+
+{% if user.total_vots > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
+    {% include "user_chart_votes.html" %}
+{% endif %}
+
+{% if addresses %}
+    <fieldset><legend>{% trans _('últimas direcciones IP') %}</legend>
+    {% for address in addresses %}
+        <p>{{address}}</p>
+    {% endfor %}
+    </fieldset>
+{% endif %}

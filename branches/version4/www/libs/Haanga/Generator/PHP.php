@@ -449,8 +449,6 @@ class Haanga_Generator_PHP
                     $code .= "'";
                 }
                 $html = addslashes_ex($value);
-                //$html  = addslashes($value);
-                //$html  = str_replace(array('$', "\r", "\t", "\n","\\'"), array('\\$', '\r', '\t', '\n',"'"), $html);
                 $code .= $html."'";
                 break;
             case 'var':
@@ -466,21 +464,21 @@ class Haanga_Generator_PHP
                 $code .= $value;
                 break;
             case 'op_expr':
-                if (strlen($code) != 0) {
+                if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
                     $code .= $concat;
                 }
                 $code .= $this->php_generate_expr($op[$i]);
                 $code .= $concat;
                 break;
             case 'expr':
-                if (strlen($code) != 0) {
+                if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
                     $code .= $concat;
                 }
                 $code .= $this->php_generate_expr($value);
                 $code .= $concat;
                 break;
             case 'expr_cond':
-                if (strlen($code) != 0) {
+                if (strlen($code) != 0 && $code[strlen($code) -1] != $concat) {
                     $code .= $concat;
                 }
                 $code .= "(";
