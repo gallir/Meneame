@@ -1160,7 +1160,7 @@ class Link {
 
 		// Filter content, check length and that it's begin con capital
 		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
-				preg_replace('/https{0,1}:\/\/\S+|/[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
+				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);

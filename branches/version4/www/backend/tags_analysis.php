@@ -27,6 +27,7 @@ $results['docs'] = $db->get_var("select max(link_id) from links");
 $results['phrases'] = 0;
 $results['in_title'] = 0;
 $results['min_freq'] = 100;
+$results['max_freq'] = 0;
 $results['highs'] = 0;
 
 
@@ -42,7 +43,11 @@ foreach ($a as $w) {
 	$r['freq'] = round(100*$h/$results['docs'],1);
 	if ($r['freq'] < $results['min_freq']) {
 		$results['min_freq'] = $r['freq'];
+	} 
+	if ($r['freq'] > $results['max_freq']) {
+		$results['max_freq'] = $r['freq'];
 	}
+
 	if ($r['freq'] > 1) {
 		$results['highs'] += 1;
 	}

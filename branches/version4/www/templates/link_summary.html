@@ -165,7 +165,7 @@
 		{% endfor %}
 
 		{# Show link to analyze the tags #}
-		{% if self.is_editable || self.author == current_user.user_id %}
+		{% if globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
 		&nbsp;&nbsp;[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 
