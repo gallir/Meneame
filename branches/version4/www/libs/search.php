@@ -126,7 +126,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 			$b = log(0.9)/720;
 			$fp = "@weight * max(0.5, exp($b*abs($now-date)/3600))";
 			$b = log(0.6)/720;
-			$fq = "@weight * max(0.4, exp($b*abs($now-date)/3600))";
+			$fq = "@weight * max(0.3, exp($b*abs($now-date)/3600))";
 			$b = log(0.2)/720;
 			$fo = "@weight * max(0.1, exp($b*abs($now-date)/3600))";
 			$exp = "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))";

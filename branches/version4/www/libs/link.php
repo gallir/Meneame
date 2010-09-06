@@ -1118,7 +1118,9 @@ class Link {
 		$words = array();
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', htmlspecialchars_decode($this->title, ENT_QUOTES), -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+			preg_replace('/[\[\(] *\w{1,6} *[\)\]]/', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
+			, -1, PREG_SPLIT_NO_EMPTY);
 		$i = 0;
 		$n = count($a);
 		foreach ($a as $w) {
@@ -1157,14 +1159,16 @@ class Link {
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', text_sanitize($this->content), -1, PREG_SPLIT_NO_EMPTY);
+		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+				preg_replace('/https{0,1}:\/\/\S+|/[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
+				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
 			if ( ! isset($words[$wlower]) 
 				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
-				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
+				if ($h < 2 || $h > $maxid/50) continue; // If 0 or 1 it won't help to the search, too frequents neither
 				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/1000) $coef = max(log10($maxid/$h) - 1, 1);
 				else $coef = 1;
 				$words[$wlower] = intval($h/$coef);
