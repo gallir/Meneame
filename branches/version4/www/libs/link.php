@@ -1106,6 +1106,8 @@ class Link {
 
 
 		$related = array();
+		$phrases = 0;
+
 		// Only work with sphinx
 		if (!$globals['sphinx_server']) return $related;
 		require(mnminclude.'search.php');
@@ -1118,15 +1120,16 @@ class Link {
 		$words = array();
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
 			preg_replace('/[\[\(] *\w{1,6} *[\)\]]/', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
 			, -1, PREG_SPLIT_NO_EMPTY);
 		$i = 0;
 		$n = count($a);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
+			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
-				&& (mb_strlen($w) > 2 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& ($len > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
@@ -1151,21 +1154,26 @@ class Link {
 		foreach ($a as $w) {
 			$w = trim($w);
 			$wlower = mb_strtolower($w);
+			$len = mb_strlen($w);
 			if (isset($words[$wlower])) continue;
-			if (preg_match('/\s/', $w)) $wlower = "\"$wlower\"";
+			if (preg_match('/\s/', $w)) {
+					$wlower = "\"$wlower\"";
+					$phrases++;
+			}
 			$h = sphinx_doc_hits($wlower);
 			if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 			$words[$wlower] = intval($h/2);
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
 				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
+			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower]) 
-				&& (mb_strlen($w) > 3 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				if ($h < 2 || $h > $maxid/50) continue; // If 0 or 1 it won't help to the search, too frequents neither
@@ -1175,16 +1183,25 @@ class Link {
 			}
 		}
 
+		// Increase "hits" proportional to word's lenght
+		// because longer words tends to appear less
+		foreach ($words as $w => $v) {
+			$len = mb_strlen($w);
+			if ($len > 6 && ! preg_match('/ /', $w)) {
+				$words[$w] = $v * $len/6; 
+			}
+		}
+
 		asort($words);
 		$i = 0;
 		$text = '';
 		foreach ($words as $w => $v) {
-			if (!preg_match('/ /', $w)) $i++; // Don't count phrases
+			$i++;
 			if ($i > 12 or ($i > 7 && $v > $maxid/2000)) break;
 			$text .= "$w ";
 		}
 
-		echo "\n<!-- Search terms: $text -->\n";
+		echo "\n<!-- Search terms: $text Phrases: $phrases -->\n";
 		$_REQUEST['q'] = $text;
 
 		// Center the date about the the link's date
@@ -1204,6 +1221,5 @@ class Link {
 		}
 		return $related;
 	}
-
 
 }

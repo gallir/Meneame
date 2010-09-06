@@ -124,9 +124,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 			$q = $globals['status_values']['queued'];
 
 			$b = log(0.9)/720;
-			$fp = "@weight * max(0.5, exp($b*abs($now-date)/3600))";
-			$b = log(0.6)/720;
-			$fq = "@weight * max(0.3, exp($b*abs($now-date)/3600))";
+			$fp = "@weight * max(0.4, exp($b*abs($now-date)/3600))";
+			$b = log(0.5)/720;
+			$fq = "@weight * max(0.25, exp($b*abs($now-date)/3600))";
 			$b = log(0.2)/720;
 			$fo = "@weight * max(0.1, exp($b*abs($now-date)/3600))";
 			$exp = "if (status-$p = 0, $fp , if (status-$q = 0, $fq, $fo))";
@@ -145,10 +145,12 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	if ($_REQUEST['p'] == 'url') {
 		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
+		echo "<!-- Query: \"$f $words\" -->\n";
 		array_push($queries, $q);
 	} else {
 		if ($words_count < 5) {
 			$q = $cl->AddQuery ( "$f $words", $indices );
+			echo "<!-- Query: \"$f $words\" -->\n";
 			array_push($queries, $q);
 		}
 	}
@@ -165,11 +167,12 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 				$words .= ' | ';
 			}
 			if ($quotes == 0 && preg_match('/^["\']/', $w)) $quotes++;
-			if ($quotes > 0 && preg_match('/["\']$/', $w)) $quotes--;
+			if ($quotes > 0 && preg_match('/["\'](\~{0,1}\d+){0,1}$/', $w)) $quotes--;
 			$words .= " $w";
 			$c++;
 		}
 		$q = $cl->AddQuery ( "$f $words", $indices );
+		echo "<!-- Query: \"$f $words\" -->\n";
 		array_push($queries, $q);
 	}
 
