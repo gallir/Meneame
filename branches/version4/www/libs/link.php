@@ -1183,6 +1183,9 @@ class Link {
 		echo "\n<!-- Search terms: $text -->\n";
 		$_REQUEST['q'] = $text;
 
+		// Center the date about the the link's date
+		$_REQUEST['root_time'] = $this->date;
+
 		$response = do_search(false, 0, $max, false);
 		if ($response && isset($response['ids'])) {
 			foreach($response['ids'] as $id) {

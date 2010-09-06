@@ -111,8 +111,14 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 	} elseif ($_REQUEST['o'] == 'pure') {
 		$cl->SetSortMode (SPH_SORT_RELEVANCE);
 	} else {
+		// If "root_time", it will center the search on that timestamp
+		if ($_REQUEST['root_time'] > 0) {
+			$now = intval($_REQUEST['root_time']);
+		} else {
+			$now = time();
+		}
+
 		// expressions to decrease weights logarimically
-		$now = time();
 		if ($_REQUEST['w'] == 'links') {
 			$p = $globals['status_values']['published'];
 			$q = $globals['status_values']['queued'];
