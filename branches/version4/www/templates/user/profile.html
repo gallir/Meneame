@@ -44,6 +44,19 @@
         (<a href="javascript:modal_from_ajax('{{globals.base_url}}backend/ip_clones.php?id={{user.id}}', '{% trans _('clones por IP') %}')" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{nclones }}</sup>)
         {% endif %}
 
+        {% if friend_icon %}
+            &nbsp;<a id="friend-{{current_user.user_id}}-{{user.id}}" href="javascript:get_votes('get_friend.php','{{current_user.user_id}}','friend-{{current_user.user_id}}-{{user.id}}',0,'{{user.id}}')">{{ friend_icon }}</a>
+         
+        {% endif %}
+
+        {% if user.id == current_user_.id OR current_user.admin %}
+             ({% trans  _('id') %}: <em>{{user.id}}</em>, <em>{{user.level}}</em>)
+        {% endif %}
+
+        {% if current_user.user_level == 'god' %}
+            (<em>{{user.username_register}}</em>)
+        {% endif %}
+
         </dd>
     {% endif %}
     {% if user.names %}

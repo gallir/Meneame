@@ -237,13 +237,16 @@ function do_profile() {
 		else $url = $user->url;
 	}
 
+    if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
+        $friend_icon = User::friend_teaser($current_user->user_id, $user->id);
+    }
+
     $selected  = 0;
     $rss       = 'rss2.php?sent_by='.$user->id;
     $rss_title = _('envíos en rss2');
     $geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
     $show_email = $current_user->user_id > 0 && !empty($user->public_info) && 
-			$current_user->user_id == $user->id
-			|| $current_user->user_level=='god'; 
+			($current_user->user_id == $user->id || $current_user->user_level=='god'); 
 
 	$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
 	if ($current_user->admin) {
@@ -297,7 +300,7 @@ function do_profile() {
     $vars = compact(
         'post', 'options', 'selected', 'rss', 'rss_title', 'current_user',
         'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
-        'entropy', 'percent', 'geo_form', 'addresses'
+        'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
     );
 
     return Haanga::Load('/user/profile.html', $vars);
