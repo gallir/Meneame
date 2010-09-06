@@ -106,14 +106,6 @@
 		</p>
 	{% endif %}
 
-	{% if self.best_comment %}
-		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">
-			<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '{{ self.best_comment->comment_id }}', 10000);" href="{{ self.permalink }}/000{{ self.best_comment->comment_order }}">
-			<strong>{{ self.best_comment->comment_order }}</strong></a>:&nbsp;{% exec text_to_summary self.best_comment->content 200 %}
-		</div>
-	{% endif %}
-
-
 
 	{% if self.do_inline_friend_votes AND self.friend_votes %}
 		<div style="padding: 3px 0 2px 0;">
@@ -154,7 +146,7 @@
 
 	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}
 
-	{% if globals.link || type == 'short' %}
+	{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
 		{% if self.show_tags AND self.tags %} 
 		<div class="news-details">
 		<strong>{% trans _('etiquetas') %}</strong>:
@@ -171,42 +163,47 @@
 
 		</div>
 		{% endif %}
+	{% endif %}
+
+	{% if globals.link || type == 'short' %}
 		{% if type!='short' %}
 			<div class="news-details">
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
 
-
-		{% if current_user.user_id > 0 %}
-			<span class="tool">
+			{% if current_user.user_id > 0 %}
+				<span class="tool">
 				<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">
 				{% exec favorite_teaser current_user.user_id self %}
 				</a>
-			</span>
-		{% endif %}
-
-				<span class="tool">
-					{% exec self.get_short_permalink as shortlink %}
-					{% exec urlencode shortlink as enc_shortlink %}
-					<strong>
-						<a href="{{ shortlink }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a>
-					</strong>:
-
-					{# Share icons #}
-					&nbsp;<a href="http://twitter.com/home?status={{ self.title }} {{ enc_shortlink }} {% if globals.twitter_user %}(via @{{ globals.twitter_user }}){% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
-					&nbsp;<a href="http://www.facebook.com/share.php?u={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/fb.gif" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
-					&nbsp;<a href="http://www.tuenti.com/share?url={{ self.permalink|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/tuenti.png" alt="tuenti" title="{% trans _('compartir en %s') "tuenti" %}" width="16" height="16"/></a>
-					&nbsp;<a href="http://www.google.com/buzz/post?url={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/buzz.png" alt="buzz" title="{% trans _('compartir en %s') "buzz" %}" width="16" height="16"/></a>
-					&nbsp;<a href="http://friendfeed.com/?url={{ enc_shortlink }}&amp;title={{self.title|urlencode}}" target="_blank"><img src="{{ globals.base_static }}img/favicons/ff.png" alt="friendfeed" title="{% trans _('compartir en %s') "friendfeed" %}" width="16" height="16"/></a>
 				</span>
-			</div>
+			{% endif %}
+
+			<span class="tool">
+				{% exec self.get_short_permalink as shortlink %}
+				{% exec urlencode shortlink as enc_shortlink %}
+				<strong><a href="{{ shortlink }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
+
+				{# Share icons #}
+				&nbsp;<a href="http://twitter.com/home?status={{ self.title }} {{ enc_shortlink }} {% if globals.twitter_user %}(via @{{ globals.twitter_user }}){% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
+				&nbsp;<a href="http://www.facebook.com/share.php?u={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/fb.gif" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
+				&nbsp;<a href="http://www.tuenti.com/share?url={{ self.permalink|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/tuenti.png" alt="tuenti" title="{% trans _('compartir en %s') "tuenti" %}" width="16" height="16"/></a>
+				&nbsp;<a href="http://www.google.com/buzz/post?url={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/buzz.png" alt="buzz" title="{% trans _('compartir en %s') "buzz" %}" width="16" height="16"/></a>
+				&nbsp;<a href="http://friendfeed.com/?url={{ enc_shortlink }}&amp;title={{self.title|urlencode}}" target="_blank"><img src="{{ globals.base_static }}img/favicons/ff.png" alt="friendfeed" title="{% trans _('compartir en %s') "friendfeed" %}" width="16" height="16"/></a>
+			</span>
+		</div>
 
 		{% endif %}
 	{% endif %}
 	
 	{% exec do_banner_story as dummy %}
-
+	{% if self.best_comment %}
+		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">
+			<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '{{ self.best_comment->comment_id }}', 10000);" href="{{ self.permalink }}/000{{ self.best_comment->comment_order }}">
+			<strong>{{ self.best_comment->comment_order }}</strong></a>:&nbsp;{% exec text_to_summary self.best_comment->content 200 %}
+		</div>
+	{% endif %}
 	</div>
 </div>
 
