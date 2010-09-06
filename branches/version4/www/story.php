@@ -311,7 +311,7 @@ case 7:
 	break;
 
 case 8:
-	$related = $link->get_related(9);
+	$related = $link->get_related(10);
 	if ($related) {
 		Haanga::Load("story/related.html", compact('related', 'link'));
 	}

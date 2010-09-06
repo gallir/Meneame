@@ -1,5 +1,10 @@
 <div style="margin-left: 80px;margin-top: 30px">
+{% if link.old %}
+<h3>{% trans _('envíos que fueron similares') %}</h3>
+{% else %}
 <h3>{% trans _('envíos posiblemente similares') %}</h3>
+{% endif %}
+
 {% for l in related %}
 	{% exec l.get_box_class %}
 	<div class="news-summary">

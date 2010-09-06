@@ -1189,8 +1189,11 @@ class Link {
 
 		// Center the date about the the link's date
 		$_REQUEST['root_time'] = $this->date;
+		if ($globals['now'] - $this->date > 86400*5) $this->old = true;
+		else $this->old = false;
 
-		$response = do_search(false, 0, $max, false);
+
+		$response = do_search(false, 0, $max+1, false);
 		if ($response && isset($response['ids'])) {
 			foreach($response['ids'] as $id) {
 				if ($id == $this->id) continue;
