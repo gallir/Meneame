@@ -108,8 +108,8 @@
     </div>
 {% endif %}
 
-{% if user.total_vots > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
-    {% include "user_chart_votes.html" %}
+{% if user.total_votes > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
+    {% include "user/chart_votes.html" %}
 {% endif %}
 
 {% if addresses %}
