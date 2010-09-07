@@ -25,9 +25,7 @@ function twitter_post($text, $short_url) {
 	$acc_url = 'http://twitter.com/oauth/access_token';
 	$authurl = 'http://twitter.com/oauth/authorize';
 	$api_url = 'http://twitter.com/statuses/update.json';
-	$conskey = 'lFkApgDdsefj6X0EUOxKZQ';
-	$conssec = 'Lni0PYVuDT7xJM5ThWMJiaVXPDrdtAisrPYUvhSW4cI';
-            
+      
 	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
 	$oauth->debug = 1;
 	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);

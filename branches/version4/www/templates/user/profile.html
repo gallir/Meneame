@@ -49,11 +49,11 @@
          
         {% endif %}
 
-        {% if user.id == current_user_.id OR current_user.admin %}
+        {% if user.id == current_user.user_id OR current_user.admin %}
              ({% trans  _('id') %}: <em>{{user.id}}</em>, <em>{{user.level}}</em>)
         {% endif %}
 
-        {% if current_user.user_level == 'god' %}
+        {% if current_user.admin %}
             (<em>{{user.username_register}}</em>)
         {% endif %}
 
