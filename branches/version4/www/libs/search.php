@@ -149,7 +149,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 	} else {
 		if ($words_count < 5) {
 			$q = $cl->AddQuery ( "$f $words", $indices );
-			echo "<!-- Query: \"$f $words\" -->\n";
 			array_push($queries, $q);
 		}
 	}
@@ -171,7 +170,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 			$c++;
 		}
 		$q = $cl->AddQuery ( "$f $words", $indices );
-		echo "<!-- Query: \"$f $words\" -->\n";
 		array_push($queries, $q);
 	}
 
