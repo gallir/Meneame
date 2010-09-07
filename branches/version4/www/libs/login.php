@@ -10,6 +10,8 @@
 
 class UserAuth {
 	const CURRENT_VERSION = '5';
+	const KEY_MAX_TTL = 864000; // Expire key in 10 days
+	const KEY_TTL = 86400; // Renew every 24 hours
 
 	function __construct() {
 		global $db, $site_key, $globals;
@@ -24,7 +26,7 @@ class UserAuth {
 			if($this->mnm_user[0] == $userInfo[0]) {
 				$this->version = $userInfo[2];
 				$cookietime = intval($userInfo[3]);
-				if (($globals['now'] - $cookietime) > 864000) $cookietime = 'expired'; // after 10 days expiration is forced
+				if (($globals['now'] - $cookietime) > UserAuth::KEY_MAX_TTL) $cookietime = 'expired'; // expiration is forced
 
 				$user_id = intval($this->mnm_user[0]);
 				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, user_pass as md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
@@ -45,13 +47,13 @@ class UserAuth {
 				elseif ($this->user_level == 'special' || $this->user_level == 'blogger') $this->special = true;
 				$this->authenticated = true;
 
-				if ($userInfo[4] > 0) $expiration = min(864000, $userInfo[4] - $globals['now']);
+				if ($userInfo[4] > 0) $expiration =  UserAuth::KEY_MAX_TTL;
 				else $expiration = 0;
 
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
 					$this->SetIDCookie(2, $expiration);
 					$this->SetUserCookie();
-				} elseif ($globals['now'] - $cookietime > 7200) { // Update the time each 2 hours
+				} elseif ($globals['now'] - $cookietime >  UserAuth::KEY_TTL) {
 					$this->SetIDCookie(2, $expiration);
 				}
 			}
@@ -77,7 +79,7 @@ class UserAuth {
 				$this->AddClone();
 				$this->SetUserCookie();
 			case 2: // Only update the key
-				if($remember > 0) $time = $globals['now'] + $remember; // Valid for 1000 hours
+				if($remember > 0) $time = $globals['now'] + $remember;
 				else $time = 0;
 				$strCookie=base64_encode(
 						$this->user_id.':'

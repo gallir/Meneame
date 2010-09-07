@@ -243,19 +243,21 @@ function save_profile() {
 	}
 
 	if(!empty($_POST['username']) && trim($_POST['username']) != $user->username) {
-		if (strlen(trim($_POST['username']))<3) {
+		$newname = trim($_POST['username']);
+
+		if (strlen($newname)<3) {
 			$messages .= '<p class="form-error">'._('nombre demasiado corto').'</p>';
 			$errors++;
 		}
 
-		if(!check_username($_POST['username'])) {
+		if(!check_username($newname)) {
 			$messages .= '<p class="form-error">'._('nombre de usuario erróneo, caracteres no admitidos').'</p>';
 			$errors++;
-		} elseif (user_exists(trim($_POST['username'])) ) {
+		} elseif (user_exists($newname, $user->id) ) {
 			$messages .= '<p class="form-error">'._('el usuario ya existe').'</p>';
 			$errors++;
 		} else {
-			$user->username=trim($_POST['username']);
+			$user->username=$newname;
 		}
 	}
 	

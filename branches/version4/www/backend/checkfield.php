@@ -26,7 +26,7 @@ switch ($type) {
 			echo _('nombre demasiado largo');
 			return;
 		}
-		if(!($current_user->user_id > 0 && $current_user->user_login == $name) && user_exists($name)) {
+		if(!($current_user->user_id > 0 && $current_user->user_login == $name) && user_exists($name, $current_user->user_id)) {
 			echo _('el usuario ya existe');
 			return;
 		}

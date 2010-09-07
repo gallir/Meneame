@@ -41,10 +41,10 @@ function get_negative_vote($value) {
 	return $globals['negative_votes_values'][$value];
 }
 
-function user_exists($username) {
+function user_exists($username, $ignore = 0) {
 	global $db;
 	$username = $db->escape($username);
-	$res=$db->get_var("SELECT count(*) FROM users WHERE user_login='$username'");
+	$res=$db->get_var("SELECT user_id FROM users WHERE user_login='$username' AND user_id != $ignore");
 	if ($res>0) return true;
 	return false;
 }
