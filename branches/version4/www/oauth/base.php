@@ -112,7 +112,7 @@ class OAuthBase {
 		global $current_user, $globals;
 		if (!$current_user->user_id) {
 			$user = $this->user;
-			$current_user->Authenticate($user->username, $user->pass, 86400*3 /* 3 days */);
+			$current_user->Authenticate($user->username, $user->pass, true);
 			UserAuth::check_clon_from_cookies();
 		}
 		$this->user_return();

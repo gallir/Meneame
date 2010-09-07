@@ -47,14 +47,13 @@ class UserAuth {
 				elseif ($this->user_level == 'special' || $this->user_level == 'blogger') $this->special = true;
 				$this->authenticated = true;
 
-				if ($userInfo[4] > 0) $expiration =  UserAuth::KEY_MAX_TTL;
-				else $expiration = 0;
+				$remember = $userInfo[4] > 0;
 
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
-					$this->SetIDCookie(2, $expiration);
+					$this->SetIDCookie(2, $remember);
 					$this->SetUserCookie();
 				} elseif ($globals['now'] - $cookietime >  UserAuth::KEY_TTL) {
-					$this->SetIDCookie(2, $expiration);
+					$this->SetIDCookie(2, $remember);
 				}
 			}
 		} else {
@@ -67,7 +66,7 @@ class UserAuth {
 	}
 
 
-	function SetIDCookie($what, $remember) {
+	function SetIDCookie($what, $remember = false) {
 		global $site_key, $globals;
 		switch ($what) {
 			case 0:	// Borra cookie, logout
@@ -79,7 +78,7 @@ class UserAuth {
 				$this->AddClone();
 				$this->SetUserCookie();
 			case 2: // Only update the key
-				if($remember > 0) $time = $globals['now'] + $remember;
+				if($remember) $time = $globals['now'] + UserAuth::KEY_MAX_TTL;
 				else $time = 0;
 				$strCookie=base64_encode(
 						$this->user_id.':'
@@ -92,7 +91,7 @@ class UserAuth {
 		}
 	}
 
-	function Authenticate($username, $hash, $remember=0/* Just this session */) {
+	function Authenticate($username, $hash, $remember = false/* Just this session */) {
 		global $db, $globals;
 
 		$dbusername=$db->escape($username);

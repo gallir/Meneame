@@ -61,17 +61,12 @@ function do_login() {
 		}
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
-		if ($_POST['persistent']) {
-			$persistent = 3600000; // 1000 hours
-		} else {
-			$persistent = 0;
-		}
 
 		// Check form
 		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) && !ts_is_human()) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
-		} elseif ($current_user->Authenticate($username, md5($password), $persistent) == false) {
+		} elseif ($current_user->Authenticate($username, md5($password), $_POST['persistent']) == false) {
 			log_insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
