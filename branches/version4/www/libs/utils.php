@@ -707,16 +707,6 @@ function meta_get_current() {
 		} else {
 			$globals['meta_categories'] = false;
 		}
-	} elseif ($_COOKIE['mnm_user_meta']) {
-		// anonymous users
-		$meta = $db->escape(clean_input_string($_COOKIE['mnm_user_meta']));
-		$globals['meta_skip'] = '?meta=_all';
-		$globals['meta_user_default'] = $db->get_var("select category_id from categories where category_uri = '$meta' and category_parent = 0");
-		// Anonymous can select metas by cookie
-		// Select user default only if no category has been selected
-		if(!$_REQUEST['category'] && !$globals['meta']) {
-			$globals['meta_current'] = $globals['meta_user_default'];
-		}
 	}
 
 	if ($_REQUEST['category']) {
@@ -724,8 +714,15 @@ function meta_get_current() {
 		if ($globals['meta'][0] == '_') {
 			$globals['meta_current'] = $globals['meta'];
 		} else {
-			$globals['meta_current'] = (int) $db->get_var("select SQL_CACHE category_parent from categories where category_id = $cat and category_parent > 0");
-			$globals['meta'] = '';
+			$res = $db->get_row("select SQL_CACHE meta.category_id as category_id, meta.category_name as category_name from categories as meta, categories as sub where sub.category_id = $cat and sub.category_parent > 0 and meta.category_id = sub.category_parent");
+			if ($res) {
+				$globals['meta_current'] = $res->category_id;
+				$globals['meta_current_name'] = $res->category_name;
+				$globals['meta'] = '';  // Security measure
+			} else {
+				$globals['meta_current'] = 0;
+				$globals['meta_current_name'] = '';
+			}
 		}
 	} elseif ($globals['meta']) {
 		// Special metas begin with _
@@ -733,9 +730,14 @@ function meta_get_current() {
 			return 0;
 		}
 		$meta = $db->escape($globals['meta']);
-		$globals['meta_current'] = $db->get_var("select SQL_CACHE category_id from categories where category_uri = '$meta' and category_parent = 0");
-		if ($globals['meta_current']) {
+		$res = $db->get_row("select SQL_CACHE category_id, category_name from categories where category_uri = '$meta' and category_parent = 0");
+		if ($res) {
+			$globals['meta_current'] = $res->category_id;
+			$globals['meta_current_name'] = $res->category_name;
 			$globals['meta'] = '';  // Security measure
+		} else {
+			$globals['meta_current'] = 0;
+			$globals['meta_current_name'] = '';
 		}
 	} 
 	
