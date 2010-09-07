@@ -145,7 +145,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	if ($_REQUEST['p'] == 'url') {
 		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
-		echo "<!-- Query: \"$f $words\" -->\n";
 		array_push($queries, $q);
 	} else {
 		if ($words_count < 5) {
@@ -207,6 +206,7 @@ function sphinx_doc_hits($q, $index = 'links') {
 
 	$hits = PHP_INT_MAX;
 	$keys = $cl->BuildKeywords ($q, $index, true);
+	if (! is_array($keys)) return $hits;
 	foreach ($keys as $k) {
 		if ($k['docs'] >= 0 && $k['docs'] < $hits) {
 			$hits = $k['docs'];
