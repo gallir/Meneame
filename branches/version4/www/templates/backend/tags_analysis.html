@@ -78,6 +78,9 @@ table.decorated td {
 					{% endif %}
 				{% else %}
 					{% trans _('muy buena') %}
+					{% if w.hits < 2 %}
+						{% trans _('¿pero está bien escrita?') %}
+					{% endif %}
 				{% endif %}
 			{% else %}
 				{% if w.freq < 1 %}
