@@ -11,7 +11,7 @@ include(mnminclude.'sneak.php');
 
 // The client requests version number
 if (!empty($_GET['getv'])) {
-	echo $sneak_version;
+	echo $globals['sneak_version'];
 	die;
 }
 
@@ -50,7 +50,7 @@ if(!empty($_GET['items']) && intval($_GET['items']) > 0) {
 header('Content-Type: text/html; charset=utf-8');
 
 $client_version = $_GET['v'];
-if (empty($client_version) || ($client_version != -1 && $client_version != $sneak_version)) {
+if (empty($client_version) || ($client_version != -1 && $client_version != $globals['sneak_version'])) {
 	echo "window.location.reload(true);";
 	exit();
 }

@@ -16,7 +16,7 @@ $events = array();
 // The client requests version number
 if (!empty($_REQUEST['getv'])) {
 	header('Content-Type: text/plain; charset=UTF-8');
-	echo $sneak_version;
+	echo $globals['sneak_version'];
 	die;
 }
 
@@ -110,7 +110,7 @@ $ccnta = $db->get_var("select count(*) from sneakers where sneaker_user = 0");
 $ccnt = $ccntu+$ccnta+$ccntj . " ($ccntu+$ccntj+$ccnta)";
 $data['ts'] = $last_timestamp;
 $data['ccnt'] = $ccnt;
-$data['v'] = $sneak_version;
+$data['v'] = $globals['sneak_version'];
 if(count($events) > 0 ) {
 	krsort($events);
 }

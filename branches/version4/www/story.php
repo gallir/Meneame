@@ -274,14 +274,10 @@ case 4:
 	Haanga::Load("story/link_logs.html", $vars);
 	break;
 case 5:
+	$items = array(); // Just to fill the empty items in sneaker
+	for ($i=0; $i<10; $i++) $items[$i] = $i;
 	// Micro sneaker
-	echo '<div class="mini-sneaker">';
-
-	echo '<fieldset>';
-	include(mnmpath.'/libs/link_sneak.php');
-	echo '</fieldset>';
-	echo '</div>';
-	echo '<script type="text/javascript">$(function(){start_link_sneak()});</script>' . "\n";
+	Haanga::Load('story/link_sneak.html', compact('link', 'items'));
 	break;
 case 7:
 	// Show trackback

@@ -23,7 +23,7 @@
 {% if globals.mobile %}
 <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
 {% else %}
-<style>
+<style type="text/css">
 @import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 780px);
 </style>
 {% endif %}
