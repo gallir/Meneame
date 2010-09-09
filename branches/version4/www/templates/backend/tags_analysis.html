@@ -31,10 +31,6 @@ table.decorated td {
 	- {% trans _('Muy pocas etiquetas') %}<br/>
 	{% endif %}
 
-	{% if results.phrases == 0 %}
-	- {% trans _('No contiene ninguna frase de la forma «palabra1 palabra2, otras»') %}<br/>
-	{% endif %}
-
 {% endif %}
 
 {% if results.in_title == 0 %}
@@ -50,8 +46,8 @@ table.decorated td {
 	- {% trans _('Demasiadas etiquetas genéricas') %}<br/>
 {% endif %}
 
-{% if results.max_freq < 0.5 %}
-	- {% trans _('Mejoraría con <b>una</b> etiqueta más genérica (para las etiquetas populares)') %}<br/>
+{% if results.phrases == 0 AND (results.in_title == 0 || results.max_freq > 1 || results.tags > 4 || results.in_title == 0) %}
+	- {% trans _('No contiene ninguna frase de la forma «palabra1 palabra2, otras»') %}<br/>
 {% endif %}
 
 <table class="decorated">
