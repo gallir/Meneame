@@ -1,14 +1,13 @@
 {% spacefull %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{% trans _('fisgona') %} // {% trans _('menéame') %}</title>
 <meta name="generator" content="meneame" />
-<link rel="stylesheet" type="text/css" media="screen" href="{{ globals.base_static }}css/es/telnet.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="{{ globals.base_static }}css/es/telnet.css?{{ globals.sneak_version }}" />
 <link rel="icon" href="{{ globals.base_static }}img/common/konsole.png" type="image/x-icon" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
-    // Cache for Ajax
 <script src="{{ globals.base_url }}js/{{ globals.js_main }}" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
@@ -65,9 +64,13 @@ function to_html(data) {
 	}
 
 	/* All the others */
-	if (data.type == 'vote')
-		html += '<div class="sneaker-type">+</div>';
-	else if (data.type == 'problem')
+	if (data.type == 'vote') {
+		if (data.status == '{% trans _('publicada') %}') {
+			html += '<div class="sneaker-type">++</div>';
+		} else {
+			html += '<div class="sneaker-type">+</div>';
+		}
+	} else if (data.type == 'problem')
 		html += '<div class="sneaker-type">-</div>';
 	else if (data.type == 'comment')
 		html += '<div class="sneaker-type">C</div>';
@@ -81,6 +84,8 @@ function to_html(data) {
 		html += '<div class="sneaker-type">E</div>';
 	else if (data.type == 'cedited')
 		html += '<div class="sneaker-type">e</div>';
+	else if (data.type == 'post')
+		html += '<div class="sneaker-type">P</div>';
 	else
 		html += '<div class="sneaker-type">'+data.type+'</div>';
 

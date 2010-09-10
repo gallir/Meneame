@@ -14,6 +14,7 @@ var is_admin = false;
 {% endif %}
 
 
+
 var default_gravatar = base_static+'img/common/no-gravatar-2-20.jpg';
 var do_animation = true;
 var animating = false;
@@ -107,7 +108,7 @@ function to_html(data) {
 
 	html = '<div class="sneaker-ts">'+timeStr+'<\/div>';
 
-	tooltip_ajax_call= "onmouseout=\"tooltip.clear(event);\"  onclick=\"tooltip.clear(this);\"";
+	tooltip_ajax_call= ' onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this)"';
 	html += '<div class="sneaker-type"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
 	switch (data.type) {
 		case 'post':
@@ -394,5 +395,16 @@ function flipChar(c) {
 //]]>
 </script>
 <script type="text/javascript" src="http://{{ globals.server_name }}{{ globals.base_url }}js/sneak.js.php?{{ globals['sneak_version'] }}" charset="utf-8"></script>
+<script type="text/javascript">
+{% if current_user.user_id > 0 %}
+	{% if _REQUEST['friends'] %}
+		global_options.show_friends = true;
+	{% endif %}
+	{% if _REQUEST['admin'] && current_user.admin %}
+		global_options.show_admin = true;
+	{% endif %}
+{% endif %}
+</script>
+
 {% endspacefull %}
 

@@ -1,0 +1,115 @@
+<div class="sneaker">
+<div class="sneaker-legend" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">
+<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">
+
+
+{% if  NOT globals.sneak_telnet %}
+<img id="play-pause-img" onclick="play_pause()" src="{{ globals.base_static }}img/common/sneak-pause01.png" alt="play/pause" title="play/pause" />&nbsp;&nbsp;&nbsp;
+{% endif %}
+
+<label><input type="checkbox" checked="checked" name="sneak-pubvotes" id="pubvotes-status" onclick="toggle_control('pubvotes')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-vote-published01.png" width="21" height="17" title="{% trans _('votos de publicadas') %}" alt="{% trans _('votos de publicadas') %}" />
+{% else %}
+[++]{% trans _('publicadas') %}
+{% endif %}
+</label>
+
+<label><input type="checkbox" checked="checked" name="sneak-vote" id="vote-status" onclick="toggle_control('vote')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-vote01.png" width="21" height="17" title="{% trans _('meneos') %}" alt="{% trans _('meneos') %}" />
+{% else %}
+[+]{% trans _('votos') %}
+{% endif %}
+</label>
+
+<label><input type="checkbox" checked="checked" name="sneak-problem" id="problem-status" onclick="toggle_control('problem')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-problem01.png" width="21" height="17" alt="{% trans _('problema') %}" title="{% trans _('problema') %}"/>
+{% else %}
+[-]{% trans _('problema') %}
+{% endif %}
+</label>
+
+<label><input type="checkbox" checked="checked" name="sneak-comment" id="comment-status" onclick="toggle_control('comment')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-comment01.png" width="21" height="17" alt="{% trans _('comentario') %}" title="{% trans _('comentario') %}"/>
+{% else %}
+[C]{% trans _('comentario') %}
+{% endif %}
+</label>
+
+<label><input type="checkbox" checked="checked" name="sneak-new" id="new-status" onclick="toggle_control('new')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-new01.png" width="21" height="17" alt="{% trans _('nueva') %}" title="{% trans _('nueva') %}"/>
+{% else %}
+[&rarr;]{% trans _('nueva') %}
+{% endif %}
+</label>
+
+<label><input type="checkbox" checked="checked" name="sneak-published" id="published-status" onclick="toggle_control('published')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-published01.png" width="21" height="17" alt="{% trans _('publicada') %}" title="{% trans _('publicada') %}"/>
+{% else %}
+[&larr;]{% trans _('publicada') %}
+{% endif %}
+</label>
+
+
+<label><input type="checkbox" {% if current_user.user_id %}checked="checked"{% endif %} name="sneak-chat" id="chat-status" onclick="toggle_control('chat')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-chat01.png" width="21" height="17" alt="{% trans _('chat') %}" title="{% trans _('chat') %}"/>
+{% else %}
+[T]{% trans _('chat') %}
+{% endif %}
+</label>
+
+
+<label><input type="checkbox" checked="checked" name="sneak-post" id="post-status" onclick="toggle_control('post')" />
+{% if  NOT globals.sneak_telnet %}
+<img src="{{ globals.base_static }}img/common/sneak-newnotame01.png" width="21" height="17" alt="{% trans _('nótame') %}" title="{% trans _('nótame') %}"/>
+{% else %}
+[P]{% trans _('nótame') %}
+{% endif %}
+</label>
+
+{% if globals.sneak_telnet %}
+&nbsp;[<a href="sneak.php" title="{% trans _('fisgona') %}">{% trans _('fisgona') %}</a>]<br/>
+{% endif %}
+
+
+<abbr title="{% trans _('total&nbsp;(registrados+jabber+anónimos)') %}">{% trans _('fisgonas') %}</abbr>: <strong><span id="ccnt"> </span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<abbr title="{% trans _('tiempo medio en milisegundos para procesar cada petición al servidor') %}">ping</abbr>: <span id="ping">---</span>
+</form>
+
+{% if current_user.user_id > 0 %}
+    <form name="chat_form" action="" onsubmit="return send_chat(this);">
+    {% trans _('mensaje') %}: <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="{% trans _('enviar') %}" class="button"/>
+    </form>
+{% endif %}
+
+</div>
+
+
+<div id="singlewrap">
+
+<div class="sneaker-item">
+<div class="sneaker-title">
+<div class="sneaker-ts"><strong>{% trans _('hora') %}</strong></div>
+<div class="sneaker-type"><strong>{% trans _('acción') %}</strong></div>
+<div class="sneaker-votes"><strong><abbr title="{% trans _('meneos') %}">me</abbr>/<abbr title="{% trans _('comentarios') %}">co</abbr></strong></div>
+<div class="sneaker-story">&nbsp;<strong>{% trans _('noticia') %}</strong></div>
+<div class="sneaker-who">&nbsp;<strong>{% trans _('quién/qué') %}</strong></div>
+<div class="sneaker-status"><strong>{% trans _('estado') %}</strong></div>
+</div>
+</div>
+
+
+<div id="items">
+{% for i in items %}
+    <div class="sneaker-item">&nbsp;</div>
+{% endfor %}
+</div>
+</div>
+</div>
+

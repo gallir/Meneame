@@ -112,10 +112,11 @@ form, input {
 	width: 56%;
 	text-align: left;
 	overflow: hidden;
+	color: #1c9c06;
 }
 
 .sneaker-chat a {
-	color: #1c9c06;
+	color: #20B007;
 }
 
 .sneaker-who {
@@ -142,8 +143,7 @@ form, input {
 	background: #000;
 	margin: 7px 0 2px 0;
 	border: 1px solid #167805;
-	color: #167805;
-	font-size: 90%;
+	color: #20B007;
 }
 
 .sneaker input.sendmessage {
