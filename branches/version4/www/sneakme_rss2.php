@@ -89,7 +89,7 @@ if ($_REQUEST['q']) {
 do_header($title);
 
 $post = new Post;
-$posts = $db->get_col($sql);
+if ($sql) $posts = $db->get_col($sql);
 if ($posts) {
 	foreach($posts as $post_id) {
 		$post->id=$post_id;
