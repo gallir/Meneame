@@ -269,6 +269,23 @@ class Haanga_AST
         return isset($this->stack[0]) ?  $this->stack[0] : NULL;
     }
 
+    function do_for($index, $min, $max, $step, Haanga_AST $body)
+    {
+        $def = array(
+            'op'    => 'for',
+            'index' => $index,
+            'min'   => $min,
+            'max'   => $max,
+            'step'  => $step,
+        );
+
+        $this->stack[] = $def;
+        $this->stack   = array_merge($this->stack, $body->getArray(TRUE));
+        $this->stack[] = array('op' => 'end_for');
+
+        return $this;
+    }
+
     function do_foreach($array, $value, $key, Haanga_AST $body)
     {
         foreach (array('array', 'value', 'key') as $var) {

@@ -74,6 +74,7 @@ class Haanga_Compiler_Tokenizer
         'not'           => HG_Parser::T_NOT,
         'regroup'       => HG_Parser::T_REGROUP,
         'spacefull'     => HG_Parser::T_SPACEFULL,
+        'step'          => HG_Parser::T_STEP,
         'with'          => HG_Parser::T_WITH,
     );
 
@@ -106,6 +107,7 @@ class Haanga_Compiler_Tokenizer
         '=='    => HG_Parser::T_EQ,
         '>='    => HG_Parser::T_GE,
         '||'    => HG_Parser::T_OR,
+        '..'    => HG_Parser::T_DOTDOT,
     );
 
     static $close_tags = array();

@@ -172,24 +172,12 @@ stmt ::= T_LOAD string(B). {
 }
 
 /* FOR loop */
-for_def(A) ::= T_FOR varname(B) T_IN filtered_var(C) T_TAG_CLOSE . {
-    /* Try to get the variable */
-    $var = $this->compiler->get_context(is_array(C[0]) ? C[0] : array(C[0]));
-    if (is_array($var)) {
-        /* let's check if it is an object or array */
-        $this->compiler->set_context(B, current($var));
-    }
 
+for_def(A) ::= T_FOR varname(B) T_IN filtered_var(C) T_TAG_CLOSE . {
     A = array('operation' => 'loop', 'variable' => B, 'index' => NULL, 'array' => C);
 }
 
 for_def(A) ::= T_FOR varname(I) T_COMMA varname(B) T_IN filtered_var(C) T_TAG_CLOSE . {
-    /* Try to get the variable */
-    $var = $this->compiler->get_context(is_array(C[0]) ? C[0] : array(C[0]));
-    if (is_array($var)) {
-        /* let's check if it is an object or array */
-        $this->compiler->set_context(B, current($var));
-    }
     A = array('operation' => 'loop', 'variable' => B, 'index' => I, 'array' => C);
 }
 
@@ -200,6 +188,20 @@ for_stmt(A) ::= for_def(B) body(D) T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. {
     }
     A = B;
     A['body'] = D;
+}
+
+for_stmt(A) ::= T_FOR varname(B) T_IN range(X) T_TAG_CLOSE body(E) T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. {
+    if (Z != "endfor") {
+        $this->Error("Unexpected ".Z.", expecting endfor");
+    }
+    A = array('operation' => 'loop', 'variable' => B, 'range' => X, 'body' => E, 'variable' => B, 'step' => 1);
+}
+
+for_stmt(A) ::= T_FOR varname(B) T_IN range(X) T_STEP numvar(S) T_TAG_CLOSE body(E) T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. {
+    if (Z != "endfor") {
+        $this->Error("Unexpected ".Z.", expecting endfor");
+    }
+    A = array('operation' => 'loop', 'variable' => B, 'range' => X, 'body' => E, 'variable' => B, 'step' => S);
 }
 
 for_stmt(A) ::= for_def(B) body(D) T_TAG_OPEN T_EMPTY T_TAG_CLOSE body(E)  T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. { 
@@ -293,14 +295,14 @@ block_stmt(A) ::= T_BLOCK varname(B) T_TAG_CLOSE body(C) T_TAG_OPEN T_CUSTOM_END
     A = array('operation' => 'block', 'name' => B, 'body' => C); 
 }
 
-block_stmt(A) ::= T_BLOCK T_NUMERIC(B) T_TAG_CLOSE body(C) T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. {
+block_stmt(A) ::= T_BLOCK number(B) T_TAG_CLOSE body(C) T_TAG_OPEN T_CUSTOM_END(Z) T_TAG_CLOSE. {
     if (Z != "endblock") {
         $this->Error("Unexpected ".Z.", expecting endblock");
     }
     A = array('operation' => 'block', 'name' => B, 'body' => C); 
 }
 
-block_stmt(A) ::= T_BLOCK T_NUMERIC(B) T_TAG_CLOSE body(C) T_TAG_OPEN T_CUSTOM_END(Z) T_NUMERIC T_TAG_CLOSE. {
+block_stmt(A) ::= T_BLOCK number(B) T_TAG_CLOSE body(C) T_TAG_OPEN T_CUSTOM_END(Z) number T_TAG_CLOSE. {
     if (Z != "endblock") {
         $this->Error("Unexpected ".Z.", expecting endblock");
     }
@@ -333,13 +335,13 @@ params(A) ::= var_or_string(B).                       { A = array(B); }
 
 /* variable or string (used on params) */
 var_or_string(A) ::= varname(B).    { A = array('var' => B); }  
-var_or_string(A) ::= T_NUMERIC(B).  { A = array('number' => B); }  
+var_or_string(A) ::= number(B).  { A = array('number' => B); }  
 var_or_string(A) ::= T_TRUE|T_FALSE(B).   { A = trim(@B); }  
 var_or_string(A) ::= string(B).     { A = array('string' => B); }
 
 /* filtered variables */
 fvar_or_string(A) ::= filtered_var(B).  { A = array('var_filter' => B); }  
-fvar_or_string(A) ::= T_NUMERIC(B).     { A = array('number' => B); }  
+fvar_or_string(A) ::= number(B).     { A = array('number' => B); }  
 fvar_or_string(A) ::= T_TRUE|T_FALSE(B).   { A = trim(@B); }  
 fvar_or_string(A) ::= string(B).        { A = array('string' => B); }
 
@@ -358,9 +360,17 @@ expr(A) ::= T_LPARENT expr(B) T_RPARENT. { A = array('op_expr' => 'expr', B); }
 expr(A) ::= fvar_or_string(B). { A = B; }
 
 /* Variable name */
-varname(A) ::= varname(B) T_OBJ T_ALPHA(C). { if (!is_array(B)) { A = array(B); } else { A = B; }  A[]=array('object' => C);}
-varname(A) ::= varname(B) T_DOT T_ALPHA(C). { if (!is_array(B)) { A = array(B); } else { A = B; } A[] = ($this->compiler->var_is_object(A)) ? array('object' => C) : C;}
+varname(A) ::= varname(B) T_OBJ T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { if (!is_array(B)) { A = array(B); } else { A = B; }  A[]=array('object' => C);}
+varname(A) ::= varname(B) T_DOT T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { if (!is_array(B)) { A = array(B); } else { A = B; } A[] = array('object' => C);}
 varname(A) ::= varname(B) T_BRACKETS_OPEN var_or_string(C) T_BRACKETS_CLOSE. { if (!is_array(B)) { A = array(B); } else { A = B; }  A[]=C;}
 varname(A) ::= T_ALPHA(B). { A = B; } 
 /* T_BLOCK|T_CUSTOM|T_CUSTOM_BLOCK are also T_ALPHA */
 varname(A) ::= T_BLOCK|T_CUSTOM_TAG|T_CUSTOM_BLOCK(B). { A = B; } 
+
+range(A)  ::= numvar(B) T_DOTDOT numvar(C). { A = array(B, C); }
+
+numvar(A) ::= number(B).  { A = B; }
+numvar(A) ::= varname(B). { A = array('var' => B); }
+
+number(A) ::= T_NUMERIC(B). { A = B; }
+number(A) ::= T_MINUS T_NUMERIC(B). { A = -1 * (B); }

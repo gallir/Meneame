@@ -37,7 +37,7 @@
 
 if (!defined('HAANGA_VERSION')) {
     /* anyone can override this value to force recompilation */
-    define('HAANGA_VERSION', '1.0.3');
+    define('HAANGA_VERSION', '1.0.4');
 }
 
 

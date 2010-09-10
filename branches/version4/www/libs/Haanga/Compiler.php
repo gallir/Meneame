@@ -829,10 +829,29 @@ class Haanga_Compiler
             foreach ($variable as $id => $part) {
                 if ($id != 0) {
                     if (is_array($part) && isset($part['object'])) {
-                        $var = &$var->$part['object'];
+                        if (is_array($part['object']) && isset($part['object']['var'])) {
+                            /* object $foo->$bar */
+                            $name = $part['object']['var']; 
+                            $name = $this->get_context($name);
+                            if (!isset($var->$name)) {
+                                return NULL;
+                            }
+                            $var = &$var->$name;
+                        } else {
+                            if (!isset($var->$part['object'])) {
+                                return NULL;
+                            }
+                            $var = &$var->$part['object'];
+                        }
                     } else if (is_object($var)) {
+                        if (!isset($var->$part)) {
+                            return NULL;
+                        }
                         $var = &$var->$part;
                     } else {
+                        if (!isset($var[$part])) {
+                            return NULL;
+                        }
                         $var = &$var[$part];
                     }
                 }
@@ -881,7 +900,8 @@ class Haanga_Compiler
                 if (!$this->forid) {
                     $this->Error("Invalid forloop reference outside of a loop");
                 }
-                switch ($variable[1]) {
+
+                switch ($variable[1]['object']) {
                 case 'counter':
                     $this->forloop[$this->forid]['counter'] = TRUE; 
                     $variable = 'forcounter1_'.$this->forid;
@@ -932,11 +952,35 @@ class Haanga_Compiler
                 return Haanga_AST::str(self::$block_var);
                 break;
             default:
+                /* choose array or objects */
+
+                for ($i=1; $i < count($variable); $i++) {
+                    $var_part = array_slice($variable, 0, $i);
+                    $def_arr  = TRUE;
+
+                    if (is_array($variable[$i])) {
+                        if (isset($variable[$i]['object'])) {
+                            $def_arr = FALSE;
+                        }
+                        if (!Haanga_AST::is_var($variable[$i])) {
+                            $variable[$i] = current($variable[$i]);
+                        } else {
+                            $variable[$i] = $this->generate_variable_name($variable[$i]['var']);
+                        }
+                    }
+
+                    $is_obj = $this->var_is_object($var_part, 'unknown');
+
+                    if ( $is_obj === TRUE || ($is_obj == 'unknown' && !$def_arr)) {
+                        $variable[$i] = array('object' => $variable[$i]); 
+                    }
+                }
+
                 break;
             } 
 
         } else if (isset($this->var_alias[$variable])) {
-            $variable = $this->var_alias[$variable];
+            $variable = $this->var_alias[$variable]['var'];
         }
 
         return hvar($variable)->getArray();
@@ -979,31 +1023,39 @@ class Haanga_Compiler
         $this->forid = $oldid+1;
         $this->forloop[$this->forid] = array();
 
-        /* Check if the array to iterate is an object */
-        $var = &$details['array'][0];
-        if (is_string($var) && $this->var_is_object(array($var), FALSE)) {
-            /* It is an object, call to get_object_vars */
-            $body->decl($var.'_arr', hexec('get_object_vars', hvar($var)));
-            $var .= '_arr';
+        if (isset($details['range'])) {
+            $this->set_safe($details['variable']);
+        } else {
+            /* variable context */
+             $var = $this->get_context(is_array($details['array'][0]) ? $details['array'][0] : array($details['array'][0]));
+            if (is_array($var)) {
+                /* let's check if it is an object or array */
+                $this->set_context($details['variable'], current($var));
+            }
+
+            /* Check if the array to iterate is an object */
+            $var = &$details['array'][0];
+            if (is_string($var) && $this->var_is_object(array($var), FALSE)) {
+                /* It is an object, call to get_object_vars */
+                $body->decl($var.'_arr', hexec('get_object_vars', hvar($var)));
+                $var .= '_arr';
+            }
+            unset($var);
+            /* variables */
+            $array = $this->get_filtered_var($details['array'], $varname);
+
+            /* Loop body */
+            if ($this->is_safe(hvar($varname))) {
+                $this->set_safe(hvar($details['variable']));
+            }
+
+            $details['array'] = $this->generate_variable_name($details['array']);
         }
-        unset($var);
 
-        /* variables */
-        $array = $this->get_filtered_var($details['array'], $varname);
-
-        /* Loop body */
-        if ($this->is_safe(hvar($varname))) {
-            $this->set_safe(hvar($details['variable']));
-        }
-
-        /* check if the elements in the array is an array or object */
-
+        /* for_body {{{ */
         $for_body = hcode();
         $this->generate_op_code($details['body'], $for_body);
 
-        if ($this->is_safe(hvar($varname))) {
-            $this->set_unsafe($details['variable']);
-        }            
 
         $oid  = $this->forid;
         $size = hvar('psize_'.$oid);
@@ -1068,11 +1120,31 @@ class Haanga_Compiler
         }
         // }}}
 
+        /* }}} */
+
         /* Restore old ForID */
         $this->forid = $oldid;
 
         /* Merge loop body  */
-        $body->do_foreach($array, $details['variable'], $details['index'], $for_body);
+        if (!isset($details['range'])) {
+            $body->do_foreach($array, $details['variable'], $details['index'], $for_body);
+
+            if ($this->is_safe(hvar($varname))) {
+                $this->set_unsafe($details['variable']);
+            }            
+        } else {
+            for ($i=0; $i < 2; $i++) {
+                if (Haanga_AST::is_var($details['range'][$i])) {
+                    $details['range'][$i] = $this->generate_variable_name($details['range'][$i]['var']);
+                }
+            }
+
+            if (Haanga_AST::is_var($details['step'])) {
+                $details['step'] = $this->generate_variable_name($details['step']['var']);
+            }
+            $body->do_for($details['variable'], $details['range'][0], $details['range'][1], $details['step'], $for_body);
+            $this->set_unsafe(hvar($details['variable']));
+        }
 
         if (isset($details['empty'])) {
             $body->do_endif();
@@ -1270,7 +1342,7 @@ class Haanga_Compiler
      */
     function generate_op_alias($details, &$body)
     {
-        $this->var_alias[ $details['as'] ] = $details['var'];
+        $this->var_alias[ $details['as'] ] = $this->generate_variable_name($details['var']);
         $this->generate_op_code($details['body'], $body);
         unset($this->var_alias[ $details['as'] ] );
     }
