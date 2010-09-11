@@ -237,6 +237,8 @@ case 2:
 	echo "</script>\n";
 	break;
 
+
+
 case 3:
 	// Show voters
 	echo '<div class="voters" id="voters">';
@@ -251,6 +253,8 @@ case 3:
 	echo '</div>';
 	break;
 
+
+
 case 6:
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
@@ -263,6 +267,8 @@ case 6:
 	echo '</div>';
 	break;
 
+
+
 case 4:
 	// Show logs
 	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_level, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
@@ -273,12 +279,16 @@ case 4:
 	$vars = compact('link', 'logs', 'annotations');
 	Haanga::Load("story/link_logs.html", $vars);
 	break;
+
+
+
 case 5:
-	$items = array(); // Just to fill the empty items in sneaker
-	for ($i=0; $i<10; $i++) $items[$i] = $i;
 	// Micro sneaker
-	Haanga::Load('story/link_sneak.html', compact('link', 'items'));
+	Haanga::Load('story/link_sneak.html', compact('link'));
 	break;
+
+
+
 case 7:
 	// Show trackback
 	echo '<div class="voters" id="voters">';
@@ -411,8 +421,6 @@ function do_comment_pages($total, $current, $reverse = true) {
 		}
 	}
 	
-
-
 	if($current<$total_pages) {
 		$i = $current+1;
 		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#187; '._('siguiente').'</a>';

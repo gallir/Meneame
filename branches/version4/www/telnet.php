@@ -19,10 +19,6 @@ header("Content-type: text/html; charset=utf-8");
 Haanga::Load('sneak/telnet_base.html');
 
 $globals['sneak_telnet'] = true;
-$items = array();
-for ($i=0; $i<$max_items;$i++) {
-    $items[$i] = $i;
-}
-Haanga::Load('sneak/form.html', compact('items'));
+Haanga::Load('sneak/form.html', compact('max_item'));
 
 ?>

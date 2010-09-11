@@ -42,12 +42,8 @@ if ($current_user->user_id > 0) {
 //////
 
 
-$items = array();
-for ($i=0; $i<$max_items;$i++) {
-	$items[$i] = $i;
-}
 $globals['sneak_telnet'] = false;
-Haanga::Load('sneak/form.html', compact('items'));
+Haanga::Load('sneak/form.html', compact('max_items'));
 
 do_footer();
 

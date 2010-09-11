@@ -32,8 +32,8 @@ var animation_timer;
 var new_items = 0;
 var max_items = 10;
 var request_timer;
-var min_update = 15000;
-var next_update = 5000;
+var min_update = 10000;
+var next_update = 3000;
 var sneak_xmlhttp;
 var requests = 0;
 var max_requests = 500;
@@ -207,7 +207,7 @@ function to_html(data) {
 </div>
 </div>
 
-{% for i in items %}
+{% for i in 0 .. 9 %}
     <div id="sneaker-{{ i }}" class="mini-sneaker-item">&nbsp;</div>
 {% endfor %}
 
