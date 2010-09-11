@@ -110,7 +110,7 @@
 	{% if self.do_inline_friend_votes AND self.friend_votes %}
 		<div style="padding: 3px 0 2px 0;">
 		{% for vote in self.friend_votes %}
-			<a href="{% exec get_user_uri vote->user_login %}" title="{{ vote.user_login }}: {% trans _('valor') %} {{vote.vote_value}}"><img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
+			<a href="{% exec get_user_uri vote.user_login %}" title="{{ vote.user_login }}: {% trans _('valor') %} {{vote.vote_value}}"><img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
 		{% endfor %}
 		</div>
 	{% endif %}
@@ -200,8 +200,8 @@
 	{% exec do_banner_story as dummy %}
 	{% if self.best_comment %}
 		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">
-			<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '{{ self.best_comment->comment_id }}', 10000);" href="{{ self.permalink }}/000{{ self.best_comment->comment_order }}">
-			<strong>{{ self.best_comment->comment_order }}</strong></a>:&nbsp;{% exec text_to_summary self.best_comment->content 200 %}
+			<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '{{ self.best_comment.comment_id }}', 10000);" href="{{ self.permalink }}/000{{ self.best_comment.comment_order }}">
+			<strong>{{ self.best_comment.comment_order }}</strong></a>:&nbsp;{% exec text_to_summary self.best_comment.content 200 %}
 		</div>
 	{% endif %}
 	</div>

@@ -883,7 +883,7 @@ class Haanga_Compiler
         }
 
         $variable = $this->get_context($variable);
-        if (isset($variable)) {
+        if (!empty($variable)) {
             return is_object($variable);
         }
 
