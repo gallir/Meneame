@@ -883,8 +883,8 @@ class Haanga_Compiler
         }
 
         $variable = $this->get_context($variable);
-        if (!empty($variable)) {
-            return is_object($variable);
+        if (isset($variable)) {
+            return !is_array($variable);
         }
 
         return $default===NULL ? self::$dot_as_object : $default;
