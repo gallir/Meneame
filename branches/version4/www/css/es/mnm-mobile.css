@@ -26,8 +26,6 @@ border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
-
-
 a {
 text-decoration: none;
 outline: none;
@@ -49,8 +47,8 @@ color: #551a8b;
 }
 
 #header {
-min-width: 300px;
-height: 25px;
+min-width: 315px;
+height: 30px;
 overflow: hidden;
 background: #ff6400;
 }
@@ -58,29 +56,26 @@ background: #ff6400;
 #logo {
 display: block;
 float: left;
-width: 125px;
-height: 24px;
+width: 130px;
+height: 30px;
 text-indent: -9999px;
-background: #ff6400 url('../../img/mnm/logobg01.png') no-repeat left top;
+background: #ff6400 url('../../img/mnm/logobg02.png') no-repeat left top;
 }
 
 #headtools {
 text-align: right;
 vertical-align: middle;
 white-space: nowrap;
-margin: 0;
+margin: 6px 10px 0 0;
 padding: 0;
+font-size: 0.9em;
 }
 
 #headtools li {
-font-size: 0.79em;
 display: inline;
 float: right;
-margin: 2px 5px 0 5px;
-border-left: 1px solid;
-padding-left: 10px;
 white-space: nowrap;
-border-color: #fff;
+margin-left: 10px;
 }
 
 #headtools li.noborder {
@@ -90,6 +85,8 @@ border-left: none;
 #headtools a {
 text-decoration: none;
 color: #fff;
+font-weight: bold;
+text-transform: capitalize; 
 }
 
 #headtools a:hover {
@@ -102,7 +99,7 @@ vertical-align: top;
 }
 
 #container {
-margin: 2px;
+margin: 4px 1px 2px 2px;
 clear:both;
 }
 
@@ -112,24 +109,25 @@ padding-right: 2px;
 }
 
 .tabmain {
+font-size: .75em;
 height: 24px !important;
 margin: 10px 0 0 0;
 padding-left: 5px;
 border-bottom: 1px solid;
 white-space: nowrap;
 border-color: #ff6400;
+margin-right: -2px;
 }
 
 .tabmain li {
 float: left;
 list-style-type: none;
-margin-right: 4px;
+margin-right: 5px;
 height: 24px;
 white-space: nowrap;
 }
 
 .tabmain li a {
-font-size: .8em;
 font-weight: bold;
 display: block;
 float: left;
@@ -142,22 +140,22 @@ text-decoration: none;
 background: #fff;
 border-color: #ff6400;
 color: #ff6400;
+text-transform: capitalize;
 }
 
 .tabmain li a:hover {
 text-decoration: none;
-background: #feefe5
+background: #FFEEC7;
 }
 
 .tabmain li.tabmain-this {
 height: 25px;
-background: #fff;
+background: #FFEEC7;
 }
 
 .tabmain li.tabmain-this a {
-font-size: 0.8em;
 height: 21px;
-background: #feefe5;
+background: #FFEEC7;
 }
 
 
