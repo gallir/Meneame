@@ -184,7 +184,7 @@ if(!empty($_REQUEST['time'])) {
 do_header($title);
 
 // Don't allow banned IPs o proxies
-if(! check_ban($globals['user_ip'], 'ip', true) && ! check_ban_proxy() ) {
+if($sql && ! check_ban($globals['user_ip'], 'ip', true) && ! check_ban_proxy()) {
 	$links = $db->get_col($sql);
 } else {
 	$links = false;

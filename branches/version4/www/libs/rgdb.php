@@ -86,7 +86,7 @@ class RGDB extends mysqli {
 	}
 
 	function flush() {
-		$this->last_result = null;
+		$this->last_result = array();
 	}
 
 	function query($query) {
@@ -95,7 +95,7 @@ class RGDB extends mysqli {
 		$this->connect();
 		
 		// Flush cached values..
-		$this->flush();
+		$this->last_result = array();
 
 		$result = @parent::query($query);
 
