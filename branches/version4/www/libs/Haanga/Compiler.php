@@ -1033,15 +1033,6 @@ class Haanga_Compiler
                 $this->set_context($details['variable'], current($var));
             }
 
-            /* Check if the array to iterate is an object */
-            $var = &$details['array'][0];
-            if (is_string($var) && $this->var_is_object(array($var), FALSE)) {
-                /* It is an object, call to get_object_vars */
-                $body->decl($var.'_arr', hexec('get_object_vars', hvar($var)));
-                $var .= '_arr';
-            }
-            unset($var);
-            /* variables */
             $array = $this->get_filtered_var($details['array'], $varname);
 
             /* Loop body */
