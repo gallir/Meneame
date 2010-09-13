@@ -44,6 +44,11 @@ class Haanga_Extension_Filter_CleanUrl
     public $php_alias = 'clean_input_url';
 }
 
+class Haanga_Extension_Filter_UserUri
+{
+    public $php_alias = 'get_user_uri';
+}
+
 class Haanga_Extension_Tag_GetURL
 {
     public $is_block = FALSE;

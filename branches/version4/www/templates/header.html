@@ -127,7 +127,7 @@ var base_key="{{globals.security_key}}";
 {% endif %}
 
 {% if current_user.authenticated %}
-	<li><a href="{% exec get_user_uri current_user.user_login %}" 
+	<li><a href="{{ current_user.user_login|useruri }}" 
 		{% if globals.greetings %}
 			 title="{% trans _('menéame te saluda en') %} {{globals.greetings[greeting]}}"
 		{% endif %}>
