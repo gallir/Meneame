@@ -392,7 +392,7 @@ function do_submit1() {
 	}
 
 	// check there is no an "overflow" of images
-	if ($link->content_type == 'image' || $link->content_type == 'video' || true) {
+	if ($link->content_type == 'image' || $link->content_type == 'video') {
 		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video')"));
 		if ($image_links > 5 && $image_links > $links_12hs * 0.08) { // Only 8% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
@@ -460,7 +460,9 @@ function do_submit2() {
 	$link->key = $_POST['key'];
 	$link->randkey = $_POST['randkey'];
 
-	Haanga::Load('link/submit2.html', compact('link', 'errors'));
+	$related = $link->get_related(6);
+
+	Haanga::Load('link/submit2.html', compact('link', 'errors', 'related'));
 	return true;
 }
 

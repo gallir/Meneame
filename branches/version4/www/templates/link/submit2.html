@@ -45,9 +45,8 @@ img1.src = img_src1;
 	</fieldset>
 	</form>
 
-	{% exec link.get_related 6 as related %}
 	{% if related %}
-		Haanga::Load("story/related.html", compact('related', 'link'));
+		{% include "story/related.html" %}
 	{% endif %}
 
 	</div>
