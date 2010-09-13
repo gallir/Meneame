@@ -39,6 +39,11 @@ class Haanga_Extension_Filter_TxtShorter
     }
 }
 
+class Haanga_Extension_Filter_CleanUrl
+{
+    public $php_alias = 'clean_input_url';
+}
+
 class Haanga_Extension_Tag_GetURL
 {
     public $is_block = FALSE;

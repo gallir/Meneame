@@ -1,0 +1,10 @@
+{% if errors %}
+	{% include 'link/errors.html' %}
+{% endif %}
+
+{% if link %}
+	<h2>{% trans _('envío de una nueva noticia: paso 2 de 3') %}</h2>
+	{% include 'link/edit.html' %}
+{% else %}
+	{% include 'link/submit_empty_form.html' %}
+{% endif %}

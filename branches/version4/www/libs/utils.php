@@ -593,17 +593,13 @@ function guess_user_id ($str) {
 	}
 }
 
-function print_simpleformat_buttons($textarea_id) {
+function print_simpleformat_buttons($id) {
 	global $globals, $current_user;
 
 	// To avoid too many bolds and italics from new users and trolls
 	if ($current_user->user_karma < 6.001) return;
-
-	echo '<div style="margin-bottom: 4px">';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'strike\');" class="rich-edit-key"><strike>D</strike></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'i\');" class="rich-edit-key"><i>I</i></button>';
-	echo '<button type="button" onclick="applyTag(\''.$textarea_id.'\', \'b\');" class="rich-edit-key"><b>B</b></button>';
-	echo '</div>';
+	
+	Haanga::Load('simpleformat_buttons.html', compact('id'));
 }
 
 function put_smileys($str) {

@@ -1,0 +1,20 @@
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="radio"
+	{% if link.content_type == 'text' %}checked="checked"{% endif %}
+	name="type" value="text"
+	/>&nbsp;{% trans _('texto') %}
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input type="radio"
+	{% if link.content_type == 'image' %}checked="checked"{% endif %}
+	name="type" value="image"
+	/>&nbsp;<img src="{{ globals.base_static }}img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="{% trans _('¿es una imagen?') %}" title="{% trans _('¿es una imagen?') %}" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input type="radio"
+	{% if link.content_type == 'video' %}checked="checked"{% endif %}
+	name="type" value="video"
+	/>&nbsp;<img src="{{ globals.base_static }}img/common/is-video02.png" class="media-icon" width="18" height="15" alt="{% trans _('¿es un vídeo?') %}" title="{% trans _('¿es un vídeo?') %}" />
+

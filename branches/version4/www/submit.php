@@ -13,6 +13,8 @@ include(mnminclude.'ban.php');
 
 $globals['ads'] = false;
 
+global $errors;
+$errors = array();
 
 if(isset($_POST["phase"])) {
 	force_authentication();
@@ -20,12 +22,24 @@ if(isset($_POST["phase"])) {
 		case 1:
 			do_header(_("enviar noticia") . " 2/3", "post");
 			echo '<div id="singlewrap">' . "\n";
-			do_submit1();
+			if (! do_submit1()) {
+				// Just to display error messages
+				$link = new Link;
+				$link->randkey = rand(10000,10000000);
+				$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+				Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+			}
 			break;
 		case 2:
 			do_header(_("enviar noticia") . " 3/3", "post");
 			echo '<div id="singlewrap">' . "\n";
-			do_submit2();
+			if (! do_submit2()) {
+				// Just to display error messages
+				$link = new Link;
+				$link->randkey = rand(10000,10000000);
+				$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+				Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+			}
 			break;
 		case 3:
 			do_submit3();
@@ -39,20 +53,9 @@ if(isset($_POST["phase"])) {
 	do_submit0();
 }
 echo "</div>\n"; // singlewrap
+
 do_footer();
 exit;
-
-function preload_indicators() {
-	global $globals;
-
-	echo '<SCRIPT type="text/javascript">'."\n";
-	echo '<!--'."\n";
-	echo 'var img_src1=\''.$globals['base_static'].'img/common/indicator_orange.gif\''."\n";;
-	echo 'var img1= new Image(); '."\n";
-	echo 'img1.src = img_src1;'."\n";
-	echo '//-->'."\n";
-	echo '</SCRIPT>'."\n";
-}
 
 function check_already_sent() {
 	global $db;
@@ -69,50 +72,24 @@ function check_already_sent() {
 	}
 }
 
-function print_empty_submit_form() {
-	global $globals, $current_user, $site_key;
-
-	preload_indicators();
-	if (!empty($_GET['url'])) {
-		$url = clean_input_url($_GET['url']);
-	} else {
-		$url = 'http://';
-	}
-	echo '<div class="genericform">';
-	echo '<fieldset><legend><span class="sign">'._('dirección de la noticia').'</span></legend>';
-	echo '<form action="submit.php" method="post" id="thisform" onSubmit="$(\'#working\').html(\''._('verificando').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">';
-	echo '<p><label for="url">'._('url').':</label><br />';
-	echo '<input type="text" name="url" id="url" value="'.htmlspecialchars($url).'" class="form-full" onblur="if(this.value==\'\') this.value=\'http://\';" onclick="if(this.value==\'http://\') this.value=\'\';"/></p>';
-	echo '<input type="hidden" name="phase" value="1" />';
-	$randkey = rand(10000,10000000);
-	echo '<input type="hidden" name="key" value="'.md5($randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name()).'" />'."\n";
-	echo '<input type="hidden" name="randkey" value="'.$randkey.'" />';
-	echo '<input type="hidden" name="id" value="c_1" />';
-	echo '<p><input class="button" type="submit" value="'._('continuar').' &#187;" ';
-	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span></p>';
-	echo '</form>';
-	echo '</fieldset>';
-	echo '</div>';
-}
-
 function do_submit0() {
-	echo '<h2>'._('envío de una nueva noticia: paso 1 de 3').'</h2>';
-	echo '<div class="faq">';
-	echo '<h3>'._('por favor, respeta estas instrucciones para mejorar la calidad:').'</h3>';
-	echo '<ul class="instruction-list">';
-	echo '<li><strong>'._('contenido externo').':</strong> '._('Menéame no es un sitio para generar noticias, ni un sistema de <em>microblogging</em>').'</li>';
-	echo '<li><strong>'._('contenido interesante').':</strong> '._('¿interesará a una cantidad razonable de lectores?').'</li>';
-	echo '<li><strong>'._('enlaza la fuente original').':</strong> '._('no enlaces a sitios intermedios que no añaden nada al original').'</li>';
-	echo '<li><strong>'._('busca antes').':</strong> '._('evita duplicar historias').'</li>';
-	echo '<li><strong>'._('sé descriptivo').':</strong> '._('explica el enlace de forma fidedigna, no distorsiones').'</li>';
-	echo '<li><strong>'._('respeta el voto de los demás').'</strong>. '._('si los votos te pueden afectar personalmente, es mejor que no envíes la noticia').'</li>';
-	echo '<li><strong>¿'._('has leído las').' <a href="legal.php#tos" target="_blank">'._('condiciones de uso').'</a></strong>?</li>';
-	echo '</ul></div>'."\n";
-	print_empty_submit_form();
+	global $current_user, $site_key;
+
+
+	$link = new Link;
+	$link->randkey = rand(10000,10000000);
+	$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+	if (!empty($_GET['url'])) {
+		$link->url = clean_input_url($_GET['url']);
+	}
+	Haanga::Load('link/submit0.html', compact('link'));
+	return true;
 }
 
 function do_submit1() {
-	global $db, $dblang, $current_user, $globals;
+	global $db, $dblang, $current_user, $globals, $errors;
+
+
 
 	$url = clean_input_url($_POST['url']);
 	$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
@@ -121,19 +98,16 @@ function do_submit1() {
 		$url = 'http://'.$url;
 	}
 
-	echo '<div>'."\n";
-
 	$new_user = false;
 	if (!check_link_key()) {
-		echo '<p class="error"><strong>'._('clave incorrecta').'</strong></p> ';
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('clave incorrecta'));
+		return false;
 	}
 	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
-		echo '<p class="error"><strong>'._('no tienes el mínimo de karma para enviar una nueva historia').'</strong></p> ';
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('no tienes el mínimo de karma para enviar una nueva historia'));
+		return false;
 	}
+
 
 	// Don't allow to send a link by a clone
 	$hours = intval($globals['user_links_clon_interval']);
@@ -142,11 +116,9 @@ function do_submit1() {
 		$l = implode(',', $clones);
 		$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
 		if ($c > 0) {
-			echo '<p class="error">'._('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'). ' </p>';
+			add_submit_error( _('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'));
 			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): $_POST[url]");
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
+			return false;
 		}
 	}
 
@@ -154,22 +126,18 @@ function do_submit1() {
 	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
-		echo '<p class="error">'._('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias'). ' </p>';
+		add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
 		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): $_POST[url]");
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 
 	// check the URL is OK and that it resolves
 	$url_components = @parse_url($url);
 	if (!$url_components || ! $url_components['host'] || gethostbyname($url_components['host']) == $url_components['host']) {
-		echo '<p class="error"><strong>'._('URL o nombre de servidor erróneo').'</strong></p> ';
-		echo '<p>'._('el nombre del servidor es incorrecto o éste tiene problemas para resolver el nombre'). ' </p>';
+		add_submit_error( _('URL o nombre de servidor erróneo'),
+			_('el nombre del servidor es incorrecto o éste tiene problemas para resolver el nombre'));
 		syslog(LOG_NOTICE, "Meneame, hostname error ($current_user->user_login): $url");
-		print_empty_submit_form();
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 
 	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute)");
@@ -177,22 +145,23 @@ function do_submit1() {
 	else $enqueued_limit = $globals['limit_3_minutes'];
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
-		echo '<p class="error"><strong>'._('exceso de envíos').':</strong></p>';
-		echo '<p>'._('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
+		//echo '<p class="error"><strong>'._('exceso de envíos').':</strong></p>';
+		//echo '<p>'._('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
+		//echo '</div>'. "\n";
+		add_submit_error( _('exceso de envíos'),
+			_('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'));
 		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 
 	// Check the user does not have too many drafts
 	$minutes = intval($globals['draft_time'] / 60) + 10;
 	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval $minutes minute) and link_status='discard' and link_votes = 0");
 	if ($drafts > $globals['draft_limit']) {
-		echo '<p class="error"><strong>'._('demasiados borradores').':</strong></p>';
-		echo '<p>'._('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>';
+		add_submit_error( _('demasiados borradores'),
+			_('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>');
 		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): $_POST[url]");
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 	// Delete dangling drafts
 	if ($drafts > 0) {
@@ -202,15 +171,12 @@ function do_submit1() {
 
 	// Check for banned IPs
 	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
-		echo '<p class="error"><strong>'._('dirección IP no permitida para enviar').':</strong> '.$globals['user_ip'].'</p>';
-		echo '<p><strong>'._('Razón').'</strong>: '.$ban['comment'].'</p>';
 		if ($ban['expire'] > 0) {
-			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
-		}
+			$expires = _('caduca').': '.get_date_time($ban['expire']);
+		} else $expires = '';
+		add_submit_error( _('dirección IP no permitida para enviar'), $expires);
 		syslog(LOG_NOTICE, "Meneame, banned IP ".$globals['user_ip']." ($current_user->user_login): $url");
-		print_empty_submit_form();
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 
 	// Number of links sent by the user
@@ -234,7 +200,6 @@ function do_submit1() {
 		$user_votes = (int) $db->get_var("select count(*) from votes where vote_type='links' and vote_date > date_sub(now(), interval 72 hour) and vote_user_id=$current_user->user_id");
 		$user_links = 1 + $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 24 hour) and link_status != 'discard'");
 		$total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
-		echo "<!-- $user_votes_total, $user_links, $total_links -->\n";
 		if ($sents == 0) {
 			// If is a new user, requires more votes, to avoid spam
 			$min_votes = $globals['min_user_votes'];
@@ -243,19 +208,16 @@ function do_submit1() {
 		}
 		if (!$current_user->admin && $user_votes < $min_votes) {
 			$needed = $min_votes - $user_votes;
-			echo '<p class="error">';
 			if ($new_user) {
-				echo '<strong>'._('¿es la primera vez que envías una noticia?').'</strong></p> ';
-				echo '<p class="error-text">'._('necesitas como mínimo'). " <strong>$needed " . _('votos') . '</strong><br/>';
+				add_submit_error( _('¿es la primera vez que envías una noticia?'),
+					_('necesitas como mínimo'). " $needed " . _('votos'));
 			} else {
-				echo '<strong>'._('no tienes el mínimo de votos necesarios para enviar una nueva historia').'</strong></p> ';
-				echo '<p class="error-text">'._('necesitas votar como mínimo a'). " <strong>$needed " . _('envíos') . '</strong><br/>';
+				add_submit_error( _('no tienes el mínimo de votos necesarios para enviar una nueva historia'),
+					_('necesitas votar como mínimo a'). " $needed " . _('envíos'));
 			}
-			echo '<strong>'._('no votes de forma apresurada, penaliza el karma').'</strong><br/>';
-			echo '<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a></p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
+			add_submit_error( _('no votes de forma apresurada, penaliza el karma'),
+				'<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a>');
+			return false;
 		}
 	}
 
@@ -271,10 +233,8 @@ function do_submit1() {
 	$same_user = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author=$current_user->user_id") - $drafts;
 	$same_ip = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_ip = '".$globals['user_ip']."'") - $drafts;
 	if ($same_user >  $user_links_limit  || $same_ip >  $user_links_limit  ) {
-		echo '<p class="error"><strong>'._('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP').  '</strong></p>';
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'));
+		return false;
 	}
 
 	// avoid users sending continuous "rubbish" or "propaganda", specially new users
@@ -283,36 +243,33 @@ function do_submit1() {
 		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
 		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
-			echo '<p class="error"><strong>'._('debes esperar, has tenido demasiados votos negativos en tus últimos envíos').  '</strong></p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
+			add_submit_error( _('debes esperar, has tenido demasiados votos negativos en tus últimos envíos'));
+			return false;
 		}
 	}
-	
+
 	$link=new Link;
 	$link->url = $url;
+	$link->is_new = true; // Disable several options in the editing form
 
 	$edit = false;
 
-	if(report_duplicated($url)) return;
+	if(report_duplicated($url)) return true; // Don't output error messages
 
 
 	if(!$link->check_url($url, true, true) || !$link->get($url)) {
-		echo '<p class="error"><strong>'._('URL erróneo o no permitido').'</strong>: ';
+		$e = _('URL erróneo o no permitido') . ': ';
 		if ($link->ban && $link->ban['match']) {
-			echo $link->ban['match'];
+			$e .= $link->ban['match'];
 		} else {
-			echo $link->url;
+			$e .= $link->url;
 		}
-		echo '</p>';
-		echo '<p><strong>'._('Razón').':</strong> '. $link->ban['comment'].'</p>';
+		add_submit_error( $e, _('Razón') . ': '. $link->ban['comment']);
+
 		if ($link->ban['expire'] > 0) {
-			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($link->ban['expire']).'</p>';
+			add_submit_error( $e, _('caduca').': '. get_date_time($link->ban['expire']));
 		}
-		print_empty_submit_form();
-		echo '</div>'. "\n";
-		return;
+		return false;
 	}
 
 	// If the URL has changed, check again is not dupe
@@ -320,14 +277,14 @@ function do_submit1() {
 
 	$link->randkey = intval($_POST['randkey']);
 	if(!$link->valid) {
-		echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
+		//echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
+		$e = _('error leyendo el url').': '. htmlspecialchars($url);
 		// Dont allow new users with low karma to post wrong URLs
 		if ($current_user->user_karma < 8 && $current_user->user_level == 'normal') {
-			echo '<p>'._('URL inválido, incompleto o no permitido. Está fuera de línea, o tiene mecanismos antibots.').'</p>';
-			print_empty_submit_form();
-			return;
+			add_submit_error( $e, _('URL inválido, incompleto o no permitido. Está fuera de línea, o tiene mecanismos antibots.'));
+			return false;
 		}
-		echo '<p>'._('no es válido, está fuera de línea, o tiene mecanismos antibots. <strong>Continúa</strong>, pero asegúrate que sea correcto').'</p>';
+		add_submit_error( $e, _('no es válido, está fuera de línea, o tiene mecanismos antibots. <strong>Continúa</strong>, pero asegúrate que sea correcto'));
 	}
 
 	$link->status='discard';
@@ -336,7 +293,9 @@ function do_submit1() {
 	if (!$link->pingback()) {
 		$link->trackback();
 	}
-	$trackback=htmlspecialchars($link->trackback);
+	$link->trackback=htmlspecialchars($link->trackback);
+
+
 	$link->create_blog_entry();
 	$blog = new Blog;
 	$blog->id = $link->blog;
@@ -347,21 +306,13 @@ function do_submit1() {
 	// Now we check again against the blog table
 	// it's done because there could be banned blogs like http://lacotelera.com/something
 	if(($ban = check_ban($blog->url, 'hostname', false, true))) {
-		echo '<p class="error"><strong>'._('URL inválido').':</strong> '.htmlspecialchars($url).'</p>';
-		echo '<p>'._('el sitio').' '.$ban['match'].' '. _('está deshabilitado'). ' ('. $ban['comment'].') </p>';
+		$e = _('URL inválido').': '.htmlspecialchars($url);
+		add_submit_error( $e, _('el sitio').' '.$ban['match'].' '. _('está deshabilitado'). ' ('. $ban['comment'].')');
 		if ($ban['expire'] > 0) {
-			echo '<p class="note"><strong>'._('caduca').'</strong>: '.get_date_time($ban['expire']).'</p>';
+			add_submit_error( $e, _('caduca').': '.get_date_time($ban['expire']));
 		}
 		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
-		print_empty_submit_form();
-		echo '</div>'. "\n";
-		/*
-		// If the domain is banned, decrease user's karma
-		if ($link->banned && $current_user->user_level == 'normal') {
-			$db->query("update users set user_karma = user_karma - 0.05 where user_id = $current_user->user_id");
-		}
-		*/
-		return;
+		return false;
 	}
 
 
@@ -373,11 +324,8 @@ function do_submit1() {
 		if ($ratio <  $threshold ) {
 			if ($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day) and link_blog = $blog->id") > 2) {
 				syslog(LOG_NOTICE, "Meneame, forbidden due to low entropy: $ratio <  $threshold  ($current_user->user_login): $link->url");
-				echo '<p class="error"><strong>'._('ya has enviado demasiados enlaces a los mismos sitios').'</strong></p> ';
-				echo '<p class="error-text">'._('varía las fuentes, podría ser considerado spam').'</p>';
-				echo '<br style="clear: both;" />' . "\n";
-				echo '</div>'. "\n";
-				return;
+				add_submit_error( _('ya has enviado demasiados enlaces a los mismos sitios'), _('varía las fuentes, podría ser considerado spam'));
+				return false;
 			}
 		}
 	}
@@ -388,11 +336,8 @@ function do_submit1() {
 		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video')"));
 		if ($image_links > $sents * 0.7) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $link->url");
-			echo '<p class="error"><strong>'._('ya has enviado demasiadas imágenes o vídeos').'</strong></p> ';
-			//echo '<p class="error-text">'._('disculpa, no es un fotolog').'</p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
+			add_submit_error( _('ya has enviado demasiadas imágenes o vídeos'));
+			return false;
 		}
 	}
 
@@ -401,10 +346,8 @@ function do_submit1() {
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour) and link_author=$current_user->user_id and link_blog=$link->blog and link_votes > 0");
 	if ($same_blog > 2) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to too many links to the same site in last $hours hours ($current_user->user_login): $link->url");
-		echo '<p class="error"><strong>'._('demasiados enlaces al mismo sitio en las últimas horas').'</strong></p> ';
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('demasiados enlaces al mismo sitio en las últimas horas'));
+		return false;
 	}
 
 	// avoid auto-promotion (autobombo)
@@ -412,12 +355,9 @@ function do_submit1() {
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $minutes minute) and link_author=$current_user->user_id and link_blog=$link->blog and link_votes > 0");
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $link->url");
-		echo '<p class="error"><strong>'._('ya has enviado un enlace al mismo sitio hace poco tiempo').'</strong></p> ';
-		echo '<p class="error-text">'._('debes esperar'). " $minutes " . _('minutos entre cada envío al mismo sitio.') . ', ';
-		echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a></p>';
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('ya has enviado un enlace al mismo sitio hace poco tiempo'),
+			_('debes esperar'). " $minutes " . _('minutos entre cada envío al mismo sitio.') . ', ' . '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a>');
+		return false;
 	}
 
 	// Avoid spam (autobombo), count links in last two months
@@ -425,16 +365,15 @@ function do_submit1() {
 
 	$check_history =  $sents > 3 && $same_blog > 0 && ($ratio = $same_blog/$sents) > 0.5;
 	if ($check_history) {
-		echo '<p class="error"><strong>'._('has enviado demasiados enlaces a')." $blog->url".'</strong></p> ';
+		$e = _('has enviado demasiados enlaces a')." $blog->url";
 		if ($sents > 5 && $ratio > 0.75) {
-			echo '<p class="error-text">'._('has superado los límites de envíos de este sitio').'</p>';
+			add_submit_error( $e, _('has superado los límites de envíos de este sitio'));
 			// don't allow to continue
 			syslog(LOG_NOTICE, "Meneame, warn, high ratio, process interrumped ($current_user->user_login): $link->url");
-			return;
+			return false;
 		} else {
-			echo '<p class="error-text">'._('continúa, pero ten en cuenta podría recibir votos negativos').', ';
-			echo '<a href="'.$globals['base_url'].'legal.php">'._('condiciones de uso').'</a>, ';
-			echo '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('el FAQ').'</a></p>';
+			add_submit_error( $e,
+				_('continúa, pero ten en cuenta podría recibir votos negativos').', '. '<a href="'.$globals['base_url'].$globals['legal'].'">'._('condiciones de uso').'</a>');
 			syslog(LOG_NOTICE, "Meneame, warn, high ratio, continue ($current_user->user_login): $link->url");
 		}
 	}
@@ -447,101 +386,44 @@ function do_submit1() {
 	$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_blog=$link->blog and link_status in ('queued')"));
 	if ($site_links > 8 && $site_links > $links_12hs * 0.04) { // Only 4% from the same site
 		syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $link->url");
-		echo '<p class="error"><strong>'._('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor').'</strong></p> ';
-		echo '<p class="error-text">'._('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04). '</p>';
-		echo '<br style="clear: both;" />' . "\n";
-		echo '</div>'. "\n";
-		return;
+		add_submit_error( _('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor'),
+			_('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.04));
+		return false;
 	}
 
 	// check there is no an "overflow" of images
-	if ($link->content_type == 'image' || $link->content_type == 'video') {
+	if ($link->content_type == 'image' || $link->content_type == 'video' || true) {
 		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video')"));
 		if ($image_links > 5 && $image_links > $links_12hs * 0.08) { // Only 8% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
-			echo '<p class="error"><strong>'._('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor').'</strong></p> ';
-			echo '<p class="error-text">'._('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05). '</p>';
-			echo '<br style="clear: both;" />' . "\n";
-			echo '</div>'. "\n";
-			return;
+			add_submit_error( _('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
+				_('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
+			return false;
 		}
 	}
 
 	if(($ban = check_ban($link->url, 'punished_hostname', false, true))) {
-		echo '<p class="error"><strong>'._('Aviso').' '.$ban['match']. ':</strong> <em>'.$ban['comment'].'</em></p>';
-		echo '<p>'._('mejor enviar el enlace a la fuente original, sino será penalizado').'</p>';
+		add_submit_error( _('Aviso').' '.$ban['match']. ': <em>'.$ban['comment'].'</em>',
+			_('mejor enviar el enlace a la fuente original, si no, será penalizado'));
 	}
 
-	
+
 	// Now stores new draft
 	$link->ip = $globals['user_ip'];
 	$link->sent_date = $link->date=time();
+
+	$link->key = $_POST['key'];
+	$link->randkey = $_POST['randkey'];
 	$link->store();
-	
-	echo '<h2>'._('envío de una nueva noticia: paso 2 de 3').'</h2>'."\n";
 
-
-	echo '<div class="genericform">'."\n";
-	echo '<form action="submit.php" method="post" id="thisform" name="thisform">'."\n";
-
-	echo '<input type="hidden" name="url" id="url" value="'.htmlspecialchars($link->url).'" />'."\n";
-	echo '<input type="hidden" name="phase" value="2" />'."\n";
-	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
-	echo '<input type="hidden" name="key" value="'.$_POST['key'].'" />'."\n";
-	echo '<input type="hidden" name="id" value="'.$link->id.'" />'."\n";
-
-	echo '<fieldset><legend><span class="sign">'._('información del enlace').'</span></legend>'."\n";
-	echo '<p class="genericformtxt"><strong>';
-	echo mb_substr($link->url_title, 0, 200);
-	echo '</strong><br/>';
-	echo htmlspecialchars($link->url);
-	echo '</p> '."\n";
-	echo '</fieldset>'."\n";
-
-	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
-
-	echo '<label for="title" accesskey="1">'._('título de la noticia').':</label>'."\n";
-	echo '<p><span class="note">'._('título de la noticia. máximo: 120 caracteres').'</span>'."\n";
-	// Is it an image or video?
-	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	$link->print_content_type_buttons();
-
-	echo '<br/><input type="text" id="title" name="title" value="'.$link_title.'" size="80" maxlength="120" />';
-	echo '</p>'."\n";
-
-	echo '<label for="tags" accesskey="2">'._('etiquetas').':</label>'."\n";
-	echo '<p><span class="note"><strong>'._('pocas palabras, genéricas, cortas y separadas por «,» (coma)').'</strong> Ejemplo: <em>web, programación, software libre</em></span>'."\n";
-	echo '<br/><input type="text" id="tags" name="tags" value="'.$link_tags.'" size="70" maxlength="70" /></p>'."\n";
-
-	print_simpleformat_buttons('bodytext');
-
-	echo '<label for="bodytext" accesskey="3">'._('descripción de la noticia').':</label>'."\n";
-	echo '<p><span class="note"><strong>'._('describe la noticia en castellano. entre dos y cinco frases es suficiente. no deformes el contenido.').'</strong></span>'."\n";
-	echo '<br /><textarea name="bodytext"  rows="10" cols="60" id="bodytext" onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)" onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)">';
+	$link->url_title = mb_substr($link->url_title, 0, 200);
 	if (mb_strlen($link->url_description) > 40) {
-		echo $link->url_description;
+		$link->content = $link->url_description;
 	}
-	echo '</textarea>'."\n";
+	$link->chars_left = 550 - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-	echo '<div style="margin-top:-7px"><input readonly type="text" name="bodycounter" size="3" maxlength="3" value="550" /> <span class="note">' . _('caracteres libres') . '</span></div>';
-	echo '</p>'."\n";
-
-	print_categories_form();
-
-	echo '<p><label for="trackback">'._('trackback').':</label><br />'."\n";
-	if (empty($trackback)) {
-		echo '<span class="note">'._('puedes agregar o cambiar el trackback si ha sido detectado automáticamente').'</span>'."\n";
-		echo '<input type="text" name="trackback" id="trackback" value="'.$trackback.'" class="form-full" /></p>'."\n";
-	} else {
-		echo '<span class="note">'.$trackback.'</span>'."\n";
-		echo '<input type="hidden" name="trackback" id="trackback" value="'.$trackback.'"/></p>'."\n";
-	}
-	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'" />&nbsp;&nbsp;'."\n";
-	echo '<input class="button" type="submit" value="'._('continuar').' &#187;" />'."\n";
-	echo '</fieldset>'."\n";
-	echo '</form>'."\n";
-	echo '</div>'."\n";
-	echo '</div>'."\n";
+	Haanga::Load('link/submit1.html', compact('link', 'errors'));
+	return true;
 }
 
 
@@ -552,12 +434,10 @@ function do_submit2() {
 	$link->id=$link_id = intval($_POST['id']);
 	$link->read();
 
-	if(report_duplicated($link->url)) return;
-
+	if(report_duplicated($link->url)) return true;
 	$link->read_content_type_buttons($_POST['type']);
 
 	// Check if the title contains [IMG], [IMGs], (IMG)... and mark it as image
-
 	if (preg_match('/[\(\[](IMG|PICT*)s*[\)\]]/i', $_POST['title'])) {
 		$_POST['title'] = preg_replace('/[\(\[](IMG|PICT*)s*[\)\]]/i', ' ', $_POST['title']);
 		$link->content_type = 'image';
@@ -571,53 +451,17 @@ function do_submit2() {
 	$link->tags = tags_normalize_string($_POST['tags']);
 	$link->content = clean_text_with_tags($_POST['bodytext']);
 	if (link_errors($link)) {
-		echo '<form class="genericform">'."\n";
-		echo '<p><input class="button" type=button onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/></p>'."\n";
-		echo '</form>'."\n";
-		echo '</div>'."\n"; // opened in print_form_submit_error
-		return;
+		return false;
 	}
 
 	$link->store();
 	tags_insert_string($link->id, $dblang, $link->tags);
 	$link->read();
-	$edit = true;
-	$link_title = $link->title;
-	$link_content = $link->content;
-	preload_indicators();
-	echo '<div class="genericform">'."\n";
-	
-	echo '<h2>'._('envío de una nueva noticia: paso 3 de 3').'</h2>'."\n";
+	$link->key = $_POST['key'];
+	$link->randkey = $_POST['randkey'];
 
-	echo '<form action="submit.php" method="post" class="genericform" onSubmit="$(\'#working\').html(\''._('enviando trackbacks').'...&nbsp;<img src=\\\'\'+img_src1+\'\\\'/>\'); return true;">'."\n";
-	echo '<fieldset><legend><span class="sign">'._('detalles de la noticia').'</span></legend>'."\n";
-
-	echo '<div class="genericformtxt"><label>'._('ATENCIÓN: esto es sólo una muestra!').'</label>&nbsp;&nbsp;<br/>'._('Ahora puedes 1) ').'<label>'._('retroceder').'</label>'._(' o 2)  ').'<label>'._('enviar a la cola y finalizar').'</label>. '._('Cualquier otro clic convertirá tu noticia en comida para <del>gatos</del> elefantes (o no).').'</div>';	
-
-	echo '<div class="formnotice">'."\n";
-	$link->print_summary('preview');
-	echo '</div>'."\n";
-
-	echo '<input type="hidden" name="phase" value="3" />'."\n";
-	echo '<input type="hidden" name="randkey" value="'.intval($_POST['randkey']).'" />'."\n";
-	echo '<input type="hidden" name="key" value="'.$_POST['key'].'" />'."\n";
-	echo '<input type="hidden" name="id" value="'.$link->id.'" />'."\n";
-	echo '<input type="hidden" name="trackback" value="'.htmlspecialchars(trim($_POST['trackback'])).'" />'."\n";
-
-	echo '<br style="clear: both;" /><br style="clear: both;" />'."\n";
-	echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'"/>&nbsp;&nbsp;'."\n";
-	echo '<input class="button" type="submit" value="'._('enviar a la cola y finalizar').' &#187;" ';
-	echo '/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>';
-	echo '</fieldset>'."\n";
-	echo '</form>'."\n";
-
-	$related = $link->get_related(6);
-	if ($related) {
-		Haanga::Load("story/related.html", compact('related', 'link'));
-	}
-
-	echo '</div>'."\n";
-
+	Haanga::Load('link/submit2.html', compact('link', 'errors'));
+	return true;
 }
 
 function do_submit3() {
@@ -667,7 +511,7 @@ function do_submit3() {
 
 	header('Location: '. $link->get_permalink());
 	die;
-	
+
 }
 
 function check_link_key() {
@@ -679,74 +523,65 @@ function link_errors($link) {
 	$error = false;
 	// Errors
 	if(! check_link_key() || intval($_POST['randkey']) != $link->randkey) {
-		print_form_submit_error(_("clave incorrecta"));
+		add_submit_error(_("clave incorrecta"));
 		$error = true;
 	}
 	if($link->status != 'discard') {
-		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("la historia ya está en cola").": $link->status");
+		add_submit_error(_("la historia ya está en cola").": $link->status");
 		$error = true;
 	}
 	if(strlen($link->title) < 10  || strlen($link->content) < 30 ) {
-		print_form_submit_error(_("título o texto incompletos"));
+		add_submit_error(_("título o texto incompletos"));
 		$error = true;
 	}
 	if(get_uppercase_ratio($link->title) > 0.25  || get_uppercase_ratio($link->content) > 0.25 ) {
-		print_form_submit_error(_("demasiadas mayúsculas en el título o texto"));
+		add_submit_error(_("demasiadas mayúsculas en el título o texto"));
 		$error = true;
 	}
 	if(mb_strlen(html_entity_decode($link->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
-		print_form_submit_error(_("título o texto demasiado largos"));
+		add_submit_error(_("título o texto demasiado largos"));
 		$error = true;
 	}
 	if(strlen($link->tags) < 3 ) {
-		print_form_submit_error(_("no has puesto etiquetas"));
+		add_submit_error(_("no has puesto etiquetas"));
 		$error = true;
 	}
 
 	if(preg_match('/.*http:\//', $link->title)) {
-		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
+		add_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
 		$error = true;
 	}
 	if(!$link->category > 0) {
-		//echo '<br style="clear: both;" />';
-		print_form_submit_error(_("categoría no seleccionada"));
+		add_submit_error(_("categoría no seleccionada"));
 		$error = true;
 	}
 	return $error;
-}
-
-function print_form_submit_error($mess) {
-	static $previous_error=false;
-	
-	if (!$previous_error) {
-		// ex container-wide
-		echo '<div class="genericform">'."\n"; // this div MUST be closed after function call!
-		echo '<h2>'._('ooops!').'</h2>'."\n";
-		$previous_error = true;
-	}
-	echo '<div class="form-error-submit">&nbsp;&nbsp;'._($mess).'</div>'."\n";
 }
 
 function report_duplicated($url) {
 	global $globals;
 
 	if(($found = Link::duplicates($url))) {
-		$dupe = new Link;
-		$dupe->id = $found;
-		$dupe->read();
-		echo '<p class="error"><strong>'._('noticia repetida').'</strong></p> ';
-		echo '<p class="error-text">'._('disculpas').'</p>';
-		$dupe->print_summary();
-		echo '<br style="clear: both;" /><br/>' . "\n";
-		echo '<form class="genericform" action="">';
-		echo '<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; '._('retroceder').'" />';
-		echo '</form>'. "\n";
-		echo '</div>'. "\n";
+		$link = new Link;
+		$link->id = $found;
+		$link->read();
+		Haanga::Load('link/duplicated.html', compact('link'));
 		return true;
 	}
 	return false;
 }
 
+function add_submit_error() {
+	global $errors;
+	if (func_num_args() < 1) return false;
+	$title = func_get_arg(0);
+	if (! isset($errors[$title])) {
+		$errors[$title] = array();
+	}
+	if (func_num_args() < 2) return true;
+	for ($i = 1; $i < func_num_args(); $i++) {
+		array_push($errors[$title], func_get_arg($i));
+	}
+	return true;
+}
 ?>

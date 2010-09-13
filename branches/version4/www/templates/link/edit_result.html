@@ -1,0 +1,22 @@
+<div class="genericform">
+
+{% if not errors %}
+	<div class="form-error-submit">&nbsp;&nbsp;{% trans _("noticia actualizada") %}</div>
+{% else %}
+	{% for e in errors %}
+		<div class="form-error-submit">&nbsp;&nbsp;{{ e }}</div>
+	{% endfor %}
+{% endif %}
+
+
+<div class="formnotice">
+{% exec link.print_summary 'preview' as dummy %}
+</div>
+
+<form class="note" method="GET" action="story.php" >
+<input type="hidden" name="id" value="{{ link.id }}" />
+<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('modificar') %}">&nbsp;&nbsp;
+<input class="button" type="submit" value="{% trans _('ir a la noticia') %}" />
+</form>
+
+</div>
