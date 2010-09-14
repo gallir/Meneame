@@ -1,0 +1,133 @@
+<div id="singlewrap" style="margin: 0 40px;">
+
+
+<div class="genericform" style="margin: 0 50px">
+
+{% if messages %}
+	{% for e in messages %}
+		<div class="form-error-submit">&nbsp;&nbsp;{{ e }}</div>
+	{% endfor %}
+{% endif %}
+
+
+<form  enctype="multipart/form-data" action="{{ form.auth_link }}profile.php" method="post" id="thisform" AUTOCOMPLETE="off">
+<fieldset><legend>
+<span class="sign">{% trans _('opciones de usuario') %} <a href="{%exec  get_user_uri user.username %}">{{ user.username }}</a>: {{ user.level }}</span></legend>
+
+<img class="thumbnail" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" />
+<input type="hidden" name="process" value="1" />
+<input type="hidden" name="user_id" value="{{ user.id }}" />
+<input type="hidden" name="form_hash" value="{{ form.hash }}" />
+{% exec get_form_auth_ip as dummy %}
+
+{% if form.admin_mode %}
+	<input type="hidden" name="login" value="{{ user.username }}" />
+{% endif %}
+
+<p><label>{% trans _('usuario') %}:</label><br/>
+<input type="text" autocomplete="off" name="username" id="username" value="{{ user.username }}" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />
+&nbsp;&nbsp;<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="{% trans _('verificar') %}" onclick="checkfield('username', this.form, this.form.username)"/></span>
+&nbsp;<span id="usernamecheckitvalue"></span>
+</p>
+
+<p><label>{% trans _('nombre real') %}:</label><br/>
+<input type="text" autocomplete="off" name="names" id="names" value="{{ user.names }}" />
+</p>
+
+<p><label>{% trans _('correo electrónico') %}:</label><br/>
+<input type="text" autocomplete="off" name="email" id="email" value="{{ user.email }}" onkeyup="enablebutton(this.form.checkbutton2, null, this)"/>
+&nbsp;&nbsp;<input type="button" class="button" id="checkbutton2" disabled="disabled" value="{% trans _('verificar') %}" onclick="checkfield('email', this.form, this.form.email)"/>
+&nbsp;<span id="emailcheckitvalue"></span>
+</p>
+
+<p><label>{% trans _('página web') %}:</label><br/>
+<input type="text" autocomplete="off" name="url" id="url" value="{{ user.url }}" />
+</p>
+
+<p><label>{% trans _('mensajero instantáneo público, invisible para los demás') %}:</label><br/>
+<span class="note">{% trans _('necesario si te conectarás vía Jabber/Google Talk') %}</span><br/>
+<input type="text" autocomplete="off" name="public_info" id="public_info" value="{{ user.public_info }}" />
+</p>
+
+{% if user.id  == current_user.user_id %}
+	<p><label>{% trans _('teléfono móvil') %}:</label><br/>
+	<span class="note">{% trans _('sólo necesario si enviarás notas al nótame vía SMS') %}</span><br/>
+	<span class="note">{% trans _('pon el número completo, con código de país: +34123456789') %}</span><br/>
+	<input type="text" autocomplete="off" name="phone" id="phone" value="{{ user.phone }}" />
+	</p>
+{% endif %}
+
+
+
+{% if globals.external_user_ads %}
+	<p><label for="adcode">{% trans _('codigo AdSense') %}:</label><br/>
+	<span class="note">{% trans _('tu código de usuario de AdSense, del tipo pub-123456789') %}</span><br/>
+	<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="20" value="{{ user.adcode }}" /><br />
+	<span class="note">{% trans _('canal AdSense (opcional), del tipo 1234567890') %}</span><br/>
+	<input type="text" autocomplete="off" name="adchannel" id="adchannel" maxlength="12" value="{{ user.adchannel }}" />
+	</p>
+{% endif %}
+
+
+{% if form.avatars_enabled %}
+	<input type="hidden" name="MAX_FILE_SIZE" value="400000" />
+	<p><label>{% trans _('avatar') %}:</label><br/>
+	<span class="note">{% trans _('imagen cuadrada de no más de 400 KB, sin transparencias') %}</span><br/>
+	<input type="file" class="button" autocomplete="off" name="image" />
+	{% if user.avatar > 0 %}
+		&nbsp;&nbsp;&nbsp;{% trans _('Eliminar avatar') %}: <input type="checkbox" name="avatar_delete" value="1"/>
+	{% endif %}
+	</p>
+{% endif %}
+
+<fieldset><legend>{% trans _('opciones de visualización') %}</legend>
+<p><label>{% trans _('mostrar todos los comentarios') %}:&nbsp;
+<input  name="comment_pref" type="checkbox" value="1" {% if (user.comment_pref & 1) > 0 %} checked="true"{% endif %}/>
+</label></p>
+
+</fieldset>
+
+
+
+<p>{% trans _('introduce la nueva clave para cambiarla -no se cambiará si la dejas en blanco-:') %}</p>
+
+<p><label for="password">{% trans _('clave') %}:</label><br />
+<input type="password" autocomplete="off" id="password" name="password" size="25" onkeyup="return securePasswordCheck(this.form.password);"/></p>
+
+<p><label for="verify">{% trans _('repite la clave') %}: </label><br />
+<input type="password" autocomplete="off" id="verify" name="password2" size="25" onkeyup="checkEqualFields(this.form.password2, this.form.password)"/></p>
+
+{% if form.admin_mode %}
+	<p><label for="verify">{% trans _('estado') %}: </label><br />
+	<select name="user_level">
+	{% for level in form.user_levels %}
+		<option value="{{ level }}" {% if user.level == level %} selected="selected" {% endif %}>{{ level }}</option>
+	{% endfor %}
+	</select>
+
+	<p><label for="karma">{% trans _('karma') %}:</label><br/>
+	<input type="text" autocomplete="off" name="karma" id="karma" value="{{ user.karma }}" />
+	</p>
+
+{% endif %}
+
+<p><input type="submit" name="save_profile" value="{% trans _('actualizar') %}" class="button" /></p>
+</fieldset>
+
+{# Disable the account #}
+{% if user.id  == current_user.user_id %}
+	<br/><fieldset><legend>{% trans _('deshabilitar cuenta') %}</legend>
+	<p>{% trans _('¡atención! la cuenta será deshabilitada.') %}</p>
+	<p class="note">{% trans _('se eliminarán automáticamente los datos personales.') %}<br/>
+	{% trans _('las notas serán eliminadas, los envíos y comentarios NO se borrarán.') %}</p>
+	<p><label>{% trans _('sí, quiero deshabilitarla') %}: <input  name="disable" type="checkbox" value="1"/>
+	</label></p>
+	<p><input type="submit" name="disabledme" value="{% trans _('deshabilitar cuenta') %}" class="button" /></p>
+	</fieldset>
+{% endif %}
+
+</form></div>
+
+
+</div> {# "singlewrap" #}
+
