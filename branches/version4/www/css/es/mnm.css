@@ -124,9 +124,9 @@ a:visited {
 color: #551a8b;
 }
 
-input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly] 
-{ 
-color: #aaa; 
+input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly]
+{
+color: #aaa;
 }
 
 /* Rounded boxes, CSS3 and temporary non-standar moz and webkit properties */
@@ -255,7 +255,7 @@ margin-bottom: 3px;
 
 #naviwrap li:hover{
 background-color: #ff6400;
-}	
+}
 
 #naviwrap li a{
 text-decoration: none;
@@ -507,7 +507,7 @@ padding-bottom:6px;
 background: #FEF3EC url(../../img/common/sidebar-header01.png) repeat-x;
 border:1px solid #FFC07E;
 border-radius: 3px;
--moz-border-radius: 3px; 
+-moz-border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
@@ -546,9 +546,9 @@ border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
 margin:0px 0px 10px 10px;
-box-shadow: 0 0 5px rgba(0,0,0,0.5);    
--moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);    
--webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5); 
+box-shadow: 0 0 5px rgba(0,0,0,0.5);
+-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
 .sidebox .votes {
@@ -564,9 +564,9 @@ padding-top: 6px;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
 border: #ff6400 1px solid;
-border-radius: 3px; 
--moz-border-radius: 3px; 
--webkit-border-radius: 3px;  
+border-radius: 3px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
 }
 
 .sidebox .votes.queued {
@@ -778,9 +778,9 @@ margin: 0 4px 2px 4px;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
--moz-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
--webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5); 
+box-shadow: 0 0 7px rgba(0,0,0,0.5);
+-moz-box-shadow: 0 0 7px rgba(0,0,0,0.5);
+-webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);
 }
 
 .news-submitted img {
@@ -796,9 +796,9 @@ border: none;
 }
 
 .shadowed, .avatar, .news-submitted img {
-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
--moz-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
--webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4); 
+box-shadow: 0 0 3px rgba(0,0,0,0.4);
+-moz-box-shadow: 0 0 3px rgba(0,0,0,0.4);
+-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 
 .tt {
@@ -947,7 +947,7 @@ background: url(../../img/common/error.png) 0 50% no-repeat;
 .form-error-submit {
 padding: 10px;
 margin: 15px 0 0 0;
-border: 1px dotted;
+border: 1px solid;
 background: #FFE2C5;
 border-color: #FF6400;
 }
@@ -1797,9 +1797,9 @@ border-color: #e2d3b0;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
--moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
--webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5); 
+box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 }
 
 .mini-sneaker-item {

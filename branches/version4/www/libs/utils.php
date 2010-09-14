@@ -33,7 +33,7 @@ function clean_input_string($string) {
 }
 
 function get_hex_color($color, $prefix = '') {
-	return $prefix . substr(preg_replace('/[^a-f\d]/i', '', $color), 0, 6);	
+	return $prefix . substr(preg_replace('/[^a-f\d]/i', '', $color), 0, 6);
 }
 
 function get_negative_vote($value) {
@@ -147,7 +147,7 @@ function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) 
 function enable_tags_callback($matches) {
 	global $globals;
 	static $open_tags = array();
-	
+
 	if (preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
 		if ($matches[1] == '/') {
 			if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] != $matches[2]) {
@@ -232,7 +232,7 @@ function add_tags_callback($matches) {
 		case '*':
 			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
 		case '-':
-			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';		
+			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
 	}
 	return $matches[1].$matches[2];
 }
@@ -277,7 +277,7 @@ function text_to_html_callback($matches) {
 			}
 		case 'h':
 			return $matches[1].preg_replace('/(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r]*)([^ :.\t,\n\r\(\"\'\]\?])(.*)/u', '<a href="$1$2$3$4$5" title="$1$2$3$4$5" rel="nofollow">$3$5</a>$6', $matches[2]);
-		
+
 	}
 	return $matches[1].$matches[2];
 }
@@ -372,7 +372,6 @@ function get_form_auth_ip() {
 	}
 	echo '<input type="hidden" name="userip" value="'.$ip.'"/>';
 	echo '<input type="hidden" name="useripcontrol" value="'.$control.'"/>';
-	echo "\n";
 }
 
 function check_form_auth_ip() {
@@ -446,7 +445,7 @@ function create_cache_dir_chain($base, $chain) {
 }
 
 function get_avatar_url($user, $avatar, $size) {
-	global $globals, $db; 
+	global $globals, $db;
 
 	// If it does not get avatar status, check the database
 	if ($user > 0 && $avatar < 0) {
@@ -458,7 +457,7 @@ function get_avatar_url($user, $avatar, $size) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
 			$file = $globals['cache_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
-			// Don't check every time, but 1/10, decrease VM pressure 
+			// Don't check every time, but 1/10, decrease VM pressure
 			// Disabled for the moment, it fails just too much for size 40
 			//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 			$file_path = mnmpath.'/'.$file;
@@ -472,7 +471,7 @@ function get_avatar_url($user, $avatar, $size) {
 				return $globals['base_static'] . $file;
 			}
 		}
-	} 
+	}
 	return get_no_avatar_url($size);
 }
 
@@ -484,7 +483,7 @@ function get_no_avatar_url($size) {
 function utf8_substr($str,$start)
 {
 	preg_match_all("/./su", $str, $ar);
- 
+
 	if(func_num_args() >= 3) {
 		$end = func_get_arg(2);
 		return join("",array_slice($ar[0],$start,$end));
@@ -598,7 +597,7 @@ function print_simpleformat_buttons($id) {
 
 	// To avoid too many bolds and italics from new users and trolls
 	if ($current_user->user_karma < 6.001) return;
-	
+
 	Haanga::Load('simpleformat_buttons.html', compact('id'));
 }
 
@@ -614,11 +613,11 @@ function put_smileys_callback($matches) {
 	global $globals;
 	static $translations = false;
 	if (!$translations) {
-		$translations = array(	
-			'ffu' => ' <img src="'.$globals['base_static'].'img/smileys/fu.gif" alt=":ffu:" title=":ffu:" width="19" height="15" /> ', 
+		$translations = array(
+			'ffu' => ' <img src="'.$globals['base_static'].'img/smileys/fu.gif" alt=":ffu:" title=":ffu:" width="19" height="15" /> ',
 			'palm' => ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" /> ',
 			'goatse' => ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title="goat-ish" width="15" height="15" /> ',
-			
+
 			'wow' => ' <img src="'.$globals['base_static'].'img/smileys/wow.gif" alt="o_o" title="o_o :wow:" width="15" height="15" /> ',
 			'shame' =>' <img src="'.$globals['base_static'].'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:" width="15" height="15" /> ',
 			'grin' =>' <img src="'.$globals['base_static'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" /> ',
@@ -693,11 +692,11 @@ function meta_get_current() {
 	// Authenticated users
 	if ($current_user->user_id > 0) {
 		$categories = $db->get_col("SELECT SQL_CACHE pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
-		if ($categories) { 
+		if ($categories) {
 			$current_user->has_personal = true;
 			$globals['meta_skip'] = '?meta=_all';
 			if (! $globals['meta']) {
-				$globals['meta_categories'] = implode(',', $categories); 
+				$globals['meta_categories'] = implode(',', $categories);
 				$globals['meta']= '_personal';
 			}
 		} else {
@@ -735,8 +734,8 @@ function meta_get_current() {
 			$globals['meta_current'] = 0;
 			$globals['meta_current_name'] = '';
 		}
-	} 
-	
+	}
+
 	if ($globals['meta_current'] > 0) {
 		$globals['meta_categories'] = meta_get_categories_list($globals['meta_current']);
 		if (!$globals['meta_categories']) {
@@ -757,7 +756,7 @@ function meta_teaser($current, $default) {
 	global $globals;
 	if ($current == $default)
 		return META_YES;
-	else 
+	else
 		return META_NO;
 }
 
@@ -904,7 +903,7 @@ function get_url($url, $referer = false, $max=200000) {
 	$url = preg_replace('/ /', '%20', $url);
 	curl_setopt($session, CURLOPT_URL, $url);
 	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
-	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer); 
+	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer);
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_HEADER , true );
@@ -913,7 +912,7 @@ function get_url($url, $referer = false, $max=200000) {
 	curl_setopt($session, CURLOPT_TIMEOUT, 25);
 	curl_setopt($session, CURLOPT_FAILONERROR, true);
 	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2); 
+	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2);
 	curl_setopt($session, CURLOPT_COOKIESESSION, true);
 	curl_setopt($session, CURLOPT_COOKIEFILE, "/dev/null");
 	curl_setopt($session, CURLOPT_COOKIEJAR, "/dev/null");
@@ -1016,7 +1015,7 @@ function clear_unicode_spaces($input){
 	"\xe2\x81\x9f", // 'MEDIUM MATHEMATICAL SPACE' (U+205F)
 	"\xe3\x80\x80", // 'IDEOGRAPHIC SPACE' (U+3000)
 	);
-	
+
 	return str_replace($spaces, ' ', $input);
 }
 
