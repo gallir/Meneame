@@ -233,7 +233,7 @@ function save_profile() {
 			$errors = 1;
 		} else {
 			$user->pass=md5(trim($_POST['password']));
-			$messages .= '<p  class="form-error">'._('La clave se ha cambiado');
+			array_push($messages, _('La clave se ha cambiado'));
 			$pass_changed = true;
 		}
 	}
