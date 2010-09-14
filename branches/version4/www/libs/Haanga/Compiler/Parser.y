@@ -65,8 +65,9 @@
 %nonassoc T_EQ T_NE.
 %nonassoc T_GT T_GE T_LT T_LE.
 %nonassoc T_IN.
-%left T_PLUS T_MINUS.
+%left T_PLUS T_MINUS T_CONCAT.
 %left T_TIMES T_DIV T_MOD.
+%left T_PIPE T_BITWISE.
 
 %syntax_error {
     $expect = array();
@@ -163,6 +164,7 @@ alias(A) ::= T_WITH varname(B) T_AS varname(C) T_TAG_CLOSE body(X) T_TAG_OPEN T_
 }
 
 /* Simple statements (don't require a end_tag or a body ) */
+stmt(A) ::= T_SET varname(C) T_ASSIGN expr(X). { A = array('operation' => 'set', 'var' => C,'expr' => X); }
 stmt(A) ::= regroup(B). { A = B; }
 stmt ::= T_LOAD string(B). {
     if (!is_file(B) || !Haanga_Compiler::getOption('enable_load')) {
@@ -353,16 +355,26 @@ string(A)    ::= T_INTL T_STRING(B) T_RPARENT. { A = B; }
 expr(A) ::= T_NOT expr(B). { A = array('op_expr' => 'not', B); }
 expr(A) ::= expr(B) T_AND(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
 expr(A) ::= expr(B) T_OR(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
-expr(A) ::= expr(B) T_PLUS|T_MINUS(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
+expr(A) ::= expr(B) T_PLUS|T_MINUS|T_CONCAT(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
 expr(A) ::= expr(B) T_EQ|T_NE|T_GT|T_GE|T_LT|T_LE|T_IN(X)  expr(C).  { A = array('op_expr' => trim(@X), B, C); }
 expr(A) ::= expr(B) T_TIMES|T_DIV|T_MOD(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
+expr(A) ::= expr(B) T_BITWISE|T_PIPE(X)  expr(C).  { A = array('op_expr' => 'expr', array('op_expr' => @X, B, C)); }
 expr(A) ::= T_LPARENT expr(B) T_RPARENT. { A = array('op_expr' => 'expr', B); }
 expr(A) ::= fvar_or_string(B). { A = B; }
 
 /* Variable name */
-varname(A) ::= varname(B) T_OBJ T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { if (!is_array(B)) { A = array(B); } else { A = B; }  A[]=array('object' => C);}
-varname(A) ::= varname(B) T_DOT T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { if (!is_array(B)) { A = array(B); } else { A = B; } A[] = array('object' => C);}
-varname(A) ::= varname(B) T_BRACKETS_OPEN var_or_string(C) T_BRACKETS_CLOSE. { if (!is_array(B)) { A = array(B); } else { A = B; }  A[]=C;}
+varname(A) ::= varname(B) T_OBJ T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { 
+    if (!is_array(B)) { A = array(B); } 
+    else { A = B; }  A[]=array('object' => C);
+}
+varname(A) ::= varname(B) T_DOT T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). {
+    if (!is_array(B)) { A = array(B); }
+    else { A = B; } A[] = array('object' => C);
+}
+varname(A) ::= varname(B) T_BRACKETS_OPEN var_or_string(C) T_BRACKETS_CLOSE. {
+    if (!is_array(B)) { A = array(B); } 
+    else { A = B; }  A[]=C;
+}
 varname(A) ::= T_ALPHA(B). { A = B; } 
 /* T_BLOCK|T_CUSTOM|T_CUSTOM_BLOCK are also T_ALPHA */
 varname(A) ::= T_BLOCK|T_CUSTOM_TAG|T_CUSTOM_BLOCK(B). { A = B; } 

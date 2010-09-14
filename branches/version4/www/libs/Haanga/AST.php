@@ -394,6 +394,22 @@ class Haanga_AST
         $last['array'][] = $val;
     }
 
+    function decl_raw($name, $value)
+    {
+        if (is_string($name)) {
+            $name = hvar($name);
+        }
+        $this->getValue($name, $name);
+        $array = array('op' => 'declare', 'name' => $name['var']);
+        foreach (func_get_args() as $id => $value) {
+            if ($id != 0) {
+                $array[] = $value;
+            }
+        }
+        $this->stack[] = $array;
+        return $this;
+    }
+
     function decl($name, $value)
     {
         if (is_string($name)) {

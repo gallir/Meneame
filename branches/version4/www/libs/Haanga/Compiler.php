@@ -883,8 +883,8 @@ class Haanga_Compiler
         }
 
         $variable = $this->get_context($variable);
-        if (isset($variable)) {
-            return !is_array($variable);
+        if (is_array($variable) || is_object($variable)) {
+            return is_object($variable);
         }
 
         return $default===NULL ? self::$dot_as_object : $default;
@@ -1033,6 +1033,15 @@ class Haanga_Compiler
                 $this->set_context($details['variable'], current($var));
             }
 
+            /* Check if the array to iterate is an object */
+            $var = &$details['array'][0];
+            if (is_string($var) && $this->var_is_object(array($var), FALSE)) {
+                /* It is an object, call to get_object_vars */
+                $body->decl($var.'_arr', hexec('get_object_vars', hvar($var)));
+                $var .= '_arr';
+            }
+            unset($var);
+            /* variables */
             $array = $this->get_filtered_var($details['array'], $varname);
 
             /* Loop body */
@@ -1142,6 +1151,15 @@ class Haanga_Compiler
         }
     }
     // }}}
+
+    function generate_op_set($details, &$body)
+    {
+        $var = $this->generate_variable_name($details['var']);
+        $this->check_expr($details['expr']);
+        $body->decl_raw($var, $details['expr']);
+        $body->decl(hvar('vars', $var['var']), $var);
+    }
+
 
     // ifchanged [<var1> <var2] {{{
     protected function generate_op_ifchanged($details, &$body)

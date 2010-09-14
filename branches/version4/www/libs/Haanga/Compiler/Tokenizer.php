@@ -73,6 +73,7 @@ class Haanga_Compiler_Tokenizer
         'load'          => HG_Parser::T_LOAD,
         'not'           => HG_Parser::T_NOT,
         'regroup'       => HG_Parser::T_REGROUP,
+        'set'           => HG_Parser::T_SET,
         'spacefull'     => HG_Parser::T_SPACEFULL,
         'step'          => HG_Parser::T_STEP,
         'with'          => HG_Parser::T_WITH,
@@ -81,6 +82,7 @@ class Haanga_Compiler_Tokenizer
     /* common operations */
     static $operators_single = array(
         '!'     => HG_Parser::T_NOT,
+        '&'     => HG_Parser::T_BITWISE,
         '%'     => HG_Parser::T_MOD,
         '('     => HG_Parser::T_LPARENT,
         ')'     => HG_Parser::T_RPARENT,
@@ -91,6 +93,7 @@ class Haanga_Compiler_Tokenizer
         '.'     => HG_Parser::T_DOT,
         '/'     => HG_Parser::T_DIV, 
         ':'     => HG_Parser::T_COLON, 
+        '='     => HG_Parser::T_ASSIGN,
         '<'     => HG_Parser::T_LT,
         '>'     => HG_Parser::T_GT,
         '['     => HG_Parser::T_BRACKETS_OPEN,
@@ -104,8 +107,10 @@ class Haanga_Compiler_Tokenizer
         '&&'    => HG_Parser::T_AND,
         '->'    => HG_Parser::T_OBJ,
         '<='    => HG_Parser::T_LE,
+        '<<'    => HG_Parser::T_BITWISE,
         '=='    => HG_Parser::T_EQ,
         '>='    => HG_Parser::T_GE,
+        '>>'    => HG_Parser::T_BITWISE,
         '||'    => HG_Parser::T_OR,
         '..'    => HG_Parser::T_DOTDOT,
     );
@@ -162,6 +167,9 @@ class Haanga_Compiler_Tokenizer
         $this->token = NULL;
 
         if ($this->length == $this->N) {
+            if ($this->status != self::IN_NONE && $this->status != self::IN_HTML) {
+                $this->Error("Unexpected end");
+            }
             return FALSE;
         }
 
@@ -334,9 +342,28 @@ class Haanga_Compiler_Tokenizer
                 break 2;
             /* }}} */
 
-            case "\n":
-                $this->line++;
-            case " ": case "\t": case "\r": case "\f":
+            case "\n": case " ": case "\t": case "\r": case "\f":
+                for (; is_null($this->token) && $i < $this->length; ++$i) {
+                    switch ($data[$i]) {
+                    case "\n":
+                        $this->line++;
+                    case " ": case "\t": case "\r": case "\f":
+                        break;
+                    case '.':
+                        if ($data[$i+1] != '.') {
+                            $this->token = HG_Parser::T_CONCAT;
+                            $this->value = '.';
+                            $i++;
+                            return;
+                        }
+                    default:
+                        /* break main loop */
+                        /* and decrease because last processed byte */
+                        /* wasn't a dot (T_CONCAT)                  */
+                        --$i;  
+                        break 2; 
+                    }
+                }
                 break; /* whitespaces are ignored */
             default: 
                 if (!$this->getTag() && !$this->getOperator()) {
