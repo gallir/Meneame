@@ -6,13 +6,20 @@
 *
 *****************************/
 ?>
+
+function redirect(url)
+{
+	document.location=url;
+	return false;
+}
+
 function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
 	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
 	url = url + "?" + content;
 	disable_vote_link(id, -1, "...", '');
-	$.getJSON(url,  
+	$.getJSON(url,
 		 function(data) {
 				parseLinkAnswer(id, data);
 		}
@@ -25,7 +32,7 @@ function menealo_comment(user, id, value)
 	var url = base_url + "backend/menealo_comment.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
 	url = url + "?" + content;
-	$.getJSON(url, 
+	$.getJSON(url,
 		 function(data) {
 			if (data.error) {
 				alert("<? echo _('Error:') ?> "+data.error);
@@ -208,7 +215,7 @@ function reportAjaxStats(category, action) {
 }
 
 function bindTogglePlusMinus(img_id, link_id, container_id) {
-	$(document).ready(function (){ 
+	$(document).ready(function (){
 		$('#'+link_id).bind('click',
 			function() {
 				if ($('#'+img_id).attr("src") == plus){
@@ -224,7 +231,7 @@ function bindTogglePlusMinus(img_id, link_id, container_id) {
 }
 
 
-/*/  
+/*/
  *  JSOC - An object Cache framework for JavaScript
  *  version 0.12.0 [beta]
  * http://dev.webframeworks.com/dist/JSOC-license.txt

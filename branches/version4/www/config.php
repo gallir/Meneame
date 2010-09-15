@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -64,7 +64,7 @@ $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = 'legal.php';
 
-$globals['min_decay'] = 0.25; 
+$globals['min_decay'] = 0.25;
 $globals['karma_start_decay'] = 10; // In hours, when a link start to decrease its karma
 $globals['karma_decay'] = 54; // In hours, when it reach its minimum
 //$globals['news_meta'] = 102; // The code of the "last news" meta category, other has a longer no decreasing period
@@ -92,7 +92,7 @@ $globals['base_user_url'] = 'user/';
 $globals['base_sneakme_url'] = 'notame/';
 
 // Memcache, set hostname if enabled
-//$globals['memcache_host'] = 'localhost'; 
+//$globals['memcache_host'] = 'localhost';
 $globals['memcache_port'] = 11211; // optional
 $globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 
@@ -138,7 +138,7 @@ $globals['depublish_karma_divisor'] = 20; //karma is divided by this when depubl
 
 
 $globals['depublish_negative_karma'] = 6.0; //minimun karma of the vote to get it counted by discard.php
-$globals['depublish_positive_karma'] = 7.4; //minimun karma of the vote to get it counted by discard.php 
+$globals['depublish_positive_karma'] = 7.4; //minimun karma of the vote to get it counted by discard.php
 
 
 
@@ -176,7 +176,7 @@ $globals['min_karma_for_comment_votes'] = 5.5;
 
 
 $globals['new_user_links_limit'] = 1; //links allowed to submit in interval for new users
-$globals['new_user_links_interval'] = 3600; 
+$globals['new_user_links_interval'] = 3600;
 $globals['user_links_limit'] = 5;
 $globals['user_links_interval'] = 7200;
 $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
