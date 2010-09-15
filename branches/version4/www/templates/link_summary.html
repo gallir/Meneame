@@ -58,10 +58,11 @@
 	{% if globals.ads %}<!-- google_ad_section_start -->{% endif %}
 
 	<h1>
-		<a  href="{{ self.url|escape }}"
-
+		<a  
 			{% if globals.click_counter %}
-				onclick="return redirect('{{ globals.base_url }}backend/go.php?id={{ self.id }}')"
+				href="{{ globals.base_url }}backend/go.php?id={{ self.id }}"
+			{% else %}
+				href="{{ self.url|escape }}"
 			{% endif %}
 			{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
 		</a>

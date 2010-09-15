@@ -41,6 +41,8 @@ if($_SERVER['HTTP_HOST']) {
 	// Check bots
 	if (preg_match('/(bot|slurp|wget|libwww|\Wjava|\Wphp|wordpress)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
 		$globals['bot'] = true;
+	} else {
+		$globals['bot'] = false;
 	}
 
 	// Check mobile/TV versions

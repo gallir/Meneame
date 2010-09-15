@@ -15,7 +15,9 @@ if ($id > 0) {
 			header('HTTP/1.1 301 Moved');
 			header('Cache-Control: no-cache');
 			header('Location: ' . $url);
-			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			if (!$globals['bot']) {
+				$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			}
 			exit(0);
 		}
 }
