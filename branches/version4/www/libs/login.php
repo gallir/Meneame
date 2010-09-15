@@ -18,7 +18,7 @@ class UserAuth {
 
 		$this->user_id = 0;
 
-		if($_COOKIE['mnm_key'] && $_COOKIE['mnm_user']
+		if(isset($_COOKIE['mnm_key']) && isset($_COOKIE['mnm_user'])
 					&& ($this->mnm_user = explode(":", $_COOKIE['mnm_user']))
 					&& $this->mnm_user[0] > 0
 					) {

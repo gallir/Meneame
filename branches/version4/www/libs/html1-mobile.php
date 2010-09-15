@@ -51,6 +51,8 @@ function do_header($title, $id='home') {
 	check_auth_page();
 	header('Content-type: text/html; charset=utf-8');
 	http_cache();
+	$globals['security_key'] = get_security_key();
+	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
     $vars = compact('title', 'id');
 
@@ -60,7 +62,6 @@ function do_header($title, $id='home') {
 function do_footer($credits = true) {
 	global $globals;
 
-    $globals['security_key'] = get_security_key();
     $vars = compact('credits');
     return Haanga::Load('mobile/footer.html', $vars);
 }
