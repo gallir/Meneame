@@ -444,7 +444,7 @@ class Link {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($result = $db->get_row("SELECT link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
+		if(($result = $db->get_row("SELECT link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}

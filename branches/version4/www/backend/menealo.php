@@ -71,6 +71,10 @@ if ($current_user->user_id > 0) $freq = 3;
 else $freq = 2;
 
 if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if published
+elseif ($globals['click_counter'] && $link->total_votes > $link->get_clicks()) {
+	// Check there is more clicks than votes to avoid "cowboy votes"
+	error(_('no puede tener más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');
+}
 
 if ($votes_freq > $freq) {
 	if ($current_user->user_id > 0 && $current_user->user_karma > 4 && $link->status != 'published') {
