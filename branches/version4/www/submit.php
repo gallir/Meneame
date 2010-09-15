@@ -486,29 +486,7 @@ function do_submit3() {
 
 	// Check this one was not already queued
 	if($link->votes == 0 && $link->status != 'queued') {
-		$db->transaction();
-		$link->status='queued';
-		$link->sent_date = $link->date=time();
-		$link->get_uri();
-		$link->store();
-		$link->insert_vote($current_user->user_karma);
-		$db->commit();
-
-		// Add the new link log/event
-		require_once(mnminclude.'log.php');
-		log_conditional_insert('link_new', $link->id, $link->author);
-
-		$db->query("delete from links where link_author = $link->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
-		if(!empty($_POST['trackback'])) {
-			$trackres = new Trackback;
-			$trackres->url=clean_input_url($_POST['trackback']);
-			$trackres->link_id=$link->id;
-			$trackres->link=$link->url;
-			$trackres->author=$link->author;
-			$trackres->status = 'pendent';
-			$trackres->store();
-		}
-		fork("backend/send_pingbacks.php?id=$link->id");
+		$link->enqueue();
 	}
 
 	header('Location: '. $link->get_permalink());

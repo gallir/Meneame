@@ -44,7 +44,7 @@ class Link {
 	var $thumb_status = 'unknown';
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, meta.category_uri as meta_uri, favorite_link_id as favorite FROM links LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id) LEFT JOIN categories as cat on (cat.category_id = links.link_category) LEFT JOIN categories as meta on (meta.category_id = cat.category_parent), users "; 
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, meta.category_uri as meta_uri, favorite_link_id as favorite FROM links LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id) LEFT JOIN categories as cat on (cat.category_id = links.link_category) LEFT JOIN categories as meta on (meta.category_id = cat.category_parent), users ";
 
 	static function from_db($id, $key = 'id') {
 		global $db, $current_user;
@@ -267,7 +267,7 @@ class Link {
 	function trackback() {
 		// Now detect trackbacks
 		if (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
-			preg_match('/trackback:ping +rdf:resource="([^>]+)"/i', $this->html, $matches) || 
+			preg_match('/trackback:ping +rdf:resource="([^>]+)"/i', $this->html, $matches) ||
 			preg_match('/<trackback:ping>([^<>]+)/i', $this->html, $matches)) {
 			$trackback=trim($matches[1]);
 		} elseif (preg_match('/<a[^>]+rel="trackback"[^>]*>/i', $this->html, $matches)) {
@@ -307,6 +307,37 @@ class Link {
 		}
 		return false;
 	}
+
+	function enqueue() {
+		global $db, $globals, $current_user;
+		// Check this one was not already queued
+		if($this->votes == 0 && $this->author == $current_user->user_id && $this->status != 'queued') {
+			$db->transaction();
+			$this->status='queued';
+			$this->sent_date = $this->date=time();
+			$this->get_uri();
+			$this->store();
+			$this->insert_vote($current_user->user_karma);
+			$db->commit();
+
+			// Add the new link log/event
+			require_once(mnminclude.'log.php');
+			log_conditional_insert('link_new', $this->id, $this->author);
+
+			$db->query("delete from links where link_author = $this->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
+			if(!empty($_POST['trackback'])) {
+				$trackres = new Trackback;
+				$trackres->url=clean_input_url($_POST['trackback']);
+				$trackres->link_id=$this->id;
+				$trackres->link=$this->url;
+				$trackres->author=$this->author;
+				$trackres->status = 'pendent';
+				$trackres->store();
+			}
+			fork("backend/send_pingbacks.php?id=$this->id");
+		}
+	}
+
 
 	function has_rss() {
 		return preg_match('/<link[^>]+(text\/xml|application\/rss\+xml|application\/atom\+xml)[^>]+>/i', $this->html);
@@ -386,8 +417,8 @@ class Link {
 			log_conditional_insert('link_new', $this->id, $this->author);
 		}
 
-		$this->update_votes(); 
-		$this->update_comments(); 
+		$this->update_votes();
+		$this->update_comments();
 	}
 
 	function update_votes() {
@@ -397,7 +428,7 @@ class Link {
 
 		$db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
 	}
-	
+
 	function read_basic($key='id') {
 		global $db, $current_user;
 		switch ($key)  {
@@ -448,8 +479,8 @@ class Link {
 		global $current_user, $current_user, $globals, $db;
 
 		if(!$this->read) return;
-		
-		
+
+
 		if ($this->is_votable()) {
 			$this->voted = $this->vote_exists($current_user->user_id);
 			if (!$this->voted) $this->md5 = md5($current_user->user_id.$this->id.$this->randkey.$globals['user_ip']);
@@ -457,8 +488,7 @@ class Link {
 
 		$this->show_tags = $show_tags;
 		$this->permalink	 = $this->get_permalink();
-		$this->show_shakebox = $type != 'preview' && $this->title && $this->content 
-				&& ($this->votes > 0 || $current_user->user_id == $this->author);
+		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning   = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable  = $this->is_editable();
 		$this->url_str	   = htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url)));
@@ -467,7 +497,7 @@ class Link {
 		$this->thumb_url    = $this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
-				$this->negatives_allowed($globals['link_id'] > 0) && 
+				$this->negatives_allowed($globals['link_id'] > 0) &&
 				$type != 'preview';
 
 
@@ -493,8 +523,8 @@ class Link {
 		}
 
 		$this->get_box_class();
-		
-		if ($this->do_inline_friend_votes) 
+
+		if ($this->do_inline_friend_votes)
 			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
 
 		$vars = compact('type');
@@ -549,9 +579,9 @@ class Link {
 
 	function vote_exists($user) {
 		$vote = new Vote('links', $this->id, $user);
-		return $vote->exists(false);	
+		return $vote->exists(false);
 	}
-	
+
 	function votes($user) {
 		$vote = new Vote('links', $this->id, $user);
 		return $vote->count();
@@ -565,14 +595,14 @@ class Link {
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
-				if ($current_user->user_id != $this->author && 
+				if ($current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
 				} else {
 					$karma_value = round(-$current_user->user_karma);
 				}
 			} else {
-				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author && 
+				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
 				} else {
@@ -633,15 +663,15 @@ class Link {
 		global $current_user, $db, $globals;
 
 		if($current_user->user_id) {
-			if(($this->author == $current_user->user_id 
-					&& $this->status == 'queued'
+			if(($this->author == $current_user->user_id
+					&& ($this->status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
 					&& $globals['now'] - $this->sent_date < 1800)
-			|| ($this->author != $current_user->user_id 
-					&& $current_user->special 
+			|| ($this->author != $current_user->user_id
+					&& $current_user->special
 					&& $this->status == 'queued'
 					&& $globals['now'] - $this->sent_date < 10400)
-			|| ($this->author != $current_user->user_id 
-					&& $current_user->user_level == 'blogger' 
+			|| ($this->author != $current_user->user_id
+					&& $current_user->user_level == 'blogger'
 					&& $globals['now'] - $this->date < 3600)
 			|| $current_user->admin) {
 				return true;
@@ -653,12 +683,12 @@ class Link {
 	function is_map_editable() {
 		global $current_user, $db, $globals;
 
-		if($current_user->user_id ==  0) return false;
-		if( ($this->author == $current_user->user_id 
-				&& $current_user->user_level == 'normal' 
-				&& $globals['now'] - $this->sent_date < 9800) 
-			|| ($current_user->special 
-				&& $globals['now'] - $this->sent_date < 14400) 
+		if($current_user->user_id ==  0 || $this->votes < 1) return false;
+		if( ($this->author == $current_user->user_id
+				&& $current_user->user_level == 'normal'
+				&& $globals['now'] - $this->sent_date < 9800)
+			|| ($current_user->special
+				&& $globals['now'] - $this->sent_date < 14400)
 			|| $current_user->admin) {
 				return true;
 			}
@@ -668,9 +698,9 @@ class Link {
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' || 
+		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' ||
 				// Close the votes after x hours if the user disabled her account
-				($this->user_level == 'autodisabled' && $this->date < $globals['now'] - 3600*6) || 
+				($this->user_level == 'autodisabled' && $this->date < $globals['now'] - 3600*6) ||
 				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
 			$this->votes_enabled = false;
 		} else {
@@ -692,10 +722,10 @@ class Link {
 				$this->votes > 0 &&
 				$this->status != 'abuse' && $this->status != 'autodiscard' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] &&
-				($this->status != 'published' || 
+				($this->status != 'published' ||
 				// Allows to vote negative to published with high ratio of negatives
 				// or a link recently published
-					$this->status == 'published' && ($this->date > $globals['now'] - $period || $this->negatives > $this->votes/10) 
+					$this->status == 'published' && ($this->date > $globals['now'] - $period || $this->negatives > $this->votes/10)
 					|| $this->warned);
 	}
 
@@ -714,7 +744,7 @@ class Link {
 		}
 		$this->uri = $new_uri;
 	}
-	
+
 	function get_short_permalink() {
 		global $globals;
 
@@ -840,7 +870,7 @@ class Link {
 					//echo "$vote->vote_value -> ";
 					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
 					//echo "$vote->vote_value ($this->author -> $vote->user_id)\n";
-				} 
+				}
 				if ($vote->vote_value >=  $globals['users_karma_avg']) {
 					$karma_pos_user_high += $vote->vote_value;
 					$vhigh++;
@@ -882,18 +912,18 @@ class Link {
 
 		// Small quadratic punishment for links having too many negatives
 		if ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user) && abs($karma_neg_user)/$karma_pos_user > 0.075) {
-			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.5); 
+			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.5);
 			$karma_neg_user = max(-($karma_pos_user+$karma_pos_ano), $karma_neg_user * pow((1+$r), 2));
 		}
-	
+
 		// Get met categories coefficientes that will be used below
 		$meta_coef = $this->metas_coef_get();
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
-		if (abs($karma_neg_user)/$karma_pos_user < 0.05 
-			&& $globals['now'] - $this->sent_date < 7200 
-			&& $globals['now'] - $this->sent_date > 600) { 
+		if (abs($karma_neg_user)/$karma_pos_user < 0.05
+			&& $globals['now'] - $this->sent_date < 7200
+			&& $globals['now'] - $this->sent_date > 600) {
 			$this->coef = $globals['bonus_coef'] - ($globals['now']-$this->sent_date)/7200;
 			// It applies the same meta coefficient to the bonus'
 			// Check 1 <= bonus <= $bonus_coef
@@ -909,7 +939,7 @@ class Link {
 				$max_hours = $globals['karma_news_decay'];
 			}
 			$d = 3600*$max_hours*(1+$globals['min_decay']);
-			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600)); 
+			$diff = max(0, $globals['now'] - ($this->sent_date + $plain_hours*3600));
 			$c = 1 - $diff/$d;
 			$c = max($globals['min_decay'], $c);
 			$c = min(1, $c);
@@ -951,7 +981,7 @@ class Link {
 		if (!isset($hours) || $hours > $globals['new_source_max_hours']) $hours = $globals['new_source_max_hours'];
 		if ($hours >= 24) {
 			return 1 + ($globals['new_source_bonus'] - 1) * ($hours - $globals['new_source_min_hours']) / ($globals['new_source_max_hours'] - $globals['new_source_min_hours']);
-		} 
+		}
 		return 0;
 	}
 
@@ -1120,7 +1150,7 @@ class Link {
 		$words = array();
 
 		// Filter title
-		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
 			preg_replace('/[\[\(] *\w{1,6} *[\)\]]/', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
 			, -1, PREG_SPLIT_NO_EMPTY);
 		$i = 0;
@@ -1166,13 +1196,13 @@ class Link {
 		}
 
 		// Filter content, check length and that it's begin con capital
-		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u', 
+		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
 				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower($w);
 			$len = mb_strlen($w);
-			if ( ! isset($words[$wlower]) 
+			if ( ! isset($words[$wlower])
 				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
@@ -1188,7 +1218,7 @@ class Link {
 		foreach ($words as $w => $v) {
 			$len = mb_strlen($w);
 			if ($len > 6 && ! preg_match('/ /', $w)) {
-				$words[$w] = $v * $len/6; 
+				$words[$w] = $v * $len/6;
 			}
 		}
 

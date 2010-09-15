@@ -2,7 +2,7 @@
 	<div class="news-body">
         {% inline "mobile/link_abuse.html" %}
 
-        {% if type != 'preview' AND self.title AND self.content %}
+        {% if self.show_shakebox %}
 	    <div class="news-shakeit">
 		    <div class="{{box_class }}">
 		        <a id="a-votes-{{self.id}}" href="{{self.rpermalink}}">

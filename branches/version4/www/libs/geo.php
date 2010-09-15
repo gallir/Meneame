@@ -26,15 +26,15 @@ function geo_distance($from, $to) {
 	$latTo   = deg2rad($to->lat);
 	$lngFrom = deg2rad($from->lng);
 	$lngTo   = deg2rad($to->lng);
-	
+
 	$x1 = $er * cos($lngFrom) * sin($latFrom);
 	$y1 = $er * sin($lngFrom) * sin($latFrom);
 	$z1 = $er * cos($latFrom);
-	
+
 	$x2 = $er * cos($lngTo) * sin($latTo);
 	$y2 = $er * sin($lngTo) * sin($latTo);
 	$z2 = $er * cos($latTo);
-	
+
 	$d = acos(sin($latFrom)*sin($latTo) + cos($latFrom)*cos($latTo)*cos($lngTo-$lngFrom)) * $er;
 	return $d;
 }
@@ -85,6 +85,9 @@ function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7, $icontype = '
 }
 
 function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued') {
+
+	Haanga::Load('geo_form.html', compact('type', 'id', 'latlng', 'label', 'icontype'));
+	/*
 	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(\''.$icontype.'\')">';
 	echo '<label for="address">'.$label. '</label><br/>';
 	echo '<input type="text" size="40" maxlength="80" name="address" id="address" value="'.$latlng->text.'" />';
@@ -114,5 +117,6 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 	//]]>
 	</script>
 <?
+*/
 }
 ?>

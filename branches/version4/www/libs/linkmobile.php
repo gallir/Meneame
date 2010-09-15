@@ -32,10 +32,12 @@ class LinkMobile extends Link{
 
 		$this->has_warning = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable = $this->author == $current_user->user_id && $this->is_editable();
-        $this->total_votes = $this->votes+$this->anonymous;
-        $this->rpermalink  = $this->get_relative_permalink();
-        $this->author_html = '<a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a>';
-        $this->normal_link = 'http://'.preg_replace('/(\.|^)m\./', '$1', get_server_name()).$this->get_relative_permalink();
+		$this->total_votes = $this->votes+$this->anonymous;
+		$this->rpermalink  = $this->get_relative_permalink();
+		$this->author_html = '<a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a>';
+		$this->normal_link = 'http://'.preg_replace('/(\.|^)m\./', '$1', get_server_name()).$this->get_relative_permalink();
+		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
+
 
         if ($this->status == 'abuse' || $this->has_warning) {
             $this->negative_text = FALSE;
@@ -92,7 +94,7 @@ class LinkMobile extends Link{
 		} elseif ($this->author == $current_user->user_id && $this->is_editable()) {
 				echo _('Esta noticia tiene varios votos negativos.').' '._('Tu karma no será afectado si la descartas manualmente.');
 		} else {
-			// Only says "what" if most votes are "wrong" or "duplicated" 
+			// Only says "what" if most votes are "wrong" or "duplicated"
 			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
 				echo _('Esta noticia podría ser').' <strong>'. get_negative_vote($negatives->vote_value) . '</strong>. ';
