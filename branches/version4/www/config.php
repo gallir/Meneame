@@ -46,6 +46,11 @@ $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have
 $globals['static_server'] = '';
 //$globals['static_server'] = 'http://static.meneame.net';
 
+// Enables the click counter, it call to backend/go.php
+// Make sure you have defined the table:
+// CREATE TABLE  `meneame`.`link_clicks` ( `id` INT UNSIGNED NOT NULL , `counter` INT UNSIGNED NOT NULL DEFAULT  '0', PRIMARY KEY (  `id` )) ENGINE = INNODB;
+$globals['click_counter'] = true;
+
 //URL shortener (used in menea.me)
 //$globals['url_shortener'] = 'menea.me';
 //$globals['url_shortener_to'] = 'meneame.net';

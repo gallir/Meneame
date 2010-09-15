@@ -27,7 +27,14 @@
         </div>
         {% endif %}
 		<h1>
-		    <a href="{{self.url|escape}}"{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{self.title}}</a>
+		    <a
+			{% if globals.click_counter %}
+				href="{{ globals.base_url }}backend/go.php?id={{ self.id }}"
+			{% else %}
+				href="{{ self.url|escape }}"
+			{% endif %}
+		    {% if self.status != 'published' %} rel="nofollow"{% endif %}
+			>{{self.title}}</a>
 		</h1>
 		<div class="news-submitted">
 		    <strong>{{self.url|txt_shorter:40}}</strong><br/>

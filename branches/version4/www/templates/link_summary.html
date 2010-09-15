@@ -36,7 +36,7 @@
 			</div>
 		{% else %}
 			{% if self.has_warning %}
-				<div class="warn"><strong>{% trans _('Aviso automático') %}</strong>: 
+				<div class="warn"><strong>{% trans _('Aviso automático') %}</strong>:
 				{% if self.status == 'published' %}
 					{% trans _('noticia errónea o controvertida, por favor lee los comentarios.') %}
 				{% else %}
@@ -58,7 +58,14 @@
 	{% if globals.ads %}<!-- google_ad_section_start -->{% endif %}
 
 	<h1>
-		<a href="{{ self.url|escape }}"{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}</a>
+		<a
+			{% if globals.click_counter %}
+				href="{{ globals.base_url }}backend/go.php?id={{ self.id }}"
+			{% else %}
+				href="{{ self.url|escape }}"
+			{% endif %}
+			{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
+		</a>
 		{% if self.content_type == 'image' %}
 			&nbsp;<img src="{{ globals.base_static }}img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}" />
 		{% endif %}
@@ -66,11 +73,11 @@
 			&nbsp;<img src="{{ globals.base_static }}img/common/is-video01.png" class="media-icon" width="18" height="15" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}" />
 		{% endif %}
 	</h1>
-	
+
 	<div class="news-submitted">
 		{% if type != 'short' %}
 			<a href="{{ self.username | useruri }}" title="{{ self.username }}"><img src="{% exec get_avatar_url self.author, self.avatar, 25 %}" width="25" height="25" alt="{{ self.username }}" onmouseover="return tooltip.ajax_delayed(event, 'get_user_info.php', {{ self.author }})" onmouseout="tooltip.clear(event);" /></a>
-		{% endif %} 
+		{% endif %}
 		<strong>{{ self.url_str }}</strong>&nbsp;<br />
 
 		{% trans _("por %s") self.username_str %}
@@ -147,7 +154,7 @@
 	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}
 
 	{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
-		{% if self.show_tags AND self.tags %} 
+		{% if self.show_tags AND self.tags %}
 		<div class="news-details">
 		<strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}
@@ -196,7 +203,7 @@
 
 		{% endif %}
 	{% endif %}
-	
+
 	{% exec do_banner_story as dummy %}
 	{% if self.best_comment %}
 		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 50px 7px 25px; padding: 4px; overflow:hidden">
