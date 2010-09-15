@@ -164,7 +164,7 @@
 
 		{# Show link to analyze the tags #}
 		{% if globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
-		&nbsp;&nbsp;[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('diagnosticar') %}</strong></a>]
+		&nbsp;[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 
 		</div>
@@ -177,6 +177,11 @@
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
+
+			{# show clicks #}
+			{% if self.id > globals.click_counter %}
+				<span class="tool"><strong>{% trans _('clics') %}</strong>: {% exec self.get_clicks %}</span>
+			{% endif %}
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">

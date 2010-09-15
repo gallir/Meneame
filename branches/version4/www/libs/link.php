@@ -1222,4 +1222,9 @@ class Link {
 		return $related;
 	}
 
+	function get_clicks() {
+		global $db;
+		return intval($db->get_var("select counter from link_clicks where id = $this->id"));
+	}
+
 }

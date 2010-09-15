@@ -49,7 +49,7 @@ $globals['static_server'] = '';
 // Enables the click counter, it call to backend/go.php
 // Make sure you have defined the table:
 // CREATE TABLE  `meneame`.`link_clicks` ( `id` INT UNSIGNED NOT NULL , `counter` INT UNSIGNED NOT NULL DEFAULT  '0', PRIMARY KEY (  `id` )) ENGINE = INNODB;
-$globals['click_counter'] = true;
+$globals['click_counter'] = 1; // Put a value since which id should show in "link_summary", 0 to disable it
 
 //URL shortener (used in menea.me)
 //$globals['url_shortener'] = 'menea.me';
