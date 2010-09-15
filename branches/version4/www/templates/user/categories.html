@@ -1,0 +1,46 @@
+<form action="" method="POST">
+<fieldset style="clear: both;">
+
+<legend>{% trans _('categorías personalizadas') %}</legend>
+
+{% for meta in metas %}
+	<dl class="categorylist" id="meta-{{ meta.category_id}}"><dt>
+	<label><input
+		{% if user.id != current_user.user_id %}disabled="true"{% endif %}
+		name="meta_category[]" type="checkbox" value="{{ meta.category_id }}"
+		{% if not selected || selected[meta.category_id] %}checked="true"{% endif %}
+		onchange="select_meta(this, {{ meta.category_id}})"
+		/>{{ meta.category_name}}</label></dt>
+
+	{% set thismeta = categories[meta.category_id] %} {# to avoid warning in Haanga compiler #}
+	{% for category in thismeta %}
+		<dd><label><input
+			{% if user.id != current_user.user_id %}disabled="true"{% endif %}
+			name="categories[]" type="checkbox"
+			{% if not selected || selected[category.category_id] %}checked="true"{% endif %}
+			value="{{ category.category_id }}"/>{{ category.category_name }}</label></dd>
+	{% endfor %}
+	</dl>
+
+{% endfor %}
+<br style="clear: both;"/>
+</fieldset>
+
+{% if user.id == current_user.user_id %}
+	<input class="button" type="submit" value="{% trans _('grabar') %}"/>
+{% endif %}
+</form>
+
+
+
+
+
+<script type="text/javascript">
+function select_meta(input, meta) {
+    if (input.checked) new_value = true;
+    else new_value = false;
+    meta_id = '#meta-'+meta;
+    $(meta_id+' input').attr({checked: new_value});
+    return false;
+}
+</script>

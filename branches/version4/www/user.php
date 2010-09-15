@@ -90,14 +90,14 @@ if ($current_user->user_id == $user->id || $current_user->admin) {
 if($globals['external_user_ads'] && !empty($user->adcode)) {
 	$globals['user_adcode'] = $user->adcode;
 	$globals['user_adchannel'] = $user->adchannel;
-	if ($current_user->user_id == $user->id || $current_user->admin) $globals['do_user_ad']  = 100; 
+	if ($current_user->user_id == $user->id || $current_user->admin) $globals['do_user_ad']  = 100;
 	else $globals['do_user_ad'] = $user->karma * 2;
 }
 
 // Load Google GEO
 if (! $user->disabled()
-		&& $view == 'profile' 
-		&& $globals['google_maps_api'] 
+		&& $view == 'profile'
+		&& $globals['google_maps_api']
 		&& (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
 	if ($current_user->user_id == $user->id) {
 		geo_init('geo_coder_editor_load', $globals['latlng'], 7, 'user');
@@ -245,8 +245,8 @@ function do_profile() {
     $rss       = 'rss2.php?sent_by='.$user->id;
     $rss_title = _('envíos en rss2');
     $geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
-    $show_email = $current_user->user_id > 0 && !empty($user->public_info) && 
-			($current_user->user_id == $user->id || $current_user->user_level=='god'); 
+    $show_email = $current_user->user_id > 0 && !empty($user->public_info) &&
+			($current_user->user_id == $user->id || $current_user->user_level=='god');
 
 	$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
 	if ($current_user->admin) {
@@ -283,7 +283,7 @@ function do_profile() {
 			// Use register IP
 			$dbaddresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
 		}
-    
+
         $addresses    = array();
         $prev_address = '';
         foreach ($dbaddresses as $dbaddress) {
@@ -496,7 +496,7 @@ function print_comment_list($comments, $user) {
 function do_friends($option) {
 	global $db, $user, $globals, $current_user;
 
-	
+
 	$header_options = array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'));
 	if ($user->id == $current_user->user_id) {
 		$header_options[_('ignorados')] = get_user_uri($user->username, 'ignored');
@@ -557,15 +557,15 @@ function do_categories() {
 	if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
 		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
 	}
-	
+
 	do_user_subheader($options, 1, 'rss2.php?personal='.$user->id, _('categorías personalizadas en rss2'));
-	
+
 	if (is_array($_POST['categories'])) {
 		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category'");
 		$total = (int) $db->get_var("SELECT count(*) FROM categories WHERE category_parent != 0");
 		if (count($_POST['categories']) < $total) {
-			for ($i=0; $i<count($_POST['categories']); $i++){ 
-				$cat = intval($_POST['categories'][$i]); 
+			for ($i=0; $i<count($_POST['categories']); $i++){
+				$cat = intval($_POST['categories'][$i]);
 				$db->query("insert into prefs (pref_user_id, pref_key, pref_value) values ($current_user->user_id, 'category', $cat)");
 			}
 		}
@@ -576,48 +576,37 @@ function do_categories() {
 function print_categories_checkboxes($user) {
 	global $db, $current_user;
 
-	if ($user->id != $current_user->user_id) $disabled = 'disabled="true"';
-	else $disabled = false;
 
+	// Get selected categories
 	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $user->id and pref_key = 'category' ");
+	$selected = array();
 	if ($selected_set) {
 		foreach ($selected_set as $cat) {
-			$selected["$cat"] = true;
+			$selected[$cat] = true;
 		}
-	} else {
-		$empty = true;
 	}
-	echo '<form action="" method="POST">';
-	echo '<fieldset style="clear: both;">';
-	echo '<legend>'._('categorías personalizadas').'</legend>'."\n";
+
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
+	$categories = array();
 	foreach ($metas as $meta) {
-		echo '<dl class="categorylist" id="meta-'.$meta->category_id.'"><dt>';
-		echo '<label><input '.$disabled.' name="meta_category[]" type="checkbox" value="'.$meta->category_id.'"';
-		if ($empty) echo ' checked="true" ';
-		echo 'onchange="select_meta(this, '.$meta->category_id.')" ';
-		echo '/> ';
-		echo $meta->category_name.'</label></dt>'."\n";
-		$categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
-		foreach ($categories as $category) {
-			echo '<dd><label><input '.$disabled.' name="categories[]" type="checkbox" ';
-			if ($empty || $selected[$category->category_id]) echo ' checked="true" ';
-			echo 'value="'.$category->category_id.'"/> '._($category->category_name).'</label></dd>'."\n";
+		$categories[$meta->category_id] = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
+		if ( $selected ) {
+			// Check if all categories are selected for the current meta
+			$all = true;
+			foreach ($categories[$meta->category_id] as $sel) {
+				if (!isset($selected[$sel->category_id])) $all = false;
+			}
+			if ($all) $selected[$meta->category_id] = true;
 		}
-		echo '</dl>'."\n";
 	}
-	echo '<br style="clear: both;"/>' . "\n";
-	echo '</fieldset>';
-	if (!$disabled) {
-		echo '<input class="button" type="submit" value="'._('grabar').'"/>';
-	}
-	echo '</form>';
+
+	Haanga::Load('user/categories.html', compact('user', 'metas', 'categories', 'selected'));
 }
 
 function do_user_subheader($content, $selected = false, $rss = false, $rss_title = '') {
 	global $globals;
-	 
-// arguments: hash array with "button text" => "button URI"; Nº of the selected button 
+
+// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
 	if ($rss) {
 		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
@@ -627,7 +616,7 @@ function do_user_subheader($content, $selected = false, $rss = false, $rss_title
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-	   		if ($selected == $n) $class_b = ' class = "selected"'; 
+	   		if ($selected == $n) $class_b = ' class = "selected"';
 			else $class_b='';
 	   		echo '<li'.$class_b.'>'."\n";
 	   		echo '<a href="'.$url.'">'.$text."</a>\n";
@@ -635,7 +624,7 @@ function do_user_subheader($content, $selected = false, $rss = false, $rss_title
 	   		$n++;
 		}
 	} else {
-	    echo '<h1>'.$content.'</h1>'; 
+	    echo '<h1>'.$content.'</h1>';
 	}
 	echo '</ul>'."\n";
 }
