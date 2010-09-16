@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at gallir dot com>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 include('../config.php');
 
@@ -39,7 +39,7 @@ if ( ($array = $link->read_annotation("link-karma")) != false ) {
 		if (!empty($colors[$key])) $obj['color'] = $colors[$key];
 		$obj['data'] = $data[$key];
 		array_push($objects, $obj);
-    }
+	}
 	echo json_encode($objects);
 }
 ?>

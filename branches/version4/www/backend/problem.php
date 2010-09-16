@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
@@ -68,9 +68,9 @@ if ($votes_freq > $freq && $current_user->user_karma > 4) {
 
 // Check the user is not a clon by cookie of others that voted the same link
 if ($current_user->user_id > 0) {
-    if (UserAuth::check_clon_votes($current_user->user_id, $link->id, 5, 'links') > 0) {
-        error(_('no se puede votar con clones'));
-    }
+	if (UserAuth::check_clon_votes($current_user->user_id, $link->id, 5, 'links') > 0) {
+		error(_('no se puede votar con clones'));
+	}
 }
 
 if (!$link->insert_vote($value)) {

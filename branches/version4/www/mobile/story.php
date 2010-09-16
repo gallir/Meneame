@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -64,8 +64,8 @@ if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_
 
 
 if ($_POST['process']=='newcomment') {
-    $comment = new Comment;
-    $new_comment_error = $comment->save_from_post($link);
+	$comment = new Comment;
+	$new_comment_error = $comment->save_from_post($link);
 }
 
 // Set globals
@@ -110,7 +110,7 @@ echo '</div>' . "\n";
 if($link->date > $globals['now']-$globals['time_enabled_comments'] && $link->comments < $globals['max_comments'] && 
 	$current_user->authenticated && 
 	($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
-        print_comment_form();
+		print_comment_form();
 }
 
 do_comment_pages($link->comments, $current_page);
@@ -122,9 +122,9 @@ do_footer();
 
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
-    echo '<script type="text/javascript">';
-    echo '$(function(){alert(\''._('comentario no insertado'). ":  $new_comment_error".'\')});';
-    echo '</script>';
+	echo '<script type="text/javascript">';
+	echo '$(function(){alert(\''._('comentario no insertado'). ":  $new_comment_error".'\')});';
+	echo '</script>';
 }
 
 

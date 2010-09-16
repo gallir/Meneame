@@ -86,7 +86,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué es el nótame?</h4>
-<p>Una herramienta de comunicación entre los usuarios de menéame y se organiza en pequeños apuntes, como los mini-post de un blog colectivo --de todos los usuarios de nótame-- y a la vez individual.  Puedes usarlo para cuestiones relacionadas con menéame o para explicar lo que quieras.  Puedes escribir desde el web, mensajería instantánea o el movil.  Encontrarás <a href="http://meneame.wikispaces.com/N%C3%B3tame">más detalles en el wiki</a>.</p>
+<p>Una herramienta de comunicación entre los usuarios de menéame y se organiza en pequeños apuntes, como los mini-post de un blog colectivo --de todos los usuarios de nótame-- y a la vez individual.	Puedes usarlo para cuestiones relacionadas con menéame o para explicar lo que quieras.	Puedes escribir desde el web, mensajería instantánea o el movil.  Encontrarás <a href="http://meneame.wikispaces.com/N%C3%B3tame">más detalles en el wiki</a>.</p>
 </li>
 
 <li id="<? echo "q$q";$q++;?>">
@@ -186,15 +186,15 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Por qué una elefanta en el logo?</h4>
 <pre>
-    Un elefante se <strike>balanceaba</strike> meneaba
-    sobre la tela de una araña
-    Como veía que no se caía
-    fue a buscar otro elefante.
+	Un elefante se <strike>balanceaba</strike> meneaba
+	sobre la tela de una araña
+	Como veía que no se caía
+	fue a buscar otro elefante.
 
-    Dos elefantes se meneaban
-    sobre la tela de una araña
-    Como veían que no se caían
-    Fueron a buscar otro elefante
+	Dos elefantes se meneaban
+	sobre la tela de una araña
+	Como veían que no se caían
+	Fueron a buscar otro elefante
 </pre>
 </li>
 

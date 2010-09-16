@@ -2,7 +2,7 @@
 /****************************
 *
 * WARN
-*     this files should be called from a generalxx.js.php file
+*	  this files should be called from a generalxx.js.php file
 *
 *****************************/
 ?>
@@ -209,7 +209,7 @@ function modal_from_ajax(url, title) {
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 function reportAjaxStats(category, action) {
-	if (typeof(pageTracker) !=  'undefined' && typeof(pageTracker._trackEvent) !=  'undefined') {
+	if (typeof(pageTracker) !=	'undefined' && typeof(pageTracker._trackEvent) !=  'undefined') {
 		pageTracker._trackEvent(category, action);
 	}
 }
@@ -232,69 +232,69 @@ function bindTogglePlusMinus(img_id, link_id, container_id) {
 
 
 /*/
- *  JSOC - An object Cache framework for JavaScript
- *  version 0.12.0 [beta]
+ *	JSOC - An object Cache framework for JavaScript
+ *	version 0.12.0 [beta]
  * http://dev.webframeworks.com/dist/JSOC-license.txt
  * version: 0.12.0
 /*/
 
 JSOC = function(){
-    var Cache = {};
-    return {
-        "get":function(n){
-            var obj = {}, val = Cache[n];
-            obj[n] = val;
-            if(val) return obj;
-        },
-        "getMulti":function(l){
-            var a = [];
-            for (var k in l) a.push(this.get(l[k]));
-            return a;
-        },
-        "getType":function(t){
-            var a = [];
-            for (var o in Cache) if(typeof(Cache[o])==t.toLowerCase()){a.push(this.get(o))}
-            return a;
-        },
-        "set":function(n,v){
-            if(Cache[n]) delete(Cache[n]);
-            Cache[n]=v;
-            if (arguments[2]){
-                var ttl = arguments[2].ttl || null;
-                if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
-            }
-            return (Cache[n])?1:0;
-        },
-        "add":function(n,v){
-            if(!Cache[n]){
-                Cache[n]=v;
-                if (arguments[2]){
-                    var ttl = arguments[2].ttl || null;
-                    if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
-                }
-                return (Cache[n])?1:0;
-            }
-        },
-        "replace":function(n,v){
-            if(Cache[n]){
-                delete(Cache[n]);
-                Cache[n]=v;
-                if (arguments[2]){
-                    var ttl = arguments[2].ttl || null;
-                    if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
-                }
-                return (Cache[n])?1:0;
-            }
-        },
-        "remove":function(n){
-            delete(Cache[n]);
-            return (!Cache[n])?1:0;
-        },
-        "flush_all":function(){
-            for(var k in Cache) delete(Cache[k]);
-            return 1;
-        }
-    }
+	var Cache = {};
+	return {
+		"get":function(n){
+			var obj = {}, val = Cache[n];
+			obj[n] = val;
+			if(val) return obj;
+		},
+		"getMulti":function(l){
+			var a = [];
+			for (var k in l) a.push(this.get(l[k]));
+			return a;
+		},
+		"getType":function(t){
+			var a = [];
+			for (var o in Cache) if(typeof(Cache[o])==t.toLowerCase()){a.push(this.get(o))}
+			return a;
+		},
+		"set":function(n,v){
+			if(Cache[n]) delete(Cache[n]);
+			Cache[n]=v;
+			if (arguments[2]){
+				var ttl = arguments[2].ttl || null;
+				if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+			}
+			return (Cache[n])?1:0;
+		},
+		"add":function(n,v){
+			if(!Cache[n]){
+				Cache[n]=v;
+				if (arguments[2]){
+					var ttl = arguments[2].ttl || null;
+					if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+				}
+				return (Cache[n])?1:0;
+			}
+		},
+		"replace":function(n,v){
+			if(Cache[n]){
+				delete(Cache[n]);
+				Cache[n]=v;
+				if (arguments[2]){
+					var ttl = arguments[2].ttl || null;
+					if(ttl) var self = this, to = setTimeout(function(){self.remove(n)}, ttl);
+				}
+				return (Cache[n])?1:0;
+			}
+		},
+		"remove":function(n){
+			delete(Cache[n]);
+			return (!Cache[n])?1:0;
+		},
+		"flush_all":function(){
+			for(var k in Cache) delete(Cache[k]);
+			return 1;
+		}
+	}
 }
 
 /**************************************
@@ -302,7 +302,7 @@ Tooltips functions
 ***************************************/
 /**
   Stronglky modified, onky works with DOM2 compatible browsers.
-  	Ricardo Galli
+	Ricardo Galli
   From http://ljouanneau.com/softs/javascript/tooltip.php
  */
 
@@ -336,11 +336,11 @@ if (typeof(JSOC) != "undefined") {
 /**
 * Open ToolTip. The title attribute of the htmlelement is the text of the tooltip
 * Call this method on the mouseover event on your htmlelement
-* ex :  <div id="myHtmlElement" onmouseover="tooltip.show(this)"...></div>
+* ex :	<div id="myHtmlElement" onmouseover="tooltip.show(this)"...></div>
 */
 
 tooltip.show = function (event, text) {
-      // we save text of title attribute to avoid the showing of tooltip generated by browser
+	  // we save text of title attribute to avoid the showing of tooltip generated by browser
 	if (this.dom2  == false ) return false;
 	if (this.tooltipText == null) {
 		this.tooltipText = document.createElement("div");
@@ -412,7 +412,7 @@ tooltip.moveTo = function (xL,yL) {
 
 // Show the content of a given comment
 tooltip.c_show = function (event, type, element, link) {
-      // we save text of title attribute to avoid the showing of tooltip generated by browser
+	  // we save text of title attribute to avoid the showing of tooltip generated by browser
 	if (this.dom2  == false ) return false;
 	if (element == 0 && link > 0) { // It's a #0  from a comment
 		this.ajax_delayed(event,'get_link.php',link);

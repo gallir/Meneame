@@ -3,14 +3,14 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
 include(mnminclude.'ban.php');
 
 $tb_url    = clean_input_string($_POST['url']);
-$title     = $_POST['title'];
+$title	   = $_POST['title'];
 $excerpt   = $_POST['excerpt'];
 $blog_name = $_POST['blog_name'];
 $charset   = $_POST['charset'];
@@ -59,7 +59,7 @@ if ($link->date < (time() - 86400*7)) {
 if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	header('Content-Type: text/xml; charset=UTF-8');
 
-	$title     = clean_text($title);
+	$title	   = clean_text($title);
 	$excerpt   = clean_text($excerpt);
 	$blog_name = clean_text($blog_name);
 	$title = (mb_strlen($title) > 120) ? mb_substr($title, 0, 120) . '...' : $title;
@@ -88,7 +88,7 @@ if ( !empty($tb_url) && !empty($title) && !empty($excerpt) ) {
 	
 
 	$permalink=$link->get_permalink();
-    $permalink_q=preg_quote($permalink,'/');
+	$permalink_q=preg_quote($permalink,'/');
 	$pattern="/<\s*a.*href\s*=[\"'\s]*".$permalink_q."[#\/0-9a-z\-]*[\"'\s]*.*>.*<\s*\/\s*a\s*>/i";
 	if(!preg_match($pattern,$response['content'])) {
 		syslog(LOG_NOTICE, "Meneame: The provided URL does not have a link back to us: $tb_url");

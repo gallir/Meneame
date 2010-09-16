@@ -4,7 +4,7 @@
 // Beldar <beldar.cat at gmail dot com>
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 if (! defined('mnmpath')) {
@@ -30,7 +30,7 @@ $comment->read();
 if(!$comment->read) die;
 if ( $comment->type != 'admin') {
 	if ($comment->avatar) {
-    	echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
+		echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
 	}
 	echo '<strong>' . $comment->username . '</strong>, karma: '.$comment->karma.'<br/>';
 } else {

@@ -50,7 +50,7 @@ function to_hoygan(str)
 	str=str.replace(/ñ/gi, 'ny');
 	str=str.replace(/buen/gi, 'GÜEN');
 
-        // benjami
+		// benjami
 	str=str.replace(/windows/gi, 'güindous');
 	str=str.replace(/we/gi, 'güe');
 	// str=str.replace(/'. '/gi, '');

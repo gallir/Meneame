@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -28,7 +28,7 @@ if ($if_modified) {
 if ($_REQUEST['q']) {
 	include(mnminclude.'search.php');
 	if ($if_modified) {
-        $_REQUEST['t'] = $if_modified;
+		$_REQUEST['t'] = $if_modified;
 	}
 	$_REQUEST['w'] = 'posts';
 	$search_ids = do_search(true);
@@ -131,11 +131,11 @@ function do_header($title) {
 		header('HTTP/1.1 304 Not Modified');
 		exit();
 	}
-	header('Last-Modified: ' .  gmdate('D, d M Y H:i:s', $last_modified) . ' GMT');
+	header('Last-Modified: ' .	gmdate('D, d M Y H:i:s', $last_modified) . ' GMT');
 	header('Content-type: text/xml; charset=UTF-8', true);
 	echo '<?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
 	echo '<rss version="2.0" '."\n";
-	echo '  xmlns:atom="http://www.w3.org/2005/Atom"'."\n";
+	echo '	xmlns:atom="http://www.w3.org/2005/Atom"'."\n";
 	echo '	xmlns:content="http://purl.org/rss/1.0/modules/content/"'."\n";
 	echo '	xmlns:wfw="http://wellformedweb.org/CommentAPI/"'."\n";
 	echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"'."\n";
@@ -143,7 +143,7 @@ function do_header($title) {
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo '	<title>'.$title.'</title>'."\n";
-	echo '  <atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
+	echo '	<atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
 	echo '	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
 	echo "	<image><title>".$title."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_static_server_name().$globals['base_url']."img/common/eli-rss.png</url></image>\n";
 	echo '	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";

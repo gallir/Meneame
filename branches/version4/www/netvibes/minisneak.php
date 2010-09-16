@@ -3,7 +3,7 @@ include('../config.php');
 header('Content-Type: text/html; charset=utf-8'); 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head profile="http://www.netvibes.com/api/0.3/profile">
 <title>minifisgón</title>
@@ -162,7 +162,7 @@ function to_html(data) {
   <label>Items :</label>
   <select name="minifisgon_items">
  <? for ($i = 10; $i <= 25 ; $i+=5) {
- 	if ($max_items == $i ) $sel = 'selected="selected"';
+	if ($max_items == $i ) $sel = 'selected="selected"';
 	else $sel='';
 	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
 	}
@@ -171,7 +171,7 @@ function to_html(data) {
   <label>Segundos :</label>
   <select name="minifisgon_secs">
  <? for ($i = 10; $i <= 60 ; $i+=5) {
- 	if ($next_update == $i ) $sel = 'selected="selected"';
+	if ($next_update == $i ) $sel = 'selected="selected"';
 	else $sel='';
 	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
 	}

@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
@@ -46,7 +46,7 @@ if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
 	} else {
 		// Check that there are not too much annonymous votes
 		if ($link->status == 'published') $anon_to_user_votes = max(4, $anon_to_user_votes); // Allow more ano votes if published. 
-		if ($link->anonymous >  $link->votes * $anon_to_user_votes) {
+		if ($link->anonymous >	$link->votes * $anon_to_user_votes) {
 			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 		}
 	}
@@ -83,17 +83,17 @@ if ($globals['click_counter']
 
 if ($votes_freq > $freq) {
 	if ($current_user->user_id > 0 && $current_user->user_karma > 4 && $link->status != 'published') {
-    	// Crazy votes attack, decrease karma
+		// Crazy votes attack, decrease karma
 		// she does not deserve it :-)
-    	$user = new User;
-    	$user->id = $current_user->user_id;
-    	$user->read();
-    	$user->karma = $user->karma - 0.2;
+		$user = new User;
+		$user->id = $current_user->user_id;
+		$user->read();
+		$user->karma = $user->karma - 0.2;
 		$user->store();
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->append(_('voto cowboy').": -0.2, karma: $user->karma\n");
 		error(_('¡tranquilo cowboy!'). ', ' . _('tu karma ha bajado: ') . $user->karma);
-	} else  {
+	} else	{
 		error(_('¡tranquilo cowboy!'));
 	}
 }

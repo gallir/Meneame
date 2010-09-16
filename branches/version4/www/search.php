@@ -17,7 +17,7 @@
 
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//      http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -79,11 +79,11 @@ echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 $options = array(
-    'w' => array('links', 'posts', 'comments'),
-    'p' => array('' => _('campos...'), 'url', 'tags', 'title', 'site'),
-    's' => array('' => _('estado...'), 'published', 'queued', 'discard', 'autodiscard', 'abuse'),
-    'h' => array('' => _('período...'), 24 => _('24 horas'), 48 => _('48 horas'), 24*7 => _('última semana'), 24*30 => _('último mes'), 24*180 => _('6 meses'), 24*365 => _('1 año')),
-    'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
+	'w' => array('links', 'posts', 'comments'),
+	'p' => array('' => _('campos...'), 'url', 'tags', 'title', 'site'),
+	's' => array('' => _('estado...'), 'published', 'queued', 'discard', 'autodiscard', 'abuse'),
+	'h' => array('' => _('período...'), 24 => _('24 horas'), 48 => _('48 horas'), 24*7 => _('última semana'), 24*30 => _('último mes'), 24*180 => _('6 meses'), 24*365 => _('1 año')),
+	'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
 );
 
 $selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h'], 'o' => $_REQUEST['o']);
@@ -95,28 +95,28 @@ do_footer();
 
 function print_result()
 {
-    global $response, $obj, $page_size;
-    if ($response['ids']) {
-	    $rows = min($response['rows'], 1000);
-	    foreach($response['ids'] as $id) {
-	    	$obj->id=$id;
-		    $obj->read();
-		    $obj->basic_summary = true; 
-		    switch ($_REQUEST['w']) {
-			    case 'posts':
-				    $obj->print_summary(300);
-				    break;
-			    case 'comments':
-				    if ($obj->type == 'admin' && !$current_user->admin) continue;
-				    $obj->print_summary(false, 300);
-				    break;
-			    case 'links':
-			    default:
-				    $obj->print_summary();
-		    }
-        }
+	global $response, $obj, $page_size;
+	if ($response['ids']) {
+		$rows = min($response['rows'], 1000);
+		foreach($response['ids'] as $id) {
+			$obj->id=$id;
+			$obj->read();
+			$obj->basic_summary = true; 
+			switch ($_REQUEST['w']) {
+				case 'posts':
+					$obj->print_summary(300);
+					break;
+				case 'comments':
+					if ($obj->type == 'admin' && !$current_user->admin) continue;
+					$obj->print_summary(false, 300);
+					break;
+				case 'links':
+				default:
+					$obj->print_summary();
+			}
+		}
 	}
-    do_pages($rows, $page_size);
+	do_pages($rows, $page_size);
 }
 
 ?>

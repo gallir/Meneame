@@ -134,7 +134,7 @@ function geo_save_current(type, id) {
 					document.geocoderform.geosave.disabled = true;
 				}
 			}
-    	});
+		});
 		reportAjaxStats('geo', 'save');
 	} else {
 		alert ('No address to save');
@@ -155,7 +155,7 @@ function geo_delete(type, id) {
 				geo_map.setCenter(geo_mallorca, 7);	
 			}
 		}
-   	});
+	});
 	reportAjaxStats('geo', 'delete');
 }
 

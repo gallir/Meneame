@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//              http://www.affero.org/oagpl.html
+//				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -65,7 +65,7 @@ $globals['ads'] = true;
 if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empty($user->adcode)) {
 	$globals['user_adcode'] = $user->adcode;
 	$globals['user_adchannel'] = $user->adchannel;
-	$globals['do_user_ad']  = 100;
+	$globals['do_user_ad']	= 100;
 }
 
 
@@ -226,9 +226,9 @@ function save_profile() {
 	$user->names=clean_text($_POST['names']);
 	if(!empty($_POST['password']) || !empty($_POST['password2'])) {
 		if(! check_password($_POST["password"]) ) {
-    	    array_push($messages, _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números'));
-        	$errors=1;
-	    } else if(trim($_POST['password']) !== trim($_POST['password2'])) {
+			array_push($messages, _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números'));
+			$errors=1;
+		} else if(trim($_POST['password']) !== trim($_POST['password2'])) {
 			array_push($messages, _('las claves no son iguales, no se ha modificado'));
 			$errors = 1;
 		} else {

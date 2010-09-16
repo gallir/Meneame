@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -51,13 +51,13 @@ function do_statics() {
 
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	// The index
-   	echo '<url>'."\n";
+	echo '<url>'."\n";
 	echo '<loc>http://'.get_server_name().$globals['base_url'].'</loc>'."\n";
 	echo '<priority>1.0</priority>'."\n";
 	echo '</url>'."\n";
 	// Secondary pages
 	foreach ($urls as $url) {
-    	echo '<url>'."\n";
+		echo '<url>'."\n";
 		echo '<loc>http://'.get_server_name().$globals['base_url'].$url.'</loc>'."\n";
 		echo '<priority>0.8</priority>'."\n";
 		echo '</url>'."\n";
@@ -77,7 +77,7 @@ function do_published($page) {
 	if (!$result) return;
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
-    	echo '<url>'."\n";
+		echo '<url>'."\n";
 		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}

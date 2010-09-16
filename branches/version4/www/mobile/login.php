@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
@@ -57,7 +57,7 @@ function do_login() {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
 			header("Location: http://".get_server_name().$globals['base_url']."login.php");
-       		die;
+			die;
 		}
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
@@ -100,7 +100,7 @@ function do_login() {
 	echo '<div><strong><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></strong></div>'."\n";
 	echo '<div style="margin-top: 30px">';
 	print_oauth_icons($_REQUEST['return']);
-  	echo '</div>'."\n";
+	echo '</div>'."\n";
 
 }
 
@@ -132,7 +132,7 @@ function do_recover() {
 			if (!$error) {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
-            }
+			}
 		}
 	}
 	if (!$sent) {

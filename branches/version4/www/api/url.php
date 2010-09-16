@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
@@ -37,9 +37,9 @@ if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['ho
 $url = preg_replace('/\/$/', '', $url);
 if (isset($_GET['all'])) {
 	$url = addcslashes($url, '%_');
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url%' order by link_date DESC limit 100");
+	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url%' order by link_date DESC limit 100");
 } else {
-    $links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url in ('$url', '$url/')");
+	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url in ('$url', '$url/')");
 }
 if ($links) {
 	$dict['status'] = 'OK';
@@ -53,7 +53,7 @@ if ($links) {
 			$data['anonymous'] = intval($dblink->link_anonymous);
 			$data['karma'] = intval($dblink->link_karma);
 			array_push($dict['data'], $data);
-	    } else {
+		} else {
 			echo 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.($dblink->link_votes+$dblink->link_anonymous).' '.$dblink->link_status."\n";
 		}
 	}

@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es> and 
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//      http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 
@@ -24,7 +24,7 @@ if (! $user_id > 0) {
 }
 
 if (!isset($_GET['p']))  {
-    $users_page = 1;
+	$users_page = 1;
 } else $users_page = intval($_GET['p']);
 
 $users_page_size = 20;
@@ -57,7 +57,7 @@ foreach ($clones as  $clon) {
 	echo '<div class="item" '.$highlight.'>';
 	echo '<a '.$highlight.' href="'.get_user_uri($clon->user_login).'/'.$clon->user_id.'" title="'.$details.'" target="_blank">';
 	echo '<img class="avatar" src="'.get_avatar_url($clon->user_id, $clon->user_avatar, 20).'" width="20" height="20" alt=""/>';
-   	echo $clon->user_login.'</a>';
+	echo $clon->user_login.'</a>';
 	echo '</div>';
 }
 

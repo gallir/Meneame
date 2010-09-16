@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//              http://www.affero.org/oagpl.html
+//				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 include('config.php');
 include(mnminclude.'html1.php');
@@ -229,23 +229,23 @@ function do_profile() {
 
 	$post = new Post;
 	if (!$post->read_last($user->id)) {
-        $post = NULL;
-    }
+		$post = NULL;
+	}
 	if(!empty($user->url)) {
 		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
 
-    if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
-        $friend_icon = User::friend_teaser($current_user->user_id, $user->id);
-    }
+	if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
+		$friend_icon = User::friend_teaser($current_user->user_id, $user->id);
+	}
 
-    $selected  = 0;
-    $rss       = 'rss2.php?sent_by='.$user->id;
-    $rss_title = _('envíos en rss2');
-    $geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
-    $show_email = $current_user->user_id > 0 && !empty($user->public_info) &&
+	$selected  = 0;
+	$rss	   = 'rss2.php?sent_by='.$user->id;
+	$rss_title = _('envíos en rss2');
+	$geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
+	$show_email = $current_user->user_id > 0 && !empty($user->public_info) &&
 			($current_user->user_id == $user->id || $current_user->user_level=='god');
 
 	$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
@@ -257,7 +257,7 @@ function do_profile() {
 
 	if ($user->total_links > 1) {
 		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
-    }
+	}
 
 	if ($user->total_links > 0 && $user->published_links > 0) {
 		$percent = intval($user->published_links/$user->total_links*100);
@@ -266,10 +266,10 @@ function do_profile() {
 	}
 
 	if($globals['do_geo'] && $current_user->user_id == $user->id) {
-        ob_start();
+		ob_start();
 		geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'), 'user');
-        $geo_form = ob_get_clean();
-    }
+		$geo_form = ob_get_clean();
+	}
 
 	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gods and admins know each other for sure, keep privacy
 		$dbaddresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
@@ -284,26 +284,26 @@ function do_profile() {
 			$dbaddresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
 		}
 
-        $addresses    = array();
-        $prev_address = '';
-        foreach ($dbaddresses as $dbaddress) {
-            $ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
-            if($ip_pattern != $prev_address) {
-                $addresses[] = $ip_pattern;
-                $clone_counter++;
-                $prev_address = $ip_pattern;
-                if ($clone_counter >= 30) break;
-            }
-        }
-    }
+		$addresses	  = array();
+		$prev_address = '';
+		foreach ($dbaddresses as $dbaddress) {
+			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
+			if($ip_pattern != $prev_address) {
+				$addresses[] = $ip_pattern;
+				$clone_counter++;
+				$prev_address = $ip_pattern;
+				if ($clone_counter >= 30) break;
+			}
+		}
+	}
 
-    $vars = compact(
-        'post', 'options', 'selected', 'rss', 'rss_title', 'current_user',
-        'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
-        'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
-    );
+	$vars = compact(
+		'post', 'options', 'selected', 'rss', 'rss_title', 'current_user',
+		'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
+		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
+	);
 
-    return Haanga::Load('/user/profile.html', $vars);
+	return Haanga::Load('/user/profile.html', $vars);
 }
 
 
@@ -616,15 +616,15 @@ function do_user_subheader($content, $selected = false, $rss = false, $rss_title
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-	   		if ($selected == $n) $class_b = ' class = "selected"';
+			if ($selected == $n) $class_b = ' class = "selected"';
 			else $class_b='';
-	   		echo '<li'.$class_b.'>'."\n";
-	   		echo '<a href="'.$url.'">'.$text."</a>\n";
-	   		echo '</li>'."\n";
-	   		$n++;
+			echo '<li'.$class_b.'>'."\n";
+			echo '<a href="'.$url.'">'.$text."</a>\n";
+			echo '</li>'."\n";
+			$n++;
 		}
 	} else {
-	    echo '<h1>'.$content.'</h1>';
+		echo '<h1>'.$content.'</h1>';
 	}
 	echo '</ul>'."\n";
 }
