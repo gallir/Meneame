@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
@@ -28,21 +28,21 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {
-        $items = array(
-            array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
-            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
-        );
+		$items = array(
+			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
+			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
+		);
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
-        }
-        $tabname = 'tabmain';
+			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
+		}
+		$tabname = 'tabmain';
 	}
 
-    $vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
-    return Haanga::Load('mobile/do_tabs.html', $vars);
+	$vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
+	return Haanga::Load('mobile/do_tabs.html', $vars);
 }
 
 function do_header($title, $id='home') {
@@ -54,16 +54,16 @@ function do_header($title, $id='home') {
 	$globals['security_key'] = get_security_key();
 	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
-    $vars = compact('title', 'id');
+	$vars = compact('title', 'id');
 
-    return Haanga::Load("mobile/header.html", $vars);
+	return Haanga::Load("mobile/header.html", $vars);
 }
 
 function do_footer($credits = true) {
 	global $globals;
 
-    $vars = compact('credits');
-    return Haanga::Load('mobile/footer.html', $vars);
+	$vars = compact('credits');
+	return Haanga::Load('mobile/footer.html', $vars);
 }
 
 function do_footer_menu() {

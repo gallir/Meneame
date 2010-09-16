@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at gmail dot com>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class RGDB extends mysqli {
@@ -19,7 +19,7 @@ class RGDB extends mysqli {
 
 	function __destruct() {
 		// Rollback dangling transactions
-    	$this->rollback();
+		$this->rollback();
 	}
 
 	function hide_errors() {
@@ -32,7 +32,7 @@ class RGDB extends mysqli {
 
 	function transaction() {
 		if ($this->in_transaction == 0) {
-    		$this->query('START TRANSACTION');
+			$this->query('START TRANSACTION');
 		}
 		$this->in_transaction++;
 		return $this->in_transaction;
@@ -180,10 +180,10 @@ class RGDB extends mysqli {
 	}
 
 	function get_enum_values($table, $column) {
-        // Retrieve available status values
+		// Retrieve available status values
 		$enum = array();
-        $row = $this->get_row("SHOW COLUMNS FROM `$table` like '$column'");
-        preg_match_all("/'(.*?)'/", $row->Type, $matches);
+		$row = $this->get_row("SHOW COLUMNS FROM `$table` like '$column'");
+		preg_match_all("/'(.*?)'/", $row->Type, $matches);
 		if ($matches[1]) {
 			foreach ($matches[1] as $v => $str) {
 				$enum[$str] = $v+1;

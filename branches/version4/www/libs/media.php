@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//      http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (!class_exists('S3')) require_once 'S3.php';
@@ -25,8 +25,8 @@ class Media {
 		$uri = "$type/$name";
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
 		if (S3::putObjectFile($file, $globals['Amazon_S3_media_bucket'], $uri, S3::ACL_PUBLIC_READ, array(), array(
-            "Cache-Control" => "max-age=864000",
-            "Expires" => gmdate("D, d M Y H:i:s T", time() + 864000) )) ) {
+			"Cache-Control" => "max-age=864000",
+			"Expires" => gmdate("D, d M Y H:i:s T", time() + 864000) )) ) {
 			//syslog(LOG_NOTICE, "Meneame, uploaded $uri to S3");
 			return true;
 		}

@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 require_once(mnminclude.'log.php');
@@ -172,7 +172,7 @@ class Link {
 					return false;
 				}
 				// Change the url if we were directed to another host
-				if (strlen($new_url) < 300  && ($new_url_components = @parse_url($new_url))) {
+				if (strlen($new_url) < 300	&& ($new_url_components = @parse_url($new_url))) {
 					if ($url_components['host'] != $new_url_components['host']) {
 						syslog(LOG_NOTICE, "Meneame, changed source URL ($current_user->user_login): $url -> $new_url");
 						$url = $new_url;
@@ -489,26 +489,26 @@ class Link {
 		$this->show_tags = $show_tags;
 		$this->permalink	 = $this->get_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
-		$this->has_warning   = !(!$this->check_warn() || $this->is_discarded());
-		$this->is_editable  = $this->is_editable();
+		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
+		$this->is_editable	= $this->is_editable();
 		$this->url_str	   = htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url)));
 		$this->username_str = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
-		$this->thumb_url    = $this->has_thumb();
+		$this->thumb_url	= $this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) &&
 				$type != 'preview';
 
 
-        if ($this->status == 'abuse' || $this->has_warning) {
-            $this->negative_text = FALSE;
+		if ($this->status == 'abuse' || $this->has_warning) {
+			$this->negative_text = FALSE;
 			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 
 			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-                $this->negative_text = get_negative_vote($negatives->vote_value);
-            }
-        }
+				$this->negative_text = get_negative_vote($negatives->vote_value);
+			}
+		}
 
 		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
 			$this->best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, substr(comment_content, 1, 225) as content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1");
@@ -718,7 +718,7 @@ class Link {
 		} else {
 			$period = $globals['time_enabled_negative_votes'];
 		}
-		return  $current_user->user_id > 0  &&
+		return	$current_user->user_id > 0	&&
 				$this->votes > 0 &&
 				$this->status != 'abuse' && $this->status != 'autodiscard' &&
 				$current_user->user_karma >= $globals['min_karma_for_negatives'] &&
@@ -881,8 +881,8 @@ class Link {
 			} else {
 				$votes_neg++;
 				if ($affinity && $affinity[$vote->user_id] < 0) {
-					$karma_neg_user += min(-6, $vote->user_karma *  $affinity[$vote->user_id]/100);
-					//echo "Negativo: " .  min(-5, $vote->user_karma *  $affinity[$vote->user_id]/100) . "$vote->user_id\n";
+					$karma_neg_user += min(-6, $vote->user_karma *	$affinity[$vote->user_id]/100);
+					//echo "Negativo: " .  min(-5, $vote->user_karma *	$affinity[$vote->user_id]/100) . "$vote->user_id\n";
 				} else {
 					$karma_neg_user -= $vote->user_karma;
 				}
@@ -1115,7 +1115,7 @@ class Link {
 				return $globals['base_static'] . $file;
 			} elseif ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
 				create_cache_dir_chain(mnmpath.'/'.$globals['cache_dir'], $chain);
-        		// Get thumbnail from S3
+				// Get thumbnail from S3
 				if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
 					return $globals['base_static'] . $file;
 				} else {
@@ -1127,7 +1127,7 @@ class Link {
 					}
 				}
 			}
-        }
+		}
 		return false;
 	}
 
@@ -1247,7 +1247,7 @@ class Link {
 				$l = Link::from_db($id);
 				if (empty($l->permalink)) $l->permalink = $l->get_permalink();
 				array_push($related, $l);
-        	}
+			}
 		}
 		return $related;
 	}

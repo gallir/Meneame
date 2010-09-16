@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Annotation {
@@ -34,7 +34,7 @@ class Annotation {
 		if ($key) $this->key = $key;
 		if (empty($this->key)) return false;
 
-		$key =  $db->escape($this->key);
+		$key =	$db->escape($this->key);
 		if(($record = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())"))) {
 			$this->time = $record->time;
 			$this->expire = $record->expire;

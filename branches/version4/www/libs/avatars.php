@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
@@ -160,7 +160,7 @@ function avatar_get_from_db($user, $size=0) {
 			if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
 				return file_get_contents("$file_base-$size.jpg");
 			}
-	 		if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
+			if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
 				$delete_it = true;
 				$original = "$file_base-orig.jpg";
 			} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) 
@@ -209,7 +209,7 @@ function avatar_get_from_file($user, $size) {
 	if(! $time > 0) return false;
 	$file = get_avatars_dir() . '/'. get_cache_dir_chain($user) . "/$user-$time-$size.jpg";
 	if (is_readable($file)) {
-		return  file_get_contents($file);
+		return	file_get_contents($file);
 	} else {
 		return false;
 	}

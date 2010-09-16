@@ -68,9 +68,9 @@ define ( "SPH_RANK_TOTAL",			8 );
 define ( "SPH_SORT_RELEVANCE",		0 );
 define ( "SPH_SORT_ATTR_DESC",		1 );
 define ( "SPH_SORT_ATTR_ASC",		2 );
-define ( "SPH_SORT_TIME_SEGMENTS", 	3 );
-define ( "SPH_SORT_EXTENDED", 		4 );
-define ( "SPH_SORT_EXPR", 			5 );
+define ( "SPH_SORT_TIME_SEGMENTS",	3 );
+define ( "SPH_SORT_EXTENDED",		4 );
+define ( "SPH_SORT_EXPR",			5 );
 
 /// known filter types
 define ( "SPH_FILTER_VALUES",		0 );
@@ -96,30 +96,30 @@ define ( "SPH_GROUPBY_ATTR",		4 );
 define ( "SPH_GROUPBY_ATTRPAIR",	5 );
 
 // important properties of PHP's integers:
-//  - always signed (one bit short of PHP_INT_SIZE)
-//  - conversion from string to int is saturated
-//  - float is double
-//  - div converts arguments to floats
-//  - mod converts arguments to ints
+//	- always signed (one bit short of PHP_INT_SIZE)
+//	- conversion from string to int is saturated
+//	- float is double
+//	- div converts arguments to floats
+//	- mod converts arguments to ints
 
 // the packing code below works as follows:
-//  - when we got an int, just pack it
-//    if performance is a problem, this is the branch users should aim for
+//	- when we got an int, just pack it
+//	  if performance is a problem, this is the branch users should aim for
 //
-//  - otherwise, we got a number in string form
-//    this might be due to different reasons, but we assume that this is
-//    because it didn't fit into PHP int
+//	- otherwise, we got a number in string form
+//	  this might be due to different reasons, but we assume that this is
+//	  because it didn't fit into PHP int
 //
-//  - factor the string into high and low ints for packing
-//    - if we have bcmath, then it is used
-//    - if we don't, we have to do it manually (this is the fun part)
+//	- factor the string into high and low ints for packing
+//	  - if we have bcmath, then it is used
+//	  - if we don't, we have to do it manually (this is the fun part)
 //
-//    - x64 branch does factoring using ints
-//    - x32 (ab)uses floats, since we can't fit unsigned 32-bit number into an int
+//	  - x64 branch does factoring using ints
+//	  - x32 (ab)uses floats, since we can't fit unsigned 32-bit number into an int
 //
 // unpacking routines are pretty much the same.
-//  - return ints if we can
-//  - otherwise format number into a string
+//	- return ints if we can
+//	- otherwise format number into a string
 
 /// pack 64-bit signed
 function sphPackI64 ( $v )
@@ -254,7 +254,7 @@ function sphUnpackU64 ( $v )
 		if ( $l>$C )
 		{
 			$h += (int)($l / $C);
-			$l  = $l % $C;
+			$l	= $l % $C;
 		}
 
 		if ( $h==0 )
@@ -456,7 +456,7 @@ class SphinxClient
 		$this->_ranker		= SPH_RANK_PROXIMITY_BM25;
 		$this->_maxquerytime= 0;
 		$this->_fieldweights= array();
-		$this->_overrides 	= array();
+		$this->_overrides	= array();
 		$this->_select		= "*";
 
 		$this->_error		= ""; // per-reply fields (for single-query case)
@@ -545,7 +545,7 @@ class SphinxClient
 			$this->_mbenc = mb_internal_encoding();
 			mb_internal_encoding ( "latin1" );
 		}
-    }
+	}
 
 	/// leave mbstring workaround mode
 	function _MBPop ()
@@ -939,9 +939,9 @@ class SphinxClient
 
 	/// clear all attribute value overrides (for multi-queries)
 	function ResetOverrides ()
-    {
-    	$this->_overrides = array ();
-    }
+	{
+		$this->_overrides = array ();
+	}
 
 	//////////////////////////////////////////////////////////////////////////////
 
@@ -1172,7 +1172,7 @@ class SphinxClient
 			$result["fields"] = $fields;
 
 			list(,$nattrs) = unpack ( "N*", substr ( $response, $p, 4 ) ); $p += 4;
-			while ( $nattrs-->0 && $p<$max  )
+			while ( $nattrs-->0 && $p<$max	)
 			{
 				list(,$len) = unpack ( "N*", substr ( $response, $p, 4 ) ); $p += 4;
 				$attr = substr ( $response, $p, $len ); $p += $len;

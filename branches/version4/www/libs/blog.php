@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Blog {
@@ -35,7 +35,7 @@ class Blog {
 		$this->rss=$this->getShortestValFromExp('/<link[^>]+text\/xml[^>]+href=[^>]+>/i','/href="([^"]+)"/i',$html);
 		$this->atom=$this->getShortestValFromExp('/<link[^>]+application\/atom\+xml[^>]+>/i','/href="([^"]+)"/i',$html);
 		$this->rss2=$this->getShortestValFromExp('/<link[^>]+application\/rss\+xml[^>]+>/i','/href="([^"]+)"/i',$html);
-       
+	   
 		if($this->rss || $this->atom || $this->rss2) $this->type='blog';
 
 		// Last try to find a rss

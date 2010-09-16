@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
@@ -109,7 +109,7 @@ function txt_time_diff($from, $now=0){
 	else if ($hours==1) $txt  .= " $hours "._('hora');
 
 	if($minutes>1) $txt .= " $minutes "._('minutos');
-	else if ($minutes==1) $txt  .= " $minutes "._('minuto');
+	else if ($minutes==1) $txt	.= " $minutes "._('minuto');
 
 	if($txt=='') $txt = " $secs ". _('segundos');
 	return $txt;
@@ -312,20 +312,20 @@ function get_current_page() {
 	} else {
 		return 1;
 	}
-    // return $_GET['page']>0 ? $_GET['page'] : 1;
+	// return $_GET['page']>0 ? $_GET['page'] : 1;
 }
 
 function get_date($epoch) {
-    return date("d-m-Y", $epoch);
+	return date("d-m-Y", $epoch);
 }
 
 function get_date_time($epoch) {
 		global $globals;
-	    //return date("Y-m-d H:i", $epoch);
+		//return date("Y-m-d H:i", $epoch);
 		if (abs($globals['now'] - $epoch) < 43200) // Difference is less than 12 hours
-	    	return date(" H:i T", $epoch);
+			return date(" H:i T", $epoch);
 		else
-	    	return date(" d-m-Y H:i T", $epoch);
+			return date(" d-m-Y H:i T", $epoch);
 }
 
 function get_server_name() {
@@ -520,15 +520,15 @@ function check_security_key($key) {
 function not_found($mess = '') {
 	header("HTTP/1.0 404 Not Found");
 	header("Status: 404 Not Found");
-    echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
-    echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
-    echo '<head>' . "\n";
-    echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-    echo "<title>". _('error') . "</title>\n";
-    echo '<meta name="generator" content="meneame" />' . "\n";
-    echo '<link rel="icon" href="'.$globals['base_static'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
-    echo '</head>' . "\n";
-    echo "<body>\n";
+	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
+	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
+	echo '<head>' . "\n";
+	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
+	echo "<title>". _('error') . "</title>\n";
+	echo '<meta name="generator" content="meneame" />' . "\n";
+	echo '<link rel="icon" href="'.$globals['base_static'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
+	echo '</head>' . "\n";
+	echo "<body>\n";
 	if (empty($mess)) {
 		echo '<h1>' . _('error') . ' 3.1415926536</h1><p>' . _('no encontrado') . '</p>';
 	} else {
@@ -623,18 +623,18 @@ function put_smileys_callback($matches) {
 			'grin' =>' <img src="'.$globals['base_static'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" /> ',
 			'oops' => ' <img src="'.$globals['base_static'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15"/> ',
 			'cool' => ' <img src="'.$globals['base_static'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15"/> ',
-			'roll' => ' <img src="'.$globals['base_static'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"  width="15" height="15"/> ',
-			'cry' => ' <img src="'.$globals['base_static'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("  width="15" height="15"/> ',
+			'roll' => ' <img src="'.$globals['base_static'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"	width="15" height="15"/> ',
+			'cry' => ' <img src="'.$globals['base_static'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("	width="15" height="15"/> ',
 			'lol' => ' <img src="'.$globals['base_static'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15"/> ',
 
 
 			'smiley' => ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" /> ',
-			'wink' => ' <img src="'.$globals['base_static'].'img/smileys/wink.gif" alt=";)" title=";)"  width="15" height="15" /> ',
-			'cheesy' => ' <img src="'.$globals['base_static'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"  width="15" height="15" /> ',
-			'angry' => ' <img src="'.$globals['base_static'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("  width="15" height="15" /> ',
+			'wink' => ' <img src="'.$globals['base_static'].'img/smileys/wink.gif" alt=";)" title=";)"	width="15" height="15" /> ',
+			'cheesy' => ' <img src="'.$globals['base_static'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"	width="15" height="15" /> ',
+			'angry' => ' <img src="'.$globals['base_static'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("	width="15" height="15" /> ',
 			'huh' => ' <img src="'.$globals['base_static'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" /> ',
-			'sad' => ' <img src="'.$globals['base_static'].'img/smileys/sad.gif" alt=":-(" title=":-("  width="15" height="15" /> ',
-			'shocked' => ' <img src="'.$globals['base_static'].'img/smileys/shocked.gif" alt=":-O" title=":-O"  width="15" height="15" />',
+			'sad' => ' <img src="'.$globals['base_static'].'img/smileys/sad.gif" alt=":-(" title=":-("	width="15" height="15" /> ',
+			'shocked' => ' <img src="'.$globals['base_static'].'img/smileys/shocked.gif" alt=":-O" title=":-O"	width="15" height="15" />',
 			'tongue' => ' <img src="'.$globals['base_static'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" /> ',
 			'lipssealed' => ' <img src="'.$globals['base_static'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15"/> ',
 			'undecided' => ' <img src="'.$globals['base_static'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15"/> ',
@@ -713,7 +713,7 @@ function meta_get_current() {
 			if ($res) {
 				$globals['meta_current'] = $res->category_id;
 				$globals['meta_current_name'] = $res->category_name;
-				$globals['meta'] = '';  // Security measure
+				$globals['meta'] = '';	// Security measure
 			} else {
 				$globals['meta_current'] = 0;
 				$globals['meta_current_name'] = '';
@@ -729,7 +729,7 @@ function meta_get_current() {
 		if ($res) {
 			$globals['meta_current'] = $res->category_id;
 			$globals['meta_current_name'] = $res->category_name;
-			$globals['meta'] = '';  // Security measure
+			$globals['meta'] = '';	// Security measure
 		} else {
 			$globals['meta_current'] = 0;
 			$globals['meta_current_name'] = '';
@@ -939,21 +939,21 @@ function get_url($url, $referer = false, $max=200000) {
 
 // From http://es2.php.net/manual/en/function.gzinflate.php#77336
 function gzBody($gzData){
-    if(substr($gzData,0,3)=="\x1f\x8b\x08"){
-        $i=10;
-        $flg=ord(substr($gzData,3,1));
-        if($flg>0){
-            if($flg&4){
-                list($xlen)=unpack('v',substr($gzData,$i,2));
-                $i=$i+2+$xlen;
-            }
-            if($flg&8) $i=strpos($gzData,"\0",$i)+1;
-            if($flg&16) $i=strpos($gzData,"\0",$i)+1;
-            if($flg&2) $i=$i+2;
-        }
-        return gzinflate(substr($gzData,$i,-8));
-    }
-    else return false;
+	if(substr($gzData,0,3)=="\x1f\x8b\x08"){
+		$i=10;
+		$flg=ord(substr($gzData,3,1));
+		if($flg>0){
+			if($flg&4){
+				list($xlen)=unpack('v',substr($gzData,$i,2));
+				$i=$i+2+$xlen;
+			}
+			if($flg&8) $i=strpos($gzData,"\0",$i)+1;
+			if($flg&16) $i=strpos($gzData,"\0",$i)+1;
+			if($flg&2) $i=$i+2;
+		}
+		return gzinflate(substr($gzData,$i,-8));
+	}
+	else return false;
 }
 
 function clear_invisible_unicode($input){
@@ -990,10 +990,10 @@ function clear_invisible_unicode($input){
 function clear_unicode_spaces($input){
 	$spaces = array(
 	"\x9", // 'CHARACTER TABULATION' (U+0009)
-	//  "\xa", // 'LINE FEED (LF)' (U+000A)
+	//	"\xa", // 'LINE FEED (LF)' (U+000A)
 	"\xb", // 'LINE TABULATION' (U+000B)
 	"\xc", // 'FORM FEED (FF)' (U+000C)
-	//  "\xd", // 'CARRIAGE RETURN (CR)' (U+000D)
+	//	"\xd", // 'CARRIAGE RETURN (CR)' (U+000D)
 	"\x20", // 'SPACE' (U+0020)
 	"\xc2\xa0", // 'NO-BREAK SPACE' (U+00A0)
 	"\xe1\x9a\x80", // 'OGHAM SPACE MARK' (U+1680)
@@ -1028,25 +1028,25 @@ function clear_whitespace($input){
 // IP and chec_proxy functions
 
 function isIPIn($ip,$net,$mask) {
-        $lnet=ip2long($net);
-        $lip=ip2long($ip);
-        $binnet=str_pad( decbin($lnet),32,"0", STR_PAD_LEFT);
-        $firstpart=substr($binnet,0,$mask);
-        $binip=str_pad( decbin($lip),32,"0", STR_PAD_LEFT);
-        $firstip=substr($binip,0,$mask);
-        return(strcmp($firstpart,$firstip)==0);
+		$lnet=ip2long($net);
+		$lip=ip2long($ip);
+		$binnet=str_pad( decbin($lnet),32,"0", STR_PAD_LEFT);
+		$firstpart=substr($binnet,0,$mask);
+		$binip=str_pad( decbin($lip),32,"0", STR_PAD_LEFT);
+		$firstip=substr($binip,0,$mask);
+		return(strcmp($firstpart,$firstip)==0);
 }
 
 
 function isPrivateIP($ip) {
-        $privates = array ("127.0.0.0/24", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16");
-        foreach ( $privates as $k ) {
-                list($net,$mask)=preg_split("#/#",$k);
-                if (isIPIn($ip,$net,$mask)) {
-                        return true;
-                }
-        }
-        return false;
+		$privates = array ("127.0.0.0/24", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16");
+		foreach ( $privates as $k ) {
+				list($net,$mask)=preg_split("#/#",$k);
+				if (isIPIn($ip,$net,$mask)) {
+						return true;
+				}
+		}
+		return false;
 }
 
 function check_ip_behind_load_balancer() {

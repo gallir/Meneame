@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class LinkMobile extends Link{
@@ -39,26 +39,26 @@ class LinkMobile extends Link{
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 
 
-        if ($this->status == 'abuse' || $this->has_warning) {
-            $this->negative_text = FALSE;
+		if ($this->status == 'abuse' || $this->has_warning) {
+			$this->negative_text = FALSE;
 			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 
 			if ($negatives->count > 2 && $negatives->count >= $this->negatives/2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
-                $this->negative_text = get_negative_vote($negatives->vote_value);
-            }
-        }
+				$this->negative_text = get_negative_vote($negatives->vote_value);
+			}
+		}
 
-        $text      = $this->content;
+		$text	   = $this->content;
 		$my_domain = get_server_name();
 		$parent_domain = preg_replace('/m\./', '', $my_domain);
 		if ($parent_domain != $my_domain && preg_match('#[^\.]'.preg_quote($parent_domain).'/#', $text)) {
 			$text = preg_replace('#([^\.])'.preg_quote($parent_domain).'/#', "$1$my_domain/", $text);
 		}
 
-        $vars = compact('type', 'karma_best_comment', 'show_tags', 'box_class', 'nofollow', 'url', 'text');
-        $vars['self'] = $this;
-        return Haanga::Load('mobile/link_summary.html', $vars);
-    }
+		$vars = compact('type', 'karma_best_comment', 'show_tags', 'box_class', 'nofollow', 'url', 'text');
+		$vars['self'] = $this;
+		return Haanga::Load('mobile/link_summary.html', $vars);
+	}
 
 	function print_problem_form() {
 		global $current_user, $db, $anon_karma, $anonnymous_vote, $globals, $site_key;

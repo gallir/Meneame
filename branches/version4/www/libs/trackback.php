@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
@@ -98,24 +98,24 @@ class Trackback {
 		}
 
 		// Send standard old trackback
-        $title = urlencode($link->title);
+		$title = urlencode($link->title);
 		// Convert everything to HTML and the strip all html tags.
-        $excerpt = urlencode(text_to_summary($link->content, 250));
+		$excerpt = urlencode(text_to_summary($link->content, 250));
 
-        $blog_name = urlencode(get_server_name());
-        $tb_url = $this->url;
-        $url = urlencode($link->get_permalink());
-        $query_string = "charset=UTF-8&title=$title&url=$url&blog_name=$blog_name&excerpt=$excerpt";
-        $trackback_url = parse_url($this->url);
-        $http_request  = 'POST ' . $trackback_url['path'] . ($trackback_url['query'] ? '?'.$trackback_url['query'] : '') . " HTTP/1.0\r\n";
-        $http_request .= 'Host: '.$trackback_url['host']."\r\n";
-        $http_request .= 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'."\r\n";
-        $http_request .= 'Content-Length: '.strlen($query_string)."\r\n";
-        $http_request .= "User-Agent: MNM (http://meneame.net) ";
-        $http_request .= "\r\n\r\n";
-        $http_request .= $query_string;
-        if (empty($trackback_url['port'])) $trackback_url['port'] = 80;
-        $fs = @fsockopen($trackback_url['host'], $trackback_url['port'], $errno, $errstr, 5);
+		$blog_name = urlencode(get_server_name());
+		$tb_url = $this->url;
+		$url = urlencode($link->get_permalink());
+		$query_string = "charset=UTF-8&title=$title&url=$url&blog_name=$blog_name&excerpt=$excerpt";
+		$trackback_url = parse_url($this->url);
+		$http_request  = 'POST ' . $trackback_url['path'] . ($trackback_url['query'] ? '?'.$trackback_url['query'] : '') . " HTTP/1.0\r\n";
+		$http_request .= 'Host: '.$trackback_url['host']."\r\n";
+		$http_request .= 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'."\r\n";
+		$http_request .= 'Content-Length: '.strlen($query_string)."\r\n";
+		$http_request .= "User-Agent: MNM (http://meneame.net) ";
+		$http_request .= "\r\n\r\n";
+		$http_request .= $query_string;
+		if (empty($trackback_url['port'])) $trackback_url['port'] = 80;
+		$fs = @fsockopen($trackback_url['host'], $trackback_url['port'], $errno, $errstr, 5);
 		if($fs && ($res=@fputs($fs, $http_request)) ) {
 		/*********** DEBUG *********
 			$debug_file = '/tmp/trackback.log';
@@ -127,7 +127,7 @@ class Trackback {
 			fwrite($fp, "\n\n");
 			fclose($fp);
 		/*********** DEBUG ************/
-        	@fclose($fs);
+			@fclose($fs);
 			$this->status='ok';
 			$this->store();
 			syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
@@ -135,7 +135,7 @@ class Trackback {
 		}
 		$this->status='error';	
 		$this->store();
-        return false;
+		return false;
 	}
 
 	function abuse() {
@@ -156,7 +156,7 @@ class Trackback {
 			}
 		}
 
-		if ($globals['user_ip'] !=  $_SERVER["SERVER_ADDR"]) {
+		if ($globals['user_ip'] !=	$_SERVER["SERVER_ADDR"]) {
 			$tbs = (int) $db->get_var("select count(*) from trackbacks where trackback_date > date_sub(now(), interval 120 minute) and trackback_type='in' and trackback_ip_int = $globals[user_ip_int]");
 			if ($tbs > 2) {
 				syslog(LOG_NOTICE, "Meneame: trackback/pingback abuse from $globals[user_ip], $this->link, $this->url");

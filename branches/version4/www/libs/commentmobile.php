@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class CommentMobile extends Comment{
@@ -14,7 +14,7 @@ class CommentMobile extends Comment{
 
 		$this->check_visibility();
 
-		if ($this->hidden)  {
+		if ($this->hidden)	{
 			$comment_meta_class = 'comment-meta-hidden';
 			$comment_class = 'comment-body-hidden';
 		} else {
@@ -35,9 +35,9 @@ class CommentMobile extends Comment{
 			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		}
 
-        $vars = compact('comment_meta_class', 'comment_class', 'author');
-        $vars['self'] = $this;
-        return Haanga::Load('mobile/comment_summary.html', $vars);
+		$vars = compact('comment_meta_class', 'comment_class', 'author');
+		$vars['self'] = $this;
+		return Haanga::Load('mobile/comment_summary.html', $vars);
 	}
 
 }

@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
@@ -29,21 +29,21 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	$active = ' class="tabmain-this"';
 
 	if ($tab_name == "main" ) {
-        $items = array(
-            array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
-            array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-            array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
-        );
+		$items = array(
+			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
+			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
+		);
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);
-            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected, 'rel'=>false);
-        }
-        $tabname = 'tabmain';
+			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected, 'rel'=>false);
+		}
+		$tabname = 'tabmain';
 	}
 
-    $vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
-    return Haanga::Load('do_tabs.html', $vars);
+	$vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
+	return Haanga::Load('do_tabs.html', $vars);
 }
 
 function do_header($title, $id='home') {
@@ -60,17 +60,17 @@ function do_header($title, $id='home') {
 		header('X-Pingback: http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php');
 	}
 
-    $globals['security_key'] = get_security_key();
+	$globals['security_key'] = get_security_key();
 	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
-    if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
-    $globals['uri'] = $_SERVER['REQUEST_URI'];
+	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
+	$globals['uri'] = $_SERVER['REQUEST_URI'];
 
 	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
 	else $greeting = _('hola');
 	
-    $vars = compact('title', 'greeting', 'id');
-    return Haanga::Load('header.html', $vars);
+	$vars = compact('title', 'greeting', 'id');
+	return Haanga::Load('header.html', $vars);
 }
 
 
@@ -93,7 +93,7 @@ function do_footer($credits = true) {
 }
 
 function do_footer_menu() {
-    return Haanga::Load('footer_menu.html');
+	return Haanga::Load('footer_menu.html');
 }
 
 function do_rss_box($search_rss = 'rss2.php') {
@@ -101,28 +101,28 @@ function do_rss_box($search_rss = 'rss2.php') {
 
 	if ($globals['mobile']) return;
 
-    return Haanga::Load('rss_box.html', compact('search_rss'));
+	return Haanga::Load('rss_box.html', compact('search_rss'));
 }
 
 function get_toggler_plusminus($container_id, $enabled = false) {
-    global $globals;
+	global $globals;
  
-    static $n = 0;
+	static $n = 0;
  
-    if ($enabled) {
-        $image = $globals['base_static'].'img/common/minus-001.png';
-    } else {
-        $image = $globals['base_static'].'img/common/plus-001.png';
-    }
-    echo "<script type=\"text/javascript\">";
-    if ($n == 0) {
-        echo "var plus = '".$globals['static_server']."' + base_url + 'img/common/plus-001.png';\n";
-        echo "var minus = '".$globals['static_server']."' + base_url + 'img/common/minus-001.png';\n";
-    }
-    echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
-    echo "</script>\n";
-    return "<a class='toggler' id='toggle_l_$n' href='' title='+/-'><img src='$image' id='toggle_i_$n' alt='+/-' width='18' height='18'/></a>";
-    $n++;
+	if ($enabled) {
+		$image = $globals['base_static'].'img/common/minus-001.png';
+	} else {
+		$image = $globals['base_static'].'img/common/plus-001.png';
+	}
+	echo "<script type=\"text/javascript\">";
+	if ($n == 0) {
+		echo "var plus = '".$globals['static_server']."' + base_url + 'img/common/plus-001.png';\n";
+		echo "var minus = '".$globals['static_server']."' + base_url + 'img/common/minus-001.png';\n";
+	}
+	echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
+	echo "</script>\n";
+	return "<a class='toggler' id='toggle_l_$n' href='' title='+/-'><img src='$image' id='toggle_i_$n' alt='+/-' width='18' height='18'/></a>";
+	$n++;
 }
 
 function do_mnu_categories_horizontal($what_cat_id) {
@@ -277,13 +277,13 @@ function do_pages($total, $page_size=25, $margin = true) {
 function print_categories_form($selected = 0) {
 	global $db, $dblang;
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
-    foreach ($metas as &$meta) {
-        $meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC"); 
-    }
-    unset($meta);
+	foreach ($metas as &$meta) {
+		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC"); 
+	}
+	unset($meta);
 
-    $vars = compact('selected', 'metas');
-    return Haanga::Load('form_categories.html', $vars);
+	$vars = compact('selected', 'metas');
+	return Haanga::Load('form_categories.html', $vars);
 }
 
 function do_vertical_tags($what=false) {
@@ -418,7 +418,7 @@ function do_best_sites() {
 ");
 	if ($res) {
 
-        $output = Haanga::Load("best_sites_posts.html", compact('res'), TRUE);
+		$output = Haanga::Load("best_sites_posts.html", compact('res'), TRUE);
 		echo $output;
 		memcache_madd($key, $output, 300);
 	}
@@ -454,7 +454,7 @@ function do_best_comments() {
 			$obj->title = $comment->link_title;
 			$obj->username = $comment->user_login;
 			$obj->tooltip = 'get_comment_tooltip.php';
-            $objects[] = $obj;
+			$objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
@@ -498,7 +498,7 @@ function do_best_story_comments($link) {
 			$obj->title = text_to_summary($comment->content, 75);
 			$obj->username = $comment->user_login;
 			$obj->tooltip = 'get_comment_tooltip.php';
-            $objects[] = $obj;
+			$objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
@@ -521,7 +521,7 @@ function do_best_stories() {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title = sprintf(_('populares de «%s»'), $globals['meta_current_name']);
 	} else {
-		$category_list  = '';
+		$category_list	= '';
 		$title = _('populares');
 	}
 
@@ -543,7 +543,7 @@ function do_best_stories() {
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
-            $links[] = $link;
+			$links[] = $link;
 		}
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
@@ -564,7 +564,7 @@ function do_best_queued() {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
 	} else {
-		$category_list  = '';
+		$category_list	= '';
 		$title = _('candidatas');
 	}
 
@@ -587,7 +587,7 @@ function do_best_queued() {
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
-            $links[] = $link;
+			$links[] = $link;
 		}
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
@@ -624,7 +624,7 @@ function do_best_posts() {
 			$obj->title = text_to_summary($post->clean_content(), 80);
 			$obj->username = $post->username;
 			$obj->tooltip = 'get_post_tooltip.php';
-            $objects[] = $obj;
+			$objects[] = $obj;
 		}
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
@@ -645,7 +645,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	}
 
 	do_header(_('error'));
-    Haanga::Load('error.html', compact('mess', 'error'));
+	Haanga::Load('error.html', compact('mess', 'error'));
 	do_footer_menu();
 	do_footer();
 	die;
@@ -657,15 +657,15 @@ function do_subheader($content, $selected = false) {
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-	   		if ($selected == $n) $class_b = ' class = "selected"'; 
+			if ($selected == $n) $class_b = ' class = "selected"'; 
 			else $class_b='';
-	   		echo '<li'.$class_b.'>'."\n";
-	   		echo '<a href="'.$url.'">'.$text."</a>\n";
-	   		echo '</li>'."\n";
-	   		$n++;
+			echo '<li'.$class_b.'>'."\n";
+			echo '<a href="'.$url.'">'.$text."</a>\n";
+			echo '</li>'."\n";
+			$n++;
 		}
 	} else {
-	    echo '<h1>'.$content.'</h1>'; 
+		echo '<h1>'.$content.'</h1>'; 
 	}
 	echo '</ul>'."\n";
 }
