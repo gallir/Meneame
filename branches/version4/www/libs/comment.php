@@ -318,7 +318,7 @@ class Comment {
 					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login)");
 				}
 				if (array_search($components['host'], $this->links) === false)
-					array_push($this->links, $components['host']);
+					$this->links[] = $components['host'];
 			}
 		}
 	}

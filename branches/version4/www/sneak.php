@@ -17,7 +17,7 @@ $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 init_sneak();
 
 // Start html
-array_push($globals['extra_css'], 'es/sneak.css?'.$globals['sneak_version']);
+$globals['extra_css'][] = 'es/sneak.css?'.$globals['sneak_version'];
 if (!empty($_REQUEST['friends'])) {
 	do_header(_('amigos en la fisgona'));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {

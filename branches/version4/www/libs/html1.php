@@ -32,8 +32,16 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		$items = array(
 			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
 			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
 		);
+
+		// Add "top clicked inf counter is enabled
+		if ($globals['click_counter']) {
+			$items[] = array('url' => 'topclicked.php', 'name' => 'topclicked', 'title' => _('más visitadas'), 'rel'=>true);
+		}
+
+		// Now add "shakeit tab
+		$items[] = array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true);
+
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
 			else $url = htmlentities($_SERVER['REQUEST_URI']);

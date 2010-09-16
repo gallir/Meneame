@@ -156,7 +156,7 @@ function enable_tags_callback($matches) {
 			array_pop($open_tags);
 			return "</$matches[2]>";
 		}
-		array_push($open_tags, $matches[2]);
+		$open_tags[] =  $matches[2];
 		return "<$matches[2]>";
 	}
 	return $matches[0];
@@ -185,7 +185,7 @@ function close_tags_callback($matches) {
 			return ' '; // Don't allow misplaced or wrong tags
 		}
 	} else {
-		array_push($open_tags, $matches[2]);
+		$open_tags[] = $matches[2];
 	}
 	return $matches[0];
 }
@@ -1092,7 +1092,7 @@ function http_cache() {
 	// Send cache control
 	global $globals, $current_user;
 
-	if ($current_user->user_id) array_push($globals['cache-control'], 's-maxage=0, private, community="'.$current_user->user_login.'"');
+	if ($current_user->user_id) $globals['cache-control'][] = 's-maxage=0, private, community="'.$current_user->user_login.'"';
 
 	if ($globals['cache-control']) header('Cache-Control: ' . implode(', ', $globals['cache-control']));
 	else header('Cache-Control: s-maxage=30');

@@ -25,7 +25,7 @@ include(mnminclude.'html1.php');
 
 mobile_redirect();
 
-array_push($globals['cache-control'], 'max-age=3');
+$globals['cache-control'][] = 'max-age=3';
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);

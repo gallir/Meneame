@@ -1246,7 +1246,7 @@ class Link {
 				if ($id == $this->id) continue;
 				$l = Link::from_db($id);
 				if (empty($l->permalink)) $l->permalink = $l->get_permalink();
-				array_push($related, $l);
+				$related[] = $l;
 			}
 		}
 		return $related;

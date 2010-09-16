@@ -154,7 +154,7 @@ class UserAuth {
 		} else {
 			$ids = array();
 		}
-		array_push($ids, $this->user_id);
+		$ids[] = $this->user_id;
 		$this->mnm_user[1] = implode('x', $ids);
 	}
 
@@ -163,7 +163,7 @@ class UserAuth {
 		foreach (explode('x', $this->mnm_user[1]) as $id) {
 			$id = intval($id);
 			if ($id > 0) {
-				array_push($clones, $id);
+				$clones[] = $id;
 			}
 		}
 		return $clones;
@@ -219,7 +219,7 @@ class UserAuth {
 			$visited = array();
 			foreach ($clones as $id) {
 				if ($current_user->user_id != $id && !in_array($id, $visited)) {
-					array_push($visited, $id);
+					$visited[] = $id;
 					if ($globals['form_user_ip']) $ip = $globals['form_user_ip']; // Used in SSL forms
 					else $ip = $globals['user_ip'];
 					UserAuth::insert_clon($current_user->user_id, $id, 'COOK:'.$ip);

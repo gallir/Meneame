@@ -14,12 +14,15 @@ if ($id > 0) {
 	if ($l) {
 		header('HTTP/1.1 301 Moved');
 		header('Location: ' . $l->url);
+		header("Content-Length: 0");
+		header("Connection: close");
+		flush();
 
 		if (! $globals['bot'] 
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 			&& $l->ip != $globals['user_ip']
 			&& ! id_visited($id)) {
-			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
 		}
 		exit(0);
 	}
@@ -28,20 +31,21 @@ require(mnminclude.$globals['html_main']);
 do_error(_('enlace inexistente'), 404);
 
 function id_visited($id) {
-	if (! isset($_COOKIE['v']) || ! ($visited = explode('x', $_COOKIE['v'])) ) {
+	if (! isset($_COOKIE['v']) || ! ($visited = preg_split('/x/', $_COOKIE['v'], 0, PREG_SPLIT_NO_EMPTY)) ) {
 		$visited = array();
 		$found = false;
 	} else {
 		$found = array_search($id, $visited);
-	}
-	if (! $found) {
-		array_push($visited, $id);
 		if (count($visited) > 10) {
 			array_shift($visited);
 		}
-		setcookie('v', implode('x', $visited));
+		if ($found !== false) {
+			unset($visited[$found]);
+		}
 	}
-	return $found;
+	$visited[] = $id;
+	setcookie('v', implode('x', $visited));
+	return $found !== false;
 }
 ?>
 
