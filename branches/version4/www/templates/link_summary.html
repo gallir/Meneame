@@ -59,7 +59,7 @@
 
 	<h1>
 		<a  
-			{% if globals.click_counter %}
+			{% if globals.click_counter && not globals.bot %}
 				href="{{ globals.base_url }}backend/go.php?id={{ self.id }}"
 			{% else %}
 				href="{{ self.url|escape }}"

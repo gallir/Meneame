@@ -11,6 +11,7 @@ include_once('../config.php');
 require(mnminclude.'search.php');
 
 header('Content-Type: text/html; charset=utf-8');
+header('Cache-Control: no-cache');
 
 $id = intval($_GET['id']);
 
