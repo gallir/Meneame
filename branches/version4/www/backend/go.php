@@ -10,19 +10,19 @@ include('../config.php');
 
 $id = intval($_GET['id']);
 if ($id > 0) {
-		$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
-		if ($l) {
-			header('HTTP/1.1 301 Moved');
-			header('Location: ' . $l->url);
+	$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
+	if ($l) {
+		header('HTTP/1.1 301 Moved');
+		header('Location: ' . $l->url);
 
-			if (! $globals['bot'] 
-				&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
-				&& $l->ip != $globals['user_ip']
-				&& ! id_visited($id)) {
-				$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-			}
-			exit(0);
+		if (! $globals['bot'] 
+			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
+			&& $l->ip != $globals['user_ip']
+			&& ! id_visited($id)) {
+			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
 		}
+		exit(0);
+	}
 }
 require(mnminclude.$globals['html_main']);
 do_error(_('enlace inexistente'), 404);

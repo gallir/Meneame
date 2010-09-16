@@ -1257,4 +1257,12 @@ class Link {
 		return intval($db->get_var("select counter from link_clicks where id = $this->id"));
 	}
 
+	function user_clicked() {
+		if (!isset($_COOKIE['v']) || ! preg_match('/(x|^)'.$this->id.'(x|$)/', $_COOKIE['v'])) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }

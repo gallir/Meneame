@@ -70,10 +70,13 @@ if ($current_user->user_id > 0 && $link->status != 'published') {
 if ($current_user->user_id > 0) $freq = 3;
 else $freq = 2;
 
+
 if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if published
-elseif ($globals['click_counter'] && $link->total_votes > $link->get_clicks()) {
+elseif ($globals['click_counter'] 
+	&& ! $link->user_clicked() 
+	&& $link->total_votes > $link->get_clicks()) {
 	// Check there is more clicks than votes to avoid "cowboy votes"
-	error(_('no puede tener más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');
+	error(_('no leído, y con más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');
 }
 
 if ($votes_freq > $freq) {
