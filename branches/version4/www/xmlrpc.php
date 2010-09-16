@@ -68,7 +68,7 @@ class Xmlrpc_server extends IXR_Server {
 
 
 		if(check_ban($globals['user_ip'], 'ip')) {
-			syslog(LOG_NOTICE, "Meneame: pingback, IP is banned ($globals[user_ip]): $pagelinkedfrom - $pagelinkedto");
+			syslog(LOG_NOTICE, "Meneame: pingback, IP is banned (".$globals['user_ip']."): $pagelinkedfrom - $pagelinkedto");
 	  		return new IXR_Error(33, 'IP is banned.');
 		}
 
@@ -78,7 +78,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		if(check_ban($urlfrom[host], 'hostname', false)) {
-			syslog(LOG_NOTICE, "Meneame: pingback, site is banned ($globals[user_ip]): $pagelinkedfrom - $pagelinkedto");
+			syslog(LOG_NOTICE, "Meneame: pingback, site is banned (".$globals['user_ip']."): $pagelinkedfrom - $pagelinkedto");
 	  		return new IXR_Error(33, 'Site is banned.');
 		}
 
@@ -95,7 +95,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		if ($link->date < (time() - 86400*15) && $urlfrom['host'] != get_server_name()) {
-			syslog(LOG_NOTICE, "Meneame ($globals[user_ip]): pingback, story is too old: $pagelinkedto ($pagelinkedfrom )");
+			syslog(LOG_NOTICE, "Meneame (".$globals['user_ip']."): pingback, story is too old: $pagelinkedto ($pagelinkedfrom )");
 	  		return new IXR_Error(33, 'Story is too old for pingbacks.');
 		}
 
