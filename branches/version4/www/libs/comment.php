@@ -43,7 +43,7 @@ class Comment {
 		if (! $current_user->user_id ) return false;
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
-		if ($previous != $time) {
+		if ($time > $previous) {
 			$db->transaction();
 			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
 			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
