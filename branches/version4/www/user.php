@@ -143,6 +143,13 @@ if (!empty($user->names)) {
 	do_header($login);
 }
 
+// Used to show the user the number of unread answers to her comments
+if ($current_user->user_id == $user->id) {
+	$globals['extra_comment_conversation'] = ' ['.Comment::get_unread_conversations($user->id).']';
+} else {
+	$globals['extra_comment_conversation'] = '';
+}
+
 echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 30px">'."\n";
 
 $url_login = urlencode($login);
@@ -398,7 +405,7 @@ function do_friends_shaken () {
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
+	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
 		'comments_rss2.php?user_id='.$user->id, _('comentarios en rss2'));
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
@@ -410,19 +417,22 @@ function do_commented () {
 function do_conversation () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
+	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
 		'comments_rss2.php?answers_id='.$user->id, _('conversación en rss2'));
 	$rows = $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$comments = $db->get_results("SELECT distinct comment_id, link_id, comment_type FROM conversations, comments, links WHERE conversation_user_to=$user->id and conversation_type='comment' and comment_id=conversation_from and link_id=comment_link_id ORDER BY conversation_time desc LIMIT $offset,$page_size");
 	if ($comments) {
-		print_comment_list($comments, $user);
+		$last_read = print_comment_list($comments, $user);
+	}
+	if ($last_read > 0 && $current_user->user_id == $user->id) {
+		Comment::update_read_conversation($timestamp_read);
 	}
 }
 
 function do_favorite_comments () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 3);
+	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 3);
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='comment'");
 	$comments = $db->get_col("SELECT comment_id FROM comments, favorites WHERE favorite_user_id=$user->id AND favorite_type='comment' AND favorite_link_id=comment_id ORDER BY comment_id DESC LIMIT $offset,$page_size");
@@ -442,7 +452,7 @@ function do_favorite_comments () {
 function do_shaken_comments () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación') => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
+	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
 
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
@@ -471,6 +481,8 @@ function print_comment_list($comments, $user) {
 	$link = new Link;
 	$comment = new Comment;
 
+	$timestamp_read = 0;
+
 	foreach ($comments as $dbcomment) {
 		if ($dbcomment->comment_type == 'admin' && ! $current_user->admin) continue;
 		$link->id=$dbcomment->link_id;
@@ -484,12 +496,15 @@ function print_comment_list($comments, $user) {
 			$last_link = $link->id;
 		}
 		$comment->read();
+		if ($comment->date > $timestamp_read) $timestamp_read = $comment->date;
 		echo '<ol class="comments-list">';
 		echo '<li>';
 		$comment->print_summary($link, 2000, false);
 		echo '</li>';
 		echo "</ol>\n";
 	}
+	// Return the timestamp of the most recent comment
+	return $timestamp_read;
 }
 
 

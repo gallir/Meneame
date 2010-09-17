@@ -37,6 +37,33 @@ class Post {
 		return null;
 	}
 
+	static function update_read_conversation($time = false) {
+		global $db, $globals, $current_user;
+		$key = 'p_last_read';
+
+		if (! $current_user->user_id ) return false;
+		if (! $time) $time = $globals['now'];
+		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+		if ($previous != $time) {
+			$db->transaction();
+			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
+			$db->commit();
+		}
+		return true;
+
+	}
+
+	static function get_unread_conversations($user = 0) {
+		global $db, $globals, $current_user;
+		$key = 'p_last_read';
+
+		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
+		$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'post' and conversation_time > FROM_UNIXTIME($last_read)");
+		return $n;
+	}
+
 	static function can_add() {
 		// Check an user can add a new post
 		global $globals, $current_user, $db;
@@ -108,7 +135,7 @@ class Post {
 	function print_summary($length=0) {
 		global $current_user, $globals;
 
-		if(!$this->read) $this->read(); 
+		if(!$this->read) $this->read();
 		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
 				$this->user_level == 'disabled';
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
@@ -130,7 +157,7 @@ class Post {
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
 
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
-		
+
 		// Print dates
 		if ($globals['now'] - $this->date > 604800) { // 7 days
 			$this->comment_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
@@ -222,13 +249,13 @@ class Post {
 
 
 		echo'<script type="text/javascript">'."\n";
-		// prepare Options Object 
+		// prepare Options Object
 		if ($this->id == 0) {
 			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#newpost").html(response); $("#addpost").hide("fast"); } } }; ';
 		} else {
 			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
 		}
-		// wait for the DOM to be loaded 
+		// wait for the DOM to be loaded
 		echo'$(\'#thisform'.$this->id.'\').ajaxForm(options);' ."\n";
 		echo '</script>'."\n";
 	}
@@ -312,7 +339,7 @@ class Post {
 			}
 		}
 	}
-	
+
 	function normalize_content() {
 		$this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
 		return $this->content;

@@ -58,7 +58,7 @@ switch ($argv[0]) {
 		$tab_option = 1;
 		$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
 		//$rows = $db->get_var("SELECT count(*) FROM posts");
-		$min_date = date("Y-m-d 00:00:00", time() - 86400*10); 
+		$min_date = date("Y-m-d 00:00:00", time() - 86400*10);
 		$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
 		$rss_option="sneakme_rss2.php";
 		break;
@@ -115,7 +115,7 @@ switch ($argv[0]) {
 					$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
 					$rss_option="sneakme_rss2.php?user_id=$user->id";
 			}
-		}		
+		}
 }
 
 $globals['ads'] = true;
@@ -124,21 +124,27 @@ do_header($page_title);
 do_posts_tabs($tab_option, $user->username);
 $post = new Post;
 
+$conversation_extra = '';
 if ($tab_option == 4) {
+	if ($current_user->user_id == $user->id) {
+		$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
+	}
 	$options = array(
 		_('todas') => post_get_base_url($user->username),
 		_('amigos') => post_get_base_url("$user->username/_friends"),
 		_('favoritos') => post_get_base_url("$user->username/_favorites"),
-		_('conversación') => post_get_base_url("$user->username/_conversation"),
+		_('conversación').$conversation_extra => post_get_base_url("$user->username/_conversation"),
 		sprintf(_('perfil de %s').'&nbsp;&rarr;', $user->username) => get_user_uri($user->username),
-		
+
 	);
 }  elseif ($tab_option == 1 && $current_user->user_id > 0) {
+	$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
+
 	$options = array(
 		_('amigos') => post_get_base_url("$current_user->user_login/_friends"),
 		_('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
-		_('conversación') => post_get_base_url("$current_user->user_login/_conversation"),
-		
+		_('conversación').$conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
+
 	);
 } else $options = false;
 do_post_subheader($options, $view, $rss_option);
@@ -199,6 +205,7 @@ function onLoad(lat, lng, zoom, icon) {
 	$posts = $db->get_results($sql);
 	if ($posts) {
 		echo '<ol class="comments-list">';
+		$time_read = 0;
 		foreach ($posts as $dbpost) {
 			$post = Post::from_db($dbpost->post_id);
 			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
@@ -206,6 +213,7 @@ function onLoad(lat, lng, zoom, icon) {
 			} else {
 				echo '<li>';
 				$post->print_summary();
+				if ($post->date > $time_read) $time_read = $post->date;
 				echo '</li>';
 			}
 		}
@@ -230,6 +238,12 @@ function onLoad(lat, lng, zoom, icon) {
 				echo "</ol>\n";
 				echo '</div>'."\n";
 			}
+		}
+
+		echo Post::get_unread_conversations() . "-- $user->id $current_user->user_id $view $time_read<br>";
+		// Update conversation time
+		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
+			Post::update_read_conversation($time_read);
 		}
 	}
 	echo '</div>';
@@ -284,8 +298,8 @@ function do_posts_tabs($tab_selected, $username) {
 
 function do_post_subheader($content, $selected = false, $rss = false, $rss_title = '') {
 	global $globals, $current_user;
-	 
-	// arguments: hash array with "button text" => "button URI"; Nº of the selected button 
+
+	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
 	if ($rss) {
 		if (!$rss_title) $rss_title = 'rss2';
@@ -301,11 +315,11 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 			echo '<li><span><a href="javascript:return false;">'._('nueva nota').'</a></span></li>';
 		}
 	}
-	
+
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-	   		if ($selected === $n) $class_b = ' class = "selected"'; 
+	   		if ($selected === $n) $class_b = ' class = "selected"';
 			else $class_b='';
 	   		echo '<li'.$class_b.'>'."\n";
 	   		echo '<a href="'.$url.'">'.$text."</a>\n";
@@ -313,7 +327,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	   		$n++;
 		}
 	} elseif (! empty($content)) {
-	    echo '<li>'.$content.'</li>'; 
+	    echo '<li>'.$content.'</li>';
 	}
 	echo '</ul>'."\n";
 }

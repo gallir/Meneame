@@ -36,6 +36,34 @@ class Comment {
 		return false;
 	}
 
+	static function update_read_conversation($time = false) {
+		global $db, $globals, $current_user;
+		$key = 'c_last_read';
+
+		if (! $current_user->user_id ) return false;
+		if (! $time) $time = $globals['now'];
+		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+		if ($previous != $time) {
+			$db->transaction();
+			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
+			$db->commit();
+		}
+		return true;
+
+	}
+
+	static function get_unread_conversations($user = 0) {
+		global $db, $globals, $current_user;
+		$key = 'c_last_read';
+
+		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
+		$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'comment' and conversation_time > FROM_UNIXTIME($last_read)");
+		return $n;
+
+	}
+
 	function store($full = true) {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
@@ -80,7 +108,7 @@ class Comment {
 		}
 		return $this->order;
 	}
-	
+
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
@@ -141,7 +169,7 @@ class Comment {
 			$link->read();
 			$this->link_object = $link;
 		}
-		
+
 		if ($single_link) $html_id = $this->order;
 		else $html_id = $this->id;
 
@@ -259,12 +287,12 @@ class Comment {
 		if (!$html_id) $html_id = $this->id;
 
 		if (!$this->basic_summary && (
-					($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time']) 
+					($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])
 					|| (($this->author != $current_user->user_id || $this->type == 'admin')
-					&& $current_user->user_level == 'god')) ) { // gods can always edit 
+					&& $current_user->user_level == 'god')) ) { // gods can always edit
 			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
 
-		} 
+		}
 		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->content = text_to_summary($this->content, $length);
 			// Check all html tags are closed
@@ -314,7 +342,7 @@ class Comment {
 			if ($components && ! preg_match("/.*$localdomain$/", $components['host'])) {
 				$link_ban = check_ban($link, 'hostname', false, true); // Mark this comment as containing a banned link
 				$this->banned |= $link_ban;
-				if ($link_ban) { 	
+				if ($link_ban) {
 					syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login)");
 				}
 				if (array_search($components['host'], $this->links) === false)
@@ -358,9 +386,9 @@ class Comment {
 			echo '<div class="commentform warn">'."\n";
 			echo _('comentarios cerrados')."\n";
 			echo '</div>'."\n";
-		} elseif ($current_user->authenticated 
-					&& (($current_user->user_karma > $globals['min_karma_for_comments'] 
-							&& $current_user->user_date < $globals['now'] - $globals['min_time_for_comments']) 
+		} elseif ($current_user->authenticated
+					&& (($current_user->user_karma > $globals['min_karma_for_comments']
+							&& $current_user->user_date < $globals['now'] - $globals['min_time_for_comments'])
 						|| $current_user->user_id == $link->author)) {
 			// User can comment
 			echo '<div class="commentform">'."\n";
@@ -419,9 +447,9 @@ class Comment {
 
 		// Check if is a POST of a comment
 
-		if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments']*1.01 && 
+		if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments']*1.01 &&
 				$link->comments < $globals['max_comments'] &&
-				intval($_POST['link_id']) == $link->id && $current_user->authenticated && 
+				intval($_POST['link_id']) == $link->id && $current_user->authenticated &&
 				intval($_POST['user_id']) == $current_user->user_id &&
 				intval($_POST['randkey']) > 0
 				)) {
@@ -443,7 +471,7 @@ class Comment {
 		// Check if is an admin comment
 		if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
 			$comment->type = 'admin';
-		} 
+		}
 
 		// Don't allow to comment with a clone
 		$hours = intval($globals['user_comments_clon_interval']);
