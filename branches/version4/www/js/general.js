@@ -297,6 +297,11 @@ JSOC = function(){
 	}
 }
 
+function clk(f, id) {
+	f.href=base_url + 'backend/go.php?id=' + id;
+	return true;
+}
+
 /**************************************
 Tooltips functions
 ***************************************/
