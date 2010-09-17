@@ -240,7 +240,6 @@ function onLoad(lat, lng, zoom, icon) {
 			}
 		}
 
-		echo Post::get_unread_conversations() . "-- $user->id $current_user->user_id $view $time_read<br>";
 		// Update conversation time
 		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
 			Post::update_read_conversation($time_read);
