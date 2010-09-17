@@ -19,6 +19,7 @@ if ($id > 0) {
 		flush();
 
 		if (! $globals['bot'] 
+			&& $globals['click_counter']
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 			&& $l->ip != $globals['user_ip']
 			&& ! id_visited($id)) {

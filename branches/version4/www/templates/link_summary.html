@@ -27,7 +27,7 @@
 			{% endif %}
 			{% if self.show_clicks && globals.click_counter %}
 				<div style="background-color: #FFB300; margin-top: 3px; color: #fff">
-				{% exec self.get_clicks %} {% trans _('clics') %}
+				{{ self.clicks }} {% trans _('clics') %}
 				</div>
 			{% endif %}
 		</div>
@@ -186,7 +186,7 @@
 
 			{# show clicks #}
 			{% if self.id >= globals.click_counter %}
-				<span class="tool"><strong>{% trans _('clics') %}</strong>: {% exec self.get_clicks %}</span>
+				<span class="tool"><strong>{% trans _('clics') %}</strong>: {{ self.clicks }}</span>
 			{% endif %}
 
 			{% if current_user.user_id > 0 %}

@@ -75,7 +75,8 @@ if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if
 
 // Check for clicks vs votes
 // to avoid "cowboy votes" without reading the article
-if ($link->id >= $globals['click_counter'] 
+if ($globals['click_counter']
+	&& $link->id >= $globals['click_counter'] 
 	&& ! $link->user_clicked() 
 	&& $link->total_votes > $link->get_clicks()) {
 	error(_('no leído, y con más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');
