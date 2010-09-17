@@ -12,8 +12,7 @@
 		onchange="select_meta(this, {{ meta.category_id}})"
 		/>{{ meta.category_name}}</label></dt>
 
-	{% set thismeta = categories[meta.category_id] %} {# to avoid warning in Haanga compiler #}
-	{% for category in thismeta %}
+	{% for category in categories[meta.category_id] %}
 		<dd><label><input
 			{% if user.id != current_user.user_id %}disabled="true"{% endif %}
 			name="categories[]" type="checkbox"

@@ -849,7 +849,7 @@ class Haanga_Compiler
                         }
                         $var = &$var->$part;
                     } else {
-                        if (!isset($var[$part])) {
+                        if (!is_scalar($part) || empty($part) || !isset($var[$part])) {
                             return NULL;
                         }
                         $var = &$var[$part];
