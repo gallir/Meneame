@@ -972,7 +972,18 @@ class Link {
 				$this->annotation .= _('Coeficiente categoría').': '.round($meta_coef[$this->meta_id], 2)."<br/>";
 			}
 		}
-		$this->karma = round($this->karma);
+
+		// Give a small bonus (= $w) to links according to their clicks
+		if ($globals['click_counter'] && $this->id >= $globals['click_counter']
+			&& $globals['karma_clicks_bonus'] > 0
+			&& $this->negatives < $this->votes/5) {
+			$w = $globals['karma_clicks_bonus'];
+			$this->clicks = $this->get_clicks(); // Just in case it was not read
+			$c = $w * log10($this->clicks/($this->total_votes+$this->negatives));
+			$c = min($w*1.5, $c); $c = max($c, 0);
+			$this->karma = $this->karma * (1+$c);
+			$this->karma = round($this->karma);
+		}
 	}
 
 	// Bonus for sources than are not frequently sent

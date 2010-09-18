@@ -64,6 +64,7 @@ $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = 'legal.php';
 
+// Coefficient for links karma calculation
 $globals['min_decay'] = 0.25;
 $globals['karma_start_decay'] = 10; // In hours, when a link start to decrease its karma
 $globals['karma_decay'] = 54; // In hours, when it reach its minimum
@@ -71,6 +72,7 @@ $globals['karma_decay'] = 54; // In hours, when it reach its minimum
 // Similar values for "news_meta", used if the previous is defined
 $globals['karma_news_start_decay'] =  7;
 $globals['karma_news_decay'] = 42;
+$globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reaches this value when clicks/votes = 10;
 
 
 
