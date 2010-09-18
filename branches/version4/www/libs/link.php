@@ -492,7 +492,7 @@ class Link {
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
-		$this->url_str	   = htmlentities(preg_replace('/^https*:\/\//', '', txt_shorter($this->url)));
+		$this->url_str	   = htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $this->url), 60));
 		$this->username_str = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
 		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
 		$this->thumb_url	= $this->has_thumb();
