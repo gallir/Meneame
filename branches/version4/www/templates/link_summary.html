@@ -25,7 +25,7 @@
 			</div>
 
 			{% endif %}
-			{% if self.show_clicks && globals.click_counter %}
+			{% if self.show_clicks && globals.click_counter && globals.click_counter <= self.id %}
 				<div style="background-color: #FFB300; margin-top: 3px; color: #fff">
 				{{ self.clicks }} {% trans _('clics') %}
 				</div>
