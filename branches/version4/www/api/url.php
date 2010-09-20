@@ -6,6 +6,11 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+// Don't check the user is logged
+$globals['no_auth'] = true;
+// Use the alternate server for api, if it exists
+$globals['alternate_db_server'] = 'api';
+
 include('../config.php');
 
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {

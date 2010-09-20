@@ -17,8 +17,11 @@ class UserAuth {
 		global $db, $site_key, $globals;
 
 		$this->user_id = 0;
+		$this->user_login = '';
+		$this->authenticated = false;
+		$this->admin = false;
 
-		if(isset($_COOKIE['mnm_key']) && isset($_COOKIE['mnm_user'])
+		if(!isset($globals['no_auth']) && isset($_COOKIE['mnm_key']) && isset($_COOKIE['mnm_user'])
 					&& ($this->mnm_user = explode(":", $_COOKIE['mnm_user']))
 					&& $this->mnm_user[0] > 0
 					) {
@@ -56,10 +59,6 @@ class UserAuth {
 					$this->SetIDCookie(2, $remember);
 				}
 			}
-		} else {
-			$this->user_login = '';
-			$this->authenticated = false;
-			$this->admin = false;
 		}
 		// Mysql variable to use en join queries
 		$db->query("set @user_id = $this->user_id");

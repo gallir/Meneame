@@ -171,7 +171,13 @@ require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 
-$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
+// Allows a script to define to use the alternate server
+if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']]);
+} else {
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
+}
+
 // we now do "lazy connection.
 $db->persistent = $globals['mysql_persistent'];
 //$db->master_persistent = $globals['mysql_master_persistent'];
