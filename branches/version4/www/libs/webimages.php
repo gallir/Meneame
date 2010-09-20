@@ -486,7 +486,7 @@ class HtmlImages {
 					$visited[$path_query_match] = true;
 
 					if ($my_path_len > 2 && $my_path_len < $other_path_len
-						&& strcmp($this->path_query, $path_query_match, strlen($this->path_query)) == 0 ) {
+						&& strncmp($this->path_query, $path_query_match, strlen($this->path_query)) == 0 ) {
 						if ($this->debug) echo "<!-- Skipped because it is a subpage-->\n";
 						continue;
 					}
