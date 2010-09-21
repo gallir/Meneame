@@ -197,7 +197,7 @@ color: #f00;
 }
 
 .black{
-  color: #3C3C3C !important;
+color: #3C3C3C !important;
 }
 
 
@@ -214,8 +214,8 @@ float: right;
 }
 
 ul#headtools li a span{
-  margin-right: 5px;
-  display: inline-block;
+margin-right: 5px;
+display: inline-block;
 }
 
 ul#headtools li img{
@@ -223,8 +223,8 @@ vertical-align: middle;
 }
 
 #header ul#headtools li{
-  margin-right: 15px;
-  margin-top:8px;
+margin-right: 15px;
+margin-top:8px;
 }
 
 #header ul#headtools li.searchbox{
@@ -259,13 +259,13 @@ margin-top: 0px;
 }
 
 #naviwrap{
-  background-color: #3C3C3C;
-  margin-top: 1px;
-  -moz-border-radius-bottomright: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  height: 25px;
+background-color: #3C3C3C;
+margin-top: 1px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+-webkit-border-bottom-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+height: 25px;
 }
 
 #naviwrap ul#navigation{
@@ -300,33 +300,33 @@ font-size: 1.2em;
 
 
 #naviwrap ul#headtools{
-  float: right;
-  display: inline-block;
-  margin-right: 5px;
+float: right;
+display: inline-block;
+margin-right: 5px;
 }
 
 #naviwrap ul#headtools li{
-  margin-left: 10px;
+margin-left: 10px;
 }
 
 #naviwrap ul#headtools li a{
-  text-transform: capitalize;
-  line-height: 25px;
-  display: inline-block;
+text-transform: capitalize;
+line-height: 25px;
+display: inline-block;
 }
 
 #naviwrap ul#headtools li a span{
-  margin-right: 5px;
-  vertical-align: -2px;
+margin-right: 5px;
+vertical-align: -2px;
 }
 
 #naviwrap ul#headtools li.inside a img{
-  margin-top: 3px;
+margin-top: 3px;
 }
 
 .banner-top {
-float: left;
-margin: 3px 0 15px 15px;
+float: auto;
+margin: 3px 0 15px 0;
 height: 92px;
 width: 732px;
 }
