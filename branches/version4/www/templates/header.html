@@ -83,6 +83,7 @@
 <script type="text/javascript">
 if(top.location != self.location)top.location = self.location;
 var base_key="{{globals.security_key}}";
+var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
 </script>
 
 {% if globals.thumbnail %}

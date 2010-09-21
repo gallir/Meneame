@@ -16,7 +16,7 @@ function redirect(url)
 function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&l=" + link_id + "&u=" + document.referrer;
 	url = url + "?" + content;
 	disable_vote_link(id, -1, "...", '');
 	$.getJSON(url,
@@ -30,7 +30,7 @@ function menealo(user, id)
 function menealo_comment(user, id, value)
 {
 	var url = base_url + "backend/menealo_comment.php";
-	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
+	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
 	$.getJSON(url,
 		 function(data) {
@@ -52,7 +52,7 @@ function menealo_comment(user, id, value)
 function menealo_post(user, id, value)
 {
 	var url = base_url + "backend/menealo_post.php";
-	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key;
+	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
 	$.getJSON(url,
 		 function(data) {
@@ -168,7 +168,7 @@ function report_problem(frm, user, id) {
 		frm.ratings.selectedIndex=0;
 		return false;
 	}
-	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key + "&u=" + document.referrer;
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + document.referrer;
 	var url=base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
