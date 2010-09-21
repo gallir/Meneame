@@ -91,9 +91,11 @@ if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
 
 $links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
 if ($links) {
+	$counter = 0;
 	foreach($links as $link_id) {
 		$link = Link::from_db($link_id);
 		$link->print_summary();
+		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter'));
 	}
 }
 

@@ -100,7 +100,7 @@ var base_key="{{globals.security_key}}";
 <div id="wrap">
 <div id="header">
 <a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
-<ul id="headtools">
+<ul class="headtools">
 
 <li class="searchbox">
 <form action="{{globals.base_url}}search.php" method="get" name="top_search">
@@ -144,7 +144,7 @@ var base_key="{{globals.security_key}}";
 	<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
 	</ul>
 
-	<ul id="headtools">
+	<ul class="headtools">
 	<li><a href="http://meneame.wikispaces.com/Comenzando">{% trans _('ayuda')%} <img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help button" title="{% trans _('ayuda') %}" width="13" height="16" /></a></li>
 
 	{% if current_user.user_id > 0 %}
@@ -163,5 +163,7 @@ var base_key="{{globals.security_key}}";
 
 
 </div>
+{#
 {% exec do_banner_top as foo%}
+#}
 <div id="container">

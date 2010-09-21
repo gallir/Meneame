@@ -156,15 +156,14 @@ border-radius: 3px;
 /* END roundboxes */
 #wrap {
 min-width: 952px;
-max-width: 1200px;
-margin: 0 auto;
+max-width: 1300px;
+width: 98%;
 text-align: left;
 background-color: #fff;
 display: inline-block;
 }
 
 #header{
-position: relative;
 height: 36px;
 background: #FF6400 url(../../img/common/header-bckg-02.png) repeat-x;
 font-family: arial, helvetica, sans serif;
@@ -181,19 +180,10 @@ display: block;
 float: left;
 }
 
-ul#headtools{
+ul.headtools{
 list-style-type: none;
 padding: 0px;
 margin: 0px;
-}
-
-ul#headtools li.inside a span{
-position: absolute;
-height: 100%;
-width: 100%;
-text-align: center;
-font-weight: bold;
-color: #f00;
 }
 
 .black{
@@ -201,40 +191,40 @@ color: #3C3C3C !important;
 }
 
 
-ul#headtools a{
+ul.headtools a{
 text-decoration: none;
 color: #FFFFFF;
 text-transform: capitalize;
 }
 
-ul#headtools li{
+ul.headtools li{
 position: relative;
 display: block;
 float: right;
 }
 
-ul#headtools li a span{
+ul.headtools li a span{
 margin-right: 5px;
 display: inline-block;
 }
 
-ul#headtools li img{
+ul.headtools li img{
 vertical-align: middle;
 }
 
-#header ul#headtools li{
+#header ul.headtools li{
 margin-right: 15px;
 margin-top:8px;
 }
 
-#header ul#headtools li.searchbox{
+#header ul.headtools li.searchbox{
 margin-right: 5px;
 margin-top: 6px;
 display: block;
 }
 
 
-#header ul#headtools li.searchbox input{
+#header ul.headtools li.searchbox input{
 padding: 0px;
 background-color: #F5F5F5;
 border: solid 0px transparent;
@@ -249,11 +239,11 @@ color: #B0B0B0;
 float: left;
 }
 
-#header ul#headtools li.searchbox a{
+#header ul.headtools li.searchbox a{
 float: left;
 }
 
-#header ul#headtools li.searchbox img{
+#header ul.headtools li.searchbox img{
 float: left;
 margin-top: 0px;
 }
@@ -266,6 +256,7 @@ margin-top: 1px;
 -webkit-border-bottom-right-radius: 4px;
 -webkit-border-bottom-left-radius: 4px;
 height: 25px;
+margin-bottom: 30px;
 }
 
 #naviwrap ul#navigation{
@@ -285,10 +276,6 @@ margin-top: 3px;
 padding: 0 10px 0 10px;
 }
 
-#naviwrap ul#navigation li:hover{
-
-}
-
 #naviwrap ul#navigation li a{
 text-decoration: none;
 text-transform: capitalize;
@@ -299,34 +286,29 @@ font-size: 1.2em;
 }
 
 
-#naviwrap ul#headtools{
+#naviwrap ul.headtools{
 float: right;
 display: inline-block;
 margin-right: 5px;
 }
 
-#naviwrap ul#headtools li{
+#naviwrap ul.headtools li{
 margin-left: 10px;
 }
 
-#naviwrap ul#headtools li a{
+#naviwrap ul.headtools li a{
 text-transform: capitalize;
 line-height: 25px;
 display: inline-block;
 }
 
-#naviwrap ul#headtools li a span{
+#naviwrap ul.headtools li a span{
 margin-right: 5px;
 vertical-align: -2px;
 }
 
-#naviwrap ul#headtools li.inside a img{
-margin-top: 3px;
-}
-
 .banner-top {
-float: auto;
-margin: 3px 0 15px 0;
+margin: 5px auto;
 height: 92px;
 width: 732px;
 }
@@ -369,7 +351,7 @@ vertical-align: middle;
 
 ul.tabmain{
 list-style-type: none;
-margin-top: 40px;
+margin-top: 10px;
 border-bottom: solid 1px #FF7E12;
 height: 25px;
 padding-left: 90px;
