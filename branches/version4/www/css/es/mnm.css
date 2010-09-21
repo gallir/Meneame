@@ -160,6 +160,7 @@ max-width: 1200px;
 margin: 0 auto;
 text-align: left;
 background-color: #fff;
+display: inline-block;
 }
 
 #header{
@@ -180,27 +181,50 @@ display: block;
 float: left;
 }
 
-#header ul#headtools{
+ul#headtools{
 list-style-type: none;
 padding: 0px;
 margin: 0px;
 }
 
-#header ul#headtools a{
-text-decoration: none;
-color: #FFFFFF;
+ul#headtools li.inside a span{
+position: absolute;
+height: 100%;
+width: 100%;
+text-align: center;
+font-weight: bold;
+color: #f00;
 }
 
-#header ul#headtools li{
+.black{
+  color: #3C3C3C !important;
+}
+
+
+ul#headtools a{
+text-decoration: none;
+color: #FFFFFF;
+text-transform: capitalize;
+}
+
+ul#headtools li{
 position: relative;
 display: block;
 float: right;
-margin-right: 15px;
-margin-top:8px;
 }
 
-#header ul#headtools li img{
+ul#headtools li a span{
+  margin-right: 5px;
+  display: inline-block;
+}
+
+ul#headtools li img{
 vertical-align: middle;
+}
+
+#header ul#headtools li{
+  margin-right: 15px;
+  margin-top:8px;
 }
 
 #header ul#headtools li.searchbox{
@@ -235,38 +259,70 @@ margin-top: 0px;
 }
 
 #naviwrap{
-float: left;
+  background-color: #3C3C3C;
+  margin-top: 1px;
+  -moz-border-radius-bottomright: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  height: 25px;
 }
 
-#naviwrap ul{
+#naviwrap ul#navigation{
 list-style-type: none;
 margin: 0;
 padding: 0;
+display: inline-block;
+float: left;
 }
 
-#naviwrap li{
-background-color: #FFB300;
+#naviwrap ul#navigation li{
 color: #FFFFFF;
-width: 120px;
-height: 20px;
+display: inline-block;
+height: 18px;
+border-right: solid 1px #FFFFFF;
 margin-top: 3px;
-margin-bottom: 3px;
+padding: 0 10px 0 10px;
 }
 
-#naviwrap li:hover{
-background-color: #ff6400;
+#naviwrap ul#navigation li:hover{
+
 }
 
-#naviwrap li a{
+#naviwrap ul#navigation li a{
 text-decoration: none;
-color: inherit;
-margin-left: 8px;
 text-transform: capitalize;
-font-size: 13px;
-line-height: 20px;
 display: block;
+color: inherit;
+font-weight: bold;
+font-size: 1.2em;
 }
 
+
+#naviwrap ul#headtools{
+  float: right;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+#naviwrap ul#headtools li{
+  margin-left: 10px;
+}
+
+#naviwrap ul#headtools li a{
+  text-transform: capitalize;
+  line-height: 25px;
+  display: inline-block;
+}
+
+#naviwrap ul#headtools li a span{
+  margin-right: 5px;
+  vertical-align: -2px;
+}
+
+#naviwrap ul#headtools li.inside a img{
+  margin-top: 3px;
+}
 
 .banner-top {
 float: left;

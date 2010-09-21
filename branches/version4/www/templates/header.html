@@ -36,7 +36,7 @@
 
 {% if globals.noindex %}
 	<meta name="robots" content="noindex,follow"/>
-{% endif %}	
+{% endif %}
 
 {% if globals.tags %}
 	<meta name="keywords" content="{{globals.tags}}" />
@@ -122,13 +122,8 @@ var base_key="{{globals.security_key}}";
 </form>
 </li>
 
-<li><a href="http://meneame.wikispaces.com/Comenzando">{% trans _('ayuda')%} <img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help button" title="{% trans _('ayuda') %}" width="13" height="16" /></a></li>
-{% if current_user.admin %}
-	<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('herramientas')%}" width="16" height="16" /> </a></li>
-{% endif %}
-
 {% if current_user.authenticated %}
-	<li><a href="{{ current_user.user_login|useruri }}" 
+	<li><a href="{{ current_user.user_login|useruri }}"
 		{% if globals.greetings %}
 			 title="{% trans _('menéame te saluda en') %} {{globals.greetings[greeting]}}"
 		{% endif %}>
@@ -142,11 +137,31 @@ var base_key="{{globals.security_key}}";
 </ul></div>
 
 <div id="naviwrap">
-<ul>
-<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar noticia') %}</a></li>
-<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
-<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
-<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
-</ul></div>
+	<ul id="navigation">
+	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar noticia') %}</a></li>
+	<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
+	<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
+	<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
+	</ul>
+
+	<ul id="headtools">
+	<li><a href="http://meneame.wikispaces.com/Comenzando">{% trans _('ayuda')%} <img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help button" title="{% trans _('ayuda') %}" width="13" height="16" /></a></li>
+
+	{% if current_user.user_id > 0 %}
+		{% if current_user.admin %}
+			<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('administración')%}" width="16" height="16" /> </a></li>
+		{% endif %}
+		{% if current_user.posts_answers %}
+			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{% trans _('respuestas a notas') %}"><span>{{ current_user.posts_answers }} {% trans _('notas') %}</span><img src="{{globals.base_static}}img/common/nota.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+		{% endif %}
+		{% if current_user.comments_answers %}
+			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span>{{ current_user.comments_answers }} {% trans _('comentarios') %}</span><img src="{{globals.base_static}}img/common/cmnt.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+		{% endif %}
+	{% endif %}
+
+	</ul>
+
+
+</div>
 {% exec do_banner_top as foo%}
 <div id="container">

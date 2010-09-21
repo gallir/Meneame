@@ -76,7 +76,12 @@ function do_header($title, $id='home') {
 
 	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
 	else $greeting = _('hola');
-	
+
+	if ($current_user->user_id > 0) {
+		$current_user->posts_answers = Post::get_unread_conversations($current_user->user_id);
+		$current_user->comments_answers = Comment::get_unread_conversations($current_user->user_id);
+	}
+
 	$vars = compact('title', 'greeting', 'id');
 	return Haanga::Load('header.html', $vars);
 }
@@ -114,9 +119,9 @@ function do_rss_box($search_rss = 'rss2.php') {
 
 function get_toggler_plusminus($container_id, $enabled = false) {
 	global $globals;
- 
+
 	static $n = 0;
- 
+
 	if ($enabled) {
 		$image = $globals['base_static'].'img/common/minus-001.png';
 	} else {
@@ -171,7 +176,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 			echo '<li'.$thiscat.'>';
 			if ($i > 0) {
-				echo '&bull; &nbsp;'; 
+				echo '&bull; &nbsp;';
 			}
 			$i++;
 			echo '<a href="'.$base_url.'?category='.$category->category_id.$query.'">';
@@ -199,11 +204,11 @@ function mobile_redirect() {
 	global $globals;
 
 	if ($globals['mobile'] && ! preg_match('/(pad|tablet|wii|tv)\W/i', $_SERVER['HTTP_USER_AGENT']) &&
-			$globals['url_shortener_mobile_to'] && 
-			(! $_SERVER['HTTP_REFERER'] || 
+			$globals['url_shortener_mobile_to'] &&
+			(! $_SERVER['HTTP_REFERER'] ||
 			// Check if the user comes from our own domain
 			// If so, don't redirect her
-			! preg_match('/^https*:\/\/.*?'.preg_quote(preg_replace('/.+?\.(.+?\..+?)$/', "$1", get_server_name())).'/i', $_SERVER['HTTP_REFERER'])) 
+			! preg_match('/^https*:\/\/.*?'.preg_quote(preg_replace('/.+?\.(.+?\..+?)$/', "$1", get_server_name())).'/i', $_SERVER['HTTP_REFERER']))
 		) {
 		header('Location: http://'.$globals['url_shortener_mobile_to'].$_SERVER['REQUEST_URI']);
 		die;
@@ -223,12 +228,12 @@ function do_pages($total, $page_size=25, $margin = true) {
 		$query = htmlspecialchars($query);
 		$query = "&amp;$query";
 	}
-	
+
 	$current = get_current_page();
 	$total_pages=ceil($total/$page_size);
 	$start=max($current-intval($index_limit/2), 1);
 	$end=$start+$index_limit-1;
-	
+
 	if ($margin) {
 		echo '<div class="pages-margin">';
 	} else {
@@ -286,7 +291,7 @@ function print_categories_form($selected = 0) {
 	global $db, $dblang;
 	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
 	foreach ($metas as &$meta) {
-		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC"); 
+		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
 	}
 	unset($meta);
 
@@ -370,7 +375,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 	$min_pts = 8;
 	$max_pts = 22;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600); 
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600);
 	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id group by category_name";
 	$max = 0;
 
@@ -443,7 +448,7 @@ function do_best_comments() {
 	$key = 'best_comments_'.$globals['css_main'];
 	if(memcache_mprint($key)) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 43000); // about 12 hours 
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 43000); // about 12 hours
 	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
 	$now = intval($globals['now']/60) * 60;
 	// The order is not exactly the comment_karma
@@ -533,7 +538,7 @@ function do_best_stories() {
 		$title = _('populares');
 	}
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours 
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
@@ -576,7 +581,7 @@ function do_best_queued() {
 		$title = _('candidatas');
 	}
 
-	
+
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*4); // 4 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
@@ -659,13 +664,13 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	die;
 }
 
-function do_subheader($content, $selected = false) { 
-// arguments: hash array with "button text" => "button URI"; Nº of the selected button 
+function do_subheader($content, $selected = false) {
+// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
 	if (is_array($content)) {
 		$n = 0;
 		foreach ($content as $text => $url) {
-			if ($selected == $n) $class_b = ' class = "selected"'; 
+			if ($selected == $n) $class_b = ' class = "selected"';
 			else $class_b='';
 			echo '<li'.$class_b.'>'."\n";
 			echo '<a href="'.$url.'">'.$text."</a>\n";
@@ -673,7 +678,7 @@ function do_subheader($content, $selected = false) {
 			$n++;
 		}
 	} else {
-		echo '<h1>'.$content.'</h1>'; 
+		echo '<h1>'.$content.'</h1>';
 	}
 	echo '</ul>'."\n";
 }

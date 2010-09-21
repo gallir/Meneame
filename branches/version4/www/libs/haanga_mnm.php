@@ -13,9 +13,9 @@ class Haanga_Extension_Tag_MeneameEndtime
 	{
 		/* ast */
 		$code = hcode();
-		
+
 		/* llamar a la funcion */
-		$exec = hexec('sprintf', "<!--Delivered to you in %4.3f seconds-->", 
+		$exec = hexec('sprintf', "<!--Delivered to you in %4.3f seconds-->",
 			hexpr( hexec('microtime', TRUE), '-', hvar('globals', 'start_time') )
 		);
 
@@ -47,6 +47,11 @@ class Haanga_Extension_Filter_CleanUrl
 class Haanga_Extension_Filter_UserUri
 {
 	public $php_alias = 'get_user_uri';
+}
+
+class Haanga_Extension_Filter_PostsURL
+{
+	public $php_alias = 'post_get_base_url';
 }
 
 class Haanga_Extension_Tag_GetURL
