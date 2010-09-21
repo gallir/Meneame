@@ -152,10 +152,10 @@ var base_key="{{globals.security_key}}";
 			<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('administración')%}" width="16" height="16" /> </a></li>
 		{% endif %}
 		{% if current_user.posts_answers %}
-			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{% trans _('respuestas a notas') %}"><span>{{ current_user.posts_answers }} {% trans _('notas') %}</span><img src="{{globals.base_static}}img/common/nota.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{% trans _('respuestas a notas') %}"><span>{{ current_user.posts_answers }} {% trans _('notas') %}</span><img src="{{globals.base_static}}img/common/icon_post-01.png" alt="" width="19" height="19"/></a>&nbsp;</li>
 		{% endif %}
 		{% if current_user.comments_answers %}
-			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span>{{ current_user.comments_answers }} {% trans _('comentarios') %}</span><img src="{{globals.base_static}}img/common/cmnt.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span>{{ current_user.comments_answers }} {% trans _('comentarios') %}</span><img src="{{globals.base_static}}img/common/icon_comment-01.png" alt="" width="19" height="19"/></a>&nbsp;</li>
 		{% endif %}
 	{% endif %}
 
