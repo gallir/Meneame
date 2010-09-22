@@ -260,6 +260,7 @@ margin-bottom: 30px;
 
 #naviwrap ul#navigation{
 list-style-type: none;
+display: inline-block;
 margin: 0;
 padding: 0;
 float: left;
@@ -267,7 +268,9 @@ float: left;
 
 #naviwrap ul#navigation li{
 color: #FFFFFF;
-display: inline-block;
+position: relative;
+display: block;
+float: left;
 height: 18px;
 border-right: solid 1px #FFFFFF;
 margin-top: 4px;
@@ -277,7 +280,7 @@ padding: 0 10px 0 10px;
 #naviwrap ul#navigation li a{
 text-decoration: none;
 text-transform: capitalize;
-color: inherit;
+color: #fff;
 font-weight: bold;
 font-size: 1.05em;
 }
