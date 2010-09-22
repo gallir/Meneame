@@ -205,7 +205,6 @@ float: right;
 
 ul.headtools li a span{
 margin-right: 5px;
-display: inline-block;
 }
 
 ul.headtools li img{
@@ -263,7 +262,6 @@ margin-bottom: 30px;
 list-style-type: none;
 margin: 0;
 padding: 0;
-display: inline-block;
 float: left;
 }
 
@@ -279,7 +277,6 @@ padding: 0 10px 0 10px;
 #naviwrap ul#navigation li a{
 text-decoration: none;
 text-transform: capitalize;
-display: block;
 color: inherit;
 font-weight: bold;
 font-size: 1.05em;
@@ -299,7 +296,6 @@ margin-left: 10px;
 #naviwrap ul.headtools li a{
 text-transform: capitalize;
 line-height: 25px;
-display: inline-block;
 }
 
 #naviwrap ul.headtools li a span{
