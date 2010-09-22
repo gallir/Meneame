@@ -272,7 +272,7 @@ color: #FFFFFF;
 display: inline-block;
 height: 18px;
 border-right: solid 1px #FFFFFF;
-margin-top: 3px;
+margin-top: 4px;
 padding: 0 10px 0 10px;
 }
 
@@ -282,7 +282,7 @@ text-transform: capitalize;
 display: block;
 color: inherit;
 font-weight: bold;
-font-size: 1.2em;
+font-size: 1.05em;
 }
 
 
@@ -564,6 +564,7 @@ color:#fff;
 padding-left: 10px;
 margin: 2px 0 0 0;
 text-align: left;
+text-transform: capitalize;
 }
 
 .sidebox .cell {
