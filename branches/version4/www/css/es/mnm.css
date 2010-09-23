@@ -160,7 +160,7 @@ max-width: 1300px;
 width: 98%;
 text-align: left;
 background-color: #fff;
-display: inline-block;
+margin: auto;
 }
 
 #header{
@@ -260,7 +260,7 @@ margin-bottom: 30px;
 
 #naviwrap ul#navigation{
 list-style-type: none;
-display: inline-block;
+display: block;
 margin: 0;
 padding: 0;
 float: left;
@@ -288,7 +288,7 @@ font-size: 1.05em;
 
 #naviwrap ul.headtools{
 float: right;
-display: inline-block;
+display: block;
 margin-right: 5px;
 }
 
