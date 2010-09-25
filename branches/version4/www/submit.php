@@ -428,7 +428,7 @@ function do_submit1() {
 
 
 function do_submit2() {
-	global $db, $dblang, $globals;
+	global $db, $dblang, $globals, $errors;
 
 	$link=new Link;
 	$link->id=$link_id = intval($_POST['id']);
@@ -449,15 +449,18 @@ function do_submit2() {
 	$link->category=intval($_POST['category']);
 	$link->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$link->tags = tags_normalize_string($_POST['tags']);
+	$link->key = $_POST['key'];
 	$link->content = clean_text_with_tags($_POST['bodytext']);
 	if (link_errors($link)) {
-		return false;
+		// Show the edit form again
+		$link->is_new = true; // Disable several options in the editing form
+		Haanga::Load('link/submit1.html', compact('link', 'errors'));
+		return true;
 	}
 
 	$link->store();
 	tags_insert_string($link->id, $dblang, $link->tags);
 	$link->read();
-	$link->key = $_POST['key'];
 	$link->randkey = $_POST['randkey'];
 
 	$related = $link->get_related(6);
