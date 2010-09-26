@@ -92,9 +92,9 @@ echo '
 				<br />
 				'._("Karma a partir del cual se destacan los comentarios") . ': ' . $globals['comment_highlight_karma'] . '.<br />
 				<br />
-				'._("Karma a partir del cual se ocultan los comentarios") . ': ' . -$globals['comment_highlight_karma'] . '.<br />
+				'._("Karma a partir del cual se ocultan los comentarios") . ': ' . $globals['comment_hidden_karma'] . '.<br />
 				<br />
-				'._("Límite de comentarios por meneo") . $globals['max_comments'] . ': ' . '.<br />
+				'._("Límite de comentarios por meneo") . ': ' . $globals['max_comments'] . '.<br />
 				<br />
 				'._("Tiempo que permanecen abiertos los comentarios en meneos en portada") . ': ' . print_time($globals['time_enabled_comments']) . '.<br />
 				<br />
