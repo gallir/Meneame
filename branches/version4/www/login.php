@@ -117,6 +117,12 @@ function do_login() {
 			$previous_login_failed++;
 		} else {
 			UserAuth::check_clon_from_cookies();
+
+			// If the user is authenticating from a mobile device, keep her in the standar version
+			if ($globals['mobile']) {
+				setcookie('nomobile', '1', 0, $globals['base_url']);
+			}
+
 			if(!empty($_REQUEST['return'])) {
 				header('Location: http://'.get_server_name().$_REQUEST['return']);
  			} else {

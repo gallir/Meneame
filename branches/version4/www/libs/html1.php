@@ -203,7 +203,7 @@ function force_authentication() {
 function mobile_redirect() {
 	global $globals;
 
-	if ($globals['mobile'] && ! preg_match('/(pad|tablet|wii|tv)\W/i', $_SERVER['HTTP_USER_AGENT']) &&
+	if ($globals['mobile'] && empty($_COOKIE['nomobile']) && ! preg_match('/(pad|tablet|wii|tv)\W/i', $_SERVER['HTTP_USER_AGENT']) &&
 			$globals['url_shortener_mobile_to'] &&
 			(! $_SERVER['HTTP_REFERER'] ||
 			// Check if the user comes from our own domain
