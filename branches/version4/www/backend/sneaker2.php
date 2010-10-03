@@ -413,7 +413,7 @@ function get_post($time, $type, $postid, $userid) {
 	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
 	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
-	$json['link'] = post_get_base_url($event->user_login) . "/$postid";
+	$json['link'] = post_get_base_url($postid);
 	$json['ts'] = $time;
 	$json['type'] = $type;
 	$json['who'] = $event->user_login;
