@@ -12,6 +12,7 @@ include(mnminclude.'ban.php');
 
 $foo_link = new Link;
 $events = array();
+$data = array();
 
 // The client requests version number
 if (!empty($_REQUEST['getv'])) {
@@ -74,7 +75,7 @@ if ($logs) {
 				break;
 			case 'link_depublished':
 			case 'link_discard':
-				if (empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['noproblem']) && empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_edit':
 				if (empty($_REQUEST['noedit']) && $current_user->admin) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
@@ -103,13 +104,14 @@ $db->barrier();
 
 
 if($last_timestamp == 0) $last_timestamp = $now_f;
-if(intval($_REQUEST['r']) % 10 == 0) update_sneakers();
-$ccntu = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
-$ccntj = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
-$ccnta = $db->get_var("select count(*) from sneakers where sneaker_user = 0");
-$ccnt = $ccntu+$ccnta+$ccntj . " ($ccntu+$ccntj+$ccnta)";
+if(intval($_REQUEST['r']) % 10 == 0) {
+	update_sneakers($data);
+	if ($current_user->user_id > 0) {
+		// Update conversation counters
+		update_conversations($data);
+	}
+}
 $data['ts'] = $last_timestamp;
-$data['ccnt'] = $ccnt;
 $data['v'] = $globals['sneak_version'];
 if(count($events) > 0 ) {
 	krsort($events);
@@ -320,7 +322,7 @@ function get_votes($dbtime) {
 		if ($event->vote_value >= 0) {
 			$type = 'vote';
 			$who = $user;
-		} else { 
+		} else {
 			$type = 'problem';
 			$who = get_negative_vote($event->vote_value);
 			// Show user_login if she voted more than N negatives in one minute
@@ -445,7 +447,7 @@ function get_status($status) {
 	return $status;
 }
 
-function update_sneakers() {
+function update_sneakers(&$data) {
 	global $db, $globals, $current_user;
 	$key = $globals['user_ip'] . '-' . intval($_REQUEST['k']);
 	$db->query("replace into sneakers (sneaker_id, sneaker_time, sneaker_user) values ('$key', unix_timestamp(now()), $current_user->user_id)");
@@ -453,5 +455,18 @@ function update_sneakers() {
 		$from = $globals['now']-120;
 		$db->query("delete from sneakers where sneaker_time < $from");
 	}
+	$ccntu = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id not like 'jabber/%'");
+	$ccntj = $db->get_var("select count(*) from sneakers where sneaker_user > 0 and sneaker_id like 'jabber/%'");
+	$ccnta = $db->get_var("select count(*) from sneakers where sneaker_user = 0");
+	$ccnt = $ccntu+$ccnta+$ccntj . " ($ccntu+$ccntj+$ccnta)";
+	$data['ccnt'] = $ccnt;
 }
+
+function update_conversations(&$data) {
+	global $db, $globals, $current_user;
+
+	$data['p_conv_c'] = Post::get_unread_conversations($current_user->user_id);
+	$data['c_conv_c'] = Comment::get_unread_conversations($current_user->user_id);
+}
+
 ?>

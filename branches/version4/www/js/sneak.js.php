@@ -60,11 +60,11 @@ function start_sneak() {
 		timeout: 10000,
 		async: true,
 		cache: false,
-		error: function (req, error) { 
+		error: function (req, error) {
 			$('#ping').html(error+'... retrying');
 			xmlhttp = undefined;
 			data_timer = setTimeout('get_data()', 3000);
-		} 
+		}
 	});
 
 	if (!get_options_cookie()) {
@@ -78,7 +78,7 @@ function start_sneak() {
 		check_control('pubvotes');
 	}
 	// For autocompletion
-	$('#comment-input').keydown(function(event) { 
+	$('#comment-input').keydown(function(event) {
 			if(event.keyCode == 9 ||event.which == 9) {
 				event.returnValue = false;
 				event.preventDefault();
@@ -130,7 +130,7 @@ function received_data(data) {
 	xmlhttp = undefined;
 	// Update ping time
 	var date_object = new Date();
-	if (ping_time == 0) 
+	if (ping_time == 0)
 		ping_time = date_object.getTime() - ping_start -15; // 15 ms is the smallest error in fastest machines
 	else if (ping_start > 0)
 		ping_time = parseInt(0.7 * ping_time + 0.3 * (date_object.getTime() - ping_start - 15)); // 15 ms also
@@ -139,7 +139,18 @@ function received_data(data) {
 
 	events = data.events;
 	ts = data.ts;
-	$('#ccnt').html(data.ccnt);
+
+	// Check general variables
+	if (typeof(data.ccnt) != 'undefined') {
+		$('#ccnt').html(data.ccnt);
+	}
+	if (typeof(data.c_conv_c) != 'undefined') {
+		$('#c_conv_c').html(data.c_conv_c);
+	}
+	if (typeof(data.p_conv_c) != 'undefined') {
+		$('#p_conv_c').html(data.p_conv_c);
+	}
+
 	new_items= events.length;
 	if(new_items > 0) {
 		if (do_animation) clear_animation();
@@ -149,7 +160,10 @@ function received_data(data) {
 		$('#items').children().slice(max_items-new_items).remove();
 
 		for (i=new_items-1; i>=0 ; i--) {
-			html = $('<div class="sneaker-item">'+to_html(events[i])+'</div>');
+			html = to_html(events[i]);
+			if (html != false ) {
+				html = $('<div class="sneaker-item">'+html+'</div>');
+			}
 			set_initial_display(html, i);
 			$('#items').prepend(html);
 			if (events[i].type == 'chat') {
@@ -284,11 +298,11 @@ function get_options_string() {
 
 function set_options_from_string(string) {
 	if (string.match(/&nochat=1/)) {
-		global_options.show_chat = false; 
+		global_options.show_chat = false;
 	}
 	set_control('chat');
 	if (string.match(/&nopost=1/)) {
-		global_options.show_post = false; 
+		global_options.show_post = false;
 	}
 	set_control('post');
 	if (string.match(/&novote=1/)) {

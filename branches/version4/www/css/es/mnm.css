@@ -203,10 +203,6 @@ display: block;
 float: right;
 }
 
-ul.headtools li a span{
-margin-right: 5px;
-}
-
 ul.headtools li img{
 vertical-align: middle;
 }
@@ -289,21 +285,16 @@ font-size: 1.05em;
 #naviwrap ul.headtools{
 float: right;
 display: block;
-margin-right: 5px;
+margin-right: 10px;
 }
 
 #naviwrap ul.headtools li{
 margin-left: 10px;
-}
-
-#naviwrap ul.headtools li a{
-text-transform: capitalize;
 line-height: 25px;
 }
 
-#naviwrap ul.headtools li a span{
-margin-right: 5px;
-vertical-align: -2px;
+#naviwrap ul.headtools li a img{
+vertical-align: -4px;
 }
 
 .banner-top {

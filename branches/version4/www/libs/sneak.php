@@ -1,5 +1,5 @@
 <?
-$globals['sneak_version'] = 2;
+$globals['sneak_version'] = 3;
 $max_items = 25;
 header('Connection: close');
 
@@ -31,6 +31,9 @@ function init_sneak() {
 
 	// Delete all connections from the same IP, just to avoid stupid cheating
 	$db->query("delete from sneakers where sneaker_id like '".$globals['user_ip']."%'");
+
+	// Force to show conv counters even if they are zero
+	if ($current_user->user_id > 0) $globals['show_conv_counters'] = true;
 }
 
 ?>

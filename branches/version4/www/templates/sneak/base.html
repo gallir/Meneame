@@ -48,7 +48,7 @@ function play_pause() {
 		if( document.getElementById('comment-input'))
 			document.getElementById('comment-input').disabled=true;
 		do_pause();
-		
+
 	} else {
 		document.images['play-pause-img'].src = base_static+"img/common/sneak-pause01.png";
 		if (document.getElementById('comment-input'))
@@ -86,7 +86,7 @@ function animate_background() {
 		if (current_colors[i] < colors_max) {
 			current_colors[i]++;
 			items.slice(i,i+1).css('background', animation_colors[current_colors[i]]);
-		} else 
+		} else
 			new_items--;
 	}
 }
@@ -117,7 +117,7 @@ function to_html(data) {
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (check_user_ping(data.title)) {
 				text_style = 'style="font-weight: bold;"';
-			} 
+			}
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
@@ -135,7 +135,7 @@ function to_html(data) {
 			// Change the style
 			if (global_options.show_admin || data.status == 'admin') {
 				chat_class = 'sneaker-chat-admin'
-			} else if (global_options.show_friends || data.status == '{% trans _('amigo') %}') { 
+			} else if (global_options.show_friends || data.status == '{% trans _('amigo') %}') {
 				// The sender is a friend and sent the message only to friends
 				chat_class = 'sneaker-chat-friends'
 			}
@@ -148,7 +148,7 @@ function to_html(data) {
 				text_style = 'style="'+text_style+'"';
 			}
 			// Open in a new window
-			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1'); 
+			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
@@ -199,6 +199,10 @@ function to_html(data) {
 			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
 			html += '<img src="'+base_static+'img/common/sneak-geo01.png" width="21" height="17" alt="{% trans _('geo editado') %}" '+tooltip_ajax_call+'/><\/div>';
 			break;
+		case 'conversations':
+			//alert(data.c_conv_c + "  " + data.p_conv_c);
+			return false;
+			break;
 		default:
 			html += data.type+'<\/div>';
 	}
@@ -226,7 +230,7 @@ function to_html(data) {
 		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
 	else if (data.status == '{% trans _('descartada') %}')
 		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
-	else 
+	else
 		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php">'+data.status+'<\/a><\/div>';
 	return html;
 }
@@ -245,7 +249,7 @@ function check_admin_ping(str) {
 	return str.match(re);
 }
 
-function to_hoygan(str) 
+function to_hoygan(str)
 {
 	str=str.replace(/á/gi, 'a');
 	str=str.replace(/é/gi, 'e');
@@ -321,7 +325,7 @@ function flipChar(c) {
 	case 'é':
 		return '\u01DD';
 	case 'f':
-		return '\u025F'; //Copied from pne -- 
+		return '\u025F'; //Copied from pne --
 		//LATIN SMALL LETTER DOTLESS J WITH STROKE
 	case 'g':
 		return 'b';

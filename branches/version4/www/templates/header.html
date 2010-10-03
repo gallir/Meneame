@@ -152,11 +152,11 @@ var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
 		{% if current_user.admin %}
 			<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('administración')%}" width="16" height="16" /> </a></li>
 		{% endif %}
-		{% if current_user.posts_answers %}
-			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{% trans _('respuestas a notas') %}"><span>{{ current_user.posts_answers }} {% trans _('notas') %}</span><img src="{{globals.base_static}}img/common/icon_post-01.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+		{% if current_user.posts_answers || globals.show_conv_counters %}
+			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{% trans _('respuestas a notas') %}"><span id="p_conv_c">{{ current_user.posts_answers }}</span> {% trans _('notas') %} <img src="{{globals.base_static}}img/common/icon_post-01.png" alt="" width="19" height="19"/></a></li>
 		{% endif %}
-		{% if current_user.comments_answers %}
-			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span>{{ current_user.comments_answers }} {% trans _('comentarios') %}</span><img src="{{globals.base_static}}img/common/icon_comment-01.png" alt="" width="19" height="19"/></a>&nbsp;</li>
+		{% if current_user.comments_answers || globals.show_conv_counters %}
+			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span id="c_conv_c">{{ current_user.comments_answers }}</span> {% trans _('comentarios') %} <img src="{{globals.base_static}}img/common/icon_comment-01.png" alt="" width="19" height="19"/></a></li>
 		{% endif %}
 	{% endif %}
 
