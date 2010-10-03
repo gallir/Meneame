@@ -157,6 +157,7 @@ class User {
 		// Delete preferences
 		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
 		// Delete posts' conversations
+		$db->query("delete from conversations where conversation_type = 'post' and conversation_user_to = $this->id");
 		$db->query("delete from conversations where conversation_type = 'post' and conversation_from in (select post_id from posts where post_user_id = $this->id)");
 		// Delete posts
 		$db->query("delete from posts where post_user_id = $this->id");
