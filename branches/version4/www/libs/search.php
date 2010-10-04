@@ -42,7 +42,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	$cl->SetLimits ( $start, $count );
 	if ($_REQUEST['w'] == 'links') {
-		$cl->SetFieldWeights(array('title' => 3, 'tags' => 2, 'url' => 2, 'content' => 1));
+		$cl->SetFieldWeights(array('title' => 3, 'tags' => 3, 'url' => 1, 'content' => 1));
 	} else {
 		$cl->SetFieldWeights(array('content' => 1));
 	}

@@ -81,7 +81,9 @@ function do_banner_story() {
 	if ($globals['link'] && $globals['kalooga_categories'] 
 			&& in_array($globals['link']->category, $globals['kalooga_categories']) ) {
 		Haanga::Safe_Load('private/kalooga.html');
-	} elseif ($globals['external_ads'] && $globals['ads'] && $globals['link']) {
+	}
+
+	if ($globals['external_ads'] && $globals['ads'] && $globals['link']) {
 		Haanga::Safe_Load('private/ad-middle.html');
 	}
 }
