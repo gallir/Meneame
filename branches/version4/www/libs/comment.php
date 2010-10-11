@@ -69,29 +69,28 @@ class Comment {
 		global $db, $current_user, $globals;
 
 		if(!$this->date) $this->date=$globals['now'];
-		$comment_author = $this->author;
-		$comment_link = $this->link;
-		$comment_karma = $this->karma;
-		$comment_date = $this->date;
-		$comment_randkey = $this->randkey;
 		$comment_content = $db->escape($this->normalize_content());
 		if ($this->type == 'admin') $comment_type = 'admin';
 		else $comment_type = 'normal';
 		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
-			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content) VALUES ($comment_author, $comment_link, '$comment_type', $comment_karma, '$this->ip', FROM_UNIXTIME($comment_date), $comment_randkey, '$comment_content')");
+			$this->order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE"))+1;
+			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->order)");
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
 			if ($full) log_insert('comment_new', $this->id, $current_user->user_id);
 		} else {
-			$db->query("UPDATE comments set comment_user_id=$comment_author, comment_link_id=$comment_link, comment_type='$comment_type', comment_karma=$comment_karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($comment_date), comment_modified=now(), comment_randkey=$comment_randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
+			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
-			if ($full) log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+			if ($full) {
+				log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+				$this->update_order();
+			}
 		}
+
 		if ($full) {
-			$this->update_order();
 			$this->update_conversation();
 		}
 		$db->commit();
@@ -101,7 +100,7 @@ class Comment {
 		global $db;
 
 		if ($this->id == 0 || $this->link == 0) return false;
-		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id < $this->id"))+1;
+		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if ($order != $this->order) {
 			$this->order = $order;
 			$db->query("update comments set comment_order=$this->order where comment_id=$this->id");
