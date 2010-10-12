@@ -241,7 +241,7 @@ class WebThumb extends BasicThumb {
 			$min_size = 100;
 			$min_surface = 15000;
 		}
-		echo "<!-- x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size -->\n";
+		echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size -->\n";
 		return min($this->html_x, $this->x)  >= $min_size 
 			&& min($this->html_y, $this->y) >= $min_size 
 			&& $this->is_not_black()
@@ -321,7 +321,7 @@ class HtmlImages {
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
-				if ($img->get()) {
+				if ($img->get() && $img->is_not_black()) {
 					$img->type = 'local';
 					$img->candidate = true;
 					$this->selected = $img;
@@ -409,7 +409,7 @@ class HtmlImages {
 		$goods = $n = 0;
 		foreach ($tags as $match) {
 			//if ($this->debug)
-			//	echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
+				//echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
 			if ($this->check_in_other($match)) continue;
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good($other_html == false)) {
