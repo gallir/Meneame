@@ -15,7 +15,7 @@ header('Content-Type: text/plain; charset=UTF-8'); // It's being read in a ifram
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
-if (!$current_user->user_id) error(_('usuario no autentificado'));
+if (!$current_user->user_id) json_error(_('usuario no autentificado'));
 
 $user = new User($current_user->user_id);
 

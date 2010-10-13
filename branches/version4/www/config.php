@@ -294,7 +294,7 @@ $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>
 		'salam aleikum'=>'senegalés','grüzi'=>'alemán suizo','haj'=>'escandinavo','hallå'=>'escandinavo',
 		'moïen'=>'luxemburgués','talofa'=>'samoano','malo'=>'samoano','malo e lelei'=>'tongano',
 		'la orana'=>'tahitiano','kia ora'=>'maorí','buna ziua'=>'rumano','kem che'=>'guyaratí',
-		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, oh'=>'asturiano','hâu'=>'nicolino',
+		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, oh,'=>'asturiano','hâu'=>'nicolino',
 		'vary'=>'nicolino','Привет'=>'ruso','konnichiwa'=>'japonés','hello world'=>'holamundo',
 		'klaatu barada nikto'=>'el idioma de Klatu y Gort',
 		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon',

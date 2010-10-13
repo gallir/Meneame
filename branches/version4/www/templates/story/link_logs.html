@@ -10,7 +10,7 @@
 		<div style="width:45%; float: left;padding: 4px 0 4px 0;">
 		{% if link.author != log.user_id AND (log.user_lever == 'admin' OR log.user_level == 'god') %}
 			{# It was edited by an admin #}
-			<img src="{% exec get_no_avatar_url 20 %}" width="20" height="20" alt="{{ log.user_login }}"/>&nbsp;{% trans _('admin') %}
+			<img src="{% exec get_no_avatar_url 20 %}" width="20" height="20" alt=""/>&nbsp;{% trans _('admin') %}
 			{% if current_user.admin %}&nbsp;({{ log.user_login }}){% endif %}
 		{% else %}
 			<a href="{{ log.user_login | useruri }}" title="{{ log.date }}"><img 
