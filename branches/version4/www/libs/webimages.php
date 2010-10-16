@@ -48,7 +48,7 @@ class BasicThumb {
 			$percent = $size/$this->y;
 		}
 		$min = min($this->x*$percent, $this->y*$percent);
-		if ($min < $size/2) $percent = $percent * $size/2/$min; // Ensure that minimum axis size is size/2
+		if ($min < $size/3) $percent = $percent * $size/3/$min; // Ensure that minimum axis size is size/3
 		$new_x = round($this->x*$percent);
 		$new_y = round($this->y*$percent);
 		$dst = ImageCreateTrueColor($new_x,$new_y);
@@ -65,11 +65,16 @@ class BasicThumb {
 	function is_not_black() {
 		// Check an image is not a background of the same color
 		if (!$this->image) return false;
-		$previous = false;
-		for ($i=0; $i < $this->x && $i < $this->y; $i++) {
+		$colors = array();
+		$min = min($this->x, $this->y);
+		$min_colors = min(round($min/10), 8);
+		for ($i=0; $i < $min; $i++) {
 			$color = imagecolorat($this->image, $i, $i);
-			if ($previous !== false && $color != $previous) return true;
-			$previous = $color;
+			$color &= 0xF0F0F0; // Reduce the number of colours, to avoid being fooled by jpeg compression
+			if (!isset($colors[$color])) {
+				$colors[$color] = true;
+			}
+			if (count($colors) > $min_colors) return true;
 		}
 		return false;
 	}
