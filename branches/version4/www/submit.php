@@ -476,7 +476,7 @@ function do_submit3() {
 
 	$link->id=$link_id = intval($_POST['id']);
 
-	if(!check_link_key() || !$link->read()) die;
+	if(!check_link_key() || !$link->read() || link_errors($link)) die;
 
 	// Check it is not in the queue already
 	if (Link::duplicates($link->url)) {

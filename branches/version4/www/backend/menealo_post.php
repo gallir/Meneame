@@ -65,7 +65,7 @@ if ($votes_freq > $freq) {
 		$user = new User;
 		$user->id = $current_user->user_id;
 		$user->read();
-		$user->karma = $user->karma - 0.2;
+		$user->karma = $user->karma - 0.1;
 		$user->store();
 		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else	{
