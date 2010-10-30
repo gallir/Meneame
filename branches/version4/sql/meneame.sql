@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5.1-log
+-- Server version	5.1.37-1ubuntu5.4-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS `auths`;
 CREATE TABLE `auths` (
   `user_id` int(10) unsigned NOT NULL,
   `service` char(32) NOT NULL,
-  `uid` int(10) unsigned NOT NULL,
+  `uid` bigint(10) unsigned NOT NULL,
   `username` char(32) NOT NULL DEFAULT '''''',
   `token` char(64) NOT NULL DEFAULT '''''',
   `secret` char(64) NOT NULL DEFAULT '''''',
@@ -219,7 +219,7 @@ DROP TABLE IF EXISTS `counts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `counts` (
-  `key` char(24) NOT NULL,
+  `key` char(64) NOT NULL,
   `count` int(11) NOT NULL DEFAULT '0',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`key`)
@@ -303,6 +303,20 @@ CREATE TABLE `languages` (
   PRIMARY KEY (`language_id`),
   UNIQUE KEY `language_name` (`language_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `link_clicks`
+--
+
+DROP TABLE IF EXISTS `link_clicks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `link_clicks` (
+  `id` int(10) unsigned NOT NULL,
+  `counter` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -441,7 +455,7 @@ DROP TABLE IF EXISTS `prefs`;
 CREATE TABLE `prefs` (
   `pref_user_id` int(11) NOT NULL,
   `pref_key` char(16) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `pref_value` char(6) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `pref_value` int(8) unsigned NOT NULL DEFAULT '0',
   KEY `pref_user_id` (`pref_user_id`,`pref_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -609,4 +623,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-04-11 23:35:28
+-- Dump completed on 2010-10-29 12:19:20
