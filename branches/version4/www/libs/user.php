@@ -237,10 +237,12 @@ class User {
 		if ($this->stats) return;
 		if(!$this->read) $this->read();
 
+		$do_cache = ($this->date < $globals['now'] - 86400); // Don't cache for new users
 		$stats = new Annotation("user_stats-$this->id");
-		if ($stats->read()
-			&& ($stats->time > $globals['now'] - 86400
-				|| $stats->time > intval($db->get_var("select max(unix_timestamp(vote_date)) from votes where vote_user_id = $this->id and vote_type = 'links'")))
+
+		if ($do_cache && $stats->read()
+			&& ($stats->time > $globals['now'] - 7200
+				|| $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'votes')")))
 			) {
 				$obj = unserialize($stats->text);
 		} else {
@@ -251,8 +253,10 @@ class User {
 			$obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
 			$obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
 			$obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
-			$stats->text = serialize($obj);
-			$stats->store($globals['now']+86400*90); // Expires in 90 days
+			if ($do_cache) {
+				$stats->text = serialize($obj);
+				$stats->store($globals['now']+86400*90); // Expires in 90 days
+			}
 		}
 		foreach(get_object_vars($obj) as $var => $value) $this->$var = $value;
 	
@@ -300,7 +304,7 @@ class User {
 		if ($this->total_friends > 200) $medal = $medals['gold'];
 		elseif ($this->total_friends > 100) $medal = $medals['silver'];
 		elseif ($this->total_friends > 50) $medal = $medals['bronze'];
-		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('amigos')." ($friends)".'"/>';
+		if ($medal) echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('amigos')." ($this->total_friends)".'"/>';
 	}
 
 	function ranking() {
