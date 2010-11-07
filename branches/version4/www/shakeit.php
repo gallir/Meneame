@@ -51,7 +51,7 @@ switch ($globals['meta']) {
 	case '_popular':
 		// Show  the hihgher karma first
 		$globals['noindex'] = true;
-		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*2).'"';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
 		$order_by = " ORDER BY link_karma DESC ";	
 		$tab = 3;
