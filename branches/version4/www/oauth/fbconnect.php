@@ -65,11 +65,12 @@ class FBConnect extends OAuthBase {
 		$fb->require_login();
 		$fb_user = $fb->get_loggedin_user();
 
-		if ($_GET['op'] != 'ok' || ! $fb_user) {
+		$user_details = $fb->api_client->users_getInfo($fb_user, array('uid', 'name', 'profile_url', 'pic_square')); 
+
+		if ($_GET['op'] != 'ok' || ! $fb_user || !is_array($user_details) || !is_array($user_details[0])) {
 			$this->user_return();
 		}
 
-		$user_details = $fb->api_client->users_getInfo($fb_user, array('uid', 'name', 'profile_url', 'pic_square')); 
 
 		$this->token = $user_details[0]['uid'];
 		$this->secret = $user_details[0]['uid'];
