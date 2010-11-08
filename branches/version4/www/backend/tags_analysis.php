@@ -59,7 +59,7 @@ foreach ($a as $w) {
 		$r['phrase'] = false;
 	}
 
-	if (preg_match('/'.preg_quote($w).'/ui', $link->title)) {
+	if (preg_match('/'.preg_quote($w, '/').'/ui', $link->title)) {
 		$results['in_title'] += 1;
 		$r['in_title'] = true;
 	}
