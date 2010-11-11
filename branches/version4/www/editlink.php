@@ -52,7 +52,7 @@ function do_edit($link) {
 }
 
 function do_save($link) {
-	global $dblang, $current_user;
+	global $dblang, $globals, $current_user;
 
 	$link->read_content_type_buttons($_POST['type']);
 
