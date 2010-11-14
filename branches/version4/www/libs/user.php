@@ -242,7 +242,7 @@ class User {
 
 		if ($do_cache && $stats->read()
 			&& ($stats->time > $globals['now'] - 7200
-				|| $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'votes')")))
+				|| $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'comments')")))
 			) {
 				$obj = unserialize($stats->text);
 		} else {
