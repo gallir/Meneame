@@ -102,14 +102,13 @@ function do_save($link) {
 			}
 		}
 
-		//echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia actualizada").'</div>'."\n";
+		// Check this one is a draft, allows the user to save and send it to the queue
+		if($link->votes == 0 && $link->status != 'queued' && $link->author == $current_user->user_id) {
+			$link->enqueue();
+		}
+
 	}
 	$link->read();
-
-	// Check this one is a draft
-	if($link->votes == 0 && $link->status != 'queued') {
-		$link->enqueue();
-	}
 
 	Haanga::Load('link/edit_result.html', compact('link', 'errors'));
 }
