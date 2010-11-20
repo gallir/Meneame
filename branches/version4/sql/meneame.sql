@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5.4-log
+-- Server version	5.1.37-1ubuntu5.5-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -255,8 +255,9 @@ CREATE TABLE `friends` (
   `friend_from` int(10) NOT NULL DEFAULT '0',
   `friend_to` int(10) NOT NULL DEFAULT '0',
   `friend_value` smallint(3) NOT NULL DEFAULT '0',
+  `friend_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `friend_type` (`friend_type`,`friend_from`,`friend_to`),
-  KEY `friend_type_2` (`friend_type`,`friend_to`)
+  KEY `friend_type_3` (`friend_type`,`friend_to`,`friend_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -583,7 +584,7 @@ DROP TABLE IF EXISTS `votes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `votes` (
   `vote_id` int(20) NOT NULL AUTO_INCREMENT,
-  `vote_type` enum('links','comments','posts') CHARACTER SET utf8 NOT NULL DEFAULT 'links',
+  `vote_type` enum('links','comments','posts','polls','users','sites','ads') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'links',
   `vote_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `vote_link_id` int(20) NOT NULL DEFAULT '0',
   `vote_user_id` int(20) NOT NULL DEFAULT '0',
@@ -623,4 +624,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-10-29 12:19:20
+-- Dump completed on 2010-11-20 17:33:32
