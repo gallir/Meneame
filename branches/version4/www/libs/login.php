@@ -85,7 +85,7 @@ class UserAuth {
 						.self::CURRENT_VERSION.':' // Version number
 						.$globals['now'].':'
 						.$time);
-				setcookie("mnm_key", $strCookie, $time, $globals['base_url']);
+				setcookie("mnm_key", $strCookie, $time, $globals['base_url'], null, false, true);
 				break;
 		}
 	}
@@ -138,7 +138,7 @@ class UserAuth {
 					':'.$this->mnm_user[1].
 					':'.$globals['now'].
 					':'.$this->signature($this->user_id.$this->mnm_user[1].$globals['now']), 
-					$expiration, $globals['base_url']);
+					$expiration, $globals['base_url'], null, false, true);
 	}
 
 	function AddClone() {
