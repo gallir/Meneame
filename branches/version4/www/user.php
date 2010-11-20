@@ -114,6 +114,7 @@ switch ($view) {
 	case 'shaken':
 	case 'friends_shaken':
 	case 'friends':
+	case 'friends_new':
 	case 'friend_of':
 	case 'ignored':
 	case 'favorites':
@@ -185,6 +186,10 @@ switch ($view) {
 	case 'ignored':
 		do_user_tabs(7, $login, true);
 		do_friends(2);
+		break;
+	case 'friends_new':
+		do_user_tabs(7, $login, true);
+		do_friends(3);
 		break;
 	case 'favorites':
 		do_user_tabs(2, $login, true);
@@ -515,12 +520,17 @@ function do_friends($option) {
 	$header_options = array(_('amigos') => get_user_uri($user->username, 'friends'), _('elegido por') => get_user_uri($user->username, 'friend_of'));
 	if ($user->id == $current_user->user_id) {
 		$header_options[_('ignorados')] = get_user_uri($user->username, 'ignored');
+		$header_options[_('nuevos')] = get_user_uri($user->username, 'friends_new');
 	}
 
 
 	$prefered_id = $user->id;
 	$prefered_admin = $user->admin;
 	switch ($option) {
+		case 3:
+			do_user_subheader($header_options, $option);
+			$prefered_type = 'new';
+			break;
 		case 2:
 			do_user_subheader($header_options, $option);
 			$prefered_type = 'ignored';
@@ -538,6 +548,16 @@ function do_friends($option) {
 	require('backend/get_friends_bars.php');
 	echo '</div>'. "\n";
 	echo '</div>'. "\n";
+
+	// Post processing
+	switch ($option) {
+		case 3:
+			if ($user->id == $current_user->user_id) {
+				User::update_new_friends_date();
+			}
+			break;
+		default:
+	}
 }
 
 function do_user_tabs($option, $user, $has_subheader = false) {

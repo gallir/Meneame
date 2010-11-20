@@ -29,19 +29,32 @@ switch ($prefered_type) {
 	case 'from':
 		$friend_value = 'AND friend_value > 0';
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
-		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		$dbusers = $db->get_results("SELECT friend_to as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 	case 'to':
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_to=$prefered_id AND friend_from != 0 and friend_value > 0");
-		$dbusers = $db->get_results("SELECT friend_from as who FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from and friend_value > 0 order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		$dbusers = $db->get_results("SELECT friend_from as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from and friend_value > 0 order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
+
+	case 'new':
+		if ($prefered_id != $current_user->user_id) {
+			return;
+		}
+		$new_friends = User::get_new_friends($prefered_id);
+		$prefered_total = count($new_friends);
+		if ($prefered_total > 0 ) {
+			$friends = implode(',', $new_friends);
+			$dbusers = $db->get_results("SELECT friend_from as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and friend_from in ($friends) and user_id = friend_from order by friend_date desc LIMIT $prefered_offset,$prefered_page_size");
+		}
+		break;
+
 	case 'ignored':
 		if ($prefered_id != $current_user->user_id) {
 			return;
 		}
 		$friend_value = 'AND friend_value < 0';
 		$prefered_total= $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
-		$dbusers = $db->get_results("SELECT friend_to as who FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+		$dbusers = $db->get_results("SELECT friend_to as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
 		break;
 }
 if ($dbusers) {
@@ -49,8 +62,10 @@ if ($dbusers) {
 	foreach($dbusers as $dbuser) {
 		$friend->id=$dbuser->who;
 		$friend->read();
+		$title = $friend->username;
+		if ($dbuser->date > 0) $title .= sprintf(' %s %s', _('desde'), get_date_time($dbuser->date));
 		echo '<div class="friends-item">';
-		echo '<a href="'.get_user_uri($friend->username).'" title="'.$friend->username.'">';
+		echo '<a href="'.get_user_uri($friend->username).'" title="'.$title.'">';
 		echo '<img class="avatar" src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
 		echo $friend->username.'</a>&nbsp;';
 		if ($current_user->user_id > 0 && $current_user->user_id != $friend->id) {

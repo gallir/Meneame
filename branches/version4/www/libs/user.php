@@ -96,6 +96,33 @@ class User {
 		return $affinity;
 	}
 
+	static function get_new_friends($user = 0) {
+		global $db, $globals, $current_user;
+		$key = 'last_friend';
+
+		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
+		return $db->get_col("select friend_from from friends where friend_type = 'manual' and friend_to = $user and friend_value > 0 and friend_date > FROM_UNIXTIME($last_read)");
+	}
+
+	static function update_new_friends_date($time = false) {
+		global $db, $globals, $current_user;
+		$key = 'last_friend';
+
+		if (! $current_user->user_id ) return false;
+		if (! $time) $time = $globals['now'];
+		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+		if ($time > $previous) {
+			$db->transaction();
+			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
+			$db->commit();
+		}
+		return true;
+
+	}
+
+
 	// $user_id is the key in annotations
 	static function get_affinity($id, $from = false) {
 		global $current_user;
