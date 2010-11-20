@@ -26,6 +26,7 @@ if ($link->avatar) {
 }
 echo '<strong>' . $link->title . '</strong><br/>';
 echo '<strong>' . $user_login . '</strong><br/>';
+echo htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $link->url), 70)) . '<br/>';
 echo $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</p>';
-echo text_to_html($link->content);
+echo '<p>' . text_to_html($link->content) . '</p>';
 ?>
