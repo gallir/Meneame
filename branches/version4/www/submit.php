@@ -344,7 +344,7 @@ function do_submit1() {
 	// Avoid users sending too many links to the same site in last hours
 	$hours = 24;
 	$same_blog = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $hours hour) and link_author=$current_user->user_id and link_blog=$link->blog and link_votes > 0");
-	if ($same_blog > 2) {
+	if ($same_blog >= $globals['limit_same_site_24_hours']) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to too many links to the same site in last $hours hours ($current_user->user_login): $link->url");
 		add_submit_error( _('demasiados enlaces al mismo sitio en las últimas horas'));
 		return false;

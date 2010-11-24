@@ -117,6 +117,7 @@ $globals['limit_3_minutes'] = 10;
 $globals['limit_3_minutes_karma'] = 10;
 
 $globals['limit_user_24_hours'] = 12;
+$globals['limit_same_site_24_hours'] = 4;
 
 $globals['karma_propaganda'] = 12; // min user karma to avoid extra spam/propaganda checks in the submits
 

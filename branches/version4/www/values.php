@@ -138,6 +138,8 @@ echo '
 				<br />
 				'._("Límite de envíos por usuario en las últimas 24 horas") . ' (' . _('debes esperar, tienes demasiadas noticias en cola de las últimas 24 horas') . "): " .$globals['limit_user_24_hours'] . ' ' ._("envíos") .'.<br />
 				<br />
+				'._("Límite de envíos por usuario al mismo sitio en las últimas 24 horas") . ' (' . _('ya has enviado un enlace al mismo sitio hace poco tiempo') . "): " .$globals['limit_same_site_24_hours'] . ' ' ._("envíos") .'.<br />
+				<br />
 				'._("Tiempo que tarda un borrador en eliminarse automáticamente") . ': ' . print_time($globals['draft_time']) . '.<br />
 				<br />
 				'._("Máximo de borradores por usuario") . ' (' . _('has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . " " . _('cola de descartadas') . '): ' . $globals['draft_limit'] . '.<br />

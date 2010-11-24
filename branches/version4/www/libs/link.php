@@ -1025,7 +1025,7 @@ class Link {
 		$key .= "-$this->id";
 		$log = new Annotation($key);
 		if ($log->read()) $array = unserialize($log->text);
-		if (!$array || ! is_array($array)) return false;
+		if (!$array || ! is_array($array)) return array(); // Return an array, always, for the template
 		return $array;
 	}
 
