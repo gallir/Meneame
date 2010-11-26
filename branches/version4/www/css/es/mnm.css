@@ -1454,66 +1454,53 @@ font-size: 85%;
 
 /* pagination */
 
-.pages, .pages-margin {
+
+.pages {
 padding: 10px 0 0 0;
 margin: 20px 0 50px 0;
 clear: left;
-font-size: 9pt;
-border-top-color: #FF6400;
+background: #FFFFFF;
+font-weight: bold;
 }
 
-.pages-margin {
+.pages.margin {
 margin-left: 90px;
 }
 
-.pages a, .pages span, .pages-margin a, .pages-margin span {
+.pages a, .pages span {
 display: block;
 float: left;
-padding: 3px 5px 3px 5px;
+padding: 4px 10px 4px 10px;
 margin-right: 3px;
-border: 1px solid;
-color: #FF6400;
-border-color: #FFF;
+color: #FF7D12;
 background: #FFF;
 }
 
-.pages span.current, .pages-margin span.current {
-border: 1px solid;
-font-weight: bold;
-background: #FFBE94;
-color: #FF6400;
-border-color: #FF6400;
+.pages span.current {
+color: #FFF;
+background-color: #FF7D12;
+border: solid 1px  #FF7D12;
 }
 
-.pages span.current a, .pages-margin span.current a {
-padding: 0;
-border: 0px;
-background: #FF6400;
-color: #FF6400;
+.pages span.current a {
 }
 
-.pages a, .pages-margin a {
-border: 1px solid;
+.pages a {
 text-decoration: none;
-border-color: #FF6400;
-background: url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+border: solid 1px  #FF7D12;
 }
 
-.pages a:hover, .pages-margin a:hover {
-border-color: #FF9400;
-background: #FFBE94;
-color: #FF6400;
+.pages a:hover {
+color: #FFF;
+background-color: #FF7D12;
+border-color:#FF7D12;
 }
 
-.pages a.nextprev, .pages-margin a.nextprev {
-font-weight: bold;
-}
-
-.pages span.nextprev, .pages-margin span.nextprev {
-border: 1px solid;
-border-color: #FFE2C5;
+.pages span.nextprev {
+border: 1px solid #FFE2C5;
 color: #FFE2C5;
 }
+
 
 /* faq page */
 

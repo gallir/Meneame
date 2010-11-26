@@ -236,7 +236,7 @@ function do_pages($total, $page_size=25, $margin = true) {
 	$end=$start+$index_limit-1;
 
 	if ($margin) {
-		echo '<div class="pages-margin">';
+		echo '<div class="pages margin">';
 	} else {
 		echo '<div class="pages">';
 	}
@@ -279,11 +279,11 @@ function do_pages($total, $page_size=25, $margin = true) {
 
 	if($total < 0 || $current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="?page='.$i.$query.'">&#187; '._('siguiente').'</a>';
+		echo '<a href="?page='.$i.$query.'">'._('siguiente').' &#187;</a>';
 	} else {
 		echo '<span class="nextprev">&#187; '._('siguiente'). '</span>';
 	}
-	echo "</div><!--html1:do_pages-->\n";
+	echo '</div>';
 
 }
 
