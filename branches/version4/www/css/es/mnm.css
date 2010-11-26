@@ -670,10 +670,9 @@ clear: both;
 #footcol1, #footcol2, #footcol3, #footcol4, #footcol5 {
 float: left;
 padding: 0 22px;
-border-left: 1px dotted;
+border-left: solid 1px #CCCCCC;
 font-size: 85%;
 margin-bottom: 20px;
-border-color: #ff6400;
 }
 
 #footcol1 ul, #footcol2 ul, #footcol3 ul, #footcol4 ul, #footcol5 ul {
@@ -688,6 +687,7 @@ list-style-type: none;
 #footcol1 {
 width: 20%;
 background: url('../../img/common/rss-bigfoot.png') no-repeat 85% bottom;
+border-left: none;
 }
 
 #footcol2 {
@@ -704,15 +704,13 @@ width: 13%;
 
 #footcol5 {
 width: 9%;
-border-right: 1px dotted;
-border-color: #ff6400;
 }
 
 #footcol1 h5, #footcol2 h5, #footcol3 h5, #footcol4 h5, #footcol5 h5 {
 font-size: 120%;
-font-weight: normal;
-text-shadow: 0 1px #ccc;
+font-weight: bold;
 color: #ff6400;
+margin-bottom: 4px;
 }
 
 #footcol1 a, #footcol2 a, #footcol3 a, #footcol4 a, #footcol5 a {
@@ -721,10 +719,11 @@ color: #5073c5;
 
 #footthingy {
 clear: both;
-margin: 5em 20px 0 20px;
-padding: 0 1em 0 60px;
-/* margin-top: -5em; hack ie7 */
-background: url('../../img/mnm/footeli.png') no-repeat left top;
+margin: 15em 20px 0 13px;
+padding: 0 1em 0 145px;
+background: url('../../img/mnm/footeli02.png') no-repeat left top;
+min-height: 139px;
+position: relative;
 }
 
 #footthingy li {
@@ -739,35 +738,37 @@ color: #999;
 }
 
 #footthingy p {
-border-bottom: 1px dotted;
-padding-bottom: 4px;
+border-bottom: 1px solid;
+padding-bottom: 0px;
 text-indent: -9999px;
-border-color: #ff6400;
-background: url('../../img/mnm/meneito.png') no-repeat left 2px;
+border-color: #FF7D12;
+background: none;
 }
 
 #legalese {
-margin-top: 5px;
 text-align: center;
+float: left;
+display: inline-block;
+width: 84%;
+margin-top: 2px;
 }
 
 #legalese li {
-border-left: 1px solid #c6c6c6;
-padding: 0 6px 0 6px;
-}
-
-#legalese li:first-child {
 border-left: none;
-padding-left: 0;
+padding: 0 0 0 0;
 }
 
 #stdcompliance {
-padding: 2em 0 4em 0;
-text-align: center;
+padding: 4px 0 0 0;
+text-align: right;
+float: right;
+display: inline-block;
+width: 16%;
+margin: 0px;
 }
 
 #stdcompliance li {
-margin: 0 5px;
+margin: 0px;
 }
 
 /*** LEGACY STYLES ***/
