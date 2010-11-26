@@ -394,7 +394,7 @@ border-bottom: solid 1px #FFEDC6;
 background-color: #FFEDC6;
 height: 40px !important;
 list-style-type: none;
-padding-left: 35px;
+padding: 1px 0 1px 35px;
 }
 
 .subheader li{
