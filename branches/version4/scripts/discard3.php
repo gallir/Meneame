@@ -55,14 +55,14 @@ if ($links) {
 				$annotation->append(_('Retirada de portada').": -". $globals['instant_karma_per_depublished'] .", karma: $user->karma\n");
 			}
 
-			if ($globals['twitter_user'] || $globals['jaiku_user']) {
+			if ($globals['twitter_token'] || $globals['jaiku_user']) {
 				if ($globals['url_shortener']) {
 					$short_url = $l->get_short_permalink();
 				} else {
 					$short_url = fon_gs($l->get_permalink());
 				}
 				$text = _('Retirada de portada') . ': ';
-				if ($globals['twitter_user'] && $globals['twitter_password']) {
+				if ($globals['twitter_user'] && $globals['twitter_token']) {
 					twitter_post($text, $short_url);
 				}
 				if ($globals['jaiku_user'] && $globals['jaiku_key']) {

@@ -10,7 +10,7 @@ header("Content-Type: text/html");
 echo '<html><head><title>promote9.php</title></head><body>';
 ob_end_flush();
 
-$min_karma_coef = 0.87;
+$min_karma_coef = 0.88;
 
 
 define(MAX, 1.15);

@@ -72,7 +72,11 @@ $history_from_ts = time() - $history_hours*3600;
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = $globals['karma_points_per_published'];
 $points_per_published_max = $globals['karma_points_per_published_max'];
-$points_given = 4;
+if ($globals['karma_points_by_votes'] > 0) {
+	$points_given = $globals['karma_points_by_votes'];
+} else {
+	$points_given = 5;
+}
 $comment_votes = $globals['comment_votes_multiplier'];
 $post_votes = $globals['post_votes_multiplier'];
 
@@ -226,8 +230,8 @@ foreach ($res as $dbuser) {
 		}
 
 		// Bot and karmawhoring warning!!!
-		if ($karma2 > 0 && $published_given > $published_links/10 && $published_given > $nopublished_given*1.5 &&
-				($published_average < 0.50 || 
+		if ($karma2 > 0 && $published_given > $published_links/8 && $published_given > $nopublished_given*1.5 &&
+				($published_average < 0.45 || 
 				($total_comments < $published_given/2 && $sent_links == 0)) 
 			) {
 			$penalized += 1;
