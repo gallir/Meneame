@@ -132,6 +132,7 @@ $globals['special_karma_loss']=12; //karma to loss 'special' status (max * 0.6)
 $globals['comment_votes_multiplier'] = 5; //'importance' in karma calculations of comment votes
 $globals['post_votes_multiplier'] = 1; //'importance' in karma calculations of post votes
 
+$globals['karma_points_by_votes'] = 5; // Max karma given to votes to other's links
 $globals['instant_karma_per_published'] = 1; //karma added when published
 $globals['instant_karma_per_depublished'] = 1.2; //karma substracted when depublished
 $globals['instant_karma_per_discard'] = 0.2; //karma substracted when discarded
