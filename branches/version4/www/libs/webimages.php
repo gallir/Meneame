@@ -113,7 +113,7 @@ class BasicThumb {
 
 	function save($filename) {
 		if (!$this->image) return false;
-		$this->round_corners();
+		// $this->round_corners(); Disabled round corners
 		return imagejpeg($this->image, $filename, 80);
 	}
 
