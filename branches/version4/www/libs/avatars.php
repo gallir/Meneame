@@ -7,14 +7,9 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-function get_avatars_dir() {
-	global $globals;
-	return mnmpath.'/'.$globals['cache_dir'];
-}
-
 function is_avatars_enabled() {
 	global $globals;
-	return $globals['Amazon_S3_media_url'] || ($globals['cache_dir'] && is_writable(get_avatars_dir()));
+	return $globals['Amazon_S3_media_url'] || ($globals['cache_dir'] && is_writable(Upload::get_cache_dir()));
 }
 
 function avatars_get_from_url($user, $url) {
@@ -41,10 +36,8 @@ function avatars_manage_upload($user, $name, $filename = false) {
 	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
 		$subdir = '/tmp';
 	} else {
-		$chain = get_cache_dir_chain($user);
-		@mkdir(get_avatars_dir());
-		create_cache_dir_chain(get_avatars_dir(), $chain);
-		$subdir = get_avatars_dir() . '/'. $chain;
+		if (! Upload::create_cache_dir($user)) return false;
+		$subdir = Upload::get_cache_dir($user);
 	}
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
@@ -143,9 +136,8 @@ function avatar_get_from_db($user, $size=0) {
 	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
 		$subdir = '/tmp';
 	} else {
-		$chain = get_cache_dir_chain($user);
-		create_cache_dir_chain(get_avatars_dir(), $chain);
-		$subdir = get_avatars_dir() . '/'. $chain;
+		if (! Upload::create_cache_dir($user)) return false;
+		$subdir = Upload::get_cache_dir($user);
 	}
 	if (!is_writable($subdir)) return false;
 	$file_base = $subdir . "/$user-$time";
@@ -163,7 +155,7 @@ function avatar_get_from_db($user, $size=0) {
 			if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
 				$delete_it = true;
 				$original = "$file_base-orig.jpg";
-			} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0) 
+			} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0)
 						|| Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
 				$original = $file_base . '-80.jpg';
 			} else {
@@ -207,7 +199,7 @@ function avatar_get_from_file($user, $size) {
 
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
 	if(! $time > 0) return false;
-	$file = get_avatars_dir() . '/'. get_cache_dir_chain($user) . "/$user-$time-$size.jpg";
+	$file = Upload::get_cache_dir($user) . "/$user-$time-$size.jpg";
 	if (is_readable($file)) {
 		return	file_get_contents($file);
 	} else {
@@ -278,7 +270,7 @@ function avatars_remove_user_files($user) {
 	}
 
 	if ($globals['Amazon_S3_local_cache'] || ! $globals['Amazon_S3_media_bucket'] ) {
-		$subdir = @get_avatars_dir() . '/'. get_cache_dir_chain($user);
+		$subdir = Upload::get_cache_dir($user);
 		if ( $subdir && ($handle = @opendir( $subdir )) ) {
 			while ( false !== ($file = readdir($handle))) {
 				if ( preg_match("/^$user-/", $file) ) {

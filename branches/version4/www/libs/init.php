@@ -62,7 +62,7 @@ if($_SERVER['HTTP_HOST']) {
 	} else {
 		$globals['referer'] = 'unknown';
 	}
-	
+
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {
@@ -104,6 +104,7 @@ function __autoload($class) {
 				'WebThumb' => 'webimages.php',
 				'HtmlImages' => 'webimages.php',
 				'Trackback' => 'trackback.php',
+				'Upload' => 'upload.php',
 				'Media' => 'media.php',
 				'S3' => 'S3.php',
 	);
@@ -140,13 +141,13 @@ $config = array(
 		/* Avoid use if empty($var) */
 		'if_empty' => FALSE,
 		/* we're smart enought to know when escape :-) */
-		'autoescape' => FALSE, 
+		'autoescape' => FALSE,
 		/* let's save bandwidth */
-		'strip_whitespace' => TRUE, 
+		'strip_whitespace' => TRUE,
 		/* call php functions from the template */
-		'allow_exec'  => TRUE, 
+		'allow_exec'  => TRUE,
 		/* global $global, $current_user for all templates */
-		'global' => array('globals', 'current_user'), 
+		'global' => array('globals', 'current_user'),
 	),
 	'use_hash_filename' => FALSE, /* don't use hash filename for generated php */
 );

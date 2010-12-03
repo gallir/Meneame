@@ -52,7 +52,7 @@ class Media {
 		$list = S3::getBucket($globals['Amazon_S3_media_bucket'], $pattern);
 		return $list;
 	}
-	
+
 	public static function rm($pattern) {
 		global $globals;
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
@@ -77,12 +77,5 @@ class S3Images extends Media {
 
 
 }
-
-
-
-
-
-
-
 
 ?>

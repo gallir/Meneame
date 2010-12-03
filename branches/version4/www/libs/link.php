@@ -1061,11 +1061,8 @@ class Link {
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
 		if ($img) {
-			$filepath = mnmpath.'/'.$globals['cache_dir'];
-			@mkdir($filepath);
-			$chain = get_cache_dir_chain($this->id);
-			create_cache_dir_chain($filepath, $chain);
-			$filepath .= "/$chain/thumb-$this->id.jpg";
+			Upload::create_cache_dir($this->id);
+			$filepath = Upload::get_cache_dir($this->id) . "/thumb-$this->id.jpg";
 			if ($img->type == 'local') {
 				$img->scale($globals['thumb_size']);
 				if($img->save($filepath)) {
@@ -1120,13 +1117,12 @@ class Link {
 	function has_thumb() {
 		global $globals;
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
-			$chain = get_cache_dir_chain($this->id);
-			$file = $globals['cache_dir']."/$chain/thumb-$this->id.jpg";
+			$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
 			if (is_readable($filepath)) {
 				return $globals['base_static'] . $file;
 			} elseif ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
-				create_cache_dir_chain(mnmpath.'/'.$globals['cache_dir'], $chain);
+				Upload::create_cache_dir($this->id);
 				// Get thumbnail from S3
 				if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
 					return $globals['base_static'] . $file;

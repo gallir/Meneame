@@ -427,23 +427,6 @@ function post_get_base_url($option='') {
 	}
 }
 
-function get_cache_dir_chain($key) {
-	// Very fast cache dir generator for two levels
-	// mask == 2^8 - 1 or 1 << 8 -1
-	return sprintf("%02x/%02x", ($key >> 8) & 255, $key & 255);
-}
-
-function create_cache_dir_chain($base, $chain) {
-	// Helper function for get_cache_dir_chain
-	@mkdir($base); // try to create the base dir, so it's able to recreate a empty cache
-	$dirs = explode('/', $chain);
-	for ($i=0; $i < count($dirs); $i++) {
-		$base .= '/'.$dirs[$i];
-		@mkdir($base);
-		@chmod($base, 0777);
-	}
-}
-
 function get_avatar_url($user, $avatar, $size) {
 	global $globals, $db;
 
@@ -456,7 +439,7 @@ function get_avatar_url($user, $avatar, $size) {
 		if ($globals['Amazon_S3_media_url'] && !$globals['Amazon_S3_local_cache']) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
-			$file = $globals['cache_dir'].'/'.get_cache_dir_chain($user). "/$user-$avatar-$size.jpg";
+			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";
 			// Don't check every time, but 1/10, decrease VM pressure
 			// Disabled for the moment, it fails just too much for size 40
 			//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
