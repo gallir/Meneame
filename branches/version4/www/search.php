@@ -104,11 +104,11 @@ function print_result()
 			$obj->basic_summary = true; 
 			switch ($_REQUEST['w']) {
 				case 'posts':
-					$obj->print_summary(300);
+					$obj->print_summary(500);
 					break;
 				case 'comments':
 					if ($obj->type == 'admin' && !$current_user->admin) continue;
-					$obj->print_summary(false, 300);
+					$obj->print_summary(false, 500);
 					break;
 				case 'links':
 				default:

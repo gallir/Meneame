@@ -571,9 +571,6 @@ margin-left:50px;
 }
 
 .sidebox .thumbnail {
-border-radius: 3px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
 margin:0px 0px 10px 10px;
 box-shadow: 0 0 5px rgba(0,0,0,0.5);
 -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
@@ -805,9 +802,6 @@ padding-bottom: 0;
 overflow: hidden;
 float: right;
 margin: 0 4px 2px 4px;
-border-radius: 5px;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
 box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -moz-box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);
