@@ -8,6 +8,16 @@
 		{# print text {{{ #}
 
 		{{ self.txt_content }}
+
+		{% if self.media_size > 0 %}
+			&nbsp;
+			{# PixeloPhilia icon from omercetin.deviantart.com #}
+			<a class="fancybox" title="{% trans _('imagen subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=comment&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}">
+			<img class="mini-icon-text" src="{{ globals.base_static }}img/common/photo.png" width="32" height="32" alt="media" title="{{ self.media_size }} bytes"/>
+			</a>
+		{% endif %}
+
+
 		{% if self.can_edit %}
 		&nbsp;&nbsp;<a href="javascript:get_votes('comment_edit.php','edit_comment','c-{{ html_id }}',0, {{ self.id }})" title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
 		{% endif %}
@@ -71,7 +81,7 @@
 
 		<div class="comment-info">
 		{{ self.author_info }}
-		<img src="{{ self.avatar_img }}" width="20" height="20" 
+		<img src="{{ self.avatar_img }}" width="20" height="20"
 		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
 				title="{{ self.username }}&nbsp;&nbsp;karma&nbsp;&nbsp;{{ self.user_karma}}" alt="{{ self.username }}"
 		{% endif %}

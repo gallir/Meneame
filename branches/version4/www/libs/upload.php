@@ -139,7 +139,7 @@ class Upload {
 	function backup() {
 		global $globals;
 
-		if ($globals['Amazon_S3_media_bucket']) {
+		if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_upload']) {
 			return Media::put($this->pathname(), $this->type);
 		}
 		return true;

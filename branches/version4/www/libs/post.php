@@ -182,7 +182,7 @@ class Post {
 		if (!$this->basic_summary && (($this->author == $current_user->user_id &&
 			time() - $this->date < $globals['posts_edit_time'] ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] ))) { // Admins can edit up to 10 days
-			$expand = '&nbsp;&nbsp;&nbsp;<a href="javascript:post_edit('.$this->id.')" title="'._('editar').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
+			$this->can_edit = true;
 
 		} elseif ($length > 0) {
 			$this->content = text_to_summary($this->content, $length);

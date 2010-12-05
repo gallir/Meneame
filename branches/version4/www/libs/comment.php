@@ -20,7 +20,7 @@ class Comment {
 	var $read = false;
 	var $ip = '';
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id), users ";
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id) LEFT JOIN media ON (media.type='comment' and media.id = comment_id and media.version = 0), users ";
 
 	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
 
@@ -391,21 +391,28 @@ class Comment {
 						|| $current_user->user_id == $link->author)) {
 			// User can comment
 			echo '<div class="commentform">'."\n";
-			echo '<form action="" method="post">'."\n";
+			echo '<form action="" method="post" enctype="multipart/form-data">'."\n";
+
+			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
+			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
+
 			echo '<fieldset>'."\n";
 			echo '<legend>'._('envía un comentario'). ' <em style="font-size:80%">'._('porque alguien en Internet está equivocado').'</em></legend>'."\n";
 			print_simpleformat_buttons('comment');
 			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 			echo '<div><textarea name="comment_content" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
+
+
 			echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
 			// Allow gods to put "admin" comments which does not allow votes
 			if ($current_user->user_level == 'god') {
 				echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin"/></label>'."\n";
 			}
-			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
-			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
-			echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";
-			echo '<input type="hidden" name="user_id" value="'.$current_user->user_id.'" />'."\n";
+
+			$comment = new Comment(); // Foo comment
+			$vars = compact('link', 'comment');
+			Haanga::Load('comment_edit.html', $vars);
+
 			echo '</fieldset>'."\n";
 			echo '</form>'."\n";
 			echo "</div>\n";
@@ -559,6 +566,12 @@ class Comment {
 		$comment->insert_vote();
 		$link->update_comments();
 		$db->commit();
+
+		// Check image upload
+		if (!empty($_FILES['image']['tmp_name'])) {
+			$comment->store_image($_FILES['image']);
+		}
+
 		// Comment stored, just redirect to it page
 		header('Location: '.$link->get_permalink() . '#c-'.$comment->order);
 		die;
@@ -607,5 +620,23 @@ class Comment {
 		$this->content = clean_lines(normalize_smileys($this->content));
 		return $this->content;
 	}
+
+	function store_image($file) {
+		$media = new Upload('comment', $this->id, 0);
+		if ($media->from_temporal($file, 'image')) {
+			$this->media_size = $media->size;
+			$this->media_mime = $media->mime;
+			return true;
+		}
+		return false;
+	}
+
+	function delete_image() {
+		$media = new Upload('comment', $this->id, 0);
+		$media->delete();
+		$this->media_size = 0;
+		$this->media_mime = '';
+	}
+
 }
 ?>

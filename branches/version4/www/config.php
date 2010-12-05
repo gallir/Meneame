@@ -267,6 +267,7 @@ $globals['thumb_size'] = 70;
 //$globals['Amazon_S3_media_bucket'] = '';
 //$globals['Amazon_S3_media_url'] = '';
 $globals['Amazon_S3_local_cache'] = true;
+$globals['Amazon_S3_upload'] = true;
 
 
 // Main javascript file

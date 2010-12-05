@@ -9,7 +9,7 @@
 if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
-} 
+}
 
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
@@ -46,10 +46,17 @@ function print_edit_form() {
 
 	$rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
 	echo '<div class="commentform">'."\n";
-	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" method="post">'."\n";
+	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" method="post" enctype="multipart/form-data">'."\n";
+
+	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
+	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";
+	echo '<input type="hidden" name="id" value="'.$comment->id.'" />'."\n";
+
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
 	echo '<div style="clear: right"><textarea name="comment_content" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
+
+
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
 	// Allow gods to put "admin" comments which does not allow votes
 	if ($current_user->user_level == 'god') {
@@ -57,11 +64,11 @@ function print_edit_form() {
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin" '.$checked.'/></label>'."\n";
 	}
 
-	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
-	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";
-	echo '<input type="hidden" name="id" value="'.$comment->id.'" />'."\n";
-	echo '<input type="hidden" name="link_id" value="'.$link->id.'" />'."\n";
-	echo '<input type="hidden" name="user_id" value="'.$current_user->user_id.'" />'."\n";
+
+	$vars = compact('link', 'comment');
+	Haanga::Load('comment_edit.html', $vars);
+
+
 	echo '</fieldset>'."\n";
 	echo '</form>'."\n";
 	echo "</div>\n";
@@ -74,14 +81,14 @@ function save_comment () {
 	// Warning, trillion of checkings :-(
 
 	$user_id = intval($_POST['user_id']);
-	if(intval($_POST['id']) == $comment->id && $current_user->authenticated && 
+	if(intval($_POST['id']) == $comment->id && $current_user->authenticated &&
 		// Allow the author of the post
-		(($user_id == $current_user->user_id 
-				&& $current_user->user_id == $comment->author 
-				&& time() - $comment->date < $globals['comment_edit_time'] * 1.1) 
-			|| (($comment->author != $current_user->user_id || $comment->type == 'admin') 
+		(($user_id == $current_user->user_id
+				&& $current_user->user_id == $comment->author
+				&& time() - $comment->date < $globals['comment_edit_time'] * 1.1)
+			|| (($comment->author != $current_user->user_id || $comment->type == 'admin')
 				&& $current_user->user_level == 'god')) &&
-		$_POST['key']  == md5($comment->randkey.$site_key)  && 
+		$_POST['key']  == md5($comment->randkey.$site_key)  &&
 		strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
 
@@ -92,11 +99,11 @@ function save_comment () {
 				$comment->type = 'normal';
 			}
 		}
-				
+
 
 		if (! $current_user->admin) $comment->get_links();
 
-		if ($current_user->user_id == $comment->author && $comment->banned 
+		if ($current_user->user_id == $comment->author && $comment->banned
 				&& $current_user->Date() > $globals['now'] - 86400) {
 			syslog(LOG_NOTICE, "Meneame: editcomment not stored, banned link ($current_user->user_login)");
 			echo _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
@@ -106,6 +113,16 @@ function save_comment () {
 		if (strlen($comment->content) > 0 ) {
 			$comment->store();
 		}
+
+		// Check image upload or delete
+		if ($_POST['image_delete']) {
+			$comment->delete_image();
+		}
+		if (!empty($_FILES['image']['tmp_name'])) {
+			$comment->store_image($_FILES['image']);
+		}
+
+
 		header('Location: '.$link->get_permalink() . '#c-'.$comment->order);
 		die;
 	} else {
