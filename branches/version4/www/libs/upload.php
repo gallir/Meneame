@@ -37,14 +37,14 @@ class Upload {
 		global $db;
 
 		if (! $user > 0) return 0;
-		return intval($db->get_var("select sum(size) from media where user = user and date > date_sub(now(), interval $hours hour)"));
+		return intval($db->get_var("select sum(size) from media where user = $user and date > date_sub(now(), interval $hours hour)"));
 	}
 
 	static function user_uploads($user, $hours = 24) {
 		global $db;
 
 		if (! $user > 0) return 0;
-		return intval($db->get_var("select count(*) from media where user = user and date > date_sub(now(), interval $hours hour)"));
+		return intval($db->get_var("select count(*) from media where user = $user and date > date_sub(now(), interval $hours hour)"));
 	}
 
 	function __construct($type, $id, $version = 0, $time = false) {
