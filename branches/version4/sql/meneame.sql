@@ -408,6 +408,30 @@ CREATE TABLE `logs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `media`
+--
+
+DROP TABLE IF EXISTS `media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `media` (
+  `type` enum('comment','link','post','avatar','thumb','other') NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `version` smallint(5) unsigned NOT NULL,
+  `user` int(10) unsigned NOT NULL,
+  `access` enum('restricted','public','friends') NOT NULL DEFAULT 'restricted',
+  `mime` char(32) NOT NULL,
+  `size` int(10) unsigned NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dim1` smallint(5) unsigned NOT NULL,
+  `dim2` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`type`,`id`,`version`),
+  UNIQUE KEY `user_2` (`user`,`date`),
+  KEY `user` (`user`,`type`,`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `pageloads`
 --
 
@@ -624,4 +648,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-11-20 17:33:32
+-- Dump completed on 2010-12-05  2:42:37
