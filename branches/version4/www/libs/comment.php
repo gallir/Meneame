@@ -160,7 +160,7 @@ class Comment {
 	function prepare_summary_text($length) {
 		global $globals, $current_user;
 
-		if ($single_link) $this->html_id = $this->order;
+		if ($this->single_link) $this->html_id = $this->order;
 		else $this->html_id = $this->id;
 
 		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
@@ -183,6 +183,7 @@ class Comment {
 
 		/* Get info about the comment and author */
 		$this->link_permalink =  $link->get_relative_permalink();
+		$this->single_link = $single_link;
 
 		$this->check_visibility();
 
@@ -238,7 +239,7 @@ class Comment {
 			$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
 		}
 
-		$vars = array('self' => $this, 'single_link' => $single_link);
+		$vars = array('self' => $this);
 		return Haanga::Load('comment_summary.html', $vars);
 	}
 
