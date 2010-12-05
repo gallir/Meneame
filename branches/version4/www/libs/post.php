@@ -20,7 +20,7 @@ class Post {
 	var $src = 'web';
 	var $read = false;
 
-	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted FROM posts LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id), users ";
+	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM posts LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id) LEFT JOIN media ON (media.type='post' and media.id = post_id and media.version = 0), users ";
 
 	// Regular expression to detect referencies to other post, like @user,post_id
 	const REF_PREG = "/(^|\W)@([^\s<>;:,\?\)]+(?:,\d+){0,1})/u";
@@ -103,8 +103,7 @@ class Post {
 
 	function read() {
 		global $db, $current_user;
-		$id = $this->id;
-		if(($result = $db->get_row("SELECT".Post::SQL."WHERE post_id = $id and user_id = post_user_id"))) {
+		if(($result = $db->get_row("SELECT".Post::SQL."WHERE post_id = $this->id and user_id = post_user_id"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			if ($this->src == 'im') {
 				$this->src = 'jabber';
@@ -222,48 +221,15 @@ class Post {
 
 	function print_edit_form() {
 		global $globals, $current_user;
-		echo '<div class="commentform" id="edit-form">'."\n";
-		echo '<fieldset><legend><span class="sign">';
-		if ($this->id > 0) {
-			echo _('edición nota');
-		} else {
-			echo _('nueva nota');
+
+		if ($this->id == 0) {
 			$this->randkey = rand(1000000,100000000);
 		}
-		echo '</span></legend>';
+		$this->body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-		print_simpleformat_buttons('post');
-
-
-		echo '<form action="'.$globals['base_url'].'backend/post_edit.php?user='.$current_user->user_id.'" method="post" id="thisform'.$this->id.'" name="thisform'.$this->id.'">'."\n";
-		echo '<input type="hidden" name="key" value="'.$this->randkey.'" />'."\n";
-		echo '<input type="hidden" name="post_id" value="'.$this->id.'" />'."\n";
-		echo '<input type="hidden" name="user_id" value="'.$this->author.'" />'."\n";
-		echo '<textarea style="clear: both" name="post" rows="6" cols="40" id="post"';
-		if (! $globals['mobile']) {
-			echo ' onKeyDown="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')" onKeyUp="textCounter(document.thisform'.$this->id.'.post,document.thisform'.$this->id.'.postcounter,'.$globals['posts_len'].')"';
-		}
-		echo '>'.$this->content.'</textarea>'."\n";
-		$body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-		if (! $globals['mobile']) {
-			echo '<div style="margin-top:-7px"><input readonly type="text" name="postcounter" size="3" maxlength="3" value="'. $body_left . '" /> <span class="note">' . _('caracteres libres') . '</span></div>';
-		}
-		echo '<input class="button" type="submit" value="'._('guardar').'" />'."\n";
-		echo '</form>'."\n";
-		echo '</fieldset>'."\n";
-		echo '</div>'."\n";
-
-
-		echo'<script type="text/javascript">'."\n";
-		// prepare Options Object
-		if ($this->id == 0) {
-			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#newpost").html(response); $("#addpost").hide("fast"); } } }; ';
-		} else {
-			echo 'var options = {success:  function(response) {if (/^ERROR:/.test(response)) alert(response); else { $("#pcontainer-'.$this->id.'").html(response); } } }; ';
-		}
-		// wait for the DOM to be loaded
-		echo'$(\'#thisform'.$this->id.'\').ajaxForm(options);' ."\n";
-		echo '</script>'."\n";
+		$vars = array();
+		$vars['self'] = $this;
+		return Haanga::Load('post_edit.html', $vars);
 	}
 
 	function vote_exists() {
@@ -351,6 +317,21 @@ class Post {
 		return $this->content;
 	}
 
+	function store_image($file) {
+		$media = new Upload('post', $this->id, 0);
+		if ($media->from_temporal($file, 'image')) {
+			$this->media_size = $media->size;
+			$this->media_mime = $media->mime;
+			return true;
+		}
+		return false;
+	}
+
+	function delete_image() {
+		$media = new Upload('post', $this->id, 0);
+		$media->delete();
+		$this->media_size = 0;
+		$this->media_mime = '';
+	}
+
 }
-
-

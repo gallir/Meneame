@@ -108,6 +108,14 @@ $globals['comment_highlight_karma'] = 100;
 $globals['comment_hidden_karma'] = -100;
 
 
+// Upload images and files
+$globals['media_max_size'] = 1024*1024; // 1 MB;
+$globals['media_min_karma'] = 6;
+$globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day
+$globals['media_max_upload_per_day'] = 10;
+
+
+
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
 

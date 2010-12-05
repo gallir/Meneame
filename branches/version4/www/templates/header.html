@@ -7,6 +7,9 @@
 <title>{{title}}</title>
 
 
+{# fancybox #}
+<link rel="stylesheet" href="{{globals.base_static}}js/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+
 {% if globals.css_main %}
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>
 {% endif %}
@@ -66,6 +69,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
 <script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
 
+
 {% for js in globals.extra_js %}
 	{% if js|substr:"0, 4" == 'http' %}
 		<script src="{{js}}" type="text/javascript"></script>
@@ -84,6 +88,7 @@
 if(top.location != self.location)top.location = self.location;
 var base_key="{{globals.security_key}}";
 var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
+$(document).ready(function() {$("a.fancybox").fancybox()});
 </script>
 
 {% if globals.thumbnail %}

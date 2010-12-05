@@ -6,7 +6,7 @@
 	<li>
         {% exec post.print_summary %}
     </li>
-   </ol> 
+   </ol>
 {% endif %}
 
 
@@ -46,7 +46,7 @@
 
         {% if friend_icon %}
             &nbsp;<a id="friend-{{current_user.user_id}}-{{user.id}}" href="javascript:get_votes('get_friend.php','{{current_user.user_id}}','friend-{{current_user.user_id}}-{{user.id}}',0,'{{user.id}}')">{{ friend_icon }}</a>
-         
+
         {% endif %}
 
         {% if user.id == current_user.user_id OR current_user.admin %}

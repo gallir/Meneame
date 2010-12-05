@@ -1,0 +1,66 @@
+<div class="commentform" id="edit-form">
+<fieldset><legend><span class="sign">
+{% if self.id > 0 %}
+	{% trans _('edición nota') %}
+{% else %}
+	{% trans _('nueva nota') %}
+{% endif %}
+</span></legend>
+
+{% exec print_simpleformat_buttons 'post' as dummy %}
+
+
+<form action="{{ globals.base_url }}backend/post_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
+<input type="hidden" name="key" value="{{ self.randkey }}" />
+<input type="hidden" name="post_id" value="{{ self.id }}" />
+<input type="hidden" name="user_id" value="{{ self.author }}" />
+<textarea style="clear: both" name="post" rows="6" cols="40" id="post"
+{% if ! globals.mobile %}
+	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
+	onKeyUp="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
+{% endif %}
+>{{ self.content }}</textarea>
+
+
+<div style="margin-top:-7px">
+{% if ! globals.mobile %}
+	<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
+	<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
+{% endif %}
+
+{% if self.media_size > 0 %}
+	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="image_delete" value="1"/></label>&nbsp;
+{% endif %}
+
+{% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
+	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
+	<input type="file" autocomplete="off" name="image" />
+{% endif %}
+</div>
+
+<input class="button" type="submit" value="{% trans _('guardar') %}" />
+</form>
+</fieldset>
+</div>
+
+
+<script type="text/javascript">
+/* prepare Options Object */
+{% if self.id == 0 %}
+	var options = { success:
+		function(response) {
+			if (/^ERROR:/.test(response)) alert(response);
+			else $("#newpost").html(response); $("#addpost").hide("fast");
+		}
+	};
+{% else %}
+	var options = { success:
+		function(response) {
+			if (/^ERROR:/.test(response)) alert(response);
+			else $("#pcontainer-{{ self.id }}").html(response);
+		}
+	};
+{% endif %}
+/* wait for the DOM to be loaded */
+$('#thisform{{ self.id }}').ajaxForm(options);
+</script>

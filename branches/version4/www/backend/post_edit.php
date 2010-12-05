@@ -9,7 +9,7 @@
 if (! defined('mnmpath')) {
 	include('../config.php');
 	include(mnminclude.'html1.php');
-} 
+}
 
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
@@ -53,7 +53,7 @@ function save_post ($post_id) {
 	if ($post_id > 0) {
 		$post->id = $post_id;
 		if (! $post->read()) die;
-		if(  
+		if(
 			// Allow the author of the post
 			((intval($_POST['user_id']) == $current_user->user_id &&
 			$current_user->user_id == $post->author &&
@@ -113,6 +113,14 @@ function save_post ($post_id) {
 			echo 'ERROR: ' . _('comentario grabado previamente');
 			die;
 		}
+	}
+
+	// Check image upload or delete
+	if ($_POST['image_delete']) {
+		$post->delete_image();
+	}
+	if (!empty($_FILES['image']['tmp_name'])) {
+		$post->store_image($_FILES['image']);
 	}
 	$post->print_summary();
 }

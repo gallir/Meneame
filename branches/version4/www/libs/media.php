@@ -27,7 +27,7 @@ class Media {
 		if (S3::putObjectFile($file, $globals['Amazon_S3_media_bucket'], $uri, S3::ACL_PUBLIC_READ, array(), array(
 			"Cache-Control" => "max-age=864000",
 			"Expires" => gmdate("D, d M Y H:i:s T", time() + 864000) )) ) {
-			//syslog(LOG_NOTICE, "Meneame, uploaded $uri to S3");
+			// syslog(LOG_NOTICE, "Meneame, uploaded $uri to S3");
 			return true;
 		}
 		syslog(LOG_NOTICE, "Meneame, failed to upload $uri to S3");
@@ -71,11 +71,6 @@ class Media {
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
 		return S3::listBuckets($detailed);
 	}
-}
-
-class S3Images extends Media {
-
-
 }
 
 ?>
