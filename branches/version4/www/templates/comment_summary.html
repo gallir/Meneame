@@ -1,32 +1,11 @@
-<div id="c-{{html_id}}">
+<div id="c-{{self.html_id}}">
 	<div class="{{ self.comment_class }}">
 		<a href="{{ self.link_permalink }}/000{{ self.order }}"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;&nbsp;
 		<span  id="cid-{{ self.id }}">
 	{% if self.hide_comment %}
 		&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
 	{% else %}
-		{# print text {{{ #}
-
-		{{ self.txt_content }}
-
-		{% if self.media_size > 0 %}
-			&nbsp;
-			{# PixeloPhilia icon from omercetin.deviantart.com #}
-			<a class="fancybox" title="{% trans _('imagen subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=comment&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}">
-			<img class="mini-icon-text" src="{{ globals.base_static }}img/common/photo.png" width="32" height="32" alt="media" title="{{ self.media_size }} bytes"/>
-			</a>
-		{% endif %}
-
-
-		{% if self.can_edit %}
-		&nbsp;&nbsp;<a href="javascript:get_votes('comment_edit.php','edit_comment','c-{{ html_id }}',0, {{ self.id }})" title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
-		{% endif %}
-
-		{% if self.is_truncated %}
-		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.id}}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
-		{% endif %}
-
-		{# print text }}} #}
+		{% include 'comment_summary_text.html' %}
 	{% endif %}
 		</span>
 	</div>

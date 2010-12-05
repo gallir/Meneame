@@ -157,6 +157,17 @@ class Comment {
 	}
 
 
+	function prepare_summary_text($length) {
+		global $globals, $current_user;
+
+		if ($single_link) $this->html_id = $this->order;
+		else $this->html_id = $this->id;
+
+		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+		if ($length > 0) $this->truncate($length);
+		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
+	}
+
 	function print_summary($link=0, $length=0, $single_link=true) {
 		global $current_user, $globals;
 
@@ -168,9 +179,6 @@ class Comment {
 			$link->read();
 			$this->link_object = $link;
 		}
-
-		if ($single_link) $html_id = $this->order;
-		else $html_id = $this->id;
 
 
 		/* Get info about the comment and author */
@@ -193,16 +201,12 @@ class Comment {
 		}
 
 
-		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+		$this->prepare_summary_text($length);
 
 		$this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id  && $single_link && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->level != 'autodisabled';
 
 		$this->user_can_vote = $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
 		$this->modified_time = txt_time_diff($this->date, $this->modified);
-
-		$this->truncate($length);
-
-		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
 
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && $globals['link'] && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
@@ -234,8 +238,7 @@ class Comment {
 			$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
 		}
 
-		$vars = array('self' => $this, 'html_id' => $html_id, 'single_link' => $single_link);
-
+		$vars = array('self' => $this, 'single_link' => $single_link);
 		return Haanga::Load('comment_summary.html', $vars);
 	}
 
@@ -280,30 +283,13 @@ class Comment {
 	}
 
 
-	function print_text($length = 0, $html_id=false) {
+	function print_text($length = 0) {
 		global $current_user, $globals;
 
-		if (!$html_id) $html_id = $this->id;
+		$this->prepare_summary_text($length);
 
-		if (!$this->basic_summary && (
-					($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])
-					|| (($this->author != $current_user->user_id || $this->type == 'admin')
-					&& $current_user->user_level == 'god')) ) { // gods can always edit
-			$expand = '&nbsp;&nbsp;<a href="javascript:get_votes(\'comment_edit.php\',\'edit_comment\',\'c-'.$html_id.'\',0,'.$this->id.')" title="'._('editar comentario').'"><img class="mini-icon-text" src="'.$globals['base_static'].'img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>';
-
-		}
-		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->content = text_to_summary($this->content, $length);
-			// Check all html tags are closed
-			if (preg_match('/<\w+>/', $this->content)) {
-				$this->content = close_tags($this->content);
-			}
-			$expand .= '&nbsp;&nbsp;' .
-				'<a href="javascript:get_votes(\'get_comment.php\',\'comment\',\'cid-'.$this->id.'\',0,'.$this->id.')" title="'._('resto del comentario').'">&#187;&nbsp;'._('ver todo el comentario').'</a>';
-		}
-
-		echo put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments'))) . $expand;
-		echo "\n";
+		$vars = array('self' => $this);
+		return Haanga::Load('comment_summary_text.html', $vars);
 	}
 
 	function username() {
