@@ -164,10 +164,11 @@ class Post {
 			$this->comment_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
 		}
 
+		$this->prepare_summary_text($length);
+
 		$vars = compact('post_meta_class', 'post_class', 'length');
 		/* reference $this to use in the template */
 		$vars['self'] = $this;
-
 		return Haanga::Load('post_summary.html', $vars);
 	}
 
@@ -176,7 +177,7 @@ class Post {
 		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, $size).'" width="'.$size.'" height="'.$size.'" alt="'.$this->username.'"/></a>';
 	}
 
-	function print_text($length = 0) {
+	function prepare_summary_text($length = 0) {
 		global $current_user, $globals;
 
 		if (!$this->basic_summary && (($this->author == $current_user->user_id &&
@@ -187,9 +188,16 @@ class Post {
 		} elseif ($length > 0) {
 			$this->content = text_to_summary($this->content, $length);
 		}
+		$this->content = put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
 
-		echo put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
-		echo "\n";
+	}
+
+	function print_text($length = 0) {
+		global $current_user, $globals;
+
+		$this->prepare_summary_text($length);
+		$vars = array('self' => $this);
+		return Haanga::Load('post_summary_text.html', $vars);
 	}
 
 	function put_tooltips ($str) {
