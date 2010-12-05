@@ -123,6 +123,9 @@ function save_post ($post_id) {
 		$post->store_image($_FILES['image']);
 	}
 	$post->print_summary();
+	echo '<script type="text/javascript">';
+	echo '$(document).ready(function() {$("a.fancybox").fancybox({transitionIn: "none", transitionOut: "none"})});';
+	echo '</script>';
 }
 
 ?>

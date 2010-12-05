@@ -168,7 +168,7 @@
 
 		{# Show link to analyze the tags #}
 		{% if globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
-		&nbsp;[<a href="javascript:modal_from_ajax('{% get_url 'backend/tags_analysis.php?id=' self.id %}')"><strong>{% trans _('diagnosticar') %}</strong></a>]
+		&nbsp;[<a class="fancybox" href="{{ globals.base_url }}backend/tags_analysis.php?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 
 		</div>

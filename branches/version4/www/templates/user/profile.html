@@ -41,7 +41,7 @@
         {% exec user.print_medals %}
 
         {% if current_user.admin AND nclones %}
-        (<a href="javascript:modal_from_ajax('{{globals.base_url}}backend/ip_clones.php?id={{user.id}}', '{% trans _('clones por IP') %}')" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{nclones }}</sup>)
+        (<a class="fancybox" href="{{globals.base_url}}backend/ip_clones.php?id={{user.id}}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
         {% endif %}
 
         {% if friend_icon %}
@@ -74,7 +74,7 @@
     {% endif %}
     {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
 	    <dt>{% trans _('clave API') %}:</dt>
-        <dd id="api-key"><a href="javascript:get_votes('get_user_api_key.php','','api-key',0,'{{user.id}}')">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</dd>
+        <dd><a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{user.id}}" title="API key">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</dd>
         {% if user.adcode %}
 			<dt>{% trans _('Código AdSense') %}:</dt><dd>{{user.adcode}}&nbsp;</dd>
 			<dt>{% trans _('Canal AdSense') %}:</dt><dd>{{user.adchannel}}&nbsp;</dd>
@@ -82,7 +82,7 @@
     {% endif %}
 	<dt>{% trans _('karma') %}:</dt><dd>{{user.karma}}
     {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
-		(<a href="javascript:modal_from_ajax('{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}', '{% trans _('cálculo del karma')%}')" title="{% trans _('detalles') %}">{% trans _('detalle cálculo') %}</a>)
+		(<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
     {% endif %}
     </dd>
 	<dt>{% trans _('ranking') %}:</dt><dd>#{% exec user.ranking %}</dd>

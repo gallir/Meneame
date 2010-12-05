@@ -41,6 +41,7 @@ if (! $clones) {
 	die;
 }
 
+echo '<div style="width:550px;padding: 5px 5px;text-align:left">';
 echo '<div style="padding-top: 20px">';
 echo '<div class="voters-list">';
 
@@ -63,7 +64,8 @@ foreach ($clones as  $clon) {
 
 echo "</div>\n";
 
-do_contained_pages($user_id, $nclones, $users_page, $users_page_size, 'ip_clones.php', 'voters', 'modalContent');
+do_contained_pages($user_id, $nclones, $users_page, $users_page_size, 'ip_clones.php', 'voters');
+echo '</div>';
 echo '</div>';
 
 ?>

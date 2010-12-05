@@ -1134,4 +1134,12 @@ function print_oauth_icons($return = false) {
 		}
 	}
 }
+
+function backend_call_string($program,$type,$page,$id) {
+	// It replaces the get_votes function
+	// it generates the string to link to a backend program given its arguments
+	global $globals;
+	
+	return $globals['base_url']."backend/$program?id=$id&amp;p=$page&amp;type=$type&amp;key=".$globals['security_key'];
+}
 ?>

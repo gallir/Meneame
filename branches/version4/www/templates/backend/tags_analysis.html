@@ -1,19 +1,20 @@
-<html>
-<head>
 <style type="text/css">
 table.decorated {
 	margin-top: 5px;
 }
+table.decorated .header {
+	font-size: 110%;
+}
+
 table.decorated th {
-	padding: 1px;
+	text-transform: capitalize;
+	padding: 3px 4px;
 }
 table.decorated td {
-	padding: 2px;
+	padding: 2px 4px;
 }
 </style>
-</head>
-<body>
-<script>$("#modalTitle").html("{% trans _('diagnóstico de etiquetas') %}")</script>
+<div style="text-align: left;min-width: 400px">
 <strong>{% trans _('etiquetas') %}:</strong> «{{ results.str }}»<br/>
 <strong>{% trans _('resumen') %}:</strong> <br/>
 {% if results.phrases > 0 OR results.min_freq < 0.19 AND results.tags > 1 %}
@@ -50,7 +51,7 @@ table.decorated td {
 	- {% trans _('No contiene ninguna frase de la forma «palabra1 palabra2, otras»') %}<br/>
 {% endif %}
 
-<table class="decorated">
+<table class="decorated" style="width: 400px">
 <tr class="header">
 <th>{% trans _('etiqueta') %}</th>
 <th><em>hits</em></th>
@@ -104,6 +105,4 @@ table.decorated td {
 	</tr>
 {% endfor %}
 </table>
-
-</body>
-</html>
+</div>

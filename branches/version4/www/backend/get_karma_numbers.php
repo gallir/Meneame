@@ -13,6 +13,7 @@ if (!empty($_GET['id']) && $current_user->user_level == 'god') {
 }
 
 $annotation = new Annotation("karma-$user");
+echo '<div style="text-align: left">';
 if ($annotation->read()) {
 	echo '<strong>' . _('última modificación') . ':</strong> ' . get_date_time($annotation->time);
 	echo '<ul>';
@@ -24,4 +25,5 @@ if ($annotation->read()) {
 } else {
 	print _('no hay registros para este usuario');
 }
+echo '</div>';
 ?>

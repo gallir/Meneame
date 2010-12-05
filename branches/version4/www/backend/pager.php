@@ -9,7 +9,8 @@
 // The code below was made by Beldar <beldar at gmail dot com>
 // Modified by Alberto Vidal <a24v7b at gmail dot com>
 
-function do_contained_pages($id, $total, $current, $page_size, $program, $type, $container) {
+function do_contained_pages($id, $total, $current, $page_size, $program, $type, $container = false) {
+	global $globals;
 
 	$index_limit = 6;
 
@@ -18,23 +19,38 @@ function do_contained_pages($id, $total, $current, $page_size, $program, $type, 
 	$end=min($start+$index_limit-1, $total_pages);
 	$start=max($end-$index_limit+1,1);
 	
-	echo '<div class="mini-pages">';
+	echo '<div class="pages">';
 	if($start>1) {
 		$i = 1;
-		echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			do_contained_page_link($id, $i, $program, $type, $container);
 		if($start>2) echo '<span>...</span>';
 	}
 	for ($i=$start;$i<=$end;$i++) {
-		if($i==$current) echo '<span class="current">';
-		echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
-		if($i==$current) echo '</span>';
+		if($i==$current) {
+				echo '<span class="current">'.$i.'</span>';
+		} else {
+			do_contained_page_link($id, $i, $program, $type, $container);
+		}
 	}
 	if($total_pages>$end) {
 		$i = $total_pages;
 		if($total_pages>$end+1) echo '<span>...</span>';
-		echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
+		do_contained_page_link($id, $i, $program, $type, $container);
 	}
 	echo "</div>\n";
+	if (! $container) {
+		echo '<script type="text/javascript">';
+		echo '$(document).ready(function() {$("a.fancybox").fancybox({transitionIn: "none", transitionOut: "none"})});';
+		echo '</script>';
+	}
+
+}
+
+function do_contained_page_link($id, $i, $program, $type, $container) {
+	if ($container)
+		echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
+	else
+		echo '<a class="fancybox" href="'.backend_call_string($program, $type, $i, $id).'">'.$i.'</a>';
 }
 
 ?>
