@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{globals.lang}}" lang="{{globals.lang}}">
+<head>
+</head>
+<body>
+{% for m in media %}
+<a id="gallery-{{ forloop.counter }}" class="fancybox" rel="gallery" href="{{ globals.base_url}}backend/media.php?type={{ m.type }}&amp;id={{ m.id }}&amp;version={{ m.version }}" title="{{ forloop.counter }}/{{ total }} [{{ m.user }}]"></a>
+{% endfor %}
+<script type="text/javascript">
+$("a.fancybox").fancybox(
+	{
+	'type': "image",
+	'transitionIn'	: 'none',
+	'transitionOut'	: 'none',
+	'showNavArrows': true,
+	'cyclic': true,
+	'titlePosition': 'inside',
+	'showCloseButton'	: false,
+	'autoDimensions': false,
+	'autoScale': false,
+	'width': 600,
+	'height': 400,
+	}
+	);
+$(document).ready(function() {$("#gallery-1").trigger('click')});
+</script>
+</body>
+</html>

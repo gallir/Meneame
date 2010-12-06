@@ -144,8 +144,9 @@ if ($tab_option == 4) {
 		_('amigos') => post_get_base_url("$current_user->user_login/_friends"),
 		_('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
 		_('conversación').$conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
-
+		_('últimas imágenes') => 'javascript:$(\'#gallery\').load(base_url+\'backend/gallery.php?type=post\');return false',
 	);
+	echo '<div id="gallery" style="display:none"></div>'; // Hidden div to load fancybox gallery
 } else $options = false;
 do_post_subheader($options, $view, $rss_option);
 
