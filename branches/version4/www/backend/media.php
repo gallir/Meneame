@@ -16,17 +16,17 @@ if (empty($type) || ! $id ) not_found();
 $media = new Upload($type, $id, $version);
 
 if (! $media->read()) not_found();
-//echo $media->filename();
 
 if ($media->access == 'public' || $current_user->user_id > 0) {
-	header("Content-type: $media->mime");
+	header("Content-Type: $media->mime");
+	header('Last-Modified: ' . date('r', $media->date));
+	header('Cache-Control: max-age=3600');
 	if ($media->size > 0) {
 		header("Content-lenght: $media->size");
 	}
-	//header('Cache-Control: max-age=120');
 	$media->readfile();
 } else {
-	header("Content-type: text/html");
+	header("Content-Type: text/html");
 	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
 }
 exit;

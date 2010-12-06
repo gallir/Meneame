@@ -276,7 +276,7 @@ function text_to_html_callback(&$matches) {
 			}
 		case 'h':
 			$suffix = $extra = '';
-			if (preg_match('/\)$/S', $matches[4]) && ! preg_match('/\(/S', $matches[4])) {
+			if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
 				$matches[4] = substr($matches[4], 0, -1);
 				$suffix = ')';
 			}
