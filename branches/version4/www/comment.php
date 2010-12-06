@@ -72,7 +72,7 @@ echo '<h3 style="text-shadow: 0 1px #ccc"><a href="'.$link->get_permalink().'">'
 
 echo '<ol class="comments-list">';
 echo '<li>';
-$comment->print_summary($link, 10000, true);
+$comment->print_summary($link, 0, true);
 echo "</li>\n";
 echo "</ol>\n";
 

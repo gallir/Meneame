@@ -162,7 +162,7 @@ function enable_tags_callback($matches) {
 	return $matches[0];
 }
 
-function close_tags($string) {
+function close_tags(&$string) {
 	return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', 'close_tags_callback', $string);
 }
 
@@ -194,9 +194,9 @@ function clean_lines($string) {
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function save_text_to_html($string, $hashtype = false) {
-	$string = preg_replace("/\n\r*/", "\n<br/>\n", $string);
-	return text_to_html($string, $hashtype);
+function save_text_to_html(&$string, $hashtype = false) {
+	$str = nl2br($string, true);
+	return text_to_html($str, $hashtype);
 }
 
 function text_sub_text($str, $length=70) {
@@ -237,8 +237,7 @@ function add_tags_callback($matches) {
 	return $matches[1].$matches[2];
 }
 
-
-function text_to_html($string, $hashtype = false, $do_links = true) {
+function text_to_html(&$string, $hashtype = false, $do_links = true) {
 	global $globals;
 	static $regexp = false, $p_hashtype = false, $p_do_links = false;
 
@@ -248,7 +247,7 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 		$regexp = '';
 
 		if ($do_links) {
-			$regexp .= 'https{0,1}:\/\/[^ \t\n\r<>]{5,500}';
+			$regexp .= '(https{0,1}:\/\/)([^\s<>]{5,500})';
 		}
 
 		$globals['hashtype'] = $hashtype; // To pass the value to the callback
@@ -261,14 +260,14 @@ function text_to_html($string, $hashtype = false, $do_links = true) {
 	return preg_replace_callback($regexp, 'text_to_html_callback', $string);
 }
 
-function text_to_html_callback($matches) {
+function text_to_html_callback(&$matches) {
 	global $globals;
 
 	switch ($matches[2][0]) {
 		case '_':
-			return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
+			return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
 		case '*':
-			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
+			return $matches[1].'<b>'.substr($matches[2], 1, -1).'</b>';
 		case '-':
 			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
 		case '#';
@@ -276,8 +275,13 @@ function text_to_html_callback($matches) {
 				return $matches[1].'<a href="'.$globals['base_url'].'search.php?w='.$globals['hashtype'].'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
 			}
 		case 'h':
-			return $matches[1].preg_replace('/(https*:\/\/)(www\.){0,1}([^ \t\n\r\]\&]{5,70})([^ \t\n\r]*)([^ :.\t,\n\r\(\"\'\]\?])(.*)/u', '<a href="$1$2$3$4$5" title="$1$2$3$4$5" rel="nofollow">$3$5</a>$6', $matches[2]);
-
+			$suffix = $extra = '';
+			if (preg_match('/\)$/S', $matches[4]) && ! preg_match('/\(/S', $matches[4])) {
+				$matches[4] = substr($matches[4], 0, -1);
+				$suffix = ')';
+			}
+			if (preg_match('/\.(jpg|gif|png)$/S', $matches[4])) $extra = 'class="fancybox"';
+			return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 	}
 	return $matches[1].$matches[2];
 }
@@ -592,7 +596,7 @@ function put_smileys($str) {
 	return $str;
 }
 
-function put_smileys_callback($matches) {
+function put_smileys_callback(&$matches) {
 	global $globals;
 	static $translations = false;
 	if (!$translations) {
@@ -1139,7 +1143,7 @@ function backend_call_string($program,$type,$page,$id) {
 	// It replaces the get_votes function
 	// it generates the string to link to a backend program given its arguments
 	global $globals;
-	
+
 	return $globals['base_url']."backend/$program?id=$id&amp;p=$page&amp;type=$type&amp;key=".$globals['security_key'];
 }
 ?>
