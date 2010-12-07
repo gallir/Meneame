@@ -302,6 +302,25 @@ function clk(f, id) {
 	return true;
 }
 
+function fancybox_expand_images(event) {
+	if (event.shiftKey) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+
+		if(!$('.zoomed').size()) { 
+			$('body').find('.fancybox[href*=\'media.php\'] , .fancybox[href*=\'jpg\'] , .fancybox[href*=\'gif\'] , .fancybox[href*=\'png\']').each( 
+				function() {
+					var title=$(this).attr('title');
+					var href=$(this).attr('href');
+					var img='<div style="margin:10px auto;text-align:center;" class="zoomed"><img style="margin:0 auto;max-width:80%;padding:10px;background:#fff" src="' + href + '"/></div>';
+					$(this).after(img);
+					$(this).next().click(function(event) { if (event.shiftKey) $('.zoomed').remove(); });
+				}); 
+		} else {
+			$('.zoomed').remove();
+		}
+	}
+}
 /**************************************
 Tooltips functions
 ***************************************/

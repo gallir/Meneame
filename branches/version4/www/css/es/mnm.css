@@ -658,6 +658,9 @@ margin: 10px 10px 10px 0px;
 
 /**** END SIDEBAR BOXES ************/
 
+a.fancybox {
+color: #C85000;
+}
 
 #footwrap {
 margin: 5em 87px 0 87px;

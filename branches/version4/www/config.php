@@ -98,6 +98,8 @@ $globals['base_sneakme_url'] = 'notame/';
 $globals['memcache_port'] = 11211; // optional
 $globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 
+$globals['fancybox_enabled'] = true;
+
 // Comment pages
 $globals['comments_page_size'] = 100;
 $globals['comments_page_threshold'] = 1.10;
@@ -271,9 +273,9 @@ $globals['Amazon_S3_upload'] = true;
 
 
 // Main javascript file
-$globals['js_main'] = 'general.js.php?v=2'; //?N is to force reloading for newer versions
+$globals['js_main'] = 'general.js.php?v=3'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=5'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=6'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

@@ -8,7 +8,9 @@
 
 
 {# fancybox #}
-<link rel="stylesheet" href="{{globals.base_static}}js/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+{% if globals.fancybox_enabled %}
+	<link rel="stylesheet" href="{{globals.base_static}}js/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+{% endif %}
 
 {% if globals.css_main %}
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>

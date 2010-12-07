@@ -33,8 +33,10 @@
 
 
 {# fancybox #}
-<script type="text/javascript" src="{{globals.base_static}}js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-{% include 'fancybox.html' %}
+{% if globals.fancybox_enabled %}
+	<script type="text/javascript" src="{{globals.base_static}}js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	{% include 'fancybox.html' %}
+{% endif %}
 
 {% for js in globals.post_js %}
 	{% if js|substr:"0, 4" == 'http' %}

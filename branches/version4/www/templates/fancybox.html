@@ -1,4 +1,13 @@
+{% if globals.fancybox_enabled %}
 <script type="text/javascript">
-$(document).ready(function() {$("a.fancybox").fancybox({transitionIn: "none", transitionOut: "none", titlePosition: 'inside'})});
+$(document).ready(
+	function() {
+		$("a.fancybox")
+		{% if current_user.user_id > 0 %}
+			.click(fancybox_expand_images)
+		{% endif %}
+		.fancybox({transitionIn: "none", transitionOut: "none", titlePosition: 'inside'})
+	}
+);
 </script>
-
+{% endif %}
