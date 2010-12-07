@@ -185,8 +185,11 @@ class Post {
 			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] ))) { // Admins can edit up to 10 days
 			$this->can_edit = true;
 
-		} elseif ($length > 0) {
-			$this->content = text_to_summary($this->content, $length);
+		} else {
+			$this->can_edit = false;
+			if ($length > 0) {
+				$this->content = text_to_summary($this->content, $length);
+			}
 		}
 		$this->content = put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
 
