@@ -187,25 +187,6 @@ function get_votes(program,type,container,page,id) {
 	reportAjaxStats('html', program);
 }
 
-// Modal functions
-//
-$.extend($.modal.defaults, {
-	closeHTML: '<a class="modalCloseImg" title="Close">x</a>',
-	opacity: "50"
-});
-
-function modal_from_ajax(url, title) {
-	if (typeof(title) == "undefined") title = '&nbsp';
-
-	$.modal('<div class="header" id="modalHeader"><div id="modalTitle">'+title+'</div></div><div class="content" id="modalContent"><? echo ('cargando...')?></div>',
-			{});
-	$.get(url, function(data){
-	// create a modal dialog with the data
-		$('#modalContent').html(data);
-	});
-	reportAjaxStats('modal', 'view');
-}
-
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 function reportAjaxStats(category, action) {
@@ -308,7 +289,7 @@ function fancybox_expand_images(event) {
 		event.stopImmediatePropagation();
 
 		if(!$('.zoomed').size()) { 
-			$('body').find('.fancybox[href*=\'media.php\'] , .fancybox[href*=\'jpg\'] , .fancybox[href*=\'gif\'] , .fancybox[href*=\'png\']').each( 
+			$('body').find('.fancybox[href*=".jpg"] , .fancybox[href*=".gif"] , .fancybox[href*=".png"]').each( 
 				function() {
 					var title=$(this).attr('title');
 					var href=$(this).attr('href');
@@ -321,6 +302,16 @@ function fancybox_expand_images(event) {
 		}
 	}
 }
+
+function fancybox_gallery(type, user, link) {
+	var url = base_url +'backend/gallery.php?type='+type;
+	if (typeof(user) != 'undefined') url = url + '&user=' + user;
+	if (typeof(link) != 'undefined') url = url + '&link=' + link;
+	
+	if (!$('#gallery').size()) $('body').append('<div id="gallery" style="display:none"></div>');
+	$('#gallery').load(url);
+}
+
 /**************************************
 Tooltips functions
 ***************************************/
@@ -425,7 +416,7 @@ tooltip.moveTo = function (xL,yL) {
 		xL +=  document.documentElement.scrollLeft;
 		yL +=  document.documentElement.scrollTop;
 	}
-	if (this.tooltipText.clientWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.55) {
+	if (this.tooltipText.clientWidth > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.50) {
 		xL = xL - this.tooltipText.clientWidth - 2*this.offsetx;
 	}
 	this.tooltipText.style.left = xL +"px";

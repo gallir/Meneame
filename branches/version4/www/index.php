@@ -23,7 +23,10 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['fancybox_enabled'] = false; // Don't load fancybox CSS and Javascript
+
+if (! $current_user->user_id) {
+	$globals['fancybox_enabled'] = false; // Don't load fancybox CSS and Javascript
+}
 
 meta_get_current();
 

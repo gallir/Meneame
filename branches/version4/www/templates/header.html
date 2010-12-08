@@ -146,8 +146,10 @@ var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
 <div id="naviwrap">
 	<ul id="navigation">
 	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar noticia') %}</a></li>
-	<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
 	<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
+	{% if current_user.user_id > 0 && globals.fancybox_enabled %}
+    	<li><a href="javascript:fancybox_gallery('all');">{% trans _('galería') %}</a></li>
+	{% endif %}
 	<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
 	</ul>
 

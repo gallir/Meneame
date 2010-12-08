@@ -4,9 +4,25 @@
 </head>
 <body>
 {% for m in media %}
-<a id="gallery-{{ forloop.counter }}" class="fancybox" rel="gallery" href="{{ globals.base_url}}backend/media.php?type={{ m.type }}&amp;id={{ m.id }}&amp;version={{ m.version }}" title="{{ forloop.counter }}/{{ total }} [@{{ m.user }}]"></a>
+	<a id="gallery-{{ forloop.counter }}" class="fancybox" rel="gallery" href="{{ globals.base_url}}backend/media.php?type={{ m.type }}&amp;id={{ m.id }}&amp;version={{ m.version }}" title="{{ m.type }},{{ m.id }},{{ m.user }}"></a>
 {% endfor %}
+
 <script type="text/javascript">
+function formatTitle(title, currentArray, currentIndex, currentOpts) {
+	t_i_u = title.split(",");
+	script = 'get_'+t_i_u[0]+'_tooltip.php';
+	if (t_i_u[0] == 'post') type = '{% trans _('nota de') %}';
+	else type = '{% trans _('comentario de') %}';
+
+	pages = (currentIndex + 1) + '/' + currentArray.length;
+	who = '<div>' + type + '&nbsp;<b class="tt" style="cursor:pointer;margin-bottom: 4px" onmouseover="tooltip.ajax_delayed(event, script, t_i_u[1], 10000)" onmouseout="tooltip.clear(event)">' + t_i_u[2] + '</b></div>';
+	return who + pages;
+}
+
+function onComplete() {
+	reportAjaxStats('gallery', 'ajax');
+}
+
 $("a.fancybox").fancybox(
 	{
 	'type': "image",
@@ -15,9 +31,12 @@ $("a.fancybox").fancybox(
 	'showNavArrows': true,
 	'cyclic': true,
 	'titlePosition': 'inside',
+	'titleFormat'		: formatTitle,
 	'showCloseButton'	: false,
 	'autoDimensions': true,
 	'autoScale': true,
+	'onComplete': onComplete,
+	'onClosed': function() {$('#gallery').remove()},
 	}
 	);
 $(document).ready(function() {$("#gallery-1").trigger('click')});

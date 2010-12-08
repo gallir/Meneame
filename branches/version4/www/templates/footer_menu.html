@@ -60,8 +60,11 @@
 </div>
 
 <div id="footcol5">
-<h5>{% trans _('mapas') %}</h5>
+<h5>{% trans _('relax') %}</h5>
 <ul id="mapslist">
+{% if globals.fancybox_enabled %}
+	<li><a href="javascript:fancybox_gallery('all');">{% trans _('imágenes') %}</a></li>
+{% endif %}
 <li><a href="{{ globals.base_url }}geovision.php">{% trans _('geovisión') %}</a></li>
 {% if globals.google_maps_in_links %}
 	<li><a href="{{ globals.base_url }}map.php">{% trans _('noticias') %}</a></li>

@@ -16,6 +16,7 @@ switch ($_GET['type']) {
 		$type_in = '("post")';
 		$type_in = '("post")';
 		break;
+	case 'all':
 	default:
 		$type_in = '("comment", "post", "link")';
 		break;
@@ -23,8 +24,7 @@ switch ($_GET['type']) {
 }
 
 header('Content-Type: text/html; charset=utf-8');
-$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in and version = 0 and user_id = media.user order by date desc limit 100");
-$total = count($media);
-if ($media) Haanga::Load("backend/gallery.html", compact('media', 'total'));
+$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in and version = 0 and user_id = media.user order by date desc limit 200");
+if ($media) Haanga::Load("backend/gallery.html", compact('media'));
 
 ?>
