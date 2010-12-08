@@ -41,7 +41,8 @@ if ($current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_l
 
 $post = new Post;
 if ($post->read_last($user->id)) {
-	echo '<br clear="left"><strong>'._('última nota').'</strong>: ';
-	$post->print_text();
+	echo '<br clear="left"><strong>'._('última nota').'</strong>:<br/>';
+	$post->show_avatar = false;
+	$post->print_text(0);
 }
 ?>

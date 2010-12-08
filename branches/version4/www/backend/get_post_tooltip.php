@@ -50,5 +50,6 @@ $post = new Post;
 $post->id=$id;
 $post->read();
 if(!$post->read) die;
-echo $post->print_text();
+$post->show_avatar = true;
+$post->print_text();
 ?>

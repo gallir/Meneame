@@ -154,6 +154,7 @@ class Post {
 		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'];
 		$this->user_can_vote =  $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
+		$this->show_avatar = true;
 
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
 

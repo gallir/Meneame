@@ -1382,7 +1382,7 @@ color: #aaa;
 color: #aaa;
 }
 
-.comment-body .avatar {
+.comment-body .avatar, #tooltip-text .avatar {
 float: left;
 margin: 2px 10px 2px 0;
 }
