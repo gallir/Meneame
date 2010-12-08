@@ -63,7 +63,9 @@
 <h5>{% trans _('mapas') %}</h5>
 <ul id="mapslist">
 <li><a href="{{ globals.base_url }}geovision.php">{% trans _('geovisión') %}</a></li>
-<li><a href="{{ globals.base_url }}map.php">{% trans _('noticias') %}</a></li>
+{% if globals.google_maps_in_links %}
+	<li><a href="{{ globals.base_url }}map.php">{% trans _('noticias') %}</a></li>
+{% endif %}
 </ul>
 {% if globals.is_meneame %}
 	<h5>tienda</h5>

@@ -684,7 +684,7 @@ class Link {
 	function is_map_editable() {
 		global $current_user, $db, $globals;
 
-		if($current_user->user_id ==  0 || $this->votes < 1) return false;
+		if(! $globals['google_maps_in_links'] || ! $current_user->user_id || $this->votes < 1) return false;
 		if( ($this->author == $current_user->user_id
 				&& $current_user->user_level == 'normal'
 				&& $globals['now'] - $this->sent_date < 9800)

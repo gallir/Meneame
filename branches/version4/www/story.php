@@ -95,7 +95,7 @@ switch ($url_args[1]) {
 
 		// Geo check
 		// Don't show it if it's a mobile browser
-		if(!$globals['mobile'] && $globals['google_maps_api']) {
+		if(!$globals['mobile'] && $globals['google_maps_in_links'] && $globals['google_maps_api']) {
 			$link->geo = true;
 			$link->latlng = $link->get_latlng();
 			if ($link->latlng) {
