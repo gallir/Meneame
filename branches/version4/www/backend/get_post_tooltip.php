@@ -1,6 +1,6 @@
 <?
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
-// Ricardo Galli <gallir at uib dot es> and 
+// Ricardo Galli <gallir at uib dot es> and
 // Beldar <beldar.cat at gmail dot com>
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -10,6 +10,7 @@
 if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
+	header('Cache-Control: public, s-maxage=300');
 }
 
 if (!empty($_GET['id'])) {

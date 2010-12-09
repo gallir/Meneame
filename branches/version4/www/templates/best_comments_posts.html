@@ -4,8 +4,8 @@
 <div class="comments"><ul>
 {% for obj in objects %}
 	<li><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="avatar"/>
-	<p><strong>{{obj.username}}</strong> {% trans _('en') %} 
-	<a onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, '{{ obj.tooltip }}', '{{obj.id}}', 60);" href="{{obj.link}}">{{obj.title}}</a>
+	<p><strong>{{obj.username}}</strong> {% trans _('en') %}
+	<a class="tooltip {{ obj.tooltip }}:{{ obj.id }} href="{{obj.link}}">{{obj.title}}</a>
 	</p></li>
 {% endfor %}
 </ul></div></div>

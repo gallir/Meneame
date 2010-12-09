@@ -10,7 +10,7 @@
 		<img src="{{l.thumb}}" width="{{l.thumb_x}}" height="{{l.thumb_y}}" alt='' class="thumbnail"/>
 	{% endif %}
 	<h5 {% if l.warn %}style="padding-left:20px;background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center"{% endif %}>
-	<a href="{{l.url}}" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" onmouseover="return tooltip.ajax_delayed(event, 'get_link.php', '{{l.id}}', 60);" >{{l.title}}</a></h5>
+	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a></h5>
 	</div>
 {% endfor %}
 </div>

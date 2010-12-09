@@ -1,6 +1,6 @@
 <?
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
-// Ricardo Galli <gallir at uib dot es> and 
+// Ricardo Galli <gallir at uib dot es> and
 // Beldar <beldar.cat at gmail dot com>
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -10,6 +10,7 @@
 if (! defined('mnmpath')) {
 	include_once('../config.php');
 	header('Content-Type: text/html; charset=utf-8');
+	header('Cache-Control: public, s-maxage=300');
 }
 include_once(mnminclude.'geo.php');
 
@@ -19,7 +20,7 @@ $id = intval($_GET['id']);
 $user = new User;
 $user->id=$id;
 if (! $user->read()) die;
-if ($user->avatar) 
+if ($user->avatar)
 	echo '<div style="float: left;"><img class="avatar" style="margin-right: 5px" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'"/></div>';
 echo '<strong>' . _('usuario') . ':</strong>&nbsp;' . $user->username;
 

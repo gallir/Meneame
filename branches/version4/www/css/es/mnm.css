@@ -1361,6 +1361,10 @@ border-radius: 5px;
 color: #FF6400;
 }
 
+.comment-body .tooltip {
+color: #C85000;
+}
+
 .comment-body.admin {
 background: #FFD5AD;
 color: #000;

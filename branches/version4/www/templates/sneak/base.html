@@ -108,12 +108,10 @@ function to_html(data) {
 
 	html = '<div class="sneaker-ts">'+timeStr+'<\/div>';
 
-	tooltip_ajax_call= ' onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this)"';
-	html += '<div class="sneaker-type"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
+	html += '<div class="sneaker-type">';
 	switch (data.type) {
 		case 'post':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-newnotame01.png" width="21" height="17" alt="{% trans _('nótame') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-newnotame01.png" width="21" height="17" alt="{% trans _('nótame') %}" class="tooltip p:'+data.id+'"/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			if (check_user_ping(data.title)) {
 				text_style = 'style="font-weight: bold;"';
@@ -121,16 +119,16 @@ function to_html(data) {
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
-			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
+			html += '<div class="sneaker-who">';
 			if (data.icon != undefined && data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.id+'"/><\/a>';
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
 			break;
 		case 'chat':
-			html += '<img src="'+base_static+'img/common/sneak-chat01.png" width="21" height="17" alt="{% trans _('mensaje') %}" title="{% trans _('mensaje') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-chat01.png" width="21" height="17" alt="{% trans _('mensaje') %}" title="{% trans _('mensaje') %}"/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			// Change the style
 			if (global_options.show_admin || data.status == 'admin') {
@@ -152,52 +150,43 @@ function to_html(data) {
 			if (do_hoygan) data.title = to_hoygan(data.title);
 			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
-			html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
+			html += '<div class="sneaker-who">';
 			if (data.icon != undefined &&  data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" /><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.id+'"/><\/a>';
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
 			break;
 		case 'vote':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
 			if (data.status == '{% trans _('publicada') %}')
-				html += '<img src="'+base_static+'img/common/sneak-vote-published01.png" width="21" height="17" alt="{% trans _('voto') %}" '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="'+base_static+'img/common/sneak-vote-published01.png" width="21" height="17" alt="{% trans _('voto') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			else
-				html += '<img src="'+base_static+'img/common/sneak-vote01.png" width="21" height="17" alt="{% trans _('voto') %}"  '+tooltip_ajax_call+'/><\/div>';
+				html += '<img src="'+base_static+'img/common/sneak-vote01.png" width="21" height="17" alt="{% trans _('voto') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'problem':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-problem01.png" width="21" height="17" alt="{% trans _('problema') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-problem01.png" width="21" height="17" alt="{% trans _('problema') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'comment':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-comment01.png" width="21" height="17" alt="{% trans _('comentario') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-comment01.png" width="21" height="17" alt="{% trans _('comentario') %}" class="tooltip c:'+data.id+'"/><\/div>';
 			break;
 		case 'new':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-new01.png" width="21" height="17" alt="{% trans _('nueva') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-new01.png" width="21" height="17" alt="{% trans _('nueva') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'published':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-published01.png" width="21" height="17" alt="{% trans _('publicada') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-published01.png" width="21" height="17" alt="{% trans _('publicada') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'discarded':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 30000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-reject01.png" width="21" height="17" alt="{% trans _('descartada') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-reject01.png" width="21" height="17" alt="{% trans _('descartada') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'edited':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-edit-notice01.png" width="21" height="17" alt="{% trans _('editada') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-edit-notice01.png" width="21" height="17" alt="{% trans _('editada') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'cedited':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_comment_tooltip.php', '"+data.id+"', 10000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-edit-comment01.png" width="21" height="17" alt="{% trans _('comentario editado') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-edit-comment01.png" width="21" height="17" alt="{% trans _('comentario editado') %}" class="tooltip c:'+data.id+'"/><\/div>';
 			break;
 		case 'geo_edited':
-			tooltip_ajax_call += " onmouseover=\"return tooltip.ajax_delayed(event, 'get_link.php', '"+data.id+"', 10000);\"";
-			html += '<img src="'+base_static+'img/common/sneak-geo01.png" width="21" height="17" alt="{% trans _('geo editado') %}" '+tooltip_ajax_call+'/><\/div>';
+			html += '<img src="'+base_static+'img/common/sneak-geo01.png" width="21" height="17" alt="{% trans _('geo editado') %}" class="tooltip l:'+data.id+'"/><\/div>';
 			break;
 		case 'conversations':
 			//alert(data.c_conv_c + "  " + data.p_conv_c);
@@ -207,7 +196,7 @@ function to_html(data) {
 			html += data.type+'<\/div>';
 	}
 
-	html += '<div class="sneaker-votes" onmouseout="tooltip.clear(event);" onmouseover="tooltip.clear(event);">'+data.votes+'/'+data.com+'<\/div>';
+	html += '<div class="sneaker-votes">'+data.votes+'/'+data.com+'<\/div>';
 	if ("undefined" != typeof(data.cid) && data.cid > 0) anchor='#c-'+data.cid;
 	else anchor='';
 	if (do_hoygan) data.title = to_hoygan(data.title);
@@ -215,12 +204,12 @@ function to_html(data) {
 	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';
-		html += '<img src="'+base_static+'img/mnm/mnm-anonym-vote-01.png" width=20 height=20 onmouseout="tooltip.clear(event);"/>';
+		html += '<img src="'+base_static+'img/mnm/mnm-anonym-vote-01.png" width=20 height=20/>';
 		html += '<span class="sneaker-problem">&nbsp;'+data.who+'<\/span><\/div>';
 	} else if (data.uid > 0)  {
-		html += '<div class="sneaker-who"  onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);" >';
+		html += '<div class="sneaker-who">';
 		if (data.icon != undefined && data.icon.length > 0) {
-			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20  onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '+data.uid+');" onmouseout="tooltip.clear(event);"  onclick="tooltip.clear(this);"/><\/a>';
+			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.id+'"/><\/a>';
 		}
 		html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {

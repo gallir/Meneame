@@ -175,7 +175,7 @@ class Post {
 
 	function print_user_avatar($size=40) {
 		global $globals;
-		echo '<a href="'.get_user_uri($this->username).'"><img onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$this->author.');" onmouseout="tooltip.clear(event);" class="avatar" src="'.get_avatar_url($this->author, $this->avatar, $size).'" width="'.$size.'" height="'.$size.'" alt="'.$this->username.'"/></a>';
+		echo '<a href="'.get_user_uri($this->username).'" class="tooltip u:'.$this->author.'"><img class="avatar" src="'.get_avatar_url($this->author, $this->avatar, $size).'" width="'.$size.'" height="'.$size.'" alt="'.$this->username.'"/></a>';
 	}
 
 	function prepare_summary_text($length = 0) {
@@ -228,7 +228,7 @@ class Post {
 				$id = '';
 			}
 			$user_url = urlencode($user);
-			return "$pre<a class='tt' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id-".$this->date."' onmouseover=\"return tooltip.ajax_delayed(event, 'get_post_tooltip.php', '$user_url".$id.'-'.$this->date."');\" onmouseout=\"tooltip.hide(event);\">@$user</a>";
+			return "$pre<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id-".$this->date."'>@$user</a>";
 	}
 
 	function print_edit_form() {

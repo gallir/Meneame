@@ -22,7 +22,7 @@ if ( !strlen($_GET['sortby']) > 0) {
 	$sortby = 1;
 } else {
 	$sortby = intval($_GET['sortby']);
-	if($sortby < 0 || $sortby > 3) 
+	if($sortby < 0 || $sortby > 3)
 		$sortby = 1;
 }
 
@@ -70,9 +70,9 @@ echo '<table class="decorated"><tr>';
 // Print headers
 for($i=0; $i<count($items); $i++) {
 	echo '<th class="short">';
-	if($i==$sortby) 
+	if($i==$sortby)
 		echo '<span class="info_s">'.$items[$i].'</span>';
-	elseif ($i <= 3) { 
+	elseif ($i <= 3) {
 		// Don't show order by votes or comment
 		// Too much CPU and disk IO consuption
 		echo '<a href="topusers.php?sortby='.$i.'">'.$items[$i].'</a>';
@@ -92,14 +92,14 @@ if ($users) {
 		$user->read();
 		$user->all_stats();
 		echo '<tr>';
-		echo '<td style="font-size:100%"><a href="'.get_user_uri($user->username).'"><img class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar" onmouseover="return tooltip.ajax_delayed(event, \'get_user_info.php\', '.$user->id.');" onmouseout="tooltip.clear(event);&nbsp;" />&nbsp;'.$user->username.'</a></td>';
+		echo '<td style="font-size:100%"><a href="'.get_user_uri($user->username).'" class="tooltip u:'.$user->id.'"><img class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar"/>&nbsp;'.$user->username.'</a></td>';
 		echo '<td class="short">'.$user->karma.'&nbsp;';
 		$user->print_medals();
 		echo '</td>';
 		echo '<td class="short">'.$user->total_links.'</td>';
-		if($user->total_links>0) 
+		if($user->total_links>0)
 			echo '<td class="short">'.$user->published_links.'&nbsp;('.intval($user->published_links/$user->total_links*100).'%)</td>';
-		else 
+		else
 			echo '<td class="short">'.$user->published_links.'&nbsp;(-)</td>';
 		echo '<td class="short">'.$user->total_comments.'</td>';
 		echo '<td class="short">'.$user->total_votes.'</td>';

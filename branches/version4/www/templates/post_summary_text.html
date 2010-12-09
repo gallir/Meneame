@@ -1,5 +1,5 @@
 {% if self.show_avatar %}
-	<a href="{{ self.username | useruri }}"><img onmouseover="return tooltip.ajax_delayed(event, 'get_user_info.php', '{{ self.author}}');" onmouseout="tooltip.clear(event);" class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
+	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
 {% endif %}
 
 	{{ self.content }}
