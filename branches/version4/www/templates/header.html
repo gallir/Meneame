@@ -145,7 +145,8 @@ var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
 
 <div id="naviwrap">
 	<ul id="navigation">
-	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar noticia') %}</a></li>
+	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar historia') %}</a></li>
+	<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
 	<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
 	{% if current_user.user_id > 0 && globals.fancybox_enabled %}
     	<li><a href="javascript:fancybox_gallery('all');">{% trans _('galería') %}</a></li>
@@ -154,7 +155,7 @@ var link_id = {% if globals.link %}{{ globals.link.id }}{% else %}0{% endif %};
 	</ul>
 
 	<ul class="headtools">
-	<li><a href="http://meneame.wikispaces.com/Comenzando">{% trans _('ayuda')%} <img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help button" title="{% trans _('ayuda') %}" width="13" height="16" /></a></li>
+	<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help" title="{% trans _('ayuda') %}" width="13" height="16" />&nbsp;</a></li>
 
 	{% if current_user.user_id > 0 %}
 		{% if current_user.admin %}

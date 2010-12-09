@@ -20,7 +20,7 @@ function formatTitle(title, currentArray, currentIndex, currentOpts) {
 }
 
 function onComplete() {
-	reportAjaxStats('gallery', 'ajax');
+	reportAjaxStats('image', 'gallery');
 }
 
 $("a.fancybox").fancybox(
@@ -32,7 +32,7 @@ $("a.fancybox").fancybox(
 	'cyclic': true,
 	'titlePosition': 'inside',
 	'titleFormat'		: formatTitle,
-	'showCloseButton'	: false,
+	'showCloseButton'	: true,
 	'autoDimensions': true,
 	'autoScale': true,
 	'onComplete': onComplete,
