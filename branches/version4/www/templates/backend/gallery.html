@@ -15,7 +15,11 @@ function formatTitle(title, currentArray, currentIndex, currentOpts) {
 	else type = '{% trans _('comentario de') %}';
 
 	pages = (currentIndex + 1) + '/' + currentArray.length;
-	who = '<div>' + type + '&nbsp;<b class="tt" style="cursor:pointer;margin-bottom: 4px" onmouseover="tooltip.ajax_delayed(event, script, t_i_u[1], 10000)" onmouseout="tooltip.clear(event)">' + t_i_u[2] + '</b></div>';
+	url = base_url + 'backend/go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
+	/* With tooltips
+	tooltip = onmouseover="tooltip.ajax_delayed(event, script, t_i_u[1], 10000)" onmouseout="tooltip.clear(event)";
+	*/
+	who = '<div>' + type + '&nbsp;<a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + t_i_u[2] + '</a></div>';
 	return who + pages;
 }
 
