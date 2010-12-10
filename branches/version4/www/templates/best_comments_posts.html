@@ -5,7 +5,7 @@
 {% for obj in objects %}
 	<li><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="avatar"/>
 	<p><strong>{{obj.username}}</strong> {% trans _('en') %}
-	<a href="{{obj.link}}" class="tooltip {{ obj.tooltip }}:{{ obj.id }}">{{obj.title}}</a>
+	<a class="tooltip {{ obj.tooltip }}:{{ obj.id }}" href="{{obj.link}}">{{obj.title}}</a>	
 	</p></li>
 {% endfor %}
 </ul></div></div>
