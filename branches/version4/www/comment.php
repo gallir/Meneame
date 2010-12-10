@@ -99,7 +99,7 @@ echo '</div>';
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
 	echo '<script type="text/javascript">';
-	echo '$(function(){alert(\''._('Aviso'). ": $new_comment_error".'\')});';
+	echo '$(function(){mDialog.notify(\''._('Aviso'). ": $new_comment_error".'\')}, 5);';
 	echo '</script>';
 }
 do_footer();

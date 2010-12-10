@@ -270,12 +270,13 @@ $globals['thumb_size'] = 70;
 //$globals['Amazon_S3_media_url'] = '';
 $globals['Amazon_S3_local_cache'] = true;
 $globals['Amazon_S3_upload'] = true;
+$globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['js_main'] = 'general.js.php?v=5'; //?N is to force reloading for newer versions
+$globals['js_main'] = 'general.js.php?v=6'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=8'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=9'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

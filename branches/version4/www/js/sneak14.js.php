@@ -17,7 +17,7 @@ var requests = 0;
 var ping_time = 0;
 var ping_start;
 var total_requests = 0;
-var max_requests = 2000;
+var max_requests = 4;
 var comment = '';
 var last_comment_sent=0;
 var comment_period = 5; //seconds
@@ -60,11 +60,11 @@ function start_sneak() {
 		timeout: 10000,
 		async: true,
 		cache: false,
-		error: function (req, error) { 
+		error: function (req, error) {
 			$('#ping').html(error+'... retrying');
 			xmlhttp = undefined;
 			data_timer = setTimeout('get_data()', 3000);
-		} 
+		}
 	});
 
 	if (!get_options_cookie()) {
@@ -78,7 +78,7 @@ function start_sneak() {
 		check_control('pubvotes');
 	}
 	// For autocompletion
-	$('#comment-input').keydown(function(event) { 
+	$('#comment-input').keydown(function(event) {
 			if(event.keyCode == 9 ||event.which == 9) {
 				event.returnValue = false;
 				event.preventDefault();
@@ -130,7 +130,7 @@ function received_data(data) {
 	xmlhttp = undefined;
 	// Update ping time
 	var date_object = new Date();
-	if (ping_time == 0) 
+	if (ping_time == 0)
 		ping_time = date_object.getTime() - ping_start -15; // 15 ms is the smallest error in fastest machines
 	else if (ping_start > 0)
 		ping_time = parseInt(0.7 * ping_time + 0.3 * (date_object.getTime() - ping_start - 15)); // 15 ms also
@@ -164,6 +164,10 @@ function received_data(data) {
 	if (next_update < 3000) next_update = 3000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
+		jqDialog.confirm("Are you sure want to click either of these buttons?",
+			function() { alert("This intrusive alert says you clicked YES"); },		// callback function for 'YES' button
+			function() { alert("This intrusive alert says you clicked NO"); }		// callback function for 'NO' button
+		);
 		if ( !confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>') ) {
 			mnm_banner_reload = 0;
 			return;
@@ -284,11 +288,11 @@ function get_options_string() {
 
 function set_options_from_string(string) {
 	if (string.match(/&nochat=1/)) {
-		global_options.show_chat = false; 
+		global_options.show_chat = false;
 	}
 	set_control('chat');
 	if (string.match(/&nopost=1/)) {
-		global_options.show_post = false; 
+		global_options.show_post = false;
 	}
 	set_control('post');
 	if (string.match(/&novote=1/)) {

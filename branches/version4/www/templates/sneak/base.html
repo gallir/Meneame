@@ -44,15 +44,9 @@ $(function(){start_sneak()});
 
 function play_pause() {
 	if (is_playing()) {
-		document.images['play-pause-img'].src = base_static+"img/common/sneak-play01.png";
-		if( document.getElementById('comment-input'))
-			document.getElementById('comment-input').disabled=true;
 		do_pause();
 
 	} else {
-		document.images['play-pause-img'].src = base_static+"img/common/sneak-pause01.png";
-		if (document.getElementById('comment-input'))
-			document.getElementById('comment-input').disabled=false;
 		do_play();
 	}
 	return false;

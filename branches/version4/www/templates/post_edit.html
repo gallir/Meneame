@@ -51,14 +51,14 @@
 {% if self.id == 0 %}
 	var options = { success:
 		function(response) {
-			if (/^ERROR:/.test(response)) alert(response);
+			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 			else $("#newpost").html(response); $("#addpost").hide("fast");
 		}
 	};
 {% else %}
 	var options = { success:
 		function(response) {
-			if (/^ERROR:/.test(response)) alert(response);
+			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 			else $("#pcontainer-{{ self.id }}").html(response);
 		}
 	};

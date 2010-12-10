@@ -17,7 +17,7 @@ var requests = 0;
 var ping_time = 0;
 var ping_start;
 var total_requests = 0;
-var max_requests = 2000;
+var max_requests = 3000;
 var comment = '';
 var last_comment_sent=0;
 var comment_period = 5; //seconds
@@ -181,13 +181,12 @@ function received_data(data) {
 	if (next_update < 3000) next_update = 3000;
 	if (next_update > min_update) next_update = min_update;
 	if (requests > max_requests) {
-		if ( !confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>') ) {
-			mnm_banner_reload = 0;
-			return;
-		}
+		do_pause();
 		requests = 0;
 		total_requests = 0;
 		next_update = 100;
+		mDialog.confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>', do_play, do_pause);
+		return;
 	}
 	data_timer = setTimeout('get_data()', next_update);
 }
@@ -198,19 +197,19 @@ function send_chat(form) {
 	if(check_command(form.comment.value)) return false;
 
 	if(!is_playing()) {
-		alert("<? echo _('está en pausa'); ?>");
+		mDialog.notify("<? echo _('está en pausa'); ?>", 3);
 		return false;
 	}
 	if(global_options.show_chat == false) {
-		alert("<? echo _('tiene deshabilitado los comentarios'); ?>");
+		mDialog.notify("<? echo _('tiene deshabilitado los comentarios'); ?>", 3);
 		return false;
 	}
 	if(!form.comment.value.match(/^!/) && form.comment.value.length < 4) {
-		alert("<? echo _('mensaje demasiado corto'); ?>");
+		mDialog.notify("<? echo _('mensaje demasiado corto'); ?>", 3);
 		return false;
 	}
 	if( currentTime.getTime() < last_comment_sent + (comment_period*1000)) {
-		alert("<? echo _('sólo se puede enviar un mensaje cada');?> " + comment_period + " <? echo _('segundos');?>");
+		mDialog.notify("<? echo _('sólo se puede enviar un mensaje cada');?> " + comment_period + " <? echo _('segundos');?>", 3);
 		return false;
 	}
 	abort_request();
@@ -380,10 +379,14 @@ function is_playing () {
 
 function do_pause() {
 	abort_request();
+	$('#comment-input').attr('disabled', true);
+	$('#play-pause-img').attr('src', base_static+"img/common/sneak-play01.png");
 	play = false;
 }
 
 function do_play() {
+	$('#comment-input').attr('disabled', false);
+	$('#play-pause-img').attr('src', base_static+"img/common/sneak-pause01.png");
 	play = true;
 	get_data();
 }

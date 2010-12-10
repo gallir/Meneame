@@ -35,7 +35,7 @@ function menealo_comment(user, id, value)
 	$.getJSON(url,
 		 function(data) {
 			if (data.error) {
-				alert("<? echo _('Error:') ?> "+data.error);
+				mDialog.notify("<? echo _('Error:') ?> "+data.error, 5);
 				return false;
 			} else {
 				$('#vc-'+id).html(data.votes+"");
@@ -57,7 +57,7 @@ function menealo_post(user, id, value)
 	$.getJSON(url,
 		 function(data) {
 			if (data.error) {
-				alert("<? echo _('Error:') ?> "+data.error);
+				mDialog.notify("<? echo _('Error:') ?> "+data.error, 5);
 				return false;
 			} else {
 				$('#vc-'+id).html(data.votes+"");
@@ -83,7 +83,7 @@ function parseLinkAnswer (id, link) {
 	$('#problem-' + id).hide();
 	if (link.error || id != link.id) {
 		disable_vote_link(id, -1, "<? echo _('grr...') ?>", '');
-		alert("<? echo _('Error:') ?> "+link.error);
+		mDialog.notify("<? echo _('Error:') ?> "+link.error, 5);
 		return false;
 	}
 	votes = parseInt(link.votes)+parseInt(link.anonymous);
@@ -155,7 +155,7 @@ function checkfield (type, form, field)
 function check_checkfield(fieldname, mess) {
 	field = document.getElementById(fieldname);
 	if (field && !field.checked) {
-		alert(mess);
+		mDialog.notify(mess, 5);
 		// box is not checked
 		return false;
 	}
@@ -164,10 +164,16 @@ function check_checkfield(fieldname, mess) {
 function report_problem(frm, user, id) {
 	if (frm.ratings.value == 0)
 		return;
-	if (! confirm("<? echo _('confirme desea votar:') ?> «" + frm.ratings.options[frm.ratings.selectedIndex].text +"»") ) {
+	mDialog.confirm("<? echo _('¿desea votar') ?> <em>" + frm.ratings.options[frm.ratings.selectedIndex].text +"</em>?",
+		function () {report_problem_yes(frm, user, id)}, function () {report_problem_no(frm, user, id)});
+	return false;
+}
+
+function report_problem_no(frm, user, id) {
 		frm.ratings.selectedIndex=0;
-		return false;
-	}
+}
+
+function report_problem_yes(frm, user, id) {
 	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + document.referrer;
 	var url=base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
@@ -311,7 +317,7 @@ tooltip.action = function (event) {
 			value = args[1];
 		}
 		catch (e) {
-			tooltip.hide(event); 
+			tooltip.hide(event);
 			return;
 		}
 		if (key == 'u') ajax = 'get_user_info.php';
@@ -324,7 +330,146 @@ tooltip.action = function (event) {
 		tooltip.hide(event);
 	}
 }
+/**
+ *  Based on mDialog from:
+ *
+	Kailash Nadh,	http://kailashnadh.name
+**/
+
+var mDialog = new function() {
+	this.closeTimer = null;
+	this.width = 0; this.height = 0;
+
+	this.divBox = null;
+
+	//________create a confirm box
+	this.confirm = function(message, callback_yes, callback_no) {
+		this.createDialog(message);
+		this.btYes.show(); this.btNo.show();
+		this.btOk.hide(); this.btCancel.hide(); this.btClose.hide();
+		this.btYes.focus();
+
+		// just redo this everytime in case a new callback is presented
+		this.btYes.unbind().click( function() {
+			mDialog.close();
+			if(callback_yes) callback_yes();
+		});
+
+		this.btNo.unbind().click( function() {
+			mDialog.close();
+			if(callback_no) callback_no();
+		});
+	};
+
+	//________prompt dialog
+	this.prompt = function(message, content, callback_ok, callback_cancel) {
+		this.createDialog($("<p>").append(message).append( $("<p>").append( $(this.input).val(content) ) ));
+
+		this.btYes.hide(); this.btNo.hide();
+		this.btOk.show(); this.input.focus(); this.btCancel.show();
+
+		// just redo this everytime in case a new callback is presented
+		this.btOk.unbind().click( function() {
+			mDialog.close();
+			if(callback_ok) callback_ok(mDialog.input.val());
+		});
+
+		this.btCancel.unbind().click( function() {
+			mDialog.close();
+			if(callback_cancel) callback_cancel();
+		});
+
+	};
+
+	//________create an alert box
+	this.alert = function(content, callback_ok) {
+		this.createDialog(content);
+		this.btCancel.hide(); this.btYes.hide(); this.btNo.hide(); this.btOk.show();
+		this.btOk.focus();
+
+		// just redo this everytime in case a new callback is presented
+		this.btOk.unbind().click( function() {
+			mDialog.close();
+			if(callback_ok)
+				callback_ok();
+		});
+	};
+
+
+	//________create a dialog with custom content
+	this.content = function(content, close_seconds) {
+		this.createDialog(content);
+		this.divOptions.hide();
+	};
+
+	//________create an auto-hiding notification
+	this.notify = function(content, close_seconds) {
+		if (this.divBox == null) this.init();
+		mDialog.makeCenter();
+		this.content(content);
+		this.btClose.focus();
+		if(close_seconds)
+			this.closeTimer = setTimeout(function() { mDialog.close(); }, close_seconds*1000 );
+	};
+
+	//________dialog control
+	this.createDialog = function(content) {
+		if (this.divBox == null) this.init();
+		clearTimeout(this.closeTimer);
+		this.divOptions.show();
+		this.divContent.html(content);
+		this.divBox.fadeIn('fast');
+		this.maintainPosition();
+	};
+
+	this.close = function() {
+		this.divBox.fadeOut('fast');
+		$(window).unbind('scroll.mDialog');
+	};
+
+	this.makeCenter = function() {
+		$(mDialog.divBox).css (
+			{
+				top: ( (($(window).height() / 2) - ( ($(mDialog.divBox).height()) / 2 ) )) + ($(document).scrollTop()) + 'px',
+				left: ( (($(window).width() / 2) - ( ($(mDialog.divBox).width()) / 2 ) )) + ($(document).scrollLeft()) + 'px'
+			}
+		);
+	};
+	this.maintainPosition = function() {
+		mDialog.makeCenter();
+		$(window).bind('scroll.mDialog', function() {
+			mDialog.makeCenter();
+		} );
+
+	}
+
+	//________
+	this.init = function() {
+		this.divBox = $("<div>").attr({ id: 'mDialog_box' });
+		this.divHeader = $("<div>").attr({ id: 'mDialog_header' });
+		this.divContent = $("<div>").attr({ id: 'mDialog_content' });
+		this.divOptions = $("<div>").attr({ id: 'mDialog_options' });
+		this.btYes = $("<button>").attr({ id: 'mDialog_yes' }).append( document.createTextNode("<? echo _('Sí') ?>") );
+		this.btNo = $("<button>").attr({ id: 'mDialog_no' }).append( document.createTextNode("<? echo _('No') ?>") );
+		this.btOk = $("<button>").attr({ id: 'mDialog_ok' }).append( document.createTextNode("<? echo _('Vale') ?>") );
+		this.btCancel = $("<button>").attr({ id: 'mDialog_ok' }).append( document.createTextNode("<? echo _('Cancelar') ?>") );
+		this.input = $("<input>").attr({ id: 'mDialog_input' });
+		this.btClose = $("<span>").attr({ id: 'mDialog_close' }).append( document.createTextNode('X') ).click(
+							function() {
+								mDialog.close();
+							});
+		this.divHeader.append(  this.btClose );
+		this.divBox.append(this.divHeader).append( this.divContent ).append(
+			this.divOptions.append(this.btYes).append(this.btNo).append(this.btOk).append(this.btCancel)
+		);
+
+		this.divBox.hide();
+		$('body').append( this.divBox );
+	};
+
+};
 
 $(document).ready(function (){
 	$('.tooltip').live('mouseenter mouseleave', tooltip.action);
+	mDialog.init();
 });

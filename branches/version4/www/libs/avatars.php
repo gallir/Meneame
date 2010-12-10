@@ -147,8 +147,10 @@ function avatar_get_from_db($user, $size=0) {
 	if ($globals['Amazon_S3_media_bucket']) {
 		// Get avatar from S3
 		// Try up to 3 times to download from Amazon
+		if ($globals['Amazon_S3_delete_allowed']) $tries = 3;
+		else $tries = 1;
 		$try = 0;
-		while ($original == false && $try < 3) {
+		while ($original == false && $try < $tries) {
 			if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
 				return file_get_contents("$file_base-$size.jpg");
 			}
@@ -163,7 +165,7 @@ function avatar_get_from_db($user, $size=0) {
 				usleep(rand(1,20)); // Wait a little to minimize race-conditions
 			}
 		}
-		if (! $original) { // The images were not found in S3
+		if ($globals['Amazon_S3_delete_allowed'] && ! $original) { // The images were not found in S3
 			if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
 					&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
 				avatars_remove($user);
