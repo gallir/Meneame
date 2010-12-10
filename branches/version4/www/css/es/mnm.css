@@ -631,6 +631,7 @@ display:block;
 font-size: 90%;
 color:#039;
 margin: 0px 10px 10px 0;
+vertical-align: top;
 }
 
 .sidebox .comments li img {
@@ -772,11 +773,7 @@ margin: 0px;
 }
 
 /*** LEGACY STYLES ***/
-
 /* references in comments and posts */
-.tt {
-color: #C85000;
-}
 
 dl.categorylist {
 float: left;
@@ -828,9 +825,14 @@ box-shadow: 0 0 3px rgba(0,0,0,0.4);
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 
+.tooltip {
+cursor: pointer;
+}
+
 .tt {
 cursor: pointer;
 text-decoration: underline;
+color: #C85000;
 }
 
 hr {
@@ -1363,6 +1365,7 @@ color: #FF6400;
 
 .comment-body .tooltip {
 color: #C85000;
+text-decoration: underline;
 }
 
 .comment-body.admin {
@@ -1800,7 +1803,7 @@ color: #FF6400;
 #tooltip-text {
 text-align: left;
 position:absolute;
-visibility:hidden;
+display:none;
 margin: 0;
 z-index:10000;
 border: 1px solid;

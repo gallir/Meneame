@@ -1,13 +1,11 @@
 <div id="c-{{self.html_id}}">
 	<div class="{{ self.comment_class }}">
-		<a href="{{ self.link_permalink }}/000{{ self.order }}"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;&nbsp;
-		<span  id="cid-{{ self.id }}">
+		<a href="{{ self.link_permalink }}/000{{ self.order }}"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;
 	{% if self.hide_comment %}
 		&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
 	{% else %}
 		{% include 'comment_summary_text.html' %}
 	{% endif %}
-		</span>
 	</div>
 	<div class="{{ self.comment_meta_class }}">
 		<div class="comment-votes-info">
