@@ -13,7 +13,6 @@ header('Content-Type: application/json; charset=UTF-8');
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
-error("test");
 if(check_ban_proxy()) {
 	error(_('IP no permitida'));
 }
