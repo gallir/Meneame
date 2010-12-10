@@ -299,7 +299,7 @@ tooltip.mouseMove = function (e) {
 
 tooltip.ajax_request = function(event, script, id) {
 	var url = base_url + 'backend/'+script+'?id='+id;
-	this.show(event, 'cargando');
+	this.show(event, '');
 	tooltip.box.load(url, function () {reportAjaxStats('tooltip', 'ajax');});
 }
 
