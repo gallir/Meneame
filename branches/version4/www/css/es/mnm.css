@@ -1918,7 +1918,7 @@ body { font-size: small }
 
 #mDialog_box {
 position: absolute;
-width: 30em;
+width: 28em;
 height: 20ex;
 font-family: Arial;
 border:1px solid #FF6400;
@@ -1954,6 +1954,7 @@ text-align: center;
 
 #mDialog_options button {
 margin-right: 10px;
+padding: 2px 8px;
 width: auto;
 }
 
