@@ -243,6 +243,10 @@ function fancybox_expand_images(event) {
 }
 
 function fancybox_gallery(type, user, link) {
+	if (! user_id > 0) {
+		mDialog.notify('<? echo _('Debe estar autentificado para visualizar imágenes') ?>', 5);
+		return;
+	}
 	var url = base_url +'backend/gallery.php?type='+type;
 	if (typeof(user) != 'undefined') url = url + '&user=' + user;
 	if (typeof(link) != 'undefined') url = url + '&link=' + link;
