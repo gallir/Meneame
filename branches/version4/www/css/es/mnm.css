@@ -826,7 +826,7 @@ box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 
 .tooltip {
-cursor: pointer;
+cursor: default;
 }
 
 .tt {
@@ -1918,14 +1918,19 @@ body { font-size: small }
 
 #mDialog_box {
 position: absolute;
-width: 28em;
+width: 25%;
+min-width: 250px;
 height: 20ex;
 font-family: Arial;
 border:1px solid #FF6400;
 background: #FFEEC7;
 overflow: hidden;
--moz-border-radius: 6px;
--webkit-border-radius: 6px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 }
 
 #mDialog_header {
@@ -1939,7 +1944,8 @@ font-size: 14px;
 }
 
 #mDialog_content {
-margin: 10px;
+margin-top: 10px;
+vertical-align: center;
 font-weight: bold;
 font-size: 110%;
 height: 7ex;
@@ -1954,7 +1960,7 @@ text-align: center;
 
 #mDialog_options button {
 margin-right: 10px;
-padding: 2px 8px;
+padding: 2px 15px;
 width: auto;
 }
 

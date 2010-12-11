@@ -47,7 +47,9 @@ if($_SERVER['HTTP_HOST']) {
 
 	// Check mobile/TV versions
 	if (preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera Mini|\/MIDP|Portable|webOS/i', $_SERVER['HTTP_USER_AGENT'])) {
-		$globals['mobile'] = true;
+		$globals['mobile'] = 1;
+	} else {
+		$globals['mobile'] = 0;
 	}
 
 	// Check the user's referer.

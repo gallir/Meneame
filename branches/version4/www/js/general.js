@@ -268,8 +268,9 @@ Tooltips functions
 function tooltip(){}
 
 // setup properties of tooltip object
-tooltip.offsetx = 10;
-tooltip.offsety = 10;
+tooltip.offsetx = 5;
+tooltip.reverse = false;
+tooltip.offsety = 5;
 tooltip.box=null;
 
 tooltip.show = function (event, text) {
@@ -278,8 +279,9 @@ tooltip.show = function (event, text) {
 		$('body').append( this.box );
 	}
 	$(document).bind('mousemove.tooltip', tooltip.mouseMove);
-	this.box.html(text);
-	this.box.show();
+	this.box.html(text).show();
+	if (tooltip.box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) this.reverse = true;
+	else this.reverse = false;
 	return false;
 }
 
@@ -290,18 +292,15 @@ tooltip.setText = function (text) {
 
 tooltip.hide = function (event) {
 	$(document).unbind('mousemove.tooltip');
-	tooltip.box.hide();
-	tooltip.box.html('');
+	tooltip.box.hide().html('');
 }
 
 // Moves the tooltip element
 tooltip.mouseMove = function (e) {
-	xL = e.pageX + tooltip.offsetx;
+	if (tooltip.reverse) xL = e.pageX - (tooltip.box.outerWidth() + tooltip.offsetx);
+	else xL = e.pageX + tooltip.offsetx;
 	yL = e.pageY + tooltip.offsety;
-	if (tooltip.box.width() > 0  && document.documentElement.clientWidth > 0 && xL > document.documentElement.clientWidth * 0.50) {
-		xL = xL - tooltip.box.width() - 2*tooltip.offsetx - 10; // Padding is 10
-	}
-	tooltip.box.css("left", xL +"px").css("top", yL +"px");
+	tooltip.box.css({left: xL +"px", top: yL +"px"});
 }
 
 tooltip.ajax_request = function(event, script, id) {
@@ -332,18 +331,48 @@ tooltip.action = function (event) {
 	}
 }
 /**
- *  Based on mDialog from:
+ *  Based on jqDialog from:
  *
-	Kailash Nadh,	http://kailashnadh.name
+	Kailash Nadh, http://plugins.jquery.com/project/jqDialog
 **/
+
+function strip_tags(html) {
+	return html.replace(/<\/?[^>]+>/gi, ''); 
+}
 
 var mDialog = new function() {
 	this.closeTimer = null;
-
 	this.divBox = null;
+
+
+	this.std_alert = function(message, callback) {
+		alert(strip_tags(message));
+		if (callback) callback();
+	}
+
+	this.std_confirm = function(message, callback_yes, callback_no) {
+		if (confirm(strip_tags(message))) {
+			if (callback_yes) callback_yes();
+		} else {
+			if (callback_no) callback_no();
+		}
+	}
+
+	this.std_prompt = function(message, content, callback_ok, callback_cancel) {
+		var res = prompt(message, content);
+		if (res != null) {
+			if (callback_ok) callback_ok(res);
+		} else {
+			if (callback_cancel) callback_cancel(res);
+		}
+	}
 
 	//________create a confirm box
 	this.confirm = function(message, callback_yes, callback_no) {
+		if (mobile_client) {
+			this.std_confirm(message, callback_yes, callback_no);
+			return;
+		}
 		this.createDialog(message);
 		this.btYes.show(); this.btNo.show();
 		this.btOk.hide(); this.btCancel.hide(); this.btClose.hide();
@@ -363,10 +392,16 @@ var mDialog = new function() {
 
 	//________prompt dialog
 	this.prompt = function(message, content, callback_ok, callback_cancel) {
+		if (mobile_client) {
+			this.std_prompt(message, content, callback_ok, callback_cancel);
+			return;
+		}
+
 		this.createDialog($("<p>").append(message).append( $("<p>").append( $(this.input).val(content) ) ));
 
 		this.btYes.hide(); this.btNo.hide();
-		this.btOk.show(); this.input.focus(); this.btCancel.show();
+		this.btOk.show(); this.btCancel.show();
+		this.input.focus();
 
 		// just redo this everytime in case a new callback is presented
 		this.btOk.unbind().click( function() {
@@ -382,29 +417,39 @@ var mDialog = new function() {
 
 	//________create an alert box
 	this.alert = function(content, callback_ok) {
+		if (mobile_client) {
+			this.std_alert(content, callback_ok);
+			return;
+		}
 		this.createDialog(content);
-		this.btCancel.hide(); this.btYes.hide(); this.btNo.hide(); this.btOk.show();
+		this.btCancel.hide(); this.btYes.hide(); this.btNo.hide();
+		this.btOk.show();
 		this.btOk.focus();
 
 		// just redo this everytime in case a new callback is presented
 		this.btOk.unbind().click( function() {
 			mDialog.close();
-			if(callback_ok)
-				callback_ok();
+			if(callback_ok) callback_ok();
 		});
 	};
 
 
 	//________create a dialog with custom content
 	this.content = function(content, close_seconds) {
+		if (mobile_client) {
+			this.std_alert(content, false);
+			return;
+		}
 		this.createDialog(content);
 		this.divOptions.hide();
 	};
 
 	//________create an auto-hiding notification
 	this.notify = function(content, close_seconds) {
-		if (this.divBox == null) this.init();
-		this.maintainPosition();
+		if (mobile_client) {
+			this.std_alert(content, false);
+			return;
+		}
 		this.content(content);
 		this.btClose.focus();
 		if(close_seconds)
@@ -446,22 +491,23 @@ var mDialog = new function() {
 
 	//________
 	this.init = function() {
+		if (mobile_client) return;
 		this.divBox = $("<div>").attr({ id: 'mDialog_box' });
 		this.divHeader = $("<div>").attr({ id: 'mDialog_header' });
 		this.divContent = $("<div>").attr({ id: 'mDialog_content' });
 		this.divOptions = $("<div>").attr({ id: 'mDialog_options' });
-		this.btYes = $("<button>").attr({ id: 'mDialog_yes' }).append( document.createTextNode("<? echo _('Sí') ?>") );
-		this.btNo = $("<button>").attr({ id: 'mDialog_no' }).append( document.createTextNode("<? echo _('No') ?>") );
-		this.btOk = $("<button>").attr({ id: 'mDialog_ok' }).append( document.createTextNode("<? echo _('Vale') ?>") );
-		this.btCancel = $("<button>").attr({ id: 'mDialog_ok' }).append( document.createTextNode("<? echo _('Cancelar') ?>") );
+		this.btYes = $("<button>").attr({ id: 'mDialog_yes' }).text("<? echo _('Sí') ?>");
+		this.btNo = $("<button>").attr({ id: 'mDialog_no' }).text("<? echo _('No') ?>");
+		this.btOk = $("<button>").attr({ id: 'mDialog_ok' }).text("<? echo _('Vale') ?>");
+		this.btCancel = $("<button>").attr({ id: 'mDialog_ok' }).text("<? echo _('Cancelar') ?>");
 		this.input = $("<input>").attr({ id: 'mDialog_input' });
-		this.btClose = $("<span>").attr({ id: 'mDialog_close' }).append( document.createTextNode('X') ).click(
+		this.btClose = $("<span>").attr({ id: 'mDialog_close' }).text('X').click(
 							function() {
 								mDialog.close();
 							});
 		this.divHeader.append(  this.btClose );
 		this.divBox.append(this.divHeader).append( this.divContent ).append(
-			this.divOptions.append(this.btYes).append(this.btNo).append(this.btOk).append(this.btCancel)
+			this.divOptions.append(this.btOk).append(this.btYes).append(this.btNo).append(this.btCancel)
 		);
 
 		this.divBox.hide();

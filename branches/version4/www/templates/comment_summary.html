@@ -55,7 +55,7 @@
 		{{ self.author_info }}
 		<img src="{{ self.avatar_img }}" width="20" height="20"
 		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
-				title="{{ self.username }}&nbsp;&nbsp;karma&nbsp;&nbsp;{{ self.user_karma}}" alt="{{ self.username }}"
+			class="tooltip u:{{ self.author }}" alt="{{ self.username }}"
 		{% endif %}
 		/>
 		</div>
