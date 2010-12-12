@@ -271,27 +271,35 @@ function tooltip(){}
 tooltip.offsetx = 5;
 tooltip.reverse = false;
 tooltip.offsety = 5;
-tooltip.box=null;
+tooltip.box = null;
+tooltip.timer = null;
+tooltip.active = false;
 
-tooltip.show = function (event, text) {
-	if (this.box == null) {
-		this.box = $("<div>").attr({ id: 'tooltip-text' });
-		$('body').append( this.box );
+tooltip.init = function (event) {
+	if (tooltip.box == null) {
+		tooltip.box = $("<div>").attr({ id: 'tooltip-text' });
+		$('body').append( tooltip.box );
 	}
+	if (tooltip.timer || tooltip.active) tooltip.hide();
+	tooltip.active = true;
+
 	$(document).bind('mousemove.tooltip', tooltip.mouseMove);
-	this.box.html(text).show();
-	if (tooltip.box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) this.reverse = true;
-	else this.reverse = false;
+	if (tooltip.box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) tooltip.reverse = true;
+	else tooltip.reverse = false;
+}
+
+tooltip.show = function (text) {
+	tooltip.box.html(text).show();
 	return false;
 }
 
-tooltip.setText = function (text) {
-	tooltip.box.html(text);
-	return false;
-}
-
-tooltip.hide = function (event) {
+tooltip.hide = function () {
+	if (tooltip.timer != null) {
+		clearTimeout(tooltip.timer);
+		tooltip.timer = null;
+	}
 	$(document).unbind('mousemove.tooltip');
+	tooltip.active = false;
 	tooltip.box.hide().html('');
 }
 
@@ -304,9 +312,17 @@ tooltip.mouseMove = function (e) {
 }
 
 tooltip.ajax_request = function(event, script, id) {
+	tooltip.timer = null;
 	var url = base_url + 'backend/'+script+'?id='+id;
-	this.show(event, '');
-	tooltip.box.load(url, function () {reportAjaxStats('tooltip', 'ajax');});
+	tooltip.show('');
+	$.ajax({
+		url: url,
+		dataType: "html",
+		success: function(html) {
+			if (tooltip.active) tooltip.show(html);
+			reportAjaxStats('tooltip', 'ajax');
+		}
+    });
 }
 
 tooltip.action = function (event) {
@@ -317,17 +333,18 @@ tooltip.action = function (event) {
 			value = args[1];
 		}
 		catch (e) {
-			tooltip.hide(event);
+			tooltip.hide();
 			return;
 		}
 		if (key == 'u') ajax = 'get_user_info.php';
 		else if (key == 'p') ajax = "get_post_tooltip.php";
 		else if (key == 'c') ajax = "get_comment_tooltip.php";
 		else if (key == 'l') ajax = "get_link.php";
-		else tooltip.hide(event);
-		tooltip.ajax_request(event, ajax, value);
-	} else {
-		tooltip.hide(event);
+
+		tooltip.init(event);
+		tooltip.timer = setTimeout(function() {tooltip.ajax_request(event, ajax, value)}, 400);
+	} else if (event.type == 'mouseleave') {
+		tooltip.hide();
 	}
 }
 /**
