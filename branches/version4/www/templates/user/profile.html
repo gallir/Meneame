@@ -17,7 +17,7 @@
         {% if current_user.user_id == user.id %}
             {% inline 'user/avatar_upload.html' %}
         {% endif %}
-        {% if current_user.user_id && user.total_images %}
+        {% if user.total_images %}
 			<br/><br/>
 			<button type="button" onclick="fancybox_gallery('all', {{ user.id }})">{% trans _('imágenes') %} [{{ user.total_images }}]</button>
         {% endif %}

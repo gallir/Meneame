@@ -546,6 +546,15 @@ class Comment {
 				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
 			}
 		}
+
+		// Check image limits
+		if (!empty($_FILES['image']['tmp_name'])) {
+			$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+			if ($limit_exceded) {
+				return $limit_exceded;
+			}
+		}
+
 		$db->transaction();
 		$comment->store();
 		$comment->insert_vote();

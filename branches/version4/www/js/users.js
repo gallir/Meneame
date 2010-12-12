@@ -64,7 +64,7 @@ function post_add_form_text(text, tries) {
 	var oldtext = textarea.val();
 	if (oldtext.match(re)) return false;
 	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') oldtext = oldtext + ' ';
-	textarea.val(oldtext + text);	
+	textarea.val(oldtext + text);
 	textarea.get(0).focus();
 }
 
@@ -78,7 +78,18 @@ function textCounter(field,cntfield,maxlimit) {
 		cntfield.value = maxlimit - field.value.length;
 }
 
-
+function check_file_size(id, size) {
+	var input = document.getElementById(id);
+	if (input.files != undefined) {
+		for (var i = 0; i < input.files.length; i++) {
+			if (input.files[i].fileSize > size) {
+				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: <? echo _('tamaño máximo excedido') ?>" + " " + input.files[i].fileSize + " > " + size, 10);
+				return;
+			}
+		}
+		mDialog.notify("<? echo _('tamaño OK') ?>", 1);
+	}
+}
 
 /************************
 Simple format functions
@@ -119,5 +130,4 @@ function wrapText(obj, tag) {
 function replaceText(text, tag) {
 		return '<'+tag+'>'+text+'</'+tag+'>';
 }
-
 

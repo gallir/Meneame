@@ -46,6 +46,16 @@ function save_post ($post_id) {
 
 	$post = new Post;
 	$_POST['post'] = clean_text_with_tags($_POST['post'], 0, false, $globals['posts_len']);
+
+
+	if (!empty($_FILES['image']['tmp_name'])) {
+		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+		if ($limit_exceded) {
+			echo 'ERROR: ' . $limit_exceded;
+			die;
+		}
+	}
+
 	if (mb_strlen($_POST['post']) < 5) {
 		echo 'ERROR: ' . _('texto muy corto');
 		die;
@@ -119,9 +129,11 @@ function save_post ($post_id) {
 	if ($_POST['image_delete']) {
 		$post->delete_image();
 	}
+
 	if (!empty($_FILES['image']['tmp_name'])) {
 		$post->store_image($_FILES['image']);
 	}
+
 	$post->print_summary();
 	Haanga::Load('fancybox.html');
 }

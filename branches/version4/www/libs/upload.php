@@ -33,6 +33,18 @@ class Upload {
 		return @mkdir(Upload::get_cache_dir($key), 0777, true);
 	}
 
+	static function current_user_limit_exceded($file) {
+		global $current_user, $globals;
+
+		// Check current_user file upload limits
+		if ($file['size'] > $globals['media_max_size']) return _('tamaño excedido');
+		if ($current_user->user_karma < $globals['media_min_karma']) return _('karma bajo');
+		if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) return _('máximas subidas diarias excedidas');
+		if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) return _('máximos bytes por día excedidos');
+		return false;
+	}
+
+
 	static function user_bytes_uploaded($user, $hours = false) {
 		global $db;
 
@@ -72,12 +84,6 @@ class Upload {
 
 		if (! $this->user) $this->user = $current_user->user_id;
 
-		// Check user and file limites
-		if ($this->size > $globals['media_max_size']) return false; // check max size
-		if ($current_user->user_karma < $globals['media_min_karma']) return false;
-		if (Upload::user_uploads($this->user, 24) > $globals['media_max_upload_per_day']) return false;
-		if (Upload::user_bytes_uploaded($this->user, 24) > $globals['media_max_bytes_per_day'] * 1.2) return false;
-
 		$mime = $db->escape($this->mime);
 		$db->query("REPLACE INTO media (type, id, version, user, mime, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, '$mime', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
 		$this->backup();
@@ -111,7 +117,9 @@ class Upload {
 	function from_temporal($file, $type = false) {
 		global $current_user, $globals;
 
-		if ($file['size'] > $globals['media_max_size']) return false; // check max size
+		// Check __again__ the limits
+		Upload::current_user_limit_exceded($file);
+
 		if ($type && ! preg_match("/$type/", $file['type'])) return false;
 		$this->mime = $file['type'];
 		$this->size = $file['size'];

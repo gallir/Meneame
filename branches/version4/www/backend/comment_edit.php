@@ -78,7 +78,19 @@ function save_comment () {
 	global $link, $db, $comment, $current_user, $globals, $site_key;
 
 
+
 	// Warning, trillion of checkings :-(
+
+
+	// Check image limits
+	if (!empty($_FILES['image']['tmp_name'])) {
+		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+		if ($limit_exceded) {
+			echo $limit_exceded;
+			die;
+		}
+	}
+
 
 	$user_id = intval($_POST['user_id']);
 	if(intval($_POST['id']) == $comment->id && $current_user->authenticated &&

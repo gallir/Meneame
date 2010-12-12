@@ -2,11 +2,8 @@
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		$("a.fancybox")
-		{% if current_user.user_id > 0 %}
-			.click(fancybox_expand_images)
-		{% endif %}
-		.fancybox({transitionIn: "none",
+		$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.fancybox({
+			transitionIn: "none",
 			transitionOut: "none",
 			titlePosition: 'inside',
 			onComplete: function() {reportAjaxStats('image', 'single');},
