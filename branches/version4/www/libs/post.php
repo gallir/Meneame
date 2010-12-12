@@ -188,9 +188,9 @@ class Post {
 
 		} else {
 			$this->can_edit = false;
-			if ($length > 0) {
-				$this->content = text_to_summary($this->content, $length);
-			}
+		}
+		if ($length > 0) {
+			$this->content = text_to_summary($this->content, $length);
 		}
 		$this->content = put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
 

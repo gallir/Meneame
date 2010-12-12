@@ -280,6 +280,7 @@ class User {
 			$obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
 			$obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
 			$obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
+			$obj->total_images = Upload::user_uploads($this->id);
 			if ($do_cache) {
 				$stats->text = serialize($obj);
 				$stats->store($globals['now']+86400*90); // Expires in 90 days
@@ -295,7 +296,7 @@ class User {
 
 		if ($this->level == 'disabled' || $this->level == 'autodisabled') return;
 
-		echo "\n<!-- Credits: using some famfamfam silk free icons -->\n";
+		// Credits: using some famfamfam silk free icons 
 		$medals = array('gold' => 'medal_gold_1.png', 'silver' => 'medal_silver_1.png', 'bronze' => 'medal_bronze_1.png');
 
 		$this->all_stats();

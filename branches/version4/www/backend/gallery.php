@@ -23,8 +23,12 @@ switch ($_GET['type']) {
 
 }
 
+$user_id = intval($_GET['user']);
+if ($user_id > 0) $user = "and user = $user_id";
+else $user = '';
+
 header('Content-Type: text/html; charset=utf-8');
-$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in and version = 0 and user_id = media.user order by date desc limit 200");
+$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit 200");
 if ($media) Haanga::Load("backend/gallery.html", compact('media'));
 
 ?>

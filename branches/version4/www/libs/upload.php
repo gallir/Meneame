@@ -33,18 +33,24 @@ class Upload {
 		return @mkdir(Upload::get_cache_dir($key), 0777, true);
 	}
 
-	static function user_bytes_uploaded($user, $hours = 24) {
+	static function user_bytes_uploaded($user, $hours = false) {
 		global $db;
 
 		if (! $user > 0) return 0;
-		return intval($db->get_var("select sum(size) from media where user = $user and date > date_sub(now(), interval $hours hour)"));
+		if ($hours) $date_limit = "and date > date_sub(now(), interval $hours hour)";
+		else $date_limit = '';
+
+		return intval($db->get_var("select sum(size) from media where user = $user $date_limit"));
 	}
 
-	static function user_uploads($user, $hours = 24) {
+	static function user_uploads($user, $hours = false) {
 		global $db;
 
 		if (! $user > 0) return 0;
-		return intval($db->get_var("select count(*) from media where user = $user and date > date_sub(now(), interval $hours hour)"));
+		if ($hours) $date_limit = "and date > date_sub(now(), interval $hours hour)";
+		else $date_limit = '';
+
+		return intval($db->get_var("select count(*) from media where user = $user $date_limit"));
 	}
 
 	function __construct($type, $id, $version = 0, $time = false) {
