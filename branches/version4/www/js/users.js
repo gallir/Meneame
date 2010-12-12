@@ -83,7 +83,7 @@ function check_file_size(id, size) {
 	if (input.files != undefined) {
 		for (var i = 0; i < input.files.length; i++) {
 			if (input.files[i].fileSize > size) {
-				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: <? echo _('tamaño máximo excedido') ?>" + " " + input.files[i].fileSize + " > " + size, 10);
+				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: <? echo _('tamaño máximo excedido') ?>" + " " + input.files[i].fileSize + " > " + size, 5);
 				return;
 			}
 		}
