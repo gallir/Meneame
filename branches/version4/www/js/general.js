@@ -507,7 +507,7 @@ var mDialog = new function() {
 							});
 		this.divHeader.append(  this.btClose );
 		this.divBox.append(this.divHeader).append( this.divContent ).append(
-			this.divOptions.append(this.btOk).append(this.btYes).append(this.btNo).append(this.btCancel)
+			this.divOptions.append(this.btNo).append(this.btCancel).append(this.btOk).append(this.btYes)
 		);
 
 		this.divBox.hide();

@@ -1931,6 +1931,9 @@ border-radius: 5px;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+user-select: none; 
+-moz-user-select: none; 
+-webkit-user-select: none; 
 }
 
 #mDialog_header {
@@ -1959,14 +1962,14 @@ text-align: center;
 }
 
 #mDialog_options button {
-margin-right: 10px;
+margin: 0 15px 0 15px;
 padding: 2px 15px;
 width: auto;
 }
 
 #mDialog_input {
 padding: 4px;
-width: 250px;
+width: 60%;
 }
 #mDialog_close {
 float: right;
