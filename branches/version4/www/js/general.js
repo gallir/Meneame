@@ -320,7 +320,7 @@ tooltip.ajax_request = function(event, script, id) {
 		dataType: "html",
 		success: function(html) {
 			if (tooltip.active) tooltip.show(html);
-			reportAjaxStats('tooltip', 'ajax');
+			reportAjaxStats('tooltip', script);
 		}
     });
 }
@@ -342,7 +342,7 @@ tooltip.action = function (event) {
 		else if (key == 'l') ajax = "get_link.php";
 
 		tooltip.init(event);
-		tooltip.timer = setTimeout(function() {tooltip.ajax_request(event, ajax, value)}, 400);
+		tooltip.timer = setTimeout(function() {tooltip.ajax_request(event, ajax, value)}, 300);
 	} else if (event.type == 'mouseleave') {
 		tooltip.hide();
 	}
