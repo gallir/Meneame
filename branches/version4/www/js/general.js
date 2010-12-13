@@ -196,9 +196,8 @@ function get_votes(program,type,container,page,id) {
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 function reportAjaxStats(category, action) {
-	if (typeof(pageTracker) !=	'undefined' && typeof(pageTracker._trackEvent) !=  'undefined') {
-		pageTracker._trackEvent(category, action);
-	}
+	if (typeof(_gaq) !=	'undefined') 
+		_gaq.push(['_trackEvent', category, action])
 }
 
 function bindTogglePlusMinus(img_id, link_id, container_id) {
