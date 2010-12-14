@@ -297,11 +297,9 @@ line-height: 25px;
 vertical-align: -4px;
 }
 
-.banner-top {
-margin: 5px auto;
-height: 92px;
-width: 732px;
-}
+#naviwrap ul li a:hover, #naviwrap ul#navigation li a:hover {
+color:#FF6400;
+} 
 
 .banner-right {
 width: 100%;
