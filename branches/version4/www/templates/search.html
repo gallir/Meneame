@@ -27,7 +27,7 @@
         {% endfor %}
 	    &nbsp;&nbsp;
 	    <label for="u">{% trans _("usuario") %}:</label>
-	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|safe }}" size="12" style="font-weight: bold;"/>
+	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|escape }}" size="12" style="font-weight: bold;"/>
         </form>
 
 	    <script type="text/javascript">
