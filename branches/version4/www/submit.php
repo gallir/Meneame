@@ -20,7 +20,7 @@ if(isset($_POST["phase"])) {
 	force_authentication();
 	switch ($_POST["phase"]) {
 		case 1:
-			do_header(_("enviar noticia") . " 2/3", "post");
+			do_header(_("enviar historia") . " 2/3", "post");
 			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit1()) {
 				// Just to display error messages
@@ -31,7 +31,7 @@ if(isset($_POST["phase"])) {
 			}
 			break;
 		case 2:
-			do_header(_("enviar noticia") . " 3/3", "post");
+			do_header(_("enviar historia") . " 3/3", "post");
 			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit2()) {
 				// Just to display error messages
@@ -48,7 +48,7 @@ if(isset($_POST["phase"])) {
 } else {
 	check_already_sent();
 	force_authentication();
-	do_header(_("enviar noticia") . " 1/3", "post");
+	do_header(_("enviar historia") . " 1/3", "post");
 	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
@@ -209,7 +209,7 @@ function do_submit1() {
 		if (!$current_user->admin && $user_votes < $min_votes) {
 			$needed = $min_votes - $user_votes;
 			if ($new_user) {
-				add_submit_error( _('¿es la primera vez que envías una noticia?'),
+				add_submit_error( _('¿es la primera vez que envías una historia?'),
 					_('necesitas como mínimo'). " $needed " . _('votos'));
 			} else {
 				add_submit_error( _('no tienes el mínimo de votos necesarios para enviar una nueva historia'),
@@ -481,7 +481,7 @@ function do_submit3() {
 	// Check it is not in the queue already
 	if (Link::duplicates($link->url)) {
 		// Write headers, they were not printed yet
-		do_header(_("enviar noticia"), "post");
+		do_header(_("enviar historia"), "post");
 		echo '<div id="singlewrap">' . "\n";
 		report_duplicated($link->url);
 		return;
