@@ -194,7 +194,6 @@ color: #3C3C3C !important;
 ul.headtools a{
 text-decoration: none;
 color: #FFFFFF;
-text-transform: capitalize;
 }
 
 ul.headtools li{
@@ -275,10 +274,9 @@ padding: 0 10px 0 10px;
 
 #naviwrap ul#navigation li a{
 text-decoration: none;
-text-transform: capitalize;
 color: #fff;
 font-weight: bold;
-font-size: 1.05em;
+font-size: 1.0em;
 }
 
 
@@ -375,7 +373,6 @@ ul.tabmain li a{
 color:#FF6400;
 float:left;
 font-weight:bold;
-text-transform: capitalize;
 text-decoration: none;
 }
 
@@ -552,7 +549,6 @@ color:#fff;
 padding-left: 10px;
 margin: 2px 0 0 0;
 text-align: left;
-text-transform: capitalize;
 }
 
 .sidebox .cell {
