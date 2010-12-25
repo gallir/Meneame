@@ -86,7 +86,7 @@
 		{% trans _("por %s") self.username_str %}
 		{% if self.print_date %}
 			{% trans _('el') %} {% exec get_date_time self.sent_date %}
-		    	{% if self.print_date %}
+		    	{% if self.status == 'published' %}
 			    {% trans _('publicado el') %} {% exec get_date_time self.date %}
 			{% endif %}
 		{% else %}
