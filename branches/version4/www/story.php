@@ -259,11 +259,9 @@ case 6:
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
 
-	echo '<fieldset>';
 	echo '<div id="voters-container">';
 	include(mnmpath.'/backend/get_link_favorites.php');
 	echo '</div><br />';
-	echo '</fieldset>';
 	echo '</div>';
 	break;
 
