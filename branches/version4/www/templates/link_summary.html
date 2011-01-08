@@ -6,6 +6,8 @@
 				<a id="a-votes-{{ self.id}}" href="{{ self.permalink }}">{{ self.total_votes }}</a>
 				{% trans _('meneos') %}
 			</div>
+
+
 			{% if not globals.bot %}
 
 			<div class="menealo" id="a-va-{{ self.id }}">
@@ -25,10 +27,9 @@
 			</div>
 
 			{% endif %}
-			{% if self.show_clicks && globals.click_counter && globals.click_counter <= self.id %}
-				<div style="background-color: #FFB300; margin-top: 3px; color: #fff">
-				{{ self.clicks }} {% trans _('clics') %}
-				</div>
+
+			{% if self.id >= globals.click_counter %}
+				<div class="clics">{{ self.clicks }} {% trans _('clics') %}</div>
 			{% endif %}
 		</div>
 	{% endif %}
@@ -181,11 +182,6 @@
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
-
-			{# show clicks #}
-			{% if self.id >= globals.click_counter %}
-				<span class="tool"><strong>{% trans _('clics') %}</strong>: {{ self.clicks }}</span>
-			{% endif %}
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">

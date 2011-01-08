@@ -1147,6 +1147,15 @@ letter-spacing: -0.1pt;
 text-shadow: 1px 1px 0 #fff;
 }
 
+.clics {
+margin: 4px 0 5px 0;
+color: #FFB300;
+border: solid 1px  #FFDF94;
+border-radius: 2px;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+}
+
 .news-body h1 {
 margin: 0;
 padding: 0 5px 0 0;
