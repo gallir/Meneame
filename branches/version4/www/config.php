@@ -276,7 +276,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 // Main javascript file
 $globals['js_main'] = 'general.js.php?v=12'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=11'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=15'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
@@ -308,7 +308,7 @@ $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>
 		'salam aleikum'=>'senegalés','grüzi'=>'alemán suizo','haj'=>'escandinavo','hallå'=>'escandinavo',
 		'moïen'=>'luxemburgués','talofa'=>'samoano','malo'=>'samoano','malo e lelei'=>'tongano',
 		'ia ora na'=>'tahitiano','kia ora'=>'maorí','buna ziua'=>'rumano','kem che'=>'guyaratí',
-		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, oh,'=>'asturiano','hâu'=>'nicolino',
+		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, ho,'=>'asturiano','oh'=>'nicolino',
 		'vary'=>'nicolino','Привет'=>'ruso','konnichiwa'=>'japonés','hello world'=>'holamundo',
 		'klaatu barada nikto'=>'el idioma de Klatu y Gort',
 		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon',
