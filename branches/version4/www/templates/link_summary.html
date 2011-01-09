@@ -28,7 +28,7 @@
 
 			{% endif %}
 
-			{% if self.id >= globals.click_counter %}
+			{% if type == 'full' AND self.id >= globals.click_counter AND self.clicks > 0 %}
 				<div class="clics">{{ self.clicks }} {% trans _('clics') %}</div>
 			{% endif %}
 		</div>
