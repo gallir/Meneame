@@ -533,16 +533,16 @@ function do_best_stories() {
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = sprintf(_('populares de «%s»'), $globals['meta_current_name']);
+			$title = sprintf(_('más votadas «%s»'), $globals['meta_current_name']);
 	} else {
 		$category_list	= '';
-		$title = _('populares');
+		$title = _('más votadas');
 	}
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 10");
+	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'topstories.php';
@@ -605,6 +605,49 @@ function do_best_queued() {
 		}
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('best_stories.html', $vars, true);
+		echo $output;
+		memcache_madd($key, $output, 180);
+	}
+}
+
+function do_most_clicked_stories() {
+	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
+	$key = 'most_clicked_'.$globals['css_main'].'_'.$globals['meta_current'];
+	if(memcache_mprint($key)) return;
+
+	if ($globals['meta_current'] && $globals['meta_categories']) {
+			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
+			$title = sprintf(_('más visitadas «%s»'), $globals['meta_current_name']);
+	} else {
+		$category_list	= '';
+		$title = _('más visitadas');
+	}
+
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
+	// The order is not exactly the votes
+	// but a time-decreasing function applied to the number of votes
+	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as value from links, link_clicks where link_status='published' $category_list and link_date > '$min_date' and link_clicks.id = link_id order by value desc limit 5");
+	if ($res) {
+		$links = array();
+		$url = $globals['base_url'].'topclicked.php';
+		$link = new Link();
+		foreach ($res as $l) {
+			$link = Link::from_db($l->link_id);
+			$link->url = $link->get_relative_permalink();
+			$link->thumb = $link->has_thumb();
+			$link->total_votes = $link->votes+$link->anonymous;
+			if ($link->thumb) {
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
+			}
+			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$links[] = $link;
+		}
+		$vars = compact('links', 'title', 'url');
+		$output = Haanga::Load('most_clicked_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
 	}

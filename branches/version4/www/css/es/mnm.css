@@ -589,6 +589,15 @@ border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
+.sidebox .clics {
+float: left;
+width: 40px;
+text-align: center;
+line-height: 95%;
+padding: 2px 1px;
+background: #fff;
+}
+
 .sidebox .votes.queued {
 color: #ff6400;
 background: #fff url('../../img/mnm/elmnm-p03a-s.png') no-repeat center top;
@@ -1149,6 +1158,7 @@ text-shadow: 1px 1px 0 #fff;
 
 .clics {
 margin: 4px 0 5px 0;
+font-size: 7.5pt;
 color: #FFB300;
 border: solid 1px  #FFDF94;
 border-radius: 2px;

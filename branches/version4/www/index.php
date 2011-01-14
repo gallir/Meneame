@@ -73,7 +73,10 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 echo '<div id="sidebar">';
 do_banner_right();
 do_banner_promotions();
-if ($globals['show_popular_published']) do_best_stories();
+if ($globals['show_popular_published']) {
+	do_best_stories();
+	do_most_clicked_stories();
+}
 do_best_sites();
 if ($page < 2) {
 	do_best_comments();
