@@ -30,7 +30,10 @@ class Upload {
 		global $globals;
 
 		if (file_exists(Upload::get_cache_dir($key))) return true;
-		return @mkdir(Upload::get_cache_dir($key), 0777, true);
+		$old_mask = umask(0);
+		$res = @mkdir(Upload::get_cache_dir($key), 0777, true);
+		umask($old_mask);
+		return $res;
 	}
 
 	static function current_user_limit_exceded($file) {
