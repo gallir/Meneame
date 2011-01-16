@@ -56,6 +56,10 @@
             {% endif %}
         </div>
 
+		{% if self.thumb_url %}
+			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
+		{% endif %}
+
         {{ text|text_to_html}}
 
 		<div class="news-details">

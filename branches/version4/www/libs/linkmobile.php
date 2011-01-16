@@ -37,6 +37,7 @@ class LinkMobile extends Link{
 		$this->author_html = '<a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a>';
 		$this->normal_link = 'http://'.preg_replace('/(\.|^)m\./', '$1', get_server_name()).$this->get_relative_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
+		$this->thumb_url    = $this->has_thumb();
 
 
 		if ($this->status == 'abuse' || $this->has_warning) {

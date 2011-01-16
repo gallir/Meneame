@@ -600,3 +600,8 @@ font-weight: bold;
 color: #FF6400;
 }
 
+.thumbnail {
+overflow: hidden;
+float: right;
+margin: 0 0 2px 3px;
+}
