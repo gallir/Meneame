@@ -67,7 +67,7 @@ class BasicThumb {
 		if (!$this->image) return false;
 		$colors = array();
 		$min = min($this->x, $this->y);
-		$min_colors = min(round($min/10), 8);
+		$min_colors = min(round($min/10), 6);
 		for ($i=0; $i < $min; $i++) {
 			$color = imagecolorat($this->image, $i, $i);
 			$color &= 0xF0F0F0; // Reduce the number of colours, to avoid being fooled by jpeg compression
@@ -76,6 +76,7 @@ class BasicThumb {
 			}
 			if (count($colors) > $min_colors) return true;
 		}
+		echo "<!-- Black image $this->url, colors: ".count($colors)." -->\n";
 		return false;
 	}
 
@@ -246,13 +247,20 @@ class WebThumb extends BasicThumb {
 			$min_size = 100;
 			$min_surface = 15000;
 		}
-		echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size -->\n";
-		return min($this->html_x, $this->x)  >= $min_size 
+		$ratio = $this->ratio();
+		echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size ratio: $ratio-->\n";
+		if (min($this->html_x, $this->x)  >= $min_size 
 			&& min($this->html_y, $this->y) >= $min_size 
 			&& $this->is_not_black()
 			&& ( 
-			(($this->html_x*$this->html_y) > $min_surface && $this->ratio() < 3.5) || 
-			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $this->ratio() < 4.6)); // For panoramic photos
+			(($this->html_x*$this->html_y) > $min_surface && $ratio < 3.5) || 
+			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $ratio < 4.6)) // For panoramic photos
+			) {
+			echo "<!-- Good -->\n";
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
@@ -413,9 +421,9 @@ class HtmlImages {
 
 		$goods = $n = 0;
 		foreach ($tags as $match) {
-			//if ($this->debug)
-				//echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
 			if ($this->check_in_other($match)) continue;
+			if ($this->debug)
+				echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
 			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good($other_html == false)) {
 				$goods++;
@@ -679,7 +687,7 @@ class HtmlImages {
 	// Youtube detection
 	function check_youtube() {
 		if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/(\w+?)[\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1]))) {
+			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/(\w+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			if ($this->debug)
 				echo "<!-- Detect Youtube, id: $video_id -->\n";
