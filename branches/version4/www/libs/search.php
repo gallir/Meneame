@@ -106,7 +106,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 		$f = '@*';
 	}
 
-	if ($by_date || $_REQUEST['o'] == 'date') {
+	if ($by_date || $_REQUEST['o'] == 'date' || $_REQUEST['p'] == 'url') {
 		$cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
 	} elseif ($_REQUEST['o'] == 'pure') {
 		$cl->SetSortMode (SPH_SORT_RELEVANCE);
@@ -139,12 +139,17 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	$cl->SetMatchMode (SPH_MATCH_EXTENDED2);
 
-	if ($words_count == 1) $cl->SetRankingMode(SPH_RANK_NONE); // Don't use rank ofr one word
+	if ($words_count == 1 || $_REQUEST['p'] == 'url' ) $cl->SetRankingMode(SPH_RANK_NONE); // Don't use rank ofr one word
 	elseif ($proximity) $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25); // Default: freq and proximity
 	else $cl->SetRankingMode(SPH_RANK_BM25); // Used for related links
 
 	if ($_REQUEST['p'] == 'url') {
-		$q = $cl->AddQuery ( "$f \"$words\"", $indices );
+		// It allows to search for several domains/url
+		for ($i = 0; $i < count($words_array); $i++) {
+			$words_array[$i] = '="'.$cl->EscapeString($words_array[$i]).'"';
+		}
+		$query = implode(" | ", $words_array); // Add the "OR" for several domain
+		$q = $cl->AddQuery ( "$f $query", $indices );
 		array_push($queries, $q);
 	} else {
 		if ($words_count < 5) {
