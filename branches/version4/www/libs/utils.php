@@ -482,15 +482,14 @@ function utf8_substr($str,$start)
 // Simple unified key generator for use in GET requests
 function get_security_key($time = false) {
 	global $globals, $current_user, $site_key;
-	if (!$time) $time = $globals['now'];
 
 	if ($current_user->user_id > 0) {
 		// For users of balanced connections and 3G we avoid using the IP
-		return $time.'-'.sha1($time.$current_user->user_id.$current_user->user_date.$site_key);
+		return $globals['now'].'-'.sha1($globals['now'].$current_user->user_id.$current_user->user_date.$site_key);
 	} else {
 		// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
 		$ip_key = $globals['user_ip_int']>>8;
-		return $time.'-'.sha1($time.$ip_key.$site_key);
+		return $globals['now'].'-'.sha1($globals['now'].$ip_key.$site_key);
 	}
 
 }

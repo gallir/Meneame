@@ -11,9 +11,7 @@ class LinkMobile extends Link{
 		global $current_user, $current_user, $globals, $db;
 
 		if(!$this->read) return;
-		if($this->is_votable()) {
-			$this->voted = $this->vote_exists($current_user->user_id);
-		}
+		$this->is_votable();
 
 		switch ($this->status) {
 			case 'queued': // another color box for not-published
