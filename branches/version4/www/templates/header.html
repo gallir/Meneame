@@ -167,7 +167,7 @@ var mobile_client = {{ globals.mobile }};
 		{% if current_user.comments_answers || globals.show_conv_counters %}
 			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{% trans _('respuestas a comentarios') %}"><span id="c_conv_c">{{ current_user.comments_answers }}</span> {% trans _('comentarios') %} <img src="{{globals.base_static}}img/common/icon_comment-01.png" alt="" width="19" height="19"/></a></li>
 		{% endif %}
-		{% if current_user.new_friends || globals.show_conv_counters %}
+		{% if ! globals.mobile AND (current_user.new_friends || globals.show_conv_counters) %}
 			<li><a href="{{ current_user.user_login | user_uri:"friends_new" }}" title="{% trans _('nuevos amigos') %}"><span id="n_friends_c">{{ current_user.new_friends }}</span> {% trans _('nuevos') %} <img src="{{globals.base_static}}img/common/icon_friend_other_00.png" alt="" width="18" height="16"/></a></li>
 
 		{% endif %}

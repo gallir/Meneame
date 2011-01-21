@@ -629,7 +629,7 @@ function do_most_clicked_stories() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as value from links, link_clicks where link_status='published' $category_list and link_date > '$min_date' and link_clicks.id = link_id order by value desc limit 5");
+	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks where link_status='published' $category_list and link_date > '$min_date' and link_clicks.id = link_id order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'topclicked.php';
@@ -675,7 +675,7 @@ function do_best_posts() {
 			$post->id = $p->post_id;
 			$post->read();
 			$obj->id = $post->id;
-			$obj->link = post_get_base_url($post->username).'/'.$post->id;
+			$obj->link = post_get_base_url().$post->id;
 			$obj->user_id = $post->author;
 			$obj->avatar = $post->avatar;
 			$obj->title = text_to_summary($post->clean_content(), 80);

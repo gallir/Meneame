@@ -104,7 +104,7 @@ function print_result()
 			$obj->basic_summary = true; 
 			switch ($_REQUEST['w']) {
 				case 'posts':
-					$obj->print_summary(500);
+					$obj->print_summary(600);
 					break;
 				case 'comments':
 					if ($obj->type == 'admin' && !$current_user->admin) continue;

@@ -30,7 +30,9 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
-if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['host']) < 5) {
+$parsed = parse_url($url);
+
+if(strlen($url) < 8 || ! $parsed || mb_strlen($parsed['host']) < 5) {
 	if ($json) {
 		$dict['status'] = 'KO';
 		echo json_encode($dict);
@@ -39,13 +41,24 @@ if(strlen($url) < 8 || ! ($p_url = parse_url($_GET['url'])) || strlen($p_url['ho
 	die;
 }
 
-if (isset($_GET['all'])) {
+if (mb_strlen($parsed['path']) > 30) {
+	// Filter extra queries and anchors
+	$url = preg_replace('/[?#].*$/', '', $url);
+	$unique = true;
+} else {
+	if (isset($_GET['all'])) $unique = false;
+	else $unique = true;
+}
+$url = addcslashes($url, '%_');
+
+
+if (! $unique) {
 	$url = preg_replace('/\/$/', '', $url);
-	$url = addcslashes($url, '%_');
 	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url%' order by link_date DESC limit 100");
 } else {
 	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url = '$url'");
 }
+
 if ($links) {
 	$dict['status'] = 'OK';
 	$dict['data'] = array();
