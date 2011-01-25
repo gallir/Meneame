@@ -72,7 +72,6 @@ class RGDB extends mysqli {
 		}
 		$this->connected = true;
 		$this->set_charset('utf8');
-		if ($this->dbname) $this->select_db($this->dbname);
 	}
 
 	function escape($str) {
