@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -41,30 +41,35 @@ $cat=$_REQUEST['category'];
 
 do_header(_('Menéame'));
 do_tabs('main','published');
+
+$from = '';
+
 if ($globals['meta_current'] > 0) {
-	$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+	$where = "link_status='published' and link_category in (".$globals['meta_categories'].") ";
 	print_index_tabs(); // No other view
 } elseif ($current_user->user_id > 0) { // Check authenticated users
 	switch ($globals['meta']) {
 		case '_personal':
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$from_where = "FROM links WHERE link_date > $from_time and link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			$where = "link_date > $from_time and link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			print_index_tabs(7); // Show "personal" as default
 			break;
 		case '_friends':
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-			$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
+			$from = ", friends";
+			$where = "link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
 			print_index_tabs(1); // Friends
 		break;
 		default:
 			print_index_tabs(0); // All
 			$rows = Link::count('published');
-			$from_where = "FROM links WHERE link_status='published' ";
+			$where = "link_status='published' ";
 	}
 } else {
 	print_index_tabs(0); // No other view
-	$from_where = "FROM links WHERE link_status='published' ";
+	$rows = Link::count('published');
+	$where = "link_status='published' ";
 }
 
 do_mnu_categories_horizontal($_REQUEST['category']);
@@ -92,21 +97,20 @@ echo '<div id="newswrap">'."\n";
 do_banner_top_news();
 
 if($cat) {
-	$from_where .= " AND link_category=$cat ";
+	$where .= " AND link_category=$cat ";
 }
-$order_by = " ORDER BY link_date DESC ";
+$order_by = "ORDER BY link_date DESC ";
 
-if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
+if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM links $from WHERE $where");
 
-$links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
+$links = $db->object_iterator("SELECT".Link::SQL."$from WHERE $where and user_id=link_author $order_by LIMIT $offset,$page_size", "Link");
 if ($links) {
-	$counter = 0;
-	foreach($links as $link_id) {
-		$link = Link::from_db($link_id);
+	foreach($links as $link) {
 		$link->print_summary();
 		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter'));
 	}
 }
+
 
 do_pages($rows, $page_size);
 echo '</div>'."\n";

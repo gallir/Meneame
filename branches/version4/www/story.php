@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -79,7 +79,7 @@ if ($last_arg > 0) {
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
-	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
+	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status],
 											$globals['time_enabled_comments']);
 }
 
@@ -90,7 +90,7 @@ if ($_POST['process']=='newcomment') {
 
 switch ($url_args[1]) {
 	case '':
-		$tab_option = 1;	
+		$tab_option = 1;
 		$order_field = 'comment_order';
 
 		// Geo check
@@ -108,7 +108,7 @@ switch ($url_args[1]) {
 			if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
 			$offset=($current_page-1)*$globals['comments_page_size'];
 			$limit = "LIMIT $offset,".$globals['comments_page_size'];
-		} 
+		}
 		break;
 	case 'best-comments':
 		$tab_option = 2;
@@ -157,7 +157,7 @@ if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_
 	$globals['user_adchannel'] = $user->adchannel;
 }
 
-if ($link->status != 'published') 
+if ($link->status != 'published')
 	$globals['do_vote_queue']=true;
 if (!empty($link->tags))
 	$globals['tags']=$link->tags;
@@ -212,15 +212,13 @@ case 2:
 
 	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 
-	$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
+	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id and user_id = comment_user_id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
 		echo '<ol class="comments-list">';
-		foreach($comments as $comment_id) {
-			if (($comment = Comment::from_db($comment_id))) {
-				echo '<li>';
-				$comment->print_summary($link, 2500, true);
-				echo '</li>';
-			}
+		foreach($comments as $comment) {
+			echo '<li>';
+			$comment->print_summary($link, 2500, true);
+			echo '</li>';
 			echo "\n";
 		}
 		echo "</ol>\n";
@@ -371,7 +369,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 	global $db, $globals;
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
-	
+
 	if ( ! empty($globals['base_story_url'])) {
 		$query = $globals['link_permalink'];
 	} else {
@@ -387,7 +385,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if ($reverse) $current = $total_pages;
 		else $current = 1;
 	}
-	
+
 	echo '<div class="pages">';
 
 	if($current==1) {
@@ -417,7 +415,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 			}
 		}
 	}
-	
+
 	if($current<$total_pages) {
 		$i = $current+1;
 		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">'._('siguiente').' &#187;</a>';

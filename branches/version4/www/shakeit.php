@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -32,19 +32,21 @@ $globals['ads'] = true;
 $rows = -1; // Don't show page numbers by default
 $cat = $_REQUEST['category'];
 
+$from = '';
 switch ($globals['meta']) {
 	case '_personal':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
-		$order_by = " ORDER BY link_date DESC ";
+		$where = "link_date > $from_time and link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+		$order_by = "ORDER BY link_date DESC";
 		$tab = 7;
 		break;
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$from_where = "FROM links, friends WHERE link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
-		$order_by = " ORDER BY link_date DESC ";
+		$from = ", friends";
+		$where = "link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
+		$order_by = "ORDER BY link_date DESC";
 		$tab = 2;
 		$globals['tag_status'] = 'queued';
 		break;
@@ -52,8 +54,8 @@ switch ($globals['meta']) {
 		// Show  the hihgher karma first
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$from_where = "FROM links WHERE link_date > $from_time and link_status='queued' and link_karma > 10";
-		$order_by = " ORDER BY link_karma DESC ";	
+		$where = "link_date > $from_time and link_status='queued' and link_karma > 10";
+		$order_by = "ORDER BY link_karma DESC";
 		$tab = 3;
 		$globals['tag_status'] = 'queued';
 		break;
@@ -62,7 +64,7 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$globals['ads'] = false;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$from_where = "FROM links WHERE link_status in ('discard', 'abuse', 'autodiscard')";
+		$where = "link_status in ('discard', 'abuse', 'autodiscard')";
 		$order_by = " ORDER BY link_date DESC ";
 		$tab = 5;
 		$globals['tag_status'] = 'discard';
@@ -71,22 +73,22 @@ switch ($globals['meta']) {
 	case '_all':
 	default:
 		$globals['tag_status'] = 'queued';
-		$order_by = " ORDER BY link_date DESC ";
+		$order_by = "ORDER BY link_date DESC";
 		if ($globals['meta_current'] > 0) {
 			if ($cat) $rows = Link::count('queued', $cat);
 			else $rows = Link::count('queued', $globals['meta_categories']);
-			$from_where = "FROM links WHERE link_status='queued' and link_category in (".$globals['meta_categories'].") ";
+			$where = "link_status='queued' and link_category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
 			$rows = Link::count('queued');
-			$from_where = "FROM links WHERE link_status='queued'";
+			$where = "link_status='queued'";
 			$tab = 1;
 		}
 		break;
 }
 
 if($cat) {
-	$from_where .= " AND link_category=$cat ";
+	$where .= " AND link_category=$cat ";
 }
 
 
@@ -109,10 +111,9 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-$links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
+$links = $db->object_iterator("SELECT".Link::SQL."$from WHERE $where and user_id=link_author $order_by LIMIT $offset,$page_size", "Link");
 if ($links) {
-	foreach($links as $link_id) {
-		$link = Link::from_db($link_id);
+	foreach($links as $link) {
 		if ($link->votes == 0 && $link->author != $current_user->user_id) continue;
 		if ($offset < 1000) {
 			$link->print_summary('full', 16);
@@ -121,6 +122,8 @@ if ($links) {
 		}
 	}
 }
+
+
 do_pages($rows, $page_size);
 echo '</div>'."\n";
 
