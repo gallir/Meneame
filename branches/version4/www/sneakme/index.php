@@ -38,7 +38,9 @@ switch ($argv[0]) {
 		$tab_option = 2;
 		$page_title = _('mejores notas') . ' | ' . _('menéame');
 		$min_date = date("Y-m-d H:00:00", time() - 86400); //  about 24 hours
-		$sql = "SELECT post_id FROM posts where post_date > '$min_date' ORDER BY post_karma desc limit $offset,$page_size";
+		$where = "post_date > '$min_date'";
+		$order_by = "ORDER BY post_karma desc";
+		$limit = "LIMIT $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
 		break;
 
@@ -56,7 +58,10 @@ switch ($argv[0]) {
 	case '':
 	case '_all':
 		$tab_option = 1;
-		$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+		//$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
+		$where = "true";
+		$order_by = "ORDER BY post_id desc";
+		$limit = "LIMIT $offset,$page_size";
 		//$rows = $db->get_var("SELECT count(*) FROM posts");
 		$min_date = date("Y-m-d 00:00:00", time() - 86400*10);
 		$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
@@ -74,7 +79,9 @@ switch ($argv[0]) {
 			}
 			$page_title = sprintf(_('nota de %s'), $user->username) . " ($post_id)";
 			$globals['search_options']['u'] = $user->username;
-			$sql = "SELECT post_id FROM posts WHERE post_id = $post_id";
+			$where = "post_id = $post_id";
+			$order_by = "";
+			$limit = "";
 			$rows = 1;
 		} else {
 			// User is specified
@@ -86,7 +93,10 @@ switch ($argv[0]) {
 				case '_friends':
 					$view = 1;
 					$page_title = sprintf(_('amigos de %s'), $user->username);
-					$sql = "SELECT post_id FROM posts, friends WHERE friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0 ORDER BY post_id desc limit $offset,$page_size";
+					$from = ", friends";
+					$where = "friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0";
+					$order_by = "ORDER BY post_id desc";
+					$limit = "LIMIT $offset,$page_size";
 					$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0");
 					$rss_option="sneakme_rss2.php?friends_of=$user->id";
 					break;
@@ -94,7 +104,11 @@ switch ($argv[0]) {
 				case '_favorites':
 					$view = 2;
 					$page_title = sprintf(_('favoritas de %s'), $user->username);
-					$sql = "SELECT post_id FROM posts, favorites WHERE favorite_user_id=$user->id AND favorite_type='post' AND favorite_link_id=post_id ORDER BY post_id DESC LIMIT $offset,$page_size";
+					$ids = $db->get_col("SELECT favorite_link_id FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post' ORDER BY favorite_link_id DESC LIMIT $offset,$page_size");
+					$from = "";
+					$where = "post_id in (".implode(',', $ids).")";
+					$order_by = "ORDER BY post_id desc";
+					$limit = "";
 					$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post'");
 					$rss_option="sneakme_rss2.php?favorites_of=$user->id";
 					break;
@@ -102,7 +116,11 @@ switch ($argv[0]) {
 				case '_conversation':
 					$view = 3;
 					$page_title = sprintf(_('conversación de %s'), $user->username);
-					$sql = "SELECT distinct conversation_from as post_id FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ORDER BY conversation_time desc LIMIT $offset,$page_size";
+					$ids = $db->get_col("SELECT distinct conversation_from FROM conversations WHERE conversation_user_to=$user->id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size");
+					$where = "post_id in (".implode(',', $ids).")";
+					$from = "";
+					$order_by = "ORDER BY post_id desc ";
+					$limit = "";
 					$rows =  $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
 					$rss_option="sneakme_rss2.php?conversation_of=$user->id";
 					break;
@@ -111,7 +129,9 @@ switch ($argv[0]) {
 					$view = 0;
 					$page_title = sprintf(_('notas de %s'), $user->username);
 					$globals['search_options']['u'] = $user->username;
-					$sql = "SELECT post_id FROM posts WHERE post_user_id=$user->id ORDER BY post_id desc limit $offset,$page_size";
+					$where = "post_user_id=$user->id";
+					$order_by = "ORDER BY post_id desc";
+					$limit = "LIMIT $offset,$page_size";
 					$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
 					$rss_option="sneakme_rss2.php?user_id=$user->id";
 			}
@@ -202,12 +222,11 @@ function onLoad(lat, lng, zoom, icon) {
 </script>
 <?
 } else {
-	$posts = $db->get_results($sql);
+	$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where and user_id = post_user_id $order_by $limit", 'Post');
 	if ($posts) {
 		echo '<ol class="comments-list">';
 		$time_read = 0;
-		foreach ($posts as $dbpost) {
-			$post = Post::from_db($dbpost->post_id);
+		foreach ($posts as $post) {
 			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
 				echo '<li>'. _('Error: nota no existente') . '</li>';
 			} else {
@@ -221,21 +240,21 @@ function onLoad(lat, lng, zoom, icon) {
 
 		// Print "conversation" for a given note
 		if ($post_id > 0) {
+			/*
 			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
 			$answers = $db->get_results($sql);
+			*/
+			$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE user_id = post_user_id and conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
+
 			if ($answers) {
-				$answer = new Post;
-				echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
-				//echo '<h3>'._('Respuestas').'</h3>';
+				echo '<div style="padding-left: 40px; padding-top: 10px">';
 				echo '<ol class="comments-list">';
-				foreach ($answers as $dbanswer) {
-					$answer->id = $dbanswer->post_id;
-					$answer->read();
+				foreach ($answers as $answer) {
 					echo '<li>';
 					$answer->print_summary();
 					echo '</li>';
 				}
-				echo "</ol>\n";
+				echo "</ol>";
 				echo '</div>'."\n";
 			}
 		}
