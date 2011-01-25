@@ -92,7 +92,7 @@ class RGDB extends mysqli {
 		$is_select = preg_match("/^ *(select|show)\s/i",$query);
 
 		$this->connect();
-		
+
 		// Flush cached values..
 		$this->last_result = array();
 
@@ -102,7 +102,7 @@ class RGDB extends mysqli {
 			$this->print_error('error in query: ' . $query);
 			return false;
 		}
-		
+
 		if ($is_select) {
 			$num_rows=0;
 			while ( $row = @$result->fetch_object() ) {
@@ -114,6 +114,28 @@ class RGDB extends mysqli {
 
 		return $this->affected_rows;
 	}
+
+	function object_iterator($query, $class = null) {
+		//echo $query . "<br/>\n";
+		//return false;
+
+		$is_select = preg_match("/^ *(select|show)\s/i",$query);
+
+		$this->connect();
+
+		// query succeeded
+		if ($this->real_query($query)) {
+			if ($is_select && $this->field_count) {
+				// SELECT, SHOW, DESCRIBE
+				return new QueryResult($this, $class);
+			} else {
+				// INSERT, UPDATE, DELETE
+				return $this->affected_rows;
+			}
+		}
+		return false;
+	}
+
 
 	function get_var($query=null,$x=0,$y=0) {
 
@@ -189,8 +211,64 @@ class RGDB extends mysqli {
 			}
 		}
 		return $enum;
-
 	}
 
+
 }
+
+// Iterators inspired from:
+//     http://techblog.procurios.nl/k/news/view/33914/14863/Syntactic-Sugar-for-MySQLi-Results-using-SPL-Iterators.html
+
+class ObjectIterator implements Iterator {
+	protected $result;
+	protected $class;
+	protected $position;
+	protected $currentRow;
+
+	public function __construct($result, $class= null) {
+		$this->Result = $result;
+		$this->class = $class;
+	}
+
+	public function __destruct() {
+		$this->Result->free();
+	}
+
+	public function rewind() {
+		$this->Result->data_seek($this->position = 0);
+		$this->currentRow = $this->Result->fetch_object($this->class);
+	}
+
+	public function next() {
+		$this->currentRow = $this->Result->fetch_object($this->class);
+		++$this->position;
+	}
+
+	public function valid() {
+		return $this->position < $this->Result->num_rows;
+	}
+
+	public function current() {
+		$this->currentRow->read = true;
+		return $this->currentRow;
+	}
+
+	public function key() {
+		return $this->position;
+	}
+}
+
+class QueryResult extends MySQLi_Result implements IteratorAggregate {
+	public function __construct($result, $class=null) {
+		parent::__construct($result);
+		$this->class = $class;
+	}
+
+	public function getIterator() {
+		return new ObjectIterator($this, $this->class);
+	}
+}
+
+
+
 ?>
