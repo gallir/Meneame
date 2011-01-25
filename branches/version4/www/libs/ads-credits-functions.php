@@ -58,6 +58,9 @@ function do_banner_right() { // side banner A
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['external_ads'] && $globals['ads']) {
+		if ($globals['kalooga_categories'] && isset($_REQUEST['category']) && in_array($_REQUEST['category'], $globals['kalooga_categories'])) {
+			$globals['kalooga_right'] = true;
+		}
 		Haanga::Safe_Load('private/ad-right.html');
 	}
 }
@@ -78,11 +81,9 @@ function do_banner_top_news() {
 
 function do_banner_story() {
 	global $globals, $current_user;
-	if ($globals['link'] && $globals['kalooga_categories'] 
-			&& in_array($globals['link']->category, $globals['kalooga_categories']) ) {
-		Haanga::Safe_Load('private/kalooga.html');
+	if ($globals['link'] && $globals['kalooga_categories'] && in_array($globals['link']->category, $globals['kalooga_categories']) ) {
+		$globals['kalooga_story'] = true;
 	}
-
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link']) {
 		Haanga::Safe_Load('private/ad-middle.html');
 	}
