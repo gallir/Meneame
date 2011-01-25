@@ -30,7 +30,7 @@ class Comment {
 		if(($result = $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id and user_id = comment_user_id", 'Comment'))) {
 			$result->order = $result->c_order; // Order is a reserved word in SQL
 			$result->read = true;
-			if($result->order == 0) $result->update_order();
+			if($result->c_order == 0) $result->update_order();
 			return $result;
 		}
 		return false;
@@ -75,8 +75,8 @@ class Comment {
 		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
-			$this->order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE"))+1;
-			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->order)");
+			$this->c_order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE"))+1;
+			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
@@ -101,11 +101,11 @@ class Comment {
 
 		if ($this->id == 0 || $this->link == 0) return false;
 		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
-		if ($order != $this->order) {
-			$this->order = $order;
-			$db->query("update comments set comment_order=$this->order where comment_id=$this->id");
+		if ($order != $this->c_order) {
+			$this->c_order = $order;
+			$db->query("update comments set comment_order=$this->c_order where comment_id=$this->id");
 		}
-		return $this->order;
+		return $this->c_order;
 	}
 
 	function read() {
@@ -115,7 +115,7 @@ class Comment {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->order = $this->c_order; // Order is a reserved word in SQL
 			$this->read = true;
-			if($this->order == 0) $this->update_order();
+			if($this->c_order == 0) $this->update_order();
 			return true;
 		}
 		$this->read = false;
@@ -129,7 +129,7 @@ class Comment {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->order = $this->c_order; // Order is a reserved word in SQL
 			$this->read = true;
-			if($this->order == 0) $this->update_order();
+			if($this->c_order == 0) $this->update_order();
 			return true;
 		}
 		$this->read = false;
@@ -160,7 +160,7 @@ class Comment {
 	function prepare_summary_text($length) {
 		global $globals, $current_user;
 
-		if ($this->single_link) $this->html_id = $this->order;
+		if ($this->single_link) $this->html_id = $this->c_order;
 		else $this->html_id = $this->id;
 
 		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
@@ -218,7 +218,7 @@ class Comment {
 				$author .= ' ('.$this->username.')';
 			}
 		} elseif ($single_link) {
-			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->order.'">'.$this->username.'</a>';
+			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->c_order.'">'.$this->username.'</a>';
 		} else {
 			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
 		}
@@ -567,7 +567,7 @@ class Comment {
 		}
 
 		// Comment stored, just redirect to it page
-		header('Location: '.$link->get_permalink() . '#c-'.$comment->order);
+		header('Location: '.$link->get_permalink() . '#c-'.$comment->c_order);
 		die;
 		//return $error;
 	}
