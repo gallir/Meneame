@@ -62,6 +62,7 @@ class UserAuth {
 		}
 		// Mysql variable to use en join queries
 		$db->query("set @user_id = $this->user_id");
+		$db->query("set @ip_int = ". $globals['user_ip_int']);
 	}
 
 

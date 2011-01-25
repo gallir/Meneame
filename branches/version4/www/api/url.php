@@ -30,9 +30,8 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
-$parsed = parse_url($url);
 
-if(strlen($url) < 8 || ! $parsed || mb_strlen($parsed['host']) < 5) {
+if(strlen($url) < 8 || ! preg_match('/^https{0,1}:\/\//', $url) || ! ($parsed = parse_url($url)) || mb_strlen($parsed['host']) < 5) {
 	if ($json) {
 		$dict['status'] = 'KO';
 		echo json_encode($dict);

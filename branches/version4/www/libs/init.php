@@ -182,5 +182,4 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 	$db->persistent = $globals['mysql_persistent'];
 }
 
-$db->query("set @ip_int = ". $globals['user_ip_int']);
 ?>
