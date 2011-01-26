@@ -21,19 +21,12 @@ $cat=$_REQUEST['category'];
 do_header('menéame mobile');
 do_tabs('main','published');
 
-$from_where = "FROM links WHERE link_status='published' ";
-$order_by = " ORDER BY link_date DESC ";
-
 echo '<div id="newswrap">'."\n";
 
-$link = new LinkMobile;
-$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
-
-$links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
+$rows = Link::count('published');
+$links = $db->object_iterator("SELECT".Link::SQL." WHERE link_status='published' ORDER BY link_date DESC LIMIT $offset,$page_size", "LinkMobile");
 if ($links) {
-	foreach($links as $link_id) {
-		$link->id=$link_id;
-		$link->read();
+	foreach($links as $link) {
 		$link->print_summary();
 	}
 }

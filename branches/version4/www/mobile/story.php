@@ -60,7 +60,7 @@ if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_
 	if (!$current_page) $current_page = 1; // previously: ceil($link->comments/$globals['comments_page_size']);
 	$offset=($current_page-1)*$globals['comments_page_size'];
 	$limit = "LIMIT $offset,".$globals['comments_page_size'];
-} 
+}
 
 
 if ($_POST['process']=='newcomment') {
@@ -92,13 +92,10 @@ do_comment_pages($link->comments, $current_page);
 echo '<div class="comments">';
 
 
-$comments = $db->get_col("SELECT SQL_CACHE comment_id FROM comments WHERE comment_link_id=$link->id ORDER BY $order_field $limit");
+$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "CommentMobile");
 if ($comments) {
 	echo '<ol class="comments-list">';
-	$comment = new CommentMobile;
-	foreach($comments as $comment_id) {
-		$comment->id=$comment_id;
-		$comment->read();
+	foreach($comments as $comment) {
 		$comment->print_summary($link, 700, true);
 		echo "\n";
 	}
@@ -107,8 +104,8 @@ if ($comments) {
 
 echo '</div>' . "\n";
 
-if($link->date > $globals['now']-$globals['time_enabled_comments'] && $link->comments < $globals['max_comments'] && 
-	$current_user->authenticated && 
+if($link->date > $globals['now']-$globals['time_enabled_comments'] && $link->comments < $globals['max_comments'] &&
+	$current_user->authenticated &&
 	($current_user->user_karma > $globals['min_karma_for_comments'] || $current_user->user_id == $link->author)) {
 		print_comment_form();
 }
@@ -133,7 +130,7 @@ function do_comment_pages($total, $current) {
 	global $db, $globals;
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
-	
+
 	if (! empty($globals['base_story_url'])) {
 		$query = $globals['link_permalink'];
 	} else {
@@ -146,7 +143,7 @@ function do_comment_pages($total, $current) {
 
 	$total_pages=ceil($total/$globals['comments_page_size']);
 	if (! $current) $current = 1;
-	
+
 	echo '<div class="pages">';
 
 	if($current==1) {

@@ -14,23 +14,15 @@ $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
-
-$order_by = " ORDER BY link_date DESC ";
-$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 864000).'"'; // Ten days
-$from_where = "FROM links WHERE link_date > $from_time and link_status='queued'";
-
 do_header(_('noticias pendientes') . ' | ' . _('menéame mobile'));
 do_tabs("main","shakeit");
 
 echo '<div id="newswrap">'."\n";
 
-$link = new LinkMobile;
-$rows = $db->get_var("SELECT SQL_CACHE count(*) $from_where");
-$links = $db->get_col("SELECT SQL_CACHE link_id $from_where $order_by LIMIT $offset,$page_size");
+$rows = Link::count('queued');
+$links = $db->object_iterator("SELECT".Link::SQL." WHERE link_status='queued' ORDER BY link_date DESC LIMIT $offset,$page_size", "LinkMobile");
 if ($links) {
-	foreach($links as $link_id) {
-		$link->id=$link_id;
-		$link->read();
+	foreach($links as $link) {
 		$link->print_summary();
 	}
 }
