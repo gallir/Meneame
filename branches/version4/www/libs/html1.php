@@ -245,7 +245,8 @@ function do_pages($total, $page_size=25, $margin = true) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="?page='.$i.$query.'">&#171; '._('anterior').'</a>';
+		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.'>&#171; '._('anterior').'</a>';
 	}
 
 	if ($total_pages > 0) {
@@ -260,14 +261,16 @@ function do_pages($total, $page_size=25, $margin = true) {
 			if($i==$current) {
 				echo '<span class="current">'.$i.'</span>';
 			} else {
-				echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+				if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+				echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
 			}
 		}
 
 		if($total_pages>$end) {
 			$i = $total_pages;
 			echo '<span>...</span>';
-			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+			if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
 		}
 	} else {
 		if($current>2) {
@@ -279,7 +282,8 @@ function do_pages($total, $page_size=25, $margin = true) {
 
 	if($total < 0 || $current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="?page='.$i.$query.'">'._('siguiente').' &#187;</a>';
+		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.'>'._('siguiente').' &#187;</a>';
 	} else {
 		echo '<span class="nextprev">&#187; '._('siguiente'). '</span>';
 	}

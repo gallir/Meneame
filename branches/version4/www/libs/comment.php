@@ -296,7 +296,7 @@ class Comment {
 
 	// Add calls for tooltip javascript functions
 	function put_comment_tooltips(&$str) {
-		return preg_replace('/(^|[\(,;\.\s¿¡])#([1-9][0-9]*)/', "$1<a class='tooltip c:$this->link-$2' href=\"".$this->link_permalink."/000$2\">#$2</a>", $str);
+		return preg_replace('/(^|[\(,;\.\s¿¡])#([1-9][0-9]*)/', "$1<a class='tooltip c:$this->link-$2' href=\"".$this->link_permalink."/000$2\" rel=\"nofollow\">#$2</a>", $str);
 	}
 
 	function same_text_count($min=30) {
