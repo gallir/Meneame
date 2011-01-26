@@ -212,7 +212,7 @@ case 2:
 
 	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 
-	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id and user_id = comment_user_id ORDER BY $order_field $limit", "Comment");
+	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
 		echo '<ol class="comments-list">';
 		foreach($comments as $comment) {

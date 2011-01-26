@@ -20,14 +20,18 @@ class Comment {
 	var $read = false;
 	var $ip = '';
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM comments LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id) LEFT JOIN votes ON (@user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id) LEFT JOIN media ON (media.type='comment' and media.id = comment_id and media.version = 0), users ";
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM comments
+	LEFT JOIN users on (user_id = comment_user_id)
+	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id)
+	LEFT JOIN votes ON (@user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id)
+	LEFT JOIN media ON (media.type='comment' and media.id = comment_id and media.version = 0) ";
 
 	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
 
 
 	static function from_db($id) {
 		global $db, $current_user;
-		if(($result = $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id and user_id = comment_user_id", 'Comment'))) {
+		if(($result = $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id", 'Comment'))) {
 			$result->order = $result->c_order; // Order is a reserved word in SQL
 			$result->read = true;
 			if($result->c_order == 0) $result->update_order();
@@ -111,7 +115,7 @@ class Comment {
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
-		if(($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $id and user_id = comment_user_id"))) {
+		if(($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $id"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->order = $this->c_order; // Order is a reserved word in SQL
 			$this->read = true;
@@ -123,17 +127,7 @@ class Comment {
 	}
 
 	function read_basic() {
-		global $db, $current_user;
-		$id = $this->id;
-		if(($result = $db->get_row("SELECT".Comment::SQL_BASIC."WHERE comment_id = $id"))) {
-			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
-			$this->order = $this->c_order; // Order is a reserved word in SQL
-			$this->read = true;
-			if($this->c_order == 0) $this->update_order();
-			return true;
-		}
-		$this->read = false;
-		return false;
+		return $this->read();
 	}
 
 	function check_visibility() {

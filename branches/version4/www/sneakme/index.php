@@ -222,7 +222,7 @@ function onLoad(lat, lng, zoom, icon) {
 </script>
 <?
 } else {
-	$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where and user_id = post_user_id $order_by $limit", 'Post');
+	$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where $order_by $limit", 'Post');
 	if ($posts) {
 		echo '<ol class="comments-list">';
 		$time_read = 0;
@@ -244,7 +244,7 @@ function onLoad(lat, lng, zoom, icon) {
 			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
 			$answers = $db->get_results($sql);
 			*/
-			$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE user_id = post_user_id and conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
+			$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
 
 			if ($answers) {
 				echo '<div style="padding-left: 40px; padding-top: 10px">';
