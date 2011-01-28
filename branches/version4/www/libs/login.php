@@ -36,8 +36,8 @@ class UserAuth {
 
 				$key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
 
-				if ( !$user || !$user->user_id > 0 || $key !== $userInfo[1] || 
-					$user->user_level == 'disabled' || $user->user_level == 'autodisabled' || 
+				if ( !$user || !$user->user_id > 0 || $key !== $userInfo[1] ||
+					$user->user_level == 'disabled' || $user->user_level == 'autodisabled' ||
 					empty($user->user_date)) {
 						$this->Logout();
 						// Make sure mysql @user_id is reset
@@ -60,9 +60,10 @@ class UserAuth {
 				}
 			}
 		}
-		// Mysql variable to use en join queries
-		$db->query("set @user_id = $this->user_id");
-		$db->query("set @ip_int = ". $globals['user_ip_int']);
+		// Mysql variables to use en join queries
+		$db->query("set @user_id = $this->user_id, @ip_int = ".$globals['user_ip_int'].
+			", @ip_int = ".$globals['user_ip_int'].
+			", @enabled_votes = date_sub(now(), interval ". intval($globals['time_enabled_votes']/3600). " hour)");
 	}
 
 
@@ -134,11 +135,11 @@ class UserAuth {
 	function SetUserCookie() {
 		global $globals;
 		$expiration = $globals['now'] + 86400 * 1000;
-		setcookie("mnm_user", 
+		setcookie("mnm_user",
 					$this->user_id.
 					':'.$this->mnm_user[1].
 					':'.$globals['now'].
-					':'.$this->signature($this->user_id.$this->mnm_user[1].$globals['now']), 
+					':'.$this->signature($this->user_id.$this->mnm_user[1].$globals['now']),
 					$expiration, $globals['base_url'], null, false, true);
 	}
 
@@ -204,7 +205,7 @@ class UserAuth {
 		if (! $all) $extra = "and clon_ip like 'COOK:%'";
 		else $extra = '';
 
-		// This as from 
+		// This as from
 		$a = $db->get_col("select clon_to as clon from clones where clon_from = $this->user_id and clon_date > date_sub(now(), interval $hours hour) $extra");
 		// This as to
 		$b = $db->get_col("select clon_from as clon from clones where clon_to = $this->user_id and clon_date > date_sub(now(), interval $hours hour) $extra");
