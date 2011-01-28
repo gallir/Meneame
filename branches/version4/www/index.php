@@ -103,7 +103,8 @@ $order_by = "ORDER BY link_date DESC ";
 
 if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM links $from WHERE $where");
 
-$links = $db->object_iterator("SELECT".Link::SQL."$from WHERE $where $order_by LIMIT $offset,$page_size", "Link");
+// We use a "INNER JOIN" in order to avoid "order by" whith filesorting. It was very bad for high pages
+$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links $from WHERE $where $order_by LIMIT $offset,$page_size) as id USING (link_id)", "Link");
 if ($links) {
 	foreach($links as $link) {
 		$link->print_summary();

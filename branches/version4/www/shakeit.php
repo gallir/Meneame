@@ -111,7 +111,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-$links = $db->object_iterator("SELECT".Link::SQL."$from WHERE $where $order_by LIMIT $offset,$page_size", "Link");
+$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links $from WHERE $where $order_by LIMIT $offset,$page_size) as id USING (link_id)", "Link");
 if ($links) {
 	foreach($links as $link) {
 		if ($link->votes == 0 && $link->author != $current_user->user_id) continue;
