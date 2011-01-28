@@ -1238,7 +1238,7 @@ class Link {
 		$text = '';
 		foreach ($words as $w => $v) {
 			$i++;
-			if ($i > 12 or ($i > 8 && $v > $maxid/2000)) break;
+			if ($i > 14 or ($i > 8 && $v > $maxid/2000)) break;
 			$text .= "$w ";
 		}
 
