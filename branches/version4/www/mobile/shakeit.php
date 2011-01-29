@@ -20,7 +20,7 @@ do_tabs("main","shakeit");
 echo '<div id="newswrap">'."\n";
 
 $rows = Link::count('queued');
-$links = $db->object_iterator("SELECT".Link::SQL." WHERE link_status='queued' ORDER BY link_date DESC LIMIT $offset,$page_size", "LinkMobile");
+$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links WHERE link_status='queued' ORDER BY link_date DESC LIMIT $offset,$page_size) as id USING (link_id)", "LinkMobile");
 if ($links) {
 	foreach($links as $link) {
 		$link->print_summary();
