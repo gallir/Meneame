@@ -75,6 +75,17 @@ class Post {
 				&& !$db->get_var("select post_id from posts where post_user_id=$current_user->user_id and post_date > date_sub(now(), interval ".$globals['posts_period']." second) order by post_id desc limit 1") > 0;
 	}
 
+	static function count($force = false) {
+		global $db;
+
+		$count = get_count('posts');
+		if ($count === false || $force) {
+			$count = $db->get_var("select count(*) from posts");
+			set_count('posts', $count);
+		}
+		return $count;
+	}
+
 	function store($full = true) {
 		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;

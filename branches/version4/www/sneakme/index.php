@@ -59,12 +59,13 @@ switch ($argv[0]) {
 	case '_all':
 		$tab_option = 1;
 		//$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
-		$where = "true";
+		$where = "post_id > 0";
 		$order_by = "ORDER BY post_id desc";
 		$limit = "LIMIT $offset,$page_size";
 		//$rows = $db->get_var("SELECT count(*) FROM posts");
+		$rows = Post::count();
 		$min_date = date("Y-m-d 00:00:00", time() - 86400*10);
-		$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
+		//$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
 		$rss_option="sneakme_rss2.php";
 		break;
 
@@ -222,7 +223,8 @@ function onLoad(lat, lng, zoom, icon) {
 </script>
 <?
 } else {
-	$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where $order_by $limit", 'Post');
+	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
+	//$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where $order_by $limit", 'Post');
 	if ($posts) {
 		echo '<ol class="comments-list">';
 		$time_read = 0;
@@ -240,10 +242,6 @@ function onLoad(lat, lng, zoom, icon) {
 
 		// Print "conversation" for a given note
 		if ($post_id > 0) {
-			/*
-			$sql = "SELECT conversation_from as post_id FROM conversations, posts WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
-			$answers = $db->get_results($sql);
-			*/
 			$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
 
 			if ($answers) {
