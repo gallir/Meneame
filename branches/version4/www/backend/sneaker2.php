@@ -40,10 +40,9 @@ if(!empty($_REQUEST['items']) && intval($_REQUEST['items']) > 0) {
 	$max_items = intval($_REQUEST['items']);
 }
 
-if ($max_items < 1 || $max_items > 50) {
-	$max_items = 50; // Avoid abuse
+if ($max_items < 1 || $max_items > 100) {
+	$max_items = 100; // Avoid abuse
 }
-
 
 if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
@@ -122,6 +121,7 @@ if(count($events) > 0 ) {
 $counter=0;
 $data['events'] = array_values($events);
 echo json_encode($data);
+exit(0);
 
 function check_chat() {
 	global $db, $current_user, $now, $now_f, $globals, $events;
@@ -421,6 +421,7 @@ function get_post($time, $type, $postid, $userid) {
 	$json['who'] = $event->user_login;
 	$json['status'] = _('nótame');
 	$json['title'] = put_smileys(text_to_summary(preg_replace('/(@[\S.-]+)(,\d+)/','$1',$event->post_content),130));
+	if (mb_strlen(trim($json['title'])) == 0) $json['title'] = '...';
 	$json['votes'] = 0;
 	$json['com'] = 0;
 	$json['uid'] = $userid;

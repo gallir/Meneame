@@ -269,6 +269,7 @@ function onLoad(lat, lng, zoom, icon) {
 echo '</div>';
 if ($rows > 15) do_footer_menu();
 do_footer();
+exit(0);
 
 function do_posts_tabs($tab_selected, $username) {
 	global $globals, $current_user;

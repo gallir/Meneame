@@ -24,7 +24,7 @@ function post_load_form(id, container) {
 	$.get(url, function (html) {
 			if (html.length > 0) {
 				if (html.match(/^ERROR:/i)) {
-					alert(html);
+					mDialog.notify(html, 2);
 				} else {
 					$('#'+container).html(html);
 				}

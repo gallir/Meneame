@@ -905,12 +905,11 @@ class Link {
 		}
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
-		// Allowed difference up to 3%$karma_pos_user_high
 		if ($karma_pos_user_low/$karma_pos_user_high > 1.15) {
 			$perc = intval($vlow/($vlow+$vhigh) * 100);
 			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
 		}
-		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.07, 4), $karma_pos_user_low);
+		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.1, 4), $karma_pos_user_low); // Allowed difference up to 10% of $karma_pos_user_high
 		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
 
 		// Small quadratic punishment for links having too many negatives

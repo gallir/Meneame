@@ -103,4 +103,5 @@ if (!empty($new_comment_error)) {
 	echo '</script>';
 }
 do_footer();
+exit(0);
 ?>

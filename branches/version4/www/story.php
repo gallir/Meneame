@@ -332,6 +332,7 @@ echo '</rdf:RDF>'."\n".'-->'."\n";
 
 $globals['tag_status'] = $globals['link']->status;
 do_footer();
+exit(0);
 
 
 function print_story_tabs($option) {

@@ -118,6 +118,7 @@ echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
+exit(0);
 
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;

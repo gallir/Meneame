@@ -23,6 +23,7 @@ if (!$link->read()) {
 	die;
 }
 
+// ignore_user_abort(); //run script in background
 // Send the trackback for the main link
 if (($tbs = $db->get_col("select trackback_id from trackbacks where trackback_link_id = $link->id and trackback_status='pendent'"))) {
 	foreach ($tbs as $tb_id) {

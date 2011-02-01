@@ -46,7 +46,7 @@ if($_SERVER['HTTP_HOST']) {
 	}
 
 	// Check mobile/TV versions
-	if (preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera Mini|\/MIDP|Portable|webOS/i', $_SERVER['HTTP_USER_AGENT'])) {
+	if (preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera Mini|\/MIDP|Portable|webOS|Kindle/i', $_SERVER['HTTP_USER_AGENT'])) {
 		$globals['mobile'] = 1;
 	} else {
 		$globals['mobile'] = 0;

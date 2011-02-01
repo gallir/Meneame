@@ -22,12 +22,12 @@ if ($media->access == 'public' || $current_user->user_id > 0) {
 	header('Last-Modified: ' . date('r', $media->date));
 	header('Cache-Control: max-age=3600');
 	if ($media->size > 0) {
-		header("Content-lenght: $media->size");
+		header("Content-Length: $media->size");
 	}
 	$media->readfile();
 } else {
 	header("Content-Type: text/html");
 	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
 }
-exit;
+exit(0);
 ?>
