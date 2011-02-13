@@ -64,6 +64,12 @@ def save_feed_url(blog_id, url):
 
 def read_feed(blog_id, data):
 	entries = 0
+
+	c = DBM.cursor('update')
+	c.execute("update blogs set blog_feed_read = now() where blog_id = %s", (blog_id))
+	DBM.commit()
+	now = time.time()
+
 	try:
 		if data['read']:
 			modified = time.gmtime(data['read'])
@@ -74,19 +80,16 @@ def read_feed(blog_id, data):
 		print "connection failed (%s) %s" % (e, data['feed'])
 		return False
 
-	c = DBM.cursor('update')
-	c.execute("update blogs set blog_feed_read = now() where blog_id = %s", (blog_id))
-	DBM.commit()
-
 	if not doc.entries or doc.status == 304: return entries
 
 	for e in doc.entries:
 		timestamp = time.mktime(e.updated_parsed)
+		if timestamp > now: timestamp = now
 		if timestamp < time.time() - 86400*3 or (data['read'] and timestamp <  data['read']):
 			pass
 		else:
 			try:
-				c.execute("insert into rss (blog_id, user_id, date, date_parsed, title, url) values (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s), %s, %s)", (blog_id, data['user_id'], time.time(), timestamp, e.title, e.link))
+				c.execute("insert into rss (blog_id, user_id, date, date_parsed, title, url) values (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s), %s, %s)", (blog_id, data['user_id'], now, timestamp, e.title, e.link))
 			except _mysql_exceptions.IntegrityError, e:
 				""" Duplicated url, ignore it"""
 				#print "insert failed (%s)" % (e,)
