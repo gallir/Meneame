@@ -1,0 +1,9 @@
+
+db = "meneame"
+dbuser = "meneame"
+dbpass = ""
+dbserver = {'update': "127.0.0.1",  # master server
+			'select': "127.0.0.1",  # server to do the selects
+			}
+
+

@@ -21,10 +21,10 @@ foreach ($res as $l) {
 	//echo "$l $link->title URL: $link->url<br>";
 	echo "<h2><a href='$link->url'>$link->title</a></h2>";
 	if ($link->thumb_status == 'unknown' || $id >0) {
-		if ($link->get_thumb()) {
+		if ($link->get_thumb(true)) {
 			echo "<h3>New</h3>";
 		}
-			echo "\n<!--\n".$link->image_parser->html."\n-->\n";
+			//echo "\n<!--\n".$link->image_parser->html."\n-->\n";
 	}
 	if ($link->thumb) {
 		echo "<p><img src='$link->thumb' width='$link->thumb_x' height='$link->thumb_y'></p>";
