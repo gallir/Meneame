@@ -32,7 +32,7 @@ meta_get_current();
 
 
 
-$page_size = 15;
+$page_size = 20;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
 $globals['ads'] = true;

@@ -53,7 +53,7 @@
 
 {% if globals.link %}
 	<link rel="pingback" href="http://{{globals.server_name}}{{globals.base_url}}xmlrpc.php"/>
-	<link rel="prefetch" href="{{ globals.link.url|escape }}"/>
+	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
 {% endif %}
 
 <link rel="microsummary" type="application/x.microsummary+xml" href="{{globals.base_url}}microsummary.xml" />

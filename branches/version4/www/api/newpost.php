@@ -52,7 +52,7 @@ if(!empty($_REQUEST['charset']) && ! preg_match('/utf-*8/i', $_REQUEST['charset'
 	$_REQUEST['text'] = @iconv($_REQUEST['charset'], 'UTF-8//IGNORE', $_REQUEST['text']);
 }
 
-$text = clean_text($_REQUEST['text'], 0, false, 300);
+$text = clean_text($_REQUEST['text'], 0, false, $globals['posts_len']);
 
 if (mb_strlen($text) < 5) {
 	echo 'KO: ' . _('texto muy corto') . $text;
