@@ -2,7 +2,7 @@ import urllib2
 import re
 import MySQLdb
 import _mysql_exceptions
-from dbconf import *
+import dbconf
 import feedparser
 import time
 
@@ -18,7 +18,7 @@ class DBM(object):
 	@classmethod
 	def cursor(cls, c_type="select"):
 		if not cls.connections[c_type]:
-			cls.connections[c_type] = MySQLdb.connect(host = dbserver[c_type], user = dbuser, passwd = dbpass, db = db, charset = "utf8", use_unicode = True)
+			cls.connections[c_type] = MySQLdb.connect(host = dbconf.dbserver[c_type], user = dbconf.dbserver['user'], passwd = dbconf.dbserver['pass'], db = dbconf.dbserver['db'], charset = "utf8", use_unicode = True)
 		return cls.connections[c_type].cursor()
 
 	@classmethod
@@ -85,7 +85,7 @@ def read_feed(blog_id, data):
 	for e in doc.entries:
 		timestamp = time.mktime(e.updated_parsed)
 		if timestamp > now: timestamp = now
-		if timestamp < time.time() - 86400*3 or (data['read'] and timestamp <  data['read']):
+		if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (data['read'] and timestamp <  data['read']):
 			pass
 		else:
 			try:

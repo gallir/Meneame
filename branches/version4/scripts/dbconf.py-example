@@ -1,9 +1,20 @@
+domain = "gallir.meneame.net/meneame"
 
-db = "meneame"
-dbuser = "meneame"
-dbpass = ""
-dbserver = {'update': "127.0.0.1",  # master server
-			'select': "127.0.0.1",  # server to do the selects
-			}
+dbserver = {
+	'db': "meneame",
+	'user': "meneame",
+	'pass': "",
+	'update': "127.0.0.1",  # master server
+	'select': "127.0.0.1",  # server to do the selects
+}
 
-
+blogs = {
+	'min_karma': 6.5, # minimum user karma
+	'days_published': 120, # days to check if it was published
+	'days_to_keep': 10, # olders are deleted from the database
+	'min_hours': 24, # entries with more that this are ignored
+	'viewer': '/rsss.php', #page to see last entries
+	'newpost': '/api/newpost.php', #page to see last entries
+	'post_user': 'meneame.net', # The user to post 
+	'post_key': '', # The API key
+ }

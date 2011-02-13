@@ -2,8 +2,12 @@
 
 import MySQLdb
 import time
-
+import gettext
+_ = gettext.gettext
+import dbconf
 from utils import *
+import urllib
+import urllib2
 
 """
 ALTER TABLE  `meneame`.`users` ADD INDEX (  `user_url` );
@@ -29,10 +33,31 @@ ALTER TABLE  `meneame`.`rss` ADD UNIQUE ( `url` );
 """
 
 def main():
-	blogs = get_candidate_blogs(120, 6.5)
+
+	""" Delete old entries """
+	c = DBM.cursor('update')
+	c.execute("delete from rss where date < date_sub(now(), interval %s day)", (dbconf.blogs['days_to_keep'],))
+	c.close()
+	DBM.commit()
+
+	users = set()
+	blogs = get_candidate_blogs(dbconf.blogs['days_published'], dbconf.blogs['min_karma'])
 	for id in blogs:
 		print blogs[id]
-		read_feed(id, blogs[id])
+		entries = read_feed(id, blogs[id])
+		if entries > 0:
+			users.add(blogs[id]['user'])
+
+	post = ''
+	if dbconf.blogs['post_user'] and dbconf.blogs['post_key'] and users:
+		for u in users:
+			post += "@" + u + " "
+		post += _('tienen un nuevo apunte en su blog: ') + 'http://'+dbconf.domain+dbconf.blogs['viewer']
+		print post
+		f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
+		print f.read(100)
+		f.close()
+
 
 def get_candidate_blogs(days, min_karma):
 	now = time.time();
