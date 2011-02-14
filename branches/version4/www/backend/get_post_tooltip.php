@@ -37,7 +37,14 @@ if (!empty($_GET['id'])) {
 		}
 
 		if (!$id > 0) {
-			echo '<strong>Error: </strong>' . _('usuario o nota no encontrada');
+
+			// Check if the user exists
+			$uid = (int) $db->get_var("select user_id from users where user_login = '$user' limit 1");
+			if (! $uid) {
+				echo '<strong>Error: </strong>' . _('usuario inexistente');
+			} else {
+				echo '<strong>Error: </strong>' . _('nota no encontrada');
+			}
 			die;
 		}
 	} else {
