@@ -1,0 +1,9 @@
+<div class="sidebox"><div class="header">
+<h4><a href="{{url}}">{{title}}</a></h4>
+</div>
+<div class="comments"><ul>
+{% for obj in objects %}
+	<li><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="tooltip u:{{ obj.user_id }} avatar"/>
+	<p><strong>{{obj.username}}</strong> <a class="tooltip_" href="{{obj.link}}" rel="nofollow">{{obj.title}}</a></p></li>
+{% endfor %}
+</ul></div></div>

@@ -178,6 +178,7 @@ do_banner_right();
 if ($rows > 20) {
 	do_best_posts();
 	do_best_comments();
+	do_last_blogs();
 }
 do_banner_promotions();
 echo '</div>' . "\n";

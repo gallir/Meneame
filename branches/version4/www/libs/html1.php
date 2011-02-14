@@ -694,6 +694,39 @@ function do_best_posts() {
 	}
 }
 
+function do_last_blogs() {
+	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
+	$foo = new Comment();
+	$output = '';
+
+	$key = 'last_blogs_'.$globals['css_main'];
+	if(memcache_mprint($key)) return;
+
+
+	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date_parsed desc limit 10");
+	if ($entries) {
+		$objects = array();
+		$title = _('últimos apuntes');
+		$url = $globals['base_url'].'rsss.php';
+		foreach ($entries as $entry) {
+			$obj = new stdClass();
+			$obj->user_id = $entry->user_id;
+			$obj->avatar = $entry->user_avatar;
+			$obj->title = text_to_summary($entry->title, 75);
+			$obj->link = $entry->url;
+			$obj->username = $entry->user_login;
+			$objects[] = $obj;
+		}
+		$vars = compact('objects', 'title', 'url');
+		$output = Haanga::Load('last_blogs.html', $vars, true);
+		echo $output;
+		memcache_madd($key, $output, 300);
+	}
+}
+
 function do_error($mess = false, $error = false, $send_status = true) {
 	global $globals;
 	$globals['ads'] = false;
