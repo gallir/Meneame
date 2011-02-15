@@ -16,6 +16,8 @@ ALTER TABLE  `blogs` ADD  `blog_feed` CHAR( 128 ) NULL DEFAULT NULL AFTER  `blog
 ADD  `blog_feed_checked` TIMESTAMP NULL AFTER  `blog_feed`,
 ADD  `blog_feed_read` TIMESTAMP NULL AFTER  `blog_feed_checked`;
 
+ALTER TABLE  `blogs` ADD  `blog_title` CHAR( 128 ) NULL DEFAULT NULL;
+
 CREATE TABLE  `meneame`.`rss` (
 `blog_id` INT UNSIGNED NOT NULL ,
 `user_id` INT UNSIGNED NOT NULL DEFAULT  '0',
@@ -83,9 +85,9 @@ def get_candidate_blogs(days, min_karma):
 				if not max_entries > 0:
 					#print "Max entries <= 0:", n_entries, user_karma, blog_url
 					continue
-				
-				if not blog_feed and (not blog_checked or blog_checked < now - 86400):
-					blog_feed = get_feed_url(blog_url, blog_id)
+
+				if (not blog_feed and (not blog_checked or blog_checked < now - 86400)) or (blog_feed and blog_checked < now - 86400*7):
+					blog_feed = get_feed_info(blog_url, blog_id)
 
 				if blog_feed and (not blog_feed_read or blog_feed_read < now - 3600):
 					blogs[blog_id] = {"url":blog_url, "feed":blog_feed, "user": user_login, "user_id": user_id, "karma": user_karma, "read": blog_feed_read, "max": max_entries}

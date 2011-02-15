@@ -1,4 +1,5 @@
 import urllib2
+from BeautifulSoup import BeautifulSoup,  SoupStrainer
 import re
 import MySQLdb
 import _mysql_exceptions
@@ -6,8 +7,7 @@ import dbconf
 import feedparser
 import time
 
-re_link = re.compile(r'<link[^>]+(text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+>',re.I)
-re_body = re.compile(r'< *body.*>', re.I)
+re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
 
 class DBM(object):
@@ -33,34 +33,38 @@ class DBM(object):
 
 
 
-def get_feed_url(url, blog_id = None):
+def get_feed_info(url, blog_id = None):
 	""" Get feed url by analysing the HTML """
 	feed_url = None
+	title = None
 	try:
 		doc = urllib2.urlopen(url=url, timeout=10)
+		soup = BeautifulSoup(doc, parseOnlyThese=SoupStrainer('head'))
+		if soup.head.title:
+			title = soup.head.title.string.strip()
 	except:
 		pass
 	else:
-		lines = 0
-		for l in doc:
-			if lines > 1 and re_body.search(l): break
-			res = re_link.search(l)
-			if res:
-				g = re_href.search(res.group(0))
-				if g and g.group(1).find('comment') < 0:
-					feed_url = g.group(1)
-					if feed_url[0:5] != 'http:':
-						feed_url = url + '/' + feed_url
-			lines += 1
+		""" Search for feed urls """
+		all_res = re_link.findall(unicode(soup))
+		for line in all_res:
+			g = re_href.search(line)
+			if g and g.group(1).find('comment') < 0:
+				feed_url = g.group(1)
+				if feed_url[0:5] != 'http:':
+					feed_url = url + '/' + feed_url
+				break
+
 	if blog_id:
-		save_feed_url(blog_id, feed_url)
+		save_feed_info(blog_id, feed_url, title)
+
 	return feed_url
 
-def save_feed_url(blog_id, url):
-	""" Save feed_url and last checked time in blogs table """
+def save_feed_info(blog_id, url,title = None):
+	""" Save feed_url, title and last checked time in blogs table """
 	c = DBM.cursor('update')
-	print "Updating to blog: %d -%s-" % (blog_id, url)
-	c.execute("update blogs set blog_feed = %s, blog_feed_checked = now() where blog_id = %s", (url, blog_id))
+	print "Updating to blog: %d %s -%s-" % (blog_id, title, url)
+	c.execute("update blogs set blog_feed = %s, blog_title = %s, blog_feed_checked = now() where blog_id = %s", (url, title, blog_id))
 	c.close()
 	DBM.commit()
 
