@@ -43,16 +43,16 @@ def main():
 	users = set()
 	blogs = get_candidate_blogs(dbconf.blogs['days_published'], dbconf.blogs['min_karma'])
 	for id in blogs:
-		print blogs[id]
+		#print blogs[id]
 		entries = read_feed(id, blogs[id])
 		if entries > 0:
 			users.add(blogs[id]['user'])
 
-	post = ''
 	if dbconf.blogs['post_user'] and dbconf.blogs['post_key'] and users:
+		post = _('Nuevo apunte en el blog de: ')
 		for u in users:
 			post += "@" + u + " "
-		post += _('tienen un nuevo apunte en su blog: ') + 'http://'+dbconf.domain+dbconf.blogs['viewer']
+		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
 		f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
 		print f.read(100)
@@ -69,18 +69,28 @@ def get_candidate_blogs(days, min_karma):
 		base_url = blog_url.replace('http://', '').replace('www.', '')
 		if counter < days and not is_site_banned(base_url):
 			c = DBM.cursor()
-			c.execute("select user_login, user_id from users where user_url in (%s, %s, %s, %s, %s, %s) and user_karma > %s order by user_karma desc limit 1",
+			c.execute("select user_login, user_id, user_karma from users where user_url in (%s, %s, %s, %s, %s, %s) and user_karma > %s order by user_karma desc limit 1",
 					('http://'+base_url, 'http://www.'+base_url, 'http://'+base_url+'/', 'http://www.'+base_url+'/', base_url, 'www.'+base_url, min_karma))
 			r = c.fetchone()
-			c.close()
 			if r is not None:
+				user_login, user_id, user_karma = r
+
+				""" Check the number of remaining entries """
+				c.execute("select count(*) from rss where blog_id = %s and date > date_sub(now(), interval 1 day)", (blog_id,))
+				n_entries, = c.fetchone()
+				""" Calculate the number of remaining entries """
+				max_entries = int(round(user_karma/dbconf.blogs['karma_divisor'])) - n_entries
+				if not max_entries > 0:
+					#print "Max entries <= 0:", n_entries, user_karma, blog_url
+					continue
+				
 				if not blog_feed and (not blog_checked or blog_checked < now - 86400):
 					blog_feed = get_feed_url(blog_url, blog_id)
 
 				if blog_feed and (not blog_feed_read or blog_feed_read < now - 3600):
-					blogs[blog_id] = {"url":blog_url, "feed":blog_feed, "user": r[0], "user_id": r[1], "read": blog_feed_read}
+					blogs[blog_id] = {"url":blog_url, "feed":blog_feed, "user": user_login, "user_id": user_id, "karma": user_karma, "read": blog_feed_read, "max": max_entries}
 					#print "Added ", blog_id, blogs[blog_id]
-	cursor.close ()
+	cursor.close()
 	DBM.close()
 	return blogs
 

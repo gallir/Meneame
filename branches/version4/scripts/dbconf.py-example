@@ -10,6 +10,7 @@ dbserver = {
 
 blogs = {
 	'min_karma': 6.5, # minimum user karma
+	'karma_divisor': 4, # The number of entries per days is round(karma/karma_divisor)
 	'days_published': 120, # days to check if it was published
 	'days_to_keep': 10, # olders are deleted from the database
 	'min_hours': 24, # entries with more that this are ignored

@@ -41,8 +41,9 @@ def get_feed_url(url, blog_id = None):
 	except:
 		pass
 	else:
+		lines = 0
 		for l in doc:
-			if re_body.search(l): break
+			if lines > 1 and re_body.search(l): break
 			res = re_link.search(l)
 			if res:
 				g = re_href.search(res.group(0))
@@ -50,6 +51,7 @@ def get_feed_url(url, blog_id = None):
 					feed_url = g.group(1)
 					if feed_url[0:5] != 'http:':
 						feed_url = url + '/' + feed_url
+			lines += 1
 	if blog_id:
 		save_feed_url(blog_id, feed_url)
 	return feed_url
@@ -70,6 +72,7 @@ def read_feed(blog_id, data):
 	DBM.commit()
 	now = time.time()
 
+	print "Reading ", data['url'], data['feed']
 	try:
 		if data['read']:
 			modified = time.gmtime(data['read'])
@@ -80,19 +83,24 @@ def read_feed(blog_id, data):
 		print "connection failed (%s) %s" % (e, data['feed'])
 		return False
 
-	if not doc.entries or doc.status == 304: return entries
+	if not doc.entries or doc.status == 304:
+		print "Not modified"
+		return entries
 
 	for e in doc.entries:
+		if entries >= data['max']: break
+
 		timestamp = time.mktime(e.updated_parsed)
 		if timestamp > now: timestamp = now
 		if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (data['read'] and timestamp <  data['read']):
+			#print "Old entry:", e.link, e.updated, e.updated_parsed, time.time() - timestamp
 			pass
 		else:
 			try:
 				c.execute("insert into rss (blog_id, user_id, date, date_parsed, title, url) values (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s), %s, %s)", (blog_id, data['user_id'], now, timestamp, e.title, e.link))
 			except _mysql_exceptions.IntegrityError, e:
 				""" Duplicated url, ignore it"""
-				#print "insert failed (%s)" % (e,)
+				print "insert failed (%s)" % (e,)
 				pass
 			else:
 				print "Added: ", e.link
