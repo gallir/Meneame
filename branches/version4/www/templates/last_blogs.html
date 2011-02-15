@@ -1,7 +1,7 @@
-<div class="sidebox"><div class="header">
+<div class="sidebox-blue"><div class="header-blue">
 <h4><a href="{{url}}">{{title}}</a></h4>
 </div>
-<div class="comments"><ul>
+<div class="comments-blue"><ul>
 {% for obj in objects %}
 	<li><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="tooltip u:{{ obj.user_id }} avatar"/>
 	<p><strong>{{obj.username}}</strong> <a class="tooltip_" href="{{obj.link}}" rel="nofollow">{{obj.title}}</a></p></li>

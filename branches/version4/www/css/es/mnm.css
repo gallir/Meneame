@@ -534,7 +534,22 @@ border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
+.sidebox-blue {
+font-family:Helvetica, Arial, sans-serif;
+margin-bottom:20px;
+padding-bottom:6px;
+background: #9acaff url(../../img/common/sidebar-header02.png) repeat-x;
+border:1px solid #0000ff;
+border-radius: 3px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+}
+
 .sidebox .header a {
+color:#fff;
+}
+
+.sidebox-blue .header-blue a {
 color:#fff;
 }
 
@@ -542,7 +557,20 @@ color:#fff;
 height:22px;
 }
 
+.sidebox-blue .header-blue {
+height:22px;
+}
+
 .sidebox h4 {
+font-size: 16px;
+text-align:left;
+color:#fff;
+padding-left: 10px;
+margin: 2px 0 0 0;
+text-align: left;
+}
+
+.sidebox-blue h4 {
 font-size: 16px;
 text-align:left;
 color:#fff;
@@ -628,7 +656,22 @@ list-style-type: none;
 padding: 0;
 }
 
-.sidebox .comments li{
+.sidebox-blue .comments-blue ul {
+margin-top: 10px;
+list-style-type: none;
+padding: 0;
+}
+
+.sidebox .comments li {
+clear: left;
+display:block;
+font-size: 90%;
+color:#039;
+margin: 0px 10px 10px 0;
+vertical-align: top;
+}
+
+.sidebox-blue .comments-blue li {
 clear: left;
 display:block;
 font-size: 90%;
@@ -642,7 +685,16 @@ float:left;
 margin: 3px 0 8px 0;
 }
 
+.sidebox-blue .comments-blue li img {
+float:left;
+margin: 3px 10px 8px 10px;
+}
+
 .sidebox .comments li p {
+margin-left: 28px;
+}
+
+.sidebox-blue .comments-blue li p {
 margin-left: 28px;
 }
 
