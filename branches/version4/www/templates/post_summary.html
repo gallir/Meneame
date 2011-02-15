@@ -13,12 +13,8 @@
 		{% if self.can_vote %}
 			{% if self.user_can_vote %}
 		 	<span id="c-votes-{{ self.id }}">
-			<a href="javascript:menealo_post({{ current_user.user_id }},{{ self.id }},1)" title="{% trans _('voto positivo')%}">
-				<img src="{{ globals.base_static }}img/common/vote-up02.png" width="18" height="16" alt="{% trans _('voto positivo')%}"/>
-			</a>&nbsp;
-		 	<a href="javascript:menealo_post({{ current_user.user_id}},{{ self.id}},-1)" title="{% trans _('voto negativo')%}">
-				<img src="{{ globals.base_static }}img/common/vote-down02.png" width="18" height="16" alt="{% trans _('voto negativo')%}"/>
-			</a>&nbsp;
+			<a href="javascript:menealo_post({{ current_user.user_id }},{{ self.id }},1)" title="{% trans _('voto positivo')%}"><img src="{{ globals.base_static }}img/common/vote-up02.png" width="18" height="16" alt="{% trans _('voto positivo')%}"/></a>&nbsp;
+		 	<a href="javascript:menealo_post({{ current_user.user_id}},{{ self.id}},-1)" title="{% trans _('voto negativo')%}"><img src="{{ globals.base_static }}img/common/vote-down02.png" width="18" height="16" alt="{% trans _('voto negativo')%}"/></a>&nbsp;
 		 	</span>
 			{% else %}
 				{% if self.voted > 0 %}
@@ -34,25 +30,17 @@
 		{% trans _('karma') %}: <span id="vk-{{ self.id }}">{{ self.karma }}</span>
 
 		{% if self.show_votes %}
-			<a class="fancybox" href="{{ globals.base_url }}backend/get_p_v.php?id={{ self.id }}">
-				<img src="{{ globals.base_static }}img/common/vote-info02.png" width="18" height="16" alt="+ info" title="{% trans _('¿quién ha votado?') %}"/>
-			</a>
+			<a class="fancybox" href="{{ globals.base_url }}backend/get_p_v.php?id={{ self.id }}"><img src="{{ globals.base_static }}img/common/vote-info02.png" width="18" height="16" alt="+ info" title="{% trans _('¿quién ha votado?') %}"/></a>
 		{% endif %}
 
 		{% if current_user.user_id > 0 %}
-			<a href="javascript:post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}">
-				<img src="{{ globals.base_static }}img/common/reply02.png" width="18" height="16"/>
-			</a>
+			<a href="javascript:post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}"><img src="{{ globals.base_static }}img/common/reply02.png" width="18" height="16"/></a>
 		{% endif %}
 
-		<a href="{% exec post_get_base_url self.id %}" title="permalink">
-			<img class="link-icon" src="{{ globals.base_static }}img/common/link-02.png" width="18" height="16" alt="link" title="{% trans _('enlace permanente') %}" />
-		</a>
+		<a href="{% exec post_get_base_url self.id %}" title="permalink"><img class="link-icon" src="{{ globals.base_static }}img/common/link-02.png" width="18" height="16" alt="link" title="{% trans _('enlace permanente') %}" /></a>
 
 		{% if current_user.user_id > 0 %}
-			<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite_post.php','{{ current_user.user_id }}','fav-{{ self.id }}',0,'{{ self.id }}')">
-				{% exec favorite_teaser current_user.user_id, self, 'post' %}
-			</a>
+			<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite_post.php','{{ current_user.user_id }}','fav-{{ self.id }}',0,'{{ self.id }}')">{% exec favorite_teaser current_user.user_id, self, 'post' %}</a>
 		{% endif %}
 		</div>
 
