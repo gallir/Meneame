@@ -538,7 +538,7 @@ border-radius: 3px;
 font-family:Helvetica, Arial, sans-serif;
 margin-bottom:20px;
 padding-bottom:6px;
-background: #9acaff url(../../img/common/sidebar-header02.png) repeat-x;
+background: #cce5ff url(../../img/common/sidebar-header02.png) repeat-x;
 border:1px solid #0000ff;
 border-radius: 3px;
 -moz-border-radius: 3px;
@@ -554,7 +554,7 @@ color:#fff;
 }
 
 .sidebox-blue a:hover {
-color:#fff;
+color:#0033AA;
 }
 
 .sidebox .header {
