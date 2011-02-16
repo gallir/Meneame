@@ -43,7 +43,8 @@ if (!empty($_GET['id'])) {
 			if (! $uid) {
 				echo '<strong>Error: </strong>' . _('usuario inexistente');
 			} else {
-				echo '<strong>Error: </strong>' . _('nota no encontrada');
+				// Redirect to the user info backend
+				header("Location: get_user_info.php?id=$uid");
 			}
 			die;
 		}
