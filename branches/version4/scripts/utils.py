@@ -35,25 +35,34 @@ class DBM(object):
 
 def get_feed_info(url, blog_id = None):
 	""" Get feed url by analysing the HTML """
+	print "Reading blog info ", url
 	feed_url = None
 	title = None
 	try:
-		doc = urllib2.urlopen(url=url, timeout=10)
+		doc = urllib2.urlopen(url=url, timeout=10).read()
 		soup = BeautifulSoup(doc, parseOnlyThese=SoupStrainer('head'))
-		if soup.head.title:
-			title = soup.head.title.string.strip()
+		if not soup.head:
+			""" Buggy blogs without <head> :( """
+			print "Parsing all"
+			soup = BeautifulSoup(doc)
+
+		if soup.title:
+			title = soup.title.string.strip()
 	except:
+		print soup
 		pass
 	else:
 		""" Search for feed urls """
 		all_res = re_link.findall(unicode(soup))
+		t_url = None
 		for line in all_res:
 			g = re_href.search(line)
 			if g and g.group(1).find('comment') < 0:
-				feed_url = g.group(1)
-				if feed_url[0:5] != 'http:':
-					feed_url = url + '/' + feed_url
-				break
+				t_url = g.group(1)
+				if t_url[0:5] != 'http:':
+					t_url = url + '/' + t_url
+				if not feed_url or len(t_url) < len(feed_url):
+					feed_url = t_url
 
 	if blog_id:
 		save_feed_info(blog_id, feed_url, title)

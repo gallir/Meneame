@@ -83,10 +83,10 @@ def get_candidate_blogs(days, min_karma):
 				""" Calculate the number of remaining entries """
 				max_entries = int(round(user_karma/dbconf.blogs['karma_divisor'])) - n_entries
 				if not max_entries > 0:
-					#print "Max entries <= 0:", n_entries, user_karma, blog_url
+					print "Max entries <= 0:", n_entries, user_karma, blog_url
 					continue
 
-				if (not blog_feed and (not blog_checked or blog_checked < now - 86400)) or (blog_feed and blog_checked < now - 86400*7):
+				if (not blog_feed and (not blog_checked or blog_checked < now - 86400)) or (blog_checked and blog_checked < now - 86400*7):
 					blog_feed = get_feed_info(blog_url, blog_id)
 
 				if blog_feed and (not blog_feed_read or blog_feed_read < now - 3600):
