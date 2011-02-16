@@ -9,13 +9,19 @@ dbserver = {
 }
 
 blogs = {
-	'min_karma': 6.5, # minimum user karma
-	'karma_divisor': 4, # The number of entries per days is round(karma/karma_divisor)
-	'days_published': 120, # days to check if it was published
-	'days_to_keep': 10, # olders are deleted from the database
-	'min_hours': 24, # entries with more that this are ignored
-	'viewer': '/rsss.php', #page to see last entries
-	'newpost': '/api/newpost.php', #page to see last entries
-	'post_user': 'meneame.net', # The user to post 
-	'post_key': '', # The API key
+	'min_karma': 6.5, 				# minimum user karma
+	'karma_divisor': 4, 			# The number of entries per days is round(karma/karma_divisor)
+	'days_published': 120, 			# days to check if it was published
+	'days_to_keep': 10, 			# olders are deleted from the database
+	'min_hours': 24,				# entries with more that this are ignored
+    ### settings for active users
+    'active_min_karma': 12,
+    'active_min_age': 180, 			# in days
+    'active_min_activity': 6, 		# in days since last user_modification (normally by karma calculation)
+
+    'viewer': '/rsss.php', 			# page to see last entries
+	'newpost': '/api/newpost.php',	# page to see last entries
+
+	'post_user': 'meneame.net', 	# The user to post
+	'post_key': '', 				# The API key
  }
