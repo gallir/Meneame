@@ -9,6 +9,7 @@ dbserver = {
 }
 
 blogs = {
+	'max_feeds': 10,				#max number of feeds to read in one execution
 	'min_karma': 6.5, 				# minimum user karma
 	'karma_divisor': 4, 			# The number of entries per days is round(karma/karma_divisor)
 	'days_published': 120, 			# days to check if it was published
