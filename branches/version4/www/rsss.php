@@ -54,7 +54,7 @@ if ($entries) {
 }
 echo '</table>';
 echo '<fieldset id="nota"><legend>'._('nota').'</legend>';
-echo _('Los enlaces son de apuntes de blogs indicados en el perfil de usuarios activos de Menéame, y que han logrado portada de Menéame en los últimos meses.');
+echo _('Los enlaces son de apuntes de blogs indicados en el perfil de usuarios activos de Menéame.');
 echo ' ';
 echo _('No tienen relación con meneame.net, ni han sido seleccionados por su comunidad de usuarios.');
 echo '</fieldset>';

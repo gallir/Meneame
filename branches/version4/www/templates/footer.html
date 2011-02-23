@@ -8,8 +8,8 @@
  contact info #}
 
 {% if globals.is_meneame %}
-	<li><a href="{{ globals.base_url }}{{ globals.legal }}">{% trans _('condiciones legales') %}</a>
-	<a href="{{ globals.base_url }}{{ globals.legal }}#tos">{% trans _('y de uso') %}</a>&nbsp;&#47;&nbsp;</li>
+	<li><a href="{{ globals.legal }}">{% trans _('condiciones legales') %}</a>
+	<a href="{{ globals.legal }}#tos">{% trans _('y de uso') %}</a>&nbsp;&#47;&nbsp;</li>
 	<li><a href="{{ globals.base_url }}faq-{{ globals.lang }}.php#we">{% trans _('quiénes somos') %}</a>&nbsp;&#47;&nbsp;</li>
 	<li>{% trans _('licencias') %}:&nbsp;
 	<a href="{{ globals.base_url }}COPYING">{% trans _('código') %}</a>,&nbsp;

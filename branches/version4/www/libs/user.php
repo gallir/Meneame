@@ -227,7 +227,7 @@ class User {
 		$user_email_register = $db->escape($this->email_register);
 		$user_names = $db->escape($this->names);
 		$user_public_info = $db->escape(htmlentities($this->public_info));
-		$user_url = $db->escape(htmlspecialchars($this->url));
+		$user_url = $db->escape(preg_replace('/\/+$/', '', htmlspecialchars($this->url))); // remove trailing "/s"
 		$user_adcode = $db->escape($this->adcode);
 		$user_adchannel = $db->escape($this->adchannel);
 		$user_phone = $db->escape($this->phone);

@@ -62,7 +62,7 @@ $globals['click_counter'] = 1; // Put a value since which id should show in "lin
 $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
-$globals['legal'] = 'legal.php';
+$globals['legal'] = '/legal.php';
 
 // Coefficient for links karma calculation
 $globals['min_decay'] = 0.25;
