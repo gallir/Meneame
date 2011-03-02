@@ -1118,6 +1118,10 @@ class Link {
 	function has_thumb() {
 		global $globals;
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
+			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
+				return $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
+			}
+
 			$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
 			if (is_readable($filepath)) {
