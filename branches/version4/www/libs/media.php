@@ -41,7 +41,7 @@ class Media {
 		if ( ($object = @S3::getObject($globals['Amazon_S3_media_bucket'], $uri, $output)) ) {
 			return $object;
 		}
-		syslog(LOG_NOTICE, "Meneame, failed to get $uri from S3");
+		syslog(LOG_NOTICE, "Meneame, failed to get $uri from S3 to $output");
 		@unlink($output);
 		return false;
 	}

@@ -11,7 +11,7 @@ class Upload {
 	static function get_cache_relative_dir($key = false) {
 		global $globals;
 
-		return $globals['cache_dir'].sprintf("/%02x/%02x", ($key >> 8) & 255, $key & 255);
+		return $globals['cache_dir'].sprintf("/%02x/%02x", ($key >> 16) & 255, ($key >> 8) & 255);
 	}
 
 	static function get_cache_dir($key = false) {
@@ -30,8 +30,10 @@ class Upload {
 		global $globals;
 
 		if (file_exists(Upload::get_cache_dir($key))) return true;
+		$dir = Upload::get_cache_dir($key);
+		syslog(LOG_INFO, "Meneame, creating cache dir " . $dir);
 		$old_mask = umask(0);
-		$res = @mkdir(Upload::get_cache_dir($key), 0777, true);
+		$res = @mkdir($dir, 0777, true);
 		umask($old_mask);
 		return $res;
 	}
@@ -166,6 +168,7 @@ class Upload {
 		global $globals;
 
 		if ($globals['Amazon_S3_media_bucket']) {
+			Upload::create_cache_dir($this->id);
 			return Media::get($this->filename(), $this->type, $this->pathname());
 		}
 	}
