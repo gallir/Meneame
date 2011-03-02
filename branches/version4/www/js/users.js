@@ -1,12 +1,3 @@
-<?
-/****************************
-*
-* WARN
-*     this files should be called from a generalxx.js.php file
-*
-*****************************/
-?>
-
 function comment_reply(id) {
 	ref = '#' + id + ' ';
 	textarea = $('#comment');
@@ -83,11 +74,11 @@ function check_file_size(id, size) {
 	if (input.files != undefined) {
 		for (var i = 0; i < input.files.length; i++) {
 			if (input.files[i].fileSize > size) {
-				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: <? echo _('tamaño máximo excedido') ?>" + " " + input.files[i].fileSize + " > " + size, 5);
+				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: {% trans _('tamaño máximo excedido') %}" + " " + input.files[i].fileSize + " > " + size, 5);
 				return;
 			}
 		}
-		mDialog.notify("<? echo _('tamaño OK') ?>", 1);
+		mDialog.notify("{% trans _('tamaño OK') %}", 1);
 	}
 }
 

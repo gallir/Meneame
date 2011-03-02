@@ -1,11 +1,7 @@
-<?
-/****************************
-*
-* WARN
-*     this files should be called from a generalxx.js.php file
-*
-*****************************/
-?>
+{% spacefull %}
+var base_url="{{ globals.base_url }}";
+var base_static="{{ globals.base_static }}";
+var mobile_version = true;
 
 function getAJAX(url, fn) {
 	var ajax;
@@ -32,7 +28,7 @@ function menealo(user, id)
 	var url = base_url + "backend/menealo.php";
 	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
 	url = url + "?" + content;
-	getJSON(url,  
+	getJSON(url,
 		 function(data) {
 				parseLinkAnswer(id, data);
 		}
@@ -53,8 +49,8 @@ function disable_vote_link(id, value, mess, background) {
 function parseLinkAnswer (id, link)
 {
 	if (link.error || id != link.id) {
-		disable_vote_link(id, "<? echo _('grr...') ?>", '');
-		alert("<? echo _('Error:') ?> "+link.error);
+		disable_vote_link(id, "{% trans _('grr...') %}", '');
+		alert("{% trans _('Error:') %} "+link.error);
 		return false;
 	}
 	votes = parseInt(link.votes)+parseInt(link.anonymous);
@@ -74,3 +70,4 @@ function load_html(program,type,container,page,id) {
 		});
 }
 
+{% endspacefull %}

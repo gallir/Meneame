@@ -1,11 +1,6 @@
-<?
-/****************************
-*
-* WARN
-*	  this files should be called from a generalxx.js.php file
-*
-*****************************/
-?>
+{% spacefull %}
+var base_url="{{ globals.base_url }}";
+var base_static="{{ globals.base_static }}";
 
 function redirect(url)
 {
@@ -35,7 +30,7 @@ function menealo_comment(user, id, value)
 	$.getJSON(url,
 		 function(data) {
 			if (data.error) {
-				mDialog.notify("<? echo _('Error:') ?> "+data.error, 5);
+				mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
 				return false;
 			} else {
 				$('#vc-'+id).html(data.votes+"");
@@ -57,7 +52,7 @@ function menealo_post(user, id, value)
 	$.getJSON(url,
 		 function(data) {
 			if (data.error) {
-				mDialog.notify("<? echo _('Error:') ?> "+data.error, 5);
+				mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
 				return false;
 			} else {
 				$('#vc-'+id).html(data.votes+"");
@@ -82,8 +77,8 @@ function disable_vote_link(id, value, mess, background) {
 function parseLinkAnswer (id, link) {
 	$('#problem-' + id).hide();
 	if (link.error || id != link.id) {
-		disable_vote_link(id, -1, "<? echo _('grr...') ?>", '');
-		mDialog.notify("<? echo _('Error:') ?> "+link.error, 5);
+		disable_vote_link(id, -1, "{% trans _('grr...') %}", '');
+		mDialog.notify("{% trans _('Error:') %} "+link.error, 5);
 		return false;
 	}
 	votes = parseInt(link.votes)+parseInt(link.anonymous);
@@ -164,7 +159,7 @@ function check_checkfield(fieldname, mess) {
 function report_problem(frm, user, id) {
 	if (frm.ratings.value == 0)
 		return;
-	mDialog.confirm("<? echo _('¿desea votar') ?> <em>" + frm.ratings.options[frm.ratings.selectedIndex].text +"</em>?",
+	mDialog.confirm("{% trans _('¿desea votar') %} <em>" + frm.ratings.options[frm.ratings.selectedIndex].text +"</em>?",
 		function () {report_problem_yes(frm, user, id)}, function () {report_problem_no(frm, user, id)});
 	return false;
 }
@@ -196,7 +191,7 @@ function get_votes(program,type,container,page,id) {
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 function reportAjaxStats(category, action) {
-	if (typeof(_gaq) !=	'undefined') 
+	if (typeof(_gaq) !=	'undefined')
 		_gaq.push(['_trackEvent', category, action])
 }
 
@@ -243,7 +238,7 @@ function fancybox_expand_images(event) {
 
 function fancybox_gallery(type, user, link) {
 	if (! user_id > 0) {
-		mDialog.notify('<? echo _('Debe estar autentificado para visualizar imágenes') ?>', 5);
+		mDialog.notify('{% trans _('Debe estar autentificado para visualizar imágenes') %}', 5);
 		return;
 	}
 	var url = base_url +'backend/gallery.php?type='+type;
@@ -353,7 +348,7 @@ tooltip.action = function (event) {
 **/
 
 function strip_tags(html) {
-	return html.replace(/<\/?[^>]+>/gi, ''); 
+	return html.replace(/<\/?[^>]+>/gi, '');
 }
 
 var mDialog = new function() {
@@ -512,10 +507,10 @@ var mDialog = new function() {
 		this.divHeader = $("<div>").attr({ id: 'mDialog_header' });
 		this.divContent = $("<div>").attr({ id: 'mDialog_content' });
 		this.divOptions = $("<div>").attr({ id: 'mDialog_options' });
-		this.btYes = $("<button>").attr({ id: 'mDialog_yes' }).text("<? echo _('Sí') ?>");
-		this.btNo = $("<button>").attr({ id: 'mDialog_no' }).text("<? echo _('No') ?>");
-		this.btOk = $("<button>").attr({ id: 'mDialog_ok' }).text("<? echo _('Vale') ?>");
-		this.btCancel = $("<button>").attr({ id: 'mDialog_ok' }).text("<? echo _('Cancelar') ?>");
+		this.btYes = $("<button>").attr({ id: 'mDialog_yes' }).text("{% trans _('Sí') %}");
+		this.btNo = $("<button>").attr({ id: 'mDialog_no' }).text("{% trans _('No') %}");
+		this.btOk = $("<button>").attr({ id: 'mDialog_ok' }).text("{% trans _('Vale') %}");
+		this.btCancel = $("<button>").attr({ id: 'mDialog_ok' }).text("{% trans _('Cancelar') %}");
 		this.input = $("<input>").attr({ id: 'mDialog_input' });
 		this.btClose = $("<span>").attr({ id: 'mDialog_close' }).text('X').click(
 							function() {
@@ -532,7 +527,132 @@ var mDialog = new function() {
 
 };
 
+function comment_reply(id) {
+	ref = '#' + id + ' ';
+	textarea = $('#comment');
+	if (textarea.length == 0 ) return;
+	var re = new RegExp(ref);
+	var oldtext = textarea.val();
+	if (oldtext.match(re)) return;
+	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != "\n") oldtext = oldtext + "\n";
+	textarea.val(oldtext + ref);
+	textarea.get(0).focus();
+}
+
+function post_load_form(id, container) {
+	var url = base_url + 'backend/post_edit.php?id='+id+"&key="+base_key;
+	$.get(url, function (html) {
+			if (html.length > 0) {
+				if (html.match(/^ERROR:/i)) {
+					mDialog.notify(html, 2);
+				} else {
+					$('#'+container).html(html);
+				}
+				reportAjaxStats('html', 'post_edit');
+			}
+		});
+}
+
+
+function post_new() {
+	post_load_form(0, 'addpost');
+}
+
+function post_edit(id) {
+	post_load_form(id, 'pcontainer-'+id);
+}
+
+function post_reply(id, user) {
+	ref = '@' + user + ',' + id + ' ';
+	textarea = $('#post');
+	if (textarea.length == 0) {
+		post_new();
+	}
+	post_add_form_text(ref, 1);
+}
+
+function post_add_form_text(text, tries) {
+	if (! tries) tries = 1;
+	textarea = $('#post');
+	if (tries < 20 && textarea.length == 0) {
+			tries++;
+			setTimeout('post_add_form_text("'+text+'", '+tries+')', 50);
+			return false;
+	}
+	if (textarea.length == 0 ) return false;
+	var re = new RegExp(text);
+	var oldtext = textarea.val();
+	if (oldtext.match(re)) return false;
+	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') oldtext = oldtext + ' ';
+	textarea.val(oldtext + text);
+	textarea.get(0).focus();
+}
+
+// See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
+function textCounter(field,cntfield,maxlimit) {
+	if (field.value.length > maxlimit)
+	// if too long...trim it!
+		field.value = field.value.substring(0, maxlimit);
+	// otherwise, update 'characters left' counter
+	else
+		cntfield.value = maxlimit - field.value.length;
+}
+
+function check_file_size(id, size) {
+	var input = document.getElementById(id);
+	if (input.files != undefined) {
+		for (var i = 0; i < input.files.length; i++) {
+			if (input.files[i].fileSize > size) {
+				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: {% trans _('tamaño máximo excedido') %}" + " " + input.files[i].fileSize + " > " + size, 5);
+				return;
+			}
+		}
+		mDialog.notify("{% trans _('tamaño OK') %}", 1);
+	}
+}
+
+/************************
+Simple format functions
+**********************************/
+/*
+  Code from http://www.gamedev.net/community/forums/topic.asp?topic_id=400585
+  strongly improved by Juan Pedro López for http://meneame.net
+  2006/10/01, jotape @ http://jplopez.net
+*/
+
+function applyTag(id, tag) {
+	obj = document.getElementById(id);
+	if (obj) wrapText(obj, tag, tag);
+	return false;
+}
+
+function wrapText(obj, tag) {
+	if(typeof obj.selectionStart == 'number') {
+		// Mozilla, Opera and any other true browser
+		var start = obj.selectionStart;
+		var end   = obj.selectionEnd;
+
+		if (start == end || end < start) return false;
+		obj.value = obj.value.substring(0, start) +  replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
+	} else if(document.selection) {
+		// Damn Explorer
+		// Checking we are processing textarea value
+		obj.focus();
+		var range = document.selection.createRange();
+		if(range.parentElement() != obj) return false;
+		if (range.text == "") return false;
+		if(typeof range.text == 'string')
+	        document.selection.createRange().text =  replaceText(range.text, tag);
+	} else
+		obj.value += text;
+}
+
+function replaceText(text, tag) {
+		return '<'+tag+'>'+text+'</'+tag+'>';
+}
+
 $(document).ready(function (){
 	$('.tooltip').live('mouseenter mouseleave', tooltip.action);
 	mDialog.init();
 });
+{% endspacefull %}
