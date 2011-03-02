@@ -1154,6 +1154,7 @@ class Link {
 		// Only work with sphinx
 		if (!$globals['sphinx_server']) return $related;
 		require(mnminclude.'search.php');
+		require(mnminclude.'uri.php');
 
 		$maxid = $db->get_var("select max(link_id) from links");
 		if ($this->status == 'published') {
@@ -1169,7 +1170,7 @@ class Link {
 		$i = 0;
 		$n = count($a);
 		foreach ($a as $w) {
-			$wlower = mb_strtolower($w);
+			$wlower = mb_strtolower(remove_accents($w));
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
 				&& ($len > 2 || preg_match('/^[A-Z]{2,}$/', $w))
@@ -1196,7 +1197,7 @@ class Link {
 		$a = preg_split('/,+/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$w = trim($w);
-			$wlower = mb_strtolower($w);
+			$wlower = mb_strtolower(remove_accents($w));
 			$len = mb_strlen($w);
 			if (isset($words[$wlower])) continue;
 			if (preg_match('/\s/', $w)) {
@@ -1213,7 +1214,7 @@ class Link {
 				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			$wlower = mb_strtolower($w);
+			$wlower = mb_strtolower(remove_accents($w));
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
 				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
