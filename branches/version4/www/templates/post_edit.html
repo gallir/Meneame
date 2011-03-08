@@ -49,15 +49,17 @@
 <script type="text/javascript">
 /* prepare Options Object */
 {% if self.id == 0 %}
-	var options = { success:
-		function(response) {
+	var options = { 
+		async: false,
+		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 			else $("#newpost").html(response); $("#addpost").hide("fast");
 		}
 	};
 {% else %}
-	var options = { success:
-		function(response) {
+	var options = { 
+		async: false,
+		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 			else $("#pcontainer-{{ self.id }}").html(response);
 		}
