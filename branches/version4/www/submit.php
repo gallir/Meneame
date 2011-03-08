@@ -513,7 +513,7 @@ function link_errors($link) {
 		add_submit_error(_("la historia ya está en cola").": $link->status");
 		$error = true;
 	}
-	if(strlen($link->title) < 10  || strlen($link->content) < 30 ) {
+	if(strlen($link->title) < 8  || strlen($link->content) < 30 ) {
 		add_submit_error(_("título o texto incompletos"));
 		$error = true;
 	}

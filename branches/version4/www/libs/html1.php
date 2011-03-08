@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-@include mnminclude.'ads-credits-functions.php';
+@include_once mnminclude.'ads-credits-functions.php';
 
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
@@ -706,7 +706,7 @@ function do_last_blogs() {
 	if(memcache_mprint($key)) return;
 
 
-	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date_parsed desc limit 10");
+	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date desc limit 10");
 	if ($entries) {
 		$objects = array();
 		$title = _('apuntes de blogs');

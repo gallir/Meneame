@@ -129,7 +129,7 @@ function link_edit_errors($link) {
 	if(time() - $_POST['timestamp'] > 900) {
 		array_push($errors, _('tiempo excedido'));
 	}
-	if(strlen($link->title) < 10  || strlen($link->content) < 30 ) {
+	if(strlen($link->title) < 8  || strlen($link->content) < 30 ) {
 		array_push($errors, _('título o texto incompletos'));
 	}
 	if(mb_strlen(html_entity_decode($link->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {

@@ -252,10 +252,11 @@ function do_rae($string) {
 	$array = preg_split('/\s+/', $string);
 	require_once(mnminclude.'uri.php'); // For remove_accents
 	if (count($array) == 2 && preg_match('/^\w+$/',remove_accents($array[1]))) {
-		$url = 'http://buscon.rae.es/draeI/SrvltGUIBusUsual?origen=RAE&TIPO_BUS=3&LEMA='.urlencode($array[1]);
+		$url = 'http://buscon.rae.es/draeI/SrvltObtenerHtml?origen=RAE&LEMA='.urlencode($array[1]).'&SUPIND=0&CAREXT=10000&NEDIC=No';
 		$res = get_url($url);
 		if ($res && $res['content']) {
 			//return $res['content'];
+			syslog(LOG_INFO, $res['content']);
 			$str = $res['content'];
 			$str = preg_replace('/<span class="eFCompleja">.*$/', '', $str); // Delete normally long examples
 			$str = preg_replace('/<TITLE>.+<\/TITLE>/i', '', $str); // Remove the title

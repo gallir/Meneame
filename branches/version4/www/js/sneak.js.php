@@ -57,7 +57,7 @@ global_options.show_admin = false;
 
 function start_sneak() {
 	$.ajaxSetup({
-		timeout: 10000,
+		timeout: 20000,
 		async: true,
 		cache: false,
 		error: function (req, error) {

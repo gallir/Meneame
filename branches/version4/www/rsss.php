@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 $rows = -1;
 $page_size = 25;
@@ -36,7 +36,7 @@ echo '</div>';
 echo '<table class="decorated">';
 
 
-$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar, blogs.blog_url, blogs.blog_title from rss, users, blogs where rss.blog_id = blogs.blog_id and rss.user_id = users.user_id order by rss.date_parsed desc limit $offset,$page_size");
+$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar, blogs.blog_url, blogs.blog_title from rss, users, blogs where rss.blog_id = blogs.blog_id and rss.user_id = users.user_id order by rss.date desc limit $offset,$page_size");
 
 if ($entries) {
 	foreach ($entries as $entry) {
