@@ -1,8 +1,8 @@
-<div style="background:#f9f9f9; border:#ddd 1px solid; padding: 7px 7px 0px 5px; margin: 15px 2px 10px 6px; vertical-align:middle;overflow: auto;">
+<div style="background:#f9f9f9; border:#ddd 1px solid; padding: 7px 7px 0px 5px; margin: 15px 2px 10px 6px; vertical-align:middle;overflow: hidden;">
 {% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
-	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 8px"/>
+	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 8px margin-bottom: 5px"/>
 {% endif %}
 <h1 style="font-size: 150%; font-weight: normal; margin: 0"><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
 <p style="font-size: 90%; color: #888">{{ self.content|text_to_html:"links" }}</p>
-<div style="text-transform:capitalize;font-variant:small-caps;letter-spacing:.07em;text-align:right;color:#aaa;font-size:95%;margin-right:-4px">{% trans _('La noticia destacada') %}</div>
+<div style="text-transform:capitalize;font-variant:small-caps;letter-spacing:.07em;text-align:right;color:#aaa;font-size:95%;margin-right:-4px;margin-top: 3px">{% trans _('La historia destacada') %}</div>
 </div>

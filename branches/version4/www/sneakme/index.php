@@ -318,7 +318,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	global $globals, $current_user;
 
 	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
-	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
+	echo '<ul class="subheader">'."\n";
 	if ($rss) {
 		if (!$rss_title) $rss_title = 'rss2';
 		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';

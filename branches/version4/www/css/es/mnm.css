@@ -302,7 +302,7 @@ color:#FF9400;
 .banner-right {
 width: 100%;
 height: 252px;
-margin: 10px 0 20px 0;
+margin: 5px 0 20px 0;
 }
 
 #container {
@@ -312,9 +312,9 @@ clear:both;
 #sidebar {
 float: right;
 width: 300px;
-margin: 2px 15px 25px 20px;
+margin: 0 15px 25px 20px;
 overflow: hidden;
-padding-top: 12px;
+padding-top: 10px;
 }
 
 #newswrap {
