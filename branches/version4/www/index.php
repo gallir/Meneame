@@ -94,8 +94,15 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-
 do_banner_top_news();
+
+if ($page == 1 && ($top = Link::top())) {
+	$vars = array('self' => $top);
+	Haanga::Load("link_top.html", $vars);
+}
+
+
+
 
 if($cat) {
 	$where .= " AND link_category=$cat ";
