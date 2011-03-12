@@ -23,6 +23,11 @@ do_tabs('main','published');
 
 echo '<div id="newswrap">'."\n";
 
+if ($page == 1 && ($top = Link::top())) {
+	$vars = array('self' => $top);
+	Haanga::Load("mobile/link_top.html", $vars);
+}
+
 $rows = Link::count('published');
 $links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links WHERE link_status='published' ORDER BY link_date DESC LIMIT $offset,$page_size) as id USING (link_id)", "LinkMobile");
 if ($links) {

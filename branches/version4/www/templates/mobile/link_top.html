@@ -1,0 +1,7 @@
+<div style="background:#f9f9f9; border:#ddd 1px solid; padding: 3px 3px 0px 2px; margin: 4px 2px 2px 2px;vertical-align:middle;overflow:hidden;">
+{% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
+	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 4px margin-bottom: 2px"/>
+{% endif %}
+<h1 style="font-size: 140%; font-weight: normal;margin: 0"><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
+<div style="text-transform:capitalize;font-variant:small-caps;text-align:right;color:#aaa;font-size:95%;">{% trans _('La historia destacada') %}</div>
+</div>
