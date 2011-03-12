@@ -6,6 +6,7 @@ import _mysql_exceptions
 import dbconf
 import feedparser
 import time
+from urlparse import urlparse
 
 re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
@@ -143,7 +144,8 @@ class BaseBlogs(object):
 
 	def is_banned(self):
 		c = DBM.cursor()
-		c.execute("select count(*) from bans where ban_text in (%s, %s) AND ban_type in ('hostname','punished_hostname') AND (ban_expire IS null OR ban_expire > now())", (self.base_url, 'www.'+self.base_url));
+		hostname = re.sub('^www\.', '', re.sub(':[0-9]+$', '', urlparse(self.url)[1]))
+		c.execute("select count(*) from bans where ban_text in (%s, %s, %s, %s) AND ban_type in ('hostname','punished_hostname') AND (ban_expire IS null OR ban_expire > now())", (self.base_url, 'www.'+self.base_url, hostname, 'www.'+hostname));
 		r = c.fetchone()
 		c.close()
 		if r[0] > 0:
