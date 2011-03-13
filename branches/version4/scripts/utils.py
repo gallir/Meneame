@@ -78,7 +78,7 @@ class BaseBlogs(object):
 				timestamp = now
 
 			if timestamp > now: timestamp = now
-			if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (self.read and timestamp <  self.read):
+			if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (self.read and timestamp <  self.read) or len(e.title.strip()) < 2:
 				#print "Old entry:", e.link, e.updated, e.updated_parsed, time.time() - timestamp
 				pass
 			else:
