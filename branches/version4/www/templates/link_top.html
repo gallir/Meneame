@@ -2,7 +2,7 @@
 {% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
 	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 8px margin-bottom: 5px"/>
 {% endif %}
-<h1 style="font-size: 150%; font-weight: normal; margin: 0"><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
-<p style="font-size: 90%; color: #888">{{ self.content|text_to_html:"links" }}</p>
+<h1 style="line-height:100%;font-size: 150%; font-weight: normal; margin: 0"><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
+<p style="font-size: 90%; color: #888">{% exec text_to_summary self.content 200 %}</p>
 <div style="text-transform:capitalize;font-variant:small-caps;letter-spacing:.07em;text-align:right;color:#aaa;font-size:95%;margin-right:-4px;margin-top: 3px">{% trans _('La historia destacada') %}</div>
 </div>

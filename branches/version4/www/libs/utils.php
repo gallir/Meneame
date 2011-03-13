@@ -211,7 +211,7 @@ function text_to_summary($string, $length=50) {
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
 		$string = preg_replace('/ *[\w&;]*$/', '', $string);
-		$string = preg_replace('/\. [^\.]{1,50}$/', '.', $string);
+		$string = preg_replace('/\. [^\.]{1,20}$/', '.', $string);
 		$string .= '...';
 	}
 	return $string;
