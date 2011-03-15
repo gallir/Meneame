@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+from __future__ import division
 
 import MySQLdb
 import time
@@ -10,12 +11,6 @@ from utils import *
 
 
 def main():
-
-	"""
-	link_max_age = 24 
-	period = 8
-	"""
-
 	links = {}
 	cursor = DBM.cursor()
 	cursor.execute("select link_id, link_uri, unix_timestamp(now()) - unix_timestamp(link_date) from links where link_status = 'published' and link_date > date_sub(now(), interval 24 hour) and link_votes > link_negatives/20 order by link_date desc")
@@ -71,21 +66,21 @@ def main():
 	print "Votes average:", votes_average, v_average, "Comments average:", comments_average, c_average
 	for id in links:
 		if links[id]['c'] > 0 and links[id]['v'] > 0:
-			links[id]['w'] = links[id]['v'] + links[id]['c'] + links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.005
+			links[id]['w'] = (1 - links[id]['old']/(2*86400)) * (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.005)
 
 	sorted_ids = sorted(links, cmp=lambda x,y: cmp(links[y]['w'], links[x]['w']))
 	i = 0
 	for id in sorted_ids:
-		if links[id]['w'] > 0:
+		if links[id]['w'] > 0 and i < 10:
 			i += 1
-			print i, links[id]['links_order'], links[id]['uri'], links[id]['w'], "votes:", links[id]['votes'], links[id]['votes_order'], links[id]['v'], "comments:", links[id]['comments'], links[id]['c'], "clicks:", links[id]['clicks'], links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.005
+			print i, links[id]['links_order'], links[id]['old'], links[id]['uri'], links[id]['w'], "votes:", links[id]['votes'], links[id]['votes_order'], links[id]['v'], "comments:", links[id]['comments'], links[id]['c'], "clicks:", links[id]['clicks'], links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.005
 
 	# Select the top stories
-	str = ','.join([unicode(x) for x in sorted_ids if links[x]['w'] > dbconf.tops['min-weight'] and links[x]['links_order'] > 2 and links[x]['c'] > c_average * 4 and links[x]['v'] > v_average * 4 and links[x]['votes_order'] <= 5])
+	str = ','.join([unicode(x) for x in sorted_ids if links[x]['w'] > dbconf.tops['min-weight'] and (links[x]['links_order'] > 2 or links[x]['old'] > 3600) and links[x]['c'] > c_average * 3.5 and links[x]['v'] > v_average * 3.5 and links[x]['votes_order'] <= 10 ])
 
 	if str:
 		c = DBM.cursor('update')
-		c.execute("replace into annotations (annotation_key, annotation_expire, annotation_text) values('top-links', date_add(now(), interval 10 minute), %s)", (str,))
+		c.execute("replace into annotations (annotation_key, annotation_expire, annotation_text) values('top-links', date_add(now(), interval 15 minute), %s)", (str,))
 		c.close()
 		DBM.commit()
 		print "Stored:", str
