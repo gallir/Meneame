@@ -151,7 +151,7 @@ if ($current_user->user_id == $user->id) {
 	$globals['extra_comment_conversation'] = '';
 }
 
-echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 30px">'."\n";
+echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 5px">'."\n";
 
 $url_login = urlencode($login);
 switch ($view) {
