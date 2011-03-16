@@ -160,6 +160,9 @@ top: 0;
 left: 0;
 width: 100%;
 background: #fff;
+box-shadow: 0 0 3px rgba(0,0,0,0.7);
+-moz-box-shadow: 0 0 3px rgba(0,0,0,0.7);
+-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.7);
 z-index: 999999;
 }
 
@@ -257,7 +260,6 @@ margin-top: 0px;
 background-color: #3C3C3C;
 margin-top: 1px;
 height: 25px;
-margin-bottom: 1px;
 padding: 0 5px;
 }
 
