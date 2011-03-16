@@ -154,7 +154,17 @@ border-radius: 3px;
 }
 
 /* END roundboxes */
+#headerwrap {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+background: #fff;
+z-index: 999999;
+}
+
 #wrap {
+padding-top: 78px;
 min-width: 952px;
 max-width: 1300px;
 width: 98%;
@@ -164,15 +174,16 @@ margin: auto;
 }
 
 #header{
-height: 36px;
+height: 34px;
 background: #FF6400 url(../../img/common/header-bckg-02.png) repeat-x;
 font-family: arial, helvetica, sans serif;
 font-size: 14px;
+padding: 0 5px;
 }
 
 #logo{
-background-image:url('../../img/mnm/logo02.png');
-height: 36px;
+background-image:url('../../img/mnm/logo03.png');
+height: 34px;
 width: 130px;
 margin-left: 5px;
 text-indent: -9999px;
@@ -222,7 +233,7 @@ display: block;
 padding: 0px;
 background-color: #F5F5F5;
 border: solid 0px transparent;
-width: 160px;
+width: 170px;
 height: 22px;
 line-height: 22px;
 margin: 0px;
@@ -245,12 +256,9 @@ margin-top: 0px;
 #naviwrap{
 background-color: #3C3C3C;
 margin-top: 1px;
--moz-border-radius-bottomright: 4px;
--moz-border-radius-bottomleft: 4px;
--webkit-border-bottom-right-radius: 4px;
--webkit-border-bottom-left-radius: 4px;
 height: 25px;
-margin-bottom: 30px;
+margin-bottom: 1px;
+padding: 0 5px;
 }
 
 #naviwrap ul#navigation{
@@ -269,7 +277,7 @@ float: left;
 height: 18px;
 border-right: solid 1px #FFFFFF;
 margin-top: 4px;
-padding: 0 10px 0 10px;
+padding: 0 8px 0 8px;
 }
 
 #naviwrap ul#navigation li a{
@@ -323,7 +331,6 @@ margin: 10px 330px 0 5px;
 
 #singlewrap {
 margin: 0 10px 0 10px;
-/*font-size: small;*/
 }
 
 #map {

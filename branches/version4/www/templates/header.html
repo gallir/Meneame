@@ -106,7 +106,9 @@ var mobile_client = {{ globals.mobile }};
 
 </head>
 <body id="{{id}}" {{globals.body_args}}>
-<div id="wrap">
+<div id="headerwrap">
+
+
 <div id="header">
 <a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
 <ul class="headtools">
@@ -145,6 +147,8 @@ var mobile_client = {{ globals.mobile }};
 
 </ul></div>
 
+
+
 <div id="naviwrap">
 	<ul id="navigation">
 	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar historia') %}</a></li>
@@ -177,5 +181,7 @@ var mobile_client = {{ globals.mobile }};
 
 
 </div>
+</div>
 {% exec do_banner_top as foo%}
+<div id="wrap">
 <div id="container">
