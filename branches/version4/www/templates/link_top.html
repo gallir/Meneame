@@ -1,8 +1,12 @@
-<div style="background:#f9f9f9; border:#ddd 1px solid; padding: 7px 7px 0px 5px; margin: 15px 0px 10px 6px; vertical-align:middle;overflow: hidden;">
+<div style="position:relative;background:#f9f9f9; border:#ddd 1px solid; padding: 7px 7px 0px 5px; margin: 15px 0px 10px 6px; vertical-align:middle;overflow: hidden;">
 {% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
-	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 6px; margin-bottom: 5px"/>
+	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail' style="float: left; margin-right: 6px; margin-bottom: 6px"/>
 {% endif %}
 <h1 style="line-height:100%;font-size: 140%; font-weight: normal; margin: 0"><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
 <p style="font-size: 90%; color: #888">{% exec text_to_summary self.content 200 %}</p>
-<div style="text-transform:capitalize;font-variant:small-caps;letter-spacing:.07em;text-align:right;color:#aaa;font-size:95%;margin-right:-4px;margin-top: 3px">{% trans _('La historia destacada') %}</div>
+<p style="
+{% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
+		position:absolute;bottom:0;right:4px;
+{% endif %}
+	margin-top:5px;text-transform:capitalize;font-variant:small-caps;text-align:right;color:#aaa;font-size:8.5pt;">{% trans _('La historia destacada') %}</p>
 </div>
