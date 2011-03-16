@@ -8,6 +8,10 @@ font-size: medium;
 font-size: small;
 }
 
+#headerwrap {
+position: absolute;
+}
+
 #wrap {
 min-width: 320px;
 }
