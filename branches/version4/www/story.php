@@ -227,12 +227,6 @@ case 2:
 	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
 	Comment::print_form($link);
 	echo '</div>' . "\n";
-
-	// Highlight a comment if it is referenced by the URL.
-	// currently double border, width must be 3 at least
-	echo '<script type="text/javascript">';
-	echo '$(window).load(function() {if(location.href.match(/#(c-\d+)$/)){$("#"+RegExp.$1+">:first").css("border-style","solid").css("border-width","1px"); $(window).scrollTop($(window).scrollTop()-80)}})';
-	echo "</script>\n";
 	break;
 
 
