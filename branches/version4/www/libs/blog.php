@@ -16,6 +16,20 @@ class Blog {
 	var $atom = false;
 	var $read = false;
 
+	// Try to find the closest blog entry
+	static function find_blog($url, $to_check = 0) {
+		global $db;
+
+		$parsed = parse_url($url);
+		$base = $parsed['scheme'].'://'.$parsed['host'];
+		if ($to_check > 0) {
+			$id = $db->get_var("select blog_id from blogs where blog_id = $to_check and blog_url like '$base%'");
+			if ($id == $to_check) return $to_check;
+		}
+		$id = $db->get_var("select blog_id from blogs where blog_url = '$base' order by blog_id desc limit 1");
+		return $id;
+	}
+
 	function print_html() {
 		echo "rss: " . $this->rss . "<br>\n";
 		echo "rss2: " . $this->rss2 . "<br>\n";

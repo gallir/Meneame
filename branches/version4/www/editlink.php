@@ -71,6 +71,7 @@ function do_save($link) {
 	$link->title = clean_text($_POST['title'], 50);
 	$link->content = clean_text_with_tags($_POST['bodytext']);
 	$link->tags = tags_normalize_string($_POST['tags']);
+
 	// change the status
 	if ($_POST['status'] != $link->status
 		&& ($_POST['status'] == 'autodiscard' || $current_user->admin)
@@ -85,6 +86,12 @@ function do_save($link) {
 	$errors = link_edit_errors($link);
 	if (! $errors) {
 		if (empty($link->uri)) $link->get_uri();
+		// Check the blog_id
+		$blog_id = Blog::find_blog($link->url, $link->id);
+		if ($blog_id > 0 && $blog_id != $link->blog) {
+			$link->blog = $blog_id;
+		}
+
 		$link->store();
 		tags_insert_string($link->id, $dblang, $link->tags, $link->date);
 
