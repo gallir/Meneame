@@ -111,6 +111,7 @@
 	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 	{% else %}
 	<label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+	<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" size="80"/></label><br/>
 	{% endif %}
 {% endif %}
 

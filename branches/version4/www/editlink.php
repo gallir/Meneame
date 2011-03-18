@@ -66,6 +66,9 @@ function do_save($link) {
 		}
 		if ($_POST['thumb_get']) {
 			$link->get_thumb();
+		} elseif (!empty($_POST['thumb_url'])) {
+			$url = clean_input_url($_POST['thumb_url']);
+			$link->get_thumb(false, $url);
 		}
 	}
 	$link->title = clean_text($_POST['title'], 50);

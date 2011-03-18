@@ -1051,7 +1051,7 @@ class Link {
 
 	// Thumbnails management
 
-	function get_thumb($debug = false) {
+	function get_thumb($debug = false, $url = false) {
 		global $globals;
 
 		$site = false;
@@ -1063,9 +1063,13 @@ class Link {
 		if ($blog->read()) {
 			$site = $blog->url;
 		}
-		$this->image_parser = new HtmlImages($this->url, $site);
-		$this->image_parser->debug = $debug;
-		$this->image_parser->referer = $this->get_permalink();
+		if (!empty($url)) {
+			$this->image_parser = new HtmlImages($url);
+		} else {
+			$this->image_parser = new HtmlImages($this->url, $site);
+			$this->image_parser->debug = $debug;
+			$this->image_parser->referer = $this->get_permalink();
+		}
 		echo "<!-- Meneame, before image_parser -->\n";
 		$img = $this->image_parser->get();
 		echo "<!-- Meneame, after image_parser -->\n";
