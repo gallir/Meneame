@@ -253,7 +253,7 @@ function text_to_html(&$string, $hashtype = false, $do_links = true) {
 		$globals['hashtype'] = $hashtype; // To pass the value to the callback
 		if ($hashtype) {
 			if ($do_links) $regexp .= '|';
-			$regexp .= '#[^\d\s\.\,\:\;\¡\!\)\-][^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
+			$regexp .= '#[^\d\s\.\,\:\;\¡\!\)\-<][^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
 		}
 		$regexp = '/([\s\(\[{¡;,:¿]|^)('.$regexp.')/Smu';
 	}

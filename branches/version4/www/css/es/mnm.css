@@ -740,11 +740,11 @@ color: #5073c5;
 
 #footthingy {
 clear: both;
-margin: 50px 20px 0 13px;
+margin: 50px 20px 10px 13px;
 padding: 0 1em 0 145px;
 background: url('../../img/mnm/footeli02.png') no-repeat left top;
-min-height: 139px;
 position: relative;
+overflow: auto;
 }
 
 #footthingy li {
