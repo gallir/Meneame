@@ -657,15 +657,18 @@ $(document).ready(function () {
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
 		$(window).load(function() {
-			target.hide();
 
 			{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
-			if(m[1].match(/^c-\d+$/)) $("#"+m[1]+">:first").css("border-style","solid").css("border-width","1px");
+			if(m[1].match(/^c-\d+$/)) {
+				$("#"+m[1]+">:first").css("border-style","solid").css("border-width","1px");
+			} else {
+				target.hide();
+				target.fadeIn(1000);
+			}
 
 			{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
 			var scroll = $(window).scrollTop();
 			if (scroll > 80) $(window).scrollTop(scroll-80);
-			target.fadeIn(300);
 		});
 	}
 

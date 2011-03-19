@@ -1027,6 +1027,7 @@ position: relative;
 .news-body {
 padding-left: 80px;
 padding-right: 5px;
+overflow: hidden;
 }
 
 .news-details {

@@ -21,6 +21,7 @@ class Blog {
 		global $db;
 
 		$parsed = parse_url($url);
+		$parsed['host'] = mb_convert_case($parsed['host'], MB_CASE_LOWER);
 		$base = $parsed['scheme'].'://'.$parsed['host'];
 		if ($to_check > 0) {
 			$id = $db->get_var("select blog_id from blogs where blog_id = $to_check and blog_url like '$base%'");
@@ -86,11 +87,13 @@ class Blog {
 		$path='';
 		$url_url = parse_url($url);
 		$url_url['path'] = preg_replace('/\/$/', '', $url_url['path']);
+		$url_url['host'] = mb_convert_case($url_url['host'], MB_CASE_LOWER);
 		$host = $url_url['host'];
 		if($this->type=='blog') {
 			$host_quoted = preg_quote($host);
 			foreach ($feeds as $feed) {
 				$rss_url = parse_url($feed);
+				$rss_url['host'] = mb_convert_case($rss_url['host'], MB_CASE_LOWER);
 				$rss_quoted = preg_quote($rss_url['host']);
 				if ($host == $rss_url['host']) {
 					// Same hostname, keep it

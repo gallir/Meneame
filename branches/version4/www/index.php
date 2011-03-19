@@ -36,6 +36,7 @@ $page_size = 20;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
 $globals['ads'] = true;
+$globals['ads_section'] = 'portada';
 
 $cat=$_REQUEST['category'];
 
@@ -99,6 +100,7 @@ do_banner_top_news();
 if ($page == 1 && ($top = Link::top())) {
 	$vars = array('self' => $top);
 	Haanga::Load("link_top.html", $vars);
+	$counter = 1;
 }
 
 
