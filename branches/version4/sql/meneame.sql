@@ -102,6 +102,10 @@ CREATE TABLE `blogs` (
   `blog_rss2` varchar(64) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `blog_atom` varchar(64) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `blog_url` varchar(64) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `blog_feed` char(128) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `blog_feed_checked` timestamp NULL DEFAULT NULL,
+  `blog_feed_read` timestamp NULL DEFAULT NULL,
+  `blog_title` char(128) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`blog_id`),
   UNIQUE KEY `key` (`blog_key`),
   KEY `blog_url` (`blog_url`)
@@ -417,7 +421,7 @@ DROP TABLE IF EXISTS `media`;
 CREATE TABLE `media` (
   `type` enum('comment','link','post','avatar','thumb','other') NOT NULL,
   `id` int(10) unsigned NOT NULL,
-  `version` smallint(5) unsigned NOT NULL,
+  `version` tinyint(3) unsigned NOT NULL,
   `user` int(10) unsigned NOT NULL,
   `access` enum('restricted','public','friends') NOT NULL DEFAULT 'restricted',
   `mime` char(32) NOT NULL,
@@ -427,7 +431,8 @@ CREATE TABLE `media` (
   `dim2` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`type`,`id`,`version`),
   UNIQUE KEY `user_2` (`user`,`date`),
-  KEY `user` (`user`,`type`,`date`)
+  KEY `user` (`user`,`type`,`date`),
+  KEY `type` (`type`,`version`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -482,6 +487,28 @@ CREATE TABLE `prefs` (
   `pref_key` char(16) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `pref_value` int(8) unsigned NOT NULL DEFAULT '0',
   KEY `pref_user_id` (`pref_user_id`,`pref_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `rss`
+--
+
+DROP TABLE IF EXISTS `rss`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rss` (
+  `blog_id` int(10) unsigned NOT NULL,
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `link_id` int(10) unsigned DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_parsed` timestamp NULL DEFAULT NULL,
+  `url` char(250) NOT NULL,
+  `title` char(250) NOT NULL,
+  UNIQUE KEY `url` (`url`),
+  KEY `date` (`date`),
+  KEY `blog_id` (`blog_id`,`date`),
+  KEY `user_id` (`user_id`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -595,7 +622,8 @@ CREATE TABLE `users` (
   KEY `user_phone` (`user_phone`),
   KEY `user_date` (`user_date`),
   KEY `user_modification` (`user_modification`),
-  KEY `user_email_register` (`user_email_register`)
+  KEY `user_email_register` (`user_email_register`),
+  KEY `user_url` (`user_url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -648,4 +676,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-12-05  2:42:37
+-- Dump completed on 2011-03-20 18:22:43
