@@ -10,6 +10,10 @@ body {
 
 abbr { cursor: help; }
 
+img {
+	opacity:0.3;
+	filter:alpha(opacity=30);
+}
 a {
 	color: #167805;
 	text-decoration: none;

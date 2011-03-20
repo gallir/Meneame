@@ -1,6 +1,7 @@
 {% spacefull %}
 var base_url="{{ globals.base_url }}";
 var base_static="{{ globals.base_static }}";
+var mobile_client = false;
 
 function redirect(url)
 {

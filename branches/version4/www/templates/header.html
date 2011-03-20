@@ -29,13 +29,15 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
 {% else %}
 <style type="text/css">
-@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 780px);
+@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
 </style>
 {% endif %}
 
+{#
 <!--[if lte IE 6]>
 <link rel="stylesheet" type="text/css" media="screen" href="{{globals.base_static}}css/ie6-hacks.css" />
 <![endif]-->
+#}
 
 <meta name="generator" content="meneame" />
 
