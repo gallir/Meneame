@@ -917,6 +917,7 @@ class Link {
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
 		if ($karma_pos_user_low/$karma_pos_user_high > 1.15) {
 			$perc = intval($vlow/($vlow+$vhigh) * 100);
+			$this->low_karma_perc = $perc;
 			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
 		}
 		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.1, 4), $karma_pos_user_low); // Allowed difference up to 10% of $karma_pos_user_high
