@@ -319,6 +319,9 @@ $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>
 // Put your authorised addresses
 //$globals['allowed_gsm_clients'] = 'localhost 192.168.0.1';
 
+// Disable checking of IP networks during registration
+//$globals['skip_ip_register'] = false;
+
 // Bonus applied to new links
 $globals['bonus_coef'] = 1.5;
 // Bonus applied to sources that are not frequent
