@@ -241,6 +241,15 @@ if ($links) {
 
 		// check differences, if > 4 store it
 		if (abs($link->old_karma - $link->karma) > 6) {
+			// Check percentage of low karma votes if difference > 20 (to avoid sending too many messages
+			if ($link->old_karma > $link->karma + 20  && !empty($globals['adm_email']) && intval($link->low_karma_perc) > 80) {
+				echo "LOW KARMA WARN $link->uri\n";
+				$subject = _('AVISO: enlace con muchos votos de karma menor que la media');
+				$body = "Perc: $link->low_karma_perc% User votes: $link->votes Negatives: $link->negatives\n\n";
+				$body .= $link->get_permalink();
+				mail($globals['adm_email'], $subject, $body);
+			}
+
 			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $link->old_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
 			//$link->annotation .= _('ajuste'). ": $link->old_karma -&gt; $link->karma <br/>";
 			if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later	
