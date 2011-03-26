@@ -27,7 +27,7 @@ class LCPBase {
 
 			$regexp .= '#[^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
 
-			$regexp .= '|\{([a-z]{3,10})\}';
+			$regexp .= '|\{[a-z]{3,10}\}';
 
 			if ($class == 'Post') {
 				$regexp .= '|@[^\s<>;:,\?\)\]\"\']+(?:,\d+){0,1}';
@@ -90,6 +90,11 @@ class LCPBase {
 				}
 				break;
 
+			case '{':
+				$m = array($matches[2], substr($matches[2], 1, -1));
+				return $matches[1].put_smileys_callback($m);
+
+
 			case 'h':
 				$suffix = $extra = '';
 				if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
@@ -98,10 +103,6 @@ class LCPBase {
 				}
 				if (preg_match('/\.(jpg|gif|png)$/S', $matches[4])) $extra = 'class="fancybox"';
 				return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
-
-			case '{':
-				$m = array($matches[2], $matches[3]);
-				return $matches[1].put_smileys_callback($m);
 
 			case '_':
 				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
