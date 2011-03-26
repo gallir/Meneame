@@ -8,7 +8,7 @@
 
 require_once(mnminclude.'favorites.php');
 
-class Post {
+class Post extends LCPBase {
 	var $id = 0;
 	var $randkey = 0;
 	var $author = 0;
@@ -207,7 +207,7 @@ class Post {
 		if ($length > 0) {
 			$this->content = text_to_summary($this->content, $length);
 		}
-		$this->content = put_smileys($this->put_tooltips(save_text_to_html($this->content, 'posts'))) . $expand;
+		$this->content = $this->to_html($this->content) . $expand;
 
 	}
 
@@ -219,31 +219,9 @@ class Post {
 		return Haanga::Load('post_summary_text.html', $vars);
 	}
 
-	function put_tooltips ($str) {
-		global $globals;
-		// add links for hashtags
-		return preg_replace_callback(Post::REF_PREG, array($this, 'replace_post_link'), $str);
-	}
-
 	function clean_content() {
 		// Clean other post references
 		return preg_replace('/(@[\S.-]+)(,\d+)/','$1',$this->content);
-	}
-
-	function replace_post_link($matches) {
-			global $globals;
-
-			$pre = $matches[1];
-			$a = explode(',', $matches[2]);
-			if (count($a) > 1) {
-				$user = $a[0];
-				$id = ','.$a[1];
-			} else {
-				$user = $matches[2];
-				$id = '';
-			}
-			$user_url = urlencode($user);
-			return "$pre<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id-".$this->date."'>@$user</a>";
 	}
 
 	function print_edit_form() {

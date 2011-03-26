@@ -9,7 +9,7 @@
 require_once(mnminclude.'log.php');
 require_once(mnminclude.'favorites.php');
 
-class Link {
+class Link extends LCPBase {
 	var $id = 0;
 	var $author = -1;
 	var $blog = 0;
@@ -499,6 +499,7 @@ class Link {
 
 		$this->is_votable();
 
+		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
 		$this->permalink	 = $this->get_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;

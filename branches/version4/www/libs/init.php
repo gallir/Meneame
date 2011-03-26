@@ -92,6 +92,7 @@ function __autoload($class) {
 	static $classfiles = array(
 				'db' => 'mysqli.php',
 				'RGDB' => 'rgdb.php',
+				'LCPBase' => 'LCPBase.php',
 				'Link' => 'link.php',
 				'LinkMobile' => 'linkmobile.php',
 				'Comment' => 'comment.php',

@@ -103,7 +103,7 @@
 			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 		{% endif %}
 		<p>
-			{{ self.content|text_to_html:"links" }}
+			{{ self.content }}
 			{% if (globals.link AND type != 'preview' ) %}
 				{% if self.is_editable %}
 					&nbsp;&nbsp;<a href="{% get_url 'editlink.php?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>

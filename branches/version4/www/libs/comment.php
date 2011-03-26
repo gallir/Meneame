@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-class Comment {
+class Comment extends LCPBase {
 	var $id = 0;
 	var $randkey = 0;
 	var $author = 0;
@@ -159,7 +159,7 @@ class Comment {
 
 		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
 		if ($length > 0) $this->truncate($length);
-		$this->txt_content = put_smileys($this->put_comment_tooltips(save_text_to_html($this->content, 'comments')));
+		$this->txt_content = $this->to_html($this->content);
 	}
 
 	function print_summary($link=0, $length=0, $single_link=true) {
@@ -593,7 +593,6 @@ class Comment {
 				}
 			}
 		}
-
 	}
 
 	function get_relative_individual_permalink() {
