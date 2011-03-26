@@ -229,6 +229,12 @@ $globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 400000;
 $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
+// If you use nginx define X-Accel-Redirect, or X-Sendfile for Apache module
+// See: https://tn123.org/mod_xsendfile/ http://wiki.nginx.org/XSendfile
+
+//$globals['xsendfile'] = 'X-Accel-Redirect';
+//$globals['xsendfile'] = 'X-Sendfile';
+
 
 $globals['show_popular_queued'] = true;
 $globals['show_popular_published'] = true;

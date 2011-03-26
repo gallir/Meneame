@@ -5,7 +5,7 @@
 <body>
 <div id="gallery-container">
 {% for m in media %}
-	<a id="gallery-{{ forloop.counter }}" class="fancybox" rel="gallery" href="{{ globals.base_url}}backend/media.php?type={{ m.type }}&amp;id={{ m.id }}&amp;version={{ m.version }}" title="{{ m.type }},{{ m.id }},{{ m.user }}"></a>
+	<a id="gallery-{{ forloop.counter }}" class="fancybox" rel="gallery" href="{{ globals.base_url}}backend/media.php?type={{ m.type }}&amp;id={{ m.id }}&amp;image.jpg" title="{{ m.type }},{{ m.id }},{{ m.user }}"></a>
 {% endfor %}
 
 <script type="text/javascript">

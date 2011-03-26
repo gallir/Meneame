@@ -146,6 +146,12 @@ class Upload {
 		return Upload::get_cache_dir($this->id).'/'.$this->filename();
 	}
 
+	function url() {
+		global $globals;
+
+		return $globals['base_url'].Upload::get_cache_relative_dir($this->id).'/'.$this->filename();
+	}
+
 	function readfile() {
 		if (! file_exists($this->pathname())) {
 			$this->restore();

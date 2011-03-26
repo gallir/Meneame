@@ -9,7 +9,8 @@ include_once('../config.php');
 
 $type = $db->escape($_GET['type']);
 $id = intval($_GET['id']);
-$version = intval($_GET['version']);
+if (empty($_GET['version'])) $version = 0;
+else $version = intval($_GET['version']);
 
 if (empty($type) || ! $id ) not_found();
 
@@ -19,12 +20,17 @@ if (! $media->read()) not_found();
 
 if ($media->access == 'public' || $current_user->user_id > 0) {
 	header("Content-Type: $media->mime");
+	header("Content-Type: text/plain");
 	header('Last-Modified: ' . date('r', $media->date));
 	header('Cache-Control: max-age=3600');
 	if ($media->size > 0) {
 		header("Content-Length: $media->size");
 	}
-	$media->readfile();
+	if (! empty($globals['xsendfile'])) {
+		header($globals['xsendfile'].': '.$media->url());
+	} else {
+		$media->readfile();
+	}
 } else {
 	header("Content-Type: text/html");
 	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
