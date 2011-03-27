@@ -18,7 +18,7 @@ $media = new Upload($type, $id, $version);
 
 if (! $media->read()) not_found();
 
-if (true || $media->access == 'public' || $current_user->user_id > 0) {
+if ($media->access == 'public' || $current_user->user_id > 0) {
 	header("Content-Type: $media->mime");
 	header('Last-Modified: ' . date('r', $media->date));
 	header('Cache-Control: max-age=3600');
