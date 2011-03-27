@@ -18,17 +18,16 @@ $media = new Upload($type, $id, $version);
 
 if (! $media->read()) not_found();
 
-if ($media->access == 'public' || $current_user->user_id > 0) {
+if (true || $media->access == 'public' || $current_user->user_id > 0) {
 	header("Content-Type: $media->mime");
-	header("Content-Type: text/plain");
 	header('Last-Modified: ' . date('r', $media->date));
 	header('Cache-Control: max-age=3600');
-	if ($media->size > 0) {
-		header("Content-Length: $media->size");
-	}
 	if (! empty($globals['xsendfile'])) {
 		header($globals['xsendfile'].': '.$media->url());
 	} else {
+		if ($media->size > 0) {
+			header("Content-Length: $media->size");
+		}
 		$media->readfile();
 	}
 } else {

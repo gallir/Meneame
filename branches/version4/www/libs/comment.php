@@ -584,10 +584,11 @@ class Comment extends LCPBase {
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
-			if (User::friend_exists($to->user_id, $this->author) < 0) $date = 0;
-			else $date = $this->date;
 			if ($to) {
 				if (!$references[$to->id]) {
+					if (User::friend_exists($to->user_id, $this->author) < 0) $date = 0;
+					else $date = $this->date;
+
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($date), $this->id, $to->id)");
 					$references[$to->id] = true;
 				}

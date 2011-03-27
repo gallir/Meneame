@@ -304,15 +304,17 @@ class Post extends LCPBase {
 				if (!$this->date) $this->date = time();
 				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
 				$to = $db->get_var("select user_id from users where user_login = '$user'");
-				// If the user is ignored, put and old date in order not to show as "new conversations".
-				if (User::friend_exists($to, $this->author) < 0) $date = 0;
-				else $date = $this->date;
 				$id = intval(preg_replace('/[^\s]+,(\d+)$/', '$1', $reference));
 				if (! $to > 0) continue;
+
 				if (! $id > 0) {
 					$id = (int) $db->get_var("select post_id from posts where post_user_id = $to and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
 				}
 				if (! $references[$id]) {
+					// If the user is ignored, put and old date in order not to show as "new conversations".
+					if (User::friend_exists($to, $this->author) < 0) $date = 0;
+					else $date = $this->date;
+
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($date), $this->id, $id)");
 					$references[$id] = true;
 				}
