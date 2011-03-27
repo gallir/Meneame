@@ -194,16 +194,6 @@ function clean_lines($string) {
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function save_text_to_html(&$string, $hashtype = false) {
-	$str = nl2br($string, true);
-	return text_to_html($str, $hashtype);
-}
-
-function text_sub_text($str, $length=70) {
-	// Just in case, to maintain compatibility
-	return text_to_summary($str, $length);
-}
-
 function text_to_summary($string, $length=50) {
 	$string = strip_tags($string);
 	$len = mb_strlen($string);
@@ -237,26 +227,10 @@ function add_tags_callback($matches) {
 	return $matches[1].$matches[2];
 }
 
-function text_to_html(&$string, $hashtype = false, $do_links = true) {
+function text_to_html(&$string) {
 	global $globals;
-	static $regexp = false, $p_hashtype = false, $p_do_links = false;
 
-	// Check if the regexp must change, otherwise use the previous one
-	if (! $regexp || $p_hashtype != $hashtype || $p_do_links != $do_links) {
-		$p_hashtype = $hashtype; $p_do_links = $do_links;
-		$regexp = '';
-
-		if ($do_links) {
-			$regexp .= '(https{0,1}:\/\/)([^\s<>]{5,500})';
-		}
-
-		$globals['hashtype'] = $hashtype; // To pass the value to the callback
-		if ($hashtype) {
-			if ($do_links) $regexp .= '|';
-			$regexp .= '#[^\d\s\.\,\:\;\¡\!\)\-<][^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
-		}
-		$regexp = '/([\s\(\[{¡;,:¿]|^)('.$regexp.')/Smu';
-	}
+	$regexp = '/([\s\(\[{¡;,:¿]|^)((https{0,1}:\/\/)([^\s<>]{5,500}))/Smu';
 	return preg_replace_callback($regexp, 'text_to_html_callback', $string);
 }
 
@@ -264,16 +238,6 @@ function text_to_html_callback(&$matches) {
 	global $globals;
 
 	switch ($matches[2][0]) {
-		case '_':
-			return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
-		case '*':
-			return $matches[1].'<b>'.substr($matches[2], 1, -1).'</b>';
-		case '-':
-			return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
-		case '#';
-			if ($globals['hashtype']) {
-				return $matches[1].'<a href="'.$globals['base_url'].'search.php?w='.$globals['hashtype'].'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
-			}
 		case 'h':
 			$suffix = $extra = '';
 			if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {

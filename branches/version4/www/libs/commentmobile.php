@@ -12,6 +12,14 @@ class CommentMobile extends Comment{
 
 		if(!$this->read) return;
 
+		if (! $link && $this->link > 0) {
+			$link = new Link;
+			$link->id = $this->link;
+			$link->read();
+			$this->link_object = $link;
+		}
+		$this->link_permalink =  $link->get_relative_permalink();
+
 		$this->check_visibility();
 
 		if ($this->hidden)	{
@@ -27,7 +35,7 @@ class CommentMobile extends Comment{
 
 		$this->truncate($length);
 
-		$this->txt_content =  put_smileys(save_text_to_html($this->content));
+		$this->txt_content =  $this->to_html($this->content);
 
 		if ($this->type == 'admin') {
 			$author = '<strong>'._('admin').'</strong> ';

@@ -16,10 +16,8 @@ if (! defined('mnmpath')) {
 
 if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
-$link = new Link;
-$link->id=$id;
-$link->read();
-if(!$link->read) die;
+$link = Link::from_db($id);
+if(!$link) die;
 $user_login = $db->get_var("select user_login from users where user_id = $link->author");
 echo '<p>';
 if ($link->avatar) {
@@ -29,5 +27,5 @@ echo '<strong>' . $link->title . '</strong><br/>';
 echo '<strong>' . $user_login . '</strong><br/>';
 echo htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $link->url), 70)) . '<br/>';
 echo $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</p>';
-echo '<p>' . text_to_html($link->content) . '</p>';
+echo '<p>' . $link->to_html($link->content) . '</p>';
 ?>

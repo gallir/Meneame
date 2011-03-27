@@ -10,7 +10,6 @@ include('../config.php');
 include(mnminclude.'link.php');
 
 $page_size = 20;
-$link = new Link;
 
 
 header("Content-type: text/html; charset=utf-8");
@@ -44,12 +43,11 @@ $links = $db->get_col("SELECT link_id $from_where order by link_date desc LIMIT 
 
 if ($links) {
 	foreach($links as $link_id) {
-		$link->id=$link_id;
-		$link->read();
+		$link = Link::from_db($link_id);
 
 		echo '<div class="news-summary">';
 		echo '<div class="news-title"><a href="'.htmlspecialchars($link->url).'">'.$link->title.'</a></div>'."\n";
-		echo '<p class="news-content">'.text_to_html($link->content).'</p>'."\n";
+		echo '<p class="news-content">'.$link->to_html($link->content).'</p>'."\n";
 		echo '<div class="news-footer">'.$link->votes . ' votos &#187; ' . '<a href="'.$link->get_permalink().'">en menéame</a>'."\n";
 		echo '</div></div>';
 	}

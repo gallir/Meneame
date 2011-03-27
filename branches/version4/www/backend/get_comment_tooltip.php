@@ -27,7 +27,7 @@ if (!empty($_GET['id'])) {
 	die;
 }
 $comment = Comment::from_db($id);
-if(!$comment->read) die;
+if(!$comment) die;
 if ( $comment->type != 'admin') {
 	if ($comment->avatar) {
 		echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
@@ -36,5 +36,5 @@ if ( $comment->type != 'admin') {
 } else {
 	echo '<strong>' . get_server_name() . '</strong><br/>';
 }
-echo put_smileys(save_text_to_html(mb_substr($comment->content, 0, 1000)));
+echo $comment->to_html(mb_substr($comment->content, 0, 1000));
 ?>

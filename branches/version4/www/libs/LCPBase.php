@@ -12,14 +12,11 @@ class LCPBase {
 		echo "hola";
 	}
 
-	function to_html(&$string, $do_links = true) {
+	function to_html(&$string, $fancy = true) {
 		global $globals;
 		static $regexp = false, $p_hashtype = false, $p_do_links = false, $p_class = false;
 
 		$string = nl2br($string, true);
-
-		$class = get_class($this);
-
 		// Check if the regexp must change, otherwise use the previous one
 		if (! $regexp || $p_class != $class || $p_do_links != $do_links) {
 			$p_class = $class; $p_do_links = $do_links;
@@ -27,17 +24,18 @@ class LCPBase {
 
 			$regexp .= '#[^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
 
-			$regexp .= '|\{[a-z]{3,10}\}';
+			if ($fancy) {
+				// Add smileys
+				$regexp .= '|\{[a-z]{3,10}\}';
+			}
 
-			if ($class == 'Post') {
+			if (is_a($this, 'Post')) {
 				$regexp .= '|@[^\s<>;:,\?\)\]\"\']+(?:,\d+){0,1}';
-			} elseif ($class == 'Comment') {
+			} elseif (is_a($this, 'Comment')) {
 				$regexp .= '|@[^\s<>;:,\?\)\]\"\']\w+';
 			}
 
-			if ($do_links) {
-				$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500})';
-			}
+			$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500})';
 
 			$regexp = '/([\s\(\[{}¡;,:¿]|^)('.$regexp.')/Smu';
 		}
@@ -49,7 +47,7 @@ class LCPBase {
 
 		switch ($matches[2][0]) {
 			case '#':
-				if (get_class($this) == 'Comment' and preg_match('/^#\d+$/', $matches[2])) {
+				if (is_a($this, 'Comment') && preg_match('/^#\d+$/', $matches[2])) {
 					$id = substr($matches[2], 1);
 					if ($id > 0) {
 						return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
@@ -74,7 +72,7 @@ class LCPBase {
 
 			case '@':
 				$ref = substr($matches[2], 1);
-				if (get_class($this) == 'Post') {
+				if (is_a($this, 'Post')) {
 					$a = explode(',', $ref);
 					if (count($a) > 1) {
 						$user = $a[0];
@@ -103,13 +101,14 @@ class LCPBase {
 				}
 				if (preg_match('/\.(jpg|gif|png)$/S', $matches[4])) $extra = 'class="fancybox"';
 				return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
-
+			/*
 			case '_':
 				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
 			case '*':
 				return $matches[1].'<b>'.substr($matches[2], 1, -1).'</b>';
 			case '-':
 				return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
+			*/
 		}
 		return $matches[1].$matches[2];
 	}

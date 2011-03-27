@@ -53,7 +53,7 @@ if ($links) {
 		echo '<div class="news-summary"><div class="news-body">';
 		echo '<div class="news-shakeit"><div class="mnm-published">'.$link->votes.'</div><div class="menealo">meneos</div></div>';
 		echo '<h2 class="title">'.$link->title.'</h2>';
-		echo '<p>'.text_to_html($link->content);
+		echo '<p>'.$link->to_html($link->content);
 		echo ' <a href="'.htmlspecialchars($link->url).'">'._('Ver noticia').' &gt;</a></p>';
 		echo '<p class="news-submitted"><img src="'.get_avatar_url($link->author, $link->avatar, 40).'" class="senderimg" width="40" height="40" alt="avatar de '.$link->username.'" />';
 		echo ' '._('por').' <strong>'.$link->username.'</strong> ';

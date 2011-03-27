@@ -202,7 +202,7 @@ function do_cabal($string) {
 function do_ojo($string) {
 	require_once('./ojo.php');
 	$i = rand(0, count($ojo_messages) -1);
-	$comment = '<i>'._('Daría un ojo por saber cuánto es de leyenda y cuanto de verdad '). ' ' . text_to_html($ojo_messages[$i]) . '. <b>En serio.</b></i>';
+	$comment = '<i>'._('Daría un ojo por saber cuánto es de leyenda y cuanto de verdad '). ' ' . $ojo_messages[$i] . '. <b>En serio.</b></i>';
 	return $comment;
 }
 

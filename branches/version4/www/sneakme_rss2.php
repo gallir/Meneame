@@ -92,11 +92,11 @@ $post = new Post;
 if ($sql) $posts = $db->get_col($sql);
 if ($posts) {
 	foreach($posts as $post_id) {
-		$post->id=$post_id;
-		$post->read();
+		$post = Post::from_db($post_id);
+		if (!$post) continue;
 		$title = text_to_summary($post->clean_content(), 40);
 		$title = $post->username.': ' . htmlentities2unicodeentities($title);
-		$content = htmlentities2unicodeentities(put_smileys(save_text_to_html($post->clean_content())));
+		$content = htmlentities2unicodeentities(put_smileys($post->to_html($post->clean_content())));
 		echo "	<item>\n";
 		echo "		<title>$title</title>\n";
 		echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";

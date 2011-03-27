@@ -195,15 +195,8 @@ if ($links) {
 		$link = Link::from_db($link_id);
 		if (!$link) continue;
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
-		$content = text_to_html(htmlentities2unicodeentities($link->content));
+		$content = htmlentities2unicodeentities($link->to_html($link->content));
 		$permalink = $link->get_short_permalink();
-		/*
-		if (isset($_REQUEST['local']) || $globals['bot']) {
-			$permalink = $link->get_permalink();
-		} else {
-			$permalink = $link->get_short_permalink();
-		}
-		*/
 		echo "	<item>\n";
 
 		// Meneame own namespace

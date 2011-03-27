@@ -151,7 +151,7 @@ if ($comments) {
 		if ($comment->user_level == 'disabled') {
 			$content = '['._('Usuario deshabilitado').']';
 		} else {
-			$content = put_smileys(save_text_to_html(htmlentities2unicodeentities($comment->content)));
+			$content = htmlentities2unicodeentities($comment->to_html($comment->content));
 		}
 		echo "	<item>\n";
 		$link = Link::from_db($comment->link);
