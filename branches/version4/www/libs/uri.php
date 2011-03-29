@@ -1,7 +1,7 @@
 <?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
 // Ricardo Galli <gallir at uib dot es>.
-// It's licensed under the GNU GENERAL PUBLIC LICENSE 
+// It's licensed under the GNU GENERAL PUBLIC LICENSE
 // Part of the code is extracted from WP 2 functions
 
 function get_uri($title) {
@@ -13,13 +13,12 @@ function get_uri($title) {
 	// Restore octets.
 	//$title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
 
-	$title = mb_strtolower($title, 'UTF-8');
-	$title = strtolower($title);
 	$title = remove_accents($title);
+	$title = mb_strtolower($title, 'UTF-8');
 	$title = preg_replace('/&.+?;/', '', $title); // kill entities
 	//$title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
 	$title = preg_replace('/[^a-z0-9,;:\]\[\(\)\. _-]/', '', $title);
-	$title = preg_replace('/[\s,;:\]\[\(\)]+/', '-', $title);
+	$title = preg_replace('/\W+/', '-', $title);
 	$title = preg_replace('/\.+$|^\.+/', '', $title);
 	$title = preg_replace('/\.+-|-\.+/', '-', $title);
 	$title = preg_replace('|-+|', '-', $title);
@@ -33,7 +32,7 @@ function get_uri($title) {
 		}
 	}
 	if (strlen($uri) < 5 ) { // Just in case if there were no short words
-			$uri = substr($title, 0, 50); 
+			$uri = substr($title, 0, 50);
 	}
 	$uri = trim($uri, '-');
 
@@ -138,22 +137,22 @@ function remove_accents($string) {
 	chr(197).chr(190) => 'z', chr(197).chr(191) => 's',
 	// Euro Sign
 	chr(226).chr(130).chr(172) => 'E');
-	
+
 	$string = strtr($string, $chars);
 	return $string;
 }
 
 function remove_shorts($string) {
 	$shorts = array( _('a'), _('e'), _('o'), _('u'), _('y'),
-			_('el'), _('la'), _('le'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('si'), 
+			_('el'), _('la'), _('le'), _('lo'), _('un'), _('una'), _('en'), _('de'), _('al'), _('se'), _('si'),
 			_('es'), _('su'), _('te'),
-			_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus'), _('me'), _('mi'),
+			_('los'), _('las'), _('por') , _('con'), _('que'), _('del'), _('sus'), _('me'), _('mi'), _('para'),
 		);
 
 	$size = count($shorts);
-	for($i=0; $i<$size && strlen($string) > 30; $i++) {
+	for($i=0; $i<$size && strlen($string) > 20; $i++) {
 		$short = $shorts[$i];
-		$string = preg_replace("/^$short-/", '', $string);
+		$string = preg_replace("/^$short-|-$short$/", '', $string);
 		$string = preg_replace("/-$short-/", '-', $string);
 	}
 	return $string;
