@@ -140,7 +140,7 @@ function do_register2() {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
 				$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
-				Log:insert('user_new', $user->id, $user->id);
+				Log::insert('user_new', $user->id, $user->id);
 			}
 			echo '</fieldset>'."\n";
 		} else {
