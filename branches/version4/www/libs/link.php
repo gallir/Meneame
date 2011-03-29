@@ -6,7 +6,6 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once(mnminclude.'log.php');
 require_once(mnminclude.'favorites.php');
 
 class Link extends LCPBase {
@@ -337,8 +336,7 @@ class Link extends LCPBase {
 			$db->commit();
 
 			// Add the new link log/event
-			require_once(mnminclude.'log.php');
-			log_conditional_insert('link_new', $this->id, $this->author);
+			Log::conditional_insert('link_new', $this->id, $this->author);
 
 			$db->query("delete from links where link_author = $this->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
 			if(!empty($_POST['trackback'])) {
@@ -430,7 +428,7 @@ class Link extends LCPBase {
 		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
 			// This is a new link, add it to the events, it an additional control
 			// just in case the user dind't do the last submit phase and voted later
-			log_conditional_insert('link_new', $this->id, $this->author);
+			Log::conditional_insert('link_new', $this->id, $this->author);
 		}
 
 		$this->update_votes();
@@ -855,7 +853,6 @@ class Link extends LCPBase {
 	function calculate_karma() {
 		global $db, $globals;
 
-		require_once(mnminclude.'log.php');
 		require_once(mnminclude.'ban.php');
 
 		$this->old_karma = round($this->karma);

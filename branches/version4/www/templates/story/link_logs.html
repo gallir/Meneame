@@ -3,7 +3,7 @@
 <div id="voters-container">
 
 {% if logs %}
-	{% for log in logs %} 
+	{% for log in logs %}
 		<div style="width:100%; display: block; clear: both; border-bottom: 1px solid #FFE2C5;">
 		<div style="width:30%; float: left;padding: 4px 0 4px 0;">{% exec get_date_time log.ts %}</div>
 		<div style="width:24%; float: left;padding: 4px 0 4px 0;"><strong>{{ log.log_type }}</strong></div>
@@ -13,9 +13,12 @@
 			<img src="{% exec get_no_avatar_url 20 %}" width="20" height="20" alt=""/>&nbsp;{% trans _('admin') %}
 			{% if current_user.admin %}&nbsp;({{ log.user_login }}){% endif %}
 		{% else %}
-			<a href="{{ log.user_login | useruri }}" title="{{ log.date }}"><img 
-				src="{% exec get_avatar_url log.log_user_id log.user_avatar 20 %}" 
+			<a href="{{ log.user_login | useruri }}" title="{{ log.date }}"><img
+				src="{% exec get_avatar_url log.log_user_id log.user_avatar 20 %}"
 				width="20" height="20" alt="{{ log.user_login }}"/>&nbsp;{{ log.user_login }}</a>
+		{% endif %}
+		{% if log.annotation %}
+			[<a class="fancybox" href="{{ globals.base_url }}backend/annotation_unserialize.php?id=log-{{ log.log_id }}" title="{% trans _('contenido previo') %}">{% trans _('ver contenido previo') %}</a>]
 		{% endif %}
 	</div>
 	</div>
@@ -57,7 +60,7 @@
 	<div id="flot" style="width:100%;height:250px;"></div>
 
 	{% spacefull %}
-	<script type="text/javascript"> 
+	<script type="text/javascript">
 	//<!--
 	$(function () {
 		var options = {
@@ -71,10 +74,10 @@
 		};
 		var data = [];
 		var placeholder = $("#flot");
-		$.getJSON(base_url+"backend/karma-story.json.php?id={{ link.id }}", 
+		$.getJSON(base_url+"backend/karma-story.json.php?id={{ link.id }}",
 			function (json) {
 				for (i=0; i<json.length; i++) {
-					data.push(json[i]); 
+					data.push(json[i]);
 				}
 				$.plot(placeholder, data, options);
 			});
@@ -115,15 +118,15 @@
 				}
 			} else {
 				$("#tooltip").remove();
-				previousPoint = null;            
+				previousPoint = null;
 			}
 		})
 
 
 		});
 	//-->
-	</script> 
-	{% endspacefull %}	
+	</script>
+	{% endspacefull %}
 	</fieldset>
 	</div>
 {% endif %}

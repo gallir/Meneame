@@ -1,5 +1,5 @@
 <?
-// The Meneame source code is Free Software, Copyright (C) 2005-2009 by
+// The Meneame source code is Free Software, Copyright (C) 2005-2011 by
 // Ricardo Galli <gallir at gmail dot com> and Menéame Comunicacions S.L.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -262,6 +262,10 @@ case 6:
 case 4:
 	// Show logs
 	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_level, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
+
+	foreach ($logs as $log) {
+		$log->annotation = Log::has_annotation($log->log_id);
+	}
 
 	// Show karma logs from annotations
 	$annotations = $link->read_annotation("link-karma");

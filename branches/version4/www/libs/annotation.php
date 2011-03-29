@@ -55,6 +55,5 @@ class Annotation {
 	function optimize() {
 		global $db;
 
-		$db->query("OPTIMIZE TABLE annotations");
 	}
 }

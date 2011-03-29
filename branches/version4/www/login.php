@@ -9,7 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
-include(mnminclude.'log.php');
 
 //$globals['ads'] = true;
 
@@ -55,7 +54,7 @@ function do_login() {
 	global $current_user, $globals;
 
 	$form_ip_check = check_form_auth_ip();
-	$previous_login_failed =  log_get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
+	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
 	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
@@ -109,10 +108,10 @@ function do_login() {
 		// Check form
 		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) 
 				&& !ts_is_human()) {
-			log_insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif ($current_user->Authenticate($username, md5($password), $_POST['persistent']) == false) {
-			log_insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
 		} else {

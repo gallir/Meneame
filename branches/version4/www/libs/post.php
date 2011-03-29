@@ -87,7 +87,6 @@ class Post extends LCPBase {
 	}
 
 	function store($full = true) {
-		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
 		$db->transaction();
@@ -106,11 +105,11 @@ class Post extends LCPBase {
 			$this->insert_vote($post_author);
 
 			// Insert post_new event into logs
-			if ($full) log_insert('post_new', $this->id, $post_author);
+			if ($full) Log::insert('post_new', $this->id, $post_author);
 		} else {
 			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_ip_int = '$this->ip', post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			// Insert post_new event into logs
-			if ($full) log_conditional_insert('post_edit', $this->id, $post_author, 30);
+			if ($full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
 		if ($full) $this->update_conversation();
 		$db->commit();

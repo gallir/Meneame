@@ -69,7 +69,6 @@ class Comment extends LCPBase {
 	}
 
 	function store($full = true) {
-		require_once(mnminclude.'log.php');
 		global $db, $current_user, $globals;
 
 		if(!$this->date) $this->date=$globals['now'];
@@ -84,12 +83,12 @@ class Comment extends LCPBase {
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
-			if ($full) log_insert('comment_new', $this->id, $current_user->user_id);
+			if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
 		} else {
 			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
 			if ($full) {
-				log_conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+				Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
 				$this->update_order();
 			}
 		}

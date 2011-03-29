@@ -10,7 +10,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 include(mnminclude.'ban.php');
-include(mnminclude.'log.php');
 
 if ($current_user->user_id > 0) {
 	header("Location: " . get_user_uri($current_user->user_login));
@@ -141,7 +140,7 @@ function do_register2() {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
 				$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
-				log_insert('user_new', $user->id, $user->id);
+				Log:insert('user_new', $user->id, $user->id);
 			}
 			echo '</fieldset>'."\n";
 		} else {

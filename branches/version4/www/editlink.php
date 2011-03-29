@@ -54,6 +54,15 @@ function do_edit($link) {
 function do_save($link) {
 	global $dblang, $globals, $current_user;
 
+	// Store previous value for the log
+	$link_old = new stdClass;
+	$link_old->url = $link->url;
+	$link_old->title = $link->title;
+	$link_old->content = $link->content;
+	$link_old->category = $link->category_name;
+	$link_old->tags = $link->tags;
+	$link_old->status = $link->status;
+
 	$link->read_content_type_buttons($_POST['type']);
 
 	$link->category=intval($_POST['category']);
@@ -100,15 +109,14 @@ function do_save($link) {
 
 		// Insert edit log/event if the link it's newer than 15 days
 		if ($globals['now'] - $link->date < 86400*15) {
-			require_once(mnminclude.'log.php');
 			if ($insert_discard_log) {
 				// Insert always a link and discard event if the status has been changed to discard
-				log_insert('link_discard', $link->id, $current_user->user_id);
+				Log::insert('link_discard', $link->id, $current_user->user_id);
 				if ($link->author == $current_user->user_id) { // Don't save edit log if it's discarded by an admin
-					log_insert('link_edit', $link->id, $current_user->user_id);
+					Log::insert('link_edit', $link->id, $current_user->user_id);
 				}
 			} elseif ($link->votes > 0) {
-				log_conditional_insert('link_edit', $link->id, $current_user->user_id, 60);
+				Log::conditional_insert('link_edit', $link->id, $current_user->user_id, 60, serialize($link_old));
 			}
 		}
 
