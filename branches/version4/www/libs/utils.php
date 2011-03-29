@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function unaccents($string) {
+function unaccent($string) {
 	$chars = array(
 	// Decompositions for Latin-1 Supplement
 	chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
