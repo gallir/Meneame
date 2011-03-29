@@ -6,6 +6,69 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+function unaccents($string) {
+	$chars = array(
+	// Decompositions for Latin-1 Supplement
+	chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
+	chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
+	chr(195).chr(132) => 'A', chr(195).chr(133) => 'A',
+	chr(195).chr(135) => 'C', chr(195).chr(136) => 'E',
+	chr(195).chr(137) => 'E', chr(195).chr(138) => 'E',
+	chr(195).chr(139) => 'E', chr(195).chr(140) => 'I',
+	chr(195).chr(141) => 'I', chr(195).chr(142) => 'I',
+	chr(195).chr(143) => 'I',
+	chr(195).chr(146) => 'O', chr(195).chr(147) => 'O',
+	chr(195).chr(148) => 'O', chr(195).chr(149) => 'O',
+	chr(195).chr(150) => 'O', chr(195).chr(153) => 'U',
+	chr(195).chr(154) => 'U', chr(195).chr(155) => 'U',
+	chr(195).chr(156) => 'U',
+	chr(195).chr(159) => 's', chr(195).chr(160) => 'a',
+	chr(195).chr(161) => 'a', chr(195).chr(162) => 'a',
+	chr(195).chr(163) => 'a', chr(195).chr(164) => 'a',
+	chr(195).chr(165) => 'a', chr(195).chr(167) => 'c',
+	chr(195).chr(168) => 'e', chr(195).chr(169) => 'e',
+	chr(195).chr(170) => 'e', chr(195).chr(171) => 'e',
+	chr(195).chr(172) => 'i', chr(195).chr(173) => 'i',
+	chr(195).chr(174) => 'i', chr(195).chr(175) => 'i',
+	chr(195).chr(178) => 'o',
+	chr(195).chr(179) => 'o', chr(195).chr(180) => 'o',
+	chr(195).chr(181) => 'o', chr(195).chr(182) => 'o',
+	chr(195).chr(182) => 'o', chr(195).chr(185) => 'u',
+	chr(195).chr(186) => 'u', chr(195).chr(187) => 'u',
+	chr(195).chr(188) => 'u',
+	// Decompositions for Latin Extended-A
+	chr(196).chr(128) => 'A', chr(196).chr(129) => 'a',
+	chr(196).chr(130) => 'A', chr(196).chr(131) => 'a',
+	chr(196).chr(132) => 'A', chr(196).chr(133) => 'a',
+	chr(196).chr(134) => 'C', chr(196).chr(135) => 'c',
+	chr(196).chr(136) => 'C', chr(196).chr(137) => 'c',
+	chr(196).chr(138) => 'C', chr(196).chr(139) => 'c',
+	chr(196).chr(140) => 'C', chr(196).chr(141) => 'c',
+	chr(196).chr(142) => 'D', chr(196).chr(143) => 'd',
+	chr(196).chr(144) => 'D', chr(196).chr(145) => 'd',
+	chr(196).chr(146) => 'E', chr(196).chr(147) => 'e',
+	chr(196).chr(148) => 'E', chr(196).chr(149) => 'e',
+	chr(196).chr(150) => 'E', chr(196).chr(151) => 'e',
+	chr(196).chr(152) => 'E', chr(196).chr(153) => 'e',
+	chr(196).chr(154) => 'E', chr(196).chr(155) => 'e',
+	chr(196).chr(168) => 'I', chr(196).chr(169) => 'i',
+	chr(196).chr(170) => 'I', chr(196).chr(171) => 'i',
+	chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
+	chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
+	chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
+	chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
+	chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
+	chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',
+	chr(197).chr(168) => 'U', chr(197).chr(169) => 'u',
+	chr(197).chr(170) => 'U', chr(197).chr(171) => 'u',
+	chr(197).chr(172) => 'U', chr(197).chr(173) => 'u',
+	chr(197).chr(174) => 'U', chr(197).chr(175) => 'u',
+	chr(197).chr(176) => 'U', chr(197).chr(177) => 'u',
+	chr(197).chr(178) => 'U', chr(197).chr(179) => 'u',
+	);
+	$string = strtr($string, $chars);
+	return $string;
+}
 
 function htmlentities2unicodeentities ($input) {
 	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
