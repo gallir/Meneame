@@ -1,6 +1,5 @@
 <?
 include('../config.php');
-include(mnminclude.'log.php');
 include(mnminclude.'external_post.php');
 
 global $globals;
@@ -43,7 +42,7 @@ if ($links) {
 				$l->annotation = _('Retirada de portada');
 				$l->save_annotation('link-karma');
 			}
-			log_insert('link_depublished', $link->link_id, $link->link_author);
+			Log::insert('link_depublished', $link->link_id, $link->link_author);
 			// Add the discard to log/event
 			$user = new User();
 			$user->id = $link->link_author;
@@ -98,7 +97,7 @@ foreach ($negatives as $negative) {
 	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event
-	log_insert('link_discard', $linkid, $negative->link_author);
+	Log::insert('link_discard', $linkid, $negative->link_author);
 	echo  "$linkid: $negative->link_karma ($negative->link_votes, $negative->link_negatives)\n";
 
 }

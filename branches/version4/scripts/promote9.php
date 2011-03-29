@@ -1,7 +1,6 @@
 <?
 include('../config.php');
 include(mnminclude.'external_post.php');
-include_once(mnminclude.'log.php');
 include_once(mnminclude.'ban.php');
 
 define('DEBUG', false);
@@ -391,7 +390,7 @@ function publish($link) {
 	}
 
 	// Add the publish event/log
-	log_insert('link_publish', $link->id, $link->author);
+	Log::insert('link_publish', $link->id, $link->author);
 	$link->annotation .= _('publicación'). "<br/>";
 	$link->save_annotation('link-karma');
 
