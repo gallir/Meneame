@@ -313,14 +313,6 @@ function text_to_html_callback(&$matches) {
 	return $matches[1].$matches[2];
 }
 
-
-// Clean all special chars and html/utf entities
-function text_sanitize($string) {
-	$string = preg_replace('/&[^ ;]{1,8};/', ' ', $string);
-	$string = preg_replace('/(^|[\(¡;,:\s])[_\*]([^\s<>]+)[_\*]/', ' $2 ', $string);
-	return $string;
-}
-
 function check_integer($which) {
 	if (is_numeric($_REQUEST[$which])) {
 		return intval($_REQUEST[$which]);

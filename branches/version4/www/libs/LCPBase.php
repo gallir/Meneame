@@ -12,7 +12,7 @@ class LCPBase {
 		echo "hola";
 	}
 
-	function to_html(&$string, $fancy = true) {
+	function to_html($string, $fancy = true) {
 		global $globals;
 		static $regexp = false, $p_hashtype = false, $p_do_links = false, $p_class = false;
 
@@ -111,6 +111,13 @@ class LCPBase {
 			*/
 		}
 		return $matches[1].$matches[2];
+	}
+
+	function sanitize($string) {
+		//$string = preg_replace('/&[^ ;]{1,8};/', ' ', $string);
+		$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
+		$string = strip_tags($string);
+		return $string;
 	}
 
 }

@@ -1167,7 +1167,6 @@ class Link extends LCPBase {
 		// Only work with sphinx
 		if (!$globals['sphinx_server']) return $related;
 		require(mnminclude.'search.php');
-		require(mnminclude.'uri.php');
 
 		$maxid = $db->get_var("select max(link_id) from links");
 		if ($this->status == 'published') {
@@ -1175,6 +1174,9 @@ class Link extends LCPBase {
 		}
 
 		$words = array();
+		$freqs = array();
+		$hits = array();
+		$freq_min = 1;
 
 		// Filter title
 		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
@@ -1183,14 +1185,23 @@ class Link extends LCPBase {
 		$i = 0;
 		$n = count($a);
 		foreach ($a as $w) {
-			$wlower = mb_strtolower(remove_accents($w));
+			$wlower = mb_strtolower(unaccent($w));
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
 				&& ($len > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
+				$hits[$wlower] = $h;
 				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
-				if (preg_match('/^[A-Z]/', $w)) {
+
+				// Store the frequency
+				$freq = $h/$maxid;
+				if (!isset($freqs[$wlower]) || $freqs[$wlower] > $freq) {
+					$freqs[$wlower] = $freq;
+				}
+				if ($freq < $freq_min) $freq_min = max(0.0001, $freq);
+
+				if (preg_match('/^[A-Z]/', $w) && $len > 2) {
 					$coef = 2 * log10($maxid/$h);
 				} else $coef = 2;
 
@@ -1210,7 +1221,7 @@ class Link extends LCPBase {
 		$a = preg_split('/,+/', $this->tags, -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$w = trim($w);
-			$wlower = mb_strtolower(remove_accents($w));
+			$wlower = mb_strtolower(unaccent($w));
 			$len = mb_strlen($w);
 			if (isset($words[$wlower])) continue;
 			if (preg_match('/\s/', $w)) {
@@ -1218,22 +1229,34 @@ class Link extends LCPBase {
 					$phrases++;
 			}
 			$h = sphinx_doc_hits($wlower);
+			$hits[$wlower] = $h;
 			if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
+
+			// Store the frequency
+			$freq = $h/$maxid;
+			if (!isset($freqs[$wlower]) || $freqs[$wlower] > $freq) {
+				$freqs[$wlower] = $freq;
+			}
+			if ($freq < $freq_min) $freq_min = max(0.0001, $freq);
+
 			$words[$wlower] = intval($h/2);
 		}
 
 		// Filter content, check length and that it's begin con capital
 		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
-				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', text_sanitize($this->content)), // Delete parenthesided and links too
+				preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', $this->sanitize($this->content)), // Delete parenthesided and links too
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
-			$wlower = mb_strtolower(remove_accents($w));
+			$wlower = mb_strtolower(unaccent($w));
+			if (!preg_match('/^[A-Z][a-z]{2,}/', $w)) continue;
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
 				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
+				$hits[$wlower] = $h;
 				if ($h < 2 || $h > $maxid/50) continue; // If 0 or 1 it won't help to the search, too frequents neither
+
 				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/1000) $coef = max(log10($maxid/$h) - 1, 1);
 				else $coef = 1;
 				$words[$wlower] = intval($h/$coef);
@@ -1253,6 +1276,9 @@ class Link extends LCPBase {
 		$i = 0;
 		$text = '';
 		foreach ($words as $w => $v) {
+			// Filter words if we got good candidates
+			if ($i > 1 && $freq_min < 0.005 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 20)) continue;
+
 			$i++;
 			if ($i > 14 or ($i > 8 && $v > $maxid/2000)) break;
 			$text .= "$w ";
