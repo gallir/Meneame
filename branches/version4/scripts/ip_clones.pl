@@ -2,6 +2,14 @@
 #
 
 use DBI;
+use FindBin qw($RealBin);
+use lib "$RealBin";
+
+require "dbconf.pl";
+my $dbh = DBI->connect ("DBI:mysql:$DBNAME;host=$DBSLAVE", $DBUSER, $DBPASS);
+$dbh->do("set character set utf8");
+$dbh->do("set names utf8");
+
 
 my $ip = shift;
 
@@ -27,8 +35,6 @@ if (scalar(@integers) <= 3) {
 } else {
 	$sql = "select distinct user_login, user_email, inet_ntoa(vote_ip_int), user_level from votes, users where user_id=vote_user_id and vote_type in ('links','comments') and vote_ip_int = inet_aton('$ip');";
 }
-
-my $dbh = DBI->connect ('DBI:mysql:meneame;host=ec2-db-slave.meneame.net', 'meneame', '');
 
 my $sth = $dbh->prepare($sql);
 
