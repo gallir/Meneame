@@ -11,11 +11,12 @@
 {% else %}
     {% trans _('algún error nos ha petado') %}
 {% endif %}
-    <br />
-
+<br/>
+<span style="font-size: 80%">
 {% if error %}
     {% trans _("error %s"), error %}
 {% endif %}
+</span>
 </p>
 <div class="errl">
     <img src="{{globals.base_url}}img/mnm/lame_excuse_01.png" width="362" height="100" alt="ooops logo" />

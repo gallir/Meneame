@@ -517,7 +517,7 @@ function link_errors($link) {
 		add_submit_error(_("título o texto incompletos"));
 		$error = true;
 	}
-	if(get_uppercase_ratio($link->title) > 0.25  || get_uppercase_ratio($link->content) > 0.25 ) {
+	if(get_uppercase_ratio($link->title) > 0.4  || get_uppercase_ratio($link->content) > 0.25 ) {
 		add_submit_error(_("demasiadas mayúsculas en el título o texto"));
 		$error = true;
 	}

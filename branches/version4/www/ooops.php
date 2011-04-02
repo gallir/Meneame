@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$errn = $_SERVER{"REDIRECT_STATUS"};
+$errn = $_GET{"e"};
 
 switch($errn) {
   case 400:

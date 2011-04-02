@@ -17,8 +17,8 @@ function get_uri($title) {
 	$title = mb_strtolower($title, 'UTF-8');
 	$title = preg_replace('/&.+?;/', '', $title); // kill entities
 	//$title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
+	$title = preg_replace('/[\W¿¡]+/u', '-', $title);
 	$title = preg_replace('/[^a-z0-9,;:\]\[\(\)\. _-]/', '', $title);
-	$title = preg_replace('/\W+/', '-', $title);
 	$title = preg_replace('/\.+$|^\.+/', '', $title);
 	$title = preg_replace('/\.+-|-\.+/', '-', $title);
 	$title = preg_replace('|-+|', '-', $title);

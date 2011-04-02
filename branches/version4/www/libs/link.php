@@ -1188,7 +1188,7 @@ class Link extends LCPBase {
 			$wlower = mb_strtolower(unaccent($w));
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
-				&& ($len > 2 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				$hits[$wlower] = $h;
@@ -1248,10 +1248,10 @@ class Link extends LCPBase {
 				 -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($a as $w) {
 			$wlower = mb_strtolower(unaccent($w));
-			if (!preg_match('/^[A-Z][a-z]{2,}/', $w)) continue;
+			if (!preg_match('/^[A-Z][a-zA-Z]{2,}/', $w)) continue;
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
-				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
+				&& ($len > 2 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				$hits[$wlower] = $h;
@@ -1277,7 +1277,8 @@ class Link extends LCPBase {
 		$text = '';
 		foreach ($words as $w => $v) {
 			// Filter words if we got good candidates
-			if ($i > 1 && $freq_min < 0.005 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 20)) continue;
+			// echo "<!-- $w: ".$freqs[$w]." coef: ".$words[$w]."-->\n";
+			if ($i > 1 && $freq_min < 0.005 && strlen($w) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 20)) continue;
 
 			$i++;
 			if ($i > 14 or ($i > 8 && $v > $maxid/2000)) break;
