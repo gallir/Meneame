@@ -49,7 +49,7 @@
 <script type="text/javascript">
 /* prepare Options Object */
 {% if self.id == 0 %}
-	var options = { 
+	var options = {
 		async: false,
 		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
@@ -57,7 +57,7 @@
 		}
 	};
 {% else %}
-	var options = { 
+	var options = {
 		async: false,
 		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
