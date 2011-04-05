@@ -34,7 +34,7 @@ if ($top->read() && ($links = explode(',',$top->text))) {
 		$link->show_clicks = true;
 		$link->print_summary();
 		$counter++; 
-		Haanga::Safe_Load('private/ad-interlinks.html', compact('counter'));
+		Haanga::Safe_Load('private/ad-interlinks-500.html', compact('counter'));
 	}
 }
 echo '</div>'."\n";

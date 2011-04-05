@@ -82,7 +82,7 @@ if ($links) {
 		$link = Link::from_db($dblink->link_id);
 		$link->show_clicks = true;
 		$link->print_summary();
-		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter'));
+		$counter++; Haanga::Safe_Load('private/ad-interlinks-500.html', compact('counter'));
 	}
 }
 do_pages($rows, $page_size);
