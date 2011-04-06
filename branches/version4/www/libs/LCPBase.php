@@ -14,31 +14,24 @@ class LCPBase {
 
 	function to_html($string, $fancy = true) {
 		global $globals;
-		static $regexp = false, $p_hashtype = false, $p_do_links = false, $p_class = false;
 
 		$string = nl2br($string, true);
-		// Check if the regexp must change, otherwise use the previous one
-		if (! $regexp || $p_class != $class || $p_do_links != $do_links) {
-			$p_class = $class; $p_do_links = $do_links;
-			$regexp = '';
 
-			$regexp .= '#[^\s\.\,\:\;\¡\!\)\-<>]{1,42}';
+		$regexp = '#[^\s\.\,\:\;\¡\!\)\-<>&]{1,42}';
 
-			if ($fancy) {
-				// Add smileys
-				$regexp .= '|\{[a-z]{3,10}\}';
-			}
-
-			if (is_a($this, 'Post')) {
-				$regexp .= '|@[^\s<>;:,\?\)\]\"\']+(?:,\d+){0,1}';
-			} elseif (is_a($this, 'Comment')) {
-				$regexp .= '|@[^\s<>;:,\?\)\]\"\']\w+';
-			}
-
-			$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500})';
-
-			$regexp = '/([\s\(\[{}¡;,:¿]|^)('.$regexp.')/Smu';
+		if ($fancy) {
+			// Add smileys
+			$regexp .= '|\{[a-z]{3,10}\}';
 		}
+
+		if (is_a($this, 'Post')) {
+			$regexp .= '|@[^\s<>;:,\?\)\]\"\']+(?:,\d+){0,1}';
+		} elseif (is_a($this, 'Comment')) {
+			$regexp .= '|@[^\s<>;:,\?\)\]\"\']\w+';
+		}
+
+		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500})';
+		$regexp = '/([\s\(\[{}¡;,:¿>]|^)('.$regexp.')/Smu';
 		return preg_replace_callback($regexp, array( &$this, 'to_html_cb'), $string);
 	}
 
