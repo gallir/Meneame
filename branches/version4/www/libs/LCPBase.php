@@ -40,13 +40,19 @@ class LCPBase {
 
 		switch ($matches[2][0]) {
 			case '#':
-				if (is_a($this, 'Comment') && preg_match('/^#\d+$/', $matches[2])) {
+				if (preg_match('/^#\d+$/', $matches[2])) {
 					$id = substr($matches[2], 1);
-					if ($id > 0) {
-						return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
-					} else {
-						return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
+					switch (get_class($this)) {
+						case 'Comment':
+							if ($id > 0) {
+								return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
+							} else {
+								return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
+							}
+						case 'Link':
+							return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
 					}
+
 				} else {
 					switch (get_class($this)) {
 						case 'Link':
