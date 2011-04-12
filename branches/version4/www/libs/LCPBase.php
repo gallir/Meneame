@@ -31,7 +31,7 @@ class LCPBase {
 		}
 
 		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500})';
-		$regexp = '/([\s\(\[{}¡;,:¿>]|^)('.$regexp.')/Smu';
+		$regexp = '/([\s\(\[{}¡;,:¿>\*]|^)('.$regexp.')/Smu';
 		return preg_replace_callback($regexp, array( &$this, 'to_html_cb'), $string);
 	}
 
