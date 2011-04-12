@@ -621,7 +621,7 @@ function put_smileys_callback(&$matches) {
 	static $translations = false;
 	if (!$translations) {
 		$translations = array(
-			'troll' => ' <img src="'.$globals['base_static'].'img/smileys/trollface.gif" alt=":troll:" title=":troll:" width="15" height="15" /> ',
+			'troll' => ' <img src="'.$globals['base_static'].'img/smileys/trollface2.gif" alt=":troll:" title=":troll:" width="15" height="15" /> ',
 			'ffu' => ' <img src="'.$globals['base_static'].'img/smileys/fu.gif" alt=":ffu:" title=":ffu:" width="19" height="15" /> ',
 			'palm' => ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" /> ',
 			'goatse' => ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title="goat-ish" width="15" height="15" /> ',
