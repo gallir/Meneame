@@ -923,7 +923,7 @@ class Link extends LCPBase {
 
 		// Small quadratic punishment for links having too many negatives
 		if ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user) && abs($karma_neg_user)/$karma_pos_user > 0.075) {
-			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.5);
+			$r = min(max(0,abs($karma_neg_user)*2/$karma_pos_user), 0.4);
 			$karma_neg_user = max(-($karma_pos_user+$karma_pos_ano), $karma_neg_user * pow((1+$r), 2));
 		}
 
@@ -984,7 +984,7 @@ class Link extends LCPBase {
 		}
 
 		// Give a small bonus (= $w) to links according to their clicks
-		if ($globals['click_counter'] && $this->id >= $globals['click_counter']
+		if ($this->karma > 0 && $globals['click_counter'] && $this->id >= $globals['click_counter']
 			&& $globals['karma_clicks_bonus'] > 0
 			&& $this->negatives < $this->votes/5) {
 			$w = $globals['karma_clicks_bonus'];

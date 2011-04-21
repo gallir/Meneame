@@ -195,7 +195,6 @@ if ($links) {
 		$link = Link::from_db($link_id);
 		if (!$link) continue;
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
-		$content = htmlentities2unicodeentities($link->to_html($link->content));
 		$permalink = $link->get_short_permalink();
 		echo "	<item>\n";
 
@@ -230,29 +229,35 @@ if ($links) {
 		if (($latlng = geo_latlng('link', $link->id))) {
 			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
 		}
-		echo '		<description><![CDATA[';
-		// In case of meta, only sends votes and karma
-		// developed for alianzo.com
-		if (($thumb = $link->has_thumb())) {
-			echo "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
-		}
-		echo '<p>'.$content.'</p>';
-		echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
+		if (isset($_REQUEST['nohtml'])) {
+			$content = htmlentities2unicodeentities(strip_tags($link->content));
+			echo "		<description>$content</description>\n";
+		} else {
+			$content = htmlentities2unicodeentities($link->to_html($link->content));
+			echo '		<description><![CDATA[';
+			// In case of meta, only sends votes and karma
+			// developed for alianzo.com
+			if (($thumb = $link->has_thumb())) {
+				echo "<img src='$thumb' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail' style='float:right;margin-left: 3px' align='right' hspace='3'/>";
+			}
+			echo '<p>'.$content.'</p>';
+			echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
 
-		if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-			echo '<p><a href="'.$permalink.'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
-		}
+			if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
+				echo '<p><a href="'.$permalink.'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
+			}
 		
-		if ($link->status != 'published') $rel = 'rel="nofollow"';
-		else $rel = '';
+			if ($link->status != 'published') $rel = 'rel="nofollow"';
+			else $rel = '';
 
-		echo '<p>&#187;&nbsp;<a href="'.htmlspecialchars($link->url).'"';
-		if ($globals['click_counter'] > 0) {
-			echo ' onmousedown="this.href=\'http://'.get_server_name().$globals['base_url'].'backend/go.php?id='.$link->id.'\'; return true"';
+			echo '<p>&#187;&nbsp;<a href="'.htmlspecialchars($link->url).'"';
+			if ($globals['click_counter'] > 0) {
+				echo ' onmousedown="this.href=\'http://'.get_server_name().$globals['base_url'].'backend/go.php?id='.$link->id.'\'; return true"';
+			}
+			echo " $rel>"._('noticia original')."</a></p>";
+
+			echo "]]></description>\n";
 		}
-		echo " $rel>"._('noticia original')."</a></p>";
-
-		echo "]]></description>\n";
 		if ($thumb) {
 			echo '		<media:thumbnail url="'.$thumb."\" width='$link->thumb_x' height='$link->thumb_y' />\n";
 		}
@@ -313,7 +318,7 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (isset($_REQUEST['local']) || $globals['bot'] || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	if (isset($_REQUEST['local']) || isset($_REQUEST['nohtml']) || $globals['bot'] || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
 	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
 	switch ($status) {
