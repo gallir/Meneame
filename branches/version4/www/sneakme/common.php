@@ -50,7 +50,7 @@ function do_posts_tabs($tab_selected, $username) {
 		if ($tab_selected == 5) {
 			echo '<li'.$active.'><a href="'.post_get_base_url().'priv.php" title="'.$reload_text.'"><em>'._('privados').'</em></a></li>' . "\n";
 		} elseif ($current_user->user_id > 0) {
-			echo '<li><a href="'.post_get_base_url().'priv.php">'._('privados').'</a></li>' . "\n";
+			echo '<li><a href="'.post_get_base_url('_priv').'">'._('privados').'</a></li>' . "\n";
 		}
 	}
 

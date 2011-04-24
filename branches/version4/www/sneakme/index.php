@@ -8,18 +8,7 @@
 
 include('../config.php');
 include('common.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'favorites.php');
 
-$globals['search_options'] = array('w' => 'posts');
-
-if ($current_user->user_id > 0) {
-	array_push($globals['extra_js'], 'jquery-form.pack.js');
-}
-
-
-
-$user=new User();
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
@@ -28,6 +17,22 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_REQUEST['id'], 4, PREG_SPLIT_NO_EMPTY);
 	$argv[0] = clean_input_string($argv[0]);
 }
+
+if ($argv[0] == _priv) {
+	// Load priv.php
+	include('priv.php');
+	die;
+}
+
+include(mnminclude.'html1.php');
+include(mnminclude.'favorites.php');
+
+$globals['search_options'] = array('w' => 'posts');
+if ($current_user->user_id > 0) {
+	array_push($globals['extra_js'], 'jquery-form.pack.js');
+}
+
+$user=new User();
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;

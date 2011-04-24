@@ -5,8 +5,8 @@
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include('../config.php');
-include('common.php');
+//include('../config.php');
+//include('common.php');
 include(mnminclude.'html1.php');
 
 if (! $current_user->user_id) {
@@ -25,7 +25,7 @@ $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 $page_title = _('mensajes privados') . ' | '._('menéame');
 
-switch ($_REQUEST['v']) {
+switch ($argv[1]) {
 	case 'sent':
 		$where = "privates.user = $current_user->user_id";
 		$order_by = "ORDER BY date desc";
@@ -44,8 +44,8 @@ switch ($_REQUEST['v']) {
 do_header($page_title);
 do_posts_tabs(5, $current_user->user_login);
 $options = array(
-	_('recibidos') => post_get_base_url().'priv.php',
-	_('enviados') => post_get_base_url().'priv.php?v=sent',
+	_('recibidos') => post_get_base_url('_priv'),
+	_('enviados') => post_get_base_url('_priv').'/sent',
 
 );
 do_priv_subheader($options, $view);
