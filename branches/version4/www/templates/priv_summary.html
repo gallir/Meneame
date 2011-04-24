@@ -1,0 +1,27 @@
+	<div class="{{ post_class }}" id="pid-{{ self.id }}">
+	{% if self.author == current_user.user_id %}
+		<a href="{{ self.to_username | useruri }}" class="tooltip u:{{ self.to}}"><img class="avatar" src="{% exec get_avatar_url self.to, self.to_avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
+	{% else %}
+		<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
+	{% endif %}
+
+	{{ self.content }}
+
+	{% if self.media_size > 0 %}
+		&nbsp;
+		{# PixeloPhilia icon from omercetin.deviantart.com #}
+		<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=rpivate&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}"><img style="vertical-align: top" src="{{ globals.base_static }}img/common/picture01.png" width="30" height="24" alt="media" title="{% trans _('Mayúsculas+Clic para expandir todas') %}"/></a>
+	{% endif %}
+	</div>
+
+
+	<div class="{{ post_meta_class }}">
+		<div class="comment-votes-info">
+		{{ self.comment_info }}
+		{% if self.author != current_user.user_id %}
+			<a href="javascript:priv_new({{ self.author }})" title="{% trans _('responder') %}"><img src="{{ globals.base_static }}img/common/reply02.png" width="18" height="16"/></a>
+		{% endif %}
+		</div>
+
+		<div class="comment-info">&nbsp;</div>
+	</div>
