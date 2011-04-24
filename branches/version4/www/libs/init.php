@@ -103,6 +103,7 @@ function __autoload($class) {
 				'Annotation' => 'annotation.php',
 				'Blog' => 'blog.php',
 				'Post' => 'post.php',
+				'PrivateMessage' => 'private.php',
 				'UserAuth' => 'login.php',
 				'User' => 'user.php',
 				'BasicThumb' => 'webimages.php',

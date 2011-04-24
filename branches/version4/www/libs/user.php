@@ -21,9 +21,22 @@ class User {
 	static function get_valid_username($name) {
 		$name = strip_tags($name);
 		$name = preg_replace('/&.+?;/', '', $name); // kill entities
-		$name = preg_replace('/[\s\'\"]/', '_', $name); 
+		$name = preg_replace('/[\s\'\"]/', '_', $name);
 		if (preg_match('/^\d/', $name)) $name = 'u_' . $name; // Don't let start with a number
 		return substr($name, 0, 24);
+	}
+
+	static function get_username($id) {
+		global $db;
+		$id = intval($id);
+		return $db->get_var("select user_login from users where user_id = $id");
+	}
+
+	static function get_user_id($name) {
+		global $db;
+
+		$name = $db->escape($name);
+		return $db->get_var("select user_id from users where user_login = '$name'");
 	}
 
 	static function calculate_affinity($uid, $min_karma = 200) {
@@ -75,7 +88,7 @@ class User {
 								$affinity[$vote->id] = $a;
 							}
 						} else {
-							$a = round((-1 - $c)*100); 
+							$a = round((-1 - $c)*100);
 							if (!isset($affinity[$vote->id]) || ($affinity[$vote->id] < 0 && $a > $affinity[$vote->id]) ) {
 								$affinity[$vote->id] = $a;
 							}
@@ -141,7 +154,7 @@ class User {
 		$this->id = 0;
 		$this->username = '';
 		$this->level = 'normal';
-		$this->admin = false; 
+		$this->admin = false;
 		$this->modification = false;
 		$this->date = false;
 		$this->ip = '';
@@ -239,7 +252,7 @@ class User {
 			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_email_register='$user_email_register', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel', user_phone='$user_phone' $modification  WHERE user_id=$this->id");
 		}
 	}
-	
+
 	function read() {
 		global $db, $current_user;
 		$id = $this->id;
@@ -287,7 +300,7 @@ class User {
 			}
 		}
 		foreach(get_object_vars($obj) as $var => $value) $this->$var = $value;
-	
+
 		$this->stats = true;
 	}
 
@@ -296,7 +309,7 @@ class User {
 
 		if ($this->level == 'disabled' || $this->level == 'autodisabled') return;
 
-		// Credits: using some famfamfam silk free icons 
+		// Credits: using some famfamfam silk free icons
 		$medals = array('gold' => 'medal_gold_1.png', 'silver' => 'medal_silver_1.png', 'bronze' => 'medal_bronze_1.png');
 
 		$this->all_stats();

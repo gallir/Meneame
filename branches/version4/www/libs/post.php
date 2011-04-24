@@ -107,7 +107,7 @@ class Post extends LCPBase {
 			// Insert post_new event into logs
 			if ($full) Log::insert('post_new', $this->id, $post_author);
 		} else {
-			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_ip_int = '$this->ip', post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
+			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			// Insert post_new event into logs
 			if ($full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}

@@ -307,7 +307,7 @@ vertical-align: -4px;
 
 #naviwrap ul li a:hover, #naviwrap ul#navigation li a:hover {
 color:#FF9400;
-} 
+}
 
 .banner-right {
 width: 100%;
@@ -1380,6 +1380,7 @@ margin-bottom: 10px;
 .comment-body {
 padding: 5px 5px 10px 10px;
 line-height: 130%;
+text-align: left;
 overflow: hidden;
 min-height: 25px;
 background: #FFF1E2;
@@ -1399,7 +1400,7 @@ color: #C85000;
 text-decoration: underline;
 }
 
-.comment-body.admin {
+.comment-body.admin, .comment-body.new {
 background: #FFD5AD;
 color: #000;
 }
@@ -1854,6 +1855,10 @@ box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 }
 
+#mDialog_box {
+z-index: 1500;
+}
+
 .mini-sneaker-item {
 margin: 0 5px 0 5px;
 width: 99%;
@@ -1962,9 +1967,9 @@ border-radius: 5px;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
-user-select: none; 
--moz-user-select: none; 
--webkit-user-select: none; 
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
 }
 
 #mDialog_header {
