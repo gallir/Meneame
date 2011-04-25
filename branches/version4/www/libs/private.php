@@ -135,6 +135,8 @@ class PrivateMessage extends LCPBase {
 
 	function store_image($file) {
 		$media = new Upload('private', $this->id, 0);
+		$media->to = $this->to;
+		$media->access = 'private';
 		if ($media->from_temporal($file, 'image')) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;

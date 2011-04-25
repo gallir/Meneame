@@ -18,21 +18,29 @@ $media = new Upload($type, $id, $version);
 
 if (! $media->read()) not_found();
 
-if ($media->access == 'public' || $current_user->user_id > 0) {
-	header("Content-Type: $media->mime");
-	header('Last-Modified: ' . date('r', $media->date));
-	header('Cache-Control: max-age=3600');
-	if (! empty($globals['xsendfile'])) {
-		header($globals['xsendfile'].': '.$media->url());
-	} else {
-		if ($media->size > 0) {
-			header("Content-Length: $media->size");
-		}
-		$media->readfile();
-	}
-} else {
+
+if ($media->access == 'restricted' && ! $current_user->user_id > 0) {
+	header("HTTP/1.0 403 Not authorized");
 	header("Content-Type: text/html");
-	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
+	echo '<b>'._('Debe estar autentificado') . '</b>';
+	die;
+} elseif ($media->access == 'private' && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) {
+	header("HTTP/1.0 403 Not authorized");
+	header("Content-Type: text/html");
+	echo '<b>'._('No está autorizado') . '</b>';
+	die;
+}
+
+header("Content-Type: $media->mime");
+header('Last-Modified: ' . date('r', $media->date));
+header('Cache-Control: max-age=3600');
+if (! empty($globals['xsendfile'])) {
+	header($globals['xsendfile'].': '.$media->url());
+} else {
+	if ($media->size > 0) {
+		header("Content-Length: $media->size");
+	}
+	$media->readfile();
 }
 exit(0);
 ?>

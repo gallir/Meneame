@@ -13,7 +13,7 @@
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="id" value="{{ self.id }}" />
 <input type="hidden" name="author" value="{{ self.author }}" />
-<label>{% trans _('A:') %}</label>&nbsp;<img id="user_avatar" 
+<label>{% trans _('A:') %}</label>&nbsp;<img id="user_avatar"
 	{% if self.to > 0 %}
 		src="{{ globals.base_url }}backend/get_avatar.php?user={{ self.to_username }}&amp;size=20"
 		style="vertical-align:text-bottom"
@@ -21,7 +21,7 @@
 		src="{% exec get_no_avatar_url 20 %}"
 		style="vertical-align:text-bottom;visibility:hidden"
 	{% endif %}
-	class="avatar" 
+	class="avatar"
  	width="20" height="20"/>
 
 <input type="text" autocomplete="off" name="to_user" id="to_user"
@@ -45,19 +45,13 @@
 	<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
 {% endif %}
 
-
-{#
-{% if self.media_size > 0 %}
-	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="image_delete" value="1"/></label>&nbsp;
-{% endif %}
-
 {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
 	<div style="float:right">
 	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/gif, image/jpeg, image/png" onchange="check_file_size('fileInput', {{ globals.media_max_size }})"/></label>
 	</div>
 {% endif %}
-#}
+
 
 </div>
 

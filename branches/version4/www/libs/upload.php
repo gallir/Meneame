@@ -75,6 +75,8 @@ class Upload {
 
 		$this->type = $type;
 		$this->id = $id;
+		$this->to = 0;
+		$this->access = 'restricted';
 		$this->version = $version;
 		if (! $time ) {
 			$this->date = $globals['now'];
@@ -90,7 +92,8 @@ class Upload {
 		if (! $this->user) $this->user = $current_user->user_id;
 
 		$mime = $db->escape($this->mime);
-		$db->query("REPLACE INTO media (type, id, version, user, mime, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, '$mime', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+		$access = $db->escape($this->access);
+		$db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
 		$this->backup();
 		return true;
 	}
@@ -98,7 +101,7 @@ class Upload {
 	function read() {
 		global $db, $current_user;
 
-		if(($result = $db->get_row("SELECT type, id, version, user, mime, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
+		if(($result = $db->get_row("SELECT type, id, version, user, `to`, access, mime, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->read = true;
 			return true;
