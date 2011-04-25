@@ -419,10 +419,11 @@ DROP TABLE IF EXISTS `media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media` (
-  `type` enum('comment','link','post','avatar','thumb','other') NOT NULL,
+  `type` enum('comment','link','post','avatar','thumb','private','other') NOT NULL,
   `id` int(10) unsigned NOT NULL,
   `version` tinyint(3) unsigned NOT NULL,
   `user` int(10) unsigned NOT NULL,
+  `to` int(10) unsigned NOT NULL DEFAULT '0',
   `access` enum('restricted','public','friends') NOT NULL DEFAULT 'restricted',
   `mime` char(32) NOT NULL,
   `size` int(10) unsigned NOT NULL,
@@ -487,6 +488,28 @@ CREATE TABLE `prefs` (
   `pref_key` char(16) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `pref_value` int(8) unsigned NOT NULL DEFAULT '0',
   KEY `pref_user_id` (`pref_user_id`,`pref_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `privates`
+--
+
+DROP TABLE IF EXISTS `privates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `privates` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `randkey` int(11) NOT NULL DEFAULT '0',
+  `user` int(10) unsigned NOT NULL,
+  `to` int(10) unsigned NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `read` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ip` char(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user` (`user`,`date`),
+  KEY `to_2` (`to`,`read`),
+  KEY `to` (`to`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -556,6 +579,21 @@ CREATE TABLE `tags` (
   UNIQUE KEY `tag_link_id` (`tag_link_id`,`tag_lang`,`tag_words`),
   KEY `tag_lang` (`tag_lang`,`tag_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `texts`
+--
+
+DROP TABLE IF EXISTS `texts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `texts` (
+  `key` char(32) NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `content` text NOT NULL,
+  PRIMARY KEY (`key`,`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -676,4 +714,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-03-20 18:22:43
+-- Dump completed on 2011-04-25 10:39:16
