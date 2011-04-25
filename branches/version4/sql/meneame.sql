@@ -424,7 +424,7 @@ CREATE TABLE `media` (
   `version` tinyint(3) unsigned NOT NULL,
   `user` int(10) unsigned NOT NULL,
   `to` int(10) unsigned NOT NULL DEFAULT '0',
-  `access` enum('restricted','public','friends') NOT NULL DEFAULT 'restricted',
+  `access` enum('restricted','public','friends','private') NOT NULL DEFAULT 'restricted',
   `mime` char(32) NOT NULL,
   `size` int(10) unsigned NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -714,4 +714,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-04-25 10:39:16
+-- Dump completed on 2011-04-25 15:07:43
