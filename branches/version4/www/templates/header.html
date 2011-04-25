@@ -170,7 +170,7 @@ var mobile_client = {{ globals.mobile }};
 		{% endif %}
 
 		{% if current_user.private_messages || globals.show_conv_counters %}
-			<li><a href="{% exec post_get_base_url '_priv' %}" title="{%if !globals.show_conv_counters %}{{ current_user.private_messages }}{% endif %} {% trans _('mensajes nuevos') %}"><span id="p_mess_c">{{ current_user.private_messages }}</span>  {% trans _('mensajes') %} <img src="{{globals.base_static}}img/common/icon_message-02.png" alt="" width="19" height="19"/></a></li>
+			<li><a href="{% exec post_get_base_url '_priv' %}" title="{%if !globals.show_conv_counters %}{{ current_user.private_messages }}{% endif %} {% trans _('privados nuevos') %}"><span id="p_mess_c">{{ current_user.private_messages }}</span>  {% trans _('privados') %} <img src="{{globals.base_static}}img/common/icon_message-02.png" alt="" width="19" height="19"/></a></li>
 		{% endif %}
 
 		{% if current_user.posts_answers || globals.show_conv_counters %}
