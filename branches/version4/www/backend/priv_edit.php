@@ -70,7 +70,7 @@ function save_post ($message_id) {
 		}
 	}
 
-	if (mb_strlen($_POST['post']) < 5) {
+	if (mb_strlen($_POST['post']) < 2) {
 		echo 'ERROR: ' . _('texto muy corto');
 		die;
 	}

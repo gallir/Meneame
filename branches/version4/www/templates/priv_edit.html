@@ -13,7 +13,8 @@
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="id" value="{{ self.id }}" />
 <input type="hidden" name="author" value="{{ self.author }}" />
-<label>{% trans _('A:') %} </label><input type="text" autocomplete="off" name="to_user" id="to_user"
+<label>{% trans _('A:') %}</label>&nbsp;<img id="user_avatar" src="{% exec get_no_avatar_url 20 %}" class="avatar" style="vertical-align:text-bottom;visibility:hidden" width="20" height="20"/>&nbsp;<input type="text" autocomplete="off" name="to_user" id="to_user"
+onChange="priv_add_avatar(this.value)"
 {% if self.to > 0 %}
 readonly value="{{ self.to_username }}"
 {% endif %}
@@ -55,7 +56,20 @@ readonly value="{{ self.to_username }}"
 </div>
 
 <script type="text/javascript">
-$("#to_user").autocomplete({ url:'{{ globals.base_url }}backend/autocomplete_friendto.php', minChars: 2});
+$("#to_user").autocomplete({ url:'{{ globals.base_url }}backend/autocomplete_friendto.php', minChars: 2,
+	onItemSelect: function(item) {
+		priv_add_avatar(item.value);
+	}
+});
+
+function priv_add_avatar(name) {
+	if (name.length > 0) {
+		$("#user_avatar").attr("src","{{ globals.base_url }}backend/get_avatar.php?user="+name+"&amp;size=20");
+		$('#user_avatar').css('visibility', 'visible');
+	} else {
+		$("#user_avatar").css('visibility', 'hidden');
+	}
+}
 
 {# prepare form`s options #}
 var options = {

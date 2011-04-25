@@ -153,6 +153,9 @@ function received_data(data) {
 	if (typeof(data.n_friends_c) != 'undefined') {
 		$('#n_friends_c').html(data.n_friends_c);
 	}
+	if (typeof(data.p_mess_c) != 'undefined') {
+		$('#p_mess_c').html(data.p_mess_c);
+	}
 
 	new_items= events.length;
 	if(new_items > 0) {

@@ -32,6 +32,11 @@ class PrivateMessage extends LCPBase {
 		return null;
 	}
 
+	static function get_unread($id) {
+		global $db;
+		return (int) $db->get_var("select count(*) from privates where `to` = $id and `read` = 0");
+	}
+
 	function store($full = true) {
 		global $db, $current_user, $globals;
 
