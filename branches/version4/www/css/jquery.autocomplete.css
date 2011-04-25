@@ -3,8 +3,8 @@
 }
 .acResults {
 	padding: 0px;
-	border: 1px solid WindowFrame;
-	background-color: Window;
+	border: 1px solid #FFD0B0;
+	background-color: #fff;
 	overflow: hidden;
 	z-index: 1200;
 }
@@ -23,10 +23,10 @@
 	cursor: pointer;
 	display: block;
 	width: 100%;
-	font: menu;
-	font-size: 10pt;
+	font-size: 12px;
 	overflow: hidden;
 	text-align: left;
+	vertical-align: bottom;
 }
 
 .acLoading {
@@ -34,6 +34,6 @@
 }
 
 .acSelect {
-	background-color: Highlight;
-	color: HighlightText;
+	background-color: #FF6400;
+	color: #fff;
 }
