@@ -39,7 +39,7 @@ switch ($argv[1]) {
 		$view = 0;
 }
 
-
+$rows = $db->get_var("select count(*) from privates where $where");
 
 do_header($page_title);
 do_posts_tabs(5, $current_user->user_login);
@@ -86,11 +86,7 @@ if ($messages) {
 	do_pages($rows, $page_size);
 }
 
-
-
-
 echo '</div>';
-if ($rows > 15) do_footer_menu();
 do_footer();
 exit(0);
 ?>
