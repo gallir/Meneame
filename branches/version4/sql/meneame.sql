@@ -509,7 +509,8 @@ CREATE TABLE `privates` (
   PRIMARY KEY (`id`),
   KEY `user` (`user`,`date`),
   KEY `to_2` (`to`,`read`),
-  KEY `to` (`to`,`date`)
+  KEY `to` (`to`,`date`),
+  KEY `date` (`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -714,4 +715,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-04-25 15:07:43
+-- Dump completed on 2011-04-26 19:02:55
