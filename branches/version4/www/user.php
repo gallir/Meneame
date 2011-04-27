@@ -78,10 +78,19 @@ $view = clean_input_string($_REQUEST['view']);
 if(empty($view)) $view = 'profile';
 
 
-// For editing notes
-if ($current_user->user_id == $user->id || $current_user->admin) {
+// The profile's use marked the current one as friend
+if ($current_user->user_id) {
+	$user->friendship = User::friend_exists($user->id, $current_user->user_id);
+} else {
+	$user->friendship = 0;
+}
+
+// For editing notes and sending privates
+if ($current_user->user_id == $user->id || $current_user->admin || $user->friendship) {
 	$globals['extra_js'][] = 'jquery-form.pack.js';
 	$globals['extra_js'][] = 'ajaxupload.min.js';
+	$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+	$globals['extra_css'][] = 'jquery.autocomplete.css';
 }
 
 // Enable user AdSense

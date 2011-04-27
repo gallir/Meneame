@@ -90,6 +90,7 @@ padding: 0;
 fieldset dt {
 clear: left;
 float: left;
+font-weight: bold;
 width: 12em; /* increase for wider dt text */
 text-align: right;
 padding: 0 10px 4px 5px;

@@ -42,7 +42,9 @@
         {% else %}
             {{ user.username }}
         {% endif %}
+
         {% exec user.print_medals %}
+
 
         {% if current_user.admin AND nclones %}
         (<a class="fancybox" href="{{globals.base_url}}backend/ip_clones.php?id={{user.id}}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
@@ -60,6 +62,11 @@
         {% if current_user.admin %}
             (<em>{{user.username_register}}</em>)
         {% endif %}
+
+		{% if user.friendship > 0 %}
+			<button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="javascript:priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
+		{% endif %}
+
 
         </dd>
     {% endif %}

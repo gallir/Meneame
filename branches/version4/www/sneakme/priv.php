@@ -13,11 +13,9 @@ if (! $current_user->user_id) {
 	do_error(_('debe autentificarse'), 403);
 }
 
-array_push($globals['extra_js'], 'jquery-form.pack.js');
-//array_push($globals['extra_js'], 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js');
-array_push($globals['extra_js'], 'autocomplete/jquery.autocomplete.min.js');
-array_push($globals['extra_js'], 'privates.js');
-array_push($globals['extra_css'], 'jquery.autocomplete.css');
+$globals['extra_js'][] = 'jquery-form.pack.js';
+$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+$globals['extra_css'][] = 'jquery.autocomplete.css';
 
 $globals['ads'] = true;
 
