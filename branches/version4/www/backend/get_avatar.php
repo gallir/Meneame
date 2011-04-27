@@ -7,7 +7,11 @@ if (!$_GET['id'] && !empty($_GET['user'])) {
 } else {
 	$id = intval($_GET['id']);
 }
-if (! $id > 0) die;
+if (! $id > 0) {
+	header("HTTP/1.0 404 Not Found");
+	header("Status: 404 Not Found");
+	die;
+}
 $size = intval($_GET['size']);
 $time = intval($_GET['time']);
 if (!$size > 0) $size = 80;
@@ -27,7 +31,7 @@ if (!($img=avatar_get_from_file($id, $size))) {
 	}  
 }
 
-header("Content-type: image/jpg");
+header("Content-type: image/jpeg");
 //header('Cache-Control: max-age=7200');
 echo $img;
 ?>
