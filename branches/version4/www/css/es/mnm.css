@@ -26,6 +26,10 @@ label {
 color: #FF6400;
 }
 
+:focus {
+outline: 0;
+}
+
 select {
 background: #FFF;
 color: #FF6400;
@@ -1060,10 +1064,11 @@ vertical-align: text-bottom;
 
 .news-details select {
 border: none;
-font-size: 85%;
+font-size: 90%;
 letter-spacing: 0px;
 max-width: 7.5em;
 vertical-align: top;
+padding: 0;
 }
 
 .news-details .tool {
