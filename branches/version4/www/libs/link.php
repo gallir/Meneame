@@ -545,6 +545,27 @@ class Link extends LCPBase {
 
 	}
 
+function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = true) {
+		global $current_user, $current_user, $globals, $db;
+
+		if(!$this->read) return;
+
+		$this->content = $this->to_html($this->content);
+		$this->permalink	 = $this->get_permalink();
+		$this->is_editable	= $this->is_editable();
+		$this->url_str	   = htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $this->url), 60));
+		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
+		$this->thumb_url	= $this->has_thumb();
+		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
+				$this->negatives_allowed($globals['link_id'] > 0) &&
+				$type != 'preview';
+
+		$vars = compact('type');
+		$vars['self'] = $this;
+		return Haanga::Load("link_summary_club.html", $vars);
+
+	}
+
 	function get_box_class() {
 		switch ($this->status) {
 			case 'queued': // another color box for not-published

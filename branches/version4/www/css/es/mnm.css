@@ -1456,7 +1456,6 @@ text-align: right;
 color: #3D72C3;
 }
 
-
 .comment-votes-info {
 float: left;
 max-width: 50%;
@@ -2018,4 +2017,73 @@ width: 60%;
 float: right;
 cursor: pointer;
 margin-right: 5px;
+}
+
+.club-share {
+position: absolute;
+top: 12px;
+left: 12px;
+padding: 3px;
+text-align: center;
+font-size: 7.2pt;
+color: #0033AA;
+border: solid 1px #E6E6E6;
+border-radius: 5px;
+-moz-box-shadow: 0 0 3px #E6E6E6;
+-webkit-box-shadow: 0 0 3px #E6E6E6;
+box-shadow: 0 0 3px #E6E6E6;
+}
+
+.club-share img {
+margin-top: 2px;
+}
+
+.club-comment-body, .club-comment-body-hidden {
+padding: 5px 0px 0px 0px;
+line-height: 130%;
+overflow: hidden;
+min-height: 25px;
+color: #202020;
+border: solid 1px #E6E6E6;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+-moz-box-shadow: 0 0 3px #E6E6E6;
+-webkit-box-shadow: 0 0 3px #E6E6E6;
+box-shadow: 0 0 3px #E6E6E6;
+}
+
+.club-comment-text {
+padding: 0px 10px 0px 10px;
+}
+
+.club-comment-body.admin {
+color: #000;
+}
+
+.club-comment-meta, .club-comment-meta-hidden {
+font-size: 90%;
+line-height: 180%;
+color: #666;
+margin: 0;
+margin-top: 15px;
+padding: 3px 5px 5px 5px;
+white-space: nowrap;
+/*background: #FFF1E2;*/
+background-image: url('../../img/common/club-commenmeta-bkg-01.png');
+border-top: solid 1px #E6E6E6;
+}
+
+.club-comment-meta-hidden, .club-comment-meta-hidden a {
+color: #aaa;
+}
+
+.club-comment-meta a {
+font-weight: bold;
+}
+
+.club-comment-meta img, .club-comment-meta-hidden img {
+border: none;
+margin: 2px 4px 0 4px;
+vertical-align: middle;
 }
