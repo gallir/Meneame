@@ -321,7 +321,7 @@ tooltip.ajax_request = function(event, script, id) {
 }
 
 tooltip.action = function (event) {
-	if (event.type == 'mouseenter') {
+	if (event.type == 'mouseover') {
 		try {
 			args = $(this).attr('class').split(' ')[1].split(':');
 			key = args[0];
@@ -338,7 +338,7 @@ tooltip.action = function (event) {
 
 		tooltip.init(event);
 		tooltip.timer = setTimeout(function() {tooltip.ajax_request(event, ajax, value)}, 300);
-	} else if (event.type == 'mouseleave') {
+	} else if (event.type == 'mouseout') {
 		tooltip.hide();
 	}
 }
@@ -672,7 +672,7 @@ function priv_new(user_id) {
 }
 
 $(document).ready(function () {
-	$('.tooltip').live('mouseenter mouseleave', tooltip.action);
+	$('.tooltip').live('mouseover mouseout', tooltip.action);
 	mDialog.init();
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
