@@ -1276,7 +1276,7 @@ function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = 
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				$hits[$wlower] = $h;
-				if ($h < 2 || $h > $maxid/50) continue; // If 0 or 1 it won't help to the search, too frequents neither
+				if ($h < 1 || $h > $maxid/50) continue; // If 0 or 1 it won't help to the search, too frequents neither
 
 				if (preg_match('/^[A-Z]/', $w) && $h < $maxid/1000) $coef = max(log10($maxid/$h) - 1, 1);
 				else $coef = 1;

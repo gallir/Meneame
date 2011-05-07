@@ -73,7 +73,7 @@ class PrivateMessage extends LCPBase {
 		$post_meta_class = 'comment-meta';
 		$post_class = 'comment-body';
 
-		if ($this->to == $current_user->user_id && $this->date_read < $this->date) {
+		if ($this->date_read < $this->date) {
 			$post_class .= ' new';
 		}
 
