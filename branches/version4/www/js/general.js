@@ -565,26 +565,34 @@ function post_edit(id) {
 
 function post_reply(id, user) {
 	ref = '@' + user + ',' + id + ' ';
+	others = '';
 	regex = /get_post_url.php\?id=([a-z_\.]+(\,\d+){0,1})/ig;
 	text = $('#pid-'+id).html();
 	while (a = regex.exec(text)) { // Add references to others
 		if ( ! a[1].match('^'+user_login)) { // exclude references to the reader
-			ref = ref + '@' + a[1] + ' ';
+			others = others + '@' + a[1] + ' ';
 		}
+	}
+	if (others.length > 0) {
+		startSelection = ref.length;
+		endSelection = startSelection + others.length;
+		ref = ref + others;
+	} else {
+		startSelection = endSelection = 0;
 	}
 	textarea = $('#post');
 	if (textarea.length == 0) {
 		post_new();
 	}
-	post_add_form_text(ref, 1);
+	post_add_form_text(ref, 1, startSelection, endSelection);
 }
 
-function post_add_form_text(text, tries) {
+function post_add_form_text(text, tries, start, end) {
 	if (! tries) tries = 1;
 	textarea = $('#post');
 	if (tries < 20 && textarea.length == 0) {
 			tries++;
-			setTimeout('post_add_form_text("'+text+'", '+tries+')', 50);
+			setTimeout('post_add_form_text("'+text+'",'+tries+','+start+','+end+')', 50);
 			return false;
 	}
 	if (textarea.length == 0 ) return false;
@@ -593,7 +601,12 @@ function post_add_form_text(text, tries) {
 	if (oldtext.match(re)) return false;
 	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') oldtext = oldtext + ' ';
 	textarea.val(oldtext + text);
-	textarea.get(0).focus();
+	obj = textarea[0];
+	obj.focus();
+	if ('selectionStart' in obj && start > 0 && end > 0) {
+		obj.selectionStart = start;
+		obj.selectionEnd = end;
+	}
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
