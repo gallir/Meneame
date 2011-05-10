@@ -565,6 +565,11 @@ function post_edit(id) {
 
 function post_reply(id, user) {
 	ref = '@' + user + ',' + id + ' ';
+	regex = /get_post_url.php\?id=([a-z_\.]+(\,\d+){0,1})/ig;
+	text = $('#pid-'+id).html();
+	while (a = regex.exec(text)) {
+		ref = ref + '@' + a[1] + ' ';
+	}
 	textarea = $('#post');
 	if (textarea.length == 0) {
 		post_new();
