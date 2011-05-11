@@ -211,7 +211,8 @@ CREATE TABLE `conversations` (
   KEY `conversation_type` (`conversation_type`,`conversation_from`),
   KEY `conversation_time` (`conversation_time`),
   KEY `conversation_type_2` (`conversation_type`,`conversation_to`),
-  KEY `conversation_user_to` (`conversation_user_to`,`conversation_type`,`conversation_time`)
+  KEY `conversation_user_to` (`conversation_user_to`,`conversation_type`,`conversation_time`),
+  KEY `conversation_type_3` (`conversation_type`,`conversation_user_to`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -683,9 +684,9 @@ CREATE TABLE `votes` (
   `vote_ip_int` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`vote_id`),
   UNIQUE KEY `vote_type` (`vote_type`,`vote_link_id`,`vote_user_id`,`vote_ip_int`),
-  KEY `vote_type_2` (`vote_type`,`vote_user_id`),
   KEY `vote_type_4` (`vote_type`,`vote_date`,`vote_user_id`),
-  KEY `vote_ip_int` (`vote_ip_int`)
+  KEY `vote_ip_int` (`vote_ip_int`),
+  KEY `vote_type_2` (`vote_type`,`vote_user_id`,`vote_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci PACK_KEYS=0;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -715,4 +716,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-04-26 19:02:55
+-- Dump completed on 2011-05-11  2:07:24
