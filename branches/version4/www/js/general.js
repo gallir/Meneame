@@ -566,7 +566,7 @@ function post_edit(id) {
 function post_reply(id, user) {
 	ref = '@' + user + ',' + id + ' ';
 	others = '';
-	regex = /get_post_url.php\?id=([a-z_\.]+(\,\d+){0,1})/ig;
+	regex = /get_post_url.php\?id=([a-z0-9_\.]+(\,\d+){0,1})/ig;
 	text = $('#pid-'+id).html();
 	while (a = regex.exec(text)) { // Add references to others
 		if ( ! a[1].match('^'+user_login)) { // exclude references to the reader
@@ -599,13 +599,17 @@ function post_add_form_text(text, tries, start, end) {
 	var re = new RegExp(text);
 	var oldtext = textarea.val();
 	if (oldtext.match(re)) return false;
-	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') oldtext = oldtext + ' ';
+	offset = oldtext.length;
+	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') {
+		oldtext = oldtext + ' ';
+		offset = offset + 1;
+	}
 	textarea.val(oldtext + text);
 	obj = textarea[0];
 	obj.focus();
 	if ('selectionStart' in obj && start > 0 && end > 0) {
-		obj.selectionStart = start;
-		obj.selectionEnd = end;
+		obj.selectionStart = start + offset;
+		obj.selectionEnd = end + offset;
 	}
 }
 

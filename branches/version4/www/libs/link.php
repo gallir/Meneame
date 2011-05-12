@@ -1201,19 +1201,20 @@ function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = 
 
 		// Filter title
 		$a = preg_split('/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
-			preg_replace('/[\[\(] *\w{1,6} *[\)\]]/', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
+			preg_replace('/[\[\(] *\w{1,6} *[\)\]] */', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
 			, -1, PREG_SPLIT_NO_EMPTY);
 		$i = 0;
 		$n = count($a);
 		foreach ($a as $w) {
-			$wlower = mb_strtolower(unaccent($w));
+			$w = unaccent($w);
+			$wlower = mb_strtolower($w);
 			$len = mb_strlen($w);
 			if ( ! isset($words[$wlower])
 				&& ($len > 3 || preg_match('/^[A-Z]{2,}$/', $w))
 				&& !preg_match('/^\d{1,3}\D{0,1}$/', $w) ) {
 				$h = sphinx_doc_hits($wlower);
 				$hits[$wlower] = $h;
-				if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
+				if ($h < 1 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 
 				// Store the frequency
 				$freq = $h/$maxid;
@@ -1251,7 +1252,7 @@ function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = 
 			}
 			$h = sphinx_doc_hits($wlower);
 			$hits[$wlower] = $h;
-			if ($h < 2 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
+			if ($h < 1 || $h > $maxid/10) continue; // If 0 or 1 it won't help to the search, too frequents neither
 
 			// Store the frequency
 			$freq = $h/$maxid;
@@ -1299,7 +1300,7 @@ function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = 
 		foreach ($words as $w => $v) {
 			// Filter words if we got good candidates
 			// echo "<!-- $w: ".$freqs[$w]." coef: ".$words[$w]."-->\n";
-			if ($i > 1 && $freq_min < 0.005 && strlen($w) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 20)) continue;
+			if ($i > 4 && $freq_min < 0.005 && strlen($w) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 100)) continue;
 
 			$i++;
 			if ($i > 14 or ($i > 8 && $v > $maxid/2000)) break;
