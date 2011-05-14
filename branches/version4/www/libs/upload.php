@@ -128,7 +128,7 @@ class Upload {
 		// Check __again__ the limits
 		Upload::current_user_limit_exceded($file);
 
-		if ($type && ! preg_match("/$type/", $file['type'])) return false;
+		if ($type && ! preg_match("/^$type/", $file['type'])) return false;
 		$this->mime = $file['type'];
 		$this->size = $file['size'];
 		$this->user = $current_user->user_id;
