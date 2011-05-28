@@ -83,7 +83,7 @@ function htmlentities2unicodeentities ($input) {
 function clean_input_url($string) {
 	$string = preg_replace('/ /', '+', trim(stripslashes(mb_substr($string, 0, 512))));
 	$string = preg_replace('/[<>\r\n\t]/', '', $string);
-	$string = preg_replace('/utm_\w+?=[^&]*/', '', $string); // Delete common variables  for Analitycs
+	$string = preg_replace('/(utm_\w+?|feature)=[^&]*/', '', $string); // Delete common variables for Analitycs and Youtube
 	$string = preg_replace('/&{2,}/', '&', $string); // Delete duplicates &
 	$string = preg_replace('/&+$/', '', $string); // Delete useless & at the end
 	$string = preg_replace('/\?&+/', '?', $string); // Delete useless & after ?

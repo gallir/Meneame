@@ -641,7 +641,7 @@ class Comment extends LCPBase {
 	}
 
 	function update_conversation() {
-		global $db, $globals;
+		global $db, $globals, $current_user;
 
 		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
 		$orders = array();
@@ -652,13 +652,19 @@ class Comment extends LCPBase {
 		}
 		if (!$this->date) $this->date = time();
 		$references = array();
+		$refs = 0;
 		foreach ($orders as $order => $val) {
+			if ($refs > 10) { // Limit the number of references to avoid abuses/spam
+				syslog(LOG_NOTICE, "Meneame: too many references in comment: $this->id ($current_user->user_login)");
+				break;
+			}
 			if ($order == 0) {
 				$to = $db->get_row("select 0 as id, link_author as user_id from links where link_id = $this->link");
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
 			if ($to) {
+				$refs++;
 				if (!$references[$to->id]) {
 					if (User::friend_exists($to->user_id, $this->author) < 0) $date = 0;
 					else $date = $this->date;

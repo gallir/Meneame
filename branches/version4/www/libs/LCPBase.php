@@ -79,7 +79,7 @@ class LCPBase {
 						$id = '';
 					}
 					$user_url = urlencode($user);
-					return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id-".$this->date."'>@$user</a>";
+					return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url.php?id=$user_url$id;".$this->date."'>@$user</a>";
 				} else {
 					return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
 				}

@@ -234,7 +234,7 @@ class Link extends LCPBase {
 		// It avoids the trick of using google or technorati
 		// Ignore it if the link has a rel="nofollow" to ignore comments in blogs
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-			preg_match_all('/(< *meta +http-equiv|< *iframe|< *frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(< *meta +http-equiv|< *frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
 			preg_match_all('/(< *a|<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}

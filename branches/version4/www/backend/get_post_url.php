@@ -13,7 +13,7 @@ if (! defined('mnmpath')) {
 }
 
 if (!empty($_GET['id'])) {
-	if (preg_match('/(.+)-(\d+)/u', $_GET['id'], $matches) > 0) {
+	if (preg_match('/(.+)[-;](\d+)/u', $_GET['id'], $matches) > 0) {
 		$id = 0;
 		$user_id = explode(',', $matches[1]);
 		if (count($user_id) == 2) {
