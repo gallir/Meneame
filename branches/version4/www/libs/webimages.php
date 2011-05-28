@@ -192,7 +192,7 @@ class WebThumb extends BasicThumb {
 			return;
 		}
 
-		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/ad\/|\/logo|header|rss|advertising/i', $this->url)) {
+		if (!preg_match('/loading|button|banner|\Wads\W|\Wpub\W|\/ad\/|\/logo[\/\.]|header|rss|advertising/i', $this->url)) {
 			$this->candidate = true;
 		}
 	}
@@ -286,6 +286,7 @@ class HtmlImages {
 		$video_servers = array(
 						// 'video.google.com' => 'check_google_video',
 						'youtube.com' => 'check_youtube',
+						'yfrog.com' => 'check_yfrog',
 						// 'metacafe.com' => 'check_metacafe',
 						// 'vimeo.com' => 'check_vimeo', 
 						// 'zappinternet.com' => 'check_zapp_internet',
@@ -331,6 +332,7 @@ class HtmlImages {
 				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/meneame/i', $match[1])) { // a bad thumbnail meta in aldea-irreductible
 				$url = $match[1];
+				$url = build_full_url($url, $this->url);
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
@@ -361,6 +363,7 @@ class HtmlImages {
 				if ($this->debug)
 					echo "<!-- Searching for video -->\n";
 				if ($this->check_youtube() || 
+						$this->check_yfrog() ||
 						$this->check_google_video() ||
 						$this->check_metacafe() ||
 						$this->check_vimeo() ||
@@ -725,6 +728,27 @@ class HtmlImages {
 			}
 		}
 		return $thumbnail;
+	}
+
+	// Check yfrog video thumbnail, from http://code.google.com/p/imageshackapi/wiki/YFROGurls
+	function check_yfrog() {
+		if (preg_match('/yfrog\.com/', $this->parsed_url['host']) && preg_match('/[zf]$/i', $this->url)) {
+			$url = $this->url . ":frame";
+			if ($this->debug)
+				echo "<!-- Detect YFrog, url: $url -->\n";
+			if ($url) {
+				$img = new BasicThumb($url);
+				if ($img->get()) {
+					$img->type = 'local';
+					$img->candidate = true;
+					$this->selected = $img;
+					if ($this->debug)
+						echo "<!-- Video selected from $img->url -->\n";
+					return $this->selected;
+				}
+			}
+		}
+		return false;
 	}
 
 	// Metaface detection
