@@ -6,7 +6,10 @@ $(document).ready(
 			transitionIn: "none",
 			transitionOut: "none",
 			titlePosition: 'inside',
-			onComplete: function() {reportAjaxStats('image', 'single');},
+			titleFormat: function(title, cA, cI, cO) { return title + '&nbsp;[<a href="'+$('#fancybox-img').attr('src')+'">{% trans _('enlace imagen') %}</a>]' },
+			onComplete: function() {
+					reportAjaxStats('image', 'single');
+				},
 		});
 	}
 );

@@ -17,7 +17,7 @@ function formatTitle(title, currentArray, currentIndex, currentOpts) {
 
 	pages = (currentIndex + 1) + '/' + currentArray.length;
 	url = base_url + 'backend/go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
-	who = '<div>' + type + '&nbsp;<a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + t_i_u[2] + '</a></div>';
+	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+'&nbsp;[<a href="'+$('#fancybox-img').attr('src')+'" target="_blank">{% trans _('imagen') %}</a>]'+'</div>';
 	return who + pages;
 }
 
