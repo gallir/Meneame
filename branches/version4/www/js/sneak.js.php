@@ -410,7 +410,7 @@ function sneak_add_recent_nicks(user) {
 function sneak_autocomplete() {
 		str = $('#comment-input').val();
 		if (str.length < 2) return false;
-		match = str.match(/[\w\.\-]+$/);
+		match = str.match(/\S+$/);
 		lastWord = match[0];
 		if (lastWord.length < 2) return false;
 		lastWord = lastWord.toLowerCase();
@@ -425,7 +425,7 @@ function sneak_autocomplete() {
 						});
 		}
 		if (match.length > 0) {
-			$('#comment-input').val(str.replace(/[\w\.\-]+$/, match[0]));
+			$('#comment-input').val(str.replace(/\S+$/, match[0]));
 			$('#comment-input')[0].selectionStart = $('#comment-input').val().length;
 		}
 }
