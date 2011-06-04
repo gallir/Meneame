@@ -69,6 +69,7 @@ print_period_tabs();
 echo '<div id="sidebar">';
 do_banner_right();
 do_banner_promotions();
+do_active_stories();
 do_best_comments();
 do_vertical_tags('published');
 echo '</div>' . "\n";

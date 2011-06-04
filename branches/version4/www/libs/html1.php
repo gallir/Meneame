@@ -523,6 +523,41 @@ function do_best_story_comments($link) {
 	}
 }
 
+function do_active_stories() {
+	global $db, $globals, $dblang;
+
+	if ($globals['mobile']) return;
+
+	$key = 'active_stories_'.$globals['css_main'].'_'.$globals['meta_current'];
+	if(memcache_mprint($key)) return;
+
+	$category_list	= '';
+	$title = _('más activas');
+	$url = $globals['base_url'].'topactive.php';
+
+	$top = new Annotation("top-active");
+	if ($top->read() && ($ids = explode(',',$top->text))) {
+		$links = array();
+		$ids = array_slice($ids, 0, 5);
+		foreach($ids as $id) {
+			$link = Link::from_db($id);
+			$link->url = $link->get_relative_permalink();
+			$link->thumb = $link->has_thumb();
+			$link->total_votes = $link->votes+$link->anonymous;
+			if ($link->thumb) {
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
+			}
+			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$links[] = $link;
+		}
+		$subclass = 'red';
+		$vars = compact('links', 'title', 'url', 'subclass');
+		$output = Haanga::Load('best_stories.html', $vars, true);
+		echo $output;
+	}
+}
+
 function do_best_stories() {
 	global $db, $globals, $dblang;
 
@@ -559,7 +594,8 @@ function do_best_stories() {
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
 			$links[] = $link;
 		}
-		$vars = compact('links', 'title', 'url');
+		$subclass = '';
+		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
@@ -603,7 +639,8 @@ function do_best_queued() {
 			if ($link->negatives >= $link->votes/10) $link->warn = true;
 			$links[] = $link;
 		}
-		$vars = compact('links', 'title', 'url');
+		$subclass = '';
+		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
 		memcache_madd($key, $output, 180);
