@@ -154,8 +154,8 @@ class Post extends LCPBase {
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
 		if ($this->hidden || $this->ignored)  {
-			$post_meta_class = 'comment-meta-hidden';
-			$post_class = 'comment-body-hidden';
+			$post_meta_class = 'comment-meta hidden';
+			$post_class = 'comment-body hidden';
 		} else {
 			$post_meta_class = 'comment-meta';
 			$post_class = 'comment-body';
@@ -163,6 +163,10 @@ class Post extends LCPBase {
 				$post_class .= ' high';
 			}
 		}
+		if ($this->author == $current_user->user_id) {
+			$post_class .= ' user';
+		}
+
 
 		$this->is_disabled   = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
 		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'];

@@ -13,8 +13,7 @@ padding: 0;
 
 body {
 font-family: sans-serif;
-/*font-size: 87.5%; /* font size 14px */
-font-size: 0.84em;
+font-size: 10pt;
 text-align: center;
 background-color: #fff;
 background-image: url('../../img/common/bkg-01.png');
@@ -160,20 +159,22 @@ border-radius: 3px;
 
 /* END roundboxes */
 #headerwrap {
-position: fixed;
+position: relative;
 top: 0;
 left: 0;
 width: 100%;
+min-width: 850px;
 background: #fff;
+z-index: 10;
 box-shadow: 0 0 3px rgba(0,0,0,0.7);
 -moz-box-shadow: 0 0 3px rgba(0,0,0,0.7);
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.7);
-z-index: 10;
 }
 
+
 #wrap {
-padding-top: 78px;
-min-width: 952px;
+padding-top: 15px;
+min-width: 850px;
 max-width: 1300px;
 width: 98%;
 text-align: left;
@@ -266,6 +267,8 @@ background-color: #3C3C3C;
 margin-top: 1px;
 height: 25px;
 padding: 0 5px;
+white-space: nowrap;
+overflow: hidden;
 }
 
 #naviwrap ul#navigation{
@@ -291,7 +294,6 @@ padding: 0 8px 0 8px;
 text-decoration: none;
 color: #fff;
 font-weight: bold;
-font-size: 1.0em;
 }
 
 
@@ -1425,15 +1427,21 @@ color: #000;
 background: #FFD5AD url(../../img/common/comment-high-01.png) 99% 5px no-repeat;
 }
 
-.comment-body-hidden {
-border: 1px dotted;
-padding: 3px 5px 3px 10px;
+.comment-body.hidden {
+border: 1px solid #ccc;
+padding: 0px 5px 0px 10px;
 font-size: 90%;
 overflow: hidden;
 color: #aaa;
+background: #fff;
 }
 
-.comment-body-hidden a {
+.comment-body.user {
+border: 1px solid #FFA500;
+}
+
+
+.comment-body.hidden a, .comment-body.hidden a strong {
 color: #aaa;
 }
 
@@ -1442,7 +1450,7 @@ float: left;
 margin: 2px 10px 2px 0;
 }
 
-.comment-meta, .comment-meta-hidden {
+.comment-meta {
 font-size: 90%;
 line-height: 180%;
 color: #666;
@@ -1450,7 +1458,8 @@ margin: 0 0 15px 0;
 white-space: nowrap;
 }
 
-.comment-meta-hidden, .comment-meta-hidden a {
+.comment-meta.hidden, .comment-meta.hidden a {
+line-height: 100%;
 color: #aaa;
 }
 
@@ -1473,7 +1482,7 @@ display: inline;
 overflow: hidden;
 }
 
-.comment-meta img, .comment-meta-hidden img {
+.comment-meta img {
 border: none;
 margin: 2px 4px 0 4px;
 vertical-align: middle;
@@ -2023,77 +2032,10 @@ width: auto;
 padding: 4px;
 width: 60%;
 }
+
 #mDialog_close {
 float: right;
 cursor: pointer;
 margin-right: 5px;
 }
 
-.club-share {
-position: absolute;
-top: 12px;
-left: 12px;
-padding: 3px;
-text-align: center;
-font-size: 7.2pt;
-color: #0033AA;
-border: solid 1px #E6E6E6;
-border-radius: 5px;
--moz-box-shadow: 0 0 3px #E6E6E6;
--webkit-box-shadow: 0 0 3px #E6E6E6;
-box-shadow: 0 0 3px #E6E6E6;
-}
-
-.club-share img {
-margin-top: 2px;
-}
-
-.club-comment-body, .club-comment-body-hidden {
-padding: 5px 0px 0px 0px;
-line-height: 130%;
-overflow: hidden;
-min-height: 25px;
-color: #202020;
-border: solid 1px #E6E6E6;
-border-radius: 5px;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
--moz-box-shadow: 0 0 3px #E6E6E6;
--webkit-box-shadow: 0 0 3px #E6E6E6;
-box-shadow: 0 0 3px #E6E6E6;
-}
-
-.club-comment-text {
-padding: 0px 10px 0px 10px;
-}
-
-.club-comment-body.admin {
-color: #000;
-}
-
-.club-comment-meta, .club-comment-meta-hidden {
-font-size: 90%;
-line-height: 180%;
-color: #666;
-margin: 0;
-margin-top: 15px;
-padding: 3px 5px 5px 5px;
-white-space: nowrap;
-/*background: #FFF1E2;*/
-background-image: url('../../img/common/club-commenmeta-bkg-01.png');
-border-top: solid 1px #E6E6E6;
-}
-
-.club-comment-meta-hidden, .club-comment-meta-hidden a {
-color: #aaa;
-}
-
-.club-comment-meta a {
-font-weight: bold;
-}
-
-.club-comment-meta img, .club-comment-meta-hidden img {
-border: none;
-margin: 2px 4px 0 4px;
-vertical-align: middle;
-}

@@ -712,8 +712,10 @@ $(document).ready(function () {
 			}
 
 			{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
-			var scroll = $(window).scrollTop();
-			if (scroll > 80) $(window).scrollTop(scroll-80);
+			if ($('#headerwrap').css('position') == 'fixed') {
+				var scroll = $(window).scrollTop();
+				if (scroll > 80) $(window).scrollTop(scroll-80);
+			}
 		});
 	}
 

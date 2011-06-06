@@ -182,8 +182,8 @@ class Comment extends LCPBase {
 
 		/* pickup the correct css for comments */
 		if ($this->hidden || $this->ignored)  {
-			$this->comment_meta_class = 'comment-meta-hidden';
-			$this->comment_class = 'comment-body-hidden';
+			$this->comment_meta_class = 'comment-meta hidden';
+			$this->comment_class = 'comment-body hidden';
 		} else {
 			$this->comment_meta_class = 'comment-meta';
 			$this->comment_class = 'comment-body';
@@ -192,6 +192,10 @@ class Comment extends LCPBase {
 			} elseif ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
 				$this->comment_class .= ' high';
 			}
+		}
+
+		if ($this->author == $current_user->user_id) {
+			$this->comment_class .= ' user';
 		}
 
 
