@@ -555,6 +555,7 @@ function do_active_stories() {
 		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
+		memcache_madd($key, $output, 60);
 	}
 }
 
