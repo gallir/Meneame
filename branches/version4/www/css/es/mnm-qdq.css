@@ -353,11 +353,11 @@ vertical-align: middle;
 
 ul.tabmain{
 list-style-type: none;
-margin-top: 10px;
 border-bottom: solid 1px #135999;
 height: 25px;
 padding-left: 90px;
 font-size: 13px;
+background: #135999;
 }
 
 ul.tabmain li{
@@ -379,6 +379,7 @@ border-top-right-radius: 4px;
 border-top-left-radius: 4px;
 height: 20px;
 line-height: 20px;
+background: #fff;
 }
 
 ul.tabmain li:hover{
@@ -2039,3 +2040,6 @@ cursor: pointer;
 margin-right: 5px;
 }
 
+#google_ads_div_MNA-TOP-MEGA {
+background: #135999;  
+}
