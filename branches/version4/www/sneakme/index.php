@@ -10,6 +10,8 @@ include('../config.php');
 include('common.php');
 
 
+
+
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
 	$argv[0] = clean_input_string($argv[0]);
@@ -39,6 +41,9 @@ $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 $page_title = _('nótame') . ' | '._('menéame');
 $view = false;
+$globals['ads'] = true;
+if ($current_user->user_id) $globals['ads_branding'] = false;
+
 switch ($argv[0]) {
 	case '_best':
 		$tab_option = 2;
@@ -145,7 +150,6 @@ switch ($argv[0]) {
 		}
 }
 
-$globals['ads'] = true;
 
 do_header($page_title);
 do_posts_tabs($tab_option, $user->username);

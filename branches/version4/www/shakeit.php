@@ -27,6 +27,7 @@ meta_get_current();
 
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
+if ($current_user->user_id) $globals['ads_branding'] = false;
 
 
 $rows = -1; // Don't show page numbers by default
