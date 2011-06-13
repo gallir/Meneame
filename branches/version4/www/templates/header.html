@@ -115,6 +115,9 @@ var mobile_client = {{ globals.mobile }};
 
 <div id="header">
 <a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
+{% if globals.ads_branding %}
+{% try_include 'private/ad-sponsored.html' %}
+{% endif %}
 <ul class="headtools">
 
 <li class="searchbox">
