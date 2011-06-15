@@ -477,9 +477,10 @@ class HtmlImages {
 			if (preg_match_all("/<a[^>]*\shref *= *[\"\']($regexp)[\"\']/is",$this->html,$matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
 					if ( preg_match('/\.(gif|jpg|zip|png|jpeg|rar|mp[1-4]|mov|mpeg|mpg|pdf|ps|gz|tar|tif)($|\s)/i', $match[1]) 
+						|| preg_match('/nofollow/i', $match[0])
 						|| preg_match('/^#/', $match[1])
 						|| preg_match('/\?cat=\d+$/i', $match[1])
-						|| preg_match('/(feed|rss|atom|trackback|search|download)\W/i', $match[1])) {
+						|| preg_match('/(feed|rss|atom|trackback|search|download|gravatar)\W/i', $match[1])) {
 						continue;
 					}
 					$weight = 1;
@@ -640,11 +641,15 @@ class HtmlImages {
 		return $this->other_html;
 	}
 
-	function check_in_other($str) {
+	function check_in_other($str, $times = 1) {
+		$n = 0;
 		if (preg_match('/'.preg_quote($str,'/').'/', $this->other_html)) {
-				if ($this->debug)
-					echo "<!-- Skip: " . htmlentities($str). "-->\n";
-				return true;
+				$n++;
+				if ($n >= $times) {
+					if ($this->debug)
+						echo "<!-- Skip ($times): " . htmlentities($str). "-->\n";
+					return true;
+				}
 		}
 		return false;
 	}
@@ -690,7 +695,7 @@ class HtmlImages {
 	// Youtube detection
 	function check_youtube() {
 		if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1]))) {
+			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
 			$video_id = $match[1];
 			if ($this->debug)
 				echo "<!-- Detect Youtube, id: $video_id -->\n";
@@ -790,7 +795,7 @@ class HtmlImages {
 	// Elmundo.es detection
 	function check_elmundo_video() {
 		if (preg_match('#ArchivoFlash *= *"(http.+?reproductor_video.swf)".+?fotograma=(.+?\.jpg)#is', $this->html, $match) &&
-			! $this->check_in_other($match[2])) {
+			! $this->check_in_other($match[2], 2)) {
 			$server = $match[1];
 			$url = $match[2];
 			if ($this->debug)
