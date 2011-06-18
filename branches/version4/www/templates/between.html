@@ -7,7 +7,7 @@
         <select name="type" id="type">
             {% for option in options.types %}
 				<option value="{{option}}"
-                {% if option == option.type %}
+                {% if option == options.type %}
                     selected="selected"
                 {% endif %}>{{option}}
                 </option>

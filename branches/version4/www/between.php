@@ -53,7 +53,6 @@ do_tabs('main',_('debate'), htmlentities($_SERVER['REQUEST_URI']));
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_rss_box($rss_program);
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
@@ -86,20 +85,20 @@ if ($id1 > 0 && $id2 >0) {
 					$obj = Post::from_db($id);
 					break;
 				case 'comments':
-					$obj = User::from_db($id);
+					$obj = Comment::from_db($id);
 					break;
 			}
 			if ($obj->type == 'admin' && !$current_user->admin) continue;
 
 			if ($obj->author == $id1) {
-				echo '<div style="margin-top: -10;width:70%">';
+				echo '<div style="margin-top: -10;margin-left: 10px; width:70%">';
 			} else {
 				echo '<div style="margin-top: -10;margin-left:30%">';
 			}
 			$obj->print_summary();
 			echo "</div>\n";
 			if (! isset($to1[$id]) && ! isset($to2[$id])) {
-				echo '<div style="font-size: 15pt; margin: -10px 0 10px 0;text-align:center; color: #888; text-shadow: 1px 1px 3px #aaa"><strong>&bull; &bull; &bull;</strong></div>';
+				echo '<div style="font-size: 15pt; margin: -5px 0 15px 0;text-align:center; color: #888; text-shadow: 1px 1px 3px #aaa"><strong>&bull; &bull; &bull;</strong></div>';
 			}
 		}
 
