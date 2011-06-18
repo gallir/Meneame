@@ -7,7 +7,7 @@
 	    <input class="button" type="submit" value="{% trans _('buscar') %}" />
 
 	    <br />
-        
+
         {% for id,values in options %}
 	        <select name="{{id}}" id="{{id}}">
             {% for oid, option in values %}
@@ -25,10 +25,24 @@
             {% endif %}
             </select>
         {% endfor %}
-	    &nbsp;&nbsp;
+
+
+		<div style="margin-top: 8px">
 	    <label for="u">{% trans _("usuario") %}:</label>
-	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|escape }}" size="12" style="font-weight: bold;"/>
+	    <img id="u_avatar"
+			{% if _REQUEST.u %}
+				src="{{ globals.base_url }}backend/get_avatar.php?user={{ _REQUEST.u|escape }}&amp;size=20"
+				style="vertical-align:text-bottom"
+			{% else %}
+				src="{% exec get_no_avatar_url 20 %}"
+				style="vertical-align:text-bottom;visibility:hidden"
+			{% endif %}
+			class="avatar"
+			width="20" height="20"/>
+
+	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|escape }}" size="12" style="font-weight: bold;" autocomplete="off" class="ac_user"/>
         </form>
+        </div>
 
 	    <script type="text/javascript">
         var do_change = function() {
@@ -51,4 +65,5 @@
 </div>
 
     {% exec print_result as dummy %}
+    {% include "autocomplete_user.html" %}
 </div>

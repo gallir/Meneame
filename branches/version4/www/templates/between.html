@@ -1,9 +1,6 @@
-
-
     <div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">
     <fieldset>
 	<form id="thisform" action="">
-	    <label for="type">{% trans _("tipo") %}:</label>
         <select name="type" id="type">
             {% for option in options.types %}
 				<option value="{{option}}"
@@ -26,7 +23,7 @@
 			{% endif %}
 			class="avatar"
 			width="20" height="20"/>
-	    <input type="text" name="u1" id="u1" value="{{ options.u1 }}" size="12" class="user_autocomplete" onChange="form_add_avatar('u1')" style="font-weight: bold;"/>
+	    <input type="text" autocomplete="off" name="u1" id="u1" value="{{ options.u1 }}" size="12" class="ac_user"/>
 	    &nbsp;&nbsp;
 
 	    <label for="u2">{% trans _("usuario 2") %}:</label>
@@ -40,7 +37,7 @@
 			{% endif %}
 			class="avatar"
 			width="20" height="20"/>
-	    <input type="text" name="u2" id="u2" value="{{ options.u2 }}" size="12" class="user_autocomplete" onChange="form_add_avatar('u2')" style="font-weight: bold;"/>
+	    <input type="text" autocomplete="off" name="u2" id="u2" value="{{ options.u2 }}" size="12" class="ac_user"/>
 	    <br />
 
 	    <input class="button" type="submit" value="{% trans _('mostrar') %}" />
@@ -48,24 +45,4 @@
     </fieldset>
 	</div>
 
-<script type="text/javascript">
-$(".user_autocomplete").autocomplete({ url:'{{ globals.base_url }}backend/autocomplete_user.php',
-	minChars: 3, matchSubset: 0, maxCacheLength: 50,
-	onItemSelect: function(item) {
-		form_add_avatar(item.value);
-	},
-	showResult: function(value, data) {
-		return '<img src="{{ globals.base_url }}backend/get_avatar.php?user='+value+'&amp;size=20" width="12" height="12" style="vertical-align:bottom"/>&nbsp;'+value;
-	},
-});
-
-function form_add_avatar(id) {
-	name = $("#"+id).val();
-	if (name.length > 0) {
-		$("#"+id+"_avatar").attr("src","{{ globals.base_url }}backend/get_avatar.php?user="+name+"&amp;size=20");
-		$("#"+id+"_avatar").css('visibility', 'visible');
-	} else {
-		$("#"+id+"_avatar").css('visibility', 'hidden');
-	}
-}
-</script>
+{% include "autocomplete_user.html" %}

@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -45,7 +45,8 @@ if (!empty($globals['base_search_url'])) {
 	}
 }
 
-
+$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+$globals['extra_css'][] = 'jquery.autocomplete.css';
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
@@ -101,7 +102,7 @@ function print_result()
 		foreach($response['ids'] as $id) {
 			$obj->id=$id;
 			$obj->read();
-			$obj->basic_summary = true; 
+			$obj->basic_summary = true;
 			switch ($_REQUEST['w']) {
 				case 'posts':
 					$obj->print_summary(600);
