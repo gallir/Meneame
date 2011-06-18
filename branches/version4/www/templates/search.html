@@ -29,8 +29,8 @@
 
 		<div style="margin-top: 8px">
 	    <label for="u">{% trans _("usuario") %}:</label>
-	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|escape }}" size="12" style="font-weight: bold;" autocomplete="off" class="ac_user"/>
-   	    <img id="u_avatar"
+	    <input type="text" name="u" id="u" value="{{ _REQUEST.u|escape }}" size="12" style="font-weight: bold;" class="ac_user"/>
+   	    <img id="u_avatar" alt="avatar"
 			{% if _REQUEST.u %}
 				src="{{ globals.base_url }}backend/get_avatar.php?user={{ _REQUEST.u|escape }}&amp;size=20"
 				style="vertical-align:text-bottom"
@@ -40,9 +40,9 @@
 			{% endif %}
 			class="avatar"
 			width="20" height="20"/>
+        </div>
 
         </form>
-        </div>
 
 	    <script type="text/javascript">
         var do_change = function() {

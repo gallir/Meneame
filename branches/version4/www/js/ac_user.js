@@ -1,4 +1,4 @@
-$(".ac_user").autocomplete({ url:base_url+'backend/autocomplete_user.php',
+$(".ac_user").attr("autocomplete", "off").autocomplete({ url:base_url+'backend/autocomplete_user.php',
 	minChars: 3, matchSubset: 0,
 	showResult: function(value, data) {
 		return '<img src="'+base_url+'backend/get_avatar.php?user='+value+'&amp;size=20" width="12" height="12" style="vertical-align:bottom"/>&nbsp;'+value;

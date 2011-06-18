@@ -13,7 +13,7 @@
 	    &nbsp;&nbsp;
 
 	    <label for="u1">{% trans _("usuario 1") %}:</label>
-	    <img id="u1_avatar"
+	    <img id="u1_avatar" alt="avatar 1"
 			{% if options.u1 %}
 				src="{{ globals.base_url }}backend/get_avatar.php?user={{ options.u1 }}&amp;size=20"
 				style="vertical-align:text-bottom"
@@ -23,11 +23,11 @@
 			{% endif %}
 			class="avatar"
 			width="20" height="20"/>
-	    <input type="text" autocomplete="off" name="u1" id="u1" value="{{ options.u1 }}" size="12" class="ac_user"/>
+	    <input type="text" name="u1" id="u1" value="{{ options.u1 }}" size="12" class="ac_user"/>
 	    &nbsp;&nbsp;
 
 	    <label for="u2">{% trans _("usuario 2") %}:</label>
-   	    <img id="u2_avatar"
+   	    <img id="u2_avatar" alt="avatar 2"
 			{% if options.u2 %}
 				src="{{ globals.base_url }}backend/get_avatar.php?user={{ options.u2 }}&amp;size=20"
 				style="vertical-align:text-bottom"
@@ -37,7 +37,7 @@
 			{% endif %}
 			class="avatar"
 			width="20" height="20"/>
-	    <input type="text" autocomplete="off" name="u2" id="u2" value="{{ options.u2 }}" size="12" class="ac_user"/>
+	    <input type="text" name="u2" id="u2" value="{{ options.u2 }}" size="12" class="ac_user"/>
 	    <br />
 
 	    <input class="button" type="submit" value="{% trans _('mostrar') %}" />
