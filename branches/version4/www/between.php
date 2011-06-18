@@ -88,7 +88,7 @@ if ($id1 > 0 && $id2 >0) {
 					$obj = Comment::from_db($id);
 					break;
 			}
-			if ($obj->type == 'admin' && !$current_user->admin) continue;
+			if (! $obj || ($obj->type == 'admin' && !$current_user->admin)) continue;
 
 			if ($obj->author == $id1) {
 				echo '<div style="margin-top: -10;margin-left: 10px; width:70%">';
