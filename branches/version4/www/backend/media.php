@@ -20,9 +20,9 @@ if (! $media->read()) not_found();
 
 
 if ($media->access == 'restricted' && ! $current_user->user_id > 0) {
-	header("HTTP/1.0 403 Not authorized");
+	//header("HTTP/1.0 403 Not authorized");
 	header("Content-Type: text/html");
-	echo '<b>'._('Debe estar autentificado') . '</b>';
+	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
 	die;
 } elseif ($media->access == 'private' && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) {
 	header("HTTP/1.0 403 Not authorized");

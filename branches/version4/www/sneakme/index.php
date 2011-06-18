@@ -42,7 +42,6 @@ $offset=(get_current_page()-1)*$page_size;
 $page_title = _('nótame') . ' | '._('menéame');
 $view = false;
 $globals['ads'] = true;
-if ($current_user->user_id) $globals['ads_branding'] = false;
 
 switch ($argv[0]) {
 	case '_best':

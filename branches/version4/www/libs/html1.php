@@ -620,7 +620,7 @@ function do_best_queued() {
 	}
 
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*4); // 4 days
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 2 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");

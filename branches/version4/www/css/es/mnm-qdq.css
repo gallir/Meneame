@@ -1,5 +1,11 @@
 @import url("mnm.css");
 
+@media screen and (max-height: 650px) {
+	#top-mega {
+		display: none;
+	}
+}
+
 #header{
 background: #135999;
 }
