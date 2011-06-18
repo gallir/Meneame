@@ -22,7 +22,8 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
-
+$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+$globals['extra_css'][] = 'jquery.autocomplete.css';
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
