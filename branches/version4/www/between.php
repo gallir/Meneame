@@ -91,7 +91,7 @@ if ($id1 > 0 && $id2 >0) {
 			$a = $all[$k];
 			sort($a, SORT_NUMERIC);
 			foreach ($a as $e) {
-				if (! in_array($e, $sorted) && ! in_array($e, $key)) {
+				if (! in_array($e, $sorted) && ! in_array($e, $keys)) {
 					$sorted[] = $e;
 				}
 			}
