@@ -686,11 +686,6 @@ function normalize_smileys($str) {
 }
 
 
-// Meta categories helpers
-define('META_YES', '<img src="'.$globals['base_static'].'img/common/fix-001.png" alt="del" width="18" height="18" title="'._('filtrar como tema por defecto').'"/>');
-define('META_NO', '<img src="'.$globals['base_static'].'img/common/fix-002.png" alt="del" width="18" height="18" title="'._('filtrar como tema por defecto').'"/>');
-
-
 function meta_get_current() {
 	global $globals, $db, $current_user;
 
@@ -759,21 +754,6 @@ function meta_get_categories_list($id) {
 	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories WHERE category_parent = $id order by category_id");
 	if (!$categories) return false;
 	return implode(',', $categories);
-}
-
-function meta_teaser($current, $default) {
-	global $globals;
-	if ($current == $default)
-		return META_YES;
-	else
-		return META_NO;
-}
-
-function meta_teaser_item() {
-	global $globals, $current_user;
-	if ($globals['meta'][0] != '_' || $globals['meta'] == '_all') { // Ignore special metas
-		echo '<li><a class="icon" id="meta-'.$globals['meta_current'].'" href="javascript:get_votes(\'set_meta.php\',\''.$current_user->user_id.'\',\'meta-'.$globals['meta_current'].'\',0,\''.$globals['meta_current'].'\')">'.meta_teaser($globals['meta_current'], $globals['meta_user_default']).'</a></li>';
-	}
 }
 
 function fork($uri) {

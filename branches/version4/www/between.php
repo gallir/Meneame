@@ -65,44 +65,74 @@ echo '<div id="newswrap">';
 Haanga::Load('between.html', compact('options'));
 
 if ($id1 > 0 && $id2 >0) {
-	$to2 = between($id1, $id2, $type, $prefix, $page_size, $offset);
-	$to1 = between($id2, $id1, $type, $prefix, $page_size, $offset);
+	$all = array();
+	$to = array();
+	$sorted = array();
 
-	$all = array_merge(array_keys($to1), array_keys($to2));
 
-	foreach ($to1 as $k => $v) {
-		$all = array_merge($all, $v);
-	}
-	foreach ($to2 as $k => $v) {
-		$all = array_merge($all, $v);
-	}
+	if (isset($_GET['id']) && ! empty($_GET['id']) ) {
+		$sorted = explode(',', @gzuncompress(@base64_decode($_GET['id'])));
+		$show_thread = true;
+	} else {
+		$show_thread = false;
+		$to[0] = between($id1, $id2, $type, $prefix, $page_size, $offset);
+		$to[1] = between($id2, $id1, $type, $prefix, $page_size, $offset);
 
-	rsort($all, SORT_NUMERIC);
-	$uniques = array_unique($all);
-
-		foreach($uniques as $id) {
-			//$obj->basic_summary = true;
-			switch ($type) {
-				case 'posts':
-					$obj = Post::from_db($id);
-					break;
-				case 'comments':
-					$obj = Comment::from_db($id);
-					break;
-			}
-			if (! $obj || ($obj->type == 'admin' && !$current_user->admin)) continue;
-
-			if ($obj->author == $id1) {
-				echo '<div style="margin-top: -10;margin-left: 10px; width:70%">';
-			} else {
-				echo '<div style="margin-top: -10;margin-left:30%">';
-			}
-			$obj->print_summary();
-			echo "</div>\n";
-			if (! isset($to1[$id]) && ! isset($to2[$id])) {
-				echo '<div style="font-size: 15pt; margin: -5px 0 15px 0;text-align:center; color: #888; text-shadow: 1px 1px 3px #aaa"><strong>&bull; &bull; &bull;</strong></div>';
+		foreach ($to as $e) {
+			foreach ($e as $k => $v) {
+				$all[$k] =  $v;
 			}
 		}
+
+
+		$keys = array_keys($all);
+		sort($keys, SORT_NUMERIC);
+		foreach ($keys as $k) {
+			$a = $all[$k];
+			sort($a, SORT_NUMERIC);
+			foreach ($a as $e) {
+				if (! in_array($e, $sorted) && ! in_array($e, $key)) {
+					$sorted[] = $e;
+				}
+			}
+			$sorted[] = $k;
+		}
+		$sorted = array_reverse($sorted);
+		print_r($uniques);
+	}
+
+	$thread = array();
+	foreach($sorted as $id) {
+		//$obj->basic_summary = true;
+		switch ($type) {
+			case 'posts':
+				$obj = Post::from_db($id);
+				break;
+			case 'comments':
+				$obj = Comment::from_db($id);
+				break;
+		}
+		if (! $obj || ($obj->type == 'admin' && !$current_user->admin)) continue;
+
+		if ($obj->author == $id1) {
+			echo '<div style="margin-top: -10;margin-left: 10px; width:70%">';
+		} else {
+			echo '<div style="margin-top: -10;margin-left:30%">';
+		}
+		$obj->print_summary();
+		echo "</div>\n";
+		$thread[] = $id;
+
+		if (! $show_thread && ! isset($all[$id])) {
+			$code = base64_encode(gzcompress(implode(",", $thread)));
+			echo '<div style="margin: -5px 0 15px 0;text-align:center; color: #888">';
+			echo '[<a href="'.$globals['base_url'].'between.php?type='.$type.'&amp;u1='.$u1.'&amp;u2='.$u2.'&amp;id='.$code.'">'._('enlace permanente').'</a>]<br/>';
+			echo '<strong style="font-size: 15pt;text-shadow: 1px 1px 3px #aaa">&bull; &bull; &bull;</strong>';
+			echo '</div>';
+			$thread = array();
+
+		}
+	}
 
 
 }

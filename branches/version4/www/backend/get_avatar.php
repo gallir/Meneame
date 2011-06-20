@@ -2,7 +2,7 @@
 include_once('../config.php');
 include_once(mnmpath.'/libs/avatars.php');
 
-if (!$_GET['id'] && !empty($_GET['user'])) {
+if (! isset($_GET['id']) && !empty($_GET['user'])) {
 	$id = (int) $db->get_var("select user_id from users where user_login = '".$db->escape($_GET['user'])."'");
 } else {
 	$id = intval($_GET['id']);
@@ -13,7 +13,6 @@ if (! $id > 0) {
 	die;
 }
 $size = intval($_GET['size']);
-$time = intval($_GET['time']);
 if (!$size > 0) $size = 80;
 
 if (!($img=avatar_get_from_file($id, $size))) {
@@ -28,7 +27,7 @@ if (!($img=avatar_get_from_file($id, $size))) {
 				header('Location: ' . get_no_avatar_url($size));
 		}
 		die;
-	}  
+	}
 }
 
 header("Content-type: image/jpeg");
