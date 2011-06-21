@@ -68,6 +68,7 @@ if ($id1 > 0 && $id2 >0) {
 	$all = array();
 	$to = array();
 	$sorted = array();
+	$rows = 0;
 
 
 	if (isset($_GET['id']) && ! empty($_GET['id']) ) {
@@ -75,6 +76,7 @@ if ($id1 > 0 && $id2 >0) {
 		$show_thread = true;
 	} else {
 		$show_thread = false;
+		$rows = -1;
 		$to[0] = between($id1, $id2, $type, $prefix, $page_size, $offset);
 		$to[1] = between($id2, $id1, $type, $prefix, $page_size, $offset);
 
@@ -124,7 +126,7 @@ if ($id1 > 0 && $id2 >0) {
 		$thread[] = $id;
 
 		if (! $show_thread && ! isset($all[$id])) {
-			$code = base64_encode(gzcompress(implode(",", $thread)));
+			$code = urlencode(base64_encode(gzcompress(implode(",", $thread))));
 			echo '<div style="margin: -5px 0 15px 0;text-align:center; color: #888">';
 			echo '[<a href="'.$globals['base_url'].'between.php?type='.$type.'&amp;u1='.$u1.'&amp;u2='.$u2.'&amp;id='.$code.'">'._('enlace permanente').'</a>]<br/>';
 			echo '<strong style="font-size: 15pt;text-shadow: 1px 1px 3px #aaa">&bull; &bull; &bull;</strong>';
@@ -139,7 +141,7 @@ if ($id1 > 0 && $id2 >0) {
 
 echo "</div>";
 
-do_pages(-1, $page_size);
+if ($rows) do_pages($rows, $page_size);
 do_footer_menu();
 do_footer();
 

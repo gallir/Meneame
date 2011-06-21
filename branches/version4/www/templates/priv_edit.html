@@ -66,7 +66,7 @@ $("#to_user").autocomplete({ url:'{{ globals.base_url }}backend/autocomplete_fri
 		priv_add_avatar(item.value);
 	},
 	showResult: function(value, data) {
-		return '<img src="{{ globals.base_url }}backend/get_avatar.php?user='+value+'&amp;size=20" width="12" height="12" style="vertical-align:bottom"/>&nbsp;'+value;
+		return '<img src="{{ globals.base_url }}backend/get_avatar.php?user='+value+'&amp;time='+data[0]+'&amp;size=20" width="12" height="12" style="vertical-align:bottom"/>&nbsp;'+value;
 	},
 });
 

@@ -196,10 +196,12 @@ function avatar_get_from_db($user, $size=0) {
 	return file_get_contents("$file_base-$size.jpg");
 }
 
-function avatar_get_from_file($user, $size) {
+function avatar_get_from_file($user, $size, $time = false) {
 	global $globals, $db;
 
-	$time = $db->get_var("select user_avatar from users where user_id=$user");
+	if ($time === false) {
+		$time = $db->get_var("select user_avatar from users where user_id=$user");
+	}
 	if(! $time > 0) return false;
 	$file = Upload::get_cache_dir($user) . "/$user-$time-$size.jpg";
 	if (is_readable($file)) {

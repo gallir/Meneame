@@ -15,6 +15,17 @@ if (! $id > 0) {
 $size = intval($_GET['size']);
 if (!$size > 0) $size = 80;
 
+if (! isset($_GET['time'])) {
+	$time = $db->get_var("select user_avatar from users where user_id=$id");
+} else {
+	$time = intval($_GET['time']);
+}
+
+if (! $time > 0) {
+	header('Location: ' . get_no_avatar_url($size));
+	die;
+}
+
 if (!($img=avatar_get_from_file($id, $size))) {
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {

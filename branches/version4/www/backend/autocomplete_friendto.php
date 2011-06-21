@@ -23,11 +23,11 @@ if (!$q) {
 }
 
 $q = $db->escape($q);
-$users = $db->get_col("select user_login from users, friends where friend_type = 'manual' and friend_to = $current_user->user_id and friend_value > 0 and user_id = friend_from and user_login like '$q%'");
+$users = $db->get_results("select user_login, user_avatar from users, friends where friend_type = 'manual' and friend_to = $current_user->user_id and friend_value > 0 and user_id = friend_from and user_login like '$q%'");
 
 if ($users) {
 	foreach ($users as $user) {
-		echo mb_strtolower($user)."\n";
+		echo mb_strtolower($user->user_login).'|'.$user->user_avatar."\n";
 	}
 }
 

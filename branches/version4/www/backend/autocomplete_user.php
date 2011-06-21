@@ -19,11 +19,11 @@ if (!$q) {
 }
 
 $q = $db->escape($q);
-$users = $db->get_col("select user_login from users where user_login like '$q%' order by user_login asc limit 20");
+$users = $db->get_results("select user_login, user_avatar from users where user_login like '$q%' order by user_login asc limit 20");
 
 if ($users) {
 	foreach ($users as $user) {
-		echo mb_strtolower($user)."\n";
+		echo mb_strtolower($user->user_login).'|'.$user->user_avatar."\n";
 	}
 }
 
