@@ -19,11 +19,30 @@ if (!$q) {
 }
 
 $q = $db->escape($q);
-$users = $db->get_results("select user_login, user_avatar from users where user_login like '$q%' order by user_login asc limit 20");
+
+if (isset($_GET['friends'])) {
+	if (! $current_user->user_id) return;
+	$from = "users, friends";
+	$where = "friend_type = 'manual' and friend_to = $current_user->user_id and friend_value > 0 and user_id = friend_from and user_login like '$q%'";
+} else {
+	$from = "users";
+	$where = "user_login like '$q%'";
+}
+
+$users = $db->get_results("select user_id, user_login, user_avatar from $from where $where order by user_login asc limit 20");
 
 if ($users) {
 	foreach ($users as $user) {
-		echo mb_strtolower($user->user_login).'|'.$user->user_avatar."\n";
+		if (isset($_GET['avatar'])) {
+			if ($user->user_avatar > 0) {
+				$avatar = get_avatar_url($user->user_id, $user->user_avatar, 20);
+			} else {
+				$avatar = get_no_avatar_url(20);
+			}
+		} else {
+			$avatar = $user->user_avatar;
+		}
+		echo mb_strtolower($user->user_login).'|'.$avatar."\n";
 	}
 }
 
