@@ -86,7 +86,6 @@ if ($id1 > 0 && $id2 >0) {
 			}
 		}
 
-
 		$keys = array_keys($all);
 		sort($keys, SORT_NUMERIC);
 		foreach ($keys as $k) {
@@ -100,11 +99,20 @@ if ($id1 > 0 && $id2 >0) {
 			$sorted[] = $k;
 		}
 		$sorted = array_reverse($sorted);
-		print_r($uniques);
 	}
 
 	$thread = array();
+	$leaves = array();
 	foreach($sorted as $id) {
+		if ( ! $show_thread ) {
+			if (isset($all[$id])) {
+				foreach ($all[$id] as $e) {
+					$leaves[$e] = true;
+				}
+			}
+		}
+		if (isset($leaves[$id])) unset($leaves[$id]);
+		
 		//$obj->basic_summary = true;
 		switch ($type) {
 			case 'posts':
@@ -125,14 +133,16 @@ if ($id1 > 0 && $id2 >0) {
 		echo "</div>\n";
 		$thread[] = $id;
 
-		if (! $show_thread && ! isset($all[$id])) {
+		if ( $show_thread ) continue;
+
+		if (! isset($all[$id]) && ! in_array($id, $leaves)) {
 			$code = urlencode(base64_encode(gzcompress(implode(",", $thread))));
 			echo '<div style="margin: -5px 0 15px 0;text-align:center; color: #888">';
 			echo '[<a href="'.$globals['base_url'].'between.php?type='.$type.'&amp;u1='.$u1.'&amp;u2='.$u2.'&amp;id='.$code.'">'._('enlace permanente').'</a>]<br/>';
 			echo '<strong style="font-size: 15pt;text-shadow: 1px 1px 3px #aaa">&bull; &bull; &bull;</strong>';
 			echo '</div>';
 			$thread = array();
-
+			$leaves = array();
 		}
 	}
 
@@ -145,7 +155,7 @@ if ($rows) do_pages($rows, $page_size);
 do_footer_menu();
 do_footer();
 
-function between($id1, $id2, $table, $prefix, $rows=20, $pos = 0) {
+function between($id1, $id2, $table, $prefix, $rows=25, $pos = 0) {
 	global $db;
 
 	$rels = array();
