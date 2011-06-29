@@ -330,7 +330,7 @@ class HtmlImages {
 			// First check for thumbnail head metas
 			if ((preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
-				&& ! preg_match('/meneame/i', $match[1])) { // a bad thumbnail meta in aldea-irreductible
+				&& ! preg_match('/favicon/i', $match[1])) { 
 				$url = $match[1];
 				$url = build_full_url($url, $this->url);
 				if ($this->debug)
