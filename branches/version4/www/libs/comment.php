@@ -157,7 +157,7 @@ class Comment extends LCPBase {
 		if ($this->single_link) $this->html_id = $this->c_order;
 		else $this->html_id = $this->id;
 
-		$this->can_edit =  ! empty($this->basic_summary) && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+		$this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary ) && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
 		if ($length > 0) $this->truncate($length);
 		$this->txt_content = $this->to_html($this->content);
 	}
