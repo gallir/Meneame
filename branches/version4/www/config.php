@@ -380,5 +380,3 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 
 
 
-
-?>

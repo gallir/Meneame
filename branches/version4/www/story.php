@@ -230,7 +230,7 @@ case 2:
 		do_comment_pages($link->comments, $current_page);
 		if ($link->comments > 5) {
 			echo '<script type="text/javascript">';
-			echo '$(window).scroll(function () { get_total_answers("comment",'.$link->id.','.$offset.', '.$globals['comments_page_size'].')});';
+			echo '$(get_total_answers("comment",'.$link->id.','.$offset.', '.$globals['comments_page_size'].'));';
 			echo '</script>';
 		}
 	}

@@ -26,9 +26,6 @@ switch ($_GET['type']) {
 
 
 $inner_join = "SELECT comment_id FROM comments WHERE comment_link_id = $id ORDER BY comment_order LIMIT $offset, $size";
-// It gets everyone
-// $sql = "SELECT conversation_to as `to`, conversation_from as `from` FROM conversations INNER JOIN ($inner_join) as comment_id ON comment_id = conversation_to WHERE conversation_type='$type'";
-
 $sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations INNER JOIN ($inner_join) as comment_id ON comment_id = conversation_to WHERE conversation_type='$type' GROUP BY conversation_to";
 
 $answers = array();

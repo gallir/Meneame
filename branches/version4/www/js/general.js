@@ -697,7 +697,6 @@ function priv_new(user_id) {
 }
 
 function get_total_answers(type, id, offset, size) {
-	$(window).unbind('scroll');
 	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size },
 		function (data) {
 			$.each(data, function(id, answers) {
