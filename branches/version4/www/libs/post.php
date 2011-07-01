@@ -177,7 +177,7 @@ class Post extends LCPBase {
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
 
 		// Print dates
-		if ($globals['now'] - $this->date > 604800) { // 7 days
+		if ($globals['now'] - $this->date > 86400) {
 			$this->comment_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
 		} else {
 			$this->comment_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);

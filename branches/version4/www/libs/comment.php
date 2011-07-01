@@ -8,6 +8,7 @@
 
 class Comment extends LCPBase {
 	var $id = 0;
+	var $prefix_id = '';
 	var $randkey = 0;
 	var $author = 0;
 	var $link = 0;
@@ -135,7 +136,7 @@ class Comment extends LCPBase {
 		$this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
 		$this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
 						|| ($this->user_level == 'disabled' && $this->type != 'admin');
-		$this->hide_comment = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
+		$this->hide_comment = ! isset($this->not_ignored) && ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0));
 	}
 
 	function truncate($length) {
@@ -167,9 +168,7 @@ class Comment extends LCPBase {
 		if(!$this->read) return;
 
 		if (! $link && $this->link > 0) {
-			$link = new Link;
-			$link->id = $this->link;
-			$link->read();
+			$link = Link::from_db($this->link);
 			$this->link_object = $link;
 		}
 
@@ -230,7 +229,7 @@ class Comment extends LCPBase {
 			$this->avatar_img = get_no_avatar_url(20);
 		}
 
-		if ($globals['now'] - $this->date > 604800) {
+		if ($globals['now'] - $this->date > 86400) {
 			$this->author_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
 		} else {
 			$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);

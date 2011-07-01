@@ -620,10 +620,11 @@ function do_best_queued() {
 	}
 
 
+	$min_karma = intval($db->get_var("SELECT avg(link_karma)/2 from links WHERE link_date >= date_sub(now(), interval 1 day) and link_status='published'"));
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 2 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id from links where link_status='queued' and link_date > '$min_date' $category_list order by link_karma desc limit 15");
+	$res = $db->get_results("select link_id from links where link_status='queued' and link_karma > $min_karma and link_date > '$min_date' $category_list order by link_karma desc limit 20");
 	if ($res) {
 		$url = $globals['base_url'].'promote.php';
 		$links = array();

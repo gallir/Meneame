@@ -1,6 +1,6 @@
 <a href="{{ self.link_permalink }}/000{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
 {% if self.hide_comment %}
-	&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
+	&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
 {% else %}
 
 	{{ self.txt_content }}
@@ -15,7 +15,7 @@
 	{% endif %}
 
 	{% if self.is_truncated %}
-		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.id}}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
+		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
 	{% endif %}
 
 {% endif %}

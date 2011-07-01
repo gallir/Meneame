@@ -19,9 +19,12 @@ if ($res) {
 	header('Content-Type: text/html; charset=UTF-8');
 	foreach($res as $answer) {
 		$comment = Comment::from_db($answer);
-		$comment->id = $id . '-' .$comment->id; // This a trick in order not to confuse with other ids
+		$comment->basic_summary = true;
+		$comment->not_ignored = true;
+		$comment->prefix_id = "$id-"; // This a trick in order not to confuse with other ids
 		$comment->print_summary(false, 2500);
 		echo "\n";
 	}
+	Haanga::Load('fancybox.html');
 }
 
