@@ -88,6 +88,8 @@ if ($_POST['process']=='newcomment') {
 	$new_comment_error = Comment::save_from_post($link);
 }
 
+$offset = 0;
+$limit = '';
 switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;
@@ -224,7 +226,16 @@ case 2:
 		echo "</ol>\n";
 	}
 
-	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+	if($tab_option == 1) {
+		do_comment_pages($link->comments, $current_page);
+		if ($link->comments > 5) {
+			echo '<script type="text/javascript">';
+			echo '$(window).scroll(function () { get_total_answers("comment",'.$link->id.','.$offset.', '.$globals['comments_page_size'].')});';
+			echo '</script>';
+		}
+	}
+
+
 	Comment::print_form($link);
 	echo '</div>' . "\n";
 	break;

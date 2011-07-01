@@ -696,6 +696,29 @@ function priv_new(user_id) {
 		height: 'auto'});
 }
 
+function get_total_answers(type, id, offset, size) {
+	$(window).unbind('scroll');
+	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size },
+		function (data) {
+			$.each(data, function(id, answers) {
+				$('#cid-'+id).siblings(".comment-meta").children(".comment-votes-info").append('<a class="comment-ans" href="javascript:show_comment_answers('+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/>'+answers+'</a>');
+			});
+
+		});
+}
+
+function show_comment_answers(id) {
+	answers = $('#answers-'+id);
+	if (answers.length == 0) {
+		$.get(base_url + 'backend/get_comment_answers.php', { "id": id }, function (html) {
+			$('#cid-'+id).parent().parent().append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
+		});
+		reportAjaxStats('html', program);
+	} else {
+		answers.toggle();
+	}
+}
+
 $(document).ready(function () {
 	$('.tooltip').live('mouseenter mouseleave', tooltip.action);
 	mDialog.init();

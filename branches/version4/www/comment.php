@@ -40,7 +40,7 @@ $globals['link'] = $link;
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
-	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status], 
+	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status],
 											$globals['time_enabled_comments']);
 }
 
@@ -80,12 +80,10 @@ echo "</ol>\n";
 $sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $comment->id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
 $answers = $db->get_results($sql);
 if ($answers) {
-	$answer = new Comment;
 	echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
 	echo '<ol class="comments-list">';
 	foreach ($answers as $dbanswer) {
-		$answer->id = $dbanswer->comment_id;
-		$answer->read();
+		$answer = Comment::from_db($dbanswer->comment_id);
 		echo '<li>';
 		$answer->print_summary($link);
 		echo '</li>';

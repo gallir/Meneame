@@ -1472,7 +1472,12 @@ font-weight: bold;
 text-align: right;
 }
 
-.comment-info a {
+.comment-answers {
+margin:-5px 15px 0 40px;
+opacity:0.8;
+}
+
+.comment-info a, .comment-ans {
 color: #3D72C3;
 }
 
