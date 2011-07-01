@@ -145,7 +145,7 @@ class RGDB extends mysqli {
 		}
 
 		// Extract var out of cached results based x,y vals
-		if ( $this->last_result[$y] ) {
+		if ( isset($this->last_result[$y]) ) {
 			$values = array_values(get_object_vars($this->last_result[$y]));
 		}
 

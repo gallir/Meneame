@@ -157,7 +157,7 @@ class Comment extends LCPBase {
 		if ($this->single_link) $this->html_id = $this->c_order;
 		else $this->html_id = $this->id;
 
-		$this->can_edit =  !$this->basic_summary && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+		$this->can_edit =  ! empty($this->basic_summary) && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
 		if ($length > 0) $this->truncate($length);
 		$this->txt_content = $this->to_html($this->content);
 	}
@@ -206,7 +206,7 @@ class Comment extends LCPBase {
 		$this->modified_time = txt_time_diff($this->date, $this->modified);
 
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
-		$this->can_reply = $current_user->user_id > 0 && $globals['link'] && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
+		$this->can_reply = $current_user->user_id > 0 && isset($globals['link']) && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
 
 		if ($this->type == 'admin') {
 			$author = '<strong>'._('admin').'</strong> ';

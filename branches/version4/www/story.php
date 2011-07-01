@@ -228,11 +228,12 @@ case 2:
 
 	if($tab_option == 1) {
 		do_comment_pages($link->comments, $current_page);
-		if ($link->comments > 5) {
-			echo '<script type="text/javascript">';
-			echo '$(get_total_answers("comment",'.$link->id.','.$offset.', '.$globals['comments_page_size'].'));';
-			echo '</script>';
-		}
+	}
+
+	if ($link->comments > 5) {
+		echo '<script type="text/javascript">';
+		echo '$(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
+		echo '</script>';
 	}
 
 

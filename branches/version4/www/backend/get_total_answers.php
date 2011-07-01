@@ -14,6 +14,12 @@ if (! $id) die;
 $offset = intval($_GET['offset']);
 $size = intval($_GET['size']);
 
+if (isset($_GET['order'])) {
+	$order = 'ORDER BY ' . $db->escape($_GET['order']);
+} else {
+	$order = '';
+}
+
 switch ($_GET['type']) {
 	case 'post':
 		$type = 'post';
@@ -25,7 +31,7 @@ switch ($_GET['type']) {
 
 
 
-$inner_join = "SELECT comment_id FROM comments WHERE comment_link_id = $id ORDER BY comment_order LIMIT $offset, $size";
+$inner_join = "SELECT comment_id FROM comments WHERE comment_link_id = $id $order LIMIT $offset, $size";
 $sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations INNER JOIN ($inner_join) as comment_id ON comment_id = conversation_to WHERE conversation_type='$type' GROUP BY conversation_to";
 
 $answers = array();

@@ -213,7 +213,7 @@ function avatar_get_from_file($user, $size, $time = false) {
 }
 
 function avatar_resize($infile,$outfile,$size) {
-	$image_info = getImageSize($infile);
+	$image_info = @getImageSize($infile);
 	switch ($image_info['mime']) {
 		case 'image/gif':
 		if (imagetypes() & IMG_GIF)  {
