@@ -993,9 +993,9 @@ text-decoration: none;
 padding: 1px 4px;
 font-weight: bold;
 text-align: center;
--moz-border-radius: 12px;
--webkit-border-radius: 12px;
-border-radius: 12px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
 color: white;
 }
 
@@ -1109,7 +1109,7 @@ border-left: none;
 }
 
 .comments-counter .counter {
-background-color: #f00;
+background-color: #EF0303;
 font-size: 11px;
 vertical-align: top;
 }
@@ -1484,6 +1484,10 @@ color: #aaa;
 font-weight: bold;
 }
 
+.comment-meta a:hover {
+text-decoration: none;
+}
+
 .comment-info {
 text-align: right;
 }
@@ -1499,7 +1503,14 @@ color: #3D72C3;
 
 .comment-meta .counter {
 background-color: #FFB600;
-font-family: courier, mono;
+}
+
+.comment-meta .counter.answers {
+font-size: 10px;
+}
+
+.comment-meta .counter.info {
+font-family: mono, courier;
 }
 
 .comment-votes-info {

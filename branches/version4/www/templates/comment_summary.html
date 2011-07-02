@@ -25,7 +25,7 @@
 		{% endif %}
 
 		{% if self.has_votes_info %}
-			<a class="fancybox" href="{{ globals.base_url }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('votos') %}"><span class="counter">i</span></a>
+			<a class="fancybox" href="{{ globals.base_url }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('votos') %}"><span class="counter info">i</span></a>
 		{% endif %}
 
 		{% if self.can_reply %}
