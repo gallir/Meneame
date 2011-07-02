@@ -991,7 +991,6 @@ border-color: #FF6400;
 .counter {
 text-decoration: none;
 padding: 1px 4px;
-min-width: 12px;
 font-weight: bold;
 text-align: center;
 -moz-border-radius: 12px;
@@ -1064,16 +1063,14 @@ overflow: hidden;
 display: block;
 margin: 4px 0 0 0;
 padding: 0;
-overflow: visible;
-overflow-y: visible;
-overflow-x: hidden;
+overflow: hidden;
 white-space: nowrap;
 color: #FF6400;
 }
 
 .news-details.main {
 font-size: 110%;
-line-height: 110%;
+line-height: 150%;
 }
 
 .news-details a:link, .news-details a:visited {
@@ -1480,7 +1477,6 @@ white-space: nowrap;
 }
 
 .comment-meta.hidden, .comment-meta.hidden a {
-line-height: 100%;
 color: #aaa;
 }
 
@@ -1508,7 +1504,7 @@ font-family: courier, mono;
 
 .comment-votes-info {
 float: left;
-max-width: 50%;
+max-width: 60%;
 display: inline;
 overflow: hidden;
 }
