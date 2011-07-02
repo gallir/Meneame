@@ -129,7 +129,7 @@
 
 
 	<div class="news-details main">
-		<span class="comments-counter">&nbsp;<a href="{{ self.permalink }}">{% if self.comments > 0 %}{% trans _("%d comentarios") self.comments %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
+		<span class="comments-counter"><a href="{{ self.permalink }}">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span> {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
 
 
 		<span class="tool">

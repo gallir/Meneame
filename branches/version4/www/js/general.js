@@ -700,7 +700,7 @@ function get_total_answers(type, order, id, offset, size) {
 	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
 		function (data) {
 			$.each(data, function(id, answers) {
-				$('#cid-'+id).siblings(".comment-meta").children(".comment-votes-info").append('<a class="comment-ans" href="javascript:show_comment_answers('+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/>'+answers+'</a>');
+				$('#cid-'+id).siblings(".comment-meta").children(".comment-votes-info").append('<a href="javascript:show_comment_answers('+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter" style="font-size:10px">'+answers+'</span></a>');
 			});
 
 		});
