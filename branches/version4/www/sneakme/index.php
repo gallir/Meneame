@@ -239,6 +239,7 @@ function onLoad(lat, lng, zoom, icon) {
 	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
 	//$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where $order_by $limit", 'Post');
 	if ($posts) {
+		$ids = array();
 		echo '<ol class="comments-list">';
 		$time_read = 0;
 		foreach ($posts as $post) {
@@ -249,6 +250,7 @@ function onLoad(lat, lng, zoom, icon) {
 				$post->print_summary();
 				if ($post->date > $time_read) $time_read = $post->date;
 				echo '</li>';
+				if (! $post_id) $ids[] = $post->id;
 			}
 		}
 		echo "</ol>\n";
@@ -264,10 +266,15 @@ function onLoad(lat, lng, zoom, icon) {
 					echo '<li>';
 					$answer->print_summary();
 					echo '</li>';
+					$ids[] = $answer->id;
 				}
 				echo "</ol>";
 				echo '</div>'."\n";
 			}
+		}
+
+		if ($current_user->user_id > 0) {
+			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
 		}
 
 		// Update conversation time

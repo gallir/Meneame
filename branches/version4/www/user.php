@@ -497,6 +497,7 @@ function print_comment_list($comments, $user) {
 
 	$timestamp_read = 0;
 
+	$ids = array();
 	foreach ($comments as $dbcomment) {
 		if ($dbcomment->comment_type == 'admin' && ! $current_user->admin) continue;
 		$link->id=$dbcomment->link_id;
@@ -516,7 +517,9 @@ function print_comment_list($comments, $user) {
 		$comment->print_summary($link, 2000, false);
 		echo '</li>';
 		echo "</ol>\n";
+		$ids[] = $comment->id;
 	}
+	Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 	// Return the timestamp of the most recent comment
 	return $timestamp_read;
 }

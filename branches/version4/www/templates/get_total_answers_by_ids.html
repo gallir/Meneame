@@ -1,0 +1,5 @@
+{% if current_user.user_id > 0 %}
+	<script type="text/javascript">
+	$(get_total_answers_by_ids("{{ type }}", "{{ ids  }}"));
+	</script>
+{% endif %}

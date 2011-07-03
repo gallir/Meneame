@@ -80,6 +80,8 @@ echo "</ol>\n";
 $sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $comment->id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
 $answers = $db->get_results($sql);
 if ($answers) {
+	$type = 'comment';
+	$ids = array();
 	echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
 	echo '<ol class="comments-list">';
 	foreach ($answers as $dbanswer) {
@@ -87,9 +89,12 @@ if ($answers) {
 		echo '<li>';
 		$answer->print_summary($link);
 		echo '</li>';
+		$ids[] = $answer->id;
 	}
 	echo "</ol>\n";
 	echo '</div>'."\n";
+	$ids = implode(',', $ids);
+	Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));
 }
 
 Comment::print_form($link, 8);

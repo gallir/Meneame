@@ -678,7 +678,6 @@ function replaceText(text, tag) {
 }
 
 /* Privates */
-
 function priv_show(content) {
 	$.fancybox({content: content, autoDimensions: false, width: 500, height: 'auto', transitionIn: 'none'});
 }
@@ -696,23 +695,42 @@ function priv_new(user_id) {
 		height: 'auto'});
 }
 
-function get_total_answers(type, order, id, offset, size) {
-	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
-		function (data) {
-			$.each(data, function(id, answers) {
-				$('#cid-'+id).siblings(".comment-meta").children(".comment-votes-info").append('<a href="javascript:show_comment_answers('+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter answers">'+answers+'</span></a>');
-			});
-
-		});
+/* Answers */
+function get_total_answers_by_ids(type, ids) {
+	$.ajax({
+		type: 'POST',
+		url: base_url + 'backend/get_total_answers.php',
+		dataType: 'json',
+		data: { "ids": ids, "type": type },
+		success: function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) },
+	});
 }
 
-function show_comment_answers(id) {
+function get_total_answers(type, order, id, offset, size) {
+	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
+		function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) });
+}
+
+function show_total_answers(type, id, answers) {
+	if (type == 'comment') dom_id = '#cid-'+ id;
+	else dom_id = '#pid-'+ id;
+	$(dom_id).siblings(".comment-meta").children(".comment-votes-info").append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter answers">'+answers+'</span></a>');
+}
+
+function show_answers(type, id) {
+	if (type == 'comment') {
+		program = 'get_comment_answers.php';
+		dom_id = '#cid-'+ id;
+	} else {
+		program = 'get_post_answers.php';
+		dom_id = '#pid-'+ id;
+	}
 	answers = $('#answers-'+id);
 	if (answers.length == 0) {
-		$.get(base_url + 'backend/get_comment_answers.php', { "id": id }, function (html) {
-			$('#cid-'+id).parent().parent().append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
+		$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
+			$(dom_id).parent().parent().append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
 		});
-		reportAjaxStats('html', program);
+		reportAjaxStats('html', 'answers');
 	} else {
 		answers.toggle();
 	}

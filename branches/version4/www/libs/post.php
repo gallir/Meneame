@@ -10,6 +10,7 @@ require_once(mnminclude.'favorites.php');
 
 class Post extends LCPBase {
 	var $id = 0;
+	var $prefix_id = '';
 	var $randkey = 0;
 	var $author = 0;
 	var $date = false;
