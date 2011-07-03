@@ -232,7 +232,7 @@ case 2:
 
 	if ($link->comments > 5) {
 		echo '<script type="text/javascript">';
-		echo '$(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
+		echo '$(window).load(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
 		echo '</script>';
 	}
 
