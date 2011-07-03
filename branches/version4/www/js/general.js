@@ -704,11 +704,13 @@ function get_total_answers_by_ids(type, ids) {
 		data: { "ids": ids, "type": type },
 		success: function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) },
 	});
+	reportAjaxStats('json', 'total_answers_ids');
 }
 
 function get_total_answers(type, order, id, offset, size) {
 	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
 		function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) });
+	reportAjaxStats('json', 'total_answers');
 }
 
 function show_total_answers(type, id, answers) {
@@ -730,7 +732,7 @@ function show_answers(type, id) {
 		$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
 			$(dom_id).parent().parent().append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
 		});
-		reportAjaxStats('html', 'answers');
+		reportAjaxStats('html', program);
 	} else {
 		answers.toggle();
 	}
