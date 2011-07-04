@@ -611,16 +611,18 @@ function do_best_queued() {
 	$key = 'best_queued_'.$globals['css_main'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
 
+	$avg_karma = intval($db->get_var("SELECT avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 1 day) and link_status='published'"));
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
+			$min_karma = intval($avg_karma/5);
 	} else {
+		$min_karma = intval($avg_karma/2);
 		$category_list	= '';
 		$title = _('candidatas');
 	}
 
 
-	$min_karma = intval($db->get_var("SELECT avg(link_karma)/2 from links WHERE link_date >= date_sub(now(), interval 1 day) and link_status='published'"));
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 2 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes

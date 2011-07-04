@@ -31,6 +31,7 @@
 </ul>
 </div>
 
+</div>
 
 {# fancybox #}
 {% if globals.fancybox_enabled %}
@@ -46,11 +47,14 @@
 	{% endif %}
 {% endfor %}
 
+{% if globals.link_id %}
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">{lang: 'es',  "parsetags": "explicit"}</script>
+{% endif %}
+
 {# warn warn warn
   dont do stats of password recovering pages #}
 
 {% spacefull %}
-</div>
 {% try_include 'private/stats.html' %}
 </body>
 {% meneame_endtime %}
