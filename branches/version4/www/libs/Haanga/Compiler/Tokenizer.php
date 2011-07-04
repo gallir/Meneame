@@ -106,6 +106,7 @@ class Haanga_Compiler_Tokenizer
         '&&'    => HG_Parser::T_AND,
         '->'    => HG_Parser::T_OBJ,
         '..'    => HG_Parser::T_DOTDOT,
+        '::'    => HG_Parser::T_CLASS,
         '<<'    => HG_Parser::T_BITWISE,
         '<='    => HG_Parser::T_LE,
         '==='   => HG_Parser::T_EQ,
@@ -147,7 +148,7 @@ class Haanga_Compiler_Tokenizer
         /*$tmp1 = self::$operators;
         $tmp2 = $tmp1;
         ksort($tmp2);
-        var_dump($tmp2, $tmp1 === $tmp2);die(); /**/
+        var_dump($tmp2, $tmp1 === $tmp2);die();/**/
 
         self::$close_tags =array(
             self::$end_tag   => HG_Parser::T_TAG_CLOSE,

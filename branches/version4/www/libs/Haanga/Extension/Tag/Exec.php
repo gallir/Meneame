@@ -21,6 +21,15 @@ class Haanga_Extension_Tag_Exec
             $cmp->Error("invalid param");
         }
 
+        // fix for static calls {{{
+        if (is_array($args[0])) {
+            $end = end($args[0]);
+            if (isset($end['class'])) {
+                $args[0][ key($args[0]) ]['class'] = substr($end['class'], 1);
+            }
+        }
+        // }}}
+
         $exec = hexec($args[0]);
         for ($i=1; $i < count($args); $i++) {
             $exec->param($args[$i]);

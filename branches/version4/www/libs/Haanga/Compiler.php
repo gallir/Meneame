@@ -589,6 +589,23 @@ class Haanga_Compiler
     }
     // }}}
 
+    function isMethod($varname, &$expr)
+    {
+        if (is_array($varname)) {
+            $tmp    = $varname;
+            $method = array_pop($tmp);
+            $object = $this->get_context($tmp);
+            if (!empty($method['object']) && is_string($method['object'])) {
+                $property = $method['object'];
+                if (is_object($object) && !isset($object->$property) && is_callable(array($object, $property))) {
+                    $expr = hexec($varname);
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
+
     // get_var_filtered {{{
     /**
      *  This method handles all the filtered variable (piped_list(X)'s 
@@ -615,6 +632,10 @@ class Haanga_Compiler
                 $this->Error("This variable can't have any filter");
             }
 
+            if ($this->isMethod($target['var'], $return)) {
+                $target = $return;
+            }
+
             for ($i=1; $i < $count; $i++) {
                 $func_name = $variable[$i];
                 if ($func_name == 'escape') {
@@ -630,6 +651,10 @@ class Haanga_Compiler
         } else {
             $details = $this->generate_variable_name($variable[0]);
             $varname = $variable[0];
+
+            if ($this->isMethod($varname, $return)) {
+                return $return;
+            }
 
             if (!Haanga_AST::is_var($details) && !$accept_string) {
                 /* generate_variable_name didn't replied a variable, weird case
@@ -884,7 +909,7 @@ class Haanga_Compiler
 
         $variable = $this->get_context($variable);
         if (is_array($variable) || is_object($variable)) {
-            return is_object($variable);
+            return $default ? is_object($variable) : is_object($variable) && !$variable InstanceOf Iterator && !$variable Instanceof ArrayAccess;
         }
 
         return $default===NULL ? self::$dot_as_object : $default;
@@ -892,11 +917,14 @@ class Haanga_Compiler
     // }}} 
 
     // Get variable name {{{
-    protected function generate_variable_name($variable)
+    function generate_variable_name($variable, $special=true)
     {
         if (is_array($variable)) {
             switch ($variable[0]) {
             case 'forloop':
+                if (!$special) {
+                    return array('var' => $variable);
+                }
                 if (!$this->forid) {
                     $this->Error("Invalid forloop reference outside of a loop");
                 }
@@ -941,6 +969,9 @@ class Haanga_Compiler
                 $this->var_is_safe = TRUE;
                 break;
             case 'block':
+                if (!$special) {
+                    return array('var' => $variable);
+                }
                 if ($this->in_block == 0) {
                     $this->Error("Can't use block.super outside a block");
                 }
@@ -954,11 +985,20 @@ class Haanga_Compiler
             default:
                 /* choose array or objects */
 
+                if ($special) {
+                    // this section is resolved on the parser.y
+                    return array('var' => $variable);
+                }
+
                 for ($i=1; $i < count($variable); $i++) {
                     $var_part = array_slice($variable, 0, $i);
                     $def_arr  = TRUE;
 
                     if (is_array($variable[$i])) {
+                        if (isset($variable[$i]['class'])) {
+                            // no type guess for static properties
+                            continue;
+                        }
                         if (isset($variable[$i]['object'])) {
                             $def_arr = FALSE;
                         }
@@ -1026,12 +1066,7 @@ class Haanga_Compiler
         if (isset($details['range'])) {
             $this->set_safe($details['variable']);
         } else {
-            /* variable context */
-             $var = $this->get_context(is_array($details['array'][0]) ? $details['array'][0] : array($details['array'][0]));
-            if (is_array($var)) {
-                /* let's check if it is an object or array */
-                $this->set_context($details['variable'], current($var));
-            }
+            /* check variable context */
 
             /* Check if the array to iterate is an object */
             $var = &$details['array'][0];
@@ -1049,7 +1084,13 @@ class Haanga_Compiler
                 $this->set_safe(hvar($details['variable']));
             }
 
-            $details['array'] = $this->generate_variable_name($details['array']);
+            if ($array Instanceof Haanga_AST) {
+                // filtered var
+                $tmp = hvar('tmp'.($oldid+1));
+                $body->decl($tmp, $array);
+                $array = $tmp;
+            }
+            $details['array'] = $array;
         }
 
         /* for_body {{{ */
