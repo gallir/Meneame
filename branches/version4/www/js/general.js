@@ -67,7 +67,6 @@ function menealo_post(user, id, value)
 	reportAjaxStats('vote', 'post');
 }
 
-
 function disable_vote_link(id, value, mess, background) {
 	if (value < 0) span = '<span class="negative">';
 	else span = '<span>';
@@ -702,7 +701,7 @@ function get_total_answers_by_ids(type, ids) {
 		url: base_url + 'backend/get_total_answers.php',
 		dataType: 'json',
 		data: { "ids": ids, "type": type },
-		success: function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) },
+		success: function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) }
 	});
 	reportAjaxStats('json', 'total_answers_ids');
 }
