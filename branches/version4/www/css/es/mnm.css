@@ -347,6 +347,26 @@ margin: 0 10px 0 10px;
 overflow: hidden;
 }
 
+.topbox {
+position:relative;
+background:#f9f9f9;
+border:#ddd 1px solid;
+padding: 7px 7px 3px 5px;
+margin: 0 0px 15px 0;
+vertical-align:middle;
+overflow: hidden;
+white-space: nowrap;
+}
+
+.topbox .title {
+margin-top:5px;
+text-transform:capitalize;
+font-variant:small-caps;
+text-align:right;
+color:#aaa;
+font-size:120%;
+}
+
 .mini-icon-text {
 vertical-align: middle;
 }
@@ -1546,7 +1566,7 @@ font-size: 85%;
 
 .pages {
 padding: 10px 0 0 0;
-margin: 20px 0 50px 0;
+margin: 15px 0 50px 0;
 clear: left;
 background: #FFFFFF;
 font-weight: bold;

@@ -193,9 +193,11 @@ do_banner_right();
 if ($link->latlng) {
 	echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>'."\n";
 }
+/*
 if ($link->comments > 15) {
 	do_best_story_comments($link);
 }
+*/
 if (! $current_user->user_id) {
 	do_best_stories();
 }
@@ -212,7 +214,10 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
-	if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+	if($tab_option == 1) {
+		print_relevant_comments($link);
+		do_comment_pages($link->comments, $current_page);
+	}
 
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
@@ -441,5 +446,42 @@ function get_comment_page_url($i, $total, $query) {
 	global $globals;
 	if ($i == $total) return $query;
 	else return $query.'/'.$i;
+}
+
+function print_relevant_comments($link) {
+	global $globals, $db;
+
+	if ($globals['bot'] || $link->comments < 25 ) return;
+	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
+	else $do_cache = false;
+
+	if($do_cache) {
+		$key = 'relevant_story_comments_'.$globals['css_main'].$link->id;
+		if(memcache_mprint($key)) return;
+	}
+
+
+	$min_karma = intval($globals['comment_highlight_karma']/3);
+	$limit = min(15, intval($link->comments/10));
+	$min_len = 50;
+
+	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order as val, user_id, user_avatar from comments, users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $limit");
+	if ($res) {
+		$objects = array();
+		foreach ($res as $comment) {
+			$obj = new stdClass();
+			$obj->order = $comment->comment_order;
+			$obj->link_id = $link->id;
+			$obj->link = $link->get_relative_permalink().'/000'.$comment->comment_order;
+			$obj->user_id = $comment->user_id;
+			$obj->avatar = $comment->user_avatar;
+			$objects[] = $obj;
+		}
+		$output = Haanga::Load('relevant_comments.html', compact('objects'), true);
+		echo $output;
+		if($do_cache) {
+			memcache_madd($key, $output, 300);
+		}
+	}
 }
 ?>

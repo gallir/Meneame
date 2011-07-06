@@ -1,0 +1,6 @@
+<div class="topbox">
+<span class="title">{% trans _('Comentarios relevantes') %}:</span>
+{% for obj in objects %}
+	<a class="tooltip c:{{ obj.link_id }}-{{ obj.order }}" href="{{obj.link}}" rel="nofollow"><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="avatar"/></a>&nbsp;
+{% endfor %}
+</div>
