@@ -99,7 +99,9 @@ var mobile_client = {{ globals.mobile }};
 </script>
 
 {% if globals.thumbnail %}
+	<link rel="image_src" href="{{globals.thumbnail}}"/>
 	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
+	{# <meta property="og:image" content="{{globals.thumbnail}}"/> #}
 {% else %}
 	<meta name="thumbnail_url" content="http://{{globals.static_server_name}}{{globals.base_url}}{{globals.thumbnail_logo}}"/>
 {% endif %}

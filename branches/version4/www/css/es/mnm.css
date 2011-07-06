@@ -1079,7 +1079,6 @@ color: #FF7C00;
 
 .news-details select {
 border: none;
-font-size: 90%;
 letter-spacing: 0px;
 max-width: 8em;
 vertical-align: top;
@@ -1099,9 +1098,11 @@ border-left: none;
 }
 
 .comments-counter .counter {
-background-color: #EF0303;
-font-size: 11px;
-vertical-align: top;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+border-radius: 6px;
+background-color: #F30000;
+font-size: 90%;
 }
 
 .news-details .comments-counter a:link, .news-details .comments-counter a:visited {
