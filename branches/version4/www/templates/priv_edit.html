@@ -61,6 +61,7 @@
 </fieldset>
 </div>
 
+<script src="{{ globals.base_static }}js/jquery.user_autocomplete.js" type="text/javascript"></script>
 <script type="text/javascript">
 var ac_minChars = 2;
 var ac_friends = true;
@@ -76,5 +77,6 @@ var options = {
 	}
 };
 $('#thisform{{ self.id }}').ajaxForm(options);
+$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
 </script>
-<script src="{{ globals.base_static }}js/ac_user.js" type="text/javascript"></script>
+

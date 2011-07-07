@@ -20,7 +20,7 @@ if (!$q) {
 
 $q = $db->escape($q);
 
-if (isset($_GET['friends'])) {
+if (isset($_GET['friends']) && $_GET['friends']) {
 	if (! $current_user->user_id) return;
 	$from = "users, friends";
 	$where = "friend_type = 'manual' and friend_to = $current_user->user_id and friend_value > 0 and user_id = friend_from and user_login like '$q%'";
@@ -33,7 +33,7 @@ $users = $db->get_results("select user_id, user_login, user_avatar from $from wh
 
 if ($users) {
 	foreach ($users as $user) {
-		if (isset($_GET['avatar'])) {
+		if (isset($_GET['avatar']) && $_GET['avatar']) {
 			if ($user->user_avatar > 0) {
 				$avatar = get_avatar_url($user->user_id, $user->user_avatar, 20);
 			} else {

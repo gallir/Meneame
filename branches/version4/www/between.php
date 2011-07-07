@@ -24,7 +24,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
-$globals['post_js'][] = 'ac_user.js';
+$globals['post_js'][] = 'jquery.user_autocomplete.js';
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
@@ -112,7 +112,7 @@ if ($id1 > 0 && $id2 >0) {
 			}
 		}
 		if (isset($leaves[$id])) unset($leaves[$id]);
-		
+
 		//$obj->basic_summary = true;
 		switch ($type) {
 			case 'posts':
