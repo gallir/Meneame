@@ -49,7 +49,7 @@
 				}
 			});
 			if (defaults.params.avatar) {
-				input.change(function () {setTimeout(function() {add_avatar(input)}, 100)});
+				input.change(function () {setTimeout(function() {add_avatar(input)}, 300)});
 			}
 		});
 	}
