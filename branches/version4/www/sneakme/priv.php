@@ -15,6 +15,7 @@ if (! $current_user->user_id) {
 
 $globals['extra_js'][] = 'jquery-form.pack.js';
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+$globals['extra_js'][] = 'jquery.user_autocomplete.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
 
 $globals['ads'] = true;

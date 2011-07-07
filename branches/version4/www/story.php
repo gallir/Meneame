@@ -463,9 +463,9 @@ function print_relevant_comments($link) {
 
 	$min_karma = intval($globals['comment_highlight_karma']/3);
 	$limit = min(15, intval($link->comments/10));
-	$min_len = 50;
+	$min_len = 32;
 
-	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order as val, user_id, user_avatar from comments, users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $limit");
+	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, user_id, user_avatar from comments, users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $limit");
 	if ($res) {
 		$objects = array();
 		foreach ($res as $comment) {

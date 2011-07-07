@@ -441,7 +441,7 @@ function do_best_sites() {
 function do_best_comments() {
 	global $db, $globals, $dblang;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile'] || $globals['bot']) return;
 
 	$foo = new Comment();
 	$output = '';
