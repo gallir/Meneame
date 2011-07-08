@@ -76,6 +76,8 @@ var options = {
 	}
 };
 $('#thisform{{ self.id }}').ajaxForm(options);
-$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
+{% if  ! self.to > 0 %}
+	$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
+{% endif %}
 </script>
 

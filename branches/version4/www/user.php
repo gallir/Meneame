@@ -89,8 +89,6 @@ if ($current_user->user_id) {
 if ($current_user->user_id == $user->id || $current_user->admin || $user->friendship) {
 	$globals['extra_js'][] = 'jquery-form.pack.js';
 	$globals['extra_js'][] = 'ajaxupload.min.js';
-	$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
-	$globals['extra_css'][] = 'jquery.autocomplete.css';
 }
 
 // Enable user AdSense
