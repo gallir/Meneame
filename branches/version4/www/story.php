@@ -135,6 +135,9 @@ switch ($url_args[1]) {
 	case 'related':
 		$tab_option = 8;
 		break;
+	case 'answered':
+		$tab_option = 9;
+		break;
 	default:
 		do_error(_('página inexistente'), 404);
 }
@@ -214,8 +217,8 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
+	print_relevant_comments($link);
 	if($tab_option == 1) {
-		print_relevant_comments($link);
 		do_comment_pages($link->comments, $current_page);
 	}
 
@@ -332,6 +335,35 @@ case 8:
 		Haanga::Load("story/related.html", compact('related', 'link'));
 	}
 	break;
+
+case 9:
+	echo '<div class="comments">';
+
+	print_relevant_comments($link);
+
+	$sql = "SELECT conversation_to as id, count(*) as t FROM conversations, comments WHERE comment_link_id = $link->id AND comment_id = conversation_to AND conversation_type='comment' GROUP BY conversation_to ORDER BY t desc, id asc LIMIT ".$globals['comments_page_size'] ;
+
+	$results = $db->get_results($sql);
+	if ($results) {
+		$ids = array();
+		echo '<ol class="comments-list">';
+		foreach($results as $res) {
+			if ($res->t < 2) break;
+			$ids[] = $res->id;
+			$comment = Comment::from_db($res->id);
+			echo '<li>';
+			$comment->print_summary($link, 2500, true);
+			echo '</li>';
+			echo "\n";
+		}
+		echo "</ol>\n";
+	}
+
+	Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
+	Comment::print_form($link);
+	echo '</div>' . "\n";
+	break;
+
 }
 echo '</div>';
 
@@ -359,6 +391,7 @@ function print_story_tabs($option) {
 	echo '<ul class="subheader">'."\n";
 	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
+	echo '<li'.$active[9].'><a href="'.$globals['link_permalink'].'/answered">'._('+ respondidas'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
