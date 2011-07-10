@@ -347,8 +347,10 @@ case 9:
 	if ($results) {
 		$ids = array();
 		echo '<ol class="comments-list">';
+		$max = 0;
 		foreach($results as $res) {
-			if ($res->t < 2) break;
+			if ($res->t > $max) $max = $res->t;
+			if ($max > 1 && $res->t < 2) break;
 			$ids[] = $res->id;
 			$comment = Comment::from_db($res->id);
 			echo '<li>';
@@ -357,10 +359,10 @@ case 9:
 			echo "\n";
 		}
 		echo "</ol>\n";
+		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
+		Comment::print_form($link);
 	}
 
-	Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
-	Comment::print_form($link);
 	echo '</div>' . "\n";
 	break;
 
@@ -494,7 +496,7 @@ function print_relevant_comments($link) {
 	}
 
 
-	$min_karma = intval($globals['comment_highlight_karma']/3);
+	$min_karma = intval($globals['comment_highlight_karma']/2);
 	$limit = min(15, intval($link->comments/10));
 	$min_len = 32;
 

@@ -258,7 +258,7 @@ Tooltips functions
   From http://ljouanneau.com/softs/javascript/tooltip.php
  */
 
-(function (){
+(function ($){
 
 	var offsetx = 5;
 	var reverse = false;

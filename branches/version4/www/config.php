@@ -283,7 +283,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['js_main'] = 'general.js.php?v=36'; //?N is to force reloading for newer versions
+$globals['js_main'] = 'general.js.php?v=37'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css?v=38'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
