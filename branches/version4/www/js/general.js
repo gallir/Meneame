@@ -260,9 +260,12 @@ Tooltips functions
 
 (function ($){
 
-	var offsetx = 5;
+	var x = 0;
+	var y = 0;
+	var offsetx = 7;
+	var offsety = 0;
 	var reverse = false;
-	var offsety = 5;
+	var top = false;
 	var box = null;
 	var timer = null;
 	var active = false;
@@ -304,8 +307,20 @@ Tooltips functions
 		active = true;
 
 		$(document).bind('mousemove.tooltip', function (e) { mouseMove(e) });
-		if (box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) reverse = true;
-		else reverse = false;
+		if (box.outerWidth() > 0) {
+			if ($(window).width() - event.pageX < box.outerWidth() * 1.05) reverse = true;
+			else reverse = false;
+			if ($(window).height() - (event.pageY - $(window).scrollTop()) < 200) top = true;
+			else top = false;
+		}
+	}
+
+	function show(html) {
+		if (active) {
+			if(typeof html == 'string')	box.html(html);
+			position();
+			box.show();
+		}
 	}
 
 	function hide () {
@@ -318,26 +333,33 @@ Tooltips functions
 		box.hide();
 	}
 
-	function mouseMove(e) {
-		if (reverse) xL = e.pageX - (box.outerWidth() + offsetx);
-		else xL = e.pageX + offsetx;
-		yL = e.pageY + offsety;
+	function position() {
+		if (reverse) xL = x - (box.outerWidth() + offsetx);
+		else xL = x + offsetx;
+		if (top) yL = y - (box.outerHeight() + offsety);
+		else yL = y + offsety;
 		box.css({left: xL +"px", top: yL +"px"});
+	}
+
+	function mouseMove(e) {
+		x = e.pageX;
+		y = e.pageY;
+		position();
 	}
 
 	function ajax_request(event, script, id) {
 		timer = null;
 		var url = base_url + 'backend/'+script+'?id='+id;
 		if (url == last) {
-			if (active) box.show();
+			show();
 		} else {
-			box.html('').show();
+			show('');
 			$.ajax({
 				url: url,
 				dataType: "html",
 				success: function(html) {
 					last = url;
-					if (active) box.html(html).show();
+					show(html)
 					reportAjaxStats('tooltip', script);
 				}
 			});
