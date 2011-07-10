@@ -253,94 +253,97 @@ function fancybox_gallery(type, user, link) {
 Tooltips functions
 ***************************************/
 /**
-  Stronglky modified, onky works with DOM2 compatible browsers.
+  Strongly modified, onky works with DOM2 compatible browsers.
 	Ricardo Galli
   From http://ljouanneau.com/softs/javascript/tooltip.php
  */
 
-// create the tooltip object
-function tooltip(){}
+(function (){
 
-// setup properties of tooltip object
-tooltip.offsetx = 5;
-tooltip.reverse = false;
-tooltip.offsety = 5;
-tooltip.box = null;
-tooltip.timer = null;
-tooltip.active = false;
+	var offsetx = 5;
+	var reverse = false;
+	var offsety = 5;
+	var box = null;
+	var timer = null;
+	var active = false;
+	var last = null;
+	var ajaxs = {'u': 'get_user_info.php', 'p': "get_post_tooltip.php", 'c': "get_comment_tooltip.php", 'l': "get_link.php"};
 
-tooltip.init = function (event) {
-	if (tooltip.box == null) {
-		tooltip.box = $("<div>").attr({ id: 'tooltip-text' });
-		$('body').append( tooltip.box );
-	}
-	if (tooltip.timer || tooltip.active) tooltip.hide();
-	tooltip.active = true;
+	$(start);
 
-	$(document).bind('mousemove.tooltip', tooltip.mouseMove);
-	if (tooltip.box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) tooltip.reverse = true;
-	else tooltip.reverse = false;
-}
-
-tooltip.show = function (text) {
-	tooltip.box.html(text).show();
-	return false;
-}
-
-tooltip.hide = function () {
-	if (tooltip.timer != null) {
-		clearTimeout(tooltip.timer);
-		tooltip.timer = null;
-	}
-	$(document).unbind('mousemove.tooltip');
-	tooltip.active = false;
-	tooltip.box.hide().html('');
-}
-
-// Moves the tooltip element
-tooltip.mouseMove = function (e) {
-	if (tooltip.reverse) xL = e.pageX - (tooltip.box.outerWidth() + tooltip.offsetx);
-	else xL = e.pageX + tooltip.offsetx;
-	yL = e.pageY + tooltip.offsety;
-	tooltip.box.css({left: xL +"px", top: yL +"px"});
-}
-
-tooltip.ajax_request = function(event, script, id) {
-	tooltip.timer = null;
-	var url = base_url + 'backend/'+script+'?id='+id;
-	tooltip.show('');
-	$.ajax({
-		url: url,
-		dataType: "html",
-		success: function(html) {
-			if (tooltip.active) tooltip.show(html);
-			reportAjaxStats('tooltip', script);
+	function start() {
+		if (box == null) {
+			box = $("<div>").attr({ id: 'tooltip-text' });
+			$('body').append( box );
 		}
-    });
-}
-
-tooltip.action = function (event) {
-	if (event.type == 'mouseenter') {
-		try {
-			args = $(this).attr('class').split(' ')[1].split(':');
-			key = args[0];
-			value = args[1];
-		}
-		catch (e) {
-			tooltip.hide();
-			return;
-		}
-		if (key == 'u') ajax = 'get_user_info.php';
-		else if (key == 'p') ajax = "get_post_tooltip.php";
-		else if (key == 'c') ajax = "get_comment_tooltip.php";
-		else if (key == 'l') ajax = "get_link.php";
-
-		tooltip.init(event);
-		tooltip.timer = setTimeout(function() {tooltip.ajax_request(event, ajax, value)}, 300);
-	} else if (event.type == 'mouseleave') {
-		tooltip.hide();
+		$('.tooltip').live('mouseenter mouseleave', function (event) {action(this, event)});
 	}
-}
+
+	function action(element, event) {
+		if (event.type == 'mouseenter') {
+			try {
+				args = $(element).attr('class').split(' ')[1].split(':');
+				key = args[0];
+				value = args[1];
+				ajax = ajaxs[key];
+				init(event);
+				timer = setTimeout(function() {ajax_request(event, ajax, value)}, 250);
+			}
+			catch (e) {
+				hide();
+				return false;
+			}
+		} else if (event.type == 'mouseleave') {
+			hide();
+		}
+		return false;
+	}
+
+	function init(event) {
+		if (timer || active) hide();
+		active = true;
+
+		$(document).bind('mousemove.tooltip', function (e) { mouseMove(e) });
+		if (box.outerWidth() > 0 && event.pageX  > $(window).width() * 0.55) reverse = true;
+		else reverse = false;
+	}
+
+	function hide () {
+		if (timer != null) {
+			clearTimeout(timer);
+			timer = null;
+		}
+		$(document).unbind('mousemove.tooltip');
+		active = false;
+		box.hide();
+	}
+
+	function mouseMove(e) {
+		if (reverse) xL = e.pageX - (box.outerWidth() + offsetx);
+		else xL = e.pageX + offsetx;
+		yL = e.pageY + offsety;
+		box.css({left: xL +"px", top: yL +"px"});
+	}
+
+	function ajax_request(event, script, id) {
+		timer = null;
+		var url = base_url + 'backend/'+script+'?id='+id;
+		if (url == last) {
+			if (active) box.show();
+		} else {
+			box.html('').show();
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(html) {
+					last = url;
+					if (active) box.html(html).show();
+					reportAjaxStats('tooltip', script);
+				}
+			});
+		}
+	}
+})(jQuery)
 /**
  *  Based on jqDialog from:
  *
@@ -738,7 +741,6 @@ function show_answers(type, id) {
 }
 
 $(document).ready(function () {
-	$('.tooltip').live('mouseenter mouseleave', tooltip.action);
 	mDialog.init();
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
