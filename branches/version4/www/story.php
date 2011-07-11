@@ -503,16 +503,17 @@ function print_relevant_comments($link) {
 	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, user_id, user_avatar from comments, users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $limit");
 	if ($res) {
 		$objects = array();
+		$link_url = $link->get_relative_permalink();
 		foreach ($res as $comment) {
 			$obj = new stdClass();
 			$obj->order = $comment->comment_order;
 			$obj->link_id = $link->id;
-			$obj->link = $link->get_relative_permalink().'/000'.$comment->comment_order;
+			$obj->link = $link_url.'/000'.$comment->comment_order;
 			$obj->user_id = $comment->user_id;
 			$obj->avatar = $comment->user_avatar;
 			$objects[] = $obj;
 		}
-		$output = Haanga::Load('relevant_comments.html', compact('objects'), true);
+		$output = Haanga::Load('relevant_comments.html', compact('objects', 'link_url'), true);
 		echo $output;
 		if($do_cache) {
 			memcache_madd($key, $output, 300);
