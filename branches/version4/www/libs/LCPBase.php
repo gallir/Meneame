@@ -27,7 +27,7 @@ class LCPBase {
 		if (is_a($this, 'Post')) {
 			$regexp .= '|@[^\s<>;:,\?\)\]\"\']+(?:,\d+){0,1}';
 		} elseif (is_a($this, 'Comment')) {
-			$regexp .= '|@[^\s<>;:,\?\)\]\"\']\w+';
+			$regexp .= '|@[^\s<>;:,\?\)\]\"\']+\w';
 		}
 
 		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\.])';
