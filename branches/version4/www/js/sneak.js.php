@@ -63,7 +63,7 @@ function start_sneak() {
 		error: function (req, error) {
 			$('#ping').html(error+'... retrying');
 			xmlhttp = undefined;
-			data_timer = setTimeout('get_data()', 3000);
+			data_timer = setTimeout(get_data, 3000);
 		}
 	});
 
@@ -191,7 +191,7 @@ function received_data(data) {
 		mDialog.confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>', do_play, do_pause);
 		return;
 	}
-	data_timer = setTimeout('get_data()', next_update);
+	data_timer = setTimeout(get_data, next_update);
 }
 
 function send_chat(form) {
@@ -220,7 +220,7 @@ function send_chat(form) {
 	last_comment_sent = currentTime.getTime();
 	form.comment.value='';
 	if (do_animation && animating) {
-		data_timer = setTimeout('get_data()', 500)
+		data_timer = setTimeout(get_data, 500)
 	} else {
 		get_data();
 	}
@@ -265,7 +265,7 @@ function toggle_control(what) {
 	ts-=3600;
 	set_options_cookie();
 	if (is_playing()) {
-		data_timer = setTimeout('get_data()', 100)
+		data_timer = setTimeout(get_data, 100)
 		$('#items').children().html('&nbsp;');
 	}
 	requests = 0;

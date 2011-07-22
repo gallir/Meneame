@@ -75,6 +75,7 @@ function disable_vote_link(id, value, mess, background) {
 }
 
 function parseLinkAnswer (id, link) {
+	var votes;
 	$('#problem-' + id).hide();
 	if (link.error || id != link.id) {
 		disable_vote_link(id, -1, "{% trans _('grr...') %}", '');
@@ -148,7 +149,7 @@ function checkfield (type, form, field)
 }
 
 function check_checkfield(fieldname, mess) {
-	field = document.getElementById(fieldname);
+	var field = document.getElementById(fieldname);
 	if (field && !field.checked) {
 		mDialog.notify(mess, 5);
 		// box is not checked
@@ -170,7 +171,7 @@ function report_problem_no(frm, user, id) {
 
 function report_problem_yes(frm, user, id) {
 	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + document.referrer;
-	var url=base_url + "backend/problem.php?" + content;
+	var url = base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
 			parseLinkAnswer(id, data);
@@ -553,8 +554,8 @@ var mDialog = new function() {
 };
 
 function comment_reply(id) {
-	ref = '#' + id + ' ';
-	textarea = $('#comment');
+	var ref = '#' + id + ' ';
+	var textarea = $('#comment');
 	if (textarea.length == 0 ) return;
 	var re = new RegExp(ref);
 	var oldtext = textarea.val();
@@ -588,10 +589,12 @@ function post_edit(id) {
 }
 
 function post_reply(id, user) {
-	ref = '@' + user + ',' + id + ' ';
-	others = '';
-	regex = /get_post_url.php\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig;
-	text = $('#pid-'+id).html();
+	var ref = '@' + user + ',' + id + ' ';
+	var others = '';
+	var regex = /get_post_url.php\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig;
+	var text = $('#pid-'+id).html();
+	var startSelection, endSelection, textarea;
+
 	while (a = regex.exec(text)) { // Add references to others
 		u = decodeURIComponent(a[1]);
 		if ( ! u.match('^'+user_login)) { // exclude references to the reader
@@ -614,23 +617,23 @@ function post_reply(id, user) {
 
 function post_add_form_text(text, tries, start, end) {
 	if (! tries) tries = 1;
-	textarea = $('#post');
+	var textarea = $('#post');
 	if (tries < 20 && textarea.length == 0) {
 			tries++;
-			setTimeout('post_add_form_text("'+text+'",'+tries+','+start+','+end+')', 50);
+			setTimeout(function () { post_add_form_text(text,tries,start,end) }, 50);
 			return false;
 	}
 	if (textarea.length == 0 ) return false;
 	var re = new RegExp(text);
 	var oldtext = textarea.val();
 	if (oldtext.match(re)) return false;
-	offset = oldtext.length;
+	var offset = oldtext.length;
 	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != ' ') {
 		oldtext = oldtext + ' ';
 		offset = offset + 1;
 	}
 	textarea.val(oldtext + text);
-	obj = textarea[0];
+	var obj = textarea[0];
 	obj.focus();
 	if ('selectionStart' in obj && start > 0 && end > 0) {
 		obj.selectionStart = start + offset;
@@ -671,7 +674,7 @@ Simple format functions
 */
 
 function applyTag(id, tag) {
-	obj = document.getElementById(id);
+	var obj = document.getElementById(id);
 	if (obj) wrapText(obj, tag, tag);
 	return false;
 }
@@ -744,6 +747,8 @@ function show_total_answers(type, id, answers) {
 }
 
 function show_answers(type, id) {
+	var program, dom_id, answers;
+
 	if (type == 'comment') {
 		program = 'get_comment_answers.php';
 		dom_id = '#cid-'+ id;
@@ -763,6 +768,8 @@ function show_answers(type, id) {
 }
 
 $(document).ready(function () {
+	var m;
+
 	mDialog.init();
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
