@@ -55,7 +55,7 @@ function save_post ($message_id) {
 		die;
 	}
 
-	if (! User::friend_exists($to, $current_user->user_id) > 0) {
+	if ( ! PrivateMessage::can_send($current_user->user_id, $to) ) {
 		echo 'ERROR: ' . _('el destinatario no lo tiene amigado');
 		die;
 	}

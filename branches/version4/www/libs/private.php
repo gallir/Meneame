@@ -37,6 +37,14 @@ class PrivateMessage extends LCPBase {
 		return (int) $db->get_var("select count(*) from privates where `to` = $id and `read` = 0");
 	}
 
+	static function can_send($from, $to) {
+		global $db;
+
+		$friendship = User::friend_exists($to, $from);
+		return $friendship > 0 || 
+			(! $friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 15 day)")) > 0);
+	}
+
 	function store($full = true) {
 		global $db, $current_user, $globals;
 
