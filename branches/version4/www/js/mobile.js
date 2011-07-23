@@ -1,7 +1,8 @@
 {% spacefull %}
-var base_url="{{ globals.base_url }}";
-var base_static="{{ globals.base_static }}";
-var mobile_version = true;
+var base_url="{{ globals.base_url }}",
+    base_static="{{ globals.base_static }}",
+	mobile_version = true,
+    mobile_client, base_key, link_id = 0, user_id, user_login;
 
 function getAJAX(url, fn) {
 	var ajax;
@@ -69,5 +70,21 @@ function load_html(program,type,container,page,id) {
 			catch (e) {}
 		});
 }
+
+window.onload = function () {
+    var m, target, canonical;
+
+	// Check the referenced comment exists, otherwise redirect
+    if ( link_id > 0 && (m = location.href.match(/#c-(\d+)$/)) && m[1] > 0) {
+		target = document.getElementById("c-" + m[1]);
+		if (target == null) {
+			var canonical = location.href.replace(/\/[^\/]+$/, '');
+			if (canonical.length > 0) {
+				self.location = canonical + "/000" + m[1];
+			}
+		}
+    }
+};
+
 
 {% endspacefull %}

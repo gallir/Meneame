@@ -3,7 +3,6 @@
     {% exec do_credits_mobile %}
 {% endif %}
 
-<script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript"></script>
 {% for js in globals.extra_js %}
 	{% if js|substr:"0, 4" == 'http' %}
 		<script src="{{js}}" type="text/javascript"></script>
@@ -16,10 +15,6 @@
 	{{globals.extra_js_text}}
 	</script>
 {% endif %}
-<script type="text/javascript">
-    if(top.location != self.location) top.location = self.location;
-    var base_key="{{ globals.security_key }}";
-</script>
 {# warn warn warn 
   dont do stats of password recovering pages #}
 {% try_include 'private/stats-mobile.html' %}

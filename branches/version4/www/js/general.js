@@ -1,7 +1,9 @@
 {% spacefull %}
-var base_url="{{ globals.base_url }}";
-var base_static="{{ globals.base_static }}";
-var mobile_client = false;
+var base_url="{{ globals.base_url }}",
+	base_static="{{ globals.base_static }}",
+	mobile_client = false,
+	base_key, link_id = 0, user_id, user_login;
+
 
 function redirect(url)
 {
@@ -768,14 +770,22 @@ function show_answers(type, id) {
 }
 
 $(document).ready(function () {
-	var m;
+	var m, m2, target, canonical;
 
-	mDialog.init();
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
-		if(m[1].match(/^c-\d+$/)) {
-			$("#"+m[1]+">:first").css("border-style","solid").css("border-width","1px");
+		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
+			if ( target.length > 0) {
+				$("#"+m[1]+">:first").css("border-style","solid").css("border-width","1px");
+			} else {
+				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
+				canonical = $("link[rel^='canonical']");
+				if (canonical.length > 0) {
+					self.location = canonical.attr("href") + "/000" + m2[1];
+					return;
+				}
+			}
 		} else {
 			target.hide();
 			target.fadeIn(1000);
@@ -787,6 +797,7 @@ $(document).ready(function () {
 			if (scroll > 80) $(window).scrollTop(scroll-80);
 		}
 	}
+	mDialog.init();
 
 });
 {% endspacefull %}

@@ -32,6 +32,17 @@
 	<link rel="apple-touch-icon" href="{{ globals.base_static }}img/favicons/apple-touch-icon.png"/>
     <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php" />
     {{ globals.extra_head|default:""}}
+
+	<script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript"></script>
+	<script type="text/javascript">
+	if(top.location != self.location)top.location = self.location;
+	base_key="{{globals.security_key}}";
+	link_id = {% if globals.link %}{{ globals.link.id }}{% endif %};
+	user_id = {{ current_user.user_id }};
+	user_login = '{{ current_user.user_login }}';
+	mobile_client = {{ globals.mobile }};
+</script>
+
 </head>
 <body id="{{id}}" {{globals.body_args}}>
 <div id="header">

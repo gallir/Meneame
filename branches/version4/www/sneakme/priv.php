@@ -59,7 +59,6 @@ if ($rows > 20) {
 	do_best_posts();
 	do_best_comments();
 }
-do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 

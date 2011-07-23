@@ -72,6 +72,7 @@ function do_banner_promotions() {
 		@include('ads/promotions.inc');
 	}
 */
+	Haanga::Safe_Load('private/promotions.html');
 }
 
 function do_banner_top_news() {
