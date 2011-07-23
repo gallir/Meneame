@@ -27,8 +27,7 @@ class TwitterOAuth extends OAuthBase {
 	function __construct() {
 		global $globals;
 
-		if ($globals['mobile_version']) $server = 'm.twitter.com';
-		else $server = 'twitter.com';
+		$server = 'twitter.com';
 		$this->request_token_url = "http://$server/oauth/request_token";
 		$this->access_token_url = "http://$server/oauth/access_token";
 		$this->authorize_url =  "http://$server/oauth/authenticate";
@@ -59,7 +58,7 @@ class TwitterOAuth extends OAuthBase {
 				do_error(_('error obteniendo tokens'), false, false);	
 			}
 		} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service", false, false);	
+				do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);	
 		}
 	}
 
@@ -74,7 +73,7 @@ class TwitterOAuth extends OAuthBase {
 			try {
 				$access_token_info = $this->oauth->getAccessToken($this->access_token_url);
 			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service", false, false);	
+				do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);	
 			}
 		} else {
 			do_error(_('acceso denegado'), false, false);	
@@ -89,7 +88,7 @@ class TwitterOAuth extends OAuthBase {
 			try {
 				$data = $this->oauth->fetch($this->credentials_url);
 			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service", false, false);	
+				do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);	
 			}
 
 			if($data){
