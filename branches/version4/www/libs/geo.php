@@ -68,14 +68,14 @@ function geo_delete($type, $id) {
 function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7, $icontype = 'user') {
 	global $globals;
 	if (! $globals['google_maps_api']) return false;
-	array_push($globals['extra_js'], 'http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$globals['google_maps_api']);
-	array_push($globals['extra_js'], 'geo.js');
+	array_push($globals['post_js'], 'http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$globals['google_maps_api']);
+	array_push($globals['post_js'], 'geo.js');
 	if ($f) {
 		if ($latlng) {
-			$globals['extra_js_text'] .= $f.'('.$latlng->lat.','.$latlng->lng.', '.$zoom.', \''.$icontype.'\');';
+			$globals['extra_js_text'] .= '$(function(){'.$f.'('.$latlng->lat.','.$latlng->lng.', '.$zoom.', \''.$icontype.'\');})';
 			$globals['body_args'] = 'onunload="GUnload()"';
 		} else {
-			$globals['extra_js_text'] .= $f.'(false, false, '.$zoom.', \''.$icontype.'\');';
+			$globals['extra_js_text'] .= '$(function(){'.$f.'(false, false, '.$zoom.', \''.$icontype.'\');})';
 			$globals['body_args'] = 'onunload="GUnload()"';
 		}
 	} else {
