@@ -644,14 +644,23 @@ function post_add_form_text(text, tries, start, end) {
 }
 
 // See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
-function textCounter(field,cntfield,maxlimit) {
-	if (field.value.length > maxlimit)
-	// if too long...trim it!
-		field.value = field.value.substring(0, maxlimit);
-	// otherwise, update 'characters left' counter
-	else
-		cntfield.value = maxlimit - field.value.length;
-}
+var textCounter = function (field,cntfield,maxlimit) {
+	if (textCounter.timer) return;
+	textCounter.timer = setTimeout( function () {
+		textCounter.timer = false;
+		var length = field.value.length;
+		if (length > maxlimit) {
+			field.value = field.value.substring(0, maxlimit);
+			length = maxlimit;
+		}
+		if (textCounter.length != length) {
+			cntfield.value = maxlimit - length;
+			textCounter.length = length;
+		}
+	}, 300);
+};
+textCounter.timer = false;
+textCounter.length = 0;
 
 function check_file_size(id, size) {
 	var input = document.getElementById(id);
