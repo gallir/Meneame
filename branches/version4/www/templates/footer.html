@@ -47,6 +47,9 @@ $(function () {
 		$.getScript("{{ globals.base_static }}js/{{ js }}");
 	{% endif %}
 {% endfor %}
+{% if globals.extra_js_text %}
+	$.globalEval("{{ globals.extra_js_text }}");
+{% endif %}
 });
 </script>
 

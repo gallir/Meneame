@@ -83,12 +83,6 @@
 	{% endif %}
 {% endfor %}
 
-{% if globals.extra_js_text %}
-	<script type="text/javascript">
-	{{globals.extra_js_text}}
-	</script>
-{% endif %}
-
 <script type="text/javascript">
 if(top.location != self.location)top.location = self.location;
 base_key="{{globals.security_key}}";
