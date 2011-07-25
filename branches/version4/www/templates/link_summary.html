@@ -204,7 +204,16 @@
 				&nbsp;<a href="http://www.tuenti.com/share?url={{ self.permalink|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/tuenti.png" alt="tuenti" title="{% trans _('compartir en %s') "tuenti" %}" width="16" height="16"/></a>
 				&nbsp;<span id="plusone-span"></span>
 				<script type="text/javascript">
-        			$(function () {gapi.plusone.render("plusone-span", {"size": "small", "count": false})});
+        			$(function () {
+						var script   = document.createElement("script");
+						script.type  = "text/javascript";
+						script.src   = "http://apis.google.com/js/plusone.js";
+						script.text  = '{lang: "es",  "parsetags": "explicit"}';
+						document.head.appendChild(script);
+						$(window).load(function () { 
+							gapi.plusone.render("plusone-span", {"size": "small", "count": false})
+						});
+					});
 				</script>
 
 {#
