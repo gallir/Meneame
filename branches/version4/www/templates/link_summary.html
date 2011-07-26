@@ -202,17 +202,13 @@
 				&nbsp;<a href="http://twitter.com/share?url={{ enc_shortlink }}&amp;text={{ enc_title }}{% if globals.twitter_user %}&amp;via={{ globals.twitter_user }}{% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
 				&nbsp;<a href="http://www.facebook.com/share.php?u={{ enc_shortlink }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/fb.gif" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
 				&nbsp;<a href="http://www.tuenti.com/share?url={{ self.permalink|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/tuenti.png" alt="tuenti" title="{% trans _('compartir en %s') "tuenti" %}" width="16" height="16"/></a>
-				&nbsp;<span id="plusone-span"></span>
+				&nbsp;<g:plusone size="small" count="false"></g:plusone>
 				<script type="text/javascript">
+					window.___gcfg = {lang: 'es'};
         			$(function () {
-						var script   = document.createElement("script");
-						script.type  = "text/javascript";
-						script.src   = "http://apis.google.com/js/plusone.js";
-						script.text  = '{lang: "es",  "parsetags": "explicit"}';
-						document.head.appendChild(script);
-						$(window).load(function () { 
-							gapi.plusone.render("plusone-span", {"size": "small", "count": false})
-						});
+						var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+						po.src = 'https://apis.google.com/js/plusone.js';
+						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 					});
 				</script>
 
