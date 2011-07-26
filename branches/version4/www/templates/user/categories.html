@@ -38,8 +38,7 @@
 function select_meta(input, meta) {
     if (input.checked) new_value = true;
     else new_value = false;
-    meta_id = '#meta-'+meta;
-    $(meta_id+' input').attr({checked: new_value});
+    $('#meta-'+meta+' input').attr({checked: new_value});
     return false;
 }
 </script>

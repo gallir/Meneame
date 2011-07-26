@@ -6,6 +6,22 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+function send_mail($to, $subject, $message) {
+	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
+	else $domain = get_server_name();
+
+	$subject = mb_encode_mimeheader("$domain: $subject","UTF-8", "B", "\n");
+	$message = wordwrap($message, 70);
+
+	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
+			'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
+			'Reply-To: '._('no_contestar')."@$domain\n".
+			'X-Mailer: meneame.net' . "\n";
+	$headers .= 'MIME-Version: 1.0' . "\n";
+
+	mail($to, $subject, $message, $headers);
+}
+
 function send_recover_mail ($user) {
 	global $site_key, $globals;
 
@@ -26,10 +42,10 @@ function send_recover_mail ($user) {
 	$message .= "\n\n". _('Este mensaje ha sido enviado a solicitud de la dirección: ') . $globals['user_ip'] . "\n\n";
 	$message .= "-- \n  " . _('el equipo de menéame');
 	$message = wordwrap($message, 70);
-	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" . 
+	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
 				'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
 				'Reply-To: '._('no_contestar')."@$domain\n".
-				'X-Mailer: meneame.net/PHP/' . phpversion(). "\n";
+				'X-Mailer: meneame.net' . "\n";
 	$headers .= 'MIME-Version: 1.0' . "\n";
 	//$pars = '-fweb@'.get_server_name();
 	mail($to, $subject, $message, $headers);

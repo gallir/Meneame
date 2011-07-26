@@ -99,6 +99,7 @@ function save_post ($message_id) {
 		};
 		$message->store();
 		$db->commit();
+		notify_user($current_user->user_id, $to, $message->content);
 	} else {
 		$db->commit();
 		echo 'ERROR: ' . _('mensaje grabado previamente');
@@ -119,4 +120,18 @@ function save_post ($message_id) {
 	//Haanga::Load('fancybox.html');
 }
 
+function notify_user($from, $to, $text) {
+	$sender = new User($from);
+	$user = new User($to);
+	if (! $user || ! $sender) return;
+
+	if (! check_email($user->email)) return;
+	if (! User::get_pref($to, 'notify_priv')) return;
+
+	$url = 'http://'.get_server_name().post_get_base_url('_priv');
+	$subject = "Notificación de mensaje privado de $from->username";
+	$message = $text . "\n\n" . $url;
+	require_once(mnminclude.'mail.php');
+	send_mail($user->email, $subject, $message);
+}
 ?>

@@ -422,7 +422,27 @@ class User {
 		}
 	}
 
+	static function get_pref($user, $key) {
+		global $db, $current_user;
 
+		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+
+		return intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key' limit 1"));
+	}
+
+	static function set_pref($user, $key, $value) {
+		global $db, $current_user;
+
+		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		$value = intval($value);
+		$key = $db->escape($key);
+
+		if ($value == 0) {
+			return $db->query("delete from prefs where pref_user_id = $user and pref_key = '$key' limit 1");
+		} else {
+			return $db->query("replace into prefs set pref_value = $value, pref_user_id = $user, pref_key = '$key'");
+		}
+	}
 }
 
 ?>

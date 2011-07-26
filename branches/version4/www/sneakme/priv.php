@@ -64,6 +64,9 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
+$notify = User::get_pref($current_user->user_id, 'notify_priv');
+Haanga::Load('priv_notify.html', compact('notify'));
+
 $messages = $db->object_iterator("SELECT".PrivateMessage::SQL."$from WHERE $where $order_by $limit", 'PrivateMessage');
 if ($messages) {
 	echo '<ol class="comments-list">';
