@@ -129,8 +129,8 @@ function notify_user($from, $to, $text) {
 	if (! User::get_pref($to, 'notify_priv')) return;
 
 	$url = 'http://'.get_server_name().post_get_base_url('_priv');
-	$subject = "Notificación de mensaje privado de $from->username";
-	$message = $text . "\n\n" . $url;
+	$subject = "Notificación de mensaje privado de $sender->username";
+	$message = "$sender->username " . _('escribió') . ":\n$url\n\n$text";
 	require_once(mnminclude.'mail.php');
 	send_mail($user->email, $subject, $message);
 }

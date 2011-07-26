@@ -7,6 +7,8 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 function send_mail($to, $subject, $message) {
+	global $globals;
+
 	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
 	else $domain = get_server_name();
 
@@ -14,7 +16,7 @@ function send_mail($to, $subject, $message) {
 	$message = wordwrap($message, 70);
 
 	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
-			'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
+			'From: '._('avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
 			'Reply-To: '._('no_contestar')."@$domain\n".
 			'X-Mailer: meneame.net' . "\n";
 	$headers .= 'MIME-Version: 1.0' . "\n";
