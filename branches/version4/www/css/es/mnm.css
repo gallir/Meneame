@@ -242,7 +242,7 @@ display: block;
 #header ul.headtools li.searchbox input{
 padding: 0px;
 background-color: #F5F5F5;
-border: solid 0px transparent;
+border: none;
 width: 170px;
 height: 22px;
 line-height: 22px;

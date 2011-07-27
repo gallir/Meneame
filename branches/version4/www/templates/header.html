@@ -130,9 +130,11 @@ mobile_client = {{ globals.mobile }};
 <form action="{{globals.base_url}}search.php" method="get" name="top_search">
 <img src="{{globals.base_static}}img/common/search-left-04.png" width="6" height="22" alt=""/>
 {% if globals.q %}
-	<input type="text" name="q" value="{{globals.q|escape}}" />
+	<input type="search" name="q" value="{{globals.q|escape}}" />
 {% else %}
-	<input name="q" value="{% trans _('buscar')%}..." type="text" onblur="if(this.value=='') this.value='{% trans _('buscar')%}...';" onfocus="if(this.value=='{% trans _('buscar')%}...') this.value='';"/>
+	<input name="q" type="text" value="{% trans _('buscar')%}..." 
+	onblur="if(this.value=='') this.value='{% trans _('buscar')%}...';" onfocus="if(this.value=='{% trans _('buscar')%}...') this.value='';"
+	 />
 {% endif %}
 
 <a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="{% trans _('buscar')%}" src="{{globals.base_static}}img/common/search-04.png" id="submit_image" width="28" height="22"/></a>
