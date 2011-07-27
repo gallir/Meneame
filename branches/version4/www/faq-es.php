@@ -186,7 +186,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Por qué una elefanta en el logo?</h4>
 <pre>
-	Un elefante se <strike>balanceaba</strike> meneaba
+	Un elefante se <del>balanceaba</del> meneaba
 	sobre la tela de una araña
 	Como veía que no se caía
 	fue a buscar otro elefante.

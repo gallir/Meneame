@@ -1,9 +1,30 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{globals.lang}}" lang="{{globals.lang}}">
+<!DOCTYPE html>
+<html lang="{{globals.lang}}">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<meta name="ROBOTS" content="NOARCHIVE" />
+<meta charset=utf-8>
+<meta name="ROBOTS" content="NOARCHIVE">
+<meta name="generator" content="meneame">
+{% if globals.noindex %}
+	<meta name="robots" content="noindex,follow">
+{% endif %}
+
+{% if globals.tags %}
+	<meta name="keywords" content="{{globals.tags}}">
+{% endif %}
+
+{% if globals.description %}
+	<meta name="description" content="{{globals.description}}">
+{% endif %}
+
+{#
+{% if globals.thumbnail %}
+	<link rel="image_src" href="{{globals.thumbnail}}"/>
+	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
+    <meta property="og:image" content="{{globals.thumbnail}}"/>
+	<meta name="og:image" content="http://{{globals.static_server_name}}{{globals.thumbnail}}">
+{% endif %}
+#}
+
 <title>{{title}}</title>
 
 
@@ -39,26 +60,12 @@
 <![endif]-->
 #}
 
-<meta name="generator" content="meneame" />
-
-{% if globals.noindex %}
-	<meta name="robots" content="noindex,follow"/>
-{% endif %}
-
-{% if globals.tags %}
-	<meta name="keywords" content="{{globals.tags}}" />
-{% endif %}
-
-{% if globals.description %}
-	<meta name="description" content="{{globals.description}}" />
-{% endif %}
 
 {% if globals.link %}
 	<link rel="pingback" href="http://{{globals.server_name}}{{globals.base_url}}xmlrpc.php"/>
 	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
 {% endif %}
 
-<link rel="microsummary" type="application/x.microsummary+xml" href="{{globals.base_url}}microsummary.xml" />
 <link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{globals.base_url}}opensearch_plugin.php"/>
 <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php" />
 <link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php?status=queued" />
@@ -66,9 +73,14 @@
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+	<link rel="icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
 {% else %}
 	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
+	<link rel="icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
 {% endif %}
+<link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
+<link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
+
 
 {# <script src="{{globals.base_static}}js/jquery-1.5.2.min.js" type="text/javascript"></script> #}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
@@ -97,14 +109,6 @@ user_id = {{ current_user.user_id }};
 user_login = '{{ current_user.user_login }}';
 mobile_client = {{ globals.mobile }};
 </script>
-
-{% if globals.thumbnail %}
-	<link rel="image_src" href="{{globals.thumbnail}}"/>
-	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
-	{# <meta property="og:image" content="{{globals.thumbnail}}"/> #}
-{% else %}
-	<meta name="thumbnail_url" content="http://{{globals.static_server_name}}{{globals.base_url}}{{globals.thumbnail_logo}}"/>
-{% endif %}
 
 {% if globals.extra_head %}
 	{{ globals.extra_head}}

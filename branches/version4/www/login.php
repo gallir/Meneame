@@ -147,7 +147,7 @@ function do_login() {
 
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" />'."\n";
 
-	echo '<div align="center">';
+	echo '<div style="text-align:center">';
 	print_oauth_icons($_REQUEST['return']);
 	echo '</div>'."\n";
 
@@ -155,7 +155,7 @@ function do_login() {
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</fieldset>'. "\n";
 	echo '</form>'."\n";
-	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
+	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
 	echo '</div>'."\n";
 	echo '<br clear="all"/>&nbsp;';
 }

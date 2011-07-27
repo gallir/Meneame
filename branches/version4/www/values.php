@@ -26,7 +26,7 @@ echo '<div id="singlewrap">'."\n";
 
 
 echo '
-<div align="center">
+<div style="text-align:center">
 	<br/>
 	<h2>'._("Información sobre valores de karma y límites").'</h2>
 	<br/>

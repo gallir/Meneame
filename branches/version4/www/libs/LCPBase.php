@@ -104,7 +104,7 @@ class LCPBase {
 			case '*':
 				return $matches[1].'<b>'.substr($matches[2], 1, -1).'</b>';
 			case '-':
-				return $matches[1].'<strike>'.substr($matches[2], 1, -1).'</strike>';
+				return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
 			*/
 		}
 		return $matches[1].$matches[2];

@@ -47,7 +47,7 @@ do_footer();
 exit;
 
 function do_register0() {
-	echo '<div class="recoverpass" align="center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>';
+	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>';
 
 	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
@@ -78,7 +78,7 @@ function do_register0() {
 	echo '<p><input type="submit" class="button" disabled="disabled" name="submit" value="'._('crear usuario').'" class="log2" tabindex="6" /></p>' . "\n";
 	echo '<input type="hidden" name="process" value="1"/>' . "\n";
 
-	echo '<div style="margin-top: 20px" align="center">';
+	echo '<div style="margin-top: 20px" style="text-align:center">';
 	print_oauth_icons($_REQUEST['return']);
 	echo '</div>'."\n";
 

@@ -369,16 +369,6 @@ case 9:
 }
 echo '</div>';
 
-echo '<!--'."\n".'<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
-echo '	xmlns:dc="http://purl.org/dc/elements/1.1/"' . "\n";
-echo '	xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">'."\n";
-echo '	<rdf:Description rdf:about="'.$globals['link_permalink'].'"'."\n";
-echo '		dc:identifier="'.$globals['link_permalink'].'"'."\n";
-echo '		dc:title="'.$link->title.'"'."\n";
-echo '	trackback:ping="'.$link->get_trackback().'" />'."\n";
-echo '</rdf:RDF>'."\n".'-->'."\n";
-
-
 $globals['tag_status'] = $globals['link']->status;
 do_footer();
 exit(0);

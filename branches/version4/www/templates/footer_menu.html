@@ -4,15 +4,15 @@
 <div id="footcol1">
 <h5>{% trans _('suscripciones por RSS') %}</h5>
 <ul>
-<li><a href="{{ globals.base_url }}rss2.php" rel="rss">{% trans _('publicadas') %}</a></li>
-<li><a href="{{ globals.base_url }}rss2.php?status=queued" rel="rss">{% trans _('en cola') %}</a></li>
+<li><a href="{{ globals.base_url }}rss2.php" >{% trans _('publicadas') %}</a></li>
+<li><a href="{{ globals.base_url }}rss2.php?status=queued" >{% trans _('en cola') %}</a></li>
 
 {% if current_user.user_id > 0 %}
-	<li><a href="{{ globals.base_url }}comments_rss2.php?conversation_id={{ current_user.user_id }}" rel="rss" title="{% trans _('comentarios de las noticias donde has comentado') %}">{% trans _('mis conversaciones') %}</a></li>
-	<li><a href="{{ globals.base_url }}comments_rss2.php?author_id={{ current_user.user_id }}" rel="rss">{% trans _('comentarios a mis noticias') %}</a></li>
+	<li><a href="{{ globals.base_url }}comments_rss2.php?conversation_id={{ current_user.user_id }}"  title="{% trans _('comentarios de las noticias donde has comentado') %}">{% trans _('mis conversaciones') %}</a></li>
+	<li><a href="{{ globals.base_url }}comments_rss2.php?author_id={{ current_user.user_id }}" >{% trans _('comentarios a mis noticias') %}</a></li>
 {% endif %}
 
-<li><a href="{{ globals.base_url }}comments_rss2.php" rel="rss">{% trans _('todos los comentarios') %}</a></li>
+<li><a href="{{ globals.base_url }}comments_rss2.php" >{% trans _('todos los comentarios') %}</a></li>
 </ul>
 </div>
 
