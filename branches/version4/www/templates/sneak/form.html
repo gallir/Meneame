@@ -1,6 +1,6 @@
 <div class="sneaker">
 <div class="sneaker-legend">
-<form action="" class="sneaker-control" id="sneaker-control" name="sneaker-control">
+<form class="sneaker-control" id="sneaker-control" name="sneaker-control">
 
 
 {% if  NOT globals.sneak_telnet %}
@@ -83,7 +83,7 @@
 </form>
 
 {% if current_user.user_id > 0 %}
-    <form name="chat_form" action="" onsubmit="return send_chat(this);">
+    <form name="chat_form" onsubmit="return send_chat(this);">
     {% trans _('mensaje') %}: <input type="text" name="comment" id="comment-input" value="" size="90" maxlength="230" autocomplete="off" />&nbsp;<input type="submit" value="{% trans _('enviar') %}" class="button"/>
     </form>
 {% endif %}

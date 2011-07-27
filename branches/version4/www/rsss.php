@@ -31,7 +31,7 @@ echo '</div>' . "\n";
 
 echo '<div id="singlewrap">'."\n";
 
-echo '<div style="margin: 20px 0"><h2>'._('apuntes de blogs').'&nbsp;&nbsp;<a href="'.$globals['base_url'].'blogs_rss2.php" title="blogs" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></h2>';
+echo '<div style="margin: 20px 0"><h2>'._('apuntes de blogs').'&nbsp;&nbsp;<a href="'.$globals['base_url'].'blogs_rss2.php" title="blogs"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></h2>';
 echo '</div>';
 echo '<table class="decorated">';
 
