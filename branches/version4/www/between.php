@@ -49,7 +49,7 @@ switch ($_REQUEST['type']) {
 
 
 do_header(sprintf(_('debate entre %s y %s'), $u1, $u2));
-do_tabs('main',_('debate'), htmlentities($_SERVER['REQUEST_URI']));
+do_tabs('main',_('debate'), $globals['uri']);
 
 
 /*** SIDEBAR ****/

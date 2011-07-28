@@ -1105,7 +1105,7 @@ function print_oauth_icons($return = false) {
 
 	if ($globals['oauth']['twitter']['consumer_key']) {
 		$title = false;
-		if (! $return) $return = urlencode($_SERVER['REQUEST_URI']);
+		if (! $return) $return = $globals['uri'];
 		if ($current_user->user_id) {
 			// Check the user is not already associated to Twitter
 			if (! $current_user->GetOAuthIds('twitter')) {
@@ -1123,7 +1123,7 @@ function print_oauth_icons($return = false) {
 	}
 	if ($globals['facebook_key']) {
 		$title = false;
-		if (! $return) $return = urlencode($_SERVER['REQUEST_URI']);
+		if (! $return) $return = $globals['uri'];
 		if ($current_user->user_id) {
 			// Check the user is not already associated to Twitter
 			if (! $current_user->GetOAuthIds('facebook')) {

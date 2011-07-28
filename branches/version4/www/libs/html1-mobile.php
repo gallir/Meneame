@@ -35,7 +35,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		);
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
-			else $url = htmlentities($_SERVER['REQUEST_URI']);
+			else $url = $globals['uri'];
 			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
 		}
 		$tabname = 'tabmain';
@@ -72,10 +72,10 @@ function do_footer_menu() {
 }
 
 function force_authentication() {
-	global $current_user;
+	global $current_user, $globals;
 
 	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login.php?return='.$_SERVER['REQUEST_URI']);
+		header('Location: '.$globals['base_url'].'login.php?return='.$globals['uri']);
 		die;
 	}
 	return true;
