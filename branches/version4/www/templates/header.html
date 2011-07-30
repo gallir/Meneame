@@ -154,10 +154,10 @@ mobile_client = {{ globals.mobile }};
 			 title="{% trans _('menéame te saluda en') %} {{globals.greetings[greeting]}}"
 		{% endif %}>
 	{{greeting}}&nbsp;{{current_user.user_login}}&nbsp;<img class="tooltip u:{{current_user.user_id}}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
-	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="logout" title="logout" width="22" height="16" /></a></li>
+	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="logout" title="logout" width="22" height="16" /></a></li>
 {% else %}
 	<li><a href="{{globals.base_url}}register.php"> {% trans _('registrarse') %} <img src="{{globals.base_static}}img/common/register-bt-02.png" alt="register" title="register" width="16" height="18" /></a></li>
-	<li><a href="{{globals.base_url}}login.php?return={{globals.uri}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="login" title="login" width="22" height="16" /></a></li>
+	<li><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="login" title="login" width="22" height="16" /></a></li>
 {% endif %}
 
 </ul></div>

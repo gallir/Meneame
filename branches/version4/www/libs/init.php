@@ -28,7 +28,7 @@ $globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
 
 $globals['now'] = time();
 $globals['cache-control'] = Array();
-$globals['uri'] = urlencode(preg_replace('/[<>]/', '', urldecode($_SERVER['REQUEST_URI']))); // clean  it for future use
+$globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode($_SERVER['REQUEST_URI'])); // clean  it for future use
 //echo "<!-- " . $globals['uri'] . "-->\n";
 
 
