@@ -148,7 +148,7 @@ function do_mnu_categories_horizontal($what_cat_id) {
 	$query=preg_replace('/page=[0-9]*/', '', $query);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
 	if(!empty($query)) {
-		$query = htmlspecialchars($query);
+		$query = htmlspecialchars($query, ENT_QUOTES);
 		$query = "&amp;$query";
 	}
 
