@@ -305,28 +305,23 @@ case 5:
 
 case 7:
 	// Show trackback
-	echo '<div class="voters" id="voters">';
 
-	echo '<a href="'.$link->get_trackback().'" title="'._('URI para trackbacks').'" class="tab-trackback-url"><img src="'.$globals['base_static'].'img/common/permalink.gif" alt="'._('enlace trackback').'" width="16" height="9"/> '._('dirección de trackback').'</a>' . "\n";
-
-	echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
-	echo '<ul class="tab-trackback">';
-
-	$trackbacks = $db->get_col("SELECT SQL_CACHE trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
+	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
 	if ($trackbacks) {
+		echo '<div class="voters" id="voters">';
+		echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
+		echo '<ul class="tab-trackback">';
 		$trackback = new Trackback;
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
 			$trackback->read();
 			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
 		}
+		echo '</ul>';
+		echo '</fieldset>';
+		echo '</div>';
 	}
-	echo '<li class="tab-trackback-technorati"><a href="http://technorati.com/search/'.urlencode($globals['link_permalink']).'">Technorati</a></li>' . "\n";
-	echo '<li class="tab-trackback-google"><a href="http://blogsearch.google.com/blogsearch?hl=es&amp;q=link%3A'.urlencode($globals['link_permalink']).'">Google</a></li>' . "\n";
 
-	echo '</ul>';
-	echo '</fieldset>';
-	echo '</div>';
 	break;
 
 case 8:

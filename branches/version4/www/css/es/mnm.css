@@ -1298,23 +1298,6 @@ padding: 2px 0 0 20px;
 background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px
 }
 
-.tab-trackback-technorati a, .tab-trackback-google a, .tab-trackback-askcom a {
-padding: 5px 0 2px 20px;
-font-size: 90%;
-}
-
-.tab-trackback-technorati a {
-background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
-}
-
-.tab-trackback-google a {
-background: url(../../img/favicons/google.png) no-repeat 0px 4px;
-}
-
-.tab-trackback-askcom a {
-background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
-}
-
 /* submit form */
 
 #thisform .column-list {
