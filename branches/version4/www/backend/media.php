@@ -34,7 +34,7 @@ if ($media->access == 'restricted' && ! $current_user->user_id > 0) {
 header("Content-Type: $media->mime");
 header('Last-Modified: ' . date('r', $media->date));
 header('Cache-Control: max-age=3600');
-if (! empty($globals['xsendfile'])) {
+if ($media->file_exists() && ! empty($globals['xsendfile'])) {
 	header($globals['xsendfile'].': '.$media->url());
 } else {
 	if ($media->size > 0) {
