@@ -46,6 +46,13 @@ $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have
 //$globals['adm_email'] = 'admin@administrador'
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
+// Don't forget to add a redirect to ooops.php in case of 404 error, for example in NGINX:
+/*
+    error_page  404 /ooops.php;
+    location = /ooops.php {
+        include php_fastcgi;
+    }
+*/
 $globals['static_server'] = '';
 //$globals['static_server'] = 'http://static.meneame.net';
 
@@ -118,6 +125,7 @@ $globals['media_max_size'] = 1024*1024; // 1 MB;
 $globals['media_min_karma'] = 6;
 $globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day
 $globals['media_max_upload_per_day'] = 10;
+$globals['media_thumb_size'] = 60;
 
 
 
@@ -212,6 +220,18 @@ $globals['post_hide_karma'] = -50;
 $globals['draft_time'] = 1200; // Time unsent drafts will be kept (20 minutes)
 $globals['draft_limit'] = 3; // Max unset drafts at the same time
 
+
+// Don't forget to add a redirect to ooops.php in case of 404 error, 
+// if you want thumbnails to be automatically created by ooops.php
+// for example in NGINX:
+/*
+    error_page  404 /ooops.php;
+    location = /ooops.php {
+        include php_fastcgi;
+    }
+*/
+// If you did it, change this to true
+$globals['cache_redirector'] = false;
 
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
