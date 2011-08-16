@@ -1153,23 +1153,37 @@ function print_summary_club($type='full', $karma_best_comment = 0, $show_tags = 
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
 				return $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
 			}
-
 			$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
-			if (is_readable($filepath)) {
+			if ($globals['cache_redirector'] || is_readable($filepath)) {
 				return $globals['base_static'] . $file;
-			} elseif ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
-				Upload::create_cache_dir($this->id);
-				// Get thumbnail from S3
-				if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
+			} else {
+				if ($this->thumb_download()) {
 					return $globals['base_static'] . $file;
-				} else {
-					// Do extra check, if S3 is working, mark thumb as deleted
-					if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
-							&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
-						syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for $this->id");
-						$this->delete_thumb();
-					}
+				}
+			}
+		}
+		return false;
+	}
+
+	function thumb_download() {
+		global $globals;
+
+		$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
+		$filepath = mnmpath."/$file";
+
+		if ($this->thumb_x > 0 && $this->thumb_y > 0
+			&& $globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
+			Upload::create_cache_dir($this->id);
+			// Get thumbnail from S3
+			if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
+				return $filepath;
+			} else {
+				// Do extra check, if S3 is working, mark thumb as deleted
+				if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
+						&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
+					syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for $this->id");
+					$this->delete_thumb();
 				}
 			}
 		}

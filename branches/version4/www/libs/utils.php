@@ -465,7 +465,7 @@ function get_avatar_url($user, $avatar, $size) {
 		} elseif ($globals['cache_dir']) {
 			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";
 			$file_path = mnmpath.'/'.$file;
-			if ($globals['avatars_check_always']) {
+			if (!$globals['cache_redirector']) {
 				if (is_readable($file_path)) {
 					return $globals['base_static'] . $file;
 				} else {

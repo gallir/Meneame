@@ -19,6 +19,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 	$parts = explode('-', $base_filename);
 	switch ($parts[0]) {
 		case "media_thumb":
+			// Comments' and posts' thumnails
 			if ($parts[1] != 'post' && $parts[1] != 'comment') break;
 			$media = new Upload($parts[1], $parts[2], 0);
 			if (! $media->read()) break;
@@ -28,9 +29,20 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				$media->thumb->output();
 				die;
 			}
+		case "thumb":
+			// Links' thumbnails
+			if (count($parts) == 2 && $parts[1] > 0) {
+				$link = Link::from_db(intval($parts[1]));
+				if ($link && ($pathname = $link->thumb_download())) {
+					header("HTTP/1.0 200 OK");
+					header('Content-Type: image/jpeg');
+					readfile($pathname);
+					die;
+				}
+			}
 		default:
+			// it's an avatar
 			if (count($parts) == 3 && $parts[0] > 0 && $parts[2] > 0) {
-			// We treat it as an avatar
 				$_GET['id'] = $parts[0];
 				$_GET['time'] = $parts[1];
 				$_GET['size'] = $parts[2];
