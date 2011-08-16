@@ -48,7 +48,7 @@ $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 // Don't forget to add a redirect to ooops.php in case of 404 error, for example in NGINX:
 /*
-    error_page  404 /ooops.php;
+    error_page  404 = /ooops.php;
     location = /ooops.php {
         include php_fastcgi;
     }
@@ -225,7 +225,7 @@ $globals['draft_limit'] = 3; // Max unset drafts at the same time
 // if you want thumbnails to be automatically created by ooops.php
 // for example in NGINX:
 /*
-    error_page  404 /ooops.php;
+    error_page  404 = /ooops.php;
     location = /ooops.php {
         include php_fastcgi;
     }

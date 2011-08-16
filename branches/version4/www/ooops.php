@@ -29,6 +29,14 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				die;
 			}
 		default:
+			if (count($parts) == 3 && $parts[0] > 0 && $parts[2] > 0) {
+			// We treat it as an avatar
+				$_GET['id'] = $parts[0];
+				$_GET['time'] = $parts[1];
+				$_GET['size'] = $parts[2];
+				require_once('backend/get_avatar.php');
+				die;
+			}
 			$errn = 404;
 	}
 }
@@ -56,4 +64,4 @@ switch($errn) {
 	$errp = false;
 }
 
-do_error($errp, $errn, false);
+do_error($errp, $errn, true);

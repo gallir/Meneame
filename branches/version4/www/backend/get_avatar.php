@@ -1,5 +1,8 @@
 <?php
-include_once('../config.php');
+if (! defined('mnmpath')) {
+	include_once('../config.php');
+}
+
 include_once(mnmpath.'/libs/avatars.php');
 
 if (! isset($_GET['id']) && !empty($_GET['user'])) {
@@ -22,6 +25,7 @@ if (! isset($_GET['time'])) {
 }
 
 if (! $time > 0) {
+	header('HTTP/1.1 302 Moved');
 	header('Location: ' . get_no_avatar_url($size));
 	die;
 }
@@ -32,16 +36,18 @@ if (!($img=avatar_get_from_file($id, $size))) {
 		if (is_writable($globals['avatars_dir'])) {
 			$user=$db->get_row("select user_avatar from users where user_id=$id");
 			if ($user) {
+				header('HTTP/1.1 302 Moved');
 				header('Location: ' . get_avatar_url($id, $user->user_avatar, $size));
 			}
 		} else {
+				header('HTTP/1.1 302 Moved');
 				header('Location: ' . get_no_avatar_url($size));
 		}
 		die;
 	}
 }
-
+syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size");
+header('HTTP/1.1 200 OK');
 header("Content-type: image/jpeg");
-//header('Cache-Control: max-age=7200');
 echo $img;
 ?>

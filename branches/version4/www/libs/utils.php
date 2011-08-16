@@ -464,9 +464,6 @@ function get_avatar_url($user, $avatar, $size) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
 			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";
-			// Don't check every time, but 1/10, decrease VM pressure
-			// Disabled for the moment, it fails just too much for size 40
-			//if (rand(0, 10) < 10) return $globals['base_url'] . $file;
 			$file_path = mnmpath.'/'.$file;
 			if ($globals['avatars_check_always']) {
 				if (is_readable($file_path)) {
