@@ -208,6 +208,10 @@ class Comment extends LCPBase {
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && isset($globals['link']) && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
 
+		if ($this->media_size > 0) {
+			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
+		}
+
 		if ($this->type == 'admin') {
 			$author = '<strong>'._('admin').'</strong> ';
 			if ($current_user->admin) {

@@ -175,6 +175,10 @@ class Post extends LCPBase {
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
 		$this->show_avatar = true;
 
+		if ($this->media_size > 0) {
+			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
+		}
+
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
 
 		// Print dates
@@ -200,7 +204,7 @@ class Post extends LCPBase {
 	function prepare_summary_text($length = 0) {
 		global $current_user, $globals;
 
-		if (!$this->basic_summary && (($this->author == $current_user->user_id &&
+		if (empty($this->basic_summary) && (($this->author == $current_user->user_id &&
 			time() - $this->date < $globals['posts_edit_time'] ) ||
 			 ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin'] ))) { // Admins can edit up to 10 days
 			$this->can_edit = true;

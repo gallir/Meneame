@@ -149,6 +149,10 @@ class Upload {
 		return Upload::get_cache_dir($this->id).'/'.$this->filename();
 	}
 
+	function path() {
+		return Upload::get_cache_dir($this->id);
+	}
+
 	function url() {
 		global $globals;
 
@@ -192,6 +196,22 @@ class Upload {
 		if ($globals['Amazon_S3_media_bucket']) {
 			return Media::rm($this->type.'/'.$this->filename());
 		}
+	}
+
+	function create_thumb($x = 40, $y = false) {
+		if (! file_exists($this->pathname())) {
+			if (! $this->restore()) return false;
+		}
+		require_once(mnminclude."simpleimage.php");
+		if (! $y) $y = $x;
+		$thumb = new SimpleImage();
+		$thumb->load($this->pathname());
+		$thumb->resize($x, $y, true);
+		if ($thumb->save($this->path() . "/media_thumb-$this->type-$this->id.jpg")) {
+			$this->thumb = $thumb;
+			return true;
+		}
+		return false;
 	}
 }
 

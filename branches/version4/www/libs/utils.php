@@ -315,7 +315,7 @@ function text_to_html_callback(&$matches) {
 }
 
 function check_integer($which) {
-	if (is_numeric($_REQUEST[$which])) {
+	if (isset($_REQUEST[$which]) && is_numeric($_REQUEST[$which])) {
 		return intval($_REQUEST[$which]);
 	} else {
 		return false;
