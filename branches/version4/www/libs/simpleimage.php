@@ -118,5 +118,6 @@ class SimpleImage {
 		$new_image = imagecreatetruecolor($width, $height);
 		if (! @imagecopyresampled($new_image, $this->image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h)) return false;
 		$this->image = $new_image;
+		return true;
 	}
 }

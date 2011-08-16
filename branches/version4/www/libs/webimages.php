@@ -42,6 +42,20 @@ class BasicThumb {
 			$this->get();
 		}
 		if (!$this->image) return false;
+
+// New code to get rectangular images
+		require_once(mnminclude."simpleimage.php");
+		$thumb = new SimpleImage();
+		$thumb->image = $this->image;
+		if ($thumb->resize($size, $size, true)) {
+			$this->image = $thumb->image;
+			$this->x=imagesx($this->image);
+			$this->y=imagesy($this->image);
+			return true;
+		}
+
+// Old code that gets irregular images
+/*
 		if ($this->x > $this->y) {
 			$percent = $size/$this->x;
 		} else {
@@ -59,6 +73,7 @@ class BasicThumb {
 			$this->y=imagesy($this->image);
 			return true;
 		} 
+*/
 		return false;
 	}
 
