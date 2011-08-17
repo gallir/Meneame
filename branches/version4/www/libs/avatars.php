@@ -132,6 +132,7 @@ function avatar_get_from_db($user, $size=0) {
 	if (! in_array($size, $globals['avatars_allowed_sizes'])) return false;
 
 	$time = $db->get_var("select user_avatar from users where user_id=$user");
+	if(! $time > 0) return false;
 
 	if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_bucket'] && is_writable('/tmp')) {
 		$subdir = '/tmp';
