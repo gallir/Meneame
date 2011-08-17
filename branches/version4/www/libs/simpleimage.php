@@ -33,6 +33,9 @@ class SimpleImage {
 		case IMAGETYPE_PNG:
 			$this->image = @imagecreatefrompng($filename);
 			return true;
+		case IMAGETYPE_WBMP:
+			$this->image = @imagecreatefromwbmp($filename);
+			return true;
 		default:
 			$this->image = false;
 		}

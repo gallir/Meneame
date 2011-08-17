@@ -211,47 +211,12 @@ function avatar_get_from_file($user, $size, $time = false) {
 }
 
 function avatar_resize($infile,$outfile,$size) {
-	$image_info = @getImageSize($infile);
-	switch ($image_info['mime']) {
-		case 'image/gif':
-		if (imagetypes() & IMG_GIF)  {
-			$src_img = imageCreateFromGIF($infile) ;
-		} else {
-			$ermsg = 'GIF images are not supported<br />';
-		}
-		break;
-		case 'image/jpeg':
-		if (imagetypes() & IMG_JPG)  {
-			$src_img = imageCreateFromJPEG($infile) ;
-		} else {
-			$ermsg = 'JPEG images are not supported<br />';
-		}
-		break;
-		case 'image/png':
-		if (imagetypes() & IMG_PNG)  {
-			$src_img = imageCreateFromPNG($infile) ;
-		} else {
-			$ermsg = 'PNG images are not supported<br />';
-		}
-		break;
-		case 'image/wbmp':
-		if (imagetypes() & IMG_WBMP)  {
-			$src_img = imageCreateFromWBMP($infile) ;
-		} else {
-			$ermsg = 'WBMP images are not supported<br />';
-		}
-		break;
-		default:
-		$ermsg = $image_info['mime'].' images are not supported<br />';
-		break;
-	}
-	if (isset($ermsg)) {
-		echo "Error: $ermsg";
-		die;
-	}
-	$dst_img = ImageCreateTrueColor($size,$size);
-	imagecopyresampled($dst_img,$src_img,0,0,0,0,$size,$size,imagesx($src_img),imagesy($src_img));
-	imagejpeg($dst_img,$outfile,85);
+	require_once(mnminclude."simpleimage.php");
+	$thumb = new SimpleImage();
+	if (!$thumb->load($infile)) return false;
+	$thumb->resize($size, $size, true);
+	if ($thumb->save($outfile, IMAGETYPE_JPEG, 85)) return true;
+	return false;
 }
 
 function avatars_remove($user) {
