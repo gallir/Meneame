@@ -172,10 +172,9 @@ box-shadow: 0 0 3px rgba(0,0,0,0.7);
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.7);
 }
 
-
 #wrap {
 padding-top: 75px;
-min-width: 850px;
+min-width: 820px;
 max-width: 1300px;
 width: 98%;
 text-align: left;
@@ -330,13 +329,13 @@ clear:both;
 #sidebar {
 float: right;
 width: 300px;
-margin: 0 15px 25px 20px;
+margin: 0 5px 25px 10px;
 overflow: hidden;
 padding-top: 10px;
 }
 
 #newswrap {
-margin: 10px 330px 0 5px;
+margin: 10px 320px 0 5px;
 }
 
 #singlewrap {
@@ -1091,6 +1090,7 @@ color: #FF6400;
 .news-details.main {
 font-size: 110%;
 line-height: 150%;
+margin-top: 6px;
 }
 
 .news-details a:link, .news-details a:visited {

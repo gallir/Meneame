@@ -128,35 +128,6 @@
 
 
 
-	<div class="news-details main">
-		<span class="comments-counter"><a href="{{ self.permalink }}">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span> {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
-
-
-		<span class="tool">
-		<a href="{% get_url '?meta=' self.meta_uri %}" title="{% trans _('meta') %}">
-			{{ self.meta_name}}</a>,
-		<a href="{% get_url '?meta=' self.meta_uri '&amp;category=' self.category %}" title="{% trans _('categoría') %}">
-			{{self.category_name}}</a>
-		</span>
-		<span class="tool">karma: <span id="a-karma-{{self.id}}">
-			{{ self.karma|intval }}
-		</span></span>
-
-		{% if self.can_vote_negative %}
-			<form  class="tool" action="" id="problem-{{ self.id }}">
-			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
-				<option value="0" selected="selected">{% trans _('problema') %}</option>
-				{% for pkey, pvalue in globals.negative_votes_values %}
-					<option value="{{pkey}}">{{ pvalue }}</option>
-				{% endfor %}
-			</select>
-			</form>
-		{% endif %}
-
-	</div>
-
-	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}
-
 	{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
 		{% if self.show_tags AND self.tags %}
 		<div class="news-details">
@@ -175,6 +146,7 @@
 		</div>
 		{% endif %}
 	{% endif %}
+	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}
 
 	{% if globals.link || type == 'short' %}
 		{% if type!='short' %}
@@ -222,6 +194,34 @@
 
 		{% endif %}
 	{% endif %}
+
+	<div class="news-details main">
+		<span class="comments-counter"><a href="{{ self.permalink }}">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span> {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
+
+
+		<span class="tool">
+		<a href="{% get_url '?meta=' self.meta_uri %}" title="{% trans _('meta') %}">
+			{{ self.meta_name}}</a>,
+		<a href="{% get_url '?meta=' self.meta_uri '&amp;category=' self.category %}" title="{% trans _('categoría') %}">
+			{{self.category_name}}</a>
+		</span>
+		<span class="tool">karma: <span id="a-karma-{{self.id}}">
+			{{ self.karma|intval }}
+		</span></span>
+
+		{% if self.can_vote_negative %}
+			<form  class="tool" action="" id="problem-{{ self.id }}">
+			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+				<option value="0" selected="selected">{% trans _('problema') %}</option>
+				{% for pkey, pvalue in globals.negative_votes_values %}
+					<option value="{{pkey}}">{{ pvalue }}</option>
+				{% endfor %}
+			</select>
+			</form>
+		{% endif %}
+
+	</div>
+
 
 	{% exec do_banner_story as dummy %}
 	{% if self.best_comment %}
