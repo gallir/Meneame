@@ -43,6 +43,10 @@ class CommentMobile extends Comment{
 			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a> ';
 		}
 
+		if ($this->media_size > 0) {
+			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
+		}
+
 		$vars = compact('comment_meta_class', 'comment_class', 'author');
 		$vars['self'] = $this;
 		return Haanga::Load('mobile/comment_summary.html', $vars);

@@ -425,6 +425,13 @@ color: #aaa;
 color: #aaa;
 }
 
+.comment-body .thumb {
+padding:4px;
+background:#fff;
+vertical-align: top;
+}
+
+
 .comment-meta, .comment-meta-hidden {
 font-size: 85%;
 line-height: 140%;
