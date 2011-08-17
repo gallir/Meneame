@@ -125,7 +125,7 @@ $globals['media_max_size'] = 1024*1024; // 1 MB;
 $globals['media_min_karma'] = 6;
 $globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day
 $globals['media_max_upload_per_day'] = 10;
-$globals['media_thumb_size'] = 60;
+$globals['media_thumb_size'] = 50;
 
 
 
@@ -305,7 +305,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 // Main javascript file
 $globals['js_main'] = 'general.js.php?v=40'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=39'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=40'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

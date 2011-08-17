@@ -1462,6 +1462,12 @@ float: left;
 margin: 2px 10px 2px 0;
 }
 
+.comment-body .thumb, #tooltip-text .thumb {
+padding:4px;
+background:#fff;
+vertical-align: top;
+}
+
 .comment-meta {
 font-size: 90%;
 line-height: 180%;
