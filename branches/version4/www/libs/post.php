@@ -175,10 +175,6 @@ class Post extends LCPBase {
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
 		$this->show_avatar = true;
 
-		if ($this->media_size > 0) {
-			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
-		}
-
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a> ('.$this->src.')';
 
 		// Print dates
@@ -216,6 +212,11 @@ class Post extends LCPBase {
 			$this->content = text_to_summary($this->content, $length);
 		}
 		$this->content = $this->to_html($this->content) . $expand;
+
+		if ($this->media_size > 0) {
+			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
+		}
+
 
 	}
 
