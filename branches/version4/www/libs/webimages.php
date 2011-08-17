@@ -268,8 +268,8 @@ class WebThumb extends BasicThumb {
 			&& min($this->html_y, $this->y) >= $min_size 
 			&& $this->is_not_black()
 			&& ( 
-			(($this->html_x*$this->html_y) > $min_surface && $ratio < 3.5) || 
-			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $ratio < 4.6)) // For panoramic photos
+			(($this->html_x*$this->html_y) > $min_surface && $ratio < 6) || 
+			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $ratio < 10)) // For panoramic photos
 			) {
 			echo "<!-- Good -->\n";
 			return true;

@@ -99,6 +99,7 @@ class SimpleImage {
 	}
 
 	function resize($width, $height, $crop = false) {
+		if (! $this->image) return false;
 		if (! $crop) {
 			$src_x = 0;
 			$src_y = 0;

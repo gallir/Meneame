@@ -18,11 +18,7 @@ if (! $id > 0) {
 $size = intval($_GET['size']);
 if (!$size > 0) $size = 80;
 
-if (! isset($_GET['time'])) {
-	$time = $db->get_var("select user_avatar from users where user_id=$id");
-} else {
-	$time = intval($_GET['time']);
-}
+$time = $db->get_var("select user_avatar from users where user_id=$id");
 
 if (! $time > 0) {
 	header('HTTP/1.1 302 Moved');
@@ -30,14 +26,15 @@ if (! $time > 0) {
 	die;
 }
 
-if (!($img=avatar_get_from_file($id, $size))) {
+
+if (!($img=avatar_get_from_file($id, $size, $time))) {
+	syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size time $time");
 	$img=avatar_get_from_db($id, $size);
 	if (!$img) {
 		if (is_writable($globals['avatars_dir'])) {
-			$user=$db->get_row("select user_avatar from users where user_id=$id");
 			if ($user) {
 				header('HTTP/1.1 302 Moved');
-				header('Location: ' . get_avatar_url($id, $user->user_avatar, $size));
+				header('Location: ' . get_avatar_url($id, $time, $size));
 			}
 		} else {
 				header('HTTP/1.1 302 Moved');
@@ -46,7 +43,6 @@ if (!($img=avatar_get_from_file($id, $size))) {
 		die;
 	}
 }
-syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size");
 header('HTTP/1.1 200 OK');
 header("Content-type: image/jpeg");
 echo $img;
