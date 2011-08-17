@@ -145,30 +145,27 @@ function avatar_get_from_db($user, $size=0) {
 
 	$delete = false;
 	$original = false;
+	$http_code = 0;
 	if ($globals['Amazon_S3_media_bucket']) {
-		// Get avatar from S3
-		// Try up to 3 times to download from Amazon
-		if ($globals['Amazon_S3_delete_allowed']) $tries = 3;
-		else $tries = 1;
-		$try = 0;
-		while ($original == false && $try < $tries) {
-			if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
-				return file_get_contents("$file_base-$size.jpg");
-			}
-			if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
-				$delete_it = true;
-				$original = "$file_base-orig.jpg";
-			} elseif ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0)
-						|| Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
+		$original == false;
+		if (Media::get("$user-$time-$size.jpg", 'avatars', "$file_base-$size.jpg")) {
+			return file_get_contents("$file_base-$size.jpg");
+		}
+
+		if (Media::get("$user-$time.jpg", 'avatars', "$file_base-orig.jpg")) {
+			$delete_it = true;
+			$original = "$file_base-orig.jpg";
+		} else {
+			$http_code = S3::$lastHTTPCode;
+			if ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0)
+					|| Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
 				$original = $file_base . '-80.jpg';
-			} else {
-				$try++;
-				usleep(rand(1,20)); // Wait a little to minimize race-conditions
 			}
 		}
-		if ($globals['Amazon_S3_delete_allowed'] && ! $original) { // The images were not found in S3
-			if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
-					&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
+
+		if ($globals['Amazon_S3_delete_allowed'] && ! $original && $http_code == 404 && S3::$lastHTTPCode == 404) { // The images were not found in S3
+			if (is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
+				syslog(LOG_INFO, "Meneame, removing avatars not found in S3 user $user time $time");
 				avatars_remove($user);
 			}
 			return false;
@@ -189,12 +186,12 @@ function avatar_get_from_db($user, $size=0) {
 		}
 	}
 
-	if ($size > 0 && $size != 80 ) {
+	if ($original && $size > 0 && $size != 80 ) {
 		avatar_resize($original, "$file_base-$size.jpg", $size);
 		if ($delete_it) @unlink($original);
 	}
 
-	return file_get_contents("$file_base-$size.jpg");
+	return @file_get_contents("$file_base-$size.jpg");
 }
 
 function avatar_get_from_file($user, $size, $time = false) {

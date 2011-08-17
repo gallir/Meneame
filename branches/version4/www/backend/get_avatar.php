@@ -26,24 +26,25 @@ if (! $time > 0) {
 	die;
 }
 
+// If the time given in the URL is wrong, redirect to the right one
+if (isset($_GET['time']) && $_GET['time'] != $time) {
+	header('HTTP/1.1 301 Moved');
+	header('Location: ' . get_avatar_url($id, $time, $size));
+	die;
+}
+
 
 if (!($img=avatar_get_from_file($id, $size, $time))) {
 	syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size time $time");
 	$img=avatar_get_from_db($id, $size);
-	if (!$img) {
-		if (is_writable($globals['avatars_dir'])) {
-			if ($user) {
-				header('HTTP/1.1 302 Moved');
-				header('Location: ' . get_avatar_url($id, $time, $size));
-			}
-		} else {
-				header('HTTP/1.1 302 Moved');
-				header('Location: ' . get_no_avatar_url($size));
-		}
-		die;
-	}
 }
-header('HTTP/1.1 200 OK');
-header("Content-type: image/jpeg");
-echo $img;
+
+if ($img) {
+	header('HTTP/1.1 200 OK');
+	header("Content-type: image/jpeg");
+	echo $img;
+} else {
+	header('HTTP/1.1 307 Image not found');
+	header('Location: ' . get_no_avatar_url($size));
+}
 ?>

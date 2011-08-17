@@ -42,6 +42,7 @@ class S3 {
 	const ACL_AUTHENTICATED_READ = 'authenticated-read';
 
 	public static $useSSL = true;
+	public static $lastHTTPCode = 0;
 
 	private static $__accessKey; // AWS Access key
 	private static $__secretKey; // AWS Secret key
@@ -404,6 +405,7 @@ class S3 {
 	*/
 	public static function getObject($bucket, $uri, $saveTo = false) {
 		$rest = new S3Request('GET', $bucket, $uri);
+ 
 		if ($saveTo !== false) {
 			if (is_resource($saveTo))
 				$rest->fp =& $saveTo;
@@ -1283,14 +1285,17 @@ final class S3Request {
 		}
 
 		// Execute, grab errors
-		if (curl_exec($curl))
+		if (curl_exec($curl)) {
 			$this->response->code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		else
+			S3::$lastHTTPCode = $this->response->code;
+		} else {
 			$this->response->error = array(
 				'code' => curl_errno($curl),
 				'message' => curl_error($curl),
 				'resource' => $this->resource
 			);
+			S3::$lastHTTPCode = -1;
+		}
 
 		@curl_close($curl);
 

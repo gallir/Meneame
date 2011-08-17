@@ -41,6 +41,7 @@ class SimpleImage {
 	}
 
 	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75) {
+		if (!$this->image) return false;
 		switch($image_type) {
 		case IMAGETYPE_JPEG:
 			$res = imagejpeg($this->image, $filename, $compression);
