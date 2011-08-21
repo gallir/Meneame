@@ -121,6 +121,7 @@ class SimpleImage {
 			$src_h = $view_h;
 		}
 		$new_image = imagecreatetruecolor($width, $height);
+		imagefill($new_image, 0, 0, imagecolorallocate($new_image, 255, 255, 255));
 		if (! @imagecopyresampled($new_image, $this->image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h)) return false;
 		$this->image = $new_image;
 		return true;

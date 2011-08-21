@@ -267,12 +267,22 @@ $globals['captcha_first_login'] = false;
 
 // Twitter settings, with oauth
 // Ensure you have pecl/oauth installed
+// For authentication
+// $globals['oauth']['twitter']['consumer_key'] = 'xxxxxxxxxx';
+// $globals['oauth']['twitter']['consumer_secret'] = 'xxxxxxxxxx';
 
+// For posting
 //$globals['twitter_user'] = 'xxx';
 //$globals['twitter_consumer_key'] = 'xxxxxx';
 //$globals['twitter_consumer_secret'] = 'xxxxxx';
 //$globals['twitter_token'] = 'xxxxxx-xxxxxx';
 //$globals['twitter_token_secret'] = 'xxxxxx';
+
+
+// For Facebook authentication
+//$globals['facebook_key'] = 'xxxxxxxx';
+//$globals['facebook_secret'] = 'xxxxxxxx';
+
 
 // Jaiku settings
 //$globals['jaiku_user'] = '';
@@ -305,7 +315,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 // Main javascript file
 $globals['js_main'] = 'general.js.php?v=40'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=40'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=41'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

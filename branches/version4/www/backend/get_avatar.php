@@ -35,7 +35,7 @@ if (isset($_GET['time']) && $_GET['time'] != $time) {
 
 
 if (!($img=avatar_get_from_file($id, $size, $time))) {
-	syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size time $time");
+	//syslog(LOG_INFO, "Meneame, creating avatar for user $id size $size time $time");
 	$img=avatar_get_from_db($id, $size);
 }
 
