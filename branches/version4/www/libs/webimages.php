@@ -439,10 +439,10 @@ class HtmlImages {
 
 		$goods = $n = 0;
 		foreach ($tags as $match) {
-			if ($this->check_in_other($match)) continue;
+			$img = new WebThumb($match, $this->base);
+			if ($img->surface() < 120000 && $this->check_in_other($match)) continue;
 			if ($this->debug)
 				echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
-			$img = new WebThumb($match, $this->base);
 			if ($img->candidate && $img->good($other_html == false)) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
