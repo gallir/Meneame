@@ -33,7 +33,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
 			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
 			array('url' => 'topclicked.php', 'name' => 'topclicked', 'title' => _('más visitadas'), 'rel'=>true),
-			array('url' => 'topactive.php', 'name' => 'active', 'title' => _('más activas'), 'rel'=>true),
+			array('url' => 'topactive.php', 'name' => 'active', 'title' => _('destacadas'), 'rel'=>true),
 			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
 		);
 
@@ -531,7 +531,7 @@ function do_active_stories() {
 	if(memcache_mprint($key)) return;
 
 	$category_list	= '';
-	$title = _('más activas');
+	$title = _('destacadas');
 	$url = $globals['base_url'].'topactive.php';
 
 	$top = new Annotation("top-active");

@@ -11,7 +11,7 @@ include(mnminclude.'html1.php');
 
 $globals['ads'] = true;
 
-do_header(_('más activas') . ' | ' . _('menéame'));
+do_header(_('destacadas') . ' | ' . _('menéame'));
 $globals['tag_status'] = 'published';
 do_tabs('main', 'active');
 

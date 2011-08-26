@@ -20,7 +20,8 @@ function twitter_post($text, $short_url) {
 			return;
 	}
 
-	$msg = text_to_summary($text, 115) . ' ' . $short_url;
+	$maxlen = 138 - strlen($short_url);
+	$msg = mb_substr(text_to_summary($text, $maxlen), 0, $maxlen) . ' ' . $short_url;
 	$req_url = 'http://twitter.com/oauth/request_token';
 	$acc_url = 'http://twitter.com/oauth/access_token';
 	$authurl = 'http://twitter.com/oauth/authorize';
