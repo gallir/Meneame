@@ -60,7 +60,7 @@ if ($links) {
 				} else {
 					$short_url = fon_gs($l->get_permalink());
 				}
-				$text = _('Retirada de portada') . ': ';
+				$text = _('Retirada de portada') . ': ' . $l->title;
 				if ($globals['twitter_user'] && $globals['twitter_token']) {
 					twitter_post($text, $short_url);
 				}

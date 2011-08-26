@@ -40,8 +40,8 @@ if ($dbusers) {
 	}
 }
 
-// Delete email, names and url of invalidated users after three months
-$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level in ('disabled', 'autodisabled') and user_modification < date_sub(now(), interval 3 month)");
+// Delete email, names and url of invalidated users after two months
+$dbusers = $db->get_col("select SQL_NO_CACHE user_id from users where user_email not like '%@disabled' && user_level in ('disabled', 'autodisabled') and user_modification < date_sub(now(), interval 2 month)");
 if ($dbusers) {
 	foreach ($dbusers as $id) {
 		$user = new User;
@@ -117,8 +117,8 @@ echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
 
-// select users that voted during last 15 days, also her last vote's day
-$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 15 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
+// select users that voted during last 20 days, also her last vote's day
+$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 20 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
 
 // Main loop
 $res = $db->get_results($users);
@@ -173,7 +173,7 @@ foreach ($res as $dbuser) {
 			$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma < 0");
 			if ($karmas && $total_user_links > 1) { // don't penalize to users who sent just one link
 				foreach ($karmas as $k) {
-					$negative_karma_received += pow(min(1,$k/$max_avg_negative_received), 2) * 2;
+					$negative_karma_received += min(0.2, pow(min(1,$k/$max_avg_negative_received), 2) * 2); // Penalize up to 0.2
 				}
 			}
 			$karma_received = $positive_karma_received - $negative_karma_received;

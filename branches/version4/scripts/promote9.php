@@ -217,14 +217,15 @@ if ($links) {
 			$karma_new *= 0.5;
 			$link->message .= 'Domain banned.<br/>';
 			$link->annotation .= _('dominio baneado').": ".$ban['comment']."<br/>";
-		} elseif ($user->level == 'disabled' ) {
+		} elseif ($user->level == 'disabled' || $user->level == 'autodisabled' ) {
 			// Check if the user is banned disabled
-			if (preg_match('/^_+[0-9]+_+$/', $user->username)) {
+			if ($user->level == 'autodisabled') {
 				$link->message .= "$user->username disabled herself, penalized.<br/>";
+				$karma_new *= 0.2;
 			} else {
 				$link->message .= "$user->username disabled, probably due to abuses, penalized.<br/>";
+				$karma_new *= 0.4;
 			}
-			$karma_new *= 0.5;
 			$link->annotation .= _('cuenta deshabilitada'). "<br/>";
 		} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
 			// Check domain and user punishments
