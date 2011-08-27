@@ -282,7 +282,7 @@ Tooltips functions
 			box = $("<div>").attr({ id: 'tooltip-text' });
 			$('body').append( box );
 		}
-		$('.tooltip').live('mouseenter mouseleave', function (event) {action(this, event)});
+		$('a.tooltip, img.tooltip').live('mouseenter mouseleave', function (event) {action(this, event)});
 	}
 
 	function action(element, event) {
