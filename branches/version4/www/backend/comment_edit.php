@@ -46,7 +46,7 @@ function print_edit_form() {
 
 	$rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
 	echo '<div class="commentform">'."\n";
-	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" method="post" enctype="multipart/form-data">'."\n";
+	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" class="comment" method="post" enctype="multipart/form-data">'."\n";
 
 	echo '<input type="hidden" name="process" value="editcomment" />'."\n";
 	echo '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />'."\n";
@@ -54,7 +54,7 @@ function print_edit_form() {
 
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
-	echo '<div style="clear: right"><textarea name="comment_content" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
+	echo '<div style="clear: right"><textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
 
 
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
@@ -129,8 +129,9 @@ function save_comment () {
 		// Check image upload or delete
 		if ($_POST['image_delete']) {
 			$comment->delete_image();
-		}
-		if (!empty($_FILES['image']['tmp_name'])) {
+		} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+			$comment->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+		} elseif (!empty($_FILES['image']['tmp_name'])) {
 			$comment->store_image($_FILES['image']);
 		}
 

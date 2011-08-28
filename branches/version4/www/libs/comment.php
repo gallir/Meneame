@@ -452,7 +452,7 @@ class Comment extends LCPBase {
 						|| $current_user->user_id == $link->author)) {
 			// User can comment
 			echo '<div class="commentform">'."\n";
-			echo '<form action="" method="post" enctype="multipart/form-data">'."\n";
+			echo '<form action="" method="post" enctype="multipart/form-data" class="comment">'."\n";
 
 			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
 			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
@@ -461,7 +461,7 @@ class Comment extends LCPBase {
 			echo '<legend>'._('envía un comentario'). ' <em style="font-size:80%">'._('porque alguien en Internet está equivocado').'</em></legend>'."\n";
 			print_simpleformat_buttons('comment');
 			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-			echo '<div><textarea name="comment_content" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
+			echo '<div><textarea name="comment_content" class="droparea" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
 
 
 			echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
@@ -637,8 +637,12 @@ class Comment extends LCPBase {
 		$link->update_comments();
 		$db->commit();
 
-		// Check image upload
-		if (!empty($_FILES['image']['tmp_name'])) {
+		// Check image upload or delete
+		if ($_POST['image_delete']) {
+			$comment->delete_image();
+		} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+			$comment->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+		} elseif (!empty($_FILES['image']['tmp_name'])) {
 			$comment->store_image($_FILES['image']);
 		}
 
