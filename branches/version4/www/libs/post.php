@@ -337,13 +337,11 @@ class Post extends LCPBase {
 	}
 
 	function store_image($file) {
-		$media = new Upload('post', $this->id, 0);
-		if ($media->from_temporal($file, 'image')) {
-			$this->media_size = $media->size;
-			$this->media_mime = $media->mime;
-			return true;
-		}
-		return false;
+		return parent::store_image('post', $file);
+	}
+
+	function move_tmp_image($file, $mime) {
+		return parent::move_tmp_image('post', $file, $mime);
 	}
 
 	function delete_image() {

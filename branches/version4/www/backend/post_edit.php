@@ -49,7 +49,7 @@ function save_post ($post_id) {
 
 
 	if (!empty($_FILES['image']['tmp_name'])) {
-		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
 		if ($limit_exceded) {
 			echo 'ERROR: ' . $limit_exceded;
 			die;
@@ -128,11 +128,12 @@ function save_post ($post_id) {
 	// Check image upload or delete
 	if ($_POST['image_delete']) {
 		$post->delete_image();
-	}
-
-	if (!empty($_FILES['image']['tmp_name'])) {
+	} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filename']) ) {
+		$post->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filename']);
+	} elseif(!empty($_FILES['image']['tmp_name'])) {
 		$post->store_image($_FILES['image']);
 	}
+
 
 	$post->print_summary();
 	Haanga::Load('fancybox.html');

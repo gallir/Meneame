@@ -625,7 +625,7 @@ class Comment extends LCPBase {
 
 		// Check image limits
 		if (!empty($_FILES['image']['tmp_name'])) {
-			$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+			$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
 			if ($limit_exceded) {
 				return $limit_exceded;
 			}
@@ -700,13 +700,11 @@ class Comment extends LCPBase {
 	}
 
 	function store_image($file) {
-		$media = new Upload('comment', $this->id, 0);
-		if ($media->from_temporal($file, 'image')) {
-			$this->media_size = $media->size;
-			$this->media_mime = $media->mime;
-			return true;
-		}
-		return false;
+		return parent::store_image('comment', $file);
+	}
+
+	function move_tmp_image($file, $mime) {
+		return parent::move_tmp_image('comment', $file, $mime);
 	}
 
 	function delete_image() {

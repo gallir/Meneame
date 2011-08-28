@@ -84,7 +84,7 @@ function save_comment () {
 
 	// Check image limits
 	if (!empty($_FILES['image']['tmp_name'])) {
-		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
 		if ($limit_exceded) {
 			echo $limit_exceded;
 			die;

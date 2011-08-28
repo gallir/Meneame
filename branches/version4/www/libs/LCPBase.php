@@ -117,6 +117,26 @@ class LCPBase {
 		return $string;
 	}
 
+	function store_image($type, $file) {
+		$media = new Upload($type, $this->id, 0);
+		if ($media->from_temporal($file, 'image')) {
+			$this->media_size = $media->size;
+			$this->media_mime = $media->mime;
+			return true;
+		}
+		return false;
+	}
+
+	function move_tmp_image($type, $file, $mime) {
+		$media = new Upload($type, $this->id, 0);
+		if ($media->from_tmp_upload($file, $mime)) {
+			$this->media_size = $media->size;
+			$this->media_mime = $media->mime;
+			return true;
+		}
+		return false;
+	}
+
 }
 
 ?>

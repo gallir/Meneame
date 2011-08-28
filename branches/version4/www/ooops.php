@@ -40,6 +40,31 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 					die;
 				}
 			}
+		case "tmp_thumb":
+			// Temporal filenames
+			$name = preg_replace('/^tmp_thumb\-/', '', $filename);
+			$path = Upload::get_cache_dir().'/tmp/';
+			$pathname = $path.$name;
+			$thumbname = "$path/$filename";
+
+
+			if (! file_exists($pathname)) {
+				$errn = 404;
+				break;
+			}
+			require_once(mnminclude."simpleimage.php");
+			$thumb = new SimpleImage();
+			$thumb->load($pathname);
+			$thumb->resize($globals['media_thumb_size'], $globals['media_thumb_size'], true);
+			if (! $thumb->save($thumbname, -1)) {
+				$errn = 503;
+				break;
+			}
+			header("HTTP/1.0 200 OK");
+			header("Content-Type: " . $thumb->mime());
+			readfile($thumbname);
+			die;
+
 		default:
 			// it's an avatar
 			if (count($parts) == 3 && $parts[0] > 0 && $parts[2] > 0) {

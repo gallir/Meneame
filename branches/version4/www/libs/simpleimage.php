@@ -20,6 +20,11 @@ class SimpleImage {
 	var $image;
 	var $image_type;
 
+	function mime() {
+		if ($this->image_type) return image_type_to_mime_type($this->image_type);
+		else return 'image/';
+	}
+
 	function load($filename) {
 		$image_info = getimagesize($filename);
 		$this->image_type = $image_info[2];
@@ -45,6 +50,13 @@ class SimpleImage {
 
 	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75) {
 		if (!$this->image) return false;
+
+		if ($image_type == -1) {
+			// Save in the same format
+			$image_type = $this->image_type;
+		}
+		syslog(LOG_INFO, "IMAGE: $image_type");
+
 		switch($image_type) {
 		case IMAGETYPE_JPEG:
 			$res = imagejpeg($this->image, $filename, $compression);
@@ -54,8 +66,10 @@ class SimpleImage {
 			break;
 		case IMAGETYPE_PNG:
 			$res = imagepng($this->image, $filename);
+			syslog(LOG_INFO, "IMAGE storing: $filename - ".$this->mime());
 			break;
 		default:
+			syslog(LOG_INFO, "IMAGE not type found: $image_type");
 			return false;
 		}
 		if ($res) return true;

@@ -63,7 +63,7 @@ function save_post ($message_id) {
 	$_POST['post'] = clean_text_with_tags($_POST['post'], 0, false, $globals['posts_len']);
 
 	if (!empty($_FILES['image']['tmp_name'])) {
-		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']);
+		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
 		if ($limit_exceded) {
 			echo 'ERROR: ' . $limit_exceded;
 			die;

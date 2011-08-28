@@ -14,7 +14,7 @@
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="post_id" value="{{ self.id }}" />
 <input type="hidden" name="user_id" value="{{ self.author }}" />
-<textarea style="clear: both" name="post" rows="6" cols="40" id="post"
+<textarea style="clear: both" name="post" class="droparea" rows="6" cols="40" id="post"
 {% if ! globals.mobile %}
 	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
 {% endif %}
@@ -34,8 +34,12 @@
 {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
 	<div style="float:right">
-	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/gif, image/jpeg, image/png" onchange="check_file_size('fileInput', {{ globals.media_max_size }})"/></label>
+	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/gif, image/jpeg, image/png"/></label>
+
+	<div class="droparea_info"></div>
+
 	</div>
+
 {% endif %}
 </div>
 
@@ -43,6 +47,10 @@
 </form>
 </fieldset>
 </div>
+
+<script type="text/javascript">
+$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
+</script>
 
 
 <script type="text/javascript">

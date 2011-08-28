@@ -1,17 +1,19 @@
 {% if globals.fancybox_enabled %}
 <script type="text/javascript">
-$(document).ready(
-	function() {
-		$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.fancybox({
-			transitionIn: "none",
-			transitionOut: "none",
-			titlePosition: 'inside',
-			titleFormat: function(title, cA, cI, cO) { if ($('#fancybox-img').length ) return title + '&nbsp;[\x3Ca href="'+$('#fancybox-img').attr('src')+'">{% trans _('enlace imagen') %}\x3C/a>]'; else return title; },
-			onComplete: function() {
-					reportAjaxStats('image', 'single');
-				},
-		});
-	}
-);
+try {
+	$(document).ready(
+		function() {
+			$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.fancybox({
+				transitionIn: "none",
+				transitionOut: "none",
+				titlePosition: 'inside',
+				titleFormat: function(title, cA, cI, cO) { if ($('#fancybox-img').length ) return title + '&nbsp;[\x3Ca href="'+$('#fancybox-img').attr('src')+'">{% trans _('enlace imagen') %}\x3C/a>]'; else return title; },
+				onComplete: function() {
+						reportAjaxStats('image', 'single');
+					},
+			});
+		}
+	);
+} catch(e) {};
 </script>
 {% endif %}

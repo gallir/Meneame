@@ -11,7 +11,8 @@ class Upload {
 	static function get_cache_relative_dir($key = false) {
 		global $globals;
 
-		return $globals['cache_dir'].sprintf("/%02x/%02x", ($key >> 16) & 255, ($key >> 8) & 255);
+		if (!$key) return $globals['cache_dir'];
+		else return $globals['cache_dir'].sprintf("/%02x/%02x", ($key >> 16) & 255, ($key >> 8) & 255);
 	}
 
 	static function get_cache_dir($key = false) {
@@ -38,11 +39,11 @@ class Upload {
 		return $res;
 	}
 
-	static function current_user_limit_exceded($file) {
+	static function current_user_limit_exceded($size) {
 		global $current_user, $globals;
 
 		// Check current_user file upload limits
-		if ($file['size'] > $globals['media_max_size']) return _('tamaño excedido');
+		if ($size > $globals['media_max_size']) return _('tamaño excedido');
 		if ($current_user->user_karma < $globals['media_min_karma']) return _('karma bajo');
 		if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) return _('máximas subidas diarias excedidas');
 		if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) return _('máximos bytes por día excedidos');
@@ -126,7 +127,7 @@ class Upload {
 		global $current_user, $globals;
 
 		// Check __again__ the limits
-		Upload::current_user_limit_exceded($file);
+		Upload::current_user_limit_exceded($file['size']);
 
 		if ($type && ! preg_match("/^$type\/[^ ]+$/", $file['type'])) return false;
 		$this->mime = $file['type'];
@@ -134,6 +135,27 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
+			return $this->store();
+		} else {
+			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
+		}
+		return false;
+	}
+
+	function from_tmp_upload($filename, $type) {
+		global $current_user, $globals;
+
+		$pathname = Upload::get_cache_dir() . '/tmp/' . $filename;
+		if (! file_exists($pathname)) return false;
+
+		// Check __again__ the limits
+		Upload::current_user_limit_exceded(filesize($pathname));
+
+		$this->mime = $type;
+		$this->size = filesize($pathname);
+		$this->user = $current_user->user_id;
+		Upload::create_cache_dir($this->id);
+		if (rename($pathname, $this->pathname())) {
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
