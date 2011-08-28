@@ -1,11 +1,11 @@
 /* Menéame colors and images */
 
 /***
-All images referenced by the CSS and distributed in the tar file are 
-copyrighted by Benjamí Villoslada and published under a CC license: 
+All images referenced by the CSS and distributed in the tar file are
+copyrighted by Benjamí Villoslada and published under a CC license:
 http://creativecommons.org/licenses/by-sa/2.5/
 
-Source code was developed by Ricardo Galli, it's published 
+Source code was developed by Ricardo Galli, it's published
 under the Affero GPL License (http://meneame.net/COPYING) unless
 stated otherwise in individual files.
 ***/
@@ -18,6 +18,11 @@ background: url(../../img/mnm/elmnm-sneak-reverse02.png) 97% 95% no-repeat;
 
 .sneaker-title strong {
 color: #FF9400;
+}
+
+.sneaker-story img {
+float: right;
+margin: 0 4px 0 2px;
 }
 
 .sneaker-legend {

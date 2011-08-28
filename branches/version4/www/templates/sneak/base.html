@@ -103,6 +103,12 @@ function to_html(data) {
 	html = '<div class="sneaker-ts">'+timeStr+'<\/div>';
 
 	html += '<div class="sneaker-type">';
+
+	if (do_hoygan) data.title = to_hoygan(data.title);
+	if (do_flip) data.title = flipString(data.title);
+	if (typeof data.thumb != 'undefined' && data.thumb.length > 0) {
+		data.title = '<img src="'+data.thumb+'" width=20 height=20 />' + data.title;
+	}
 	switch (data.type) {
 		case 'post':
 			html += '<img src="'+base_static+'img/common/sneak-newnotame01.png" width="21" height="17" alt="{% trans _('nótame') %}" class="tooltip p:'+data.id+'"/><\/div>';
@@ -110,8 +116,6 @@ function to_html(data) {
 			if (check_user_ping(data.title)) {
 				text_style = 'style="font-weight: bold;"';
 			}
-			if (do_hoygan) data.title = to_hoygan(data.title);
-			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined && data.icon.length > 0) {
@@ -141,8 +145,6 @@ function to_html(data) {
 			}
 			// Open in a new window
 			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
-			if (do_hoygan) data.title = to_hoygan(data.title);
-			if (do_flip) data.title = flipString(data.title);
 			html += '<div class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined &&  data.icon.length > 0) {
@@ -193,8 +195,6 @@ function to_html(data) {
 	html += '<div class="sneaker-votes">'+data.votes+'/'+data.com+'<\/div>';
 	if ("undefined" != typeof(data.cid) && data.cid > 0) anchor='#c-'+data.cid;
 	else anchor='';
-	if (do_hoygan) data.title = to_hoygan(data.title);
-	if (do_flip) data.title = flipString(data.title);
 	html += '<div class="sneaker-story"><a target="_blank" href="'+data.link+anchor+'">'+data.title+'<\/a><\/div>';
 	if (data.type == 'problem') {
 		html += '<div class="sneaker-who">';

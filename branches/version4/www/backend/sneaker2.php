@@ -356,26 +356,26 @@ function get_votes($dbtime) {
 
 function get_story($time, $type, $linkid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link;
-	$event = $db->get_row("select SQL_CACHE user_login, user_level, link_title, link_uri, link_status, link_votes, link_anonymous, link_comments, link_author from links, users where link_id = $linkid and user_id=$userid");
-	if (!$event) return;
 
-	$foo_link->id=$linkid;
-	$foo_link->uri=$event->link_uri;
-	$json['link'] = $foo_link->get_relative_permalink();
+	$link = Link::from_db($linkid);
+	if (!$link) return;
+
+	$json['link'] = $link->get_relative_permalink();
 	$json['id'] = $linkid;
-	$json['status'] = get_status($event->link_status);
+	$json['status'] = get_status($link->status);
 	$json['ts'] = $time;
 	$json['type'] = $type;
-	$json['votes'] = $event->link_votes+$event->link_anonymous;
-	$json['com'] = $event->link_comments;
-	$json['title'] = $event->link_title;
+	$json['votes'] = $link->total_votes;
+	$json['com'] = $link->comments;
+	$json['title'] = $link->title;
+	$json['thumb'] = $link->has_thumb();
 
-	if ($event->link_author != $userid && ($event->user_level == 'admin' || $event->user_level == 'god')) {
+	if ($link->author != $userid && ($link->user_level == 'admin' || $link->user_level == 'god')) {
 		// Edited by admin, don't show the author
 		$json['uid'] = 0;
 		$json['who'] = 'admin';
 	} else {
-		$json['who'] = $event->user_login;
+		$json['who'] = $link->username;
 		$json['uid'] = $userid;
 		if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 	}
@@ -387,8 +387,13 @@ function get_story($time, $type, $linkid, $userid) {
 
 function get_comment($time, $type, $commentid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
-	$event = $db->get_row("select SQL_CACHE user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from comments, links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid");
+
+	$event = $db->get_row("select SQL_CACHE user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments, media.size as media_size from comments LEFT JOIN media ON (media.type='comment' and media.id = comments.comment_id and media.version = 0), links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid ");
+
+
 	if (!$event) return;
+
+
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
 	$json['link'] = $foo_link->get_relative_permalink()."/000$event->comment_order";
@@ -407,6 +412,10 @@ function get_comment($time, $type, $commentid, $userid) {
 	}
 	$json['uid'] = $userid;
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+	if ($event->media_size > 0) {
+		$json['thumb'] = $globals['base_static'].Upload::get_cache_relative_dir($commentid)."/media_thumb-comment-$commentid.jpg";
+	}
+
 	$key = $time . ':'.$type.':'.$commentid;
 	$events[$key] = $json;
 	if($time > $last_timestamp) $last_timestamp = $time;
@@ -414,7 +423,7 @@ function get_comment($time, $type, $commentid, $userid) {
 
 function get_post($time, $type, $postid, $userid) {
 	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
-	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content from posts, users where post_id = $postid and user_id=$userid");
+	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content, media.size as media_size from posts LEFT JOIN media ON (media.type='post' and media.id = posts.post_id and media.version = 0), users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
 	$json['link'] = post_get_base_url($postid);
 	$json['ts'] = $time;
@@ -428,6 +437,10 @@ function get_post($time, $type, $postid, $userid) {
 	$json['uid'] = $userid;
 	$json['id'] = $postid;
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+	if ($event->media_size > 0) {
+		$json['thumb'] = $globals['base_static'].Upload::get_cache_relative_dir($postid)."/media_thumb-post-$postid.jpg";
+	}
+
 	$key = $time . ':'.$type.':'.$postid;
 	$events[$key] = $json;
 	if($time > $last_timestamp) $last_timestamp = $time;
