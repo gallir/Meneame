@@ -107,7 +107,7 @@ function to_html(data) {
 	if (do_hoygan) data.title = to_hoygan(data.title);
 	if (do_flip) data.title = flipString(data.title);
 	if (typeof data.thumb != 'undefined' && data.thumb.length > 0) {
-		data.title = '<img src="'+data.thumb+'" width=20 height=20 />' + data.title;
+		data.title = '<img src="'+data.thumb+'" class="thumb" width=20 height=20 />' + data.title;
 	}
 	switch (data.type) {
 		case 'post':

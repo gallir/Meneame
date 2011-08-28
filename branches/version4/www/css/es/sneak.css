@@ -20,9 +20,9 @@ background: url(../../img/mnm/elmnm-sneak-reverse02.png) 97% 95% no-repeat;
 color: #FF9400;
 }
 
-.sneaker-story img {
-float: right;
-margin: 0 4px 0 2px;
+.sneaker-story .thumb {
+float: left;
+margin: 0 4px 0 0;
 }
 
 .sneaker-legend {

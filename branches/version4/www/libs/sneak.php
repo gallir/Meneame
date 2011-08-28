@@ -1,5 +1,5 @@
 <?
-$globals['sneak_version'] = 6;
+$globals['sneak_version'] = 7;
 $max_items = 25;
 header('Connection: close');
 
