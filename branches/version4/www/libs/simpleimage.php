@@ -55,7 +55,6 @@ class SimpleImage {
 			// Save in the same format
 			$image_type = $this->image_type;
 		}
-		syslog(LOG_INFO, "IMAGE: $image_type");
 
 		switch($image_type) {
 		case IMAGETYPE_JPEG:
@@ -66,7 +65,6 @@ class SimpleImage {
 			break;
 		case IMAGETYPE_PNG:
 			$res = imagepng($this->image, $filename);
-			syslog(LOG_INFO, "IMAGE storing: $filename - ".$this->mime());
 			break;
 		default:
 			syslog(LOG_INFO, "IMAGE not type found: $image_type");

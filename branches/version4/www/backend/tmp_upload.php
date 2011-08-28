@@ -23,16 +23,17 @@ $r = new stdClass();
 $headers = apache_request_headers();
 
 if ( ! $current_user->user_id
-	|| empty($headers['x-file-type'])
-	|| empty($headers['x-file-size'])
-	|| Upload::current_user_limit_exceded($headers['x-file-size']) ) {
+	|| empty($headers['X-File-Type'])
+	|| empty($headers['X-File-Size'])
+	|| Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
 		$r->error = "Error";
+		syslog(LOG_INFO, "Error " . $headers['X-File-Type'] . "-" . $headers['X-File-Size']);
 		echo json_encode($r);
 		die;
 }
 
-$type = $headers['x-file-type'];
-$size = $headers['x-file-size'];
+$type = $headers['X-File-Type'];
+$size = $headers['X-File-Size'];
 
 
 $dir = Upload::get_cache_dir() . '/tmp';

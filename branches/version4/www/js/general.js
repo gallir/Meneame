@@ -890,10 +890,10 @@ function check_file_size(id, size) {
 			xhr.open("post", s.post, true);
 
 			// Set appropriate headers
-			xhr.setRequestHeader("content-type", "multipart/form-data");
-			xhr.setRequestHeader("x-file-name", file.fileName);
-			xhr.setRequestHeader("x-file-size", file.fileSize);
-			xhr.setRequestHeader("x-file-type", file.type);
+			xhr.setRequestHeader("content-type", "multipart/form-data-alternate");
+			xhr.setRequestHeader("X-File-Name", file.fileName);
+			xhr.setRequestHeader("X-File-Size", file.fileSize);
+			xhr.setRequestHeader("X-File-Type", file.type);
 
 			// Set request headers
 			for (var i in area.data())
@@ -926,6 +926,7 @@ function check_file_size(id, size) {
 
 			form.find('input[type="file"]').change(function () {
 				m.traverse(this.files, $(this))
+				$(this).val("");
 			});
 
 			var progress = $('<progress value="0" max="0" style="float:right;margin-right:4px;"></progress>').hide();

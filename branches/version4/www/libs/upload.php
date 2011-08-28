@@ -121,6 +121,7 @@ class Upload {
 
 	function clean() {
 		@unlink($this->pathname());
+		@unlink($this->thumb_pathname());
 	}
 
 	function from_temporal($file, $type = false) {
@@ -135,6 +136,7 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
+			@unlink($this->thumb_pathname());
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
@@ -156,6 +158,7 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (rename($pathname, $this->pathname())) {
+			@unlink($this->thumb_pathname());
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
@@ -220,6 +223,10 @@ class Upload {
 		}
 	}
 
+	function thumb_pathname() {
+		return $this->path() . "/media_thumb-$this->type-$this->id.jpg";
+	}
+
 	function create_thumb($x = 40, $y = false) {
 		if (! file_exists($this->pathname())) {
 			if (! $this->restore()) return false;
@@ -229,7 +236,7 @@ class Upload {
 		$thumb = new SimpleImage();
 		$thumb->load($this->pathname());
 		$thumb->resize($x, $y, true);
-		if ($thumb->save($this->path() . "/media_thumb-$this->type-$this->id.jpg")) {
+		if ($thumb->save($this->thumb_pathname())) {
 			$this->thumb = $thumb;
 			return true;
 		}
