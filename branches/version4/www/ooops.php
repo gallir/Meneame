@@ -29,6 +29,8 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				$media->thumb->output();
 				die;
 			}
+			$errn = 404;
+			break;
 		case "thumb":
 			// Links' thumbnails
 			if (count($parts) == 2 && $parts[1] > 0) {
@@ -40,6 +42,8 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 					die;
 				}
 			}
+			$errn = 404;
+			break;
 		case "tmp_thumb":
 			// Temporal filenames
 			$name = preg_replace('/^tmp_thumb\-/', '', $filename);
