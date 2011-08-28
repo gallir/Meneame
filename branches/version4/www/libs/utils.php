@@ -174,7 +174,10 @@ function txt_time_diff($from, $now=0){
 	if($minutes>1) $txt .= " $minutes "._('minutos');
 	else if ($minutes==1) $txt	.= " $minutes "._('minuto');
 
-	if($txt=='') $txt = " $secs ". _('segundos');
+	if($txt=='') {
+		if ($secs < 5) $txt = ' ' . _('nada');
+		else $txt = " $secs ". _('segundos');
+	}
 	return $txt;
 }
 
