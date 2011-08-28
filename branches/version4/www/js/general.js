@@ -870,7 +870,7 @@ $(document).ready(function () {
 				} else {
 					s.error(r);
 				}
-				setTimeout(function () {progress.hide();}, 2000);
+				setTimeout(function () {progress.hide();}, s.hide_delay);
 			}, false);
 
 			xhr.open("post", s.post, true);
@@ -901,8 +901,10 @@ $(document).ready(function () {
 			'complete': m.complete,
 			'error': m.error,
 			'maxsize': 500000, // Bytes
+			'show_thumb': true,
+			'hide_delay': 2000,
 			'backgroundColor': '#AFFBBB',
-			'backgroundImage': base_static +'img/common/picture01.png'
+			'backgroundImage': base_static +'img/common/picture_simple01.png'
 		};
 
 		this.each(function(){
@@ -916,9 +918,13 @@ $(document).ready(function () {
 				$(this).val("");
 			});
 
+			if (s.show_thumb) {
+				var thumb = $('<img width="40" height="40" style="float:right;"/>').hide();
+				form.find('.droparea_info').append(thumb);
+			}
+
 			var progress = $('<progress value="0" max="0" style="float:right;margin-right:4px;"></progress>').hide();
-			var thumb = $('<img width="40" height="40" style="float:right;"/>').hide();
-			form.find('.droparea_info').append(thumb).append(progress);
+			form.find('.droparea_info').append(progress);
 
 			form.find('.droparea')
 			.bind({

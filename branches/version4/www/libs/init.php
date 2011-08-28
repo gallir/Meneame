@@ -12,7 +12,12 @@ include mnminclude.'utils.php';
 
 mb_internal_encoding('UTF-8');
 global $globals;
-$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+
+if (!empty($globals['static_server'])) {
+	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+} else {
+	$globals['base_static'] = 'http://'.get_server_name().$globals['base_url'];
+}
 
 // Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
