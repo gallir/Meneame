@@ -109,9 +109,9 @@ function save_post ($message_id) {
 	// Check image upload or delete
 	if ($_POST['image_delete']) {
 		$message->delete_image();
-	}
-
-	if (!empty($_FILES['image']['tmp_name'])) {
+	} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+		$message->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+	} elseif(!empty($_FILES['image']['tmp_name'])) {
 		$message->store_image($_FILES['image']);
 	}
 

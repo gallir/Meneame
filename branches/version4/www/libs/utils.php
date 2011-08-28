@@ -560,17 +560,23 @@ function do_modified_headers($time, $tag) {
 	header('ETag: "'.$tag.'"');
 }
 
+// Use this function to normalize headers to capital first letter
+// Apache converts X-Something to x-something
+function request_headers() {
+	$headers = array();
+	foreach ($_SERVER as $key => $value) {
+		if (substr($key, 0, 5) != 'HTTP_') {
+			continue;
+		}
+		$headername = strtr(ucwords(strtolower(strtr(substr($key, 5), '_', ' '))), ' ', '-');
+		$headers[$headername] = $value;
+	}
+	return $headers;
+}
+
 if (!function_exists("apache_request_headers")){
 	function apache_request_headers() {
-		$headers = array();
-		foreach ($_SERVER as $key => $value) {
-			if (substr($key, 0, 5) != 'HTTP_') {
-				continue;
-			}
-			$headername = strtr(ucwords(strtolower(strtr(substr($key, 5), '_', ' '))), ' ', '-');
-			$headers[$headername] = $value;
-		}
-		return $headers;
+		return request_headers();
 	}
 }
 

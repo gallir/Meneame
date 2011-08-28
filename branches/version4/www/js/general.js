@@ -797,20 +797,6 @@ $(document).ready(function () {
 
 });
 
-// To make it obsolete
-function check_file_size(id, size) {
-	var input = document.getElementById(id);
-	if (input.files != undefined) {
-		for (var i = 0; i < input.files.length; i++) {
-			if (input.files[i].fileSize > size) {
-				mDialog.notify('<i>'+input.files[i].fileName + "<\/i>: {% trans _('tamaño máximo excedido') %}" + " " + input.files[i].fileSize + " > " + size, 5);
-				return;
-			}
-		}
-		mDialog.notify("{% trans _('tamaño OK') %}", 1);
-	}
-}
-
 // Drop an image file
 // Modified from http://gokercebeci.com/dev/droparea
 (function( $ ){
@@ -890,7 +876,7 @@ function check_file_size(id, size) {
 			xhr.open("post", s.post, true);
 
 			// Set appropriate headers
-			xhr.setRequestHeader("content-type", "multipart/form-data-alternate");
+			xhr.setRequestHeader("Content-Type", "multipart/form-data-alternate");
 			xhr.setRequestHeader("X-File-Name", file.fileName);
 			xhr.setRequestHeader("X-File-Size", file.fileSize);
 			xhr.setRequestHeader("X-File-Type", file.type);
@@ -913,6 +899,7 @@ function check_file_size(id, size) {
 			'init': m.init,
 			'start': m.start,
 			'complete': m.complete,
+			'error': m.error,
 			'maxsize': 500000, // Bytes
 			'backgroundColor': '#AFFBBB',
 			'backgroundImage': base_static +'img/common/picture01.png'

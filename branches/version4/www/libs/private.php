@@ -41,7 +41,7 @@ class PrivateMessage extends LCPBase {
 		global $db;
 
 		$friendship = User::friend_exists($to, $from);
-		return $friendship > 0 || 
+		return $friendship > 0 ||
 			(! $friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 15 day)")) > 0);
 	}
 
@@ -142,15 +142,11 @@ class PrivateMessage extends LCPBase {
 	}
 
 	function store_image($file) {
-		$media = new Upload('private', $this->id, 0);
-		$media->to = $this->to;
-		$media->access = 'private';
-		if ($media->from_temporal($file, 'image')) {
-			$this->media_size = $media->size;
-			$this->media_mime = $media->mime;
-			return true;
-		}
-		return false;
+		return parent::store_image('private', $file);
+	}
+
+	function move_tmp_image($file, $mime) {
+		return parent::move_tmp_image('private', $file, $mime);
 	}
 
 	function delete_image() {

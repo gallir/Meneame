@@ -20,7 +20,7 @@ $field = 'tmp_file';
 $r = new stdClass();
 
 
-$headers = apache_request_headers();
+$headers = request_headers();
 
 if ( ! $current_user->user_id
 	|| empty($headers['X-File-Type'])
