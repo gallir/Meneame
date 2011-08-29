@@ -881,11 +881,6 @@ $(document).ready(function () {
 			xhr.setRequestHeader("X-File-Size", file.fileSize);
 			xhr.setRequestHeader("X-File-Type", file.type);
 
-			// Set request headers
-			for (var i in area.data())
-				if (typeof area.data(i) !== "object")
-					xhr.setRequestHeader('x-param-'+i, area.data(i));
-
 			xhr.send(file);
 		}
 	};

@@ -24,10 +24,16 @@ $headers = request_headers();
 
 if ( ! $current_user->user_id
 	|| empty($headers['X-File-Type'])
-	|| empty($headers['X-File-Size'])
-	|| Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
-		$r->error = "Error";
-		syslog(LOG_INFO, "Error " . $headers['X-File-Type'] . "-" . $headers['X-File-Size']);
+	|| empty($headers['X-File-Size']) ) {
+		$r->error = _('Error en cabeceras');
+		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size']);
+		echo json_encode($r);
+		die;
+}
+
+if (Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
+		$r->error = _("Límite de ficheros excedidos");
+		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Size']);
 		echo json_encode($r);
 		die;
 }
