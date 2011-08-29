@@ -9,8 +9,7 @@
 include('../config.php');
 include(mnminclude.'avatars.php');
 
-//header('Content-Type: application/json; charset=UTF-8');
-header('Content-Type: text/plain; charset=UTF-8'); // It's being read in a iframe son can't be a json to avoid problems
+header('Content-Type: application/json; charset=UTF-8');
 
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
