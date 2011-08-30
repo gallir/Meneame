@@ -369,16 +369,21 @@ function get_story($time, $type, $linkid, $userid) {
 	$json['com'] = $link->comments;
 	$json['title'] = $link->title;
 	$json['thumb'] = $link->has_thumb();
+	$json['who'] = $link->username;
+	$json['uid'] = $userid;
 
-	if ($link->author != $userid && ($link->user_level == 'admin' || $link->user_level == 'god')) {
-		// Edited by admin, don't show the author
-		$json['uid'] = 0;
-		$json['who'] = 'admin';
-	} else {
-		$json['who'] = $link->username;
-		$json['uid'] = $userid;
-		if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
-	}
+	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
+
+	if ($link->author != $userid && $userid > 0) {
+		$user = new User($userid);
+		$user->read();
+		if ($user->admin) {
+			// Edited by admin, don't show the author
+			$json['uid'] = 0;
+			$json['who'] = 'admin';
+			$json['icon'] = '';
+		}
+	} 
 
 	$key = $time . ':'.$type.':'.$linkid;
 	$events[$key] = $json;

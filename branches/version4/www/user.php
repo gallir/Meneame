@@ -497,7 +497,6 @@ function print_comment_list($comments, $user) {
 
 	$ids = array();
 	foreach ($comments as $dbcomment) {
-		if ($dbcomment->comment_type == 'admin' && ! $current_user->admin) continue;
 		$link->id=$dbcomment->link_id;
 		$comment->id = $dbcomment->comment_id;
 		if ($last_link != $link->id) {
