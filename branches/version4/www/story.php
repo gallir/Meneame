@@ -123,6 +123,9 @@ switch ($url_args[1]) {
 	case 'log':
 		$tab_option = 4;
 		break;
+	case 'votes_raw':
+		print_votes_raw($link);
+		die;
 	case 'sneak':
 		$tab_option = 5;
 		break;
@@ -503,6 +506,20 @@ function print_relevant_comments($link) {
 		if($do_cache) {
 			memcache_madd($key, $output, 300);
 		}
+	}
+}
+
+function print_votes_raw($link) {
+	global $globals, $db;
+
+	header("Content-Type: text/plain");
+
+	$votes = $db->get_results("SELECT vote_value, user_login, user_karma, UNIX_TIMESTAMP(vote_date) as ts FROM votes LEFT JOIN users on (user_id = vote_user_id) WHERE vote_type='links' and vote_link_id=$link->id ORDER BY vote_date");
+
+	if (! $votes) return;
+
+	foreach ($votes as $v) {
+		printf("%s\t%d\t%s\t%3.1f\n", date("c", $v->ts), $v->vote_value, $v->user_login, $v->user_karma);
 	}
 }
 ?>
