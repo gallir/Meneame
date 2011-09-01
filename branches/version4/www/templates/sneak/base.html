@@ -16,12 +16,6 @@ var is_admin = false;
 
 
 var default_gravatar = base_static+'img/common/no-gravatar-2-20.jpg';
-var do_animation = true;
-var animating = false;
-var animation_colors = Array("#ffc387", "#ffc891", "#ffcd9c", "#ffd2a6", "#ffd7b0", "#ffddba", "#ffe7cf", "#ffecd9", "#fff1e3", "#fff6ed", "#fffbf7", "transparent");
-var colors_max = animation_colors.length - 1;
-var current_colors = Array();
-var animation_timer;
 
 {% if _REQUEST.hoygan %}
 var do_hoygan = true;
@@ -52,39 +46,6 @@ function play_pause() {
 	return false;
 
 }
-
-function set_initial_display(item, i) {
-	var j;
-	if (i >= colors_max)
-		j = colors_max - 1;
-	else j = i;
-	current_colors[i] = j;
-	item.css('background', animation_colors[j]);
-}
-
-function clear_animation() {
-	clearInterval(animation_timer);
-	animating = false;
-	$('#items').children().css('background', 'transparent');
-}
-
-function animate_background() {
-	if (current_colors[0] == colors_max) {
-		clearInterval(animation_timer);
-		animating = false;
-		return;
-	}
-	var items = new Object; // For IE6
-	items = $('#items').children();
-	for (i=new_items-1; i>=0; i--) {
-		if (current_colors[i] < colors_max) {
-			current_colors[i]++;
-			items.slice(i,i+1).css('background', animation_colors[current_colors[i]]);
-		} else
-			new_items--;
-	}
-}
-
 
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);

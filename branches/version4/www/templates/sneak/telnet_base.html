@@ -27,14 +27,7 @@ var is_admin = false;
 {% endif %}
 
 
-var do_animation = false;
-
 $(function(){start_sneak()});
-
-function set_initial_display(item, i) {
-	item.children().hide();
-	item.children().fadeIn('normal');
-}
 
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);

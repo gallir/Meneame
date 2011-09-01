@@ -159,26 +159,26 @@ function received_data(data) {
 
 	new_items= events.length;
 	if(new_items > 0) {
-		if (do_animation) clear_animation();
 		next_update = Math.round(0.5*next_update + 0.5*min_update/(new_items*2));
 
+		var items = $('#items');
 		//Remove old items
-		$('#items').children().slice(max_items-new_items).remove();
+		items.children().slice(max_items-new_items).remove();
 
+		var remaining = new_items;
 		for (i=new_items-1; i>=0 ; i--) {
+			remaining -= 1;
 			html = to_html(events[i]);
-			if (html != false ) {
-				html = $('<div class="sneaker-item">'+html+'</div>');
-			}
-			set_initial_display(html, i);
-			$('#items').prepend(html);
+			if (!html) continue;
+			html = $('<div class="sneaker-item">'+html+'</div>');
+			items.prepend(html);
 			if (events[i].type == 'chat') {
 				sneak_add_recent_nicks(events[i].who);
 			}
-		}
-		if (do_animation) {
-			animation_timer = setInterval('animate_background()', 100);
-			animating = true;
+			if (remaining < 10) {
+				html.css( {opacity: remaining * 0.1 });
+				html.animate({ 'opacity': 1}, 'slow' );
+			}
 		}
 	} else next_update = Math.round(next_update*1.05);
 	if (next_update < 3000) next_update = 3000;
@@ -219,11 +219,7 @@ function send_chat(form) {
 	comment=form.comment.value;
 	last_comment_sent = currentTime.getTime();
 	form.comment.value='';
-	if (do_animation && animating) {
-		data_timer = setTimeout(get_data, 500)
-	} else {
-		get_data();
-	}
+	get_data();
 	requests = 0;
 	return false;
 }
