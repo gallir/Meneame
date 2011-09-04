@@ -85,7 +85,8 @@ class BasicThumb {
 		$min_colors = min(round($min/10), 6);
 		for ($i=0; $i < $min; $i++) {
 			$color = imagecolorat($this->image, $i, $i);
-			$color &= 0xF0F0F0; // Reduce the number of colours, to avoid being fooled by jpeg compression
+			// Check disabled due to problems with PNGs (http://aprogrammerslife.info/2011/08/31/programmer%E2%80%99s-logic/)
+			// $color &= 0xF0F0F0; // Reduce the number of colours, to avoid being fooled by jpeg compression
 			if (!isset($colors[$color])) {
 				$colors[$color] = true;
 			}
@@ -309,12 +310,12 @@ class HtmlImages {
 				);
 		$base_host = preg_replace('/^www\./', '', $this->parsed_url['host']);
 		if ($video_servers[$base_host]) {
-			if ($this->debug) echo "<!-- Check video by URL: $video_servers[$base_host] -->\n";
+			if ($this->debug) echo "<!-- Check thumb by URL: $video_servers[$base_host] -->\n";
 			if($this->$video_servers[$base_host]()) {
-				if ($this->debug) echo "<!-- Selected video by URL: $video_servers[$base_host] -->\n";
+				if ($this->debug) echo "<!-- Selected thumb by URL: $video_servers[$base_host] -->\n";
 				$this->selected->video = true;
+				return $this->selected;
 			}
-			return $this->selected;
 		}
 
 		$res = get_url($this->url, $this->referer);
@@ -752,18 +753,23 @@ class HtmlImages {
 
 	// Check yfrog video thumbnail, from http://code.google.com/p/imageshackapi/wiki/YFROGurls
 	function check_yfrog() {
-		if (preg_match('/yfrog\.com/', $this->parsed_url['host']) && preg_match('/[zf]$/i', $this->url)) {
-			$url = $this->url . ":frame";
-			if ($this->debug)
-				echo "<!-- Detect YFrog, url: $url -->\n";
+		$url = false;
+
+		if (preg_match('/yfrog\.com/', $this->parsed_url['host']) ) {
+			$new_url = 'http://yfrog.com/'.basename($this->parsed_url['path']);
+			if  (preg_match('/[zf]$/i', $this->url)) {
+				$url = $new_url . ":frame";
+			} elseif (preg_match('/[jpigbt]$/i', $this->url)) {
+				$url = $new_url . ":medium";
+			}
+			if ($this->debug) echo "<!-- Detect YFrog, url: $url -->\n";
 			if ($url) {
 				$img = new BasicThumb($url);
 				if ($img->get()) {
 					$img->type = 'local';
 					$img->candidate = true;
 					$this->selected = $img;
-					if ($this->debug)
-						echo "<!-- Video selected from $img->url -->\n";
+					if ($this->debug) echo "<!-- Thumb selected from $img->url -->\n";
 					return $this->selected;
 				}
 			}
