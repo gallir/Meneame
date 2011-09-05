@@ -137,6 +137,7 @@ class Upload {
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
 			@unlink($this->thumb_pathname());
+			$this->create_thumb($globals['media_thumb_size']);
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
@@ -159,6 +160,24 @@ class Upload {
 		Upload::create_cache_dir($this->id);
 		if (rename($pathname, $this->pathname())) {
 			@unlink($this->thumb_pathname());
+
+			// Check if it exists a thumb adn save it in jpg
+			$thumbname = Upload::get_cache_dir() . "/tmp/tmp_thumb-$filename";
+			if (file_exists($thumbname)) {
+				if (preg_match('/\.(jpeg|jpg)$/i', $filename)) {
+					// If it's already jpg, just rename it
+					rename($thumbname, $this->thumb_pathname());
+				} else {
+					// else convert it
+					require_once(mnminclude."simpleimage.php");
+					$thumb = new SimpleImage();
+					$thumb->load($thumbname);
+					$thumb->save($this->thumb_pathname());
+				}
+			} else {
+				$this->create_thumb($globals['media_thumb_size']);
+			}
+
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());

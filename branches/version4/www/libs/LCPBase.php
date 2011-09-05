@@ -8,10 +8,6 @@
 
 
 class LCPBase {
-	function hola() {
-		echo "hola";
-	}
-
 	function to_html($string, $fancy = true) {
 		global $globals;
 
@@ -139,4 +135,3 @@ class LCPBase {
 
 }
 
-?>

@@ -75,6 +75,15 @@ if (file_put_contents($uploadfile, $source)) {
 	$r->name = basename($uploadfile);
 	$r->url = $globals['base_static'].Upload::get_cache_relative_dir().'/tmp/'.$r->name;
 	$r->thumb = $globals['base_static'].Upload::get_cache_relative_dir()."/tmp/tmp_thumb-$r->name";
+
+
+	// Creates the thumbnail
+	require_once(mnminclude."simpleimage.php");
+	$thumb = new SimpleImage();
+	$thumb->load($uploadfile);
+	$thumb->resize($globals['media_thumb_size'], $globals['media_thumb_size'], true);
+	$thumb->save(dirname($uploadfile)."/tmp_thumb-$r->name", -1);
+
 	echo json_encode($r);
 }
 

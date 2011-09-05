@@ -885,7 +885,7 @@ $(document).ready(function () {
 		}
 	};
 	$.fn.droparea = function(o) {
-		// Checo support for HTML5 File API
+		// Check support for HTML5 File API
 		if (!window.File) return;
 
 		// Settings
