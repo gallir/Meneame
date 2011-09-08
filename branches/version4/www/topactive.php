@@ -18,8 +18,8 @@ do_tabs('main', 'active');
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_banner_promotions();
 do_best_stories();
+do_banner_promotions();
 do_best_comments();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/

@@ -69,11 +69,9 @@ print_period_tabs();
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
+do_active_stories();
 do_banner_promotions();
-if ($globals['show_popular_published']) {
-	do_active_stories();
-	do_best_stories();
-}
+do_best_stories();
 do_best_comments();
 do_vertical_tags('published');
 echo '</div>' . "\n";

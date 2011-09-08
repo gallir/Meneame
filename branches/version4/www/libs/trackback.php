@@ -92,7 +92,7 @@ class Trackback {
 				$this->status='error';
 				$this->title = $client->getErrorMessage();
 				$this->store();
-				syslog(LOG_NOTICE, "Meneame, out pingback error: $url ".$link->get_permalink().': '.$client->getErrorCode().' '.$client->getErrorMessage());
+				// syslog(LOG_NOTICE, "Meneame, out pingback error: $url ".$link->get_permalink().': '.$client->getErrorCode().' '.$client->getErrorMessage());
 				return false;
 			}
 		}

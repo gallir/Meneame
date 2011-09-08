@@ -78,9 +78,11 @@ do_mnu_categories_horizontal($_REQUEST['category']);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_banner_promotions();
 if ($globals['show_popular_published']) {
 	do_active_stories();
+}
+do_banner_promotions();
+if ($globals['show_popular_published']) {
 	do_best_stories();
 	do_most_clicked_stories();
 }
