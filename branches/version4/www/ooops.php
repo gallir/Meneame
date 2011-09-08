@@ -19,7 +19,6 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 	$parts = explode('-', $base_filename);
 	switch ($parts[0]) {
 		case "media_thumb":
-			syslog (LOG_INFO, "media_thumb called ". $parts[1] . " " . $parts[2]);
 			// Comments' and posts' thumnails
 			if ($parts[1] != 'post' && $parts[1] != 'comment') break;
 			$media = new Upload($parts[1], $parts[2], 0);
@@ -31,7 +30,6 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				die;
 			}
 			$errn = 404;
-			syslog (LOG_INFO, "media_thumb failed ". $parts[1] . " " . $parts[2]);
 			break;
 		case "thumb":
 			// Links' thumbnails

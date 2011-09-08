@@ -247,13 +247,21 @@ class Upload {
 	}
 
 	function create_thumb($x = 40, $y = false) {
-		if (! file_exists($this->pathname())) {
+		$pathname = $this->pathname();
+
+		if (! file_exists($pathname)) {
 			if (! $this->restore()) return false;
 		}
+
 		require_once(mnminclude."simpleimage.php");
 		if (! $y) $y = $x;
 		$thumb = new SimpleImage();
-		$thumb->load($this->pathname());
+		$thumb->load($pathname);
+		if ( ! $thumb->load($pathname)) {
+			$alternate_image = mnmpath . "/img/common/picture01-40x40.png";
+			syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
+			if (!$thumb->load($alternate_image)) return false;
+		}
 		$thumb->resize($x, $y, true);
 		if ($thumb->save($this->thumb_pathname())) {
 			$this->thumb = $thumb;
