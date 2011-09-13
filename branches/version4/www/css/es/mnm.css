@@ -172,10 +172,9 @@ box-shadow: 0 0 3px rgba(0,0,0,0.7);
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.7);
 }
 
-
 #wrap {
 padding-top: 75px;
-min-width: 850px;
+min-width: 820px;
 max-width: 1300px;
 width: 98%;
 text-align: left;
@@ -242,7 +241,7 @@ display: block;
 #header ul.headtools li.searchbox input{
 padding: 0px;
 background-color: #F5F5F5;
-border: solid 0px transparent;
+border: none;
 width: 170px;
 height: 22px;
 line-height: 22px;
@@ -330,13 +329,13 @@ clear:both;
 #sidebar {
 float: right;
 width: 300px;
-margin: 0 15px 25px 20px;
+margin: 0 5px 25px 10px;
 overflow: hidden;
 padding-top: 10px;
 }
 
 #newswrap {
-margin: 10px 330px 0 5px;
+margin: 10px 320px 0 5px;
 }
 
 #singlewrap {
@@ -345,6 +344,26 @@ margin: 0 10px 0 10px;
 
 #map {
 overflow: hidden;
+}
+
+.topbox {
+position:relative;
+background:#f9f9f9;
+border:#ddd 1px solid;
+padding: 7px 5px 3px 5px;
+margin: 0 0px 15px 0;
+vertical-align:middle;
+overflow: hidden;
+white-space: nowrap;
+}
+
+.topbox .title {
+margin-top:5px;
+text-transform:capitalize;
+font-variant:small-caps;
+text-align:right;
+color:#aaa;
+font-size:120%;
 }
 
 .mini-icon-text {
@@ -988,6 +1007,17 @@ background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
 border-color: #FF6400;
 }
 
+.counter {
+text-decoration: none;
+padding: 1px 4px;
+font-weight: bold;
+text-align: center;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+color: white;
+}
+
 .error {
 font-weight: bold;
 font-size: 120%;
@@ -1050,8 +1080,8 @@ overflow: hidden;
 
 .news-details {
 display: block;
-margin: 4px 0 0 0;
 padding: 0;
+margin: 4px 0 0 0;
 overflow: hidden;
 white-space: nowrap;
 color: #FF6400;
@@ -1059,27 +1089,18 @@ color: #FF6400;
 
 .news-details.main {
 font-size: 110%;
+line-height: 150%;
+margin-top: 6px;
 }
 
 .news-details a:link, .news-details a:visited {
 color: #FF7C00;
 }
 
-.news-details span {
-margin: 0;
-vertical-align: top;
-}
-
-.news-details img {
-margin: 0;
-vertical-align: text-bottom;
-}
-
 .news-details select {
 border: none;
-font-size: 90%;
 letter-spacing: 0px;
-max-width: 7.5em;
+max-width: 8em;
 vertical-align: top;
 padding: 0;
 }
@@ -1092,9 +1113,16 @@ border-left-color: #FF6400;
 }
 
 .news-details .comments-counter {
-padding: 0 6px 0 22px ;
+padding: 0 6px 0 0;
 border-left: none;
-background: url(../../img/common/tocomments01.png) no-repeat left;
+}
+
+.comments-counter .counter {
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+border-radius: 6px;
+background-color: #F30000;
+font-size: 90%;
 }
 
 .news-details .comments-counter a:link, .news-details .comments-counter a:visited {
@@ -1270,23 +1298,6 @@ padding: 2px 0 0 20px;
 background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px
 }
 
-.tab-trackback-technorati a, .tab-trackback-google a, .tab-trackback-askcom a {
-padding: 5px 0 2px 20px;
-font-size: 90%;
-}
-
-.tab-trackback-technorati a {
-background: url(../../img/favicons/technorati.png) no-repeat 0px 4px;
-}
-
-.tab-trackback-google a {
-background: url(../../img/favicons/google.png) no-repeat 0px 4px;
-}
-
-.tab-trackback-askcom a {
-background: url(../../img/favicons/ask.gif) no-repeat 0px 4px;
-}
-
 /* submit form */
 
 #thisform .column-list {
@@ -1451,6 +1462,12 @@ float: left;
 margin: 2px 10px 2px 0;
 }
 
+.comment-body .thumb, #tooltip-text .thumb {
+padding:4px;
+background:#fff;
+vertical-align: top;
+}
+
 .comment-meta {
 font-size: 90%;
 line-height: 180%;
@@ -1460,12 +1477,15 @@ white-space: nowrap;
 }
 
 .comment-meta.hidden, .comment-meta.hidden a {
-line-height: 100%;
 color: #aaa;
 }
 
 .comment-meta a {
 font-weight: bold;
+}
+
+.comment-meta a:hover {
+text-decoration: none;
 }
 
 .comment-info {
@@ -1481,30 +1501,21 @@ opacity:0.8;
 color: #3D72C3;
 }
 
-.counter {
-text-decoration: none;
-padding: 1px 4px;
-min-width: 12px;
-font-weight: bold;
-text-align: center;
--moz-border-radius: 10px;
--webkit-border-radius: 10px;
-border-radius: 10px;
-color: white;
-}
-
 .comment-meta .counter {
 background-color: #FFB600;
-font-family: courier, mono;
 }
 
-.comments-counter .counter {
-background-color: #
+.comment-meta .counter.answers {
+font-size: 10px;
+}
+
+.comment-meta .counter.info {
+font-family: mono, courier;
 }
 
 .comment-votes-info {
 float: left;
-max-width: 50%;
+max-width: 60%;
 display: inline;
 overflow: hidden;
 }
@@ -1544,7 +1555,7 @@ font-size: 85%;
 
 .pages {
 padding: 10px 0 0 0;
-margin: 20px 0 50px 0;
+margin: 15px 0 50px 0;
 clear: left;
 background: #FFFFFF;
 font-weight: bold;
@@ -1893,14 +1904,10 @@ border: 1px solid;
 padding: 10px;
 font-size: 95%;
 overflow: hidden;
-width: 40em;
+width: 40%;
 max-height: 45ex;
 background: #FFEEC7;
 border-color: #e2d3b0;
-/* CSS3 */
-border-radius: 5px;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
