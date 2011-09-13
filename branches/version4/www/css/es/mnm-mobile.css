@@ -20,7 +20,7 @@ border-radius-topleft: 4px;
 -webkit-border-top-left-radius: 4px;
 }
 
-.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .comment-body-hidden, .comment-body, input, textarea, legend, button, fieldset, label {
+.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .comment-body-hidden, .comment-body, input, textarea, legend, button, fieldset, label, .clics {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
@@ -258,20 +258,21 @@ font-weight: bold;
 font-size: 110%;
 }
 
-/* Counter box */
 .news-shakeit {
-/*
-position: absolute;
-top: 10px;
-left: 2px;
-*/
 float: left;
-width: 4.1em;
+width: 4.5em;
 text-align: center;
 font-size: 90%;
-margin: 5px 5px 0 0;
+margin: 0 5px 0 0;
 padding: 0;
 overflow: hidden;
+}
+
+.clics {
+margin: 4px 0 0 0;
+color: #FFB300;
+border: solid 1px  #FFDF94;
+font-size: 7.5pt;
 }
 
 .mnm-published, .mnm-queued, .mnm-discarded {
@@ -281,7 +282,7 @@ font-weight: bold;
 letter-spacing: -1px;
 text-decoration: none;
 vertical-align: bottom;
-padding: 7px 0 7px 0;
+padding: 10px 0 7px 0;
 }
 
 
@@ -327,7 +328,7 @@ border-color: #ffcbaa;
 .menealo a, .menealo span {
 margin-top: 2px;
 display: block;
-padding: 2px 0 2px 0;
+padding: 3px 0 3px 0;
 font-size: 8pt;
 color: #FF6400;
 }
