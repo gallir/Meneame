@@ -498,7 +498,9 @@ function print_comment_list($comments, $user) {
 	$ids = array();
 	foreach ($comments as $dbcomment) {
 		$link->id=$dbcomment->link_id;
-		$comment->id = $dbcomment->comment_id;
+		$comment = Comment::from_db($dbcomment->comment_id);
+		// Don't show admin comment if it's her own profile.
+		if ($comment->type == 'admin' && ! $current_user->admin && $user->id == $comment->author) continue;
 		if ($last_link != $link->id) {
 			$link->read();
 			echo '<h4>';
@@ -507,7 +509,6 @@ function print_comment_list($comments, $user) {
 			echo '</h4>';
 			$last_link = $link->id;
 		}
-		$comment->read();
 		if ($comment->date > $timestamp_read) $timestamp_read = $comment->date;
 		echo '<ol class="comments-list">';
 		echo '<li>';
