@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.37, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.41, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5.5-log
+-- Server version	5.1.41-3ubuntu12.10-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS `auths`;
 CREATE TABLE `auths` (
   `user_id` int(10) unsigned NOT NULL,
   `service` char(32) NOT NULL,
-  `uid` bigint(10) unsigned NOT NULL,
+  `uid` decimal(24,0) unsigned NOT NULL,
   `username` char(32) NOT NULL DEFAULT '''''',
   `token` char(64) NOT NULL DEFAULT '''''',
   `secret` char(64) NOT NULL DEFAULT '''''',
@@ -432,9 +432,9 @@ CREATE TABLE `media` (
   `dim1` smallint(5) unsigned NOT NULL,
   `dim2` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`type`,`id`,`version`),
-  UNIQUE KEY `user_2` (`user`,`date`),
   KEY `user` (`user`,`type`,`date`),
-  KEY `type` (`type`,`version`,`date`)
+  KEY `type` (`type`,`version`,`date`),
+  KEY `user_2` (`user`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -716,4 +716,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-05-11  2:07:24
+-- Dump completed on 2011-09-17  2:52:28
