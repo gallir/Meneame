@@ -1127,6 +1127,7 @@ function print_oauth_icons($return = false) {
 			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
+
 	if ($globals['facebook_key']) {
 		$title = false;
 		if (! $return) $return = $globals['uri'];
@@ -1143,6 +1144,25 @@ function print_oauth_icons($return = false) {
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
 			echo '<img style="vertical-align:middle" src="'.$globals['base_static'].'img/external/signin-fb.gif" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
+		}
+	}
+
+	if ($globals['oauth']['gplus']['consumer_key']) {
+		$title = false;
+		if (! $return) $return = $globals['uri'];
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('gplus')) {
+				$title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
+				$text = _('asociar a Google+');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Google+');
+			$text = _('login con Google+');
+		}
+		if ($title) {
+			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-googleplus.png" width="24" height="24" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
 }

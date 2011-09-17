@@ -27,6 +27,15 @@ $service = clean_input_string($_GET['service']);
 $op = clean_input_string($_GET['op']);
 
 switch ($service) {
+    case 'gplus':
+		require_once('gplus.php');
+		$req = new GplusOAuth();
+		if ($op == 'init') {
+			$req->authRequest();
+		} else {
+			$req->authorize();
+		}
+        break;
 	case 'twitter':
 	default:
 		require_once('twitter.php');
