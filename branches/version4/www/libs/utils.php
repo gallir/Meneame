@@ -1162,7 +1162,7 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-googleplus.png" width="24" height="24" alt=""/></a>&nbsp;&nbsp;'."\n";
+			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-gplus.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
 		}
 	}
 }
