@@ -474,7 +474,7 @@ function get_comment_page_url($i, $total, $query) {
 function print_relevant_comments($link) {
 	global $globals, $db;
 
-	if ($globals['bot'] || $link->comments < 25 ) return;
+	if ($globals['bot'] || $link->comments < 20 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 
@@ -484,14 +484,31 @@ function print_relevant_comments($link) {
 	}
 
 
-	$min_karma = intval($globals['comment_highlight_karma']/2);
+	$karma = intval($globals['comment_highlight_karma']/2);
 	$limit = min(15, intval($link->comments/10));
-	$min_len = 32;
 
-	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, user_id, user_avatar from comments, users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $limit");
+	// For the SQL
+	$extra_limit = $limit * 2;
+	$min_len = 32;
+	$min_karma = max(20, $karma/2);
+
+	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON (vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
+
+	function cmp_comment_val($a, $b) {
+		if ($a->val == $b->val) return 0;
+		return ($a->val < $b->val) ? 1 : -1;
+	}
+
 	if ($res) {
 		$objects = array();
 		$link_url = $link->get_relative_permalink();
+		foreach ($res as $comment) {
+			// The commenter has voted negative
+			if ($comment->vote_value < 0 && $comment->comment_len > 60) {
+				$comment->val *= 2;
+			}
+		}
+		usort($res, "cmp_comment_val");
 		foreach ($res as $comment) {
 			$obj = new stdClass();
 			$obj->order = $comment->comment_order;
@@ -499,7 +516,9 @@ function print_relevant_comments($link) {
 			$obj->link = $link_url.'/000'.$comment->comment_order;
 			$obj->user_id = $comment->user_id;
 			$obj->avatar = $comment->user_avatar;
+			$obj->vote = $comment->vote_value;
 			$objects[] = $obj;
+			if (count($objects) > $limit) break;
 		}
 		$output = Haanga::Load('relevant_comments.html', compact('objects', 'link_url'), true);
 		echo $output;
