@@ -6,9 +6,12 @@
 		alt="" width="20" height="20" 
 		{% if obj.vote < 0 %}
 			class="avatar shadow-red"
-			{# style="border: 1px solid red;" #}
 		{% else %}
-			class="avatar"
+			{% if obj.vote > 0 %}
+				class="avatar shadow-green"
+			{% else %}
+				class="avatar"
+			{% endif %}
 		{% endif %}
 		/></a>&nbsp;
 {% endfor %}

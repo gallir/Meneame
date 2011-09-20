@@ -474,7 +474,7 @@ function get_comment_page_url($i, $total, $query) {
 function print_relevant_comments($link) {
 	global $globals, $db;
 
-	if ($globals['bot'] || $link->comments < 20 ) return;
+	if ($globals['bot'] || $link->comments < 15 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 
