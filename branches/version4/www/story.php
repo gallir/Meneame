@@ -480,7 +480,7 @@ function print_relevant_comments($link) {
 
 	if($do_cache) {
 		$key = 'relevant_story_comments_'.$globals['css_main'].$link->id;
-		if(memcache_mprint($key)) return;
+		//if(memcache_mprint($key)) return;
 	}
 
 
@@ -491,8 +491,9 @@ function print_relevant_comments($link) {
 	$extra_limit = $limit * 2;
 	$min_len = 32;
 	$min_karma = max(20, $karma/2);
+	$check_vote = $link->date - ($globals['now'] - $globals['time_enabled_votes']);
 
-	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON (vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
+	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON ($check_vote > 0 and vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
 
 	function cmp_comment_val($a, $b) {
 		if ($a->val == $b->val) return 0;
@@ -507,6 +508,8 @@ function print_relevant_comments($link) {
 			if ($comment->vote_value < 0 && $comment->comment_len > 60) {
 				$comment->val *= 2;
 			}
+			// Gives a little advantage to larger comments
+			$comment->val *=  min(1.5, log($comment->comment_len, 10) / 1.8);
 		}
 		usort($res, "cmp_comment_val");
 		foreach ($res as $comment) {
