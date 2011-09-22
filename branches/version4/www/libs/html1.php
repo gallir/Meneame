@@ -614,12 +614,13 @@ function do_best_queued() {
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
-			$min_karma = intval($avg_karma/5);
+			$min_karma = intval($avg_karma/4);
 	} else {
-		$min_karma = intval($avg_karma/2);
+		$min_karma = intval($avg_karma/3);
 		$category_list	= '';
 		$title = _('candidatas');
 	}
+	$warned_threshold = intval($min_karma * 1.5);
 
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 2 days
@@ -632,6 +633,7 @@ function do_best_queued() {
 		$link = new Link();
 		foreach ($res as $l) {
 			$link = Link::from_db($l->link_id);
+			if ($link->negatives > $link->votes/10 && $link->karma < $warned_threshold) continue;
 			$link->url = $link->get_relative_permalink();
 			$link->thumb = $link->has_thumb();
 			$link->total_votes = $link->votes+$link->anonymous;
