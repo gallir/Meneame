@@ -183,7 +183,7 @@ foreach ($res as $dbuser) {
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
-				$pun =  3 * $link_abuse;
+				$pun =  2 * $link_abuse;
 				$karma1 = max(-12, $karma1 - $pun);
 				$output .= _('Penalizado por enlaces que violan las reglas')." ($link_abuse): $pun\n";
 				$penalized += 4;

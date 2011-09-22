@@ -237,6 +237,15 @@ if ($links) {
 			$link->message .= 'Image/Video '.$meta_coef[$dblink->parent].'<br/>';
 		}
 
+		// Check if it was depubished before
+
+		$depublished = (int) $db->get_var("select count(*) from logs where log_type = 'link_depublished' and log_ref_id = $link->id");
+		if ($depublished > 0) {
+			$karma_new *= 0.5;
+			$link->message .= 'Previously depublished' . '<br/>';
+			$link->annotation .= _('previamente quitada de portada')."<br/>";
+		}
+
 		$link->karma = round($karma_new);
 
 		// check differences, if > 4 store it
