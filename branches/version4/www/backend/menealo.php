@@ -76,13 +76,13 @@ if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if
 // Check for clicks vs votes
 // to avoid "cowboy votes" without reading the article
 if ($globals['click_counter'] 
-	&& (empty($_GET['l']) || $_GET['l'] != $link->id) // Check is not in "story" page
 	&& ! $link->user_clicked()) {
-	if ($current_user->user_id > 0 && $link->votes/10 < $link->negatives && $link->get_clicks() < $link->total_votes * 2) {
-	// Require to read it if it has 10% of negatives en less that votes*2 click
+	if ($link->votes > 3 && $current_user->user_id > 0 && $link->votes/10 < $link->negatives && $link->get_clicks() < $link->total_votes * 1.5) {
 		error(_('enlace no leído, con muchos negativos'));
-	} elseif ($link->total_votes > $link->get_clicks()) {
-	// Don't allow to vote if it has less clicks than votes
+	} elseif ( (empty($_GET['l']) || $_GET['l'] != $link->id) 
+		// Check is not in "story" page 
+		&& $link->total_votes > $link->get_clicks()) {
+		// Don't allow to vote if it has less clicks than votes
 		error(_('no leído, y con más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');
 	}
 }

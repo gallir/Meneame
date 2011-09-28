@@ -10,7 +10,7 @@
 
 class UserAuth {
 	const CURRENT_VERSION = '5';
-	const KEY_MAX_TTL = 864000; // Expire key in 10 days
+	const KEY_MAX_TTL = 2592000; // Expire key in 30 days
 	const KEY_TTL = 86400; // Renew every 24 hours
 
 	function __construct() {
