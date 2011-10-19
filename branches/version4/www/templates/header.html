@@ -16,14 +16,14 @@
 	<meta name="description" content="{{globals.description}}" />
 {% endif %}
 
-{#
 {% if globals.thumbnail %}
 	<link rel="image_src" href="{{globals.thumbnail}}"/>
 	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
-    <meta property="og:image" content="{{globals.thumbnail}}"/>
-	<meta name="og:image" content="http://{{globals.static_server_name}}{{globals.thumbnail}}">
-{% endif %}
+    <meta property="og:image" content="{{globals.thumbnail}}"/> 
+{#
+	<meta name="og:image" content="{{globals.thumbnail}}">
 #}
+{% endif %}
 
 <title>{{title}}</title>
 
