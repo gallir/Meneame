@@ -97,14 +97,18 @@
     {% endif %}
     </dd>
 	<dt>{% trans _('ranking') %}:</dt><dd>#{% exec user.ranking %}</dd>
-	<dt>{% trans _('noticias enviadas')%}:</dt><dd>{{user.total_links}}</dd>
-    {% if entropy %}
-		<dt><em>{% trans _('entropía') %}</em>:</dt><dd>{{entropy}}%</dd>
-    {% endif %}
-	<dt>{% trans _('noticias publicadas') %}:</dt><dd>{{user.published_links}} ({{percent}}%)</dd>
-	<dt>{% trans _('comentarios') %}:</dt><dd>{{user.total_comments}}</dd>
-	<dt>{% trans _('notas') %}:</dt><dd>{{user.total_posts}}</dd>
-	<dt>{% trans _('número de votos') %}:</dt><dd>{{user.total_votes}}</dd>
+
+	{% if user.stats %}
+		<dt>{% trans _('noticias enviadas')%}:</dt><dd>{{user.total_links}}</dd>
+    	{% if entropy %}
+			<dt><em>{% trans _('entropía') %}</em>:</dt><dd>{{entropy}}%</dd>
+    	{% endif %}
+		<dt>{% trans _('noticias publicadas') %}:</dt><dd>{{user.published_links}} ({{percent}}%)</dd>
+		<dt>{% trans _('comentarios') %}:</dt><dd>{{user.total_comments}}</dd>
+		<dt>{% trans _('notas') %}:</dt><dd>{{user.total_posts}}</dd>
+		<dt>{% trans _('número de votos') %}:</dt><dd>{{user.total_votes}}</dd>
+	{% endif %}
+
     {% if user.id == current_user.user_id %}
 		<div style="margin-top: 20px" align="center">
         {% exec print_oauth_icons _REQUEST.return as foo %}

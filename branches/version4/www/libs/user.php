@@ -272,7 +272,7 @@ class User {
 	}
 
 	function all_stats() {
-		global $db, $globals;
+		global $db, $globals, $current_user;
 
 		if ($this->stats) return;
 		if(!$this->read) $this->read();
@@ -282,10 +282,14 @@ class User {
 
 		if ($do_cache && $stats->read()
 			&& ($stats->time > $globals['now'] - 7200
+				|| $globals['bot'] || $current_user->user_id == 0
 				|| $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'comments')")))
 			) {
 				$obj = unserialize($stats->text);
 		} else {
+
+			if ($globals['bot'] && $current_user->user_id == 0) return; // Don't calculate stats por bots
+
 			$obj = new stdClass;
 			$obj->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
 			$obj->total_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
