@@ -167,7 +167,10 @@
 			{% if ! self.is_discarded %}
 				{% exec self.get_short_permalink as shortlink %}
 				{% exec urlencode shortlink as enc_shortlink %}
-				{% exec urlencode self.title as enc_title %}
+
+				{% exec htmlspecialchars_decode self.title as enc_title %}
+				{% exec urlencode enc_title as enc_title %}
+
 				<strong><a href="{{ shortlink }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
 
 				{# Share icons #}
