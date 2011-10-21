@@ -2,13 +2,13 @@
 include('../config.php');
 include(mnminclude.'external_post.php');
 
-global $globals;
+global $globals, $db;
 
 header("Content-Type: text/plain");
 
 $now = time();
 $max_date = "date_sub(now(), interval 15 minute)";
-$min_date = "date_sub(now(), interval 24 hour)"; 
+$min_date = "date_sub(now(), interval 24 hour)";
 
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 12 hour) and user_date > date_sub(now(), interval 24 hour) and user_validated_date is null");
@@ -27,7 +27,7 @@ if ($links) {
 		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
 		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
-		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6 
+		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6
 			&& ($negatives > $positives || ($negatives > $link->link_karma/2 && $negatives > $positives/2) )) {
 			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
 			$karma_old = $link->link_karma;
@@ -43,15 +43,22 @@ if ($links) {
 				$l->save_annotation('link-karma');
 			}
 			Log::insert('link_depublished', $link->link_id, $link->link_author);
+
 			// Add the discard to log/event
-			$user = new User();
-			$user->id = $link->link_author;
-			if ($user->read()) {
-				$user->karma -= $globals['instant_karma_per_depublished'];
+			$user = new User($link->link_author);
+			if ($user->read) {
 				echo "$user->username: $user->karma\n";
-				$user->store();
-				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('Retirada de portada').": -". $globals['instant_karma_per_depublished'] .", karma: $user->karma\n");
+				$user->add_karma(-$globals['instant_karma_per_depublished'], _('Retirada de portada'));
+			}
+
+			// Increase karma to users that voted negative
+			$ids = $db->get_col("select vote_user_id from votes where vote_type = 'links' and vote_link_id = $link->link_id and vote_user_id > 0 and vote_value < 0");
+
+			foreach ($ids as $id) {
+				$u = new User($id);
+				if ($u->read) {
+					$u->add_karma(0.2, _('Negativo a retirada de portada'));
+				}
 			}
 
 			if ($globals['twitter_token'] || $globals['jaiku_user']) {
@@ -79,21 +86,17 @@ punish_comments();
 $negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
 
 //$db->debug();
-if( !$negatives) { 
+if( !$negatives) {
 	echo "no negatives to analyze\n";
 	die;
 }
 
 foreach ($negatives as $negative) {
 	$linkid = $negative->link_id;
-	$user = new User();
-	$user->id = $negative->link_author;
-	if ($user->read()) {
-		$user->karma -= $globals['instant_karma_per_discard'];
+	$user = new User($negative->link_author);
+	if ($user->read) {
+		$user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
 		echo "$user->username: $user->karma\n";
-		$user->store();
-		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Noticia descartada').": -". $globals['instant_karma_per_discard'] .", karma: $user->karma\n");
 	}
 	$db->query("update links set link_status='discard' where link_id = $linkid");
 	// Add the discard to log/event
@@ -129,12 +132,10 @@ function punish_comments($hours = 2) {
 	if (! $result) return;
 
 	foreach ($result as $dbuser) {
-		$user = new User;
-		$user->id=$dbuser->user_id;
-		$user->read();
+		$user = new User($dbuser->user_id);
 		printf ("%07d  %s\n", $user->id, $user->username);
 		$punish = 0;
-	
+
 		$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > from_unixtime($comments_from) and vote_type='comments' and vote_link_id = comment_id and  vote_date > from_unixtime($votes_from) and vote_user_id != $user->id");
 		if ($comment_votes_count > 5)  {
 			$votes_karma = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > from_unixtime($comments_from) and vote_type='comments' and vote_link_id = comment_id and vote_date > from_unixtime($votes_from) and vote_user_id != $user->id");
@@ -147,10 +148,7 @@ function punish_comments($hours = 2) {
 		}
 		if ($punish < -0.1) {
 			echo "comments: $comments_count votes distinct: $distinct_votes_count karma: $votes_karma coef: $comment_coeff -> $punish\n";
-			$user->karma += $punish;
-			$user->store();
-			$annotation = new Annotation("karma-$user->id");
-			$annotation->append(_('Penalización por comentarios').": $punish, nuevo karma: $user->karma\n");
+			$user->add_karma($punish, _('Penalización por comentarios'));
 			echo(_('Penalización por negativos en comentarios').": $punish, nuevo karma: $user->karma\n");
 			$log->append(_('Penalización')." $user->username: $punish, nuevo karma: $user->karma\n");
 		}

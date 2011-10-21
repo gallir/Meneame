@@ -34,7 +34,7 @@ $output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br/>\n";
 //$from_time = "date_sub(now(), interval 9 day)";
 $hours = intval($globals['time_enabled_votes']/3600);
 $from_time = "date_sub(now(), interval $hours hour)";
-#$from_where = "FROM votes, links WHERE  
+#$from_where = "FROM votes, links WHERE
 
 
 $last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from links WHERE link_status='published'");
@@ -157,11 +157,11 @@ if (!$rows) {
 	}
 	die;
 }
-	
+
 $max_karma_found = 0;
 $best_link = 0;
 $best_karma = 0;
-$output .= "<table>\n";	
+$output .= "<table>\n";
 if ($links) {
 	$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>coef</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 	$i=0;
@@ -185,7 +185,7 @@ if ($links) {
 		$link->calculate_karma();
 
 		if ($link->coef > 1) {
-			if ($decay > 1) 
+			if ($decay > 1)
 				$karma_threshold = $past_karma;
 			else
 				$karma_threshold = $min_karma;
@@ -211,7 +211,7 @@ if ($links) {
 			$link->message .= 'Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.<br/>';
 		}
 
-		
+
 		if(($ban = check_ban($link->url, 'hostname', false, true))) {
 			// Check if the  domain is banned
 			$karma_new *= 0.5;
@@ -261,7 +261,7 @@ if ($links) {
 
 			$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $link->old_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
 			//$link->annotation .= _('ajuste'). ": $link->old_karma -&gt; $link->karma <br/>";
-			if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later	
+			if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later
 			else $changes = 2; // increase
 			if (! DEBUG) {
 				$link->store_basic();
@@ -281,9 +281,9 @@ if ($links) {
 		if ($link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
 			$published++;
 			publish($link);
-			$changes = 3; // to show a "published" later	
+			$changes = 3; // to show a "published" later
 		} else {
-			if (( $must_publish || $link->karma > $min_past_karma) 
+			if (( $must_publish || $link->karma > $min_past_karma)
 						&& $link->karma > $limit_karma && $link->karma > $last_resort_karma &&
 						$link->votes > $link->negatives*20) {
 				$last_resort_id = $link->id;
@@ -295,7 +295,7 @@ if ($links) {
 		usleep(10000);
 		$i++;
 	}
-	if (! DEBUG && $published == 0 && $links_published_projection < $pub_estimation * 0.9 
+	if (! DEBUG && $published == 0 && $links_published_projection < $pub_estimation * 0.9
 			&& $must_publish && $last_resort_id  > 0) {
 		// Publish last resort
 		$link = new Link;
@@ -305,7 +305,7 @@ if ($links) {
 			print_row($link, 3);
 			publish($link);
 			// Recheck for images, some sites add images after the article has been published
-			if ($link->thumb_status != 'local' && $link->thumb_status != 'remote' 
+			if ($link->thumb_status != 'local' && $link->thumb_status != 'remote'
 					&& $link->thumb_status != 'deleted' && ! in_array($link->id, $thumbs_queue) ) {
 				echo "Adding $link->id to thumb queue\n";
 				array_push($thumbs_queue, $link->id);
@@ -390,13 +390,9 @@ function publish($link) {
 	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
 
 	// Increase user's karma
-	$user = new User;
-	$user->id = $link->author;
-	if ($user->read()) {
-		$user->karma = min(20, $user->karma + $globals['instant_karma_per_published']);
-		$user->store();
-		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('noticia publicada').": +". $globals['instant_karma_per_published'] .", karma: $user->karma\n");
+	$user = new User($link->author);
+	if ($user->read) {
+		$user->add_karma($globals['instant_karma_per_published'], _('noticia publicada'));
 	}
 
 	// Add the publish event/log
@@ -410,10 +406,10 @@ function publish($link) {
 		$short_url = fon_gs($link->get_permalink());
 	}
 	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
-		twitter_post($link->title, $short_url); 
+		twitter_post($link->title, $short_url);
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-		jaiku_post($link->title, $short_url); 
+		jaiku_post($link->title, $short_url);
 	}
 	if ($globals['pubsub']) {
 		pubsub_post();
