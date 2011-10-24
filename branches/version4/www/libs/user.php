@@ -383,7 +383,7 @@ class User {
 		$this->store();
 		if (! empty($log) && mb_strlen($log) > 5) {
 			$annotation = new Annotation("karma-$this->id");
-			$annotation->append("$log: $inc, new karma: $this->karma\n");
+			$annotation->append("$log: $inc, " . _('nuevo karma') . ": $this->karma\n");
 		}
 
 	}
