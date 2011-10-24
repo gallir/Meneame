@@ -110,6 +110,7 @@
 	{% endif %}
 
     {% if user.id == current_user.user_id %}
+		<dt>{% trans _('IP actual') %}:</dt><dd>{{globals.user_ip}}</dd>
 		<div style="margin-top: 20px" align="center">
         {% exec print_oauth_icons _REQUEST.return as foo %}
 		</div>
