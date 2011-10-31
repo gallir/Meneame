@@ -381,7 +381,7 @@ function print_story_tabs($option) {
 	echo '<ul class="subheader">'."\n";
 	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li'.$active[9].'><a href="'.$globals['link_permalink'].'/answered">'._('+ respondidas'). '</a></li>'."\n";
+	echo '<li'.$active[9].'><a href="'.$globals['link_permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";

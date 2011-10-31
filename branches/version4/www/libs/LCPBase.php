@@ -13,7 +13,7 @@ class LCPBase {
 
 		$string = nl2br($string, true);
 
-		$regexp = '#[^\s\.\,\:\;\¡\!\)\-<>&]{1,42}';
+		$regexp = '#[^\s\.\,\:\;\¡\!\)\-<>&\?]{1,42}';
 
 		if ($fancy) {
 			// Add smileys

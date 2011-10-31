@@ -209,7 +209,7 @@ class Ban {
 		}
 
 		if ($this->ban_id > 0) {
-			$sql="UPDATE bans SET ban_type='$this->ban_type', ban_text='$this->ban_text', ban_comment = '$this->ban_comment', ban_expire = $expire_value WHERE ban_id =$this->ban_id LIMIT 1";
+			$sql="UPDATE bans SET ban_type='$this->ban_type', ban_text='$this->ban_text', ban_comment = '$this->ban_comment', ban_expire = $expire_value WHERE ban_id =$this->ban_id";
 			//$sql = 'UPDATE bans SET (ban_id, ban_type, ban_text, ban_comment, ban_expire) ';
 			//$sql .= "VALUES ($this->ban_id, '$this->ban_type', '$this->ban_text',  '$this->ban_comment', $expire_value) ";
 		} else {

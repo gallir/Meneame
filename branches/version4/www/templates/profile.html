@@ -49,6 +49,7 @@
 <input type="text" autocomplete="off" name="public_info" id="public_info" value="{{ user.public_info }}" />
 </p>
 
+{#
 {% if user.id  == current_user.user_id %}
 	<p><label>{% trans _('teléfono móvil') %}:</label><br/>
 	<span class="note">{% trans _('sólo necesario si enviarás notas al nótame vía SMS') %}</span><br/>
@@ -56,6 +57,7 @@
 	<input type="text" autocomplete="off" name="phone" id="phone" value="{{ user.phone }}" />
 	</p>
 {% endif %}
+#}
 
 
 
