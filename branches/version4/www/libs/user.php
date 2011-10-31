@@ -16,6 +16,26 @@ define('FRIEND_IGNORE', '<img src="'.$globals['base_static'].'img/common/icon_fr
 
 class User {
 
+	protected $meta = false; // Used to store further user's info
+	protected $meta_modified = false;
+
+	public $read = false;
+	public $id = 0;
+	public $username = '';
+	public $level = 'normal';
+	public $admin = false;
+	public $modification = false;
+	public $date = false;
+	public $ip = '';
+	public $pass = '';
+	public $email = '';
+	public $avatar = 0;
+	public $names = '';
+	public $lang = 1;
+	public $comment_pref = 0;
+	public $karma = 6;
+	public $url = '';
+
 	const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
 
 	static function get_valid_username($name) {
@@ -149,23 +169,65 @@ class User {
 		return false; // Nothing found
 	}
 
+
+	// Functions to manage "meta variables" that willl be stored as annotations and read automatically
+
+	// Variables that are accepted as "meta" (to avoid storing all
+	static function meta_valid($property) {
+		switch ($property) {
+			case 'bio':
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	function __get($property) {
+		if (! $this->id > 0 || ! User::meta_valid($property) ) return false;
+
+		if ($this->meta === false && ! $this->meta_read() ) {
+			return false;
+		}
+		if (isset($this->meta[$property])) {
+			return $this->meta[$property];
+		}
+		return false;
+	}
+
+
+	function __set($property, $value) {
+		if (! $this->id > 0 ) return;
+		if (! User::meta_valid($property) ) {
+			$this->$property = $value;
+			return;
+		}
+		if ($this->meta === false) {
+			$this->meta_read();
+		}
+		$this->meta[$property] = $value;
+		$this->meta_modified = true;
+	}
+
+	function meta_read() {
+		$m = new Annotation("user_meta-$this->id");
+		if (! $m->read() || ! ($this->meta = json_decode($m->text, true)) ) {
+			$this->meta = array();
+			return false;
+		}
+		return true;
+	}
+
+	function meta_store() {
+		if (! is_array($this->meta)) return;
+		$m = new Annotation("user_meta-$this->id");
+		$m->text = json_encode($this->meta);
+		$m->store();
+		$this->meta_modified = false;
+	}
+
+// END meta
+
 	function __construct($id = 0) {
-		$this->read = false;
-		$this->id = 0;
-		$this->username = '';
-		$this->level = 'normal';
-		$this->admin = false;
-		$this->modification = false;
-		$this->date = false;
-		$this->ip = '';
-		$this->pass = '';
-		$this->email = '';
-		$this->avatar = 0;
-		$this->names = '';
-		$this->lang = 1;
-		$this->comment_pref = 0;
-		$this->karma = 6;
-		$this->url = '';
 		/*
 		// For stats
 		$this->total_votes;
@@ -251,6 +313,7 @@ class User {
 			if ($full_save) $modification = ', user_modification = now() ' ;
 			$db->query("UPDATE users set user_login='$user_login', user_level='$user_level', user_karma=$user_karma, user_avatar=$user_avatar, user_date=FROM_UNIXTIME($user_date), user_ip='$user_ip', user_pass='$user_pass', user_lang=$user_lang, user_comment_pref=$user_comment_pref, user_email='$user_email', user_email_register='$user_email_register', user_names='$user_names', user_public_info='$user_public_info', user_url='$user_url', user_adcode='$user_adcode', user_adchannel='$user_adchannel', user_phone='$user_phone' $modification  WHERE user_id=$this->id");
 		}
+		if ($this->meta_modified) $this->meta_store();
 	}
 
 	function read() {

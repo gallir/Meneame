@@ -73,6 +73,9 @@
     {% if user.names %}
 		<dt>{% trans _('nombre') %}:</dt><dd>{{user.names}}</dd>
     {% endif %}
+    {% if user.bio %}
+		<dt>{% trans _('bio') %}:</dt><dd style="font-weight:normal">{% exec text_to_html user.bio %}</dd>
+    {% endif %}
     {% if show_email %}
 		<dt>{% trans _('IM/email') %}:</dt><dd> {{user.public_info}}</dd>
     {% endif %}

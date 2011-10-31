@@ -76,7 +76,7 @@ class RGDB extends mysqli {
 
 	function escape($str) {
 		$this->connect();
-		return $this->real_escape_string(stripslashes($str));
+		return $this->real_escape_string($str);
 	}
 
 	function print_error($str = "") {

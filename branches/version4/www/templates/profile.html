@@ -10,7 +10,7 @@
 {% endif %}
 
 
-<form  enctype="multipart/form-data" action="{{ form.auth_link }}profile.php" method="post" id="thisform" AUTOCOMPLETE="off">
+<form  enctype="multipart/form-data" action="{{ form.auth_link }}profile.php" method="post" id="thisform" name="thisform" AUTOCOMPLETE="off">
 <fieldset><legend>
 <span class="sign">{% trans _('opciones de usuario') %} <a href="{%exec  get_user_uri user.username %}">{{ user.username }}</a>: {{ user.level }}</span></legend>
 
@@ -43,6 +43,26 @@
 <p><label>{% trans _('página web') %}:</label><br/>
 <input type="text" autocomplete="off" name="url" id="url" value="{{ user.url }}" size="30"/>
 </p>
+
+<p><label>{% trans _('bio') %}:</label><br/>
+<textarea style="width:60%;height:60px;" name="bio" id="bio"
+{% if ! globals.mobile %}
+	onKeyDown="textCounter(document.thisform.bio,document.thisform.postcounter,{{ form.bio_max }})"
+{% endif %}
+>{{ user.bio }}</textarea>
+
+
+{% if ! globals.mobile %}
+	{% exec mb_strlen user.bio as len %}
+	<div style="margin-top:-7px">
+		<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ form.bio_left }}" />
+		<span class="note">{% trans _('caracteres libres') %}</span>
+	</div>
+{% endif %}
+
+
+
+
 
 <p><label>{% trans _('mensajero instantáneo público, invisible para los demás') %}:</label><br/>
 <span class="note">{% trans _('necesario si te conectarás vía Jabber/Google Talk') %}</span><br/>

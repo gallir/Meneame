@@ -273,6 +273,9 @@ function do_profile() {
 	}
 
 	$user->all_stats();
+	if (! $user->bio) {
+		$user->bio = '';
+	}
 
 	if ($user->total_links > 1) {
 		$entropy = intval(($user->blogs() - 1) / ($user->total_links - 1) * 100);
@@ -317,7 +320,7 @@ function do_profile() {
 	}
 
 	$vars = compact(
-		'post', 'options', 'selected', 'rss', 'rss_title', 'current_user',
+		'post', 'options', 'selected', 'rss', 'rss_title',
 		'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
 		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
 	);

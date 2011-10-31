@@ -14,6 +14,7 @@ include(mnminclude.'avatars.php');
 ob_start();
 
 $user_levels = array ('autodisabled', 'disabled', 'normal', 'special', 'blogger', 'admin', 'god');
+$bio_max = 200; // Max bio length
 
 // User recovering her password
 if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
@@ -94,6 +95,9 @@ $form->admin_mode = $admin_mode;
 $form->auth_link = get_auth_link();
 $form->user_levels = $user_levels;
 $form->avatars_enabled = is_avatars_enabled();
+$form->bio_max = $bio_max;
+$form->bio_left = $form->bio_max - mb_strlen(html_entity_decode($user->bio, ENT_COMPAT, 'UTF-8'), 'UTF-8');
+
 
 Haanga::Load('profile.html', compact('user', 'form', 'messages'));
 
@@ -102,7 +106,7 @@ do_footer();
 
 
 function save_profile() {
-	global $db, $user, $current_user, $globals, $admin_mode, $site_key;
+	global $db, $user, $current_user, $globals, $admin_mode, $site_key, $bio_max;
 	$errors = 0; // benjami: control added (2005-12-22)
 	$pass_changed=false;
 	$messages = array();
@@ -144,6 +148,11 @@ function save_profile() {
 		} else {
 			$user->username=$newname;
 		}
+	}
+
+	if(!empty($_POST['bio']) || $user->bio) {
+		$bio = clean_text($_POST['bio'], 0, false, $bio_max);
+		if ($bio != $user->bio) $user->bio = $bio;
 	}
 
 	if($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
