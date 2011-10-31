@@ -21,10 +21,10 @@
 			<br/><br/>
 			<button type="button" onclick="fancybox_gallery('all', {{ user.id }})">{% trans _('imágenes') %} [{{ user.total_images }}]</button>
         {% endif %}
-    </div>
-	<div style="width:140px; float:left;">
+
     {% if globals.do_geo %}
-		<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden; float:left"></div>
+		<br/><br/>
+    	<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden"></div>
         {% if geodiv %}
             {% exec geo_distance my_latlng, globals.latlng as distance %}
 			<p style="color: #FF9400; font-size: 90%">{{user.username}} {% trans _('está a') %}<strong>{{distance|intval}} kms</strong></p>

@@ -320,7 +320,7 @@ function do_profile() {
 	}
 
 	$vars = compact(
-		'post', 'options', 'selected', 'rss', 'rss_title',
+		'post', 'options', 'selected', 'rss', 'rss_title', 'geodiv',
 		'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
 		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
 	);
