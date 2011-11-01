@@ -32,12 +32,12 @@
     {% endif %}
 	</div>
 
-	<dl>
+	<table class="keyvalue">
     {% if user.username %}
-        <dt>{% trans _('usuario') %}:</dt>
-        <dd>
+        <tr><th>{% trans _('usuario') %}:</th>
+        <td>
         {% if url %}
-            <a href="{{url}}" {{nofollow}}>{{user.username}}</a>
+            <a href="{{url}}" {{nofollow}}><strong>{{user.username}}</strong></a>
         {% else %}
             {{ user.username }}
         {% endif %}
@@ -67,57 +67,57 @@
 		{% endif %}
 
 
-        </dd>
+        </td></tr>
     {% endif %}
     {% if user.names %}
-		<dt>{% trans _('nombre') %}:</dt><dd>{{user.names}}</dd>
+		<tr><th>{% trans _('nombre') %}:</th><td>{{user.names}}</td></tr>
     {% endif %}
     {% if user.bio %}
-		<dt>{% trans _('bio') %}:</dt><dd style="font-weight:normal">{% exec text_to_html user.bio %}</dd>
+		<tr><th>{% trans _('bio') %}:</th><td style="font-weight:normal">{% exec text_to_html user.bio %}</td></tr>
     {% endif %}
     {% if show_email %}
-		<dt>{% trans _('IM/email') %}:</dt><dd> {{user.public_info}}</dd>
+		<tr><th>{% trans _('IM/email') %}:</th><td> {{user.public_info}}</td></tr>
     {% endif %}
     {% if url %}
-		<dt>{% trans _('sitio web') %}</dt><dd><a href="{{url}}" {{nofollow}}>{{url}}</a></dd>
+		<tr><th>{% trans _('sitio web') %}:</th><td><a href="{{url}}" {{nofollow}}>{{url}}</a></td></tr>
     {% endif %}
-	    <dt>{% trans _('desde') %}:</dt><dd>{% exec get_date_time user.date %}</dd>
+	    <tr><th>{% trans _('desde') %}:</th><td>{% exec get_date_time user.date %}</td></tr>
     {% if current_user.user_level == 'god' %}
-		<dt>{% trans _('email') %}:</dt><dd>{{user.email}} (<em>{{user->email_register}}</em>)</dd>
+		<tr><th>{% trans _('email') %}:</th><td>{{user.email}} (<em>{{user->email_register}}</em>)</td></tr>
     {% endif %}
     {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
-	    <dt>{% trans _('clave API') %}:</dt>
-        <dd><a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{user.id}}" title="API key">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</dd>
+	    <tr><th>{% trans _('clave API') %}:</th>
+        <td><a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{user.id}}" title="API key">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</td></tr>
         {% if user.adcode %}
-			<dt>{% trans _('Código AdSense') %}:</dt><dd>{{user.adcode}}&nbsp;</dd>
-			<dt>{% trans _('Canal AdSense') %}:</dt><dd>{{user.adchannel}}&nbsp;</dd>
+			<tr><th>{% trans _('Código AdSense') %}:</th><td>{{user.adcode}}&nbsp;</td></tr>
+			<tr><th>{% trans _('Canal AdSense') %}:</th><td>{{user.adchannel}}&nbsp;</td></tr>
         {% endif %}
     {% endif %}
-	<dt>{% trans _('karma') %}:</dt><dd>{{user.karma}}
+	<tr><th>{% trans _('karma') %}:</th><td>{{user.karma}}
     {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
 		(<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
     {% endif %}
-    </dd>
-	<dt>{% trans _('ranking') %}:</dt><dd>#{% exec user.ranking %}</dd>
+    </td></tr>
+	<tr><th>{% trans _('ranking') %}:</th><td>#{% exec user.ranking %}</td></tr>
 
 	{% if user.stats %}
-		<dt>{% trans _('noticias enviadas')%}:</dt><dd>{{user.total_links}}</dd>
+		<tr><th>{% trans _('noticias enviadas')%}:</th><td>{{user.total_links}}</td></tr>
     	{% if entropy %}
-			<dt><em>{% trans _('entropía') %}</em>:</dt><dd>{{entropy}}%</dd>
+			<tr><th><em>{% trans _('entropía') %}</em>:</th><td>{{entropy}}%</td></tr>
     	{% endif %}
-		<dt>{% trans _('noticias publicadas') %}:</dt><dd>{{user.published_links}} ({{percent}}%)</dd>
-		<dt>{% trans _('comentarios') %}:</dt><dd>{{user.total_comments}}</dd>
-		<dt>{% trans _('notas') %}:</dt><dd>{{user.total_posts}}</dd>
-		<dt>{% trans _('número de votos') %}:</dt><dd>{{user.total_votes}}</dd>
+		<tr><th>{% trans _('noticias publicadas') %}:</th><td>{{user.published_links}} ({{percent}}%)</td></tr>
+		<tr><th>{% trans _('comentarios') %}:</th><td>{{user.total_comments}}</td></tr>
+		<tr><th>{% trans _('notas') %}:</th><td>{{user.total_posts}}</td></tr>
+		<tr><th>{% trans _('número de votos') %}:</th><td>{{user.total_votes}}</td></tr>
 	{% endif %}
 
     {% if user.id == current_user.user_id %}
-		<dt>{% trans _('IP actual') %}:</dt><dd>{{globals.user_ip}}</dd>
+		<tr><th>{% trans _('IP actual') %}:</th><td>{{globals.user_ip}}</td></tr>
 		<div style="margin-top: 20px" align="center">
         {% exec print_oauth_icons _REQUEST.return as foo %}
 		</div>
     {% endif %}
-    </dl>
+    </table>
 </fieldset>
 {% if geo_form %}
     <div class="geoform">

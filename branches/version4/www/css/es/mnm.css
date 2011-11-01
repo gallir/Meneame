@@ -85,24 +85,6 @@ border-color: #FF6400;
 background: #FEEFE5;
 }
 
-fieldset dl {
-margin: 0;
-padding: 0;
-}
-
-fieldset dt {
-clear: left;
-float: left;
-font-weight: bold;
-width: 12em; /* increase for wider dt text */
-text-align: right;
-padding: 0 10px 4px 5px;
-}
-
-fieldset dd {
-padding: 0 0 4px 0;
-font-weight: bold;
-}
 
 label {
 font-weight: bold;
@@ -943,6 +925,26 @@ font-weight: bold;
 margin: 5px 0 3px 0;
 }
 
+table.keyvalue tr {
+border-bottom: 1px solid;
+padding: 5px, 0, 2px, 0;
+}
+
+table.keyvalue th {
+text-align: right;
+padding-right: 4px;
+vertical-align: top;
+white-space: nowrap;
+}
+
+table.keyvalue td {
+padding-left: 4px;
+}
+
+table.keyvalue td img {
+vertical-align: text-bottom;
+}
+
 table.decorated {
 border-collapse: collapse;
 width: 100%;
@@ -957,7 +959,7 @@ padding: 6px;
 border-bottom: 1px solid;
 }
 
-tr:hover td {
+tr:hover td, table.keyvalue tr:hover th  {
 background: #fafafa;
 }
 
