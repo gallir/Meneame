@@ -118,7 +118,7 @@ $no_calculated = 0;
 $calculated = 0;
 
 // select users that voted during last 20 days, also her last vote's day
-$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 20 day) and vote_user_id > 0 and user_id = vote_user_id  and user_level not in ('disabled', 'autodisabled') group by user_id";
+$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 20 day) and vote_user_id > 0 and user_id = vote_user_id and user_level not in ('disabled', 'autodisabled') group by user_id";
 
 // Main loop
 $res = $db->get_results($users);
@@ -420,7 +420,7 @@ foreach ($res as $dbuser) {
 	$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 	$karma = round($karma, 2);
 
-	if ($user->karma != $karma) {
+	if ($user->karma != $karma || ! empty($output)) {
 		$old_karma = $user->karma;
 		if ($user->karma > $karma) {
 			if ($karma < $karma_base || $penalized > 1) {
@@ -442,6 +442,8 @@ foreach ($res as $dbuser) {
 		}
 		$output .= sprintf(_('Karma final').": %4.2f,  ".('cálculo actual').": %4.2f, ".('karma anterior').": %4.2f\n", 
 					$user->karma, $karma, $old_karma);
+		$user->karma_log = $output;
+		$user->karma_calculated = time();
 		$user->store();
 		// If we run in the same server as the database master, wait few milliseconds
 		if (!$db->dbmaster) {
