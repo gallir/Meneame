@@ -12,7 +12,7 @@ class Annotation {
 	var $text = '';
 
 	function Annotation($key = false) {
-		if ($key) $this->key = $key;
+		$this->key = $key;
 		return;
 	}
 
@@ -32,13 +32,10 @@ class Annotation {
 		global $db;
 
 		if ($key) $this->key = $key;
-		if (empty($this->key)) return false;
 
 		$key =	$db->escape($this->key);
-		if(($record = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())"))) {
-			$this->time = $record->time;
-			$this->expire = $record->expire;
-			$this->text = $record->text;
+		if(($result = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())"))) {
+			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}
 		return false;
@@ -53,7 +50,7 @@ class Annotation {
 	}
 
 	function optimize() {
+		// For compatibility with old versions
 		global $db;
-
 	}
 }
