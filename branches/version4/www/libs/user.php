@@ -176,6 +176,8 @@ class User {
 	static function meta_valid($property) {
 		switch ($property) {
 			case 'bio':
+			case 'karma_log':
+			case 'karma_calculated':
 				return true;
 			default:
 				return false;
@@ -263,6 +265,9 @@ class User {
 		$db->query("delete from conversations where conversation_type = 'post' and conversation_from in (select post_id from posts where post_user_id = $this->id)");
 		// Delete posts
 		$db->query("delete from posts where post_user_id = $this->id");
+		// Delete user's meta
+		$db->query("delete from annotations where annotation_key = 'user_meta-$this->id'");
+
 
 		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";
