@@ -50,10 +50,17 @@ if ($current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_l
 	echo '<strong>'._('distancia') . ':</strong>&nbsp;' . $distance . '&nbsp;kms<br/>';
 }
 
+if ($user->bio) {
+	echo '<br clear="left"><strong>'._('bio').'</strong>:<br/>';
+	echo text_to_html($user->bio);
+}
+
+/*
 $post = new Post;
 if ($post->read_last($user->id)) {
 	echo '<br clear="left"><strong>'._('última nota').'</strong>:<br/>';
 	$post->show_avatar = false;
 	$post->print_text(150);
 }
+*/
 ?>

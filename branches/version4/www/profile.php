@@ -14,7 +14,7 @@ include(mnminclude.'avatars.php');
 ob_start();
 
 $user_levels = array ('autodisabled', 'disabled', 'normal', 'special', 'blogger', 'admin', 'god');
-$bio_max = 200; // Max bio length
+$bio_max = 300; // Max bio length
 
 // User recovering her password
 if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
