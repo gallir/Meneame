@@ -93,15 +93,15 @@ function save_post ($post_id) {
 		$post->author=$current_user->user_id ;
 		$post->content=$_POST['post'];
 
+		// Verify that there are a period of 1 minute between posts.
+		if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval ".$globals['posts_period']." second)"))> 0) {
+			echo 'ERROR: ' . _('debe esperar entre notas');
+			die;
+		};
+
 		$db->transaction();
 		$dupe = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 5 minute) and post_randkey = $post->randkey FOR UPDATE"));
 		if (! $dupe && ! $post->same_text_count() ) {
-			// Verify that there are a period of 1 minute between posts.
-			if(intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 1 minute)"))> 0) {
-				echo 'ERROR: ' . _('debe esperar 1 minuto entre notas');
-				die;
-			};
-
 			$same_links = $post->same_links_count();
 			if ($same_links > 2) {
 				$reduction = $same_links * 0.2;

@@ -252,6 +252,8 @@ function do_profile() {
 	}
 	if(!empty($user->url)) {
 		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
+		else $nofollow = '';
+
 		if (!preg_match('/^http/', $user->url)) $url = 'http://'.$user->url;
 		else $url = $user->url;
 	}
@@ -293,7 +295,8 @@ function do_profile() {
 		$geo_form = ob_get_clean();
 	}
 
-	if ($current_user->user_level == 'god' &&  ! $user->admin ) { // gods and admins know each other for sure, keep privacy
+	$addresses	  = array();
+	if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' &&  ! $user->admin) ) { // gods and admins know each other for sure, keep privacy
 		$dbaddresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
@@ -306,7 +309,6 @@ function do_profile() {
 			$dbaddresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
 		}
 
-		$addresses	  = array();
 		$prev_address = '';
 		foreach ($dbaddresses as $dbaddress) {
 			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
