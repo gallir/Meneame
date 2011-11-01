@@ -82,13 +82,8 @@ if ($votes_freq > $freq) {
 	if ($current_user->user_id > 0 && $current_user->user_karma > 4) {
 		// Crazy votes attack, decrease karma
 		// she does not deserve it :-)
-		$user = new User;
-		$user->id = $current_user->user_id;
-		$user->read();
-		$user->karma = $user->karma - 0.2;
-		$user->store();
-		$annotation = new Annotation("karma-$user->id");
-		$annotation->append(_('Voto cowboy a comentarios').": -0.2, karma: $user->karma\n");
+		$user = new User($current_user->user_id);
+		$user->add_karma(-0.2, _('Voto cowboy a comentarios'));
 		error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 	} else	{
 		error(_('¡tranquilo cowboy!'));

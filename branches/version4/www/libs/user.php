@@ -448,11 +448,11 @@ class User {
 
 		$this->karma = min($globals['max_karma'], $this->karma + $inc);
 		$this->karma = max($globals['min_karma'], $this->karma);
-		$this->store();
 		if (! empty($log) && mb_strlen($log) > 5) {
-			$annotation = new Annotation("karma-$this->id");
-			$annotation->append("$log: $inc, " . _('nuevo karma') . ": $this->karma\n");
+			$this->karma_log .= "$log: $inc, " . _('nuevo karma') . ": $this->karma\n";
+			$this->karma_calculated = time();
 		}
+		$this->store();
 
 	}
 

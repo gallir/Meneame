@@ -94,7 +94,7 @@
         {% endif %}
     {% endif %}
 	<tr><th>{% trans _('karma') %}:</th><td>{{user.karma}}
-    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+    {% if (user.id == current_user.user_id || current_user.user_level == 'god' || current_user.user_level == 'admin') && user.karma_log %}
 		(<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
     {% endif %}
     </td></tr>

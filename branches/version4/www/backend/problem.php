@@ -56,13 +56,8 @@ if ($current_user->user_id > 0) {
 
 if ($votes_freq > $freq && $current_user->user_karma > 4) {
 	// Typical "negative votes" attack, decrease karma
-	$user = new User;
-	$user->id = $current_user->user_id;
-	$user->read();
-	$user->karma = $user->karma - 1.0;
-	$user->store();
-	$annotation = new Annotation("karma-$user->id");
-	$annotation->append(_('Voto cowboy negativo').": -1, karma: $user->karma\n");
+	$user = new User($current_user->user_id);
+	$user->add_karma(-1.0, _('Voto cowboy negativo'));
 	error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 }
 

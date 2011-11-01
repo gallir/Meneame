@@ -536,14 +536,8 @@ class Comment extends LCPBase {
 				$reduction += $same_count * 0.25;
 			}
 			if ($reduction > 0) {
-				$user = new User;
-				$user->id = $current_user->user_id;
-				$user->read();
-				$user->karma = $user->karma - $reduction;
-				syslog(LOG_NOTICE, "Meneame: story decreasing $reduction of karma to $current_user->user_login (now $user->karma)");
-				$user->store();
-				$annotation = new Annotation("karma-$user->id");
-				$annotation->append(_('texto repetido o abuso de enlaces en comentarios').": -$reduction, karma: $user->karma\n");
+				$user = new User($current_user->user_id);
+				$user->add_karma(-$reduction, _('texto repetido o abuso de enlaces en comentarios'));
 				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
 			}
 		}

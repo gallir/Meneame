@@ -7,17 +7,16 @@ if (empty($current_user->user_login)) {
 }
 
 if (!empty($_GET['id']) && $current_user->user_level == 'god') {
-	$user = intval($_GET['id']);
+	$user = new User(intval($_GET['id']));
 } else {
-	$user = $current_user->user_id;
+	$user = new User($current_user->user_id);
 }
 
-$annotation = new Annotation("karma-$user");
 echo '<div style="text-align: left">';
-if ($annotation->read()) {
-	echo '<strong>' . _('última modificación') . ':</strong> ' . get_date_time($annotation->time);
+if ($user->karma_log) {
+	echo '<strong>' . _('última modificación') . ':</strong> ' . get_date_time($user->karma_calculated);
 	echo '<ul>';
-	foreach (preg_split("/\n/", $annotation->text) as $line) {
+	foreach (preg_split("/\n/", $user->karma_log) as $line) {
 		$line = trim($line);
 		if($line) echo "<li>$line</li>\n";
 	}
