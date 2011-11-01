@@ -20,7 +20,7 @@ $db->query("delete from links where link_status='discard' and link_date < date_s
 ///
 
 // Delete old annotations
-$db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
+// $db->query("delete from annotations where annotation_time  < date_sub(now(), interval 90 day)");
 $db->query("delete from annotations where annotation_expire is not null and annotation_expire < now()");
 
 

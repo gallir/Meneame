@@ -81,10 +81,12 @@ if ($absolute_previous_maxid > 0) {
 	$max_to_delete = 1000;
 	$total_deleted = 0;
 	$deleted = $max_to_delete;
-	while ($deleted >= $max_to_delete) {
-		$db->query("delete from votes where vote_id <= $absolute_maxid limit $max_to_delete");
+	$from = $absolute_maxid - $max_to_delete;
+	while ($deleted > 0) {
+		$db->query("delete from votes where vote_id <= $absolute_maxid and vote_id > $from");
 		$deleted = $db->affected_rows;
 		$total_deleted += $deleted;
+		$from -= $max_to_delete;
 		printf("%8.3f: deleted $deleted ($total_deleted) rows\n", microtime(true)-$start);
 		flush();
 		sleep(1);
