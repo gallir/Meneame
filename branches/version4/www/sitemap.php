@@ -18,6 +18,8 @@ if (empty($_SERVER['QUERY_STRING'])) {
 } else {
 	if (isset($_REQUEST['statics'])) {
 		do_statics();
+	} if (isset($_REQUEST['last'])) {
+		do_last_published();
 	} else {
 		$page = (int) $_REQUEST['page'];
 		do_published($page);
@@ -33,6 +35,12 @@ function do_master($size) {
 	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?statics</loc>'."\n";
 	echo '</sitemap>'."\n";
 
+	echo '<sitemap>'."\n";
+	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?last</loc>'."\n";
+	echo '</sitemap>'."\n";
+
+	/*
+	* Simplified with last published in the previos lines
 	$count = (int) Link::count('published');
 	$indexes = ceil($count/$size);
 	for ($i = 0; $i < $indexes; $i++) {
@@ -40,6 +48,7 @@ function do_master($size) {
 		echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?page='.$i.'</loc>'."\n";
 		echo '</sitemap>'."\n";
 	}
+	*/
 	echo '</sitemapindex>'."\n";
 }
 
@@ -69,10 +78,22 @@ function do_published($page) {
 	global $globals, $index_size, $db;
 	$start = $page * $index_size;
 
-	// Force to open DB connection
-	$db->get_var("select count(*) from users");
-
 	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' order by link_date asc limit $start, $index_size";
+	$result = $db->get_col($sql);
+	if (!$result) return;
+	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+	foreach ($result as $uri) {
+		echo '<url>'."\n";
+		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
+		echo '</url>'."\n";
+	}
+	echo '</urlset>'."\n";
+}
+
+function do_last_published() {
+	global $globals, $db;
+
+	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' and link_date > date_sub(now(), interval 60 day) order by link_date desc";
 	$result = $db->get_col($sql);
 	if (!$result) return;
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
