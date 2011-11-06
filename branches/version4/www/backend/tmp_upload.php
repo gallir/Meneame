@@ -22,10 +22,9 @@ $r = new stdClass();
 $headers = request_headers();
 
 if ( ! $current_user->user_id
-	|| empty($headers['X-File-Type'])
-	|| empty($headers['X-File-Size']) ) {
+	|| empty($headers['X-File-Type']) ) {
 		$r->error = _('Error en cabeceras');
-		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size']);
+		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size'] . $headers['x-file-type']);
 		echo json_encode($r);
 		die;
 }
@@ -38,7 +37,6 @@ if (Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
 }
 
 $type = $headers['X-File-Type'];
-$size = $headers['X-File-Size'];
 
 
 $dir = Upload::get_cache_dir() . '/tmp';

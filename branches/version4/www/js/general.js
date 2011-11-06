@@ -845,7 +845,8 @@ $(document).ready(function () {
 			var progress = form.find('progress').show();
 			var thumb = form.find('.droparea_info img');
 
-			progress.attr('max', file.fileSize).attr('value', 0);
+			progress.attr('max', file.fileSize);
+			progress.attr('vaue', 0);
 
 			var xhr = new XMLHttpRequest();
 
