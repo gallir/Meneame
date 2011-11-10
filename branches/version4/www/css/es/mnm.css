@@ -1515,6 +1515,11 @@ opacity:0.8;
 color: #3D72C3;
 }
 
+.comment-votes-info a {
+color: #666;
+}
+
+
 .comment-meta .counter {
 background-color: #FFB600;
 }
@@ -1523,13 +1528,8 @@ background-color: #FFB600;
 font-size: 10px;
 }
 
-.comment-meta .counter.info {
-font-family: mono, courier;
-}
-
 .comment-meta .votes-counter {
 font-weight: bold;
-font-size: 13px;
 padding: 0 3px 0 3px;
 }
 
