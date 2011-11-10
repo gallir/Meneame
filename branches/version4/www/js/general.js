@@ -32,16 +32,7 @@ function menealo_comment(user, id, value)
 	url = url + "?" + content;
 	$.getJSON(url,
 		 function(data) {
-			if (data.error) {
-				mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
-				return false;
-			} else {
-				$('#vc-'+id).html(data.votes+"");
-				$('#vk-'+id).html(data.karma+"");
-				if (data.image.length > 0) {
-					$('#c-votes-'+id).html('<img src="'+data.image+'"/>');
-				}
-			}
+				update_comment_vote(id, value, data);
 		}
 	);
 	reportAjaxStats('vote', 'comment');
@@ -54,19 +45,24 @@ function menealo_post(user, id, value)
 	url = url + "?" + content;
 	$.getJSON(url,
 		 function(data) {
-			if (data.error) {
-				mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
-				return false;
-			} else {
-				$('#vc-'+id).html(data.votes+"");
-				$('#vk-'+id).html(data.karma+"");
-				if (data.image.length > 0) {
-					$('#c-votes-'+id).html('<img src="'+data.image+'"/>');
-				}
-			}
+				update_comment_vote(id, value, data);
 		}
 	);
 	reportAjaxStats('vote', 'post');
+}
+
+function update_comment_vote(id, value, data) {
+	if (data.error) {
+		mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
+		return false;
+	} else {
+		$('#vc-'+id).html(data.votes+"");
+		$('#vk-'+id).html(data.karma+"");
+		if (data.image.length > 0) {
+			$('#vc-n-'+id).hide();
+			$('#vc-p-'+id).html('<img src="'+data.image+'"/>');
+		}
+	}
 }
 
 function disable_vote_link(id, value, mess, background) {

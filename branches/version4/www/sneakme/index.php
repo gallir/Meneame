@@ -164,9 +164,9 @@ if ($tab_option == 4) {
 		_('amigos') => post_get_base_url("$user->username/_friends"),
 		_('favoritos') => post_get_base_url("$user->username/_favorites"),
 		_('conversación').$conversation_extra => post_get_base_url("$user->username/_conversation"),
-		sprintf(_('debates con %s').'&nbsp;&rarr;', $user->username) =>
+		sprintf(_('debates con %s'), $user->username) =>
 				$globals['base_url'] . "between.php?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
-		sprintf(_('perfil de %s').'&nbsp;&rarr;', $user->username) => get_user_uri($user->username),
+		sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
 
 	);
 }  elseif ($tab_option == 1 && $current_user->user_id > 0) {

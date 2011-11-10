@@ -1527,6 +1527,13 @@ font-size: 10px;
 font-family: mono, courier;
 }
 
+.comment-meta .votes-counter {
+font-weight: bold;
+font-size: 13px;
+padding: 0 3px 0 3px;
+}
+
+
 .comment-votes-info {
 float: left;
 max-width: 60%;
