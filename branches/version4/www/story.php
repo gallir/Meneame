@@ -431,7 +431,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">&#171; '._('anterior').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" rel="prev">&#171; '._('anterior').'</a>';
 	}
 
 
@@ -457,7 +457,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'">'._('siguiente').' &#187;</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" rel="next">'._('siguiente').' &#187;</a>';
 	} else {
 		echo '<span class="nextprev">'._('siguiente'). ' &#187;</span>';
 	}

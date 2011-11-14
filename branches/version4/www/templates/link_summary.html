@@ -63,7 +63,7 @@
 	{% endif %}
 	{% if globals.ads %}<!-- google_ad_section_start -->{% endif %}
 
-	<h1>
+	{% if globals.link %}<h1>{% else %}<h2>{% endif %}
 		<a href="{{ self.url|escape }}"
 		{% if globals.click_counter %}
 			onmousedown="return clk(this, {{ self.id }})"
@@ -76,7 +76,7 @@
 		{% if self.content_type == 'video' %}
 			&nbsp;<img src="{{ globals.base_static }}img/common/is-video01.png" class="media-icon" width="18" height="15" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}" />
 		{% endif %}
-	</h1>
+	{% if globals.link %}</h1>{% else %}</h2>{% endif %}
 
 	<div class="news-submitted">
 		{% if type != 'short' %}
@@ -199,7 +199,7 @@
 	{% endif %}
 
 	<div class="news-details main">
-		<span class="comments-counter"><a href="{{ self.permalink }}">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span> {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
+		<span class="comments-counter"><a href="{{ self.permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span> {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
 
 
 		<span class="tool">

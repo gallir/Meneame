@@ -1290,7 +1290,7 @@ border-radius: 2px;
 -webkit-border-radius: 2px;
 }
 
-.news-body h1 {
+.news-body h1, .news-body h2 {
 margin: 0;
 padding: 0 5px 0 0;
 font-size: 140%;
