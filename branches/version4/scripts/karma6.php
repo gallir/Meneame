@@ -304,7 +304,7 @@ foreach ($res as $dbuser) {
 
 			$comment_votes_sum = (int) $db->get_var("SELECT SQL_NO_CACHE sum(vote_value) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_date > $history_from and vote_user_id != $user->id");
 			//echo "Comment new coef: $comment_coeff ($distinct_votes_count,  $distinct_user_votes_count, $comments_count, $comment_votes_count, $comment_votes_sum)\n";
-			$karma4 = max(-$comment_votes, min($comment_votes_sum / ($comment_votes_count*10) * $comment_votes, $comment_votes)) * $comment_coeff ;
+			$karma4 = max(-$comment_votes, min($comment_votes_sum / (max(10,$comment_votes_count)*10) * $comment_votes, $comment_votes)) * $comment_coeff ;
 
 
 			// Count low karma comments
@@ -320,11 +320,16 @@ foreach ($res as $dbuser) {
 				else $karma4 *= $karma4_coef;
 				$output .= sprintf("%s: %d %6.2f -> %6.2f\n", _('Penalización por comentarios karma negativo'), $comments_low_karma, $old_karma4, $karma4);	
 				
+			} elseif ($comments_total - $comments_low_karma > 0) {
+				// Give few tenths to comments that were not penalized
+				$old_karma4 = $karma4;
+				$karma4 += min(0.5, 0.05 * $comments_total - $comments_low_karma);
+				$output .= sprintf("%s: %6.2f -> %6.2f\n", _('Bonificación por comentar'), $old_karma4, $karma4);	
 			}
 
 		}
 		
-		// Limit karma to users that does not send links and does not vote
+		// Limit karma to users that do not send links and do not vote
 		if ( $karma4 > 0 && $karma1 == 0 && $karma2 == 0 && $karma3 == 0 ) $karma4 = $karma4 * 0.5;
 		if ($karma4 != 0) {
 			$output .= _('Votos a comentarios contabilizados').": $comment_votes_count (karma: $comment_votes_sum), karma4: ";
