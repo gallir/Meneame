@@ -37,12 +37,15 @@ if (! in_array($tops[0], $history) ) {
 	$a_history->store();
 
 
-	// Post to Twitter and Jaiku
+	// Post to Twitter, Jaiku and Facebook
 	if ($globals['twitter_token']) {
 		twitter_post($text, $short_url); 
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($text, $short_url); 
+	}
+	if ($globals['facebook_token']) {
+		facebook_post($text, $link->get_permalink());
 	}
 }
 
