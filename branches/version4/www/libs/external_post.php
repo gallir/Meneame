@@ -124,4 +124,26 @@ function pubsub_post() {
 		syslog(LOG_NOTICE, "Meneame: failed to post to pubsub ($rss)");
 	}
 }
+
+
+function facebook_post($text, $short_url) {
+	require_once(mnminclude.'facebook-php-sdk/facebook.php');
+	global $globals;
+	 
+	$facebook = new Facebook(array(
+		 'appId'  => $globals['facebook_key'],
+		 'secret' => $globals['facebook_secret'],
+		 'cookie' => true,
+		 'perms' => 'read_stream, publish_stream',
+	));
+	
+	$r = $facebook->api('/me/feed', 'POST', array(
+	 			'link' => $short_url,
+				'message' => $text, 
+				'access_token' => $globals['facebook_token']
+	));
+	print_r($r);
+}
+
+
 ?>

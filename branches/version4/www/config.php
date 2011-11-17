@@ -221,7 +221,7 @@ $globals['draft_time'] = 1200; // Time unsent drafts will be kept (20 minutes)
 $globals['draft_limit'] = 3; // Max unset drafts at the same time
 
 
-// Don't forget to add a redirect to ooops.php in case of 404 error, 
+// Don't forget to add a redirect to ooops.php in case of 404 error,
 // if you want thumbnails to be automatically created by ooops.php
 // for example in NGINX:
 /*
@@ -282,6 +282,8 @@ $globals['captcha_first_login'] = false;
 // For Facebook authentication
 //$globals['facebook_key'] = 'xxxxxxxx';
 //$globals['facebook_secret'] = 'xxxxxxxx';
+// For Facebook page
+//$globals['facebook_token'] = '';
 
 
 // Jaiku settings
