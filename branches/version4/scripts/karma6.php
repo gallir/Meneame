@@ -323,7 +323,7 @@ foreach ($res as $dbuser) {
 			} elseif ($comments_total - $comments_low_karma > 0) {
 				// Give few tenths to comments that were not penalized
 				$old_karma4 = $karma4;
-				$karma4 += min(0.5, 0.05 * $comments_total - $comments_low_karma);
+				$karma4 += min(1, 0.05 * $comments_total - $comments_low_karma);
 				$output .= sprintf("%s: %6.2f -> %6.2f\n", _('Bonificación por comentar'), $old_karma4, $karma4);	
 			}
 

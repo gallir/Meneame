@@ -28,7 +28,8 @@ if (! in_array($tops[0], $history) ) {
 	} else {
 		$short_url = fon_gs($link->get_permalink());
 	}
-	$text = '#'._('destacada').' '.$link->title;
+	$intro = '#'._('destacada');
+	$text = "$intro $link->title";
 
 	// Save the history
 	array_push($history, intval($tops[0]));
@@ -45,7 +46,7 @@ if (! in_array($tops[0], $history) ) {
 		jaiku_post($text, $short_url); 
 	}
 	if ($globals['facebook_token']) {
-		facebook_post($text, $link->get_permalink());
+		facebook_post($intro, $link->get_permalink());
 	}
 }
 

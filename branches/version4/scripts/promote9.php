@@ -231,11 +231,14 @@ if ($links) {
 			// Check domain and user punishments
 			$karma_new *= 0.75;
 			$link->message .= $globals['ban_message'].'<br/>';
-		} elseif ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image')) {
+		}
+		/*
+		 elseif ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image')) {
 			// check if it's "media" and the metacategory coefficient is low
 			$karma_new *= 0.9;
 			$link->message .= 'Image/Video '.$meta_coef[$dblink->parent].'<br/>';
 		}
+		*/
 
 		// Check if it was depubished before
 
@@ -409,7 +412,7 @@ function publish($link) {
 		twitter_post($link->title, $short_url);
 	}
 	if ($globals['facebook_token']) {
-		facebook_post($link->title, $link->get_permalink());
+		facebook_post("", $link->get_permalink());
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($link->title, $short_url);

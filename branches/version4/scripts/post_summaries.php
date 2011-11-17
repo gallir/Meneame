@@ -31,7 +31,8 @@ foreach ($link_sqls as $key => $sql) {
 		} else {
 			$short_url = fon_gs($link->get_permalink());
 		}
-		$text = "$key ${hours}h: $link->title";
+		$intro = "$key ${hours}h";
+		$text = "$intro: $link->title";
 		//echo "$short_url $text\n"; continue;
 		if ($globals['twitter_token']) {
 			twitter_post($text, $short_url); 
@@ -40,7 +41,7 @@ foreach ($link_sqls as $key => $sql) {
 			jaiku_post($text, $short_url); 
 		}
 		if ($globals['facebook_token']) {
-			facebook_post($text, $link->get_permalink());
+			facebook_post($intro, $link->get_permalink());
 		}
 	}
 }
