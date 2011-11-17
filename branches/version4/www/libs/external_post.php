@@ -126,7 +126,7 @@ function pubsub_post() {
 }
 
 
-function facebook_post($text, $short_url) {
+function facebook_post($text, $url) {
 	require_once(mnminclude.'facebook-php-sdk/facebook.php');
 	global $globals;
 	 
@@ -138,7 +138,7 @@ function facebook_post($text, $short_url) {
 	));
 	
 	$r = $facebook->api('/me/feed', 'POST', array(
-	 			'link' => $short_url,
+	 			'link' => $url,
 				'message' => $text, 
 				'access_token' => $globals['facebook_token']
 	));

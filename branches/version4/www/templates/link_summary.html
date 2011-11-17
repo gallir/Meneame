@@ -203,9 +203,9 @@
 
 
 		<span class="tool">
-		<a href="{% get_url '?meta=' self.meta_uri %}" title="{% trans _('meta') %}">
+		<a href="{% get_url '?meta=' self.meta_uri %}" title="{% trans _('meta') %}: {{ self.meta_name }}">
 			{{ self.meta_name}}</a>,
-		<a href="{% get_url '?meta=' self.meta_uri '&amp;category=' self.category %}" title="{% trans _('categoría') %}">
+		<a href="{% get_url '?meta=' self.meta_uri '&amp;category=' self.category %}" title="{% trans _('categoría') %}: {{ self.category_name }}">
 			{{self.category_name}}</a>
 		</span>
 		<span class="tool">karma: <span id="a-karma-{{self.id}}">

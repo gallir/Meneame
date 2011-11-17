@@ -219,9 +219,9 @@ class Comment extends LCPBase {
 				$author .= ' ('.$this->username.')';
 			}
 		} elseif ($single_link) {
-			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'" id="cauthor-'.$this->c_order.'">'.$this->username.'</a>';
+			$author = '<a href="'.get_user_uri($this->username).'" id="cauthor-'.$this->c_order.'">'.$this->username.'</a>';
 		} else {
-			$author = '<a href="'.get_user_uri($this->username).'" title="karma:&nbsp;'.$this->user_karma.'">'.$this->username.'</a>';
+			$author = '<a href="'.get_user_uri($this->username).'">'.$this->username.'</a>';
 		}
 
 		if ($this->modified > $this->date + 1) {
