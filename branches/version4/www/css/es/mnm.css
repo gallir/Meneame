@@ -466,18 +466,8 @@ margin-left: 0px;
 margin-right: 10px;
 padding-left: 0px;
 padding-right: 0px;
-}
-
-.subheader li.icon-right-text{
-float:right;
-background-color: #FFEDC6;
 color: #FF6400;
 font-weight: bold;
-border-color: #FFEDC6;
-margin-left: 0px;
-margin-right: 10px;
-padding-left: 0px;
-padding-right: 0px;
 }
 
 .toggler img{
