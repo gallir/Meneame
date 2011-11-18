@@ -14,7 +14,7 @@ function redirect(url)
 function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&l=" + link_id + "&u=" + document.referrer;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	url = url + "?" + content;
 	disable_vote_link(id, -1, "...", '');
 	$.getJSON(url,
@@ -168,7 +168,7 @@ function report_problem_no(frm, user, id) {
 }
 
 function report_problem_yes(frm, user, id) {
-	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + document.referrer;
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	var url = base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
