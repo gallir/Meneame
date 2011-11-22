@@ -23,10 +23,22 @@ if ($id > 0) {
 			do_redirection($url);
 			exit(0);
 		default:
+
+			if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'use_bar')) {
+				if ($globals['base_bar_url']) {
+					$url = $globals['base_url'] . $globals['base_bar_url'] . $id;
+				} else {
+					$url = $globals['base_url'] . "bar.php?id=$id";
+				}
+				header('HTTP/1.1 307 Temporary');
+				header('Location: ' . $url);
+				die;
+			}
+
 			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
 			if ($l) {
 				do_redirection($l->url);
-				if (! $globals['bot'] 
+				if (! $globals['bot']
 					&& $globals['click_counter']
 					&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 					&& $l->ip != $globals['user_ip']

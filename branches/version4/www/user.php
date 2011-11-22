@@ -321,10 +321,11 @@ function do_profile() {
 		}
 	}
 
+	$use_bar = User::get_pref($user->id, 'use_bar');
 	$vars = compact(
 		'post', 'options', 'selected', 'rss', 'rss_title', 'geodiv',
 		'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
-		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
+		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon', 'use_bar'
 	);
 
 	return Haanga::Load('/user/profile.html', $vars);

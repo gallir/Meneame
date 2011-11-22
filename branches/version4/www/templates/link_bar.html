@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{globals.lang}}">
+<head>
+<meta charset="utf-8" />
+<meta name="ROBOTS" content="NOARCHIVE" />
+<meta name="generator" content="meneame" />
+
+<title>{{ self.title }}</title>
+
+
+{% if globals.css_main %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>
+{% endif %}
+
+{% if globals.mobile %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
+{% else %}
+<style type="text/css">
+@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
+</style>
+{% endif %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/meneamebar.css"/>
+
+{% if globals.favicon %}
+	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+	<link rel="icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+{% else %}
+	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
+	<link rel="icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
+{% endif %}
+
+<script src="{{ globals.jquery }}" type="text/javascript"></script>
+<script src="{{ globals.base_url }}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+if(top.location != self.location)top.location = self.location;
+base_key="{{ globals.security_key }}";
+link_id = {{ self.id }};
+user_id = {{ current_user.user_id }};
+user_login = '{{ current_user.user_login }}';
+mobile_client = {{ globals.mobile }};
+</script>
+
+</head>
+
+
+<body>
+	<div id="header">
+		<a href="{{ self.permalink }}" title="{% trans _('ir a noticia en menéame') %}" id="logo">{% trans _('ir a noticia en menéame') %}</a>
+
+		<div id="votes">
+			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong><br/>{% trans _('meneos') %}</div>
+
+			<div class="menealo" id="a-va-{{ self.id }}">
+			{% if self.votes_enabled %}
+				{% if not self.voted %}
+					<a class="menealo" href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+				{% else %}
+					{% if self.voted > 0 %}
+					<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
+					{% else %}
+					<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+			</div>
+
+		<h1><a href="{{ self.url }}" target="meneameframe">{{ self.title }}</a></h1>
+
+
+		{% if self.can_vote_negative %}
+			<form  class="tool" action="" id="problem-{{ self.id }}">
+			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+				<option value="0" selected="selected">{% trans _('problema') %}</option>
+				{% for pkey, pvalue in globals.negative_votes_values %}
+					<option value="{{pkey}}">{{ pvalue }}</option>
+				{% endfor %}
+			</select>
+			</form>
+		{% endif %}
+
+		</div>
+
+		<ul class="headtools">
+			<li id="bar">
+				<a href="" onClick="location.href = '{{ self.url }}';return false;">{% trans _('cerrar barra') %} <b>x</b></a>
+			</li>
+			{% if current_user.authenticated %}
+				<li><a href="{{ current_user.user_login|useruri }}">
+				{{current_user.user_login}}&nbsp;<img src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
+			{% endif %}
+		</ul>
+
+
+
+	</div>
+	<div id="content">
+		<iframe id="meneameframe" name="meneameframe" src="{{ self.url }}">
+		</iframe>
+	</div>
+</body>
+
+</html>

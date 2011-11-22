@@ -94,6 +94,9 @@ $globals['base_story_url'] = 'story/';
 //RewriteRule ^/c/(.+)$ /comment.php/$1  [L,NS]
 $globals['base_comment_url'] = 'c/';
 
+// Uncomment for /bar.php?id?ID to get /b/ID
+//$globals['base_bar_url'] = 'b/';
+
 //RewriteRule ^/search(/.*)$ /search.php$1 [L,NS,NE,PT]
 //$globals['base_search_url'] = 'search/';
 
@@ -315,6 +318,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
+$globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js';
 $globals['js_main'] = 'general.js.php?v=45'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css?v=50'; //?N is to force reloading for newer versions

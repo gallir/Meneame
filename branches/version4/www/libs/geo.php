@@ -87,36 +87,5 @@ function geo_init($f='geo_basic_load', $latlng = false, $zoom = 7, $icontype = '
 function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued') {
 
 	Haanga::Load('geo_form.html', compact('type', 'id', 'latlng', 'label', 'icontype'));
-	/*
-	echo '<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address(\''.$icontype.'\')">';
-	echo '<label for="address">'.$label. '</label><br/>';
-	echo '<input type="text" size="40" maxlength="80" name="address" id="address" value="'.$latlng->text.'" />';
-	echo '&nbsp;<input type="button" class="button" value="'._('buscar').'" onclick="return geo_show_address(\''.$icontype.'\');"/>';
-	echo '&nbsp;<input type="button" class="button" id="geosave"  disabled="disabled"  value="'._('grabar').'" onclick="return geo_save_current(\''.$type.'\', '.$id.')"/>';
-	echo '&nbsp;<input type="button" class="button" id="geodelete" ';
-	if (!$latlng) {
-		echo 'disabled="disabled" ';
-	}
-	echo 'value="'._('borrar').'" onclick="return geo_delete(\''.$type.'\', '.$id.')"/>';
-	echo '<br/><span class="note">'._('puedes hacer clic en el mapa o buscar por «país», «ciudad, país» o «calle, ciudad, país»')."\n";
-	echo '<br/>'._('también acepta coordenadas «lat, long», p.e. «1.234, -54.321»')."</span>\n";
-	echo '</form>'."\n";
-?>
-	<script type="text/javascript">
-	//<![CDATA[
-		// Check if there is a map container, otherwise it creates a container
-		if ($('#map').length == 0 ) {
-			$('#geocoderform').before('<div id="map" style="width:300px;height:250px">&nbsp;<\/div>');
-			$('#geocoderform').after('<br/>');
-			if (typeof geo_coder_editor_load == 'function') { // Check if the geo.js has bees loaded
-				geo_coder_editor_load(false, false, 3, "<?echo $icontype?>");
-			} else {
-				$(function() {geo_coder_editor_load(false, false, 3, "<?echo $icontype?>")});
-			}
-		}
-	//]]>
-	</script>
-<?
-*/
 }
 ?>
