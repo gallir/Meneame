@@ -30,21 +30,15 @@ if ($id > 0) {
 				} else {
 					$url = $globals['base_url'] . "bar.php?id=$id";
 				}
-				header('HTTP/1.1 307 Temporary');
-				header('Location: ' . $url);
-				die;
+				do_redirection($url, 307);
+				add_click($id);
+				exit(0);
 			}
 
 			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
 			if ($l) {
 				do_redirection($l->url);
-				if (! $globals['bot']
-					&& $globals['click_counter']
-					&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
-					&& $l->ip != $globals['user_ip']
-					&& ! id_visited($id)) {
-					$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-				}
+				add_click($id);
 				exit(0);
 			}
 	}
@@ -52,8 +46,8 @@ if ($id > 0) {
 require(mnminclude.$globals['html_main']);
 do_error(_('enlace inexistente'), 404);
 
-function do_redirection($url) {
-	header('HTTP/1.1 301 Moved');
+function do_redirection($url, $code = 301) {
+	header("HTTP/1.1 $code Moved");
 	header('Location: ' . $url);
 	header("Content-Length: 0");
 	header("Connection: close");
@@ -77,5 +71,16 @@ function id_visited($id) {
 	setcookie('v', implode('x', $visited));
 	return $found !== false;
 }
-?>
 
+function add_click($id) {
+	global $globals, $db;
+
+	if (! $globals['bot']
+		&& $globals['click_counter']
+		&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
+		&& $l->ip != $globals['user_ip']
+		&& ! id_visited($id)) {
+		$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+	}
+}
+?>
