@@ -137,7 +137,7 @@ function facebook_post($text, $url) {
 		 'perms' => 'read_stream, publish_stream',
 	));
 	
-	$r = $facebook->api('/me/feed', 'POST', array(
+	$r = $facebook->api('/me/links', 'POST', array(
 	 			'link' => $url,
 				'message' => $text, 
 				'access_token' => $globals['facebook_token']

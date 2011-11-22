@@ -27,7 +27,7 @@ function getJSON(url, fn) {
 function menealo(user, id)
 {
 	var url = base_url + "backend/menealo.php";
-	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + document.referrer;
+	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&u=" + encodeURIComponent(document.referrer);
 	url = url + "?" + content;
 	getJSON(url,
 		 function(data) {

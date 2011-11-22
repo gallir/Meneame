@@ -321,7 +321,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 $globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js';
 $globals['js_main'] = 'general.js.php?v=45'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=50'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css?v=52'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
