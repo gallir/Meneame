@@ -54,6 +54,7 @@ function do_header($title, $id='home') {
 
 	check_auth_page();
 	header('Content-Type: text/html; charset=utf-8');
+	header('X-Frame-Options: SAMEORIGIN');
 	http_cache();
 
 

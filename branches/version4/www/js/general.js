@@ -211,7 +211,7 @@ function bindTogglePlusMinus(img_id, link_id, container_id) {
 }
 
 function clk(f, id) {
-	f.href=base_url + 'backend/go.php?id=' + id;
+	f.href=base_url + 'go.php?id=' + id;
 	return true;
 }
 

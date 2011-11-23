@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include('./config.php');
 
 $id = intval($_GET['id']);
 if ($id > 0) {
@@ -24,7 +24,7 @@ if ($id > 0) {
 			exit(0);
 		default:
 
-			if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'use_bar')) {
+			if (! $globals['mobile_version'] && $current_user->user_id > 0 && User::get_pref($current_user->user_id, 'use_bar')) {
 				if ($globals['base_bar_url']) {
 					$url = $globals['base_url'] . $globals['base_bar_url'] . $id;
 				} else {

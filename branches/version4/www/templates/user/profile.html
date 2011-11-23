@@ -121,41 +121,43 @@
 </fieldset>
 
 {% if geo_form %}
-    <div class="geoform">
-        {{geo_form}}
-    </div>
+	<div class="geoform">
+		{{geo_form}}
+	</div>
 {% endif %}
 
-<fieldset><legend>{% trans _('preferencias básicas') %}</legend>
-<table class="keyvalue">
+{% if user.id == current_user.user_id %}
+	<fieldset><legend>{% trans _('preferencias básicas') %}</legend>
+	<table class="keyvalue">
 
-{# Use bar #}
-<tr><th>{% trans _('abrir enlaces con barra superior') %}:</th>
-<td>
-<input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if use_bar %}checked="true"{% endif %}/>
-</div>
+	{# Use bar #}
+	<tr><th>{% trans _('abrir enlaces con barra superior') %}:</th>
+	<td>
+	<input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if use_bar %}checked="true"{% endif %}/>
+	</div>
 
-<script type="text/javascript">
-function use_bar() {
-	var value;
+	<script type="text/javascript">
+	function use_bar() {
+		var value;
 
-    if (this.checked) value = 1;
-    else value = 0;
-    $.post(base_url + 'backend/pref.php',
-			{"id": {{ current_user.user_id }}, "value": value, "key": this.value},
-			function (data) {
-				if (data) this.checked = true;
-				else this.checked = false;
-			},
-			'json');
-}
-$("#use_bar").change(use_bar);
-</script>
-</td>
+    	if (this.checked) value = 1;
+    	else value = 0;
+    	$.post(base_url + 'backend/pref.php',
+				{"id": {{ current_user.user_id }}, "value": value, "key": this.value},
+				function (data) {
+					if (data) this.checked = true;
+					else this.checked = false;
+				},
+				'json');
+	}
+	$("#use_bar").change(use_bar);
+	</script>
+	</td>
 
 
-</table>
-</fieldset>
+	</table>
+	</fieldset>
+{% endif %}
 
 
 {% if user.total_votes > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
