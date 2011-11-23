@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.41, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.17, for Linux (x86_64)
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.1.41-3ubuntu12.10-log
+-- Server version	5.5.17-55-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -97,7 +97,7 @@ DROP TABLE IF EXISTS `blogs`;
 CREATE TABLE `blogs` (
   `blog_id` int(20) NOT NULL AUTO_INCREMENT,
   `blog_key` char(35) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `blog_type` enum('normal','blog') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'normal',
+  `blog_type` enum('normal','blog','noiframe','redirector','aggregator') CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'normal',
   `blog_rss` varchar(64) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `blog_rss2` varchar(64) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   `blog_atom` varchar(64) COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
@@ -716,4 +716,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-09-17  2:52:28
+-- Dump completed on 2011-11-23 15:49:50
