@@ -24,7 +24,10 @@ if ($id > 0) {
 			exit(0);
 		default:
 
-			if (! $globals['mobile_version'] && $current_user->user_id > 0 && User::get_pref($current_user->user_id, 'use_bar')) {
+			if (! $globals['mobile_version']
+				&& $current_user->user_id > 0
+				&& User::get_pref($current_user->user_id, 'use_bar')
+				&& $db->get_var("select blog_type from links, blogs where link_id = $id and blog_id = link_blog") != 'noiframe') {
 				if ($globals['base_bar_url']) {
 					$url = $globals['base_url'] . $globals['base_bar_url'] . $id;
 				} else {

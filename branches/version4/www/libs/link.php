@@ -166,8 +166,14 @@ class Link extends LCPBase {
 		$url_components = @parse_url($url);
 
 
+		$this->noiframe = false;
 		if (($response = get_url($url)) ) {
 			$this->content_type = preg_replace('#^(\w+).+#', '$1', $response['content_type']);
+
+			// Check if it forbides including in an iframe
+			if (preg_match('/X-Frame-Options: *(.+)/i', $response['header'])) {
+				$this->noiframe = true;
+			}
 
 			// Check if it has pingbacks
 			if (preg_match('/X-Pingback: *(.+)/i', $response['header'], $match)) {
@@ -360,7 +366,16 @@ class Link extends LCPBase {
 	function create_blog_entry() {
 		$blog = new Blog();
 		$blog->analyze_html($this->url, $this->html);
-		if(!$blog->read('key')) {
+		if(!$blog->read('key')
+			|| ($blog->type != 'noiframe' && $this->noiframe)
+			|| ($blog->type == 'noiframe' && ! $this->noiframe)) {
+
+			if ($blog->type != 'noiframe' && $this->noiframe) {
+				$blog->type = 'noiframe';
+			} elseif ($blog->type == 'noiframe' && ! $this->noiframe) {
+				$blog->type = 'normal';
+			}
+			syslog(LOG_INFO, "Meneame, changed noiframe ($blog->id, $blog->url): $blog->type");
 			$blog->store();
 		}
 		$this->blog=$blog->id;
