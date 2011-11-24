@@ -24,8 +24,11 @@ if ($link->avatar) {
 	echo '<img class="avatar" src="'.get_avatar_url($link->author, $link->avatar, 40).'" width="40" height="40" alt="avatar"  style="float:left; margin: 0 5px 0 0;"/>';
 }
 echo '<strong>' . $link->title . '</strong><br/>';
-echo '<strong>' . $user_login . '</strong><br/>';
-echo htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $link->url), 70)) . '<br/>';
-echo $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</p>';
-echo '<p>' . $link->to_html($link->content) . '</p>';
+echo _('por') . ' <strong>' . $user_login . '</strong><br/>';
+echo '<strong>' . $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</strong></p>';
+echo '<p style="margin-top: 4px">';
+if (($image = $link->has_thumb()) ) {
+	echo "<img src='$image' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
+}
+echo $link->to_html($link->content) . '</p>';
 ?>
