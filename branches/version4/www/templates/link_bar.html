@@ -19,7 +19,7 @@
 @import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
 </style>
 {% endif %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/meneamebar.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css"/>
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
@@ -65,7 +65,9 @@ mobile_client = {{ globals.mobile }};
 			{% endif %}
 			</div>
 
+{#
 		<h1><a href="{{ self.url }}">{{ self.title }}</a></h1>
+#}
 
 
 		{% if self.can_vote_negative %}
@@ -83,7 +85,7 @@ mobile_client = {{ globals.mobile }};
 
 		<ul class="headtools">
 			<li id="bar">
-				<a href="" onClick="location.href = '{{ self.url }}';return false;">{% trans _('cerrar barra') %} <b>x</b></a>
+				<a href="{{ self.url }}" onClick="location.href = '{{ self.url }}';return false;">{% trans _('cerrar barra') %} <b>x</b></a>
 			</li>
 			{% if current_user.authenticated %}
 				<li><a href="{{ current_user.user_login|useruri }}">
@@ -95,8 +97,7 @@ mobile_client = {{ globals.mobile }};
 
 	</div>
 	<div id="content">
-		<iframe id="meneameframe" name="meneameframe" src="{{ self.url }}">
-		</iframe>
+		<iframe id="meneameframe" name="meneameframe" src="{{ self.url }}"></iframe>
 	</div>
 </body>
 
