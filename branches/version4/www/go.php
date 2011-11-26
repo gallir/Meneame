@@ -33,14 +33,14 @@ if ($id > 0) {
 				} else {
 					$url = $globals['base_url'] . "bar.php?id=$id";
 				}
-				add_click($id);
+				Link::add_click($id);
 				do_redirection($url, 307);
 				exit(0);
 			}
 
 			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
 			if ($l) {
-				add_click($id);
+				Link::add_click($id);
 				do_redirection($l->url);
 				exit(0);
 			}
@@ -56,34 +56,3 @@ function do_redirection($url, $code = 301) {
 	header("Connection: close");
 	flush();
 }
-
-function id_visited($id) {
-	if (! isset($_COOKIE['v']) || ! ($visited = preg_split('/x/', $_COOKIE['v'], 0, PREG_SPLIT_NO_EMPTY)) ) {
-		$visited = array();
-		$found = false;
-	} else {
-		$found = array_search($id, $visited);
-		if (count($visited) > 10) {
-			array_shift($visited);
-		}
-		if ($found !== false) {
-			unset($visited[$found]);
-		}
-	}
-	$visited[] = $id;
-	setcookie('v', implode('x', $visited));
-	return $found !== false;
-}
-
-function add_click($id) {
-	global $globals, $db;
-
-	if (! $globals['bot']
-		&& $globals['click_counter']
-		&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
-		&& $l->ip != $globals['user_ip']
-		&& ! id_visited($id)) {
-		$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-	}
-}
-?>

@@ -28,6 +28,9 @@ if (! ($link = Link::from_db($id))) {
 	do_error(_('enlace no encontrado'), 404);
 }
 
+// Mark as read, add click if necessary
+Link::add_click($link->id);
+
 $link->title = text_to_summary($link->title, 80);
 
 // From libs/html1.php do_header()
