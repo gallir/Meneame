@@ -33,15 +33,15 @@ if ($id > 0) {
 				} else {
 					$url = $globals['base_url'] . "bar.php?id=$id";
 				}
-				do_redirection($url, 307);
 				add_click($id);
+				do_redirection($url, 307);
 				exit(0);
 			}
 
 			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
 			if ($l) {
-				do_redirection($l->url);
 				add_click($id);
+				do_redirection($l->url);
 				exit(0);
 			}
 	}

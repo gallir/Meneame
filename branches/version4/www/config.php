@@ -56,7 +56,7 @@ $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have
 $globals['static_server'] = '';
 //$globals['static_server'] = 'http://static.meneame.net';
 
-// Enables the click counter, it call to backend/go.php
+// Enables the click counter, it call to /go.php
 // Make sure you have defined the table:
 // CREATE TABLE  `meneame`.`link_clicks` ( `id` INT UNSIGNED NOT NULL , `counter` INT UNSIGNED NOT NULL DEFAULT  '0', PRIMARY KEY (  `id` )) ENGINE = INNODB;
 $globals['click_counter'] = 1; // Put a value since which id should show in "link_summary", 0 to disable it
@@ -318,7 +318,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js';
+$globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js';
 $globals['js_main'] = 'general.js.php?v=46'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css?v=52'; //?N is to force reloading for newer versions
