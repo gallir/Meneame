@@ -23,6 +23,8 @@ if ($id > 0) {
 			do_redirection($url);
 			exit(0);
 		default:
+			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
+			if (! $l) exit(0);
 
 			if (! $globals['mobile_version']
 				&& $current_user->user_id > 0
@@ -33,17 +35,12 @@ if ($id > 0) {
 				} else {
 					$url = $globals['base_url'] . "bar.php?id=$id";
 				}
-				Link::add_click($id);
 				do_redirection($url, 307);
-				exit(0);
-			}
-
-			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
-			if ($l) {
-				Link::add_click($id);
+			} else {
 				do_redirection($l->url);
-				exit(0);
 			}
+			Link::add_click($id, $l->ip);
+			exit(0);
 	}
 }
 require(mnminclude.$globals['html_main']);
@@ -53,6 +50,4 @@ function do_redirection($url, $code = 301) {
 	header("HTTP/1.1 $code Moved");
 	header('Location: ' . $url);
 	header("Content-Length: 0");
-	header("Connection: close");
-	flush();
 }

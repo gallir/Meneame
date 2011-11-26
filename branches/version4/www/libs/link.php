@@ -104,6 +104,8 @@ class Link extends LCPBase {
 	}
 
 	static function visited($id) {
+		global $globals;
+
 		if (! isset($_COOKIE['v']) || ! ($visited = preg_split('/x/', $_COOKIE['v'], 0, PREG_SPLIT_NO_EMPTY)) ) {
 			$visited = array();
 			$found = false;
@@ -117,18 +119,18 @@ class Link extends LCPBase {
 			}
 		}
 		$visited[] = $id;
-		setcookie('v', implode('x', $visited));
+		setcookie('v', implode('x', $visited), 0, $globals['base_url']);
 		return $found !== false;
 	}
 
-	static function add_click($id) {
+	static function add_click($id, $ignore_ip = false) {
 		global $globals, $db;
 
 		if (! $globals['bot']
+			&& ! Link::visited($id)
 			&& $globals['click_counter']
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
-			&& $l->ip != $globals['user_ip']
-			&& ! Link::visited($id)) {
+			&& ($ignore_ip === false || $ignore_ip != $globals['user_ip']) ){
 			$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
 		}
 	}
