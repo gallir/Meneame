@@ -412,7 +412,7 @@ function publish($link) {
 		twitter_post($link->title, $short_url);
 	}
 	if ($globals['facebook_token']) {
-		facebook_post("", $link->get_permalink(), $link->has_thumb() || get_avatar_url($link->author, -1, 40));
+		facebook_post($link);
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($link->title, $short_url);
