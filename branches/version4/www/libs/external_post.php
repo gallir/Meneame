@@ -126,7 +126,7 @@ function pubsub_post() {
 }
 
 
-function facebook_post($text, $url, $tumb = false) {
+function facebook_post($text, $url, $thumb = false) {
 	require_once(mnminclude.'facebook-php-sdk/facebook.php');
 	global $globals;
 	 
@@ -143,7 +143,10 @@ function facebook_post($text, $url, $tumb = false) {
 				'access_token' => $globals['facebook_token']
 			);
 
-	if ($thumb) $data['picture'] = $thumb;
+	if ($thumb) {
+		$data['picture'] = $thumb;
+		syslog(LOG_INFO, "Meneame, picture sent to FB: $thumb");
+	}
 	$r = $facebook->api('/me/links', 'POST', $data);
 }
 
