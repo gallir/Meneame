@@ -126,7 +126,7 @@ function pubsub_post() {
 }
 
 
-function facebook_post($link, $text) {
+function facebook_post($link, $text = '') {
 	require_once(mnminclude.'facebook-php-sdk/facebook.php');
 	global $globals;
 
