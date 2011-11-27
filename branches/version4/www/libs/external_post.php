@@ -26,11 +26,11 @@ function twitter_post($text, $short_url) {
 	$acc_url = 'http://twitter.com/oauth/access_token';
 	$authurl = 'http://twitter.com/oauth/authorize';
 	$api_url = 'http://twitter.com/statuses/update.json';
-	  
+
 	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
 	$oauth->debug = 1;
 	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);
-			
+
 	$api_args = array("status" => $msg, "empty_param" => NULL);
 	/* No using geo yet
 	if (isset($entry['lat'])) {
@@ -92,7 +92,7 @@ function jaiku_post($text, $short_url) {
 	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
 	curl_setopt($session, CURLOPT_TIMEOUT, 20);
-	curl_setopt ($session, CURLOPT_FOLLOWLOCATION,1); 
+	curl_setopt ($session, CURLOPT_FOLLOWLOCATION,1);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($session, CURLOPT_POST, 1);
 	curl_setopt($session, CURLOPT_POSTFIELDS,$postdata);
@@ -126,29 +126,30 @@ function pubsub_post() {
 }
 
 
-function facebook_post($text, $url, $thumb = false) {
+function facebook_post($link, $text) {
 	require_once(mnminclude.'facebook-php-sdk/facebook.php');
 	global $globals;
-	 
+
+
 	$facebook = new Facebook(array(
 		 'appId'  => $globals['facebook_key'],
 		 'secret' => $globals['facebook_secret'],
 		 'cookie' => true,
 		 'perms' => 'read_stream, publish_stream',
 	));
-	
+
+	$thumb = $link->has_thumb();
+	if (! $thumb) {
+		$thumb = get_avatar_url($link->author, $link->avatar, 40);
+	}
+	syslog(LOG_INFO, "Meneame, picture sent to FB: $thumb");
+
 	$data = array(
-	 			'link' => $url,
-				'message' => $text, 
-				'access_token' => $globals['facebook_token']
+				'link' => $link->get_permalink(),
+				'message' => $text,
+				'access_token' => $globals['facebook_token'],
+				'picture' => $thumb
 			);
 
-	if ($thumb) {
-		$data['picture'] = $thumb;
-		syslog(LOG_INFO, "Meneame, picture sent to FB: $thumb");
-	}
 	$r = $facebook->api('/me/links', 'POST', $data);
 }
-
-
-?>
