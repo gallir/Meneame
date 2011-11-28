@@ -82,6 +82,10 @@ mobile_client = {{ globals.mobile }};
 			</form>
 		{% endif %}
 
+		{% if current_user.user_id > 0 %}
+		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
+		{% endif %}
+
 		<div class="info"><a class="tooltip l:{{ self.id }}">i</a></div>
 
 		</div>
