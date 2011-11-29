@@ -627,6 +627,7 @@ function put_smileys_callback(&$matches) {
 	static $translations = false;
 	if (!$translations) {
 		$translations = array(
+			'wall' => ' <img src="'.$globals['base_static'].'img/smileys/wall.gif" alt=":wall:" title=":wall:" width="27" height="20" /> ',
 			'troll' => ' <img src="'.$globals['base_static'].'img/smileys/trollface2.gif" alt=":troll:" title=":troll:" width="15" height="15" /> ',
 			'ffu' => ' <img src="'.$globals['base_static'].'img/smileys/fu.gif" alt=":ffu:" title=":ffu:" width="19" height="15" /> ',
 			'palm' => ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" /> ',
@@ -663,6 +664,7 @@ function put_smileys_callback(&$matches) {
 function normalize_smileys($str) {
 	global $globals;
 
+	$str=preg_replace('/(\s|^):wall:/i', '$1{wall}', $str);
 	$str=preg_replace('/(\s|^):troll:/i', '$1{troll}', $str);
 	$str=preg_replace('/(\s|^):ffu:/i', '$1{ffu}', $str);
 	$str=preg_replace('/(\s|^):palm:/i', '$1{palm}', $str);
