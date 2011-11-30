@@ -328,7 +328,7 @@ $globals['html_main'] = 'html1.php';
 // Store access stats
 $globals['save_pageloads'] = false;
 
-$globals['enabled_tags'] = 'b|i|em|strong|del'; // HTML tags allowed for comments and posts
+$globals['enabled_tags'] = 'b|i|em|strong|del|sup|sub'; // HTML tags allowed for comments and posts
 
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
