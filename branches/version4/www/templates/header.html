@@ -74,13 +74,8 @@
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
 {% else %}
-	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
-{% endif %}
-
-{% if globals.icon %}
-	<link rel="icon" href="{{globals.base_static}}{{globals.icon}}" type="image/png"/>
-{% else %}
-	<link rel="icon" href="{{globals.base_static}}img/favicons/logo_200x200.png" type="image/png"/>
+	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/logo_16x16.png" type="image/png" sizes="16x16"/>
+	<link rel="icon" href="{{globals.base_static}}img/favicons/logo_128x128.png" type="image/png" sizes="32x32 48x48 64x63 128x128"/>
 {% endif %}
 
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
