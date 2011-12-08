@@ -148,7 +148,8 @@ function facebook_post($link, $text = '') {
 				'link' => $link->get_permalink(),
 				'message' => $text,
 				'access_token' => $globals['facebook_token'],
-				'picture' => $thumb
+				'picture' => $thumb,
+				'icon' => $thumb
 			);
 
 	$r = $facebook->api('/me/links', 'POST', $data);

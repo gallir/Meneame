@@ -102,7 +102,7 @@ function save_post ($post_id) {
 		$db->transaction();
 		$dupe = intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 5 minute) and post_randkey = $post->randkey FOR UPDATE"));
 		if (! $dupe && ! $post->same_text_count() ) {
-			$same_links = $post->same_links_count();
+			$same_links = $post->same_links_count(10);
 			if ($same_links > 2) {
 				$reduction = $same_links * 0.2;
 				$user = new User($current_user->user_id);

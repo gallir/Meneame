@@ -522,7 +522,7 @@ class User {
 		$key = $db->escape($key);
 
 		if ($value == 0) {
-			return $db->query("delete from prefs where pref_user_id = $user and pref_key = '$key' limit 1");
+			return $db->query("delete from prefs where pref_user_id = $user and pref_key = '$key'");
 		} else {
 			return $db->query("replace into prefs set pref_value = $value, pref_user_id = $user, pref_key = '$key'");
 		}

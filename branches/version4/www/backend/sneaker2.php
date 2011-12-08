@@ -159,6 +159,10 @@ function check_chat() {
 		} else {
 			$comment = clean_text_with_tags($comment);
 			$comment = preg_replace('/(^|[\s\.,¿#@])\/me([\s\.,\?]|$)/', "$1<i>$current_user->user_login</i>$2", $comment);
+			if (mb_strlen($comment) > 255) {
+				// Cut text longer that database, to avoid unclosed html tags
+				$comment = mb_substr($comment, 0, 1) . mb_substr($comment, -254, 254);
+			}
 		}
 
 		$from = $now - 1500;

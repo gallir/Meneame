@@ -53,9 +53,16 @@ if ($_POST['process']=='newcomment') {
 
 $username = $comment->type == 'admin'?'admin':$comment->username;
 $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username);
-$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
 
-do_header(text_to_summary($comment->content, 120) . ' | '._('menéame'));
+$comment->check_visibility();
+if (! $comment->hide_comment) {
+	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
+	$title = text_to_summary($comment->content, 120) . ' | '._('menéame');
+} else {
+	$title = '';
+}
+
+do_header($title);
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';

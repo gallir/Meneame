@@ -178,7 +178,7 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 
 $globals['thumbnail'] = $link->has_thumb();
 
-$globals['description'] = _('Autor') . ": $link->username, " . _('Resumen') . ': '. text_to_summary($link->content, 250);
+$globals['description'] = text_to_summary($link->content, 250);
 
 do_header($link->title, 'post');
 
@@ -241,7 +241,7 @@ case 2:
 		do_comment_pages($link->comments, $current_page);
 	}
 
-	if ($link->comments > 5) {
+	if ($current_user->user_id > 0 && $link->comments > 5) {
 		echo '<script type="text/javascript">';
 		echo '$(window).load(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
 		echo '</script>';
@@ -474,7 +474,7 @@ function get_comment_page_url($i, $total, $query) {
 function print_relevant_comments($link) {
 	global $globals, $db;
 
-	if ($globals['bot'] || $link->comments < 15 ) return;
+	if ($globals['bot'] || $link->comments < 10 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 

@@ -18,7 +18,7 @@ if (empty($_SERVER['QUERY_STRING'])) {
 } else {
 	if (isset($_REQUEST['statics'])) {
 		do_statics();
-	} if (isset($_REQUEST['last'])) {
+	} elseif (isset($_REQUEST['last'])) {
 		do_last_published();
 	} else {
 		$page = (int) $_REQUEST['page'];
@@ -55,8 +55,9 @@ function do_master($size) {
 function do_statics() {
 	global $globals;
 
-	$urls = Array('shakeit.php', 'sneak.php', 'geovision.php', 'notame/', 'cloud.php', 'topstories.php', 'topcommented.php', 
-			'topcomments.php', 'sitescloud.php', 'topusers.php', 'map.php', 'faq-es.php', 'wii/', 'nds/');
+	$urls = Array('shakeit.php', 'sneak.php', 'geovision.php', 'notame/', 
+			'cloud.php', 'topstories.php', 'topcommented.php', 
+			'topcomments.php', 'sitescloud.php', 'topusers.php', 'faq-es.php');
 
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	// The index
