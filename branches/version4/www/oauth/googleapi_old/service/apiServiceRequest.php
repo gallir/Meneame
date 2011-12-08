@@ -22,6 +22,7 @@
  * the request
  *
  * @author Chris Chabot <chabotc@google.com>
+ * @author Chirag Shah <chirags@google.com>
  *
  */
 class apiServiceRequest {
@@ -37,15 +38,22 @@ class apiServiceRequest {
   protected $batchKey;
 
   /**
-   * Only used internally, so using a quick-and-dirty constructor
+   * @param apiIO $io
+   * @param string $restBasePath
+   * @param string $rpcPath
+   * @param string $restPath
+   * @param string $rpcName
+   * @param string $httpMethod
+   * @param $parameters
+   * @param $postBody
    */
   public function __construct(apiIO $io, $restBasePath, $rpcPath, $restPath, $rpcName, $httpMethod, $parameters, $postBody = null) {
-    global $apiConfig;
     $this->io = $io;
 
     if (substr($restBasePath, 0, 4) == 'http') {
       $this->restBasePath = $restBasePath;
     } else {
+      global $apiConfig;
       $this->restBasePath = $apiConfig['basePath'] . $restBasePath;
     }
 
@@ -72,14 +80,14 @@ class apiServiceRequest {
   }
 
   /**
-   * @return the $io
+   * @return apiIo $io
    */
   public function getIo() {
     return $this->io;
   }
 
   /**
-   * @param $io the $io to set
+   * @param apiIo $io
    */
   public function setIo($io) {
     $this->io = $io;
@@ -107,28 +115,28 @@ class apiServiceRequest {
   }
 
   /**
-   * @return the $rpcPath
+   * @return string $rpcPath
    */
   public function getRpcPath() {
     return $this->rpcPath;
   }
 
   /**
-   * @return the $rpcName
+   * @return string $rpcName
    */
   public function getRpcName() {
     return $this->rpcName;
   }
 
   /**
-   * @return the $httpMethod
+   * @return string $httpMethod
    */
   public function getHttpMethod() {
     return $this->httpMethod;
   }
 
   /**
-   * @return the $parameters
+   * @return array $parameters
    */
   public function getParameters() {
     return $this->parameters;
@@ -156,7 +164,7 @@ class apiServiceRequest {
   }
 
   /**
-   * @return the $batchKey
+   * @return string $batchKey
    */
   public function getBatchKey() {
     return $this->batchKey;

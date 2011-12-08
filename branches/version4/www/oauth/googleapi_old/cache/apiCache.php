@@ -31,7 +31,8 @@ abstract class apiCache {
    * key is unknown or expired
    *
    * @param String $key The key who's data to retrieve
-   * @param int $expiration Experiration time in seconds
+   * @param boolean|int $expiration Expiration time in seconds
+   *
    */
   abstract function get($key, $expiration = false);
 
@@ -40,7 +41,7 @@ abstract class apiCache {
    * by this function so can be of any type
    *
    * @param String $key Key of the data
-   * @param Any-type $value the data
+   * @param $value the data
    */
   abstract function set($key, $value);
 

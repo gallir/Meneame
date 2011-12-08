@@ -34,7 +34,7 @@ require_once 'service/apiServiceRequest.php';
     /**
      * Updates or creates the user's current location. (currentLocation.insert)
      *
-     * @param $postBody the {@link Location}
+     * @param Location $postBody
      * @return Location
      */
     public function insert(Location $postBody) {
@@ -89,7 +89,7 @@ require_once 'service/apiServiceRequest.php';
     /**
      * Inserts or updates a location in the user's location history. (location.insert)
      *
-     * @param $postBody the {@link Location}
+     * @param Location $postBody
      * @return Location
      */
     public function insert(Location $postBody) {
@@ -191,7 +191,6 @@ class apiLatitudeService extends apiService {
 }
 
 class Location extends apiModel {
-
   public $kind;
   public $altitude;
   public $longitude;
@@ -202,110 +201,84 @@ class Location extends apiModel {
   public $speed;
   public $heading;
   public $accuracy;
-
   public function setKind($kind) {
     $this->kind = $kind;
   }
-
   public function getKind() {
     return $this->kind;
   }
-  
   public function setAltitude($altitude) {
     $this->altitude = $altitude;
   }
-
   public function getAltitude() {
     return $this->altitude;
   }
-  
   public function setLongitude($longitude) {
     $this->longitude = $longitude;
   }
-
   public function getLongitude() {
     return $this->longitude;
   }
-  
   public function setActivityId($activityId) {
     $this->activityId = $activityId;
   }
-
   public function getActivityId() {
     return $this->activityId;
   }
-  
   public function setLatitude($latitude) {
     $this->latitude = $latitude;
   }
-
   public function getLatitude() {
     return $this->latitude;
   }
-  
   public function setAltitudeAccuracy($altitudeAccuracy) {
     $this->altitudeAccuracy = $altitudeAccuracy;
   }
-
   public function getAltitudeAccuracy() {
     return $this->altitudeAccuracy;
   }
-  
   public function setTimestampMs($timestampMs) {
     $this->timestampMs = $timestampMs;
   }
-
   public function getTimestampMs() {
     return $this->timestampMs;
   }
-  
   public function setSpeed($speed) {
     $this->speed = $speed;
   }
-
   public function getSpeed() {
     return $this->speed;
   }
-  
   public function setHeading($heading) {
     $this->heading = $heading;
   }
-
   public function getHeading() {
     return $this->heading;
   }
-  
   public function setAccuracy($accuracy) {
     $this->accuracy = $accuracy;
   }
-
   public function getAccuracy() {
     return $this->accuracy;
   }
-  
 }
 
-
 class LocationFeed extends apiModel {
-
+  protected $__itemsType = 'Location';
+  protected $__itemsDataType = 'array';
   public $items;
   public $kind;
-
-  public function setItems(Location $items) {
+  public function setItems(/* array(Location) */ $items) {
+    $this->assertIsArray($items, 'Location', __METHOD__);
     $this->items = $items;
   }
-
   public function getItems() {
     return $this->items;
   }
-  
   public function setKind($kind) {
     $this->kind = $kind;
   }
-
   public function getKind() {
     return $this->kind;
   }
-  
 }
-

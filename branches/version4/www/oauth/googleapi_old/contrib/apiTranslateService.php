@@ -154,139 +154,101 @@ class apiTranslateService extends apiService {
 }
 
 class DetectionsListResponse extends apiModel {
-
+  protected $__detectionsType = 'DetectionsResourceItems';
+  protected $__detectionsDataType = 'array';
   public $detections;
-
-  public function setDetections(DetectionsResource $detections) {
+  public function setDetections(/* array(DetectionsResourceItems) */ $detections) {
+    $this->assertIsArray($detections, 'DetectionsResourceItems', __METHOD__);
     $this->detections = $detections;
   }
-
   public function getDetections() {
     return $this->detections;
   }
-  
 }
-
-
-class LanguagesListResponse extends apiModel {
-
-  public $languages;
-
-  public function setLanguages(LanguagesResource $languages) {
-    $this->languages = $languages;
-  }
-
-  public function getLanguages() {
-    return $this->languages;
-  }
-  
-}
-
 
 class DetectionsResource extends apiModel {
-
-  public $items;
-
-  public function setItems(/* array() */ $items) {
-    $this->items = $items;
-  }
-
-
 }
 
-
 class DetectionsResourceItems extends apiModel {
-
   public $isReliable;
   public $confidence;
   public $language;
-
   public function setIsReliable($isReliable) {
     $this->isReliable = $isReliable;
   }
-
   public function getIsReliable() {
     return $this->isReliable;
   }
-  
   public function setConfidence($confidence) {
     $this->confidence = $confidence;
   }
-
   public function getConfidence() {
     return $this->confidence;
   }
-  
   public function setLanguage($language) {
     $this->language = $language;
   }
-
   public function getLanguage() {
     return $this->language;
   }
-  
 }
 
+class LanguagesListResponse extends apiModel {
+  protected $__languagesType = 'LanguagesResource';
+  protected $__languagesDataType = 'array';
+  public $languages;
+  public function setLanguages(/* array(LanguagesResource) */ $languages) {
+    $this->assertIsArray($languages, 'LanguagesResource', __METHOD__);
+    $this->languages = $languages;
+  }
+  public function getLanguages() {
+    return $this->languages;
+  }
+}
 
 class LanguagesResource extends apiModel {
-
   public $name;
   public $language;
-
   public function setName($name) {
     $this->name = $name;
   }
-
   public function getName() {
     return $this->name;
   }
-  
   public function setLanguage($language) {
     $this->language = $language;
   }
-
   public function getLanguage() {
     return $this->language;
   }
-  
 }
-
-
-class TranslationsResource extends apiModel {
-
-  public $detectedSourceLanguage;
-  public $translatedText;
-
-  public function setDetectedSourceLanguage($detectedSourceLanguage) {
-    $this->detectedSourceLanguage = $detectedSourceLanguage;
-  }
-
-  public function getDetectedSourceLanguage() {
-    return $this->detectedSourceLanguage;
-  }
-  
-  public function setTranslatedText($translatedText) {
-    $this->translatedText = $translatedText;
-  }
-
-  public function getTranslatedText() {
-    return $this->translatedText;
-  }
-  
-}
-
 
 class TranslationsListResponse extends apiModel {
-
+  protected $__translationsType = 'TranslationsResource';
+  protected $__translationsDataType = 'array';
   public $translations;
-
-  public function setTranslations(TranslationsResource $translations) {
+  public function setTranslations(/* array(TranslationsResource) */ $translations) {
+    $this->assertIsArray($translations, 'TranslationsResource', __METHOD__);
     $this->translations = $translations;
   }
-
   public function getTranslations() {
     return $this->translations;
   }
-  
 }
 
+class TranslationsResource extends apiModel {
+  public $detectedSourceLanguage;
+  public $translatedText;
+  public function setDetectedSourceLanguage($detectedSourceLanguage) {
+    $this->detectedSourceLanguage = $detectedSourceLanguage;
+  }
+  public function getDetectedSourceLanguage() {
+    return $this->detectedSourceLanguage;
+  }
+  public function setTranslatedText($translatedText) {
+    $this->translatedText = $translatedText;
+  }
+  public function getTranslatedText() {
+    return $this->translatedText;
+  }
+}

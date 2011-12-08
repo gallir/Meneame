@@ -31,12 +31,12 @@ class apiRPC {
       }
       $jsonRpcRequest[] = array(
         'id' => $request->getBatchKey(),
-        'method' => str_replace('buzz.', 'chili.', $request->getRpcName()),
+        'method' => $request->getRpcName(),
         'params' => $parameters,
       	'apiVersion' => 'v1'
       );
     }
-    $httpRequest = new apiHttpRequest($request->getRpcPath() . '?pp=1');
+    $httpRequest = new apiHttpRequest($request->getRpcPath());
     $httpRequest->setHeaders(array('Content-Type: application/json'));
     $httpRequest->setMethod('POST');
     $httpRequest->setPostBody(json_encode($jsonRpcRequest));

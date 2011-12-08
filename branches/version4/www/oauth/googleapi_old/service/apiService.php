@@ -50,14 +50,14 @@ class apiService {
   }
 
   /**
-   * @return the $io
+   * @return apiIo $io
    */
   public function getIo() {
     return $this->io;
   }
 
   /**
-   * @param $io the $io to set
+   * @param apiIo $io
    */
   public function setIo($io) {
     $this->io = $io;

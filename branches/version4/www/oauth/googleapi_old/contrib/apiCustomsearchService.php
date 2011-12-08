@@ -98,317 +98,135 @@ class apiCustomsearchService extends apiService {
   }
 }
 
-class Search extends apiModel {
-
-  public $promotions;
-  public $kind;
-  public $url;
-  public $items;
-  public $context;
-  public $queries;
-
-  public function setPromotions(Promotion $promotions) {
-    $this->promotions = $promotions;
-  }
-
-  public function getPromotions() {
-    return $this->promotions;
-  }
-  
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-
-  public function getKind() {
-    return $this->kind;
-  }
-  
-  public function setUrl(SearchUrl $url) {
-    $this->url = $url;
-  }
-
-  public function getUrl() {
-    return $this->url;
-  }
-  
-  public function setItems(Result $items) {
-    $this->items = $items;
-  }
-
-  public function getItems() {
-    return $this->items;
-  }
-  
-  public function setContext(Context $context) {
-    $this->context = $context;
-  }
-
-  public function getContext() {
-    return $this->context;
-  }
-  
-  public function setQueries(Query $queries) {
-    $this->queries = $queries;
-  }
-
-  public function getQueries() {
-    return $this->queries;
-  }
-  
-}
-
-
-class PromotionImage extends apiModel {
-
-  public $source;
-  public $width;
-  public $height;
-
-  public function setSource($source) {
-    $this->source = $source;
-  }
-
-  public function getSource() {
-    return $this->source;
-  }
-  
-  public function setWidth($width) {
-    $this->width = $width;
-  }
-
-  public function getWidth() {
-    return $this->width;
-  }
-  
-  public function setHeight($height) {
-    $this->height = $height;
-  }
-
-  public function getHeight() {
-    return $this->height;
-  }
-  
-}
-
-
-class ContextFacetsItems extends apiModel {
-
-  public $anchor;
-  public $label;
-
-  public function setAnchor($anchor) {
-    $this->anchor = $anchor;
-  }
-
-  public function getAnchor() {
-    return $this->anchor;
-  }
-  
-  public function setLabel($label) {
-    $this->label = $label;
-  }
-
-  public function getLabel() {
-    return $this->label;
-  }
-  
-}
-
-
-class SearchUrl extends apiModel {
-
-  public $type;
-  public $template;
-
-  public function setType($type) {
-    $this->type = $type;
-  }
-
-  public function getType() {
-    return $this->type;
-  }
-  
-  public function setTemplate($template) {
-    $this->template = $template;
-  }
-
-  public function getTemplate() {
-    return $this->template;
-  }
-  
-}
-
-
-class ResultPagemap extends apiModel {
-
-
-}
-
-
-class PromotionBodyLines extends apiModel {
-
-  public $url;
-  public $link;
-  public $title;
-
-  public function setUrl($url) {
-    $this->url = $url;
-  }
-
-  public function getUrl() {
-    return $this->url;
-  }
-  
-  public function setLink($link) {
-    $this->link = $link;
-  }
-
-  public function getLink() {
-    return $this->link;
-  }
-  
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-
-  public function getTitle() {
-    return $this->title;
-  }
-  
-}
-
-
-class Result extends apiModel {
-
-  public $kind;
-  public $title;
-  public $displayLink;
-  public $cacheId;
-  public $pagemap;
-  public $snippet;
-  public $htmlSnippet;
-  public $link;
-  public $htmlTitle;
-
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-
-  public function getKind() {
-    return $this->kind;
-  }
-  
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-
-  public function getTitle() {
-    return $this->title;
-  }
-  
-  public function setDisplayLink($displayLink) {
-    $this->displayLink = $displayLink;
-  }
-
-  public function getDisplayLink() {
-    return $this->displayLink;
-  }
-  
-  public function setCacheId($cacheId) {
-    $this->cacheId = $cacheId;
-  }
-
-  public function getCacheId() {
-    return $this->cacheId;
-  }
-  
-  public function setPagemap($pagemap) {
-    $this->pagemap = $pagemap;
-  }
-
-  public function getPagemap() {
-    return $this->pagemap;
-  }
-  
-  public function setSnippet($snippet) {
-    $this->snippet = $snippet;
-  }
-
-  public function getSnippet() {
-    return $this->snippet;
-  }
-  
-  public function setHtmlSnippet($htmlSnippet) {
-    $this->htmlSnippet = $htmlSnippet;
-  }
-
-  public function getHtmlSnippet() {
-    return $this->htmlSnippet;
-  }
-  
-  public function setLink($link) {
-    $this->link = $link;
-  }
-
-  public function getLink() {
-    return $this->link;
-  }
-  
-  public function setHtmlTitle($htmlTitle) {
-    $this->htmlTitle = $htmlTitle;
-  }
-
-  public function getHtmlTitle() {
-    return $this->htmlTitle;
-  }
-  
-}
-
-
 class Context extends apiModel {
-
+  protected $__facetsType = 'ContextFacets';
+  protected $__facetsDataType = 'array';
   public $facets;
   public $title;
-
-  public function setFacets(ContextFacetsItems $facets) {
+  public function setFacets(/* array(ContextFacets) */ $facets) {
+    $this->assertIsArray($facets, 'ContextFacets', __METHOD__);
     $this->facets = $facets;
   }
-
   public function getFacets() {
     return $this->facets;
   }
-  
   public function setTitle($title) {
     $this->title = $title;
   }
-
   public function getTitle() {
     return $this->title;
   }
-  
 }
-
-
-class SearchQueries extends apiModel {
-
-
-}
-
 
 class ContextFacets extends apiModel {
-
-  public $items;
-
-  public function setItems(/* array() */ $items) {
-    $this->items = $items;
+  public $anchor;
+  public $label;
+  public function setAnchor($anchor) {
+    $this->anchor = $anchor;
   }
-
-
+  public function getAnchor() {
+    return $this->anchor;
+  }
+  public function setLabel($label) {
+    $this->label = $label;
+  }
+  public function getLabel() {
+    return $this->label;
+  }
 }
 
+class Promotion extends apiModel {
+  public $link;
+  public $displayLink;
+  protected $__imageType = 'PromotionImage';
+  protected $__imageDataType = '';
+  public $image;
+  protected $__bodyLinesType = 'PromotionBodyLines';
+  protected $__bodyLinesDataType = 'array';
+  public $bodyLines;
+  public $title;
+  public function setLink($link) {
+    $this->link = $link;
+  }
+  public function getLink() {
+    return $this->link;
+  }
+  public function setDisplayLink($displayLink) {
+    $this->displayLink = $displayLink;
+  }
+  public function getDisplayLink() {
+    return $this->displayLink;
+  }
+  public function setImage(PromotionImage $image) {
+    $this->image = $image;
+  }
+  public function getImage() {
+    return $this->image;
+  }
+  public function setBodyLines(/* array(PromotionBodyLines) */ $bodyLines) {
+    $this->assertIsArray($bodyLines, 'PromotionBodyLines', __METHOD__);
+    $this->bodyLines = $bodyLines;
+  }
+  public function getBodyLines() {
+    return $this->bodyLines;
+  }
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+  public function getTitle() {
+    return $this->title;
+  }
+}
+
+class PromotionBodyLines extends apiModel {
+  public $url;
+  public $link;
+  public $title;
+  public function setUrl($url) {
+    $this->url = $url;
+  }
+  public function getUrl() {
+    return $this->url;
+  }
+  public function setLink($link) {
+    $this->link = $link;
+  }
+  public function getLink() {
+    return $this->link;
+  }
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+  public function getTitle() {
+    return $this->title;
+  }
+}
+
+class PromotionImage extends apiModel {
+  public $source;
+  public $width;
+  public $height;
+  public function setSource($source) {
+    $this->source = $source;
+  }
+  public function getSource() {
+    return $this->source;
+  }
+  public function setWidth($width) {
+    $this->width = $width;
+  }
+  public function getWidth() {
+    return $this->width;
+  }
+  public function setHeight($height) {
+    $this->height = $height;
+  }
+  public function getHeight() {
+    return $this->height;
+  }
+}
 
 class Query extends apiModel {
-
   public $count;
   public $sort;
   public $outputEncoding;
@@ -426,199 +244,246 @@ class Query extends apiModel {
   public $gl;
   public $totalResults;
   public $cref;
-
   public function setCount($count) {
     $this->count = $count;
   }
-
   public function getCount() {
     return $this->count;
   }
-  
   public function setSort($sort) {
     $this->sort = $sort;
   }
-
   public function getSort() {
     return $this->sort;
   }
-  
   public function setOutputEncoding($outputEncoding) {
     $this->outputEncoding = $outputEncoding;
   }
-
   public function getOutputEncoding() {
     return $this->outputEncoding;
   }
-  
   public function setLanguage($language) {
     $this->language = $language;
   }
-
   public function getLanguage() {
     return $this->language;
   }
-  
   public function setTitle($title) {
     $this->title = $title;
   }
-
   public function getTitle() {
     return $this->title;
   }
-  
   public function setGoogleHost($googleHost) {
     $this->googleHost = $googleHost;
   }
-
   public function getGoogleHost() {
     return $this->googleHost;
   }
-  
   public function setSafe($safe) {
     $this->safe = $safe;
   }
-
   public function getSafe() {
     return $this->safe;
   }
-  
   public function setSearchTerms($searchTerms) {
     $this->searchTerms = $searchTerms;
   }
-
   public function getSearchTerms() {
     return $this->searchTerms;
   }
-  
   public function setFilter($filter) {
     $this->filter = $filter;
   }
-
   public function getFilter() {
     return $this->filter;
   }
-  
   public function setStartIndex($startIndex) {
     $this->startIndex = $startIndex;
   }
-
   public function getStartIndex() {
     return $this->startIndex;
   }
-  
   public function setCx($cx) {
     $this->cx = $cx;
   }
-
   public function getCx() {
     return $this->cx;
   }
-  
   public function setStartPage($startPage) {
     $this->startPage = $startPage;
   }
-
   public function getStartPage() {
     return $this->startPage;
   }
-  
   public function setInputEncoding($inputEncoding) {
     $this->inputEncoding = $inputEncoding;
   }
-
   public function getInputEncoding() {
     return $this->inputEncoding;
   }
-  
   public function setCr($cr) {
     $this->cr = $cr;
   }
-
   public function getCr() {
     return $this->cr;
   }
-  
   public function setGl($gl) {
     $this->gl = $gl;
   }
-
   public function getGl() {
     return $this->gl;
   }
-  
   public function setTotalResults($totalResults) {
     $this->totalResults = $totalResults;
   }
-
   public function getTotalResults() {
     return $this->totalResults;
   }
-  
   public function setCref($cref) {
     $this->cref = $cref;
   }
-
   public function getCref() {
     return $this->cref;
   }
-  
 }
 
-
-class Promotion extends apiModel {
-
-  public $link;
-  public $displayLink;
-  public $image;
-  public $bodyLines;
+class Result extends apiModel {
+  public $kind;
   public $title;
-
-  public function setLink($link) {
-    $this->link = $link;
+  public $displayLink;
+  public $cacheId;
+  public $pagemap;
+  public $snippet;
+  public $htmlSnippet;
+  public $link;
+  public $htmlTitle;
+  public function setKind($kind) {
+    $this->kind = $kind;
   }
-
-  public function getLink() {
-    return $this->link;
+  public function getKind() {
+    return $this->kind;
   }
-  
-  public function setDisplayLink($displayLink) {
-    $this->displayLink = $displayLink;
-  }
-
-  public function getDisplayLink() {
-    return $this->displayLink;
-  }
-  
-  public function setImage(PromotionImage $image) {
-    $this->image = $image;
-  }
-
-  public function getImage() {
-    return $this->image;
-  }
-  
-  public function setBodyLines(PromotionBodyLines $bodyLines) {
-    $this->bodyLines = $bodyLines;
-  }
-
-  public function getBodyLines() {
-    return $this->bodyLines;
-  }
-  
   public function setTitle($title) {
     $this->title = $title;
   }
-
   public function getTitle() {
     return $this->title;
   }
-  
+  public function setDisplayLink($displayLink) {
+    $this->displayLink = $displayLink;
+  }
+  public function getDisplayLink() {
+    return $this->displayLink;
+  }
+  public function setCacheId($cacheId) {
+    $this->cacheId = $cacheId;
+  }
+  public function getCacheId() {
+    return $this->cacheId;
+  }
+  public function setPagemap($pagemap) {
+    $this->pagemap = $pagemap;
+  }
+  public function getPagemap() {
+    return $this->pagemap;
+  }
+  public function setSnippet($snippet) {
+    $this->snippet = $snippet;
+  }
+  public function getSnippet() {
+    return $this->snippet;
+  }
+  public function setHtmlSnippet($htmlSnippet) {
+    $this->htmlSnippet = $htmlSnippet;
+  }
+  public function getHtmlSnippet() {
+    return $this->htmlSnippet;
+  }
+  public function setLink($link) {
+    $this->link = $link;
+  }
+  public function getLink() {
+    return $this->link;
+  }
+  public function setHtmlTitle($htmlTitle) {
+    $this->htmlTitle = $htmlTitle;
+  }
+  public function getHtmlTitle() {
+    return $this->htmlTitle;
+  }
 }
 
-
-class ResultPagemapItems extends apiModel {
-
-
+class Search extends apiModel {
+  protected $__promotionsType = 'Promotion';
+  protected $__promotionsDataType = 'array';
+  public $promotions;
+  public $kind;
+  protected $__urlType = 'SearchUrl';
+  protected $__urlDataType = '';
+  public $url;
+  protected $__itemsType = 'Result';
+  protected $__itemsDataType = 'array';
+  public $items;
+  protected $__contextType = 'Context';
+  protected $__contextDataType = '';
+  public $context;
+  protected $__queriesType = 'Query';
+  protected $__queriesDataType = 'map';
+  public $queries;
+  public function setPromotions(/* array(Promotion) */ $promotions) {
+    $this->assertIsArray($promotions, 'Promotion', __METHOD__);
+    $this->promotions = $promotions;
+  }
+  public function getPromotions() {
+    return $this->promotions;
+  }
+  public function setKind($kind) {
+    $this->kind = $kind;
+  }
+  public function getKind() {
+    return $this->kind;
+  }
+  public function setUrl(SearchUrl $url) {
+    $this->url = $url;
+  }
+  public function getUrl() {
+    return $this->url;
+  }
+  public function setItems(/* array(Result) */ $items) {
+    $this->assertIsArray($items, 'Result', __METHOD__);
+    $this->items = $items;
+  }
+  public function getItems() {
+    return $this->items;
+  }
+  public function setContext(Context $context) {
+    $this->context = $context;
+  }
+  public function getContext() {
+    return $this->context;
+  }
+  public function setQueries(Query $queries) {
+    $this->queries = $queries;
+  }
+  public function getQueries() {
+    return $this->queries;
+  }
 }
 
+class SearchUrl extends apiModel {
+  public $type;
+  public $template;
+  public function setType($type) {
+    $this->type = $type;
+  }
+  public function getType() {
+    return $this->type;
+  }
+  public function setTemplate($template) {
+    $this->template = $template;
+  }
+  public function getTemplate() {
+    return $this->template;
+  }
+}

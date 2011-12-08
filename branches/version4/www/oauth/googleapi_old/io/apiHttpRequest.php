@@ -20,10 +20,11 @@
  * responseHttpCode, responseHeaders and responseBody will be filled in.
  *
  * @author Chris Chabot <chabotc@google.com>
+ * @author Chirag Shah <chirags@google.com>
  *
  */
 class apiHttpRequest {
-  const USER_AGENT_SUFFIX = "google-api-php-client/0.4.4";
+  const USER_AGENT_SUFFIX = "google-api-php-client/0.4.7";
 
   protected $url;
   protected $method;
@@ -81,42 +82,42 @@ class apiHttpRequest {
   }
 
   /**
-   * @return string the HTTP Response Code.
+   * @return string HTTP Response Code.
    */
   public function getResponseHttpCode() {
     return $this->responseHttpCode;
   }
 
   /**
-   * @param $responseHttpCode the $responseHttpCode to set.
+   * @param int $responseHttpCode HTTP Response Code.
    */
   public function setResponseHttpCode($responseHttpCode) {
     $this->responseHttpCode = $responseHttpCode;
   }
 
   /**
-   * @return array the $responseHeaders
+   * @return $responseHeaders (array) HTTP Response Headers.
    */
   public function getResponseHeaders() {
     return $this->responseHeaders;
   }
 
   /**
-   * @return string the $responseBody
+   * @return string HTTP Response Body
    */
   public function getResponseBody() {
     return $this->responseBody;
   }
 
   /**
-   * @param array $responseHeaders the $responseHeaders to set.
+   * @param array $responseHeaders The HTTP Response Headers.
    */
   public function setResponseHeaders($responseHeaders) {
     $this->responseHeaders = $responseHeaders;
   }
 
   /**
-   * @param string $responseBody the $responseBody to set.
+   * @param string $responseBody $responseBody to set.
    */
   public function setResponseBody($responseBody) {
     $this->responseBody = $responseBody;
@@ -131,7 +132,7 @@ class apiHttpRequest {
   }
 
   /**
-   * @return string the $method
+   * @return string $method
    */
   public function getMethod() {
     return $this->method;

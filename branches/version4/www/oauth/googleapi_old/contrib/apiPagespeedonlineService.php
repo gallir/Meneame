@@ -90,341 +90,288 @@ class apiPagespeedonlineService extends apiService {
   }
 }
 
-class ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs extends apiModel {
-
-  public $type;
-  public $value;
-
-  public function setType($type) {
-    $this->type = $type;
-  }
-
-  public function getType() {
-    return $this->type;
-  }
-  
-  public function setValue($value) {
-    $this->value = $value;
-  }
-
-  public function getValue() {
-    return $this->value;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails extends apiModel {
-
-  public $args;
-  public $format;
-
-  public function setArgs(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs $args) {
-    $this->args = $args;
-  }
-
-  public function getArgs() {
-    return $this->args;
-  }
-  
-  public function setFormat($format) {
-    $this->format = $format;
-  }
-
-  public function getFormat() {
-    return $this->format;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs extends apiModel {
-
-  public $type;
-  public $value;
-
-  public function setType($type) {
-    $this->type = $type;
-  }
-
-  public function getType() {
-    return $this->type;
-  }
-  
-  public function setValue($value) {
-    $this->value = $value;
-  }
-
-  public function getValue() {
-    return $this->value;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksUrls extends apiModel {
-
-  public $details;
-  public $result;
-
-  public function setDetails(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails $details) {
-    $this->details = $details;
-  }
-
-  public function getDetails() {
-    return $this->details;
-  }
-  
-  public function setResult(ResultFormattedResultsRuleResultsUrlBlocksUrlsResult $result) {
-    $this->result = $result;
-  }
-
-  public function getResult() {
-    return $this->result;
-  }
-  
-}
-
-
-class ResultVersion extends apiModel {
-
-  public $major;
-  public $minor;
-
-  public function setMajor($major) {
-    $this->major = $major;
-  }
-
-  public function getMajor() {
-    return $this->major;
-  }
-  
-  public function setMinor($minor) {
-    $this->minor = $minor;
-  }
-
-  public function getMinor() {
-    return $this->minor;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResults extends apiModel {
-
-
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs extends apiModel {
-
-  public $type;
-  public $value;
-
-  public function setType($type) {
-    $this->type = $type;
-  }
-
-  public function getType() {
-    return $this->type;
-  }
-  
-  public function setValue($value) {
-    $this->value = $value;
-  }
-
-  public function getValue() {
-    return $this->value;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksUrlsResult extends apiModel {
-
-  public $args;
-  public $format;
-
-  public function setArgs(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs $args) {
-    $this->args = $args;
-  }
-
-  public function getArgs() {
-    return $this->args;
-  }
-  
-  public function setFormat($format) {
-    $this->format = $format;
-  }
-
-  public function getFormat() {
-    return $this->format;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocks extends apiModel {
-
-  public $header;
-  public $urls;
-
-  public function setHeader(ResultFormattedResultsRuleResultsUrlBlocksHeader $header) {
-    $this->header = $header;
-  }
-
-  public function getHeader() {
-    return $this->header;
-  }
-  
-  public function setUrls(ResultFormattedResultsRuleResultsUrlBlocksUrls $urls) {
-    $this->urls = $urls;
-  }
-
-  public function getUrls() {
-    return $this->urls;
-  }
-  
-}
-
-
-class ResultFormattedResultsRuleResultsUrlBlocksHeader extends apiModel {
-
-  public $args;
-  public $format;
-
-  public function setArgs(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs $args) {
-    $this->args = $args;
-  }
-
-  public function getArgs() {
-    return $this->args;
-  }
-  
-  public function setFormat($format) {
-    $this->format = $format;
-  }
-
-  public function getFormat() {
-    return $this->format;
-  }
-  
-}
-
-
 class Result extends apiModel {
-
   public $kind;
+  protected $__formattedResultsType = 'ResultFormattedResults';
+  protected $__formattedResultsDataType = '';
   public $formattedResults;
   public $title;
+  protected $__versionType = 'ResultVersion';
+  protected $__versionDataType = '';
   public $version;
   public $score;
   public $responseCode;
   public $invalidRules;
+  protected $__pageStatsType = 'ResultPageStats';
+  protected $__pageStatsDataType = '';
   public $pageStats;
   public $id;
-
   public function setKind($kind) {
     $this->kind = $kind;
   }
-
   public function getKind() {
     return $this->kind;
   }
-  
   public function setFormattedResults(ResultFormattedResults $formattedResults) {
     $this->formattedResults = $formattedResults;
   }
-
   public function getFormattedResults() {
     return $this->formattedResults;
   }
-  
   public function setTitle($title) {
     $this->title = $title;
   }
-
   public function getTitle() {
     return $this->title;
   }
-  
   public function setVersion(ResultVersion $version) {
     $this->version = $version;
   }
-
   public function getVersion() {
     return $this->version;
   }
-  
   public function setScore($score) {
     $this->score = $score;
   }
-
   public function getScore() {
     return $this->score;
   }
-  
   public function setResponseCode($responseCode) {
     $this->responseCode = $responseCode;
   }
-
   public function getResponseCode() {
     return $this->responseCode;
   }
-  
-  public function setInvalidRules($invalidRules) {
+  public function setInvalidRules(/* array(string) */ $invalidRules) {
+    $this->assertIsArray($invalidRules, 'string', __METHOD__);
     $this->invalidRules = $invalidRules;
   }
-
   public function getInvalidRules() {
     return $this->invalidRules;
   }
-  
   public function setPageStats(ResultPageStats $pageStats) {
     $this->pageStats = $pageStats;
   }
-
   public function getPageStats() {
     return $this->pageStats;
   }
-  
   public function setId($id) {
     $this->id = $id;
   }
-
   public function getId() {
     return $this->id;
   }
-  
 }
 
-
 class ResultFormattedResults extends apiModel {
-
   public $locale;
+  protected $__ruleResultsType = 'ResultFormattedResultsRuleResults';
+  protected $__ruleResultsDataType = 'map';
   public $ruleResults;
-
   public function setLocale($locale) {
     $this->locale = $locale;
   }
-
   public function getLocale() {
     return $this->locale;
   }
-  
   public function setRuleResults(ResultFormattedResultsRuleResults $ruleResults) {
     $this->ruleResults = $ruleResults;
   }
-
   public function getRuleResults() {
     return $this->ruleResults;
   }
-  
 }
 
+class ResultFormattedResultsRuleResults extends apiModel {
+  public $localizedRuleName;
+  protected $__urlBlocksType = 'ResultFormattedResultsRuleResultsUrlBlocks';
+  protected $__urlBlocksDataType = 'array';
+  public $urlBlocks;
+  public $ruleScore;
+  public $ruleImpact;
+  public function setLocalizedRuleName($localizedRuleName) {
+    $this->localizedRuleName = $localizedRuleName;
+  }
+  public function getLocalizedRuleName() {
+    return $this->localizedRuleName;
+  }
+  public function setUrlBlocks(/* array(ResultFormattedResultsRuleResultsUrlBlocks) */ $urlBlocks) {
+    $this->assertIsArray($urlBlocks, 'ResultFormattedResultsRuleResultsUrlBlocks', __METHOD__);
+    $this->urlBlocks = $urlBlocks;
+  }
+  public function getUrlBlocks() {
+    return $this->urlBlocks;
+  }
+  public function setRuleScore($ruleScore) {
+    $this->ruleScore = $ruleScore;
+  }
+  public function getRuleScore() {
+    return $this->ruleScore;
+  }
+  public function setRuleImpact($ruleImpact) {
+    $this->ruleImpact = $ruleImpact;
+  }
+  public function getRuleImpact() {
+    return $this->ruleImpact;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocks extends apiModel {
+  protected $__headerType = 'ResultFormattedResultsRuleResultsUrlBlocksHeader';
+  protected $__headerDataType = '';
+  public $header;
+  protected $__urlsType = 'ResultFormattedResultsRuleResultsUrlBlocksUrls';
+  protected $__urlsDataType = 'array';
+  public $urls;
+  public function setHeader(ResultFormattedResultsRuleResultsUrlBlocksHeader $header) {
+    $this->header = $header;
+  }
+  public function getHeader() {
+    return $this->header;
+  }
+  public function setUrls(/* array(ResultFormattedResultsRuleResultsUrlBlocksUrls) */ $urls) {
+    $this->assertIsArray($urls, 'ResultFormattedResultsRuleResultsUrlBlocksUrls', __METHOD__);
+    $this->urls = $urls;
+  }
+  public function getUrls() {
+    return $this->urls;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksHeader extends apiModel {
+  protected $__argsType = 'ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs';
+  protected $__argsDataType = 'array';
+  public $args;
+  public $format;
+  public function setArgs(/* array(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs) */ $args) {
+    $this->assertIsArray($args, 'ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs', __METHOD__);
+    $this->args = $args;
+  }
+  public function getArgs() {
+    return $this->args;
+  }
+  public function setFormat($format) {
+    $this->format = $format;
+  }
+  public function getFormat() {
+    return $this->format;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs extends apiModel {
+  public $type;
+  public $value;
+  public function setType($type) {
+    $this->type = $type;
+  }
+  public function getType() {
+    return $this->type;
+  }
+  public function setValue($value) {
+    $this->value = $value;
+  }
+  public function getValue() {
+    return $this->value;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksUrls extends apiModel {
+  protected $__detailsType = 'ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails';
+  protected $__detailsDataType = 'array';
+  public $details;
+  protected $__resultType = 'ResultFormattedResultsRuleResultsUrlBlocksUrlsResult';
+  protected $__resultDataType = '';
+  public $result;
+  public function setDetails(/* array(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails) */ $details) {
+    $this->assertIsArray($details, 'ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails', __METHOD__);
+    $this->details = $details;
+  }
+  public function getDetails() {
+    return $this->details;
+  }
+  public function setResult(ResultFormattedResultsRuleResultsUrlBlocksUrlsResult $result) {
+    $this->result = $result;
+  }
+  public function getResult() {
+    return $this->result;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails extends apiModel {
+  protected $__argsType = 'ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs';
+  protected $__argsDataType = 'array';
+  public $args;
+  public $format;
+  public function setArgs(/* array(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs) */ $args) {
+    $this->assertIsArray($args, 'ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs', __METHOD__);
+    $this->args = $args;
+  }
+  public function getArgs() {
+    return $this->args;
+  }
+  public function setFormat($format) {
+    $this->format = $format;
+  }
+  public function getFormat() {
+    return $this->format;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs extends apiModel {
+  public $type;
+  public $value;
+  public function setType($type) {
+    $this->type = $type;
+  }
+  public function getType() {
+    return $this->type;
+  }
+  public function setValue($value) {
+    $this->value = $value;
+  }
+  public function getValue() {
+    return $this->value;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksUrlsResult extends apiModel {
+  protected $__argsType = 'ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs';
+  protected $__argsDataType = 'array';
+  public $args;
+  public $format;
+  public function setArgs(/* array(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs) */ $args) {
+    $this->assertIsArray($args, 'ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs', __METHOD__);
+    $this->args = $args;
+  }
+  public function getArgs() {
+    return $this->args;
+  }
+  public function setFormat($format) {
+    $this->format = $format;
+  }
+  public function getFormat() {
+    return $this->format;
+  }
+}
+
+class ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs extends apiModel {
+  public $type;
+  public $value;
+  public function setType($type) {
+    $this->type = $type;
+  }
+  public function getType() {
+    return $this->type;
+  }
+  public function setValue($value) {
+    $this->value = $value;
+  }
+  public function getValue() {
+    return $this->value;
+  }
+}
 
 class ResultPageStats extends apiModel {
-
   public $otherResponseBytes;
   public $flashResponseBytes;
   public $totalRequestBytes;
@@ -438,110 +385,99 @@ class ResultPageStats extends apiModel {
   public $htmlResponseBytes;
   public $numberJsResources;
   public $textResponseBytes;
-
   public function setOtherResponseBytes($otherResponseBytes) {
     $this->otherResponseBytes = $otherResponseBytes;
   }
-
   public function getOtherResponseBytes() {
     return $this->otherResponseBytes;
   }
-  
   public function setFlashResponseBytes($flashResponseBytes) {
     $this->flashResponseBytes = $flashResponseBytes;
   }
-
   public function getFlashResponseBytes() {
     return $this->flashResponseBytes;
   }
-  
   public function setTotalRequestBytes($totalRequestBytes) {
     $this->totalRequestBytes = $totalRequestBytes;
   }
-
   public function getTotalRequestBytes() {
     return $this->totalRequestBytes;
   }
-  
   public function setNumberCssResources($numberCssResources) {
     $this->numberCssResources = $numberCssResources;
   }
-
   public function getNumberCssResources() {
     return $this->numberCssResources;
   }
-  
   public function setNumberResources($numberResources) {
     $this->numberResources = $numberResources;
   }
-
   public function getNumberResources() {
     return $this->numberResources;
   }
-  
   public function setCssResponseBytes($cssResponseBytes) {
     $this->cssResponseBytes = $cssResponseBytes;
   }
-
   public function getCssResponseBytes() {
     return $this->cssResponseBytes;
   }
-  
   public function setJavascriptResponseBytes($javascriptResponseBytes) {
     $this->javascriptResponseBytes = $javascriptResponseBytes;
   }
-
   public function getJavascriptResponseBytes() {
     return $this->javascriptResponseBytes;
   }
-  
   public function setImageResponseBytes($imageResponseBytes) {
     $this->imageResponseBytes = $imageResponseBytes;
   }
-
   public function getImageResponseBytes() {
     return $this->imageResponseBytes;
   }
-  
   public function setNumberHosts($numberHosts) {
     $this->numberHosts = $numberHosts;
   }
-
   public function getNumberHosts() {
     return $this->numberHosts;
   }
-  
   public function setNumberStaticResources($numberStaticResources) {
     $this->numberStaticResources = $numberStaticResources;
   }
-
   public function getNumberStaticResources() {
     return $this->numberStaticResources;
   }
-  
   public function setHtmlResponseBytes($htmlResponseBytes) {
     $this->htmlResponseBytes = $htmlResponseBytes;
   }
-
   public function getHtmlResponseBytes() {
     return $this->htmlResponseBytes;
   }
-  
   public function setNumberJsResources($numberJsResources) {
     $this->numberJsResources = $numberJsResources;
   }
-
   public function getNumberJsResources() {
     return $this->numberJsResources;
   }
-  
   public function setTextResponseBytes($textResponseBytes) {
     $this->textResponseBytes = $textResponseBytes;
   }
-
   public function getTextResponseBytes() {
     return $this->textResponseBytes;
   }
-  
 }
 
+class ResultVersion extends apiModel {
+  public $major;
+  public $minor;
+  public function setMajor($major) {
+    $this->major = $major;
+  }
+  public function getMajor() {
+    return $this->major;
+  }
+  public function setMinor($minor) {
+    $this->minor = $minor;
+  }
+  public function getMinor() {
+    return $this->minor;
+  }
+}

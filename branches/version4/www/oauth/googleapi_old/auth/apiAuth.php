@@ -25,6 +25,7 @@ require_once "apiOAuth2.php";
  *
  */
 abstract class apiAuth {
+  /** @var apiIo $io */
   public $io;
 
   abstract public function authenticate($service);
@@ -32,7 +33,7 @@ abstract class apiAuth {
   abstract public function setDeveloperKey($developerKey);
   abstract public function sign(apiHttpRequest $request);
 
-  public function setIo (apiIo $io) {
+  public function setIo(apiIo $io) {
     $this->io = $io;
   }
 }
