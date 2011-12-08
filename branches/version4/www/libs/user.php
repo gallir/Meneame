@@ -22,6 +22,7 @@ class User {
 	public $read = false;
 	public $id = 0;
 	public $username = '';
+	public $username_register = '';
 	public $level = 'normal';
 	public $admin = false;
 	public $modification = false;
@@ -29,6 +30,7 @@ class User {
 	public $ip = '';
 	public $pass = '';
 	public $email = '';
+	public $email_register = '';
 	public $avatar = 0;
 	public $names = '';
 	public $lang = 1;

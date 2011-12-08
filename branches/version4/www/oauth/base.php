@@ -77,7 +77,6 @@ class OAuthBase {
 		} else {
 			$user->username = $this->username;
 		}
-		$user->username_register = $user->username;
 		if (! $user->pass || preg_match('/$\$/', $user->pass) ) {
 			$user->pass = "\$$this->service\$$this->secret";
 		}
@@ -88,6 +87,7 @@ class OAuthBase {
 			$user->ip = $globals['user_ip'];
 			$user->email = $this->username.'@'.$this->service;
 			$user->email_register = $this->username.'@'.$this->service;
+			$user->username_register = $user->username;
 		}
 		syslog(LOG_NOTICE, "Meneame new user from $this->service: $user->username, $user->names");
 		$user->store();
