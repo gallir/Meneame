@@ -404,7 +404,7 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 
 	@include('local.php');
 	@include($_SERVER['HTTP_HOST'].'-local.php');
-	@include($_SERVER['SERVER_ADDR'].'-local.php');
+	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 
 	include mnminclude.'init.php';

@@ -566,6 +566,7 @@ class Comment extends LCPBase {
 		}
 
 		// Comment stored, just redirect to it page
+		header ('HTTP/1.1 303 Load');
 		header('Location: '.$link->get_permalink() . '#c-'.$comment->c_order);
 		die;
 		//return $error;
