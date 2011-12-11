@@ -10,7 +10,7 @@
 include(mnminclude.'html1.php');
 
 if (! $current_user->user_id) {
-	do_error(_('debe autentificarse'), 403);
+	do_error(_('debe autentificarse'), 401);
 }
 
 $globals['extra_js'][] = 'jquery-form.pack.js';

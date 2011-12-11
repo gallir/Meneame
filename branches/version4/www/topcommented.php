@@ -11,8 +11,8 @@ include(mnminclude.'html1.php');
 
 $globals['ads'] = true;
 
-$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'), _('un año'), _('todas'));
-$range_values = array(1, 2, 7, 30, 365, 0);
+$range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'));
+$range_values = array(1, 2, 7, 30);
 
 $offset=(get_current_page()-1)*$page_size;
 
@@ -23,14 +23,14 @@ if ($from >= count($range_values) || $from < 0 ) $from = 0;
 if ($range_values[$from] > 0) {
 	// we use this to allow sql caching
 	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$sql = "SELECT link_id, link_comments as comments FROM links WHERE  link_date > $from_time ORDER BY link_comments DESC ";
+	$sql = "SELECT link_id, link_comments as comments FROM links WHERE  link_date > $from_time ".$globals['allowed_categories_sql']." ORDER BY link_comments DESC ";
 	$time_link = "link_date > FROM_UNIXTIME($from_time)";
 } else {
-	$sql = "SELECT link_id, link_comments as comments FROM links ORDER BY link_comments DESC ";
+	$sql = "SELECT link_id, link_comments as comments FROM links WHERE true ".$globals['allowed_categories_sql']." ORDER BY link_comments DESC ";
 	$time_link = '';
 }
 
-do_header(_('más comentadas') . ' | ' . _('menéame'));
+do_header(_('más comentadas') . ' | ' . $globals['site_name']);
 do_tabs('main', _('más comentadas'), true);
 print_period_tabs();
 
@@ -52,15 +52,15 @@ $link = new Link;
 
 // Use memcache if available
 if ($globals['memcache_host'] && get_current_page() < 4) {
-	$memcache_key = 'topcommented_'.$from.'_'.get_current_page();
+	$memcache_key = 'topcommented_'.$globals['site_shortname'].$from.'_'.get_current_page();
 }
 
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
 	// It's not in memcache
 	if ($time_link) {
-		$rows = min(100, $db->get_var("SELECT count(*) FROM links WHERE $time_link"));
+		$rows = min(100, $db->get_var("SELECT count(*) FROM links WHERE $time_link ".$globals['allowed_categories_sql']));
 	} else {
-		$rows = min(100, $db->get_var("SELECT count(*) FROM links"));
+		$rows = -1; // min(100, $db->get_var("SELECT count(*) FROM links"));
 	}
 	if ($rows == 0) {
 		do_error(_('no hay noticias seleccionadas'), 500);

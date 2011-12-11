@@ -11,7 +11,7 @@ include(mnminclude.'html1.php');
 
 $globals['ads'] = true;
 
-do_header(_('destacadas') . ' | ' . _('menéame'));
+do_header(_('destacadas') . ' | ' . $globals['site_name']);
 $globals['tag_status'] = 'published';
 do_tabs('main', 'active');
 
@@ -26,14 +26,14 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-$top = new Annotation("top-active");
+$top = new Annotation('top-active-'.$globals['site_shortname']);
 if ($top->read() && ($links = explode(',',$top->text))) {
 	$counter = 0;
 	foreach($links as $id) {
 		$link = Link::from_db($id);
 		$link->show_clicks = true;
 		$link->print_summary();
-		$counter++; 
+		$counter++;
 		Haanga::Safe_Load('private/ad-interlinks-500.html', compact('counter'));
 	}
 }

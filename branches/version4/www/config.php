@@ -24,7 +24,23 @@
 // and/or "local.php"
 // They are automatically included
 //$globals['server_name']	= $_SERVER['HTTP_HOST'];
+$globals['site_name'] = 'Menéame';
+$globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
+$globals['v'] = 1; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
+
+// Show only these meta categories, false for all
+$globals['allowed_metas'] = false;
+// Must be an array, example
+// $globals['allowed_metas'] = array(100, 101, 102, 103);
+
+
+// Show only these categories, false for all
+$globals['allowed_categories'] = false;
+// Must be an array, example
+// $globals['allowed_categories'] = array(1, 4, 8, 9, 11, 13, 15);
+
+
 $globals['page_size'] = $page_size	= 30;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['external_ads'] = $external_ads = true;
@@ -319,9 +335,9 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 // Main javascript file
 $globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js';
-$globals['js_main'] = 'general.js.php?v=46'; //?N is to force reloading for newer versions
+$globals['js_main'] = 'general.js.php'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
-$globals['css_main'] = 'css/es/mnm.css?v=52'; //?N is to force reloading for newer versions
+$globals['css_main'] = 'css/es/mnm.css'; //?N is to force reloading for newer versions
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

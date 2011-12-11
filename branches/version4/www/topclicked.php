@@ -21,7 +21,7 @@ $offset=($current_page-1)*$page_size;
 
 // Select a month and year
 if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
-	$sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM links WHERE YEAR(link_date) = $year AND MONTH(link_date) = $month AND link_status = 'published' ORDER BY link_votes DESC ";
+	$sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM links WHERE YEAR(link_date) = $year AND MONTH(link_date) = $month AND link_status = 'published' ".$globals['allowed_categories_sql']." ORDER BY link_votes DESC ";
 	$time_link = "YEAR(link_date) = $year AND MONTH(link_date) = $month";
 } else {
 	// Select from a start date
@@ -30,7 +30,7 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 
 	// Use memcache if available
 	if ($globals['memcache_host'] && $current_page < 4) {
-		$memcache_key = 'topclicked_'.$from.'_'.$current_page;
+		$memcache_key = 'topclicked_'.$globals['site_shortname'].$from.'_'.$current_page;
 	}
 
 	if ($range_values[$from] > 0) {
@@ -41,14 +41,14 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 		} else {
 			$status = "AND link_status in ('published', 'queued')";
 		}
-		$sql = "SELECT link_id, counter FROM links, link_clicks WHERE link_date > $from_time $status AND link_clicks.id = link_id ORDER BY counter DESC ";
+		$sql = "SELECT link_id, counter FROM links, link_clicks WHERE link_date > $from_time $status AND link_clicks.id = link_id ".$globals['allowed_categories_sql']." ORDER BY counter DESC ";
 		$time_link = "link_date > $from_time";
 	}
 }
 
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
 	// It's not in cache, or memcache is disabled
-	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link $status");
+	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link $status ".$globals['allowed_categories_sql']);
 	$rows = min(4*$page_size, $rows); // Only up to 4 pages
 	if ($rows > 0) {
 		$links = $db->get_results("$sql LIMIT $offset,$page_size");
@@ -61,7 +61,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('más visitadas') . ' | ' . _('menéame'));
+do_header(_('más visitadas') . ' | ' . $globals['site_name']);
 $globals['tag_status'] = 'published';
 do_tabs('main', 'topclicked');
 print_period_tabs();

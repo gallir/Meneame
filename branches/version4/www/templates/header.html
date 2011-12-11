@@ -34,23 +34,23 @@
 {% endif %}
 
 {% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}?v={{globals.v}}"/>
 {% endif %}
 
 {% if globals.css_color %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
 {% endif %}
 
 {% for css in globals.extra_css %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}?v={{globals.v}}"/>
 {% endfor %}
 
 {# Definitions for mobile, iPad and TVs #}
 {% if globals.mobile %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
 {% else %}
 <style type="text/css">
-@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
+@import url({{globals.base_static}}css/handheld.css?v={{globals.v}}) print,tv,handheld,screen and (max-device-width: 680px);
 </style>
 {% endif %}
 
@@ -84,7 +84,7 @@
 
 
 <script src="{{ globals.jquery }}" type="text/javascript"></script>
-<script src="{{ globals.base_url }}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
 
 
 {% for js in globals.extra_js %}

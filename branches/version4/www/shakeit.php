@@ -45,7 +45,7 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$from = ", friends";
-		$where = "link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
+		$where = "link_date >  $from_time and link_status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 " . $globals['allowed_categories_sql'];
 		$order_by = "ORDER BY link_date DESC";
 		$tab = 2;
 		$globals['tag_status'] = 'queued';
@@ -54,7 +54,7 @@ switch ($globals['meta']) {
 		// Show  the hihgher karma first
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$where = "link_date > $from_time and link_status='queued' and link_karma > 10";
+		$where = "link_date > $from_time and link_status='queued' and link_karma > 10 " . $globals['allowed_categories_sql'];
 		$order_by = "ORDER BY link_karma DESC";
 		$tab = 3;
 		$globals['tag_status'] = 'queued';
@@ -64,8 +64,8 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$globals['ads'] = false;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$where = "link_status in ('discard', 'abuse', 'autodiscard')";
-		$order_by = " ORDER BY link_date DESC ";
+		$where = "link_status in ('discard', 'abuse', 'autodiscard') " . $globals['allowed_categories_sql'];
+		$order_by = "ORDER BY link_date DESC ";
 		$tab = 5;
 		$globals['tag_status'] = 'discard';
 		$rows = Link::count('discard') + Link::count('autodiscard') + Link::count('abuse');
@@ -81,7 +81,7 @@ switch ($globals['meta']) {
 			$tab = false;
 		} else {
 			$rows = Link::count('queued');
-			$where = "link_status='queued'";
+			$where = "link_status='queued' " . $globals['allowed_categories_sql'];
 			$tab = 1;
 		}
 		break;
@@ -92,7 +92,7 @@ if($cat) {
 }
 
 
-do_header(_('noticias pendientes') . ' | ' . _('menéame'));
+do_header(_('noticias pendientes') . ' | ' . $globals['site_name']);
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
@@ -140,7 +140,13 @@ function print_shakeit_tabs($option=-1) {
 	}
 	$items[] = array('id' => 1, 'url' => 'shakeit.php'.$globals['meta_skip'], 'title' => _('todas'));
 
-	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+	if ($globals['allowed_metas']) {
+		$extra = 'and category_id in ('.implode(',',$globals['allowed_metas']).')';
+	} else {
+		$extra = '';
+	}
+
+	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 $extra ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			$items[] = array(

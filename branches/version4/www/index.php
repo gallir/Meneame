@@ -40,7 +40,7 @@ $globals['ads_section'] = 'portada';
 
 $cat=$_REQUEST['category'];
 
-do_header(_('Menéame'));
+do_header($globals['site_name']);
 do_tabs('main','published');
 
 $from = '';
@@ -48,30 +48,31 @@ $from = '';
 if ($globals['meta_current'] > 0) {
 	$where = "link_status='published' and link_category in (".$globals['meta_categories'].") ";
 	print_index_tabs(); // No other view
-} elseif ($current_user->user_id > 0) { // Check authenticated users
+} else {
 	switch ($globals['meta']) {
 		case '_personal':
-			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$where = "link_date > $from_time and link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
+			// $from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+			$where = "link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			$rows = -1;
 			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			print_index_tabs(7); // Show "personal" as default
 			break;
 		case '_friends':
+			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 			$from = ", friends";
 			$where = "link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
+			$rows = -1;
 			print_index_tabs(1); // Friends
-		break;
+			break;
 		default:
 			print_index_tabs(0); // All
 			$rows = Link::count('published');
-			$where = "link_status='published' ";
+			$where = "link_status='published' " . $globals['allowed_categories_sql'];
 	}
-} else {
-	print_index_tabs(0); // No other view
-	$rows = Link::count('published');
-	$where = "link_status='published' ";
 }
+
 
 do_mnu_categories_horizontal($_REQUEST['category']);
 
@@ -137,11 +138,17 @@ function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
 	$items = array();
-	if ($current_user->has_personal) {
+	if (isset($current_user->has_personal)) {
 		$items[] = array('id' => 7, 'url' => '', 'title' => _('personal'));
 	}
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
-	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 ORDER BY category_id ASC");
+
+	if ($globals['allowed_metas']) {
+		$extra = 'and category_id in ('.implode(',',$globals['allowed_metas']).')';
+	} else {
+		$extra = '';
+	}
+	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 $extra ORDER BY category_id ASC");
 	if ($metas) {
 		foreach ($metas as $meta) {
 			$items[] = array(

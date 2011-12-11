@@ -700,14 +700,24 @@ function meta_get_current() {
 	$globals['meta_current'] = 0;
 	$globals['meta']  = clean_input_string($_REQUEST['meta']);
 
+
+	if ($globals['allowed_categories']) {
+		$globals['allowed_categories_str'] = implode(',', $globals['allowed_categories']);
+		$globals['allowed_categories_sql'] = 'and link_category in ('.$globals['allowed_categories_str'].')';
+	} else {
+		$globals['allowed_categories_str'] = $globals['allowed_categories_sql'] = '';
+	}
+
 	//Check for personalisation
 	// Authenticated users
 	if ($current_user->user_id > 0) {
 		$categories = $db->get_col("SELECT SQL_CACHE pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category' order by pref_value");
 		if ($categories) {
+			// The user has selected categories
 			$current_user->has_personal = true;
 			$globals['meta_skip'] = '?meta=_all';
 			if (! $globals['meta']) {
+				if ($globals['allowed_categories']) $categories = array_intersect($categories, $globals['allowed_categories']);
 				$globals['meta_categories'] = implode(',', $categories);
 				$globals['meta']= '_personal';
 			}
@@ -754,12 +764,18 @@ function meta_get_current() {
 			$globals['meta_current'] = 0;
 		}
 	}
+
 	return $globals['meta_current'];
 }
 
 function meta_get_categories_list($id) {
-	global $db;
-	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories WHERE category_parent = $id order by category_id");
+	global $db, $globals;
+	if ($globals['allowed_categories']) {
+		$extra = 'and category_id in ('. implode(',', $globals['allowed_categories']).')';
+	} else {
+		$extra = '';
+	}
+	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories WHERE category_parent = $id $extra order by category_id");
 	if (!$categories) return false;
 	return implode(',', $categories);
 }
@@ -1105,6 +1121,7 @@ function get_count($key, $seconds = 7200) { // Every two hours by default
 
 function set_count($key, $count) {
 	global $db;
+
 	return $db->query("REPLACE INTO counts (`key`, `count`) VALUES ('$key', $count)");
 }
 

@@ -73,6 +73,15 @@ if($_SERVER['HTTP_HOST']) {
 		$globals['referer'] = 'unknown';
 	}
 
+	// Init variables for allowed categories, it's used in several scripts
+	if ($globals['allowed_categories']) {
+		$globals['allowed_categories_str'] = implode(',', $globals['allowed_categories']);
+		$globals['allowed_categories_sql'] = 'and link_category in ('.$globals['allowed_categories_str'].')';
+	} else {
+		$globals['allowed_categories_str'] = $globals['allowed_categories_sql'] = '';
+	}
+
+
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {

@@ -60,7 +60,7 @@ switch ($sortby) {
 }
 // Sort by votes
 
-do_header(_('usuarios') . ' | ' . _('menéame'));
+do_header(_('usuarios') . ' | ' . $globals['site_name']);
 
 echo '<div id="singlewrap">' . "\n";
 echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>';

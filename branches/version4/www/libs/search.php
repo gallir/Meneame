@@ -226,7 +226,7 @@ function sphinx_doc_hits($q, $index = 'links') {
 
 
 function db_get_search_links($by_date = false, $start = 0, $count = 50) {
-	global $db;
+	global $db, $globals;
 	// For now it serves for search specific blogs (used from most voted sites)
 
 	$response = array();
@@ -255,8 +255,8 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$hours = intval($_REQUEST['h']);
 		$where .= " and link_date > date_sub(now(), interval $hours hour)";
 	}
-	if ($where && $from) { 
-		$sql = "select link_id from $from where $where $order limit $start,$count";
+	if ($where && $from) {
+		$sql = "select link_id from $from where $where ".$globals['allowed_categories_sql']." $order limit $start,$count";
 		$response['rows'] = $db->get_var("select count(*) from $from where $where");
 		if ($response['rows'] > 0) {
 			$response['ids'] = array();
@@ -309,7 +309,7 @@ function search_parse_query() {
 				$_REQUEST['p'] = 'tags';
 				break;
 		}
-	} 
+	}
 
 
 	// Check filters and clean
