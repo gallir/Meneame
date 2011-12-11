@@ -26,7 +26,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-$top = new Annotation('top-active-'.$globals['site_shortname']);
+$top = new Annotation('top-actives-'.$globals['site_shortname']);
 if ($top->read() && ($links = explode(',',$top->text))) {
 	$counter = 0;
 	foreach($links as $id) {

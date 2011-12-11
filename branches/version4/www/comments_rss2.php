@@ -109,7 +109,7 @@ if ($_REQUEST['q']) {
 	//
 	$id = 0;
 	if ($if_modified > 0)
-		$from_time = "comment_date > FROM_UNIXTIME($if_modified)";
+		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments, links WHERE link_id = comment_link_id ".$globals['allowed_categories_sql']." $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
 	$title = $globals['site_name'].': '._('comentarios');
