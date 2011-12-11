@@ -12,7 +12,7 @@ if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 300) $rows = 100; //avoid abuses
 } else $rows = 100;
-	
+
 // Bug in FeedBurner, it needs all items
 if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$if_modified = 0;
@@ -33,7 +33,7 @@ if ($_REQUEST['q']) {
 		$sql = "SELECT comment_id FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT $rows";
 		$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_id in ($ids) ORDER BY comment_id DESC LIMIT 1");
 	}
-	$title = _('Menéame').': '._('búsqueda en comentarios') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
+	$title = $globals['site_name'].': '._('búsqueda en comentarios') . ': ' . htmlspecialchars(strip_tags($_REQUEST['q']));
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['id'])) {
 	//
@@ -48,7 +48,7 @@ if ($_REQUEST['q']) {
 	}
 	$sql = "SELECT comment_id FROM comments WHERE comment_link_id=$id $extra_sql ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_link_id=$id ORDER BY comment_date DESC LIMIT 1");
-	$title = _('Menéame').': '._('comentarios') . " [$id]";
+	$title = $globals['site_name'].': '._('comentarios') . " [$id]";
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['user_id'])) {
 	//
@@ -57,25 +57,25 @@ if ($_REQUEST['q']) {
 	$individual_user = true;
 	$id = guess_user_id($_GET['user_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0) 
+	if ($if_modified > 0)
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments WHERE comment_user_id=$id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments WHERE comment_user_id=$id ORDER BY comment_date DESC LIMIT 1");
-	$title = _('Menéame').': '.sprintf(_('comentarios de %s'), $username);
+	$title = $globals['site_name'].': '.sprintf(_('comentarios de %s'), $username);
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['conversation_id'])) {
-	// 
+	//
 	// Comments in news where the user has commented
 	//
 	$id = guess_user_id($_GET['conversation_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0 && $if_modified > time() - 86400*3 ) 
+	if ($if_modified > 0 && $if_modified > time() - 86400*3 )
 		$from_time = "FROM_UNIXTIME($if_modified)";
-	else 
+	else
 		$from_time = "date_sub(now(), interval 5 day)";
 	$sql = "SELECT DISTINCT comments1.comment_id FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comments1.comment_date) FROM comments AS comments1  INNER JOIN comments AS comments2 WHERE comments1.comment_link_id = comments2.comment_link_id AND comments2.comment_user_id=$id AND comments2.comment_date > $from_time order by comments1.comment_id desc LIMIT 1");
-	$title = _('Menéame').': '.sprintf(_('conversación de %s'), $username);
+	$title = $globals['site_name'].': '.sprintf(_('conversación de %s'), $username);
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['author_id'])) {
 	//
@@ -84,11 +84,11 @@ if ($_REQUEST['q']) {
 	$individual_user = true;
 	$id = guess_user_id($_GET['author_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0) 
+	if ($if_modified > 0)
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT comment_id FROM comments, links  WHERE link_author=$id and comment_link_id=link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, links WHERE link_author=$id and comment_link_id=link_id ORDER BY comment_date DESC LIMIT 1");
-	$title = _('Menéame').': '.sprintf(_('comentarios noticias de %s'), $username);
+	$title = $globals['site_name'].': '.sprintf(_('comentarios noticias de %s'), $username);
 	$globals['redirect_feedburner'] = false;
 } elseif(!empty($_GET['answers_id'])) {
 	//
@@ -97,35 +97,35 @@ if ($_REQUEST['q']) {
 	$individual_user = true;
 	$id = guess_user_id($_GET['answers_id']);
 	$username = $db->get_var("select user_login from users where user_id=$id");
-	if ($if_modified > 0) 
+	if ($if_modified > 0)
 		$from_time = "AND conversation_time > FROM_UNIXTIME($if_modified)";
 	$sql = "SELECT conversation_from FROM conversations  WHERE  conversation_user_to=$id and conversation_type='comment' $from_time ORDER BY conversation_time DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(conversation_time) FROM conversations WHERE conversation_user_to=$id and conversation_type='comment'  ORDER BY conversation_time DESC LIMIT 1");
-	$title = _('Menéame').': '.sprintf(_('respuestas a %s'), $username);
+	$title = $globals['site_name'].': '.sprintf(_('respuestas a %s'), $username);
 	$globals['redirect_feedburner'] = false;
 } else {
 	//
 	// All comments
 	//
 	$id = 0;
-	if ($if_modified > 0) 
-		$from_time = "WHERE comment_date > FROM_UNIXTIME($if_modified)";
-	$sql = "SELECT comment_id FROM comments $from_time ORDER BY comment_date DESC LIMIT $rows";
+	if ($if_modified > 0)
+		$from_time = "comment_date > FROM_UNIXTIME($if_modified)";
+	$sql = "SELECT comment_id FROM comments, links WHERE link_id = comment_link_id ".$globals['allowed_categories_sql']." $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
-	$title = _('Menéame').': '._('comentarios');
+	$title = $globals['site_name'].': '._('comentarios');
 	$globals['redirect_feedburner'] = false;
 }
 
 	/*****  WARNING
 		this function is to redirect to feed burner
 		comment it out
-		You have been warned 
+		You have been warned
 	***/
 
 	if (!$search && empty($_REQUEST['category'])) {
 		check_redirect_to_feedburner();
 	}
-	
+
 	/****
 	END WARNING ******/
 
@@ -174,17 +174,17 @@ if ($comments) {
 		echo "]]></description>\n";
 		echo "	</item>\n\n";
 	}
-} 
+}
 
 do_footer();
 
 function do_header($title) {
 	global $if_modified, $last_modified, $dblang, $globals;
 
-	if (!$last_modified > 0) { 
+	if (!$last_modified > 0) {
 		if ($if_modified > 0)
 			$last_modified = $if_modified;
-		else 
+		else
 			$last_modified = time();
 	}
 	header('X-If-Modified: '. gmdate('D, d M Y H:i:s',$if_modified));

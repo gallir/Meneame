@@ -14,7 +14,7 @@ if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 200) $rows = 50; //avoid abuses
 } else $rows = 50;
-	
+
 // Bug in FeedBurner, it needs all items
 if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$if_modified = 0;
@@ -31,13 +31,13 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	if(!($time = check_integer('time')))
 		die;
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";	
+	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";
 	if ($time < 0 || $time > 86400*5) $time = 86400*2;
 	$from = time()-$time;
 	$sql .= "link_date > FROM_UNIXTIME($from) AND ";
-	$sql .= "link_status = 'published' ORDER BY link_votes DESC LIMIT $rows";
+	$sql .= "link_status = 'published' ".$globals['allowed_categories_sql']." ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
-	$title = _('Menéame').': '.sprintf(_('más votadas en %s'), txt_time_diff($from));
+	$title = $globals['site_name'].': '.sprintf(_('más votadas en %s'), txt_time_diff($from));
 } elseif (!empty($_REQUEST['favorites'])) {
 	/////
 	// RSS for users' favorites
@@ -46,7 +46,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links, favorites WHERE favorite_user_id=$user_id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY favorite_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(favorite_date)) from favorites where favorite_user_id=$user_id AND favorite_type='link'");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame').': '.sprintf(_('favoritas de %s'), $user_login);
+	$title = $globals['site_name'].': '.sprintf(_('favoritas de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['voted_by'])) {
 	// RSS for voted links
@@ -55,7 +55,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT vote_link_id FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(vote_date) FROM votes WHERE vote_type='links' and vote_user_id = $user_id and vote_value > 0 ORDER BY vote_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame').': '.sprintf(_('votadas por %s'), $user_login);
+	$title = $globals['site_name'].': '.sprintf(_('votadas por %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['friends_of'])) {
 	/////
@@ -65,7 +65,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(link_date) FROM links, friends WHERE friend_type='manual' and friend_from = $user_id and friend_to=link_author and friend_value > 0 and link_status in ('queued', 'published') ORDER BY link_date DESC limit 1");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame').': '.sprintf(_('amigos de %s'), $user_login);
+	$title = $globals['site_name'].': '.sprintf(_('amigos de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } elseif (!empty($_REQUEST['sent_by'])) {
 	/////
@@ -75,7 +75,7 @@ if(!empty($_REQUEST['time'])) {
 	$sql = "SELECT link_id FROM links WHERE link_author=$user_id and link_votes > 0 ORDER BY link_id DESC limit $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(max(link_date)) from links where link_author=$user_id and link_votes > 0");
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
-	$title = _('Menéame').': '.sprintf(_('noticias de %s'), $user_login);
+	$title = $globals['site_name'].': '.sprintf(_('noticias de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
 } else {
 	/////
@@ -97,15 +97,15 @@ if(!empty($_REQUEST['time'])) {
 			$status = 'published';
 		}
 	}
-	
+
 	switch ($status) {
 		case 'published':
 			$order_field = 'link_date';
 			$link_date = 'date';
-			$title = _('Menéame').': '._('publicadas');
+			$title = $globals['site_name'].': '._('publicadas');
 			break;
 		case 'queued':
-			$title = _('Menéame').': '._('en cola');
+			$title = $globals['site_name'].': '._('en cola');
 			$order_field = 'link_date';
 			$link_date = "date";
 			$home = "/shakeit.php";
@@ -115,7 +115,7 @@ if(!empty($_REQUEST['time'])) {
 		case 'all':
 		case 'all_local':
 		default:
-			$title = _('Menéame').': '._('todas');
+			$title = $globals['site_name'].': '._('todas');
 			$order_field = 'link_date';
 			$link_date = "date";
 			break;
@@ -131,11 +131,11 @@ if(!empty($_REQUEST['time'])) {
 		}
 		check_redirect_to_feedburner($status);
 	}
-	
+
 	/*****  END WARNING ******/
-	
-	
-	
+
+
+
 	if($status == 'all' || $status == 'all_local') {
 		$from_where = "FROM links WHERE link_status in  ('published', 'queued') AND link_date > date_sub(now(), interval 7 day) ";
 	} else {
@@ -149,9 +149,9 @@ if(!empty($_REQUEST['time'])) {
 		} else {
 			$from_where .= "AND false"; // Force to return empty set
 		}
-		$title = _('Menéame') . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
+		$title = $globals['site_name'] . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
 	}
-	
+
 
 	if(($meta=check_integer('meta'))) {
 		$cat_list = meta_get_categories_list($meta);
@@ -172,7 +172,10 @@ if(!empty($_REQUEST['time'])) {
 			$from_where .= " AND link_category in ($cats) ";
 		}
 	}
-	
+
+	if ($globals['allowed_categories_sql']) {
+		$from_where .= $globals['allowed_categories_sql'] . ' ';
+	}
 	$order_by = " ORDER BY $order_field DESC ";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) $from_where $order_by LIMIT 1");
 	if ($if_modified > 0) {
@@ -246,7 +249,7 @@ if ($links) {
 			if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
 				echo '<p><a href="'.$permalink.'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
 			}
-		
+
 			if ($link->status != 'published') $rel = 'rel="nofollow"';
 			else $rel = '';
 
@@ -338,6 +341,6 @@ function check_redirect_to_feedburner($status) {
 			exit();
 			break;
 	}
-	
+
 }
 ?>
