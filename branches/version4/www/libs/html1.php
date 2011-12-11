@@ -544,7 +544,7 @@ function do_active_stories() {
 	$title = _('destacadas');
 	$url = $globals['base_url'].'topactive.php';
 
-	$top = new Annotation('top-active-'.$globals['site_shortname']);
+	$top = new Annotation('top-actives-'.$globals['site_shortname']);
 	if ($top->read() && ($ids = explode(',',$top->text))) {
 		$links = array();
 		$ids = array_slice($ids, 0, 5);
