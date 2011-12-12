@@ -9,9 +9,19 @@
 
 
 class UserAuth {
-	const CURRENT_VERSION = '5';
+	const CURRENT_VERSION = '6';
 	const KEY_MAX_TTL = 2592000; // Expire key in 30 days
 	const KEY_TTL = 86400; // Renew every 24 hours
+
+	static function domain() {
+		global $globals;
+
+		if (isset($globals['cookies_domain']) && ! empty($globals['cookies_domain'])) {
+			return $globals['cookies_domain'];
+		} else {
+			return $domain = null;
+		}
+	}
 
 	function __construct() {
 		global $db, $site_key, $globals;
@@ -21,17 +31,31 @@ class UserAuth {
 		$this->authenticated = false;
 		$this->admin = false;
 
-		if(!isset($globals['no_auth']) && isset($_COOKIE['mnm_key']) && isset($_COOKIE['mnm_user'])
-					&& ($this->mnm_user = explode(":", $_COOKIE['mnm_user']))
-					&& $this->mnm_user[0] > 0
+		// Temporal, for migration to subdomain authentication
+		if ($this->version != self::CURRENT_VERSION) { // Update the key
+			if (isset($_COOKIE['mnm_key'])) {
+				$_COOKIE['ukey'] = $_COOKIE['mnm_key'];
+				setcookie ('mnm_key', '', $globals['now'] - 3600, $globals['base_url']);
+				setcookie ('mnm_key', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+			}
+ 			if (isset($_COOKIE['mnm_user'])) {
+				$_COOKIE['u'] = $_COOKIE['mnm_user'];
+				setcookie ('mnm_user', '', $globals['now'] - 3600, $globals['base_url']);
+				setcookie ('mnm_user', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+			}
+		}
+
+		if(!isset($globals['no_auth']) && isset($_COOKIE['ukey']) && isset($_COOKIE['u'])
+					&& ($this->u = explode(":", $_COOKIE['u']))
+					&& $this->u[0] > 0
 					) {
-			$userInfo=explode(":", base64_decode($_COOKIE['mnm_key']));
-			if($this->mnm_user[0] == $userInfo[0]) {
+			$userInfo=explode(":", base64_decode($_COOKIE['ukey']));
+			if($this->u[0] == $userInfo[0]) {
 				$this->version = $userInfo[2];
 				$cookietime = intval($userInfo[3]);
 				if (($globals['now'] - $cookietime) > UserAuth::KEY_MAX_TTL) $cookietime = 'expired'; // expiration is forced
 
-				$user_id = intval($this->mnm_user[0]);
+				$user_id = intval($this->u[0]);
 				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, user_pass as md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
 
 				$key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
@@ -70,12 +94,12 @@ class UserAuth {
 	function SetIDCookie($what, $remember = false) {
 		global $site_key, $globals;
 		switch ($what) {
-			case 0:	// Borra cookie, logout
+			case 0:	// Expires cookie,logout
 				$this->user_id = 0;
-				setcookie ("mnm_key", '', $globals['now'] - 3600, $globals['base_url']); // Expiramos el cookie
+				setcookie ('ukey', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 				$this->SetUserCookie();
 				break;
-			case 1: // Usuario logeado, actualiza el cookie
+			case 1: // User is logged, update the cookie
 				$this->AddClone();
 				$this->SetUserCookie();
 			case 2: // Only update the key
@@ -87,7 +111,7 @@ class UserAuth {
 						.self::CURRENT_VERSION.':' // Version number
 						.$globals['now'].':'
 						.$time);
-				setcookie("mnm_key", $strCookie, $time, $globals['base_url'], null, false, true);
+				setcookie('ukey', $strCookie, $time, $globals['base_url'], UserAuth::domain(), false, true);
 				break;
 		}
 	}
@@ -135,20 +159,20 @@ class UserAuth {
 	function SetUserCookie() {
 		global $globals;
 		$expiration = $globals['now'] + 86400 * 1000;
-		setcookie("mnm_user",
+		setcookie('u',
 					$this->user_id.
-					':'.$this->mnm_user[1].
+					':'.$this->u[1].
 					':'.$globals['now'].
-					':'.$this->signature($this->user_id.$this->mnm_user[1].$globals['now']),
-					$expiration, $globals['base_url'], null, false, true);
+					':'.$this->signature($this->user_id.$this->u[1].$globals['now']),
+					$expiration, $globals['base_url'], UserAuth::domain(), false, true);
 	}
 
 	function AddClone() {
 		global $globals;
 
-		$this->mnm_user = self::user_cookie_data(); // Get the previous user cookie which shouldn't be modified at this time
-		if ($this->mnm_user && $globals['now'] - $this->mnm_user[2] < 86400 * 5) { // Only if it was stored recently
-			$ids = explode("x", $this->mnm_user[1]);
+		$this->u = self::user_cookie_data(); // Get the previous user cookie which shouldn't be modified at this time
+		if ($this->u && $globals['now'] - $this->u[2] < 86400 * 5) { // Only if it was stored recently
+			$ids = explode("x", $this->u[1]);
 			while(count($ids) > 4) {
 				array_shift($ids);
 			}
@@ -156,12 +180,12 @@ class UserAuth {
 			$ids = array();
 		}
 		$ids[] = $this->user_id;
-		$this->mnm_user[1] = implode('x', $ids);
+		$this->u[1] = implode('x', $ids);
 	}
 
 	function GetClones() {
 		$clones = array();
-		foreach (explode('x', $this->mnm_user[1]) as $id) {
+		foreach (explode('x', $this->u[1]) as $id) {
 			$id = intval($id);
 			if ($id > 0) {
 				$clones[] = $id;
@@ -190,10 +214,10 @@ class UserAuth {
 
 
 	static function user_cookie_data() {
-		// Return an array with mnm_user only if the signature is valid
-		if ($_COOKIE['mnm_user'] && ($mnm_user = explode(":", $_COOKIE['mnm_user']))
-			&&  $mnm_user[3] == self::signature($mnm_user[0].$mnm_user[1].$mnm_user[2]) ) {
-			return $mnm_user;
+		// Return an array with u only if the signature is valid
+		if ($_COOKIE['u'] && ($u = explode(":", $_COOKIE['u']))
+			&&  $u[3] == self::signature($u[0].$u[1].$u[2]) ) {
+			return $u;
 		}
 		return false;
 	}

@@ -171,7 +171,7 @@ if (!empty($link->tags))
 	$globals['tags']=$link->tags;
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="'.$globals['link_permalink'].'" />'."\n";
+$globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_permalink().'" />'."\n";
 
 // add also a rel to the comments rss
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";

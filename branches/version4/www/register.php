@@ -11,12 +11,19 @@ include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 include(mnminclude.'ban.php');
 
+
 if ($current_user->user_id > 0) {
-	header("Location: " . get_user_uri($current_user->user_login));
+	if(!isset($_COOKIE['return_site'])) {
+		$_COOKIE['return_site'] = get_server_name();
+	}
+	header("Location: http://".$_COOKIE['return_site'].get_user_uri($current_user->user_login));
+	die;
 }
 
 if(isset($_POST["process"])) {
 	$globals['secure_page'] = True;
+} else {
+	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
 
 // Check the IP is right

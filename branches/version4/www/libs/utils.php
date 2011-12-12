@@ -367,7 +367,7 @@ function get_static_server_name() {
 
 function get_auth_link() {
 	global $globals;
-	if ($globals['ssl_server']) return 'https://'.get_server_name().$globals['base_url'];
+	if ($globals['ssl_server']) return 'https://'.$globals['ssl_server'].$globals['base_url'];
 	else return $globals['base_url'];
 }
 
@@ -510,7 +510,8 @@ function get_security_key($time = false) {
 	} else {
 		// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
 		$ip_key = $globals['user_ip_int']>>8;
-		return $time.'-'.sha1($time.$ip_key.$site_key);
+		// return $time.'-'.sha1($time.$ip_key.$site_key);
+		return $time.'-'.base64_encode($time.$ip_key); // Faster, not needed more complex for anoymous users
 	}
 
 }

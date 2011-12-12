@@ -13,14 +13,20 @@ include(mnminclude.'ts.php');
 //$globals['ads'] = true;
 
 // Clean return variable
-if(!empty($_REQUEST['return']))
+if(!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
+}
+
+if(!isset($_COOKIE['return_site'])) {
+	$_COOKIE['return_site'] = get_server_name();
+}
 
 if($_GET["op"] == 'logout') {
 	// check the user is really authenticated (to avoid bucles due to bad caching)
 	if ($current_user->user_id > 0) {
 		$current_user->Logout($_REQUEST['return']);
 	} else {
+		header ('HTTP/1.1 303 Load');
 		header("Location: http://".$_COOKIE['return_site'].$globals['base_url']);
 		die;
 	}
@@ -100,6 +106,7 @@ function do_login() {
 	if($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
+			header ('HTTP/1.1 303 Load');
 			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login.php");
 			die;
 		}
@@ -124,6 +131,7 @@ function do_login() {
 				setcookie('nomobile', '1', 0, $globals['base_url'], UserAuth::domain());
 			}
 
+			header ('HTTP/1.1 303 Load');
 			if(!empty($_REQUEST['return'])) {
 				header('Location: http://'.$_COOKIE['return_site'].$_REQUEST['return']);
  			} else {

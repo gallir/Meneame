@@ -557,6 +557,7 @@ class Link extends LCPBase {
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
 		$this->permalink	 = $this->get_permalink();
+		$this->relative_permalink	 = $this->get_relative_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
@@ -831,14 +832,26 @@ class Link extends LCPBase {
 
 	function get_relative_permalink() {
 		global $globals;
+
 		if (!empty($this->uri) && !empty($globals['base_story_url']) ) {
 			return $globals['base_url'] . $globals['base_story_url'] . $this->uri;
 		} else {
 			return $globals['base_url'] . 'story.php?id=' . $this->id;
 		}
 	}
+
 	function get_permalink() {
 		return 'http://'.get_server_name().$this->get_relative_permalink();
+	}
+
+	function get_canonical_permalink() {
+		global $globals;
+
+		if (!isset($globals['canonical_server_name']) || empty($globals['canonical_server_name'])) {
+			return get_permalink();
+		} else {
+			return 'http://'.$globals['canonical_server_name'].$this->get_relative_permalink();
+		}
 	}
 
 	function get_trackback() {

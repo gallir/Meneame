@@ -15,8 +15,13 @@ $globals['ads'] = false;
 $globals['original_user_ip_int'] = sprintf("%u", ip2long($_SERVER["REMOTE_ADDR"]));
 
 // Clean return variable
-if(!empty($_REQUEST['return']))
+if(!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
+}
+
+if(!isset($_COOKIE['return_site'])) {
+	$_COOKIE['return_site'] = get_server_name();
+}
 
 if($_GET["op"] === 'logout') {
 	$current_user->Logout($_REQUEST['return']);
@@ -26,6 +31,8 @@ if($_GET["op"] === 'logout') {
 ob_start();
 if ($_POST["processlogin"] == 1) {
 	$globals['secure_page'] = True;
+} else {
+	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
 
 
@@ -55,7 +62,8 @@ function do_login() {
 	if ($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
-			header("Location: http://".get_server_name().$globals['base_url']."login.php");
+			header ('HTTP/1.1 303 Load');
+			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login.php");
 			die;
 		}
 		$username = clean_input_string(trim($_POST['username']));
@@ -71,10 +79,11 @@ function do_login() {
 			$previous_login_failed++;
 		} else {
 			UserAuth::check_clon_from_cookies();
+			header ('HTTP/1.1 303 Load');
 			if(!empty($_REQUEST['return'])) {
-				header('Location: '.$_REQUEST['return']);
+				header('Location: http://'.$_COOKIE['return_site'].$_REQUEST['return']);
 			} else {
-				header('Location: ./');
+				header('Location: http://'.$_COOKIE['return_site'].$globals['base_url']);
 			}
 			die;
 		}

@@ -23,7 +23,18 @@
 // IMPORTANT: Do local modification in "hostname-local.php"
 // and/or "local.php"
 // They are automatically included
-//$globals['server_name']	= $_SERVER['HTTP_HOST'];
+//
+//.$globals['server_name']	= $_SERVER['HTTP_HOST'];
+
+// In case you have different domains and want to avoid Google penalization for duplicated content
+// $globals['canonical_server_name'] = 'www.canonical.com';
+
+// If you want to use the same cookie for subdomains, set de .domain.com
+// $globals['cookies_domain'] = '.domain.com';
+
+// Specify the name of the ssl server, ensure you have also setup "cookies_domain
+$globals['ssl_server'] = False; 
+
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 $globals['v'] = 1; // internal version, to for reloads
@@ -45,7 +56,6 @@ $globals['page_size'] = $page_size	= 30;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['external_ads'] = $external_ads = true;
 $globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
-$globals['ssl_server'] = False; //Secure server must have the same name and base
 //$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails from web, if not defined it uses server_name
 
 //Configuration values
@@ -296,6 +306,8 @@ $globals['captcha_first_login'] = false;
 //$globals['twitter_consumer_secret'] = 'xxxxxx';
 //$globals['twitter_token'] = 'xxxxxx-xxxxxx';
 //$globals['twitter_token_secret'] = 'xxxxxx';
+// Show the link in the horizontal bar
+// $globals['twitter_page'] = 'http://twitter.com/meneame_net';
 
 
 // For Facebook authentication
@@ -303,6 +315,8 @@ $globals['captcha_first_login'] = false;
 //$globals['facebook_secret'] = 'xxxxxxxx';
 // For Facebook page
 //$globals['facebook_token'] = '';
+// Show the link in the horizontal bar
+// $globals['facebook_page'] = 'http://facebook.com/meneameoficial';
 
 
 // Jaiku settings
