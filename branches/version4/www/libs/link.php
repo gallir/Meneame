@@ -848,7 +848,7 @@ class Link extends LCPBase {
 		global $globals;
 
 		if (!isset($globals['canonical_server_name']) || empty($globals['canonical_server_name'])) {
-			return get_permalink();
+			return $this->get_permalink();
 		} else {
 			return 'http://'.$globals['canonical_server_name'].$this->get_relative_permalink();
 		}
