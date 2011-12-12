@@ -21,7 +21,7 @@ if($_GET["op"] == 'logout') {
 	if ($current_user->user_id > 0) {
 		$current_user->Logout($_REQUEST['return']);
 	} else {
-		header("Location: http://".get_server_name().$globals['base_url']);
+		header("Location: http://".$_COOKIE['return_site'].$globals['base_url']);
 		die;
 	}
 }
@@ -31,6 +31,8 @@ ob_start();
 
 if ($_POST["processlogin"] == 1) {
 	$globals['secure_page'] = True;
+} else {
+	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
 
 do_header("login");
@@ -57,7 +59,7 @@ function do_login() {
 	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
-	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['mnm_user'])) {
+	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
 		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
@@ -98,7 +100,7 @@ function do_login() {
 	if($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
-			header("Location: http://".get_server_name().$globals['base_url']."login.php");
+			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login.php");
 			die;
 		}
 
@@ -117,15 +119,15 @@ function do_login() {
 		} else {
 			UserAuth::check_clon_from_cookies();
 
-			// If the user is authenticating from a mobile device, keep her in the standar version
+			// If the user is authenticating from a mobile device, keep her in the standard version
 			if ($globals['mobile']) {
-				setcookie('nomobile', '1', 0, $globals['base_url']);
+				setcookie('nomobile', '1', 0, $globals['base_url'], UserAuth::domain());
 			}
 
 			if(!empty($_REQUEST['return'])) {
-				header('Location: http://'.get_server_name().$_REQUEST['return']);
+				header('Location: http://'.$_COOKIE['return_site'].$_REQUEST['return']);
  			} else {
-				header('Location: http://'.get_server_name().$globals['base_url']);
+				header('Location: http://'.$_COOKIE['return_site'].$globals['base_url']);
 			}
 			die;
 		}
