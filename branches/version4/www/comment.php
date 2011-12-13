@@ -57,11 +57,14 @@ $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username)
 $comment->check_visibility();
 if (! $comment->hide_comment) {
 	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
-	$title = text_to_summary($comment->content, 120) . ' | '._('menéame');
+	$title = text_to_summary($comment->content, 120) . ' | '.$globals['site_name'];
 } else {
 	$title = '';
 }
 
+if (isset($globals['canonical_server_name']) && !empty($globals['canonical_server_name'])) {
+	$globals['extra_head'] = '<link rel="canonical" href="http://'.$globals['canonical_server_name'].$comment->get_relative_individual_permalink().'" />';
+}
 do_header($title);
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/

@@ -39,7 +39,7 @@ $user=new User();
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
-$page_title = _('nótame') . ' | '._('menéame');
+$page_title = _('nótame') . ' | '. $globals['site_name'];
 $view = false;
 $globals['ads'] = true;
 
@@ -149,6 +149,9 @@ switch ($argv[0]) {
 		}
 }
 
+if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'] != get_server_name()) {
+	$globals['noindex'] = true;
+}
 
 do_header($page_title);
 do_posts_tabs($tab_option, $user->username);
