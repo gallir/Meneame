@@ -19,9 +19,6 @@ if(!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
 }
 
-if(!isset($_COOKIE['return_site'])) {
-	$_COOKIE['return_site'] = get_server_name();
-}
 
 if($_GET["op"] === 'logout') {
 	$current_user->Logout($_REQUEST['return']);
@@ -31,6 +28,9 @@ if($_GET["op"] === 'logout') {
 ob_start();
 if ($_POST["processlogin"] == 1) {
 	$globals['secure_page'] = True;
+	if(!isset($_COOKIE['return_site'])) {
+		$_COOKIE['return_site'] = get_server_name();
+	}
 } else {
 	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
@@ -57,7 +57,7 @@ function do_login() {
 	$form_ip_check = check_form_auth_ip();
 	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
-	echo '<form action="'.get_auth_link().'login.php" id="xxxthisform" method="post">'."\n";
+	echo '<form action="'.get_auth_link().'mobile/login.php" id="xxxthisform" method="post">'."\n";
 	
 	if ($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect

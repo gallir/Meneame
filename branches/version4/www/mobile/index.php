@@ -29,7 +29,7 @@ if ($page == 1 && ($top = Link::top())) {
 }
 
 $rows = Link::count('published');
-$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links WHERE link_status='published' ORDER BY link_date DESC LIMIT $offset,$page_size) as id USING (link_id)", "LinkMobile");
+$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links WHERE link_status='published' ".$globals['allowed_categories_sql']." ORDER BY link_date DESC LIMIT $offset,$page_size) as id USING (link_id)", "LinkMobile");
 if ($links) {
 	foreach($links as $link) {
 		$link->print_summary();

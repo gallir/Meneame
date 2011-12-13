@@ -17,10 +17,6 @@ if(!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
 }
 
-if(!isset($_COOKIE['return_site'])) {
-	$_COOKIE['return_site'] = get_server_name();
-}
-
 if($_GET["op"] == 'logout') {
 	// check the user is really authenticated (to avoid bucles due to bad caching)
 	if ($current_user->user_id > 0) {
@@ -37,6 +33,9 @@ ob_start();
 
 if ($_POST["processlogin"] == 1) {
 	$globals['secure_page'] = True;
+	if(!isset($_COOKIE['return_site'])) {
+		$_COOKIE['return_site'] = get_server_name();
+	}
 } else {
 	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }

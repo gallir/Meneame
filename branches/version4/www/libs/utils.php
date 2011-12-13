@@ -395,7 +395,7 @@ function get_form_auth_ip() {
 		$control = $_REQUEST['useripcontrol'];
 	} else {
 		$ip = $globals['user_ip'];
-		$control = sha1($ip.$site_key.mnminclude); // mnminclude to add entropy
+		$control = sha1($ip.$site_key.base64_encode($ip.$site_key));
 	}
 	echo '<input type="hidden" name="userip" value="'.$ip.'"/>';
 	echo '<input type="hidden" name="useripcontrol" value="'.$control.'"/>';
@@ -403,7 +403,7 @@ function get_form_auth_ip() {
 
 function check_form_auth_ip() {
 	global $globals, $site_key;
-	if ($_REQUEST['userip'] && $_REQUEST['useripcontrol'] && sha1($_REQUEST['userip'].$site_key.mnminclude) == $_REQUEST['useripcontrol']) {
+	if ($_REQUEST['userip'] && $_REQUEST['useripcontrol'] && sha1($_REQUEST['userip'].$site_key.base64_encode($_REQUEST['userip'].$site_key)) == $_REQUEST['useripcontrol']) {
 		$globals['form_user_ip'] = $_REQUEST['userip'];
 		$globals['form_user_ip_int'] = sprintf("%u", ip2long($globals['form_user_ip']));
 		return true;

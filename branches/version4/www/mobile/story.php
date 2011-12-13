@@ -90,7 +90,7 @@ if ($link->status == 'discard') {
 
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="'.$globals['link_permalink'].'" />'."\n";
+$globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_permalink().'" />'."\n";
 
 do_header($link->title, 'post');
 
