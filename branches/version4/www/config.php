@@ -24,7 +24,7 @@
 // and/or "local.php"
 // They are automatically included
 //
-//.$globals['server_name']	= $_SERVER['HTTP_HOST'];
+// $globals['server_name']	= $_SERVER['HTTP_HOST'];
 
 // In case you have different domains and want to avoid Google penalization for duplicated content
 // $globals['canonical_server_name'] = 'www.canonical.com';
