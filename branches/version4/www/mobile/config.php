@@ -11,6 +11,7 @@ define("mnminclude", dirname(__FILE__).'/libs/');
 ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 $globals['basic_config'] = true; include('../config.php');
+$globals['site_name'] = 'Menéame móvil';
 
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
@@ -42,7 +43,7 @@ $globals['comments_page_size'] = 50;
 
 @include('local.php');
 @include($_SERVER['SERVER_NAME'].'-local.php');
-@include($_SERVER['SERVER_ADDR'].'-local.php');
+//@include($_SERVER['SERVER_ADDR'].'-local.php');
 
 
 include mnminclude.'init.php';

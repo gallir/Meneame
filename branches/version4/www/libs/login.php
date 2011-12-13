@@ -144,6 +144,7 @@ class UserAuth {
 		$this->SetIDCookie (0, false);
 
 		//header("Pragma: no-cache");
+		header ('HTTP/1.1 303 Load');
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Location: $url");
 		header("Expires: " . gmdate("r", $globals['now'] - 3600));

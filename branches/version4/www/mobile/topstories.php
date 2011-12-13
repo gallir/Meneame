@@ -24,7 +24,7 @@ $offset=($current_page-1)*$page_size;
 
 // Use memcache if available
 if ($globals['memcache_host'] && $current_page < 4) {
-	$memcache_key = 'topstories_mobile_'.$from.'_'.$current_page;
+	$memcache_key = 'topstories_'.$globals['site_shortname'].$from.'_'.$current_page;
 }
 
 // we use this to allow sql caching
@@ -46,7 +46,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('populares').' '.$range_names[$from].' | ' . _('menéame mobile'));
+do_header(_('populares').' '.$range_names[$from].' | ' . $globals['site_name']);
 $globals['tag_status'] = 'published';
 do_tabs('main', 'popular');
 

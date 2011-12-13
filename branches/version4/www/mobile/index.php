@@ -18,7 +18,7 @@ $offset=($page-1)*$page_size;
 
 $cat=$_REQUEST['category'];
 
-do_header('menéame mobile');
+do_header($globals['site_name']);
 do_tabs('main','published');
 
 echo '<div id="newswrap">'."\n";

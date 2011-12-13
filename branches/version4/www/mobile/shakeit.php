@@ -14,7 +14,7 @@ $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 $globals['ads'] = true;
 
-do_header(_('noticias pendientes') . ' | ' . _('menéame mobile'));
+do_header(_('pendientes') . ' | ' . $globals['site_name']);
 do_tabs("main","shakeit");
 
 echo '<div id="newswrap">'."\n";
