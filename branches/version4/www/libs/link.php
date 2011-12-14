@@ -458,9 +458,10 @@ class Link extends LCPBase {
 		$db->commit();
 	}
 
-	function store_basic() {
+	function store_basic($really_basic = false) {
 		global $db, $current_user, $globals;
 
+		$db->transaction();
 		if(!$this->date) $this->date=$globals['now'];
 		$link_author = $this->author;
 		$link_blog = $this->blog;
@@ -482,15 +483,21 @@ class Link extends LCPBase {
 		// update
 			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
 		}
-		SitesMgr::deploy($this);
-		if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
-			// This is a new link, add it to the events, it an additional control
-			// just in case the user dind't do the last submit phase and voted later
-			Log::conditional_insert('link_new', $this->id, $this->author);
-		}
 
-		$this->update_votes();
-		$this->update_comments();
+		// Deploy changes to other sub sites
+		SitesMgr::deploy($this);
+
+		if (! $really_basic) {
+			if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
+				// This is a new link, add it to the events, it an additional control
+				// just in case the user dind't do the last submit phase and voted later
+				Log::conditional_insert('link_new', $this->id, $this->author);
+			}
+
+			$this->update_votes();
+			$this->update_comments();
+		}
+		$db->commit();
 	}
 
 	function update_votes() {
@@ -504,15 +511,13 @@ class Link extends LCPBase {
 	function read_basic($key='id') {
 		global $db, $current_user;
 		switch ($key)  {
-			case 'id':
-				$cond = "link_id = $this->id";
-				break;
 			case 'uri':
 				$cond = "link_uri = '$this->uri'";
 				break;
 			case 'url':
 				$cond = "link_url = '$this->url'";
 				break;
+			case 'id':
 			default:
 				$cond = "link_id = $this->id";
 		}

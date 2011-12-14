@@ -53,7 +53,6 @@ class SitesMgr {
 						case 'autodiscard':
 						case 'abuse':
 							$me->date = $link->sent_date;
-							$me->status = $link->status;
 							break;
 						default:
 							$me->date = $link->date;
@@ -61,6 +60,7 @@ class SitesMgr {
 					$me->status = $link->status;
 					break;
 				case 'published':
+					// TODO: check this when metapublished is enabled
 					$copy = true;
 					$me->karma = $link->karma;
 					$me->status = $link->status;
@@ -97,10 +97,11 @@ class SitesMgr {
 			}
 		}
 
-		$receivers = self::get_receivers($me);
+		$receivers = self::get_receivers($me->category);
 		if ($copy) {
 			if ($receivers) {
 				foreach ($receivers as $r) {
+					// TODO: check this when metapublished is enabled
 					self::store_status($r, $me);
 				}
 			}
@@ -118,10 +119,10 @@ class SitesMgr {
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
-	static private function get_receivers($s) {
+	static public function get_receivers($category) {
 		global $db;
 
-		return $db->get_col("select id from sub_categories where category = $s->category and import and enabled");
+		return $db->get_col("select id from sub_categories where category = $category and import and enabled");
 	}
 
 	static private function get_category_configuration($id, $category) {
