@@ -126,7 +126,7 @@ mobile_client = {{ globals.mobile }};
 	<a href="http://e.{{globals.server_name}}" title="{% trans _('ir a la edición de cultura y tecnología') %}" id="mnme">{% trans _("menéame") %}</a>
 {% else %}
 	<a href="http://meneame.net" title="{% trans _('ir a la edición general') %}" id="mnme">{% trans _("menéame") %}</a>
-	<img src="{{globals.base_static}}img/common/mnme-cyt-01.png" width="136" height="16" alt="" class="mnme-title"/>
+	<img src="{{globals.base_static}}img/common/mnme-cyt-01.png" width="136" height="16" alt="{{globals.site_name}}" title="{{globals.site_name}}" class="mnme-title"/>
 {% endif %}
 
 {% if globals.ads_branding %}
