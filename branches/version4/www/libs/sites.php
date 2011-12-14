@@ -14,7 +14,7 @@ class SitesMgr {
 
 		if (!isset($globals['site_id'])) {
 			self::$id = $db->get_var("select id from subs where name = '".$globals['site_shortname']."'");
-			if (! self::$id) echo "Error, site_shortname not found: ". $globals['site_shortname'];
+			if (! self::$id) echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 		} else {
 			self::$id = $globals['site_id'];
 		}

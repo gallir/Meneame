@@ -23,8 +23,9 @@ if($_GET["op"] == 'logout') {
 		$current_user->Logout($_REQUEST['return']);
 	} else {
 		header ('HTTP/1.1 303 Load');
+		setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 		header("Location: http://".$_COOKIE['return_site'].$globals['base_url']);
-		die;
+		exit();
 	}
 }
 
@@ -67,12 +68,12 @@ function do_login() {
 	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
 		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
-		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) { 
+		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) {
 			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
 		}
 		echo '<h3>'._('¿Qué es menéame?').'</h3>'."\n";
 		echo '<p>'._('Es un sitio que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="shakeit.php">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal').'.</p>'."\n";
-			
+
 		echo '<h3>'._('¿Todavía no eres usuario de menéame?').'</h3>'."\n";
 		echo '<p>'._('Como usuario registrado podrás, entre otras cosas').':</p>'."\n";
 		echo '<ul style="margin-left: 1.5em">'."\n";
@@ -95,13 +96,13 @@ function do_login() {
 		echo '</ul>'."\n";
 		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
 		echo '</div>'."\n";
-		
-		echo '<div class="genericform" style="float:left; width:40%; margin: 0">'."\n";	
+
+		echo '<div class="genericform" style="float:left; width:40%; margin: 0">'."\n";
 	} else {
-		echo '<div class="genericform" style="float:auto;">'."\n";	
+		echo '<div class="genericform" style="float:auto;">'."\n";
 	}
 	echo '<form action="'.get_auth_link().'login.php" id="thisform" method="post">'."\n";
-	
+
 	if($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
@@ -114,7 +115,7 @@ function do_login() {
 		$password = trim($_POST['password']);
 
 		// Check form
-		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) 
+		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) )
 				&& !ts_is_human()) {
 			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));

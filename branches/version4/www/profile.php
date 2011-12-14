@@ -292,5 +292,3 @@ function save_profile() {
 	}
 	return $messages;
 }
-
-?>

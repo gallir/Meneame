@@ -377,12 +377,20 @@ function check_auth_page() {
 	if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 		// If it's not a page that need SSL, redirect to the standard server
 		if (!$globals['secure_page']) {
+			// Send the user back to the origial page if it exists the cookie
+			if ($_COOKIE['return_site']) {
+				$host = $_COOKIE['return_site'];
+			} else {
+				$host = $_SERVER["HTTP_HOST"];
+			}
 			header('HTTP/1.1 302 Moved');
-			header('Location: http://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+			header('Location: http://'.$host.$_SERVER["REQUEST_URI"]);
 			die;
 		}
 	} elseif ($globals['ssl_server'] && $globals['secure_page']) {
 		header('HTTP/1.1 302 Moved');
+		setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 		header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
 		die;
 	}
