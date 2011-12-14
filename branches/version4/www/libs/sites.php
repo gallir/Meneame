@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class SitesMgr {
-	static $id = 0;
+	static private $id = 0;
 
 	static function __init() {
 		global $globals, $db;
@@ -21,7 +21,12 @@ class SitesMgr {
 
 	}
 
-	static function deploy($link) {
+	static public function my_id() {
+		if (! self::$id ) self::__init();
+		return self::$id;
+	}
+
+	static public function deploy($link) {
 		global $db;
 
 		if (! self::$id ) self::__init();
@@ -51,7 +56,7 @@ class SitesMgr {
 							$me->status = $link->status;
 							break;
 						default:
-							$me->date = time();
+							$me->date = $link->date;
 					}
 					$me->status = $link->status;
 					break;
@@ -113,18 +118,18 @@ class SitesMgr {
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
-	static function get_receivers($s) {
+	static private function get_receivers($s) {
 		global $db;
 
 		return $db->get_col("select id from sub_categories where category = $s->category and import and enabled");
 	}
 
-	static function get_category_configuration($id, $category) {
+	static private function get_category_configuration($id, $category) {
 		global $db;
 		return $db->get_row("select * from sub_categories where id = $id and category = $category");
 	}
 
-	static function get_status($id, $link) {
+	static private function get_status($id, $link) {
 		global $db;
 
 		$status = $db->get_row("select id, status, unix_timestamp(date) as date, category, link, origen, karma from sub_statuses where id = $id and link = $link->id");
@@ -144,7 +149,7 @@ class SitesMgr {
 		return $status;
 	}
 
-	static function store_status($id, $s) {
+	static private function store_status($id, $s) {
 		global $db;
 
 		$db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($id, '$s->status', from_unixtime($s->date), $s->category, $s->link, $s->origen, $s->karma)");
