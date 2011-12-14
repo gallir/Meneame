@@ -41,7 +41,7 @@ foreach ($link_sqls as $key => $sql) {
 			jaiku_post($text, $short_url); 
 		}
 		if ($globals['facebook_token']) {
-			facebook_post($intro, $link->get_permalink());
+			facebook_post($link, $intro);
 		}
 	}
 }

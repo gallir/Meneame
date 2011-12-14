@@ -46,7 +46,7 @@ if (! in_array($tops[0], $history) ) {
 		jaiku_post($text, $short_url); 
 	}
 	if ($globals['facebook_token']) {
-		facebook_post($intro, $link->get_permalink());
+		facebook_post($link, $intro);
 	}
 }
 

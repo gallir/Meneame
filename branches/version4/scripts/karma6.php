@@ -374,7 +374,7 @@ foreach ($res as $dbuser) {
 		}
 
         // Limit karma to users that do not have other activity
-		if ($karma6 > 0 && ($karma0+$karma1+$karma2+$karma3+$karma4+$karma5) < 1 ) $karma6 = 0;
+		if ($karma6 > 0 && ($karma0+$karma1+$karma2+$karma3+$karma4+$karma5) < 0 ) $karma6 = 0;
 		if ($karma6 != 0) {
 			$output .= _('Votos a notas contabilizados').": $post_votes_count users: $distinct_user_votes_count karma: $post_votes_sum, karma6: ";
 			$output .= sprintf("%4.2f\n", $karma6);
