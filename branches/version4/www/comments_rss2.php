@@ -10,8 +10,8 @@ include('config.php');
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
-	if ($rows > 300) $rows = 100; //avoid abuses
-} else $rows = 100;
+	if ($rows > 300) $rows = 200; //avoid abuses
+} else $rows = 200;
 
 // Bug in FeedBurner, it needs all items
 if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
@@ -110,6 +110,8 @@ if ($_REQUEST['q']) {
 	$id = 0;
 	if ($if_modified > 0)
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
+	else
+		$from_time = "AND comment_date > date_sub(now(), interval 2 day)";
 	$sql = "SELECT comment_id FROM comments, links WHERE link_id = comment_link_id ".$globals['allowed_categories_sql']." $from_time ORDER BY comment_date DESC LIMIT $rows";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
 	$title = $globals['site_name'].': '._('comentarios');

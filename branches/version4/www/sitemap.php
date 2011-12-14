@@ -79,13 +79,18 @@ function do_published($page) {
 	global $globals, $index_size, $db;
 	$start = $page * $index_size;
 
-	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' order by link_date asc limit $start, $index_size";
+	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' ".$globals['allowed_categories_sql']." order by link_date asc limit $start, $index_size";
 	$result = $db->get_col($sql);
 	if (!$result) return;
+	if (isset($globals['canonical_server_name']) && ! empty($globals['canonical_server_name'])) {
+		$server = $globals['canonical_server_name'];
+	} else {
+		$server = get_server_name();
+	}
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
+		echo '<loc>http://'.$server.$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
@@ -94,13 +99,18 @@ function do_published($page) {
 function do_last_published() {
 	global $globals, $db;
 
-	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' and link_date > date_sub(now(), interval 60 day) order by link_date desc";
+	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' and link_date > date_sub(now(), interval 60 day) ".$globals['allowed_categories_sql']." order by link_date desc";
 	$result = $db->get_col($sql);
 	if (!$result) return;
+	if (isset($globals['canonical_server_name']) && ! empty($globals['canonical_server_name'])) {
+		$server = $globals['canonical_server_name'];
+	} else {
+		$server = get_server_name();
+	}
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.get_server_name().$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
+		echo '<loc>http://'.$server.$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
