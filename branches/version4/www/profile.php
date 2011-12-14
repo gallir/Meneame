@@ -80,6 +80,8 @@ if (isset($_POST['process'])) {
 	$messages = save_profile();
 } else {
 	$globals['secure_page'] = False;
+	// This allows to send the user back to the original cross domain authentication and ssl_server
+	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 	$messages = array();
 }
 
