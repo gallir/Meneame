@@ -390,7 +390,9 @@ function publish($link) {
 
 	$link->status = 'published';
 	$link->date = $link->published_date=time();
+
 	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
+	SitesMgr::deploy($link);
 
 	// Increase user's karma
 	$user = new User($link->author);

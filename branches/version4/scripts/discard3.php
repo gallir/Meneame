@@ -18,41 +18,42 @@ $minutes = intval($globals['draft_time'] / 60);
 $db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
 
 // send back to queue links with too many negatives
-$links = $db->get_results("select SQL_NO_CACHE link_id, link_author, link_date, link_karma, link_votes, link_negatives from links where link_status = 'published' and link_date > date_sub(now(), interval 6 day) and link_date < date_sub(now(), interval 8 minute) and link_negatives > link_votes / 8");
+$links = $db->get_results("select SQL_NO_CACHE link_id as id from links where link_status = 'published' and link_date > date_sub(now(), interval 6 day) and link_date < date_sub(now(), interval 8 minute) and link_negatives > link_votes / 8");
 
 
+$l = new Link();
 if ($links) {
 	foreach ($links as $link) {
+		$l->id = $link->id;
+		$l->read_basic();
 		// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
-		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
-		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$link->link_id and vote_date > '$link->link_date' and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
-		echo "Candidate $link->link_id ($link->link_karma) $negatives $positives\n";
-		if ($negatives > $link->link_karma/6 && $link->link_negatives > $link->link_votes/6
-			&& ($negatives > $positives || ($negatives > $link->link_karma/2 && $negatives > $positives/2) )) {
-			echo "Queued again: $link->link_id negative karma: $negatives positive karma: $positives\n";
-			$karma_old = $link->link_karma;
-			$karma_new = intval($link->link_karma/ $globals['depublish_karma_divisor'] );
-			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $link->link_id");
+		$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > '$l->date' and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
+		$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > '$l->date' and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
+		echo "Candidate $l->id ($l->karma) $negatives $positives\n";
+		if ($negatives > $l->karma/6 && $l->negatives > $l->votes/6
+			&& ($negatives > $positives || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
+			echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
+			$karma_old = $l->karma;
+			$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
+
+			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $l->id");
+			SitesMgr::deploy($l);
 
 			// Add an annotation to show it in the logs
-			$l= new Link;
-			$l->id = $link->link_id;
-			if ($l->read()) {
-				$l->karma_old = $karma_old;
-				$l->annotation = _('Retirada de portada');
-				$l->save_annotation('link-karma');
-			}
-			Log::insert('link_depublished', $link->link_id, $link->link_author);
+			$l->karma_old = $karma_old;
+			$l->annotation = _('Retirada de portada');
+			$l->save_annotation('link-karma');
+			Log::insert('link_depublished', $l->id, $l->author);
 
 			// Add the discard to log/event
-			$user = new User($link->link_author);
+			$user = new User($l->author);
 			if ($user->read) {
 				echo "$user->username: $user->karma\n";
 				$user->add_karma(-$globals['instant_karma_per_depublished'], _('Retirada de portada'));
 			}
 
 			// Increase karma to users that voted negative
-			$ids = $db->get_col("select vote_user_id from votes where vote_type = 'links' and vote_link_id = $link->link_id and vote_user_id > 0 and vote_value < 0");
+			$ids = $db->get_col("select vote_user_id from votes where vote_type = 'links' and vote_link_id = $l->id and vote_user_id > 0 and vote_value < 0");
 
 			foreach ($ids as $id) {
 				$u = new User($id);
@@ -79,11 +80,10 @@ if ($links) {
 	}
 }
 
-
 punish_comments();
 
 // Discard links
-$negatives = $db->get_results("select SQL_NO_CACHE link_id, link_karma, link_votes, link_negatives, link_author from links where link_date > $min_date and link_status = 'queued' and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
+$negatives = $db->get_results("select SQL_NO_CACHE link_id from links where link_date > $min_date and link_status = 'queued' and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
 
 //$db->debug();
 if( !$negatives) {
@@ -92,16 +92,22 @@ if( !$negatives) {
 }
 
 foreach ($negatives as $negative) {
-	$linkid = $negative->link_id;
-	$user = new User($negative->link_author);
+	$l->id = $negative->link_id;
+	$l->read_basic();
+
+	$user = new User($l->author);
 	if ($user->read) {
 		$user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
 		echo "$user->username: $user->karma\n";
 	}
-	$db->query("update links set link_status='discard' where link_id = $linkid");
+
+	$l->status = 'discard';
+	$db->query("update links set link_status='discard' where link_id = $l->id");
+	SitesMgr::deploy($l);
+
 	// Add the discard to log/event
-	Log::insert('link_discard', $linkid, $negative->link_author);
-	echo  "$linkid: $negative->link_karma ($negative->link_votes, $negative->link_negatives)\n";
+	Log::insert('link_discard', $l->id, $l->author);
+	echo  "$l->id: $l->karma ($l->votes, $l->negatives)\n";
 
 }
 
