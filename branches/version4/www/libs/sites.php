@@ -135,6 +135,7 @@ class SitesMgr {
 			$status->id = $id;
 			$status->link = $link->id;
 			$status->date = $link->date;
+			$status->status = '';
 			$status->category = 0;
 			$status->origen = self::$id;
 			$status->karma = 0;
