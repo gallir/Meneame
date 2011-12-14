@@ -655,7 +655,7 @@ function do_best_queued() {
 		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 180);
+		memcache_madd($key, $output, 120);
 	}
 }
 

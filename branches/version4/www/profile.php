@@ -90,7 +90,7 @@ do_header(_('edición del perfil del usuario'). ': ' . $user->username);
 //show_profile();
 
 $form = new stdClass;
-$form->hash = md5($site_key.$user->id.mnminclude);
+$form->hash = md5($site_key.$user->id.$current_user->user_id);
 $form->admin_mode = $admin_mode;
 $form->auth_link = get_auth_link();
 $form->user_levels = $user_levels;
@@ -111,7 +111,7 @@ function save_profile() {
 	$pass_changed=false;
 	$messages = array();
 
-	$form_hash = md5($site_key.$user->id.mnminclude);
+	$form_hash = md5($site_key.$user->id.$current_user->user_id);
 	if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
 		$old_user_login = $user->username;
 		$old_user_id = $user->id;
