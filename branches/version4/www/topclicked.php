@@ -21,8 +21,8 @@ $offset=($current_page-1)*$page_size;
 
 // Select a month and year
 if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
-	$sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM links WHERE YEAR(link_date) = $year AND MONTH(link_date) = $month AND link_status = 'published' ".$globals['allowed_categories_sql']." ORDER BY link_votes DESC ";
-	$time_link = "YEAR(link_date) = $year AND MONTH(link_date) = $month";
+	$sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM sub_statuses, links WHERE id = ".SitesMgr::my_id()." AND YEAR(date) = $year AND MONTH(date) = $month AND status = 'published' AND link = link_id ORDER BY link_votes DESC ";
+	$time_link = "YEAR(date) = $year AND MONTH(date) = $month";
 } else {
 	// Select from a start date
 	$from = intval($_GET['range']);
@@ -37,18 +37,18 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 		// we use this to allow sql caching
 		$from_time = '"'.date("Y-m-d H:i:00", time() - 86400 * $range_values[$from]).'"';
 		if ($from > 0) {
-			$status = "AND link_status = 'published'";
+			$status = "AND status = 'published'";
 		} else {
-			$status = "AND link_status in ('published', 'queued')";
+			$status = "AND status in ('published', 'queued')";
 		}
-		$sql = "SELECT link_id, counter FROM links, link_clicks WHERE link_date > $from_time $status AND link_clicks.id = link_id ".$globals['allowed_categories_sql']." ORDER BY counter DESC ";
-		$time_link = "link_date > $from_time";
+		$sql = "SELECT link_id, counter FROM sub_statuses, links, link_clicks WHERE sub_statuses.id = ".SitesMgr::my_id()." AND date > $from_time $status AND link = link_id AND link_clicks.id = link_id ORDER BY counter DESC ";
+		$time_link = "date > $from_time";
 	}
 }
 
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
 	// It's not in cache, or memcache is disabled
-	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link $status ".$globals['allowed_categories_sql']);
+	$rows = $db->get_var("SELECT count(*) FROM sub_statuses WHERE $time_link $status");
 	$rows = min(4*$page_size, $rows); // Only up to 4 pages
 	if ($rows > 0) {
 		$links = $db->get_results("$sql LIMIT $offset,$page_size");

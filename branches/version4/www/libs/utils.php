@@ -702,13 +702,6 @@ function meta_get_current() {
 	$globals['meta']  = clean_input_string($_REQUEST['meta']);
 
 
-	if ($globals['allowed_categories']) {
-		$globals['allowed_categories_str'] = implode(',', $globals['allowed_categories']);
-		$globals['allowed_categories_sql'] = 'and link_category in ('.$globals['allowed_categories_str'].')';
-	} else {
-		$globals['allowed_categories_str'] = $globals['allowed_categories_sql'] = '';
-	}
-
 	//Check for personalisation
 	// Authenticated users
 	if ($current_user->user_id > 0) {
@@ -718,7 +711,6 @@ function meta_get_current() {
 			$current_user->has_personal = true;
 			$globals['meta_skip'] = '?meta=_all';
 			if (! $globals['meta']) {
-				if ($globals['allowed_categories']) $categories = array_intersect($categories, $globals['allowed_categories']);
 				$globals['meta_categories'] = implode(',', $categories);
 				$globals['meta']= '_personal';
 			}
@@ -771,12 +763,8 @@ function meta_get_current() {
 
 function meta_get_categories_list($id) {
 	global $db, $globals;
-	if ($globals['allowed_categories']) {
-		$extra = 'and category_id in ('. implode(',', $globals['allowed_categories']).')';
-	} else {
-		$extra = '';
-	}
-	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories WHERE category_parent = $id $extra order by category_id");
+
+	$categories = $db->get_col("SELECT SQL_CACHE category_id FROM categories, sub_categories WHERE sub_categories.id = ".SitesMgr::my_id()." AND category_id = category AND category_parent = $id order by category_id");
 	if (!$categories) return false;
 	return implode(',', $categories);
 }

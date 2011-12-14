@@ -154,14 +154,12 @@ function do_mnu_categories_horizontal($what_cat_id) {
 
 	// draw categories
 	if (!empty($globals['meta_categories'])) { // The list of categories of the selected meta
-		$category_condition = 'category_id in ('.$globals['meta_categories'].')';
+		//$category_condition = 'category_id in ('.$globals['meta_categories'].')';
+		$category_condition = 'category in ('.$globals['meta_categories'].')';
 	} else {
 		$category_condition = 'category_parent > 0';
-		if ($globals['allowed_categories']) {
-			$category_condition .= ' and category_id in ('.$globals['allowed_categories_str'].')';
-		}
 	}
-	$categories = $db->get_results("SELECT SQL_CACHE category_id, category_name FROM categories WHERE $category_condition ORDER BY category_name ASC");
+	$categories = $db->get_results("SELECT SQL_CACHE category_id, category_name FROM sub_categories, categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND $category_condition ORDER BY category_name ASC");
 	if ($categories) {
 		$i = 0;
 		foreach ($categories as $category) {
@@ -296,12 +294,11 @@ function print_categories_form($selected = 0) {
 	if ($globals['allowed_metas']) $extra_meta = 'AND category_id in ('.implode(',', $globals['allowed_metas']).')';
 	else $extra_meta = '';
 
-	if ($globals['allowed_categories']) $extra = 'AND category_id in ('.implode(',', $globals['allowed_categories']).')';
-	else $extra = '';
 
-	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 $extra_meta ORDER BY category_name ASC");
+	$metas = $db->get_results("SELECT category_id, category_name FROM categories, sub_categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND category_parent = 0 $extra_meta ORDER BY category_name ASC");
+
 	foreach ($metas as &$meta) {
-		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id $extra ORDER BY category_name ASC");
+		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories, sub_categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND category_parent = $meta->category_id ORDER BY category_name ASC");
 	}
 	unset($meta);
 
@@ -320,7 +317,7 @@ function do_vertical_tags($what=false) {
 		$status = "!= 'discarded'";
 	}
 	if(!empty($globals['meta_categories'])) {
-		$meta_cond = 'and link_category in ('.$globals['meta_categories'].')';
+		$meta_cond = 'and link in ('.$globals['meta_categories'].')';
 	}
 
 	$cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status.$meta_cond;
@@ -333,9 +330,8 @@ function do_vertical_tags($what=false) {
 	$db->query("delete from tags where tag_lang = '$dblang' and tag_date < date_sub(now(), interval 8 day)");
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
-	$from_where = "FROM tags, links WHERE tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and link_status $status $meta_cond ".$globals['allowed_categories_sql']." GROUP BY tag_words";
+	$from_where = "FROM tags, links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link AND tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and status $status $meta_cond GROUP BY tag_words";
 	$max = 3;
-	//$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 3);
 
 	$res = $db->get_results("select lower(tag_words) as word, count(*) as count $from_where order by count desc limit 20");
 	if ($res) {
@@ -348,7 +344,9 @@ function do_vertical_tags($what=false) {
 		}
 		$coef = ($max_pts - $min_pts)/($max-1);
 		ksort($words);
+		$max_count = 0;
 		foreach ($words as $word => $count) {
+			if ($count > $max_count) $max_count = $count;
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$op = round(0.4 + 0.6*$count/$max, 2);
 			$content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
@@ -359,10 +357,14 @@ function do_vertical_tags($what=false) {
 			}
 			$content .= urlencode($word).'">'.$word.'</a>  ';
 		}
-		$vars = compact('content', 'title', 'url');
-		$output = Haanga::Load('tags_sidebox.html', $vars, true);
-		echo $output;
-		memcache_madd($cache_key, $output, 600);
+		if ($max_count > 2) {
+			$vars = compact('content', 'title', 'url');
+			$output = Haanga::Load('tags_sidebox.html', $vars, true);
+			echo $output;
+		} else {
+			$output = ' ';
+		}
+		memcache_madd($cache_key, $output, 900);
 	}
 }
 
@@ -386,7 +388,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 	$max_pts = 22;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600);
-	$from_where = "from categories, links where link_status $status and link_date > '$min_date' and link_category = category_id ".$globals['allowed_categories_sql']." group by category_name";
+	$from_where = "from categories, links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND link_status $status and date > '$min_date' and category = category_id group by category_name";
 	$max = 0;
 
 
@@ -437,10 +439,9 @@ function do_best_sites() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs where link_date > '$min_date' and link_status='published' and link_blog = blog_id ".$globals['allowed_categories_sql']." group by link_blog order by coef desc limit 10;
+	$res = $db->get_results("select sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10;
 ");
 	if ($res) {
-
 		$output = Haanga::Load("best_sites_posts.html", compact('res'), TRUE);
 		echo $output;
 		memcache_madd($key, $output, 300);
@@ -458,12 +459,12 @@ function do_best_comments() {
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 43000); // about 12 hours
-	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // 24 hours
+	$min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours
+	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 48 hours
 	$now = intval($globals['now']/60) * 60;
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users  where link_date > '$link_min_date' and comment_date > '$min_date' and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link_id and comment_user_id = user_id ".$globals['allowed_categories_sql']." order by value desc limit 10");
+	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id order by value desc limit 10");
 	if ($res) {
 		$objects = array();
 		$title = _('mejores comentarios');
@@ -587,7 +588,7 @@ function do_best_stories() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links where link_status='published' $category_list and link_date > '$min_date' ".$globals['allowed_categories_sql']." order by value desc limit 5");
+	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'topstories.php';
@@ -620,7 +621,7 @@ function do_best_queued() {
 	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
 
-	$avg_karma = intval($db->get_var("SELECT avg(link_karma) from links WHERE link_date >= date_sub(now(), interval 1 day) and link_status='published' ".$globals['allowed_categories_sql']));
+	$avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
 			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
@@ -636,7 +637,7 @@ function do_best_queued() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 2 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id from links where link_status='queued' and link_karma > $min_karma and link_date > '$min_date' $category_list ".$globals['allowed_categories_sql']." order by link_karma desc limit 20");
+	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' $category_list order by link_karma desc limit 20");
 	if ($res) {
 		$url = $globals['base_url'].'promote.php';
 		$links = array();
@@ -681,7 +682,7 @@ function do_most_clicked_stories() {
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks where link_status='published' $category_list and link_date > '$min_date' and link_clicks.id = link_id ".$globals['allowed_categories_sql']." order by value desc limit 5");
+	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'topclicked.php';

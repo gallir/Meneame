@@ -25,17 +25,19 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 // Compatibility with the old "search" query string
 if($_REQUEST['search']) $_REQUEST['q'] = $_REQUEST['search'];
 
+$site_id = SitesMgr::my_id();
+
 if(!empty($_REQUEST['time'])) {
 	/////
 	// Prepare for times
 	/////
 	if(!($time = check_integer('time')))
 		die;
-	$sql = "SELECT link_id, link_votes as votes FROM links WHERE ";
+	$sql = "SELECT link_id, link_votes as votes FROM links, sub_statuses WHERE id = $site_id AND link_id = link";
 	if ($time < 0 || $time > 86400*5) $time = 86400*2;
 	$from = time()-$time;
-	$sql .= "link_date > FROM_UNIXTIME($from) AND ";
-	$sql .= "link_status = 'published' ".$globals['allowed_categories_sql']." ORDER BY link_votes DESC LIMIT $rows";
+	$sql .= "date > FROM_UNIXTIME($from) AND ";
+	$sql .= "status = 'published' ORDER BY link_votes DESC LIMIT $rows";
 	$last_modified = time();
 	$title = $globals['site_name'].': '.sprintf(_('más votadas en %s'), txt_time_diff($from));
 } elseif (!empty($_REQUEST['favorites'])) {
@@ -100,13 +102,13 @@ if(!empty($_REQUEST['time'])) {
 
 	switch ($status) {
 		case 'published':
-			$order_field = 'link_date';
+			$order_field = 'date';
 			$link_date = 'date';
 			$title = $globals['site_name'].': '._('publicadas');
 			break;
 		case 'queued':
 			$title = $globals['site_name'].': '._('en cola');
-			$order_field = 'link_date';
+			$order_field = 'date';
 			$link_date = "date";
 			$home = "/shakeit.php";
 			// disable feedburner for queued
@@ -116,7 +118,7 @@ if(!empty($_REQUEST['time'])) {
 		case 'all_local':
 		default:
 			$title = $globals['site_name'].': '._('todas');
-			$order_field = 'link_date';
+			$order_field = 'date';
 			$link_date = "date";
 			break;
 	}
@@ -137,10 +139,11 @@ if(!empty($_REQUEST['time'])) {
 
 
 	if($status == 'all' || $status == 'all_local') {
-		$from_where = "FROM links WHERE link_status in  ('published', 'queued') AND link_date > date_sub(now(), interval 7 day) ";
+		$from_where = "FROM links, sub_statuses WHERE id = $site_id AND status in ('published', 'queued') AND date > date_sub(now(), interval 7 day) AND link_id = link";
 	} else {
-		$from_where = "FROM links WHERE link_status='$status' AND link_date > date_sub(now(), interval 7 day) ";
+		$from_where = "FROM links, sub_statuses WHERE id = $site_id AND status='$status' AND date > date_sub(now(), interval 7 day) AND link_id = link";
 	}
+
 
 	// Check if it's search
 	if($_REQUEST['q']) {
@@ -150,32 +153,26 @@ if(!empty($_REQUEST['time'])) {
 			$from_where .= "AND false"; // Force to return empty set
 		}
 		$title = $globals['site_name'] . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
-	}
-
-
-	if(($meta=check_integer('meta'))) {
+	} elseif (($meta=check_integer('meta'))) {
 		$cat_list = meta_get_categories_list($meta);
 		if (!$cat_list) not_found();
-		$from_where .= " AND link_category in ($cat_list)";
+		$from_where .= " AND category in ($cat_list)";
 		$meta_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $meta AND category_parent=0");
 		$title .= " -$meta_name-";
-	} elseif(($cat=check_integer('category'))) {
-		$from_where .= " AND link_category=$cat ";
+	} elseif (($cat=check_integer('category'))) {
+		$from_where .= " AND category=$cat ";
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $cat AND category_lang='$dblang'");
 		$title .= " -$category_name-";
-	} elseif(($uid=check_integer('personal'))) {
+	} elseif (($uid=check_integer('personal'))) {
 		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category' ");
 		$user_login = $db->get_var("select user_login from users where user_id=$uid");
 		$title .= " -$user_login-";
 		if ($categories) {
 			$cats = implode(',', $categories);
-			$from_where .= " AND link_category in ($cats) ";
+			$from_where .= " AND category in ($cats) ";
 		}
 	}
 
-	if ($globals['allowed_categories_sql']) {
-		$from_where .= $globals['allowed_categories_sql'] . ' ';
-	}
 	$order_by = " ORDER BY $order_field DESC ";
 	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP($order_field) $from_where $order_by LIMIT 1");
 	if ($if_modified > 0) {

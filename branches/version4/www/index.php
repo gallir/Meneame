@@ -45,15 +45,15 @@ do_tabs('main','published');
 
 $from = '';
 
-if ($globals['meta_current'] > 0) {
-	$where = "link_status='published' and link_category in (".$globals['meta_categories'].") ";
+if ($globals['meta_current'] > 0 && empty($cat)) {
+	$where = "status='published' and category in (".$globals['meta_categories'].") ";
 	print_index_tabs(); // No other view
 } else {
 	switch ($globals['meta']) {
 		case '_personal':
 			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 			// $from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$where = "link_status='published' and link_category in (".$globals['meta_categories'].") ";
+			$where = "status='published' and category in (".$globals['meta_categories'].") ";
 			$rows = -1;
 			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			print_index_tabs(7); // Show "personal" as default
@@ -61,15 +61,15 @@ if ($globals['meta_current'] > 0) {
 		case '_friends':
 			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-			$from = ", friends";
-			$where = "link_date >  $from_time and link_status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0";
+			$from = ", friends, links";
+			$where = "date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
 			$rows = -1;
 			print_index_tabs(1); // Friends
 			break;
 		default:
 			print_index_tabs(0); // All
 			$rows = Link::count('published');
-			$where = "link_status='published' " . $globals['allowed_categories_sql'];
+			$where = "status='published' ";
 	}
 }
 
@@ -111,14 +111,16 @@ if ($page == 1 && ($top = Link::top())) {
 
 
 if($cat) {
-	$where .= " AND link_category=$cat ";
+	$where .= " AND category=$cat ";
 }
-$order_by = "ORDER BY link_date DESC ";
+$order_by = "ORDER BY date DESC ";
 
-if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM links $from WHERE $where");
+if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND $where");
 
 // We use a "INNER JOIN" in order to avoid "order by" whith filesorting. It was very bad for high pages
-$links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link_id FROM links $from WHERE $where $order_by LIMIT $offset,$page_size) as id USING (link_id)", "Link");
+$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND $where $order_by LIMIT $offset,$page_size) as ids ON (ids.link = link_id)";
+
+$links = $db->object_iterator($sql, "Link");
 if ($links) {
 	foreach($links as $link) {
 		$link->print_summary();
@@ -161,15 +163,12 @@ function print_index_tabs($option=-1) {
 	}
 	// RSS teasers
 	switch ($option) {
-	case 0: // All, published
-		$feed = array("url" => "", "title" => "");
-		break;
-	case 7: // Personalised, published
-		$feed = array("url" => "?personal=".$current_user->user_id, "title" => _('categoría personalizadas'));
-		break;
-	default:
-		$feed = array("url" => "?meta=".$globals['meta_current'], "title" => "");
-		break;
+		case 7: // Personalised, published
+			$feed = array("url" => "?personal=".$current_user->user_id, "title" => _('categoría personalizadas'));
+			break;
+		default:
+			$feed = array("url" => "?meta=".$globals['meta_current'], "title" => "");
+			break;
 	}
 
 	if ($current_user->user_id > 0) {

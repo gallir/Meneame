@@ -23,10 +23,10 @@ if ($from >= count($range_values) || $from < 0 ) $from = 0;
 if ($range_values[$from] > 0) {
 	// we use this to allow sql caching
 	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$sql = "SELECT link_id, link_comments as comments FROM links WHERE  link_date > $from_time ".$globals['allowed_categories_sql']." ORDER BY link_comments DESC ";
-	$time_link = "link_date > FROM_UNIXTIME($from_time)";
+	$sql = "SELECT link_id, link_comments as comments FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND status = 'published' AND date > $from_time AND link_id = link ORDER BY link_comments DESC ";
+	$time_link = "date > FROM_UNIXTIME($from_time)";
 } else {
-	$sql = "SELECT link_id, link_comments as comments FROM links WHERE true ".$globals['allowed_categories_sql']." ORDER BY link_comments DESC ";
+	$sql = "SELECT link_id, link_comments as comments FROM links, sub_statuses  WHERE id = ".SitesMgr::my_id()." AND status = 'published' AND link_id = link ORDER BY link_comments DESC ";
 	$time_link = '';
 }
 
@@ -57,14 +57,9 @@ if ($globals['memcache_host'] && get_current_page() < 4) {
 
 if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
 	// It's not in memcache
-	if ($time_link) {
-		$rows = min(100, $db->get_var("SELECT count(*) FROM links WHERE $time_link ".$globals['allowed_categories_sql']));
-	} else {
-		$rows = -1; // min(100, $db->get_var("SELECT count(*) FROM links"));
-	}
-	if ($rows == 0) {
-		do_error(_('no hay noticias seleccionadas'), 500);
-	}
+
+	$rows = -1; // min(100, $db->get_var("SELECT count(*) FROM links"));
+
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {
 		memcache_madd($memcache_key.'rows', $rows, 1800);
