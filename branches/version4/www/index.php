@@ -45,7 +45,7 @@ do_tabs('main','published');
 
 $from = '';
 
-if ($globals['meta_current'] > 0 && empty($cat)) {
+if ($globals['meta_current'] > 0) {
 	$where = "status='published' and category in (".$globals['meta_categories'].") ";
 	print_index_tabs(); // No other view
 } else {
@@ -145,19 +145,14 @@ function print_index_tabs($option=-1) {
 	}
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
 
-	if ($globals['allowed_metas']) {
-		$extra = 'and category_id in ('.implode(',',$globals['allowed_metas']).')';
-	} else {
-		$extra = '';
-	}
-	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 $extra ORDER BY category_id ASC");
+	$metas = SitesMgr::get_metas();
 	if ($metas) {
 		foreach ($metas as $meta) {
 			$items[] = array(
 				'id'  => 9999, /* fake number */
-				'url' =>'?meta='.$meta->category_uri,
-				'selected' => $meta->category_id == $globals['meta_current'],
-				'title' => $meta->category_name
+				'url' =>'?meta='.$meta->uri,
+				'selected' => $meta->id == $globals['meta_current'],
+				'title' => $meta->name
 			);
 		}
 	}

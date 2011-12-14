@@ -155,4 +155,56 @@ class SitesMgr {
 
 		$db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($id, '$s->status', from_unixtime($s->date), $s->category, $s->link, $s->origen, $s->karma)");
 	}
+
+	static public function get_metas($ids = false) {
+		global $globals, $db;
+
+		if ($ids) {
+			if (is_array($ids)) {
+				$extra = 'and category in ('.implode(',', $ids).')';
+			} else {
+				$extra = 'and category = '.(int) $ids;
+			}
+		} else {
+			$extra = '';
+		}
+
+		if ($globals['allowed_metas']) {
+			$extra .= ' and category in ('.implode(',',$globals['allowed_metas']).')';
+		}
+
+		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra AND category_parent = 0 ORDER BY category_id ASC");
+	}
+
+	static public function get_categories($parent = false) {
+		global $globals, $db;
+
+		if ($parent !== false) {
+			$extra = 'and category_parent = '.(int) $parent;
+		} else {
+			$extra = 'and category_parent != 0';
+		}
+
+		if ($globals['allowed_metas']) {
+			$extra .= ' and category_parent in ('.implode(',',$globals['allowed_metas']).')';
+		}
+
+		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_id ASC");
+	}
+
+	static public function get_category_ids($parent = false) {
+		global $globals, $db;
+
+		if ($parent !== false) {
+			$extra = 'and category_parent = '.(int) $parent;
+		} else {
+			$extra = 'and category_parent != 0';
+		}
+
+		if ($globals['allowed_metas']) {
+			$extra .= ' and category_parent in ('.implode(',',$globals['allowed_metas']).')';
+		}
+
+		return $db->get_col("SELECT SQL_CACHE category FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_id ASC");
+	}
 }

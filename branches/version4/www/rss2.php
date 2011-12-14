@@ -154,8 +154,9 @@ if(!empty($_REQUEST['time'])) {
 		}
 		$title = $globals['site_name'] . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
 	} elseif (($meta=check_integer('meta'))) {
-		$cat_list = meta_get_categories_list($meta);
+		$cat_list = SitesMgr::get_category_ids($meta);
 		if (!$cat_list) not_found();
+		$cat_list = implode(',', $cat_list);
 		$from_where .= " AND category in ($cat_list)";
 		$meta_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $meta AND category_parent=0");
 		$title .= " -$meta_name-";
@@ -164,7 +165,7 @@ if(!empty($_REQUEST['time'])) {
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $cat AND category_lang='$dblang'");
 		$title .= " -$category_name-";
 	} elseif (($uid=check_integer('personal'))) {
-		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category' ");
+		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category_".SitesMgr::my_id()."' ");
 		$user_login = $db->get_var("select user_login from users where user_id=$uid");
 		$title .= " -$user_login-";
 		if ($categories) {

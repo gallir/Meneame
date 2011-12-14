@@ -4,20 +4,20 @@
 <legend>{% trans _('categorías personalizadas') %}</legend>
 
 {% for meta in metas %}
-	<dl class="categorylist" id="meta-{{ meta.category_id}}"><dt>
+	<dl class="categorylist" id="meta-{{ meta.id}}"><dt>
 	<label><input
 		{% if user.id != current_user.user_id %}disabled="true"{% endif %}
-		name="meta_category[]" type="checkbox" value="{{ meta.category_id }}"
-		{% if not selected || selected[meta.category_id] %}checked="true"{% endif %}
-		onchange="select_meta(this, {{ meta.category_id}})"
-		/>{{ meta.category_name}}</label></dt>
+		name="meta_category[]" type="checkbox" value="{{ meta.id }}"
+		{% if not selected || selected[meta.id] %}checked="true"{% endif %}
+		onchange="select_meta(this, {{ meta.id}})"
+		/>{{ meta.name}}</label></dt>
 
-	{% for category in categories[meta.category_id] %}
+	{% for category in categories[meta.id] %}
 		<dd><label><input
 			{% if user.id != current_user.user_id %}disabled="true"{% endif %}
 			name="categories[]" type="checkbox"
-			{% if not selected || selected[category.category_id] %}checked="true"{% endif %}
-			value="{{ category.category_id }}"/>{{ category.category_name }}</label></dd>
+			{% if not selected || selected[category.id] %}checked="true"{% endif %}
+			value="{{ category.id }}"/>{{ category.name }}</label></dd>
 	{% endfor %}
 	</dl>
 

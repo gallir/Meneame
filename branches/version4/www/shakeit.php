@@ -77,7 +77,7 @@ switch ($globals['meta']) {
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = "ORDER BY date DESC";
-		if ($globals['meta_current'] > 0 && empty($cat)) {
+		if ($globals['meta_current'] > 0) {
 			if ($cat) $rows = Link::count('queued', $cat);
 			else $rows = Link::count('queued', $globals['meta_categories']);
 			$where = "status='queued' and category in (".$globals['meta_categories'].") ";
@@ -145,20 +145,14 @@ function print_shakeit_tabs($option=-1) {
 	}
 	$items[] = array('id' => 1, 'url' => 'shakeit.php'.$globals['meta_skip'], 'title' => _('todas'));
 
-	if ($globals['allowed_metas']) {
-		$extra = 'and category_id in ('.implode(',',$globals['allowed_metas']).')';
-	} else {
-		$extra = '';
-	}
-
-	$metas = $db->get_results("SELECT SQL_CACHE category_id, category_name, category_uri FROM categories WHERE category_parent = 0 $extra ORDER BY category_id ASC");
+	$metas = SitesMgr::get_metas();
 	if ($metas) {
 		foreach ($metas as $meta) {
 			$items[] = array(
 				'id'  => 9999, /* fake number */
-				'url' =>'shakeit.php?meta='.$meta->category_uri,
-				'selected' => $meta->category_id == $globals['meta_current'],
-				'title' => $meta->category_name
+				'url' =>'shakeit.php?meta='.$meta->uri,
+				'selected' => $meta->id == $globals['meta_current'],
+				'title' => $meta->name
 			);
 		}
 	}

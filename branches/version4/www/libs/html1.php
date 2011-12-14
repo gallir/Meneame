@@ -291,14 +291,10 @@ function do_pages($total, $page_size=25, $margin = true) {
 function print_categories_form($selected = 0) {
 	global $db, $dblang, $globals;
 
-	if ($globals['allowed_metas']) $extra_meta = 'AND category_id in ('.implode(',', $globals['allowed_metas']).')';
-	else $extra_meta = '';
-
-
-	$metas = $db->get_results("SELECT category_id, category_name FROM categories, sub_categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND category_parent = 0 $extra_meta ORDER BY category_name ASC");
+	$metas = SitesMgr::get_metas();
 
 	foreach ($metas as &$meta) {
-		$meta->categories = $db->get_results("SELECT category_id, category_name FROM categories, sub_categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND category_parent = $meta->category_id ORDER BY category_name ASC");
+		$meta->categories = SitesMgr::get_categories($meta->id);
 	}
 	unset($meta);
 

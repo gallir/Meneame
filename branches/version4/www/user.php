@@ -612,12 +612,12 @@ function do_categories() {
 	do_user_subheader($options, 1, 'rss2.php?personal='.$user->id, _('categorías personalizadas en rss2'));
 
 	if (is_array($_POST['categories'])) {
-		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category'");
-		$total = (int) $db->get_var("SELECT count(*) FROM categories WHERE category_parent != 0");
+		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category_".SitesMgr::my_id()."'");
+		$total = count(SitesMgr::get_categories());
 		if (count($_POST['categories']) < $total) {
 			for ($i=0; $i<count($_POST['categories']); $i++){
 				$cat = intval($_POST['categories'][$i]);
-				$db->query("insert into prefs (pref_user_id, pref_key, pref_value) values ($current_user->user_id, 'category', $cat)");
+				$db->query("insert into prefs (pref_user_id, pref_key, pref_value) values ($current_user->user_id, 'category_".SitesMgr::my_id()."', $cat)");
 			}
 		}
 	}
@@ -629,7 +629,7 @@ function print_categories_checkboxes($user) {
 
 
 	// Get selected categories
-	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $user->id and pref_key = 'category' ");
+	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $user->id and pref_key = 'category_".SitesMgr::my_id()."'");
 	$selected = array();
 	if ($selected_set) {
 		foreach ($selected_set as $cat) {
@@ -637,17 +637,17 @@ function print_categories_checkboxes($user) {
 		}
 	}
 
-	$metas = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = 0 ORDER BY category_name ASC");
+	$metas = SitesMgr::get_metas();
 	$categories = array();
 	foreach ($metas as $meta) {
-		$categories[$meta->category_id] = $db->get_results("SELECT category_id, category_name FROM categories WHERE category_parent = $meta->category_id ORDER BY category_name ASC");
+		$categories[$meta->id] = SitesMgr::get_categories($meta->id);
 		if ( $selected ) {
 			// Check if all categories are selected for the current meta
 			$all = true;
-			foreach ($categories[$meta->category_id] as $sel) {
-				if (!isset($selected[$sel->category_id])) $all = false;
+			foreach ($categories[$meta->id] as $sel) {
+				if (!isset($selected[$sel->id])) $all = false;
 			}
-			if ($all) $selected[$meta->category_id] = true;
+			if ($all) $selected[$meta->id] = true;
 		}
 	}
 
