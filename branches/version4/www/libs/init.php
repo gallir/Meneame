@@ -107,6 +107,7 @@ $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('ant
 // and before de database
 function __autoload($class) {
 	static $classfiles = array(
+				'SitesMgr' => 'sites.php',
 				'Annotation' => 'annotation.php',
 				'Log' => 'log.php',
 				'db' => 'mysqli.php',
