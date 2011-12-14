@@ -173,14 +173,40 @@ padding: 0 5px;
 }
 
 #logo{
-background-image:url('../../img/mnm/logo03.png');
+background-image:url('../../img/mnm/logo04.png');
 height: 34px;
 width: 130px;
 margin-left: 5px;
+margin-right: 0px;
 text-indent: -9999px;
 display: block;
 float: left;
 }
+
+#mnme{
+background-image:url('../../img/common/mnme-01.png');
+height: 18px;
+width: 11px;
+margin-top: 12px;
+margin-left: 0px;
+margin-right: 0px;
+text-indent: -9999px;
+display: block;
+float: left;
+}
+
+.logo-sep {
+float: left;
+margin-top: 5px;
+margin-right: 8px;
+}
+
+.mnme-title {
+float: left;
+margin-top: 12px;
+margin-left: 5px;
+}
+
 
 ul.headtools{
 list-style-type: none;

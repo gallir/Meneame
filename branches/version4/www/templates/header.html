@@ -120,6 +120,15 @@ mobile_client = {{ globals.mobile }};
 
 <div id="header">
 <a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
+<img src="{{globals.base_static}}img/common/mnme-sep.png" width="1" height="24" alt="" class="logo-sep"/>
+
+{% if globals.site_shortname == "mnm" %}
+	<a href="http://e.{{globals.server_name}}" title="{% trans _('ir a la edición de cultura y tecnología') %}" id="mnme">{% trans _("menéame") %}</a>
+{% else %}
+	<a href="http://meneame.net" title="{% trans _('ir a la edición general') %}" id="mnme">{% trans _("menéame") %}</a>
+	<img src="{{globals.base_static}}img/common/mnme-cyt-01.png" width="136" height="16" alt="" class="mnme-title"/>
+{% endif %}
+
 {% if globals.ads_branding %}
 {% try_include 'private/ad-sponsored.html' %}
 {% endif %}
