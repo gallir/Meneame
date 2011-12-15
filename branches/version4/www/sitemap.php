@@ -79,7 +79,7 @@ function do_published($page) {
 	global $globals, $index_size, $db;
 	$start = $page * $index_size;
 
-	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' ".$globals['allowed_categories_sql']." order by link_date asc limit $start, $index_size";
+	$sql = "SELECT SQL_NO_CACHE link_uri from links, sub_statuses where id = ".SitesMgr::my_id()." and link_id = link and status='published' order by date asc limit $start, $index_size";
 	$result = $db->get_col($sql);
 	if (!$result) return;
 	if (isset($globals['canonical_server_name']) && ! empty($globals['canonical_server_name'])) {
@@ -99,7 +99,7 @@ function do_published($page) {
 function do_last_published() {
 	global $globals, $db;
 
-	$sql = "SELECT SQL_NO_CACHE link_uri from links where link_status='published' and link_date > date_sub(now(), interval 60 day) ".$globals['allowed_categories_sql']." order by link_date desc";
+	$sql = "SELECT SQL_NO_CACHE link_uri from links, sub_statuses where id = ".SitesMgr::my_id()." and link_id = link and status='published' and date > date_sub(now(), interval 60 day) order by date desc";
 	$result = $db->get_col($sql);
 	if (!$result) return;
 	if (isset($globals['canonical_server_name']) && ! empty($globals['canonical_server_name'])) {

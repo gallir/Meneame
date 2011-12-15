@@ -72,25 +72,22 @@ class Link extends LCPBase {
 	static function count($status='', $cat='', $force = false) {
 		global $db, $globals;
 
-		if (empty($cat) && $globals['allowed_categories']) {
-			$cat_key = implode(',', $globals['allowed_categories']); // We store the list, used as a key in the DB
-		} else {
-			$cat_key = $cat;
-		}
-		if (!$status) return Link::count('published', $cat_key, $force) +
-							Link::count('queued', $cat_key, $force) +
-							Link::count('discard', $cat_key, $force) +
-							Link::count('abuse', $cat_key, $force) +
-							Link::count('autodiscard', $cat_key, $force);
+		$my_id = SitesMgr::my_id();
+
+		if (!$status) return Link::count('published', $cat, $force) +
+							Link::count('queued', $cat, $force) +
+							Link::count('discard', $cat, $force) +
+							Link::count('abuse', $cat, $force) +
+							Link::count('autodiscard', $cat, $force);
 
 
-		$count = get_count("$status.$cat_key");
+		$count = get_count("$my_id.$status.$cat");
 		if ($count === false || $force) {
-			if (! empty($cat_key)) {
-				$extra = "and link_category in ($cat_key)";
+			if (! empty($cat)) {
+				$extra = "and category in ($cat)";
 			} else $extra = '';
-			$count = $db->get_var("select count(*) from links where link_status = '$status' $extra");
-			set_count("$status.$cat_key", $count);
+			$count = $db->get_var("select count(*) from sub_statuses where id = $my_id and status = '$status' $extra");
+			set_count("$my_id.$status.$cat", $count);
 		}
 		return $count;
 	}

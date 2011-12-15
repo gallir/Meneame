@@ -256,7 +256,7 @@ function db_get_search_links($by_date = false, $start = 0, $count = 50) {
 		$where .= " and link_date > date_sub(now(), interval $hours hour)";
 	}
 	if ($where && $from) {
-		$sql = "select link_id from $from where $where ".$globals['allowed_categories_sql']." $order limit $start,$count";
+		$sql = "select link_id from $from where $where $order limit $start,$count";
 		$response['rows'] = $db->get_var("select count(*) from $from where $where");
 		if ($response['rows'] > 0) {
 			$response['ids'] = array();

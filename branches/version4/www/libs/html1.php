@@ -319,6 +319,8 @@ function do_vertical_tags($what=false) {
 	$cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status.$meta_cond;
 	if(memcache_mprint($cache_key)) return;
 
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
+
 	$min_pts = 8;
 	$max_pts = 22;
 
@@ -371,7 +373,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 
 	$cache_key = 'categories_cloud_'.$globals['site_shortname'].$globals['v'].$what;
 	if(memcache_mprint($cache_key)) return;
-
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	if (!empty($what)) {
 		$status = '= "'.$what. '"';
@@ -431,6 +433,7 @@ function do_best_sites() {
 
 	$key = 'best_sites_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 	// The order is not exactly the votes counts
@@ -454,6 +457,7 @@ function do_best_comments() {
 
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours
 	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 48 hours
@@ -502,6 +506,7 @@ function do_best_story_comments($link) {
 		$key = 'best_story_comments_'.$globals['v'].$link->id;
 		if(memcache_mprint($key)) return;
 	}
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$limit = min(15, intval($link->comments/5));
 	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
@@ -536,6 +541,7 @@ function do_active_stories() {
 
 	$key = 'active_stories_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$category_list	= '';
 	$title = _('destacadas');
@@ -572,6 +578,7 @@ function do_best_stories() {
 
 	$key = 'best_stories_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
@@ -616,6 +623,7 @@ function do_best_queued() {
 
 	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
 	if ($globals['meta_current'] && $globals['meta_categories']) {
@@ -666,6 +674,7 @@ function do_most_clicked_stories() {
 
 	$key = 'most_clicked_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	if ($globals['meta_current'] && $globals['meta_categories']) {
 			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
@@ -711,6 +720,7 @@ function do_best_posts() {
 
 	$key = 'best_posts_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
@@ -749,6 +759,7 @@ function do_last_blogs() {
 
 	$key = 'last_blogs_'.$globals['v'];
 	if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 
 	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date desc limit 10");
