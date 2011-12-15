@@ -46,12 +46,6 @@ $globals['allowed_metas'] = false;
 // $globals['allowed_metas'] = array(100, 101, 102, 103);
 
 
-// Show only these categories, false for all
-$globals['allowed_categories'] = false;
-// Must be an array, example
-// $globals['allowed_categories'] = array(1, 4, 8, 9, 11, 13, 15);
-
-
 $globals['page_size'] = $page_size	= 30;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['external_ads'] = $external_ads = true;
