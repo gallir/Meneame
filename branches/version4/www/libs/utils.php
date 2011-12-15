@@ -367,8 +367,18 @@ function get_static_server_name() {
 
 function get_auth_link() {
 	global $globals;
-	if ($globals['ssl_server']) return 'https://'.$globals['ssl_server'].$globals['base_url'];
-	else return $globals['base_url'];
+	if ($globals['ssl_server']) {
+		// If this is the mobile version and it's an external server, e.g www.meneame.net, 
+		// we'd call /mobile/login.php instead of /login.php
+		if ($globals['mobile_version'] && $globals['ssl_server'] != get_server_name() ) {
+			$path = 'mobile/';
+		} else {
+			$path = '';
+		}
+		return 'https://'.$globals['ssl_server'].$globals['base_url'].$path;
+	} else {
+		return $globals['base_url'];
+	}
 }
 
 function check_auth_page() {

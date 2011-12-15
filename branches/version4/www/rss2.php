@@ -33,7 +33,7 @@ if(!empty($_REQUEST['time'])) {
 	/////
 	if(!($time = check_integer('time')))
 		die;
-	$sql = "SELECT link_id, link_votes as votes FROM links, sub_statuses WHERE id = $site_id AND link_id = link";
+	$sql = "SELECT link_id, link_votes as votes FROM links, sub_statuses WHERE id = $site_id AND link_id = link AND ";
 	if ($time < 0 || $time > 86400*5) $time = 86400*2;
 	$from = time()-$time;
 	$sql .= "date > FROM_UNIXTIME($from) AND ";
@@ -89,6 +89,7 @@ if(!empty($_REQUEST['time'])) {
 	} else {
 		// By default it searches on all
 		if($_REQUEST['q']) {
+			return; // Disabled search
 			$status = 'all';
 			include(mnminclude.'search.php');
 			$search_ids = do_search(true);
@@ -147,6 +148,7 @@ if(!empty($_REQUEST['time'])) {
 
 	// Check if it's search
 	if($_REQUEST['q']) {
+		return; // Disabled search
 		if($search) {
 			$from_where = "FROM links WHERE $search ";
 		} else {
