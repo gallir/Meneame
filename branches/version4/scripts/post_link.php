@@ -5,6 +5,7 @@
 
 
 if (count($argv) != 3) {
+	syslog(LOG_INFO, "Usage: ".basename(__FILE__)." site_id hostname link_id");
 	echo "Usage: ".basename(__FILE__)." site_id hostname link_id\n";
 	die;
 }
@@ -20,12 +21,14 @@ include(mnminclude.'external_post.php');
 $my_id = SitesMgr::my_id();
 
 if (! $my_id) {
+	syslog(LOG_INFO, "Meneame, post_link.php, site not found $hostname");
 	echo "No site id found\n";
 	die;
 }
 
 $link = Link::from_db($link_id);
 if (! $link) {
+	syslog(LOG_INFO, "Meneame, post_link.php, link not found $link_id");
 	echo "Link $link_id not found\n";
 	die;
 }
@@ -35,6 +38,8 @@ do_posts($link);
 
 function do_posts($link) {
 	global $globals;
+
+	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
 	// echo "Posting $link->uri: ".$globals['server_name']. "--".$globals["site_shortname"]."---". $globals['twitter_consumer_key'] ."\n"; die;
 	if ($globals['url_shortener']) {

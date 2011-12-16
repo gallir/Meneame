@@ -418,8 +418,8 @@ function publish($link) {
 
 	foreach ($sites as $s) {
 		$server_name = SitesMgr::get_info($s)->server_name;
-		syslog(LOG_INFO, "Meneame, calling sub process to post: post_link.php $server_name $link->category");
-		passthru(dirname(__FILE__)."/post_link.php $server_name $link->category");
+		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
+		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id");
 	}
 
 }

@@ -4,14 +4,15 @@
 include('../config.php');
 include(mnminclude.'external_post.php');
 
-
-$a_tops = new Annotation('top-links');
+$my_name = $globals['site_shortname'];
+$a_tops = new Annotation('top-link-'.$my_name);
+echo 'top-link-'.$my_name."\n";
 if(!$a_tops->read()) {
 	exit;
 }
 $tops = explode(',', $a_tops->text);
 
-$a_history = new Annotation('top-links-post-history');
+$a_history = new Annotation('top-link-post-history-'.$my_id);
 if($a_history->read()) {
 	$history = explode(',',$a_history->text);
 } else {
