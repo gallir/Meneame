@@ -26,6 +26,13 @@ class SitesMgr {
 		return self::$id;
 	}
 
+	static public function get_info($id = false) {
+		global $db;
+
+		if (!$id) $id = self::$id;
+		return $db->get_row("select * from subs where id = $id");
+	}
+
 	static public function deploy($link) {
 		global $db;
 
@@ -125,6 +132,12 @@ class SitesMgr {
 		return $db->get_col("select id from sub_categories where category = $category and import and enabled");
 	}
 
+	static public function get_children($site_id) {
+		global $db;
+
+		return $db->get_col("select id from subs where parent = $site_id");
+	}
+
 	static private function get_category_configuration($id, $category) {
 		global $db;
 		return $db->get_row("select * from sub_categories where id = $id and category = $category");
@@ -207,4 +220,5 @@ class SitesMgr {
 
 		return $db->get_col("SELECT SQL_CACHE category FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_id ASC");
 	}
+
 }
