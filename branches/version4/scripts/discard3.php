@@ -36,6 +36,7 @@ if ($links) {
 			$karma_old = $l->karma;
 			$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
 
+			$l->status = 'queued';
 			$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $l->id");
 			SitesMgr::deploy($l);
 
