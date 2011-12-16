@@ -405,22 +405,21 @@ function publish($link) {
 	$link->annotation .= _('publicación'). "<br/>";
 	$link->save_annotation('link-karma');
 
-	if ($globals['url_shortener']) {
-		$short_url = $link->get_short_permalink();
-	} else {
-		$short_url = fon_gs($link->get_permalink());
-	}
-	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
-		twitter_post($link->title, $short_url);
-	}
-	if ($globals['facebook_token']) {
-		facebook_post($link);
-	}
-	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-		jaiku_post($link->title, $short_url);
-	}
-	if ($globals['pubsub']) {
-		pubsub_post();
+
+	// Publish to all sub sites: this and children who import the link category
+	$my_id = SitesMgr::my_id();
+
+	// Get all sites that are "children" and try to post links
+	// And that "import" the link->category
+	$sites = array_intersect(SitesMgr::get_children($my_id), SitesMgr::get_receivers($link->category));
+
+	// Add my own
+	$sites[] = $my_id;
+
+	foreach ($sites as $s) {
+		$server_name = SitesMgr::get_info($s)->server_name;
+		syslog(LOG_INFO, "Meneame, calling sub process to post: post_link.php $server_name $link->category");
+		passthru(dirname(__FILE__)."/post_link.php $server_name $link->category");
 	}
 
 }
