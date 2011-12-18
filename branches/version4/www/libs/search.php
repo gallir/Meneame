@@ -47,6 +47,18 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 		$cl->SetFieldWeights(array('content' => 1));
 	}
 
+	// Function to filter by sub site
+	if ($_REQUEST['w'] == 'links' || $_REQUEST['w'] == 'comments') {
+		$allowed_categories = SitesMgr::get_categories();
+		if ($allowed_categories) {
+			$cats = array();
+			foreach ($allowed_categories as $c) {
+				$cats[] = (int) $c->id;
+			}
+			$cl->SetFilter('category', $cats);
+		}
+	}
+
 	$response['rows'] = 0;
 	$response['time'] = 0;
 
