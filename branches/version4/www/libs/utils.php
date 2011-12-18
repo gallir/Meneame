@@ -357,7 +357,7 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $globals;
-	return $globals['server_name'] ? $globals['server_name'] : $_SERVER['HTTP_HOST'];
+	return $globals['server_name'] ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
 }
 
 function get_static_server_name() {
@@ -391,7 +391,7 @@ function check_auth_page() {
 			if (!empty($_COOKIE['return_site'])) {
 				$host = $_COOKIE['return_site'];
 			} else {
-				$host = $_SERVER["HTTP_HOST"];
+				$host = $_SERVER["SERVER_NAME"];
 			}
 			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 			header('HTTP/1.1 302 Moved');
@@ -401,7 +401,7 @@ function check_auth_page() {
 	} elseif ($globals['ssl_server'] && $globals['secure_page']) {
 		setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 		header('HTTP/1.1 302 Moved');
-		header('Location: https://'.$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+		header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
 		die;
 	}
 }
@@ -785,7 +785,7 @@ function fork($uri) {
 	$sock = @fsockopen(get_server_name(), $_SERVER['SERVER_PORT'], $errno, $errstr, 0.01 );
 
 	if ($sock) {
-		@fputs($sock, "GET {$globals['base_url']}$uri HTTP/1.0\r\n" . "Host: {$_SERVER['HTTP_HOST']}\r\n\r\n");
+		@fputs($sock, "GET {$globals['base_url']}$uri HTTP/1.0\r\n" . "Host: {$_SERVER['SERVER_NAME']}\r\n\r\n");
 		return true;
 	}
 	return false;

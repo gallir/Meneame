@@ -24,7 +24,7 @@
 // and/or "local.php"
 // They are automatically included
 //
-// $globals['server_name']	= $_SERVER['HTTP_HOST'];
+// $globals['server_name']	= $_SERVER['SERVER_NAME'];
 
 // In case you have different domains and want to avoid Google penalization for duplicated content
 // $globals['canonical_server_name'] = 'www.canonical.com';
@@ -427,7 +427,7 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 	@include('local.php');
-	@include($_SERVER['HTTP_HOST'].'-local.php');
+	@include($_SERVER['SERVER_NAME'].'-local.php');
 	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 

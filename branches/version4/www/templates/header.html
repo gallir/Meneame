@@ -125,10 +125,8 @@ mobile_client = {{ globals.mobile }};
 {% if globals.site_shortname == "emnm" %}
 	<a href="http://www.meneame.net" title="{% trans _('ir a la edición general') %}" id="mnme">{% trans _("menéame") %}</a>
 	<img src="{{globals.base_static}}img/common/mnme-cyt-01.png" width="136" height="16" alt="{{globals.site_name}}" title="{{globals.site_name}}" class="mnme-title"/>
-{#         BORRAR ESTA LINEA PARA HABILITAR EL ENLACE....
 {% else %}
-	<a href="http://e.{{globals.server_name}}" title="{% trans _('ir a la edición de cultura y tecnología') %}" id="mnme">{% trans _("menéame") %}</a>
-         Y ESTA OTRA LINEA #}
+	<a href="http://e.meneame.net/" title="{% trans _('ir a la edición de cultura y tecnología') %}" id="mnme">{% trans _("menéame") %}</a>
 {% endif %}
 
 {% if globals.ads_branding %}

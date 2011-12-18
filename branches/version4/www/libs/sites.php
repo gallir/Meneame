@@ -186,7 +186,7 @@ class SitesMgr {
 			$extra .= ' and category in ('.implode(',',$globals['allowed_metas']).')';
 		}
 
-		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra AND category_parent = 0 ORDER BY category_id ASC");
+		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra AND category_parent = 0 ORDER BY category_name ASC");
 	}
 
 	static public function get_categories($parent = false) {

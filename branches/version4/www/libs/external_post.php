@@ -38,7 +38,11 @@ function twitter_post($text, $short_url) {
 		$api_args['long'] = $entry['long'];
 	}
 	*/
-	$oauth->fetch($api_url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
+	try {
+		$oauth->fetch($api_url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
+	} catch (Exception $e) {
+		syslog(LOG_INFO, 'Menéame, Twitter caught exception: '.  $e->getMessage(). " in ".basename(__FILE__)."\n");
+	}
 }
 
 function twitter_post_basic($text, $short_url) {
@@ -142,15 +146,21 @@ function facebook_post($link, $text = '') {
 	if (! $thumb) {
 		$thumb = get_avatar_url($link->author, $link->avatar, 40);
 	}
-	syslog(LOG_INFO, "Meneame, picture sent to FB: $thumb");
+
+	$permalink = $link->get_permalink();
+	// syslog(LOG_INFO, "Meneame, $permalink picture sent to FB: $thumb");
 
 	$data = array(
-				'link' => $link->get_permalink(),
+				'link' => $permalink,
 				'message' => $text,
 				'access_token' => $globals['facebook_token'],
 				'picture' => $thumb,
 				'icon' => $thumb
 			);
 
-	$r = $facebook->api('/me/links', 'POST', $data);
+	try {
+		$r = $facebook->api('/me/links', 'POST', $data);
+	} catch (Exception $e) {
+		syslog(LOG_INFO, 'Menéame, Facebook caught exception: '.  $e->getMessage(). " in ".basename(__FILE__)."\n");
+	}
 }
