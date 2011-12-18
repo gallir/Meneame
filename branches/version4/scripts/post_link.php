@@ -13,7 +13,7 @@ if (count($argv) != 3) {
 $hostname = $argv[1];
 $link_id = (int) $argv[2];
 
-$_SERVER['HTTP_HOST'] = $hostname;
+$_SERVER['SERVER_NAME'] = $hostname;
 
 include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');

@@ -1,21 +1,32 @@
-<?
+#! /usr/bin/env php
+<?php
+
+global $_SERVER;
+// Check which hostname server we run for, for example: e.meneame.net or www.meneame.net
+if (!empty($argv[2])) {
+	$_SERVER['SERVER_NAME'] = $argv[2];
+}
+
+
 // Post to Twitter/Jaiku the most voted and commented during last 24 hr
-include('../config.php');
+include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');
 
-if ($_SERVER['argv'] && intval($_SERVER['argv'][1]) > 0) {
-	$hours = intval($_SERVER['argv'][1]);
+syslog(LOG_INFO, "Meneame, running ".basename(__FILE__)." for ".get_server_name());
+
+if (intval($argv[1]) > 0) {
+	$hours = intval($argv[1]);
 } else {
 	$hours = 24;
 }
 // Get most voted link
-$link_sqls[_('Más votada')] = "select vote_link_id as id, count(*) as n from votes use index (vote_type_4) where vote_type='links' and vote_date > date_sub(now(), interval $hours hour) and vote_user_id > 0 and vote_value > 0 group by vote_link_id order by n desc limit 1";
+$link_sqls[_('Más votada')] = "select vote_link_id as id, count(*) as n from sub_statuses, votes use index (vote_type_4) where id = ".SitesMgr::my_id()." AND vote_link_id = link AND vote_type='links' and vote_date > date_sub(now(), interval $hours hour) and vote_user_id > 0 and vote_value > 0 group by vote_link_id order by n desc limit 1";
 
 // Most commented
-$link_sqls[_('Más comentada')] = "select comment_link_id as id, count(*) as n from comments use index (comment_date) where comment_date > date_sub(now(), interval $hours hour) group by comment_link_id order by n desc limit 1;";
+$link_sqls[_('Más comentada')] = "select comment_link_id as id, count(*) as n from sub_statuses, comments use index (comment_date) where id = ".SitesMgr::my_id()." AND sub_statuses.status in ('published', 'metapublished') AND comment_link_id = link AND comment_date > date_sub(now(), interval $hours hour) group by comment_link_id order by n desc limit 1";
 
 if ($globals['click_counter'] && $hours > 20) {
-	$link_sqls[_('Más leída')] = "select link_id as id, counter as n from links, link_clicks where link_date > date_sub(now(), interval $hours hour) and link_clicks.id = link_id order by n desc limit 1";
+	$link_sqls[_('Más leída')] = "select sub_statuses.link as id, counter as n from sub_statuses, link_clicks where sub_statuses.id = ".SitesMgr::my_id()." AND sub_statuses.status in ('published', 'metapublished') AND date > date_sub(now(), interval $hours hour) and link_clicks.id = sub_statuses.link order by n desc limit 1";
 }
 
 
@@ -33,7 +44,7 @@ foreach ($link_sqls as $key => $sql) {
 		}
 		$intro = "$key ${hours}h";
 		$text = "$intro: $link->title";
-		//echo "$short_url $text\n"; continue;
+
 		if ($globals['twitter_token']) {
 			twitter_post($text, $short_url); 
 		}
@@ -43,6 +54,8 @@ foreach ($link_sqls as $key => $sql) {
 		if ($globals['facebook_token']) {
 			facebook_post($link, $intro);
 		}
+
+		echo "$short_url $text\n"; continue;
 	}
 }
 ?>
