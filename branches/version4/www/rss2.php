@@ -89,7 +89,6 @@ if(!empty($_REQUEST['time'])) {
 	} else {
 		// By default it searches on all
 		if($_REQUEST['q']) {
-			return; // Disabled search
 			$status = 'all';
 			include(mnminclude.'search.php');
 			$search_ids = do_search(true);
@@ -148,7 +147,7 @@ if(!empty($_REQUEST['time'])) {
 
 	// Check if it's search
 	if($_REQUEST['q']) {
-		return; // Disabled search
+		$order_field = 'link_date'; // Because sub_statuses is not used
 		if($search) {
 			$from_where = "FROM links WHERE $search ";
 		} else {
@@ -203,6 +202,7 @@ if ($links) {
 
 		// Meneame own namespace
 		echo "		<meneame:link_id>$link->id</meneame:link_id>\n";
+		echo "		<meneame:status>$link->status</meneame:status>\n";
 		echo "		<meneame:user>$link->username</meneame:user>\n";
 		echo "		<meneame:votes>".intval($link->votes+$link->anonymous)."</meneame:votes>\n";
 		echo "		<meneame:negatives>$link->negatives</meneame:negatives>\n";
