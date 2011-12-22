@@ -14,10 +14,9 @@
 
 	</div>
 
-
-
 	<script type="text/javascript">
 	$('form.comment').droparea({maxsize: {{ globals.media_max_size }} });
+	$(document).ready(function(){$('textarea').autosize();});
 	</script>
 
 {% endif %}

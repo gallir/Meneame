@@ -45,11 +45,16 @@
 </p>
 
 <p><label>{% trans _('bio') %}:</label><br/>
-<textarea style="width:60%;height:60px;" name="bio" id="bio"
+<textarea style="width:60%;" cols="1" name="bio" id="bio"
 {% if ! globals.mobile %}
 	onKeyDown="textCounter(document.thisform.bio,document.thisform.postcounter,{{ form.bio_max }})"
 {% endif %}
 >{{ user.bio }}</textarea>
+
+<script type="text/javascript">
+$(document).ready(function(){$('textarea').autosize();});
+</script>
+
 
 
 {% if ! globals.mobile %}

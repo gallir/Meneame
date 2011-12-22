@@ -44,7 +44,7 @@ function print_edit_form() {
 
 	if ($current_user->user_level != 'god' && time() - $comment->date > $globals['comment_edit_time']) die;
 
-	$rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
+	// $rows = min(40, max(substr_count($comment->content, "\n") * 2, 8));
 	echo '<div class="commentform">'."\n";
 	echo '<form action="'.htmlspecialchars($_SERVER['PHP_SELF']).'" class="comment" method="post" enctype="multipart/form-data">'."\n";
 
@@ -54,7 +54,7 @@ function print_edit_form() {
 
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
-	echo '<div style="clear: right"><textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'" rows="'.$rows.'" cols="75">'.$comment->content.'</textarea></div>'."\n";
+	echo '<div style="clear: right"><textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'">'.$comment->content.'</textarea></div>'."\n";
 
 
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";

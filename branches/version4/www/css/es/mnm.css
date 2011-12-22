@@ -1761,7 +1761,7 @@ font-weight: normal;
 
 .genericform textarea {
 width: 100%;
-height: 128px;
+/* height: 128px;*/
 }
 
 .geoform {

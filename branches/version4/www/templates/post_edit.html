@@ -14,7 +14,7 @@
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="post_id" value="{{ self.id }}" />
 <input type="hidden" name="user_id" value="{{ self.author }}" />
-<textarea style="clear: both" name="post" class="droparea" rows="6" cols="40" id="post"
+<textarea style="clear: both" name="post" class="droparea" rows="4" id="post"
 {% if ! globals.mobile %}
 	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
 {% endif %}
@@ -74,4 +74,5 @@ $('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
 {% endif %}
 /* wait for the DOM to be loaded */
 $('#thisform{{ self.id }}').ajaxForm(options);
+$(document).ready(function(){$('textarea').autosize();});
 </script>

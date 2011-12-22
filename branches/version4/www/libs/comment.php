@@ -362,7 +362,7 @@ class Comment extends LCPBase {
 	}
 
 	// Static function to print comment form
-	static function print_form($link, $rows=12) {
+	static function print_form($link, $rows=4) {
 		global $current_user, $globals;
 
 		if (!$link->votes > 0) return;
@@ -386,7 +386,7 @@ class Comment extends LCPBase {
 			echo '<legend>'._('envía un comentario'). ' <em style="font-size:80%">'._('porque alguien en Internet está equivocado').'</em></legend>'."\n";
 			print_simpleformat_buttons('comment');
 			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-			echo '<div><textarea name="comment_content" class="droparea" id="comment" cols="75" rows="'.$rows.'"></textarea></div>'."\n";
+			echo '<div><textarea name="comment_content" class="droparea" id="comment" rows="'.$rows.'"></textarea></div>'."\n";
 
 
 			echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
