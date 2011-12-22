@@ -24,6 +24,8 @@
 // and/or "local.php"
 // They are automatically included
 //
+// WARN WARNING ALERT: we use $_SERVER['SERVER_NAME'] which is the first
+// server_name in NGInx and other servers
 // $globals['server_name']	= $_SERVER['SERVER_NAME'];
 
 // In case you have different domains and want to avoid Google penalization for duplicated content
@@ -37,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 2; // internal version, to for reloads
+$globals['v'] = 3; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 // Show only these meta categories, false for all

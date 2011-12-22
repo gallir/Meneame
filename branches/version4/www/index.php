@@ -52,8 +52,8 @@ if ($globals['meta_current'] > 0) {
 	switch ($globals['meta']) {
 		case '_personal':
 			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
-			// $from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$where = "status='published' and category in (".$globals['meta_categories'].") ";
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+			$where = "status='published' and date > $from_time and category in (".$globals['meta_categories'].") ";
 			$rows = -1;
 			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 			print_index_tabs(7); // Show "personal" as default

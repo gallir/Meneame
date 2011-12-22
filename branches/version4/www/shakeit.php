@@ -78,9 +78,13 @@ switch ($globals['meta']) {
 		$globals['tag_status'] = 'queued';
 		$order_by = "ORDER BY date DESC";
 		if ($globals['meta_current'] > 0) {
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+			$rows = -1;
+/*
 			if ($cat) $rows = Link::count('queued', $cat);
 			else $rows = Link::count('queued', $globals['meta_categories']);
-			$where = "status='queued' and category in (".$globals['meta_categories'].") ";
+*/
+			$where = "status='queued' and date > $from_time and category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
 			$rows = Link::count('queued');

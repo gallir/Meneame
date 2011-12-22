@@ -151,7 +151,7 @@ if(!empty($_REQUEST['time'])) {
 		if($search) {
 			$from_where = "FROM links WHERE $search ";
 		} else {
-			$from_where .= "AND false"; // Force to return empty set
+			$from_where = "FROM links WHERE false "; // Force to return empty set
 		}
 		$title = $globals['site_name'] . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
 	} elseif (($meta=check_integer('meta'))) {

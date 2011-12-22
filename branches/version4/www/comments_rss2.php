@@ -18,6 +18,7 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	$if_modified = 0;
 } else {
 	$if_modified = get_if_modified();
+	if ($if_modified < time() - 3*86400) $if_modified = 0;
 }
 
 $individual_user = false;
