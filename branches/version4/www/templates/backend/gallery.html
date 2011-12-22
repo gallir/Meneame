@@ -9,38 +9,38 @@
 {% endfor %}
 
 <script type="text/javascript">
-function formatTitle(title, currentArray, currentIndex, currentOpts) {
-	t_i_u = title.split(",");
+function formatTitle() {
+	t_i_u = this.title.split(",");
+
 	script = 'get_'+t_i_u[0]+'_tooltip.php';
 	if (t_i_u[0] == 'post') type = '{% trans _('nota de') %}';
 	else type = '{% trans _('comentario de') %}';
 
-	pages = (currentIndex + 1) + '/' + currentArray.length;
 	url = base_url + 'go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
-	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+'&nbsp;[<a href="'+$('#fancybox-img').attr('src')+'" target="_blank">{% trans _('imagen') %}</a>]'+'</div>';
-	return who + pages;
+
+	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+'&nbsp;[<a href="'+this.href+'" target="_blank">{% trans _('imagen') %}</a>]'+'</div>';
+
+	return who;
 }
 
 function onComplete() {
-	reportAjaxStats('image', 'gallery');
+	reportAjaxStats('image', 'gallery', this.href);
 }
 
-$("#gallery-container > a.fancybox").fancybox(
+$("#gallery-container > a.fancybox").colorbox(
 	{
-	'type': "image",
-	'transitionIn'	: 'none',
-	'transitionOut'	: 'none',
-	'showNavArrows': true,
-	'cyclic': true,
-	'titlePosition': 'inside',
-	'titleFormat'		: formatTitle,
-	'showCloseButton'	: true,
-	'autoDimensions': true,
-	'autoScale': true,
-	'onComplete': onComplete,
-	'onClosed': function() {$('#gallery').remove()},
+		'type': "image",
+		'transition'	: 'none',
+		'loop': true,
+		'onComplete': onComplete,
+		'width':"75%",
+		'height':"75%",
+		'opacity': 0.5,
+		'preloading': true,
+		'title': formatTitle,
+		'onClosed': function() {$('#gallery').remove()}
 	}
-	);
+);
 $(document).ready(function() {$("#gallery-1").trigger('click')});
 </script>
 </div>

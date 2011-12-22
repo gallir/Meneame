@@ -92,7 +92,7 @@ mobile_client = {{ globals.mobile }};
 
 		<ul class="headtools">
 			<li id="bar">
-				<a href="{{ self.url }}" onClick="location.href = '{{ self.url }}';return false;">{% trans _('cerrar barra') %} <b>X</b></a>
+				<a href="{{ self.url }}">{% trans _('cerrar barra') %} <b>X</b></a>
 			</li>
 			{% if current_user.authenticated %}
 				<li><a href="{{ current_user.user_login|useruri }}">

@@ -3,14 +3,27 @@
 try {
 	$(document).ready(
 		function() {
-			$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.fancybox({
-				transitionIn: "none",
-				transitionOut: "none",
-				titlePosition: 'inside',
-				titleFormat: function(title, cA, cI, cO) { if ($('#fancybox-img').length ) return title + '&nbsp;[\x3Ca href="'+$('#fancybox-img').attr('src')+'">{% trans _('enlace imagen') %}\x3C/a>]'; else return title; },
-				onComplete: function() {
-						reportAjaxStats('image', 'single');
+{# Disabled expand images
+			$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.colorbox({
+#}
+			$("a.fancybox").colorbox({
+				'transition': 'none',
+				'maxWidth': '75%',
+				'maxHeight': '75%',
+				'opacity': 0.5,
+
+				'title':
+					function() {
+						var title;
+						if (this.title.length > 0 && this.title.length < 30) title = this.title;
+						else title = '{% trans _('enlace original') %}';
+
+						return '<a href="'+this.href+'">'+title+'</a>';
 					},
+
+				'onComplete': function() {
+						reportAjaxStats('image', 'single', this.href);
+					}
 			});
 		}
 	);

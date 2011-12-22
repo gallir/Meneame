@@ -6,7 +6,7 @@
 	border: 1px solid #FFD0B0;
 	background-color: #fff;
 	overflow: hidden;
-	z-index: 1200;
+	z-index: 10000;
 }
 
 .acResults ul {

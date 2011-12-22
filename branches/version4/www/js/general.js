@@ -189,9 +189,14 @@ function get_votes(program,type,container,page,id) {
 
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
-function reportAjaxStats(category, action) {
-	if (typeof(_gaq) !=	'undefined')
-		_gaq.push(['_trackEvent', category, action])
+function reportAjaxStats(category, action, url) {
+
+	if (typeof(_gaq) !=	'undefined') {
+		_gaq.push(['_trackEvent', category, action]);
+		if (typeof url == 'string') {
+			_gaq.push(["_trackPageview", url]);
+		}
+	}
 }
 
 function bindTogglePlusMinus(img_id, link_id, container_id) {
@@ -700,20 +705,20 @@ function replaceText(text, tag) {
 
 /* Privates */
 function priv_show(content) {
-	$.fancybox({content: content, autoDimensions: false, width: 500, height: 'auto', transitionIn: 'none'});
+	$.colorbox({html: content, width: 500, transition: 'none', scrolling: false});
 }
 
 function priv_new(user_id) {
 	var url = base_url + 'backend/priv_edit.php?user_id='+user_id+"&key="+base_key;
-	$.fancybox({href: url,
+	$.colorbox({href: url,
 		onComplete: function () { if (user_id > 0) $('#post').focus(); else $("#to_user").focus();},
-		hideOnOverlayClick: false,
-		titleShow: false,
-		centerOnScroll: false,
-		scrolling: 'no',
-		autoDimensions: false,
-		width: 500,
-		height: 'auto'});
+		overlayClose: false,
+		transition: 'none',
+		title: false,
+		scrolling: false,
+		open: true,
+		width: 500
+	});
 }
 
 /* Answers */
