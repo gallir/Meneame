@@ -14,7 +14,7 @@
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="post_id" value="{{ self.id }}" />
 <input type="hidden" name="user_id" value="{{ self.author }}" />
-<textarea style="clear: both" name="post" class="droparea" rows="4" id="post"
+<textarea style="clear: both" name="post" class="droparea" rows="5" id="post"
 {% if ! globals.mobile %}
 	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
 {% endif %}

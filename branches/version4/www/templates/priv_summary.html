@@ -10,7 +10,7 @@
 	{% if self.media_size > 0 %}
 		&nbsp;
 		{# PixeloPhilia icon from omercetin.deviantart.com #}
-		<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=private&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}"><img style="vertical-align: top" src="{{ globals.base_static }}img/common/picture01.png" width="30" height="24" alt="media" title="{% trans _('Mayúsculas+Clic para expandir todas') %}"/></a>
+		<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=private&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}"><img style="vertical-align: top" src="{{ globals.base_static }}img/common/picture01.png" width="30" height="24" alt="media"/></a>
 	{% endif %}
 	</div>
 

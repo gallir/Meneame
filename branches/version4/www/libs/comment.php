@@ -362,7 +362,7 @@ class Comment extends LCPBase {
 	}
 
 	// Static function to print comment form
-	static function print_form($link, $rows=4) {
+	static function print_form($link, $rows=5) {
 		global $current_user, $globals;
 
 		if (!$link->votes > 0) return;

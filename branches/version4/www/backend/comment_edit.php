@@ -54,7 +54,7 @@ function print_edit_form() {
 
 	echo '<fieldset><legend>'._('editar comentario').'</legend>'."\n";
 	print_simpleformat_buttons('edit-comment-'.$comment->id);
-	echo '<div style="clear: right"><textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'">'.$comment->content.'</textarea></div>'."\n";
+	echo '<div style="clear: right"><textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'" rows="5">'.$comment->content.'</textarea></div>'."\n";
 
 
 	echo '<input class="button" type="submit" name="submit" value="'._('modificar comentario').'" />'."\n";
