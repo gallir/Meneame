@@ -123,7 +123,8 @@ class Link extends LCPBase {
 			}
 		}
 		$visited[] = $id;
-		setcookie('v', implode('x', $visited), 0, $globals['base_url']);
+		setcookie('v', implode('x', $visited), $globals['now'] - 3600, $globals['base_url']); // Delete old cookie
+		setcookie('v', implode('x', $visited), 0, $globals['base_url'], UserAuth::domain());
 		return $found !== false;
 	}
 

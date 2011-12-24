@@ -1,32 +1,7 @@
 {% if globals.fancybox_enabled %}
 <script type="text/javascript">
 try {
-	$(document).ready(
-		function() {
-{# Disabled expand images
-			$("a.fancybox"){% if current_user.user_id > 0 %}.click(fancybox_expand_images){% endif %}.colorbox({
-#}
-			$("a.fancybox").colorbox({
-				'transition': 'none',
-				'maxWidth': '75%',
-				'maxHeight': '75%',
-				'opacity': 0.5,
-
-				'title':
-					function() {
-						var title;
-						if (this.title.length > 0 && this.title.length < 30) title = this.title;
-						else title = '{% trans _('enlace original') %}';
-
-						return '<a href="'+this.href+'">'+title+'</a>';
-					},
-
-				'onComplete': function() {
-						reportAjaxStats('image', 'single', this.href);
-					}
-			});
-		}
-	);
+	$(document).ready(set_fancybox);
 } catch(e) {};
 </script>
 {% endif %}

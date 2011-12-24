@@ -64,7 +64,7 @@
 	{% if globals.ads %}<!-- google_ad_section_start -->{% endif %}
 
 	{% if globals.link %}<h1>{% else %}<h2>{% endif %}
-		<a href="{{ self.url|escape }}"
+		<a href="{{ self.url|escape }}" class="l:{{ self.id }}"
 		{% if globals.click_counter %}
 			onmousedown="return clk(this, {{ self.id }})"
 		{% endif %}

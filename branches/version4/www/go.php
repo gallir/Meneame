@@ -47,6 +47,9 @@ require(mnminclude.$globals['html_main']);
 do_error(_('enlace inexistente'), 404);
 
 function do_redirection($url, $code = 301) {
+	if (isset($_GET['quiet'])) {
+		return; // Don't redirect if the caller asked so
+	}
 	header("HTTP/1.1 $code Moved");
 	header('Location: ' . $url);
 	header("Content-Length: 0");
