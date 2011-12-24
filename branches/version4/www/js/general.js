@@ -974,7 +974,7 @@ function set_fancybox() {
 		if ((v = this.href.match(/youtube\.com\/.*v=([\w\-_]+)/))) {
 			if (mobile_client) return;
 			iframe = true;
-			title = '<a href="'+this.href+'">{% trans _('vídeo original') %}</a>';
+			title = '<a href="'+this.href+'">{% trans _('página de Youtube') %}</a>';
 			href = 'http://www.youtube.com/embed/'+v[1];
 			innerWidth = 640;
 			innerHeight = 390;

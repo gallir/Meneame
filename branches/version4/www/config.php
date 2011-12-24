@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 3; // internal version, to for reloads
+$globals['v'] = 4; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 // Show only these meta categories, false for all
