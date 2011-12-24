@@ -311,7 +311,7 @@ function text_to_html_callback(&$matches) {
 				$matches[4] = substr($matches[4], 0, -1);
 				$suffix = ')';
 			}
-			if (preg_match('/\.(jpg|gif|png)$/S', $matches[4])) $extra = 'class="fancybox"';
+			if (preg_match('/\.(:?jpg|jpeg|gif|png)$|youtube.com\/.*v=/S', $matches[4])) $extra = 'class="fancybox"';
 			return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 	}
 	return $matches[1].$matches[2];

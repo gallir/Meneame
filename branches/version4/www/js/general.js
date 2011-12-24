@@ -795,7 +795,7 @@ $(document).ready(function () {
 		}
 	}
 	mDialog.init();
-
+	fancyBox.init();
 });
 
 // Drop an image file
@@ -967,55 +967,90 @@ $(document).ready(function () {
 	};
 })( jQuery );
 
-function set_fancybox() {
-	$('.fancybox,a[href*="youtube.com/"][href*="v="]').each(function(i) {
-		var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass;
+var fancyBox = new function () {
+	var timeout = false;
 
-		if ((v = this.href.match(/youtube\.com\/.*v=([\w\-_]+)/))) {
-			if (mobile_client) return;
-			iframe = true;
-			title = '<a href="'+this.href+'">{% trans _('página de Youtube') %}</a>';
-			href = 'http://www.youtube.com/embed/'+v[1];
-			innerWidth = 640;
-			innerHeight = 390;
-			maxWidth = false;
-			maxHeight = false;
+	this.init = function (parent) {
+		this.scan(parent);
+		this.setTimeout();
+	}
 
-			myClass = $(this).attr('class');
-			if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
-				/* It's a link, so we must call to go.php */
-				onLoad = function() {
-					var id = linkId[1];
-					$.get(base_url + 'go.php?quiet=1&id='+id);
-				};
-			}
+	this.scan = function (parent) {
+		var selector;
+
+		if (! jQuery().colorbox) return;
+
+		if (typeof parent == 'string') {
+			selector = parent + ' > .fancybox';
 		} else {
-			if (this.title.length > 0 && this.title.length < 30) title = this.title;
-			else title = '{% trans _('enlace original') %}';
-			title = '<a href="'+this.href+'">'+title+'</a>';
-			href = this.href;
-			maxWidth = '75%';
-			maxHeight = '75%';
+			selector = '.fancybox';
 		}
 
-		$(this).colorbox({
-			'href': href,
-			'transition': 'none',
-			'maxWidth': maxWidth,
-			'maxHeight': maxHeight,
-			'opacity': 0.5,
+		$(selector).each(function(i) {
+			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, target = '';
 
-			'title': title,
-			'iframe': iframe,
-			'innerWidth': innerWidth,
-			'innerHeight': innerHeight,
-			'onLoad': onLoad,
-
-			'onComplete': function() {
-				reportAjaxStats('image', 'single', this.href);
+			if ($(this).attr('target')) {
+				target = ' target="'+$(this).attr('target')+'"';
 			}
-		}); // colorbox
-	}); // each
+			if ((v = this.href.match(/youtube\.com\/.*v=([\w\-_]+)/))) {
+				if (mobile_client) return;
+				iframe = true;
+				title = '<a href="'+this.href+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
+				href = 'http://www.youtube.com/embed/'+v[1];
+				innerWidth = 640;
+				innerHeight = 390;
+				maxWidth = false;
+				maxHeight = false;
+
+				myClass = $(this).attr('class');
+				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
+					/* It's a link, so we must call to go.php */
+					onLoad = function() {
+						var id = linkId[1];
+						$.get(base_url + 'go.php?quiet=1&id='+id);
+					};
+				}
+			} else {
+				if (this.title.length > 0 && this.title.length < 30) title = this.title;
+				else title = '{% trans _('enlace original') %}';
+				title = '<a href="'+this.href+'"'+target+'>'+title+'</a>';
+				href = this.href;
+				maxWidth = '75%';
+				maxHeight = '75%';
+			}
+
+			$(this).colorbox({
+				'href': href,
+				'transition': 'none',
+				'maxWidth': maxWidth,
+				'maxHeight': maxHeight,
+				'opacity': 0.5,
+
+				'title': title,
+				'iframe': iframe,
+				'innerWidth': innerWidth,
+				'innerHeight': innerHeight,
+				'onLoad': onLoad,
+
+				'onComplete': function() {
+					reportAjaxStats('image', 'single');
+				}
+			}); // colorbox
+		}); // each
+		timeout = false;
+	};
+
+
+	this.setTimeout = function () {
+		var scan = this.scan;
+		setTimeout(function() {
+			$("#newswrap").on("DOMSubtreeModified", function(e) {
+				if (!timeout) {
+					timeout = setTimeout(scan, 100);
+				}
+			});
+		}, 200);
+	};
 }
 
 {% endspacefull %}

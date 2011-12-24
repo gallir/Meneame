@@ -560,6 +560,7 @@ class Link extends LCPBase {
 
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
+		$this->fancybox = preg_match('/youtube\.com\/.*v=/', $this->url);
 		$this->permalink	 = $this->get_permalink();
 		$this->relative_permalink	 = $this->get_relative_permalink();
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;

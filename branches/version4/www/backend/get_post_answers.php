@@ -25,6 +25,5 @@ if ($res) {
 		$post->print_summary();
 		echo "\n";
 	}
-	Haanga::Load('fancybox.html');
 }
 

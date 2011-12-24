@@ -779,10 +779,6 @@ margin: 10px 10px 10px 0px;
 
 /**** END SIDEBAR BOXES ************/
 
-a.fancybox {
-color: #C85000;
-}
-
 #footwrap {
 margin: 5em 87px 0 87px;
 clear: both;
@@ -1543,6 +1539,9 @@ background: #fff;
 border: 1px solid #FFA500;
 }
 
+.comment-body a.fancybox {
+color: #C85000;
+}
 
 .comment-body.hidden a, .comment-body.hidden a strong {
 color: #aaa;

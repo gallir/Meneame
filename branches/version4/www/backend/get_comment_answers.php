@@ -25,6 +25,5 @@ if ($res) {
 		$comment->print_summary(false, 2500);
 		echo "\n";
 	}
-	Haanga::Load('fancybox.html');
 }
 

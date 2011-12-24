@@ -117,7 +117,6 @@ function save_post ($message_id) {
 
 	$message = PrivateMessage::from_db($message->id); // Reread the object
 	$message->print_summary();
-	//Haanga::Load('fancybox.html');
 }
 
 function notify_user($from, $to, $text) {

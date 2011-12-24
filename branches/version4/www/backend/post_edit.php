@@ -129,7 +129,6 @@ function save_post ($post_id) {
 
 
 	$post->print_summary();
-	Haanga::Load('fancybox.html');
 }
 
 ?>

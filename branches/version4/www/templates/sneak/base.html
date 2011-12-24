@@ -7,6 +7,8 @@ var server_name = '{{ globals.server_name }}';
 var sneak_base_url = '{{ globals.base_url }}backend/sneaker2.php';
 var mykey = {% exec rand 100 999  %};
 
+var chat_counter = 0;
+
 {% if current_user.admin %}
 var is_admin = true;
 {% else %}
@@ -106,13 +108,19 @@ function to_html(data) {
 			}
 			// Open in a new window
 			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
-			html += '<div class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
+			html += '<div id="chat'+chat_counter+'" class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined &&  data.icon.length > 0) {
 				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
+			if (! global_options.show_admin) {
+				/* Call fancyBox to scan the new chat if it's not admin (i.e. not anonymized) */
+				var c = chat_counter;
+				setTimeout(function() {fancyBox.scan('#chat'+c)}, 1);
+			}
+			chat_counter += 1;
 			return html;
 			break;
 		case 'vote':

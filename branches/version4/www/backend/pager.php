@@ -12,6 +12,10 @@
 function do_contained_pages($id, $total, $current, $page_size, $program, $type, $container = false) {
 	global $globals;
 
+	if (empty($container)) {
+		$container = 'cboxLoadedContent'; // Colorbox (ex Fancybox) container
+	}
+
 	$index_limit = 6;
 
 	$total_pages=ceil($total/$page_size);
@@ -38,17 +42,10 @@ function do_contained_pages($id, $total, $current, $page_size, $program, $type, 
 		do_contained_page_link($id, $i, $program, $type, $container);
 	}
 	echo "</div>\n";
-	if (! $container) {
-		Haanga::Load('fancybox.html');
-	}
-
 }
 
 function do_contained_page_link($id, $i, $program, $type, $container) {
-	if ($container)
-		echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
-	else
-		echo '<a class="fancybox" href="'.backend_call_string($program, $type, $i, $id).'">'.$i.'</a>';
+	echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
 }
 
 ?>

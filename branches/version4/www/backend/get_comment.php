@@ -23,5 +23,4 @@ $link->id = $comment->link;
 if(!$link->read_basic()) die;
 $comment->link_permalink =  $link->get_relative_permalink();
 $comment->print_text(0);
-Haanga::Load('fancybox.html');
 ?>
