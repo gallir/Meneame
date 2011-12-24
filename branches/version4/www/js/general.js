@@ -992,7 +992,7 @@ var fancyBox = new function () {
 			if ($(this).attr('target')) {
 				target = ' target="'+$(this).attr('target')+'"';
 			}
-			if ((v = this.href.match(/youtube\.com\/.*v=([\w\-_]+)/))) {
+			if ((v = this.href.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([\w\-_]+)/))) {
 				if (mobile_client) return;
 				iframe = true;
 				title = '<a href="'+this.href+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
