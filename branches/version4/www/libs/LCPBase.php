@@ -92,7 +92,7 @@ class LCPBase {
 					$matches[4] = substr($matches[4], 0, -1);
 					$suffix = ')';
 				}
-				if (preg_match('/\.(?:jpg|gif|png)$|youtube.com\/.*v=|youtu\.be\/.+/S', $matches[4])) $extra = 'class="fancybox"';
+				if (preg_match('/\.(?:jpg|gif|png)$|youtube.com\/(?:.*v=|embed)|youtu\.be\/.+/S', $matches[4])) $extra = 'class="fancybox"';
 				return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 			/*
 			case '_':
