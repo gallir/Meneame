@@ -57,7 +57,7 @@ $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username)
 $comment->check_visibility();
 if (! $comment->hide_comment) {
 	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
-	$title = text_to_summary($comment->content, 120) . ' | '.$globals['site_name'];
+	$title = text_to_summary($comment->content, 120);
 } else {
 	$title = '';
 }
@@ -65,13 +65,13 @@ if (! $comment->hide_comment) {
 if (isset($globals['canonical_server_name']) && !empty($globals['canonical_server_name'])) {
 	$globals['extra_head'] = '<link rel="canonical" href="http://'.$globals['canonical_server_name'].$comment->get_relative_individual_permalink().'" />';
 }
-do_header($title);
+do_header($title. ' | ' . $globals['site_name']);
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
 //do_best_stories();
-//do_best_comments();
+do_best_comments();
 do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
@@ -83,6 +83,12 @@ echo '<h3 style="text-shadow: 0 1px #ccc"><a href="'.$link->get_permalink().'">'
 echo '<ol class="comments-list">';
 echo '<li>';
 $comment->print_summary($link, 0, true);
+
+echo '<div style="text-align:right">';
+$vars = array('link' => 'http://'.get_server_name().$comment->get_relative_individual_permalink(),
+			'title' => $title);
+Haanga::Load('share.html', $vars);
+echo '</div>';
 echo "</li>\n";
 echo "</ol>\n";
 
