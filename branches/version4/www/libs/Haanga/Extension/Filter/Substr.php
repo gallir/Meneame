@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Substr
 {
-    public static function generator($compiler, $args)
+    public static function generator($cmp, $args)
     {
         if (count($args) != 2) {
             $cmp->Error("substr parameter must have one param");

@@ -331,7 +331,7 @@ class Haanga_Generator_PHP
     {
         $op['array'] = $this->php_get_varname($op['array']);
         $op['value'] = $this->php_get_varname($op['value']);
-        $code = "foreach ({$op['array']} as ";
+        $code = "foreach ((array) {$op['array']} as ";
         if (!isset($op['key'])) {
             $code .= " {$op['value']}";
         } else {

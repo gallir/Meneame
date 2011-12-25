@@ -30,7 +30,7 @@ class Haanga_yyToken implements ArrayAccess
 
     function __toString()
     {
-        return $this->_string;
+        return $this->string;
     }
 
     function offsetExists($offset)
@@ -975,7 +975,7 @@ static public $yy_action = array(
     /**
      * @var int
      */
-    public $yyidx;                    /* Index of top element in stack */
+    public $yyidx = -1;                    /* Index of top element in stack */
     /**
      * @var int
      */
@@ -1453,7 +1453,7 @@ static public $yy_action = array(
             fprintf(self::$yyTraceFILE, "%sShift %d\n", self::$yyTracePrompt,
                 $yyNewState);
             fprintf(self::$yyTraceFILE, "%sStack:", self::$yyTracePrompt);
-            for($i = 1; $i <= $this->yyidx; $i++) {
+            for ($i = 1; $i <= $this->yyidx; $i++) {
                 fprintf(self::$yyTraceFILE, " %s",
                     self::$yyTokenName[$this->yystack[$i]->major]);
             }
@@ -1681,34 +1681,34 @@ static public $yy_action = array(
 #line 86 "Parser.y"
     function yy_r3(){ if (count($this->yystack[$this->yyidx + 0]->minor)) $this->yystack[$this->yyidx + 0]->minor['line'] = $this->lex->getLine();  $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;     }
 #line 1689 "Parser.php"
-#line 87 "Parser.y"
+#line 88 "Parser.y"
     function yy_r4(){
     $this->_retvalue = array('operation' => 'html', 'html' => $this->yystack[$this->yyidx + 0]->minor, 'line' => $this->lex->getLine() ); 
     }
 #line 1694 "Parser.php"
-#line 90 "Parser.y"
+#line 92 "Parser.y"
     function yy_r5(){
     $this->yystack[$this->yyidx + 0]->minor=rtrim($this->yystack[$this->yyidx + 0]->minor); $this->_retvalue = array('operation' => 'comment', 'comment' => $this->yystack[$this->yyidx + 0]->minor); 
     }
 #line 1699 "Parser.php"
-#line 93 "Parser.y"
+#line 96 "Parser.y"
     function yy_r6(){
     $this->_retvalue = array('operation' => 'print_var', 'variable' => $this->yystack[$this->yyidx + -1]->minor, 'line' => $this->lex->getLine() ); 
     }
 #line 1704 "Parser.php"
-#line 97 "Parser.y"
+#line 100 "Parser.y"
     function yy_r7(){ $this->_retvalue = array('operation' => 'base', $this->yystack[$this->yyidx + -1]->minor);     }
 #line 1707 "Parser.php"
-#line 98 "Parser.y"
+#line 101 "Parser.y"
     function yy_r8(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }
 #line 1710 "Parser.php"
-#line 99 "Parser.y"
+#line 102 "Parser.y"
     function yy_r9(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;     }
 #line 1713 "Parser.php"
-#line 104 "Parser.y"
+#line 107 "Parser.y"
     function yy_r14(){ $this->_retvalue = array('operation' => 'include', $this->yystack[$this->yyidx + -1]->minor);     }
 #line 1716 "Parser.php"
-#line 108 "Parser.y"
+#line 111 "Parser.y"
     function yy_r18(){ 
     $this->yystack[$this->yyidx + -5]->minor = strtolower($this->yystack[$this->yyidx + -5]->minor);
     if ($this->yystack[$this->yyidx + -5]->minor != 'on' && $this->yystack[$this->yyidx + -5]->minor != 'off') {
@@ -1720,27 +1720,27 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'autoescape', 'value' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1728 "Parser.php"
-#line 122 "Parser.y"
+#line 125 "Parser.y"
     function yy_r19(){
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -1]->minor, 'list'=>array()); 
     }
 #line 1733 "Parser.php"
-#line 125 "Parser.y"
+#line 128 "Parser.y"
     function yy_r20(){
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -3]->minor, 'as' => $this->yystack[$this->yyidx + -1]->minor, 'list'=>array()); 
     }
 #line 1738 "Parser.php"
-#line 128 "Parser.y"
+#line 131 "Parser.y"
     function yy_r21(){ 
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -2]->minor, 'list' => $this->yystack[$this->yyidx + -1]->minor); 
     }
 #line 1743 "Parser.php"
-#line 131 "Parser.y"
+#line 134 "Parser.y"
     function yy_r22(){
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -4]->minor, 'as' => $this->yystack[$this->yyidx + -1]->minor, 'list' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1748 "Parser.php"
-#line 136 "Parser.y"
+#line 139 "Parser.y"
     function yy_r23(){
     if ('end'.$this->yystack[$this->yyidx + -5]->minor != $this->yystack[$this->yyidx + -1]->minor) { 
         $this->error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor); 
@@ -1748,7 +1748,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor, 'list' => array());
     }
 #line 1756 "Parser.php"
-#line 142 "Parser.y"
+#line 145 "Parser.y"
     function yy_r24(){
     if ('end'.$this->yystack[$this->yyidx + -6]->minor != $this->yystack[$this->yyidx + -1]->minor) { 
         $this->error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor); 
@@ -1756,7 +1756,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'custom_tag', 'name' => $this->yystack[$this->yyidx + -6]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor, 'list' => $this->yystack[$this->yyidx + -5]->minor);
     }
 #line 1764 "Parser.php"
-#line 150 "Parser.y"
+#line 153 "Parser.y"
     function yy_r25(){
     if ('endspacefull' != $this->yystack[$this->yyidx + -1]->minor) {
         $this->error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor);
@@ -1764,7 +1764,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'spacefull', 'body' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1772 "Parser.php"
-#line 158 "Parser.y"
+#line 161 "Parser.y"
     function yy_r26(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endwith") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endwith");
@@ -1772,10 +1772,10 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'alias', 'var' => $this->yystack[$this->yyidx + -7]->minor, 'as' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1780 "Parser.php"
-#line 166 "Parser.y"
+#line 169 "Parser.y"
     function yy_r27(){ $this->_retvalue = array('operation' => 'set', 'var' => $this->yystack[$this->yyidx + -2]->minor,'expr' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1783 "Parser.php"
-#line 168 "Parser.y"
+#line 171 "Parser.y"
     function yy_r29(){
     if (!is_file($this->yystack[$this->yyidx + 0]->minor) || !Haanga_Compiler::getOption('enable_load')) {
         $this->error($this->yystack[$this->yyidx + 0]->minor." is not a valid file"); 
@@ -1783,7 +1783,7 @@ static public $yy_action = array(
     require_once $this->yystack[$this->yyidx + 0]->minor;
     }
 #line 1791 "Parser.php"
-#line 177 "Parser.y"
+#line 180 "Parser.y"
     function yy_r30(){
     $var = $this->compiler->get_context($this->yystack[$this->yyidx + -1]->minor[0]);
     if (is_array($var) || $var instanceof Iterator) {
@@ -1793,7 +1793,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'loop', 'variable' => $this->yystack[$this->yyidx + -3]->minor, 'index' => NULL, 'array' => $this->yystack[$this->yyidx + -1]->minor);
     }
 #line 1801 "Parser.php"
-#line 185 "Parser.y"
+#line 188 "Parser.y"
     function yy_r31(){
     $var = $this->compiler->get_context($this->yystack[$this->yyidx + -1]->minor[0]);
     if (is_array($var) || $var instanceof Iterator) {
@@ -1804,7 +1804,7 @@ static public $yy_action = array(
 
     }
 #line 1812 "Parser.php"
-#line 195 "Parser.y"
+#line 198 "Parser.y"
     function yy_r32(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endfor") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endfor");
@@ -1813,7 +1813,7 @@ static public $yy_action = array(
     $this->_retvalue['body'] = $this->yystack[$this->yyidx + -3]->minor;
     }
 #line 1821 "Parser.php"
-#line 203 "Parser.y"
+#line 206 "Parser.y"
     function yy_r33(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endfor") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endfor");
@@ -1821,7 +1821,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'loop', 'variable' => $this->yystack[$this->yyidx + -7]->minor, 'range' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor, 'variable' => $this->yystack[$this->yyidx + -7]->minor, 'step' => 1);
     }
 #line 1829 "Parser.php"
-#line 210 "Parser.y"
+#line 213 "Parser.y"
     function yy_r34(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endfor") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endfor");
@@ -1829,7 +1829,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'loop', 'variable' => $this->yystack[$this->yyidx + -9]->minor, 'range' => $this->yystack[$this->yyidx + -7]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor, 'variable' => $this->yystack[$this->yyidx + -9]->minor, 'step' => $this->yystack[$this->yyidx + -5]->minor);
     }
 #line 1837 "Parser.php"
-#line 217 "Parser.y"
+#line 220 "Parser.y"
     function yy_r35(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endfor") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endfor");
@@ -1839,7 +1839,7 @@ static public $yy_action = array(
     $this->_retvalue['empty'] = $this->yystack[$this->yyidx + -3]->minor;
     }
 #line 1847 "Parser.php"
-#line 226 "Parser.y"
+#line 229 "Parser.y"
     function yy_r36(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endif") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endif");
@@ -1847,7 +1847,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'if', 'expr' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1855 "Parser.php"
-#line 232 "Parser.y"
+#line 235 "Parser.y"
     function yy_r37(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endif") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endif");
@@ -1855,7 +1855,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'if', 'expr' => $this->yystack[$this->yyidx + -9]->minor, 'body' => $this->yystack[$this->yyidx + -7]->minor, 'else' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1863 "Parser.php"
-#line 240 "Parser.y"
+#line 243 "Parser.y"
     function yy_r38(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endifchanged") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifchanged");
@@ -1863,7 +1863,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifchanged', 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1871 "Parser.php"
-#line 247 "Parser.y"
+#line 250 "Parser.y"
     function yy_r39(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endifchanged") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifchanged");
@@ -1871,7 +1871,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifchanged', 'body' => $this->yystack[$this->yyidx + -3]->minor, 'check' => $this->yystack[$this->yyidx + -5]->minor);
     }
 #line 1879 "Parser.php"
-#line 253 "Parser.y"
+#line 256 "Parser.y"
     function yy_r40(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endifchanged") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifchanged");
@@ -1879,7 +1879,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifchanged', 'body' => $this->yystack[$this->yyidx + -7]->minor, 'else' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1887 "Parser.php"
-#line 260 "Parser.y"
+#line 263 "Parser.y"
     function yy_r41(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endifchanged") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifchanged");
@@ -1887,7 +1887,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifchanged', 'body' => $this->yystack[$this->yyidx + -7]->minor, 'check' => $this->yystack[$this->yyidx + -9]->minor, 'else' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1895 "Parser.php"
-#line 268 "Parser.y"
+#line 271 "Parser.y"
     function yy_r42(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endifequal") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifequal");
@@ -1895,7 +1895,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifequal', 'cmp' => '==', 1 => $this->yystack[$this->yyidx + -6]->minor, 2 => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1903 "Parser.php"
-#line 274 "Parser.y"
+#line 277 "Parser.y"
     function yy_r43(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endifequal") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifequal");
@@ -1903,7 +1903,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifequal', 'cmp' => '==', 1 => $this->yystack[$this->yyidx + -10]->minor, 2 => $this->yystack[$this->yyidx + -9]->minor, 'body' => $this->yystack[$this->yyidx + -7]->minor, 'else' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1911 "Parser.php"
-#line 280 "Parser.y"
+#line 283 "Parser.y"
     function yy_r44(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endifnotequal") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifnotequal");
@@ -1911,7 +1911,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifequal', 'cmp' => '!=', 1 => $this->yystack[$this->yyidx + -6]->minor, 2 => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1919 "Parser.php"
-#line 286 "Parser.y"
+#line 289 "Parser.y"
     function yy_r45(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endifnotequal") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endifnotequal");
@@ -1919,7 +1919,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'ifequal', 'cmp' => '!=', 1 => $this->yystack[$this->yyidx + -10]->minor, 2 => $this->yystack[$this->yyidx + -9]->minor, 'body' => $this->yystack[$this->yyidx + -7]->minor, 'else' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1927 "Parser.php"
-#line 294 "Parser.y"
+#line 297 "Parser.y"
     function yy_r46(){ 
     if ($this->yystack[$this->yyidx + -1]->minor != "endblock") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endblock");
@@ -1927,7 +1927,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'block', 'name' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1935 "Parser.php"
-#line 301 "Parser.y"
+#line 304 "Parser.y"
     function yy_r47(){
     if ($this->yystack[$this->yyidx + -2]->minor != "endblock") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -2]->minor.", expecting endblock");
@@ -1935,7 +1935,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'block', 'name' => $this->yystack[$this->yyidx + -6]->minor, 'body' => $this->yystack[$this->yyidx + -4]->minor); 
     }
 #line 1943 "Parser.php"
-#line 308 "Parser.y"
+#line 311 "Parser.y"
     function yy_r48(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endblock") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endblock");
@@ -1943,7 +1943,7 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'block', 'name' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor); 
     }
 #line 1951 "Parser.php"
-#line 323 "Parser.y"
+#line 326 "Parser.y"
     function yy_r50(){
     if ($this->yystack[$this->yyidx + -1]->minor != "endfilter") {
         $this->Error("Unexpected ".$this->yystack[$this->yyidx + -1]->minor.", expecting endfilter");
@@ -1951,76 +1951,76 @@ static public $yy_action = array(
     $this->_retvalue = array('operation' => 'filter', 'functions' => $this->yystack[$this->yyidx + -5]->minor, 'body' => $this->yystack[$this->yyidx + -3]->minor);
     }
 #line 1959 "Parser.php"
-#line 331 "Parser.y"
+#line 334 "Parser.y"
     function yy_r51(){ $this->_retvalue=array('operation' => 'regroup', 'array' => $this->yystack[$this->yyidx + -4]->minor, 'row' => $this->yystack[$this->yyidx + -2]->minor, 'as' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1962 "Parser.php"
-#line 334 "Parser.y"
+#line 337 "Parser.y"
     function yy_r52(){ $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
 #line 1965 "Parser.php"
-#line 335 "Parser.y"
+#line 338 "Parser.y"
     function yy_r53(){ $this->_retvalue = array($this->yystack[$this->yyidx + 0]->minor);     }
 #line 1968 "Parser.php"
-#line 337 "Parser.y"
+#line 340 "Parser.y"
     function yy_r54(){ $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor, 'args'=>array($this->yystack[$this->yyidx + 0]->minor));     }
 #line 1971 "Parser.php"
-#line 341 "Parser.y"
+#line 344 "Parser.y"
     function yy_r56(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
 #line 1974 "Parser.php"
-#line 347 "Parser.y"
+#line 350 "Parser.y"
     function yy_r59(){ $this->_retvalue = array('var' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1977 "Parser.php"
-#line 348 "Parser.y"
+#line 351 "Parser.y"
     function yy_r60(){ $this->_retvalue = array('number' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1980 "Parser.php"
-#line 349 "Parser.y"
+#line 352 "Parser.y"
     function yy_r61(){ $this->_retvalue = trim(@$this->yystack[$this->yyidx + 0]->minor);     }
 #line 1983 "Parser.php"
-#line 350 "Parser.y"
+#line 353 "Parser.y"
     function yy_r62(){ $this->_retvalue = array('string' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1986 "Parser.php"
-#line 353 "Parser.y"
+#line 356 "Parser.y"
     function yy_r63(){ $this->_retvalue = array('var_filter' => $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1989 "Parser.php"
-#line 363 "Parser.y"
+#line 366 "Parser.y"
     function yy_r69(){ $this->_retvalue = array('op_expr' => 'not', $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1992 "Parser.php"
-#line 364 "Parser.y"
+#line 367 "Parser.y"
     function yy_r70(){ $this->_retvalue = array('op_expr' => @$this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1995 "Parser.php"
-#line 367 "Parser.y"
+#line 370 "Parser.y"
     function yy_r73(){ $this->_retvalue = array('op_expr' => trim(@$this->yystack[$this->yyidx + -1]->minor), $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
 #line 1998 "Parser.php"
-#line 369 "Parser.y"
+#line 372 "Parser.y"
     function yy_r75(){ $this->_retvalue = array('op_expr' => 'expr', array('op_expr' => @$this->yystack[$this->yyidx + -1]->minor, $this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor));     }
 #line 2001 "Parser.php"
-#line 370 "Parser.y"
+#line 373 "Parser.y"
     function yy_r76(){ $this->_retvalue = array('op_expr' => 'expr', $this->yystack[$this->yyidx + -1]->minor);     }
 #line 2004 "Parser.php"
-#line 375 "Parser.y"
+#line 378 "Parser.y"
     function yy_r78(){ $this->_retvalue = current($this->compiler->generate_variable_name($this->yystack[$this->yyidx + 0]->minor, false));     }
 #line 2007 "Parser.php"
-#line 376 "Parser.y"
+#line 379 "Parser.y"
     function yy_r79(){ 
     if (!is_array($this->yystack[$this->yyidx + -2]->minor)) { $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor); } 
     else { $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; }  $this->_retvalue[]=array('object' => $this->yystack[$this->yyidx + 0]->minor);
     }
 #line 2013 "Parser.php"
-#line 380 "Parser.y"
+#line 383 "Parser.y"
     function yy_r80(){ 
     if (!is_array($this->yystack[$this->yyidx + -2]->minor)) { $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor); } 
     else { $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; }  $this->_retvalue[]=array('class' => '$'.$this->yystack[$this->yyidx + 0]->minor);
     }
 #line 2019 "Parser.php"
-#line 384 "Parser.y"
+#line 387 "Parser.y"
     function yy_r81(){
     if (!is_array($this->yystack[$this->yyidx + -3]->minor)) { $this->_retvalue = array($this->yystack[$this->yyidx + -3]->minor); } 
     else { $this->_retvalue = $this->yystack[$this->yyidx + -3]->minor; }  $this->_retvalue[]=$this->yystack[$this->yyidx + -1]->minor;
     }
 #line 2025 "Parser.php"
-#line 392 "Parser.y"
+#line 395 "Parser.y"
     function yy_r84(){ $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
 #line 2028 "Parser.php"
-#line 398 "Parser.y"
+#line 401 "Parser.y"
     function yy_r88(){ $this->_retvalue = -1 * ($this->yystack[$this->yyidx + 0]->minor);     }
 #line 2031 "Parser.php"
 
@@ -2083,7 +2083,7 @@ static public $yy_action = array(
         $yygoto = self::$yyRuleInfo[$yyruleno]['lhs'];
         $yysize = self::$yyRuleInfo[$yyruleno]['rhs'];
         $this->yyidx -= $yysize;
-        for($i = $yysize; $i; $i--) {
+        for ($i = $yysize; $i; $i--) {
             // pop all of the right-hand side parameters
             array_pop($this->yystack);
         }
@@ -2140,7 +2140,7 @@ static public $yy_action = array(
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    $this->Error('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
+    $this->Error('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. ')');
 #line 2151 "Parser.php"
     }
 
@@ -2170,9 +2170,11 @@ static public $yy_action = array(
      * The first argument is the major token number.  The second is
      * the token value string as scanned from the input.
      *
-     * @param int the token number
-     * @param mixed the token value
-     * @param mixed any extra arguments that should be passed to handlers
+     * @param int   $yymajor      the token number
+     * @param mixed $yytokenvalue the token value
+     * @param mixed ...           any extra arguments that should be passed to handlers
+     *
+     * @return void
      */
     function doParse($yymajor, $yytokenvalue)
     {
@@ -2194,14 +2196,19 @@ static public $yy_action = array(
         $yyendofinput = ($yymajor==0);
         
         if (self::$yyTraceFILE) {
-            fprintf(self::$yyTraceFILE, "%sInput %s\n",
-                self::$yyTracePrompt, self::$yyTokenName[$yymajor]);
+            fprintf(
+                self::$yyTraceFILE,
+                "%sInput %s\n",
+                self::$yyTracePrompt,
+                self::$yyTokenName[$yymajor]
+            );
         }
         
         do {
             $yyact = $this->yy_find_shift_action($yymajor);
-            if ($yymajor < self::YYERRORSYMBOL &&
-                  !$this->yy_is_expected_token($yymajor)) {
+            if ($yymajor < self::YYERRORSYMBOL
+                && !$this->yy_is_expected_token($yymajor)
+            ) {
                 // force a syntax error
                 $yyact = self::YY_ERROR_ACTION;
             }
@@ -2217,8 +2224,11 @@ static public $yy_action = array(
                 $this->yy_reduce($yyact - self::YYNSTATE);
             } elseif ($yyact == self::YY_ERROR_ACTION) {
                 if (self::$yyTraceFILE) {
-                    fprintf(self::$yyTraceFILE, "%sSyntax Error!\n",
-                        self::$yyTracePrompt);
+                    fprintf(
+                        self::$yyTraceFILE,
+                        "%sSyntax Error!\n",
+                        self::$yyTracePrompt
+                    );
                 }
                 if (self::YYERRORSYMBOL) {
                     /* A syntax error has occurred.
@@ -2244,18 +2254,22 @@ static public $yy_action = array(
                         $this->yy_syntax_error($yymajor, $yytokenvalue);
                     }
                     $yymx = $this->yystack[$this->yyidx]->major;
-                    if ($yymx == self::YYERRORSYMBOL || $yyerrorhit ){
+                    if ($yymx == self::YYERRORSYMBOL || $yyerrorhit ) {
                         if (self::$yyTraceFILE) {
-                            fprintf(self::$yyTraceFILE, "%sDiscard input token %s\n",
-                                self::$yyTracePrompt, self::$yyTokenName[$yymajor]);
+                            fprintf(
+                                self::$yyTraceFILE,
+                                "%sDiscard input token %s\n",
+                                self::$yyTracePrompt,
+                                self::$yyTokenName[$yymajor]
+                            );
                         }
                         $this->yy_destructor($yymajor, $yytokenvalue);
                         $yymajor = self::YYNOCODE;
                     } else {
-                        while ($this->yyidx >= 0 &&
-                                 $yymx != self::YYERRORSYMBOL &&
-        ($yyact = $this->yy_find_shift_action(self::YYERRORSYMBOL)) >= self::YYNSTATE
-                              ){
+                        while ($this->yyidx >= 0
+                            && $yymx != self::YYERRORSYMBOL
+                            && ($yyact = $this->yy_find_shift_action(self::YYERRORSYMBOL)) >= self::YYNSTATE
+                        ) {
                             $this->yy_pop_parser_stack();
                         }
                         if ($this->yyidx < 0 || $yymajor==0) {

@@ -74,7 +74,7 @@
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
-    $this->Error('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. '), expected one of: ' . implode(',', $expect));
+    $this->Error('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. ')');
 }
 
 

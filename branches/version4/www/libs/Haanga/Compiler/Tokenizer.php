@@ -560,7 +560,7 @@ class Haanga_Compiler_Tokenizer
             /* destroy the parser */
             try {
                 $parser->doParse(0,0); 
-            } catch (Exception $e) {}
+            } catch (Exception $y) {}
             throw $e; /* re-throw exception */
         }
 
