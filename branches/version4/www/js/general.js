@@ -972,7 +972,7 @@ var fancyBox = new function () {
 
 	this.init = function (parent) {
 		this.scan(parent);
-		this.setTimeout();
+		this.modifyCallback();
 	}
 
 	this.scan = function (parent) {
@@ -981,18 +981,18 @@ var fancyBox = new function () {
 		if (! jQuery().colorbox) return;
 
 		if (typeof parent == 'string') {
-			selector = parent + ' > .fancybox';
+			selector = parent + ' > a.fancybox';
 		} else {
-			selector = '.fancybox';
+			selector = 'a.fancybox';
 		}
 
-		$(selector).each(function(i) {
+		$(selector).not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, target = '';
 
 			if ($(this).attr('target')) {
 				target = ' target="'+$(this).attr('target')+'"';
 			}
-			if ((v = this.href.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([\w\-_]+)/))) {
+			if ((v = this.href.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+)/))) {
 				if (mobile_client) return;
 				iframe = true;
 				title = '<a href="'+this.href+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
@@ -1005,9 +1005,9 @@ var fancyBox = new function () {
 				myClass = $(this).attr('class');
 				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
 					/* It's a link, so we must call to go.php */
+					var link = linkId[1];
 					onLoad = function() {
-						var id = linkId[1];
-						$.get(base_url + 'go.php?quiet=1&id='+id);
+						$.get(base_url + 'go.php?quiet=1&id='+link);
 					};
 				}
 			} else {
@@ -1041,12 +1041,13 @@ var fancyBox = new function () {
 	};
 
 
-	this.setTimeout = function () {
+	this.modifyCallback = function () {
 		var scan = this.scan;
 		setTimeout(function() {
-			$("#newswrap").on("DOMSubtreeModified", function(e) {
+			//$("#newswrap").on("DOMSubtreeModified", function(e) {
+			$('#newswrap').on("ajaxComplete", function() {
 				if (!timeout) {
-					timeout = setTimeout(scan, 100);
+					timeout = setTimeout(scan, 200);
 				}
 			});
 		}, 200);

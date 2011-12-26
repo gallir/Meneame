@@ -263,8 +263,8 @@ function clean_lines($string) {
 
 function text_to_summary($string, $length=50) {
 	$string = strip_tags($string);
-	$len = mb_strlen($string);
 	$string = preg_replace("/[\r\n\t]+/", ' ', $string);
+	$len = mb_strlen($string);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
 		$string = preg_replace('/ *[\w&;]*$/', '', $string);
