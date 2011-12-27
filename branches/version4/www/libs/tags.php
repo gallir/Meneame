@@ -19,7 +19,7 @@ function tags_normalize_string($string) {
 	}
 	$string = preg_replace('/[\.\,] *$/', "", $string);
 	// Clean strange characteres, there are feed reader (including feedburner) that are just too strict and complain loudly
-	$string = preg_replace('/[<>;"\'\]\[&]/', "", $string);
+	$string = preg_replace('/[\\\\<>;"\'\]\[&]/', "", $string);
 	return htmlspecialchars(mb_substr(mb_strtolower($string, 'UTF-8'), 0, 80), ENT_COMPAT, 'UTF-8');
 }
 
