@@ -1,7 +1,12 @@
+#! /usr/bin/env php
 <?
 // Post to Twitter/Jaiku the "top story"
+// Check which hostname server we run for, for example: e.meneame.net or www.meneame.net
+if (!empty($argv[1])) {
+	$_SERVER['SERVER_NAME'] = $argv[1];
+}
 
-include('../config.php');
+include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');
 
 $my_name = $globals['site_shortname'];
@@ -12,7 +17,7 @@ if(!$a_tops->read()) {
 }
 $tops = explode(',', $a_tops->text);
 
-$a_history = new Annotation('top-link-post-history-'.$my_id);
+$a_history = new Annotation('top-link-history-'.$my_name);
 if($a_history->read()) {
 	$history = explode(',',$a_history->text);
 } else {

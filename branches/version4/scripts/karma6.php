@@ -269,7 +269,7 @@ foreach ($res as $dbuser) {
 			$negative_user_ratio = 1;
 		}
 
-		if ($negative_no_discarded > $negative_discarded/4) { // To fight against karma whores and bots
+		if ($negative_discarded > $negative_no_discarded/4) { // To fight against karma whores and bots
 			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded * $negative_user_ratio);
 		} 
 		
