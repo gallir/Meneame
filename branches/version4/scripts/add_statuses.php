@@ -1,6 +1,7 @@
 <?
 
 // This script is to add the statuses values of previous links for multisite support
+// It must be run for every subsite you have created
 
 include('../config.php');
 
