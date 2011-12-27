@@ -37,10 +37,12 @@ class Haanga_Extension_Tag_Exec
         $exec->end();
         if ($assign) {
             $code->decl($assign, $exec);
+
+            // make it global
+            $code->decl(hvar('vars', $assign), hvar($assign));
         } else {
             $cmp->do_print($code, $exec);
         }
         return $code;
     }
 }
-

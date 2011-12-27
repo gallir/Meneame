@@ -128,12 +128,14 @@ class SitesMgr {
 	// Receivers are categories from other sub sites that have importe as true
 	static public function get_receivers($category) {
 		global $db;
+		if (! self::$id ) self::__init();
 
 		return $db->get_col("select id from sub_categories where category = $category and import and enabled");
 	}
 
 	static public function get_children($site_id) {
 		global $db;
+		if (! self::$id ) self::__init();
 
 		return $db->get_col("select id from subs where parent = $site_id");
 	}

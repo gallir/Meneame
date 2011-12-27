@@ -167,9 +167,7 @@
 			{% if ! self.is_discarded %}
 
 				{% exec htmlspecialchars_decode self.title as title %}
-				{% set title = title %} {# to make it visible in included template #}
 				{% exec self.get_short_permalink as short_link %}
-				{% set short_link = short_link %} {# to make it visible in included template #}
 				{% set link = self.permalink %}
 
 				<strong><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
