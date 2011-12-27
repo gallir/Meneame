@@ -10,7 +10,7 @@
         <img src="{{globals.base_static}}img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/>
     </li>
 {% endif %}
-{% if options|is_array %}
+{% if options %}
     {% for text,turl in options %}
         {% if forloop.counter0 == selected %}
             <li class="selected">
