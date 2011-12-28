@@ -21,6 +21,8 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 	if ($if_modified < time() - 3*86400) $if_modified = 0;
 }
 
+$site_id = SitesMgr::my_id();
+
 $individual_user = false;
 if ($_REQUEST['q']) {
 	include(mnminclude.'search.php');
@@ -113,8 +115,8 @@ if ($_REQUEST['q']) {
 		$from_time = "AND comment_date > FROM_UNIXTIME($if_modified)";
 	else
 		$from_time = "AND comment_date > date_sub(now(), interval 2 day)";
-	$sql = "SELECT comment_id FROM comments, links WHERE link_id = comment_link_id ".$globals['allowed_categories_sql']." $from_time ORDER BY comment_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
+	$sql = "SELECT comment_id FROM comments, sub_statuses WHERE id = $site_id AND link = comment_link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, sub_statuses WHERE id = $site_id AND link = comment_link_id ORDER BY comment_date DESC LIMIT 1");
 	$title = $globals['site_name'].': '._('comentarios');
 	$globals['redirect_feedburner'] = false;
 }
