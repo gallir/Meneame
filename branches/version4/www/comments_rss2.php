@@ -7,6 +7,12 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
+include(mnminclude.'ban.php');
+
+if (check_ban($globals['user_ip'], 'ip') || check_ban($globals['user_ip'], 'proxy')) {
+	syslog(LOG_NOTICE, "Meneame: comments_rss2, IP is banned: " . $globals['user_ip']);
+	return;
+}
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
@@ -116,7 +122,7 @@ if ($_REQUEST['q']) {
 	else
 		$from_time = "AND comment_date > date_sub(now(), interval 2 day)";
 	$sql = "SELECT comment_id FROM comments, sub_statuses WHERE id = $site_id AND link = comment_link_id $from_time ORDER BY comment_date DESC LIMIT $rows";
-	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments, sub_statuses WHERE id = $site_id AND link = comment_link_id ORDER BY comment_date DESC LIMIT 1");
+	$last_modified = $db->get_var("SELECT UNIX_TIMESTAMP(comment_date) FROM comments ORDER BY comment_date DESC LIMIT 1");
 	$title = $globals['site_name'].': '._('comentarios');
 	$globals['redirect_feedburner'] = false;
 }

@@ -93,7 +93,7 @@ function save_post ($message_id) {
 		};
 
 		// Verify that there less than X messages from the same user in a day
-		if(intval($db->get_var("select count(*) from privates where user= $current_user->user_id and date > date_sub(now(), interval 1 day)"))> 60) {
+		if(intval($db->get_var("select count(*) from privates where user= $current_user->user_id and date > date_sub(now(), interval 1 day)"))> 160) {
 			echo 'ERROR: ' . _('demasiados mensajes en un día');
 			die;
 		};
