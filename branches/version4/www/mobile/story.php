@@ -11,8 +11,6 @@ include(mnminclude.'linkmobile.php');
 include(mnminclude.'commentmobile.php');
 include(mnminclude.'html1-mobile.php');
 
-$globals['ads'] = true;
-
 $link = new LinkMobile;
 
 

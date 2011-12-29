@@ -10,8 +10,6 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
-$globals['ads'] = true;
-
 $page_size = 15;
 
 $from = 1; // For 48 hours

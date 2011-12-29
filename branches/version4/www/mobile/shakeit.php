@@ -12,7 +12,6 @@ include(mnminclude.'linkmobile.php');
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
 
 do_header(_('pendientes') . ' | ' . $globals['site_name']);
 do_tabs("main","shakeit");
