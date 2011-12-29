@@ -20,13 +20,14 @@ $range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes')
 $range_values = array(1, 2, 7, 30, 365, 0);
 
 
+$site_id = SitesMgr::my_id();
 
 if(($from = check_integer('range')) >= 0 && $from < count($range_values) && $range_values[$from] > 0 ) {
 	// we use this to allow sql caching
 	$from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-	$from_where = "FROM blogs, links WHERE  link_date > $from_time and link_status = 'published' and link_lang = '$dblang' and link_blog = blog_id";
+	$from_where = "FROM blogs, links, sub_statuses WHERE id = $site_id and date > $from_time and status = 'published' and link = link_id and link_blog = blog_id";
 } else {
-	$from_where = "FROM blogs, links WHERE link_status = 'published' and link_lang = '$dblang' and link_blog = blog_id";
+	$from_where = "FROM blogs, links, sub_statuses WHERE id = $site_id and status = 'published' and link = link_id and link_blog = blog_id";
 }
 $from_where .= " GROUP BY blog_id";
 
