@@ -57,6 +57,8 @@ class SitesMgr {
 		$db->transaction();
 
 		$me = self::get_status(self::$id, $link);
+		$strict = false;
+
 		if ($me->status != $link->status) {
 			switch ($link->status) {
 				case 'discard':
@@ -81,7 +83,9 @@ class SitesMgr {
 					$me->status = $link->status;
 					break;
 				case 'published':
-					// TODO: check this when metapublished is enabled
+					// TODO: check, also editor for admins
+					$strict = true; // Change only to those that import the category (i.e. not to the parent)
+
 					$copy = true;
 					$me->karma = $link->karma;
 					$me->status = $link->status;
@@ -89,11 +93,16 @@ class SitesMgr {
 					break;
 				case 'metapublished':
 					$copy = false;
+
+					// TODO: check, also editor for admins
+					$strict = true; // We don't change the status of our parent, publication is local
+
 					$me->date = $link->date;
 					$me->karma = $link->karma;
 					$me->status = 'published';
 				default:
 					$copy = false;
+					$strict = true;
 					syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
 			}
 
@@ -118,11 +127,10 @@ class SitesMgr {
 			}
 		}
 
-		$receivers = self::get_receivers($me->category);
+		$receivers = self::get_receivers($me->category, $strict);
 		if ($copy) {
 			if ($receivers) {
 				foreach ($receivers as $r) {
-					// TODO: check this when metapublished is enabled
 					self::store_status($r, $me);
 				}
 			}
@@ -140,12 +148,12 @@ class SitesMgr {
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
-	static public function get_receivers($category) {
+	static public function get_receivers($category, $strict = false) {
 		global $db;
 		if (! self::$id ) self::__init();
 
 		$receivers = $db->get_col("select id from sub_categories where category = $category and import and enabled");
-		if (self::$parent > 0 && self::$parent != self::$id) {
+		if (! $strict && self::$parent > 0 && self::$parent != self::$id) {
 			$receivers[] = self::$parent;
 		}
 		return array_unique($receivers);
