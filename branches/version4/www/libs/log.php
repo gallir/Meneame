@@ -16,7 +16,8 @@ class Log {
 		} else {
 			$ip = $globals['user_ip'];
 		}
-		$res = $db->query("insert into logs (log_date, log_type, log_ref_id, log_user_id, log_ip) values (now(), '$type', $ref_id, $user_id, '$ip')");
+		$sub = SitesMgr::my_parent(); // Get this subsite's parent id (or itself if it's a parent)
+		$res = $db->query("insert into logs (log_sub, log_date, log_type, log_ref_id, log_user_id, log_ip) values ($sub, now(), '$type', $ref_id, $user_id, '$ip')");
 		if ($res && $annotation) {
 			$a = new Annotation('log-'.$db->insert_id);
 			$a->text = $annotation;

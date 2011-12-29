@@ -47,7 +47,7 @@ if ($max_items < 1 || $max_items > 100) {
 if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
 // Get the logs
-$logs = $db->get_results("select SQL_CACHE UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_date > $dbtime order by log_date desc limit $max_items");
+$logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_type != 'login_failed' and log_date > $dbtime and log_sub = ".SitesMgr::my_parent()." order by log_date desc limit $max_items");
 
 if ($logs) {
 	foreach ($logs as $log) {
@@ -291,7 +291,7 @@ function get_chat() {
 function get_votes($dbtime) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
 
-	$res = $db->get_results("select SQL_CACHE vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from votes, links where vote_type='links' and vote_date > $dbtime and link_id = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from votes, links, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." and vote_type='links' and vote_date > $dbtime and link_id = sub_statuses.link and sub_statuses.link = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
 		if ($current_user->user_id > 0) {
@@ -387,7 +387,7 @@ function get_story($time, $type, $linkid, $userid) {
 			$json['who'] = 'admin';
 			$json['icon'] = '';
 		}
-	} 
+	}
 
 	$key = $time . ':'.$type.':'.$linkid;
 	$events[$key] = $json;
@@ -397,7 +397,7 @@ function get_story($time, $type, $linkid, $userid) {
 function get_comment($time, $type, $commentid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
 
-	$event = $db->get_row("select SQL_CACHE user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments, media.size as media_size from comments LEFT JOIN media ON (media.type='comment' and media.id = comments.comment_id and media.version = 0), links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid ");
+	$event = $db->get_row("select user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments, media.size as media_size from comments LEFT JOIN media ON (media.type='comment' and media.id = comments.comment_id and media.version = 0), links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid ");
 
 
 	if (!$event) return;
@@ -432,7 +432,7 @@ function get_comment($time, $type, $commentid, $userid) {
 
 function get_post($time, $type, $postid, $userid) {
 	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
-	$event = $db->get_row("select SQL_CACHE user_login, post_user_id, post_content, media.size as media_size from posts LEFT JOIN media ON (media.type='post' and media.id = posts.post_id and media.version = 0), users where post_id = $postid and user_id=$userid");
+	$event = $db->get_row("select user_login, post_user_id, post_content, media.size as media_size from posts LEFT JOIN media ON (media.type='post' and media.id = posts.post_id and media.version = 0), users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
 	$json['link'] = post_get_base_url($postid);
 	$json['ts'] = $time;
