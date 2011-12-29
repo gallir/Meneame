@@ -47,12 +47,12 @@ class SitesMgr {
 		return $db->get_row("select * from subs where id = $id");
 	}
 
-	static public function deploy($link) {
+	static public function deploy($link, $full = false) {
 		global $db;
 
 		if (! self::$id ) self::__init();
 
-		$copy = false;
+		$delete_others = false;
 
 		$db->transaction();
 
@@ -64,12 +64,10 @@ class SitesMgr {
 				case 'discard':
 				case 'autodiscard':
 				case 'abuse':
-					$copy = true;
 					$me->date = $link->sent_date;
 					$me->status = $link->status;
 					break;
 				case 'queued':
-					$copy = true;
 					switch ($me->status) {
 						case 'published':
 						case 'discard':
@@ -84,16 +82,13 @@ class SitesMgr {
 					break;
 				case 'published':
 					// TODO: check, also editor for admins
-					$strict = true; // Change only to those that import the category (i.e. not to the parent)
+					if (! $full) $strict = true; // Change only to those that import the category (i.e. not to the parent)
 
-					$copy = true;
 					$me->karma = $link->karma;
 					$me->status = $link->status;
 					$me->date = $link->date;
 					break;
 				case 'metapublished':
-					$copy = false;
-
 					// TODO: check, also editor for admins
 					$strict = true; // We don't change the status of our parent, publication is local
 
@@ -101,50 +96,44 @@ class SitesMgr {
 					$me->karma = $link->karma;
 					$me->status = 'published';
 				default:
-					$copy = false;
 					$strict = true;
 					syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
 			}
 
 		}
 
-		$old_category = false;
 		if ($me->category != $link->category) {
-			if (! $me->category == 0 ) {
-				$old_category = $me->category;
-			}
-			$copy = true;
+			$delete_others = true;
 			$me->category = $link->category;
 		}
 
-		if ($copy || $old_category) {
-			self::store_status($me->id, $me);
+		$receivers = self::get_receivers($me->category, $strict);
+
+		if (! $full) {
 			$my_conf = self::get_category_configuration(self::$id, $link->category);
 			if ($me->category == 0 || ! $my_conf->export) {
 				// We don't have to export our links to other sites
-				$db->commit();
-				return;
+				$receivers = array_intersect(self::$id, $receivers);
+				$delete_others = false;
 			}
+		} else {
+			$delete_others = true;
 		}
 
-		$receivers = self::get_receivers($me->category, $strict);
-		if ($copy) {
-			if ($receivers) {
-				foreach ($receivers as $r) {
-					self::store_status($r, $me);
-				}
+		if ($receivers) {
+			// echo "DEPLOY, $me->link cat: $me->category -> " . implode(', ', $receivers). " $me->status\n"; $delete_others = false;
+			foreach ($receivers as $r) {
+				self::store_status($r, $me);
 			}
 		}
 
 		// We delete those old statues belong to the old category that were not changed before
-		if ($old_category > 0) {
-			$receivers[] = self::$id;
+		if ($delete_others) {
 			$avoid = implode(',', $receivers);
 			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
 		}
 
 		$db->commit();
-
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
@@ -152,10 +141,10 @@ class SitesMgr {
 		global $db;
 		if (! self::$id ) self::__init();
 
-		$receivers = $db->get_col("select id from sub_categories where category = $category and import and enabled");
-		if (! $strict && self::$parent > 0 && self::$parent != self::$id) {
-			$receivers[] = self::$parent;
-		}
+		if ($strict) $extra = 'and import';
+		else $extra = '';
+
+		$receivers = $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled");
 		return array_unique($receivers);
 	}
 
@@ -174,18 +163,19 @@ class SitesMgr {
 	static private function get_status($id, $link) {
 		global $db;
 
-		$status = $db->get_row("select id, status, unix_timestamp(date) as date, category, link, origen, karma from sub_statuses where id = $id and link = $link->id");
+		$status = $db->get_row("select id, status, unix_timestamp(date) as date, category, link, origen, karma, 1 as found from sub_statuses where id = $id and link = $link->id");
 
 		if (! $status) {
-			// Create and object that can be later stores
+			// Create and object that can be later stored
 			$status = new stdClass();
 			$status->id = $id;
 			$status->link = $link->id;
 			$status->date = $link->date;
-			$status->status = '';
+			$status->status = 'new';
 			$status->category = 0;
 			$status->origen = self::$id;
 			$status->karma = 0;
+			$status->found = 0;
 		}
 
 		return $status;
