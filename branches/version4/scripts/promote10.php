@@ -17,7 +17,6 @@ define (PUB_PERC, 0.10);
 
 $sites = SitesMgr::get_active_sites();
 
-print_r($sites);
 
 foreach ($sites as $site) {
 	promote($site);
@@ -395,6 +394,7 @@ function print_row($link, $changes, $log = '') {
 function publish($link) {
 	global $globals, $db;
 
+	return;
 	if (DEBUG) return;
 
 	// Calculate votes average
