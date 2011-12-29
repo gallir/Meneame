@@ -59,7 +59,6 @@ if(!$user->read()) {
 	not_found();
 }
 
-$globals['ads'] = true;
 if ($current_user->user_id) $globals['ads_branding'] = false;
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100

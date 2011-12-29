@@ -26,9 +26,6 @@ include(mnminclude.'html1.php');
 meta_get_current();
 
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
-
-
 $rows = -1; // Don't show page numbers by default
 $cat = $_REQUEST['category'];
 

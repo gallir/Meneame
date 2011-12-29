@@ -30,7 +30,6 @@ meta_get_current();
 $page_size = 20;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
-$globals['ads'] = true;
 $globals['ads_section'] = 'portada';
 
 $cat=$_REQUEST['category'];

@@ -9,8 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
-
+$globals['ads'] = false;
 
 $sql = "SELECT link_id  FROM links WHERE  link_date > date_sub(now(), interval 48 hour) and link_negatives > 0  and link_karma < 0 ORDER BY link_karma ASC LIMIT 50 ";
 

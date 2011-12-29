@@ -9,8 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
-
 do_header(_('mejores comentarios en 24 horas') . ' | ' . $globals['site_name']);
 do_tabs('main', '+ ' . _('comentarios'), true);
 

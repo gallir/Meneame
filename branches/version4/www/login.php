@@ -10,7 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 
-//$globals['ads'] = true;
+$globals['ads'] = false;
 
 // Clean return variable
 if(!empty($_REQUEST['return'])) {

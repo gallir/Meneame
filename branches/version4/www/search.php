@@ -51,7 +51,6 @@ $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 
 $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
 
 $globals['noindex'] = true;
 

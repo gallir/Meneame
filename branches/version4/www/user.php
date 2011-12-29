@@ -12,8 +12,6 @@ include(mnminclude.'favorites.php');
 
 
 $offset=(get_current_page()-1)*$page_size;
-$globals['ads'] = true;
-
 
 if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);

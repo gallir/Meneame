@@ -10,7 +10,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 
-$globals['ads'] = true;
 geo_init('onLoad', false, 3);
 
 do_header(_('geovisión'));

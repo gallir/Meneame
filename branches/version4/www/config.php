@@ -50,6 +50,7 @@ $globals['allowed_metas'] = false;
 
 $globals['page_size'] = $page_size	= 30;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
+$globals['ads'] = true;
 $globals['external_ads'] = $external_ads = true;
 $globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
 //$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails from web, if not defined it uses server_name

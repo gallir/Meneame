@@ -9,8 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
-
 do_header(_('destacadas') . ' | ' . $globals['site_name']);
 $globals['tag_status'] = 'published';
 do_tabs('main', 'active');

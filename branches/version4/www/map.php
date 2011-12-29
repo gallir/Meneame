@@ -10,7 +10,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 
-$globals['ads'] = true;
 geo_init('onLoad', false, 2);
 array_push($globals['post_js'], 'markermanager.js');
 

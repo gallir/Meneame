@@ -10,8 +10,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'sneak.php');
 
-
-#$globals['ads'] = true;
 $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();

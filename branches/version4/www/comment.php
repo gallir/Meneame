@@ -9,8 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
-
 $page_size = 50;
 $comment = new Comment;
 

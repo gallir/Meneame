@@ -9,7 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
 $page_size = 30;
 
 $offset=(get_current_page()-1)*$page_size;

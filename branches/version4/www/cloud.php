@@ -9,8 +9,6 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$globals['ads'] = true;
-
 $min_pts = 10;
 $max_pts = 44;
 $words_limit = 100;
