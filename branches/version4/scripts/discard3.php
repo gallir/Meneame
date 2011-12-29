@@ -13,7 +13,7 @@ $db->query("delete from users where user_date < date_sub(now(), interval 12 hour
 echo "STARTING delete old bad links\n";
 // Delete old bad links
 $minutes = intval($globals['draft_time'] / 60);
-$db->query("delete from links where link_id where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
+$db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
 
 $sites = SitesMgr::get_active_sites();
 
@@ -35,7 +35,7 @@ function discard($site_id) {
 	echo "STARTING discard for $site_id\n";
 
 	// Discard links
-	$negatives = $db->get_results("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
+	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
 
 	//$db->debug();
 	if( !$negatives) {
@@ -43,9 +43,8 @@ function discard($site_id) {
 		return;
 	}
 
-	foreach ($negatives as $negative) {
-		$l->id = $negative->link_id;
-		$l->read_basic();
+	foreach ($negatives as $id) {
+		$l = Link::from_db($id);
 
 		$user = new User($l->author);
 		if ($user->read) {
@@ -121,7 +120,7 @@ function depublish($site_id) {
 
 	echo "STARTING depublish for $site_id\n";
 
-	$links = $db->get_row("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval 6 day) and date < date_sub(now(), interval 8 minute) and link = link_id and link_negatives > link_votes / 8");
+	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval 6 day) and date < date_sub(now(), interval 8 minute) and link = link_id and link_negatives > link_votes / 8");
 
 	if ($links) {
 		foreach ($links as $link) {
