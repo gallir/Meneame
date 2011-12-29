@@ -394,7 +394,6 @@ function print_row($link, $changes, $log = '') {
 function publish($link) {
 	global $globals, $db;
 
-	return;
 	if (DEBUG) return;
 
 	// Calculate votes average
