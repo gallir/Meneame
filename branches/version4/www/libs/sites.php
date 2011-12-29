@@ -8,22 +8,36 @@
 
 class SitesMgr {
 	static private $id = 0;
+	static private $parent = false;
 
-	static function __init() {
+	static function __init($id = false) {
 		global $globals, $db;
 
-		if (!isset($globals['site_id'])) {
-			self::$id = $db->get_var("select id from subs where name = '".$globals['site_shortname']."'");
+		if ($id > 0) {
+			self::$id = $id;
+		} elseif (!isset($globals['site_id'])) {
+			$res = $db->get_row("select id, parent from subs where name = '".$globals['site_shortname']."'");
+			self::$id = $res->id;
+			self::$parent = $res->parent;
 			if (! self::$id) echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 		} else {
 			self::$id = $globals['site_id'];
 		}
 
+		if (self::$parent === false && self::$id > 0) {
+			self::$parent = (int) $db->get_var("select parent from subs where id = ".self::$id);
+		}
 	}
 
 	static public function my_id() {
 		if (! self::$id ) self::__init();
 		return self::$id;
+	}
+
+	static public function my_parent() {
+		if (! self::$id ) self::__init();
+
+		return self::$parent > 0 ? self::$parent : self::$id;
 	}
 
 	static public function get_info($id = false) {
@@ -221,6 +235,12 @@ class SitesMgr {
 		}
 
 		return $db->get_col("SELECT SQL_CACHE category FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_id ASC");
+	}
+
+	static public function get_active_sites($children = false) {
+		global $db;
+
+		return $db->get_col("select id from subs where parent = 0 and enabled");
 	}
 
 }
