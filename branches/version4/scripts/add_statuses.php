@@ -16,7 +16,7 @@ if ($links) {
 			usleep(100000);
 			$db->transaction();
 		}
-		SitesMgr::deploy($link);
+		SitesMgr::deploy($link, true); // Force to copy to all receivers
 		$c++;
 	}
 	$db->commit();
