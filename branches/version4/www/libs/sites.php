@@ -144,7 +144,11 @@ class SitesMgr {
 		global $db;
 		if (! self::$id ) self::__init();
 
-		return $db->get_col("select id from sub_categories where category = $category and import and enabled");
+		$receivers = $db->get_col("select id from sub_categories where category = $category and import and enabled");
+		if (self::$parent > 0 && self::$parent != self::$id) {
+			$receivers[] = self::$parent;
+		}
+		return array_unique($receivers);
 	}
 
 	static public function get_children($site_id) {
