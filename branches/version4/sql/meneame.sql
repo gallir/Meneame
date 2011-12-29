@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.17, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.18, for Linux (x86_64)
 --
 -- Host: localhost    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.5.17-55-log
+-- Server version	5.5.18-55-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -19,7 +19,6 @@
 -- Table structure for table `annotations`
 --
 
-DROP TABLE IF EXISTS `annotations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `annotations` (
@@ -36,7 +35,6 @@ CREATE TABLE `annotations` (
 -- Table structure for table `auths`
 --
 
-DROP TABLE IF EXISTS `auths`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `auths` (
@@ -57,7 +55,6 @@ CREATE TABLE `auths` (
 -- Table structure for table `avatars`
 --
 
-DROP TABLE IF EXISTS `avatars`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `avatars` (
@@ -72,7 +69,6 @@ CREATE TABLE `avatars` (
 -- Table structure for table `bans`
 --
 
-DROP TABLE IF EXISTS `bans`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bans` (
@@ -91,7 +87,6 @@ CREATE TABLE `bans` (
 -- Table structure for table `blogs`
 --
 
-DROP TABLE IF EXISTS `blogs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `blogs` (
@@ -116,7 +111,6 @@ CREATE TABLE `blogs` (
 -- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `categories` (
@@ -137,7 +131,6 @@ CREATE TABLE `categories` (
 -- Table structure for table `chats`
 --
 
-DROP TABLE IF EXISTS `chats`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `chats` (
@@ -154,7 +147,6 @@ CREATE TABLE `chats` (
 -- Table structure for table `clones`
 --
 
-DROP TABLE IF EXISTS `clones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `clones` (
@@ -170,7 +162,6 @@ CREATE TABLE `clones` (
 -- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `comments` (
@@ -199,7 +190,6 @@ CREATE TABLE `comments` (
 -- Table structure for table `conversations`
 --
 
-DROP TABLE IF EXISTS `conversations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `conversations` (
@@ -220,7 +210,6 @@ CREATE TABLE `conversations` (
 -- Table structure for table `counts`
 --
 
-DROP TABLE IF EXISTS `counts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `counts` (
@@ -235,7 +224,6 @@ CREATE TABLE `counts` (
 -- Table structure for table `favorites`
 --
 
-DROP TABLE IF EXISTS `favorites`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `favorites` (
@@ -252,7 +240,6 @@ CREATE TABLE `favorites` (
 -- Table structure for table `friends`
 --
 
-DROP TABLE IF EXISTS `friends`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `friends` (
@@ -270,7 +257,6 @@ CREATE TABLE `friends` (
 -- Table structure for table `geo_links`
 --
 
-DROP TABLE IF EXISTS `geo_links`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `geo_links` (
@@ -285,7 +271,6 @@ CREATE TABLE `geo_links` (
 -- Table structure for table `geo_users`
 --
 
-DROP TABLE IF EXISTS `geo_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `geo_users` (
@@ -300,7 +285,6 @@ CREATE TABLE `geo_users` (
 -- Table structure for table `languages`
 --
 
-DROP TABLE IF EXISTS `languages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `languages` (
@@ -315,7 +299,6 @@ CREATE TABLE `languages` (
 -- Table structure for table `link_clicks`
 --
 
-DROP TABLE IF EXISTS `link_clicks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `link_clicks` (
@@ -329,7 +312,6 @@ CREATE TABLE `link_clicks` (
 -- Table structure for table `links`
 --
 
-DROP TABLE IF EXISTS `links`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `links` (
@@ -367,8 +349,7 @@ CREATE TABLE `links` (
   KEY `link_uri` (`link_uri`),
   KEY `link_blog` (`link_blog`),
   KEY `link_author` (`link_author`,`link_date`),
-  KEY `link_date` (`link_date`),
-  KEY `link_status` (`link_status`,`link_date`,`link_category`)
+  KEY `link_date` (`link_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -376,7 +357,6 @@ CREATE TABLE `links` (
 -- Table structure for table `log_pos`
 --
 
-DROP TABLE IF EXISTS `log_pos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `log_pos` (
@@ -395,11 +375,11 @@ CREATE TABLE `log_pos` (
 -- Table structure for table `logs`
 --
 
-DROP TABLE IF EXISTS `logs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `log_sub` smallint(5) unsigned NOT NULL DEFAULT '1',
   `log_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit','user_new','user_delete','link_depublished') NOT NULL,
   `log_ref_id` int(11) unsigned NOT NULL,
@@ -416,7 +396,6 @@ CREATE TABLE `logs` (
 -- Table structure for table `media`
 --
 
-DROP TABLE IF EXISTS `media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media` (
@@ -442,7 +421,6 @@ CREATE TABLE `media` (
 -- Table structure for table `pageloads`
 --
 
-DROP TABLE IF EXISTS `pageloads`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pageloads` (
@@ -457,7 +435,6 @@ CREATE TABLE `pageloads` (
 -- Table structure for table `posts`
 --
 
-DROP TABLE IF EXISTS `posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `posts` (
@@ -481,7 +458,6 @@ CREATE TABLE `posts` (
 -- Table structure for table `prefs`
 --
 
-DROP TABLE IF EXISTS `prefs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prefs` (
@@ -496,7 +472,6 @@ CREATE TABLE `prefs` (
 -- Table structure for table `privates`
 --
 
-DROP TABLE IF EXISTS `privates`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `privates` (
@@ -519,7 +494,6 @@ CREATE TABLE `privates` (
 -- Table structure for table `rss`
 --
 
-DROP TABLE IF EXISTS `rss`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rss` (
@@ -541,7 +515,6 @@ CREATE TABLE `rss` (
 -- Table structure for table `sneakers`
 --
 
-DROP TABLE IF EXISTS `sneakers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sneakers` (
@@ -556,7 +529,6 @@ CREATE TABLE `sneakers` (
 -- Table structure for table `sph_counter`
 --
 
-DROP TABLE IF EXISTS `sph_counter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sph_counter` (
@@ -567,10 +539,66 @@ CREATE TABLE `sph_counter` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `sub_categories`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sub_categories` (
+  `id` smallint(5) unsigned NOT NULL,
+  `category` smallint(5) unsigned NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `import` tinyint(1) NOT NULL DEFAULT '1',
+  `export` tinyint(1) NOT NULL DEFAULT '0',
+  `calculated_coef` float NOT NULL DEFAULT '0',
+  UNIQUE KEY `category_id` (`category`,`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Store categories available for each sub site';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sub_statuses`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sub_statuses` (
+  `id` smallint(5) unsigned NOT NULL,
+  `status` enum('discard','queued','published','abuse','duplicated','autodiscard','metapublished') NOT NULL DEFAULT 'discard',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `category` smallint(5) unsigned NOT NULL,
+  `link` int(10) NOT NULL,
+  `origen` smallint(5) unsigned NOT NULL,
+  `karma` decimal(10,2) NOT NULL DEFAULT '0.00',
+  UNIQUE KEY `link_id` (`link`,`id`),
+  KEY `id_status_category_date` (`id`,`status`,`category`,`date`),
+  KEY `id_status_date_category` (`id`,`status`,`date`,`category`),
+  CONSTRAINT `sub_statuses_ibfk_1` FOREIGN KEY (`link`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Store the status for each link in every sub site';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subs`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subs` (
+  `id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `name` char(12) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `parent` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `server_name` varchar(32) DEFAULT NULL,
+  `base_url` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Basic data for every sub site';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tags`
 --
 
-DROP TABLE IF EXISTS `tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tags` (
@@ -587,7 +615,6 @@ CREATE TABLE `tags` (
 -- Table structure for table `texts`
 --
 
-DROP TABLE IF EXISTS `texts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `texts` (
@@ -602,7 +629,6 @@ CREATE TABLE `texts` (
 -- Table structure for table `trackbacks`
 --
 
-DROP TABLE IF EXISTS `trackbacks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `trackbacks` (
@@ -629,7 +655,6 @@ CREATE TABLE `trackbacks` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
@@ -671,7 +696,6 @@ CREATE TABLE `users` (
 -- Table structure for table `votes`
 --
 
-DROP TABLE IF EXISTS `votes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `votes` (
@@ -694,7 +718,6 @@ CREATE TABLE `votes` (
 -- Table structure for table `votes_summary`
 --
 
-DROP TABLE IF EXISTS `votes_summary`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `votes_summary` (
@@ -716,4 +739,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-11-23 15:49:50
+-- Dump completed on 2011-12-29  1:54:14
