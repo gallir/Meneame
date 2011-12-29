@@ -14,7 +14,9 @@ promote_style();
 do_header(_('promote') . ' | ' . _('menéame'));
 echo '<div id="singlewrap">'."\n";
 
-$annotation = new Annotation('promote');
+$site_id = SitesMgr::my_parent();
+
+$annotation = new Annotation("promote-$site_id");
 $annotation->text = $output;
 if($annotation->read()) {
 	echo $annotation->text;
