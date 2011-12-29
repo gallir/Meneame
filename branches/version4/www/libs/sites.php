@@ -113,7 +113,7 @@ class SitesMgr {
 			$my_conf = self::get_category_configuration(self::$id, $link->category);
 			if ($me->category == 0 || ! $my_conf->export) {
 				// We don't have to export our links to other sites
-				$receivers = array_intersect(self::$id, $receivers);
+				$receivers = array_intersect(array(self::$id), $receivers);
 				$delete_others = false;
 			}
 		} else {
@@ -141,7 +141,7 @@ class SitesMgr {
 		global $db;
 		if (! self::$id ) self::__init();
 
-		if ($strict) $extra = 'and import';
+		if ($strict) $extra = 'and (import or id = '.self::$id.')';
 		else $extra = '';
 
 		$receivers = $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled");
