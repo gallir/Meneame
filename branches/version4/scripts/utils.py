@@ -12,6 +12,17 @@ from urlparse import urlparse
 re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
 
+def clean_url(string):
+	string = re.sub(r'&amp;', '&', string)
+	string = re.sub(r'[<>\r\n\t]|utm_\w+?=[^&]*', '', string) #  Delete common variables  for Analitycs and illegal chars
+	string = re.sub(r'&{2,}', '&', string) # Delete duplicates &
+	string = re.sub(r'&+$', '', string) # Delete useless & at the end
+	string = re.sub(r'\?&+', '?', string) # Delete useless & after ?
+	string = re.sub(r'\?&*$', '', string) # Delete empty queries
+	string = re.sub(r'&', '&amp;', string)
+	return string
+
+
 class DBM(object):
 	""" Helper class to hold select and update connections """
 
@@ -71,28 +82,33 @@ class BaseBlogs(object):
 		for e in doc.entries:
 			if entries >= self.max: break
 
-			if hasattr(e, 'published_parsed'):
+			if hasattr(e, 'published_parsed') and e.published_parsed:
 				timestamp = time.mktime(e.published_parsed)
-			elif hasattr(e, 'updated_parsed'):
+			elif hasattr(e, 'updated_parsed') and e.updated_parsed:
 				timestamp = time.mktime(e.updated_parsed)
 			else:
 				timestamp = now
 
 			if timestamp > now: timestamp = now
-			if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (self.read and timestamp <  self.read) or len(e.title.strip()) < 2:
-				#print "Old entry:", e.link, e.updated, e.updated_parsed, time.time() - timestamp
-				pass
-			else:
-				try:
-					c.execute("insert into rss (blog_id, user_id, date, date_parsed, title, url) values (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s), %s, %s)", (self.id, self.user_id, now, timestamp, e.title, e.link))
-				except _mysql_exceptions.IntegrityError, e:
-					""" Duplicated url, ignore it"""
-					print "insert failed (%s)" % (e,)
+			try:
+				if timestamp < time.time() - dbconf.blogs['min_hours']*3600 or (self.read and timestamp <  self.read) or len(e.title.strip()) < 2:
+					#print "Old entry:", e.link, e.updated, e.updated_parsed, time.time() - timestamp
 					pass
 				else:
-					print "Added: ", e.link
-					self.links.add(e.link)
-					entries += 1
+					try:
+						link_clean = clean_url(e.link)
+						c.execute("insert into rss (blog_id, user_id, date, date_parsed, title, url) values (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s), %s, %s)", (self.id, self.user_id, now, timestamp, e.title, link_clean))
+					except _mysql_exceptions.IntegrityError, e:
+						""" Duplicated url, ignore it"""
+						print "insert failed (%s)" % (e,)
+						pass
+					else:
+						print "Added: ", e.link
+						self.links.add(e.link)
+						entries += 1
+			except AttributeError, e:
+					print "not existing attribute (%s)" % (e,)
+					pass
 
 		DBM.commit()
 		c.close()
@@ -138,6 +154,8 @@ class BaseBlogs(object):
 		""" Save feed_url, title and last checked time in blogs table """
 		c = DBM.cursor('update')
 		print "Updating to blog: %s -%s-" % (self.base_url, self.feed)
+		if self.title: self.title = self.title[0:125]
+		else: self.title = ""
 		c.execute("update blogs set blog_feed = %s, blog_title = %s, blog_feed_checked = now() where blog_id = %s", (self.feed, self.title, self.id))
 		c.close()
 		DBM.commit()

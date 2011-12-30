@@ -84,12 +84,18 @@ def get_candidate_blogs(days, min_karma):
 	cursor = DBM.cursor()
 	c = DBM.cursor()
 
+	local_domain = dbconf.domain.replace('http://', '').replace('www.', '')
+	print "Local domain:", local_domain
+
 	""" Select users that have at least one published """
 	cursor.execute("SELECT link_blog, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), count(*) as n  from links, blogs where link_status in ('published') and link_date > date_sub(now(), interval %s day) and blog_id = link_blog and blog_type='blog' and (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour)) group by blog_id", (days,))
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.counter = row
 		o.base_url = o.url.replace('http://', '').replace('www.', '')
+		if o.base_url == local_domain:
+			print "Url is the same as local domain: ", local_domain, o.url
+			continue
 		if o.counter < days:
 			c.execute("select user_login, user_id, user_karma from users where user_url in (%s, %s, %s, %s, %s, %s) and user_karma > %s and user_level not in ('disabled', 'autodisabled') order by user_karma desc limit 1",
 					('http://'+o.base_url, 'http://www.'+o.base_url, 'http://'+o.base_url+'/', 'http://www.'+o.base_url+'/', o.base_url, 'www.'+o.base_url, min_karma))
