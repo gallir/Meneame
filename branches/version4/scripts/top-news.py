@@ -46,6 +46,9 @@ def do_site(site):
 		links[row[0]]['votes'] = row[2]
 		votes_total += row[2]
 		links[row[0]]['votes_order'] = votes_links
+
+	if not votes_links: return
+
 	v_average = v_total/votes_links
 	votes_average = votes_total/votes_links
 
@@ -62,6 +65,9 @@ def do_site(site):
 		c_list[row[0]] = float(row[1]);
 		links[row[0]]['comments'] = row[2]
 		comments_total += row[2]
+
+	if not comments_links: return
+
 	c_average = c_total/comments_links
 	comments_average = comments_total/comments_links
 
