@@ -283,27 +283,27 @@ Tooltips functions
 			box = $("<div>").attr({ id: 'tooltip-text' });
 			$('body').append( box );
 		}
-		$('a.tooltip, img.tooltip').live('mouseenter mouseleave', function (event) {action(this, event)});
-	}
-
-	function action(element, event) {
-		if (event.type == 'mouseenter') {
-			try {
-				args = $(element).attr('class').split(' ')[1].split(':');
-				key = args[0];
-				value = args[1];
-				ajax = ajaxs[key];
-				init(event);
-				timer = setTimeout(function() {ajax_request(event, ajax, value)}, 250);
+		$(document).on('mouseenter mouseleave', 'a.tooltip, img.tooltip',
+			function (event) {
+				if (event.type == 'mouseenter') {
+					try {
+						args = $(this).attr('class').split(' ')[1].split(':');
+						key = args[0];
+						value = args[1];
+						ajax = ajaxs[key];
+						init(event);
+						timer = setTimeout(function() {ajax_request(event, ajax, value)}, 200);
+					}
+					catch (e) {
+						hide();
+						return false;
+					}
+				} else if (event.type == 'mouseleave') {
+					hide();
+				}
+				event.preventDefault();
 			}
-			catch (e) {
-				hide();
-				return false;
-			}
-		} else if (event.type == 'mouseleave') {
-			hide();
-		}
-		return false;
+		);
 	}
 
 	function init(event) {
@@ -988,14 +988,17 @@ var fancyBox = new function () {
 
 		$(selector).not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, overlayClose = true, target = '';
+			var box = $(this), myHref = box.attr('href'), myTitle;
 
-			if ($(this).attr('target')) {
-				target = ' target="'+$(this).attr('target')+'"';
+
+			if (box.attr('target')) {
+				target = ' target="'+box.attr('target')+'"';
 			}
-			if ((v = this.href.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+)/))) {
+
+			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+)/))) {
 				if (mobile_client) return;
 				iframe = true;
-				title = '<a href="'+this.href+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
+				title = '<a href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 				href = 'http://www.youtube.com/embed/'+v[1];
 				innerWidth = 640;
 				innerHeight = 390;
@@ -1003,7 +1006,7 @@ var fancyBox = new function () {
 				maxHeight = false;
 				overlayClose = false;
 
-				myClass = $(this).attr('class');
+				myClass = box.attr('class');
 				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
 					/* It's a link, so we must call to go.php */
 					var link = linkId[1];
@@ -1012,10 +1015,11 @@ var fancyBox = new function () {
 					};
 				}
 			} else {
-				if (this.title.length > 0 && this.title.length < 30) title = this.title;
+				myTitle = box.attr('title');
+				if (myTitle.length > 0 && myTitle.length < 30) title = myTitle;
 				else title = '{% trans _('enlace original') %}';
-				title = '<a href="'+this.href+'"'+target+'>'+title+'</a>';
-				href = this.href;
+				title = '<a href="'+myHref+'"'+target+'>'+title+'</a>';
+				href = myHref;
 				maxWidth = '75%';
 				maxHeight = '75%';
 			}
