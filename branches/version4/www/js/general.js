@@ -987,7 +987,7 @@ var fancyBox = new function () {
 		}
 
 		$(selector).not('[class*=" cbox"]').each(function(i) {
-			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, target = '';
+			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, overlayClose = true, target = '';
 
 			if ($(this).attr('target')) {
 				target = ' target="'+$(this).attr('target')+'"';
@@ -1001,6 +1001,7 @@ var fancyBox = new function () {
 				innerHeight = 390;
 				maxWidth = false;
 				maxHeight = false;
+				overlayClose = false;
 
 				myClass = $(this).attr('class');
 				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
@@ -1030,6 +1031,7 @@ var fancyBox = new function () {
 				'iframe': iframe,
 				'innerWidth': innerWidth,
 				'innerHeight': innerHeight,
+				'overlayClose': overlayClose,
 				'onLoad': onLoad,
 
 				'onComplete': function() {
@@ -1045,7 +1047,7 @@ var fancyBox = new function () {
 		var scan = this.scan;
 		setTimeout(function() {
 			//$("#newswrap").on("DOMSubtreeModified", function(e) {
-			$('#newswrap').on("ajaxComplete", function() {
+			$('#newswrap,#singlewrap').on("ajaxComplete", function() {
 				if (!timeout) {
 					timeout = setTimeout(scan, 200);
 				}
