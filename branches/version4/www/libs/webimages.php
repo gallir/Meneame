@@ -838,7 +838,7 @@ class HtmlImages {
 
 	// Vimeo detection
 	function check_vimeo() {
-		if (preg_match('/=["\']http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=(\d+)/i', $this->html, $match) &&
+		if (preg_match('/=["\'](?:http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=|http:\/\/player.vimeo.com\/video\/)(\d+)/i', $this->html, $match) &&
 				(preg_match('/vimeo\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			if ($this->debug)
@@ -862,7 +862,7 @@ class HtmlImages {
 	}
 
 	function get_vimeo_thumb($videoid) {
-		if(($res = get_url("http://vimeo.com/api/clip/$videoid.xml"))) {
+		if(($res = get_url("http://vimeo.com/api/v2/video/$videoid.xml"))) {
 			$vrss = $res['content'];
 			if($vrss) {
 				preg_match('/<thumbnail_large>(.+)<\/thumbnail_large>/i',$vrss,$thumbnail_array);
