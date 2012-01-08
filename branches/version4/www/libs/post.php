@@ -309,7 +309,11 @@ class Post extends LCPBase {
 		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
 		$references = array();
 		if (preg_match_all(Post::REF_PREG, $this->content, $matches)) {
+			$refs = 0;
 			foreach ($matches[2] as $reference) {
+				if ($refs > 10) { // Limit the number of references to avoid abuses/spam
+					break;
+				}
 				if (!$this->date) $this->date = time();
 				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
 				$to = $db->get_var("select user_id from users where user_login = '$user'");
@@ -326,6 +330,7 @@ class Post extends LCPBase {
 
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($date), $this->id, $id)");
 					$references[$id] = true;
+					$refs++;
 				}
 			}
 		}

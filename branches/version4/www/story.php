@@ -61,7 +61,7 @@ $last_arg = count($url_args)-1;
 if ($last_arg > 0) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^000/', $url_args[$last_arg])) {
-		header ('HTTP/1.1 301 Moved Permanently');
+		header ('HTTP/1.1 303 Load');
 		if ((int) $url_args[$last_arg] > 0 && (int) $url_args[$last_arg] <= $link->comments) {
 			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#c-'.(int) $url_args[$last_arg]);
 		} else {

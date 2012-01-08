@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'ban.php');
 
-if (check_ban($globals['user_ip'], 'ip') || check_ban($globals['user_ip'], 'proxy')) {
+if (check_ban($globals['user_ip'], 'proxy')) {
 	syslog(LOG_NOTICE, "Meneame: comments_rss2, IP is banned: " . $globals['user_ip']);
 	return;
 }
