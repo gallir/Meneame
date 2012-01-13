@@ -24,7 +24,7 @@ $headers = request_headers();
 if ( ! $current_user->user_id
 	|| empty($headers['X-File-Type']) ) {
 		$r->error = _('Error en cabeceras');
-		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size'] . $headers['x-file-type']);
+		syslog(LOG_INFO, "Menáme, $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size'] . $headers['x-file-type']);
 		echo json_encode($r);
 		die;
 }

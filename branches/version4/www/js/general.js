@@ -828,7 +828,7 @@ $(document).ready(function () {
 			if (files != undefined) {
 				for (var i = 0; i < files.length; i++) {
 					// File type control
-					if (typeof FileReader === "undefined" || !(/image/i).test(files[i].type)) {
+					if (typeof File == "undefined" || !files[i].type.match('image.*')) {
 						mDialog.notify("{% trans _('sólo se admiten imágenes') %}", 5);
 						return false;
 					}
