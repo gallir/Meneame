@@ -807,7 +807,7 @@ $(document).ready(function () {
 		init: function(e){},
 		start: function(e){},
 		complete: function(r){},
-		error: function(r){ alert(r.error); return false; },
+		error: function(r){ mDialog.alert(r.error); return false; },
 		traverse: function(files, area) {
 
 			var form = area.parents('form');
@@ -825,10 +825,10 @@ $(document).ready(function () {
 		},
 
 		check_files: function(files, area) {
-			if (files != undefined) {
+			if (typeof File != "undefined"  && files != undefined) {
 				for (var i = 0; i < files.length; i++) {
 					// File type control
-					if (typeof File == "undefined" || !files[i].type.match('image.*')) {
+					if (files[i].type.length > 0 && !files[i].type.match('image.*')) {
 						mDialog.notify("{% trans _('sólo se admiten imágenes') %}", 5);
 						return false;
 					}
@@ -837,8 +837,8 @@ $(document).ready(function () {
 						return false;
 					}
 				}
-				return true;
 			}
+			return true;
 		},
 
 		upload: function(file, area) {
@@ -855,7 +855,6 @@ $(document).ready(function () {
 			xhr.upload.addEventListener("progress", function (e) {
 				if (e.lengthComputable) {
 					progress.attr("value", e.loaded);
-					//var loaded = Math.ceil((e.loaded / e.total) * 100) + "%";
 				}
 			}, false);
 
@@ -879,10 +878,9 @@ $(document).ready(function () {
 
 			// Set appropriate headers
 			xhr.setRequestHeader("Content-Type", "multipart/form-data-alternate");
-			xhr.setRequestHeader("X-File-Name", file.fileName);
-			xhr.setRequestHeader("X-File-Size", file.fileSize);
-			xhr.setRequestHeader("X-File-Type", file.type);
-
+			if (typeof file.fileSize != "undefined") {
+				xhr.setRequestHeader("X-File-Size", file.fileSize);
+			}
 			xhr.send(file);
 		}
 	};

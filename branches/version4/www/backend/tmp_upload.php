@@ -14,37 +14,34 @@ header('Content-Type: application/json; charset=UTF-8');
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
-$error = false;
-$field = 'tmp_file';
 $r = new stdClass();
-
-
 $headers = request_headers();
 
-if ( ! $current_user->user_id
-	|| empty($headers['X-File-Type']) ) {
-		$r->error = _('Error en cabeceras');
-		syslog(LOG_INFO, "Menáme, $r->error " . $headers['X-File-Type'] . " - " . $headers['X-File-Size'] . $headers['x-file-type']);
-		echo json_encode($r);
+if ( ! $current_user->user_id) {
 		die;
 }
 
-if (Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
+// If the header is available, chech the size
+if (isset($headers['X-File-Size'])
+		&& $headers['X-File-Size'] > 0
+		&& Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
 		$r->error = _("Límite de ficheros excedidos");
-		syslog(LOG_INFO, "Error $r->error " . $headers['X-File-Size']);
 		echo json_encode($r);
 		die;
 }
-
-$type = $headers['X-File-Type'];
-
 
 $dir = Upload::get_cache_dir() . '/tmp';
-
 if (! file_exists($dir)) {
 	$old_mask = umask(0);
 	$res = @mkdir($dir, 0777, true);
 	umask($old_mask);
+}
+
+$source = file_get_contents('php://input');
+if (Upload::current_user_limit_exceded(strlen($source)) ) {
+		$r->error = _("Límite de ficheros excedidos");
+		echo json_encode($r);
+		die;
 }
 
 // Delete old files first
@@ -58,18 +55,22 @@ foreach ($iterator as $fileinfo) {
 	}
 }
 
-$ext = preg_replace('/^[^\/]*\//', '', $type);
-$uploadfile =  $dir . '/' . $current_user->user_id . '-' . $current_user->user_login . '-' . uniqid() . ".$ext";
+$tmpfile =  $dir . '/' . $current_user->user_id . '-' . $current_user->user_login . '-' . uniqid();
 
-$source = file_get_contents('php://input');
-if (Upload::current_user_limit_exceded(strlen($source)) ) {
-		$r->error = "Size Error";
+if (file_put_contents($tmpfile, $source)) {
+	$info = getimagesize($tmpfile);
+	if (! $info) {
+		@unlink($tmpfile);
+		$r->error = _('imagen no soportada');
 		echo json_encode($r);
 		die;
-}
+	}
+	$ext = image_type_to_extension($info[2]);
+	$uploadfile =  $tmpfile . $ext;
 
-if (file_put_contents($uploadfile, $source)) {
-	$r->type = $type;
+	@rename($tmpfile, $uploadfile);
+
+	$r->type = $info['mime'];
 	$r->name = basename($uploadfile);
 	$r->url = $globals['base_static'].Upload::get_cache_relative_dir().'/tmp/'.$r->name;
 	$r->thumb = $globals['base_static'].Upload::get_cache_relative_dir()."/tmp/tmp_thumb-$r->name";
