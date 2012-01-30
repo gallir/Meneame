@@ -12,7 +12,7 @@ $id = intval($_GET['id']);
 if (! $id) die;
 
 // Print answers to the comment
-$sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='post' and conversation_to = $id and comment_id = conversation_from ORDER BY conversation_from asc";
+$sql = "SELECT conversation_from as comment_id FROM conversations, posts WHERE conversation_type='post' and conversation_to = $id and post_id = conversation_from ORDER BY conversation_from asc";
 $res = $db->get_col($sql);
 
 if ($res) {
