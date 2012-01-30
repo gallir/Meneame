@@ -993,16 +993,16 @@ var fancyBox = new function () {
 				target = ' target="'+box.attr('target')+'"';
 			}
 
-			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+)/))) {
+			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
 				if (mobile_client) return;
 				iframe = true;
 				title = '<a href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 				href = 'http://www.youtube.com/embed/'+v[1];
+				if (typeof v[2] != "undefined") href += v[2];
 				innerWidth = 640;
 				innerHeight = 390;
 				maxWidth = false;
 				maxHeight = false;
-				overlayClose = false;
 
 				myClass = box.attr('class');
 				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
