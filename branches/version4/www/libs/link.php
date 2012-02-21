@@ -1047,7 +1047,7 @@ class Link extends LCPBase {
 			$this->karma *= $meta_coef[$this->meta_id];
 			// Annotate meta's coeeficient if the variation > 5%
 			if (abs(1 - $meta_coef[$this->meta_id]) > 0.05) {
-				$this->annotation .= _('Coeficiente categoría').': '.round($meta_coef[$this->meta_id], 2)."<br/>";
+				$this->annotation .= _('Coeficiente categoría').' ('.$this->meta_id.') : '.round($meta_coef[$this->meta_id], 2)."<br/>";
 			}
 		}
 
@@ -1109,7 +1109,7 @@ class Link extends LCPBase {
 
 	// Read affinity values using annotations
 	function metas_coef_get() {
-		$log = new Annotation("metas-coef");
+		$log = new Annotation("metas-coef-".SitesMgr::my_id());
 		if (!$log->read()) return false;
 		$dict = unserialize($log->text);
 		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
