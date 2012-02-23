@@ -320,7 +320,7 @@ foreach ($res as $dbuser) {
 				else $karma4 *= $karma4_coef;
 				$output .= sprintf("%s: %d %6.2f -> %6.2f\n", _('Penalización por comentarios karma negativo'), $comments_low_karma, $old_karma4, $karma4);	
 				
-			} elseif ($comments_total - $comments_low_karma > 0) {
+			} elseif ($comments_total - $comments_low_karma > 0 && $penalized < 1) {
 				// Give few tenths to comments that were not penalized
 				$old_karma4 = $karma4;
 				$karma4 += min(1, 0.05 * ($comments_total - $comments_low_karma));
