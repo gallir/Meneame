@@ -89,7 +89,9 @@ class Comment extends LCPBase {
 			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
 			if ($full) {
-				Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+				if ($globals['now'] - $this->date < 86400) {
+					Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+				}
 				$this->update_order();
 			}
 		}
@@ -577,7 +579,7 @@ class Comment extends LCPBase {
 
 		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
 		$orders = array();
-		if (preg_match_all('/(^|[\(,;\.\s])#(\d+)/', $this->content, $matches)) {
+		if (preg_match_all('/(^|[\(,;\.\s¿¡])#(\d+)/', $this->content, $matches)) {
 			foreach ($matches[2] as $order) {
 				$orders[$order] += 1;
 			}
