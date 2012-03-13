@@ -20,7 +20,7 @@ if(isset($_POST["phase"])) {
 	force_authentication();
 	switch ($_POST["phase"]) {
 		case 1:
-			do_header(_("enviar historia") . " 2/3", "post");
+			do_header(_('enviar historia') . " 2/3", _('enviar historia'));
 			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit1()) {
 				// Just to display error messages
@@ -31,7 +31,7 @@ if(isset($_POST["phase"])) {
 			}
 			break;
 		case 2:
-			do_header(_("enviar historia") . " 3/3", "post");
+			do_header(_('enviar historia') . " 3/3", _('enviar historia'));
 			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit2()) {
 				// Just to display error messages
@@ -48,7 +48,7 @@ if(isset($_POST["phase"])) {
 } else {
 	check_already_sent();
 	force_authentication();
-	do_header(_("enviar historia") . " 1/3", "post");
+	do_header(_('enviar historia') . " 1/3", _('enviar historia'));
 	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
@@ -481,7 +481,7 @@ function do_submit3() {
 	// Check it is not in the queue already
 	if (Link::duplicates($link->url)) {
 		// Write headers, they were not printed yet
-		do_header(_("enviar historia"), "post");
+		do_header(_('enviar historia'), _('enviar historia'));
 		echo '<div id="singlewrap">' . "\n";
 		report_duplicated($link->url);
 		return;

@@ -17,11 +17,11 @@ init_sneak();
 // Start html
 $globals['extra_css'][] = 'es/sneak.css?'.$globals['sneak_version'];
 if (!empty($_REQUEST['friends'])) {
-	do_header(_('amigos en la fisgona'));
+	do_header(_('amigos en la fisgona'), _('fisgona'));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {
-	do_header(_('admin'));
+	do_header(_('admin'), _('fisgona'));
 } else {
-	do_header(_('fisgona'));
+	do_header(_('fisgona'), _('fisgona'));
 }
 
 Haanga::Load('sneak/base.html');

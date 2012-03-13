@@ -96,7 +96,7 @@ if($cat) {
 }
 
 
-do_header(_('noticias pendientes') . ' | ' . $globals['site_name']);
+do_header(_('noticias pendientes') . ' | ' . $globals['site_name'], _('pendientes'));
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 

@@ -59,7 +59,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 }
 
 
-do_header(_('más visitadas') . ' | ' . $globals['site_name']);
+do_header(_('más visitadas') . ' | ' . $globals['site_name'], _('más visitadas'));
 $globals['tag_status'] = 'published';
 do_tabs('main', 'topclicked');
 print_period_tabs();

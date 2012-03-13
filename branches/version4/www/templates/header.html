@@ -50,7 +50,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
 {% else %}
 <style type="text/css">
-@import url({{globals.base_static}}css/handheld.css?v={{globals.v}}) print,tv,handheld,screen and (max-device-width: 680px);
+@import url({{globals.base_static}}css/handheld.css?v={{ globals.v }}) print,tv,handheld,screen and (max-device-width: 680px);
 </style>
 {% endif %}
 
@@ -81,7 +81,7 @@
 
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
-
+<link href='http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 
 <script src="{{ globals.jquery }}" type="text/javascript"></script>
 <script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
@@ -102,11 +102,11 @@
 {% endif %}
 
 <script type="text/javascript">
-base_key="{{globals.security_key}}";
-{% if globals.link %}link_id = {{ globals.link.id }}{% endif %};
-user_id = {{ current_user.user_id }};
-user_login = '{{ current_user.user_login }}';
-mobile_client = {{ globals.mobile }};
+	base_key="{{globals.security_key}}";
+	{% if globals.link %}link_id = {{ globals.link.id }}{% endif %};
+	user_id = {{ current_user.user_id }};
+	user_login = '{{ current_user.user_login }}';
+	mobile_client = {{ globals.mobile }};
 </script>
 
 {% if globals.extra_head %}
@@ -115,103 +115,75 @@ mobile_client = {{ globals.mobile }};
 
 </head>
 <body id="{{id}}" {{globals.body_args}}>
-<div id="headerwrap">
-
 
 <div id="header">
-<a href="{{globals.base_url}}" title="{% trans _('inicio') %}" id="logo">{% trans _("menéame") %}</a>
-<img src="{{globals.base_static}}img/common/mnme-sep.png" width="1" height="24" alt="" class="logo-sep"/>
+<div id="header-top">
 
-{% if globals.site_shortname == "emnm" %}
-	<a href="http://www.meneame.net" title="{% trans _('ir a la edición general') %}" id="mnme">{% trans _("menéame") %}</a>
-	<img src="{{globals.base_static}}img/common/mnme-cyt-01.png" width="136" height="16" alt="{{globals.site_name}}" title="{{globals.site_name}}" class="mnme-title"/>
-{% else %}
-	<a href="http://e.meneame.net/" title="{% trans _('ir a la edición de cultura y tecnología') %}" id="mnme">{% trans _("menéame") %}</a>
-{% endif %}
+  <a href="{{ globals.base_url }}" title="{% trans _('portada') %}" class="logo-mnm">{% trans _('menéame') %}</a>
+  <a href="{{ globals.base_url }}" title="{% trans _('menéame ediciones') %}" class="logo-ed">{% trans _('menéame ediciones') %}</a>
 
-{% if globals.ads_branding %}
-{% try_include 'private/ad-sponsored.html' %}
-{% endif %}
-<ul class="headtools">
-
-<li class="searchbox">
-<form action="{{globals.base_url}}search.php" method="get" name="top_search">
-<img src="{{globals.base_static}}img/common/search-left-04.png" width="6" height="22" alt=""/>
-{% if globals.q %}
-	<input type="text" name="q" value="{{globals.q|escape}}" />
-{% else %}
-	<input name="q" type="text" value="{% trans _('buscar')%}..."
-	onblur="if(this.value=='') this.value='{% trans _('buscar')%}...';" onfocus="if(this.value=='{% trans _('buscar')%}...') this.value='';"
-	 />
-{% endif %}
-
-<a href="javascript:document.top_search.submit()"><img class="searchIcon" alt="{% trans _('buscar')%}" src="{{globals.base_static}}img/common/search-04.png" id="submit_image" width="28" height="22"/></a>
-
-{% if globals.search_options %}
-	{% for name, value in globals.search_options %}
-		<input type="hidden" name="{{name}}" value="{{value}}"/>
+  <ul id="edlist">
+	{% for s in sites %}
+		<li>
+			{% if s.id != this_site.id %}
+				<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
+			{% else %}
+				<b>{{ s.name_long }}</b>
+			{% endif %}
+		</li>
 	{% endfor %}
-{% endif %}
+  </ul>
 
-</form>
-</li>
-
-{% if current_user.authenticated %}
-	<li><a href="{{ current_user.user_login|useruri }}"
-		{% if globals.greetings %}
-			 title="{% trans _('menéame te saluda en') %} {{globals.greetings[greeting]}}"
-		{% endif %}>
-	{{greeting}}&nbsp;{{current_user.user_login}}&nbsp;<img class="tooltip u:{{current_user.user_id}}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
-	<li><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}">{%trans _('cerrar sesión')%} <img src="{{globals.base_static}}img/common/logout-bt-02.png" alt="logout" title="logout" width="22" height="16" /></a></li>
-{% else %}
-	<li><a href="{{globals.base_url}}register.php"> {% trans _('registrarse') %} <img src="{{globals.base_static}}img/common/register-bt-02.png" alt="register" title="register" width="16" height="18" /></a></li>
-	<li><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %} <img src="{{globals.base_static}}img/common/login-bt-02.png" alt="login" title="login" width="22" height="16" /></a></li>
-{% endif %}
-
-</ul></div>
-
-
-
-<div id="naviwrap">
-	<ul id="navigation">
-	<li><a href="{{globals.base_url}}submit.php">{% trans _('enviar historia') %}</a></li>
-	<li><a href="{{globals.base_url}}shakeit.php">{% trans _('pendientes') %}</a></li>
-	<li><a href="{{globals.base_url}}sneak.php">{% trans _('fisgona') %}</a></li>
-   	<li><a href="javascript:fancybox_gallery('all');">{% trans _('galería') %}</a></li>
-	<li><a href="{{globals.base_url}}notame/">{% trans _('nótame') %}</a></li>
-	</ul>
-
-	<ul class="headtools">
-	<li><a href="http://meneame.wikispaces.com/Comenzando"><img src="{{globals.base_static}}img/common/help-bt-02.png" alt="help" title="{% trans _('ayuda') %}" width="13" height="16" /></a>&nbsp;</li>
-
+  <ul id="userinfo">
 	{% if current_user.user_id > 0 %}
+    <li class="usertext"><a href="{{ current_user.user_login|useruri }}" class="tooltip u:{{current_user.user_id}}">{{current_user.user_login}}</a></li>
 		{% if current_user.admin %}
-			<li><a href="{{globals.base_url}}admin/bans.php">admin <img src="{{globals.base_static}}img/common/tools-bt-02.png" alt="tools button" title="{%trans _('administración')%}" width="16" height="16" /> </a></li>
+			<li class="usertext"><a href="{{ globals.base_url }}admin/bans.php">admin</a></li>
 		{% endif %}
+    <li><a href="{{ current_user.user_login|useruri }}"><img class="tooltip u:{{current_user.user_id}}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 25 %}" width="25" height="25" alt="{{current_user.user_login}}"/></a></li>
+    <li class="userpend"><a href="#">&nbsp;5&nbsp;</a></li>
+    <li class="userlogin"><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}"><img src="img/common/h9_login.png" width="16" height="16" alt=""/></a></li>
+    {% else %}
+    <li class="usertext"><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %}</a></li>
+    <li class="usertext"><a href="{{globals.base_url}}register.php">{% trans _('registrarse') %}</a></li>
+    {% endif %}
+  </ul>
 
-		{% if current_user.private_messages || globals.show_conv_counters %}
-			<li><a href="{% exec post_get_base_url '_priv' %}" title="{%if !globals.show_conv_counters %}{{ current_user.private_messages }}{% endif %} {% trans _('privados nuevos') %}"><span id="p_mess_c">{{ current_user.private_messages }}</span>&nbsp;<img src="{{globals.base_static}}img/common/icon_message-01.png" alt="" width="19" height="19"/></a></li>
-		{% endif %}
+</div><!--header-top-->
 
-		{% if current_user.posts_answers || globals.show_conv_counters %}
-			<li><a href="{{ current_user.user_login | posts_url }}/_conversation" title="{%if !globals.show_conv_counters %}{{ current_user.posts_answers }}{% endif %} {% trans _('respuestas a notas') %}"><span id="p_conv_c">{{ current_user.posts_answers }}</span>&nbsp;<img src="{{globals.base_static}}img/common/icon_post-01.png" alt="" width="19" height="19"/></a></li>
-		{% endif %}
+<div id="header-center">
+  <a href="{{ globals.base_url }}" class="logo-eli">{% trans _('menéame') %}</a>
+  <ul id="edname">
+    <li>{% trans _('edición') %} <b>{{ this_site.name_long }}</b></li>
+  </ul>
 
-		{% if current_user.comments_answers || globals.show_conv_counters %}
-			<li><a href="{{ current_user.user_login | user_uri:"conversation" }}" title="{%if !globals.show_conv_counters %}{{ current_user.comments_answers }}{% endif %} {% trans _('respuestas a comentarios') %}"><span id="c_conv_c">{{ current_user.comments_answers }}</span>&nbsp;<img src="{{globals.base_static}}img/common/icon_comment-01.png" alt="" width="19" height="19"/></a></li>
-		{% endif %}
+<!--search-->
+  <div id="searchform">
+    <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
+    <input class="searchbox" name="q" type="text" />
+    <a href="javascript:document.top_search.submit()"></a>
+    </form>
+  </div>
+<!--end search-->
+</div><!--header-center-->
 
-		{% if ! globals.mobile AND (current_user.new_friends || globals.show_conv_counters) %}
-			<li><a href="{{ current_user.user_login | user_uri:"friends_new" }}" title="{%if !globals.show_conv_counters %}{{ current_user.new_friends }}{% endif %} {% trans _('nuevos amigos') %}"><span id="n_friends_c">{{ current_user.new_friends }}</span>&nbsp;<img src="{{globals.base_static}}img/common/icon_friend_other_00.png" alt="" width="18" height="16"/></a></li>
+<div id="header-menu01">
+  <ul id="menu01-itemsl">
+	{% for o in left_options %}
+	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+	{% endfor %}
+  </ul>
 
-		{% endif %}
-	{% endif %}
+  <ul id="menu01-itemsr">
+	{% for o in right_options %}
+	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+	{% endfor %}
+  </ul>
 
-	</ul>
+</div><!--header-menu01-->
+</div><!--header-->
 
 
-</div>
-</div>
 <div id="wrap">
 {% exec do_banner_top as foo%}
 <div id="container">

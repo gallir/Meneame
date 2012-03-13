@@ -34,7 +34,7 @@ $globals['ads_section'] = 'portada';
 
 $cat=$_REQUEST['category'];
 
-do_header($globals['site_name']);
+do_header($globals['site_name'], _('portada'));
 do_tabs('main','published');
 
 $from = '';

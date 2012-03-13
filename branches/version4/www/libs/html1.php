@@ -21,9 +21,12 @@ $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
 $globals['post_js'] = Array();
 
+
+
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
 
+/*
 	$reload_text = _('recargar');
 	$active = ' class="tabmain-this"';
 
@@ -46,10 +49,11 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 
 	$vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
 	return Haanga::Load('do_tabs.html', $vars);
+	*/
 }
 
 function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals;
+	global $current_user, $dblang, $globals, $db;
 
 	check_auth_page();
 	header('Content-Type: text/html; charset=utf-8');
@@ -68,9 +72,12 @@ function do_header($title, $id='home') {
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
 
+
+	// Build data and objects for the options in the geader
+/*
 	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
 	else $greeting = _('hola');
-
+*/
 	if ($current_user->user_id > 0) {
 		$current_user->posts_answers = Post::get_unread_conversations($current_user->user_id);
 		$current_user->comments_answers = Comment::get_unread_conversations($current_user->user_id);
@@ -78,7 +85,39 @@ function do_header($title, $id='home') {
 		$current_user->new_friends = count(User::get_new_friends($current_user->user_id));
 	}
 
-	$vars = compact('title', 'greeting', 'id');
+	class MenuOption{
+		// Small helper class to store links' information
+		function __construct($text, $url, $active = false, $title = '') {
+			$this->text = $text;
+			$this->url = $url;
+			$this->title = $title;
+			if ($active && $active == $this->text) {
+				$this->selected = true;
+			} else {
+				$this->selected = $false;
+			}
+		}
+	}
+
+	$left_options = array();
+	$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
+	$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', $id, _('menear noticias pendientes'));
+	$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
+	$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'topstories.php', $id, _('historias más votadas'));
+	$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'topclicked.php', $id, _('historias más visitadas/leídas'));
+	$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'topactive.php', $id, _('historias más activas'));
+
+	$right_options = array();
+	$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
+	$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
+	$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
+	$right_options[] = new MenuOption('?', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
+
+
+	$sites = $db->get_results("select * from subs where visible order by id asc");
+	$this_site = SitesMgr::get_info();
+
+	$vars = compact('title', 'greeting', 'id', 'left_options', 'right_options', 'sites', 'this_site');
 	return Haanga::Load('header.html', $vars);
 }
 

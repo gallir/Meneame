@@ -153,7 +153,7 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 	$globals['noindex'] = true;
 }
 
-do_header($page_title);
+do_header($page_title, _('nótame'));
 do_posts_tabs($tab_option, $user->username);
 $post = new Post;
 
