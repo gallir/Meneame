@@ -79,10 +79,16 @@ function do_header($title, $id='home') {
 	else $greeting = _('hola');
 */
 	if ($current_user->user_id > 0) {
-		$current_user->posts_answers = Post::get_unread_conversations($current_user->user_id);
+		$current_user->notifications = Post::get_unread_conversations($current_user->user_id)
+					+ Comment::get_unread_conversations($current_user->user_id)
+					+ PrivateMessage::get_unread($current_user->user_id)
+					+ count(User::get_new_friends($current_user->user_id));
+
+/*		$current_user->posts_answers = Post::get_unread_conversations($current_user->user_id);
 		$current_user->comments_answers = Comment::get_unread_conversations($current_user->user_id);
 		$current_user->private_messages = PrivateMessage::get_unread($current_user->user_id);
 		$current_user->new_friends = count(User::get_new_friends($current_user->user_id));
+		*/
 	}
 
 	class MenuOption{
