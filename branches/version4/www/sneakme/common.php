@@ -10,21 +10,47 @@
 function do_posts_tabs($tab_selected, $username) {
 	global $globals, $current_user;
 
-	$reload_text = _('recargar');
-	$active = ' class="tabmain-this"';
 
-	echo '<ul class="tabmain">' . "\n";
+	$items = array();
+	$items[] = array('id' => 1, 'url' => post_get_base_url('', false), 'title' => _('todas'));
+	$items[] = array('id' => 2, 'url' => post_get_base_url('_best', false), 'title' => _('popular'));
+	// GEO
+	if ($globals['google_maps_api']) {
+		$items[] = array('id' => 3, 'url' => post_get_base_url('_geo', false), 'title' => _('mapa'));
+	}
+	if ($tab_selected == 4) {
+		$items[] = array('id' => 4, 'url' => post_get_base_url($username, false), 'title' => $username);
+	} elseif ($current_user->user_id > 0) {
+		$items[] = array('id' => 4, 'url' => post_get_base_url($current_user->user_login, false), 'title' => $current_user->user_login);
+	}
+
+	if ($current_user->user_id > 0 ) {
+		$items[] = array('id' => 5, 'url' => post_get_base_url('_priv', false), 'title' => _('privados'));
+	}
+
+	$feed = false;
+	$option = $tab_selected;
+
+	$vars = compact('items', 'option', 'feed');
+	return Haanga::Load('print_tabs.html', $vars);
+
+
+/*
+	$reload_text = _('recargar');
+	$active = ' class="selected"';
+
+	echo '<ul class="subheader">' . "\n";
 
 	// All
 	if ($tab_selected == 1) {
-		echo '<li'.$active.'><a href="'.post_get_base_url().'" title="'.$reload_text.'"><em>'._('todos').'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url().'" title="'.$reload_text.'">'._('todos').'</a></li>' . "\n";
 	} else {
 		echo '<li><a href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
 	}
 
 	// Best
 	if ($tab_selected == 2) {
-		echo '<li'.$active.'><a href="'.post_get_base_url('_best').'" title="'.$reload_text.'"><em>'._('popular').'</em></a></li>' . "\n";
+		echo '<li'.$active.'><a href="'.post_get_base_url('_best').'" title="'.$reload_text.'">'._('popular').'</a></li>' . "\n";
 	} else {
 		echo '<li><a href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
 	}
@@ -32,7 +58,7 @@ function do_posts_tabs($tab_selected, $username) {
 	// GEO
 	if ($globals['google_maps_api']) {
 		if ($tab_selected == 3) {
-			echo '<li'.$active.'><a href="'.post_get_base_url('_geo').'" title="'.$reload_text.'"><em>'._('mapa').'</em></a></li>' . "\n";
+			echo '<li'.$active.'><a href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('mapa').'</a></li>' . "\n";
 		} else {
 			echo '<li><a href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
 		}
@@ -56,6 +82,7 @@ function do_posts_tabs($tab_selected, $username) {
 
 	// END STANDARD TABS
 	echo '</ul>' . "\n";
+	*/
 }
 
 function do_post_subheader($content, $selected = false, $rss = false, $rss_title = '') {

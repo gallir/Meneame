@@ -100,8 +100,6 @@ do_header(_('noticias pendientes') . ' | ' . $globals['site_name'], _('pendiente
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
-do_mnu_categories_horizontal($_REQUEST['category']);
-
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
@@ -178,8 +176,6 @@ function print_shakeit_tabs($option=-1) {
 			break;
 	}
 	$vars = compact('items', 'option', 'feed');
-	$vars['container_id']   = 'topcatlist';
-	$vars['toggle_enabled'] = isset($_REQUEST['category']);
 	return Haanga::Load('print_tabs.html', $vars);
 }
 

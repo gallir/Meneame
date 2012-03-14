@@ -1,11 +1,7 @@
 <ul class="subheader">
 {% for item in items %}
-    <li{% if item.id == option OR item.selected %} class="selected"{%endif%}>
-        <span>
-            <a href="{{globals.base_url}}{{item.url}}" title="+/-">{{ item.title }}</a>
-        {% if item.id == option OR item.selected %}
-            {% inline "get_toggler_plusminus.html" %}
-        {% endif %}
+    <li {% if item.id == option OR item.selected %}class="selected"{% endif %}>
+            <a href="{{globals.base_url}}{{item.url}}">{{ item.title }}</a>
         </span>
     </li>
 {% endfor %}
@@ -13,24 +9,10 @@
 {% if feed %}
     <li class="icon">
         <a href="{{globals.base_url}}rss2.php{{feed.url}}" title="{{feed.title}}" >
-            <img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/>
+            <img src="{{globals.base_static}}img/common/h9_rss.png" width="15" height="15" alt="rss2"/>
         </a>
     </li>
 {% endif %}
-{% if globals.facebook_page || globals.twitter_page %}
-	<li class="icon-right">
-	{% if globals.facebook_page %}
-		&nbsp;<a href="{{ globals.facebook_page }}" title="{% trans _('en Facebook') %}" >
-            <img src="{{globals.base_static}}img/external/fb-icon-01.png" width="18" height="18" alt="Facebook"/>
-        </a>
-	{% endif %}
-	{% if globals.twitter_page %}
-		&nbsp;<a href="{{ globals.twitter_page }}" title="{% trans _('en Twiter') %}" >
-            <img src="{{globals.base_static}}img/external/tw-icon-01.png" width="18" height="18" alt="Twitter"/>
-        </a>
-	{% endif %}
-	</li>
-	<li class="icon-right">{% trans _('síguenos en:') %}&nbsp;</li>
-{% endif %}
+
 </ul>
 

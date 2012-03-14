@@ -68,8 +68,6 @@ if ($globals['meta_current'] > 0) {
 }
 
 
-do_mnu_categories_horizontal($_REQUEST['category']);
-
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
@@ -165,8 +163,6 @@ function print_index_tabs($option=-1) {
 	}
 
 	$vars = compact('items', 'option', 'feed');
-	$vars['container_id']   = 'topcatlist';
-	$vars['toggle_enabled'] = isset($_REQUEST['category']);
 	return Haanga::Load('print_tabs.html', $vars);
 }
 

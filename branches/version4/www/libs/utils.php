@@ -459,16 +459,18 @@ function get_user_uri_by_uid($user, $view='') {
 	return $uri;
 }
 
-function post_get_base_url($option='') {
+function post_get_base_url($option='', $give_base=true) {
 	global $globals;
+	if ($give_base) $base = $globals['base_url'];
+	else $base = '';
 	if (empty($globals['base_sneakme_url'])) {
 		if (empty($option)) {
-			return $globals['base_url'].'sneakme/';
+			return $base.'sneakme/';
 		} else {
-			return $globals['base_url'].'sneakme/?id='.$option;
+			return $base.'sneakme/?id='.$option;
 		}
 	} else {
-		return $globals['base_url'].$globals['base_sneakme_url'].$option;
+		return $base.$globals['base_sneakme_url'].$option;
 	}
 }
 
