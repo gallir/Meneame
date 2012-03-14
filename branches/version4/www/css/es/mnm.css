@@ -28,7 +28,7 @@ padding:0px;
 
 #header{
 width: 100%;
-min-width: 820px;
+min-width: 790px;
 }
 
 /* first header zone */
@@ -576,7 +576,7 @@ border-radius: 3px;
 
 #wrap {
 padding-top: 20px;
-min-width: 820px;
+min-width: 790px;
 max-width: 1300px;
 width: 98%;
 text-align: left;
