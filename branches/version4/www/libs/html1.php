@@ -117,7 +117,7 @@ function do_header($title, $id='home') {
 	$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
 	$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 	$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
-	$right_options[] = new MenuOption('?', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
+	$right_options[] = new MenuOption('<b>?</b>', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
 
 
 	$sites = $db->get_results("select * from subs where visible order by id asc");
