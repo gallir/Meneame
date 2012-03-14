@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-do_header(_('destacadas') . ' | ' . $globals['site_name']);
+do_header(_('destacadas') . ' | ' . $globals['site_name'], _('destacadas'));
 $globals['tag_status'] = 'published';
 do_tabs('main', 'active');
 
