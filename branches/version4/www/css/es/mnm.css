@@ -29,6 +29,7 @@ padding:0px;
 #header{
 width: 100%;
 min-width: 790px;
+font-family:'Open Sans', Helvetica, sans-serif;
 }
 
 /* first header zone */
@@ -76,7 +77,6 @@ float:left;
 }
 
 #header-top ul#edlist li{
-font-family:'Open Sans',sans-serif;
 font-size:14px;
 color:#fff;
 margin-right:20px;
@@ -122,7 +122,7 @@ background:#fff;
 }
 
 #header-top .usertext{
-font-family:'Open Sans Condensed',sans-serif;
+font-family:'Open Sans Condensed', Helvetica, sans-serif;
 font-size:14px;
 color:#fff;
 margin-right:10px;
@@ -131,7 +131,6 @@ margin-top:1px;
 
 #header-top .userpend{
 background:#ff0000;
-font-family:'Open Sans',sans-serif;
 color:#fff;
 font-size:14px;
 font-weight:bold;
@@ -170,7 +169,6 @@ list-style-type:none;
 margin:0;
 padding:0;
 float:left;
-font-family:'Open Sans',sans-serif;
 font-size:25px;
 color:#fff;
 position:relative;
@@ -182,7 +180,6 @@ margin-top:4px;
 /* search */
 
 #searchform {
-font-family:'Open Sans',sans-serif;
 font-size: 12px;
 width:300px;
 height:20px;
@@ -229,7 +226,6 @@ float:left;
 }
 
 #header-menu01 ul li a{
-font-family:'Open Sans',sans-serif;
 color:#ff6400;
 text-decoration:none;
 }
@@ -288,7 +284,7 @@ float:left;
 }
 
 #header-menu02 ul#menu02-items li a{
-font-family:'Open Sans',sans-serif;
+font-family:'Open Sans', Helvetica, sans-serif;
 font-size:13px;
 color:#3c3c3c;
 text-decoration:none;
@@ -335,7 +331,7 @@ float:left;
 }
 
 #menu-single ul#menu-single-items li a{
-font-family:'Open Sans',sans-serif;
+font-family:'Open Sans', Helvetica, sans-serif;
 font-size:14px;
 color:#ff6400;
 text-decoration:none;
@@ -384,7 +380,7 @@ float:left;
 }
 
 #menu-double-l01 ul#menu-double-l01-items li a{
-font-family:'Open Sans',sans-serif;
+font-family:'Open Sans', Helvetica, sans-serif;
 font-size:14px;
 color:#ff6400;
 text-decoration:none;
@@ -431,7 +427,7 @@ float:left;
 }
 
 #menu-double-l02 ul#menu-double-l02-items li a{
-font-family:'Open Sans',sans-serif;
+font-family:'Open Sans', Helvetica, sans-serif;
 font-size:13px;
 color:#3c3c3c;
 text-decoration:none;
@@ -923,7 +919,8 @@ height:22px;
 }
 
 .sidebox h4 {
-font-size: 16px;
+font-family:'Open Sans', Helvetica, sans-serif;
+font-size: 15px;
 text-align:left;
 color:#fff;
 padding-left: 10px;
