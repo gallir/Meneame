@@ -6,100 +6,60 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-
-function do_posts_tabs($tab_selected, $username) {
+function get_posts_menu($tab_selected, $username) {
 	global $globals, $current_user;
 
+	if ($tab_selected != 4 && $current_user->user_id > 0) {
+		$username = $current_user->user_login;
+	}
+
+	switch ($tab_selected) {
+		case 2:
+			$id = _('popular');
+			break;
+		case 3:
+			$id = _('mapa');
+			break;
+		case 4:
+			$id = $username;
+			break;
+		case 5:
+			$id = _('privados');
+			break;
+		case 1:
+		default:
+			$id = _('todas');
+			break;
+
+	}
 
 	$items = array();
-	$items[] = array('id' => 1, 'url' => post_get_base_url('', false), 'title' => _('todas'));
-	$items[] = array('id' => 2, 'url' => post_get_base_url('_best', false), 'title' => _('popular'));
-	// GEO
+	$items[] = new MenuOption(_('todas'), post_get_base_url(''), $id, _('todas las notas'));
+	$items[] = new MenuOption(_('popular'), post_get_base_url('_best'), $id, _('notas populares'));
 	if ($globals['google_maps_api']) {
-		$items[] = array('id' => 3, 'url' => post_get_base_url('_geo', false), 'title' => _('mapa'));
+		$items[] = new MenuOption(_('mapa'), post_get_base_url('_geo'), $id, _('mapa animado'));
 	}
-	if ($tab_selected == 4) {
-		$items[] = array('id' => 4, 'url' => post_get_base_url($username, false), 'title' => $username);
-	} elseif ($current_user->user_id > 0) {
-		$items[] = array('id' => 4, 'url' => post_get_base_url($current_user->user_login, false), 'title' => $current_user->user_login);
+	if (! empty($username)) {
+		$items[] = new MenuOption($username, post_get_base_url($username), $id, $username);
 	}
 
 	if ($current_user->user_id > 0 ) {
-		$items[] = array('id' => 5, 'url' => post_get_base_url('_priv', false), 'title' => _('privados'));
+		$items[] = new MenuOption(_('privados'), post_get_base_url('_priv'), $id, _('mensajes privados'));
 	}
 
-	$feed = false;
-	$option = $tab_selected;
-
-	$vars = compact('items', 'option', 'feed');
-	return Haanga::Load('print_tabs.html', $vars);
-
-
-/*
-	$reload_text = _('recargar');
-	$active = ' class="selected"';
-
-	echo '<ul class="subheader">' . "\n";
-
-	// All
-	if ($tab_selected == 1) {
-		echo '<li'.$active.'><a href="'.post_get_base_url().'" title="'.$reload_text.'">'._('todos').'</a></li>' . "\n";
-	} else {
-		echo '<li><a href="'.post_get_base_url().'">'._('todos').'</a></li>' . "\n";
-	}
-
-	// Best
-	if ($tab_selected == 2) {
-		echo '<li'.$active.'><a href="'.post_get_base_url('_best').'" title="'.$reload_text.'">'._('popular').'</a></li>' . "\n";
-	} else {
-		echo '<li><a href="'.post_get_base_url('_best').'" title="'._('más votadas en 24 horas').'">'._('popular').'</a></li>' . "\n";
-	}
-
-	// GEO
-	if ($globals['google_maps_api']) {
-		if ($tab_selected == 3) {
-			echo '<li'.$active.'><a href="'.post_get_base_url('_geo').'" title="'.$reload_text.'">'._('mapa').'</a></li>' . "\n";
-		} else {
-			echo '<li><a href="'.post_get_base_url('_geo').'" title="'._('geo').'">'._('mapa').'</a></li>' . "\n";
-		}
-	}
-
-	// User
-	if ($tab_selected == 4) {
-		echo '<li'.$active.'><a href="'.post_get_base_url($username).'" title="'.$reload_text.'"><em>'.$username.'</em></a></li>' . "\n";
-	} elseif ($current_user->user_id > 0) {
-		echo '<li><a href="'.post_get_base_url($current_user->user_login).'">'.$current_user->user_login.'</a></li>' . "\n";
-	}
-
-	if ($current_user->user_id > 0 ) {
-		// Private messages
-		if ($tab_selected == 5) {
-			echo '<li'.$active.'><a href="'.post_get_base_url('_priv').'" title="'.$reload_text.'"><em>'._('privados').'</em></a></li>' . "\n";
-		} elseif ($current_user->user_id > 0) {
-			echo '<li><a href="'.post_get_base_url('_priv').'">'._('privados').'</a></li>' . "\n";
-		}
-	}
-
-	// END STANDARD TABS
-	echo '</ul>' . "\n";
-	*/
+	return $items;
 }
+
 
 function do_post_subheader($content, $selected = false, $rss = false, $rss_title = '') {
 	global $globals, $current_user;
 
 	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader">'."\n";
-	if ($rss) {
-		if (!$rss_title) $rss_title = 'rss2';
-		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-	} else {
-		echo '<li class="icon"><img src="'.$globals['base_static'].'img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/></li>';
-	}
 
 	if ($current_user->user_id > 0 ) {
 		if (Post::can_add()) {
-			echo '<li class="selected"><span><a class="toggler" href="javascript:post_new()" title="'._('nueva nota').'">'._('nueva nota').'&nbsp;<img src="'.$globals['base_static'].'img/common/icon_add_post_002.png" alt="" width="13" height="12"/></a></span></li>';
+			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva nota').'">&nbsp;'._('nueva nota').'<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
 		} else {
 			echo '<li><span><a href="javascript:return;">'._('nueva nota').'</a></span></li>';
 		}
@@ -118,6 +78,14 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	} elseif (! empty($content)) {
 	    echo '<li>'.$content.'</li>';
 	}
+
+	if ($rss) {
+		if (!$rss_title) $rss_title = 'rss2';
+		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
+	} else {
+		echo '<li class="icon"><img src="'.$globals['base_static'].'img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/></li>';
+	}
+
 	echo '</ul>'."\n";
 }
 
@@ -128,7 +96,7 @@ function do_priv_subheader($content, $selected = false) {
 	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader">'."\n";
 
-	echo '<li class="selected"><span><a class="toggler" href="javascript:priv_new(0)" title="'._('nuevo').'">'._('nuevo').'&nbsp;<img src="'.$globals['base_static'].'img/common/icon_add_post_002.png" alt="" width="13" height="12"/></a></span></li>';
+	echo '<li><span><a class="toggler" href="javascript:priv_new(0)" title="'._('nuevo').'">'._('nuevo').'&nbsp;<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
 
 	if (is_array($content)) {
 		$n = 0;

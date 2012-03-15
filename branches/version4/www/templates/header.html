@@ -62,14 +62,14 @@
 
 
 {% if globals.link %}
-	<link rel="pingback" href="http://{{globals.server_name}}{{globals.base_url}}xmlrpc.php"/>
+	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url }}xmlrpc.php"/>
 	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
 {% endif %}
 
-<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{globals.base_url}}opensearch_plugin.php"/>
-<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{globals.base_url}}rss2.php?status=queued" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{globals.base_url}}comments_rss2.php" />
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url }}opensearch_plugin.php"/>
+<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php?status=queued" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss2.php" />
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
@@ -136,18 +136,18 @@
 
   <ul id="userinfo">
 	{% if current_user.user_id > 0 %}
-		<li class="usertext"><a href="{{ current_user.user_login|useruri }}" class="tooltip u:{{current_user.user_id}}">{{current_user.user_login}}</a></li>
+		<li class="usertext"><a href="{{ current_user.user_login|useruri }}" class="tooltip u:{{ current_user.user_id }}">{{current_user.user_login}}</a></li>
 			{% if current_user.admin %}
 				<li class="usertext"><a href="{{ globals.base_url }}admin/bans.php">admin</a></li>
 			{% endif %}
-		<li><a href="{{ current_user.user_login|useruri }}"><img class="tooltip u:{{current_user.user_id}}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 25 %}" width="25" height="25" alt="{{current_user.user_login}}"/></a></li>
+		<li><a href="{{ current_user.user_login|useruri }}"><img class="tooltip u:{{ current_user.user_id }}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 25 %}" width="25" height="25" alt="{{current_user.user_login}}"/></a></li>
 		<li class="userpend"><a href="#">&nbsp;{{ current_user.notifications }}&nbsp;</a></li>
 
 
-		<li class="userlogin"><a href="{{globals.base_url}}login.php?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}"><img src="img/common/h9_login.png" width="16" height="16" alt=""/></a></li>
+		<li class="userlogin"><a href="{{ globals.base_url }}login.php?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}"><img src="{{ globals.base_url }}img/common/h9_login.png" width="16" height="16" alt=""/></a></li>
 		{% else %}
-		<li class="usertext"><a href="{{globals.base_url}}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %}</a></li>
-		<li class="usertext"><a href="{{globals.base_url}}register.php">{% trans _('registrarse') %}</a></li>
+		<li class="usertext"><a href="{{ globals.base_url }}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %}</a></li>
+		<li class="usertext"><a href="{{ globals.base_url }}register.php">{% trans _('registrarse') %}</a></li>
     {% endif %}
   </ul>
 
@@ -155,15 +155,35 @@
 
 <div id="header-center">
   <a href="{{ globals.base_url }}" class="logo-eli">{% trans _('menéame') %}</a>
-  <ul id="edname">
-    <li>{% trans _('edición') %} <b>{{ this_site.name_long }}</b></li>
-  </ul>
+  <div class="edname">
+    {% trans _('edición') %} <b>{{ this_site.name_long }}</b>
+
+	{% if globals.facebook_page || globals.twitter_page %}
+		&nbsp;
+		{% if globals.facebook_page %}
+			<a href="{{ globals.facebook_page }}" title="{% trans _('en Facebook') %}" >
+			<img src="{{globals.base_static}}img/external/fb-icon-01.png" width="18" height="18" alt="Facebook"/>
+			</a>
+		{% endif %}
+		{% if globals.twitter_page %}
+			<a href="{{ globals.twitter_page }}" title="{% trans _('en Twiter') %}" >
+			<img src="{{globals.base_static}}img/external/tw-icon-01.png" width="18" height="18" alt="Twitter"/>
+			</a>
+		{% endif %}
+	{% endif %}
+
+	</div>
 
 <!--search-->
   <div id="searchform">
     <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
-    <input class="searchbox" name="q" type="text" />
-    <a href="javascript:document.top_search.submit()"></a>
+		{% if globals.search_options %}
+			{% for name, value in globals.search_options %}
+				<input type="hidden" name="{{name}}" value="{{value}}"/>
+			{% endfor %}
+		{% endif %}
+		<input class="searchbox" name="q" type="text" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+		<a href="javascript:document.top_search.submit()"></a>
     </form>
   </div>
 <!--end search-->

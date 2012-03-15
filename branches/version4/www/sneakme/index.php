@@ -41,7 +41,6 @@ $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 $page_title = _('nótame') . ' | '. $globals['site_name'];
 $view = false;
-$globals['ads'] = true;
 
 switch ($argv[0]) {
 	case '_best':
@@ -153,8 +152,7 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 	$globals['noindex'] = true;
 }
 
-do_header($page_title, _('nótame'));
-do_posts_tabs($tab_option, $user->username);
+do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
 $post = new Post;
 
 $conversation_extra = '';

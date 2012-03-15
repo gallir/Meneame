@@ -22,6 +22,20 @@ $globals['extra_css'] = Array();
 $globals['post_js'] = Array();
 
 
+class MenuOption{
+	// Small helper class to store links' information
+	function __construct($text, $url, $active = false, $title = '') {
+		$this->text = $text;
+		$this->url = $url;
+		$this->title = $title;
+		if ($active && $active == $this->text) {
+			$this->selected = true;
+		} else {
+			$this->selected = $false;
+		}
+	}
+}
+
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
@@ -52,7 +66,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	*/
 }
 
-function do_header($title, $id='home') {
+
+function do_header($title, $id='home', $options = false) {
 	global $current_user, $dblang, $globals, $db;
 
 	check_auth_page();
@@ -91,32 +106,25 @@ function do_header($title, $id='home') {
 		*/
 	}
 
-	class MenuOption{
-		// Small helper class to store links' information
-		function __construct($text, $url, $active = false, $title = '') {
-			$this->text = $text;
-			$this->url = $url;
-			$this->title = $title;
-			if ($active && $active == $this->text) {
-				$this->selected = true;
-			} else {
-				$this->selected = $false;
-			}
-		}
+
+	if (! is_array($options)) {
+		$left_options = array();
+		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
+		$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', $id, _('menear noticias pendientes'));
+		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
+		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'topstories.php', $id, _('historias más votadas'));
+		$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'topclicked.php', $id, _('historias más visitadas/leídas'));
+		$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'topactive.php', $id, _('historias más activas'));
+
+		$right_options = array();
+		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
+		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
+		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
+	} else {
+		$left_options = $options;
+		$right_options = array();
+
 	}
-
-	$left_options = array();
-	$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
-	$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', $id, _('menear noticias pendientes'));
-	$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
-	$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'topstories.php', $id, _('historias más votadas'));
-	$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'topclicked.php', $id, _('historias más visitadas/leídas'));
-	$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'topactive.php', $id, _('historias más activas'));
-
-	$right_options = array();
-	$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
-	$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
-	$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	$right_options[] = new MenuOption('<b>?</b>', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
 
 

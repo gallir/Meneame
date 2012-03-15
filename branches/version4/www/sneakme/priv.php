@@ -40,8 +40,8 @@ switch ($argv[1]) {
 
 $rows = $db->get_var("select count(*) from privates where $where");
 
-do_header($page_title);
-do_posts_tabs(5, $current_user->user_login);
+do_header($page_title, _('privados'), get_posts_menu(5, $user->username));
+
 $options = array(
 	_('recibidos') => post_get_base_url('_priv'),
 	_('enviados') => post_get_base_url('_priv').'/sent',
