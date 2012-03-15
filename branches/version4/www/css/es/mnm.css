@@ -82,12 +82,18 @@ color:#fff;
 margin-right:20px;
 position:relative;
 float:left;
-margin-top:2px;
+margin-top:1px;
 }
 
 #header-top ul#edlist li a{
 text-decoration:none;
 color:#fff;
+}
+
+#header-top ul#edlist li.selected a{
+background: url('../../img/common/h9_underline_edition01.png') bottom left repeat-x;
+padding-bottom: 4px;
+white-space: nowrap;
 }
 
 #header-top ul#edlist li a:hover{
@@ -645,7 +651,7 @@ border-bottom: solid 1px #FFEDC6;
 margin-top: -20px;
 height:26px;
 padding-left:35px;
-background-color:#f9f9f9;
+/*background-color:#f9f9f9;*/
 font-family:'Open Sans', Helvetica, sans-serif;
 list-style-type: none;
 }
@@ -869,7 +875,7 @@ clear: both;
 }
 
 .sidebox h5 {
-font-size:0.87em;
+font-size:0.9em;
 font-weight: normal;
 color:#03F;
 margin-left:50px;
@@ -942,7 +948,7 @@ padding: 0;
 .sidebox .comments li {
 clear: left;
 display:block;
-font-size: 90%;
+font-size: 0.9em;
 color:#039;
 margin: 0px 10px 10px 0;
 vertical-align: top;
@@ -1166,11 +1172,8 @@ h2 {
 margin-top: 0;
 margin-bottom: 8px;
 font-size: 160%;
-font-weight: normal;
-border-bottom-width: 1px;
-border-bottom-style: dotted;
+font-weight: bold;
 color: #FF6400;
-border-bottom-color: #FF6400;
 }
 
 /* h2 without underline */

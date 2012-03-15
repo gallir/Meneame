@@ -124,12 +124,8 @@
 
   <ul id="edlist">
 	{% for s in sites %}
-		<li>
-			{% if s.id != this_site.id %}
-				<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
-			{% else %}
-				<b>{{ s.name_long }}</b>
-			{% endif %}
+		<li {% if s.id == this_site.id %}class="selected"{% endif %}>
+			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
 		</li>
 	{% endfor %}
   </ul>

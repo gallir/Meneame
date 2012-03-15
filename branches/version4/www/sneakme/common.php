@@ -82,8 +82,6 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	if ($rss) {
 		if (!$rss_title) $rss_title = 'rss2';
 		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
-	} else {
-		echo '<li class="icon"><img src="'.$globals['base_static'].'img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/></li>';
 	}
 
 	echo '</ul>'."\n";

@@ -144,9 +144,9 @@ switch ($view) {
 $globals['extra_head'] = '<link rel="canonical" href="http://'.get_server_name().get_user_uri($user->username).'" />'."\n";
 
 if (!empty($user->names)) {
-	do_header("$login ($user->names)");
+	do_header("$login ($user->names)", 'profile', User::get_menu_items($view, $login));
 } else {
-	do_header($login);
+	do_header($login, 'profile', User::get_menu_items($view, $login));
 }
 
 // Used to show the user the number of unread answers to her comments
@@ -161,67 +161,53 @@ echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 5px">'."\n";
 $url_login = urlencode($login);
 switch ($view) {
 	case 'history':
-		do_user_tabs(2, $login, true);
 		do_history();
 		do_pages($rows, $page_size);
 		break;
 	case 'commented':
-		do_user_tabs(3, $login, true);
 		do_commented();
 		do_pages($rows, $page_size, false);
 		break;
 	case 'shaken':
-		do_user_tabs(2, $login, true);
 		do_shaken();
 		do_pages($rows, $page_size);
 		break;
 	case 'friends_shaken':
-		do_user_tabs(2, $login, true);
 		do_friends_shaken();
 		do_pages(-1, $page_size);
 		break;
 	case 'friends':
-		do_user_tabs(7, $login, true);
 		do_friends(0);
 		break;
 	case 'friend_of':
-		do_user_tabs(7, $login, true);
 		do_friends(1);
 		break;
 	case 'ignored':
-		do_user_tabs(7, $login, true);
 		do_friends(2);
 		break;
 	case 'friends_new':
-		do_user_tabs(7, $login, true);
 		do_friends(3);
 		break;
 	case 'favorites':
-		do_user_tabs(2, $login, true);
 		do_favorites();
 		do_pages($rows, $page_size);
 		break;
 	case 'favorite_comments':
-		do_user_tabs(3, $login, true);
 		do_favorite_comments();
 		do_pages($rows, $page_size);
 		break;
 	case 'shaken_comments':
-		do_user_tabs(3, $login, true);
 		do_shaken_comments();
 		do_pages($rows, $page_size);
 		break;
 	case 'categories':
-		do_user_tabs(1, $login, true);
 		do_categories();
 		break;
 	case 'conversation':
-		do_user_tabs(3, $login, true);
 		do_conversation();
 		do_pages($rows, $page_size, false);
 		break;
 	case 'profile':
-		do_user_tabs(1, $login, true);
 		do_profile();
 		break;
 	default:
@@ -574,29 +560,6 @@ function do_friends($option) {
 	}
 }
 
-function do_user_tabs($option, $user, $has_subheader = false) {
-	global $globals, $current_user;
-
-	$active = array();
-	$active[$option] = ' class="tabsub-this"';
-
-	if ($has_subheader) {
-		echo '<ul class="tabsub" style="margin-bottom: 0">'."\n";
-	} else {
-		echo '<ul class="tabsub">'."\n";
-	}
-	echo '<li'.$active[1].'><a href="'.get_user_uri($user).'">'._('personal'). '</a></li>';
-	// echo '<li'.$active[8].'><a href="'.get_user_uri($user, 'categories').'">'._('personalización'). '</a></li>';
-	//echo '<li'.$active[9].'><a href="'.get_user_uri($user, 'conversation').'">'._('conversación'). '</a></li>';
-	echo '<li'.$active[7].'><a href="'.get_user_uri($user, 'friends').'">&nbsp;<img src="'.$globals['base_static'].'img/common/icon_friend_bi_00.png" alt="amigos e ignorados" width="18" height="16" title="'._('amigos e ignorados').'"/>&nbsp;</a></li>';
-	echo '<li'.$active[2].'><a href="'.get_user_uri($user, 'history').'">'._('enlaces'). '</a></li>';
-	//echo '<li'.$active[6].'><a href="'.get_user_uri($user, 'favorites').'">&nbsp;'.FAV_YES. '&nbsp;</a></li>';
-	echo '<li'.$active[3].'><a href="'.get_user_uri($user, 'commented').'">'._('comentarios'). '</a></li>';
-	//echo '<li'.$active[4].'><a href="'.get_user_uri($user, 'shaken').'">'._('votadas'). '</a></li>';
-	echo '<li><a href="'.post_get_base_url($user).'">'._('notas'). '&nbsp;&rarr;</a></li>';
-	echo '</ul>';
-}
-
 function do_categories() {
 	global $globals, $current_user, $db, $user, $login;
 
@@ -652,30 +615,15 @@ function print_categories_checkboxes($user) {
 	Haanga::Load('user/categories.html', compact('user', 'metas', 'categories', 'selected'));
 }
 
-function do_user_subheader($content, $selected = false, $rss = false, $rss_title = '') {
+function do_user_subheader($options, $selected = false, $rss = false, $rss_title = '') {
 	global $globals;
 
-// arguments: hash array with "button text" => "button URI"; Nº of the selected button
-	echo '<ul class="subheader" style="margin-bottom: 20px">'."\n";
-	if ($rss) {
-		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'" rel="rss"><img src="'.$globals['base_static'].'img/common/feed-icon-001.png" width="18" height="18" alt="rss2"/></a></li>';
-	} else {
-		echo '<li class="icon"><img src="'.$globals['base_static'].'img/common/feed-icon-gy-001.png" width="18" height="18" alt=""/></li>';
-	}
-	if (is_array($content)) {
-		$n = 0;
-		foreach ($content as $text => $url) {
-			if ($selected == $n) $class_b = ' class = "selected"';
-			else $class_b='';
-			echo '<li'.$class_b.'>'."\n";
-			echo '<a href="'.$url.'">'.$text."</a>\n";
-			echo '</li>'."\n";
-			$n++;
-		}
-	} else {
-		echo '<h1>'.$content.'</h1>';
-	}
-	echo '</ul>'."\n";
+	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
+
+	$vars = compact(
+		'options', 'selected', 'rss', 'rss_title'
+	);
+	return Haanga::Load('/user/subheader.html', $vars);
 }
 
 ?>

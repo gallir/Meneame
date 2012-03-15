@@ -172,8 +172,10 @@ if ($tab_option == 4) {
 	);
 }  elseif ($tab_option == 1 && $current_user->user_id > 0) {
 	$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
+	$view = 0;
 
 	$options = array(
+		_('todas') => post_get_base_url(''),
 		_('amigos') => post_get_base_url("$current_user->user_login/_friends"),
 		_('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
 		_('conversación').$conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),

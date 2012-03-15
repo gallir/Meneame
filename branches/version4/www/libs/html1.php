@@ -38,32 +38,7 @@ class MenuOption{
 
 
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
-	global $globals;
-
-/*
-	$reload_text = _('recargar');
-	$active = ' class="tabmain-this"';
-
-	if ($tab_name == "main" ) {
-		$items = array(
-			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
-			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-			array('url' => 'topclicked.php', 'name' => 'topclicked', 'title' => _('más visitadas'), 'rel'=>true),
-			array('url' => 'topactive.php', 'name' => 'active', 'title' => _('destacadas'), 'rel'=>true),
-			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('menear pendientes'), 'rel'=> true),
-		);
-
-		if ($extra_tab) {
-			if ($globals['link_permalink']) $url = $globals['link_permalink'];
-			else $url = htmlentities($globals['uri']);
-			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected, 'rel'=>false);
-		}
-		$tabname = 'tabmain';
-	}
-
-	$vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
-	return Haanga::Load('do_tabs.html', $vars);
-	*/
+	/* Not used any more */
 }
 
 
@@ -109,9 +84,9 @@ function do_header($title, $id='home', $options = false) {
 
 	if (! is_array($options)) {
 		$left_options = array();
+		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
 		$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', $id, _('menear noticias pendientes'));
-		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
 		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'topstories.php', $id, _('historias más votadas'));
 		$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'topclicked.php', $id, _('historias más visitadas/leídas'));
 		$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'topactive.php', $id, _('historias más activas'));

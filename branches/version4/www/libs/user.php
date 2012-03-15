@@ -186,6 +186,50 @@ class User {
 		}
 	}
 
+	// Return the items for the top menu
+	// Used by /user.php and /profile.php
+	static function get_menu_items($view, $user) {
+		global $globals, $current_user;
+
+		switch ($view) {
+			case 'history':
+			case 'shaken':
+			case 'friends_shaken':
+			case 'favorites':
+				$id = _('historias');
+				break;
+			case 'commented':
+			case 'favorite_comments':
+			case 'shaken_comments':
+			case 'conversation':
+				$id = _('comentarios');
+				break;
+			case 'friends':
+			case 'friend_of':
+			case 'ignored':
+			case 'friends_new':
+				$id = _('relaciones');
+				break;
+			case 'categories':
+			case 'profile':
+				$id = _('personal');
+				break;
+			default:
+				do_error(_('opción inexistente'), 404);
+				break;
+		}
+
+
+		$items = array();
+		$items[] = new MenuOption(_('personal'), get_user_uri($user), $id, _('información de usuario'));
+		$items[] = new MenuOption(_('relaciones'), get_user_uri($user, 'friends'), $id, _('amigos e ignorados'));
+		$items[] = new MenuOption(_('historias'), get_user_uri($user, 'history'), $id, _('información de envíos'));
+		$items[] = new MenuOption(_('comentarios'), get_user_uri($user, 'commented'), $id, _('información de comentarios'));
+		$items[] = new MenuOption(_('notas'), post_get_base_url($user), $id, _('página de notas'));
+
+		return $items;
+	}
+
 	function __get($property) {
 		if (! $this->id > 0 || ! User::meta_valid($property) ) return false;
 

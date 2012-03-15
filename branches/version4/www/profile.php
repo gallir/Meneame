@@ -84,7 +84,7 @@ if (isset($_POST['process'])) {
 	$messages = array();
 }
 
-do_header(_('edición del perfil del usuario'). ': ' . $user->username);
+do_header(_('edición del perfil del usuario'). ': ' . $user->username, 'profile', User::get_menu_items('profile', $login));
 
 
 //echo $save_messages; // We do it later because teh profile could change header's info

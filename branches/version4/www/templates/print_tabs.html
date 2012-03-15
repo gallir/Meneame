@@ -2,7 +2,6 @@
 {% for item in items %}
     <li {% if item.id == option OR item.selected %}class="selected"{% endif %}>
             <a href="{{globals.base_url}}{{item.url}}">{{ item.title }}</a>
-        </span>
     </li>
 {% endfor %}
 
