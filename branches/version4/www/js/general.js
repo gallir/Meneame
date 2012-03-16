@@ -795,6 +795,7 @@ $(document).ready(function () {
 		}
 	}
 	mDialog.init();
+	notifier.init();
 	fancyBox.init();
 });
 
@@ -1048,7 +1049,6 @@ var fancyBox = new function () {
 	this.modifyCallback = function () {
 		var scan = this.scan;
 		setTimeout(function() {
-			//$("#newswrap").on("DOMSubtreeModified", function(e) {
 			$('#newswrap,#singlewrap').on("ajaxComplete", function() {
 				if (!timeout) {
 					timeout = setTimeout(scan, 200);
@@ -1056,6 +1056,67 @@ var fancyBox = new function () {
 			});
 		}, 200);
 	};
+}
+
+var notifier = new function () {
+	var timeout = false;
+	var area;
+	var panel_visible = false;
+
+	var click_handler = function (e) {
+		if ($(e.target).closest('#notifier_panel').length == 0) {
+			// click happened outside of the notifier panel, hide it
+			notifier.hide();
+		}
+	}
+
+	this.click = function () {
+		if (! panel_visible) {
+			panel_visible = true;
+			$('<div id="notifier_panel"> </div>').appendTo("body");
+			$('body').bind('click', click_handler);
+
+			$.getJSON(base_url+"backend/notifications.json.php", function (data) {
+				for(var i=0; i<data.length; i++) {
+					o = data[i];
+					$("#notifier_panel").append("<div style='background:url(\"" + o.icon + "\") no-repeat 5px 5px'><a href='" + o.url + "'>" + o.count + " " + o.text + "</a></div>");
+				}
+			});
+		} else {
+			this.hide();
+		}
+		return false;
+	}
+
+
+	this.hide = function () {
+		$("#notifier_panel").remove();
+		$('body').unbind('click', click_handler);
+		panel_visible = false;
+	}
+
+	this.update = function() {
+		$.getJSON(base_url+'backend/notifications.json.php?totals', function (data) { area.html(data.total); });
+		timeout = setTimeout(notifier.update, 30000);
+	}
+
+	this.init = function () {
+		if (! user_id > 0 || (area = $('#notifier')).lenght == 0) return;
+
+		area.click(this.click);
+		$(window).focus(function() {
+			if (! timeout) {
+				notifier.update();
+			}
+		});
+		$(window).blur(function() {
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = false;
+			}
+		});
+		this.update();
+	}
 }
 
 {% endspacefull %}

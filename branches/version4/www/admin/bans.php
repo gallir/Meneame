@@ -9,6 +9,8 @@
 include('../config.php');
 include(mnminclude.'html1.php');
 
+$globals['extra_css'][] = 'admin.css';
+
 $globals['ads'] = false;
 
 do_header(_('Administración de bans'));
@@ -42,7 +44,7 @@ function admin_tabs($tab_selected = false) {
 	global $globals;
 
 	$active = ' class="tabsub-this"';
-	
+
 	echo '<ul class="tabsub">' . "\n";
 
 	// url with parameters?
@@ -83,7 +85,7 @@ function admin_bans($ban_type) {
 			del_ban($_REQUEST["del_ban"]);
 		}
 	}
-	
+
 	// ex container-wide
 	echo '<div class="genericform" style="margin:0">';
 
@@ -94,15 +96,15 @@ function admin_bans($ban_type) {
 	echo '<input type="text" name="s" ';
 	if ($_REQUEST["s"]) {
 		$_REQUEST["s"] = clean_text($_REQUEST["s"]);
-		echo ' value="'.$_REQUEST["s"].'" '; 
-	} else { 
-		echo ' value="'._('buscar').'..." '; 
+		echo ' value="'.$_REQUEST["s"].'" ';
+	} else {
+		echo ' value="'._('buscar').'..." ';
 	}
 	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar').'...\';" onfocus="if(this.value==\''._('buscar').'...\') this.value=\'\';" />';
-	
+
 	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="'._('buscar').'" alt="'._('buscar').'" src="'.$globals['base_static'].'img/common/search-03.png" />';
 	echo '</form>';
-	echo '</div>'; 
+	echo '</div>';
 
 	if ($current_user->user_level=="god") {
 		echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=new">'._('Nuevo ban').'</a> ]';
@@ -115,7 +117,7 @@ function admin_bans($ban_type) {
 	}
 
 	echo '<table class="decorated" style="font-size: 10pt">';
-	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;'; 
+	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_text">'.$ban_type.'</a></th>';
 	echo '<th width="30%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
@@ -128,7 +130,7 @@ function admin_bans($ban_type) {
 	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
 	echo 'orderby=ban_expire">'._('fecha caducidad').'</a></th>';
 	echo '<th>'._('Editar / Borrar').'</th></tr>';
-	
+
 	switch ($_REQUEST["op"]) {
 		case 'new':
 			echo '<tr><td>';
@@ -194,9 +196,9 @@ function admin_bans($ban_type) {
 			}
 		}
 		$where= "WHERE ban_type='".$ban_type."'";
-		if ($_REQUEST["s"]) { 
+		if ($_REQUEST["s"]) {
 			$search_text = $db->escape($_REQUEST["s"]);
-			$where .=" AND (ban_text LIKE '%$search_text%' OR ban_comment LIKE '%$search_text%')"; 
+			$where .=" AND (ban_text LIKE '%$search_text%' OR ban_comment LIKE '%$search_text%')";
 		}
 		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." $order LIMIT $offset,$page_size");
 		$rows = $db->get_var("SELECT count(*) FROM bans ".$where);

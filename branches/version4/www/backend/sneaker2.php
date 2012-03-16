@@ -105,13 +105,6 @@ $db->barrier();
 if($last_timestamp == 0) $last_timestamp = $now_f;
 if(intval($_REQUEST['r']) % 10 == 0) {
 	update_sneakers($data);
-	if ($current_user->user_id > 0) {
-		// Update conversation counters
-		$data['p_conv_c'] = Post::get_unread_conversations($current_user->user_id);
-		$data['c_conv_c'] = Comment::get_unread_conversations($current_user->user_id);
-		$data['n_friends_c'] = count(User::get_new_friends($current_user->user_id));
-		$data['p_mess_c'] = PrivateMessage::get_unread($current_user->user_id);
-	}
 }
 $data['ts'] = $last_timestamp;
 $data['v'] = $globals['sneak_version'];

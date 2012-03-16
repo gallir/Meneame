@@ -62,25 +62,10 @@ function do_header($title, $id='home', $options = false) {
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
 
-
-	// Build data and objects for the options in the geader
 /*
 	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
 	else $greeting = _('hola');
 */
-	if ($current_user->user_id > 0) {
-		$current_user->notifications = Post::get_unread_conversations($current_user->user_id)
-					+ Comment::get_unread_conversations($current_user->user_id)
-					+ PrivateMessage::get_unread($current_user->user_id)
-					+ count(User::get_new_friends($current_user->user_id));
-
-/*		$current_user->posts_answers = Post::get_unread_conversations($current_user->user_id);
-		$current_user->comments_answers = Comment::get_unread_conversations($current_user->user_id);
-		$current_user->private_messages = PrivateMessage::get_unread($current_user->user_id);
-		$current_user->new_friends = count(User::get_new_friends($current_user->user_id));
-		*/
-	}
-
 
 	if (! is_array($options)) {
 		$left_options = array();
@@ -98,7 +83,8 @@ function do_header($title, $id='home', $options = false) {
 	} else {
 		$left_options = $options;
 		$right_options = array();
-
+		$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
+		$right_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', '', _('menear noticias pendientes'));
 	}
 	$right_options[] = new MenuOption('<b>?</b>', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
 
@@ -139,80 +125,6 @@ function do_rss_box($search_rss = 'rss2.php') {
 	if ($globals['mobile']) return;
 
 	return Haanga::Load('rss_box.html', compact('search_rss'));
-}
-
-function get_toggler_plusminus($container_id, $enabled = false) {
-	global $globals;
-
-	static $n = 0;
-
-	if ($enabled) {
-		$image = $globals['base_static'].'img/common/minus-001.png';
-	} else {
-		$image = $globals['base_static'].'img/common/plus-001.png';
-	}
-	echo "<script type=\"text/javascript\">";
-	if ($n == 0) {
-		echo "var plus = '".$globals['static_server']."' + base_url + 'img/common/plus-001.png';\n";
-		echo "var minus = '".$globals['static_server']."' + base_url + 'img/common/minus-001.png';\n";
-	}
-	echo "bindTogglePlusMinus('toggle_i_$n', 'toggle_l_$n', '$container_id')";
-	echo "</script>\n";
-	return "<a class='toggler' id='toggle_l_$n' href='' title='+/-'><img src='$image' id='toggle_i_$n' alt='+/-' width='18' height='18'/></a>";
-	$n++;
-}
-
-function do_mnu_categories_horizontal($what_cat_id) {
-	global $db, $dblang, $globals;
-
-	echo '<div id="topcatlist" class="catsub-block"';
-	if (! $what_cat_id) echo ' style="display:none;"';
-	echo "><ul>\n";
-
-	$query=preg_replace('/category=[0-9]*/', '', $_SERVER['QUERY_STRING']);
-	// If a meta is not a "virtual" one, delete it.
-	$query=preg_replace('/meta=[a-z]+/i', '', $query);
-	// Always return to page 1
-	$query=preg_replace('/page=[0-9]*/', '', $query);
-	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
-	if(!empty($query)) {
-		$query = htmlspecialchars($query, ENT_QUOTES);
-		$query = "&amp;$query";
-	}
-
-	// draw categories
-	if (!empty($globals['meta_categories'])) { // The list of categories of the selected meta
-		//$category_condition = 'category_id in ('.$globals['meta_categories'].')';
-		$category_condition = 'category in ('.$globals['meta_categories'].')';
-	} else {
-		$category_condition = 'category_parent > 0';
-	}
-	$categories = $db->get_results("SELECT SQL_CACHE category_id, category_name FROM sub_categories, categories WHERE id = ".SitesMgr::my_id()." AND category_id = category AND $category_condition ORDER BY category_name ASC");
-	if ($categories) {
-		$i = 0;
-		foreach ($categories as $category) {
-			if($category->category_id == $what_cat_id) {
-				$globals['category_id'] = $category->category_id;
-				$globals['category_name'] = $category->category_name;
-				$thiscat = ' class="thiscat"';
-			} else {
-				$thiscat = '';
-			}
-
-			echo '<li'.$thiscat.'>';
-			if ($i > 0) {
-				echo '&bull; &nbsp;';
-			}
-			$i++;
-			echo '<a href="?category='.$category->category_id.$query.'">';
-			echo _($category->category_name);
-			echo "</a></li>";
-		}
-	}
-
-	echo '</ul>';
-	echo '</div>' . "\n";
-
 }
 
 function force_authentication() {

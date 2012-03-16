@@ -13,6 +13,7 @@ stated otherwise in individual files.
 /* sneaker */
 
 .sneaker {
+margin-top: -19px;
 background: url(../../img/mnm/elmnm-sneak-reverse02.png) 97% 95% no-repeat;
 }
 

@@ -14,30 +14,31 @@ $globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();
 
+// Check the tab options and set corresponging JS variables
+if ($current_user->user_id > 0) {
+	if (!empty($_REQUEST['friends'])) {
+		$option = _('amigos');
+	} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
+		$option = _('admin');
+	} else {
+		$option = _('todos');
+	}
+	// Haanga::Load('sneak/tabs.html', compact('option'));
+}
+//////
+
 // Start html
 $globals['extra_css'][] = 'es/sneak.css?'.$globals['sneak_version'];
 if (!empty($_REQUEST['friends'])) {
-	do_header(_('amigos en la fisgona'), _('fisgona'));
+	do_header(_('amigos en la fisgona'), _('fisgona'), sneak_menu_items($option));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {
-	do_header(_('admin'), _('fisgona'));
+	do_header(_('admin'), _('fisgona'), sneak_menu_items($option));
 } else {
-	do_header(_('fisgona'), _('fisgona'));
+	do_header(_('fisgona'), _('fisgona'), sneak_menu_items($option));
 }
 
 Haanga::Load('sneak/base.html');
 
-// Check the tab options and set corresponging JS variables
-if ($current_user->user_id > 0) {
-	if (!empty($_REQUEST['friends'])) {
-		$option = 2;
-	} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
-		$option = 3;
-	} else {
-		$option = 1;
-	}
-	Haanga::Load('sneak/tabs.html', compact('option'));
-}
-//////
 
 
 $globals['sneak_telnet'] = false;
@@ -45,4 +46,13 @@ Haanga::Load('sneak/form.html', compact('max_items'));
 
 do_footer();
 
-?>
+function sneak_menu_items($id) {
+	global $globals;
+
+	$items = array();
+	$items[] = new MenuOption(_('todos'), $globals['base_url'].'sneak.php', $id, _('todos'));
+	$items[] = new MenuOption(_('amigos'), $globals['base_url'].'sneak.php?friends=1', $id, _('amigos'));
+	$items[] = new MenuOption(_('admin'), $globals['base_url'].'sneak.php?admin=1', $id, _('admin'));
+
+	return $items;
+}
