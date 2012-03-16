@@ -1096,12 +1096,16 @@ var notifier = new function () {
 	}
 
 	this.update = function() {
-		$.getJSON(base_url+'backend/notifications.json.php?totals', function (data) { area.html(data.total); });
-		timeout = setTimeout(notifier.update, 30000);
+		$.getJSON(base_url+'backend/notifications.json.php?totals',
+			function (data) {
+				var pre = area.html();
+				if (pre.length == 0 || pre != data.total) area.html(data.total);
+			});
+		timeout = setTimeout(notifier.update, 3000);
 	}
 
 	this.init = function () {
-		if (! user_id > 0 || (area = $('#notifier')).lenght == 0) return;
+		if (! user_id > 0 || (area = $('#notifier')).length == 0) return;
 
 		area.click(this.click);
 		$(window).focus(function() {

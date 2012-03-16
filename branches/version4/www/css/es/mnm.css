@@ -2114,8 +2114,12 @@ position: relative;
 color:#333;
 padding:7px 0px 2px 30px;
 margin-bottom:0px;
-border-bottom:1px solid #ddd;
+border-top:1px solid #ddd;
 height:22px;
+}
+
+#notifier_panel div:first-child {
+border-top:none;
 }
 
 #notifier_panel div:hover {
