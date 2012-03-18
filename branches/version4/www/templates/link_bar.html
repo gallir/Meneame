@@ -94,72 +94,13 @@ mobile_client = {{ globals.mobile }};
 		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
 		{% endif %}
 
-		<div class="info"><a class="tooltip l:{{ self.id }}">i</a></div>
-
+		<a class="tooltip l:{{ self.id }} info">i</a>
+		<a class="close" href="{{ self.url }}">{% trans _('cerrar barra') %}</a>
 		</div>
-
-
-
-
-
-
-
-	{#
-	<ul id="edlist">
-	{% for s in sites %}
-		<li {% if s.id == this_site.id %}class="selected"{% endif %}>
-			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
-		</li>
-	{% endfor %}
-	</ul>
-	#}
 
 	{% include "header_userinfo.html" %}
 
 	</div><!--header-top-->
-
-
-{#
-		<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" id="logo">{% trans _('ir a noticia en menéame') %}</a>
-
-		<div id="votes">
-			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong><br/>{% trans _('meneos') %}</div>
-
-			<div class="menealo" id="a-va-{{ self.id }}">
-			{% if self.votes_enabled %}
-				{% if not self.voted %}
-					<a class="menealo" href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
-				{% else %}
-					{% if self.voted > 0 %}
-					<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
-					{% else %}
-					<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
-					{% endif %}
-				{% endif %}
-			{% endif %}
-			</div>
-
-
-
-		{% if self.can_vote_negative %}
-			<form  class="tool" action="" id="problem-{{ self.id }}">
-			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
-				<option value="0" selected="selected">{% trans _('problema') %}</option>
-				{% for pkey, pvalue in globals.negative_votes_values %}
-					<option value="{{pkey}}">{{ pvalue }}</option>
-				{% endfor %}
-			</select>
-			</form>
-		{% endif %}
-
-		{% if current_user.user_id > 0 %}
-		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
-		{% endif %}
-
-		<div class="info"><a class="tooltip l:{{ self.id }}">i</a></div>
-
-		</div>
-#}
 
 {% try_include 'private/stats.html' %}
 </div>

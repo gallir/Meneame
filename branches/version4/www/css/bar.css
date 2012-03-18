@@ -22,21 +22,7 @@ height: 100%;
 margin-left: 2.0em;
 padding-top: 1px;
 padding-bottom: 0px;
-}
-
-#header #votes .info {
-display: inline;
-float: left;
-font-size: 14px;
-font-family: Mono,Serif;
-font-weight: bold;
-margin: 3px 0.5em 0 1em;
 overflow: hidden;
-}
-
-#header #votes .info a {
-color: #FFF;
-text-decoration: underline;
 }
 
 .mnm-queued,
@@ -48,6 +34,7 @@ float: left;
 font-size: 12px;
 padding: 1px 0 1px 0;
 margin: 0 0.5em 0 0;
+text-align: center;
 }
 
 .tool {
@@ -69,13 +56,32 @@ background-color: white;
 padding-left: 0.3em;
 padding-right: 0.3em;
 font-size: 10px;
-padding: 1px 4px 1px 4px;
+padding: 0 4px 0 4px;
 }
 
 .tool select {
 font-size: x-small;
 }
 
+.info {
+display: inline;
+float: left;
+font-size: 15px;
+font-family: Mono,Serif;
+font-weight: bold;
+margin: 3px 10px 0 10px;
+color: #FFF;
+}
+
+.info a {
+color: #FFF;
+text-decoration: underline;
+}
+
+.close, .close:visited {
+margin: 3px 10px 0 10px;
+color: #FFF;
+}
 
 #content {
 position: absolute;
@@ -88,4 +94,3 @@ height: 100%;
 background: #fff;
 padding-top: 1px;
 }
-
