@@ -1064,9 +1064,11 @@ var notifier = new function () {
 	var panel_visible = false;
 
 	var click_handler = function (e) {
+		if (! panel_visible) return;
 		if ($(e.target).closest('#notifier_panel').length == 0) {
 			// click happened outside of the notifier panel, hide it
 			notifier.hide();
+			e.preventDefault();
 		}
 	}
 
@@ -1074,7 +1076,7 @@ var notifier = new function () {
 		if (! panel_visible) {
 			panel_visible = true;
 			$('<div id="notifier_panel"> </div>').appendTo("body");
-			$('body').bind('click', click_handler);
+			$('html').bind('click', click_handler);
 
 			$.getJSON(base_url+"backend/notifications.json.php", function (data) {
 				for(var i=0; i<data.length; i++) {
@@ -1083,7 +1085,7 @@ var notifier = new function () {
 				}
 			});
 		} else {
-			this.hide();
+			notifier.hide();
 		}
 		return false;
 	}
@@ -1091,7 +1093,7 @@ var notifier = new function () {
 
 	this.hide = function () {
 		$("#notifier_panel").remove();
-		$('body').unbind('click', click_handler);
+		$('html').unbind('click', click_handler);
 		panel_visible = false;
 	}
 
@@ -1101,7 +1103,7 @@ var notifier = new function () {
 				var pre = area.html();
 				if (pre.length == 0 || pre != data.total) area.html(data.total);
 			});
-		timeout = setTimeout(notifier.update, 3000);
+		timeout = setTimeout(notifier.update, 30000); /* update every 30 seconds */
 	}
 
 	this.init = function () {

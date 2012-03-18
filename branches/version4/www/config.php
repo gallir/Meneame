@@ -39,8 +39,10 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 1; // internal version, to for reloads
+$globals['v'] = 2; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
+
+$globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
 
 // Show only these meta categories, false for all
 $globals['allowed_metas'] = false;
@@ -349,6 +351,8 @@ $globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min
 $globals['js_main'] = 'general.js.php'; //?N is to force reloading for newer versions
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css'; //?N is to force reloading for newer versions
+// Load webfonts from the specified url
+$globals['css_webfonts'] = 'http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
@@ -359,6 +363,7 @@ $globals['enabled_tags'] = 'b|i|em|strong|del|sup|sub'; // HTML tags allowed for
 
 // Greeting in several languages
 // Unfortunately, array constructor does not work properly with GNU _()
+/*
 $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
 		'apa'=>'catalán','com va'=>'catalán','va bé?'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
 		'aupa'=>'español','ieup'=>'vasco','gñap'=>'gñapés','aiya'=>'quenya','hello'=>'inglés',
@@ -386,6 +391,7 @@ $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>
 		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon',
 		'Mba\'eichapa' => 'guaraní', 'Mba\'eteko' => 'guaraní'
 	);
+*/
 
 // This is for SMS messages
 // Put your authorised addresses

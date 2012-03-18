@@ -9,17 +9,26 @@
 
 
 {% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}?v={{globals.v}}"/>
+{% endif %}
+
+{% if globals.css_color %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
 {% endif %}
 
 {% if globals.mobile %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
-{% else %}
-<style type="text/css">
-@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
-</style>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
+	{% else %}
+	<style type="text/css">
+	@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
+	</style>
 {% endif %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css?v=1"/>
+
+{% if globals.css_webfonts %}
+	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+{% endif %}
+
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css?v={{globals.v}}"/>
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
@@ -30,7 +39,7 @@
 {% endif %}
 
 <script src="{{ globals.jquery }}" type="text/javascript"></script>
-<script src="{{ globals.base_url }}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript">
 if(top.location != self.location)top.location = self.location;
@@ -45,16 +54,19 @@ mobile_client = {{ globals.mobile }};
 
 
 <body>
-	<div id="header">
-		<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" id="logo">{% trans _('ir a noticia en menéame') %}</a>
+<div id="header">
+	<div id="header-top">
+
+	<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" class="logo-mnm">{% trans _('ir a noticia en menéame') %}</a>
+
 
 		<div id="votes">
-			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong><br/>{% trans _('meneos') %}</div>
+			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong></div>
 
 			<div class="menealo" id="a-va-{{ self.id }}">
 			{% if self.votes_enabled %}
 				{% if not self.voted %}
-					<a class="menealo" href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+					<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
 				{% else %}
 					{% if self.voted > 0 %}
 					<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
@@ -65,10 +77,6 @@ mobile_client = {{ globals.mobile }};
 			{% endif %}
 			</div>
 
-
-{#
-		<h1><a href="{{ self.url }}">{{ self.title }}</a></h1>
-#}
 
 
 		{% if self.can_vote_negative %}
@@ -90,20 +98,73 @@ mobile_client = {{ globals.mobile }};
 
 		</div>
 
-		<ul class="headtools">
-			<li id="bar">
-				<a href="{{ self.url }}">{% trans _('cerrar barra') %} <b>X</b></a>
-			</li>
-			{% if current_user.authenticated %}
-				<li><a href="{{ current_user.user_login|useruri }}">
-				{{current_user.user_login}}&nbsp;<img src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 20 %}" width="20" height="20" alt="{{current_user.user_login}}"/></a></li>
+
+
+
+
+
+
+	{#
+	<ul id="edlist">
+	{% for s in sites %}
+		<li {% if s.id == this_site.id %}class="selected"{% endif %}>
+			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
+		</li>
+	{% endfor %}
+	</ul>
+	#}
+
+	{% include "header_userinfo.html" %}
+
+	</div><!--header-top-->
+
+
+{#
+		<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" id="logo">{% trans _('ir a noticia en menéame') %}</a>
+
+		<div id="votes">
+			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong><br/>{% trans _('meneos') %}</div>
+
+			<div class="menealo" id="a-va-{{ self.id }}">
+			{% if self.votes_enabled %}
+				{% if not self.voted %}
+					<a class="menealo" href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+				{% else %}
+					{% if self.voted > 0 %}
+					<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
+					{% else %}
+					<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
+					{% endif %}
+				{% endif %}
 			{% endif %}
-		</ul>
+			</div>
 
-		{% try_include 'private/stats.html' %}
 
-	</div>
-	<iframe id="content" frameborder="0"  width="100%" height="100%" src="{{ self.url }}"></iframe>
+
+		{% if self.can_vote_negative %}
+			<form  class="tool" action="" id="problem-{{ self.id }}">
+			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+				<option value="0" selected="selected">{% trans _('problema') %}</option>
+				{% for pkey, pvalue in globals.negative_votes_values %}
+					<option value="{{pkey}}">{{ pvalue }}</option>
+				{% endfor %}
+			</select>
+			</form>
+		{% endif %}
+
+		{% if current_user.user_id > 0 %}
+		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
+		{% endif %}
+
+		<div class="info"><a class="tooltip l:{{ self.id }}">i</a></div>
+
+		</div>
+#}
+
+{% try_include 'private/stats.html' %}
+</div>
+
+<iframe id="content" frameborder="0"  width="100%" height="100%" src="{{ self.url }}"></iframe>
 </body>
 
 </html>

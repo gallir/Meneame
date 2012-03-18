@@ -15,18 +15,19 @@ overflow: hidden;
 z-index: 1;
 }
 
+
 #header #votes {
 float: left;
 height: 100%;
 margin-left: 2.0em;
-padding-top: 3px;
-padding-bottom: 1px;
+padding-top: 1px;
+padding-bottom: 0px;
 }
 
 #header #votes .info {
 display: inline;
 float: left;
-font-size: 12pt;
+font-size: 14px;
 font-family: Mono,Serif;
 font-weight: bold;
 margin: 3px 0.5em 0 1em;
@@ -38,55 +39,47 @@ color: #FFF;
 text-decoration: underline;
 }
 
-#header #votes .mnm-queued,
-#header #votes .mnm-published,
-#header #votes .mnm-discarded {
-line-height: 0.8em;
+.mnm-queued,
+.mnm-published,
+.mnm-discarded {
 width: 5.0em;
 background-color: transparent;
 float: left;
-font-size: 7.5pt;
+font-size: 12px;
+padding: 1px 0 1px 0;
 margin: 0 0.5em 0 0;
 }
 
-#header #votes .tool {
+.tool {
 background-color: transparent;
 float: left;
 font-size: 7.5pt;
-padding-top: 5px;
+padding-top: 2px;
 margin-left: 10px;
 }
 
-#header #votes .menealo {
+.menealo {
 float: left;
 margin-left: 5px;
 }
 
-#header #votes .menealo a,
-#header #votes .menealo span {
+.menealo a,
+.menealo span {
 background-color: white;
 padding-left: 0.3em;
 padding-right: 0.3em;
-font-size: 7.5pt;
+font-size: 10px;
+padding: 1px 4px 1px 4px;
 }
 
-#header #votes .tool select {
+.tool select {
 font-size: x-small;
 }
 
-#header ul.headtools {
-float: right;
-}
-
-#header ul.headtools li#bar {
-display: block;
-text-align: left;
-font-size: small;
-}
 
 #content {
 position: absolute;
-top: 34px;
+top: 25px;
 bottom: 0px;
 left: 0px;
 right: 0px;

@@ -86,7 +86,9 @@ function do_header($title, $id='home', $options = false) {
 		$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
 		$right_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', '', _('menear noticias pendientes'));
 	}
-	$right_options[] = new MenuOption('<b>?</b>', 'http://meneame.wikispaces.com/Comenzando', false, _('ayuda para principiantes'));
+	if (! empty($globals['help_url'])) {
+		$right_options[] = new MenuOption('<b>?</b>', $globals['help_url'], false, _('ayuda para principiantes'));
+	}
 
 
 	$sites = $db->get_results("select * from subs where visible order by id asc");

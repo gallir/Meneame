@@ -1102,14 +1102,14 @@ function check_ip_behind_proxy() {
 	return $last_seen;
 }
 
-function http_cache() {
+function http_cache($maxage = 30) {
 	// Send cache control
 	global $globals, $current_user;
 
 	if ($current_user->user_id) $globals['cache-control'][] = 's-maxage=0, private, community="'.$current_user->user_login.'"';
 
 	if ($globals['cache-control']) header('Cache-Control: ' . implode(', ', $globals['cache-control']));
-	else header('Cache-Control: s-maxage=30');
+	else header('Cache-Control: s-maxage='.$maxage);
 }
 
 // Used to store countes, in order to avoid expensives select count(*)
