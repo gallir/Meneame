@@ -7,9 +7,8 @@
 		<li><a href="{{ current_user.user_login|useruri }}"><img class="tooltip u:{{ current_user.user_id }}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 25 %}" width="25" height="25" alt="{{current_user.user_login}}"/></a></li>
 		<li class="userpend" id="notifier"></li></li>
 
-
 		<li class="userlogin"><a href="{{ globals.base_url }}login.php?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}"><img src="{{ globals.base_url }}img/common/h9_login.png" width="16" height="16" alt=""/></a></li>
-		{% else %}
+	{% else %}
 		<li class="usertext"><a href="{{ globals.base_url }}login.php?return={{globals.uri|urlencode}}">{% trans _('login') %}</a></li>
 		<li class="usertext"><a href="{{ globals.base_url }}register.php">{% trans _('registrarse') %}</a></li>
     {% endif %}

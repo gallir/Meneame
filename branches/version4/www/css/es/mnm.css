@@ -13,8 +13,7 @@ padding: 0;
 
 body {
 font-family: Arial, Helvetica, sans-serif;
-font-size: 10.5pt;
-text-align: center;
+font-size: 10.2pt;
 background-color: #fff;
 background-image: url('../../img/common/bkg-01.png');
 color: #000;
@@ -109,6 +108,7 @@ margin:0;
 padding:0;
 float:right;
 }
+
 
 #header-top ul#userinfo li{
 position:relative;
@@ -412,7 +412,7 @@ padding-top: 10px;
 }
 
 #newswrap {
-margin: 10px 318px 0 4px;
+margin: 10px 316px 0 4px;
 }
 
 #singlewrap {
@@ -845,7 +845,7 @@ padding-bottom: 0;
 .thumbnail {
 overflow: hidden;
 float: right;
-margin: 0 4px 2px 4px;
+margin: 0 2px 2px 4px;
 box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -moz-box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);

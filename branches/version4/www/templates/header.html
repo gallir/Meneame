@@ -180,6 +180,10 @@
 	{% for o in right_options %}
 	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
 	{% endfor %}
+
+	{% if globals.help_url %}
+		<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
+	{% endif %}
   </ul>
 
 </div><!--header-menu01-->
