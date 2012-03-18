@@ -629,7 +629,7 @@ margin: 2px 0 10px 0;
 padding-top: 6px;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
-opacity: 0.8; /* Alert */
+opacity: 0.9; /* Alert */
 border: #ff6400 1px solid;
 border-radius: 3px;
 -moz-border-radius: 3px;
