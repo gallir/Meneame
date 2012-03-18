@@ -629,6 +629,7 @@ margin: 2px 0 10px 0;
 padding-top: 6px;
 color: #fff;
 background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
+opacity: 0.8; /* Alert */
 border: #ff6400 1px solid;
 border-radius: 3px;
 -moz-border-radius: 3px;
@@ -1187,6 +1188,7 @@ padding: 4px 0 4px 0;
 .mnm-published {
 background: #FF6400 url(../../img/mnm/elmnm-p03.png) top left no-repeat;
 border-color: #FF6400;
+opacity: 0.9; /* Alert */
 }
 
 .mnm-queued, .mnm-queued a, .mnm-queued a:visited {
