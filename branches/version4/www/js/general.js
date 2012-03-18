@@ -1102,6 +1102,8 @@ var notifier = new function () {
 			function (data) {
 				var pre = area.html();
 				if (pre.length == 0 || pre != data.total) area.html(data.total);
+				if (data.total > 0) area.addClass('nonzero');
+				else area.removeClass('nonzero');
 			});
 		timeout = setTimeout(notifier.update, 30000); /* update every 30 seconds */
 	}

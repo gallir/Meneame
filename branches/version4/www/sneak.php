@@ -47,12 +47,14 @@ Haanga::Load('sneak/form.html', compact('max_items'));
 do_footer();
 
 function sneak_menu_items($id) {
-	global $globals;
+	global $globals, $current_user;
 
 	$items = array();
 	$items[] = new MenuOption(_('todos'), $globals['base_url'].'sneak.php', $id, _('todos'));
 	$items[] = new MenuOption(_('amigos'), $globals['base_url'].'sneak.php?friends=1', $id, _('amigos'));
-	$items[] = new MenuOption(_('admin'), $globals['base_url'].'sneak.php?admin=1', $id, _('admin'));
+	if ($current_user->admin) {
+		$items[] = new MenuOption(_('admin'), $globals['base_url'].'sneak.php?admin=1', $id, _('admin'));
+	}
 
 	return $items;
 }

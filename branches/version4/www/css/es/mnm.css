@@ -244,22 +244,6 @@ margin-right:10px;
 margin-top:1px;
 }
 
-#header-top .userpend{
-background:#f00;
-color:#fff;
-font-size:14px;
-font-weight:bold;
-height:25px;
-width:28px;
-text-align:center;
-padding-top:3px;
-}
-
-#header-top .userpend:hover{
-background:#fff;
-color: #f00;
-}
-
 #header-top .userlogin{
 width: 40px;
 text-align: center;
@@ -2143,7 +2127,26 @@ opacity:1.0;
 
 #notifier {
 cursor:pointer;
+background:#666;
+color:#fff;
+font-size:14px;
+font-weight:bold;
+height:25px;
+width:28px;
+text-align:center;
+padding-top:3px;
 }
+
+#notifier:hover{
+background:#fff;
+color: #f00;
+}
+
+#notifier.nonzero {
+background:#f00;
+color:#fff;
+}
+
 
 #notifier_panel {
 border-radius:3px;
