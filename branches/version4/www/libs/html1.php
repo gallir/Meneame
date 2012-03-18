@@ -85,6 +85,13 @@ function do_header($title, $id='home', $options = false) {
 		$right_options = array();
 		$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
 		$right_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', '', _('menear noticias pendientes'));
+
+		if ($id != _('fisgona')) {
+			$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
+		}
+		if ($id != _('nótame')) {
+			$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
+		}
 	}
 
 	$sites = $db->get_results("select * from subs where visible order by id asc");
