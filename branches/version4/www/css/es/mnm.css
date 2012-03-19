@@ -355,14 +355,14 @@ float:left;
 
 #header-menu01 * .selected{
 background: url('../../img/common/h9_underline_menu01.png') repeat-x 100% 100%;
-padding-bottom: 6px;
+padding-bottom: 7px;
 white-space: nowrap;
 }
 
 #header-menu01 ul li a:hover{
 color:#3c3c3c;
 background: url('../../img/common/h9_underline_menu02.png') bottom left repeat-x;
-padding-bottom: 6px;
+padding-bottom: 7px;
 }
 
 #wrap {
