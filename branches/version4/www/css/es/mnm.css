@@ -1446,7 +1446,7 @@ margin-bottom: 10px;
 
 .comment-body {
 padding: 5px 5px 10px 10px;
-line-height: 130%;
+line-height: 110%;
 text-align: left;
 overflow: hidden;
 min-height: 25px;
@@ -2057,8 +2057,7 @@ position: absolute;
 z-index: 1500;
 width: 25%;
 min-width: 250px;
-height: 20ex;
-font-family: Arial;
+height: 18.5ex;
 border:1px solid #FF6400;
 background: #FFEEC7;
 overflow: hidden;
