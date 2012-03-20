@@ -256,6 +256,8 @@ margin-top:4px;
 #header-center{
 height:42px;
 background-color:#ccc;
+overflow: hidden;
+white-space: nowrap;
 }
 
 #header-center .logo-eli{
@@ -1447,7 +1449,7 @@ margin-bottom: 10px;
 
 .comment-body {
 padding: 5px 5px 10px 10px;
-line-height: 110%;
+line-height: 120%;
 text-align: left;
 overflow: hidden;
 min-height: 25px;
