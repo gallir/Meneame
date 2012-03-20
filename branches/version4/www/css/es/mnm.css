@@ -207,8 +207,8 @@ white-space: nowrap;
 }
 
 #header-top ul#edlist li a:hover{
-color:#ff6400;
-background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x;
+color:#fff;
+background: url('../../img/common/h9_underline_edition01.png') bottom left repeat-x;
 padding-bottom: 5px;
 }
 
@@ -362,8 +362,8 @@ white-space: nowrap;
 }
 
 #header-menu01 ul li a:hover{
-color:#3c3c3c;
-background: url('../../img/common/h9_underline_menu02.png') bottom left repeat-x;
+color:#ff6400;
+background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x;
 padding-bottom: 7px;
 }
 
@@ -501,8 +501,8 @@ white-space: nowrap;
 }
 
 .subheader li a:hover{
-color:#ff6400;
-background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x;
+color:#3c3c3c;
+background: url('../../img/common/h9_underline_menu02.png') bottom left repeat-x;
 padding-bottom: 5px;
 }
 
