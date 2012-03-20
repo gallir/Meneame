@@ -4,6 +4,7 @@ body {
 	padding: 0;
 	background: #000;
 	font-family: bitstream mono, courier, courier new, mono;
+	font-size: small;
 }
 
 /* elements */
