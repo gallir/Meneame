@@ -126,11 +126,11 @@ border-radius: 3px;
 }
 
 /* All 2 px */
-.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .button, input, textarea, legend, button {
+/*.menealo a, .menealo span, .mnm-published, .mnm-queued, .mnm-discarded, .button, input, textarea, legend, button {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
-}
+}*/
 
 /* END roundboxes */
 
@@ -614,11 +614,10 @@ height:22px;
 }
 
 .sidebox h4 {
-font-family: Helvetica, Arial, sans-serif;
-font-size: 13pt;
+font-family:'Open Sans', Helvetica, Arial, sans-serif;
+font-size: 11pt;
 text-align:left;
-color:#fff;
-padding-left: 10px;
+padding-left: 8px;
 margin: 2px 0 0 0;
 }
 
@@ -1205,13 +1204,14 @@ color: #FFF;
 }
 
 .mnm-published, .mnm-queued, .mnm-discarded {
+font-family:'Open Sans', Helvetica, Arial, sans-serif;
 display: block;
 border: 1px solid;
-padding: 4px 0 4px 0;
+padding: 4px 0 7px 0;
 }
 
 .mnm-published {
-background: #FF6400 url(../../img/mnm/elmnm-p03.png) top left no-repeat;
+background: #FF6400;
 border-color: #FF6400;
 opacity: 0.9; /* Alert */
 }
@@ -1221,28 +1221,31 @@ color: #FF6400;
 }
 
 .mnm-queued {
-background: #FFF url(../../img/mnm/elmnm-p03a.png) top left no-repeat;
+/*background: #FFF url(../../img/mnm/elmnm-p03a.png) top left no-repeat;*/
+background: #ececec;
 border-color: #FF6400;
 }
 
 .mnm-discarded, .mnm-discarded a, .mnm-discarded a:visited {
-color: #FFF;
+color: #ff6400;
 }
 
 .mnm-discarded {
-background: #D9AA95 url(../../img/mnm/elmnm-p03b.png) top left no-repeat;
-border-color: #D9AA95;
+/*background: #D9AA95 url(../../img/mnm/elmnm-p03b.png) top left no-repeat;*/
+background: #fff;
+border-color: #ff6400;
 }
 
 /* vote box */
 
 .menealo a {
 border: 1px solid;
-background: url(../../img/common/menealo-background.png) bottom left repeat-x;
-border-color: #ffcbaa;
+/*background: url(../../img/common/menealo-background.png) bottom left repeat-x;*/
+border-color: #ff6400;
 }
 
 .menealo a, .menealo span {
+font-family:'Open Sans', Helvetica, Arial, sans-serif;
 margin-top: 2px;
 display: block;
 padding: 4px 0 4px 0;
@@ -1251,7 +1254,7 @@ color: #FF6400;
 
 .menealo span {
 border: 1px solid;
-border-color: #FFCBAA;
+border-color: #ff6400;
 }
 
 .menealo span.negative {
@@ -1262,16 +1265,18 @@ text-shadow: 1px 1px 0 #fff;
 }
 
 .clics {
+font-family:'Open Sans', Helvetica, Arial, sans-serif;
 margin: 4px 0 5px 0;
 font-size: 7.5pt;
 color: #FFB300;
 border: solid 1px  #FFDF94;
-border-radius: 2px;
+/*border-radius: 2px;
 -moz-border-radius: 2px;
--webkit-border-radius: 2px;
+-webkit-border-radius: 2px;*/
 }
 
 .news-body h1, .news-body h2 {
+font-family:'Open Sans', Helvetica, Arial, sans-serif;
 margin: 0;
 padding: 0 5px 0 0;
 font-size: 140%;
