@@ -652,12 +652,13 @@ overflow: visible;
 margin: 2px 0 10px 0;
 padding-top: 6px;
 color: #fff;
-background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;
+/*background: #ff6400 url('../../img/mnm/elmnm-p03-s.png') no-repeat center top;*/
+background: #ff6400;
 opacity: 0.9; /* Alert */
 border: #ff6400 1px solid;
-border-radius: 3px;
+/*border-radius: 3px;
 -moz-border-radius: 3px;
--webkit-border-radius: 3px;
+-webkit-border-radius: 3px;*/
 }
 
 .sidebox .clics {
