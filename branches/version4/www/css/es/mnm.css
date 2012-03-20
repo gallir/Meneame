@@ -254,7 +254,7 @@ margin-top:4px;
 /* second header zone */
 
 #header-center{
-height:42px;
+height:45px;
 background-color:#ccc;
 overflow: hidden;
 white-space: nowrap;
@@ -265,7 +265,7 @@ background-image:url('../../img/mnm/h9_eli.png');
 height:35px;
 width:39px;
 margin-left:45px;
-margin-top:3px;
+margin-top:5px;
 margin-right:55px;
 text-indent:-9999px;
 float:left;
