@@ -1944,19 +1944,20 @@ color: #FF6400;
 }
 
 #tooltip-text {
+border-radius:3px;
 text-align: left;
 position:absolute;
 display:none;
 margin: 0;
 z-index:15;
 border: 1px solid;
-padding: 10px;
+padding: 6px;
 font-size: 95%;
 overflow: hidden;
 width: 40%;
 max-height: 45ex;
-background: #FFEEC7;
-border-color: #e2d3b0;
+background: #fbfbfb;
+border-color: #aaa;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
@@ -2159,8 +2160,11 @@ padding: 2px 2px;
 color:#aaa;
 background:#fff;
 min-width:200px;
-border:1px solid #ccc;
+border:1px solid #aaa;
 text-align: left;
+box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 }
 
 #notifier_panel div {
