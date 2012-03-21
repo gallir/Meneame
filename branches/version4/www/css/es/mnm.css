@@ -140,7 +140,7 @@ border-radius: 3px;
 #header{
 width: 100%;
 min-width: 790px;
-font-family:'Open Sans', Helvetica, Arial, sans-serif;
+font-family:'Open Sans', Arial, Helvetica, sans-serif;
 }
 
 /* first header zone */
@@ -237,7 +237,7 @@ color:#ff0000;
 }
 
 #header-top .usertext{
-font-family:'Open Sans Condensed', Helvetica, Arial, sans-serif;
+font-family:'Open Sans Condensed', Arial, Helvetica, sans-serif;
 font-size:14px;
 color:#fff;
 margin-right:10px;
@@ -298,10 +298,11 @@ float:right;
 
 .searchbox {
 border:0px;
-background-color:transparent;
+background-color:#fff;
 position:absolute;
 left:25px;
 width:275px;
+padding-top: 2px;
 }
 
 /* menu 01 header */
@@ -477,7 +478,7 @@ margin-top: -20px;
 height:30px;
 padding-left:35px;
 /*background-color:#f9f9f9;*/
-font-family:'Open Sans', Helvetica, Arial, sans-serif;
+font-family:'Open Sans', Arial, Helvetica, sans-serif;
 list-style-type: none;
 }
 
