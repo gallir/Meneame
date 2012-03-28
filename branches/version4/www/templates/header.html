@@ -157,13 +157,13 @@
 <!--search-->
   <div id="searchform">
     <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
+		<a href="javascript:document.top_search.submit()" id="searchglass"><img src="{{ globals.base_static }}img/common/h9_search02.png" width="12" height="12"></a>
 		{% if globals.search_options %}
 			{% for name, value in globals.search_options %}
 				<input type="hidden" name="{{name}}" value="{{value}}"/>
 			{% endfor %}
 		{% endif %}
-		<input class="searchbox" name="q" type="text" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
-		<a href="javascript:document.top_search.submit()"></a>
+		<input id="searchbox" name="q" type="text" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
     </form>
   </div>
 <!--end search-->
