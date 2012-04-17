@@ -161,8 +161,12 @@ width:96px;
 margin-left:25px;
 margin-top:4px;
 margin-right:0px;
-text-indent:-9999px;
 float:left;
+/* text-indent:-9999px; */
+/* tick from http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/ */
+text-indent: 100%;
+white-space: nowrap;
+overflow: hidden;
 }
 
 /* editions logo */
