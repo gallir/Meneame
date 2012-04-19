@@ -9,11 +9,17 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+include(mnminclude.'ban.php');
+
 $page_size = 30;
 
 $offset=(get_current_page()-1)*$page_size;
 
 $items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos últimos 2 meses'));
+
+if (check_ban($globals['user_ip'], 'proxy')) {
+	return;
+}
 
 
 // Warn, empty() return true even if sortby=0
