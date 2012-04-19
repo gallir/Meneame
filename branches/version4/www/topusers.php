@@ -11,9 +11,8 @@ include(mnminclude.'html1.php');
 
 include(mnminclude.'ban.php');
 
-$page_size = 30;
+$page_size = 100;
 
-$offset=(get_current_page()-1)*$page_size;
 
 $items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos últimos 2 meses'));
 
@@ -33,37 +32,43 @@ if ( !strlen($_GET['sortby']) > 0) {
 
 switch ($sortby) {
 	case 0:
-		$select = "SELECT SQL_CACHE user_id ";
+		$select = "SELECT user_id ";
 		$from_where = " FROM users ";
 		$order_by = " ORDER BY user_login ";
 		break;
 	case 1:
-		$select = "SELECT SQL_CACHE user_id ";
+		$select = "SELECT user_id ";
 		$from_where = " FROM users ";
 		$order_by = " ORDER BY user_karma DESC ";
 		break;
 	case 2:
-		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
-		$from_where = " FROM links, users WHERE  link_author=user_id GROUP BY link_author";
+		$select = "SELECT user_id, count(*) as count ";
+		$from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_author=user_id GROUP BY link_author";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 3:
-		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
-		$from_where = " FROM links, users WHERE  link_status = 'published' AND link_author=user_id GROUP BY link_author";
+		$select = "SELECT user_id, count(*) as count ";
+		$from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_status = 'published' AND link_author=user_id GROUP BY link_author";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 4:
-		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
-		$from_where = " FROM comments, users WHERE comment_user_id=user_id GROUP BY comment_user_id";
+		$select = "SELECT user_id, count(*) as count ";
+		$from_where = " FROM comments, users WHERE user_level not in ('disabled', 'autodisabled') and comment_user_id=user_id GROUP BY comment_user_id";
 		$order_by = " ORDER BY count DESC ";
 		break;
 	case 5:
-		$select = "SELECT SQL_CACHE user_id, count(*) as count ";
+		$select = "SELECT user_id, count(*) as count ";
 		$from_where = " FROM votes, users WHERE vote_type='links' and vote_user_id=user_id GROUP BY vote_user_id";
 		$order_by = " ORDER BY count DESC ";
 		break;
 }
-// Sort by votes
+
+$sql = "$select $from_where $order_by LIMIT $page_size";
+if (! ($users = memcache_mget($sql)) ) {
+	$users = $db->get_results($sql);
+	memcache_madd($sql, $users, 3600);
+}
+
 
 do_header(_('usuarios') . ' | ' . $globals['site_name']);
 
@@ -77,7 +82,7 @@ for($i=0; $i<count($items); $i++) {
 	echo '<th class="short">';
 	if($i==$sortby)
 		echo '<span class="info_s">'.$items[$i].'</span>';
-	elseif ($i <= 3) {
+	elseif ($i <= 3 && $i > 0) {
 		// Don't show order by votes or comment
 		// Too much CPU and disk IO consuption
 		echo '<a href="topusers.php?sortby='.$i.'">'.$items[$i].'</a>';
@@ -88,9 +93,9 @@ for($i=0; $i<count($items); $i++) {
 }
 
 echo '</tr>';
+
 $user = new User;
-$rows = $db->get_var("SELECT SQL_CACHE count(*) as count $from_where");
-$users = $db->get_results("$select $from_where $order_by LIMIT $offset,$page_size");
+
 if ($users) {
 	foreach($users as $dbuser) {
 		$user->id=$dbuser->user_id;
@@ -112,10 +117,7 @@ if ($users) {
 	}
 }
 echo "</table>\n\n";
-do_pages($rows, $page_size, false);
 echo "</div>\n";
 do_footer_menu();
 do_footer();
 
-
-?>
