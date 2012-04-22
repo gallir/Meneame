@@ -97,12 +97,25 @@
 			}).appendTo("body").fadeIn(200);
 		}
 
+		function pad(number, length) {
+			var str = '' + number;
+			while (str.length < length) {
+				str = '0' + str;
+			}
+			return str;
+		}
+
 		var previousPoint = null;
+		var txt = '';
 		$("#flot").bind("plothover", function (event, pos, item) {
 			if (item) {
 				if (previousPoint != item.datapoint) {
 					previousPoint = item.datapoint;
-					var txt = '<strong>'+item.series.label+':</strong> ' + item.datapoint[1];
+
+					txt = '<strong>'+item.series.label+':</strong> ' + item.datapoint[1];
+					var d = new Date(item.datapoint[0]);
+					txt = txt + ' (' + pad(d.getUTCHours(),2) + ":" + pad(d.getUTCMinutes(),2) + " UTC)";
+
 					if (item.series.label == 'karma') {
 						var ktime = item.datapoint[0]/1000; // to epoch time
 						if (k_old[ktime] != 0) {
@@ -113,6 +126,7 @@
 						if (k_coef[ktime] != 0) txt = txt + '<br/><strong>coefficient:</strong> '+k_coef[ktime];
 						if (k_annotation[ktime] != '') txt = txt + '<br><strong>notes</strong><br/>'+k_annotation[ktime];
 					}
+
 					$("#tooltip").remove();
 					showTooltip(item.pageX, item.pageY, txt);
 				}
