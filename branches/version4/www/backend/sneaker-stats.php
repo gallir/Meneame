@@ -253,6 +253,7 @@ function do_rae($string) {
 	require_once(mnminclude.'uri.php'); // For remove_accents
 	if (count($array) == 2 && preg_match('/^\w+$/',remove_accents($array[1]))) {
 		$url = 'http://buscon.rae.es/draeI/SrvltObtenerHtml?origen=RAE&LEMA='.urlencode($array[1]).'&SUPIND=0&CAREXT=10000&NEDIC=No';
+		$url = 'http://lema.rae.es/drae/srv/search?val='.urlencode($array[1]);
 		$res = get_url($url);
 		if ($res && $res['content']) {
 			//return $res['content'];

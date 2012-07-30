@@ -188,11 +188,15 @@ function admin_bans($ban_type) {
 	if (empty($_REQUEST["op"])) {
 	//listado de bans
 		if (empty($_REQUEST["orderby"])) {
-			$_REQUEST["orderby"]="ban_text";
+			//$_REQUEST["orderby"]="ban_text";
+			$_REQUEST["orderby"] = 'ban_date';
+			$order = "DESC";
 		} else {
 			$_REQUEST["orderby"] = preg_replace('/[^a-z_]/i', '', $_REQUEST["orderby"]);
 			if ($_REQUEST["orderby"] == 'ban_date') {
 				$order = "DESC";
+			} else {
+				$order = "ASC";
 			}
 		}
 		$where= "WHERE ban_type='".$ban_type."'";

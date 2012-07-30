@@ -579,8 +579,8 @@ class Comment extends LCPBase {
 
 		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
 		$orders = array();
-		if (preg_match_all('/(^|[\(,;\.\s¿¡])#(\d+)/', $this->content, $matches)) {
-			foreach ($matches[2] as $order) {
+		if (preg_match_all('/(?:^|\W)#(\d+)\b/', $this->content, $matches)) {
+			foreach ($matches[1] as $order) {
 				$orders[$order] += 1;
 			}
 		}
