@@ -368,7 +368,7 @@ function get_static_server_name() {
 function get_auth_link() {
 	global $globals;
 	if ($globals['ssl_server']) {
-		// If this is the mobile version and it's an external server, e.g www.meneame.net, 
+		// If this is the mobile version and it's an external server, e.g www.meneame.net,
 		// we'd call /mobile/login.php instead of /login.php
 		if ($globals['mobile_version'] && $globals['ssl_server'] != get_server_name() ) {
 			$path = 'mobile/';
@@ -1100,6 +1100,81 @@ function check_ip_behind_proxy() {
 
 	$last_seen = $_SERVER["REMOTE_ADDR"];
 	return $last_seen;
+}
+
+/**
+ * Convert an IP address from string/presentation format to decimal(39.0) format
+ * See: http://stackoverflow.com/questions/1120371/how-to-convert-ipv6-from-binary-for-storage-in-mysql
+ */
+
+function inet_ptod($ip_address)
+{
+	$packed_ip = inet_pton($ip_address);
+
+	if (strlen($packed_ip) == 4) {
+		// IPv4 address
+		$ip_a = unpack("N", $packed_ip);
+		return $ip_a[1];
+	}
+
+	// IPv6 address
+	$parts = unpack('N*', $packed_ip);
+
+	foreach ($parts as &$part) {
+			if ($part < 0) {
+					$part = bcadd((string) $part, '4294967296');
+			}
+
+			if (!is_string($part)) {
+					$part = (string) $part;
+			}
+	}
+
+	bcscale(0);
+	$decimal = $parts[4];
+	$decimal = bcadd($decimal, bcmul($parts[3], '4294967296'));
+	$decimal = bcadd($decimal, bcmul($parts[2], '18446744073709551616'));
+	$decimal = bcadd($decimal, bcmul($parts[1], '79228162514264337593543950336'));
+
+	return $decimal;
+}
+
+/**
+ * Convert an IP address from decimal format to presentation format
+ *
+ * @param string $decimal An IP address in IPv4, IPv6 or decimal notation
+ * @return string The IP address in presentation format
+ */
+function inet_dtop($decimal)
+{
+	// Decimal format
+	bcscale(0);
+	$parts = array();
+	$parts[1] = bcdiv($decimal, '79228162514264337593543950336', 0);
+	$decimal = bcsub($decimal, bcmul($parts[1], '79228162514264337593543950336'));
+	$parts[2] = bcdiv($decimal, '18446744073709551616', 0);
+	$decimal = bcsub($decimal, bcmul($parts[2], '18446744073709551616'));
+	$parts[3] = bcdiv($decimal, '4294967296', 0);
+	$decimal = bcsub($decimal, bcmul($parts[3], '4294967296'));
+	$parts[4] = $decimal;
+
+	foreach ($parts as &$part) {
+		if (bccomp($part, '2147483647') == 1) {
+				$part = bcsub($part, '4294967296');
+		}
+
+		$part = (int) $part;
+	}
+
+	$network = pack('N4', $parts[1], $parts[2], $parts[3], $parts[4]);
+	$ip_address = inet_ntop($network);
+
+	// Turn IPv6 to IPv4 if it's IPv4
+	if (preg_match('/^::\d+.\d+.\d+.\d+$/', $ip_address)) {
+		return substr($ip_address, 2);
+	}
+
+	return $ip_address;
 }
 
 function http_cache($maxage = 30) {
