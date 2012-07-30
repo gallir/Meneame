@@ -1109,15 +1109,14 @@ function check_ip_behind_proxy() {
 
 function inet_ptod($ip_address)
 {
-	$packed_ip = inet_pton($ip_address);
 
-	if (strlen($packed_ip) == 4) {
-		// IPv4 address
-		$ip_a = unpack("N", $packed_ip);
-		return $ip_a[1];
-	}
+	// IPv4 address
+    if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
+		return sprintf("%u", ip2long($ip_address));
+    }
 
 	// IPv6 address
+	$packed_ip = inet_pton($ip_address);
 	$parts = unpack('N*', $packed_ip);
 
 	foreach ($parts as &$part) {
