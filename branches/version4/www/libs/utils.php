@@ -1107,9 +1107,7 @@ function check_ip_behind_proxy() {
  * See: http://stackoverflow.com/questions/1120371/how-to-convert-ipv6-from-binary-for-storage-in-mysql
  */
 
-function inet_ptod($ip_address)
-{
-
+function inet_ptod($ip_address) {
 	// IPv4 address
     if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
 		return sprintf("%u", ip2long($ip_address));
@@ -1123,12 +1121,10 @@ function inet_ptod($ip_address)
 			if ($part < 0) {
 					$part = bcadd((string) $part, '4294967296');
 			}
-
 			if (!is_string($part)) {
 					$part = (string) $part;
 			}
 	}
-
 	bcscale(0);
 	$decimal = $parts[4];
 	$decimal = bcadd($decimal, bcmul($parts[3], '4294967296'));
@@ -1139,13 +1135,9 @@ function inet_ptod($ip_address)
 }
 
 /**
- * Convert an IP address from decimal format to presentation format
- *
- * @param string $decimal An IP address in IPv4, IPv6 or decimal notation
- * @return string The IP address in presentation format
+ * Convert an IP address from decimal to presentation format
  */
-function inet_dtop($decimal)
-{
+function inet_dtop($decimal) {
 	// Decimal format
 	bcscale(0);
 	$parts = array();

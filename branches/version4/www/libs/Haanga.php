@@ -342,7 +342,6 @@ class Haanga
         } 
         
         if (!is_file($php) || ($check && filemtime($tpl) > filemtime($php))) {
-
             if (!is_file($tpl)) {
                 /* There is no template nor compiled file */
                 throw new Exception("View {$file} doesn't exists");
@@ -419,10 +418,21 @@ class Haanga
                 /* 
                    really weird case ($php is empty, another process is compiling
                    the $tpl for the first time), so create a lambda function
-                   for the template
+                   for the template.
+
+                   To be safe we're invalidating its time, because its content 
+                   is no longer valid to us
                  */
-                $lambda= self::compile(file_get_contents($tpl), $vars);
-                return $lambda($vars, $return, $blocks);
+                touch($php, 300, 300);
+                chmod($php, 0777);
+            
+                
+                // compile temporarily
+                $compiler = self::getCompiler();
+                $code = $compiler->compile_file($tpl, FALSE, $vars);
+                eval($code);
+
+                return $callback($vars, $return, $blocks);
             }
         }
 
