@@ -28,8 +28,7 @@ if ($globals['check_behind_proxy']) {
 	$globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
 }
 
-// Warn, we shoud printf "%u" because PHP on 32 bits systems fails with high unsigned numbers
-$globals['user_ip_int'] = sprintf("%u", ip2long($globals['user_ip']));
+$globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 
 $globals['now'] = time();
 $globals['cache-control'] = Array();

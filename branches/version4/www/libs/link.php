@@ -410,7 +410,7 @@ class Link extends LCPBase {
 			if ($blog->type != 'noiframe' && $this->noiframe) {
 				$blog->type = 'noiframe';
 				syslog(LOG_INFO, "Meneame, changed to noiframe ($blog->id, $blog->url)");
-			} 
+			}
 			$blog->store();
 		}
 		$this->blog=$blog->id;
@@ -468,13 +468,16 @@ class Link extends LCPBase {
 		$link_sent_date = $this->sent_date;
 		$link_published_date = $this->published_date;
 		$link_content_type = $db->escape($this->content_type);
-		$link_ip = $db->escape($this->ip);
 		if($this->id===0) {
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', '$link_ip')");
+			$this->ip = $globals['user_ip'];
+			$link_ip = $db->escape($this->ip);
+			$this->ip_int = $globals['user_ip_int'];
+
+			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip_int, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', $this->ip_int, '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type', link_ip='$link_ip' WHERE link_id=$this->id");
+			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type' WHERE link_id=$this->id");
 		}
 
 		// Deploy changes to other sub sites

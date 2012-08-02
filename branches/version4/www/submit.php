@@ -409,7 +409,6 @@ function do_submit1() {
 
 
 	// Now stores new draft
-	$link->ip = $globals['user_ip'];
 	$link->sent_date = $link->date=time();
 
 	$link->key = $_POST['key'];

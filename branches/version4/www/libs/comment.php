@@ -21,13 +21,13 @@ class Comment extends LCPBase {
 	var $read = false;
 	var $ip = '';
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM comments
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.access as media_access FROM comments
 	INNER JOIN users on (user_id = comment_user_id)
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id)
 	LEFT JOIN votes ON (comment_date > @enabled_votes and @user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id)
 	LEFT JOIN media ON (media.type='comment' and media.id = comment_id and media.version = 0) ";
 
-	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
+	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
 
 
 	static function from_db($id) {
@@ -79,14 +79,15 @@ class Comment extends LCPBase {
 		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
+			$this->ip_int = $db->escape($globals['user_ip_int']);
 			$this->c_order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE"))+1;
-			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
+			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
 			$this->id = $db->insert_id;
 
 			// Insert comment_new event into logs
 			if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
 		} else {
-			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_ip = '$this->ip', comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
+			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
 			// Insert comment_new event into logs
 			if ($full) {
 				if ($globals['now'] - $this->date < 86400) {
@@ -457,7 +458,7 @@ class Comment extends LCPBase {
 		$comment = new Comment;
 
 		$comment->link=$link->id;
-		$comment->ip = $db->escape($globals['user_ip']);
+		$comment->ip = $globals['user_ip'];
 		$comment->randkey=intval($_POST['randkey']);
 		$comment->author=intval($_POST['user_id']);
 		$comment->karma=round($current_user->user_karma);
