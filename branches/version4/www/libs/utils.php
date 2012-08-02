@@ -1115,6 +1115,11 @@ function inet_ptod($ip_address) {
 
 	// IPv6 address
 	$packed_ip = inet_pton($ip_address);
+	if ($packed_ip === FALSE) {
+		syslog(LOG_INFO, "Bad ip address in inet_pton: $ip_address");
+		return 0;
+	}
+
 	$parts = unpack('N*', $packed_ip);
 
 	foreach ($parts as &$part) {
