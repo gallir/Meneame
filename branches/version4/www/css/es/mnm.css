@@ -1200,6 +1200,15 @@ font-size: 9pt;
 color: #03a;
 }
 
+.comments-counter a .counter {
+display: inline-block;
+line-height: 120%;
+} 
+
+.comments-counter a:hover .counter {
+text-decoration: none;
+}
+
 
 /* Counter box */
 .news-shakeit {
