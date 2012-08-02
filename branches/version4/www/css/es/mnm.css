@@ -1203,6 +1203,7 @@ color: #03a;
 .comments-counter a .counter {
 display: inline-block;
 line-height: 120%;
+margin-right: 0.25em;
 } 
 
 .comments-counter a:hover .counter {
