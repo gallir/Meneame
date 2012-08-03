@@ -6,6 +6,7 @@
 <ul>
 <li><a href="{{ globals.base_url }}rss2.php" >{% trans _('publicadas') %}</a></li>
 <li><a href="{{ globals.base_url }}rss2.php?status=queued" >{% trans _('en cola') %}</a></li>
+<li><a href="{{ globals.base_url }}rss2.php?active" >{% trans _('más activas') %}</a></li>
 
 {% if current_user.user_id > 0 %}
 	<li><a href="{{ globals.base_url }}comments_rss2.php?conversation_id={{ current_user.user_id }}"  title="{% trans _('comentarios de las noticias donde has comentado') %}">{% trans _('mis conversaciones') %}</a></li>

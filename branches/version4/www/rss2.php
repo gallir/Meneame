@@ -10,6 +10,11 @@ include('config.php');
 include(mnminclude.'geo.php');
 include(mnminclude.'ban.php');
 
+
+if (check_ban($globals['user_ip'], 'ip', true) && check_ban_proxy()) {
+	die;
+}
+
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 200) $rows = 50; //avoid abuses
@@ -79,6 +84,21 @@ if(!empty($_REQUEST['time'])) {
 	$user_login = $db->get_var("select user_login from users where user_id=$user_id");
 	$title = $globals['site_name'].': '.sprintf(_('noticias de %s'), $user_login);
 	$globals['redirect_feedburner'] = false;
+} elseif (isset($_REQUEST['active'])) {
+	$globals['redirect_feedburner'] = false;
+	$title = $globals['site_name'].': '._('más activas');
+	$top = new Annotation('top-actives-'.$globals['site_shortname']);
+	/*
+	if ($top->read()) {
+		$sql = "SELECT link_id FROM links WHERE link_id in ($top->text)";
+		syslog(LOG_INFO, $sql);
+		$last_modified = $top->time;
+	}
+	*/
+	if ($top->read()) {
+		$links = explode(',',$top->text);
+		$last_modified = $top->time;
+	}
 } else {
 	/////
 	// All the others
@@ -186,10 +206,8 @@ if(!empty($_REQUEST['time'])) {
 do_header($title);
 
 // Don't allow banned IPs o proxies
-if($sql && ! check_ban($globals['user_ip'], 'ip', true) && ! check_ban_proxy()) {
+if (! empty($sql)) {
 	$links = $db->get_col($sql);
-} else {
-	$links = false;
 }
 
 if ($links) {
