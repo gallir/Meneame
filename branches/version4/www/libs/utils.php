@@ -1108,6 +1108,11 @@ function check_ip_behind_proxy() {
  */
 
 function inet_ptod($ip_address) {
+
+	if (empty($ip_address)) {
+		return 0;
+	}
+
 	// IPv4 address
     if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
 		return sprintf("%u", ip2long($ip_address));
