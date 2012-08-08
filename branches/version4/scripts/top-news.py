@@ -31,6 +31,8 @@ def do_site(site):
 		values['links_order'] = links_total
 		links[row[0]] = values
 
+	if not links_total: return
+
 	links_format = ','.join(['%s'] * len(links))
 
 	cursor.execute("select vote_link_id, sum((1-(unix_timestamp(now())-unix_timestamp(vote_date))/36000)) as x, count(*) from votes where vote_link_id in (%s) and vote_type='links' and vote_date > date_sub(now(), interval 12 hour) and vote_user_id > 0 and vote_value > 6.1 group by vote_link_id order by x desc" % links_format, tuple(links))

@@ -87,7 +87,8 @@ class BaseBlogs(object):
 			elif hasattr(e, 'updated_parsed') and e.updated_parsed:
 				timestamp = time.mktime(e.updated_parsed)
 			else:
-				timestamp = now
+				continue
+				#timestamp = now
 
 			if timestamp > now: timestamp = now
 			try:
