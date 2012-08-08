@@ -357,7 +357,7 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $globals;
-	return $globals['server_name'] ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
+	return isset($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
 }
 
 function get_static_server_name() {

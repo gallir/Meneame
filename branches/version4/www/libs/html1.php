@@ -154,6 +154,18 @@ function mobile_redirect() {
 	}
 }
 
+function do_pages_reverse_tpl($total, $current, $tpl) {
+	$index_limit = 5;
+	$start = max($current-intval($index_limit/2), 1);
+    $pages = array();
+	for ($i=$start;$i<= $total;$i++) {
+        $pages[] = $i;
+    }
+    rsort($pages, SORT_NUMERIC);
+    $args = compact('total', 'current', 'start', 'pages');
+    Haanga::Load($tpl, $args);
+}
+
 function do_pages($total, $page_size=25, $margin = true) {
 	global $db;
 

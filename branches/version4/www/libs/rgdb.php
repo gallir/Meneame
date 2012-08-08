@@ -170,7 +170,7 @@ class RGDB extends mysqli {
 			$this->query($query);
 		}
 
-		return $this->last_result[$y]?$this->last_result[$y]:null;
+		return isset($this->last_result[$y])?$this->last_result[$y]:null;
 	}
 
 	//	Function to get 1 column from the cached result set based in X index
