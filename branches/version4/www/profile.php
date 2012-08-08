@@ -10,6 +10,8 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'avatars.php');
 
+$globals['ads'] = false;
+
 // We need it because we modify headers
 ob_start();
 

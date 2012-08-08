@@ -11,6 +11,8 @@ include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 include(mnminclude.'ban.php');
 
+$globals['ads'] = false;
+
 
 if ($current_user->user_id > 0) {
 	if(!isset($_COOKIE['return_site'])) {
