@@ -129,7 +129,7 @@ function ts_print_form() {
 	} else {
 	// reCaptcha
 		Haanga::Load('recaptcha.html');
-		echo recaptcha_get_html($globals['recaptcha_public_key'],null);
+		echo recaptcha_get_html($globals['recaptcha_public_key'],null,$globals['https']);
 	}
 }
 ?>

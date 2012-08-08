@@ -347,12 +347,12 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['jquery'] = 'http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js';
+$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js';
 $globals['js_main'] = 'general.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css';
 // Load webfonts from the specified url
-$globals['css_webfonts'] = 'http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
+$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
