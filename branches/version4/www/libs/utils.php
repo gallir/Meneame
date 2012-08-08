@@ -384,7 +384,7 @@ function get_auth_link() {
 function check_auth_page() {
 	global $globals;
 
-	if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
+	if ($globals['https']) {
 		// If it's not a page that need SSL, redirect to the standard server
 		if (!$globals['secure_page']) {
 			// Send the user back to the origial page if it exists the cookie

@@ -13,7 +13,13 @@ include mnminclude.'utils.php';
 mb_internal_encoding('UTF-8');
 global $globals;
 
-if (!empty($globals['static_server'])) {
+if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
+	$globals['https'] = true;
+} else {
+	$globals['https'] = false;
+}
+
+if (!empty($globals['static_server']) && ! $globals['https']) {
 	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
 } else {
 	$globals['base_static'] = 'http://'.get_server_name().$globals['base_url'];
@@ -74,7 +80,7 @@ if($_SERVER['HTTP_HOST']) {
 
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
-	if($_SERVER['SERVER_PORT'] != '80' && $_SERVER['SERVER_PORT'] != 443) {
+	if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
 		$globals['server_name'] = strtolower($_SERVER['SERVER_NAME']) . ':' . $_SERVER['SERVER_PORT'];
 	} else {
 		$globals['server_name'] = strtolower($_SERVER['SERVER_NAME']);
