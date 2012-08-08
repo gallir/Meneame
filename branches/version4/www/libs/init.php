@@ -22,7 +22,7 @@ if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 if (!empty($globals['static_server']) && ! $globals['https']) {
 	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
 } else {
-	$globals['base_static'] = 'http://'.get_server_name().$globals['base_url'];
+	$globals['base_static'] = $globals['base_url'];
 }
 
 // Use proxy and load balancer detection
