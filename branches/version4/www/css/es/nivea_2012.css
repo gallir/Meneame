@@ -1,0 +1,354 @@
+body{
+margin:0;
+padding:0;
+/* background-color:#072b7a; */
+background-color:#fff;
+background-image:url('../../img/nivea_2012/background.png');
+background-repeat:repeat-x;
+background-position:left top;
+}
+
+/* banner top */
+
+.banner-top{
+display:block;
+margin-left:auto;
+margin-right:auto;
+margin-top:15px;
+}
+
+/* bases */
+
+.bases{
+margin:auto;
+margin-top:50px;
+margin-bottom:50px;
+padding:25px;
+width:850px;
+background-color:rgba(0,51,119,0.2);
+/* IE 6-8 */
+-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+zoom:1;
+}
+
+.bases p{
+margin:0;
+padding:0;
+color:#072b7a;
+font-family:'Open Sans',sans-serif;
+font-size:18px;
+}
+
+.bases p{
+color:#fff;
+}
+
+.bases a,.game-footer a{
+text-decoration:none;
+color:#072b7a;
+font-weight:bold;
+}
+
+.bases a{
+color:#fff;
+}
+
+.bases a:hover,.game-footer a:hover{
+text-decoration:underline;
+}
+
+/* game box */
+
+.game{
+margin:auto;
+margin-top:50px;
+margin-bottom:50px;
+padding:25px;
+width:850px;
+overflow:hidden;
+background-color:rgba(0,51,119,0.2);
+/* IE 6-8 */
+-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+zoom:1;
+}
+
+.game-footer{
+margin:auto;
+float:left;
+margin-top:5px;
+padding:0;
+width:850px;
+color:#072b7a;
+font-family:'Open Sans',sans-serif;
+font-size:15px;
+text-align:center;
+}
+
+/* 2 teams box */
+
+.teams{
+margin:0px auto;
+margin-top:15px;
+padding:0;
+height:200px;
+width:650px;
+}
+
+.game h1{
+color:#072b7a;
+font-family:'Open Sans',sans-serif;
+font-size:25px;
+margin:0px;
+padding:0;
+text-shadow:0px 0px 1px #fff;
+text-align:center;
+overflow:hidden;
+}
+
+/* team box */
+
+/* team flag & name */
+
+.team-A,.team-B{
+position: relative;
+}
+
+.team-A{
+float:left;
+}
+
+.team-B{
+float:right;
+}
+
+.team-A-logo,.team-B-logo{
+margin-top:15px;
+opacity:0.4;
+filter:alpha(opacity=40);
+}
+
+.team-B-logo{
+float:right;
+}
+
+.team-A-logo{
+float:left;
+}
+
+/* team how many votes box */
+
+.team-votes-box-A,.team-votes-box-B,.team-votes-box-C{
+margin-top:30px;
+padding:0;
+width:90px;
+height:115px;
+background-color:#ececec;
+border:1px solid #ccc;
+box-shadow:1px 1px 1px #ccc;
+}
+
+.team-votes-box-A{
+position: absolute;
+top: 0;
+right:-60px;
+}
+
+.team-votes-box-B{
+position: absolute;
+top: 0;
+left:-60px;
+}
+
+.team-votes-box-C{
+float:left;
+margin-left:130px;
+margin-top:20px;
+}
+
+.team-votes-count{
+margin:5px 0 0 5px;
+padding:0;
+width:80px;
+height:80px;
+background-color:#abb7d2;
+}
+
+.team-votes-number{
+color:#fff;
+font-family:'Open Sans',sans-serif;
+font-size:25px;
+text-align:center;
+text-shadow:0 1px 1px #072b7a;
+position:relative;
+top:10px;
+}
+
+.team-votes-meneos{
+color:#fff;
+font-family:'Open Sans',sans-serif;
+font-size:15px;
+text-align:center;
+text-shadow:0 1px 1px #072b7a;
+position:relative;
+top:8px;
+}
+
+/* team vote button */
+
+.team-votes-menealo{
+font-family:'Open Sans',sans-serif;
+font-size:13px;
+text-align:center;
+text-shadow:0 1px 1px #072b7a;
+position:relative;
+top:-2px;
+text-decoration:none;
+color:#fff;
+cursor: pointer;
+}
+
+.disabled{
+cursor: default;
+}
+
+
+.team-votes-button-A{
+margin:5px 0 0 5px;
+padding:0;
+width:78px;
+height:18px;
+border:1px solid #072b7a;
+background-color:#abb7d2;
+-moz-border-radius:2px;
+border-radius:2px;
+}
+
+/* button 3d effect */
+
+.team-votes-button-B{
+margin:0;
+padding:0;
+width:78px;
+height:14px;
+border-top:2px solid #ececec;
+background-color:#abb7d2;
+-moz-border-radius:2px;
+border-radius:2px;
+}
+
+/* match voters list box */
+
+.game-voters-list{
+margin:0px auto;
+padding:2px 2px 2px 2px;
+min-height:150px;
+width:95%;
+overflow:hidden;
+background:#E4E9F1;
+border:solid 1px #abb7d2;
+}
+
+.game-voters-list .item {
+font-family:'Open Sans',sans-serif;
+float: left;
+overflow: hidden;
+display: block;
+width: 24%;
+height: 20%;
+font-size: 75%;
+white-space: nowrap;
+padding: 5px 0 1px 0;
+}
+
+.game-voters-list .avatar{
+margin:0 5px 0 3px;
+}
+
+.game-voters-list a{
+text-decoration:none;
+color:#072b7a;
+}
+
+.game-voters-list a:hover{
+color:#abb7d2;
+}
+
+/* voters pagination */
+
+.game-voters-pages{
+padding:10px 0 0 0;
+margin:0 0 40px 20px;
+clear:left;
+font-family:'Open Sans',sans-serif;
+font-size:70%;
+}
+
+.game-voters-pages a,.game-voters-pages span{
+display:block;
+float:left;
+padding:4px 10px 4px 10px;
+margin-right:3px;
+color:#072b7a;
+}
+
+.game-voters-pages span.current{
+color:#fff;
+background-color:#072b7a;
+border:solid 1px #072b7a;
+}
+
+.game-voters-pages a{
+text-decoration:none;
+border:solid 1px #072b7a;
+background:#E4E9F1;
+}
+
+.game-voters-pages a:hover{
+color:#fff;
+background-color:#072b7a;
+border-color:#072b7a;
+}
+
+/* general pagination */
+
+.pages-ad{
+margin:auto;
+margin-top:50px;
+padding-bottom:50px;
+width:900px;background:#fff;
+font-family:'Open Sans',sans-serif;
+font-size:15px;
+}
+
+.pages-ad a,.pages-ad span{
+display:block;
+float:left;
+padding:4px 10px 4px 10px;
+margin-right:3px;
+color:#072b7a;
+background:#fff;
+}
+
+.pages-ad span.current-ad{
+color:#fff;
+background-color:#072b7a;
+border:solid 1px #072b7a;
+}
+
+.pages-ad a{
+text-decoration:none;
+border:solid 1px #072b7a;
+}
+
+.pages-ad a:hover{
+color:#fff;
+background-color:#072b7a;
+border-color:#072b7a;
+}
+
+.pages-ad span.nextprev-ad{
+border:1px solid #abb7d2;
+color:#abb7d2;
+}
