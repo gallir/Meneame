@@ -11,6 +11,11 @@ if (!empty($_POST['process'])) {
 	if (!empty($_POST['form_time']) && !empty($_POST['form_hash'])) {
 		$valid = sha1($site_key . $_POST['form_time'] . $current_user->user_id) == $_POST['form_hash'];
 	}
+
+	if (is_numeric($_POST['vote_until'])) {
+		$_POST['vote_until'] = date("Y-m-d H:i:s", strtotime($_POST['date']) - intval($_POST['vote_until']) * 60);
+	}
+
 	if ($valid && empty($_POST['match_id'])) {
 		Match::create($_POST);
 	} else if ($valid) {
