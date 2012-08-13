@@ -102,8 +102,25 @@ class Link extends LCPBase {
 			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
 		}
 		$list .= ", '$link_alternative', '$link_alternative/'";
+
+		$site_id = SitesMgr::my_id();
+		$filter_by_site_sql = "(sub_statuses.id = $site_id ";
+		$site_parent = SitesMgr::my_parent();
+		if ($site_parent > 0 && $site_parent != $site_id) {
+			$filter_by_site_sql .= " OR sub_statuses.id = $site_parent ";
+		}
+		$site_children = SitesMgr::get_children(); // array
+		if (is_array($site_children) && count($site_children) > 0 ) {
+			$filter_by_site_sql .= " OR sub_statuses.id in (" . implode(',', $site_children).")";
+		}
+		$filter_by_site_sql .= ")";
+
+		
+	
+
+		
 		// If it was abuse o autodiscarded allow other to send it again
-		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
+		$found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND $filter_by_site_sql ORDER by link_id asc limit 1");
 		return $found;
 	}
 
