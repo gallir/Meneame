@@ -137,7 +137,12 @@ class Match {
 		$sql .= " WHERE m.id = {$id}";
 
 		if(($result = $db->get_row($sql))) {
-			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
+			foreach(get_object_vars($result) as $var => $value) {
+				$this->$var = $value;
+				if (is_numeric($value)) {
+					$this->$var += 0;
+				}
+			}
 			$this->total_votes = $this->votes_local + $this->votes_visitor + $this->votes_tied;
 			$this->ts_date  = strtotime($this->date);
 			$this->ts_vote_until = strtotime($this->vote_until);

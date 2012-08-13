@@ -42,7 +42,7 @@ class League {
 
 		$this->current = $current;
 		$this->total   = $max->total;
-		return $db->get_results("SELECT id FROM " . Match::TABLE . " WHERE league_id = $this->id ORDER BY id DESC LIMIT {$current}, $per_page");
+		return $db->get_results("SELECT id FROM " . Match::TABLE . " WHERE league_id = $this->id ORDER BY date DESC LIMIT {$current}, $per_page");
 	}
 
 	public static function create(Array $data)
