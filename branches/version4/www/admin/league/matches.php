@@ -32,7 +32,8 @@ if (!empty($_POST['process'])) {
 	} else if (!$valid) {
 		die(_("El token del formulario no es correcto"));
 	}
-	$_GET['action'] = 'list';
+	$_GET = array('action' => 'list');
+	$_SERVER['QUERY_STRING'] = http_build_query($_GET);
 }
 
 
@@ -58,6 +59,15 @@ case 'update':
 
 case 'list':
 default:
+	$total    = $db->get_row("SELECT count(*) as total from " . Match::TABLE)->total;
+	$per_page = 30;
+	$pages    = ceil($total/$per_page);
+	$current  = $pages;
+	if (!empty($_GET['page']) && is_numeric($_GET['page'])) {
+   	 	$current = intval($_GET['page']);
+	}
+	$offset  = ($pages-$current) * $per_page;
+
 	$sql = "SELECT
 		m.*,
 		t1.name as local,
@@ -70,11 +80,14 @@ default:
 	INNER JOIN " . Team::TABLE ." t1 ON (t1.id = m.local)
 	INNER JOIN " . Team::TABLE ." t2 ON (t2.id = m.visitor)
 	INNER JOIN " . League::TABLE ." l ON (l.id = m.league_id)
+	ORDER BY id DESC
+	LIMIT $offset, $per_page
 	";
 	$data['cols'] = array('liga' => _('Liga'), 'local' => _('Local'), 'visitante' => _('Visitante'), 'date' => _('Fecha'));
 	$data['rows'] = $db->get_results($sql);
 	$data['page'] = $globals['league_base_url'] . 'matches.php';
 	Haanga::Load("league/abm-list.tpl", $data);
+	do_pages_reverse($total, $per_page);
 }
 
 do_footer();
