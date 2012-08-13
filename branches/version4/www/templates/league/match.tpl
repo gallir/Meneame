@@ -11,7 +11,7 @@
 				<div class="team-votes-meneos">meneos</div>
 			</div><!--team-votes-count-->
 			{% if current_user.user_id != 0 %}
-			<div class="team-votes-button-A"><div class="team-votes-button-B">
+			<div class="team-votes-button-A"><div class="{% if match.vote!==1%}team-votes-button-B{%endif%}">
 				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%} {% if match.vote===1%}team-voted{%endif%}">
 					{% if (match.vote == 1) %}
 						{% trans _("presionado") %}
@@ -34,8 +34,8 @@
 				<div class="team-votes-meneos">meneos</div>
 			</div><!--team-votes-count-->
 			{% if current_user.user_id != 0 %}
-			<div class="team-votes-button-A"><div class="team-votes-button-B">
-				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%} {% if match.vote===0%}team-voted{%endif%}">
+			<div class="team-votes-button-A"><div class="{% if match.vote!==0%}team-votes-button-B{%endif%}">
+				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%}">
 					{% if (match.vote === 0) %}
 						{% trans _("presionado") %}
 					{% else %}
@@ -58,7 +58,7 @@
 				<div class="team-votes-meneos">meneos</div>
 			</div><!--team-votes-count-->
 			{% if current_user.user_id != 0 %}
-			<div class="team-votes-button-A">
+			<div class="team-votes-button-A"><div class="{% if match.vote!==2%}team-votes-button-B{%endif%}">
 				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%} {% if match.vote===2%}team-voted{%endif%}">
 					{% if (match.vote == 2) %}
 						{% trans _("presionado") %}
@@ -70,7 +70,7 @@
 						{% endif %}
 					{% endif %}
 					</div>
-			</div><!--team-votes-button-*-->
+			</div></div><!--team-votes-button-*-->
 			{% endif %}
 		</div><!--team-votes-box-B-->
 		</div><!--team-B-->

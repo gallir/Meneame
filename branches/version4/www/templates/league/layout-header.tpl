@@ -76,7 +76,11 @@ $(document).ready(function() {
 
 			if (target) {
 				$('.team .team-votes-menealo', match).text("{% trans _("menéalo") %}");
-				target.parents('.team').find('.team-votes-menealo').text("{% trans _("presionado") %}");
+                $('.team-votes-button-A > div', match).addClass('team-votes-button-B');
+				target
+                  .parents('.team')
+                  .find('.team-votes-button-A > div').attr('class', '').end()
+                  .find('.team-votes-menealo').text("{% trans _("presionado") %}");
 			}
 		});
 	});
