@@ -277,6 +277,7 @@ color:#abb7d2;
 
 /* voters pagination */
 
+.pages,
 .game-voters-pages{
 padding:10px 0 0 0;
 margin:0 0 40px 20px;
@@ -285,6 +286,7 @@ font-family:'Open Sans',sans-serif;
 font-size:70%;
 }
 
+.pages a,.pages span,
 .game-voters-pages a,.game-voters-pages span{
 display:block;
 float:left;
@@ -293,18 +295,21 @@ margin-right:3px;
 color:#072b7a;
 }
 
+.pages span.current,
 .game-voters-pages span.current{
 color:#fff;
 background-color:#072b7a;
 border:solid 1px #072b7a;
 }
 
+.pages a,
 .game-voters-pages a{
 text-decoration:none;
 border:solid 1px #072b7a;
 background:#E4E9F1;
 }
 
+.pages a:hover,
 .game-voters-pages a:hover{
 color:#fff;
 background-color:#072b7a;

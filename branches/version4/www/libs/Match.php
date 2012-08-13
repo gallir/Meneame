@@ -14,7 +14,6 @@ class Match {
 	
 	const REVOTE_TIME = 300;
 	public $id;
-	public $limit_votes = 25;
 
 	public function create(Array $data)
 	{
@@ -85,6 +84,21 @@ class Match {
 		$db->commit();
 	}
 
+	public function get_votes_box()
+	{
+		ob_start();
+		$GLOBALS['globals']['match_id'] = $this->id;
+		echo '<div id="voters-container-' . $this->id . '">';
+		require mnmpath . '/backend/league_meneos.php';
+		echo '</div>';
+		return ob_get_clean();
+	}
+
+	public function print_summary()
+	{
+		Haanga::Load('league/match.tpl', array('match' => $this));
+	}
+
 	public function json_votes_info() {
 		global $db, $current_user;
 		$summary = $db->get_row("SELECT 
@@ -98,7 +112,7 @@ class Match {
 
 	public function read()
 	{
-		global $db, $current_user;
+		global $db, $current_user, $globals;
 
 		$id = $this->id;
 		$sql = "SELECT
@@ -127,7 +141,7 @@ class Match {
 			$this->total_votes = $this->votes_local + $this->votes_visitor + $this->votes_tied;
 			$this->ts_date  = strtotime($this->date);
 			$this->ts_vote_until = strtotime($this->vote_until);
-			$this->votes    = $this->getVotes();
+			$globals['vote_values'] = array(_("empate"), $this->local_name, $this->visitor_name);
 			return true;
 		}
 		return false;
@@ -145,22 +159,6 @@ class Match {
 			local = $local, visitor = $visitor, league_id = $league,
 			date = '$date', vote_until = '$vote_until'
 			WHERE id = {$this->id}");
-	}
-
-	public function getVotes()
-	{
-		global $db;
-
-		$page   = empty($_REQUEST['page']) ? 1 : intval($_REQUEST['page']);
-		$offset = ($page > 0 ? ($page-1) : 0) * $this->limit_votes;
-		$sql = "SELECT
-			v.*, u.user_names as name, u.user_avatar as avatar,
-			u.user_login
-		FROM " . self::VOTES . " v
-		INNER JOIN users u ON (u.user_id = v.user_id)
-		WHERE match_id = {$this->id} LIMIT $offset, $this->limit_votes";
-
-		return $db->get_results($sql);
 	}
 
 }

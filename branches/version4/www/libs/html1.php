@@ -154,16 +154,81 @@ function mobile_redirect() {
 	}
 }
 
-function do_pages_reverse_tpl($total, $current, $tpl) {
+function do_pages_reverse($total, $page_size=25, $margin = true) {
+	global $db;
+
+	if ($total > 0 && $total < $page_size) return;
+
 	$index_limit = 5;
-	$start = max($current-intval($index_limit/2), 1);
-    $pages = array();
-	for ($i=$start;$i<= $total;$i++) {
-        $pages[] = $i;
-    }
-    rsort($pages, SORT_NUMERIC);
-    $args = compact('total', 'current', 'start', 'pages');
-    Haanga::Load($tpl, $args);
+
+	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
+	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
+	if(!empty($query)) {
+		$query = htmlspecialchars($query);
+		$query = "&amp;$query";
+	}
+
+	$total_pages=ceil($total/$page_size);
+	$current = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : $total_pages;
+	$start=max($current-intval($index_limit/2), 1);
+	$end=$start+$index_limit-1;
+
+	if ($margin) {
+		echo '<div class="pages margin">';
+	} else {
+		echo '<div class="pages">';
+	}
+
+	if($total < 0 || $current<$total_pages) {
+		$i = $current+1;
+		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'._('siguiente').' &#171;</a>';
+	} else {
+		echo '<span class="nextprev">&#171; '._('siguiente'). '</span>';
+	}
+
+	if ($total_pages > 0) {
+
+		if($total_pages>$end) {
+			$i = $total_pages;
+			if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+			echo '<span>...</span>';
+		}
+
+		//for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
+		for ($i=min($end, $total_pages) ; $i >= $start;$i--) {
+			if($i==$current) {
+				echo '<span class="current">'.$i.'</span>';
+			} else {
+				if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+				echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+			}
+		}
+
+		if($start>1) {
+			$i = 1;
+			echo '<span>...</span>';
+			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+		}
+
+	} else {
+		echo '<span class="current">'.$current.'</span>';
+		if($current>2) {
+			echo '<span>...</span>';
+			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
+		}
+	}
+
+	if($current==1) {
+		echo '<span class="nextprev">&#187; '._('anterior'). '</span>';
+	} else {
+		$i = $current-1;
+		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#187; '._('anterior').'</a>';
+	}
+
+	echo '</div>';
 }
 
 function do_pages($total, $page_size=25, $margin = true) {

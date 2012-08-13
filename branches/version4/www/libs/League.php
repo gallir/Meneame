@@ -12,6 +12,7 @@ class League {
 	const TABLE = "league";
 
 	var $id;
+	var $per_page = 5;
 
 	public function __construct($id = NULL)
 	{
@@ -24,21 +25,24 @@ class League {
 		}
 	}
 
-	public function read_current_match()
+	public function get_pages($per_page=2)
 	{
 		global $db;
-		$max = $db->get_row("SELECT count(*) as total FROM " . Match ::TABLE . " WHERE league_id = $this->id");
-		if (!empty($_SERVER['PATH_INFO'])) {
-   	 		$current = intval(substr($_SERVER['PATH_INFO'], 1));
+
+		$this->per_page = $per_page;
+
+		$max = $db->get_row("SELECT count(*) as total FROM " . Match::TABLE . " WHERE league_id = $this->id");
+
+		$total   = ceil($max->total/$per_page);
+		$current = $total;
+		if (!empty($_GET['page']) && is_numeric($_GET['page'])) {
+   	 		$current = intval($_GET['page']);
 		}
-		if ($current < 1 || $current > $max->total) {
-			$current = $max->total;
-		} 
+		$current = ($total - $current) * $per_page;
+
 		$this->current = $current;
 		$this->total   = $max->total;
-		$current--;
-		$match = $db->get_row("SELECT id FROM " . Match::TABLE . " WHERE league_id = $this->id LIMIT {$current}, 1");
-		return new Match($match->id);
+		return $db->get_results("SELECT id FROM " . Match::TABLE . " WHERE league_id = $this->id LIMIT {$current}, $per_page");
 	}
 
 	public static function create(Array $data)
