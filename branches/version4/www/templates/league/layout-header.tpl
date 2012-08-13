@@ -29,17 +29,20 @@ $(document).ready(function() {
 	var values = {A: 1, B: 2, C: 0},
 		vstatus = ["{% trans _("presionado") %}", "{% trans _("menéalo") %}"],
 		url	 = "{{globals.base_url}}backend/league_vote.php?";
-		objects = {
-			local: $('.team-A .team-votes-number'),
-			visitor: $('.team-B .team-votes-number'),
-			tied: $('.team-votes-box-C .team-votes-number')
-		};
 
 	$('.team-votes-menealo').click(function(e) {
 		e.preventDefault();
 		var self = $(this),
+            match  = self.parents('div.game'),
 			parent = self.parents('div.team');
+            link_id = match.attr('id').match(/match-([0-9]+)/)[1],
 			vote = values[parent.attr('class').match(/team.*-([abc])$/i)[1]];
+
+		var objects = {
+			local: $('.team-A .team-votes-number', match),
+			visitor: $('.team-B .team-votes-number', match),
+			tied: $('.team-votes-box-C .team-votes-number', match)
+		};
 
 		if (self.hasClass('disabled')) {
 			return;
@@ -72,8 +75,8 @@ $(document).ready(function() {
 			}
 
 			if (target) {
-				$('.team .team-votes-menealo a').text("{% trans _("menéalo") %}");
-				target.parents('.team').find('.team-votes-menealo a').text("{% trans _("presionado") %}");
+				$('.team .team-votes-menealo', match).text("{% trans _("menéalo") %}");
+				target.parents('.team').find('.team-votes-menealo').text("{% trans _("presionado") %}");
 			}
 		});
 	});

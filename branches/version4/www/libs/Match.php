@@ -131,7 +131,7 @@ class Match {
 		";
 
 		if ($current_user->user_id > 0) {
-			$sql .= " LEFT JOIN " . self::VOTES . " v ON (v.match_id = m.id)";
+			$sql  .= " LEFT JOIN " . self::VOTES . " v ON (v.match_id = m.id AND v.user_id = {$current_user->user_id})";
 		}
 
 		$sql .= " WHERE m.id = {$id}";

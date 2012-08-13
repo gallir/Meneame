@@ -196,7 +196,6 @@ function do_pages_reverse($total, $page_size=25, $margin = true) {
 			echo '<span>...</span>';
 		}
 
-		//for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
 		for ($i=min($end, $total_pages) ; $i >= $start;$i--) {
 			if($i==$current) {
 				echo '<span class="current">'.$i.'</span>';

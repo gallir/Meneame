@@ -3,8 +3,7 @@
 	<h1>{{match.local_name}} // {{match.visitor_name}}</h1>
 
 	<div class="teams"><!--to group 2 teams-->
-
-		 <div class="team team-A">
+		<div class="team team-A">
 		<img class="team-A-logo" src="{{globals.base_static}}img/liga_f_ES_2012/{{match.local_short|lower}}_G.png" alt="{{match.local_name}}" title="{{match.local_name}}" widht="150" height="150" />
 		<div class="team-votes-box-A">
 			<div class="team-votes-count">
