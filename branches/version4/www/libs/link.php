@@ -109,7 +109,7 @@ class Link extends LCPBase {
 		if ($site_parent > 0 && $site_parent != $site_id) {
 			$filter_by_site_sql .= " OR sub_statuses.id = $site_parent ";
 		}
-		$site_children = SitesMgr::get_children(); // array
+		$site_children = SitesMgr::get_children($site_id); // array
 		if (is_array($site_children) && count($site_children) > 0 ) {
 			$filter_by_site_sql .= " OR sub_statuses.id in (" . implode(',', $site_children).")";
 		}
@@ -1166,15 +1166,23 @@ class Link extends LCPBase {
 			Upload::create_cache_dir($this->id);
 			$filepath = Upload::get_cache_dir($this->id) . "/thumb-$this->id.jpg";
 			if ($img->type == 'local') {
-				$img->scale($globals['thumb_size']);
-				if($img->save($filepath)) {
+				$thumbnail = $img->scale($globals['thumb_size']);
+				if($thumbnail != false && $thumbnail->save($filepath)) {
 					@chmod($filepath, 0777);
-					$this->thumb_x = $img->x;
-					$this->thumb_y = $img->y;
+					$this->thumb_x = $thumbnail->getWidth();
+					$this->thumb_y = $thumbnail->getHeight();
+
+					// If everything goes OK, create a bigger thumbnail
+					// TODO: this is a dirty hack for @jordisan, before going on vacation
+					$thumbnail_medium = $img->scale(250);
+					$filepath_medium = Upload::get_cache_dir($this->id) . "/thumb_medium-$this->id.jpg";
+					$thumbnail_medium->save($filepath_medium);
+
 					// Upload to S3
 					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
 							//$this->thumb = $globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
 							$this->thumb_status = 'remote';
+							Media::put($filepath_medium, 'thumbs', "medium_$this->id.jpg");
 					} else {
 						//$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
 						//$this->thumb .= "/$chain/$this->id.jpg";

@@ -48,32 +48,12 @@ class BasicThumb {
 		$thumb = new SimpleImage();
 		$thumb->image = $this->image;
 		if ($thumb->resize($size, $size, true)) {
-			$this->image = $thumb->image;
-			$this->x=imagesx($this->image);
-			$this->y=imagesy($this->image);
-			return true;
+			//$this->image = $thumb->image;
+			//$this->x=imagesx($this->image);
+			//$this->y=imagesy($this->image);
+			return $thumb;
 		}
 
-// Old code that gets irregular images
-/*
-		if ($this->x > $this->y) {
-			$percent = $size/$this->x;
-		} else {
-			$percent = $size/$this->y;
-		}
-		$min = min($this->x*$percent, $this->y*$percent);
-		if ($min < $size/3) $percent = $percent * $size/3/$min; // Ensure that minimum axis size is size/3
-		$new_x = round($this->x*$percent);
-		$new_y = round($this->y*$percent);
-		$dst = ImageCreateTrueColor($new_x,$new_y);
-		imagefill($dst, 0, 0, imagecolorallocate($dst, 255, 255, 255));
-		if(imagecopyresampled($dst,$this->image,0,0,0,0,$new_x,$new_y,$this->x,$this->y)) {
-			$this->image = $dst;
-			$this->x=imagesx($this->image);
-			$this->y=imagesy($this->image);
-			return true;
-		} 
-*/
 		return false;
 	}
 
