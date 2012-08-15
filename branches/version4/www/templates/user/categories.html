@@ -12,6 +12,7 @@
 		onchange="select_meta(this, {{ meta.id}})"
 		/>{{ meta.name}}</label></dt>
 
+	<div class="metadd">
 	{% for category in categories[meta.id] %}
 		<dd><label><input
 			{% if user.id != current_user.user_id %}disabled="true"{% endif %}
@@ -19,6 +20,7 @@
 			{% if not selected || selected[category.id] %}checked="true"{% endif %}
 			value="{{ category.id }}"/>{{ category.name }}</label></dd>
 	{% endfor %}
+	</div>
 	</dl>
 
 {% endfor %}

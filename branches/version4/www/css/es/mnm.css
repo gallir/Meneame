@@ -876,25 +876,31 @@ margin: 0px;
 
 dl.categorylist {
 float: left;
-width: auto;
-min-width: 15%;
-margin-right: 5px;
-padding-bottom: 5px;
-font-size: 85%;
 }
 
-dl.categorylist dt {
+dl.categorylist dt label {
+margin-left: 20px;
 float: none;
 width: auto;
 text-align: left;
-font-size: 120%;
+font-size: 110%;
 font-weight: bold;
+color: #ff6400;
 }
 
-dl.categorylist dd {
-margin-left: 15px ;
-font-size: 100%;
-padding-bottom: 0;
+dl.categorylist dd label {
+margin-left: 35px;
+font-size: 85%;
+color: #ff9400;
+}
+
+.metadd {
+margin-top: 5px;
+}
+
+dl.categorylist input {
+margin-right: 7px;
+margin-bottom: 5px;
 }
 
 .thumbnail {
