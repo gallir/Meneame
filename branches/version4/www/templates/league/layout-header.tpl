@@ -9,6 +9,16 @@
   <title>menéame / Nivea For Men</title>
 
 </head>
+{% if accepted_terms === FALSE %}
+<link rel="stylesheet" href="{{globals.base_static}}css/jquery.simplemodal.css" type="text/css" media="screen" />
+<script src="{{globals.base_url}}js/jquery.simplemodal.js"></script>
+<script>
+$(document).ready(function() {
+    $("#terms").modal({close: false});
+});
+</script>
+{% endif %}
+
 
 {%spacefull%}
 <script type="text/javascript">
@@ -20,8 +30,7 @@ mobile_client = {{ globals.mobile }};
 </script>
 
 <script>
-function disable_league_votes(text)
-{
+function disable_league_votes(text) {
 	$('.team-votes-menealo').addClass('disabled').text(text);
 }
 
@@ -92,6 +101,13 @@ $(document).ready(function() {
 
 <!--Facebook stuff-->
 <div id="fb-root"></div>
+<div id="terms" style="display:none">
+    here goes the terms
+    <form method="POST">
+        <input type="submit" name="terms" value="{% trans _("Acepto") %}" />
+        <input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
+    </form>
+</div>
 <img class="banner-top" src="{{globals.base_static}}img/nivea_2012/banner_00.png" width="386" height="200" alt="Nivea For Men" title="Logo Nivea For Men" />
 
 <div class="bases">
