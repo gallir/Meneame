@@ -19,6 +19,7 @@ $sites = SitesMgr::get_active_sites();
 
 foreach ($sites as $site) {
 	echo "START SITE: $site\n";
+	SitesMgr::__init($site);
 	depublish($site);
 	discard($site);
 }
@@ -54,6 +55,7 @@ function discard($site_id) {
 
 		$l->status = 'discard';
 		$db->query("update links set link_status='discard' where link_id = $l->id");
+		echo "Discard id: ".$l->id."\n"; // benjami 18-08-2012
 		SitesMgr::deploy($l);
 
 		// Add the discard to log/event
@@ -126,8 +128,8 @@ function depublish($site_id) {
 		foreach ($links as $link) {
 			$l = Link::from_db($link);
 			// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
-			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > '$l->date' and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
-			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > '$l->date' and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
+			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
+			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 			echo "Candidate $l->id ($l->karma) $negatives $positives\n";
 			if ($negatives > $l->karma/6 && $l->negatives > $l->votes/6
 				&& ($negatives > $positives || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {

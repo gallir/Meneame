@@ -19,6 +19,7 @@ $sites = SitesMgr::get_active_sites();
 
 
 foreach ($sites as $site) {
+	echo "*** SITE: ".$site."\n"; // benjami 18-08-2012
 	promote($site);
 }
 
@@ -28,7 +29,7 @@ function promote($site_id) {
 	SitesMgr::__init($site_id);
 	echo "Parent: ". SitesMgr::my_parent()."\n";
 
-	$min_karma_coef = 0.88;
+	$min_karma_coef = 0.85;
 
 
 	$links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from sub_statuses WHERE id = $site_id and date > date_sub(now(), interval 24 hour) and status in ('published', 'queued')");
@@ -95,7 +96,7 @@ function promote($site_id) {
 	$min_votes = 5;
 	/////////////
 
-	$limit_karma = round(min($past_karma,$min_karma) * 0.60);
+	$limit_karma = round(min($past_karma,$min_karma) * 0.50);
 	$bonus_karma = round(min($past_karma,$min_karma) * 0.40);
 
 
@@ -169,7 +170,8 @@ function promote($site_id) {
 		} else {
 			echo "OUTPUT:\n. ".strip_tags($output)."\n";
 		}
-		die;
+		// die; benjami 18-08-2012
+		return;
 	}
 
 	$max_karma_found = 0;
@@ -258,7 +260,7 @@ function promote($site_id) {
 
 			$depublished = (int) $db->get_var("select count(*) from logs where log_type = 'link_depublished' and log_ref_id = $link->id");
 			if ($depublished > 0) {
-				$karma_new *= 0.5;
+				$karma_new *= 0.4;
 				$link->message .= 'Previously depublished' . '<br/>';
 				$link->annotation .= _('previamente quitada de portada')."<br/>";
 			}
