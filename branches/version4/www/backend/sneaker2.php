@@ -47,7 +47,7 @@ if ($max_items < 1 || $max_items > 100) {
 if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
 // Get the logs
-if ($current_user->admin && SiteMgr::my_id() == 0) $site_filter = '';
+if ($current_user->admin && SiteMgr::my_id() == 0 && false) $site_filter = '';
 else $site_filter = 'and log_sub = ' . SitesMgr::my_parent();
 
 $logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_type != 'login_failed' and log_date > $dbtime $site_filter order by log_date desc limit $max_items");
