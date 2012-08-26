@@ -95,21 +95,40 @@ $(document).ready(function() {
 	});
 });
 </script>
+
+<script type='text/javascript'>
+(function() {
+var useSSL = 'https:' == document.location.protocol;
+var src = (useSSL ? 'https:' : 'http:') +
+'//www.googletagservices.com/tag/js/gpt.js';
+document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+})();
+</script>
+
+<script type='text/javascript'>
+googletag.defineSlot('/10377667/MNA-CEN-RECT', [500, 250],
+'div-gpt-ad-1345640121649-0').addService(googletag.pubads());
+googletag.pubads().enableSyncRendering();
+googletag.pubads().enableSingleRequest();
+googletag.enableServices();
+</script>
+
 {% endspacefull %}
 
 <body>
 
-<!--Facebook stuff-->
-<div id="fb-root"></div>
 <div id="terms" style="display:none">
-    here goes the terms
+Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
     <form method="POST">
         <input type="submit" name="terms" value="{% trans _("Acepto") %}" />
         <input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
     </form>
 </div>
-<img class="banner-top" src="{{globals.base_static}}img/nivea_2012/banner_00.png" width="386" height="200" alt="Nivea For Men" title="Logo Nivea For Men" />
+<div class="mnm-logo"><a href="http://{{globals.server_name}}"><img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" /></a></div>
 
-<div class="bases">
-	<p>Presentación / Enlace a las bases / Información legal</p>
-</div><!--class bases-->
+<!-- MNA-CEN-RECT -->
+<div id='div-gpt-ad-1345640121649-0' class="banner-top">
+<script type='text/javascript'>
+googletag.display('div-gpt-ad-1345640121649-0');
+</script>
+</div>

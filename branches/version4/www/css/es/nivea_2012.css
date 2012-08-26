@@ -1,11 +1,23 @@
 body{
 margin:0;
 padding:0;
-/* background-color:#072b7a; */
-background-color:#fff;
-background-image:url('../../img/nivea_2012/background.png');
-background-repeat:repeat-x;
-background-position:left top;
+background-color:#6b96b2;
+}
+
+/* top mnm logo */
+
+.mnm-logo{
+margin:0;
+padding:0;
+width:100%;
+background:#fff;
+border-bottom: 1px solid #ff6400;
+}
+
+.mnm-logo img{
+margin-top:10px;
+margin-left:20px;
+margin-bottom:10px;
 }
 
 /* banner top */
@@ -14,48 +26,10 @@ background-position:left top;
 display:block;
 margin-left:auto;
 margin-right:auto;
-margin-top:15px;
-}
-
-/* bases */
-
-.bases{
-margin:auto;
 margin-top:50px;
-margin-bottom:50px;
-padding:25px;
-width:850px;
-background-color:rgba(0,51,119,0.2);
-/* IE 6-8 */
--ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
-zoom:1;
-}
-
-.bases p{
-margin:0;
-padding:0;
-color:#072b7a;
-font-family:'Open Sans',sans-serif;
-font-size:18px;
-}
-
-.bases p{
-color:#fff;
-}
-
-.bases a,.game-footer a{
-text-decoration:none;
-color:#072b7a;
-font-weight:bold;
-}
-
-.bases a{
-color:#fff;
-}
-
-.bases a:hover,.game-footer a:hover{
-text-decoration:underline;
+width:500px;
+height:250px;
+/*background:#f00;*/
 }
 
 /* game box */
@@ -67,11 +41,9 @@ margin-bottom:50px;
 padding:25px;
 width:850px;
 overflow:hidden;
-background-color:rgba(0,51,119,0.2);
-/* IE 6-8 */
--ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
-zoom:1;
+background-image:url('../../img/nivea_2012/background.png');
+background-repeat:repeat-x;
+background-position:left top;
 }
 
 .game-footer{
@@ -97,12 +69,12 @@ width:650px;
 }
 
 .game h1{
-color:#072b7a;
+color:#fff;
 font-family:'Open Sans',sans-serif;
 font-size:25px;
 margin:0px;
 padding:0;
-text-shadow:0px 0px 1px #fff;
+/*text-shadow:0px 0px 1px #fff;*/
 text-align:center;
 overflow:hidden;
 }
@@ -322,7 +294,8 @@ border-color:#072b7a;
 margin:auto;
 margin-top:50px;
 padding-bottom:50px;
-width:900px;background:#fff;
+width:900px;
+background:#6b96b2;
 font-family:'Open Sans',sans-serif;
 font-size:15px;
 }
@@ -333,11 +306,11 @@ float:left;
 padding:4px 10px 4px 10px;
 margin-right:3px;
 color:#072b7a;
-background:#fff;
+background:#6b96b2;
 }
 
 .pages-ad span.current-ad{
-color:#fff;
+color:#6b96b2;
 background-color:#072b7a;
 border:solid 1px #072b7a;
 }
@@ -348,7 +321,7 @@ border:solid 1px #072b7a;
 }
 
 .pages-ad a:hover{
-color:#fff;
+color:#6b96b2;
 background-color:#072b7a;
 border-color:#072b7a;
 }
@@ -356,4 +329,4 @@ border-color:#072b7a;
 .pages-ad span.nextprev-ad{
 border:1px solid #abb7d2;
 color:#abb7d2;
-}
+} 
