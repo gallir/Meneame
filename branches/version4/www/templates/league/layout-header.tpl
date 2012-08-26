@@ -36,7 +36,7 @@ function disable_league_votes(text) {
 
 $(document).ready(function() {
 	var values = {A: 1, B: 2, C: 0},
-		vstatus = ["{% trans _("presionado") %}", "{% trans _("menéalo") %}"],
+		vstatus = ["{% trans _("¡votado!") %}", "{% trans _("menéalo") %}"],
 		url	 = "{{globals.base_url}}backend/league_vote.php?";
 
 	$('.team-votes-menealo').click(function(e) {
@@ -89,7 +89,7 @@ $(document).ready(function() {
 				target
                   .parents('.team')
                   .find('.team-votes-button-A > div').attr('class', '').end()
-                  .find('.team-votes-menealo').text("{% trans _("presionado") %}");
+                  .find('.team-votes-menealo').text("{% trans _("¡votado!") %}");
 			}
 		});
 	});
