@@ -6,7 +6,7 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script> 
   <script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript"></script>
-  <title>menéame / Nivea For Men</title>
+  <title>menéame / NIVEA FOR MEN</title>
 
 </head>
 {% if accepted_terms === FALSE %}
@@ -36,7 +36,7 @@ function disable_league_votes(text) {
 
 $(document).ready(function() {
 	var values = {A: 1, B: 2, C: 0},
-		vstatus = ["{% trans _("¡votado!") %}", "{% trans _("menéalo") %}"],
+		vstatus = ["{% trans _("¡votado!") %}", "{% trans _("gana") %}"],
 		url	 = "{{globals.base_url}}backend/league_vote.php?";
 
 	$('.team-votes-menealo').click(function(e) {
@@ -84,7 +84,7 @@ $(document).ready(function() {
 			}
 
 			if (target) {
-				$('.team .team-votes-menealo', match).text("{% trans _("menéalo") %}");
+				$('.team .team-votes-menealo', match).text("{% trans _("gana") %}");
                 $('.team-votes-button-A > div', match).addClass('team-votes-button-B');
 				target
                   .parents('.team')
