@@ -14,10 +14,10 @@
 			<div class="team-votes-button-A"><div class="{% if match.vote!==1%}team-votes-button-B{%endif%}">
 				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%} {% if match.vote===1%}team-voted{%endif%}">
 					{% if (match.vote == 1) %}
-						{% trans _("presionado") %}
+						{% trans _("¡votado!") %}
 					{% else %}
 						{% if match.is_votable %}
-							{% trans _("menéalo") %}
+							{% trans _("gana") %}
 						{% else %}
 							{% trans _("cerrado") %}
 						{% endif %}
@@ -37,7 +37,7 @@
 			<div class="team-votes-button-A"><div class="{% if match.vote!==0%}team-votes-button-B{%endif%}">
 				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%}">
 					{% if (match.vote === 0) %}
-						{% trans _("presionado") %}
+						{% trans _("¡votado!") %}
 					{% else %}
 						{% if match.is_votable %}
 							{% trans _("empate") %}
@@ -61,10 +61,10 @@
 			<div class="team-votes-button-A"><div class="{% if match.vote!==2%}team-votes-button-B{%endif%}">
 				<div class="team-votes-menealo {% if !match.is_votable%}disabled{%endif%} {% if match.vote===2%}team-voted{%endif%}">
 					{% if (match.vote == 2) %}
-						{% trans _("presionado") %}
+						{% trans _("¡votado!") %}
 					{% else %}
 						{% if match.is_votable %}
-							{% trans _("menéalo") %}
+							{% trans _("gana") %}
 						{% else %}
 							{% trans _("cerrado") %}
 						{% endif %}
