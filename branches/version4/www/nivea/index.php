@@ -30,7 +30,7 @@ $globals['league_url']  = $globals['base_url'] . 'nivea/';
 
 /* terms {{{ */
 $accepted_terms = NULL;
-if ($current_user) {
+if ($current_user->user_id > 0) {
 	if (!empty($_POST['terms'])) {
 		if ($_POST['terms'] == _('Acepto')) {
 			$db->query("INSERT INTO league_terms VALUES({$current_user->user_id}, 'nivea')");
