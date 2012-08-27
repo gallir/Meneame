@@ -43,10 +43,10 @@ if ($current_user->user_id > 0) {
 }
 /* }}} */
 
-$args = compact('league', 'accepted_terms');
+$sites = $db->get_results("select * from subs where visible order by id asc");
+$args  = compact('league', 'accepted_terms', 'sites');
 
 Haanga::Load('league/layout-header.tpl', $args);
-
 
 if (isset($_GET['match'])) {
 	$match = new Match(intval($_GET['match']));

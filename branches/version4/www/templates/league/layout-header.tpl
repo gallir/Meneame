@@ -124,7 +124,22 @@ Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de l
         <input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
     </form>
 </div>
-<div class="mnm-logo"><a href="http://{{globals.server_name}}"><img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" /></a></div>
+
+<div id="header-top">
+  <ul id="edlist">
+	{% for s in sites %}
+		<li>
+			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long|default:s.name}}</a>
+		</li>
+	{% endfor %}
+  </ul>
+  {% include "header_userinfo.html" %}
+</div>
+  <div class="mnm-logo">
+     <a href="http://{{globals.server_name}}">
+        <img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" />
+     </a>
+  </div>
 
 <!-- MNA-CEN-RECT -->
 <div id='div-gpt-ad-1345640121649-0' class="banner-top">

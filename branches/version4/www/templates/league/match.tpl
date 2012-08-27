@@ -1,6 +1,6 @@
 <div id="match-{{match.id}}" class="game">
 
-	<h1>{{match.local_name}} // {{match.visitor_name}}</h1>
+	<h1><a class="match-title" href="?match={{match.id}}">{{match.local_name}} // {{match.visitor_name}}</a></h1>
 
 	<div class="teams"><!--to group 2 teams-->
 		<div class="team team-A">
