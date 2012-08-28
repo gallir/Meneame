@@ -41,7 +41,6 @@ INNER JOIN users u ON (u.user_id = v.user_id)
 WHERE match_id = {$globals['match_id']}
 ORDER BY date DESC
 LIMIT $votes_offset, $votes_page_size";
-die($sql);
 $votes = $db->get_results($sql);
 
 $globals['vote_values'] = array("Empate", "Local", "Visitante");
