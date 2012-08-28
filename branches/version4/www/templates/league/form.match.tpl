@@ -33,7 +33,7 @@
   <input type="text" class="date" name="date" value="{{ data.date|default:""|escape }}" />
 </p>
 <p>
-  <label>{% trans _('Fecha limite') %}:</label><br/>
-  <input type="text" class="date" name="vote_until" value="{{ data.vote_until|default:""|escape }}" />
+  <label>{% trans _('Comienzo de votos') %}:</label><br/>
+  <input type="text" class="date" name="vote_starts" value="{{ data.vote_starts|default:""|escape }}" />
 </p>
 {% endblock %}

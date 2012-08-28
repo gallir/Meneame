@@ -54,7 +54,7 @@ if (isset($_GET['match'])) {
 		$match->print_summary();
 	}
 } else {
-	foreach ($league->get_pages(2) as $m) {
+	foreach ($league->get_pages($league->per_page) as $m) {
 		$match = new Match($m->id);
 		$match->read();
 		$match->print_summary();

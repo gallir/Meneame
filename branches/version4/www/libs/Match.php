@@ -22,9 +22,9 @@ class Match {
 		$local		= intval($data['local']);
 		$visitor	= intval($data['visitor']);
 		$date		= date('Y-m-d H:i:s', strtotime($data['date']));
-		$vote_until = date('Y-m-d H:i:s', strtotime($data['vote_until'])); 
-		$db->query("INSERT into `" . self::TABLE . "`(league_id, local, visitor, date, vote_until) 
-				VALUES('{$league}', '{$local}', '{$visitor}', '{$date}', '{$vote_until}')");
+		$vote_starts = date('Y-m-d H:i:s', strtotime($data['vote_starts'])); 
+		$db->query("INSERT into `" . self::TABLE . "`(league_id, local, visitor, date, vote_starts) 
+				VALUES('{$league}', '{$local}', '{$visitor}', '{$date}', '{$vote_starts}')");
 	}
 
 
@@ -48,7 +48,8 @@ class Match {
 
 	public function is_votable()
 	{
-		return strtotime($this->vote_until) > time();
+		$now = time();
+		return strtotime($this->vote_starts) < $now  && strtotime($this->date) > $now;
 	}
 
 	public function insert_vote($vote)
@@ -145,7 +146,7 @@ class Match {
 			}
 			$this->total_votes = $this->votes_local + $this->votes_visitor + $this->votes_tied;
 			$this->ts_date  = strtotime($this->date);
-			$this->ts_vote_until = strtotime($this->vote_until);
+			$this->ts_vote_starts = strtotime($this->vote_starts);
 			$globals['vote_values'] = array(_("empate"), $this->local_name, $this->visitor_name);
 			return true;
 		}
@@ -159,10 +160,10 @@ class Match {
 		$local		= intval($this->local);
 		$visitor	= intval($this->visitor);
 		$date		= date('Y-m-d H:i:s', strtotime($this->date));
-		$vote_until = date('Y-m-d H:i:s', strtotime($this->vote_until)); 
+		$vote_starts = date('Y-m-d H:i:s', strtotime($this->vote_starts)); 
 		$db->query("UPDATE " . self::TABLE . " SET 
 			local = $local, visitor = $visitor, league_id = $league,
-			date = '$date', vote_until = '$vote_until'
+			date = '$date', vote_starts = '$vote_starts'
 			WHERE id = {$this->id}");
 	}
 

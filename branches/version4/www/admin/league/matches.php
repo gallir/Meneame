@@ -12,8 +12,14 @@ if (!empty($_POST['process'])) {
 		$valid = sha1($site_key . $_POST['form_time'] . $current_user->user_id) == $_POST['form_hash'];
 	}
 
-	if (is_numeric($_POST['vote_until'])) {
-		$_POST['vote_until'] = date("Y-m-d H:i:s", strtotime($_POST['date']) - intval($_POST['vote_until']) * 60);
+	if (empty($_POST['vote_starts'])) {
+		// if vote_starts is empty by default 7 days before
+		$_POST['vote_starts'] = 7*24;
+	}
+
+	if (is_numeric($_POST['vote_starts'])) {
+		// if the input is a number we assume they are hours
+		$_POST['vote_starts'] = date("Y-m-d H:i:s", strtotime($_POST['date']) - intval($_POST['vote_starts']) * 3600);
 	}
 
 	if ($valid && empty($_POST['match_id'])) {
@@ -27,7 +33,7 @@ if (!empty($_POST['process'])) {
 		$league->local		= $_POST['local'];
 		$league->visitor	= $_POST['visitor'];
 		$league->date		= $_POST['date'];
-		$league->vote_until	= $_POST['vote_until'];
+		$league->vote_starts	= $_POST['vote_starts'];
 		$league->store();
 	} else if (!$valid) {
 		die(_("El token del formulario no es correcto"));

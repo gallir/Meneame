@@ -82,7 +82,7 @@
 
 	<div class="game-footer">
 		<p>Encuentro el {{match.ts_date|date:"d-m-Y"}} a las {{match.ts_date|date:"H:i"}}. 
-		Puedes votar hasta el {{match.ts_vote_until|date:"d-m-Y"}} a las {{match.ts_vote_until|date:"H:i"}}</p>
+		Puedes votar apartir del {{match.ts_vote_starts|date:"d-m-Y"}} a las {{match.ts_vote_starts|date:"H:i"}}</p>
 	</div><!--game-footer-->
 
 </div><!--game-->
