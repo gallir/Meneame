@@ -53,6 +53,7 @@ googletag.defineSlot('/10377667/MNA-CEN-RECT', [500, 250],
 googletag.pubads().enableSyncRendering();
 googletag.pubads().enableSingleRequest();
 googletag.enableServices();
+GA_googleAddAttr("site", "pmnm");
 </script>
 
 {% endspacefull %}
