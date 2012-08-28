@@ -57,7 +57,7 @@ googletag.pubads().setTargeting("site","pmnm");
 <body>
 
 <div id="terms" style="display:none">
-Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido, tienes 5 minutos para cambiar tu voto, y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
+Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido, tienes 5 minutos para cambiar tu voto, y <b>necesitas un usuario en menéame</b>. Si aún no lo tienes puedes crearlo <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>; cuando lo tengas, si no puedes votar asegúrate que has hecho <b><a href="http://{{globals.server_name}}/login.php?return=%2Fnivea%2F">login</a></b>.<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
     {% if accepted_terms === FALSE %}
 	<form method="POST">
 		<input type="submit" name="terms" value="{% trans _("Acepto") %}" />
@@ -94,5 +94,5 @@ Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de l
 </div>
 
 <div class="bases">
-	<p><a id="bases" href="#">volver a consultar las instrucciones</a></p>
+	<p><a id="bases" href="#">consultar las instrucciones</a></p>
 </div>
