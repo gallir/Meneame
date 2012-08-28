@@ -14,7 +14,7 @@
 <script src="{{globals.base_url}}js/jquery.simplemodal.js"></script>
 <script>
 $(document).ready(function() {
-    $("#terms").modal({close: false});
+	$("#terms").modal({close: false});
 });
 </script>
 {% endif %}
@@ -42,9 +42,9 @@ $(document).ready(function() {
 	$('.team-votes-menealo').click(function(e) {
 		e.preventDefault();
 		var self = $(this),
-            match  = self.parents('div.game'),
+			match  = self.parents('div.game'),
 			parent = self.parents('div.team');
-            link_id = match.attr('id').match(/match-([0-9]+)/)[1],
+			link_id = match.attr('id').match(/match-([0-9]+)/)[1],
 			vote = values[parent.attr('class').match(/team.*-([abc])$/i)[1]];
 
 		var objects = {
@@ -70,6 +70,8 @@ $(document).ready(function() {
 			objects.visitor.text(data.visitor);
 			objects.tied.text(data.tied);
 
+			get_votes("league_meneos.php", "voters", "voters-container-" + link_id, 1, link_id);
+
 			var target;
 			switch (parseInt(data.voted)) {
 			case 1:
@@ -85,11 +87,11 @@ $(document).ready(function() {
 
 			if (target) {
 				$('.team .team-votes-menealo', match).text("{% trans _("gana") %}");
-                $('.team-votes-button-A > div', match).addClass('team-votes-button-B');
+				$('.team-votes-button-A > div', match).addClass('team-votes-button-B');
 				target
-                  .parents('.team')
-                  .find('.team-votes-button-A > div').attr('class', '').end()
-                  .find('.team-votes-menealo').text("{% trans _("¡votado!") %}");
+				  .parents('.team')
+				  .find('.team-votes-button-A > div').attr('class', '').end()
+				  .find('.team-votes-menealo').text("{% trans _("¡votado!") %}");
 			}
 		});
 	});
@@ -119,10 +121,10 @@ googletag.enableServices();
 
 <div id="terms" style="display:none">
 Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
-    <form method="POST">
-        <input type="submit" name="terms" value="{% trans _("Acepto") %}" />
-        <input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
-    </form>
+	<form method="POST">
+		<input type="submit" name="terms" value="{% trans _("Acepto") %}" />
+		<input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
+	</form>
 </div>
 
 <div id="header-top">
@@ -136,9 +138,9 @@ Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de l
   {% include "header_userinfo.html" %}
 </div>
   <div class="mnm-logo">
-     <a href="http://{{globals.server_name}}">
-        <img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" />
-     </a>
+	 <a href="http://{{globals.server_name}}">
+		<img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" />
+	 </a>
   </div>
 
 <!-- MNA-CEN-RECT -->

@@ -23,8 +23,10 @@ if (!isset($globals['match_id']) && !empty($_GET['id'])) {
 if (! $globals['match_id'] > 0 ) die;
 
 if (!isset($_GET['p']))  {
-$votes_page = 1;
-} else $votes_page = intval($_GET['p']);
+  $votes_page = 1;
+} else {
+  $votes_page = intval($_GET['p']);
+}
 
 $votes_page_size = 40;
 $votes_offset=($votes_page-1)*$votes_page_size;
@@ -38,6 +40,8 @@ FROM " . Match::VOTES . " v
 INNER JOIN users u ON (u.user_id = v.user_id)
 WHERE match_id = {$globals['match_id']} LIMIT $votes_offset, $votes_page_size";
 $votes = $db->get_results($sql);
+
+$globals['vote_values'] = array("Empate", "Local", "Visitante");
 
 if (!$votes) return;
 echo '<div class="game-voters-list">';
