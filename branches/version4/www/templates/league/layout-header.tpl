@@ -6,12 +6,12 @@
   <link href='http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js" type="text/javascript"></script> 
   <script src="{{globals.base_url}}js/{{globals.js_main}}" type="text/javascript"></script>
+  <link rel="stylesheet" href="{{globals.base_static}}css/jquery.simplemodal.css" type="text/css" media="screen" />
+  <script src="{{globals.base_url}}js/jquery.simplemodal.js"></script>
   <title>menéame / NIVEA FOR MEN</title>
 
 </head>
 {% if accepted_terms === FALSE %}
-<link rel="stylesheet" href="{{globals.base_static}}css/jquery.simplemodal.css" type="text/css" media="screen" />
-<script src="{{globals.base_url}}js/jquery.simplemodal.js"></script>
 <script>
 $(document).ready(function() {
 	$("#terms").modal({close: false});
@@ -21,24 +21,22 @@ $(document).ready(function() {
 
 
 {%spacefull%}
+<script src="/js/league.js"></script>
 <script type="text/javascript">
 if(top.location != self.location)top.location = self.location;
 base_key="{{ globals.security_key }}";
 user_id = {{ current_user.user_id }};
 user_login = '{{ current_user.user_login }}';
 mobile_client = {{ globals.mobile }};
-</script>
-
-<script src="/js/league.js"></script>
-<script>
 $(function() {
 	var vstatus = ["{% trans _("¡votado!") %}", "{% trans _("gana") %}"],
 		url	 = "{{globals.base_url}}backend/league_vote.php?";
     league_init(vstatus, url);
+    $('a#bases').click(function() {
+	    $("#terms").modal();
+        return false;
+    });
 });
-</script>
-
-<script type='text/javascript'>
 (function() {
 var useSSL = 'https:' == document.location.protocol;
 var src = (useSSL ? 'https:' : 'http:') +
@@ -46,8 +44,7 @@ var src = (useSSL ? 'https:' : 'http:') +
 document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
 })();
 </script>
-
-<script type='text/javascript'>
+<script>
 googletag.defineSlot('/10377667/MNA-CEN-RECT', [500, 250],
 'div-gpt-ad-1345640121649-0').addService(googletag.pubads());
 googletag.pubads().enableSyncRendering();
@@ -55,17 +52,18 @@ googletag.pubads().enableSingleRequest();
 googletag.enableServices();
 googletag.pubads().setTargeting("site","pmnm");
 </script>
-
 {% endspacefull %}
 
 <body>
 
 <div id="terms" style="display:none">
 Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido, tienes 5 minutos para cambiar tu voto, y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
+    {% if accepted_terms === FALSE %}
 	<form method="POST">
 		<input type="submit" name="terms" value="{% trans _("Acepto") %}" />
 		<input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
 	</form>
+    {% endif %}
 </div>
 
 <div id="header-top">
@@ -96,5 +94,5 @@ Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de l
 </div>
 
 <div class="bases">
-	<p><a href="#">volver a consultar las instrucciones</a></p>
+	<p><a id="bases" href="#">volver a consultar las instrucciones</a></p>
 </div>
