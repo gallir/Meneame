@@ -61,7 +61,7 @@ googletag.pubads().setTargeting("site","pmnm");
 <body>
 
 <div id="terms" style="display:none">
-Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
+Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de liga, así que <b>bienvenido a la porra de liga de menéame deportes</b>, que hemos programado con el patrocinio de NIVEA FOR MEN como puedes ver.<br /><br />Menea el equipo ganador o la casilla de empate, y veremos si la comunidad menéame acierta más con la liga que los locutores deportivos.<br /><br />Sólo puedes votar una vez por partido, tienes 5 minutos para cambiar tu voto, y <em>necesitas un usuario en menéame</em> (si aún no lo tienes o no puedes votar y no sabes porqué, puedes consultar las condiciones de usuario <b><a href="http://{{globals.server_name}}/register.php">aquí</a></b>).<br /><br />Podrás votar cada partido desde que abramos las votaciones hasta una hora antes del inicio del partido.<br /><br />
 	<form method="POST">
 		<input type="submit" name="terms" value="{% trans _("Acepto") %}" />
 		<input type="submit" name="terms" value="{% trans _("Rechazo") %}" />
@@ -80,13 +80,21 @@ Ya sabemos lo que te gusta votar y que sabes quién va a ganar cada partido de l
 </div>
   <div class="mnm-logo">
 	 <a href="http://{{globals.server_name}}">
-		<img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="200" height="60" alt="menéame deportes" title="ir a menéame deportes" />
+		<img src="{{globals.base_static}}img/nivea_2012/mnmd_01.png" widht="150" height="45" alt="menéame deportes" title="ir a menéame deportes" />
 	 </a>
   </div>
 
-<!-- MNA-CEN-RECT -->
-<div id='div-gpt-ad-1345640121649-0' class="banner-top">
-<script type='text/javascript'>
-googletag.display('div-gpt-ad-1345640121649-0');
-</script>
+<div class="banners-container">
+  <div class="banner-lateral-l"><img src="{{globals.base_static}}img/nivea_2012/background_02.png" width="143" heigh="74" alt="NIVEA FOR MEN" title="NIVEA FOR MEN" /></div>
+    <!-- MNA-CEN-RECT -->
+    <div id='div-gpt-ad-1345640121649-0' class="banner-central">
+    <script type='text/javascript'>
+    googletag.display('div-gpt-ad-1345640121649-0');
+    </script>
+    </div>
+  <div class="banner-lateral-r"><img src="{{globals.base_static}}img/nivea_2012/background_03.png" widht="101" height="318" alt="NIVEA FOR MEN" title="NIVEA FOR MEN" /></div>
+</div>
+
+<div class="bases">
+	<p><a href="#">volver a consultar las instrucciones</a></p>
 </div>

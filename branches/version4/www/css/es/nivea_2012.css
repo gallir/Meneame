@@ -1,12 +1,16 @@
 body{
 margin:0;
 padding:0;
-background-color:#6b96b2;
+background:#8aaec4;
+background-image:url('../../img/nivea_2012/background_01.png');
+background-repeat:repeat-x;
+background-position:left top;
 }
 
 /* top mnm logo */
 
 /** header {{{ */
+
 #header-top{
 width: 100%;
 height:25px;
@@ -20,7 +24,7 @@ white-space:nowrap;
 #header-top ul#edlist{
 list-style-type:none;
 margin:0;
-padding:0;
+padding:0 0 0 25px;
 float:left;
 }
 
@@ -109,7 +113,6 @@ background:#f00;
 color:#fff;
 }
 
-
 /** }}} */
 
 .match-title {
@@ -135,14 +138,28 @@ margin-bottom:10px;
 
 /* banner top */
 
-.banner-top{
-display:block;
-margin-left:auto;
-margin-right:auto;
+.banners-container{
+margin:0px auto;
 margin-top:50px;
-width:500px;
-height:250px;
-/*background:#f00;*/
+padding:0;
+width:900px;
+height:350px;
+}
+
+.banner-central{
+margin:0px auto;
+padding:0 0 0 55px;
+float:left;
+}
+
+.banner-lateral-l, .banner-lateral-r{
+margin:0px auto;
+padding:0;
+float:left;
+}
+
+.banner-lateral-r{
+padding-left:70px;
 }
 
 /* game box */
@@ -382,7 +399,7 @@ color:#072b7a;
 
 .pages span.current,
 .game-voters-pages span.current{
-color:#fff;
+color:#8aaec4;
 background-color:#072b7a;
 border:solid 1px #072b7a;
 }
@@ -408,7 +425,6 @@ margin:auto;
 margin-top:50px;
 padding-bottom:50px;
 width:900px;
-background:#6b96b2;
 font-family:'Open Sans',sans-serif;
 font-size:15px;
 }
@@ -419,7 +435,7 @@ float:left;
 padding:4px 10px 4px 10px;
 margin-right:3px;
 color:#072b7a;
-background:#6b96b2;
+background:#8aaec4;
 }
 
 .pages-ad span.current-ad{
@@ -434,12 +450,45 @@ border:solid 1px #072b7a;
 }
 
 .pages-ad a:hover{
-color:#6b96b2;
-background-color:#072b7a;
+color:#8aaec4;
+background:#072b7a;
 border-color:#072b7a;
 }
 
 .pages-ad span.nextprev-ad{
 border:1px solid #abb7d2;
 color:#abb7d2;
-} 
+}
+
+/* bases */
+
+.bases{
+margin:0px auto;
+padding:10px 0 10px 0;
+width:500px;
+background-color:rgba(0,51,119,0.2);
+/* IE 6-8 */
+-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33003377,endColorstr=#33003377);
+zoom:1;
+}
+
+.bases p{
+margin:0;
+padding:0;
+color:#072b7a;
+font-family:'Open Sans',sans-serif;
+font-size:14px;
+color:#fff;
+text-align:center;
+}
+
+.bases a{
+text-decoration:none;
+color:#fff;
+font-weight:bold;
+}
+
+.bases a:hover{
+text-decoration:underline;
+}
