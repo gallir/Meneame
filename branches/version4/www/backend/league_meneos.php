@@ -39,7 +39,7 @@ $sql = "SELECT
     user_login 
 FROM league_votes, users 
 WHERE match_id = {$globals['match_id']} 
-AND users.user_id = league_votes.user_id ORDER BY league_votes.date DESC LIMIT 0, 40";
+AND users.user_id = league_votes.user_id ORDER BY league_votes.date DESC LIMIT $votes_offset, 40";
 $votes = $db->get_results($sql);
 
 $globals['vote_values'] = array("Empate", "Local", "Visitante");
