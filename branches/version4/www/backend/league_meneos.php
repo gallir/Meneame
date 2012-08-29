@@ -33,14 +33,13 @@ $votes_offset=($votes_page-1)*$votes_page_size;
 
 $votes_users = $db->get_var("SELECT count(*) FROM league_votes WHERE match_id=".$globals['match_id']);
 
-$sql = "SELECT
-	v.*, u.user_avatar,
-	u.user_login
-FROM " . Match::VOTES . " v
-INNER JOIN users u ON (u.user_id = v.user_id)
-WHERE match_id = {$globals['match_id']}
-ORDER BY date DESC
-LIMIT $votes_offset, $votes_page_size";
+$sql = "SELECT 
+    league_votes.*, 
+    user_avatar, 
+    user_login 
+FROM league_votes, users 
+WHERE match_id = {$globals['match_id']} 
+AND users.user_id = league_votes.user_id ORDER BY league_votes.date DESC LIMIT 0, 40";
 $votes = $db->get_results($sql);
 
 $globals['vote_values'] = array("Empate", "Local", "Visitante");

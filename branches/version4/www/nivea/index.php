@@ -26,15 +26,10 @@ include(mnminclude.'html1.php');
 $league = new League(1);
 $league->read();
 
-if (!empty($globals['nivea_site'])) {
-	$current = SitesMgr::get_info();
-	if ($current->id != $globals['nivea_site']) {
-		$site = SitesMgr::get_info($globals['nivea_site']);
-		$url  = substr($_SERVER['REQUEST_URI'], 1);
-		header('HTTP/1.1 301 Moved Permanently');
-		header("Location: http://{$site->server_name}{$site->base_url}{$url}");
-		exit;
-	}
+if (!empty($globals['nivea_host']) && $_SERVER["HTTP_HOST"] !== $globals['nivea_host']) {
+	header('HTTP/1.1 301 Moved Permanently');
+	header("Location: http://{$globals['nivea_host']}{$_SERVER['REQUEST_URI']}");
+	exit;
 }
 
 $globals['league_url']  = $globals['base_url'] . 'nivea/';
