@@ -30,7 +30,7 @@ if (!empty($globals['nivea_site'])) {
 	$current = SitesMgr::get_info();
 	if ($current->id != $globals['nivea_site']) {
 		$site = SitesMgr::get_info($globals['nivea_site']);
-		$url  = $_SERVER['REQUEST_URI'];
+		$url  = substr($_SERVER['REQUEST_URI'], 1);
 		header('HTTP/1.1 301 Moved Permanently');
 		header("Location: http://{$site->server_name}{$site->base_url}{$url}");
 		exit;
