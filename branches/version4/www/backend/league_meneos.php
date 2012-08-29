@@ -31,7 +31,7 @@ if (!isset($_GET['p']))  {
 $votes_page_size = 40;
 $votes_offset=($votes_page-1)*$votes_page_size;
 
-$votes_users = $db->get_var("SELECT count(*) FROM league_votes WHERE league_id=".$globals['match_id']);
+$votes_users = $db->get_var("SELECT count(*) FROM league_votes WHERE match_id=".$globals['match_id']);
 
 $sql = "SELECT
 	v.*, u.user_avatar,
