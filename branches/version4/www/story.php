@@ -23,6 +23,11 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+include(mnminclude.'ban.php');
+if (check_ip_noaccess()) {
+	die;
+}
+
 mobile_redirect();
 
 $globals['cache-control'][] = 'max-age=3';

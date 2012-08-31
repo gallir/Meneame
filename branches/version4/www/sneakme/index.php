@@ -9,7 +9,10 @@
 include('../config.php');
 include('common.php');
 
-
+include(mnminclude.'ban.php');
+if (check_ip_noaccess()) {
+	die;
+}
 
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {

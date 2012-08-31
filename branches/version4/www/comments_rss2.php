@@ -7,10 +7,10 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
-include(mnminclude.'ban.php');
 
-if (check_ban($globals['user_ip'], 'proxy')) {
-	return;
+include(mnminclude.'ban.php');
+if (check_ip_noaccess() || check_ban_proxy()) {
+	die;
 }
 
 if(!empty($_REQUEST['rows'])) {

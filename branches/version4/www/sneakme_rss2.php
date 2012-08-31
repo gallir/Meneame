@@ -9,6 +9,11 @@
 include('config.php');
 include(mnminclude.'geo.php');
 
+include(mnminclude.'ban.php');
+if (check_ip_noaccess() || check_ban_proxy()) {
+	die;
+}
+
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 300) $rows = 100; //avoid abuses

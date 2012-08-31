@@ -8,10 +8,9 @@
 
 include('config.php');
 include(mnminclude.'geo.php');
+
 include(mnminclude.'ban.php');
-
-
-if (check_ban($globals['user_ip'], 'ip', true) && check_ban_proxy()) {
+if (check_ip_noaccess() || check_ban_proxy()) {
 	die;
 }
 
