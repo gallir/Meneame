@@ -51,6 +51,8 @@ googletag.pubads().enableSyncRendering();
 googletag.pubads().enableSingleRequest();
 googletag.enableServices();
 googletag.pubads().setTargeting("site","pmnm");
+if (navigator.userAgent.match(/iPad/i) != null) { googletag.pubads().setTargeting("ua", "ipad"); }
+	else if (navigator.userAgent.match(/iPhone/i) != null) { GA_googleAddAttr("ua", "iphone"); } 
 </script>
 {% endspacefull %}
 
