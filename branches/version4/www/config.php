@@ -402,6 +402,8 @@ $globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>
 
 // Bonus applied to new links
 $globals['bonus_coef'] = 1.5;
+// The min karma coeffcient in promote10.php
+$globals['min_karma_coef'] = 0.85;
 // Bonus applied to sources that are not frequent
 $globals['new_source_bonus'] = 1.05;
 $globals['new_source_max_hours'] = 240;
