@@ -34,6 +34,8 @@ if (!empty($_POST['process'])) {
 		$league->visitor	= $_POST['visitor'];
 		$league->date		= $_POST['date'];
 		$league->vote_starts	= $_POST['vote_starts'];
+		$league->score_local   = $_POST['score_local'];
+		$league->score_visitor = $_POST['score_visitor'];
 		$league->store();
 	} else if (!$valid) {
 		die(_("El token del formulario no es correcto"));

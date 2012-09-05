@@ -36,4 +36,14 @@
   <label>{% trans _('Comienzo de votos') %}:</label><br/>
   <input type="text" class="date" name="vote_starts" value="{{ data.vote_starts|default:""|escape }}" />
 </p>
+{% if data.id %}
+    <p>
+        <label>{% trans _('Goles del Local') %}:</label><br/>
+        <input type="text" class="date" name="score_local" value="{{ data.score_local|default:""|escape }}" />
+    </p>
+    <p>
+        <label>{% trans _('Goles del visitante') %}:</label><br/>
+        <input type="text" class="date" name="score_visitor" value="{{ data.score_visitor|default:""|escape }}" />
+    </p>
+{% endif %}
 {% endblock %}
