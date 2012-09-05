@@ -53,6 +53,19 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	}
 }
 
+// Check the link belong to the current site
+$site_id = SitesMgr::my_id();
+if ($db->get_var("select count(*) from sub_statuses where id=$site_id and link=$link->id") <= 0) {
+	// The link does not correspond to the current site, find one
+	$hostname = $db->get_var("select server_name from subs, sub_statuses where sub_statuses.link=$link->id and subs.id = sub_statuses.id and subs.parent = 0");
+	if (! empty($hostname) ) {
+		// Redirect it
+		header ('HTTP/1.1 301 Moved Permanently');
+		header('Location: http://' . $hostname . $link->get_relative_permalink());
+		die;
+	}
+}
+
 
 if ($link->is_discarded()) {
 	// Dont allow indexing of discarded links
