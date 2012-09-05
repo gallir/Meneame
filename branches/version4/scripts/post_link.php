@@ -51,9 +51,11 @@ function do_posts($link) {
 	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
 		twitter_post($link->title, $short_url);
 	}
+
 	if ($globals['facebook_token']) {
 		facebook_post($link);
 	}
+
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($link->title, $short_url);
 	}

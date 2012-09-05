@@ -29,7 +29,7 @@ function promote($site_id) {
 	SitesMgr::__init($site_id);
 	echo "Parent: ". SitesMgr::my_parent()."\n";
 
-	$min_karma_coef = 0.85;
+	$min_karma_coef = $globals['media_min_karma'];
 
 
 	$links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from sub_statuses WHERE id = $site_id and date > date_sub(now(), interval 24 hour) and status in ('published', 'queued')");
@@ -82,7 +82,7 @@ function promote($site_id) {
 	$past_karma_long = intval($db->get_var("SELECT SQL_NO_CACHE avg(karma) from sub_statuses WHERE id = $site_id and date >= date_sub(now(), interval 7 day) and status='published'"));
 	$past_karma_short = intval($db->get_var("SELECT SQL_NO_CACHE avg(karma) from sub_statuses WHERE id = $site_id and date >= date_sub(now(), interval 12 hour) and status='published'"));
 
-	$past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max($past_karma_long*0.8, $past_karma_short);
+	$past_karma = 0.5 * max(40, $past_karma_long) + 0.5 * max(20, $past_karma_short);
 	$min_past_karma = (int) ($past_karma * $min_karma_coef);
 	$last_resort_karma = (int) $past_karma * 0.8;
 

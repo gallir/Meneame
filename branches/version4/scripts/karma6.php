@@ -258,8 +258,8 @@ foreach ($res as $dbuser) {
 		}
 
 
-		$negative_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status in ('discard', 'autodiscard', 'abuse') and TIMESTAMPDIFF(MINUTE, link_date, vote_date) < 15 ");
-		$negative_discarded += (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status = 'abuse'");
+		$negative_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status in ('discard', 'autodiscard') and TIMESTAMPDIFF(MINUTE, link_date, vote_date) < 30 ");
+		$negative_abuse = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from  and vote_value < 0 AND link_id = vote_link_id AND link_status = 'abuse'");
 
 		$negative_no_discarded = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $discarded_history_from and vote_date < $ignored_nondiscarded and vote_value < 0 AND link_id = vote_link_id AND link_status not in ('discard', 'autodiscard', 'abuse') and (link_negatives < 3 or link_negatives < link_votes/15)");
 		if ($negative_no_discarded > 3) {
@@ -270,11 +270,12 @@ foreach ($res as $dbuser) {
 		}
 
 		if ($negative_discarded > $negative_no_discarded/4) { // To fight against karma whores and bots
-			$karma3 = $points_discarded * ($negative_discarded - $negative_no_discarded * $negative_user_ratio);
+			$karma3 = $points_discarded * ($negative_discarded + 4 * $negative_abuse - $negative_no_discarded * $negative_user_ratio);
 		} 
 		
 		if ($karma3 != 0) {
-			$output .= _('Votos negativos a descartadas').": $negative_discarded, "._('no descartadas').": $negative_no_discarded, karma3: ";
+			$negative_discarded_total = $negative_discarded + $negative_abuse;
+			$output .= _('Votos negativos a descartadas').": $negative_discarded_total, "._('no descartadas').": $negative_no_discarded, karma3: ";
 			$output .= sprintf("%4.2f\n", $karma3);
 		}
 
