@@ -147,6 +147,11 @@ class Match {
 			$this->total_votes = $this->votes_local + $this->votes_visitor + $this->votes_tied;
 			$this->ts_date  = strtotime($this->date);
 			$this->ts_vote_starts = strtotime($this->vote_starts);
+			if ($this->ts_date > time()) {
+				$this->result = null;
+			} else {
+				$this->result = $this->score_local == $this->score_visitor ? 0 : ($this->score_local > $this->visitor_name ? 1 : 2);
+			}
 			$globals['vote_values'] = array(_("empate"), $this->local_name, $this->visitor_name);
 			return true;
 		}

@@ -36,18 +36,35 @@ $votes_users = $db->get_var("SELECT count(*) FROM league_votes WHERE match_id=".
 $sql = "SELECT 
     league_votes.*, 
     user_avatar, 
+    score_visitor,
+    score_local,
+    m.date,
     user_login 
-FROM league_votes, users 
-WHERE match_id = {$globals['match_id']} 
-AND users.user_id = league_votes.user_id ORDER BY league_votes.date DESC LIMIT $votes_offset, 40";
+FROM 
+    league_votes, users, league_matches m
+WHERE 
+    m.id = {$globals['match_id']} 
+    AND m.id = match_id
+    AND users.user_id = league_votes.user_id 
+ORDER BY league_votes.date DESC LIMIT $votes_offset, 40";
 $votes = $db->get_results($sql);
 
 $globals['vote_values'] = array("Empate", "Local", "Visitante");
 
 if (!$votes) return;
 echo '<div class="game-voters-list">';
-foreach ( $votes as $vote ){
-	echo '<div class="item">';
+
+$win_class = '';
+if (!empty($votes[0])) {
+    if (strtotime($votes[0]->date) < time()) {
+        $local = $votes[0]->score_local;
+        $vis   = $votes[0]->score_visitor;
+        $win_class = $local == $vis ? 0 : ($local > $vis ? 1 : 2);
+    }
+}
+
+foreach ( $votes as $vote) {
+	echo '<div class="item ' . ($vote->value == $win_class ? 'winner' : '') . ' ">';
 	$vote_detail = get_date_time(strtotime($vote->date));
 	$vote_detail .= ' '._('valor').":&nbsp;" . $globals['vote_values'][$vote->value];
 	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
