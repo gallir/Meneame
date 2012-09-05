@@ -29,7 +29,7 @@ function promote($site_id) {
 	SitesMgr::__init($site_id);
 	echo "Parent: ". SitesMgr::my_parent()."\n";
 
-	$min_karma_coef = $globals['media_min_karma'];
+	$min_karma_coef = $globals['min_karma_coef'];
 
 
 	$links_queue = $db->get_var("SELECT SQL_NO_CACHE count(*) from sub_statuses WHERE id = $site_id and date > date_sub(now(), interval 24 hour) and status in ('published', 'queued')");
