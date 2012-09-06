@@ -141,6 +141,11 @@
   <a href="{{ globals.base_url }}" class="logo-eli">{% trans _('menéame') %}</a>
   <div class="edname">
     {% trans _('edición') %} <b>{{ this_site.name_long }}</b>
+    
+	{% if globals.site_shortname == "dmnm" %}
+		<!--temporal ad-->
+		<img class="header_ad_200x20" src="img/nivea_2012/header_ad_200x20.jpg" width="200" height="20" alt="patrocinado por NIVEA FOR MEN" title="patrocinado por NIVEA FOR MEN" />
+	{% endif %}
 
 	{% if globals.facebook_page || globals.twitter_page %}
 		&nbsp;&nbsp;
