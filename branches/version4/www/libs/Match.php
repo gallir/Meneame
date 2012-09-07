@@ -13,6 +13,7 @@ class Match {
 	const VOTES = "league_votes";
 	
 	const REVOTE_TIME = 300;
+	const END_VOTE_TIME_BEFORE_MATCH = 3600;
 	public $id;
 
 	public function create(Array $data)
@@ -49,8 +50,15 @@ class Match {
 	public function is_votable()
 	{
 		$now = time();
-		return strtotime($this->vote_starts) < $now  && strtotime($this->date) > $now;
+		return strtotime($this->vote_starts) < $now  && strtotime($this->date) > $now-self::END_VOTE_TIME_BEFORE_MATCH;
 	}
+
+	public function is_played()
+	{
+		$now = time();
+		return strtotime($this->date) < $now-self::END_VOTE_TIME_BEFORE_MATCH;
+	}
+
 
 	public function insert_vote($vote)
 	{

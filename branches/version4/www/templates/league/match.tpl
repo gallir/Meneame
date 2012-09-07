@@ -85,7 +85,9 @@
 
 	<div class="game-footer">
 		<p>Encuentro el {{match.ts_date|date:"d-m-Y"}} a las {{match.ts_date|date:"H:i"}}. 
+        {% if !match.is_played %}
 		Puedes votar a partir del {{match.ts_vote_starts|date:"d-m-Y"}} a las {{match.ts_vote_starts|date:"H:i"}}</p>
+        {% endif %}
 	</div><!--game-footer-->
 
 </div><!--game-->
