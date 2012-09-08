@@ -18,7 +18,7 @@ $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
 
-$globals['ads'] = true;
+$globals['ads'] = false;
 
 $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
