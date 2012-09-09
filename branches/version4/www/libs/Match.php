@@ -50,15 +50,18 @@ class Match {
 	public function is_votable()
 	{
 		$now = time();
-		return strtotime($this->vote_starts) < $now  && strtotime($this->date) > $now-self::END_VOTE_TIME_BEFORE_MATCH;
+		return strtotime($this->vote_starts) < $now && strtotime($this->date) - self::END_VOTE_TIME_BEFORE_MATCH > $now;
 	}
 
-	public function is_played()
+	public function is_played() /* el partido ha empezado. Para gestionar mensajes */
 	{
-		$now = time();
-		return strtotime($this->date) < $now-self::END_VOTE_TIME_BEFORE_MATCH;
+		return time() > strtotime($this->date);
 	}
 
+	public function not_votable_before_start() /* cuando no se puede votar antes que empieze el partido. Para gestionar mensajes */
+	{
+		return time() > strtotime($this->vote_starts) && (time() > strtotime($this->date) - self::END_VOTE_TIME_BEFORE_MATCH && time() < strtotime($this->date));
+	}
 
 	public function insert_vote($vote)
 	{
@@ -154,6 +157,7 @@ class Match {
 			}
 			$this->total_votes = $this->votes_local + $this->votes_visitor + $this->votes_tied;
 			$this->ts_date  = strtotime($this->date);
+			$this->ts_date_end_votes = strtotime($this->date)-self::END_VOTE_TIME_BEFORE_MATCH;
 			$this->ts_vote_starts = strtotime($this->vote_starts);
 			if ($this->ts_date > time()) {
 				$this->result = null;

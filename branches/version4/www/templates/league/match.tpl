@@ -84,10 +84,19 @@
     {{ match.get_votes_box }}
 
 	<div class="game-footer">
-		<p>Encuentro el {{match.ts_date|date:"d-m-Y"}} a las {{match.ts_date|date:"H:i"}}. 
+		<p>Encuentro el {{match.ts_date|date:"d-m-Y"}} a las {{match.ts_date|date:"H:i"}}.
         {% if !match.is_played %}
-		Puedes votar a partir del {{match.ts_vote_starts|date:"d-m-Y"}} a las {{match.ts_vote_starts|date:"H:i"}}</p>
+			{% if match.is_votable %}
+				Fin de las votaciones: {{match.ts_date_end_votes|date:"d-m-Y"}} a las {{match.ts_date_end_votes|date:"H:i"}}.
+			{% else %}
+				{% if match.not_votable_before_start %}
+					Votos cerrados, el partido está a punto de empezar.
+				{% else %}
+					Puedes votar a partir del {{match.ts_vote_starts|date:"d-m-Y"}} a las {{match.ts_vote_starts|date:"H:i"}}
+				{% endif %}
+			{% endif %}
         {% endif %}
+        </p>
 	</div><!--game-footer-->
 
 </div><!--game-->
