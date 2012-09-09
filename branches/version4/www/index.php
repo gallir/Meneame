@@ -34,7 +34,12 @@ $globals['ads_section'] = 'portada';
 
 $cat=$_REQUEST['category'];
 
-do_header($globals['site_name'], _('portada'));
+$pagetitle = $globals['site_name'];
+if ($page > 1) {
+	$pagetitle .= " ($page)";
+}
+
+do_header($pagetitle, _('portada'));
 do_tabs('main','published');
 
 $from = '';

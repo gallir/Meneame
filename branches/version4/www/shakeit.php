@@ -25,7 +25,8 @@ include(mnminclude.'html1.php');
 
 meta_get_current();
 
-$offset=(get_current_page()-1)*$page_size;
+$page = get_current_page();
+$offset = ($page-1)*$page_size;
 $rows = -1; // Don't show page numbers by default
 $cat = $_REQUEST['category'];
 
@@ -95,8 +96,11 @@ if($cat) {
 	$where .= " AND category=$cat ";
 }
 
-
-do_header(_('noticias pendientes') . ' | ' . $globals['site_name'], _('pendientes'));
+$pagetitle = _('noticias pendientes');
+if ($page > 1) {
+    $pagetitle .= " ($page)";
+}
+do_header($pagetitle, _('pendientes'));
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
