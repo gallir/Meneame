@@ -39,11 +39,11 @@
 {% if data.id %}
     <p>
         <label>{% trans _('Goles del Local') %}:</label><br/>
-        <input type="text" class="date" name="score_local" value="{{ data.score_local|default:""|escape }}" />
+        <input type="text" class="date" name="score_local" value="{{ data.score_local|escape }}" />
     </p>
     <p>
         <label>{% trans _('Goles del visitante') %}:</label><br/>
-        <input type="text" class="date" name="score_visitor" value="{{ data.score_visitor|default:""|escape }}" />
+        <input type="text" class="date" name="score_visitor" value="{{ data.score_visitor|escape }}" />
     </p>
 {% endif %}
 {% endblock %}

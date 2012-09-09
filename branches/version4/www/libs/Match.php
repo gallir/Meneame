@@ -173,17 +173,22 @@ class Match {
 	public function store()
 	{
 		global $db;
-		$league		= intval($this->league_id);
-		$local		= intval($this->local);
-		$visitor	= intval($this->visitor);
-		$goalvis    = intval($this->score_visitor);
-		$goalloc    = intval($this->score_local);
-		$date		= date('Y-m-d H:i:s', strtotime($this->date));
+		$league		 = intval($this->league_id);
+		$local		 = intval($this->local);
+		$visitor	 = intval($this->visitor);
+		$date	 	 = date('Y-m-d H:i:s', strtotime($this->date));
 		$vote_starts = date('Y-m-d H:i:s', strtotime($this->vote_starts)); 
+		if (is_numeric($_POST['score_local']) && is_numeric($_POST['score_visitor'])) {
+			$goalvis = intval($this->score_visitor);
+			$goalloc = intval($this->score_local);
+		} else {
+			$goalvis = 'NULL';
+			$goalloc = 'NULL';
+		}
 		$db->query("UPDATE " . self::TABLE . " SET 
 			local = $local, visitor = $visitor, league_id = $league,
 			date = '$date', vote_starts = '$vote_starts',
-			score_local = '$goalloc', score_visitor='$goalvis'
+			score_local = $goalloc, score_visitor=$goalvis
 			WHERE id = {$this->id}");
 	}
 
