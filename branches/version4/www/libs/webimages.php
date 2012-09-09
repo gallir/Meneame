@@ -332,7 +332,7 @@ class HtmlImages {
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
-				if ($img->get() && $img->is_not_black()) {
+				if ($img->get() && $img->x > 150 && $img->y > 150 && $img->is_not_black()) {
 					$img->type = 'local';
 					$img->candidate = true;
 					$this->selected = $img;

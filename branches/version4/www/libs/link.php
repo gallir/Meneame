@@ -1174,9 +1174,11 @@ class Link extends LCPBase {
 
 					// If everything goes OK, create a bigger thumbnail
 					// TODO: this is a dirty hack for @jordisan, before going on vacation
-					$thumbnail_medium = $img->scale(250);
+					$thumbnail_medium = $img->scale(200);
 					$filepath_medium = Upload::get_cache_dir($this->id) . "/thumb_medium-$this->id.jpg";
-					$thumbnail_medium->save($filepath_medium);
+					if($thumbnail_medium->save($filepath_medium)) {
+						@chmod($filepath_medium, 0777);	
+					}
 
 					// Upload to S3
 					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
