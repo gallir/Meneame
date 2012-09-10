@@ -95,6 +95,8 @@
 					Puedes votar a partir del {{match.ts_vote_starts|date:"d-m-Y"}} a las {{match.ts_vote_starts|date:"H:i"}}
 				{% endif %}
 			{% endif %}
+		{% else %}
+			Finalizado.
         {% endif %}
         </p>
 	</div><!--game-footer-->
