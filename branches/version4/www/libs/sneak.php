@@ -20,9 +20,7 @@ function init_sneak() {
 	}
 
 	// Check number of connections from the same IP addres
-	// if it comes from Netvibes, allow more
-	if (preg_match('/Netvibes Ajax/' , $_SERVER["HTTP_USER_AGENT"])) $max_conn = 50;
-	else $max_conn = 10;
+	$max_conn = 50;
 	$nusers= $db->get_var("select count(*) from sneakers where sneaker_id like '".$globals['user_ip']."-%'");
 	if ($nusers > $max_conn) {
 		header('Location: http://' . get_server_name().$globals['base_url'].'toomuch.html');
