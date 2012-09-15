@@ -30,6 +30,11 @@ class BasicThumb {
 		}
 	}
 
+	public function __toString() {
+		return $this->url;
+	}
+
+
 	function clean_url($str) {
 		// Decode HTML entities
 		//$str = preg_replace('~&#x0*([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $str);
@@ -267,13 +272,13 @@ class HtmlImages {
 	public $selected = false;
 	public $referer = false;
 	public $debug = false;
+	public $fallback = false;
 
 	function __construct($url, $site = false) {
 		$this->url = $url;
 		$this->parsed_url = parse_url($url);
 		$this->base = $url;
 		$this->site = $site;
-		$this->redirected = false;
 	}
 
 	function get() {
@@ -325,20 +330,25 @@ class HtmlImages {
 
 			// First check for thumbnail head metas
 			if ((preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
-				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
+				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta\s+?property=[\'"]og:image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/favicon/i', $match[1])) { 
 				$url = $match[1];
 				$url = build_full_url($url, $this->url);
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
-				if ($img->get() && $img->x > 150 && $img->y > 150 && $img->is_not_black()) {
-					$img->type = 'local';
-					$img->candidate = true;
-					$this->selected = $img;
-					if ($this->debug)
-						echo "<!-- Selected from $img->url -->\n";
-					return $this->selected;
+				if ($img->get() && $img->is_not_black()) {
+						$img->type = 'local';
+						$img->candidate = true;
+					if ($img->x > 150 && $img->y > 150) {
+						if ($this->debug) echo "<!-- Selected from $img->url -->\n";
+						$this->selected = $img;
+						return $this->selected;
+					} else {
+						if ($this->debug) echo "<!-- Failback $img->url -->\n";
+						$this->fallback = $img;
+					}
 				}
 			}
 
@@ -372,6 +382,10 @@ class HtmlImages {
 			}
 
 		}
+		if (! $this->selected && $this->fallback != false) {
+			$this->selected = $this->fallback;
+		}
+		if ($this->debug) echo "<!-- FINAL selection: $this->selected -->\n";
 		return $this->selected;
 	}
 

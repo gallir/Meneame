@@ -1159,7 +1159,7 @@ class Link extends LCPBase {
 		}
 		echo "<!-- Meneame, before image_parser -->\n";
 		$img = $this->image_parser->get();
-		echo "<!-- Meneame, after image_parser -->\n";
+		echo "<!-- Meneame, after image_parser: $img->url -->\n";
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
 		if ($img) {
