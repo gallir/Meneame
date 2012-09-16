@@ -28,7 +28,28 @@ if ($user_id > 0) $user = "and user = $user_id";
 else $user = '';
 
 header('Content-Type: text/html; charset=utf-8');
-$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit 200");
-if ($media) Haanga::Load("backend/gallery.html", compact('media'));
+$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user and (type='comment' ) order by date desc limit 250");
+
+$images = array();
+
+if ($media) {
+	foreach ($media as $image) {
+		switch ($image->type) {
+			case 'comment':
+				$karma = $db->get_var("select comment_karma from comments where comment_id = $image->id");
+				break;
+			case 'post':
+				$karma = $db->get_var("select post_karma from posts where post_id = $image->id");
+				break;
+			default:
+				$karma = 0;
+		}
+			
+		if ($karma >= 0) {
+			$images[] = $image;
+		}
+	}
+}
+if ($images) Haanga::Load("backend/gallery.html", compact('images'));
 
 ?>
