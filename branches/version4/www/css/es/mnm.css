@@ -190,18 +190,19 @@ padding:0;
 float:left;
 }
 
-#header-top ul#edlist li{
+#header-top ul li{
 font-size:14px;
 color:#fff;
 margin-right:20px;
 position:relative;
 float:left;
 margin-top:1px;
+line-height:135%;
 }
 
 #header-top ul#edlist li a{
 text-decoration:none;
-padding-bottom: 4px;
+padding-bottom: 5px;
 color:#fff;
 }
 
@@ -376,10 +377,11 @@ float:right;
 display: block;
 }
 
-#header-menu01 ul#menu01-itemsr li{
+#header-menu01 ul li{
 margin-left:18px;
 position:relative;
 float:left;
+line-height:145%;
 }
 
 #header-menu01 ul li a{
