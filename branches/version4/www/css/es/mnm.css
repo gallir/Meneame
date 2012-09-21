@@ -201,19 +201,18 @@ margin-top:1px;
 
 #header-top ul#edlist li a{
 text-decoration:none;
+padding-bottom: 4px;
 color:#fff;
 }
 
 #header-top ul#edlist li.selected a{
 background: url('../../img/common/h9_underline_edition01.png') bottom left repeat-x;
-padding-bottom: 5px;
 white-space: nowrap;
 }
 
 #header-top ul#edlist li a:hover{
 color:#fff;
 background: url('../../img/common/h9_underline_edition01.png') bottom left repeat-x;
-padding-bottom: 5px;
 }
 
 /* user zone */
@@ -383,16 +382,19 @@ position:relative;
 float:left;
 }
 
-#header-menu01 * .selected{
+#header-menu01 ul li a{
+display:inline-block;
+padding-bottom: 5px;
+}
+
+#header-menu01 .selected{
 background: url('../../img/common/h9_underline_menu01.png') repeat-x 100% 100%;
-padding-bottom: 7px;
 white-space: nowrap;
 }
 
 #header-menu01 ul li a:hover{
 color:#ff6400;
 background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x;
-padding-bottom: 7px;
 }
 
 #wrap {
