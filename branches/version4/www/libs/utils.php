@@ -971,9 +971,10 @@ function gzBody($gzData){
 }
 
 function clear_invisible_unicode($input){
-	$input = preg_replace('/[\x00-\x1F]/', '', $input);
+	$input = preg_replace('/[\x00-\x09]/', '', $input);
 
 	$invisible = array(
+	"\x1F",
 	"\xc2\xad", // 'SOFT HYPHEN' (U+00AD)
 	"\xcc\xb7", // 'COMBINING SHORT SOLIDUS OVERLAY' (U+0337)
 	"\xcc\xb8", // 'COMBINING LONG SOLIDUS OVERLAY' (U+0338)
