@@ -8,7 +8,12 @@
 
 function check_ip_noaccess() {
 	global $globals;
-	return check_ban($globals['user_ip'], 'noaccess');
+	$ban = check_ban($globals['user_ip'], 'noaccess');
+	if ($ban) {
+		header('HTTP/1.0 403 ' . $ban['comment']);
+		die;
+	}
+	return false;
 }
 
 function check_ban_proxy() {

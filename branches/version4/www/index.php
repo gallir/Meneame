@@ -23,6 +23,9 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 meta_get_current();
 
 

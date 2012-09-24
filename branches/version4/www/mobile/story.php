@@ -12,9 +12,7 @@ include(mnminclude.'commentmobile.php');
 include(mnminclude.'html1-mobile.php');
 
 include(mnminclude.'ban.php');
-if (check_ip_noaccess()) {
-	die;
-}
+check_ip_noaccess();
 
 
 $link = new LinkMobile;
