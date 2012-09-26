@@ -268,7 +268,7 @@ white-space: nowrap;
 background-image:url('../../img/mnm/h9_eli.png');
 height:35px;
 width:39px;
-margin-left:45px;
+margin-left:50px;
 margin-top:5px;
 margin-right:55px;
 text-indent:-9999px;
@@ -501,7 +501,7 @@ vertical-align: middle;
 .subheader{
 margin-top: -20px;
 height:30px;
-padding-left:35px;
+padding-left:25px;
 /*background-color:#f9f9f9;*/
 font-family:'Open Sans', Arial, Helvetica, sans-serif;
 list-style-type: none;
