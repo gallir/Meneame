@@ -239,6 +239,7 @@ function check_user_fields() {
 		if ($error) return false;
 	}
 
+	if ($error) return false;
 	return true;
 }
 
