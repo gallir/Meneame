@@ -416,6 +416,9 @@ function publish($link) {
 		$user->add_karma($globals['instant_karma_per_published'], _('noticia publicada'));
 	}
 
+	// Store commons votes
+	$common = $link->calculate_common_votes(true);
+
 	// Add the publish event/log
 	Log::insert('link_publish', $link->id, $link->author);
 	$link->annotation .= _('publicación'). "<br/>";
