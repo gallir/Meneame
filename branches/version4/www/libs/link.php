@@ -1436,4 +1436,50 @@ class Link extends LCPBase {
 		}
 	}
 
+	function calculate_common_votes($store = false) {
+		global $db, $globals;
+
+		if ($this->status == 'published') {
+			$cond = "and vote_date < FROM_UNIXTIME($this->date)";
+		} else {
+			$cond = '';
+		}
+
+		$votes = $db->get_results("select vote_user_id, vote_value from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $cond");
+		if (! $votes) return;
+
+		$users = array();
+		$total_values = 0;
+		$values_total = 0;
+
+		foreach ($votes as $vote) {
+			$users[$vote->vote_user_id] = 1; //round($vote->vote_user_id/abs($vote->vote_user_id));
+		}
+
+		foreach ($users as $x => $xval) {
+			foreach ($users as $y => $yval) {
+				if ($x < $y) {
+					$common = $db->get_row("select value, UNIX_TIMESTAMP(date) as date from users_similarities where minor = $x and major = $y");
+					if (!$common) {
+						$value = 0;
+					} else {
+						if ($globals['now'] - $common->date > 86400) {
+							$coef = 1 - ($globals['now'] - $common->date)/(86400*30);
+						} else {
+							$coef = 1;
+						}
+						$value = $common->value*$coef; //*$xval*$yval;
+					}
+					$values_total += $value;
+					$total_values++;
+				}
+			}
+		}
+		$mean = $values_total/$total_values;
+		if ($store) {
+			$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $mean)");
+		}
+		return $mean;
+	}
+
 }
