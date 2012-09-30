@@ -1439,6 +1439,8 @@ class Link extends LCPBase {
 	function calculate_common_votes($store = false) {
 		global $db, $globals;
 
+		$this->mean_common_votes = false;
+
 		if ($this->status == 'published') {
 			$cond = "and vote_date < FROM_UNIXTIME($this->date)";
 		} else {
@@ -1446,7 +1448,9 @@ class Link extends LCPBase {
 		}
 
 		$votes = $db->get_results("select vote_user_id, vote_value from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $cond");
-		if (! $votes) return;
+		if (! $votes) {
+			return $this->mean_common_votes;
+		}
 
 		$users = array();
 		$total_values = 0;
@@ -1484,7 +1488,9 @@ class Link extends LCPBase {
 
 	function store_mean_common_votes() {
 		global $db;
-		$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $this->mean_common_votes)");
+		if (!empty($this->mean_common_votes) && $this->mean_common_votes !== false) {
+			$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $this->mean_common_votes)");
+		}
 	}
 
 }
