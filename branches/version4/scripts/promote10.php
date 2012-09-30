@@ -275,7 +275,7 @@ function promote($site_id) {
 			$link->karma = round($karma_new);
 
 			/// Commons votes
-			if ($link->karma > $limit_karma && abs($link->old_karma - $link->karma) > 6) {
+			if ($link->karma > $limit_karma && abs($link->old_karma - $link->karma) > 6) { // ALERT
 				echo "Calculating diversity\n";
 				$common = $link->calculate_common_votes();
 				if ($common != false && !empty($commons_votes)) {
@@ -283,6 +283,21 @@ function promote($site_id) {
 					$link->common_probability = $common_probability;
 					$link->message .= 'Voters diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)."<br/>";
 					$link->annotation .= _('Coeficiente de diversidad').": ".sprintf("%3.2f%%", (1-$common_probability)*100)."<br/>";
+
+					// Bonus for diversity
+					$c = $common_probability/0.4;
+					if ($c < 1) {
+						$c = 1 - $c;
+						if ($link->low_karma_perc > 50) {
+							$low_karma_coef =  (100 - ($link->low_karma_perc - 50)) / 100;
+						} else {
+							$low_karma_coef = 1;
+						}
+						$bonus = round($c * 0.20 * $link->karma * $low_karma_coef * (1 - $link->negatives/$link->votes));
+						echo "BONUS: $link->karma $common_probability, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
+						$link->karma += $bonus;
+						$link->annotation .= _('Bonus por diversidad').": $bonus -> $link->karma<br/>";
+					}
 				}
 			}
 
