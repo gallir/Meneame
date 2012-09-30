@@ -100,6 +100,12 @@ function promote($site_id) {
 	$bonus_karma = round(min($past_karma,$min_karma) * 0.40);
 
 
+	/// Get common votes links' averages
+
+	$days = 3;
+
+	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
+
 	/// Coeficients to balance metacategories
 	$days = 2;
 	$total_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day)");
@@ -197,6 +203,7 @@ function promote($site_id) {
 
 			User::calculate_affinity($link->author, $past_karma*0.3);
 
+			
 			// Calculate the real karma for the link
 			$link->calculate_karma();
 
@@ -267,6 +274,18 @@ function promote($site_id) {
 
 			$link->karma = round($karma_new);
 
+			/// Commons votes
+			if ($link->karma > $limit_karma && abs($link->old_karma - $link->karma) > 6) {
+				echo "Calculating diversity\n";
+				$common = $link->calculate_common_votes();
+				if ($common != false && !empty($commons_votes)) {
+					$common_probability =  cdf($commons_votes, $common);
+					$link->common_probability = $common_probability;
+					$link->message .= 'Voters diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)."<br/>";
+					$link->annotation .= _('Coeficiente de diversidad').": ".sprintf("%3.2f%%", (1-$common_probability)*100)."<br/>";
+				}
+			}
+
 			// check differences, if > 4 store it
 			if (abs($link->old_karma - $link->karma) > 6) {
 				// Check percentage of low karma votes if difference > 20 (to avoid sending too many messages
@@ -291,7 +310,6 @@ function promote($site_id) {
 			}
 			$db->commit();
 
-			echo "THUMB: $link->uri $link->thumb_status $link->karma > $limit_karma\n";
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 				echo "Adding $link->id to thumb queue\n";
 				array_push($thumbs_queue, $link->id);
@@ -417,7 +435,7 @@ function publish($link) {
 	}
 
 	// Store commons votes
-	$common = $link->calculate_common_votes(true);
+	$link->store_mean_common_votes();
 
 	// Add the publish event/log
 	Log::insert('link_publish', $link->id, $link->author);
@@ -440,6 +458,22 @@ function publish($link) {
 		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
 		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id");
 	}
+
+}
+
+
+// Cumulative Distribution Function
+// It returns the probability of val < array[i]
+function cdf($array, $value) {
+	$len = count($array);
+	$i = 0;
+
+	while ($i < $len) {
+		if ($array[$i] > $value) break;
+		$i++;
+	}
+
+	return $i/$len;
 
 }
 
