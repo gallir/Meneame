@@ -81,8 +81,8 @@ def do_site(site):
 
 	print "Site:", site, "Votes average:", votes_average, v_average, "Comments average:", comments_average, c_average
 	for id in links:
-		if links[id]['c'] > 0 and links[id]['v'] > 0:
-			links[id]['w'] = (1 - links[id]['old']/(1.5*86400)) * (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.005)
+		if links[id]['c'] > 0 and links[id]['v'] > 0 and 'clicks' in links[id]:
+			links[id]['w'] = (1 - links[id]['old']/(1.5*86400)) * (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.01)
 
 	sorted_ids = sorted(links, cmp=lambda x,y: cmp(links[y]['w'], links[x]['w']))
 
