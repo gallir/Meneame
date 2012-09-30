@@ -1475,11 +1475,16 @@ class Link extends LCPBase {
 				}
 			}
 		}
-		$mean = $values_total/$total_values;
+		$this->mean_common_votes = $values_total/$total_values;
 		if ($store) {
-			$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $mean)");
+			$this->store_mean_common_votes();
 		}
-		return $mean;
+		return $this->mean_common_votes;
+	}
+
+	function store_mean_common_votes() {
+		global $db;
+		$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $this->mean_common_votes)");
 	}
 
 }
