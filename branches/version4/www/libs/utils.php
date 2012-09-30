@@ -678,6 +678,7 @@ function put_smileys_callback(&$matches) {
 			'blank' => ' <img src="'.$globals['base_static'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15"/> ',
 			'kiss' => ' <img src="'.$globals['base_static'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" /> ',
 			'hug' => ' <img src="'.$globals['base_static'].'img/smileys/hug.gif" alt="hug" title="hug" width="39" height="15" /> ',
+			'shit' => ' <img src="'.$globals['base_static'].'img/smileys/shit.gif" alt="shit" title="shit" width="15" height="15" /> ',
 		);
 	}
 	return isset($translations[$matches[1]]) ? $translations[$matches[1]] : $matches[0];
@@ -713,6 +714,7 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^):-{0,1}\|/i', '$1{blank}', $str);
 	$str=preg_replace('/(\s|^):-{0,1}\*/i', '$1{kiss}', $str);
 	$str=preg_replace('/(\s|^):hug:/i', '$1{hug}', $str);
+	$str=preg_replace('/(\s|^):shit:/i', '$1{shit}', $str);
 	return $str;
 }
 
