@@ -275,7 +275,7 @@ function promote($site_id) {
 			$link->karma = round($karma_new);
 
 			/// Commons votes
-			if ($link->karma > $limit_karma && abs($link->old_karma - $link->karma) > 6) { // ALERT
+			if ($link->karma > $limit_karma) {
 				echo "Calculating diversity\n";
 				$common = $link->calculate_common_votes();
 				if ($common != false && !empty($commons_votes)) {
@@ -450,9 +450,6 @@ function publish($link) {
 	if ($user->read) {
 		$user->add_karma($globals['instant_karma_per_published'], _('noticia publicada'));
 	}
-
-	// Store commons votes
-	$link->store_mean_common_votes();
 
 	// Add the publish event/log
 	Log::insert('link_publish', $link->id, $link->author);
