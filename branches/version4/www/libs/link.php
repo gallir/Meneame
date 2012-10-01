@@ -1436,18 +1436,27 @@ class Link extends LCPBase {
 		}
 	}
 
-	function calculate_common_votes($store = false) {
+	function calculate_common_votes() {
 		global $db, $globals;
 
 		$this->mean_common_votes = false;
 
-		if ($this->status == 'published') {
-			$cond = "and vote_date < FROM_UNIXTIME($this->date)";
+		$previous = $db->get_row("select value, n, UNIX_TIMESTAMP(date) as date from link_commons where link = $this->id and date > date_sub(now(), interval 3 hour)");
+		if ($previous && $previous->n > 0 && $previous->date > 0) {
+			$this->mean_common_votes = $previous->value;
+			$from_date =  $previous->date ;
+			echo "CACHE: $from_date $previous->value\n";
 		} else {
-			$cond = '';
+			$from_date = 0;
 		}
 
-		$votes = $db->get_results("select vote_user_id, vote_value from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $cond");
+		if ($this->status == 'published') {
+			$to_date = "and vote_date < FROM_UNIXTIME($this->date)";
+		} else {
+			$to_date = '';
+		}
+
+		$votes = $db->get_results("select vote_user_id, vote_value, UNIX_TIMESTAMP(vote_date) as date from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $to_date order by vote_id asc");
 		if (! $votes) {
 			return $this->mean_common_votes;
 		}
@@ -1455,14 +1464,18 @@ class Link extends LCPBase {
 		$users = array();
 		$total_values = 0;
 		$values_total = 0;
+		$last_date = 0;
 
 		foreach ($votes as $vote) {
-			$users[$vote->vote_user_id] = 1; //round($vote->vote_user_id/abs($vote->vote_user_id));
+			$users[$vote->vote_user_id] = $vote->date; //round($vote->vote_user_id/abs($vote->vote_user_id));
+			if ( $vote->date > $last_date) {
+				$last_date = $vote->date;
+			}
 		}
 
-		foreach ($users as $x => $xval) {
-			foreach ($users as $y => $yval) {
-				if ($x < $y) {
+		foreach ($users as $x => $xdate) {
+			foreach ($users as $y => $ydate) {
+				if ($x < $y && ($xdate > $from_date || $ydate > $from_date)) {
 					$common = $db->get_row("select value, UNIX_TIMESTAMP(date) as date from users_similarities where minor = $x and major = $y");
 					if (!$common) {
 						$value = 0;
@@ -1472,25 +1485,20 @@ class Link extends LCPBase {
 						} else {
 							$coef = 1;
 						}
-						$value = $common->value*$coef; //*$xval*$yval;
+						$value = $common->value*$coef;
 					}
 					$values_total += $value;
 					$total_values++;
 				}
 			}
 		}
+		if ($previous && $previous->n > 0 && $previous->date > 0) {
+			$values_total += $previous->value*$previous->n;
+			$total_values += $previous->n;
+		}
 		$this->mean_common_votes = $values_total/$total_values;
-		if ($store) {
-			$this->store_mean_common_votes();
-		}
+		$db->query("REPLACE link_commons (link, value, n, date) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date))");
 		return $this->mean_common_votes;
-	}
-
-	function store_mean_common_votes() {
-		global $db;
-		if (!empty($this->mean_common_votes) && $this->mean_common_votes !== false) {
-			$db->query("REPLACE link_commons (link, value) VALUES ($this->id, $this->mean_common_votes)");
-		}
 	}
 
 }
