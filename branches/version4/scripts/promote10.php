@@ -104,7 +104,7 @@ function promote($site_id) {
 
 	$days = 3;
 
-	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
+	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 
 	/// Coeficients to balance metacategories
 	$days = 2;
