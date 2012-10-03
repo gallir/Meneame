@@ -29,7 +29,7 @@ user_id = {{ current_user.user_id }};
 user_login = '{{ current_user.user_login }}';
 mobile_client = {{ globals.mobile }};
 $(function() {
-	var vstatus = ["{% trans _("¡votado!") %}", "{% trans _("gana") %}"],
+	var vstatus = ["{% trans _("¡votado!") %}", "{% trans _("gana") %}", "{% trans _("empate") %}"],
 		url	 = "{{globals.base_url}}backend/league_vote.php?";
     league_init(vstatus, url);
     $('a#bases').click(function() {

@@ -52,6 +52,7 @@ function league_init(vstatus, url) {
 
 			if (target) {
 				$('.team .team-votes-menealo', match).text(vstatus[1]);
+				$('.team-votes-box-C .team-votes-menealo', match).text(vstatus[2]);
 				$('.team-votes-button-A > div', match).addClass('team-votes-button-B');
 				target
 				  .parents('.team')
