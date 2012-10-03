@@ -35,6 +35,7 @@ $votes_users = $db->get_var("SELECT count(*) FROM league_votes WHERE match_id=".
 
 $sql = "SELECT 
     league_votes.*, 
+    league_votes.date as vdate,
     user_avatar, 
     score_visitor,
     score_local,
@@ -65,7 +66,7 @@ if (!empty($votes[0])) {
 
 foreach ( $votes as $vote) {
 	echo '<div class="item' . ($vote->value == $win_class ? ' winner' : '') . '">';
-	$vote_detail = _('el').get_date_time(strtotime($vote->date));
+	$vote_detail = _('el').get_date_time(strtotime($vote->vdate));
 	$vote_detail .= ' '._('votó')."&nbsp;" . $globals['vote_values'][$vote->value];
 	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
 	echo '<img class="avatar" src="'.get_avatar_url($vote->user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
