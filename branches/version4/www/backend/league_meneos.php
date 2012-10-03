@@ -66,7 +66,7 @@ if (!empty($votes[0])) {
 
 foreach ( $votes as $vote) {
 	echo '<div class="item' . ($vote->value == $win_class ? ' winner' : '') . '">';
-	$vote_detail = _('votó')."&nbsp;" . $globals['vote_values'][$vote->value];
+	$vote_detail = _('votó al')."&nbsp;" . $globals['vote_values'][$vote->value];
 	$vote_detail .= ' '._('el').date(" d-m-Y, H:i:s",strtotime($vote->vdate));
 	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote_detail.'">';
 	echo '<img class="avatar" src="'.get_avatar_url($vote->user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
