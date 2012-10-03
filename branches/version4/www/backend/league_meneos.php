@@ -50,7 +50,7 @@ WHERE
 ORDER BY league_votes.date DESC LIMIT $votes_offset, 40";
 $votes = $db->get_results($sql);
 
-$globals['vote_values'] = array("Empate", "Local", "Visitante");
+$globals['vote_values'] = array("empate", "equipo local", "equipo visitante");
 
 if (!$votes) return;
 echo '<div class="game-voters-list">';
@@ -66,9 +66,9 @@ if (!empty($votes[0])) {
 
 foreach ( $votes as $vote) {
 	echo '<div class="item' . ($vote->value == $win_class ? ' winner' : '') . '">';
-	$vote_detail = _('el').get_date_time(strtotime($vote->vdate));
-	$vote_detail .= ' '._('votó')."&nbsp;" . $globals['vote_values'][$vote->value];
-	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
+	$vote_detail = _('votó')."&nbsp;" . $globals['vote_values'][$vote->value];
+	$vote_detail .= ' '._('el').date(" d-m-Y, H:i:s",strtotime($vote->vdate));
+	echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote_detail.'">';
 	echo '<img class="avatar" src="'.get_avatar_url($vote->user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
 	echo $vote->user_login.'</a>';
 	echo '</div>';
