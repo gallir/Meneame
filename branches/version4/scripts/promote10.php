@@ -102,7 +102,7 @@ function promote($site_id) {
 
 	/// Get common votes links' averages
 
-	$days = 3;
+	$days = 4;
 
 	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 
@@ -286,7 +286,7 @@ function promote($site_id) {
 					$link->annotation .= _('Coeficiente de diversidad').": ".sprintf("%3.2f%%", (1-$common_probability)*100)." ("._('probabilidad').": $p)<br/>";
 
 					// Bonus for diversity
-					$c = $common_probability/0.6;
+					$c = $common_probability/0.5;
 					if ($c < 1) {
 						$c = 1 - $c;
 						if ($link->low_karma_perc > 50) {
