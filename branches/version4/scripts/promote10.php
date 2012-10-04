@@ -332,7 +332,7 @@ function promote($site_id) {
 				array_push($thumbs_queue, $link->id);
 			}
 
-			if ($link->votes >= $min_votes && $karma_new >= $karma_threshold && $published < $max_to_publish) {
+			if ($link->votes >= $min_votes && $link->karma >= $karma_threshold && $published < $max_to_publish) {
 				$published++;
 				publish($link);
 				$changes = 3; // to show a "published" later
