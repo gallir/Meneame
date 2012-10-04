@@ -1453,7 +1453,6 @@ class Link extends LCPBase {
 		if ($previous && $previous->n > 0 && $previous->date > 0) {
 			$this->mean_common_votes = $previous->value;
 			$from_date =  $previous->date ;
-			echo "CACHE: $from_date $previous->value\n";
 		} else {
 			$from_date = 0;
 		}
