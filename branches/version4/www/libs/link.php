@@ -693,14 +693,14 @@ class Link extends LCPBase {
 		// For karma calculation
 		if ($this->status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
-				if ($current_user->user_id != $this->author &&
+				if ($globals['karma_user_affinity'] && $current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
 				} else {
 					$karma_value = round(-$current_user->user_karma);
 				}
 			} else {
-				if ($current_user->user_id  > 0 && $current_user->user_id != $this->author &&
+				if ($globals['karma_user_affinity'] && $current_user->user_id  > 0 && $current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
 				} else {
@@ -968,11 +968,13 @@ class Link extends LCPBase {
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
 		$n = $vlow = $vhigh = 0;
+		$diff = 0;
 		foreach ($votes as $vote) {
 			if ($vote->vote_value > 0) {
 				$votes_pos++;
 				if ($affinity && $affinity[$vote->user_id] > 0) {
 					$n++;
+					$diff += ($vote->user_karma - $vote->vote_value);
 					// Change vote_value if there is affinity
 					//echo "$vote->vote_value -> ";
 					$vote->vote_value = max($vote->user_karma * $affinity[$vote->user_id]/100, 6);
@@ -990,11 +992,13 @@ class Link extends LCPBase {
 				if ($affinity && $affinity[$vote->user_id] < 0) {
 					$karma_neg_user += min(-6, $vote->user_karma *	$affinity[$vote->user_id]/100);
 					//echo "Negativo: " .  min(-5, $vote->user_karma *	$affinity[$vote->user_id]/100) . "$vote->user_id\n";
+					$diff -= ($vote->user_karma + $karma_neg_user);
 				} else {
 					$karma_neg_user -= $vote->user_karma;
 				}
 			}
 		}
+		echo "Affinity Difference: $diff Base: " . intval($karma_pos_user_high+$karma_pos_user_low+$karma_neg_user) ." ($n, $votes_pos)\n";
 		if ($n > $votes_pos/5) {
 			$perc = intval($n/$votes_pos * 100);
 			$this->annotation .= $perc. _('% de votos con afinidad elevada'). "<br/>";

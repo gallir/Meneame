@@ -99,6 +99,8 @@ $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
 $globals['legal'] = '/legal.php';
 
+// Calculate affinity to the sender of the link
+$globals['karma_user_affinity'] = false;
 // Coefficient for links karma calculation
 $globals['min_decay'] = 0.25;
 $globals['karma_start_decay'] = 12; // In hours, when a link start to decrease its karma

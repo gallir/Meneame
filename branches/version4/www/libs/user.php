@@ -64,6 +64,10 @@ class User {
 	static function calculate_affinity($uid, $min_karma = 200) {
 		global $globals, $db;
 
+		if (!$globals['karma_user_affinity']) {
+			return false;
+		}
+
 		$affinity = array();
 		$log = new Annotation("affinity-$uid");
 		if ($log->read() && $log->time > time() - 3600*4) {
@@ -160,7 +164,11 @@ class User {
 
 	// $user_id is the key in annotations
 	static function get_affinity($id, $from = false) {
-		global $current_user;
+		global $current_user, $globals;
+
+		if (!$globals['karma_user_affinity']) {
+			return false;
+		}
 
 		$log = new Annotation("affinity-$id");
 		if (!$log->read()) return false;
