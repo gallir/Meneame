@@ -287,18 +287,25 @@ function promote($site_id) {
 
 					// Bonus for diversity
 					$c = $common_probability/0.5;
-					if ($c < 1) {
+					if ($c <= 1) {
 						$c = 1 - $c;
 						if ($link->low_karma_perc > 50) {
 							$low_karma_coef =  (100 - ($link->low_karma_perc - 50)) / 100;
 						} else {
 							$low_karma_coef = 1;
 						}
-						$bonus = round($c * 0.30 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
+						$bonus = round($c * 0.25 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
 						echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
+					} else {
+						// Decrease for high affinity between voters
+						$c = $c - 1;
+						$bonus = - round($c * 0.15 * $link->karma);
+						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
+					}
+					if (abs($bonus) > 10) {
 						$old = $link->karma;
 						$link->karma += $bonus;
-						$link->annotation .= _('Bonus por diversidad').": $old -> $link->karma<br/>";
+						$link->annotation .= _('Karma por diversidad').": $old -> $link->karma<br/>";
 					}
 				}
 			}
