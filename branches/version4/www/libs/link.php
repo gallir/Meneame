@@ -165,7 +165,15 @@ class Link extends LCPBase {
 		$ids = explode(',',$top->text);
 		if (! $ids) return false;
 
-		return Link::from_db($ids[0]);
+		$link = Link::from_db($ids[0]);
+		if ($link) {
+			$link->thumb_url = $link->has_thumb();
+			if ($link->thumb_url) {
+				$link->thumb_x = $link->thumb_y = 200;
+				$link->thumb_url = preg_replace('/\/thumb\-/', '/thumb_medium-', $link->thumb_url);
+			}
+		}
+		return $link;
 	}
 
 	function json_votes_info($value=false) {

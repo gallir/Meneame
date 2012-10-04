@@ -1,9 +1,9 @@
 <div id="toplink">
-{% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
-	<img src='{% exec self.has_thumb %}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
+{% if self.thumb_url %}
+	<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 {% endif %}
 <h1><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
-<p>{% exec text_to_summary self.content 200 %}</p>
+<p>{% exec text_to_summary self.content 600 %}</p>
 <a class="footer"
 {% if self.thumb_x > 0 &&  self.thumb_y > 0 %}
 		style="position:absolute;bottom:0;right:4px;"
