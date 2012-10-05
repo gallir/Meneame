@@ -423,9 +423,10 @@ CREATE TABLE `link_commons` (
   `link` int(10) unsigned NOT NULL,
   `value` float NOT NULL,
   `n` int(11) NOT NULL DEFAULT '0',
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date` timestamp NULL DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `link` (`link`),
-  KEY `date` (`date`)
+  KEY `created` (`created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -901,4 +902,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-10-02 19:13:26
+-- Dump completed on 2012-10-05 20:57:59
