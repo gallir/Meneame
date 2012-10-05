@@ -1453,12 +1453,14 @@ class Link extends LCPBase {
 
 		$this->mean_common_votes = false;
 
-		$previous = $db->get_row("select value, n, UNIX_TIMESTAMP(date) as date from link_commons where link = $this->id and date > date_sub(now(), interval 3 hour)");
+		$previous = $db->get_row("select value, n, UNIX_TIMESTAMP(date) as date, UNIX_TIMESTAMP(created) as created from link_commons where link = $this->id and created > date_sub(now(), interval 3 hour)");
 		if ($previous && $previous->n > 0 && $previous->date > 0) {
 			$this->mean_common_votes = $previous->value;
 			$from_date =  $previous->date ;
+			$created = $previous->created;
 		} else {
 			$from_date = 0;
+			$created = time();
 		}
 
 		if ($this->status == 'published') {
@@ -1508,7 +1510,9 @@ class Link extends LCPBase {
 			$total_values += $previous->n;
 		}
 		$this->mean_common_votes = $values_total/$total_values;
-		$db->query("REPLACE link_commons (link, value, n, date) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date))");
+		$db->query("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))");
+		echo("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))"); 
+		echo "\n";
 		return $this->mean_common_votes;
 	}
 
