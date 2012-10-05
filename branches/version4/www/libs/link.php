@@ -1064,6 +1064,9 @@ class Link extends LCPBase {
 			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}
 
+		/* 
+		 * DISABLED: global affinity votes behaves better
+		 *
 		// Give the "new source" only if if has less than %5 of negative karma
 		if (abs($karma_neg_user)/$karma_pos_user < 0.05) {
 			$c = $this->calculate_source_bonus();
@@ -1073,6 +1076,7 @@ class Link extends LCPBase {
 				$this->annotation .= _('Bonus por fuente esporádica'). " ($c)<br/>";
 			}
 		}
+		*/
 
 		$this->karma = ($karma_pos_user+$karma_pos_ano+$karma_neg_user)*$this->coef;
 		if ($meta_coef && $meta_coef[$this->meta_id]) {
@@ -1511,8 +1515,6 @@ class Link extends LCPBase {
 		}
 		$this->mean_common_votes = $values_total/$total_values;
 		$db->query("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))");
-		echo("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))"); 
-		echo "\n";
 		return $this->mean_common_votes;
 	}
 
