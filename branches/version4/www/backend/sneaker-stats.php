@@ -256,8 +256,6 @@ function do_rae($string) {
 		$url = 'http://lema.rae.es/drae/srv/search?val='.urlencode($array[1]);
 		$res = get_url($url);
 		if ($res && $res['content']) {
-			//return $res['content'];
-			syslog(LOG_INFO, $res['content']);
 			$str = $res['content'];
 			$str = preg_replace('/<span class="eFCompleja">.*$/', '', $str); // Delete normally long examples
 			$str = preg_replace('/<TITLE>.+<\/TITLE>/i', '', $str); // Remove the title

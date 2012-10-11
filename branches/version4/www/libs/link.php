@@ -1018,7 +1018,7 @@ class Link extends LCPBase {
 			$this->low_karma_perc = $perc;
 			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
 		}
-		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.1, 4), $karma_pos_user_low); // Allowed difference up to 10% of $karma_pos_user_high
+		$karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.15, 4), $karma_pos_user_low); // Allowed difference up to 15% of $karma_pos_user_high
 		$karma_pos_ano = min($karma_pos_user_high*0.1, $karma_pos_ano);
 
 		// Small quadratic punishment for links having too many negatives
