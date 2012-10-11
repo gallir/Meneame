@@ -48,10 +48,11 @@ if (mb_strlen($parsed['path']) > 30) {
 	if (isset($_GET['all'])) $unique = false;
 	else $unique = true;
 }
-$url_db = addcslashes($url, '%_');
 
+$url_db = $url;
 
 if (! $unique) {
+	$url_db = addcslashes($url, '%_');
 	$url_db = preg_replace('/\/$/', '', $url_db);
 	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url_db%' order by link_date DESC limit 100");
 } else {
