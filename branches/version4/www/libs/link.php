@@ -1498,7 +1498,7 @@ class Link extends LCPBase {
 						$value = 0;
 					} else {
 						if ($globals['now'] - $common->date > 86400) {
-							$coef = 1 - ($globals['now'] - $common->date)/(86400*60);
+							$coef = 1 - min(1, ($globals['now'] - $common->date)/(86400*60));
 						} else {
 							$coef = 1;
 						}
