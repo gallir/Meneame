@@ -7,6 +7,8 @@ import time
 import datetime
 import gettext
 _ = gettext.gettext
+import argparse
+
 import dbconf
 from utils import *
 
@@ -14,19 +16,19 @@ from utils import *
 def main():
 	links = {}
 	commons = {}
+
+	parser = argparse.ArgumentParser(description='Store the number of common votes among users')
+	parser.add_argument("hours", help="Hours to analyze", type=int)	
+	parser.add_argument("-d", "--days", help="How many day in the past show be the top_date", type=int, default=0)	
+	parser.add_argument("-m", "--max", help="store only if the new value is greater", action="store_true")
+
+	args = parser.parse_args()
+
 	now = datetime.datetime.fromtimestamp(0)
 
-	
+	time_to = args.days * 24
+	time_from = args.hours + time_to
 
-	if len(sys.argv) < 2:
-		print "Usage: %s hours [top_limit_in_days]" % (sys.argv[0],)
-		exit()
-
-	if len(sys.argv) > 2:
-		time_to = int(sys.argv[2]) * 24
-	else:
-		time_to = 0
-	time_from = int(sys.argv[1]) + time_to
 
 	cursor = DBM.cursor()
 	cursor.execute("select link_id, link_date, link_status, vote_user_id, vote_date, vote_value FROM votes, links WHERE vote_type = 'links' and vote_user_id > 0 and vote_date > date_sub(now(), interval %s hour) and vote_date < date_sub(now(), interval %s hour) and link_id = vote_link_id" % (time_from, time_to))
@@ -58,7 +60,7 @@ def main():
 						commons[ax][ay] -= 1
 
 	c = DBM.cursor("update")
-	c.execute("delete from users_similarities where date < date_sub(now(), interval 30 day)")
+	c.execute("delete from users_similarities where date < date_sub(now(), interval 45 day)")
 	DBM.commit()
 
 
@@ -69,7 +71,9 @@ def main():
 	for k in sorted(commons):
 		for l in sorted(commons[k]):
 			ops += 1
-			c.execute("INSERT INTO users_similarities (minor, major, value, date) VALUES (%s, %s, %s, '%s') ON DUPLICATE KEY UPDATE value = %s * value + (1-%s) * %s, date = '%s'" % (k, l, commons[k][l], now, alpha, alpha, commons[k][l], now))
+			sql = "INSERT INTO users_similarities (minor, major, value, date) VALUES (%s, %s, %s, '%s') ON DUPLICATE KEY UPDATE value = GREATEST(%s, %s * value * (1 - LEAST(1, timestampdiff(day, date, '%s')/60) ) + (1-%s) * %s), date = '%s'" % (k, l, commons[k][l], now, commons[k][l], alpha, now, alpha, commons[k][l], now)
+			#print sql
+			c.execute(sql)
 			#print k, l, distances[k][l]
 			if ops % 1000 == 0:
 				DBM.commit()
