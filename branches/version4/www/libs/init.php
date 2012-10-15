@@ -15,8 +15,10 @@ global $globals;
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
+	$globals['url'] = 'https';
 } else {
 	$globals['https'] = false;
+	$globals['url'] = 'http';
 }
 
 if (!empty($globals['static_server']) && ! $globals['https']) {
@@ -89,10 +91,13 @@ if($_SERVER['HTTP_HOST']) {
 	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
 }
 
+$globals['url'] .= '//'.$globals['server_name'].htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
+
 if (empty($globals['static_server_name'])) {
 	if ($globals['static_server']) $globals['static_server_name'] = preg_replace('/^http:\/\//', '', $globals['static_server']);
 	else $globals['static_server_name'] = $globals['server_name'];
 }
+
 
 // Votes' tags
 $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
