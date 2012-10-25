@@ -5,7 +5,11 @@
 		src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" 
 		alt="" width="20" height="20" 
 		{% if obj.vote < 0 %}
-			class="avatar shadow-red" style="margin-bottom:5px"
+			{% if obj.summary %}
+				class="avatar shadow-red" style="margin-bottom:-10px"
+			{% else %}
+				class="avatar shadow-red" style="margin-bottom:5px"
+			{% endif %}
 		{% else %}
 			{% if obj.vote > 0 %}
 				class="avatar shadow-green"
@@ -15,4 +19,9 @@
 		{% endif %}
 		/></a>&nbsp;
 {% endfor %}
+{% if self %}
+	<div style="white-space: normal;margin:10px 20px 0 20px;font-size:90%;color:#666;a:link {color:#FF0000;}">
+	{% include 'comment_summary_text.html' %}
+	</div>
+{% endif %}
 </div>

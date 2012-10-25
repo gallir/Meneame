@@ -86,7 +86,7 @@ if ($last_arg > 0) {
 		die;
 	}
 	if ($url_args[$last_arg] > 0) {
-		$requested_page = $current_page =  (int) $url_args[$last_arg];
+		$requested_page = $current_page = (int) $url_args[$last_arg];
 		array_pop($url_args);
 	}
 }
@@ -234,8 +234,8 @@ case 1:
 case 2:
 	echo '<div class="comments">';
 
-	print_relevant_comments($link);
 	if($tab_option == 1) {
+		print_relevant_comments($link, $requested_page);
 		do_comment_pages($link->comments, $current_page);
 	}
 
@@ -350,8 +350,6 @@ case 8:
 
 case 9:
 	echo '<div class="comments">';
-
-	print_relevant_comments($link);
 
 	$sql = "SELECT conversation_to as id, count(*) as t FROM conversations, comments WHERE comment_link_id = $link->id AND comment_id = conversation_to AND conversation_type='comment' GROUP BY conversation_to ORDER BY t desc, id asc LIMIT ".$globals['comments_page_size'] ;
 
@@ -485,7 +483,7 @@ function get_comment_page_url($i, $total, $query) {
 	else return $query.'/'.$i;
 }
 
-function print_relevant_comments($link) {
+function print_relevant_comments($link, $page) {
 	global $globals, $db;
 
 	if ($globals['bot'] || $link->comments < 10 ) return;
@@ -516,6 +514,7 @@ function print_relevant_comments($link) {
 
 	if ($res) {
 		$objects = array();
+		$self = false;
 		$link_url = $link->get_relative_permalink();
 		foreach ($res as $comment) {
 			// The commenter has voted negative
@@ -535,9 +534,21 @@ function print_relevant_comments($link) {
 			$obj->avatar = $comment->user_avatar;
 			$obj->vote = $comment->vote_value;
 			$objects[] = $obj;
+			if (! $page && count($objects) < 6 && $obj->vote < 0 && ! $self && count($res) > count($objects) * 2) {
+				// Read the object for printing the summary
+				$self = Comment::from_db($comment->comment_id);
+				// Simplify text of the comment
+				$self->prepare_summary_text(500);
+				$self->is_truncated = false;
+				$self->media_size= 0;
+				$self->can_edit = false;
+				$obj->summary = true;
+			} else {
+				$obj->false = true;
+			}
 			if (count($objects) > $limit) break;
 		}
-		$output = Haanga::Load('relevant_comments.html', compact('objects', 'link_url'), true);
+		$output = Haanga::Load('relevant_comments.html', compact('objects', 'link_url', 'self'), true);
 		echo $output;
 		if($do_cache) {
 			memcache_madd($key, $output, 300);
