@@ -1143,7 +1143,7 @@ padding: 5px 0 5px 25px;
 
 .news-summary {
 margin: 0;
-padding: 10px 0 15px 0;
+padding: 10px 0 10px 0;
 position: relative;
 }
 
@@ -1400,7 +1400,7 @@ margin: 0px;
 /* comments [& incipient notes] */
 
 .comments {
-margin: 15px 5px 0 10px;
+margin: 10px 5px 0 10px;
 }
 
 .notes {
