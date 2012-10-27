@@ -80,7 +80,6 @@ window.onload = function () {
 		if (target == null) {
 			var canonical = location.href.replace(/#c[^\/]+$/, '');
 			if (canonical.length > 0) {
-				alert(canonical);
 				self.location = canonical + "/000" + m[1];
 			}
 		}

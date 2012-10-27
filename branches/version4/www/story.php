@@ -534,7 +534,7 @@ function print_relevant_comments($link, $page) {
 			$obj->avatar = $comment->user_avatar;
 			$obj->vote = $comment->vote_value;
 			$objects[] = $obj;
-			if (! $page && count($objects) < 6 && $obj->vote < 0 && ! $self && count($res) > count($objects) * 2) {
+			if (! $page && count($objects) < 6 && $obj->vote < 0 && ! $self && count($res) >= count($objects) * 2) {
 				// Read the object for printing the summary
 				$self = Comment::from_db($comment->comment_id);
 				// Simplify text of the comment
