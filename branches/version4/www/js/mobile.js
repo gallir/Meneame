@@ -78,8 +78,9 @@ window.onload = function () {
     if ( link_id > 0 && (m = location.href.match(/#c-(\d+)$/)) && m[1] > 0) {
 		target = document.getElementById("c-" + m[1]);
 		if (target == null) {
-			var canonical = location.href.replace(/\/[^\/]+$/, '');
+			var canonical = location.href.replace(/#c[^\/]+$/, '');
 			if (canonical.length > 0) {
+				alert(canonical);
 				self.location = canonical + "/000" + m[1];
 			}
 		}
