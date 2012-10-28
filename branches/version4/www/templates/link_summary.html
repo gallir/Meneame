@@ -1,8 +1,8 @@
 <div class="news-summary">
 	<div class="news-body">
 	{% if self.show_shakebox %}
-		<div class="news-shakeit">
-			<div class="{{ self.box_class }}">
+		<div class="news-shakeit {{ self.box_class }}">
+			<div class="votes">
 				<a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
 				{% trans _('meneos') %}
 			</div>
@@ -12,7 +12,7 @@
 
 			<div class="menealo" id="a-va-{{ self.id }}">
 			{% if not self.votes_enabled %}
-				<span>{% trans _('cerrado') %}</span>
+				<span class="closed">{% trans _('cerrado') %}</span>
 			{% else %}
 				{% if not self.voted %}
 					<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
@@ -28,9 +28,13 @@
 
 			{% endif %}
 
-			{% if type == 'full' AND self.id >= globals.click_counter AND self.clicks > 0 %}
-				<div class="clics">{{ self.clicks }} {% trans _('clics') %}</div>
+			<div class="clics">
+			{% if self.id >= globals.click_counter AND self.clicks > 0 %}
+				{{ self.clicks }} {% trans _('clics') %}
+			{% else %}
+				&nbsp;
 			{% endif %}
+			</div>
 		</div>
 	{% endif %}
 

@@ -60,11 +60,11 @@ mobile_client = {{ globals.mobile }};
 	<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" class="logo-mnm">{% trans _('ir a noticia en menéame') %}</a>
 
 
-		<div id="votes">
+		<div id="votes" class="bar">
 			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong></div>
 
-			<div class="menealo" id="a-va-{{ self.id }}">
 			{% if self.votes_enabled %}
+				<div class="menealo" id="a-va-{{ self.id }}">
 				{% if not self.voted %}
 					<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
 				{% else %}
@@ -74,8 +74,8 @@ mobile_client = {{ globals.mobile }};
 					<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
 					{% endif %}
 				{% endif %}
+				</div>
 			{% endif %}
-			</div>
 
 
 
