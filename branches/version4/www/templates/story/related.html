@@ -7,11 +7,17 @@
 
 {% for l in related %}
 	{% exec l.get_box_class %}
-	<div class="news-summary">
+	<div class="news-summary" style="margin-bottom: 15px">
 		<div class="news-body">
-			<div class="news-shakeit" style="margin: 0">
-				<div class="{{ l.box_class }}"><a href="{{ l.permalink }}">{{ l.total_votes }}</a></div>
-			</div>
+
+        <div class="news-shakeit {{ l.box_class }}" style="height: auto">
+            <div class="votes">
+                <a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ l.total_votes }}</a>
+                {% trans _('meneos') %}
+            </div>
+			<div class="clics">{{ l.clicks }} {% trans _('clics') %}</div>
+		</div>
+
 			<h3 style="font-size: 120%"><a href="{{ l.permalink }}"{% if l.status != 'published' %} rel="nofollow"{% endif %}>{{ l.title }}</a></h3>
 		</div>
 	</div><br/>
