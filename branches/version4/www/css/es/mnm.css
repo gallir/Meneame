@@ -1177,10 +1177,10 @@ font-size: 115%;
 }
 
 .comments-counter .counter {
--moz-border-radius: 6px;
--webkit-border-radius: 6px;
-border-radius: 6px;
-background-color: #F30000;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border-radius: 3px;
+background-color: #ff6400;
 font-size: 9pt;
 }
 
