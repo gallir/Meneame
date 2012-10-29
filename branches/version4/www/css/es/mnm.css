@@ -14,7 +14,6 @@ padding: 0;
 body {
 font-family: Arial, Helvetica, sans-serif;
 font-size: small;
-background-color: #fff;
 background-image: url('../../img/common/bkg-01.png');
 color: #000;
 background-color: #fff;
@@ -65,8 +64,7 @@ border: 1px solid;
 font-weight: bold;
 margin: 4px 0 4px 0;
 padding: 2px 4px 2px 4px;
-background: #fff url(../../img/common/button-bck-01.png) top left repeat-x;
-border-color: #FF6400;
+background: #FF6400 url('../../img/common/button-bck-01.png') top left repeat-x;
 color: #fff;
 }
 
@@ -162,8 +160,7 @@ margin-left:25px;
 margin-top:4px;
 margin-right:0px;
 float:left;
-/* text-indent:-9999px; */
-/* tick from http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/ */
+/* tip from http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/ */
 text-indent: 100%;
 white-space: nowrap;
 overflow: hidden;
@@ -272,7 +269,7 @@ width:39px;
 margin-left:50px;
 margin-top:5px;
 margin-right:55px;
-text-indent:-9999px;
+text-indent:100%;
 float:left;
 }
 
@@ -396,9 +393,9 @@ background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x
 
 #wrap {
 padding-top: 20px;
-min-width: 790px;
+min-width: 805px;
 max-width: 1300px;
-width: 98%;
+width: 99%;
 text-align: left;
 background-color: #fff;
 margin: auto;
@@ -441,7 +438,7 @@ position:relative;
 background:#f9f9f9;
 border:#ddd 1px solid;
 padding: 7px 7px 0px 5px;
-margin: 15px 0px 10px 6px;
+margin: 15px 0px 10px 8px;
 vertical-align:middle;
 overflow: hidden;
 }
@@ -1132,7 +1129,7 @@ position: relative;
 }
 
 .news-body {
-padding-left: 86px;
+padding-left: 95px;
 padding-right: 5px;
 overflow: hidden;
 }
@@ -1203,7 +1200,7 @@ text-decoration: none;
 .news-shakeit {
 position: absolute;
 top: 10px;
-left: 2px;
+left: 8px;
 width: 67px;
 height: 85px;
 border: 1px solid #ffeed6;
