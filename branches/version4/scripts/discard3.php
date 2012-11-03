@@ -36,7 +36,7 @@ function discard($site_id) {
 	echo "STARTING discard for $site_id\n";
 
 	// Discard links
-	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes) )");
+	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) )");
 
 	//$db->debug();
 	if( !$negatives) {
@@ -132,7 +132,7 @@ function depublish($site_id) {
 			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 			echo "Candidate $l->id ($l->karma) $negatives $positives\n";
 			if ($negatives > $l->karma/6 && $l->negatives > $l->votes/6
-				&& ($negatives > $positives || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
+				&& ($negatives > $positives * 1.25 || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
 				$karma_old = $l->karma;
 				$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
@@ -143,6 +143,7 @@ function depublish($site_id) {
 
 				// Add an annotation to show it in the logs
 				$l->karma_old = $karma_old;
+				$l->karma = $karma_new;
 				$l->annotation = _('Retirada de portada');
 				$l->save_annotation('link-karma');
 				Log::insert('link_depublished', $l->id, $l->author);

@@ -102,7 +102,7 @@ function promote($site_id) {
 
 	/// Get common votes links' averages
 
-	$days = 5;
+	$days = 7;
 
 	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 
@@ -283,8 +283,8 @@ function promote($site_id) {
 					$p = round($common_probability, 2);
 					echo "common: $common common_probability: $common_probability\n";
 					$link->common_probability = $common_probability;
-					$link->message .= 'Voters diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)." Probability: $p<br/>";
-					$link->annotation .= _('Coeficiente de diversidad').": ".sprintf("%3.2f%%", (1-$common_probability)*100)." ("._('probabilidad').": $p)<br/>";
+					$link->message .= 'Voters density: ' . sprintf("%5.2f", $common) . ' diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)." Probability: $p<br/>";
+					$link->annotation .= _('Densidad diversidad').': '. sprintf("%5.2f", $common) . ' ' . _('coeficiente').": ".sprintf("%3.2f%%", (1-$common_probability)*100)." ("._('probabilidad').": $p)<br/>";
 
 					// Bonus for diversity
 					$c = $common_probability/0.5;
@@ -295,12 +295,12 @@ function promote($site_id) {
 						} else {
 							$low_karma_coef = 1;
 						}
-						$bonus = round($c * 0.25 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
+						$bonus = round($c * 0.35 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
 						echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
 					} else {
 						// Decrease for high affinity between voters
 						$c = $c - 1;
-						$bonus = - round($c * 0.20 * $link->karma);
+						$bonus = - round($c * 0.30 * $link->karma);
 						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
 					}
 					if (abs($bonus) > 10) {
