@@ -76,7 +76,7 @@ def main():
 						commons[ax][ay] -= 1
 
 	c = DBM.cursor("update")
-	c.execute("delete from users_similarities where date < date_sub(now(), interval 45 day)")
+	c.execute("delete from users_similarities where date < date_sub(now(), interval 60 day)")
 	DBM.commit()
 
 	alpha = 0.9**(int(sys.argv[1])/24)
