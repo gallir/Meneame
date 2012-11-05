@@ -537,6 +537,7 @@ function print_relevant_comments($link, $page) {
 			if (! $page && count($objects) < 6 && $obj->vote < 0 && ! $self && count($res) >= count($objects) * 2) {
 				// Read the object for printing the summary
 				$self = Comment::from_db($comment->comment_id);
+				$self->link_permalink =  $link_url;
 				// Simplify text of the comment
 				$self->prepare_summary_text(500);
 				$self->is_truncated = false;
