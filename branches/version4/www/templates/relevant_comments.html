@@ -2,11 +2,13 @@
 <a class="title" href="{{ link_url }}/best-comments" title="{% trans _('los sombreados de rojo son de usuarios que votaron negativo') %}">{% trans _('Comentarios destacados') %}:</a>&nbsp;
 {% for obj in objects %}
 	<a class="tooltip c:{{ obj.link_id }}-{{ obj.order }}" href="{{obj.link}}" rel="nofollow"><img 
-		src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" 
-		alt="" width="20" height="20" 
 		{% if obj.vote < 0 %}
-			class="avatar shadow-red" style="margin-bottom:5px"
+			src="{% exec get_avatar_url obj.user_id, obj.avatar, 25 %}" 
+			alt="" width="25" height="25" 
+			class="avatar shadow-red"
 		{% else %}
+			src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" 
+			alt="" width="20" height="20" 
 			{% if obj.vote > 0 %}
 				class="avatar shadow-green"
 			{% else %}
