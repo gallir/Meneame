@@ -5,11 +5,7 @@
 		src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" 
 		alt="" width="20" height="20" 
 		{% if obj.vote < 0 %}
-			{% if obj.summary %}
-				class="avatar shadow-red" style="margin-bottom:-10px"
-			{% else %}
-				class="avatar shadow-red" style="margin-bottom:5px"
-			{% endif %}
+			class="avatar shadow-red" style="margin-bottom:5px"
 		{% else %}
 			{% if obj.vote > 0 %}
 				class="avatar shadow-green"
@@ -20,8 +16,17 @@
 		/></a>&nbsp;
 {% endfor %}
 {% if self %}
-	<div style="white-space: normal;margin:10px 20px 0 20px;font-size:90%;color:#666;a:link {color:#FF0000;}">
-	{% include 'comment_summary_text.html' %}
+	<div style="margin-top:5px;margin-bottom:3px">
+		<div style="float:left;">
+		<a class="tooltip c:{{ self.link_id }}-{{ self.c_order }}" href="{{self.link_permalink}}" rel="nofollow"><img 
+			src="{% exec get_avatar_url self.author, self.avatar, 25 %}" 
+			alt="" width="25" height="25" 
+			class="avatar shadow-red" style="vertical-align:text-top"
+			/></a>
+		</div>
+		<div style="white-space:normal;margin:0 20px 0 30px;font-size:9pt;color:#666;a:link {color:#FF0000;}">
+		{% include 'comment_summary_text.html' %}
+		</div>
 	</div>
 {% endif %}
 </div>
