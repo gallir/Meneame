@@ -305,7 +305,7 @@ class Link extends LCPBase {
 		if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
 			preg_match_all('/(< *meta +http-equiv|< *frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		} else {
-			preg_match_all('/(< *a|<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+			preg_match_all('/(<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|location\.|top\.|self\.)[^><]*(href|url|action|src|location|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
 		}
 		$check_counter = 0;
 		$second_level = preg_quote(preg_replace('/^(.+\.)*([^\.]+)\.[^\.]+$/', "$2", $url_components['host']));
@@ -1123,6 +1123,9 @@ class Link extends LCPBase {
 		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
 		$dict['anonymous'] = $this->anonymous;
+		if (empty($this->old_karma)) {
+			$this->old_karma = $this->karma;
+		}
 		$dict['old_karma'] = $this->old_karma;
 		$dict['karma'] = $this->karma;
 		$dict['coef'] = sprintf("%.2f",$this->coef);

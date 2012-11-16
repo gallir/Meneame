@@ -10,6 +10,9 @@ include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 include(mnminclude.'favorites.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 
 $offset=(get_current_page()-1)*$page_size;
 

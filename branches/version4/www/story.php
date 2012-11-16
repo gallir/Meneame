@@ -540,8 +540,11 @@ function print_relevant_comments($link, $page) {
 				$self->link_id = $link->id;
 				$self->link_permalink =  $link_url;
 				// Simplify text of the comment
-				$self->prepare_summary_text(500);
-				$self->is_truncated = false;
+				$self->prepare_summary_text(800);
+				if ($self->is_truncated) {
+					$self->content .= '...';
+					$self->is_truncated = false;
+				}
 				$self->media_size= 0;
 				$self->can_edit = false;
 				$obj->summary = true;
