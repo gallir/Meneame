@@ -538,6 +538,7 @@ function print_relevant_comments($link, $page) {
 				// Read the object for printing the summary
 				$self = Comment::from_db($comment->comment_id);
 				$self->link_id = $link->id;
+				$self->link = $obj->link;
 				$self->link_permalink =  $link_url;
 				// Simplify text of the comment
 				$self->prepare_summary_text(800);
