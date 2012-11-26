@@ -213,7 +213,11 @@ $globals['mysql_master_persistent'] = false;
 // Enable or disable the detecttion of real IP behind transparents proxies
 $globals['check_behind_proxy'] = false;
 //$globals['lounge'] = 'lounge.html';
-//$globals['redirect_feedburner'] = false;
+
+//$globals['rss_redirect_user_agent'] = 'feedburner'; // Identify the user agent of the agency
+//$globals['rss_redirect_published'] = false; // http://url.of.the.new.rss
+//$globals['rss_redirect_queued'] = false; // also valid for other links' status
+
 
 // If > 0 it shows negatives votes and date(vote) > $globals['show_negatives']
 //$globals['show_negatives'] = 0;

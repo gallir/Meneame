@@ -338,25 +338,12 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (isset($_REQUEST['local']) || isset($_REQUEST['nohtml']) || $globals['bot'] || !$globals['redirect_feedburner'] || preg_match('/feedburner/', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	if (isset($_REQUEST['local']) || isset($_REQUEST['nohtml']) || $globals['bot'] || !$globals['rss_redirect_user_agent'] || preg_match('/'.$globals['rss_redirect_user_agent'].'/i', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/'.$globals['rss_redirect_user_agent'].'/i', $_SERVER['HTTP_USER_AGENT']) ) return;
 	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
-	switch ($status) {
-		case 'published':
-			//header("Location: http://feeds.feedburner.com/meneame/published");
-			header("Location: http://feedproxy.google.com/MeneamePublicadas");
+	if (!empty($globals['rss_redirect_'.$status])) {
+			header('Location: ' . $globals['rss_redirect_'.$status]);
 			exit();
-			break;
-		case 'queued':
-			//header("Location: http://feeds.feedburner.com/meneame/queued");
-			header("Location: http://feedproxy.google.com/MeneameEnCola");
-			exit();
-			break;
-		case 'all':
-			//header("Location: http://feeds.feedburner.com/meneame/all");
-			header("Location: http://feedproxy.google.com/MeneameEnCola");
-			exit();
-			break;
 	}
 
 }
