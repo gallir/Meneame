@@ -82,7 +82,12 @@ function do_submit0() {
 	if (!empty($_GET['url'])) {
 		$link->url = clean_input_url($_GET['url']);
 	}
-	Haanga::Load('link/submit0.html', compact('link'));
+	if ((!$globals['mobile'] && $current_user->user_karma < 9) || isset($_REQUEST['help']) ) {
+		$show_help = true;
+	} else {
+		$show_help = false;
+	}
+	Haanga::Load('link/submit0.html', compact('link', 'show_help'));
 	return true;
 }
 
