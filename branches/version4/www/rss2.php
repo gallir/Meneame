@@ -338,7 +338,9 @@ function do_footer() {
 function check_redirect_to_feedburner($status) {
 	global $globals;
 
-	if (isset($_REQUEST['local']) || isset($_REQUEST['nohtml']) || $globals['bot'] || !$globals['rss_redirect_user_agent'] || preg_match('/'.$globals['rss_redirect_user_agent'].'/i', htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match('/'.$globals['rss_redirect_user_agent'].'/i', $_SERVER['HTTP_USER_AGENT']) ) return;
+	$regex = '/'.$globals['rss_redirect_user_agent'].'|pubsub|meneame|burner/i';
+
+	if (isset($_REQUEST['local']) || isset($_REQUEST['nohtml']) || $globals['bot'] || !$globals['rss_redirect_user_agent'] || preg_match($regex, htmlspecialchars($_SERVER['PHP_SELF'])) || preg_match($regex, $_SERVER['HTTP_USER_AGENT']) ) return;
 	/*|| preg_match('/technoratibot/i', $_SERVER['HTTP_USER_AGENT']) */
 
 	if (!empty($globals['rss_redirect_'.$status])) {
