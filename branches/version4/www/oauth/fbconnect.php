@@ -25,7 +25,7 @@ $base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that wo
 include("$base/config.php");
 
 include('base.php');
-include_once(mnminclude.'fbconnect/facebook.php');
+include_once(mnminclude.'facebook/facebook.php');
 
 
 class FBConnect extends OAuthBase {
@@ -37,10 +37,12 @@ class FBConnect extends OAuthBase {
 		if ($globals['mobile_version']) $server = 'm.facebook.com';
 		else $server = 'www.facebook.com';
 
-		// Store de FB URL for login
-		$location_ok = urlencode('http://'.  get_server_name() . $globals['base_url'] . 'oauth/fbconnect.php?op=ok'.'&t='.time());
-		$location_cancel = urlencode('http://'.  get_server_name() . $globals['base_url'] . 'oauth/fbconnect.php?op=cancel'.'&t='.time());
-		$this->authorize_url = "http://$server/login.php?api_key=".$globals['facebook_key'].'&extern=1&fbconnect=1&return_session=1&v=1.0&next='.$location_ok.'&cancel_url='.$location_ok;
+		$this->facebook = new Facebook(array(
+					'appId' => $globals['facebook_key'],
+					'secret' => $globals['facebook_secret'],
+					));
+		$this->user = $this->facebook->getUser();
+		
 		parent::__construct();
 	}
 
@@ -48,6 +50,14 @@ class FBConnect extends OAuthBase {
 		global $globals;
 
 		// Print html needed for FB Connect API
+		$loginUrl = $this->facebook->getLoginUrl();
+
+		echo "<html><head>\n";
+		echo '<script type="text/javascript">'."\n";
+		echo 'self.location = "'.$loginUrl.'";'."\n";
+		echo '</script>'."\n";
+		echo '</head><body></body></html>'."\n";
+	/*
 		echo "<html><head>\n";
 		echo '<script src="http://static.new.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>'."\n";
 		echo '<script type="text/javascript">'."\n";
@@ -55,41 +65,42 @@ class FBConnect extends OAuthBase {
 		echo 'self.location = "'.$this->authorize_url.'";'."\n";
 		echo '</script>'."\n";
 		echo '</head><body></body></html>'."\n";
+	*/
 		exit;
 	}
 
 	function authorize() {
 		global $globals, $db;
 
-		$fb = new Facebook($globals['facebook_key'], $globals['facebook_secret']);
-		$fb->require_login();
-		$fb_user = $fb->get_loggedin_user();
-
-		$user_details = $fb->api_client->users_getInfo($fb_user, array('uid', 'name', 'profile_url', 'pic_square')); 
-
-		if ($_GET['op'] != 'ok' || ! $fb_user || !is_array($user_details) || !is_array($user_details[0])) {
+		try {
+			$user_profile = $this->facebook->api('/me');
+		} catch (FacebookApiException $e) {
+			$this->user = null;
 			$this->user_return();
+			die;
 		}
 
 
-		$this->token = $user_details[0]['uid'];
-		$this->secret = $user_details[0]['uid'];
-		$this->uid = $user_details[0]['uid'];
-		$this->username = preg_replace('/.+?\/.*?([\w\.\-_]+)$/', '$1', $user_details[0]['profile_url']);
+		$this->token = $user_profile['id'];
+		$this->secret = $user_profile['id'];
+		$this->uid = $user_profile['id'];
+		$this->username = preg_replace('/.+?\/.*?([\w\.\-_]+)$/', '$1', $user_profile['username']);
 		// Most Facebook users don't have a name, only profile number
 		if (!$this->username || preg_match('/^\d+$/', $this->username)) {
 			// Create a name like a uri used in stories
-			if (strlen($user_details[0]['name']) > 2) {
-				$this->username = User::get_valid_username($user_details[0]['name']);
+			if (strlen($user_profile['name']) > 2) {
+				$this->username = User::get_valid_username($user_profile['name']);
 			} else {
 				$this->username = 'fb'.$this->username;
 			}
 		}
 		$db->transaction();
 		if (!$this->user_exists()) {
-			$this->url = $user_details[0]['profile_url'];
-			$this->names = $user_details[0]['name'];
-			$this->avatar = $user_details[0]['pic_square'];
+			$this->url = $user_profile['link'];
+			$this->names = $user_profile['name'];
+			if ($user_profile['username']) {
+				$this->avatar = "http://graph.facebook.com/".$user_profile['username']."/picture";
+			}
 			$this->store_user();
 		}
 		$this->store_auth();
@@ -101,6 +112,13 @@ class FBConnect extends OAuthBase {
 
 $auth = new FBConnect();
 
+if ($auth->user) {
+	$auth->authorize();
+} else {
+	$auth->authRequest();
+}
+
+die;
 switch ($_GET['op']) {
 	case 'ok':
 	case 'cancel':
