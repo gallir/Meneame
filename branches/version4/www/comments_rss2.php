@@ -154,6 +154,9 @@ if ($comments) {
 		$comment = Comment::from_db($comment_id);
 		if (!$comment) continue;
 
+		$link = Link::from_db($comment->link);
+		$comment->link_permalink =  $link->get_permalink();
+
 		if ($comment->type == 'admin') {
 			if ($individual_user) continue;
 			else $comment->username = get_server_name();
@@ -164,21 +167,20 @@ if ($comments) {
 			$content = htmlentities2unicodeentities($comment->to_html($comment->content));
 		}
 		echo "	<item>\n";
-		$link = Link::from_db($comment->link);
 		echo "		<meneame:comment_id>$comment->id</meneame:comment_id>\n";
 		echo "		<meneame:link_id>$comment->link</meneame:link_id>\n";
 		echo "		<meneame:order>$comment->c_order</meneame:order>\n";
 		echo "		<meneame:user>$comment->username</meneame:user>\n";
 		echo "		<meneame:votes>".intval($comment->votes)."</meneame:votes>\n";
 		echo "		<meneame:karma>".intval($comment->karma)."</meneame:karma>\n";
-		echo "		<meneame:url>".'http://'.get_server_name().$comment->get_relative_individual_permalink()."</meneame:url>\n";
+		echo "		<meneame:url>".$comment->link_permalink."</meneame:url>\n";
 
 		// Title must not carry htmlentities
 		echo "		<title>#$comment->order ".htmlentities2unicodeentities($link->title)."</title>\n";
-		echo "		<link>".$link->get_permalink()."/000".$comment->order."</link>\n";
+		echo "		<link>".$comment->link_permalink."/000".$comment->order."</link>\n";
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";
-		echo "		<guid>".$link->get_permalink()."/000".$comment->order."</guid>\n";
+		echo "		<guid>".$comment->link_permalink."/000".$comment->order."</guid>\n";
 		echo "		<description><![CDATA[<p>$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$comment->username.'</strong></p>';
 		echo "]]></description>\n";
