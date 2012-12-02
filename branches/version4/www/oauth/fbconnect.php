@@ -57,15 +57,6 @@ class FBConnect extends OAuthBase {
 		echo 'self.location = "'.$loginUrl.'";'."\n";
 		echo '</script>'."\n";
 		echo '</head><body></body></html>'."\n";
-	/*
-		echo "<html><head>\n";
-		echo '<script src="http://static.new.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>'."\n";
-		echo '<script type="text/javascript">'."\n";
-		echo 'FB.init("'.$globals['facebook_key'].'", "'.$globals['base_url'].'libs/fbconnect/xd_receiver.php",{"reloadIfSessionStateChanged":true});'."\n";
-		echo 'self.location = "'.$this->authorize_url.'";'."\n";
-		echo '</script>'."\n";
-		echo '</head><body></body></html>'."\n";
-	*/
 		exit;
 	}
 
@@ -118,17 +109,4 @@ if ($auth->user) {
 	$auth->authRequest();
 }
 
-die;
-switch ($_GET['op']) {
-	case 'ok':
-	case 'cancel':
-		$auth->authorize();
-		break;
-	case '':
-		$auth->authRequest();
-		break;
-	default:
-		die;
-}
-		
 ?>
