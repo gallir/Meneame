@@ -51,8 +51,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 			break;
 		case 'ip':
 		case 'proxy':
-			//Quizá convendría revisar este preg_mach para revisar las IPs válidas mejor.
-			if ($check_valid  && ! preg_match('/^\d+\.[\d\.]+$/s', $ban_text)) {
+			if ($check_valid  && ! preg_match('/^(\d+[\.\:])+/s', $ban_text)) { // TODO: check regexp
 				$ban = array();
 				$ban['match'] =  $ban_text;
 				$ban['comment'] =_('No es una IP válida');
