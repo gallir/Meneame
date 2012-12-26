@@ -7,6 +7,8 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
+include(mnminclude.'ban.php');
+check_ip_noaccess();
 
 if ($globals['url_shortener_mobile_to'] && $globals['mobile']) {
 	$server_to = $globals['url_shortener_mobile_to'];

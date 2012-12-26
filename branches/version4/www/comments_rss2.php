@@ -15,8 +15,8 @@ if (check_ip_noaccess() || check_ban_proxy()) {
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
-	if ($rows > 300) $rows = 200; //avoid abuses
-} else $rows = 200;
+	if ($rows > 2000) $rows = 500; //avoid abuses
+} else $rows = 500;
 
 // Bug in FeedBurner, it needs all items
 if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {

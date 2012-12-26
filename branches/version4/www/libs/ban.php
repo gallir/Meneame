@@ -51,10 +51,11 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 			break;
 		case 'ip':
 		case 'proxy':
-			if ($check_valid  && ! preg_match('/^(\d+[\.\:])+/s', $ban_text)) { // TODO: check regexp
+			if ($check_valid  && ! preg_match('/^([\da-f]+[\.\:])+/is', $ban_text)) { // TODO: check regexp
 				$ban = array();
 				$ban['match'] =  $ban_text;
 				$ban['comment'] =_('No es una IP válida');
+				syslog(LOG_INFO, "IP inválida: $ban_text");
 				return $ban;
 			}
 			$list = subclasses_list($ban_text);

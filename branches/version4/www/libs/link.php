@@ -1013,7 +1013,7 @@ class Link extends LCPBase {
 		}
 
 		// Make sure we don't deviate too much from the average (it avoids vote spams and abuses)
-		if ($karma_pos_user_low/$karma_pos_user_high > 1.15) {
+		if ($karma_pos_user_high == 0 || $karma_pos_user_low/$karma_pos_user_high > 1.15) {
 			$perc = intval($vlow/($vlow+$vhigh) * 100);
 			$this->low_karma_perc = $perc;
 			$this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
