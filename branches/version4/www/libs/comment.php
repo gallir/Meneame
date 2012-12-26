@@ -207,7 +207,8 @@ class Comment extends LCPBase {
 
 		$this->prepare_summary_text($length);
 
-		$this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id  && $single_link && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->user_level != 'disabled';
+		// $this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id  && $single_link && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->user_level != 'disabled';
+		$this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->user_level != 'disabled';
 
 		$this->user_can_vote = $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
 		$this->modified_time = txt_time_diff($this->date, $this->modified);
