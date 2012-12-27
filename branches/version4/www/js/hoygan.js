@@ -1,5 +1,5 @@
 $(function(){
-	$("h1 > *, h4 > a, h5 > p:first, h5 > a, .topcommentsli > li > a , li > strong > a, p").each(function(index) {
+	$("h2 > *, h4 > a, h5 > p:first, h5 > a, .topcommentsli > li > a , li > strong > a, p").each(function(index) {
 		$(this).html(to_hoygan($(this).html()));
 	});
 });

@@ -262,8 +262,7 @@ white-space: nowrap;
 }
 
 #header-center .logo-eli{
-/* logo standard commented (7 anniversary) background-image:url('../../img/mnm/h9_eli.png'); */
-background-image:url('../../img/mnm/eli_7y.png');
+background-image:url('../../img/mnm/h9_eli.png');
 background-repeat: no-repeat;
 height:35px;
 width:55px;
