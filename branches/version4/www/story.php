@@ -190,9 +190,15 @@ $globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_per
 // add also a rel to the comments rss
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";
 
-$globals['thumbnail'] = $link->has_thumb();
+if ($link->has_thumb()) {
+	if ($link->thumb_medium_url) {
+		$globals['thumbnail'] = $link->thumb_medium_url;
+	} else {
+		$globals['thumbnail'] = $link->thumb_url;
+	}
+}
 
-$globals['description'] = text_to_summary($link->content, 250);
+$globals['description'] = text_to_summary($link->content, 200);
 
 do_header($link->title, 'post');
 

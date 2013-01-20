@@ -21,12 +21,6 @@ if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['url'] = 'http';
 }
 
-if (!empty($globals['static_server']) && ! $globals['https']) {
-	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
-} else {
-	$globals['base_static'] = $globals['base_url'];
-}
-
 // Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
 	$globals['user_ip'] = check_ip_behind_proxy();
@@ -53,7 +47,7 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 
 if($_SERVER['HTTP_HOST']) {
 	// Check bots
-	if (preg_match('/(httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
+	if (preg_match('/(httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
 		$globals['bot'] = true;
 	} else {
 		$globals['bot'] = false;
@@ -89,6 +83,12 @@ if($_SERVER['HTTP_HOST']) {
 	}
 } else {
 	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
+}
+
+if (!empty($globals['static_server']) && ! $globals['https']) {
+	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+} else {
+	$globals['base_static'] = $globals['url'].'://'.$globals['server_name'].$globals['base_url'];
 }
 
 $globals['url'] .= '//'.$globals['server_name'].htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);

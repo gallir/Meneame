@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{globals.lang}}">
+<html lang="{{globals.lang}}" prefix="og: http://ogp.me/ns#">
 <head>
 <meta charset="utf-8" />
 <meta name="ROBOTS" content="NOARCHIVE" />
@@ -16,14 +16,25 @@
 	<meta name="description" content="{{globals.description}}" />
 {% endif %}
 
-{% if globals.thumbnail %}
-	<link rel="image_src" href="{{globals.thumbnail}}"/>
-	<meta name="thumbnail_url" content="{{globals.thumbnail}}"/>
-    <meta property="og:image" content="{{globals.thumbnail}}"/>
-{#
-	<meta name="og:image" content="{{globals.thumbnail}}">
-#}
+{% if globals.link %}
+	{# Twitter Card #}
+	{% if globals.bot %}
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="{{title}}">
+		{% if globals.twitter_user %}
+			<meta name="twitter:site" content="@{{globals.twitter_user}}">
+		{% endif %}
+	{% endif %}
+	{% if globals.thumbnail %}
+		<link rel="image_src" href="{{globals.thumbnail}}"/>
+    	<meta property="og:image" content="{{globals.thumbnail}}"/>
+	{% endif %}
+	<meta property="og:url" content="{{ globals.link_permalink }}">
+	<meta property="og:title" content="{{title}}">
+	<meta property="og:description" content="{{ globals.description }}">
 {% endif %}
+
+
 
 <script type="text/javascript">
 var mnm_start_time=(new Date()).getTime()

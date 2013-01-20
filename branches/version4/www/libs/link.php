@@ -33,6 +33,7 @@ class Link extends LCPBase {
 	var $title = '';
 	var $tags = '';
 	var $uri = '';
+	var $thumb_url = false;
 	var $content = '';
 	var $content_type = '';
 	var $ip = '';
@@ -167,11 +168,7 @@ class Link extends LCPBase {
 
 		$link = Link::from_db($ids[0]);
 		if ($link) {
-			$link->thumb_url = $link->has_thumb();
-			if ($link->thumb_url) {
-				$link->thumb_x = $link->thumb_y = 200;
-				$link->thumb_url = preg_replace('/\/thumb\-/', '/thumb_medium-', $link->thumb_url);
-			}
+			$link->has_thumb();
 		}
 		return $link;
 	}
@@ -1233,8 +1230,11 @@ class Link extends LCPBase {
 		$db->query("update links set link_content_type = '$this->content_type', link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
-	function delete_thumb() {
+	function delete_thumb($base = '') {
 		global $globals;
+		if (!empty($base)) { // Don't delete if not the original (smaller) thumbnail
+			return;
+		}
 		$this->thumb = '';
 		$this->thumb_status = 'deleted';
 		$this->thumb_x = 0;
@@ -1247,41 +1247,66 @@ class Link extends LCPBase {
 
 	function has_thumb() {
 		global $globals;
+
+		if ($this->thumb_url) return $this->thumb_url;
+
+		$link_year = getdate($this->date);
+		$link_year = $link_year['year'];
+
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
-				return $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
-			}
+				$this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
+				if ($link_year > 2012) {
+					$this->thumb_medium_x = $this->thumb_medium_y = 200;
+					$this->thumb_medium_url = preg_replace('/\/(\d)/', '/medium_$1', $this->thumb_url);
+				}
+				return $this->thumb_url;
+			} 
 			$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
 			if ($globals['cache_redirector'] || is_readable($filepath)) {
-				return $globals['base_static'] . $file;
+				$this->thumb_url = $globals['base_static'] . $file;
 			} else {
 				if ($this->thumb_download()) {
-					return $globals['base_static'] . $file;
+					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
+					$this->thumb_url = $globals['base_static'] . $file;
 				}
 			}
 		}
-		return false;
+		if ($this->thumb_url && $link_year > 2012) {
+			$this->thumb_medium_x = $this->thumb_medium_y = 200;
+			$this->thumb_medium_url = preg_replace('/\/thumb\-/', '/thumb_medium-', $this->thumb_url);
+		}
+
+		return $this->thumb_url;
 	}
 
-	function thumb_download() {
+	function thumb_download($basename = 'thumb') {
 		global $globals;
 
-		$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
+		$file = Upload::get_cache_relative_dir($this->id) . "/$basename-$this->id.jpg";
 		$filepath = mnmpath."/$file";
+
+		if ($basename == "thumb_medium") {
+			$s3_base = "medium_";
+			$s3_filename = "medium_$this->id.jpg";
+		} else {
+			$s3_base = "";
+			$s3_filename = "$this->id.jpg";
+		}
 
 		if ($this->thumb_x > 0 && $this->thumb_y > 0
 			&& $globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
 			Upload::create_cache_dir($this->id);
 			// Get thumbnail from S3
-			if (Media::get("$this->id.jpg", 'thumbs', $filepath)) {
+			if (Media::get($s3_filename, 'thumbs', $filepath)) {
 				return $filepath;
 			} else {
 				// Do extra check, if S3 is working, mark thumb as deleted
 				if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
 						&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
-					syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for $this->id");
-					$this->delete_thumb();
+					syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for ${base}_$this->id");
+					$this->delete_thumb($s3_base);
 				}
 			}
 		}
