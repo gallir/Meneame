@@ -61,16 +61,13 @@ do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 switch ($_REQUEST['w']) {
 	case 'posts':
 		$rss_program = 'sneakme_rss2.php';
-		$obj = new Post;
 		break;
 	case 'comments':
 		$rss_program = 'comments_rss2.php';
-		$obj = new Comment;
 		break;
 	case 'links':
 	default:
 		$rss_program = 'rss2.php';
-		$obj = new Link;
 }
 
 /*** SIDEBAR ****/
@@ -95,14 +92,22 @@ Haanga::Load('search.html', compact('options', 'selected', 'response', 'rss_prog
 do_footer_menu();
 do_footer();
 
-function print_result()
-{
-	global $response, $obj, $page_size;
+function print_result() {
+	global $response, $page_size;
 	if ($response['ids']) {
 		$rows = min($response['rows'], 1000);
 		foreach($response['ids'] as $id) {
-			$obj->id=$id;
-			$obj->read();
+			switch ($_REQUEST['w']) {
+				case 'posts':
+					$obj = Post::from_db($id);
+					break;
+				case 'comments':
+					$obj = Comment::from_db($id);
+					break;
+				case 'links':
+				default:
+					$obj = Link::from_db($id);
+			}
 			$obj->basic_summary = true;
 			switch ($_REQUEST['w']) {
 				case 'posts':
