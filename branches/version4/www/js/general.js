@@ -1062,6 +1062,7 @@ var notifier = new function () {
 	var timeout = false;
 	var area;
 	var panel_visible = false;
+	var current_count = -1;
 
 	var click_handler = function (e) {
 		if (! panel_visible) return;
@@ -1100,10 +1101,16 @@ var notifier = new function () {
 	this.update = function() {
 		$.getJSON(base_url+'backend/notifications.json.php?totals',
 			function (data) {
-				var pre = area.html();
-				if (pre.length == 0 || pre != data.total) area.html(data.total);
-				if (data.total > 0) area.addClass('nonzero');
-				else area.removeClass('nonzero');
+				if (current_count == data.total) return;
+				document.title = document.title.replace(/^\(\d+\) /, '');
+				area.html(data.total);
+				if (data.total > 0) {
+					area.addClass('nonzero');
+					document.title = '('+data.total+') ' + document.title;
+				} else {
+					area.removeClass('nonzero');
+				}
+				current_count = data.total;
 			});
 		timeout = setTimeout(notifier.update, 30000); /* update every 30 seconds */
 	}
