@@ -51,9 +51,9 @@ do_tabs('main', 'popular');
 echo '<div id="newswrap">'."\n";
 
 
-$link = new LinkMobile;
 if ($links) {
 	foreach($links as $dblink) {
+		$link = new LinkMobile;
 		$link->id=$dblink->link_id;
 		$link->read();
 		$link->print_summary();
