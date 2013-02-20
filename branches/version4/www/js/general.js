@@ -1066,7 +1066,7 @@ var notifier = new function () {
 	var current_count = -1;
 	var has_focus = true;
 	var check_counter = 0;
-	var base_update = 25000; // Check every 25 seconds
+	var base_update = 15000; // Base check every 15 seconds
 
 	var click_handler = function (e) {
 		if (! panel_visible) return;
@@ -1104,14 +1104,11 @@ var notifier = new function () {
 
 	this.update = function() {
 		var next_check;
-		if (timeout) {
-			clearTimeout(timeout);
-			timeout = false;
-		}
-		check_counter++;
+
 		$.getJSON(base_url+'backend/notifications.json.php?totals'+"&check="+check_counter+"&has_focus="+has_focus,
 			function (data) {
 				if (current_count == data.total) return;
+				check_counter = 0;
 				document.title = document.title.replace(/^\(\d+\) /, '');
 				area.html(data.total);
 				if (data.total > 0) {
@@ -1122,12 +1119,14 @@ var notifier = new function () {
 				}
 				current_count = data.total;
 			});
+
+		next_update = base_update;
 		if (! has_focus) {
-			next_update = base_update + check_counter * 1000; // Increment one second for every
-		} else {
-			next_update = base_update;
+			next_update += check_counter * 1000; // Increment one second for every check
 		}
-		if (! is_mobile && next_update < 90000) {
+		check_counter++;
+
+		if (! is_mobile && next_update < 300000) {
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
@@ -1141,6 +1140,10 @@ var notifier = new function () {
 		$(window).focus(function() {
 			has_focus = true;
 			check_counter = 0;
+			if (timeout) {
+				clearTimeout(timeout);
+				timeout = false;
+			}
 			notifier.update();
 				
 		});
