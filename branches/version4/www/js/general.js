@@ -2,6 +2,7 @@
 var base_url="{{ globals.base_url }}",
 	base_static="{{ globals.base_static }}",
 	mobile_client = false,
+	is_mobile = {{ globals.mobile }},
 	base_key, link_id = 0, user_id, user_login;
 
 
@@ -1063,6 +1064,9 @@ var notifier = new function () {
 	var area;
 	var panel_visible = false;
 	var current_count = -1;
+	var has_focus = true;
+	var check_counter = 0;
+	var base_update = 25000; // Check every 25 seconds
 
 	var click_handler = function (e) {
 		if (! panel_visible) return;
@@ -1099,7 +1103,13 @@ var notifier = new function () {
 	}
 
 	this.update = function() {
-		$.getJSON(base_url+'backend/notifications.json.php?totals',
+		var next_check;
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = false;
+		}
+		check_counter++;
+		$.getJSON(base_url+'backend/notifications.json.php?totals'+"&check="+check_counter+"&has_focus="+has_focus,
 			function (data) {
 				if (current_count == data.total) return;
 				document.title = document.title.replace(/^\(\d+\) /, '');
@@ -1112,7 +1122,16 @@ var notifier = new function () {
 				}
 				current_count = data.total;
 			});
-		timeout = setTimeout(notifier.update, 30000); /* update every 30 seconds */
+		if (! has_focus) {
+			next_update = base_update + check_counter * 1000; // Increment one second for every
+		} else {
+			next_update = base_update;
+		}
+		if (! is_mobile && next_update < 90000) {
+			timeout = setTimeout(notifier.update, next_update);
+		} else {
+			timeout = false;
+		}
 	}
 
 	this.init = function () {
@@ -1120,15 +1139,13 @@ var notifier = new function () {
 
 		area.click(this.click);
 		$(window).focus(function() {
-			if (! timeout) {
-				notifier.update();
-			}
+			has_focus = true;
+			check_counter = 0;
+			notifier.update();
+				
 		});
 		$(window).blur(function() {
-			if (timeout) {
-				clearTimeout(timeout);
-				timeout = false;
-			}
+			has_focus = false;
 		});
 		this.update();
 	}

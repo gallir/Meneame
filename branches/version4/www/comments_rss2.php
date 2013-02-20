@@ -8,6 +8,9 @@
 
 include('config.php');
 
+// Use the alternate server for api, if it exists
+$globals['alternate_db_server'] = 'api';
+
 include(mnminclude.'ban.php');
 if (check_ip_noaccess() || check_ban_proxy()) {
 	die;

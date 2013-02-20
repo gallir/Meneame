@@ -8,6 +8,9 @@
 
 include('config.php');
 
+// Use the alternate server for api, if it exists
+$globals['alternate_db_server'] = 'api';
+
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 300) $rows = 100; //avoid abuses
