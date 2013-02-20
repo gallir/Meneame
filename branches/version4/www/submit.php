@@ -96,7 +96,7 @@ function do_submit1() {
 
 
 
-	$url = clean_input_url($_POST['url']);
+	$url = clean_input_url(urldecode($_POST['url']));
 	$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
 	$url = preg_replace('/^http:\/\/http:\/\//', 'http://', $url); // Some users forget to delete the foo http://
 	if (! preg_match('/^\w{3,6}:\/\//', $url)) { // http:// forgotten, add it
@@ -122,7 +122,7 @@ function do_submit1() {
 		$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
 		if ($c > 0) {
 			add_submit_error( _('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'));
-			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): $_POST[url]");
+			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): " . $_REQUEST['url']);
 			return false;
 		}
 	}
@@ -132,7 +132,7 @@ function do_submit1() {
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
 		add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
-		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): $_POST[url]");
+		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): " . $_REQUEST['url']);
 		return false;
 	}
 
@@ -155,7 +155,7 @@ function do_submit1() {
 		//echo '</div>'. "\n";
 		add_submit_error( _('exceso de envíos'),
 			_('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'));
-		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): $_POST[url]");
+		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): " . $_REQUEST['url']);
 		return false;
 	}
 
@@ -165,7 +165,7 @@ function do_submit1() {
 	if ($drafts > $globals['draft_limit']) {
 		add_submit_error( _('demasiados borradores'),
 			_('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>');
-		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): $_POST[url]");
+		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): " . $_REQUEST['url']);
 		return false;
 	}
 	// Delete dangling drafts
@@ -316,7 +316,7 @@ function do_submit1() {
 		if ($ban['expire'] > 0) {
 			add_submit_error( $e, _('caduca').': '.get_date_time($ban['expire']));
 		}
-		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- $_POST[url]");
+		syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- " . $_REQUEST['url']);
 		return false;
 	}
 
