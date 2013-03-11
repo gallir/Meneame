@@ -6,10 +6,10 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
+include('config.php');
 
 include(mnminclude.'ban.php');
 if (check_ip_noaccess() || check_ban_proxy()) {
@@ -18,7 +18,7 @@ if (check_ip_noaccess() || check_ban_proxy()) {
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
-	if ($rows > 2000) $rows = 500; //avoid abuses
+	if ($rows > 2000) $rows = 2000; //avoid abuses
 } else $rows = 500;
 
 // Bug in FeedBurner, it needs all items

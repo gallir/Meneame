@@ -1013,6 +1013,7 @@ function clear_unicode_spaces($input){
 	//	"\xa", // 'LINE FEED (LF)' (U+000A)
 	"\xb", // 'LINE TABULATION' (U+000B)
 	"\xc", // 'FORM FEED (FF)' (U+000C)
+	"\x10", 
 	//	"\xd", // 'CARRIAGE RETURN (CR)' (U+000D)
 	"\x20", // 'SPACE' (U+0020)
 	"\xc2\xa0", // 'NO-BREAK SPACE' (U+00A0)

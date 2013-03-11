@@ -43,7 +43,7 @@ class User {
 	static function get_valid_username($name) {
 		$name = strip_tags($name);
 		$name = preg_replace('/&.+?;/', '', $name); // kill entities
-		$name = preg_replace('/[\s\'\"]/', '_', $name);
+		$name = preg_replace('/[\s\'\"\(\)]/', '_', $name);
 		if (preg_match('/^\d/', $name)) $name = 'u_' . $name; // Don't let start with a number
 		return substr($name, 0, 24);
 	}

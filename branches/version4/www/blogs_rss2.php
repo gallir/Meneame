@@ -6,10 +6,10 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
+include('config.php');
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);

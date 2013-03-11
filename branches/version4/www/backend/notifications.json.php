@@ -5,11 +5,11 @@
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include('../config.php');
-syslog(LOG_INFO, $_SERVER['QUERY_STRING']);
 
 // Use the alternate server for api, if it exists
-$globals['alternate_db_server'] = 'api';
+// $globals['alternate_db_server'] = 'api';
+
+include('../config.php');
 
 include(mnminclude.'ban.php');
 check_ip_noaccess();

@@ -1215,7 +1215,7 @@ class Link extends LCPBase {
 						echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
 				}
 			}
-			if ($img->video) $this->content_type = 'video';
+			// if ($img->video) $this->content_type = 'video';
 		} elseif ($this->thumb_x || $this->thumb_y) {
 			$this->delete_thumb();
 			return false;
