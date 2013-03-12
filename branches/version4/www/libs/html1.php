@@ -31,7 +31,7 @@ class MenuOption{
 		if ($active && $active == $this->text) {
 			$this->selected = true;
 		} else {
-			$this->selected = $false;
+			$this->selected = false;
 		}
 	}
 }
