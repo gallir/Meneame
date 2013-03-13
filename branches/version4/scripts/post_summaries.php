@@ -20,7 +20,7 @@ if (intval($argv[1]) > 0) {
 	$hours = 24;
 }
 // Get most voted link
-$link_sqls[_('Más votada')] = "select vote_link_id as id, count(*) as n from sub_statuses, votes use index (vote_type_4) where id = ".SitesMgr::my_id()." AND vote_link_id = link AND vote_type='links' and vote_date > date_sub(now(), interval $hours hour) and vote_user_id > 0 and vote_value > 0 group by vote_link_id order by n desc limit 1";
+$link_sqls[_('Más votada')] = "select vote_link_id as id, count(*) as n from sub_statuses, links, votes use index (vote_type_4) where id = ".SitesMgr::my_id()." AND link_id = link AND link_status = 'published' AND vote_link_id = link AND vote_type='links' and vote_date > date_sub(now(), interval $hours hour) and vote_user_id > 0 and vote_value > 0 group by vote_link_id order by n desc limit 1";
 
 // Most commented
 $link_sqls[_('Más comentada')] = "select comment_link_id as id, count(*) as n from sub_statuses, comments use index (comment_date) where id = ".SitesMgr::my_id()." AND sub_statuses.status in ('published', 'metapublished') AND comment_link_id = link AND comment_date > date_sub(now(), interval $hours hour) group by comment_link_id order by n desc limit 1";

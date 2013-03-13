@@ -131,8 +131,8 @@ function depublish($site_id) {
 			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
 			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 			echo "Candidate $l->id ($l->karma) $negatives $positives\n";
-			if ($negatives > $l->karma/6 && $l->negatives > $l->votes/6
-				&& ($negatives > $positives * 1.25 || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
+			if ($negatives > 2 && $negatives > $l->karma/6 && $l->negatives > $l->votes/6 && $l->negatives > 5
+				&& ($negatives > $positives * 1.1 || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
 				$karma_old = $l->karma;
 				$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
