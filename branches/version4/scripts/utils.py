@@ -163,13 +163,20 @@ class BaseBlogs(object):
 
 
 	def is_banned(self):
-		c = DBM.cursor()
+		local_domain = dbconf.domain.replace('http://', '').replace('www.', '')
 		hostname = re.sub('^www\.', '', re.sub(':[0-9]+$', '', urlparse(self.url)[1]))
+		if re.search(re.escape(local_domain)+r'$', hostname):
+			print "Url is the same as local domain: ", local_domain, hostname
+			return True
+
+
+		c = DBM.cursor()
 		c.execute("select count(*) from bans where ban_text in (%s, %s, %s, %s) AND ban_type in ('hostname','punished_hostname') AND (ban_expire IS null OR ban_expire > now())", (self.base_url, 'www.'+self.base_url, hostname, 'www.'+hostname));
+		# print("select count(*) from bans where ban_text in (%s, %s, %s, %s) AND ban_type in ('hostname','punished_hostname') AND (ban_expire IS null OR ban_expire > now())" % (self.base_url, 'www.'+self.base_url, hostname, 'www.'+hostname));
 		r = c.fetchone()
 		c.close()
 		if r[0] > 0:
-			#print "Banned ", domain
+			print "Banned ", hostname
 			return True
 		else:
 			return False

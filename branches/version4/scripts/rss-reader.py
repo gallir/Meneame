@@ -9,6 +9,7 @@ from utils import *
 import urllib
 import urllib2
 import socket
+import re
 
 
 
@@ -54,7 +55,7 @@ def main():
 	blogs = get_candidate_blogs(dbconf.blogs['days_published'], dbconf.blogs['min_karma'])
 	for o in blogs:
 		entries = o.read_feed()
-		time.sleep(3)
+		time.sleep(5)
 		if entries > 0:
 			users.add(o.user)
 			news.add(o)
@@ -70,9 +71,12 @@ def main():
 			
 		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
-		f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
-		print f.read(100)
-		f.close()
+		try:
+			f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
+			print f.read(100)
+			f.close()
+		except KeyError: 
+			pass
 
 
 def get_candidate_blogs(days, min_karma):
@@ -84,18 +88,15 @@ def get_candidate_blogs(days, min_karma):
 	cursor = DBM.cursor()
 	c = DBM.cursor()
 
-	local_domain = dbconf.domain.replace('http://', '').replace('www.', '')
-	print "Local domain:", local_domain
-
 	""" Select users that have at least one published """
 	cursor.execute("SELECT link_blog, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), count(*) as n  from links, blogs where link_status in ('published') and link_date > date_sub(now(), interval %s day) and blog_id = link_blog and blog_type='blog' and (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour)) group by blog_id", (days,))
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.counter = row
-		o.base_url = o.url.replace('http://', '').replace('www.', '')
-		if o.base_url == local_domain:
-			print "Url is the same as local domain: ", local_domain, o.url
+		o.base_url = o.url.replace('http://', '').replace('https://', '').replace('www.', '')
+		if o.is_banned():
 			continue
+
 		if o.counter < days:
 			c.execute("select user_login, user_id, user_karma from users where user_url in (%s, %s, %s, %s, %s, %s) and user_karma > %s and user_level not in ('disabled', 'autodisabled') order by user_karma desc limit 1",
 					('http://'+o.base_url, 'http://www.'+o.base_url, 'http://'+o.base_url+'/', 'http://www.'+o.base_url+'/', o.base_url, 'www.'+o.base_url, min_karma))
@@ -122,7 +123,7 @@ def get_candidate_blogs(days, min_karma):
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.user, o.user_id, o.karma = row
-		o.base_url = o.url.replace('http://', '').replace('www.', '')
+		o.base_url = o.url.replace('http://', '').replace('https://', '').replace('www.', '')
 		if o.id not in blogs_ids and o.user_id not in users_ids:
 				blogs.add(o)
 				users_ids.add(o.user_id)
@@ -151,6 +152,7 @@ def get_candidate_blogs(days, min_karma):
 					feeds_read += 1
 	cursor.close()
 	return results
+
 
 if __name__ == "__main__":
 	main()
