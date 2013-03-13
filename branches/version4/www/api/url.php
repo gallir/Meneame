@@ -29,6 +29,11 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 
 stats_increment('api', true);
 
+$cache_key = 'api_url'.$json.$_GET['url'];
+if(memcache_mprint($cache_key)) {
+	exit(0);
+}
+
 $url = $db->escape($_GET['url']);
 
 if(strlen($url) < 8 || ! preg_match('/^https{0,1}:\/\//', $url) || ! ($parsed = parse_url($url)) || mb_strlen($parsed['host']) < 5) {
@@ -73,18 +78,20 @@ if ($links) {
 			$data['karma'] = intval($dblink->link_karma);
 			array_push($dict['data'], $data);
 		} else {
-			echo 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.($dblink->link_votes+$dblink->link_anonymous).' '.$dblink->link_status."\n";
+			$response = 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.($dblink->link_votes+$dblink->link_anonymous).' '.$dblink->link_status."\n";
 		}
 	}
 } else {
 	if ($json) {
 		$dict['status'] = 'KO';
 		$dict['submit_url'] = 'http://'.get_server_name().'/submit.php?url='.$url;
-	} else echo 'KO http://'.get_server_name().'/submit.php?url='.$url;
+	} else $response = 'KO http://'.get_server_name().'/submit.php?url='.$url;
 }
 
 if ($json) {
-		echo json_encode($dict);
-		echo $ending;
+		$response = json_encode($dict) . $ending;
 }
+
+echo $response;
+memcache_madd($cache_key, $response, 5);
 ?>
