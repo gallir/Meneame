@@ -81,7 +81,7 @@ class RGDB extends mysqli {
 
 	function print_error($str = "") {
 		if ($this->show_errors) echo "$str ($this->error)\n";
-		syslog(LOG_NOTICE, "Meneame: db error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
+		syslog(LOG_NOTICE, "Meneame: db ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 	}
 
 	function flush() {
