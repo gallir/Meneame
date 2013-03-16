@@ -27,12 +27,14 @@ if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	header('Content-Type: text/plain; charset=UTF-8');
 }
 
-stats_increment('api', true);
-
 $cache_key = 'api_url'.$json.$_GET['url'];
 if(memcache_mprint($cache_key)) {
 	exit(0);
 }
+
+
+
+stats_increment('api', true);
 
 $url = $db->escape($_GET['url']);
 

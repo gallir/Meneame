@@ -1126,7 +1126,7 @@ var notifier = new function () {
 		}
 		check_counter++;
 
-		if (! is_mobile && next_update < 300000) {
+		if (! is_mobile && check_counter < 176) { // 5 hours
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
