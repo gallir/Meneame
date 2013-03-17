@@ -158,9 +158,11 @@ $post = new Post;
 
 $conversation_extra = '';
 if ($tab_option == 4) {
+	/*
 	if ($current_user->user_id == $user->id) {
 		$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
 	}
+	*/
 	$options = array(
 		_('todas') => post_get_base_url($user->username),
 		_('amigos') => post_get_base_url("$user->username/_friends"),
@@ -172,7 +174,7 @@ if ($tab_option == 4) {
 
 	);
 }  elseif ($tab_option == 1 && $current_user->user_id > 0) {
-	$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
+	//$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
 	$view = 0;
 
 	$options = array(
