@@ -153,6 +153,9 @@ class Link extends LCPBase {
 			&& $globals['click_counter']
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 			&& ($ignore_ip === false || $ignore_ip != $globals['user_ip']) ){
+			if (function_exists('fastcgi_finish_request')) {
+				fastcgi_finish_request();
+			}
 			$db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
 		}
 	}
