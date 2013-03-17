@@ -24,7 +24,6 @@ if (isset($_GET['totals'])) {
 
 $cache_key = 'notifications_'.$current_user->user_id.'_'.$do_totals;
 if(memcache_mprint($cache_key)) {
-	echo "\n/*CACHED $cache_key*/";
     exit(0);
 }
 
