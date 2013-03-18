@@ -1111,6 +1111,7 @@ var notifier = new function () {
 				check_counter = 0;
 				document.title = document.title.replace(/^\(\d+\) /, '');
 				area.html(data.total);
+				$('#p_c_counter').html(data.posts);
 				if (data.total > 0) {
 					area.addClass('nonzero');
 					document.title = '('+data.total+') ' + document.title;
