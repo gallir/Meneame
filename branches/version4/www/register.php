@@ -13,6 +13,10 @@ include(mnminclude.'ban.php');
 
 $globals['ads'] = false;
 
+// Clean return variable
+if(!empty($_REQUEST['return'])) {
+	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
+}
 
 if ($current_user->user_id > 0) {
 	if(!isset($_COOKIE['return_site'])) {

@@ -1212,9 +1212,9 @@ function set_count($key, $count) {
 function print_oauth_icons($return = false) {
 	global $globals, $current_user;
 
+	if (! $return) $return = htmlentities($globals['uri']);
 	if ($globals['oauth']['twitter']['consumer_key']) {
 		$title = false;
-		if (! $return) $return = $globals['uri'];
 		if ($current_user->user_id) {
 			// Check the user is not already associated to Twitter
 			if (! $current_user->GetOAuthIds('twitter')) {
@@ -1233,7 +1233,6 @@ function print_oauth_icons($return = false) {
 
 	if ($globals['facebook_key']) {
 		$title = false;
-		if (! $return) $return = $globals['uri'];
 		if ($current_user->user_id) {
 			// Check the user is not already associated to Twitter
 			if (! $current_user->GetOAuthIds('facebook')) {
@@ -1252,7 +1251,6 @@ function print_oauth_icons($return = false) {
 
 	if ($globals['oauth']['gplus']['consumer_key']) {
 		$title = false;
-		if (! $return) $return = $globals['uri'];
 		if ($current_user->user_id) {
 			// Check the user is not already associated to Twitter
 			if (! $current_user->GetOAuthIds('gplus')) {
