@@ -72,13 +72,14 @@ overflow: auto;
 height:auto;
 white-space:normal;
 padding: 0 5px 0 5px;
+line-height: 180%;
 }
 
 .subheader{
 margin-top: -20px;
 height:auto;
 padding-left:5px;
-line-height: 200%;
+line-height: 180%;
 }
 
 .news-body {
