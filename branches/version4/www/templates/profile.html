@@ -1,7 +1,16 @@
-<div id="singlewrap" style="margin: 0 40px;">
+<div id="singlewrap" 
+{% if not globals.mobile %}
+	style="margin: 0 40px;"
+{% endif %}
+>
 
 
-<div class="genericform" style="margin: 0 50px">
+
+<div class="genericform"
+{% if not globals.mobile %}
+	style="margin: 0 50px;"
+{% endif %}
+>
 
 {% if messages %}
 	{% for e in messages %}
