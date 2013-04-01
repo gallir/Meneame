@@ -59,6 +59,12 @@ margin-left:5px;
 #header-center .logo-eli{
 margin-left:5px;
 margin-right:5px;
+width:45px;
+}
+
+#header-center .edname{
+margin-top:8px;
+font-size:20px;
 }
 
 #header-menu01{
