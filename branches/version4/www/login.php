@@ -44,15 +44,12 @@ if ($_POST["processlogin"] == 1) {
 do_header("login");
 echo '<div id="singlewrap">' . "\n";
 
-echo '<div class="genericform">'."\n";
-
 if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_recover();
 } else {
 	do_login();
 }
 
-echo '</div>'."\n";
 echo '</div>'."\n"; // singlewrap
 
 do_footer();
@@ -65,7 +62,7 @@ function do_login() {
 	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
-	if ($previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
+	if (! $globals['mobile'] && $previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
 		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) {

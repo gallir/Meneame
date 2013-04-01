@@ -109,6 +109,11 @@ margin: 0;
 margin-left: 80px;
 }
 
+.genericform {
+border: 0;
+margin: 0 10px 10px 10px;
+}
+
 .ads-interlinks {
 margin-left: 5px;
 }
