@@ -899,6 +899,12 @@ box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);
 }
 
+.news-submitted img {
+float: left;
+margin-right: 4px;
+vertical-align: bottom;
+}
+
 abbr { cursor: help; }
 
 img {
@@ -2270,7 +2276,7 @@ text-decoration: none;
 margin:0 0 -2px 15px;
 }
 
-.ads-interlink {
+.ads-interlinks {
 height: 95px;
 border-top: 1px solid #aaa;
 padding-top: 4px;
