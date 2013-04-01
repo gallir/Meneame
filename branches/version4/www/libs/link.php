@@ -116,10 +116,10 @@ class Link extends LCPBase {
 		}
 		$filter_by_site_sql .= ")";
 
-		
-	
 
-		
+
+
+
 		// If it was abuse o autodiscarded allow other to send it again
 		$found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND $filter_by_site_sql ORDER by link_id asc limit 1");
 		return $found;
@@ -591,9 +591,11 @@ class Link extends LCPBase {
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
-		$this->url_str	   = htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $this->url), 60));
+		if ($globals['mobile']) $u_len = 30;
+		else $u_len = 60;
+		$this->url_str	   = htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $this->url), $u_len));
 		$this->username_str = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
-		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']); // 7 days or user agent is empty
+		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']) || $globals['mobile']; // 7 days or user agent is empty
 		$this->thumb_url	= $this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
@@ -1066,7 +1068,7 @@ class Link extends LCPBase {
 			$this->annotation .= _('Bonus por noticia reciente'). "<br/>";
 		}
 
-		/* 
+		/*
 		 * DISABLED: global affinity votes behaves better
 		 *
 		// Give the "new source" only if if has less than %5 of negative karma
@@ -1198,7 +1200,7 @@ class Link extends LCPBase {
 					$thumbnail_medium = $img->scale(200);
 					$filepath_medium = Upload::get_cache_dir($this->id) . "/thumb_medium-$this->id.jpg";
 					if($thumbnail_medium->save($filepath_medium)) {
-						@chmod($filepath_medium, 0777);	
+						@chmod($filepath_medium, 0777);
 					}
 
 					// Upload to S3
@@ -1266,7 +1268,7 @@ class Link extends LCPBase {
 					$this->thumb_medium_url = preg_replace('/\/(\d)/', '/medium_$1', $this->thumb_url);
 				}
 				return $this->thumb_url;
-			} 
+			}
 			$file = Upload::get_cache_relative_dir($this->id) . "/thumb-$this->id.jpg";
 			$filepath = mnmpath."/$file";
 			if ($globals['cache_redirector'] || is_readable($filepath)) {

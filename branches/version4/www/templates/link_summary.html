@@ -89,15 +89,16 @@
 		<strong>{{ self.url_str }}</strong>&nbsp;<br />
 
 		{% trans _("por %s") self.username_str %}
+
 		{% if self.print_date %}
 			{% trans _('el') %} {% exec get_date_time self.sent_date %}
 		    	{% if self.status == 'published' %}
-			    {% trans _('publicado el') %} {% exec get_date_time self.date %}
+			    {% trans _('publicado: ') %} {% exec get_date_time self.date %}
 			{% endif %}
 		{% else %}
 			{% trans _('hace') %} {% exec txt_time_diff self.sent_date %}
 			{% if self.status == 'published' %}
-				{% trans _('publicado hace') %} {% exec txt_time_diff self.date %}
+				{% trans _('publicado hace:') %} {% exec txt_time_diff self.date %}
 	        	{% endif %}
 		{% endif %}
 	</div>
@@ -143,7 +144,7 @@
 		{% endfor %}
 
 		{# Show link to analyze the tags #}
-		{% if globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
+		{% if ! globals.mobile AND globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
 		&nbsp;[<a class="fancybox" href="{{ globals.base_url }}backend/tags_analysis.php?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 

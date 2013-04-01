@@ -80,6 +80,13 @@ padding-right: 5px;
 overflow: hidden;
 }
 
+.news-details, .news-submitted {
+white-space: normal;
+}
+
+.news-details select {
+float: right;
+}
 
 .news-shakeit {
 position: relative;
