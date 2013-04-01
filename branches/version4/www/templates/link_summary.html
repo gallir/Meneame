@@ -157,7 +157,9 @@
 			<div class="news-details">
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
-				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
+				{% if not globals.mobile %}
+					<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
+				{% endif %}
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">
@@ -174,7 +176,9 @@
 				{% exec self.get_short_permalink as short_link %}
 				{% set link = self.permalink %}
 
-				<strong><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
+				{% if not globals.mobile %}
+					<strong><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
+				{% endif %}
 
 				{% include "share.html" %}
 
@@ -192,11 +196,10 @@
 
 		<span class="tool">
 		<a href="{{ globals.base_url }}{% if self.status != "published" %}shakeit.php{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">
-			{{ self.meta_name}}</a>,
-		<a href="{{ globals.base_url }}{% if self.status != "published" %}shakeit.php{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">
-			{{self.category_name}}</a>
+			{{ self.meta_name}}</a>{% if ! globals.mobile %}, <a href="{{ globals.base_url }}{% if self.status != "published" %}shakeit.php{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">
+			{{self.category_name}}</a>{% endif %}
 		</span>
-		<span class="tool">karma: <span id="a-karma-{{self.id}}">
+		<span class="tool">{% if not globals.mobile %}karma: {% endif %}<span id="a-karma-{{self.id}}">
 			{{ self.karma|intval }}
 		</span></span>
 
