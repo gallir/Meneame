@@ -52,6 +52,8 @@ function do_banner_top_mobile () {
 
 function do_banner_right() { // side banner A
 	global $globals, $current_user;
+
+	if ($globals['mobile']) return;
 //
 // WARNING!
 //
@@ -66,6 +68,10 @@ function do_banner_right() { // side banner A
 }
 
 function do_banner_promotions() { 
+	global $globals;
+
+	if ($globals['mobile']) return;
+
 /*
 	global $globals;
 	if(! $globals['mobile'] && $globals['external_ads'] && $globals['ads']) {

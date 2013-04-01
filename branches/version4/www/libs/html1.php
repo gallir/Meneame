@@ -155,11 +155,20 @@ function mobile_redirect() {
 }
 
 function do_pages_reverse($total, $page_size=25, $margin = true) {
-	global $db;
+	global $db, $globals;
 
 	if ($total > 0 && $total < $page_size) return;
 
-	$index_limit = 5;
+	if (! $globals['mobile']) {
+		$index_limit = 5;
+		$go_prev = _('anterior');
+		$go_next = _('siguiente');
+	} else {
+		$index_limit = 1;
+		$go_prev = '';
+		$go_next = '';
+	}
+	$separator = '&hellip;';
 
 	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
@@ -182,9 +191,9 @@ function do_pages_reverse($total, $page_size=25, $margin = true) {
 	if($total < 0 || $current<$total_pages) {
 		$i = $current+1;
 		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
-		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'._('siguiente').' &#171;</a>';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'.$go_next.' &#171;</a>';
 	} else {
-		echo '<span class="nextprev">&#171; '._('siguiente'). '</span>';
+		echo '<span class="nextprev">&#171; '.$go_next. '</span>';
 	}
 
 	if ($total_pages > 0) {
@@ -193,7 +202,7 @@ function do_pages_reverse($total, $page_size=25, $margin = true) {
 			$i = $total_pages;
 			if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
 			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 		}
 
 		for ($i=min($end, $total_pages) ; $i >= $start;$i--) {
@@ -207,35 +216,44 @@ function do_pages_reverse($total, $page_size=25, $margin = true) {
 
 		if($start>1) {
 			$i = 1;
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 		}
 
 	} else {
 		echo '<span class="current">'.$current.'</span>';
 		if($current>2) {
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
 		}
 	}
 
 	if($current==1) {
-		echo '<span class="nextprev">&#187; '._('anterior'). '</span>';
+		echo '<span class="nextprev">&#187; '.$go_prev. '</span>';
 	} else {
 		$i = $current-1;
 		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
-		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#187; '._('anterior').'</a>';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#187; '.$go_prev.'</a>';
 	}
 
 	echo '</div>';
 }
 
 function do_pages($total, $page_size=25, $margin = true) {
-	global $db;
+	global $db, $globals;
 
 	if ($total > 0 && $total < $page_size) return;
 
-	$index_limit = 5;
+	if (! $globals['mobile']) {
+		$index_limit = 5;
+		$go_prev = _('anterior');
+		$go_next = _('siguiente');
+	} else {
+		$index_limit = 1;
+		$go_prev = '';
+		$go_next = '';
+	}
+	$separator = '&hellip;';
 
 	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
 	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
@@ -256,11 +274,11 @@ function do_pages($total, $page_size=25, $margin = true) {
 	}
 
 	if($current==1) {
-		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
+		echo '<span class="nextprev">&#171; '.$go_prev. '</span>';
 	} else {
 		$i = $current-1;
 		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
-		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#171; '._('anterior').'</a>';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#171; '.$go_prev.'</a>';
 	}
 
 	if ($total_pages > 0) {
@@ -268,7 +286,7 @@ function do_pages($total, $page_size=25, $margin = true) {
 		if($start>1) {
 			$i = 1;
 			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 		}
 
 		for ($i=$start;$i<=$end && $i<= $total_pages;$i++) {
@@ -282,14 +300,14 @@ function do_pages($total, $page_size=25, $margin = true) {
 
 		if($total_pages>$end) {
 			$i = $total_pages;
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 			if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
 			echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
 		}
 	} else {
 		if($current>2) {
 			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
-			echo '<span>...</span>';
+			echo "<span>$separator</span>";
 		}
 		echo '<span class="current">'.$current.'</span>';
 	}
@@ -297,9 +315,9 @@ function do_pages($total, $page_size=25, $margin = true) {
 	if($total < 0 || $current<$total_pages) {
 		$i = $current+1;
 		if ($i > 10) $nofollow = ' rel="nofollow"'; else $nofollow = '';
-		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'._('siguiente').' &#187;</a>';
+		echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'.$go_next.' &#187;</a>';
 	} else {
-		echo '<span class="nextprev">&#187; '._('siguiente'). '</span>';
+		echo '<span class="nextprev">&#187; '.$go_next. '</span>';
 	}
 	echo '</div>';
 

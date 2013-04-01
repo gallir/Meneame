@@ -103,10 +103,10 @@
 	</div>
 
 	{% if type == 'full' || type == 'preview' %}
+		<p>
 		{% if self.thumb_url %}
 			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 		{% endif %}
-		<p>
 			{{ self.content }}
 			{% if type != 'preview' %}
 				{% if self.is_editable %}

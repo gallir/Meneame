@@ -1,24 +1,18 @@
 /* Definitions for mobile, iPad and TVs */
 
 body {
-font-size: medium;
+font-size: small;
+background: #fff;
 }
 
 .sneaker {
 font-size: small;
 }
 
-#headerwrap {
-position: absolute;
-}
-
-#wrap {
-min-width: 320px;
-}
-
 #sidebar {
 display:none;
 width: 0px;
+min-width: 0;
 }
 
 #singlewrap, #newswrap {
@@ -39,3 +33,82 @@ clear: both;
 width: 470px;
 }
 
+
+#header{
+min-width: 0;
+}
+
+#wrap {
+min-width: 0;
+max-width: auto;
+}
+
+#searchform {
+width:175px;
+margin-right:2px;
+}
+
+#searchform #searchbox {
+width:150px;
+}
+
+#header-top .logo-mnm{
+margin-left:5px;
+}
+
+#header-center .logo-eli{
+margin-left:5px;
+margin-right:5px;
+}
+
+#header-menu01{
+overflow: auto;
+height:auto;
+white-space:normal;
+padding: 0 5px 0 5px;
+}
+
+.subheader{
+margin-top: -20px;
+height:auto;
+padding-left:5px;
+}
+
+.news-body {
+padding-left: 5px;
+padding-right: 5px;
+overflow: hidden;
+}
+
+
+.news-shakeit {
+position: relative;
+top: 0;
+left: 0;
+float:left;
+margin: 0 10px 5px 0;
+}
+
+.news-body p {
+clear: left;
+}
+
+.comments, .notes {
+margin: 10px 0 0 0;
+}
+
+.pages.margin {
+margin-left: 5px;
+}
+
+#singlewrap, #singlewrap {
+margin: 0;
+}
+
+.warn {
+margin-left: 80px;
+}
+
+.ads-interlink {
+margin-left: 5px;
+}

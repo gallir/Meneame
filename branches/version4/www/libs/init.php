@@ -54,7 +54,7 @@ if($_SERVER['HTTP_HOST']) {
 	}
 
 	// Check mobile/TV versions
-	if (preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT'])
+	if (isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT'])
 			&& ! preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT']) ) { // Don't treat iPad as mobiles
 		$globals['mobile'] = 1;
 	} else {

@@ -4,6 +4,14 @@
 <meta charset="utf-8" />
 <meta name="ROBOTS" content="NOARCHIVE" />
 <meta name="generator" content="meneame" />
+
+{#
+#}
+{% if globals.mobile %}
+	<meta name="viewport" content="width=device-width"/>
+{% endif %}
+
+
 {% if globals.noindex %}
 	<meta name="robots" content="noindex,follow" />
 {% endif %}
@@ -97,8 +105,10 @@ var mnm_start_time=(new Date()).getTime()
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
-{% if globals.css_webfonts %}
-	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+{% if not globals.mobile %}
+	{% if globals.css_webfonts %}
+		<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+	{% endif %}
 {% endif %}
 
 <script src="{{ globals.jquery }}" type="text/javascript"></script>
@@ -138,15 +148,17 @@ var mnm_start_time=(new Date()).getTime()
 <div id="header-top">
 
   <a href="{{ globals.base_url }}" title="{% trans _('portada') %}" class="logo-mnm">{% trans _('menéame') %}</a>
-  <span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
 
-  <ul id="edlist">
-	{% for s in sites %}
+	{% if not globals.mobile %}
+		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
+		<ul id="edlist">
+		{% for s in sites %}
 		<li {% if s.id == this_site.id %}class="selected"{% endif %}>
 			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
 		</li>
-	{% endfor %}
-  </ul>
+		{% endfor %}
+		</ul>
+	{% endif %}
 
   {% include "header_userinfo.html" %}
 
@@ -155,17 +167,20 @@ var mnm_start_time=(new Date()).getTime()
 <div id="header-center">
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('menéame') %}">{% trans _('menéame') %}</a>
   <div class="edname">
-    {% trans _('edición') %} <b>{{ this_site.name_long }}</b>
-	{% if globals.facebook_page || globals.twitter_page %}
-		&nbsp;&nbsp;
-		{% if globals.facebook_page %}
-			<a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-icon-01.png" width="18" height="18" alt="Facebook"/></a>
+	{% if not globals.mobile %}
+		{% trans _('edición') %} <b>{{ this_site.name_long }}</b>
+		{% if globals.facebook_page || globals.twitter_page %}
+			&nbsp;&nbsp;
+			{% if globals.facebook_page %}
+				<a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-icon-01.png" width="18" height="18" alt="Facebook"/></a>
+			{% endif %}
+			{% if globals.twitter_page %}
+				<a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-icon-01.png" width="18" height="18" alt="Twitter"/></a>
+			{% endif %}
 		{% endif %}
-		{% if globals.twitter_page %}
-			<a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-icon-01.png" width="18" height="18" alt="Twitter"/></a>
-		{% endif %}
+	{% else %}
+		<b>{{ this_site.name_long }}</b>
 	{% endif %}
-
 	</div>
 
 <!--search-->
@@ -190,15 +205,17 @@ var mnm_start_time=(new Date()).getTime()
 	{% endfor %}
   </ul>
 
-  <ul id="menu01-itemsr">
-	{% for o in right_options %}
-	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
-	{% endfor %}
+	{% if not globals.mobilesssss %}
+		<ul id="menu01-itemsr">
+		{% for o in right_options %}
+			<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+		{% endfor %}
 
-	{% if globals.help_url %}
-		<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
+		{% if globals.help_url %}
+			<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
+		{% endif %}
+		</ul>
 	{% endif %}
-  </ul>
 
 </div><!--header-menu01-->
 </div><!--header-->

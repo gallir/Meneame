@@ -724,6 +724,7 @@ function priv_new(user_id) {
 
 /* Answers */
 function get_total_answers_by_ids(type, ids) {
+	if (is_mobile) return;
 	$.ajax({
 		type: 'POST',
 		url: base_url + 'backend/get_total_answers.php',
@@ -735,6 +736,7 @@ function get_total_answers_by_ids(type, ids) {
 }
 
 function get_total_answers(type, order, id, offset, size) {
+	if (is_mobile) return;
 	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
 		function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) });
 	reportAjaxStats('json', 'total_answers');

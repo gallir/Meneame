@@ -8,10 +8,12 @@
 
 <h1><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
 
-{% if self.thumb_url %}
-	<p>{% exec text_to_summary self.content 600 %}</p>
-{% else %}
-	<p>{% exec text_to_summary self.content 200 %}</p>
+{% if not globals.mobile %}
+	{% if self.thumb_url %}
+		<p>{% exec text_to_summary self.content 600 %}</p>
+	{% else %}
+		<p>{% exec text_to_summary self.content 200 %}</p>
+	{% endif %}
 {% endif %}
 
 <a class="footer"

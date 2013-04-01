@@ -338,21 +338,23 @@ background-color:#ececec;
 white-space:nowrap;
 overflow: hidden;
 font-size: 15px;
+padding: 0 20px 0 20px;
 }
 
 /* menu 01 header left items */
 
 #header-menu01 ul#menu01-itemsl{
 list-style-type:none;
-margin:0;
+margin: 3px 20px 0 0;
 padding:0;
-margin-left:20px;
-margin-top:3px;
 float:left;
 }
 
+#menu01-itemsl li {
+margin-right: 20px;
+}
+
 #header-menu01 ul li{
-margin-right:20px;
 position:relative;
 float:left;
 line-height:145%
@@ -368,12 +370,14 @@ text-decoration:none;
 
 #header-menu01 ul#menu01-itemsr{
 list-style-type:none;
-margin:0;
+margin: 3px 0 0 20px;
 padding:0;
-margin-right:0px;
-margin-top:3px;
 float:right;
 display: block;
+}
+
+#menu01-itemsr li {
+margin-left: 20px;
 }
 
 #header-menu01 ul li a{
@@ -499,9 +503,16 @@ vertical-align: middle;
 margin-top: -20px;
 height:30px;
 padding-left:25px;
-/*background-color:#f9f9f9;*/
 font-family:'Open Sans', Arial, Helvetica, sans-serif;
 list-style-type: none;
+}
+
+.subheader:after {
+content: ".";
+display: block;
+height: 0;
+clear: left;
+visibility: hidden;
 }
 
 .subheader li{
@@ -509,7 +520,6 @@ margin-right:25px;
 margin-top: 3px;
 float:left;
 }
-
 
 .subheader li a{
 font-size:14px;
@@ -741,7 +751,7 @@ margin: 10px 0 10px 0px;
 /**** END SIDEBAR BOXES ************/
 
 #footwrap {
-margin: 5em 87px 0 87px;
+margin: 5em 40px 0 40px;
 }
 
 #footcol1, #footcol2, #footcol3, #footcol4, #footcol5 {
@@ -883,16 +893,10 @@ margin-bottom: 5px;
 .thumbnail {
 overflow: hidden;
 float: right;
-margin: 0 2px 2px 4px;
+margin: 3px 3px 3px 5px;
 box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -moz-box-shadow: 0 0 7px rgba(0,0,0,0.5);
 -webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);
-}
-
-.news-submitted img {
-float: left;
-margin-right: 4px;
-vertical-align: bottom;
 }
 
 abbr { cursor: help; }
@@ -1055,7 +1059,7 @@ text-align: right;
 position: relative;
 border: 1px solid;
 padding: 3px 10px 3px 30px ;
-margin: 5px 0 5px 0;
+margin: 0px 0 5px 0;
 font-size: 85%;
 background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
 border-color: #FF6400;
@@ -1210,7 +1214,6 @@ background-clip: padding-box;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
-
 }
 
 .news-shakeit .votes, .news-shakeit .clics, .sidebox .votes, .sidebox .clics {
@@ -1357,7 +1360,7 @@ border: none;
 
 .news-body p {
 margin: 2px 0 1px 0;
-padding: 0 5px 0 0;
+padding: 0;
 text-align: left;
 overflow: hidden;
 }
@@ -1582,6 +1585,7 @@ line-height: 180%;
 color: #666;
 margin: 0 0 15px 0;
 white-space: nowrap;
+overflow: hidden;
 }
 
 .comment-meta.hidden, .comment-meta.hidden a {
@@ -1666,13 +1670,20 @@ font-size: 85%;
 
 /* pagination */
 
-
 .pages {
 padding: 10px 0 0 0;
 margin: 15px 0 50px 0;
 clear: left;
 background: #FFFFFF;
 font-weight: bold;
+}
+
+.pages:after {
+content: ".";
+display: block;
+height: 0;
+clear: left;
+visibility: hidden;
 }
 
 .pages.margin {
@@ -2257,4 +2268,14 @@ text-decoration: none;
 
 .header_ad_200x20{ /* temporal: nivea for men ad */
 margin:0 0 -2px 15px;
+}
+
+.ads-interlink {
+height: 95px;
+border-top: 1px solid #aaa;
+padding-top: 4px;
+border-bottom: 1px solid #aaa;
+margin: 10px 0 4px 95px;
+white-space:nowrap;
+overflow:hidden
 }

@@ -238,10 +238,14 @@ class Comment extends LCPBase {
 			$this->avatar_img = get_no_avatar_url(20);
 		}
 
-		if ($globals['now'] - $this->date > 86400) {
-			$this->author_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
+		if (! $globals['mobile']) {
+			if ($globals['now'] - $this->date > 86400) {
+				$this->author_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
+			} else {
+				$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
+			}
 		} else {
-			$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
+			$this->author_info = $author;
 		}
 
 		$vars = array('self' => $this);
@@ -387,9 +391,9 @@ class Comment extends LCPBase {
 			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
 
 			echo '<fieldset>'."\n";
-			echo '<legend>'._('envía un comentario'). ' <em style="font-size:80%">'._('porque alguien en Internet está equivocado').'</em></legend>'."\n";
+			echo '<legend>'._('envía un comentario').'</legend>'."\n";
 			print_simpleformat_buttons('comment');
-			echo '<label for="comment">'. _('texto del comentario / no se admiten etiquetas HTML').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
+			echo '<label for="comment">'. _('texto del comentario').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
 			echo '<div><textarea name="comment_content" class="droparea" id="comment" rows="'.$rows.'"></textarea></div>'."\n";
 
 
