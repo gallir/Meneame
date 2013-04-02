@@ -26,7 +26,7 @@ if ($id > 0) {
 			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
 			if (! $l) exit(0);
 
-			if (! $globals['mobile_version']
+			if (! $globals['mobile']
 				&& $current_user->user_id > 0
 				&& User::get_pref($current_user->user_id, 'use_bar')
 				&& $db->get_var("select blog_type from links, blogs where link_id = $id and blog_id = link_blog") != 'noiframe') {
