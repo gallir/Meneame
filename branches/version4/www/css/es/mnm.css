@@ -1774,6 +1774,7 @@ font-size: 110%;
 .genericform .genericformtxt {
 font-size: 100%;
 font-weight: normal;
+color: #303030;
 }
 
 .genericform textarea {
@@ -1786,10 +1787,6 @@ margin: 5px 0 5px 0;
 font-size: 8.5pt;
 background: #FFF;
 color: #FF6400;
-}
-
-.genericform .genericformtxt {
-color: #303030;
 }
 
 .genericform .recoverpass {

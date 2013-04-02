@@ -28,7 +28,7 @@
 {% if not link.is_new && current_user.admin %}
 	<label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
 	<p><span class="note">{% trans _('url de la noticia') %}</span>
-	<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" size="80" />
+	<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>
 	</p>
 {% endif %}
 
@@ -38,9 +38,6 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {% include 'link/content_type_buttons.html' %}
-
-<br/>
-<input type="text" id="title" name="title" value="{{ link.title }}" size="80" maxlength="120" />
 
 {% if not link.is_new && (link.votes > 0 && (link.status != 'published' || current_user.user_level == 'god') &&
 		(( not link.discarded && current_user.user_id == link.author) || current_user.admin)) %}
@@ -76,11 +73,15 @@
 	</select>
 {% endif %}
 
+<br/>
+<input type="text" id="title" name="title" value="{{ link.title }}" style="width:100%" maxlength="120" />
+
+
 </p>
 
 <label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
 <p><span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
-<br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" size="70" maxlength="70" /></p>
+<br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" /></p>
 
 {% exec print_simpleformat_buttons 'bodytext' as dummy %}
 
@@ -88,7 +89,7 @@
 <br /><span class="note"><strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong></span>
 
 <br/>
-<textarea name="bodytext" rows="10" cols="60" id="bodytext"
+<textarea name="bodytext" rows="10" style="width:100%" id="bodytext"
 	onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"
 	onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"
 	>{{ link.content }}</textarea>
@@ -111,7 +112,7 @@
 	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 	{% else %}
 	<label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
-	<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" size="80"/></label><br/>
+	<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:100%" /></label><br/>
 	{% endif %}
 {% endif %}
 
