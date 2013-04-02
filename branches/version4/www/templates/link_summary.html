@@ -104,22 +104,20 @@
 	</div>
 
 	{% if type == 'full' || type == 'preview' %}
-		<p>
 		{% if self.thumb_url %}
 			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 		{% endif %}
-			{{ self.content }}
-			{% if type != 'preview' %}
-				{% if self.is_editable %}
-					&nbsp;&nbsp;<a href="{% get_url 'editlink.php?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
-				{% endif %}
-
-				{% if self.map_editable %}
-					&nbsp;&nbsp;<a href="#" onclick="$('#geoedit').load('{% get_url  "geo/get_form.php?id=" self.id  "&amp;type=link&amp;icon=" self.status %}'); return false;">
-					<img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-geo01.png" alt="edit" title="{% trans _('editar geolocalización') %}"/></a>
-				{% endif %}
+		{{ self.content }}
+		{% if type != 'preview' %}
+			{% if self.is_editable %}
+				&nbsp;&nbsp;<a href="{% get_url 'editlink.php?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
 			{% endif %}
-		</p>
+
+			{% if self.map_editable %}
+				&nbsp;&nbsp;<a href="#" onclick="$('#geoedit').load('{% get_url  "geo/get_form.php?id=" self.id  "&amp;type=link&amp;icon=" self.status %}'); return false;">
+				<img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-geo01.png" alt="edit" title="{% trans _('editar geolocalización') %}"/></a>
+			{% endif %}
+		{% endif %}
 	{% endif %}
 
 
@@ -135,8 +133,7 @@
 
 	{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
 		{% if self.show_tags AND self.tags %}
-		<div class="news-details">
-		<strong>{% trans _('etiquetas') %}</strong>:
+		<br/><span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}
 		{% for id, tag in tags_array %}
 			{% if id > 0 %}, {% endif %}
@@ -144,11 +141,11 @@
 		{% endfor %}
 
 		{# Show link to analyze the tags #}
-		{% if ! globals.mobile AND globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
+		{% if globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
 		&nbsp;[<a class="fancybox" href="{{ globals.base_url }}backend/tags_analysis.php?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 
-		</div>
+		</span>
 		{% endif %}
 	{% endif %}
 	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}

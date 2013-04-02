@@ -1156,7 +1156,7 @@ line-height: 120%;
 margin-top: 6px;
 }
 
-.news-details a:link, .news-details a:visited {
+.news-details a:link, .news-details a:visited, .news-tags, .news-tags a:link, .news-tags a:visited {
 color: #666;
 }
 
@@ -1364,16 +1364,9 @@ background: none;
 border: none;
 }
 
-.news-body p {
-margin: 2px 0 1px 0;
-padding: 0;
-text-align: left;
-overflow: hidden;
-}
-
 .news-submitted {
 font-size: 85%;
-margin: 0;
+margin: 0 0 2px 0;
 white-space: nowrap;
 min-height: 25px;
 color: #666;
@@ -1383,13 +1376,6 @@ color: #666;
 font-weight: bold;
 color: #3D72C3;
 }
-
-.news-tags {
-font-size: 90%;
-margin: 0;
-color: #666;
-}
-
 
 /* trackback */
 
