@@ -441,7 +441,7 @@ overflow: hidden;
 position:relative;
 background:#f9f9f9;
 border:#ddd 1px solid;
-padding: 7px 7px 0px 5px;
+padding: 5px 5px;
 margin: 15px 0 10px 0;
 vertical-align:middle;
 overflow: hidden;
@@ -457,11 +457,10 @@ margin: 0;
 #toplink .thumbnail {
 float: left;
 margin-right: 8px;
-margin-bottom: 6px;
 }
 
 #toplink p {
-color: #888;
+color: #666;
 }
 
 #toplink .footer {
@@ -471,7 +470,6 @@ text-transform:capitalize;
 font-variant:small-caps;
 text-align:right;
 color:#aaa;
-font-size:90%;
 text-decoration:underline;
 }
 

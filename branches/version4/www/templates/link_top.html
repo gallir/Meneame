@@ -1,7 +1,7 @@
 <div id="toplink">
 
 {% if ! globals.mobile AND self.thumb_medium_url %}
-	<img src='{{ self.thumb_medium_url }}' width='{{ self.thumb_medium_x }}' height='{{ self.thumb_medium_y }}' alt='' class='thumbnail'/>
+	<img src='{{ self.thumb_medium_url }}' width='100' height='100' alt='' class='thumbnail'/>
 {% else %} {% if self.thumb_url %}
 	<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
 {% endif %}{% endif %}
