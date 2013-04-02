@@ -44,12 +44,12 @@ max-width: auto;
 }
 
 #searchform {
-width:155px;
+width:125px;
 margin-right:2px;
 }
 
 #searchform #searchbox {
-width:130px;
+width:100px;
 }
 
 #header-top .logo-mnm{
@@ -65,6 +65,8 @@ width:45px;
 #header-center .edname{
 margin-top:8px;
 font-size:20px;
+max-width:45%;
+overflow:hidden;
 }
 
 #header-menu01{
@@ -108,9 +110,14 @@ margin: 0 10px 5px 0;
 clear: left;
 }
 
+.news-details .comments-counter {
+font-size: 100%;
+}
+
 .comments, .notes {
 margin: 10px 0 0 0;
 }
+
 
 .pages.margin {
 margin-left: 5px;

@@ -442,7 +442,7 @@ position:relative;
 background:#f9f9f9;
 border:#ddd 1px solid;
 padding: 7px 7px 0px 5px;
-margin: 15px 0px 10px 8px;
+margin: 15px 0 10px 0;
 vertical-align:middle;
 overflow: hidden;
 }

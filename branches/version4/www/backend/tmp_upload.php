@@ -26,6 +26,7 @@ if (isset($headers['X-File-Size'])
 		&& $headers['X-File-Size'] > 0
 		&& Upload::current_user_limit_exceded($headers['X-File-Size']) ) {
 		$r->error = _("Límite de ficheros excedidos");
+		syslog(LOG_INFO, "File size exceeded ".$headers['X-File-Size']);
 		echo json_encode($r);
 		die;
 }
