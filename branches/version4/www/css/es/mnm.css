@@ -622,7 +622,7 @@ border: 1px solid #FFF;
 
 .sidebox h5 {
 padding: 0px;
-margin: 0 -35px 0 50px;
+margin: 0 2px 0 50px;
 font-size: 90%;
 font-weight: normal;
 color:#03F;
@@ -2265,5 +2265,5 @@ padding-top: 4px;
 border-bottom: 1px solid #aaa;
 margin: 10px 0 4px 95px;
 white-space:nowrap;
-overflow:hidden
+overflow:hidden;
 }
