@@ -679,7 +679,7 @@ function do_best_queued() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' $category_list order by link_karma desc limit 20");
 	if ($res) {
-		$url = $globals['base_url'].'promote.php';
+		$url = $globals['base_url'].'shakeit.php?meta=_popular';
 		$links = array();
 		$link = new Link();
 		foreach ($res as $l) {

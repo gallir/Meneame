@@ -84,7 +84,7 @@
 
 {% if current_user.user_id > 0 %}
     <form name="chat_form" onsubmit="return send_chat(this);" id="sneak-chat">
-    {% trans _('mensaje') %}: <input type="text" name="comment" id="comment-input" class="droparea" value="" size="80" maxlength="230" autocomplete="off" style="font-size:11pt;min-height:12pt;"/>&nbsp;<input type="submit" value="{% trans _('enviar') %}" class="button"/>
+    {% trans _('mensaje') %}: <input type="text" name="comment" id="comment-input" class="droparea" value="" style="width:75%" maxlength="230" autocomplete="off" style="font-size:11pt;min-height:12pt;"/>&nbsp;<input type="submit" value="{% trans _('enviar') %}" class="button"/>
 	{% if ! globals.sneak_telnet %}
 		<div class="droparea_info" style="float:right"></div>
 	{% endif %}
