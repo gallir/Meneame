@@ -797,6 +797,7 @@ $(document).ready(function () {
 			if (scroll > 80) $(window).scrollTop(scroll-80);
 		}
 	}
+	$.ajaxSetup({ cache: false });
 	mDialog.init();
 	notifier.init();
 	fancyBox.init();
