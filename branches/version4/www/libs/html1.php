@@ -48,6 +48,7 @@ function do_header($title, $id='home', $options = false) {
 	check_auth_page();
 	header('Content-Type: text/html; charset=utf-8');
 	header('X-Frame-Options: SAMEORIGIN');
+	header('X-UA-Compatible: IE=edge,chrome=1');
 	http_cache();
 
 
