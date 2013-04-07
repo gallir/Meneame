@@ -24,6 +24,9 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'search.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 // Manage "search" url and redirections accordingly
 if (!empty($globals['base_search_url'])) {
 	if (!empty($_SERVER['PATH_INFO']) ) {

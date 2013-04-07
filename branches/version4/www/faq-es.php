@@ -37,7 +37,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Sólo cuenta el número de votos?</h4>
-<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://blog.meneame.net/2009/05/07/explicacion-simple-del-algoritmo-de-promocion-de-noticias-promote/">El algoritmo es bastante complejo</a>.
+<p>No, cuentan también el <em>karma</em>, si es voto anónimo o no, y el número de <em>problemas</em> reportados (similar a votos negativos). <a href="http://blog.meneame.net/2012/11/04/explicacion-simple-del-algoritmo-de-promocion-de-noticias-promote/">El algoritmo es bastante complejo</a>.
 </p>
 </li>
 
