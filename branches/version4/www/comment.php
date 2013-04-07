@@ -35,6 +35,7 @@ $link = new Link;
 $link->id=$comment->link;
 $link->read();
 $globals['link'] = $link;
+$globals['permalink'] = 'http://'.get_server_name().$comment->get_relative_individual_permalink();
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
@@ -83,7 +84,7 @@ echo '<li>';
 $comment->print_summary($link, 0, true);
 
 echo '<div style="text-align:right">';
-$vars = array('link' => 'http://'.get_server_name().$comment->get_relative_individual_permalink(),
+$vars = array('link' => $globals['permalink'],
 			'title' => $title);
 Haanga::Load('share.html', $vars);
 echo '</div>';

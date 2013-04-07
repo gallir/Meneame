@@ -162,7 +162,7 @@ switch ($url_args[1]) {
 // Set globals
 $globals['link'] = $link;
 $globals['link_id'] = $link->id;
-$globals['link_permalink'] = $globals['link']->get_permalink();
+$globals['permalink'] = $globals['link']->get_permalink();
 
 // to avoid search engines penalisation
 if ($tab_option != 1 || $link->status == 'discard') {
@@ -397,28 +397,28 @@ function print_story_tabs($option) {
 	$active[$option] = ' class="selected"';
 
 	echo '<ul class="subheader">'."\n";
-	echo '<li'.$active[1].'><a href="'.$globals['link_permalink'].'">'._('comentarios'). '</a></li>'."\n";
-	echo '<li'.$active[2].'><a href="'.$globals['link_permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li'.$active[9].'><a href="'.$globals['link_permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
+	echo '<li'.$active[1].'><a href="'.$globals['permalink'].'">'._('comentarios'). '</a></li>'."\n";
+	echo '<li'.$active[2].'><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
+	echo '<li'.$active[9].'><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
-			echo '<li'.$active[3].'><a href="'.$globals['link_permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+			echo '<li'.$active[3].'><a href="'.$globals['permalink'].'/voters">'._('votos'). '</a></li>'."\n";
 		}
 		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
-			echo '<li'.$active[4].'><a href="'.$globals['link_permalink'].'/log">'._('registros'). '</a></li>'."\n";
+			echo '<li'.$active[4].'><a href="'.$globals['permalink'].'/log">'._('registros'). '</a></li>'."\n";
 		}
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
-			echo '<li'.$active[5].'><a href="'.$globals['link_permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+			echo '<li'.$active[5].'><a href="'.$globals['permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 		}
 
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
-		echo '<li'.$active[6].'><a href="'.$globals['link_permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
+		echo '<li'.$active[6].'><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
-		echo '<li'.$active[7].'><a href="'.$globals['link_permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
+		echo '<li'.$active[7].'><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
 	}
-	echo '<li'.$active[8].'><a href="'.$globals['link_permalink'].'/related">'._('relacionadas'). '</a></li>';
+	echo '<li'.$active[8].'><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>'."\n";
 }
 
@@ -428,7 +428,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 
 	if ( ! empty($globals['base_story_url'])) {
-		$query = $globals['link_permalink'];
+		$query = $globals['permalink'];
 	} else {
 		$query=preg_replace('/\/[0-9]+(#.*)*$/', '', $_SERVER['QUERY_STRING']);
 		if(!empty($query)) {

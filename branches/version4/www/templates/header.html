@@ -24,7 +24,7 @@
 	<meta name="description" content="{{globals.description}}" />
 {% endif %}
 
-{% if globals.link %}
+{% if globals.permalink AND title %}
 	{# Twitter Card #}
 	{% if globals.bot %}
 		<meta name="twitter:card" content="summary">
@@ -37,7 +37,7 @@
 		<link rel="image_src" href="{{globals.thumbnail}}"/>
     	<meta property="og:image" content="{{globals.thumbnail}}"/>
 	{% endif %}
-	<meta property="og:url" content="{{ globals.link_permalink }}">
+	<meta property="og:url" content="{{ globals.permalink }}">
 	<meta property="og:title" content="{{title}}">
 	<meta property="og:description" content="{{ globals.description }}">
 {% endif %}
