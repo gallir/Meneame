@@ -220,7 +220,7 @@ class User {
 				break;
 			case 'categories':
 			case 'profile':
-				$id = _('personal');
+				$id = _('perfil');
 				break;
 			default:
 				do_error(_('opción inexistente'), 404);
@@ -229,7 +229,7 @@ class User {
 
 
 		$items = array();
-		$items[] = new MenuOption(_('personal'), get_user_uri($user), $id, _('información de usuario'));
+		$items[] = new MenuOption(_('perfil'), get_user_uri($user), $id, _('información de usuario'));
 		$items[] = new MenuOption(_('relaciones'), get_user_uri($user, 'friends'), $id, _('amigos e ignorados'));
 		$items[] = new MenuOption(_('historias'), get_user_uri($user, 'history'), $id, _('información de envíos'));
 		$items[] = new MenuOption(_('comentarios'), get_user_uri($user, 'commented'), $id, _('información de comentarios'));

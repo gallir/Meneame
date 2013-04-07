@@ -11,7 +11,7 @@
 
 
 <fieldset>
-    <legend>{% trans _('información personal') %}</legend>
+    <legend>{% trans _('perfil personal') %}</legend>
 	<div style="float:right;text-align:center">
 	    <img id="avatar" class="avatar" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{user.username}}" title="avatar" />
         {% if current_user.user_id == user.id %}

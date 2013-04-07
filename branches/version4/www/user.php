@@ -414,7 +414,7 @@ function do_friends_shaken () {
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
+	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
 		'comments_rss2.php?user_id='.$user->id, _('comentarios en rss2'));
 	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
@@ -426,7 +426,7 @@ function do_commented () {
 function do_conversation () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
+	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
 		'comments_rss2.php?answers_id='.$user->id, _('conversación en rss2'));
 	$rows = $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$conversation = "SELECT distinct(conversation_from) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment' ORDER BY conversation_time desc LIMIT $offset,$page_size";
@@ -443,7 +443,7 @@ function do_conversation () {
 function do_favorite_comments () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 3);
+	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 3);
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='comment'");
 	$comments = $db->get_col("SELECT comment_id FROM comments, favorites WHERE favorite_user_id=$user->id AND favorite_type='comment' AND favorite_link_id=comment_id ORDER BY comment_id DESC LIMIT $offset,$page_size");
@@ -463,7 +463,7 @@ function do_favorite_comments () {
 function do_shaken_comments () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-	do_user_subheader(array(_('mis comentarios') => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
+	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
 
 	$comment = new Comment;
 	$rows = $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
