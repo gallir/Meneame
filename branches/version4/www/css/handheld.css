@@ -110,10 +110,13 @@ margin: 0 10px 5px 0;
 font-size: 100%;
 }
 
+.comment-votes-info {
+max-width: 75%;
+}
+
 .comments, .notes {
 margin: 10px 0 0 0;
 }
-
 
 .pages.margin {
 margin-left: 5px;
