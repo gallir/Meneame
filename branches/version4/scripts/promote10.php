@@ -300,7 +300,7 @@ function promote($site_id) {
 					} else {
 						// Decrease for high affinity between voters
 						$c = $c - 1;
-						$bonus = - round($c * 0.30 * $link->karma);
+						$bonus = - round($c * 0.35 * $link->karma);
 						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
 					}
 					if (abs($bonus) > 10) {
