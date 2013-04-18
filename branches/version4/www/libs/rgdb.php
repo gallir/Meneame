@@ -80,7 +80,11 @@ class RGDB extends mysqli {
 	}
 
 	function print_error($str = "") {
-		if ($this->show_errors) echo "$str ($this->error)\n";
+		if ($this->show_errors) {
+			header('HTTP/1.1 500 Server error');
+			header('Content-Type: text/plain');
+			echo "$str ($this->error)\n";
+		}
 		syslog(LOG_NOTICE, "Meneame: db ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 	}
 
