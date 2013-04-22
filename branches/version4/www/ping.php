@@ -6,7 +6,7 @@ include(mnminclude.'html1.php');
 // Chech for cache typical dirs
 for ($i=0; $i<10; $i++) {
 	if ( is_dir($globals['cache_dir'].'/0'.$i)) {
-		echo "ping";
+		echo "pong";
 		die;
 	}
 }

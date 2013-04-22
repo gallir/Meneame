@@ -10,6 +10,9 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'ts.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 $globals['ads'] = false;
 
 // Clean return variable

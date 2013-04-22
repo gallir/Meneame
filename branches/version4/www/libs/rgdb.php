@@ -60,17 +60,17 @@ class RGDB extends mysqli {
 
 	function connect() {
 		if ($this->connected) return;
-		// PHP 5.2 does not support mysqli persistent connections, so we use the standard
+		@parent::init();
+		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
 		if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
-			@parent::__construct('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+			$this->connected = @parent::real_connect('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		} else {
-			@parent::__construct($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+			$this->connected = @parent::real_connect($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		}
-		if ($this->connect_error) {
+		if (! $this->connected) {
 			$this->print_error( _('error temporal'));
 			die;
 		}
-		$this->connected = true;
 		$this->set_charset('utf8');
 	}
 

@@ -339,7 +339,7 @@ function do_submit1() {
 	// they think this is a fotolog
 	if ($sents > 5 && ($link->content_type == 'image' || $link->content_type == 'video')) {
 		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video')"));
-		if ($image_links > $sents * 0.7) {
+		if ($image_links > $sents * 0.8) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $link->url");
 			add_submit_error( _('ya has enviado demasiadas imágenes o vídeos'));
 			return false;
@@ -399,7 +399,7 @@ function do_submit1() {
 	// check there is no an "overflow" of images
 	if ($link->content_type == 'image' || $link->content_type == 'video') {
 		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video')"));
-		if ($image_links > 5 && $image_links > $links_12hs * 0.08) { // Only 8% images and videos
+		if ($image_links > 5 && $image_links > $links_12hs * 0.15) { // Only 15% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
 			add_submit_error( _('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
 				_('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
