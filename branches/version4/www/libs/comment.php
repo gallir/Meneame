@@ -195,8 +195,13 @@ class Comment extends LCPBase {
 			$this->comment_class = 'comment-body';
 			if ($this->type == 'admin') {
 				$this->comment_class .= ' admin';
-			} elseif ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
-				$this->comment_class .= ' high';
+			} else {
+				if ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
+					$this->comment_class .= ' high';
+				}
+				if ($link && $link->author == $this->author) {
+					$this->comment_class .= ' author';
+				}
 			}
 		}
 

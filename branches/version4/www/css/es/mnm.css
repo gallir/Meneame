@@ -1538,6 +1538,19 @@ color: #000;
 background: #FFD5AD url(../../img/common/comment-high-01.png) 99% 5px no-repeat;
 }
 
+.comment-body.user {
+border: 1px solid #FFA500;
+}
+
+.comment-body.author {
+background-color: #D3DDE9;
+border-color: #3D72C3;
+}
+
+.comment-body.high.author {
+background-color: #B4BCD6;
+}
+
 .comment-body.hidden {
 border: 1px solid #ccc;
 padding: 0px 5px 0px 10px;
@@ -1545,10 +1558,6 @@ font-size: 90%;
 overflow: hidden;
 color: #aaa;
 background: #fff;
-}
-
-.comment-body.user {
-border: 1px solid #FFA500;
 }
 
 .comment-body a.fancybox {
