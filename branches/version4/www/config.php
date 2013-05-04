@@ -341,6 +341,7 @@ $globals['do_websnapr'] = false;
 
 // Automatic thumbnails size
 $globals['thumb_size'] = 70;
+$globals['medium_thumb_size'] = 220;
 
 // Amazon setup
 //$globals['Amazon_access_key'] = '';

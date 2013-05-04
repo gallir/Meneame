@@ -329,9 +329,11 @@ class HtmlImages {
 			if ($this->debug) echo "<!-- HTML $this->title -->\n";
 
 			// First check for thumbnail head metas
-			if ((preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+			if ((
+				preg_match('/<meta\s+?name=[\'"]product-image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta\s+?property=[\'"]og:image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
-				preg_match('/<meta\s+?property=[\'"]og:image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
+				preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/favicon/i', $match[1])) { 
 				$url = $match[1];
 				$url = build_full_url($url, $this->url);

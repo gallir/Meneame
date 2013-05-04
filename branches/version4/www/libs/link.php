@@ -1197,7 +1197,7 @@ class Link extends LCPBase {
 
 					// If everything goes OK, create a bigger thumbnail
 					// TODO: this is a dirty hack for @jordisan, before going on vacation
-					$thumbnail_medium = $img->scale(200);
+					$thumbnail_medium = $img->scale($globals['medium_thumb_size']);
 					$filepath_medium = Upload::get_cache_dir($this->id) . "/thumb_medium-$this->id.jpg";
 					if($thumbnail_medium->save($filepath_medium)) {
 						@chmod($filepath_medium, 0777);
