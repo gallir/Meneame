@@ -1262,10 +1262,10 @@ class Link extends LCPBase {
 
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
-				$this->thumb_relative_url = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
+				$this->thumb_uri = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
 				if ($link_year > 2012) {
 					$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
-					$this->thumb_medium_relative_url = $this->thumb_medium_url = preg_replace('/\/(\d)/', '/medium_$1', $this->thumb_url);
+					$this->thumb_medium_uri = $this->thumb_medium_url = preg_replace('/\/(\d)/', '/medium_$1', $this->thumb_url);
 				}
 				return $this->thumb_url;
 			}
@@ -1277,20 +1277,20 @@ class Link extends LCPBase {
 			$local_dir = mnmpath . $path;
 			$file_thumb = $local_dir.'/'.$base_thumb;
 			if ($globals['cache_redirector'] || is_readable($file_thumb)) {
-				$this->thumb_relative_url = '/' . $path . '/' . $base_thumb;
-				$this->thumb_url = $globals['base_static'] . $this->thumb_relative_url;
+				$this->thumb_uri = $path . '/' . $base_thumb;
+				$this->thumb_url = $globals['base_static'] . $this->thumb_uri;
 			} else {
 				if ($this->thumb_download()) {
 					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
-					$this->thumb_relative_url = '/' . $path . '/' . $base_thumb;
-					$this->thumb_url = $globals['base_static'] . $this->thumb_relative_url;
+					$this->thumb_uri = $path . '/' . $base_thumb;
+					$this->thumb_url = $globals['base_static'] . $this->thumb_uri;
 				}
 			}
 		}
 		if ($this->thumb_url && $link_year > 2012) {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
-			$this->thumb_medium_relative_url = $path . '/' . $base_medium_thumb;
-			$this->thumb_medium_url = $globals['base_static'] . $this->thumb_medium_relative_url;
+			$this->thumb_medium_uri = $path . '/' . $base_medium_thumb;
+			$this->thumb_medium_url = $globals['base_static'] . $this->thumb_medium_uri;
 	}
 
 		return $this->thumb_url;
