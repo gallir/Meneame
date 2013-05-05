@@ -77,7 +77,7 @@ class BasicThumb {
 			}
 			if (count($colors) > $min_colors) return true;
 		}
-		echo "<!-- Black image $this->url, colors: ".count($colors)." -->\n";
+		//echo "<!-- Black image $this->url, colors: ".count($colors)." -->\n";
 		return false;
 	}
 
@@ -126,7 +126,7 @@ class BasicThumb {
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
-		echo "<!-- Failed to get $this->url -->\n";
+		//echo "<!-- Failed to get $this->url -->\n";
 		return false;
 	}
 
@@ -140,7 +140,7 @@ class BasicThumb {
 		}
 		$this->x = $this->y = 0;
 		$this->type = 'error';
-		echo "<!-- GET error: $this->url: $this->x, $this->y-->\n";
+		//echo "<!-- GET error: $this->url: $this->x, $this->y-->\n";
 		return false;
 	}
 }
@@ -249,7 +249,7 @@ class WebThumb extends BasicThumb {
 			$min_surface = 15000;
 		}
 		$ratio = $this->ratio();
-		echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size ratio: $ratio-->\n";
+		//echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size ratio: $ratio-->\n";
 		if (min($this->html_x, $this->x)  >= $min_size 
 			&& min($this->html_y, $this->y) >= $min_size 
 			&& $this->is_not_black()
@@ -257,7 +257,7 @@ class WebThumb extends BasicThumb {
 			(($this->html_x*$this->html_y) > $min_surface && $ratio < 6) || 
 			( $this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $ratio < 10)) // For panoramic photos
 			) {
-			echo "<!-- Good -->\n";
+			//echo "<!-- Good -->\n";
 			return true;
 		} else {
 			return false;
@@ -305,7 +305,7 @@ class HtmlImages {
 
 		$res = get_url($this->url, $this->referer);
 		if (!$res) {
-			echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
+			if ($this->debug) echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;
 		}
 		if ($this->debug) echo "<!-- Got $this->url (". strlen($res['content']) .") -->\n";
@@ -632,7 +632,7 @@ class HtmlImages {
 						$same_title++;
 						// Next iff we found less that 3 pages, otherwise we asume all pages have same title
 						if ($same_title < 3 || $other_title) {
-							echo "<!-- Skipping: same title $url -->\n";
+							if ($this->debug) echo "<!-- Skipping: same title $url -->\n";
 							continue;
 						}
 					} else {

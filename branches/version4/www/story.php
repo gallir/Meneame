@@ -191,18 +191,10 @@ $globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_per
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";
 
 if ($link->has_thumb()) {
-	// Check if we got a relative or absolute path
-	if (strncmp($link->thumb_uri, 'http', 4) != 0 ) {
-		// It's a relative url
-		$base = 'http://'.get_server_name().$globals['base_url'];
-	} else {
-		$base = '';
-	}
-
 	if ($link->thumb_medium_url) {
-		$globals['thumbnail'] = $base.$link->thumb_medium_uri.'?'.$link->status;
+		$globals['thumbnail'] = $link->thumb_medium_url.'?'.$link->status;
 	} else {
-		$globals['thumbnail'] = $base.$link->thumb_uri.'?'.$link->status;
+		$globals['thumbnail'] = $link->thumb_url.'?'.$link->status;
 	}
 }
 
