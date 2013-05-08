@@ -1212,7 +1212,6 @@ function set_count($key, $count) {
 function print_oauth_icons($return = false) {
 	global $globals, $current_user;
 
-	syslog(LOG_INFO, "RETURN $return");
 	if (! $return) {
 		$return = $globals['uri'];
 	}
