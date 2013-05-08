@@ -29,8 +29,13 @@ require_once(mnminclude.$globals['html_main']);
 class OAuthBase {
 
 	function __construct() {
-		if ($_COOKIE['return']) $this->return = $_COOKIE['return'];
-		elseif ($_GET['return']) setcookie('return', $_GET['return'], 0);
+		// syslog(LOG_INFO, "AuthBase::__construct: ". $_GET['return'] . "  COOKIE: ".$_COOKIE['return']);
+		if (!empty($_GET['return'])) {
+			setcookie('return', $_GET['return'], 0, $globals['base_url'], UserAuth::domain(), false, true);
+			$this->return = $_GET['return'];
+		} elseif ($_COOKIE['return']) {
+			$this->return = $_COOKIE['return'];
+		}
 	}
 
 	function user_exists() {
@@ -69,6 +74,7 @@ class OAuthBase {
 
 	function store_user() {
 		global $db, $globals;
+		// syslog(LOG_INFO, "store_user: ". $this->return. "  COOKIE: ".$_COOKIE['return']);
 
 		$user = $this->user;
 		if (!$this->secret) $this->secret = $this->service . "-" . $globals['now'];
@@ -111,6 +117,7 @@ class OAuthBase {
 
 	function user_login() {
 		global $current_user, $globals;
+		// syslog(LOG_INFO, "user_login: ". $this->return. "  COOKIE: ".$_COOKIE['return']);
 		if (!$current_user->user_id) {
 			$user = $this->user;
 			$current_user->Authenticate($user->username, $user->pass, true);
@@ -122,7 +129,9 @@ class OAuthBase {
 	function user_return() {
 		global $globals;
 
-		setcookie('return', '', time() - 10000);
+		// syslog(LOG_INFO, "user_return: ". $this->return. "  COOKIE: ".$_COOKIE['return']);
+		setcookie('return', '', time() - 10000, $globals['base_url'], UserAuth::domain());
+		setcookie('return', '', time() - 10000, $globals['base_url']);
 		if(!empty($this->return)) {
 			header('Location: http://'.get_server_name().$this->return);
 		} else {

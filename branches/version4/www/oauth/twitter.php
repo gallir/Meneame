@@ -31,7 +31,7 @@ class TwitterOAuth extends OAuthBase {
 		$this->request_token_url = "https://$server/oauth/request_token";
 		$this->access_token_url = "https://$server/oauth/access_token";
 		$this->authorize_url =  "https://$server/oauth/authenticate";
-		$this->credentials_url = "https://$server/account/verify_credentials.json";
+		$this->credentials_url = "https://$server/1.1/account/verify_credentials.json";
 
 		if (! $globals['oauth']['twitter']['consumer_key'] || ! $globals['oauth']['twitter']['consumer_secret']) {
 			$oauth = null;

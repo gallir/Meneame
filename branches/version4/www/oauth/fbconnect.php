@@ -32,7 +32,7 @@ class FBConnect extends OAuthBase {
 
 	function __construct() {
 		global $globals;
-		syslog(LOG_INFO, "construct: ".$_SERVER["REQUEST_URI"]);
+		// syslog(LOG_INFO, "construct: ".$_SERVER["REQUEST_URI"]);
 		$this->service = 'facebook';
 
 		if ($globals['mobile_version']) $server = 'm.facebook.com';
@@ -49,7 +49,7 @@ class FBConnect extends OAuthBase {
 
 	function authRequest() {
 		global $globals;
-		syslog(LOG_INFO, "authRequest: ".$_SERVER["REQUEST_URI"]);
+		// syslog(LOG_INFO, "authRequest: ".$_SERVER["REQUEST_URI"]);
 
 		// Print html needed for FB Connect API
 		$loginUrl = $this->facebook->getLoginUrl();
@@ -64,7 +64,7 @@ class FBConnect extends OAuthBase {
 
 	function authorize() {
 		global $globals, $db;
-		syslog(LOG_INFO, "authorize: ".$_SERVER["REQUEST_URI"]);
+		// syslog(LOG_INFO, "authorize: ".$_SERVER["REQUEST_URI"]);
 
 
 		try {
@@ -107,7 +107,7 @@ class FBConnect extends OAuthBase {
 
 $auth = new FBConnect();
 
-syslog(LOG_INFO, "FBconnect: ".$_SERVER["REQUEST_URI"]);
+// syslog(LOG_INFO, "FBconnect: ".$_SERVER["REQUEST_URI"]);
 if ($auth->user) {
 	$auth->authorize();
 } else {
