@@ -20,6 +20,8 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
 
 // for the do_errors
 require_once(mnminclude.$globals['html_main']);

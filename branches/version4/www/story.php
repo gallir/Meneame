@@ -192,9 +192,9 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 
 if ($link->has_thumb()) {
 	if ($link->thumb_medium_url) {
-		$globals['thumbnail'] = $link->thumb_medium_url.'?'.$link->status;
+		$globals['thumbnail'] = $link->thumb_medium_url;
 	} else {
-		$globals['thumbnail'] = $link->thumb_url.'?'.$link->status;
+		$globals['thumbnail'] = $link->thumb_url;
 	}
 }
 

@@ -143,19 +143,22 @@ function facebook_post($link, $text = '') {
 	));
 
 	$thumb = $link->has_thumb();
-	if (! $thumb) {
-		$thumb = get_avatar_url($link->author, $link->avatar, 40);
+	if ($thumb) {
+		if ($link->thumb_medium_url) {
+			$thumb = $link->thumb_medium_url;
+		}
+	} else {
+		$thumb = get_avatar_url($link->author, $link->avatar, 80);
 	}
 
 	$permalink = $link->get_permalink();
-	// syslog(LOG_INFO, "Meneame, $permalink picture sent to FB: $thumb");
+	syslog(LOG_INFO, "Meneame, $permalink picture sent to FB: $thumb");
 
 	$data = array(
 				'link' => $permalink,
 				'message' => $text,
 				'access_token' => $globals['facebook_token'],
-				'picture' => $thumb,
-				'icon' => $thumb
+				'picture' => $thumb
 			);
 
 	try {
