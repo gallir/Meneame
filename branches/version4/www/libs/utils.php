@@ -1212,8 +1212,11 @@ function set_count($key, $count) {
 function print_oauth_icons($return = false) {
 	global $globals, $current_user;
 
-	if (! $return) $return = $globals['uri'];
-	$return = htmlentities($globals['uri']);
+	syslog(LOG_INFO, "RETURN $return");
+	if (! $return) {
+		$return = $globals['uri'];
+	}
+	$return = htmlentities($return);
 
 	if ($globals['oauth']['twitter']['consumer_key']) {
 		$title = false;
