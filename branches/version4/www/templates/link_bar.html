@@ -105,7 +105,7 @@ mobile_client = {{ globals.mobile }};
 {% try_include 'private/stats.html' %}
 </div>
 
-<iframe id="content" frameborder="0" noresize="noresize" src="{{ self.url }}"></iframe>
+<iframe id="content" frameborder="0" noresize="noresize" src="{{ self.url|escape }}"></iframe>
 </body>
 
 </html>
