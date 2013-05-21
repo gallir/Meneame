@@ -13,6 +13,8 @@ $globals['alternate_db_server'] = 'api';
 
 include('../config.php');
 
+check_load(2);
+
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;
 	$dict = array();
@@ -31,8 +33,6 @@ $cache_key = 'api_url'.$json.$_GET['url'];
 if(memcache_mprint($cache_key)) {
 	exit(0);
 }
-
-
 
 stats_increment('api', true);
 

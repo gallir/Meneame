@@ -1279,4 +1279,12 @@ function backend_call_string($program,$type,$page,$id) {
 
 	return $globals['base_url']."backend/$program?id=$id&amp;p=$page&amp;type=$type&amp;key=".$globals['security_key'];
 }
+
+function check_load($max=4) {
+	$load = sys_getloadavg();
+	if ($load[0] > $max) {
+		header('HTTP/1.1 503 Too busy, try again later');
+		die();
+	}
+}
 ?>
