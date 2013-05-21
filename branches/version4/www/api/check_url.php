@@ -6,6 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+$globals['max_load'] = 2;
 include('../config.php');
 
 $mnm_over = $globals['base_static']."img/mnm/api/mnm-over-01.png";

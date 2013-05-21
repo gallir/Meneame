@@ -8,6 +8,10 @@
 
 include mnminclude.'utils.php';
 
+if (isset($globals['max_load']) && $globals['max_load'] > 0) {
+	check_load($globals['max_load']);
+}
+
 // Basic initialization
 
 mb_internal_encoding('UTF-8');

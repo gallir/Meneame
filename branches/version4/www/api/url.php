@@ -11,9 +11,8 @@ $globals['no_auth'] = true;
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
 
+$globals['max_load'] = 2;
 include('../config.php');
-
-check_load(2);
 
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;
