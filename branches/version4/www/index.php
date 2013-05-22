@@ -88,7 +88,7 @@ if ($globals['show_popular_published']) {
 	do_best_stories();
 	do_most_clicked_stories();
 }
-//do_best_sites();
+// do_best_sites();
 do_most_clicked_sites();
 if ($page < 2) {
 	do_best_comments();
