@@ -1,0 +1,3 @@
+{# Votes info #}
+{% trans _('votos') %}: {% if self.show_votes %}<a class="fancybox" href="{{ globals.base_url }}backend/get_p_v.php?id={{ self.id }}" title="{% trans _('información de votos') %}">{% endif %}<span id="vc-{{ self.id }}">{{ self.votes }}</span>{% if self.show_votes %}</a>{% endif %}&nbsp;&nbsp;{% trans _('karma') %}: <span class="votes-counter" id="vk-{{ self.id }}" title="{% trans _('karma') %}">{{ self.karma }}</span>
+
