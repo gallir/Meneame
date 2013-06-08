@@ -5,7 +5,7 @@
 {% endif %}
 
 
-&nbsp;<a href="http://twitter.com/share?url={{ short_link|urlencode }}&amp;text={{ title |urlencode }}{% if globals.twitter_user %}&amp;via={{ globals.twitter_user }}{% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
+&nbsp;<a href="https://twitter.com/intent/tweet?url={{ link|urlencode }}&amp;text={{ title |urlencode }}{% if globals.twitter_user %}&amp;via={{ globals.twitter_user }}{% endif %}" target="_blank"><img src="{{ globals.base_static }}img/favicons/twitter.gif" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
 
 &nbsp;<a href="http://www.facebook.com/share.php?u={{ link|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/fb.gif" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
 
