@@ -31,6 +31,7 @@ function menealo_comment(user, id, value)
 	var url = base_url + "backend/menealo_comment.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
+	respond_comment_vote(id, value);
 	$.getJSON(url,
 		 function(data) {
 				update_comment_vote(id, value, data);
@@ -44,6 +45,7 @@ function menealo_post(user, id, value)
 	var url = base_url + "backend/menealo_post.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
+	respond_comment_vote(id, value);
 	$.getJSON(url,
 		 function(data) {
 				update_comment_vote(id, value, data);
@@ -51,6 +53,12 @@ function menealo_post(user, id, value)
 	);
 	reportAjaxStats('vote', 'post');
 }
+
+function respond_comment_vote(id, value) {
+	$('#vc-p-'+id).css('opacity', 0.2);
+	$('#vc-n-'+id).css('opacity', 0.2);
+}
+
 
 function update_comment_vote(id, value, data) {
 	if (data.error) {
@@ -61,7 +69,7 @@ function update_comment_vote(id, value, data) {
 		$('#vk-'+id).html(data.karma+"");
 		if (data.image.length > 0) {
 			$('#vc-n-'+id).hide();
-			$('#vc-p-'+id).html('<img src="'+data.image+'"/>');
+			$('#vc-p-'+id).css('opacity', 1).html('<img src="'+data.image+'"/>');
 		}
 	}
 }
