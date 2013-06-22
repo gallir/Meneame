@@ -71,6 +71,7 @@ function unaccent($string) {
 }
 
 function htmlentities2unicodeentities ($input) {
+	$input = utf8_for_xml($input);
 	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
 	$entitiesDecoded = array_keys  (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
 	$num = count ($entitiesDecoded);
@@ -78,6 +79,10 @@ function htmlentities2unicodeentities ($input) {
 		$utf8Entities[$u] = '&#'.ord($entitiesDecoded[$u]).';';
 	}
 	return str_replace ($htmlEntities, $utf8Entities, $input);
+}
+
+function utf8_for_xml($string) {
+	return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
 function clean_input_url($string) {
