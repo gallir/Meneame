@@ -28,7 +28,7 @@ if (! $user->read()) {
 	die;
 }
 if ($user->avatar)
-	echo '<div style="float: left;"><img class="avatar" style="margin-right: 5px" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'"/></div>';
+	echo '<div style="float: left;"><img class="avatar big" style="margin-right: 5px" src="'.get_avatar_url($user->id, $user->avatar, 80).'" width="80" height="80" alt="'.$user->username.'"/></div>';
 echo '<strong>' . _('usuario') . ':</strong>&nbsp;' . $user->username;
 
 $user->print_medals();

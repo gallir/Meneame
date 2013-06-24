@@ -896,7 +896,7 @@ img {
 border: none;
 }
 
-.shadowed {
+.shadowed, .avatar.big {
 box-shadow: 0 0 3px rgba(0,0,0,0.4);
 -moz-box-shadow: 0 0 3px rgba(0,0,0,0.4);
 -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.4);
@@ -907,6 +907,12 @@ border: 1px solid #ccc;
 -moz-border-radius: 50%;
 -webkit-border-radius: 50%;
 border-radius: 50%;
+}
+
+.avatar.big {
+-moz-border-radius: 0px;
+-webkit-border-radius: 0px;
+border-radius: 0px;
 }
 
 .shadow-red {
