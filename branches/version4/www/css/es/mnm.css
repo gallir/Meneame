@@ -575,9 +575,6 @@ padding: 4px;
 border: 1px solid #dadada;
 -moz-border-radius: 4px 4px 0 0;
 border-radius: 4px 4px 0 0;
-background-image: url('../../img/common/bg-sb.png');
-background-position: bottom left;
-background-repeat: repeat-x
 }
 
 
@@ -651,13 +648,10 @@ border: 1px solid #ffeed6;
 text-align: center;
 font-size: 12px;
 color: #ff6400;
-background-position: 0 -2px;
-background-repeat: repeat-x;
-background-clip: padding-box;
+background-color: #FFE1B6;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
-
 }
 
 .sidebox .clics {
@@ -1213,7 +1207,7 @@ background-clip: padding-box;
 border-radius: 4px;
 }
 
-.news-shakeit .votes, .news-shakeit .clics, .sidebox .votes, .sidebox .clics {
+.news-shakeit .votes, .news-shakeit .clics {
 background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABbCAIAAAA9YnhPAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKHBIbEFJ0KpIAAAA7SURBVBjTtY87CgAhFAOH3P+u1jZvbBbWSkGxCiQhH9QAobeAwQoa+ND6+WP9Imv27fRlTz38t9tMgAGM9ZDiUJW8zgAAAABJRU5ErkJggg==');
 }
 
