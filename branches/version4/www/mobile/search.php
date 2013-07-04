@@ -39,10 +39,10 @@ echo '<input type="submit" value="'._('buscar').'" />'."\n";
 echo '</fieldset>';
 echo '</form>';
 
-$link = new LinkMobile;
 if ($response['ids']) {
 	$rows = min($response['rows'], 1000);
 	foreach($response['ids'] as $link_id) {
+		$link = new LinkMobile;
 		$link->id=$link_id;
 		$link->read();
 		$link->print_summary('full', $link->status == 'published' ? 100 : 20);
