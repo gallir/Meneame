@@ -56,6 +56,9 @@ $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username)
 $comment->check_visibility();
 if (! $comment->hide_comment) {
 	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
+	if ($comment->avatar) {
+		$globals['thumbnail'] = get_avatar_url($comment->author, $comment->avatar, 80);
+	}
 	$title = text_to_summary($comment->content, 120);
 } else {
 	$title = '';

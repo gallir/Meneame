@@ -93,6 +93,10 @@ switch ($argv[0]) {
 			$summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250); 
 			$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': '. $summary;
 			$page_title = text_to_summary($summary, 120);
+			if ($user->avatar) {
+				$globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
+			}
+
 			//$page_title = sprintf(_('nota de %s'), $user->username) . " ($post_id)";
 			$globals['search_options']['u'] = $user->username;
 			$where = "post_id = $post_id";

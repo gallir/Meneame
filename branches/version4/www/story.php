@@ -196,6 +196,8 @@ if ($link->has_thumb()) {
 	} else {
 		$globals['thumbnail'] = $link->thumb_url;
 	}
+} elseif ($link->avatar) {
+	$globals['thumbnail'] = get_avatar_url($link->author, $link->avatar, 80);
 }
 
 $globals['description'] = text_to_summary($link->content, 200);
