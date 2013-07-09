@@ -492,10 +492,10 @@ class User {
 		return substr(md5($this->user.$this->date.$this->pass.$site_key), 0, 10);
 	}
 
-	function get_api_token() {
+	function get_api_token($version = 0) {
 		global $site_key;
 
-		return md5($this->username_register.$this->email_register.$this->date.$this->id.$site_key);
+		return "$version:".md5($this->username_register.$this->email_register.$this->date.$this->id.$site_key);
 	}
 
 	function get_latlng() {
