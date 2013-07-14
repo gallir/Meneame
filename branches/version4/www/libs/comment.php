@@ -597,6 +597,7 @@ class Comment extends LCPBase {
 		}
 		if (!$this->date) $this->date = time();
 		$references = array();
+		$user_references = array();
 		$refs = 0;
 		foreach ($orders as $order => $val) {
 			if ($refs > 10) { // Limit the number of references to avoid abuses/spam
@@ -611,11 +612,15 @@ class Comment extends LCPBase {
 			if ($to) {
 				$refs++;
 				if (!$references[$to->id]) {
-					if (User::friend_exists($to->user_id, $this->author) < 0) $date = 0;
-					else $date = $this->date;
+					if (User::friend_exists($to->user_id, $this->author) < 0 || $user_references[$to->user_id]) {
+						$date = 0;
+					} else {
+						$date = $this->date;
+					}
 
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($date), $this->id, $to->id)");
 					$references[$to->id] = true;
+					$user_references[$to->user_id] = true;
 				}
 			}
 		}

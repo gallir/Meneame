@@ -325,10 +325,11 @@ class Post extends LCPBase {
 				if (! $id > 0) {
 					$id = (int) $db->get_var("select post_id from posts where post_user_id = $to and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
 				}
-				if (! $references[$id]) {
+				if (! $references[$id] ) {
 					// If the user is ignored, put and old date in order not to show as "new conversations".
-					if (User::friend_exists($to, $this->author) < 0 || 
-							$refs > 10) { // Limit the number of references to avoid abuses/spam
+					if (User::friend_exists($to, $this->author) < 0
+							|| $refs > 10
+							|| $references[$user] ) { // Limit the number of references to avoid abuses/spam and multip
 						$date = 0;
 					} else {
 						$date = $this->date;
@@ -336,6 +337,7 @@ class Post extends LCPBase {
 
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($date), $this->id, $id)");
 					$references[$id] = true;
+					$references[$user] = true;
 					$refs++;
 				}
 			}
