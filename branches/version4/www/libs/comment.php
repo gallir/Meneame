@@ -612,7 +612,9 @@ class Comment extends LCPBase {
 			if ($to) {
 				$refs++;
 				if (!$references[$to->id]) {
-					if (User::friend_exists($to->user_id, $this->author) < 0 || $user_references[$to->user_id]) {
+					if (User::friend_exists($to->user_id, $this->author) < 0 
+						|| $to->user_id == $this->author
+						|| $user_references[$to->user_id]) {
 						$date = 0;
 					} else {
 						$date = $this->date;

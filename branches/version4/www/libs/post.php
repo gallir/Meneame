@@ -329,6 +329,7 @@ class Post extends LCPBase {
 					// If the user is ignored, put and old date in order not to show as "new conversations".
 					if (User::friend_exists($to, $this->author) < 0
 							|| $refs > 10
+							|| $this->author == $to // Don't show notification for the same user
 							|| $references[$user] ) { // Limit the number of references to avoid abuses/spam and multip
 						$date = 0;
 					} else {
