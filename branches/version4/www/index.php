@@ -79,7 +79,6 @@ if ($globals['meta_current'] > 0) {
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-do_banner_promotions();
 if ($globals['show_popular_published']) {
 	do_active_stories();
 }
@@ -88,6 +87,7 @@ if ($globals['show_popular_published']) {
 	do_best_stories();
 	do_most_clicked_stories();
 }
+do_banner_promotions();
 // do_best_sites();
 do_most_clicked_sites();
 if ($page < 2) {
@@ -126,7 +126,7 @@ $links = $db->object_iterator($sql, "Link");
 if ($links) {
 	foreach($links as $link) {
 		$link->print_summary();
-		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter'));
+		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
 	}
 }
 
