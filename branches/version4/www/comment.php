@@ -121,7 +121,7 @@ function print_answers($id, $level, $visited = false) {
 	$answers = $db->get_col($sql);
 	if ($answers) {
 		$type = 'comment';
-		echo '<div style="padding-left: 6%; padding-top: 10px">'."\n";
+		echo '<div style="padding-left: 6%">'."\n";
 		echo '<ol class="comments-list">';
 		foreach ($answers as $dbanswer) {
 			if (in_array($dbanswer, $visited)) continue;
