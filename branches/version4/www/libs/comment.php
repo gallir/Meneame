@@ -154,7 +154,7 @@ class Comment extends LCPBase {
 	}
 
 
-	function prepare_summary_text($length) {
+	function prepare_summary_text($length = 0) {
 		global $globals, $current_user;
 
 		if ($this->single_link) $this->html_id = $this->c_order;

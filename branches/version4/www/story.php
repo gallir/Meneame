@@ -513,7 +513,8 @@ function print_relevant_comments($link, $page) {
 	$min_karma = max(20, $karma/2);
 	$check_vote = $link->date - ($globals['now'] - $globals['time_enabled_votes']);
 
-	$res = $db->get_results("select comment_id, comment_order, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON ($check_vote > 0 and vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
+	$now = intval($globals['now']/60) * 60;
+	$res = $db->get_results("select comment_id, comment_order, comment_karma, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON ($check_vote > 0 and vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
 
 	function cmp_comment_val($a, $b) {
 		if ($a->val == $b->val) return 0;
@@ -535,32 +536,26 @@ function print_relevant_comments($link, $page) {
 		usort($res, "cmp_comment_val");
 		foreach ($res as $comment) {
 			$obj = new stdClass();
+			$obj->id = $comment->comment_id;
 			$obj->order = $comment->comment_order;
 			$obj->link_id = $link->id;
 			$obj->link = $link_url.'/000'.$comment->comment_order;
 			$obj->user_id = $comment->user_id;
 			$obj->avatar = $comment->user_avatar;
 			$obj->vote = $comment->vote_value;
+			$obj->val = $comment->val;
+			$obj->karma = $comment->comment_karma;
+			$obj->link_url = $link_url;
 			$objects[] = $obj;
 			if (! $page && (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'] ) && $obj->vote < 0 && ! $self && count($res) >= count($objects) * 2) {
-				// Read the object for printing the summary
-				$self = Comment::from_db($comment->comment_id);
-				$self->link_id = $link->id;
-				$self->link = $obj->link;
-				$self->link_permalink =  $link_url;
-				// Simplify text of the comment
-				$self->prepare_summary_text(800);
-				if ($self->is_truncated) {
-					$self->content .= '...';
-					$self->is_truncated = false;
-				}
-				$self->media_size= 0;
-				$self->can_edit = false;
+				$self = get_highlighted_comment($obj);
 				$obj->summary = true;
-			} else {
-				$obj->false = true;
 			}
 			if (count($objects) > $limit) break;
+		}
+		if (! $page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 3) {
+			$self = get_highlighted_comment($objects[0]);
+			$objects[0]->summary = true;
 		}
 		$output = Haanga::Load('relevant_comments.html', compact('objects', 'link_url', 'self'), true);
 		echo $output;
@@ -568,6 +563,24 @@ function print_relevant_comments($link, $page) {
 			memcache_madd($key, $output, 300);
 		}
 	}
+}
+
+function get_highlighted_comment($obj) {
+	// Read the object for printing the summary
+	$self = Comment::from_db($obj->id);
+	$self->link_id = $obj->link_id;
+	$self->url = $self->get_relative_individual_permalink();
+	$self->link_permalink =  $obj->link_url;
+	// Simplify text of the comment
+	$self->prepare_summary_text(1000);
+	if ($self->is_truncated) {
+		$self->txt_content .= '...';
+		$self->is_truncated = false;
+	}
+	$self->media_size= 0;
+	$self->vote = $obj->vote;
+	$self->can_edit = false;
+	return $self;
 }
 
 function print_votes_raw($link) {

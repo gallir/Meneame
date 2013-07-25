@@ -126,6 +126,7 @@ function print_answers($id, $level, $visited = false) {
 		foreach ($answers as $dbanswer) {
 			if (in_array($dbanswer, $visited)) continue;
 			$answer = Comment::from_db($dbanswer);
+			$answer->url = $answer->get_relative_individual_permalink();
 			echo '<li>';
 			$answer->print_summary($link);
 			if ($level > 0) {

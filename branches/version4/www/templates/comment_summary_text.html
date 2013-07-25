@@ -1,7 +1,11 @@
-{% if self.link_permalink %}
-	<a href="{{ self.link_permalink }}/000{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
+{% if self.url %}
+	<a href="{{ self.url }}"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
 {% else %}
-	<strong>#{{ self.c_order }}</strong>&nbsp;&nbsp;
+	{% if self.link_permalink %}
+		<a href="{{ self.link_permalink }}/000{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
+	{% else %}
+		<strong>#{{ self.c_order }}</strong>&nbsp;&nbsp;
+	{% endif %}
 {% endif %}
 
 {% if self.hide_comment %}
