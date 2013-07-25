@@ -94,26 +94,7 @@ echo '</div>';
 echo "</li>\n";
 echo "</ol>\n";
 
-// Print answers to the comment
-$sql = "SELECT conversation_from as comment_id FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $comment->id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
-$answers = $db->get_results($sql);
-if ($answers) {
-	$type = 'comment';
-	$ids = array();
-	echo '<div style="padding-left: 40px; padding-top: 10px">'."\n";
-	echo '<ol class="comments-list">';
-	foreach ($answers as $dbanswer) {
-		$answer = Comment::from_db($dbanswer->comment_id);
-		echo '<li>';
-		$answer->print_summary($link);
-		echo '</li>';
-		$ids[] = $answer->id;
-	}
-	echo "</ol>\n";
-	echo '</div>'."\n";
-	$ids = implode(',', $ids);
-	Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));
-}
+print_answers($comment->id, 1);
 
 Comment::print_form($link, 8);
 echo '</div>';
@@ -125,4 +106,44 @@ if (!empty($new_comment_error)) {
 }
 do_footer();
 exit(0);
+
+function print_answers($id, $level, $visited = false) {
+	// Print answers to the comment
+	global $db, $page_size;
+
+	if (! $visited) {
+		$visited = array();
+		$visited[] = $id;
+	}
+
+	$printed = array();
+	$sql = "SELECT conversation_from FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
+	$answers = $db->get_col($sql);
+	if ($answers) {
+		$type = 'comment';
+		echo '<div style="padding-left: 6%; padding-top: 10px">'."\n";
+		echo '<ol class="comments-list">';
+		foreach ($answers as $dbanswer) {
+			if (in_array($dbanswer, $visited)) continue;
+			$answer = Comment::from_db($dbanswer);
+			echo '<li>';
+			$answer->print_summary($link);
+			if ($level > 0) {
+				$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
+				array_merge($visited, $res);
+			}
+			$printed[] = $answer->id;
+			$visited[] = $answer->id;
+			echo '</li>';
+		}
+		echo "</ol>\n";
+		echo '</div>'."\n";
+		if (! $level > 0) {
+			$ids = implode(',', $printed);
+			Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));
+		}
+	}
+	return $printed;
+}
+
 ?>
