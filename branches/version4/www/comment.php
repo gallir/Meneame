@@ -51,7 +51,7 @@ if ($_POST['process']=='newcomment') {
 
 
 $username = $comment->type == 'admin'?'admin':$comment->username;
-$globals['search_options'] = array('w' => 'comments', 'u' => $comment->username);
+if ($comment->type != 'admin') $globals['search_options'] = array('w' => 'comments', 'u' => $comment->username);
 
 $comment->check_visibility();
 if (! $comment->hide_comment) {
