@@ -219,10 +219,10 @@ function shutdown() {
 		fastcgi_finish_request();
 	}
 
-	if ($globals['access_log']) {
+	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
 		openlog('meneame_accesslog', LOG_NDELAY, LOG_USER);
-		syslog(LOG_INFO, $globals['user_ip'] . ' ' . $time . ' ' . $_SERVER["SCRIPT_NAME"] . ' ' . get_server_name() . ' ' . $_SERVER["REQUEST_URI"]);
+		syslog(LOG_INFO, $globals['user_ip'].' '.$time.' '.get_server_name().' '.$_SERVER['SCRIPT_NAME']);
 	}
 }
 ?>
