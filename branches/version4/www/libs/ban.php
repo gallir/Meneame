@@ -10,6 +10,7 @@ function check_ip_noaccess() {
 	global $globals;
 	$ban = check_ban($globals['user_ip'], 'noaccess');
 	if ($ban) {
+		$globals['access_log'] = false; // Don't log it to avoid repeated bans
 		header('HTTP/1.0 403 ' . $ban['comment']);
 		die;
 	}
