@@ -19,8 +19,6 @@ $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
 $globals['post_js'] = Array();
 
-$globals['start_time'] = microtime(true);
-
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	global $globals;
 

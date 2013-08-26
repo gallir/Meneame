@@ -426,9 +426,11 @@ $anon_karma	= 4;
 
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
+// Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")
+//$globals['access_log'] = false;
 
 // Send logs to "log_user", is windows compatible
-openlog(false, LOG_ODELAY, LOG_USER);
+openlog('meneame', LOG_NDELAY, LOG_USER);
 
 //////////////////////////////////////
 // Don't touch behind this

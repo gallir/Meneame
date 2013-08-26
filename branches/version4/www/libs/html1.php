@@ -15,8 +15,6 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
-$globals['start_time'] = microtime(true);
-
 $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
 $globals['post_js'] = Array();

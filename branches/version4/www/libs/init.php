@@ -7,6 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include mnminclude.'utils.php';
+$globals['start_time'] = microtime(true);
 
 if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 	check_load($globals['max_load']);
@@ -16,6 +17,8 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 
 mb_internal_encoding('UTF-8');
 global $globals;
+
+register_shutdown_function('shutdown');
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
@@ -209,4 +212,17 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 	$db->persistent = $globals['mysql_persistent'];
 }
 
+function shutdown() {
+	global $globals;
+
+	if (function_exists('fastcgi_finish_request')) {
+		fastcgi_finish_request();
+	}
+
+	if ($globals['access_log']) {
+		$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
+		openlog('meneame_accesslog', LOG_NDELAY, LOG_USER);
+		syslog(LOG_INFO, $globals['user_ip'] . ' ' . $time . ' ' . $_SERVER["SCRIPT_NAME"] . ' ' . get_server_name() . ' ' . $_SERVER["REQUEST_URI"]);
+	}
+}
 ?>
