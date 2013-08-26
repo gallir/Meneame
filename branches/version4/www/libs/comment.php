@@ -146,7 +146,7 @@ class Comment extends LCPBase {
 		$this->is_truncated  = FALSE;
 		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
 			$this->is_truncated = TRUE;
-			$this->content = preg_replace('/(?:[&<\{]\w*|[^<>\s]{1,10})$/', '', mb_substr($this->content, 0 , $length));
+			$this->content = preg_replace('/(?:[&<\{]\w{1,10}|[^<>\s]{1,10})$/u', '', mb_substr($this->content, 0 , $length));
 			if (preg_match('/<\w+>/', $this->content)) {
 				$this->content = close_tags($this->content);
 			}
