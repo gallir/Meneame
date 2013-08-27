@@ -213,16 +213,27 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 }
 
 function shutdown() {
-	global $globals;
+	global $globals, $current_user;
 
 	if (function_exists('fastcgi_finish_request')) {
 		fastcgi_finish_request();
 	}
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
-		$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
+		if ($globals['start_time'] > 0) {
+			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
+		} else {
+			$time = 0;
+		}
+
+		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null';
+		else $script = $_SERVER['SCRIPT_NAME'];
+
+		if ($current_user->user_id > 0) $user = $current_user->user_login;
+		else $user = '-';
+
 		openlog('meneame_accesslog', LOG_NDELAY, LOG_USER);
-		syslog(LOG_INFO, $globals['user_ip'].' '.$time.' '.get_server_name().' '.$_SERVER['SCRIPT_NAME']);
+		syslog(LOG_INFO, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
 	}
 }
 ?>
