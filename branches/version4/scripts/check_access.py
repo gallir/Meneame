@@ -70,7 +70,7 @@ def analyze(logfile):
 			rate = counter/configuration.period
 			if total > 0:
 				print rate, "c/sec"
-			if empties > 4:
+			if empties > 2:
 				return total
 			if counter == 0:
 				empties += 1
@@ -109,6 +109,8 @@ def analyze(logfile):
 								seconds = 1800
 							else:
 								seconds = 86400
+							""" Increase de seconds according to how much it exceeded """
+							seconds = int(seconds * 2 * ip_counter[ip]/float(max_count))
 							reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conns/second, banned for " + str(seconds) + " seconds"
 							ban_ip(ip, reason, seconds)
 
