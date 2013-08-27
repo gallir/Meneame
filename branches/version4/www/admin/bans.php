@@ -236,6 +236,7 @@ function admin_bans($ban_type) {
 
 function print_expiration_dates() {
 	echo '<option value="UNDEFINED">'._('Sin caducidad').'</option>';
+	echo '<option value="'.time().'">'._('Ahora').'</option>';
 	echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
 	echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
 	echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';

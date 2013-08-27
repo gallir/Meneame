@@ -14,6 +14,10 @@ $globals['alternate_db_server'] = 'api';
 $globals['max_load'] = 2;
 include('../config.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
+
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;
 	$dict = array();

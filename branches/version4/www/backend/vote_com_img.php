@@ -1,6 +1,9 @@
 <?php
 include_once('../config.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 $id = intval($_GET['id']);
 if (! $id > 0) die;
 

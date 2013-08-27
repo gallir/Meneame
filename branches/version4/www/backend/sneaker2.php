@@ -10,6 +10,8 @@ include('../config.php');
 include(mnminclude.'sneak.php');
 include(mnminclude.'ban.php');
 
+check_ip_noaccess();
+
 $foo_link = new Link;
 $events = array();
 $data = array();

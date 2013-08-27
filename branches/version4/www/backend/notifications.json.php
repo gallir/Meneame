@@ -12,6 +12,9 @@
 $globals['max_load'] = 4;
 include('../config.php');
 
+include(mnminclude.'ban.php');
+check_ip_noaccess();
+
 if (! $current_user->user_id) die;
 
 header('Content-Type: application/json; charset=utf-8');
@@ -27,11 +30,6 @@ $cache_key = 'notifications_'.$current_user->user_id.'_'.$do_totals;
 if(memcache_mprint($cache_key)) {
     exit(0);
 }
-
-include(mnminclude.'ban.php');
-check_ip_noaccess();
-
-
 
 $notifications = new stdClass();
 
