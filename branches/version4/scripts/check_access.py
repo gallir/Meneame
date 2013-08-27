@@ -80,7 +80,8 @@ def analyze(logfile):
 				ip_exceeded = set()
 				i = 0
 				max_count = configuration.rate * configuration.period
-				while sorted_ips[i][1] >= max_count:
+				""" Give one aditional connection per second to different users """
+				while sorted_ips[i][1] >= max_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
 					ip = sorted_ips[i][0]
 					ip_exceeded.add(ip)
 					i += 1
@@ -96,7 +97,8 @@ def analyze(logfile):
 						else: print " ",
 						if ip in ip_warned: print "*",
 						else: print " ",
-						print "%5d %4d %s" % (conns, conns/configuration.period, ip)
+						print "%5d %4d %s" % (conns, conns/configuration.period, ip),
+						print ','.join([x for x in sorted(ip_users[ip], key=str.lower)])
 					print
 
 				if configuration.ban:
@@ -107,7 +109,7 @@ def analyze(logfile):
 								seconds = 1800
 							else:
 								seconds = 86400
-							reason = "Automatic (" + ','.join([x for x in ip_users[ip]]) + ") " + rate + " conns/second for " + str(seconds) + " seconds"
+							reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conns/second, banned for " + str(seconds) + " seconds"
 							ban_ip(ip, reason, seconds)
 
 				ip_warned = ip_exceeded;
@@ -129,9 +131,9 @@ def ban_ip(ip, reason, time):
 		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason)
 		msg['Subject'] = "Automatic DoS ban"
 		msg['From'] = getpass.getuser()
-		msg['To'] = "gallir@gmail.com"
+		msg['To'] = configuration.mail
 		s = smtplib.SMTP('localhost')
-		s.sendmail(getpass.getuser(), "gallir@gmail.com", msg.as_string())
+		s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 		s.quit()
 
 	c = DBM.cursor('update')
