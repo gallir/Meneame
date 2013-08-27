@@ -1,9 +1,5 @@
 #! /usr/bin/env python
 
-# follow.py
-#
-# Follow a file like tail -f.
-
 import time
 import operator
 import argparse
