@@ -1,3 +1,4 @@
+import socket
 import urllib2
 import httplib
 from BeautifulSoup import BeautifulSoup,  SoupStrainer
@@ -122,7 +123,7 @@ class BaseBlogs(object):
 		self.feed = None
 		self.title = None
 		try:
-			doc = urllib2.urlopen(url=self.url, timeout=10).read()
+			doc = urllib2.urlopen(url=self.url, timeout=20).read()
 			soup = BeautifulSoup(doc, parseOnlyThese=SoupStrainer('head'))
 			if not soup.head:
 				""" Buggy blogs without <head> :( """
@@ -131,7 +132,7 @@ class BaseBlogs(object):
 
 			if soup.title and soup.title.string:
 				self.title = soup.title.string.strip()
-		except (urllib2.URLError, urllib2.HTTPError, UnicodeEncodeError, httplib.BadStatusLine, TypeError), e:
+		except (socket.timeout, urllib2.URLError, urllib2.HTTPError, UnicodeEncodeError, httplib.BadStatusLine, TypeError), e:
 			pass
 		else:
 			""" Search for feed urls """
