@@ -9,10 +9,6 @@
 include('../config.php');
 include('common.php');
 
-include(mnminclude.'ban.php');
-check_ip_noaccess();
-
-
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
 	$argv[0] = clean_input_string($argv[0]);

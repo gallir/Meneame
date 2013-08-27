@@ -15,6 +15,7 @@ class RGDB extends mysqli {
 		$this->connected = false;
 		$this->in_transaction = 0;
 		$this->show_errors = true;
+		$this->ban_checked = false;
 	}
 
 	function __destruct() {
@@ -72,6 +73,13 @@ class RGDB extends mysqli {
 			die;
 		}
 		$this->set_charset('utf8');
+
+		if (! $this->ban_checked) {
+			// Check the IP is not banned before doing anything more
+			include_once(mnminclude.'ban.php');
+			check_ip_noaccess();
+			$this->ban_checked = true;
+		}
 	}
 
 	function escape($str) {

@@ -8,6 +8,9 @@
 
 function check_ip_noaccess() {
 	global $globals;
+
+	if (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false) return false;
+
 	$ban = check_ban($globals['user_ip'], 'noaccess');
 	if ($ban) {
 		$globals['access_log'] = false; // Don't log it to avoid repeated bans

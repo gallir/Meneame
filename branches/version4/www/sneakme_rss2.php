@@ -13,8 +13,8 @@ include('config.php');
 
 include(mnminclude.'geo.php');
 
-include(mnminclude.'ban.php');
-if (check_ip_noaccess() || check_ban_proxy()) {
+include_once(mnminclude.'ban.php');
+if (check_ban_proxy()) {
 	die;
 }
 

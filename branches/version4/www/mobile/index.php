@@ -10,9 +10,6 @@ include('config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'linkmobile.php');
 
-include(mnminclude.'ban.php');
-check_ip_noaccess();
-
 $page_size = 10;
 $page = get_current_page();
 $offset=($page-1)*$page_size;

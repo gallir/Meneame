@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-include(mnminclude.'ban.php');
+include_once(mnminclude.'ban.php');
 
 $page_size = 100;
 

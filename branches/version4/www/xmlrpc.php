@@ -10,7 +10,7 @@
 
 include('config.php');
 include(mnminclude.'IXR_Library.inc.php');
-include(mnminclude.'ban.php');
+include_once(mnminclude.'ban.php');
 
 // Some browser-embedded clients send cookies. We don't want them.
 $_COOKIE = array();

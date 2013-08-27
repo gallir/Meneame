@@ -12,9 +12,6 @@
 $globals['max_load'] = 4;
 include('../config.php');
 
-include(mnminclude.'ban.php');
-check_ip_noaccess();
-
 if (! $current_user->user_id) die;
 
 header('Content-Type: application/json; charset=utf-8');
