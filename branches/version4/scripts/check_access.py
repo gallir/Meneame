@@ -15,6 +15,7 @@ from email.mime.text import MIMEText
 
 
 def follow(thefile):
+	prev = ""
 	while True:
 		line = thefile.readline()
 		if not line:
@@ -22,8 +23,15 @@ def follow(thefile):
 			#continue
 			yield None
 		else:
+			""" This works with the following rsyslog format template 
+			$template ReducedLog,"%timereported%%msg%\n"
+			and used as:
+			if $programname == 'meneame_accesslog' then /mnt/meneame_access.log;ReducedLog
+			& ~
+			"""
+
 			fields = line.split()
-			if len(fields) >= 10 and fields[4] == "meneame_accesslog:":
+			if len(fields) == 8:
 				yield fields
 			else:
 				print >> sys.stderr, "BAD:", line
@@ -52,11 +60,11 @@ def analyze(logfile):
 			counter += 1
 			total += 1
 
-			log_ip = fields[5]
-			log_user = fields[6]
-			log_time = fields[7]
-			log_server = fields[8]
-			log_script = fields[9]
+			log_ip = fields[3]
+			log_user = fields[4]
+			log_time = fields[5]
+			log_server = fields[6]
+			log_script = fields[7]
 
 			if log_ip in ip_counter:
 				ip_counter[log_ip] += 1
