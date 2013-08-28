@@ -429,8 +429,8 @@ $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
 // Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")
 //$globals['access_log'] = false;
 
-// Send logs to "log_user", is windows compatible
-openlog('meneame', LOG_NDELAY, LOG_USER);
+// Send logs to "log_user", it's windows compatible
+openlog('meneame', LOG_ODELAY, LOG_USER);
 
 //////////////////////////////////////
 // Don't touch behind this
