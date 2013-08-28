@@ -142,6 +142,9 @@ def ban_ip(ip, reason, time):
 	c = DBM.cursor('update')
 	c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
 	c.close()
+	DBM.commit()
+	DBM.close()
+
 	if configuration.mail:
 		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason)
 		msg['Subject'] = "Automatic DoS ban"
@@ -151,8 +154,6 @@ def ban_ip(ip, reason, time):
 		s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 		s.quit()
 
-	DBM.commit()
-	DBM.close()
 
 
 if __name__ == '__main__':
