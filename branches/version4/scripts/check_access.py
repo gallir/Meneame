@@ -113,12 +113,14 @@ def analyze(logfile):
 					for ip in ip_exceeded:
 						if ip in ip_warned:
 							rate = str(ip_counter[ip]/configuration.period)
+
 							if len(ip_users[ip]) > 1 or "-" not in ip_users[ip]:
-								seconds = 1800
+								seconds = 3600
 							else:
 								seconds = 86400
 							""" Increase de seconds according to how much it exceeded """
-							seconds = int(seconds * 2 * ip_counter[ip]/float(max_count))
+							seconds = int(seconds * ip_counter[ip]/float(max_count))
+
 							reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conns/second, banned for " + str(seconds) + " seconds"
 							ban_ip(ip, reason, seconds)
 
@@ -137,6 +139,9 @@ def ban_ip(ip, reason, time):
 
 	print "BAN:", ip, reason
 	
+	c = DBM.cursor('update')
+	c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
+	c.close()
 	if configuration.mail:
 		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason)
 		msg['Subject'] = "Automatic DoS ban"
@@ -146,10 +151,8 @@ def ban_ip(ip, reason, time):
 		s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 		s.quit()
 
-	c = DBM.cursor('update')
-	c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
-	c.close()
 	DBM.commit()
+	DBM.close()
 
 
 if __name__ == '__main__':

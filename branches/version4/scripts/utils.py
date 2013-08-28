@@ -39,6 +39,7 @@ class DBM(object):
 	def close(cls, c_type="select"):
 		if cls.connections[c_type]:
 			cls.connections[c_type].close()
+			cls.connections[c_type] = None
 
 	@classmethod
 	def commit(cls, c_type="update"):
