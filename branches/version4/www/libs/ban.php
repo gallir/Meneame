@@ -6,20 +6,6 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function check_ip_noaccess() {
-	global $globals;
-
-	if (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false) return false;
-
-	$ban = check_ban($globals['user_ip'], 'noaccess');
-	if ($ban) {
-		$globals['access_log'] = false; // Don't log it to avoid repeated bans
-		header('HTTP/1.0 403 ' . $ban['comment']);
-		die;
-	}
-	return false;
-}
-
 function check_ban_proxy() {
 	global $globals;
 	if (($ban = check_ban($globals['user_ip'], 'proxy'))) return $ban;

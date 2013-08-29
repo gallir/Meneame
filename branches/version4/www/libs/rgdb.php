@@ -16,6 +16,7 @@ class RGDB extends mysqli {
 		$this->in_transaction = 0;
 		$this->show_errors = true;
 		$this->ban_checked = false;
+		$this->initial_query = false;
 	}
 
 	function __destruct() {
@@ -29,6 +30,10 @@ class RGDB extends mysqli {
 
 	function show_errors() {
 		$this->show_errors = true;
+	}
+	
+	function initial_query($query) {
+		$this->initial_query = $query;
 	}
 
 	function transaction() {
@@ -61,6 +66,12 @@ class RGDB extends mysqli {
 
 	function connect() {
 		if ($this->connected) return;
+
+		// Check the IP is not banned before doing anything more
+		if (! $this->ban_checked) {
+			check_ip_noaccess(true);
+		}
+
 		@parent::init();
 		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
 		if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
@@ -76,9 +87,12 @@ class RGDB extends mysqli {
 
 		if (! $this->ban_checked) {
 			// Check the IP is not banned before doing anything more
-			include_once(mnminclude.'ban.php');
 			check_ip_noaccess();
 			$this->ban_checked = true;
+		}
+
+		if ($this->initial_query) {
+			$this->query($this->initial_query);
 		}
 	}
 
@@ -128,9 +142,6 @@ class RGDB extends mysqli {
 	}
 
 	function object_iterator($query, $class = null) {
-		//echo $query . "<br/>\n";
-		//return false;
-
 		$is_select = preg_match("/^ *(select|show)\s/i",$query);
 
 		$this->connect();
@@ -150,7 +161,6 @@ class RGDB extends mysqli {
 
 
 	function get_var($query=null,$x=0,$y=0) {
-
 		// If there is a query then perform it if not then use cached results..
 		if ( $query ) {
 			$this->query($query);

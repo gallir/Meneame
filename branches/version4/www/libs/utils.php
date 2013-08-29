@@ -228,7 +228,7 @@ function enable_tags_callback($matches) {
 			array_pop($open_tags);
 			return "</$matches[2]>";
 		}
-		$open_tags[] =  $matches[2];
+		$open_tags[] =	$matches[2];
 		return "<$matches[2]>";
 	}
 	return $matches[0];
@@ -856,7 +856,11 @@ function memcache_mget ($key) {
 
 	// Use xcache vars if enabled and available
 	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		return unserialize(xcache_get($key));
+		if (xcache_isset($key)) {
+			return unserialize(xcache_get($key));
+		} else {
+			return false;
+		}
 	}
 
 	// Check for memcache
@@ -1126,9 +1130,9 @@ function inet_ptod($ip_address) {
 	}
 
 	// IPv4 address
-    if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
+	if (strpos($ip_address, ':') === false && strpos($ip_address, '.') !== false) {
 		return sprintf("%u", ip2long($ip_address));
-    }
+	}
 
 	// IPv6 address
 	$packed_ip = inet_pton($ip_address);
@@ -1291,5 +1295,58 @@ function check_load($max=4) {
 		header('HTTP/1.1 503 Too busy, try again later');
 		die();
 	}
+}
+
+function check_ip_noaccess($only_in_cache = false) {
+	global $globals, $db;
+
+	static $last_ip = false;
+	static $last_matches = false;
+
+	if (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false) return false;
+	if ($only_in_cache && empty($globals['check_ip_noaccess_cache']) ) return false;
+
+	// If we already checked the same IP, return inmediately
+	if ($globals['user_ip'] == $last_ip) {
+		if ($last_matches) reject_connection();
+		return false;
+	}
+
+	if (! empty($globals['check_ip_noaccess_cache'])  && $globals['check_ip_noaccess_cache'] > 0) {
+		$cache_key = 'no_access_'.$globals['user_ip'];
+	} else {
+		$cache_key = false;
+		$matches = false;
+	}
+
+	if ($cache_key) {
+		$matches = memcache_mget($cache_key);
+	} 
+
+	$store = false;
+	if ($matches  === false && ! $only_in_cache) {
+		$matches=$db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
+		$store = true;
+	}
+
+	if ($cache_key && $store) {
+		memcache_madd ($cache_key, $matches, $globals['check_ip_noaccess_cache']);
+	}
+
+	if ($matches !== false ) {
+		$last_ip = $globals['user_ip'];
+		$last_matches = $matches;
+	}
+
+	if ($matches) reject_connection();
+
+	return false;
+}
+
+function reject_connection() {
+	global $globals;
+	$globals['access_log'] = false; // Don't log it to avoid repeated bans
+	header('HTTP/1.0 403 ' . 'Too many connections');
+	die;
 }
 ?>

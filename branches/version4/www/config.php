@@ -138,6 +138,15 @@ $globals['base_sneakme_url'] = 'notame/';
 $globals['memcache_port'] = 11211; // optional
 $globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 
+
+// Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")
+//$globals['access_log'] = false;
+
+// Uncomment if you don't want to control the banned IPs
+//$globals['check_ip_noaccess'] = false;
+// Uncomment and asssign the seconds you want to keep noaccess cache
+//$globals['check_ip_noaccess_cache'] = 3;
+
 $globals['fancybox_enabled'] = true;
 
 // Comment pages
@@ -426,8 +435,6 @@ $anon_karma	= 4;
 
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
-// Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")
-//$globals['access_log'] = false;
 
 // Send logs to "log_user", it's windows compatible
 openlog('meneame', LOG_ODELAY, LOG_USER);
