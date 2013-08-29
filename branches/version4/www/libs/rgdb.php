@@ -34,6 +34,9 @@ class RGDB extends mysqli {
 	
 	function initial_query($query) {
 		$this->initial_query = $query;
+		if ($this->connected) {
+			$this->query($query);
+		}
 	}
 
 	function transaction() {
