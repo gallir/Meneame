@@ -8,23 +8,36 @@ import os
 
 import dbconf
 import utils
+import re
 
 def analize(what, data, logfile):
 	global configuration
 
+	regex = False
+
+	""" It supports "*" as wildcard in data """
+	if re.search(r'\*', data):
+		data = re.escape(data)
+		regex = re.sub(r'\\\*', r'.*', data)
+
 	summary = {}
 	total_lines = 0
+	total = 0
 
 	for line in logfile:
 		total_lines += 1
 		log = utils.parse_logline(line)
-		if not log or log[what] != data: continue
+		if not log or (not regex and log[what] != data) or (regex and not re.match(regex, log[what])):
+			continue
+		total += 1
 		utils.add_log2dict(log, summary)
 
-	total = summary[what][data]
 	print "TOTAL LINES:    %d" % (total_lines,)
 	print "FILTERED LINES: %d (%.2f%%)" % (total, 100 * total/float(total_lines))
-	for k in [x for x in summary if x != what]:
+
+	if total == 0: return
+
+	for k in [what] + [x for x in summary if x != what]:
 		print "%ss (%d): " % (k.upper(),len(summary[k]))
 		sorted_vals = sorted(summary[k].items(), key=lambda x:x[1], reverse=True)
 		if configuration.maxitems > 0:
