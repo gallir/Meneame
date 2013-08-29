@@ -1,3 +1,4 @@
+import sys
 import socket
 import urllib2
 import httplib
@@ -23,6 +24,52 @@ def clean_url(string):
 	string = re.sub(r'&', '&amp;', string)
 	return string
 
+def follow_log(thefile, show_bad=False):
+	prev = ""
+	while True:
+		line = thefile.readline()
+		if not line:
+			#time.sleep(0.00001)
+			#continue
+			yield None
+		else:
+			log = parse_logline(line)
+			if log:
+				yield log
+			else:
+				if show_bad:
+					print >> sys.stderr, "BAD:", line
+
+def parse_logline(line):
+	""" This works with the following rsyslog format template 
+	$template ReducedLog,"%timereported%%msg%\n"
+	and used as:
+	if $programname == 'meneame_accesslog' then /mnt/meneame_access.log;ReducedLog
+	& ~
+	"""
+
+	fields = line.split()
+	if len(fields) == 8:
+		log = dict()
+		log['ip'] = fields[3]
+		log['user'] = fields[4]
+		log['time'] = float(fields[5])
+		log['server'] = fields[6]
+		log['script'] = fields[7]
+		return log
+	else:
+		return None
+
+def add_log2dict(log, d):
+	for k in [x for x in log if x != 'time']:
+		if k not in d:
+			d[k] = {}
+		if log[k] not in d[k]:
+			d[k][log[k]] = 1
+		else:
+			d[k][log[k]] += 1
+			
+		
 
 class DBM(object):
 	""" Helper class to hold select and update connections """

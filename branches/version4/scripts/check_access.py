@@ -14,29 +14,6 @@ import smtplib
 from email.mime.text import MIMEText
 
 
-def follow(thefile):
-	prev = ""
-	while True:
-		line = thefile.readline()
-		if not line:
-			#time.sleep(0.00001)
-			#continue
-			yield None
-		else:
-			""" This works with the following rsyslog format template 
-			$template ReducedLog,"%timereported%%msg%\n"
-			and used as:
-			if $programname == 'meneame_accesslog' then /mnt/meneame_access.log;ReducedLog
-			& ~
-			"""
-
-			fields = line.split()
-			if len(fields) == 8:
-				yield fields
-			else:
-				print >> sys.stderr, "BAD:", line
-
-
 def openfile(filename):
 	logfile = open(filename,"rU")
 	logfile.seek(0,2)
@@ -46,7 +23,7 @@ def analyze(logfile):
 	global configuration
 
 
-	loglines = follow(logfile)
+	loglines = follow_log(logfile, configuration.showbad)
 	total = counter = empties = 0
 
 	ip_scripts = {}
@@ -54,24 +31,18 @@ def analyze(logfile):
 	ip_counter = {}
 	ip_warned = set()
 
-	for fields in loglines:
-		if fields:
+	for log in loglines:
+		if log:
 			empties = 0
 			counter += 1
 			total += 1
 
-			log_ip = fields[3]
-			log_user = fields[4]
-			log_time = fields[5]
-			log_server = fields[6]
-			log_script = fields[7]
-
-			if log_ip in ip_counter:
-				ip_counter[log_ip] += 1
+			if log['ip'] in ip_counter:
+				ip_counter[log['ip']] += 1
 			else:
-				ip_counter[log_ip] = 1
-				ip_users[log_ip] = set()
-			ip_users[log_ip].add(log_user)
+				ip_counter[log['ip']] = 1
+				ip_users[log['ip']] = set()
+			ip_users[log['ip']].add(log['user'])
 
 			
 		else:
@@ -164,6 +135,7 @@ if __name__ == '__main__':
 	parser.add_argument("--rate", "-r", type=int, default=15, help="Set the max number of connections per second, default 15")
 	parser.add_argument("--logfile", "-l", default="/var/log/meneame_access.log", help="Logfile pathname, default /var/log/meneame_access.log")
 	parser.add_argument("--mail", "-m", help="Send email to this address when an IP is banned")
+	parser.add_argument("--showbad", action="store_true", help="Report bad format lines")
 	configuration = parser.parse_args()
 
 	if configuration.q:
