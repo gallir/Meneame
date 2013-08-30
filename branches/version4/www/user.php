@@ -11,6 +11,10 @@ include(mnminclude.'geo.php');
 include(mnminclude.'favorites.php');
 
 
+if ($globals['bot'] && get_current_page() > 2) {
+	do_error('Pages exceeded', 404);
+}
+
 $offset=(get_current_page()-1)*$page_size;
 
 if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
@@ -163,22 +167,23 @@ if ($globals['mobile']) {
 }
 
 $url_login = urlencode($login);
+
 switch ($view) {
 	case 'history':
 		do_history();
-		do_pages($rows, $page_size);
+		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
 	case 'commented':
 		do_commented();
-		do_pages($rows, $page_size, false);
+		if (! $globals['bot']) do_pages($rows, $page_size, false);
 		break;
 	case 'shaken':
 		do_shaken();
-		do_pages($rows, $page_size);
+		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
 	case 'friends_shaken':
 		do_friends_shaken();
-		do_pages(-1, $page_size);
+		if (! $globals['bot']) do_pages(-1, $page_size);
 		break;
 	case 'friends':
 		do_friends(0);
@@ -194,22 +199,22 @@ switch ($view) {
 		break;
 	case 'favorites':
 		do_favorites();
-		do_pages($rows, $page_size);
+		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
 	case 'favorite_comments':
 		do_favorite_comments();
-		do_pages($rows, $page_size);
+		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
 	case 'shaken_comments':
 		do_shaken_comments();
-		do_pages($rows, $page_size);
+		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
 	case 'categories':
 		do_categories();
 		break;
 	case 'conversation':
 		do_conversation();
-		do_pages($rows, $page_size, false);
+		if (! $globals['bot']) do_pages($rows, $page_size, false);
 		break;
 	case 'profile':
 		do_profile();
@@ -475,7 +480,7 @@ function do_shaken_comments () {
 			if ($comment->author != $user->id && ! $comment->admin) {
 				echo '<li>';
 				$comment->print_summary(false, 1000, false);
-				echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-22px;left:0px;width:30px;height:12px;border-color:'.$color.';opacity: 0.7"></div>';
+				echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
 				echo '</li>';
 			}
 		}
