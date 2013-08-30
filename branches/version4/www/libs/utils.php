@@ -1089,7 +1089,6 @@ function check_ip_behind_load_balancer() {
 		$ip = array_pop($ips);
 		if ($ip) return $ip;
 	}
-	syslog(LOG_INFO, "No IP info in check_ip_behind_load_balancer: ".$_SERVER["REMOTE_ADDR"]);
 	return $_SERVER["REMOTE_ADDR"];
 }
 
@@ -1304,8 +1303,12 @@ function check_ip_noaccess($only_in_cache = false) {
 	static $last_ip = false;
 	static $last_matches = false;
 
-	if (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false) return false;
-	if ($only_in_cache && empty($globals['check_ip_noaccess_cache']) ) return false;
+	if ( (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false)
+		|| ($only_in_cache && empty($globals['check_ip_noaccess_cache']))
+		|| ($globals['proxy_ip'] == $globals['user_ip'])
+		) {
+			return false;
+		}
 
 	// If we already checked the same IP, return inmediately
 	if ($globals['user_ip'] == $last_ip) {

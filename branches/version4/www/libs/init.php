@@ -30,11 +30,14 @@ if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 
 // Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
+	$globals['proxy_ip'] = $_SERVER["REMOTE_ADDR"];
 	$globals['user_ip'] = check_ip_behind_proxy();
 } elseif ($globals['behind_load_balancer']) {
+	$globals['proxy_ip'] = $_SERVER["REMOTE_ADDR"];
 	$globals['user_ip'] = check_ip_behind_load_balancer();
 } else {
 	$globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
+	$globals['proxy_ip'] = false;
 }
 
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
@@ -54,7 +57,7 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 
 if($_SERVER['HTTP_HOST']) {
 	// Check bots
-	if (preg_match('/(httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
+	if (preg_match('/(spider|httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
 		$globals['bot'] = true;
 	} else {
 		$globals['bot'] = false;
@@ -219,7 +222,7 @@ function shutdown() {
 		fastcgi_finish_request();
 	}
 
-	if ($globals['access_log'] && !empty($globals['user_ip'])) {
+	if ($globals['access_log'] && !empty($globals['user_ip']) && $globals['proxy_ip'] != $globals['user_ip']) {
 		if ($globals['start_time'] > 0) {
 			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
 		} else {

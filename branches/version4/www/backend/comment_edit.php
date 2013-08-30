@@ -97,7 +97,7 @@ function save_comment () {
 		// Allow the author of the post
 		(($user_id == $current_user->user_id
 				&& $current_user->user_id == $comment->author
-				&& time() - $comment->date < $globals['comment_edit_time'] * 1.1)
+				&& time() - $comment->date < $globals['comment_edit_time'] * 1.5)
 			|| (($comment->author != $current_user->user_id || $comment->type == 'admin')
 				&& $current_user->user_level == 'god')) &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  &&
