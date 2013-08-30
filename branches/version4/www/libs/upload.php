@@ -61,14 +61,18 @@ class Upload {
 		return intval($db->get_var("select sum(size) from media where user = $user $date_limit"));
 	}
 
-	static function user_uploads($user, $hours = false) {
+	static function user_uploads($user, $hours = false, $type = false) {
 		global $db;
 
 		if (! $user > 0) return 0;
+
 		if ($hours) $date_limit = "and date > date_sub(now(), interval $hours hour)";
 		else $date_limit = '';
 
-		return intval($db->get_var("select count(*) from media where user = $user $date_limit"));
+		if ($type) $media_type = "and type = '$type'";
+		else $media_type = '';
+
+		return intval($db->get_var("select count(*) from media where user = $user $date_limit $media_type"));
 	}
 
 	function __construct($type, $id, $version = 0, $time = false) {

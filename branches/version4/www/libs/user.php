@@ -400,10 +400,11 @@ class User {
 		if(!$this->read) $this->read();
 
 		$do_cache = ($this->date < $globals['now'] - 86400); // Don't cache for new users
+		$cache_time = 7200;
 		$stats = new Annotation("user_stats-$this->id");
 
 		if ($do_cache && $stats->read()
-			&& ($stats->time > $globals['now'] - 7200
+			&& ($stats->time > $globals['now'] - $cache_time
 				|| $globals['bot'] || $current_user->user_id == 0
 				|| $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'comments')")))
 			) {
@@ -419,7 +420,7 @@ class User {
 			$obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
 			$obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
 			$obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
-			$obj->total_images = Upload::user_uploads($this->id);
+			$obj->total_images = Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private');
 			if ($do_cache) {
 				$stats->text = serialize($obj);
 				$stats->store($globals['now']+86400*90); // Expires in 90 days
