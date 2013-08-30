@@ -331,13 +331,15 @@ function do_history () {
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 0,
 		'rss2.php?sent_by='.$user->id, _('envíos en rss2'));
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id AND link_votes > 0");
-	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id AND link_votes > 0 ORDER BY link_date DESC LIMIT $offset,$page_size");
+	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
+	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();
-			$link->print_summary('short');
+			if ($link->votes > 0) {
+				$link->print_summary('short');
+			}
 		}
 	}
 }

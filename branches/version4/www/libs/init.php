@@ -222,14 +222,14 @@ function shutdown() {
 		fastcgi_finish_request();
 	}
 
-	if ($globals['access_log'] && !empty($globals['user_ip']) && $globals['proxy_ip'] != $globals['user_ip']) {
+	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		if ($globals['start_time'] > 0) {
 			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
 		} else {
 			$time = 0;
 		}
 
-		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null';
+		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.$_SERVER["DOCUMENT_URI"].')';
 		else $script = $_SERVER['SCRIPT_NAME'];
 
 		if ($current_user->user_id > 0) $user = $current_user->user_login;
