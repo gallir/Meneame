@@ -10,6 +10,7 @@ import dbconf
 import feedparser
 import time
 from urlparse import urlparse
+import datetime
 
 re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
@@ -51,6 +52,7 @@ def parse_logline(line):
 	fields = line.split()
 	if len(fields) == 8:
 		log = dict()
+		log['_date'] = fields[0] + " " + fields[1] + " " + fields[2]
 		log['ip'] = fields[3]
 		log['user'] = fields[4]
 		log['time'] = float(fields[5])
@@ -61,13 +63,45 @@ def parse_logline(line):
 		return None
 
 def add_log2dict(log, d):
-	for k in [x for x in log if x != 'time']:
+	for k in [x for x in log if x != 'time' and x[0] != "_"]:
 		if k not in d:
 			d[k] = {}
 		if log[k] not in d[k]:
 			d[k][log[k]] = 1
 		else:
 			d[k][log[k]] += 1
+
+def time_position_log(logfile, minutes):
+	now = datetime.datetime.now()
+	goal = now - datetime.timedelta(minutes=minutes)
+
+	base = 0
+	logfile.seek(0, 2)
+	top = logfile.tell()
+	while top - base > 1000:
+		pos = base + (top - base) / 2
+		logfile.seek(pos, 0)
+		logfile.readline() #Clean first line
+		line = logfile.readline()
+		if not line: 
+			top = pos
+			break
+		log = parse_logline(line)
+		log_date = datetime.datetime.strptime(log["_date"], "%b %d %H:%M:%S")
+		if log_date.year < 2000:
+			if log_date.month <= now.month:
+				log_date = log_date.replace(year=now.year)
+			else:
+				log_date = log_date.replace(year=now.year-1)
+
+		if log_date < goal:
+			base = pos
+		else:
+			top = pos
+	return
+		
+		
+	
 			
 		
 

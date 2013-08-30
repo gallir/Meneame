@@ -13,6 +13,8 @@ import getpass
 import smtplib
 from email.mime.text import MIMEText
 
+import subprocess
+
 
 def openfile(filename):
 	logfile = open(filename,"rU")
@@ -110,14 +112,22 @@ def ban_ip(ip, reason, time):
 
 	print "BAN:", ip, reason
 	
-	c = DBM.cursor('update')
-	c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
-	c.close()
-	DBM.commit()
-	DBM.close()
+	if not configuration.dry:
+		c = DBM.cursor('update')
+		c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
+		c.close()
+		DBM.commit()
+		DBM.close()
 
 	if configuration.mail:
-		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason)
+		""" Generate a report """
+		try:
+			p = subprocess.Popen(["summary_access.py", ip, "-M", "1"], stdout=subprocess.PIPE)
+			(report, err) = p.communicate()
+		except Exception as e:
+			report = unicode(e)
+
+		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason + "\n\nSUMMARY REPORT LAST MINUTE:\n" + unicode(report))
 		msg['Subject'] = "Automatic DoS ban"
 		msg['From'] = getpass.getuser()
 		msg['To'] = configuration.mail
@@ -132,6 +142,7 @@ if __name__ == '__main__':
 	parser.add_argument("--period", "-p", type=int, default=10, help="Seconds between analysis, default 10")
 	parser.add_argument("--ban", "-b", action="store_true", help="Ban IPs")
 	parser.add_argument("-q", action="store_true", help="Quiet mode")
+	parser.add_argument("--dry", "-d", action="store_true", help="Do not store the ban in the DB")
 	parser.add_argument("--rate", "-r", type=int, default=15, help="Set the max number of connections per second, default 15")
 	parser.add_argument("--logfile", "-l", default="/var/log/meneame_access.log", help="Logfile pathname, default /var/log/meneame_access.log")
 	parser.add_argument("--mail", "-m", help="Send email to this address when an IP is banned")
