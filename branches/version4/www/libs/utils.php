@@ -1089,6 +1089,7 @@ function check_ip_behind_load_balancer() {
 		$ip = array_pop($ips);
 		if ($ip) return $ip;
 	}
+	syslog(LOG_INFO, "No IP info in check_ip_behind_load_balancer: ".$_SERVER["REMOTE_ADDR"]);
 	return $_SERVER["REMOTE_ADDR"];
 }
 
