@@ -229,7 +229,7 @@ function shutdown() {
 			$time = 0;
 		}
 
-		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.$_SERVER["DOCUMENT_URI"].')';
+		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
 		else $script = $_SERVER['SCRIPT_NAME'];
 
 		if ($current_user->user_id > 0) $user = $current_user->user_login;
