@@ -17,6 +17,7 @@ class RGDB extends mysqli {
 		$this->show_errors = true;
 		$this->ban_checked = false;
 		$this->initial_query = false;
+		$this->connect_timeout = 10;
 	}
 
 	function __destruct() {
@@ -76,7 +77,7 @@ class RGDB extends mysqli {
 		}
 
 		@parent::init();
-		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, $this->connect_timeout);
 		if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
 			$this->connected = @parent::real_connect('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		} else {

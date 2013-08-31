@@ -14,6 +14,10 @@ $globals['alternate_db_server'] = 'api';
 $globals['max_load'] = 2;
 include('../config.php');
 
+// Free connections fast
+ini_set('default_socket_timeout', 2);
+$db->connect_timeout = 1;
+
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;
 	$dict = array();
