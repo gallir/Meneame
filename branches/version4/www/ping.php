@@ -1,12 +1,15 @@
 <?
-// It warms up the template systems and cache
+// Don't check the user is logged
+$globals['no_auth'] = true;
+
 include('config.php');
-include(mnminclude.'html1.php');
+
+header("Content-Type: text/plain");
 
 // Chech for cache typical dirs
 for ($i=0; $i<10; $i++) {
 	if ( is_dir($globals['cache_dir'].'/0'.$i)) {
-		echo "pong";
+		echo "pong (" . SitesMgr::my_id() . ")\n"; // Force a DB access
 		die;
 	}
 }

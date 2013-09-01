@@ -235,10 +235,7 @@ function shutdown() {
 		if ($current_user->user_id > 0) $user = $current_user->user_login;
 		else $user = '-';
 
-		@openlog('meneame_accesslog', LOG_NDELAY, LOG_DAEMON);
-		@syslog(LOG_INFO, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
-		// Open again to avoid bugs with php/rsyslog/fpm, not sure which one
-		openlog('meneame', LOG_ODELAY, LOG_USER);
+		@syslog(LOG_DEBUG, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
 	}
 }
 ?>
