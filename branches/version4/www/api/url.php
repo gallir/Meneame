@@ -44,7 +44,7 @@ $url = $db->escape($_GET['url']);
 if(strlen($url) < 8 || ! preg_match('/^https{0,1}:\/\//', $url) || ! ($parsed = parse_url($url)) || mb_strlen($parsed['host']) < 5) {
 	if ($json) {
 		$dict['status'] = 'KO';
-		echo json_encode($dict);
+		echo @json_encode($dict);
 		echo $ending;
 	} else echo 'KO';
 	die;

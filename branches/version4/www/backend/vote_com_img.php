@@ -1,4 +1,8 @@
 <?php
+$globals['alternate_db_server'] = 'backend';
+// Don't check the user is logged
+$globals['no_auth'] = true;
+
 include_once('../config.php');
 
 $id = intval($_GET['id']);

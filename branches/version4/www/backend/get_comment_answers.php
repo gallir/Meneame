@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 // Use the alternate server for api, if it exists
-$globals['alternate_db_server'] = 'backend';
+//$globals['alternate_db_server'] = 'backend';
 
 include('../config.php');
 
