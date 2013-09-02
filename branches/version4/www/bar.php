@@ -29,7 +29,7 @@ if (! ($link = Link::from_db($id))) {
 }
 
 // Mark as read, add click if necessary
-Link::add_click($link->id, $link->ip, true);
+Link::add_click($link->id, $link->ip);
 
 $link->title = text_to_summary($link->title, 80);
 

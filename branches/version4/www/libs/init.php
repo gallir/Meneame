@@ -216,9 +216,13 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 }
 
 function shutdown() {
-	global $globals, $current_user;
+	global $globals, $current_user, $db;
 
 	close_connection();
+	if (!empty($globals['add_link_click']) && $globals['add_link_click'] > 0) {
+		$id = $globals['add_link_click'];
+		$db->query("CALL update_link_counter($id)");
+	}
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		if ($globals['start_time'] > 0) {

@@ -40,7 +40,7 @@ if ($id > 0) {
 			} else {
 				do_redirection($l->url);
 			}
-			Link::add_click($id, $l->ip, true); // true is to force a connection close
+			Link::add_click($id, $l->ip);
 			exit(0);
 	}
 } else {
