@@ -246,12 +246,19 @@ case 2:
 
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
+		$order = 1;
 		echo '<ol class="comments-list">';
 		foreach($comments as $comment) {
+			// Check the comment order is correct, otherwise, force an updating
+			if ($tab_option == 1 && $comment->c_order != $order) {
+				syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
+				$comment->update_order();
+			}
 			echo '<li>';
 			$comment->print_summary($link, 2500, true);
 			echo '</li>';
 			echo "\n";
+			$order++;
 		}
 		echo "</ol>\n";
 	}

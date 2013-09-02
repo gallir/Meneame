@@ -197,7 +197,6 @@ class Comment extends LCPBase {
 			$link = Link::from_db($this->link);
 			$this->link_object = $link;
 		}
-		if($this->c_order == 0 || $this->c_order > 10000) $this->update_order();
 
 		/* Get info about the comment and author */
 		$this->link_permalink =  $link->get_relative_permalink();
