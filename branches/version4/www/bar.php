@@ -29,7 +29,7 @@ if (! ($link = Link::from_db($id))) {
 }
 
 // Mark as read, add click if necessary
-Link::add_click($link->id);
+Link::add_click($link->id, $link->ip, true);
 
 $link->title = text_to_summary($link->title, 80);
 
@@ -48,3 +48,5 @@ $vars = compact('type');
 $vars['self'] = $link;
 
 Haanga::Load("link_bar.html", $vars);
+
+

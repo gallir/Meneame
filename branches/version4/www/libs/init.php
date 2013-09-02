@@ -218,9 +218,7 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 function shutdown() {
 	global $globals, $current_user;
 
-	if (function_exists('fastcgi_finish_request')) {
-		fastcgi_finish_request();
-	}
+	close_connection();
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		if ($globals['start_time'] > 0) {

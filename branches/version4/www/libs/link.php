@@ -145,7 +145,7 @@ class Link extends LCPBase {
 		return $found !== false;
 	}
 
-	static function add_click($id, $ignore_ip = false) {
+	static function add_click($id, $ignore_ip = false, $close_connection = false) {
 		global $globals, $db;
 
 		if (! $globals['bot']
@@ -154,6 +154,7 @@ class Link extends LCPBase {
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 			&& ($ignore_ip === false || $ignore_ip != $globals['user_ip']) ){
 			// $db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			if ($close_connection) close_connection();
 			$db->query("CALL update_link_counter($id)");
 		}
 	}

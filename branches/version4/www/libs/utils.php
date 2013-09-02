@@ -1353,4 +1353,11 @@ function reject_connection() {
 	header('HTTP/1.0 403 ' . 'Too many connections');
 	die;
 }
+
+function close_connection(){
+	if (function_exists('fastcgi_finish_request')) {
+		fastcgi_finish_request();
+	}
+}
+
 ?>

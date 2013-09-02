@@ -23,14 +23,14 @@ if ($id > 0) {
 			do_redirection($url);
 			exit(0);
 		default:
-			$l = $db->get_row("select link_url as url, link_ip as ip from links where link_id = $id");
+			$l = $db->get_row("select link_url as url, link_ip as ip, blog_type from links, blogs where link_id = $id and blog_id = link_blog");
 			if (! $l) exit(0);
 
 			if (! $globals['mobile']
 				&& ! $globals['mobile_version']
 				&& $current_user->user_id > 0
 				&& User::get_pref($current_user->user_id, 'use_bar')
-				&& $db->get_var("select blog_type from links, blogs where link_id = $id and blog_id = link_blog") != 'noiframe') {
+				&& $l->blog_type != 'noiframe') {
 				if ($globals['base_bar_url']) {
 					$url = $globals['base_url'] . $globals['base_bar_url'] . $id;
 				} else {
@@ -40,12 +40,13 @@ if ($id > 0) {
 			} else {
 				do_redirection($l->url);
 			}
-			Link::add_click($id, $l->ip);
+			Link::add_click($id, $l->ip, true); // true is to force a connection close
 			exit(0);
 	}
+} else {
+	require(mnminclude.$globals['html_main']);
+	do_error(_('enlace inexistente'), 404);
 }
-require(mnminclude.$globals['html_main']);
-do_error(_('enlace inexistente'), 404);
 
 function do_redirection($url, $code = 301) {
 	if (isset($_GET['quiet'])) {
