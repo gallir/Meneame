@@ -246,7 +246,7 @@ case 2:
 
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
-		$order = 1;
+		$order = $offset + 1;
 		echo '<ol class="comments-list">';
 		foreach($comments as $comment) {
 			// Check the comment order is correct, otherwise, force an updating
