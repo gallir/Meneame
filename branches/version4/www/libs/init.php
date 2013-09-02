@@ -221,7 +221,8 @@ function shutdown() {
 	close_connection();
 	if (!empty($globals['add_link_click']) && $globals['add_link_click'] > 0) {
 		$id = $globals['add_link_click'];
-		$db->query("CALL update_link_counter($id)");
+		// $db->query("CALL update_link_counter($id)");
+		$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
 	}
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
