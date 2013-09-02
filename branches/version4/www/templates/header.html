@@ -203,17 +203,17 @@ var mnm_start_time=(new Date()).getTime()
 	{% endfor %}
   </ul>
 
-	{% if not globals.mobilesssss %}
-		<ul id="menu01-itemsr">
-		{% for o in right_options %}
-			<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
-		{% endfor %}
+	<ul id="menu01-itemsr">
+	{% for o in right_options %}
+		<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+	{% endfor %}
 
+	{% if not globals.mobile %}
 		{% if globals.help_url %}
 			<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
 		{% endif %}
-		</ul>
 	{% endif %}
+	</ul>
 
 </div><!--header-menu01-->
 </div><!--header-->

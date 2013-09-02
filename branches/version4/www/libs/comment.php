@@ -80,24 +80,33 @@ class Comment extends LCPBase {
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$this->ip_int = $db->escape($globals['user_ip_int']);
-			$this->c_order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE"))+1;
-			$db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
-			$this->id = $db->insert_id;
+			$this->c_order = intval($db->get_var("select max(comment_order+1) from comments where comment_link_id=$this->link FOR UPDATE"));
 
-			// Insert comment_new event into logs
-			if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
+			// Check we got a good order value
+			if (!$this->c_order) {
+				syslog(LOG_INFO, "Failed to assign order to comment $this->id at insert");
+			}
+
+			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
+			if ($r) {
+				$this->id = $db->insert_id;
+				// Insert comment_new event into logs
+				if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
+			}
 		} else {
-			$db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
-			// Insert comment_new event into logs
-			if ($full) {
-				if ($globals['now'] - $this->date < 86400) {
-					Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+			$r = $db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
+			if ($r) {
+				// Insert comment_new event into logs
+				if ($full) {
+					if ($globals['now'] - $this->date < 86400) {
+						Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
+					}
+					$this->update_order();
 				}
-				$this->update_order();
 			}
 		}
 
-		if ($full) {
+		if ($r && $full) {
 			$this->update_conversation();
 		}
 		$db->commit();
@@ -107,8 +116,13 @@ class Comment extends LCPBase {
 		global $db;
 
 		if ($this->id == 0 || $this->link == 0) return false;
-		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
+		$order = intval($db->get_var("select max(comment_order+1) from comments where comment_link_id=$this->link and comment_id < $this->id FOR UPDATE"));
+		if (! $order) {
+			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->corder");
+			return false;
+		}
 		if ($order != $this->c_order) {
+			syslog(LOG_INFO, "Fixing order for $this->id, $this->corder -> $order");
 			$this->c_order = $order;
 			$db->query("update comments set comment_order=$this->c_order where comment_id=$this->id");
 		}
@@ -179,6 +193,9 @@ class Comment extends LCPBase {
 			$link = Link::from_db($this->link);
 			$this->link_object = $link;
 		}
+
+		// Check order again
+		if($this->c_order == 0) $this->update_order();
 
 
 		/* Get info about the comment and author */
