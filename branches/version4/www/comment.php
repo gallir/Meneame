@@ -34,6 +34,10 @@ if (!$comment->read()) {
 $link = new Link;
 $link->id=$comment->link;
 $link->read();
+if ($link->is_discarded()) {
+	$globals['ads'] = false;
+}
+
 $globals['link'] = $link;
 $globals['permalink'] = 'http://'.get_server_name().$comment->get_relative_individual_permalink();
 

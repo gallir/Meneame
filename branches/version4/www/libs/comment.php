@@ -79,7 +79,7 @@ class Comment extends LCPBase {
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$this->ip_int = $db->escape($globals['user_ip_int']);
-			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE");
+			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link");
 			if (! $previous > 0 && $previous !== '0') {
 				syslog(LOG_INFO, "Failed to assign order to comment $this->id in insert");
 				$this->c_order = 0;
@@ -121,7 +121,7 @@ class Comment extends LCPBase {
 		global $db;
 
 		if ($this->id == 0 || $this->link == 0) return false;
-		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
+		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id"));
 		if (! $order) {
 			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->c_order");
 			return false;

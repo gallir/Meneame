@@ -181,11 +181,12 @@ class Link extends LCPBase {
 			$cache[$id]++;
 		}
 
-		if ($globals['start_time'] - $cache['time'] > 3.0) {
+		if ($globals['start_time'] - $cache['time'] > 4.0) {
 			if( !memcache_mdelete($key)) {
 				memcache_madd($key, array());
 				syslog(LOG_INFO, "store_clicks: Delete failed");
 			}
+			ksort($cache); // To avoid transaction's deadlocks
 			$db->transaction();
 			$total= 0;
 			foreach ($cache as $id => $counter) {
@@ -195,7 +196,6 @@ class Link extends LCPBase {
 				}
 			}
 			$db->commit();
-			syslog(LOG_INFO, "link_counter total: $total");
 		} else {
 			memcache_madd($key, $cache);
 		}
@@ -437,10 +437,10 @@ class Link extends LCPBase {
 		global $db, $globals, $current_user;
 		// Check this one was not already queued
 		if($this->votes == 0 && $this->author == $current_user->user_id && $this->status != 'queued') {
-			$db->transaction();
 			$this->status='queued';
 			$this->sent_date = $this->date=time();
 			$this->get_uri();
+			$db->transaction();
 			$this->store();
 			$this->insert_vote($current_user->user_karma);
 			$db->commit();
@@ -1006,7 +1006,6 @@ class Link extends LCPBase {
 		// low =~ users with higher karma less-equal than average
 		$votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
-		$db->transaction();
 		$votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
 
 		$votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
@@ -1047,7 +1046,6 @@ class Link extends LCPBase {
 			$this->annotation .= $perc. _('% de votos con afinidad elevada'). "<br/>";
 		}
 		$karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
-		$db->commit();
 
 		if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
 			$this->votes = $votes_pos;
