@@ -834,6 +834,12 @@ function json_encode_single($dict) {
 
 $memcache = false;
 
+function memcache_menabled () {
+	global $globals;
+
+	return !empty($globals['memcache_host']) || ($globals['xcache_enabled'] && defined('XC_TYPE_VAR'));
+}
+
 function memcache_minit () {
 	global $memcache, $globals;
 
@@ -879,7 +885,7 @@ function memcache_madd ($key, $str, $expire=0) {
 	}
 
 	// Check for memcache
-	if (memcache_minit()) return $memcache->add($key, $str, false, $expire);
+	if (memcache_minit()) return $memcache->set($key, $str, false, $expire);
 	return false;
 }
 
@@ -904,8 +910,14 @@ function memcache_mprint ($key) {
 }
 
 function memcache_mdelete ($key) {
-	global $memcache;
-	if (memcache_minit()) return $memcache->delete($key);
+	global $memcache, $globals;
+
+	// Use xcache vars if enabled and available
+	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
+		return xcache_unset($key);
+	} elseif (memcache_minit()) {
+		return $memcache->delete($key);
+	}
 	return false;
 }
 

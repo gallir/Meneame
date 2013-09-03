@@ -9,6 +9,8 @@
 require_once(mnminclude.'favorites.php');
 
 class Link extends LCPBase {
+	private static $clicked = 0; // Must add a click to this link->id
+
 	var $id = 0;
 	var $author = -1;
 	var $blog = 0;
@@ -153,8 +155,49 @@ class Link extends LCPBase {
 			&& $globals['click_counter']
 			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
 			&& ($ignore_ip === false || $ignore_ip != $globals['user_ip']) ){
-			// $db->query("INSERT LOW_PRIORITY INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-			$globals['add_link_click'] = $id; // Delay incrementing the counter for shutdown
+			self::$clicked = $id;
+		}
+	}
+
+	static function store_clicks() {
+		global $globals, $db;
+
+		if (!self::$clicked) return false;
+		$id = self::$clicked;
+		self::$clicked = 0;
+
+		if (! memcache_menabled()) {
+			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			return true;
+		}
+
+		$key = 'clicks_cache';
+		$cache = memcache_mget($key);
+		if (!$cache) {
+			$cache = array();
+			$cache['time'] = $globals['start_time'];
+			$cache[$id] = 1;
+		} else {
+			$cache[$id]++;
+		}
+
+		if ($globals['start_time'] - $cache['time'] > 3.0) {
+			if( !memcache_mdelete($key)) {
+				memcache_madd($key, array());
+				syslog(LOG_INFO, "store_clicks: Delete failed");
+			}
+			$db->transaction();
+			$total= 0;
+			foreach ($cache as $id => $counter) {
+				if ($id > 0 && $counter > 0) {
+					$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+					$total += $counter;
+				}
+			}
+			$db->commit();
+			syslog(LOG_INFO, "link_counter total: $total");
+		} else {
+			memcache_madd($key, $cache);
 		}
 	}
 

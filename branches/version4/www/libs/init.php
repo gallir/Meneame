@@ -8,6 +8,7 @@
 
 include mnminclude.'utils.php';
 $globals['start_time'] = microtime(true);
+$globals['now'] = intval($globals['start_time']);
 
 if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 	check_load($globals['max_load']);
@@ -42,7 +43,6 @@ if ($globals['check_behind_proxy']) {
 
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 
-$globals['now'] = time();
 $globals['cache-control'] = Array();
 $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode($_SERVER['REQUEST_URI'])); // clean  it for future use
 //echo "<!-- " . $globals['uri'] . "-->\n";
@@ -219,11 +219,8 @@ function shutdown() {
 	global $globals, $current_user, $db;
 
 	close_connection();
-	if (!empty($globals['add_link_click']) && $globals['add_link_click'] > 0) {
-		$id = $globals['add_link_click'];
-		// $db->query("CALL update_link_counter($id)");
-		$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-	}
+
+	Link::store_clicks(); // It will check cache and increment link clicks counter
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		if ($globals['start_time'] > 0) {
