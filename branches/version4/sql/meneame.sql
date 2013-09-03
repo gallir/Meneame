@@ -768,22 +768,6 @@ CREATE TABLE `texts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tmp_link_clicks`
---
-
-DROP TABLE IF EXISTS `tmp_link_clicks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tmp_link_clicks` (
-  `id` int(5) NOT NULL,
-  `counter` int(5) NOT NULL DEFAULT '0',
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `main` (`id`) USING HASH,
-  KEY `created` (`created`) USING BTREE
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `trackbacks`
 --
 
@@ -908,50 +892,6 @@ CREATE TABLE `votes_summary` (
   UNIQUE KEY `votes_year` (`votes_year`,`votes_month`,`votes_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping routines for database 'meneame'
---
-/*!50003 DROP PROCEDURE IF EXISTS `update_link_counter` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`meneame`@`%` PROCEDURE `update_link_counter`(link_id INT(6))
-BEGIN
- DECLARE t_id INT(10) UNSIGNED ;
- DECLARE t_counter INT(6) UNSIGNED ;
- DECLARE finished INT DEFAULT 0;
- DECLARE now TIMESTAMP DEFAULT current_timestamp;
- DECLARE c_update CURSOR FOR SELECT `id`, `counter` FROM `tmp_link_clicks` WHERE `created` < DATE_ADD(now, INTERVAL -3 SECOND);
- 
-  
-  INSERT INTO tmp_link_clicks (id, counter) VALUES (link_id, 1) ON DUPLICATE KEY UPDATE counter=counter+1;
-
-  START TRANSACTION;
-  OPEN c_update;
-  BEGIN
-    DECLARE EXIT HANDLER FOR SQLSTATE '02000' BEGIN END;
-    LOOP
-      FETCH c_update INTO t_id, t_counter;
-      INSERT INTO link_clicks (id, counter) VALUES (t_id, t_counter) ON DUPLICATE KEY UPDATE counter=counter+t_counter;
-      DELETE FROM tmp_link_clicks WHERE `id` = t_id;
-    END LOOP;
-  END; 
-  CLOSE c_update;
-  COMMIT;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -962,4 +902,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-02  2:25:16
+-- Dump completed on 2013-09-03 17:32:19
