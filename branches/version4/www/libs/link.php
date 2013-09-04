@@ -147,15 +147,21 @@ class Link extends LCPBase {
 		return $found !== false;
 	}
 
-	static function add_click($id, $ignore_ip = false) {
+	function add_click() {
 		global $globals, $db;
 
 		if (! $globals['bot']
-			&& ! Link::visited($id)
+			&& ! Link::visited($this->id)
 			&& $globals['click_counter']
-			&& isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])
-			&& ($ignore_ip === false || $ignore_ip != $globals['user_ip']) ){
-			self::$clicked = $id;
+			&& isset($_COOKIE['k'])
+			&& check_security_key($_COOKIE['k'])
+			&& $this->ip != $globals['user_ip']) {
+			if (!$this->clicks) {
+				$r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($this->id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			} else {
+				// Delay storing
+				self::$clicked = $this->id;
+			}
 		}
 	}
 
@@ -167,7 +173,7 @@ class Link extends LCPBase {
 		self::$clicked = 0;
 
 		if (! memcache_menabled()) {
-			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
+			$db->query("UPDATE link_clicks SET counter=counter+1 WHERE id = $id");
 			return true;
 		}
 
@@ -198,7 +204,8 @@ class Link extends LCPBase {
 				$r = true;
 				foreach ($cache as $id => $counter) {
 					if ($id > 0 && $counter > 0) {
-						$r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+						// $r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+						$r = $db->query("UPDATE link_clicks SET counter=counter+$counter WHERE id = $id");
 						if (!$r) {
 							break;
 						}
@@ -293,11 +300,6 @@ class Link extends LCPBase {
 		if (($response = get_url($url)) ) {
 			$this->content_type = preg_replace('#^(\w+).+#', '$1', $response['content_type']);
 
-			// Check if it forbides including in an iframe
-			if (preg_match('/X-Frame-Options: *(.+)/i', $response['header'])) {
-				$this->noiframe = true;
-			}
-
 			// Check if it has pingbacks
 			if (preg_match('/X-Pingback: *(.+)/i', $response['header'], $match)) {
 				$this->pingback = 'ping:'.clean_input_url($match[1]);
@@ -341,7 +343,13 @@ class Link extends LCPBase {
 			}
 		}
 		// NO more to do
-		if (!$url_ok) return true;
+		if (!$url_ok || ! preg_match('/html/', $response['content_type'])) return true;
+
+		// Check if it forbides including in an iframe
+		if (preg_match('/X-Frame-Options: *(.+)/i', $response['header'])
+			|| preg_match('/top\.location\.href *=/', $response['content'])) {
+			$this->noiframe = true;
+		}
 
 		if(preg_match('/charset=([a-zA-Z0-9-_]+)/i', $this->html, $matches)) {
 			$this->encoding=trim($matches[1]);
