@@ -474,7 +474,6 @@ class Comment extends LCPBase {
 
 		require_once(mnminclude.'ban.php');
 
-		$error = '';
 		if(check_ban_proxy()) return _('dirección IP no permitida');
 
 		// Check if is a POST of a comment
@@ -542,12 +541,6 @@ class Comment extends LCPBase {
 		}
 
 
-		// Check the comment wasn't already stored
-		$already_stored = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey"));
-		if ($already_stored) {
-			return _('comentario duplicado');
-		}
-
 		if (! $current_user->admin) {
 			$comment->get_links();
 			if ($comment->banned && $current_user->Date() > $globals['now'] - 86400) {
@@ -567,18 +560,13 @@ class Comment extends LCPBase {
 		}
 
 		$comment_limit = round(min($current_user->user_karma/6, 2) * 2.5);
+		$karma_penalty = 0;
 		if ($comment_count > $comment_limit || $same_count > 2) {
-			$reduction = 0;
 			if ($comment_count > $comment_limit) {
-				$reduction += ($comment_count-3) * 0.1;
+				$karma_penalty += ($comment_count-3) * 0.1;
 			}
 			if($same_count > 1) {
-				$reduction += $same_count * 0.25;
-			}
-			if ($reduction > 0) {
-				$user = new User($current_user->user_id);
-				$user->add_karma(-$reduction, _('texto repetido o abuso de enlaces en comentarios'));
-				$error .= ' ' . ('penalización de karma por texto repetido o abuso de enlaces');
+				$karma_penalty += $same_count * 0.25;
 			}
 		}
 
@@ -590,25 +578,44 @@ class Comment extends LCPBase {
 			}
 		}
 
-		if ($comment->store()) {
+		$db->transaction();
+
+		// Check the comment wasn't already stored
+		$r = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey FOR UPDATE"));
+		$already_stored = intval($r);
+		if ($already_stored) {
+			$db->rollback();
+			return _('comentario duplicado');
+		}
+
+		if ($karma_penalty > 0) {
+			$db->rollback();
+			$user = new User($current_user->user_id);
+			$user->add_karma(-$karma_penalty, _('texto repetido o abuso de enlaces en comentarios'));
+			return ('penalización de karma por texto repetido o abuso de enlaces');
+		}
+
+		if (!is_null($r) && $comment->store() && $db->commit()) {
 			$comment->insert_vote();
 			$link->update_comments();
 			$link->comments++;
-		}
 
-		// Check image upload or delete
-		if ($_POST['image_delete']) {
-			$comment->delete_image();
-		} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-			$comment->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
-		} elseif (!empty($_FILES['image']['tmp_name'])) {
-			$comment->store_image($_FILES['image']);
-		}
+			// Check image upload or delete
+			if ($_POST['image_delete']) {
+				$comment->delete_image();
+			} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+				$comment->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+			} elseif (!empty($_FILES['image']['tmp_name'])) {
+				$comment->store_image($_FILES['image']);
+			}
 
-		// Comment stored, just redirect to it page
-		header ('HTTP/1.1 303 Load');
-		header('Location: '.$link->get_permalink() . '#c-'.$comment->c_order);
-		die;
+			// Comment stored, just redirect to it page
+			header ('HTTP/1.1 303 Load');
+			header('Location: '.$link->get_permalink() . '#c-'.$comment->c_order);
+			die;
+		}
+		$db->rollback();
+		return _('error insertando comentario');
 		//return $error;
 	}
 
