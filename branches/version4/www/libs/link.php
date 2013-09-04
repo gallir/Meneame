@@ -187,15 +187,34 @@ class Link extends LCPBase {
 				syslog(LOG_INFO, "store_clicks: Delete failed");
 			}
 			ksort($cache); // To avoid transaction's deadlocks
-			$db->transaction();
-			$total= 0;
-			foreach ($cache as $id => $counter) {
-				if ($id > 0 && $counter > 0) {
-					$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
-					$total += $counter;
+
+			$show_errors = $db->show_errors;
+			$db->show_errors = false; // we know there can be lock timeouts :(
+			$tries = 0; // By the way, freaking locking timeouts with few updates per second with this technique
+			while ($tries < 3) {
+				$error = false;
+				$db->transaction();
+				$total= 0;
+				$r = true;
+				foreach ($cache as $id => $counter) {
+					if ($id > 0 && $counter > 0) {
+						$r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+						if (!$r) {
+							break;
+						}
+						$total += $counter;
+					}
+				}
+				if ($r) {
+					$db->commit();
+					$tries = 100000; // Stop it
+				} else {
+					$tries++;
+					syslog(LOG_INFO, "failed $tries attempts in store_clicks");
+					$db->rollback();
 				}
 			}
-			$db->commit();
+			$db->show_errors = $show_errors;
 		} else {
 			memcache_madd($key, $cache);
 		}
