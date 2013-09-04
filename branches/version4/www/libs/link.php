@@ -459,10 +459,8 @@ class Link extends LCPBase {
 			$this->status='queued';
 			$this->sent_date = $this->date=time();
 			$this->get_uri();
-			$db->transaction();
-			$this->store();
+			if( ! $this->store()) return false;
 			$this->insert_vote($current_user->user_karma);
-			$db->commit();
 
 			// Add the new link log/event
 			Log::conditional_insert('link_new', $this->id, $this->author);
@@ -530,16 +528,17 @@ class Link extends LCPBase {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
-		$db->transaction();
-		$this->store_basic();
-		$db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
-		$db->commit();
+		if (! $this->store_basic()) {
+			return false;
+		}
+
+		return $db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
+
 	}
 
 	function store_basic($really_basic = false) {
 		global $db, $current_user, $globals;
 
-		$db->transaction();
 		if(!$this->date) $this->date=$globals['now'];
 		$link_author = $this->author;
 		$link_blog = $this->blog;
@@ -558,11 +557,16 @@ class Link extends LCPBase {
 			$link_ip = $db->escape($this->ip);
 			$this->ip_int = $globals['user_ip_int'];
 
-			$db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip_int, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', $this->ip_int, '$link_ip')");
+			$r = $db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_category, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip_int, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, $link_category, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', $this->ip_int, '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
-			$db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type' WHERE link_id=$this->id");
+			$r = $db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type' WHERE link_id=$this->id");
+		}
+
+		if (! $r) {
+			syslog(LOG_INFO, "failed insert of update in store_basic: $this->id ($r)");
+			return false;
 		}
 
 		// Deploy changes to other sub sites
@@ -578,13 +582,18 @@ class Link extends LCPBase {
 			$this->update_votes();
 			$this->update_comments();
 		}
-		$db->commit();
+		return true;
 	}
 
 	function update_votes() {
 		global $db, $globals;
 
 		if ($this->date < time() - ($globals['time_enabled_votes'] + 3600)) return; // ALERT: Do not modify if votes are already closed
+
+		$count = $db->get_var("select count(*) from votes where vote_type='links' and vote_link_id=$this->id");
+		if ($count == $this->votes + $this->anonymous + $this->negatives) return;
+
+		syslog(LOG_INFO, "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating");
 
 		$db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
 	}
@@ -775,26 +784,43 @@ class Link extends LCPBase {
 		$vote->value=$value;
 		$db->transaction();
 		if($vote->insert()) {
-			// For published links we update counter fields
-			if ($this->status == 'published') {
-				if ($vote->user > 0) {
-					if ($value > 0) {
-						$db->query("update links set link_votes=link_votes+1 where link_id = $this->id");
-					} else {
-						$db->query("update links set link_negatives=link_negatives+1 where link_id = $this->id");
-					}
+			if ($vote->user > 0) {
+				if ($value > 0) {
+					$r = $db->query("update links set link_votes=link_votes+1 where link_id = $this->id");
 				} else {
-					$db->query("update links set link_anonymous=link_anonymous+1 where link_id = $this->id");
+					$r = $db->query("update links set link_negatives=link_negatives+1 where link_id = $this->id");
 				}
 			} else {
-				// If not published we update karma and count all votes
-				$db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
-				$this->update_votes();
+				$r = $db->query("update links set link_anonymous=link_anonymous+1 where link_id = $this->id");
 			}
-			$db->commit();
-			$this->read_basic();
+
+			// For published links we update counter fields
+			if ($r && $this->status != 'published') {
+				// If not published we update karma and count all votes
+				$r = $db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
+				//$this->update_votes();
+			}
+
+			if (! $r || ! $db->commit()) {
+				syslog(LOG_INFO, "failed transaction in Link::insert_vote: $this->id ($r)");
+				$value = false;
+			} else {
+				// Update in memory object
+				if ($vote->user > 0) {
+					if ($value > 0) $this->votes += 1;
+					else $this->negatives += 1;
+				} else {
+					$this->anonymous += 1;
+				}
+
+				// Update karma and check votes
+				if ($this->status != 'published') {
+					$this->karma += $karma_value;
+					$this->update_votes();
+				}
+			}
 		} else {
-			$db->commit();
+			$db->rollback();
 			$value = false;
 		}
 		return $value;
@@ -811,8 +837,12 @@ class Link extends LCPBase {
 
 	function update_comments() {
 		global $db;
+		$count = $db->get_var("SELECT count(*) FROM comments WHERE comment_link_id = $this->id");
+		if ($count == $this->comments && $count !== false) return true;
+
 		$db->query("update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id");
-		$this->comments = $db->get_var("select link_comments from links where link_id = $this->id");
+		$this->comments = $count;
+
 	}
 
 	function is_discarded() {

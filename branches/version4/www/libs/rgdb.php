@@ -36,8 +36,9 @@ class RGDB extends mysqli {
 	function initial_query($query) {
 		$this->initial_query = $query;
 		if ($this->connected) {
-			$this->query($query);
+			return $this->query($query);
 		}
+		return false;
 	}
 
 	function transaction() {
@@ -51,7 +52,7 @@ class RGDB extends mysqli {
 	function commit() {
 		$this->in_transaction--;
 		if ($this->in_transaction == 0) {
-			parent::commit();
+			return parent::commit();
 		}
 		return $this->in_transaction;
 	}
@@ -142,7 +143,7 @@ class RGDB extends mysqli {
 			@$result->close();
 		}
 
-		return $this->affected_rows;
+		return true;
 	}
 
 	function object_iterator($query, $class = null) {

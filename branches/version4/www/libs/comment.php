@@ -48,10 +48,10 @@ class Comment extends LCPBase {
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
 		if ($time > $previous) {
-			$db->transaction();
-			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
-			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
-			$db->commit();
+			$r = $db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+			if ($r) {
+				$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
+			}
 		}
 		return true;
 
@@ -75,7 +75,6 @@ class Comment extends LCPBase {
 		$comment_content = $db->escape($this->normalize_content());
 		if ($this->type == 'admin') $comment_type = 'admin';
 		else $comment_type = 'normal';
-		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$this->ip_int = $db->escape($globals['user_ip_int']);
@@ -106,15 +105,22 @@ class Comment extends LCPBase {
 			}
 		}
 
-		if ($r && $full) {
+		if (! $r) {
+			syslog(LOG_INFO, "Error storing comment $this->id");
+			return false;
+		}
+
+		if ($full) {
 			$this->update_conversation();
 		}
-		$db->commit();
+
 		// Check we got a good order value
 		if (!$this->c_order) {
 			syslog(LOG_INFO, "Trying to assign order to comment $this->id after commit");
 			$this->update_order();
 		}
+
+		return true;
 	}
 
 	function update_order() {
@@ -304,15 +310,18 @@ class Comment extends LCPBase {
 
 		$vote->value = $value;
 		$db->transaction();
-		if($vote->insert()) {
+		if(($r = $vote->insert())) {
 			if ($current_user->user_id != $this->author) {
-				$db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
+				$r = $db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
 			}
-		} else {
-			$vote->value = false;
 		}
-		$db->commit();
-		return $vote->value;
+
+		if ($r && $db->commit()) {
+			return $vote->value;
+		}
+		$db->rollback();
+		syslog(LOG_INFO, "failed insert comment vote for $this->id");
+		return false;
 	}
 
 
@@ -581,11 +590,11 @@ class Comment extends LCPBase {
 			}
 		}
 
-		$db->transaction();
-		$comment->store();
-		$comment->insert_vote();
-		$link->update_comments();
-		$db->commit();
+		if ($comment->store()) {
+			$comment->insert_vote();
+			$link->update_comments();
+			$link->comments++;
+		}
 
 		// Check image upload or delete
 		if ($_POST['image_delete']) {
