@@ -257,7 +257,7 @@ case 2:
 						// syslog(LOG_INFO, "Updating order for $prev->id, order: $prev->c_order");
 						$prev->update_order();
 					}
-					// syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
+					syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
 					$comment->update_order();
 					$prev = false;
 				} else {

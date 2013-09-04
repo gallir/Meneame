@@ -806,7 +806,6 @@ class Link extends LCPBase {
 			if ($r && $this->status != 'published') {
 				// If not published we update karma and count all votes
 				$r = $db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
-				//$this->update_votes();
 			}
 
 			if (! $r || ! $db->commit()) {
