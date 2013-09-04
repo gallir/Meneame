@@ -50,10 +50,10 @@ class Post extends LCPBase {
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
 		if ($time > $previous) {
-			$db->transaction();
-			$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
-			$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
-			$db->commit();
+			$r = $db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
+			if ($r) {
+				$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
+			}
 		}
 		return true;
 
@@ -90,7 +90,6 @@ class Post extends LCPBase {
 	function store($full = true) {
 		global $db, $current_user, $globals;
 
-		$db->transaction();
 		if(!$this->date) $this->date=time();
 		$post_author = $this->author;
 		$post_src = $this->src;
@@ -113,7 +112,6 @@ class Post extends LCPBase {
 			if ($full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
 		if ($full) $this->update_conversation();
-		$db->commit();
 	}
 
 	function read() {
@@ -273,13 +271,21 @@ class Post extends LCPBase {
 		}
 		$vote->value = $value;
 		$db->transaction();
-		if($vote->insert()) {
+		if(($r = $vote->insert())) {
 			if ($current_user->user_id != $this->author) {
-				$db->query("update posts set post_votes=post_votes+1, post_karma=post_karma+$value, post_date=post_date where post_id=$this->id");
+				$r = $db->query("update posts set post_votes=post_votes+1, post_karma=post_karma+$value, post_date=post_date where post_id=$this->id");
 			}
-		} else {
-			$vote->value = false;
 		}
+
+		if ($r && $db->commit()) {
+			return $vote->value;
+		}
+
+        $db->rollback();
+        syslog(LOG_INFO, "failed insert post vote for $this->id");
+        return false;
+
+
 		$db->commit();
 		return $vote->value;
 	}
