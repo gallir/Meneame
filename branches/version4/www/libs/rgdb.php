@@ -45,18 +45,19 @@ class RGDB extends mysqli {
 		if ($this->in_transaction == 0) {
 			$this->query('START TRANSACTION');
 		} else {
-			syslog(LOG_INFO, "Transaction inside a transaction in ".$_SERVER['SCRIPT_NAME']);
+			// syslog(LOG_INFO, "Transaction inside a transaction in ".$_SERVER['SCRIPT_NAME']);
 		}
 		$this->in_transaction++;
 		return $this->in_transaction;
 	}
 
 	function commit() {
-		$this->in_transaction--;
-		if ($this->in_transaction == 0) {
+		if ($this->in_transaction > 0) {
+			$this->in_transaction = 0;
 			return parent::commit();
 		}
-		return $this->in_transaction;
+		$this->in_transaction--;
+		return true;
 	}
 
 	function rollback() {

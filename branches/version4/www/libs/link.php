@@ -54,18 +54,30 @@ class Link extends LCPBase {
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id)
 	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id) ";
 
-	static function from_db($id, $key = 'id') {
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links INNER JOIN users on (user_id = link_author) ";
+
+
+	static function from_db($id, $key = 'id', $complete = true) {
 		global $db, $current_user;
 
-		if ($key == 'uri') {
-			$id = $db->escape($id);
-			$selector = " link_uri = '$id' ";
-		} else {
-			$id = intval($id);
-			$selector = " link_id = $id ";
+		switch ($key) {
+			case 'uri':
+				$id = $db->escape($id);
+				$selector = "link_uri = '$id'";
+				break;
+			default:
+				$id = intval($id);
+				$selector = "link_id = $id";
 		}
 
-		if(($object = $db->get_object("SELECT".Link::SQL."WHERE $selector", 'Link'))) {
+		if ($complete) {
+			$sql = "SELECT".Link::SQL."WHERE $selector";
+		} else {
+			$sql = "SELECT".Link::SQL_BASIC."WHERE $selector";
+		}
+			
+
+		if(($object = $db->get_object($sql, 'Link'))) {
 			$object->read = true;
 			return $object;
 		}
@@ -619,7 +631,7 @@ class Link extends LCPBase {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($result = $db->get_row("SELECT link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_uri as uri, link_url as url, link_title as title, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip FROM links WHERE $cond"))) {
+		if(($result = $db->get_row("SELECT".Link::SQL_BASIC."WHERE FROM links WHERE $cond"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}

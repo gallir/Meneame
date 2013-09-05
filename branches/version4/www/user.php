@@ -369,7 +369,7 @@ function do_shaken () {
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 1,
 		'rss2.php?voted_by='.$user->id, _('votadas en rss2'));
 	$link = new Link;
-	$rows = $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
+	$rows = -1; //$db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
 	$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		foreach($links as $linkdb) {
@@ -420,7 +420,7 @@ function do_commented () {
 
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
 		'comments_rss2.php?user_id='.$user->id, _('comentarios en rss2'));
-	$rows = $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
+	$rows = -1; // $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
 		print_comment_list($comments, $user);
@@ -432,7 +432,7 @@ function do_conversation () {
 
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
 		'comments_rss2.php?answers_id='.$user->id, _('conversación en rss2'));
-	$rows = $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
+	$rows = -1; //$db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$conversation = "SELECT distinct(conversation_from) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment' ORDER BY conversation_time desc LIMIT $offset,$page_size";
 	
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments INNER JOIN links ON (link_id = comment_link_id) INNER JOIN ($conversation) AS convs ON convs.conversation_from = comments.comment_id");
@@ -470,7 +470,7 @@ function do_shaken_comments () {
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
 
 	$comment = new Comment;
-	$rows = $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
+	$rows = -1; $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
 	$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id  and comment_id = vote_link_id and comment_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<ol class="comments-list">';
@@ -493,19 +493,17 @@ function do_shaken_comments () {
 function print_comment_list($comments, $user) {
 	global $globals, $current_user;
 
-	$link = new Link;
 	$comment = new Comment;
-
 	$timestamp_read = 0;
+	$last_link = 0;
 
 	$ids = array();
 	foreach ($comments as $dbcomment) {
-		$link->id=$dbcomment->link_id;
 		$comment = Comment::from_db($dbcomment->comment_id);
 		// Don't show admin comment if it's her own profile.
 		if ($comment->type == 'admin' && ! $current_user->admin && $user->id == $comment->author) continue;
-		if ($last_link != $link->id) {
-			$link->read();
+		if ($last_link != $dbcomment->link_id) {
+			$link = Link::from_db($dbcomment->link_id, null, false); // Read basic
 			echo '<h4>';
 			echo '<a href="'.$link->get_permalink().'">'. $link->title. '</a>';
 			echo ' ['.$link->comments.']';

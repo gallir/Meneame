@@ -47,6 +47,8 @@ class Post extends LCPBase {
 		$key = 'p_last_read';
 
 		if (! $current_user->user_id ) return false;
+
+
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
 		if ($time > $previous) {
@@ -55,8 +57,7 @@ class Post extends LCPBase {
 				$db->query("insert into prefs set pref_user_id = $current_user->user_id, pref_key = '$key', pref_value = $time");
 			}
 		}
-		return true;
-
+		return User::reset_notification($current_user->user_id, 'post');
 	}
 
 	static function get_unread_conversations($user = 0) {
@@ -64,6 +65,12 @@ class Post extends LCPBase {
 		$key = 'p_last_read';
 
 		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		
+		$n = User::get_notification($user, 'post');
+		if (! is_null($n)) {
+			return $n;
+		}
+
 		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
 		$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'post' and conversation_time > FROM_UNIXTIME($last_read)");
 		return $n;
@@ -317,6 +324,14 @@ class Post extends LCPBase {
 	function update_conversation() {
 		global $db, $globals;
 
+		// Select users previous conversation to decrease in the new system
+		$tos = $db->get_col("select conversation_user_to from conversations where conversation_type='post' and conversation_from=$this->id and conversation_time > date_sub(now(), interval 5 minute)");
+		if ($tos) {
+			foreach ($tos as $to) {
+				User::add_notification($to, 'post', -1);
+			}
+		}
+
 		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
 		$references = array();
 		if (preg_match_all(Post::REF_PREG, $this->content, $matches)) {
@@ -340,6 +355,7 @@ class Post extends LCPBase {
 						$date = 0;
 					} else {
 						$date = $this->date;
+						User::add_notification($to, 'post');
 					}
 
 					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($date), $this->id, $id)");

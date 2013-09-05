@@ -23,6 +23,7 @@ if (isset($_GET['totals'])) {
 	$do_totals = false;
 }
 
+
 $cache_key = 'notifications_'.$current_user->user_id.'_'.$do_totals;
 if(memcache_mprint($cache_key)) {
     exit(0);
@@ -31,7 +32,13 @@ if(memcache_mprint($cache_key)) {
 $notifications = new stdClass();
 
 $notifications->posts = Post::get_unread_conversations($current_user->user_id);
+// Temporal
+if (is_null(User::get_notification($current_user->user_id, 'post'))) User::reset_notification($current_user->user_id, 'post', $notifications->posts);
+
 $notifications->comments = Comment::get_unread_conversations($current_user->user_id);
+// Temporal
+if (is_null(User::get_notification($current_user->user_id, 'comment'))) User::reset_notification($current_user->user_id, 'comment', $notifications->comments);
+
 $notifications->privates = PrivateMessage::get_unread($current_user->user_id);
 $notifications->friends = count(User::get_new_friends($current_user->user_id));
 
@@ -80,6 +87,6 @@ if ($do_totals) {
 	$response = json_encode($objects);
 }
 
-memcache_madd($cache_key, $response, 10);
+memcache_madd($cache_key, $response, 2);
 echo $response;
 

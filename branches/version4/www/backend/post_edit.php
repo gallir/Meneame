@@ -114,20 +114,20 @@ function save_post ($post_id) {
 			}
 			$post->store();
 			$db->commit();
+			// Check image upload or delete
+			if ($_POST['image_delete']) {
+				$post->delete_image();
+			} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+				$post->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+			} elseif(!empty($_FILES['image']['tmp_name'])) {
+				$post->store_image($_FILES['image']);
+			}
+
 		} else {
 			$db->commit();
 			echo 'ERROR: ' . _('comentario grabado previamente');
 			die;
 		}
-	}
-
-	// Check image upload or delete
-	if ($_POST['image_delete']) {
-		$post->delete_image();
-	} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-		$post->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
-	} elseif(!empty($_FILES['image']['tmp_name'])) {
-		$post->store_image($_FILES['image']);
 	}
 
 

@@ -137,7 +137,7 @@ switch ($argv[0]) {
 					$from = "";
 					$order_by = "ORDER BY post_id desc ";
 					$limit = "";
-					$rows =  $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
+					$rows = -1; // $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
 					$rss_option="sneakme_rss2.php?conversation_of=$user->id";
 					break;
 

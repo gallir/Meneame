@@ -31,9 +31,7 @@ if (!$comment->read()) {
 	do_error(_('comentario no encontrado'), 404);
 }
 
-$link = new Link;
-$link->id=$comment->link;
-$link->read();
+$link = Link::from_db($comment->link, null, false);
 if ($link->is_discarded()) {
 	$globals['ads'] = false;
 }

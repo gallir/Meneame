@@ -18,7 +18,7 @@ if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
 $link = Link::from_db($id);
 if(!$link) die;
-$user_login = $db->get_var("select user_login from users where user_id = $link->author");
+$user_login = $link->username;
 echo '<p>';
 if ($link->avatar) {
 	echo '<img class="avatar" src="'.get_avatar_url($link->author, $link->avatar, 40).'" width="40" height="40" alt="avatar"  style="float:left; margin: 0 5px 0 0;"/>';

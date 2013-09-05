@@ -358,7 +358,7 @@ function get_votes($dbtime) {
 function get_story($time, $type, $linkid, $userid) {
 	global $db, $events, $last_timestamp, $foo_link;
 
-	$link = Link::from_db($linkid);
+	$link = Link::from_db($linkid, null, false);
 	if (!$link) return;
 
 	$json['link'] = $link->get_relative_permalink();

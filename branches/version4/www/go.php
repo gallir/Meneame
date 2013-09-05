@@ -23,7 +23,7 @@ if ($id > 0) {
 			do_redirection($url);
 			exit(0);
 		default:
-			$l = Link::from_db($id);
+			$l = Link::from_db($id, null, false);
 			if (! $l) exit(0);
 
 			if (! $globals['mobile']

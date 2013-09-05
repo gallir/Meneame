@@ -24,7 +24,7 @@ if (!isset($_REQUEST['id']) && $globals['base_bar_url'] && $_SERVER['PATH_INFO']
 	}
 }
 
-if (! ($link = Link::from_db($id))) {
+if (! ($link = Link::from_db($id, null, false))) {
 	do_error(_('enlace no encontrado'), 404);
 }
 

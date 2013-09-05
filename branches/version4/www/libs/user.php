@@ -40,6 +40,31 @@ class User {
 
 	const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
 
+	static function get_notification($id, $type) {
+		global $db;
+
+		$r =  $db->get_var("select counter from notifications where user = $id and type = '$type'");
+
+		if ($r < 0) {
+			User::reset_notification($id, $type);
+			return 0;
+		}
+		return $r;
+	}
+
+	static function add_notification($id, $type, $value = 1) {
+		global $db;
+		if (! is_null(User::get_notification($id, $type))) {
+			return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
+		}
+		return false;
+	}
+
+	static function reset_notification($id, $type, $value = 0) {
+		global $db;
+		return $db->query("replace into notifications (user, type, counter) values ($id, '$type', $value)");
+	}
+
 	static function get_valid_username($name) {
 		$name = strip_tags($name);
 		$name = preg_replace('/&.+?;/', '', $name); // kill entities
