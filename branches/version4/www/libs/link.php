@@ -631,7 +631,7 @@ class Link extends LCPBase {
 			default:
 				$cond = "link_id = $this->id";
 		}
-		if(($result = $db->get_row("SELECT".Link::SQL_BASIC."WHERE FROM links WHERE $cond"))) {
+		if(($result = $db->get_row("SELECT".Link::SQL_BASIC."WHERE $cond"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			return true;
 		}
