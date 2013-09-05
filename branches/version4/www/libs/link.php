@@ -168,12 +168,8 @@ class Link extends LCPBase {
 			&& isset($_COOKIE['k'])
 			&& check_security_key($_COOKIE['k'])
 			&& $this->ip != $globals['user_ip']) {
-			if (!$this->clicks) {
-				$r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($this->id,1) ON DUPLICATE KEY UPDATE counter=counter+1");
-			} else {
-				// Delay storing
-				self::$clicked = $this->id;
-			}
+			// Delay storing
+			self::$clicked = $this->id;
 		}
 	}
 
@@ -216,8 +212,8 @@ class Link extends LCPBase {
 				$r = true;
 				foreach ($cache as $id => $counter) {
 					if ($id > 0 && $counter > 0) {
-						// $r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
-						$r = $db->query("UPDATE link_clicks SET counter=counter+$counter WHERE id = $id");
+						$r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+						// $r = $db->query("UPDATE link_clicks SET counter=counter+$counter WHERE id = $id");
 						if (!$r) {
 							break;
 						}
