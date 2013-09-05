@@ -105,7 +105,8 @@ function do_save($link) {
 		}
 
 		$link->store();
-		tags_insert_string($link->id, $dblang, $link->tags, $link->date);
+		// Disabled table tags
+		// tags_insert_string($link->id, $dblang, $link->tags, $link->date);
 
 		// Insert edit log/event if the link it's newer than 15 days
 		if ($globals['now'] - $link->date < 86400*15) {

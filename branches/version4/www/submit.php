@@ -463,7 +463,8 @@ function do_submit2() {
 	}
 
 	$link->store();
-	tags_insert_string($link->id, $dblang, $link->tags);
+	// Disabled table tags
+	// tags_insert_string($link->id, $dblang, $link->tags);
 	$link->read();
 	$link->randkey = $_POST['randkey'];
 

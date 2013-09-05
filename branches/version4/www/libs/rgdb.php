@@ -44,6 +44,8 @@ class RGDB extends mysqli {
 	function transaction() {
 		if ($this->in_transaction == 0) {
 			$this->query('START TRANSACTION');
+		} else {
+			syslog(LOG_INFO, "Transaction inside a transaction in ".$_SERVER['SCRIPT_NAME']);
 		}
 		$this->in_transaction++;
 		return $this->in_transaction;
