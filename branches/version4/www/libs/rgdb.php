@@ -111,8 +111,8 @@ class RGDB extends mysqli {
 			header('HTTP/1.1 500 Server error');
 			header('Content-Type: text/plain');
 			echo "$str ($this->error)\n";
-			syslog(LOG_NOTICE, "DB ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 		}
+		syslog(LOG_NOTICE, "DB ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 	}
 
 	function flush() {
@@ -130,7 +130,7 @@ class RGDB extends mysqli {
 		$result = @parent::query($query);
 
 		if (!$result) {
-			$this->print_error('error in query: ' . $query);
+			$this->print_error($query);
 			return false;
 		}
 
