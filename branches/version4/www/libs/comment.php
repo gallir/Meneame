@@ -84,7 +84,9 @@ class Comment extends LCPBase {
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$this->ip_int = $db->escape($globals['user_ip_int']);
-			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link");
+
+			$db->transaction();
+			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE");
 			if (! $previous > 0 && $previous !== '0') {
 				syslog(LOG_INFO, "Failed to assign order to comment $this->id in insert");
 				$this->c_order = 0;
@@ -93,6 +95,8 @@ class Comment extends LCPBase {
 			}
 
 			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
+			$db->commit();
+
 			if ($r) {
 				$this->id = $db->insert_id;
 				// Insert comment_new event into logs
@@ -133,15 +137,22 @@ class Comment extends LCPBase {
 		global $db;
 
 		if ($this->id == 0 || $this->link == 0) return false;
-		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id"));
+		
+		$db->transaction();
+		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if (! $order) {
+			$db->commit();
 			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->c_order");
 			return false;
 		}
 		if ($order != $this->c_order) {
-			syslog(LOG_INFO, "Fixing order for $this->id, $this->c_order -> $order");
+			$db->query("update comments set comment_order=$this->order where comment_id=$this->id");
+			$rows = $db->affected_rows;
+			$db->commit();
+			if ($rows > 0) {
+				syslog(LOG_INFO, "Fixing order for $this->id, $this->c_order -> $order");
+			}
 			$this->c_order = $order;
-			$db->query("update comments set comment_order=$this->c_order where comment_id=$this->id");
 		}
 		return $this->c_order;
 	}
@@ -604,7 +615,6 @@ class Comment extends LCPBase {
 		if (!is_null($r) && $comment->store() && $db->commit()) {
 			$comment->insert_vote();
 			$link->update_comments();
-			$link->comments++;
 
 			// Check image upload or delete
 			if ($_POST['image_delete']) {

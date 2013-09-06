@@ -606,12 +606,20 @@ class Link extends LCPBase {
 
 		if ($this->date < time() - ($globals['time_enabled_votes'] + 3600)) return; // ALERT: Do not modify if votes are already closed
 
-		$count = $db->get_var("select count(*) from votes where vote_type='links' and vote_link_id=$this->id");
-		if ($count == $this->votes + $this->anonymous + $this->negatives) return;
-
-		syslog(LOG_INFO, "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating");
+		$db->transaction();
+		$count = $db->get_var("select count(*) from votes where vote_type='links' and vote_link_id=$this->id FOR UPDATE");
+		if ($count == $this->votes + $this->anonymous + $this->negatives) {
+			$db->commit();
+			return;
+		}
 
 		$db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
+		$rows = $db->affected_rows;
+		$db->commit();
+
+		if ($rows > 0) {
+			syslog(LOG_INFO, "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating");
+		}
 	}
 
 	function read_basic($key='id') {
@@ -852,10 +860,16 @@ class Link extends LCPBase {
 
 	function update_comments() {
 		global $db;
-		$count = $db->get_var("SELECT count(*) FROM comments WHERE comment_link_id = $this->id");
-		if ($count == $this->comments && $count !== false) return true;
+
+		$db->transaction();
+		$count = $db->get_var("SELECT count(*) FROM comments WHERE comment_link_id = $this->id FOR UPDATE");
+		if ($count == $this->comments && $count !== false) {
+			$db->commit();
+			return true;
+		}
 
 		$db->query("update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id");
+		$db->commit();
 		$this->comments = $count;
 
 	}
