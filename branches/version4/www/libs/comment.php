@@ -95,10 +95,11 @@ class Comment extends LCPBase {
 			}
 
 			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
+			$new_id = $db->insert_id;
 			$db->commit();
 
 			if ($r) {
-				$this->id = $db->insert_id;
+				$this->id = $new_id;
 				// Insert comment_new event into logs
 				if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
 			}

@@ -105,19 +105,19 @@ class Post extends LCPBase {
 		$post_content = $db->escape($this->normalize_content());
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
-			$db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
+			$r = $db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
 			$this->id = $db->insert_id;
-
-			$this->insert_vote($post_author);
-
-			// Insert post_new event into logs
-			if ($full) Log::insert('post_new', $this->id, $post_author);
+			if ($this->id > 0) {
+				$this->insert_vote($post_author);
+				// Insert post_new event into logs
+				if ($full) Log::insert('post_new', $this->id, $post_author);
+			}
 		} else {
-			$db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
+			$r = $db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			// Insert post_new event into logs
-			if ($full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
+			if ($r && $full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
-		if ($full) $this->update_conversation();
+		if ($r && $full) $this->update_conversation();
 	}
 
 	function read() {
