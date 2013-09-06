@@ -223,19 +223,20 @@ function shutdown() {
 	Link::store_clicks(); // It will check cache and increment link clicks counter
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
-		if ($globals['start_time'] > 0) {
-			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
-		} else {
-			$time = 0;
-		}
-
 		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
 		else $script = $_SERVER['SCRIPT_NAME'];
 
 		if ($current_user->user_id > 0) $user = $current_user->user_login;
 		else $user = '-';
 
+		if ($globals['start_time'] > 0) {
+			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
+		} else {
+			$time = 0;
+		}
+
 		@syslog(LOG_DEBUG, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
+		exit(0);
 	}
 }
 ?>

@@ -324,7 +324,7 @@ class Post extends LCPBase {
 		global $db, $globals;
 
 		// Select users previous conversation to decrease in the new system
-		$tos = $db->get_col("select conversation_user_to from conversations where conversation_type='post' and conversation_from=$this->id and conversation_time > date_sub(now(), interval 5 minute)");
+		$tos = $db->get_col("select conversation_user_to from conversations where conversation_type='post' and conversation_from=$this->id and conversation_time > date_sub(now(), interval 15 minute)");
 		if ($tos) {
 			foreach ($tos as $to) {
 				User::add_notification($to, 'post', -1);
