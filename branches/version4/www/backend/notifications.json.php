@@ -11,6 +11,7 @@
 
 $globals['max_load'] = 4;
 include('../config.php');
+$db->connect_timeout = 3;
 
 if (! $current_user->user_id) die;
 

@@ -65,7 +65,7 @@
 			{% endif %}
 		{% endif %}
 	{% endif %}
-	{% if globals.ads %}<!-- google_ad_section_start -->{% endif %}
+	{# {% if globals.ads %}<!-- google_ad_section_start -->{% endif %} #}
 
 	{% if globals.link %}<h1>{% else %}<h2>{% endif %}
 		<a href="{{ self.url|escape }}" class="{% if self.fancybox %}fancybox {% endif %}l:{{ self.id }}"
@@ -148,7 +148,7 @@
 		</span>
 		{% endif %}
 	{% endif %}
-	{% if globals.ads %}<!-- google_ad_section_end -->{% endif %}
+	{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
 	{% if globals.link || type == 'short' %}
 		{% if type!='short' %}
