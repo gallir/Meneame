@@ -97,9 +97,10 @@ function save_post ($message_id) {
 			echo 'ERROR: ' . _('demasiados mensajes en un día');
 			die;
 		};
-		$message->store();
 		$db->commit();
+		$message->store();
 		notify_user($current_user->user_id, $to, $message->content);
+		User::add_notification($message->to, 'private');
 	} else {
 		$db->commit();
 		echo 'ERROR: ' . _('mensaje grabado previamente');

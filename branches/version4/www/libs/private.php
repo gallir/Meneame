@@ -34,7 +34,14 @@ class PrivateMessage extends LCPBase {
 
 	static function get_unread($id) {
 		global $db;
-		return (int) $db->get_var("select count(*) from privates where `to` = $id and `read` = 0");
+
+		$r = User::get_notification($id, 'private');
+		if (is_null($r)) {
+			$r = (int) $db->get_var("select count(*) from privates where `to` = $id and `read` = 0");
+			User::reset_notification($id, 'private', $r);
+		}
+		return $r;
+
 	}
 
 	static function can_send($from, $to) {

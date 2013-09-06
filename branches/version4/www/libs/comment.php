@@ -63,14 +63,13 @@ class Comment extends LCPBase {
 		global $db, $globals, $current_user;
 
 		$n = User::get_notification($user, 'comment');
-		if (! is_null($n)) {
-			return $n;
+		if (is_null($n)) {
+			$key = 'c_last_read';
+			if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+			$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
+			$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'comment' and conversation_time > FROM_UNIXTIME($last_read)");
+			User::reset_notification($user, 'comment', $n);
 		}
-
-		$key = 'c_last_read';
-		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
-		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
-		$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'comment' and conversation_time > FROM_UNIXTIME($last_read)");
 		return $n;
 
 	}

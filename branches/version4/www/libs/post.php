@@ -67,12 +67,11 @@ class Post extends LCPBase {
 		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
 		
 		$n = User::get_notification($user, 'post');
-		if (! is_null($n)) {
-			return $n;
+		if (is_null($n)) {
+			$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
+			$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'post' and conversation_time > FROM_UNIXTIME($last_read)");
+			User::reset_notification($user, 'post', $n);
 		}
-
-		$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
-		$n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'post' and conversation_time > FROM_UNIXTIME($last_read)");
 		return $n;
 	}
 

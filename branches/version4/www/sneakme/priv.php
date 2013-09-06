@@ -36,6 +36,7 @@ switch ($argv[1]) {
 		$order_by = "ORDER BY date desc";
 		$limit = "LIMIT $offset,$page_size";
 		$view = 0;
+		User::reset_notification($current_user->user_id, 'private');
 }
 
 $rows = $db->get_var("select count(*) from privates where $where");
