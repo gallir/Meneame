@@ -17,18 +17,17 @@ if(check_ban_proxy()) {
 	error(_('IP no permitida'));
 }
 
-$link = new Link;
 $id=intval($_REQUEST['id']);
 $user_id=intval($_REQUEST['user']);
-
-
 
 $value = round($_REQUEST['value']);
 if ($value < -count($globals['negative_votes_values']) || $value > -1)
 	error(_('Voto incorrecto') . " $value");
 
-$link->id=$id;
-$link->read_basic();
+$link = Link::from_db($id, null, false);
+if(!$link) {
+	error(_('artículo inexistente'));
+}
 
 if(!$link->is_votable()) {
 	error(_('votos cerrados'));

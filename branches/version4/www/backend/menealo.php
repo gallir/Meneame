@@ -29,9 +29,8 @@ if (!check_security_key($_REQUEST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
-$link = new Link;
-$link->id=$id;
-if(!$link->read_basic()) {
+$link = Link::from_db($id, null, false);
+if(!$link) {
 	error(_('artículo inexistente'));
 }
 
