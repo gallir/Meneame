@@ -1309,54 +1309,42 @@ function check_load($max=4) {
 	}
 }
 
-function check_ip_noaccess($only_in_cache = false) {
+function check_ip_noaccess($steps = 0) {
 	global $globals, $db;
 
-	static $last_ip = false;
-	static $last_matches = false;
-
-	if ( (isset($globals['check_ip_noaccess']) && $globals['check_ip_noaccess'] == false)
+	if ( empty($globals['check_ip_noaccess'])
 		|| ($only_in_cache && empty($globals['check_ip_noaccess_cache']))
 		|| ($globals['proxy_ip'] == $globals['user_ip'])
+		|| !empty($globals['skip_check_ip_noaccess'])
 		) {
 			return false;
 		}
-
-	// If we already checked the same IP, return inmediately
-	if ($globals['user_ip'] == $last_ip) {
-		if ($last_matches) reject_connection();
-		return false;
-	}
 
 	if (! empty($globals['check_ip_noaccess_cache'])  && $globals['check_ip_noaccess_cache'] > 0) {
 		$cache_key = 'no_access_'.$globals['user_ip'];
 	} else {
 		$cache_key = false;
-		$matches = false;
 	}
 
-	if ($cache_key) {
+	if ($steps < 2 && $cache_key) { // Don't cehck cache if >= 2
 		$matches = memcache_mget($cache_key);
+		if ($matches) {
+			reject_connection();
+		} elseif ($steps == 1) { // Only in cache
+			return true;
+		}
 	} 
 
-	$store = false;
-	if ($matches  === false && ! $only_in_cache) {
-		$matches=$db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
-		$store = true;
+	$matches = $db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
+
+	if ($matches) {
+		if ($cache_key) {
+			memcache_madd ($cache_key, $matches, $globals['check_ip_noaccess_cache']);
+		}
+		reject_connection();
 	}
 
-	if ($cache_key && $store) {
-		memcache_madd ($cache_key, $matches, $globals['check_ip_noaccess_cache']);
-	}
-
-	if ($matches !== false ) {
-		$last_ip = $globals['user_ip'];
-		$last_matches = $matches;
-	}
-
-	if ($matches) reject_connection();
-
-	return false;
+	return true;
 }
 
 function reject_connection() {

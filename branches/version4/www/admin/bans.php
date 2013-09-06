@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-$globals['check_ip_noaccess'] = false;
+$globals['skip_check_ip_noaccess'] = true;
 include('../config.php');
 include(mnminclude.'html1.php');
 

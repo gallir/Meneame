@@ -143,7 +143,7 @@ $globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 //$globals['access_log'] = false;
 
 // Uncomment if you don't want to control the banned IPs
-//$globals['check_ip_noaccess'] = false;
+//$globals['check_ip_noaccess'] = true;
 // Uncomment and asssign the seconds you want to keep noaccess cache
 //$globals['check_ip_noaccess_cache'] = 3;
 
