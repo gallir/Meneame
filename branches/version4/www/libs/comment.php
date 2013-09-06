@@ -81,11 +81,11 @@ class Comment extends LCPBase {
 		$comment_content = $db->escape($this->normalize_content());
 		if ($this->type == 'admin') $comment_type = 'admin';
 		else $comment_type = 'normal';
+		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $db->escape($globals['user_ip']);
 			$this->ip_int = $db->escape($globals['user_ip_int']);
 
-			$db->transaction();
 			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE");
 			if (! $previous > 0 && $previous !== '0') {
 				syslog(LOG_INFO, "Failed to assign order to comment $this->id in insert");
@@ -96,7 +96,6 @@ class Comment extends LCPBase {
 
 			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
 			$new_id = $db->insert_id;
-			$db->commit();
 
 			if ($r) {
 				$this->id = $new_id;
@@ -118,6 +117,7 @@ class Comment extends LCPBase {
 
 		if (! $r) {
 			syslog(LOG_INFO, "Error storing comment $this->id");
+			$db->rollback();
 			return false;
 		}
 
@@ -130,6 +130,7 @@ class Comment extends LCPBase {
 			syslog(LOG_INFO, "Trying to assign order to comment $this->id after commit");
 			$this->update_order();
 		}
+		$db->commit();
 
 		return true;
 	}
@@ -139,7 +140,6 @@ class Comment extends LCPBase {
 
 		if ($this->id == 0 || $this->link == 0) return false;
 		
-		$db->transaction();
 		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if (! $order) {
 			$db->commit();
@@ -149,7 +149,6 @@ class Comment extends LCPBase {
 		if ($order != $this->c_order) {
 			$db->query("update comments set comment_order=$this->order where comment_id=$this->id");
 			$rows = $db->affected_rows;
-			$db->commit();
 			if ($rows > 0) {
 				syslog(LOG_INFO, "Fixing order for $this->id, $this->c_order -> $order");
 			}
@@ -337,7 +336,6 @@ class Comment extends LCPBase {
 		if ($r && $db->commit()) {
 			return $vote->value;
 		}
-		$db->rollback();
 		syslog(LOG_INFO, "failed insert comment vote for $this->id");
 		return false;
 	}
@@ -613,9 +611,10 @@ class Comment extends LCPBase {
 			return ('penalización de karma por texto repetido o abuso de enlaces');
 		}
 
-		if (!is_null($r) && $comment->store() && $db->commit()) {
+		if (!is_null($r) && $comment->store()) {
 			$comment->insert_vote();
 			$link->update_comments();
+			$db->commit();
 
 			// Check image upload or delete
 			if ($_POST['image_delete']) {

@@ -52,7 +52,7 @@ function do_edit($link) {
 }
 
 function do_save($link) {
-	global $dblang, $globals, $current_user;
+	global $dblang, $globals, $current_user, $db;
 
 	// Store previous value for the log
 	$link_old = new stdClass;
@@ -104,6 +104,7 @@ function do_save($link) {
 			$link->blog = $blog_id;
 		}
 
+		$db->transaction();
 		$link->store();
 		// Disabled table tags
 		// tags_insert_string($link->id, $dblang, $link->tags, $link->date);
@@ -125,6 +126,7 @@ function do_save($link) {
 		if($link->votes == 0 && $link->status != 'queued' && $link->author == $current_user->user_id) {
 			$link->enqueue();
 		}
+		$db->commit();
 
 	}
 	$link->read();

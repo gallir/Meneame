@@ -475,7 +475,11 @@ class Link extends LCPBase {
 			$this->status='queued';
 			$this->sent_date = $this->date=time();
 			$this->get_uri();
-			if( ! $this->store()) return false;
+			$db->transaction();
+			if( ! $this->store()) {
+				$db->rollback();
+				return false;
+			}
 			$this->insert_vote($current_user->user_karma);
 
 			// Add the new link log/event
@@ -491,6 +495,7 @@ class Link extends LCPBase {
 				$trackres->status = 'pendent';
 				$trackres->store();
 			}
+			$db->commit();
 			fork("backend/send_pingbacks.php?id=$this->id");
 		}
 	}
@@ -544,11 +549,15 @@ class Link extends LCPBase {
 		$link_thumb_x = intval($this->thumb_x);
 		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
+		$db->transaction();
 		if (! $this->store_basic()) {
+			$db->rollback();
 			return false;
 		}
 
-		return $db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
+		$r = $db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
+		$db->commit();
+		return $r;
 
 	}
 
@@ -568,6 +577,7 @@ class Link extends LCPBase {
 		$link_sent_date = $this->sent_date;
 		$link_published_date = $this->published_date;
 		$link_content_type = $db->escape($this->content_type);
+		$db->transaction();
 		if($this->id===0) {
 			$this->ip = $globals['user_ip'];
 			$link_ip = $db->escape($this->ip);
@@ -582,6 +592,7 @@ class Link extends LCPBase {
 
 		if (! $r) {
 			syslog(LOG_INFO, "failed insert of update in store_basic: $this->id ($r)");
+			$db->rollback();
 			return false;
 		}
 
@@ -598,6 +609,7 @@ class Link extends LCPBase {
 			$this->update_votes();
 			$this->update_comments();
 		}
+		$db->commit();
 		return true;
 	}
 
@@ -606,16 +618,13 @@ class Link extends LCPBase {
 
 		if ($this->date < time() - ($globals['time_enabled_votes'] + 3600)) return; // ALERT: Do not modify if votes are already closed
 
-		$db->transaction();
 		$count = $db->get_var("select count(*) from votes where vote_type='links' and vote_link_id=$this->id FOR UPDATE");
 		if ($count == $this->votes + $this->anonymous + $this->negatives) {
-			$db->commit();
 			return;
 		}
 
 		$db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
 		$rows = $db->affected_rows;
-		$db->commit();
 
 		if ($rows > 0) {
 			syslog(LOG_INFO, "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating");
@@ -824,7 +833,7 @@ class Link extends LCPBase {
 				$r = $db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
 
-			if (! $r || ! $db->commit()) {
+			if (! $r) {
 				syslog(LOG_INFO, "failed transaction in Link::insert_vote: $this->id ($r)");
 				$value = false;
 			} else {
@@ -842,6 +851,7 @@ class Link extends LCPBase {
 					$this->update_votes();
 				}
 			}
+			$db->commit();
 		} else {
 			$db->rollback();
 			$value = false;
@@ -861,15 +871,12 @@ class Link extends LCPBase {
 	function update_comments() {
 		global $db;
 
-		$db->transaction();
 		$count = $db->get_var("SELECT count(*) FROM comments WHERE comment_link_id = $this->id FOR UPDATE");
 		if ($count == $this->comments && $count !== false) {
-			$db->commit();
 			return true;
 		}
 
 		$db->query("update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id");
-		$db->commit();
 		$this->comments = $count;
 
 	}

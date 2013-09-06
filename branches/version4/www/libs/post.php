@@ -283,11 +283,12 @@ class Post extends LCPBase {
 			}
 		}
 
-		if ($r && $db->commit()) {
+		$c = $db->commit();
+
+		if ($r && $c) {
 			return $vote->value;
 		}
 
-        $db->rollback();
         syslog(LOG_INFO, "failed insert post vote for $this->id");
         return false;
 

@@ -7,6 +7,8 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class RGDB extends mysqli {
+	const POINT_KEY = "rgdb_savepoint_";
+
 	function __construct($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost') {
 		$this->dbuser = $dbuser;
 		$this->dbpassword = $dbpassword;
@@ -22,7 +24,10 @@ class RGDB extends mysqli {
 
 	function __destruct() {
 		// Rollback dangling transactions
-		$this->rollback();
+		if ($this->transactions > 0) {
+			parent::rollback();
+			syslog(LOG_INFO, "Dangling transactions, rollback forced ".$_SERVER['SCRIPT_NAME']);
+		}
 	}
 
 	function hide_errors() {
@@ -41,31 +46,65 @@ class RGDB extends mysqli {
 		return false;
 	}
 
+	function savepoint_name() {
+		if ($this->in_transaction > 1) {
+			return self::POINT_KEY.$this->in_transaction;
+		}
+		return '';
+	}
+	
 	function transaction() {
-		if ($this->in_transaction == 0) {
+		$this->in_transaction++;
+		//syslog(LOG_INFO, __FUNCTION__ ." ".$this->savepoint_name() . " ".$_SERVER['SCRIPT_NAME']);
+		if ($this->in_transaction == 1) {
 			$this->query('START TRANSACTION');
 		} else {
-			// syslog(LOG_INFO, "Transaction inside a transaction in ".$_SERVER['SCRIPT_NAME']);
+			$r = $this->query("SAVEPOINT ".$this->savepoint_name());
+			if (!$r) {
+				syslog(LOG_INFO, "Error SAVEPOINT ".$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
+			}
 		}
-		$this->in_transaction++;
 		return $this->in_transaction;
 	}
 
 	function commit() {
-		if ($this->in_transaction > 0) {
-			$this->in_transaction = 0;
-			return parent::commit();
+		if ($this->in_transaction <= 0) {
+			syslog(LOG_INFO, "Error COMMIT, transaction = 0 ".$_SERVER['SCRIPT_NAME']);
+			return false;
+		}
+		//syslog(LOG_INFO, __FUNCTION__ ." ".$this->savepoint_name() . " ".$_SERVER['SCRIPT_NAME']);
+
+		if ($this->in_transaction > 1) {
+			$r = $this->query('RELEASE SAVEPOINT '.$this->savepoint_name());
+		} else {
+			$r = parent::commit();
+		}
+
+		if (! $r) {
+			syslog(LOG_INFO, "Error commit/RELEASE SAVEPOINT ".$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
 		}
 		$this->in_transaction--;
-		return true;
+		return $r;
 	}
 
 	function rollback() {
-		if ($this->in_transaction > 0) {
-			parent::rollback();
-			$this->in_transaction = 0;
+		if ($this->in_transaction <= 0) {
+			syslog(LOG_INFO, "Error ROLLBACK, transaction = 0 ".' '.$_SERVER['SCRIPT_NAME']);
+			return false;
 		}
-		return $this->in_transaction;
+		//syslog(LOG_INFO, __FUNCTION__ ." ".$this->savepoint_name() . " ".$_SERVER['SCRIPT_NAME']);
+
+		if ($this->in_transaction > 1) {
+			$r = $this->query('ROLLBACK TO '.$this->savepoint_name());
+		} else {
+			$r = parent::rollback();
+		}
+
+		if (! $r) {
+			syslog(LOG_INFO, "Error rollback/ROLLBACK TO ".$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
+		}
+		$this->in_transaction--;
+		return $r;
 	}
 
 	// Reset the connection to the slave if it was using the master
