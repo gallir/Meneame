@@ -74,8 +74,8 @@ class GPlusOAuth extends OAuthBase {
 			do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);	
 		}
 
+		$db->transaction();
 		if (!$this->user_exists()) {
-			$db->transaction();
 			$this->url = $response['url'];
 			$this->names = $response['displayName'];
 			$this->avatar = $response['image']['url'];
