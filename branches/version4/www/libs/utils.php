@@ -1327,19 +1327,22 @@ function check_ip_noaccess($steps = 0) {
 
 	if ($steps < 2 && $cache_key) { // Don't check cache if >= 2
 		$matches = memcache_mget($cache_key);
-		if ($matches) {
-			reject_connection();
-		} elseif ($steps == 1) { // Only in cache
-			return true;
+		if ($matches !== false) {
+			if ($steps == 1 && $matches === 0) { // Only in cache and found it's 0
+				return true; // OK
+			} elseif ($matches > 0) {
+				reject_connection();
+			} 
 		}
+		return false; // Not found in cache
 	} 
 
 	$matches = $db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
 
+	if ($cache_key) {
+		memcache_madd ($cache_key, (int) $matches, $globals['check_ip_noaccess_cache']);
+	}
 	if ($matches) {
-		if ($cache_key) {
-			memcache_madd ($cache_key, $matches, $globals['check_ip_noaccess_cache']);
-		}
 		reject_connection();
 	}
 

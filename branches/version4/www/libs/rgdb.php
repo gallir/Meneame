@@ -116,7 +116,7 @@ class RGDB extends mysqli {
 
 		// Check the IP is not banned before doing anything more
 		if (! $this->ban_checked) {
-			check_ip_noaccess(1); // 1 == only cache
+			$this->ban_checked = check_ip_noaccess(1); // 1 == only cache
 		}
 
 		@parent::init();

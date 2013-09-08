@@ -9,7 +9,6 @@
 // Use the alternate server for api, if it exists
 //$globals['alternate_db_server'] = 'backend';
 
-$globals['max_load'] = 4;
 include('../config.php');
 $db->connect_timeout = 3;
 

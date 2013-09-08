@@ -11,7 +11,7 @@ $globals['no_auth'] = true;
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
 
-$globals['max_load'] = 2;
+$globals['max_load'] = 5;
 include('../config.php');
 
 // Free connections fast
