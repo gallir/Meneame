@@ -863,7 +863,7 @@ function memcache_mget ($key) {
 	// Use xcache vars if enabled and available
 	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
 		if (xcache_isset($key)) {
-			return unserialize(xcache_get($key));
+			return xcache_get($key);
 		} else {
 			return false;
 		}
@@ -875,13 +875,12 @@ function memcache_mget ($key) {
 }
 
 
-function memcache_madd ($key, $str, $expire=1) {
+function memcache_madd ($key, $value, $expire=1) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available
 	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		$str = serialize($str);
-		return xcache_set($key, $str, $expire);
+		return xcache_set($key, $value, $expire);
 	}
 
 	// Check for memcache
@@ -895,7 +894,7 @@ function memcache_mprint ($key) {
 	// Use xcache vars if enabled and available
 	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
 		if (xcache_isset($key)) {
-			echo unserialize(xcache_get($key));
+			echo xcache_get($key);
 			return true;
 		}
 		return false;

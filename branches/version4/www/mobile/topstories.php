@@ -30,7 +30,9 @@ $from_time = '"'.date("Y-m-d H:i:00", time() - 86400 * $range_values[$from]).'"'
 $sql = "SELECT SQL_CACHE link_id, link_votes+link_anonymous-link_negatives as votes FROM links WHERE  link_date > $from_time AND  link_status = 'published' ORDER BY votes DESC ";
 $time_link = "link_date > $from_time AND";
 
-if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
+if (!($memcache_key
+		&& ($rows = memcache_mget($memcache_key.'rows'))
+		&& ($links = unserialize(memcache_mget($memcache_key)))) ) {
 	// Itr's not in cache, or memcache is disabled
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
 	if ($rows == 0) {
@@ -39,7 +41,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {
 		memcache_madd($memcache_key.'rows', $rows, 1800);
-		memcache_madd($memcache_key, $links, 1800);
+		memcache_madd($memcache_key, serialize($links), 1800);
 	}
 }
 

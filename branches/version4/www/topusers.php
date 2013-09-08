@@ -64,9 +64,9 @@ switch ($sortby) {
 }
 
 $sql = "$select $from_where $order_by LIMIT $page_size";
-if (! ($users = memcache_mget($sql)) ) {
+if (! ($users = unserialize(memcache_mget($sql))) ) {
 	$users = $db->get_results($sql);
-	memcache_madd($sql, $users, 3600);
+	memcache_madd($sql, serialize($users), 3600);
 }
 
 

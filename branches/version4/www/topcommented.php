@@ -53,7 +53,9 @@ if ($globals['memcache_host'] && get_current_page() < 4) {
 	$memcache_key = 'topcommented_'.$globals['site_shortname'].$from.'_'.get_current_page();
 }
 
-if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
+if (!($memcache_key 
+		&& ($rows = memcache_mget($memcache_key.'rows'))
+		&& ($links = unserialize(memcache_mget($memcache_key)))) ) {
 	// It's not in memcache
 
 	$rows = -1; // min(100, $db->get_var("SELECT count(*) FROM links"));
@@ -61,7 +63,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 	$links = $db->get_results("$sql LIMIT $offset,$page_size");
 	if ($memcache_key) {
 		memcache_madd($memcache_key.'rows', $rows, 1800);
-		memcache_madd($memcache_key, $links, 1800);
+		memcache_madd($memcache_key, serialize($links), 1800);
 	}
 }
 

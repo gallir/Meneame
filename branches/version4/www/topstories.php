@@ -43,7 +43,9 @@ if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['mo
 	}
 }
 
-if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links = memcache_mget($memcache_key))) ) {
+if (!($memcache_key
+		&& ($rows = memcache_mget($memcache_key.'rows'))
+		&& ($links = unserialize(memcache_mget($memcache_key)))) ) {
 	// It's not in cache, or memcache is disabled
 	$rows = $db->get_var("SELECT count(*) FROM sub_statuses WHERE id = ".SitesMgr::my_id()." AND $time_link status = 'published'");
 	if ($rows > 0) {
@@ -52,7 +54,7 @@ if (!($memcache_key && ($rows = memcache_mget($memcache_key.'rows')) && ($links 
 			if ($range_values[$from] > 2) $ttl = 86400;
 			else $ttl = 1800;
 			memcache_madd($memcache_key.'rows', $rows, $ttl);
-			memcache_madd($memcache_key, $links, $ttl);
+			memcache_madd($memcache_key, serialize($links), $ttl);
 		}
 	}
 }
