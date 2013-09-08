@@ -875,7 +875,7 @@ function memcache_mget ($key) {
 }
 
 
-function memcache_madd ($key, $str, $expire=0) {
+function memcache_madd ($key, $str, $expire=1) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available
@@ -1313,20 +1313,20 @@ function check_ip_noaccess($steps = 0) {
 	global $globals, $db;
 
 	if ( empty($globals['check_ip_noaccess'])
-		|| ($only_in_cache && empty($globals['check_ip_noaccess_cache']))
+		|| ($steps == 1 && empty($globals['check_ip_noaccess_cache']))
 		|| ($globals['proxy_ip'] == $globals['user_ip'])
 		|| !empty($globals['skip_check_ip_noaccess'])
 		) {
 			return false;
 		}
 
-	if (! empty($globals['check_ip_noaccess_cache'])  && $globals['check_ip_noaccess_cache'] > 0) {
+	if (! empty($globals['check_ip_noaccess_cache']) && $globals['check_ip_noaccess_cache'] > 0) {
 		$cache_key = 'no_access_'.$globals['user_ip'];
 	} else {
 		$cache_key = false;
 	}
 
-	if ($steps < 2 && $cache_key) { // Don't cehck cache if >= 2
+	if ($steps < 2 && $cache_key) { // Don't check cache if >= 2
 		$matches = memcache_mget($cache_key);
 		if ($matches) {
 			reject_connection();
