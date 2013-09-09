@@ -85,7 +85,7 @@ class Xmlrpc_server extends IXR_Server {
 		$link = new Link;
 		$link->uri= preg_replace('/#[\w\-\_]+$/', '', $uri);
 		if( empty($uri) || !$link->read('uri') ) {
-			syslog(LOG_NOTICE, "Meneame: pingback, story does not exist: $pagelinkedto");
+			// syslog(LOG_NOTICE, "Meneame: pingback, story does not exist: $pagelinkedto");
 	  		return new IXR_Error(33, 'Story doesn\'t exist.');
 		}
 
@@ -95,7 +95,7 @@ class Xmlrpc_server extends IXR_Server {
 		}
 
 		if ($link->date < (time() - 86400*15) && $urlfrom['host'] != get_server_name()) {
-			syslog(LOG_NOTICE, "Meneame (".$globals['user_ip']."): pingback, story is too old: $pagelinkedto ($pagelinkedfrom )");
+			// syslog(LOG_NOTICE, "Meneame (".$globals['user_ip']."): pingback, story is too old: $pagelinkedto ($pagelinkedfrom )");
 	  		return new IXR_Error(33, 'Story is too old for pingbacks.');
 		}
 

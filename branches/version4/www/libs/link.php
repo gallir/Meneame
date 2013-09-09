@@ -1335,7 +1335,7 @@ class Link extends LCPBase {
 						//$this->thumb .= "/$chain/$this->id.jpg";
 						$this->thumb_status='local';
 					}
-					syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
+					// syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
 					if ($debug)
 						echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				} else {

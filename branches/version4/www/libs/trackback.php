@@ -85,7 +85,7 @@ class Trackback {
 			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();
-				syslog(LOG_NOTICE, "Meneame, pingback sent: $this->link, $this->url");
+				//syslog(LOG_NOTICE, "Meneame, pingback sent: $this->link, $this->url");
 				return true;
 			} else {
 				// Be quiet for pingbacks
@@ -130,7 +130,7 @@ class Trackback {
 			@fclose($fs);
 			$this->status='ok';
 			$this->store();
-			syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
+			// syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
 			return true;	
 		}
 		$this->status='error';	
