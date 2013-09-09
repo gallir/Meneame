@@ -1352,9 +1352,13 @@ function check_ip_noaccess($steps = 0) {
 }
 
 function reject_connection() {
-	global $globals;
+	global $globalsi, $db;
+
+	$db->close();
+
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;
+
 	usleep(300000);
 	header('HTTP/1.0 403 ' . 'Too many connections');
 	die;

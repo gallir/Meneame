@@ -25,11 +25,19 @@ class RGDB extends mysqli {
 	}
 
 	function __destruct() {
+		$this->close();
+	}
+
+	function close() {
+		if (! $this->connected) return;
+
 		// Rollback dangling transactions
 		if ($this->transactions > 0) {
 			parent::rollback();
 			syslog(LOG_INFO, "Dangling transactions, rollback forced ".$_SERVER['SCRIPT_NAME']);
 		}
+		parent::close();
+		$this->connected = false;
 	}
 
 	function hide_errors() {

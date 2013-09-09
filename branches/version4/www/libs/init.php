@@ -223,7 +223,10 @@ function shutdown() {
 
 	close_connection();
 
-	Link::store_clicks(); // It will check cache and increment link clicks counter
+	if ($db->connected) {
+		Link::store_clicks(); // It will check cache and increment link clicks counter
+		$db->close();
+	}
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
 		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
