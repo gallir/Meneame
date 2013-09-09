@@ -17,9 +17,11 @@ class RGDB extends mysqli {
 		$this->connected = false;
 		$this->in_transaction = 0;
 		$this->show_errors = true;
-		$this->ban_checked = false;
 		$this->initial_query = false;
 		$this->connect_timeout = 10;
+		// Check the IP is not banned before doing anything more
+		$this->ban_checked = check_ip_noaccess(1); // 1 == only cache
+
 	}
 
 	function __destruct() {
@@ -113,11 +115,6 @@ class RGDB extends mysqli {
 
 	function connect() {
 		if ($this->connected) return;
-
-		// Check the IP is not banned before doing anything more
-		if (! $this->ban_checked) {
-			$this->ban_checked = check_ip_noaccess(1); // 1 == only cache
-		}
 
 		@parent::init();
 		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, $this->connect_timeout);

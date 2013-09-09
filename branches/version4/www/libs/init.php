@@ -7,8 +7,11 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include mnminclude.'utils.php';
+
 $globals['start_time'] = microtime(true);
 $globals['now'] = intval($globals['start_time']);
+
+register_shutdown_function('shutdown');
 
 if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 	check_load($globals['max_load']);
@@ -19,7 +22,6 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 mb_internal_encoding('UTF-8');
 global $globals;
 
-register_shutdown_function('shutdown');
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
@@ -115,7 +117,7 @@ $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('ant
 
 // autoloaded clasess
 // Should be defined after mnminclude
-// and before de database
+// and before the database
 function __autoload($class) {
 	static $classfiles = array(
 				'SitesMgr' => 'sites.php',
@@ -160,6 +162,15 @@ function __autoload($class) {
 		@include_once($class.".php");
 	}
 }
+
+// Allows a script to define to use the alternate server
+if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']]);
+} else {
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
+	$db->persistent = $globals['mysql_persistent'];
+}
+
 
 function haanga_bootstrap()
 {
@@ -207,14 +218,6 @@ require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 
-// Allows a script to define to use the alternate server
-if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
-	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']]);
-} else {
-	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
-	$db->persistent = $globals['mysql_persistent'];
-}
-
 function shutdown() {
 	global $globals, $current_user, $db;
 
@@ -226,7 +229,8 @@ function shutdown() {
 		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
 		else $script = $_SERVER['SCRIPT_NAME'];
 
-		if ($current_user->user_id > 0) $user = $current_user->user_login;
+		if (!empty($globals['ip_blocked'])) $user = 'B'; // IP is banned
+		elseif ($current_user->user_id > 0) $user = $current_user->user_login;
 		else $user = '-';
 
 		if ($globals['start_time'] > 0) {
