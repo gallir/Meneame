@@ -1352,9 +1352,9 @@ function check_ip_noaccess($steps = 0) {
 }
 
 function reject_connection() {
-	global $globalsi, $db;
+	global $globals, $db;
 
-	$db->close();
+	if (is_object($db)) $db->close();
 
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;

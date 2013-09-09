@@ -8,6 +8,7 @@
 
 include mnminclude.'utils.php';
 
+global $globals;
 $globals['start_time'] = microtime(true);
 $globals['now'] = intval($globals['start_time']);
 
@@ -20,7 +21,6 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 // Basic initialization
 
 mb_internal_encoding('UTF-8');
-global $globals;
 
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
@@ -223,7 +223,7 @@ function shutdown() {
 
 	close_connection();
 
-	if ($db->connected) {
+	if (is_object($db) && $db->connected) {
 		Link::store_clicks(); // It will check cache and increment link clicks counter
 		$db->close();
 	}
