@@ -88,9 +88,6 @@ function do_banner_top_news() {
 
 function do_banner_story() {
 	global $globals, $current_user;
-	if ($globals['link'] && $globals['kalooga_categories'] && in_array($globals['link']->category, $globals['kalooga_categories']) ) {
-		$globals['kalooga_story'] = true;
-	}
 	if ($globals['external_ads'] && $globals['ads'] && $globals['link']) {
 		Haanga::Safe_Load('private/ad-middle.html');
 	}

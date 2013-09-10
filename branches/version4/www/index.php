@@ -138,6 +138,8 @@ exit(0);
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
+	if ($globals['mobile']) return;
+
 	$items = array();
 	if (isset($current_user->has_personal)) {
 		$items[] = array('id' => 7, 'url' => '', 'title' => _('personal'));

@@ -162,6 +162,7 @@ var mnm_start_time=(new Date()).getTime()
 
 </div><!--header-top-->
 
+{% if ! globals.link OR ! globals.mobile %}
 <div id="header-center">
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('menéame') %}">{% trans _('menéame') %}</a>
   <div class="edname">
@@ -216,6 +217,7 @@ var mnm_start_time=(new Date()).getTime()
 	</ul>
 
 </div><!--header-menu01-->
+{% endif %}
 </div><!--header-->
 
 

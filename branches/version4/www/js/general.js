@@ -800,9 +800,14 @@ $(document).ready(function () {
 		}
 
 		{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
-		if ($('#headerwrap').css('position') == 'fixed') {
-			var scroll = $(window).scrollTop();
-			if (scroll > 80) $(window).scrollTop(scroll-80);
+		if (window.location.hash && $('#header-top').css('position') == 'fixed') {
+			setTimeout(function () { 
+					var scroll = $(window).scrollTop();
+					var h = $('#header-top').height();
+					if (scroll >= h) {
+						$(window).scrollTop(scroll-h);
+					}
+			}, 1);
 		}
 	}
 	$.ajaxSetup({ cache: false });

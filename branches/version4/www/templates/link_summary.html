@@ -150,14 +150,11 @@
 	{% endif %}
 	{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
-	{% if globals.link || type == 'short' %}
-		{% if type!='short' %}
+	{% if globals.link || type != 'short' %}
 			<div class="news-details">
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
-				{% if not globals.mobile %}
-					<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
-				{% endif %}
+				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">
@@ -176,17 +173,16 @@
 
 				{% if not globals.mobile %}
 					<strong><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
+					{% include "share.html" %}
 				{% endif %}
-
-				{% include "share.html" %}
 
 
 			{% endif %}
 			</div>
 		</div>
 
-		{% endif %}
 	{% endif %}
+
 
 	<div class="news-details main">
 		<span class="comments-counter"><a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span>{% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
@@ -216,6 +212,8 @@
 
 
 	{% exec do_banner_story as dummy %}
+
+
 	{% if self.best_comment %}
 		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 25px 7px 25px; padding: 4px; overflow:hidden">
 			<a  class="tooltip c:{{ self.best_comment.comment_id }}" href="{{ self.relative_permalink }}/000{{ self.best_comment.comment_order }}">

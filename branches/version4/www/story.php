@@ -411,6 +411,8 @@ exit(0);
 function print_story_tabs($option) {
 	global $globals, $db, $link;
 
+	if ($globals['mobile']) return;
+
 	$active = array();
 	$active[$option] = ' class="selected"';
 

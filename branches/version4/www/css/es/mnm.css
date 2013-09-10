@@ -247,7 +247,7 @@ font-family:'Open Sans Condensed', 'Helvetica Neue', Arial, Helvetica, sans-seri
 font-size:14px;
 color:#fff;
 margin-right:10px;
-margin-top:1px;
+margin-top:3px;
 }
 
 #header-top .userlogin{
@@ -449,7 +449,7 @@ position:relative;
 background:#f9f9f9;
 border:#ddd 1px solid;
 padding: 5px 5px;
-margin: 15px 0 10px 0;
+margin: 5px 0 10px 0;
 vertical-align:middle;
 overflow: hidden;
 }

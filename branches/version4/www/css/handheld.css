@@ -5,6 +5,32 @@ font-size: small;
 background: #fff;
 }
 
+#header{
+min-width: 0;
+}
+
+#header-top {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+z-index: 9999;
+}
+
+#header-center {
+margin-top: 25px;
+}
+
+#header-top .logo-mnm{
+margin-left:5px;
+}
+
+#header-center .logo-eli{
+margin-left:5px;
+margin-right:5px;
+width:45px;
+}
+
 .sneaker {
 font-size: small;
 }
@@ -33,11 +59,6 @@ clear: both;
 width: 470px;
 }
 
-
-#header{
-min-width: 0;
-}
-
 #wrap {
 min-width: 0;
 max-width: auto;
@@ -50,16 +71,6 @@ margin-right:2px;
 
 #searchform #searchbox {
 width:100px;
-}
-
-#header-top .logo-mnm{
-margin-left:5px;
-}
-
-#header-center .logo-eli{
-margin-left:5px;
-margin-right:5px;
-width:45px;
 }
 
 #header-center .edname{
@@ -128,6 +139,10 @@ margin: 0;
 
 .warn {
 margin-left: 80px;
+}
+
+.commentform.warn {
+margin-left: 0;
 }
 
 .genericform {
