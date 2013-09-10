@@ -108,6 +108,9 @@ function print_result() {
 				default:
 					$obj = Link::from_db($id);
 			}
+
+			if (!$obj) continue;
+
 			$obj->basic_summary = true;
 			switch ($_REQUEST['w']) {
 				case 'posts':
