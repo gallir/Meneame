@@ -142,12 +142,11 @@ class Comment extends LCPBase {
 		
 		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if (! $order) {
-			$db->commit();
 			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->c_order");
 			return false;
 		}
 		if ($order != $this->c_order) {
-			$db->query("update comments set comment_order=$this->order where comment_id=$this->id");
+			$db->query("update comments set comment_order=$order where comment_id=$this->id");
 			$rows = $db->affected_rows;
 			if ($rows > 0) {
 				syslog(LOG_INFO, "Fixing order for $this->id, $this->c_order -> $order");
