@@ -177,7 +177,7 @@ function report_problem_no(frm, user, id) {
 }
 
 function report_problem_yes(frm, user, id) {
-	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key	+ "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	var url = base_url + "backend/problem.php?" + content;
 	$.getJSON(url,
 		 function(data) {
@@ -195,6 +195,31 @@ function get_votes(program,type,container,page,id) {
 	$('#'+container).load(url);
 	reportAjaxStats('html', program);
 }
+
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	} else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}
+
 
 // This function report the ajax request to stats events if enabled in your account
 // http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
@@ -380,7 +405,7 @@ Tooltips functions
 	}
 })(jQuery)
 /**
- *  Based on jqDialog from:
+ *	Based on jqDialog from:
  *
 	Kailash Nadh, http://plugins.jquery.com/project/jqDialog
 **/
@@ -554,7 +579,7 @@ var mDialog = new function() {
 							function() {
 								mDialog.close();
 							});
-		this.divHeader.append(  this.btClose );
+		this.divHeader.append(	this.btClose );
 		this.divBox.append(this.divHeader).append( this.divContent ).append(
 			this.divOptions.append(this.btNo).append(this.btCancel).append(this.btOk).append(this.btYes)
 		);
@@ -843,7 +868,7 @@ $(document).ready(function () {
 		},
 
 		check_files: function(files, area) {
-			if (typeof File != "undefined"  && files != undefined) {
+			if (typeof File != "undefined"	&& files != undefined) {
 				for (var i = 0; i < files.length; i++) {
 					// File type control
 					if (files[i].type.length > 0 && !files[i].type.match('image.*')) {
@@ -1119,35 +1144,67 @@ var notifier = new function () {
 	}
 
 	this.update = function() {
-		var next_check;
+		var next_update;
+		var now;
 
-		$.getJSON(base_url+'backend/notifications.json.php?totals'+"&check="+check_counter+"&has_focus="+has_focus,
-			function (data) {
-				if (current_count == data.total) return;
-				check_counter = 0;
-				document.title = document.title.replace(/^\(\d+\) /, '');
-				area.html(data.total);
-				$('#p_c_counter').html(data.posts);
-				if (data.total > 0) {
-					area.addClass('nonzero');
-					document.title = '('+data.total+') ' + document.title;
-				} else {
-					area.removeClass('nonzero');
-				}
-				current_count = data.total;
-			});
-
-		next_update = base_update;
-		if (! has_focus) {
-			next_update += check_counter * 1000; // Increment one second for every check
+		now = new Date().getTime();
+		last_check = readCookie("notifier_"+user_id+"_last_check");
+		if (last_check == null || now - last_check > base_update) {
+			createCookie("notifier_"+user_id+"_last_check", now, 1);
+			notifier.connect();
+		} else {
+			notifier.update_panel();
 		}
-		check_counter++;
 
-		if (! is_mobile && check_counter < 176) { // 5 hours
+		if (! has_focus) {
+			next_update = 5000;
+		} else {
+			next_update = 2000;
+		}
+
+
+		if ( (is_mobile && check_counter < 5) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { // 6 hours
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
 		}
+	}
+
+	this.update_panel = function() {
+		var count;
+		var posts;
+
+		count = readCookie("notifier_"+user_id+"_count");
+		if (count == current_count) return;
+		posts = readCookie("notifier_"+user_id+"_posts");
+
+		check_counter = 0;
+		document.title = document.title.replace(/^\(\d+\) /, '');
+		area.html(count);
+		$('#p_c_counter').html(posts);
+		if (count > 0) {
+			area.addClass('nonzero');
+			document.title = '('+count+') ' + document.title;
+		} else {
+			area.removeClass('nonzero');
+		}
+		current_count = count;
+	}
+
+	this.connect = function() {
+		var next_check;
+
+		check_counter++;
+		$.getJSON(base_url+'backend/notifications.json.php?totals'+"&check="+check_counter+"&has_focus="+has_focus,
+			function (data) {
+				var now;
+				now = new Date().getTime();
+				createCookie("notifier_"+user_id+"_last_check", now, 1);
+				if (current_count == data.total) return;
+				createCookie("notifier_"+user_id+"_count", data.total, 1);
+				createCookie("notifier_"+user_id+"_posts", data.posts, 1);
+				notifier.update_panel();
+			});
 	}
 
 	this.init = function () {
