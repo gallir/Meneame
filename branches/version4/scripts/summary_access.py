@@ -61,6 +61,7 @@ if __name__ == '__main__':
 	group.add_argument("-u", dest="what", action="store_const", const="user", help="Show user summary")
 	group.add_argument("-s", dest="what", action="store_const", const="script", help="Show script summary [fullname required]")
 	group.add_argument("-n", dest="what", action="store_const", const="server", help="Show server/hostname summary")
+	group.add_argument("-w", dest="what", help="Show a given log category")
 
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("--hours", "-H", type=int, default=1, help="Hours to analyze since the current time")

@@ -47,15 +47,15 @@ def main():
 	""" Delete old entries """
 	c = DBM.cursor('update')
 	c.execute("delete from rss where date < date_sub(now(), interval %s day)", (dbconf.blogs['days_to_keep'],))
-	c.close()
 	DBM.commit()
+	c.close()
 
 	users = set()
 	news = set()
 	blogs = get_candidate_blogs(dbconf.blogs['days_published'], dbconf.blogs['min_karma'])
 	for o in blogs:
 		entries = o.read_feed()
-		time.sleep(5)
+		time.sleep(3)
 		if entries > 0:
 			users.add(o.user)
 			news.add(o)

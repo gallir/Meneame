@@ -93,11 +93,11 @@ def main():
 			#print sql
 			c.execute(sql)
 			#print k, l, distances[k][l]
-			if ops % 1000 == 0:
+			if ops % 100 == 0:
 				DBM.commit()
-				time.sleep(0.05)
-	c.close()
+				time.sleep(0.01)
 	DBM.commit()
+	c.close()
 	
 
 

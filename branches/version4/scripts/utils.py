@@ -43,21 +43,31 @@ def follow_log(thefile, show_bad=False):
 
 def parse_logline(line):
 	""" This works with the following rsyslog format template 
-	$template ReducedLog,"%timereported%%msg%\n"
+	$template ReducedLog,"%timereported% %fromhost-ip% %msg%\n"
 	and used as:
 	if $programname == 'meneame_accesslog' then /mnt/meneame_access.log;ReducedLog
 	& ~
 	"""
 
 	fields = line.split()
-	if len(fields) == 8:
+	if len(fields) >= 9:
 		log = dict()
-		log['_date'] = fields[0] + " " + fields[1] + " " + fields[2]
-		log['ip'] = fields[3]
-		log['user'] = fields[4]
-		log['time'] = float(fields[5])
-		log['server'] = fields[6]
-		log['script'] = fields[7]
+		try:
+			log['_date'] = fields[0] + " " + fields[1] + " " + fields[2]
+			log['server_ip'] = fields[3]
+			log['ip'] = fields[4]
+			log['user'] = fields[5]
+
+			if fields[5] == 'B':
+				log['_blocked'] = True
+			else: log['_blocked'] = False
+
+			log['time'] = float(fields[6])
+			log['server'] = fields[7]
+			log['script'] = fields[8]
+		except (ValueError, TypeError) as e:
+			print >> sys.stderr, "Bad line in parse_logline", e, line
+			return None
 		return log
 	else:
 		return None
@@ -85,9 +95,14 @@ def time_position_log(logfile, minutes):
 		line = logfile.readline()
 		if not line: 
 			top = pos
-			break
+			continue
 		log = parse_logline(line)
-		log_date = datetime.datetime.strptime(log["_date"], "%b %d %H:%M:%S")
+		try:
+			log_date = datetime.datetime.strptime(log["_date"], "%b %d %H:%M:%S")
+		except (ValueError, TypeError) as e:
+			print >> sys.stderr, "Bad line in time_position_log:", e, line
+			base = pos
+			continue
 		if log_date.year < 2000:
 			if log_date.month <= now.month:
 				log_date = log_date.replace(year=now.year)
@@ -156,10 +171,14 @@ class BaseBlogs(object):
 			doc = feedparser.parse(self.feed, modified=modified)
 		except (urllib2.URLError, urllib2.HTTPError, UnicodeEncodeError), e:
 			print "connection failed (%s) %s" % (e, self.feed)
+			DBM.commit()
+			c.close()
 			return False
 
 		if not doc.entries or doc.status == 304:
 			print "Not modified"
+			DBM.commit()
+			c.close()
 			return entries
 
 		for e in doc.entries:
@@ -241,8 +260,8 @@ class BaseBlogs(object):
 		if self.title: self.title = self.title[0:125]
 		else: self.title = ""
 		c.execute("update blogs set blog_feed = %s, blog_title = %s, blog_feed_checked = now() where blog_id = %s", (self.feed, self.title, self.id))
-		c.close()
 		DBM.commit()
+		c.close()
 
 
 	def is_banned(self):
