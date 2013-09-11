@@ -208,16 +208,14 @@
 
 	</div>
 
-
-	{% exec do_banner_story as dummy %}
-
-
 	{% if self.best_comment %}
 		<div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 25px 7px 25px; padding: 4px; overflow:hidden">
 			<a  class="tooltip c:{{ self.best_comment.comment_id }}" href="{{ self.relative_permalink }}/000{{ self.best_comment.comment_order }}">
 			<strong>{{ self.best_comment.comment_order }}</strong></a>:&nbsp;{% exec text_to_summary self.best_comment.content 200 %}
 		</div>
 	{% endif %}
+
+	{% exec do_banner_story as dummy %}
 	</div>
 </div>
 

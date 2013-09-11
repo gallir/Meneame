@@ -103,7 +103,6 @@ do_banner_top_news();
 if ($page == 1 && ($top = Link::top())) {
 	$vars = array('self' => $top);
 	Haanga::Load("link_top.html", $vars);
-	$counter = 1;
 }
 
 
@@ -121,6 +120,7 @@ $sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE
 
 $links = $db->object_iterator($sql, "Link");
 if ($links) {
+	$counter = 0;
 	foreach($links as $link) {
 		$link->print_summary();
 		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
