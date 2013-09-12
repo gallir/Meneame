@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Comment extends LCPBase {
@@ -364,7 +364,7 @@ class Comment extends LCPBase {
 	function same_text_count($min=30) {
 		global $db;
 		// WARNING: $db->escape(clean_lines($comment->content)) should be the sama as in libs/comment.php (unify both!)
-		return (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author  and comment_date > date_sub(now(), interval $min minute) and comment_content = '".$db->escape(clean_lines($this->content))."'");
+		return (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author	and comment_date > date_sub(now(), interval $min minute) and comment_content = '".$db->escape(clean_lines($this->content))."'");
 	}
 
 	function get_links() {
@@ -571,7 +571,7 @@ class Comment extends LCPBase {
 			if ($comment->banned) $same_links_count *= 2;
 			$same_count += $same_links_count;
 		} else {
-			$comment_count  = $same_count = 0;
+			$comment_count	= $same_count = 0;
 		}
 
 		$comment_limit = round(min($current_user->user_karma/6, 2) * 2.5);
@@ -637,15 +637,19 @@ class Comment extends LCPBase {
 	function update_conversation() {
 		global $db, $globals, $current_user;
 
-		// Select users previous conversation to decrease in the new system
-		$tos = $db->get_col("select conversation_user_to from conversations where conversation_type='comment' and conversation_from=$this->id and conversation_time > date_sub(now(), interval 5 minute)");
-		if ($tos) {
-			foreach ($tos as $to) {
-				User::add_notification($to, 'comment', -1);
-			}
+		$previous_ids = $db->get_col("select distinct conversation_to from conversations where conversation_type='comment' and conversation_from=$this->id");
+		if ($previous_ids) {
+			// Select users previous conversation to decrease in the new system
+			$previous_users = $db->get_col("select distinct conversation_user_to from conversations where conversation_type='comment' and conversation_from=$this->id");
+		} else {
+			$previous_users = array();
 		}
 
-		$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id");
+		$seen_users = array();
+		$seen_ids = array();
+		$refs = 0;
+
+
 		$orders = array();
 		if (preg_match_all('/(?:^|\W)#(\d+)\b/', $this->content, $matches)) {
 			foreach ($matches[1] as $order) {
@@ -653,9 +657,7 @@ class Comment extends LCPBase {
 			}
 		}
 		if (!$this->date) $this->date = time();
-		$references = array();
-		$user_references = array();
-		$refs = 0;
+
 		foreach ($orders as $order => $val) {
 			if ($refs > 10) { // Limit the number of references to avoid abuses/spam
 				syslog(LOG_NOTICE, "Meneame: too many references in comment: $this->id ($current_user->user_login)");
@@ -666,23 +668,32 @@ class Comment extends LCPBase {
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
-			if ($to) {
-				$refs++;
-				if (!$references[$to->id]) {
-					if (User::friend_exists($to->user_id, $this->author) < 0 
-						|| $to->user_id == $this->author
-						|| $user_references[$to->user_id]) {
-						$date = 0;
-					} else {
-						$date = $this->date;
-						User::add_notification($to->user_id, 'comment');
-					}
+			if (! $to > 0) continue;
 
-					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($date), $this->id, $to->id)");
-					$references[$to->id] = true;
-					$user_references[$to->user_id] = true;
+			if (! in_array($to->id, $previous_ids) && ! in_array($to->id, $seen_ids)) {
+				if (User::friend_exists($to->user_id, $this->author) >= 0 
+						&& $to->user_id != $this->author
+						&& ! in_array($to->user_id, $seen_users)  // Limit the number of references to avoid abuses/spam and multip
+						&& ! in_array($to->user_id, $previous_users)) {
+					User::add_notification($to->user_id, 'comment');
 				}
+
+				$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
 			}
+			$refs++;
+			if (! in_array($id, $seen_ids)) $seen_ids[] = $to->id;
+			if (! in_array($to, $seen_users)) $seen_users[] = $to->user_id;
+		}
+
+		$to_delete = array_diff($previous_ids, $seen_ids);
+		if ($to_delete) {
+			$to_delete = implode(',', $to_delete);
+			$db->query("delete from conversations where conversation_type='comment' and conversation_from=$this->id and conversation_to in ($to_delete)");
+		}
+
+		$to_unnotify = array_diff($previous_users, $seen_users);
+		foreach ($to_unnotify as $to) {
+			User::add_notification($to, 'comment', -1);
 		}
 	}
 

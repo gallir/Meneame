@@ -55,7 +55,12 @@ class User {
 	static function add_notification($id, $type, $value = 1) {
 		global $db;
 		if (! is_null(User::get_notification($id, $type))) {
-			return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
+			if ($value < 0) {
+				$value = abs($value);
+				return $db->query("update notifications set counter = counter-$value where user=$id and type = '$type' and counter >= $value");
+			} else {
+				return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
+			}
 		}
 		return false;
 	}

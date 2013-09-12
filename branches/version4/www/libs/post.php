@@ -324,20 +324,22 @@ class Post extends LCPBase {
 	function update_conversation() {
 		global $db, $globals;
 
-		// Select users previous conversation to decrease in the new system
-		$tos = $db->get_col("select conversation_user_to from conversations where conversation_type='post' and conversation_from=$this->id and conversation_time > date_sub(now(), interval 15 minute)");
-		if ($tos) {
-			foreach ($tos as $to) {
-				User::add_notification($to, 'post', -1);
-			}
+		$previous_ids = $db->get_col("select distinct conversation_to from conversations where conversation_type='post' and conversation_from=$this->id");
+		if ($previous_ids) {
+			// Select users previous conversation to decrease in the new system
+			$previous_users = $db->get_col("select distinct conversation_user_to from conversations where conversation_type='post' and conversation_from=$this->id");
+		} else {
+			$previous_users = array();
 		}
 
-		$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
-		$references = array();
+		//$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id");
+		$seen_users = array();
+		$seen_ids = array();
+		$refs = 0;
+		if (!$this->date) $this->date = time();
+
 		if (preg_match_all(Post::REF_PREG, $this->content, $matches)) {
-			$refs = 0;
 			foreach ($matches[2] as $reference) {
-				if (!$this->date) $this->date = time();
 				$user = $db->escape(preg_replace('/,\d+$/', '', $reference));
 				$to = $db->get_var("select user_id from users where user_login = '$user'");
 				$id = intval(preg_replace('/[^\s]+,(\d+)$/', '$1', $reference));
@@ -346,25 +348,34 @@ class Post extends LCPBase {
 				if (! $id > 0) {
 					$id = (int) $db->get_var("select post_id from posts where post_user_id = $to and post_date < FROM_UNIXTIME($this->date) order by post_date desc limit 1");
 				}
-				if (! $references[$id] ) {
-					// If the user is ignored, put and old date in order not to show as "new conversations".
-					if (User::friend_exists($to, $this->author) < 0
-							|| $refs > 10
-							|| $this->author == $to // Don't show notification for the same user
-							|| $references[$user] ) { // Limit the number of references to avoid abuses/spam and multip
-						$date = 0;
-					} else {
-						$date = $this->date;
+				if (! in_array($id, $previous_ids) && ! in_array($id, $seen_ids)) {
+					if (User::friend_exists($to, $this->author) >= 0
+							&& $refs < 10
+							&& $this->author != $to // Don't show notification for the same user
+							&& ! in_array($to, $seen_users)  // Limit the number of references to avoid abuses/spam and multip
+							&& ! in_array($to, $previous_users)) {
 						User::add_notification($to, 'post');
 					}
+					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
 
-					$db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($date), $this->id, $id)");
-					$references[$id] = true;
-					$references[$user] = true;
-					$refs++;
 				}
+				$refs++;
+				if (! in_array($id, $seen_ids)) $seen_ids[] = $id;
+				if (! in_array($to, $seen_users)) $seen_users[] = $to;
 			}
 		}
+
+		$to_delete = array_diff($previous_ids, $seen_ids);
+		if ($to_delete) {
+			$to_delete = implode(',', $to_delete);
+			$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id and conversation_to in ($to_delete)");
+		}
+
+		$to_unnotify = array_diff($previous_users, $seen_users);
+		foreach ($to_unnotify as $to) {
+			User::add_notification($to, 'post', -1);
+		}
+			
 	}
 
 	function normalize_content() {
