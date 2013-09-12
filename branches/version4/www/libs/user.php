@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 global $globals;
@@ -335,19 +335,6 @@ class User {
 		avatars_remove($this->id);
 		geo_delete('user', $this->id);
 
-		// Delete relationships
-		$db->query("DELETE FROM friends WHERE friend_type='manual' and (friend_from = $this->id or friend_to = $this->id)");
-		// Delete preferences
-		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
-		// Delete posts' conversations
-		$db->query("delete from conversations where conversation_type = 'post' and conversation_user_to = $this->id");
-		$db->query("delete from conversations where conversation_type = 'post' and conversation_from in (select post_id from posts where post_user_id = $this->id)");
-		// Delete posts
-		$db->query("delete from posts where post_user_id = $this->id");
-		// Delete user's meta
-		$db->query("delete from annotations where annotation_key = 'user_meta-$this->id'");
-
-
 		$this->username = '--'.$this->id.'--';
 		$this->email = "$this->id@disabled";
 		$this->url = '';
@@ -360,7 +347,37 @@ class User {
 		$this->phone = '';
 		$this->avatar = 0;
 		$this->karma = 6;
-		return $this->store();
+		$this->store();
+		syslog(LOG_INFO, "User disabled: $this->id");
+
+		// Delete relationships
+		$db->query("DELETE FROM friends WHERE friend_type='manual' and (friend_from = $this->id or friend_to = $this->id)");
+
+		/*
+		// Delete posts' conversations
+		$db->query("delete from conversations where conversation_type = 'post' and conversation_user_to = $this->id");
+
+		$db->transaction();
+		$conv = $db->get_col("select post_id from posts where post_user_id = $this->id");
+		if ($conv) {
+			foreach ($conv as $id) {
+				$db->query("delete from conversations where conversation_type = 'post' and conversation_from = $id");
+			}
+		}
+		$db->commit();
+		*/
+
+		// Delete posts
+		$db->query("delete from posts where post_user_id = $this->id");
+		// Delete user's meta
+		$db->query("delete from annotations where annotation_key = 'user_meta-$this->id'");
+
+		// Delete preferences
+		$db->query("DELETE FROM prefs WHERE pref_user_id = $this->id");
+
+		return true;
+
+
 	}
 
 	function store($full_save = true) {

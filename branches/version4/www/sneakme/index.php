@@ -102,7 +102,7 @@ switch ($argv[0]) {
 		} else {
 			// User is specified
 			$user->username = $db->escape($argv[0]);
-			if(!$user->read()) {
+			if(!$user->read() || $user->disabled()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
 			switch($argv[1]) {
