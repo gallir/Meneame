@@ -133,7 +133,7 @@ function print_answers($id, $level, $visited = false) {
 			$answer->print_summary($link);
 			if ($level > 0) {
 				$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
-				array_merge($visited, $res);
+				$visited = array_merge($visited, $res);
 			}
 			$printed[] = $answer->id;
 			$visited[] = $answer->id;
@@ -141,7 +141,7 @@ function print_answers($id, $level, $visited = false) {
 		}
 		echo "</ol>\n";
 		echo '</div>'."\n";
-		if (! $level > 0) {
+		if ($level == 0) {
 			$ids = implode(',', $printed);
 			Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));
 		}
