@@ -875,7 +875,7 @@ function memcache_mget ($key) {
 }
 
 
-function memcache_madd ($key, $value, $expire=1) {
+function memcache_madd ($key, $value, $expire=3600) {
 	global $memcache, $globals;
 
 	// Use xcache vars if enabled and available

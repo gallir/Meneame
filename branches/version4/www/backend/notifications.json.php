@@ -24,10 +24,10 @@ if (isset($_GET['totals'])) {
 }
 
 
-$cache_key = 'notifications_'.$current_user->user_id.'_'.$do_totals;
-if(memcache_mprint($cache_key)) {
-    exit(0);
-}
+// $cache_key = 'notifications_'.$current_user->user_id.'_'.$do_totals;
+// if(memcache_mprint($cache_key)) {
+//     exit(0);
+// }
 
 $notifications = new stdClass();
 
@@ -81,6 +81,6 @@ if ($do_totals) {
 	$response = json_encode($objects);
 }
 
-memcache_madd($cache_key, $response, 2);
+// memcache_madd($cache_key, $response, 2);
 echo $response;
 

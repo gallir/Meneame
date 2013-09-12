@@ -1149,7 +1149,7 @@ var notifier = new function () {
 
 		now = new Date().getTime();
 		last_check = readCookie("notifier_"+user_id+"_last_check");
-		if (last_check == null || now - last_check > base_update) {
+		if (last_check == null || now - last_check > base_update + check_counter * 20) {
 			createCookie("notifier_"+user_id+"_last_check", now, 1);
 			notifier.connect();
 		} else {
