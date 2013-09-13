@@ -13,7 +13,15 @@ $db->query("delete from users where user_date < date_sub(now(), interval 12 hour
 echo "STARTING delete old bad links\n";
 // Delete old bad links
 $minutes = intval($globals['draft_time'] / 60);
-$db->query("delete from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0");
+
+$ids = $db->get_col("select link_id from links where link_status='discard' and link_date > date_sub(now(), interval 24 hour) and link_date < date_sub(now(), interval $minutes minute) and link_votes = 0 order by link_id asc");
+
+if ($ids) {
+	$ids_str = implode(',', $ids);
+	echo "Deleting $ids_str\n";
+	$db->query("delete from links where link_id in ($ids_str)");
+}
+
 
 $sites = SitesMgr::get_active_sites();
 
@@ -36,7 +44,7 @@ function discard($site_id) {
 	echo "STARTING discard for $site_id\n";
 
 	// Discard links
-	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) )");
+	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) ) order by link_id asc");
 
 	//$db->debug();
 	if( !$negatives) {
@@ -161,7 +169,7 @@ function depublish($site_id) {
 				foreach ($ids as $id) {
 					$u = new User($id);
 					if ($u->read) {
-						$u->add_karma(0.4, _('Negativo a retirada de portada'));
+						$u->add_karma(0.3, _('Negativo a retirada de portada'));
 					}
 				}
 

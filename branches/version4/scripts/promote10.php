@@ -137,11 +137,11 @@ function promote($site_id) {
 		if (! DEBUG) {
 			// $db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
 			$db->query("update sub_categories set calculated_coef = $meta_coef[$m] where id = $site_id and category = $m");
-		}
 
-		$log = new Annotation("metas-coef-$site_id");
-		$log->text = serialize($meta_coef);
-		$log->store();
+			$log = new Annotation("metas-coef-$site_id");
+			$log->text = serialize($meta_coef);
+			$log->store();
+		}
 	}
 
 	echo "DONE METAS\n";
@@ -190,7 +190,7 @@ function promote($site_id) {
 		foreach($links as $dblink) {
 			$link = new Link;
 			$link->id=$dblink->link_id;
-			$db->transaction();
+			// $db->transaction();
 			$link->read();
 			echo "START WITH $link->uri\n";
 			$user = new User;
@@ -327,13 +327,14 @@ function promote($site_id) {
 				if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later
 				else $changes = 2; // increase
 				if (! DEBUG) {
-					$link->store_basic();
 					$link->save_annotation('link-karma');
+					// Update relevant values
+					$db->query("UPDATE links set link_karma=$link->karma, link_votes_avg=$link->votes_avg WHERE link_id=$link->id");
 				} else {
 					$link->message .= "To store: previous: $link->old_karma new: $link->karma<br>\n";
 				}
 			}
-			$db->commit();
+			// $db->commit();
 
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 				echo "Adding $link->id to thumb queue\n";
@@ -450,8 +451,11 @@ function publish($link) {
 	$link->status = 'published';
 	$link->date = $link->published_date=time();
 
+	$db->transaction();
 	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
+	// Publish to all sub sites: this and children who import the link category
 	SitesMgr::deploy($link);
+	$db->commit();
 
 	// Increase user's karma
 	$user = new User($link->author);
@@ -465,8 +469,8 @@ function publish($link) {
 	$link->save_annotation('link-karma');
 
 
-	// Publish to all sub sites: this and children who import the link category
 	$my_id = SitesMgr::my_id();
+
 
 	// Get all sites that are "children" and try to post links
 	// And that "import" the link->category

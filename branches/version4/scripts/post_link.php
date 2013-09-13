@@ -42,14 +42,15 @@ function do_posts($link) {
 	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
 	// echo "Posting $link->uri: ".$globals['server_name']. "--".$globals["site_shortname"]."---". $globals['twitter_consumer_key'] ."\n"; die;
+	$url = $link->get_permalink();
 	if ($globals['url_shortener']) {
 		$short_url = $link->get_short_permalink();
 	} else {
-		$short_url = fon_gs($link->get_permalink());
+		$short_url = $url;
 	}
 
 	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
-		twitter_post($link->title, $short_url);
+		twitter_post($link->title, $url);
 	}
 
 	if ($globals['facebook_token']) {

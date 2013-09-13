@@ -37,16 +37,23 @@ foreach ($link_sqls as $key => $sql) {
 	$link = new Link;
 	$link->id = $res->id;
 	if ($link->read()) {
+		$url = $link->get_permalink();
 		if ($globals['url_shortener']) {
 			$short_url = $link->get_short_permalink();
 		} else {
-			$short_url = fon_gs($link->get_permalink());
+			//$short_url = fon_gs($link->get_permalink());
+			$short_url = $url;
 		}
-		$intro = "$key ${hours}h";
+		if ($hours < 72) {
+			$intro = "$key ${hours}h";
+		} else {
+			$days = intval($hours/24);
+			$intro = "$key ${days}d";
+		}
 		$text = "$intro: $link->title";
 
 		if ($globals['twitter_token']) {
-			twitter_post($text, $short_url); 
+			twitter_post($text, $url); 
 		}
 		if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 			jaiku_post($text, $short_url); 
@@ -55,7 +62,7 @@ foreach ($link_sqls as $key => $sql) {
 			facebook_post($link, $intro);
 		}
 
-		echo "$short_url $text\n"; continue;
+		echo "$text $short_url\n"; continue;
 	}
 }
 ?>

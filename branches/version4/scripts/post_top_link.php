@@ -29,10 +29,11 @@ if (! in_array($tops[0], $history) ) {
 		echo "Error reading link ". $tops[0] . "\n";
 		exit;
 	}
+	$url = $link->get_permalink();
 	if ($globals['url_shortener']) {
 		$short_url = $link->get_short_permalink();
 	} else {
-		$short_url = fon_gs($link->get_permalink());
+		$short_url = $url;
 	}
 	$intro = '#'._('destacada');
 	$text = "$intro $link->title";
@@ -46,7 +47,7 @@ if (! in_array($tops[0], $history) ) {
 
 	// Post to Twitter, Jaiku and Facebook
 	if ($globals['twitter_token']) {
-		twitter_post($text, $short_url); 
+		twitter_post($text, $url); 
 	}
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
 		jaiku_post($text, $short_url); 
