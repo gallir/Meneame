@@ -310,9 +310,6 @@ class Comment extends LCPBase {
 		if (!$value) $value = $current_user->user_karma;
 
 		$vote = new Vote('comments', $this->id, $current_user->user_id);
-		if ($vote->exists(true)) {
-			return false;
-		}
 
 		// Affinity
 		if ($current_user->user_id != $this->author
@@ -322,6 +319,10 @@ class Comment extends LCPBase {
 			} elseif ($value > 1 && $affinity > 0) {
 					$value = round(max($value * $affinity/100, 1));
 			}
+		}
+
+		if ($vote->exists(true)) {
+			return false;
 		}
 
 		$vote->value = $value;

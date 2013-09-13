@@ -11,12 +11,12 @@ $globals['no_auth'] = true;
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
 
-$globals['max_load'] = 5;
+$globals['max_load'] = 6;
 include('../config.php');
 
 // Free connections fast
 ini_set('default_socket_timeout', 2);
-$db->connect_timeout = 1;
+$db->connect_timeout = 2;
 
 if (isset($_GET['json']) || !empty($_GET['jsonp']))  {
 	$json = true;

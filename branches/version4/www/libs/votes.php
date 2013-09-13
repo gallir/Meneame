@@ -55,8 +55,7 @@ class Vote {
 		if (empty($this->ip)) $this->ip=$globals['user_ip_int'];
 		$this->value=round($this->value);
 
-		// HIGH_PRIORITY to avoid duplicates votes from people clicking very fast on purpose
-		$sql="INSERT HIGH_PRIORITY IGNORE INTO votes (vote_type, vote_user_id, vote_link_id, vote_value, vote_ip_int) VALUES ('$this->type', $this->user, $this->link, $this->value, $this->ip)";
+		$sql="INSERT IGNORE INTO votes (vote_type, vote_user_id, vote_link_id, vote_value, vote_ip_int) VALUES ('$this->type', $this->user, $this->link, $this->value, $this->ip)";
 		$r = $db->query($sql);
 		return $db->affected_rows;
 		

@@ -291,10 +291,6 @@ class Post extends LCPBase {
 
         syslog(LOG_INFO, "failed insert post vote for $this->id");
         return false;
-
-
-		$db->commit();
-		return $vote->value;
 	}
 
 	function same_text_count($min=30) {
