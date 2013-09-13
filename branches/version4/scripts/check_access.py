@@ -58,11 +58,15 @@ def analyze(logfile):
 	loglines = follow_log(logfile, configuration.showbad)
 	total = counter = empties = 0
 
+	""" Number of previous periods to store """
+	low_history = 4 
+
 	ip_scripts = {}
 	ip_users = {}
 	ip_counter = {}
 	ip_warned = set()
 	ip_banned = set()
+	ip_periods = []
 	
 
 	for log in loglines:
@@ -87,8 +91,12 @@ def analyze(logfile):
 			
 		else:
 			ip_exceeded = set()
-			banned = set()
+			ip_low_exceeded = set()
+			ip_high_exceeded = set()
+			to_ban = set()
 			rate = counter/configuration.period
+			ip_periods_seen = {}
+
 			if total > 0:
 				print rate, "c/sec"
 			if empties > 2:
@@ -100,11 +108,20 @@ def analyze(logfile):
 				sorted_ips = sorted(ip_counter.items(), key=lambda x:x[1], reverse=True)
 				i = 0
 				max_count = configuration.rate * configuration.period
+				low_count = max_count / 2
+				high_count = max_count * 2
 				""" Give one aditional connection per second to different users """
-				while sorted_ips[i][1] >= max_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
+				while sorted_ips[i][1] >= low_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
 					ip = sorted_ips[i][0]
+					count = sorted_ips[i][1]
+					additional = (len(ip_users[sorted_ips[i][0]])-1)*configuration.period
 					if ip not in ip_banned:
-						ip_exceeded.add(ip)
+						ip_low_exceeded.add(ip)
+						if count > max_count + additional:
+							ip_exceeded.add(ip)
+						if count > high_count + additional:
+							ip_high_exceeded.add(ip)
+						
 					i += 1
 					
 				if not configuration.q:
@@ -114,32 +131,51 @@ def analyze(logfile):
 					for i in range(r):
 						ip, conns = sorted_ips[i]
 						
-						if ip in ip_exceeded: print "+",
+						if ip in ip_high_exceeded: print "H",
+						elif ip in ip_exceeded: print "+",
+						elif ip in ip_low_exceeded: print "-",
 						else: print " ",
+
 						if ip in ip_warned: print "*",
 						else: print " ",
+
 						print "%5d %4d %s" % (conns, conns/configuration.period, ip),
 						print ','.join([x for x in sorted(ip_users[ip], key=str.lower)])
 					print
 
 				if configuration.ban:
-					for ip in ip_exceeded:
-						if ip in ip_warned and ip not in ip_banned:
-							rate = str(ip_counter[ip]/configuration.period)
+					to_ban = ip_high_exceeded
+					for ip in ip_high_exceeded:
+						ip_periods_seen[ip] = 1
 
-							if len(ip_users[ip]) > 1 or "-" not in ip_users[ip]:
-								seconds = 3600
-							else:
-								seconds = 86400
-							""" Increase de seconds according to how much it exceeded """
-							seconds = int(seconds * ip_counter[ip]/float(max_count))
+					for ip in [x for x in ip_exceeded if x in ip_warned and x not in ip_banned]:
+						to_ban.add(ip)
+						ip_periods_seen[ip] = 2
 
-							reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec, banned for " + str(seconds) + " seconds"
-							ban_ip(ip, reason, seconds)
-							banned.add(ip)
+					low_intersection = set.intersection(*ip_periods)
+					for ip in [x for x in ip_low_exceeded if x in low_intersection and x not in ip_banned]:
+						to_ban.add(ip)
+						ip_periods_seen[ip] = low_history + 1
+				
+					for ip in to_ban:
+						rate = str(ip_counter[ip]/configuration.period)
+
+						if len(ip_users[ip]) > 1 or "-" not in ip_users[ip]:
+							seconds = 3600
+						else:
+							seconds = 86400
+						""" Increase de seconds according to how much it exceeded """
+						seconds = int(seconds * ip_counter[ip]/float(max_count))
+
+						reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec during " + str(ip_periods_seen[ip]) + " periods, blocked for " + str(seconds) + " seconds"
+						ban_ip(ip, reason, seconds)
 
 			ip_warned = ip_exceeded;
-			ip_banned = banned;
+			ip_banned = to_ban;
+
+			ip_periods.append(ip_low_exceeded)
+			if len(ip_periods) > low_history:
+				del(ip_periods[0])
 
 			
 			ip_scripts = {}
@@ -163,7 +199,7 @@ def ban_ip(ip, reason, time):
 		DBM.close()
 
 	print "BAN:", ip, reason
-	syslog.syslog(syslog.LOG_INFO, "Accesses ban: " + reason)
+	syslog.syslog(syslog.LOG_INFO, "Block IP: " + ip + " " + reason)
 
 	if configuration.mail:
 		""" Generate a report """
