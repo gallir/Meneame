@@ -8,6 +8,7 @@ import os
 
 import dbconf
 from utils import *
+import ipaddr
 
 import getpass
 import smtplib
@@ -108,11 +109,18 @@ def analyze(logfile):
 				sorted_ips = sorted(ip_counter.items(), key=lambda x:x[1], reverse=True)
 				i = 0
 				max_count = configuration.rate * configuration.period
-				low_count = max_count / 2
+				low_count = max_count * 0.6
 				high_count = max_count * 2
 				""" Give one aditional connection per second to different users """
 				while sorted_ips[i][1] >= low_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
 					ip = sorted_ips[i][0]
+
+					""" Never block private IPs """
+					ip_addr = ipaddr.IPNetwork(ip)
+					if ip_addr.is_private or ip_addr.is_loopback or ip_addr.is_link_local:
+						continue
+
+
 					count = sorted_ips[i][1]
 					additional = (len(ip_users[sorted_ips[i][0]])-1)*configuration.period
 					if ip not in ip_banned:
@@ -158,16 +166,19 @@ def analyze(logfile):
 						ip_periods_seen[ip] = low_history + 1
 				
 					for ip in to_ban:
-						rate = str(ip_counter[ip]/configuration.period)
+						rate = ip_counter[ip]/configuration.period
 
 						if len(ip_users[ip]) > 1 or "-" not in ip_users[ip]:
-							seconds = 3600
+							seconds = 3600 * 2
 						else:
-							seconds = 86400
+							seconds = 86400 * 2
 						""" Increase de seconds according to how much it exceeded """
 						seconds = int(seconds * ip_counter[ip]/float(max_count))
 
-						reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec during " + str(ip_periods_seen[ip]) + " periods, blocked for " + str(seconds) + " seconds"
+						users = ','.join([x for x in sorted(ip_users[ip], key=str.lower)])
+						reason = "Automatic (%s) %d conn/sec during %d seconds, blocked for %02d:%02d:%02d hs" % \
+								(users, rate, ip_periods_seen[ip]*configuration.period, seconds/3600, (seconds%3600)/60, seconds%60)
+						# reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec during " + str(ip_periods_seen[ip]*configuration.period) + " seconds, blocked for " + str(seconds/3600) + ":" + str((seconds%3600)/60) + str(seconds%60)
 						ban_ip(ip, reason, seconds)
 
 			ip_warned = ip_exceeded;
