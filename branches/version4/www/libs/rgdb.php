@@ -132,7 +132,7 @@ class RGDB extends mysqli {
 			$this->connected = @parent::real_connect($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
 		}
 		if (! $this->connected) {
-			$this->print_error( _('error temporal'));
+			header('HTTP/1.1 503 Service Unavailable');
 			die;
 		}
 		$this->set_charset('utf8');
@@ -155,7 +155,7 @@ class RGDB extends mysqli {
 
 	function print_error($str = "") {
 		if ($this->show_errors) {
-			header('HTTP/1.1 500 Server error');
+			header('HTTP/1.1 503 Database error');
 			header('Content-Type: text/plain');
 			echo "$str ($this->error)\n";
 		}
