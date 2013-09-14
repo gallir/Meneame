@@ -1149,7 +1149,9 @@ var notifier = new function () {
 
 		now = new Date().getTime();
 		last_check = readCookie("notifier_"+user_id+"_last_check");
-		if (last_check == null || now - last_check > base_update + check_counter * 20) {
+		if (last_check == null 
+				|| (check_counter == 0 && now - last_check > 3000) /* Don't allow too many refreshes */
+				|| now - last_check > base_update + check_counter * 20) {
 			createCookie("notifier_"+user_id+"_last_check", now, 1);
 			notifier.connect();
 		} else {
@@ -1176,9 +1178,12 @@ var notifier = new function () {
 
 		count = readCookie("notifier_"+user_id+"_count");
 		if (count == current_count) return;
+		if (count > 0) {
+			check_counter = (check_counter + 1)/2; /* to update faster next times */
+		}
+
 		posts = readCookie("notifier_"+user_id+"_posts");
 
-		check_counter = 0;
 		document.title = document.title.replace(/^\(\d+\) /, '');
 		area.html(count);
 		$('#p_c_counter').html(posts);
@@ -1212,15 +1217,15 @@ var notifier = new function () {
 
 		area.click(this.click);
 		$(window).focus(function() {
-			has_focus = true;
 			check_counter = 0;
+			has_focus = true;
 			if (timeout) {
 				clearTimeout(timeout);
 				timeout = false;
 			}
 			notifier.update();
-				
 		});
+
 		$(window).blur(function() {
 			has_focus = false;
 		});
