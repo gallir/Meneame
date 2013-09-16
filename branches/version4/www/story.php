@@ -244,6 +244,7 @@ case 2:
 		do_comment_pages($link->comments, $current_page);
 	}
 
+	$update_comments = false;
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
 		$order = $offset + 1;
@@ -259,6 +260,7 @@ case 2:
 					}
 					syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
 					$comment->update_order();
+					$update_comments = true;
 					$prev = false;
 				} else {
 					$prev = $comment;
@@ -276,6 +278,9 @@ case 2:
 	}
 
 	if($tab_option == 1) {
+		if ($update_comments) {
+			$link->update_comments();
+		}
 		do_comment_pages($link->comments, $current_page);
 	}
 
