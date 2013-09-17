@@ -853,10 +853,10 @@ function do_error($mess = false, $error = false, $send_status = true) {
 		header("Status: $error $mess");
 	}
 
-	do_header(_('error'));
+	// do_header(_('error'));
 	Haanga::Load('error.html', compact('mess', 'error'));
-	do_footer_menu();
-	do_footer();
+	// do_footer_menu();
+	// do_footer();
 	die;
 }
 
