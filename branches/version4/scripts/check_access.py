@@ -108,11 +108,12 @@ def analyze(logfile):
 				#sorted_ips = sorted(ip_counter.iteritems(), key=operator.itemgetter(1), reverse=True)
 				sorted_ips = sorted(ip_counter.items(), key=lambda x:x[1], reverse=True)
 				i = 0
+				max_len = len(sorted_ips)
 				max_count = configuration.rate * configuration.period
 				low_count = max_count * 0.6
 				high_count = max_count * 2
 				""" Give one aditional connection per second to different users """
-				while sorted_ips[i][1] >= low_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
+				while i < max_len and sorted_ips[i][1] >= low_count + (len(ip_users[sorted_ips[i][0]])-1)*configuration.period:
 					ip = sorted_ips[i][0]
 
 					""" Never block private IPs """
@@ -264,7 +265,12 @@ if __name__ == '__main__':
 
 			counter += 1
 			lines = analyze(logfile)
-			print "End", counter, lines
+			mess = "check_access, end: %d, %d, restarting in 1 second" % (counter, lines)
+			if not configuration.q:
+				print mess
+			else:
+				syslog.syslog(syslog.LOG_INFO, mess)
+			time.sleep(1)
 		except (KeyboardInterrupt), e:
 			print
 			exit(0)
