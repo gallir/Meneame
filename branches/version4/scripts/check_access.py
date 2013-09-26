@@ -119,6 +119,7 @@ def analyze(logfile):
 					""" Never block private IPs """
 					ip_addr = ipaddr.IPNetwork(ip)
 					if ip_addr.is_private or ip_addr.is_loopback or ip_addr.is_link_local:
+						i += 1
 						continue
 
 
