@@ -570,13 +570,19 @@ function print_relevant_comments($link, $page) {
 			$obj->karma = $comment->comment_karma;
 			$obj->link_url = $link_url;
 			$objects[] = $obj;
-			if (! $page && (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'] ) && $obj->vote < 0 && ! $self && count($res) >= count($objects) * 2) {
+			if (! $page 
+					&& ! $self
+					&& $obj->vote < 0
+					&& $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
+					&& (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
+					&& count($res) >= count($objects) * 2
+				) {
 				$self = get_highlighted_comment($obj);
 				$obj->summary = true;
 			}
 			if (count($objects) > $limit) break;
 		}
-		if (! $page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 3) {
+		if (! $page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
 			$self = get_highlighted_comment($objects[0]);
 			$objects[0]->summary = true;
 		}
