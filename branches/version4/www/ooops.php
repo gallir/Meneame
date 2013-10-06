@@ -30,6 +30,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				header("HTTP/1.0 200 OK");
 				header('Content-Type: image/jpeg');
 				$media->thumb->output();
+				$globals['access_log'] = false;
 				die;
 			}
 			$errn = 404;
@@ -44,6 +45,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 					header("HTTP/1.0 200 OK");
 					header('Content-Type: image/jpeg');
 					readfile($pathname);
+					$globals['access_log'] = false;
 					die;
 				}
 			}
@@ -72,6 +74,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 			header("HTTP/1.0 200 OK");
 			header("Content-Type: " . $thumb->mime());
 			readfile($thumbname);
+			$globals['access_log'] = false;
 			die;
 
 		default:

@@ -158,6 +158,8 @@ if ($comments) {
 		if (!$comment) continue;
 
 		$link = Link::from_db($comment->link);
+		if (!$link) continue;
+
 		$comment->link_permalink =  $link->get_permalink();
 
 		if ($comment->type == 'admin') {

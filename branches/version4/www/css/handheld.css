@@ -23,7 +23,7 @@ z-index: 9999;
 }
 
 #notifier_panel {
-position:absolute;
+position:fixed;
 }
 
 #header-center {

@@ -1342,7 +1342,7 @@ function check_ip_noaccess($steps = 0) {
 	$matches = $db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
 
 	if ($cache_key) {
-		if ($matches) $ttl = $globals['check_ip_noaccess_cache'] * 5;
+		if ($matches) $ttl = 60; // Blocked IPs cached for 60 seconds
 		else $ttl = $globals['check_ip_noaccess_cache'];
 		memcache_madd ($cache_key, (int) $matches, $ttl);
 	}
