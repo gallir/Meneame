@@ -71,6 +71,14 @@ if (file_put_contents($tmpfile, $source)) {
 
 	@rename($tmpfile, $uploadfile);
 
+	require_once(mnminclude."simpleimage.php");
+
+	$image = new SimpleImage();
+	if ($image->rotate_exif($uploadfile)) {
+		$image->save($uploadfile);
+	}
+
+
 	$r->type = $info['mime'];
 	$r->name = basename($uploadfile);
 	$r->url = $globals['base_static'].Upload::get_cache_relative_dir().'/tmp/'.$r->name;
@@ -78,7 +86,6 @@ if (file_put_contents($tmpfile, $source)) {
 
 
 	// Creates the thumbnail
-	require_once(mnminclude."simpleimage.php");
 	$thumb = new SimpleImage();
 	$thumb->load($uploadfile);
 	$thumb->resize($globals['media_thumb_size'], $globals['media_thumb_size'], true);

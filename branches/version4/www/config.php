@@ -164,7 +164,7 @@ $globals['media_max_size'] = 1024*1024; // 1 MB;
 $globals['media_min_karma'] = 6;
 $globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day
 $globals['media_max_upload_per_day'] = 10;
-$globals['media_thumb_size'] = 50;
+$globals['media_thumb_size'] = 80;
 
 
 

@@ -140,6 +140,7 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
+			$this->check_size_and_rotation($this->pathname());
 			@unlink($this->thumb_pathname());
 			$this->create_thumb($globals['media_thumb_size']);
 			return $this->store();
@@ -163,6 +164,7 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (rename($pathname, $this->pathname())) {
+			$this->check_size_and_rotation($this->pathname());
 			@unlink($this->thumb_pathname());
 
 			// Check if it exists a thumb adn save it in jpg
@@ -272,6 +274,15 @@ class Upload {
 			return true;
 		}
 		return false;
+	}
+
+	function check_size_and_rotation($pathname) {
+		require_once(mnminclude."simpleimage.php");
+		$image = new SimpleImage();
+		if ($image->rotate_exif($pathname)) {
+			$image->save($pathname);
+		}
+		return true;
 	}
 }
 

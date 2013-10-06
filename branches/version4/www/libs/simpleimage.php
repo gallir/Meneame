@@ -28,6 +28,7 @@ class SimpleImage {
 	function load($filename) {
 		$image_info = getimagesize($filename);
 		$this->image_type = $image_info[2];
+		$this->filename = $filename;
 		switch($this->image_type) {
 		case IMAGETYPE_JPEG:
 			$this->image = @imagecreatefromjpeg($filename);
@@ -48,7 +49,7 @@ class SimpleImage {
 		else return false;
 	}
 
-	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75) {
+	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=80) {
 		if (!$this->image) return false;
 
 		if ($image_type == -1) {
@@ -138,4 +139,95 @@ class SimpleImage {
 		$this->image = $new_image;
 		return true;
 	}
+
+
+	/* Extracted from http://www.neilyoungcv.com/blog/code-share/image-resizing-with-php-exif-orientation-fix/ */
+	function flip() {
+
+		$width = $this->getWidth();
+		$height = $this->getHeight();
+
+		// Truecolor provides better results, if possible.
+		if (function_exists('imageistruecolor') && imageistruecolor($image)) {
+			$tmp = imagecreatetruecolor(1, $height);
+		} else {
+			$tmp = imagecreate(1, $height);
+		}
+
+		$x2 = $x + $width - 1;
+
+		for ($i = (int)floor(($width - 1) / 2); $i >= 0; $i--) {
+			// Backup right stripe.
+			imagecopy($tmp, $this->image, 0, 0, $x2 - $i, $y, 1, $height);
+
+			// Copy left stripe to the right.
+			imagecopy($this->image, $this->image, $x2 - $i, $y, $x + $i, $y, 1, $height);
+
+			// Copy backuped right stripe to the left.
+			imagecopy($this->image, $tmp, $x + $i,	$y, 0, 0, 1, $height);
+		}
+
+		imagedestroy($tmp);
+		return true;
+	}
+
+	function rotate_exif($filename = false) {
+
+		if (! $filename && $this->filename) {
+			$filename = $this->filename;
+		}
+
+		$exif = @exif_read_data($filename);
+		if (!$exif) return false;
+
+		$ort = $exif['Orientation'];
+		if (empty($ort) || $ort < 2 || $ort > 8) return false;
+
+		if (! $this->image) {
+			$this->load($filename);
+		}
+
+		// exif only supports jpg in our supported file types
+		if (! $this->image || $this->image_type != IMAGETYPE_JPEG) return false;
+
+		//determine what oreientation the image was taken at
+		switch($ort) {
+
+		case 2: // horizontal flip
+			$this->flip();
+			break;
+
+		case 3: // 180 rotate left
+			$this->image = imagerotate($this->image, 180, -1);
+			break;
+
+		case 4: // vertical flip
+			$this->flip();
+			break;
+
+		case 5: // vertical flip + 90 rotate right
+			$this->flip();
+			$this->image = imagerotate($this->image, -90, -1);
+			break;
+
+		case 6: // 90 rotate right
+			$this->image = imagerotate($this->image, -90, -1);
+			break;
+
+		case 7: // horizontal flip + 90 rotate right
+			$this->flip();
+			$this->image = imagerotate($this->image, -90, -1);
+			break;
+
+		case 8: // 90 rotate left
+			$this->image = imagerotate($this->image, 90, -1);
+			break;
+
+		default:
+			return false;
+		}
+
+		return true;
+	}
+
 }
