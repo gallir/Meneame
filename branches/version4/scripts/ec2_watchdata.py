@@ -74,8 +74,6 @@ class WatchData:
 		self.avg_load = self.total_load/self.instances
 
 	def get_instance_CPU_load(self, instance):
-		global cw
-
 		end = datetime.datetime.now()
 		start = end - datetime.timedelta(seconds=300)
 
