@@ -17,6 +17,7 @@ class WatchData:
 	low_limit = 70
 	high_limit = 90
 	high_urgent = 95
+	stats_period = 120
 
 	def __init__(self):
 		self.name = ''
@@ -77,7 +78,7 @@ class WatchData:
 		end = datetime.datetime.now()
 		start = end - datetime.timedelta(seconds=300)
 
-		m = self.cw.get_metric_statistics(60, start, end, "CPUUtilization", "AWS/EC2", ["Average"], {"InstanceId": instance})
+		m = self.cw.get_metric_statistics(self.stats_period, start, end, "CPUUtilization", "AWS/EC2", ["Average"], {"InstanceId": instance})
 		if len(m) > 0:
 			self.measures[instance] = len(m)
 			ordered = sorted(m, key=lambda x: x['Timestamp'], reverse=True)
@@ -104,7 +105,7 @@ class WatchData:
 
 	def check_too_low(self):
 		for instance, load in self.loads.iteritems():
-			if load is not None and self.measures[instance] > 2 and self.instances > 1 and load < self.avg_load * 0.2 and load < 4:
+			if load is not None and self.measures[instance] > 1 and self.instances > 1 and load < self.avg_load * 0.2 and load < 4:
 				self.emergency = True
 				self.check_avg_low() # Check if the desired instanes can be decreased
 				self.action = "EMERGENCY LOW (%s %5.2f%%) " % (instance, load)
@@ -114,7 +115,7 @@ class WatchData:
 
 	def check_too_high(self):
 		for instance, load in self.loads.iteritems():
-			if load is not None and self.measures[instance] > 2 and load > self.high_urgent:
+			if load is not None and self.measures[instance] > 1 and load > self.high_urgent:
 				self.emergency = True
 				self.action = "EMERGENCY HIGH (%s %5.2f%%) " % (instance, load)
 				if self.instances > 1 and load > self.avg_load * 1.5:

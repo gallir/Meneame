@@ -8,6 +8,7 @@ from ec2_watchdata import WatchData
 def main():
 	global configuration
 
+	WatchData.stats_period = 60 # Show just last measure
 	data = WatchData()
 	data.connect(configuration.group)
 	data.get_instances_info()
