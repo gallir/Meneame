@@ -34,14 +34,15 @@ function check_stats($string) {
 
 function do_load() {
 	global $db, $current_user;
-	$annotation = new Annotation('ec2-autoscaler');
+	$annotation = new Annotation('ec2_watch');
 	if (!$annotation->read()) {
 		return _('no hay estadísticas disponibles');
 	}
-	$group = unserialize($annotation->text);
+	$group = json_decode($annotation->text);
 	$str = "web instances: $group->instances, ";
-	$str .= "cpu average load: ".round($group->load, 2) . "%, ";
-	$str .= "cpu max average ($group->measures periods): ".round($group->load_max, 2)."%, ";
+	$str .= "cpu average load: ".round($group->avg_load, 2) . "%, ";
+	$str .= "last action: $group->action ";
+	$str .= "last change: ".get_date_time($group->changed_ts)." ";
 	$str .= "stored at: ". get_date_time($annotation->time);
 	return $str;
 }
