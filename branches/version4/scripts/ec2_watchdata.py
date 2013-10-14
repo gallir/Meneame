@@ -141,7 +141,7 @@ class WatchData:
 
 	def check_avg_low(self):
 		if self.instances <= self.group.min_size:
-			return false
+			return False
 		
 		if self.total_load/(self.instances-1) < self.low_limit:
 			self.action = "low load: %d -> %d " % (self.instances, self.instances - 1)
