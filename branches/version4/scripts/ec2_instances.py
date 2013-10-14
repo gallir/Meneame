@@ -19,6 +19,13 @@ def main():
 			data.set_desired(desired)
 		else:
 			print "You can specify up to +-2 instances more of currently running (%d)" % (data.instances,)
+		exit(0)
+
+	if configuration.kill:
+		if configuration.kill in [x.id for x in data.instances_info]:
+			data.kill_instance(configuration.kill)
+		else:
+			print "Instance", configuration.kill, "doesn't exist"
 
 		exit(0)
 
@@ -32,7 +39,7 @@ def main():
 		else:
 			load = 0
 
-		print "%s %5.2f%%	%-15s %s" % (instance.id, load, instance.private_ip_address, instance.dns_name)
+		print "%s %5.2f%% %s %-15s %s" % (instance.id, load, instance._state.name, instance.private_ip_address, instance.dns_name)
 
 	print "Average load: %5.2f%%" % (data.avg_load,)
 
@@ -43,7 +50,11 @@ def main():
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--group", "-g", default="web", help="AutoScaler group")
-	parser.add_argument("--instances", "-i", type=int, help="Set the number of desired instances")
+
+	group = parser.add_mutually_exclusive_group()
+	group.add_argument("--kill", "-k", help="Kill instance")
+	group.add_argument("--instances", "-i", type=int, help="Set the number of desired instances")
+
 	configuration = parser.parse_args()
 	main()
 

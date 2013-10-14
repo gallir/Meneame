@@ -39,8 +39,14 @@ def main():
 	""" Retrieve and calculate previous values in the current instance """
 	data.action_ts = prev_data.action_ts
 	data.action = prev_data.action
-	data.previous_instances = prev_data.instances
-	if data.instances != data.previous_instances or data.desired != prev_data.desired:
+
+	if data.instances != prev_data.instances:
+		data.previous_instances = prev_data.instances
+	else:
+		data.previous_instances = prev_data.previous_instances
+		
+
+	if data.instances != prev_data.instances or data.desired != prev_data.desired:
 		data.changed_ts = time.time()
 	else:
 		data.changed_ts = prev_data.changed_ts
@@ -64,7 +70,7 @@ def main():
 	if	now - data.changed_ts > 300 and now - data.action_ts > 300:
 		data.check_avg_low()
 
-	data.store(configuration.db)
+	data.store(configuration.annotation)
 
 	if configuration.mail and data.emergency:
 		sendmail(data, configuration.mail)
@@ -75,7 +81,7 @@ def sendmail(data, to):
 
 		""" Generate a report """
 		try:
-			p = subprocess.Popen([os.path.join(os.path.dirname(os.path.realpath(__file__)),"instances.py")], stdout=subprocess.PIPE)
+			p = subprocess.Popen([os.path.join(os.path.dirname(os.path.realpath(__file__)),"ec2_instances.py")], stdout=subprocess.PIPE)
 			(report, err) = p.communicate()
 		except Exception as e:
 			report = unicode(e)
@@ -93,7 +99,7 @@ def sendmail(data, to):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--group", "-g", default="web", help="AutoScaler group")
-	parser.add_argument("--db", "-db", action="store_true", help="Store data in Meneame database (as annotation)")
+	parser.add_argument("--annotation", "-a", action="store_true", help="Store data in Meneame database as annotation")
 	parser.add_argument("--mail", "-m", help="Send email to this address when took an emergency action")
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not take actions")
 	parser.add_argument("--low", "-low", type=int, default=70, help="Low limit for CPU average")

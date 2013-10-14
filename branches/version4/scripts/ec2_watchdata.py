@@ -4,6 +4,8 @@ import sys
 import time
 import datetime
 import pickle
+import json
+import syslog
 
 import boto
 from boto.ec2.autoscale import AutoScaleConnection
@@ -17,7 +19,9 @@ class WatchData:
 	high_urgent = 95
 
 	def __init__(self):
+		self.name = ''
 		self.instances = 0
+		self.new_desired = 0
 		self.desired = 0
 		self.instances_info = None
 		self.previous_instances = 0
@@ -49,6 +53,7 @@ class WatchData:
 		self.group = self.autoscale.get_all_groups(names=[groupname])[0]
 		self.instances = len(self.group.instances)
 		self.desired = self.group.desired_capacity
+		self.name = groupname
 
 	def get_instances_info(self):
 		ids = [i.instance_id for i in self.group.instances]
@@ -91,12 +96,13 @@ class WatchData:
 
 		return data
 
-	def store(self, db = False):
+	def store(self, annotation = False):
 		pickle.dump(self, open(self.datafile, "wb" ))
 
-		if db:
-			from .. import utils
-			store_annotation("key", "text")
+		if annotation:
+			import utils
+			text = json.dumps(self.__getstate__(), skipkeys=True)
+			utils.store_annotation("ec2_watch", text)
 
 	def check_too_low(self):
 		for instance, load in self.loads.iteritems():
@@ -145,6 +151,7 @@ class WatchData:
 		if self.action:
 			print self.action
 		print "Kill instance", id
+		syslog.syslog(syslog.LOG_INFO, "ec2_watch kill_instance: %s instances: %d (%s)" % (id, self.instances, self.action))
 		if self.dry:
 			return
 		self.ec2.terminate_instances(instance_ids=[id])
@@ -154,11 +161,12 @@ class WatchData:
 		if self.action:
 			print self.action
 		print "Setting instances from %d to %d" % (self.instances, desired)
+		syslog.syslog(syslog.LOG_INFO, "ec2_watch set_desired: %d -> %d (%s)" % (self.instances, desired, self.action))
 		if self.dry:
 			return
 		if desired >= self.group.min_size:
 			self.group.set_capacity(desired)
 		self.action_ts = time.time()
-		self.desired = desired
+		self.new_desired = desired
 		
 
