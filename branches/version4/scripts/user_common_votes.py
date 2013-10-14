@@ -95,9 +95,11 @@ def main():
 			#print k, l, distances[k][l]
 			if ops % 100 == 0:
 				DBM.commit()
-				time.sleep(0.01)
+				print "Inserted ", ops, " rows"
+				time.sleep(0.02)
 	DBM.commit()
 	c.close()
+	print "END: ", ops
 	
 
 

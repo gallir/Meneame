@@ -11,9 +11,23 @@ import feedparser
 import time
 from urlparse import urlparse
 import datetime
+import syslog
 
 re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
+
+def store_annotation(key, text):
+	try:
+		c = DBM.cursor('update')
+		c.execute("REPLACE INTO annotations (annotation_key, annotation_text) VALUES (%s, %s)", (key, text))
+		c.close()
+		DBM.commit()
+		DBM.close('update')
+	except Exception as e:
+		DBM.close('update')
+		print "Error in store annotaion: " + key + " " + unicode(e)
+		syslog.syslog(syslog.LOG_INFO, "Error in store annotaion: " + key + " " + unicode(e))
+		return False
 
 def clean_url(string):
 	string = re.sub(r'&amp;', '&', string)
@@ -134,7 +148,9 @@ class DBM(object):
 	@classmethod
 	def close(cls, c_type="select"):
 		if cls.connections[c_type]:
-			cls.connections[c_type].close()
+			try:
+				cls.connections[c_type].close()
+			except: pass
 			cls.connections[c_type] = None
 
 	@classmethod

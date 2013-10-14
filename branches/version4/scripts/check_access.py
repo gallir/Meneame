@@ -167,7 +167,7 @@ def analyze(logfile):
 						to_ban.add(ip)
 						ip_periods_seen[ip] = low_history + 1
 				
-					for ip in to_ban:
+					for ip in to_ban.copy():
 						rate = ip_counter[ip]/configuration.period
 
 						if len(ip_users[ip]) > 1 or "-" not in ip_users[ip]:
@@ -181,7 +181,8 @@ def analyze(logfile):
 						reason = "Automatic (%s) %d conn/sec during %d seconds, blocked for %02d:%02d:%02d hs" % \
 								(users, rate, ip_periods_seen[ip]*configuration.period, seconds/3600, (seconds%3600)/60, seconds%60)
 						# reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec during " + str(ip_periods_seen[ip]*configuration.period) + " seconds, blocked for " + str(seconds/3600) + ":" + str((seconds%3600)/60) + str(seconds%60)
-						ban_ip(ip, reason, seconds)
+						if not ban_ip(ip, reason, seconds):
+							to_ban.remove(ip) # Don't consider it as banned
 
 			ip_warned = ip_exceeded;
 			ip_banned = to_ban;
@@ -205,11 +206,17 @@ def ban_ip(ip, reason, time):
 
 	
 	if not configuration.dry:
-		c = DBM.cursor('update')
-		c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
-		c.close()
-		DBM.commit()
-		DBM.close()
+		try:
+			c = DBM.cursor('update')
+			c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
+			c.close()
+			DBM.commit()
+			DBM.close('update')
+		except Exception as e:
+			DBM.close('update')
+			syslog.syslog(syslog.LOG_INFO, "Error in DB blocking IP: " + ip + " " + unicode(e))
+			return False
+			
 
 	print "BAN:", ip, reason
 	syslog.syslog(syslog.LOG_INFO, "Block IP: " + ip + " " + reason)
@@ -229,6 +236,8 @@ def ban_ip(ip, reason, time):
 		s = smtplib.SMTP('localhost')
 		s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 		s.quit()
+
+	return True
 
 
 
@@ -262,6 +271,7 @@ if __name__ == '__main__':
 				logfile = openfile(configuration.logfile)
 			except (IOError), e:
 				print >> sys.stderr, e
+				syslog.syslog(syslog.LOG_INFO, "check_access IOError: " + e)
 				exit(1)
 
 			counter += 1
