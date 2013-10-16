@@ -888,6 +888,9 @@ $(document).ready(function () {
 			var form = area.parents('form');
 			var progress = form.find('progress').show();
 			var thumb = form.find('.droparea_info img');
+			var submit = form.find(':submit');
+
+			submit.attr('disabled', 'disabled');
 
 			progress.attr('max', file.fileSize);
 			progress.attr('vaue', 0);
@@ -914,6 +917,7 @@ $(document).ready(function () {
 				} else {
 					s.error(r);
 				}
+				submit.removeAttr('disabled');
 				setTimeout(function () {progress.hide();}, s.hide_delay);
 			}, false);
 

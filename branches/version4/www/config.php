@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 9; // internal version, to for reloads
+$globals['v'] = 10; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -363,7 +363,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js';
+$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js';
 $globals['js_main'] = 'general.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css';
