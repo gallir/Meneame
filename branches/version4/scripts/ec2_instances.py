@@ -35,12 +35,17 @@ def main():
 	print "Group values: instances: %d min: %d max: %d desired: %d Launch config: %s" % (data.instances, data.group.min_size, data.group.max_size, data.group.desired_capacity, data.group.launch_config_name)
 
 	for instance in data.instances_info:
+
 		if instance.id in data.loads:
 			load = data.loads[instance.id]
 		else:
 			load = 0
 
-		print "%s %5.2f%% %s %-15s %s" % (instance.id, load, instance._state.name, instance.private_ip_address, instance.dns_name)
+		print "%s %5.2f%% %s %s" % (instance.id, load, instance._state.name, instance.image_id),
+		if configuration.all:
+			print "%s %s %-15s %s" % (instance.instance_type, instance._placement, instance.private_ip_address, instance.dns_name, )
+		else:
+			print
 
 	print "Average load: %5.2f%%" % (data.avg_load,)
 
@@ -51,10 +56,12 @@ def main():
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--group", "-g", default="web", help="AutoScaler group")
+	parser.add_argument("--all", "-a", action="store_true", help="Show more info for every instance")
 
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("--kill", "-k", help="Kill instance")
 	group.add_argument("--instances", "-i", type=int, help="Set the number of desired instances")
+	
 
 	configuration = parser.parse_args()
 	main()
