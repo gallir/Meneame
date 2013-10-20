@@ -107,9 +107,11 @@ var mnm_start_time=(new Date()).getTime()
 	{% if globals.css_webfonts %}
 		<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
 	{% endif %}
+	<script src="{{ globals.jquery2 }}" type="text/javascript"></script>
+{% else %}
+	<script src="{{ globals.jquery }}" type="text/javascript"></script>
 {% endif %}
 
-<script src="{{ globals.jquery }}" type="text/javascript"></script>
 <script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
 
 

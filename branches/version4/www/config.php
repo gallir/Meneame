@@ -364,6 +364,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 // Main javascript file
 $globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js';
+$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js';
 $globals['js_main'] = 'general.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css';
