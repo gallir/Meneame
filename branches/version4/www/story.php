@@ -284,7 +284,7 @@ case 2:
 		do_comment_pages($link->comments, $current_page);
 	}
 
-	if ($current_user->user_id > 0 && $link->comments > 5) {
+	if ($link->comments > 5) {
 		echo '<script type="text/javascript">';
 		echo '$(window).load(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
 		echo '</script>';

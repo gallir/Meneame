@@ -292,9 +292,7 @@ function onLoad(lat, lng, zoom, icon) {
 			}
 		}
 
-		if ($current_user->user_id > 0) {
-			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
-		}
+		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
 
 		// Update conversation time
 		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {

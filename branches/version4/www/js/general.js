@@ -778,7 +778,8 @@ function get_total_answers(type, order, id, offset, size) {
 function show_total_answers(type, id, answers) {
 	if (type == 'comment') dom_id = '#cid-'+ id;
 	else dom_id = '#pid-'+ id;
-	$(dom_id).siblings(".comment-meta").children(".comment-votes-info").append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter answers">'+answers+'</span></a>');
+	element = $(dom_id).siblings(".comment-meta").children(".comment-votes-info");
+	element.append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter answers">'+answers+'</span></a>');
 }
 
 function show_answers(type, id) {
@@ -794,7 +795,9 @@ function show_answers(type, id) {
 	answers = $('#answers-'+id);
 	if (answers.length == 0) {
 		$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
-			$(dom_id).parent().parent().append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
+			element = $(dom_id).parent().parent();
+			element.append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
+			element.trigger('DOMChanged', element);
 		});
 		reportAjaxStats('html', program);
 	} else {
@@ -1013,11 +1016,12 @@ $(document).ready(function () {
 })( jQuery );
 
 var fancyBox = new function () {
-	var timeout = false;
 
 	this.init = function (parent) {
 		this.scan(parent);
-		this.modifyCallback();
+		$('#wrap').on("DOMChanged", function(event, element) {
+				fancyBox.scan(element);
+		});
 	}
 
 	this.scan = function (parent) {
@@ -1025,13 +1029,15 @@ var fancyBox = new function () {
 
 		if (! jQuery().colorbox) return;
 
-		if (typeof parent == 'string') {
-			selector = parent + ' > a.fancybox';
+		if (typeof parent == 'object') {
+			elements = $(parent).find('a.fancybox');
+		} else if (typeof parent == 'string') {
+			elements = $(parent + ' > a.fancybox');
 		} else {
-			selector = 'a.fancybox';
+			elements = $('a.fancybox');
 		}
 
-		$(selector).not('[class*=" cbox"]').each(function(i) {
+		elements.not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, overlayClose = true, target = '';
 			var box = $(this), myHref = box.attr('href'), myTitle;
 
@@ -1088,19 +1094,6 @@ var fancyBox = new function () {
 				}
 			}); // colorbox
 		}); // each
-		timeout = false;
-	};
-
-
-	this.modifyCallback = function () {
-		var scan = this.scan;
-		setTimeout(function() {
-			$('#newswrap,#singlewrap').on("ajaxComplete", function() {
-				if (!timeout) {
-					timeout = setTimeout(scan, 200);
-				}
-			});
-		}, 200);
 	};
 }
 

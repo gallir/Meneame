@@ -64,7 +64,12 @@ $('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
 		async: false,
 		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
-			else $("#newpost").html(response); $("#addpost").hide("fast");
+			else {
+				element = $("#newpost");
+				element.html(response); 
+				$("#addpost").hide("fast");
+				element.trigger('DOMChanged', element);
+			}
 		}
 	};
 {% else %}
@@ -72,7 +77,11 @@ $('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
 		async: false,
 		success: function(response) {
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
-			else $("#pcontainer-{{ self.id }}").html(response);
+			else {
+				element = $("#pcontainer-{{ self.id }}");
+				element.html(response);
+				element.trigger('DOMChanged', element);
+			}
 		}
 	};
 {% endif %}
