@@ -1,5 +1,6 @@
 <?
 include('../config.php');
+include('utils.php');
 include(mnminclude.'external_post.php');
 include_once(mnminclude.'ban.php');
 
@@ -484,20 +485,5 @@ function publish($link) {
 
 }
 
-
-// Cumulative Distribution Function
-// It returns the probability of val < array[i]
-function cdf($array, $value) {
-	$len = count($array);
-	$i = 0;
-
-	while ($i < $len) {
-		if ($array[$i] > $value) break;
-		$i++;
-	}
-
-	return $i/$len;
-
-}
 
 ?>

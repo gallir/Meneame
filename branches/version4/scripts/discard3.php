@@ -1,5 +1,6 @@
 <?
 include('../config.php');
+include('utils.php');
 include(mnminclude.'external_post.php');
 
 $now = time();
@@ -128,19 +129,34 @@ function depublish($site_id) {
 	// send back to queue links with too many negatives
 	global $db, $globals;
 
+	$days = 4;
+
 	echo "STARTING depublish for $site_id\n";
 
-	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval 6 day) and date < date_sub(now(), interval 8 minute) and link = link_id and link_negatives > link_votes / 8");
+
+
+	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and date < date_sub(now(), interval 8 minute) and link = link_id and link_negatives > link_votes / 8");
 
 	if ($links) {
+		$votes_clicks = $db->get_col("select SQL_NO_CACHE link_votes/counter from links, sub_statuses, link_clicks where sub_statuses.id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and link = link_id and link_clicks.id = link");
+		sort($votes_clicks);
+
 		foreach ($links as $link) {
 			$l = Link::from_db($link);
+			$vc = $l->votes/$l->clicks;
+			$prob = cdf($votes_clicks, $vc);
+
 			// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
 			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
 			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
-			echo "Candidate $l->id ($l->karma) $negatives $positives\n";
-			if ($negatives > 2 && $negatives > $l->karma/6 && $l->negatives > $l->votes/6 && $l->negatives > 5
-				&& ($negatives > $positives * 1.1 || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
+			
+			echo "Candidate $l->id ($l->karma) negative karma: $negatives positive karma: $positives\n";
+			// Adjust positives to the probability of votes/clicks
+			$positives = $positives * (1 + (1 - $prob) * 0.6);
+			echo "Probability: $prob New positives: $positives\n";
+
+			if ($negatives > 10 && $negatives > $l->karma/6 && $l->negatives > $l->votes/6 && $l->negatives > 5
+				&& ($negatives > $positives || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
 				$karma_old = $l->karma;
 				$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
