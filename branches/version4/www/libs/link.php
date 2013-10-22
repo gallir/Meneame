@@ -1249,6 +1249,7 @@ class Link extends LCPBase {
 		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
 		$dict['anonymous'] = $this->anonymous;
+		$dict['clicks'] = $this->clicks;
 		if (empty($this->old_karma)) {
 			$this->old_karma = $this->karma;
 		}
