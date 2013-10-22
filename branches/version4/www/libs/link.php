@@ -1219,8 +1219,8 @@ class Link extends LCPBase {
 			&& $this->negatives < $this->votes/5) {
 			$w = $globals['karma_clicks_bonus'];
 			$this->clicks = $this->get_clicks(); // Just in case it was not read
-			$c = $w * log10($this->clicks/($this->total_votes+$this->negatives));
-			$c = min($w*1.5, $c); $c = max($c, 0);
+			$c = $w * log($this->clicks/($this->total_votes+$this->negatives));
+			$c = min($w*1.5, $c); $c = max($c, -0.1);
 			$this->karma = $this->karma * (1+$c);
 			$this->karma = round($this->karma);
 		}
