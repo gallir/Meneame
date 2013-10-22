@@ -22,6 +22,7 @@ if ( ($array = $link->read_annotation("link-karma")) != false ) {
 	$data['positives'] = array();
 	$data['negatives'] = array();
 	$data['karma'] = array();
+	$data['clicks'] = array();
 
 	$array = array_reverse($array);
 	foreach ($array as $log) {
@@ -35,7 +36,7 @@ if ( ($array = $link->read_annotation("link-karma")) != false ) {
 	foreach (array_keys($data) as $key) {
 		$obj = array();
 		$obj['label'] = $key;
-		if ($key == 'karma') $obj['yaxis'] = 2;
+		if ($key == 'karma' || $key == 'clicks') $obj['yaxis'] = 2;
 		if (!empty($colors[$key])) $obj['color'] = $colors[$key];
 		$obj['data'] = $data[$key];
 		array_push($objects, $obj);

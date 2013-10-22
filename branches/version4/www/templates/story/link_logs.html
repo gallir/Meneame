@@ -68,6 +68,7 @@
 			points: { show: true },
 			legend: { position: "nw" },
 			xaxis: { mode: "time", minTickSize: [1, "hour"], },
+			yaxes: [ { }, { position: "right" } ],
 			//yaxis: { min: 0 },
 			//y2axis: { min: 0 },
 			grid: { hoverable: true },
@@ -107,7 +108,7 @@
 
 		var previousPoint = null;
 		var txt = '';
-		$("#flot").bind("plothover", function (event, pos, item) {
+		$("#flot").on("plothover", function (event, pos, item) {
 			if (item) {
 				if (previousPoint != item.datapoint) {
 					previousPoint = item.datapoint;
