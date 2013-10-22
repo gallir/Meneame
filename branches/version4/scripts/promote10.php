@@ -188,10 +188,7 @@ function promote($site_id) {
 		$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>coef</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
 		$i=0;
 		foreach($links as $dblink) {
-			$link = new Link;
-			$link->id=$dblink->link_id;
-			// $db->transaction();
-			$link->read();
+			$link = Link::from_db($dblink->link_id);
 			echo "START WITH $link->uri\n";
 			$user = new User;
 			$user->id = $link->author;

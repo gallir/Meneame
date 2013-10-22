@@ -169,7 +169,7 @@ function depublish($site_id) {
 				foreach ($ids as $id) {
 					$u = new User($id);
 					if ($u->read) {
-						$u->add_karma(0.3, _('Negativo a retirada de portada'));
+						$u->add_karma(0.25, _('Negativo a retirada de portada'));
 					}
 				}
 
