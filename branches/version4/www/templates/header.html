@@ -5,11 +5,7 @@
 <meta name="ROBOTS" content="NOARCHIVE" />
 <meta name="generator" content="meneame" />
 
-{#
-#}
-{% if globals.mobile %}
-	<meta name="viewport" content="width=device-width initial-scale=1"/>
-{% endif %}
+<meta name="viewport" content="width=device-width initial-scale=1"/>
 
 
 {% if globals.noindex %}
@@ -193,7 +189,7 @@ var mnm_start_time=(new Date()).getTime()
 				<input type="hidden" name="{{name}}" value="{{value}}"/>
 			{% endfor %}
 		{% endif %}
-		<input id="searchbox" name="q" type="text" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+		<input id="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
     </form>
   </div>
 <!--end search-->

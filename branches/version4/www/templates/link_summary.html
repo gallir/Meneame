@@ -152,9 +152,9 @@
 
 	{% if type != 'short' %}
 			<div class="news-details">
-				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
-				<strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;
+				<span  class="widescreen"><strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;</span>
+				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">
@@ -165,13 +165,15 @@
 			{% endif %}
 
 			<div style="display:inline" class="tool">
-			{% if ! self.is_discarded && not globals.mobile %}
+			{% if ! self.is_discarded %}
 
 				{% exec htmlspecialchars_decode self.title as title %}
-				{% exec self.get_short_permalink as short_link %}
 				{% set link = self.permalink %}
 
-				<strong><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a></strong>:
+				{% if not globals.mobile %}
+					{% exec self.get_short_permalink as short_link %}
+					<strong class="widescreen"><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a>:</strong>
+				{% endif %}
 				{% include "share.html" %}
 
 

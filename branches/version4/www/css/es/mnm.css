@@ -295,9 +295,9 @@ margin-top:3px;
 /* search */
 
 #searchform {
-font-size: 12px;
+font-size: 16px;
 width:300px;
-height:20px;
+height:22px;
 margin-top:13px;
 margin-right:10px;
 position:relative;
@@ -307,17 +307,16 @@ float:right;
 #searchform #searchglass {
 background-color: #fff;
 position:absolute;
-width:20px;
-height: 15px;
-padding-top: 2px;
-padding-left: 2px;
+width:22px;
+height: 16px;
+padding: 0 0px 2px 2px;
 -webkit-border-top-left-radius: 3px;
 -webkit-border-bottom-left-radius: 3px;
 -moz-border-radius-topleft: 3px;
 -moz-border-radius-bottomleft: 3px;
 border-top-left-radius: 3px;
 border-bottom-left-radius: 3px;
-vertical-align: top;
+vertical-align: middle;
 }
 
 #searchform #searchbox {
@@ -326,8 +325,8 @@ background-color:#fff;
 position:absolute;
 left:20px;
 width:275px;
-height: 15px;
-padding-top: 2px;
+height: 18px;
+padding-top: 0px;
 padding-left: 2px;
 -webkit-border-top-right-radius: 3px;
 -webkit-border-bottom-right-radius: 3px;
@@ -403,7 +402,7 @@ background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x
 }
 
 #wrap {
-padding-top: 20px;
+padding-top: 2px;
 min-width: 805px;
 max-width: 1300px;
 width: 99%;
@@ -449,7 +448,7 @@ position:relative;
 background:#f9f9f9;
 border:#ddd 1px solid;
 padding: 5px 5px;
-margin: 5px 0 10px 0;
+margin: 10px 0;
 vertical-align:middle;
 overflow: hidden;
 }
@@ -506,7 +505,6 @@ vertical-align: middle;
 
 .subheader{
 width: auto;
-margin-top: -20px;
 height:30px;
 padding-left:25px;
 font-family:'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;

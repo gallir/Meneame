@@ -160,11 +160,7 @@ if ($current_user->user_id == $user->id) {
 	$globals['extra_comment_conversation'] = '';
 }
 
-if ($globals['mobile']) {
-	echo '<div id="singlewrap">'."\n";
-} else {
-	echo '<div id="singlewrap" style="margin: 0 40px; padding-top: 5px">'."\n";
-}
+echo '<div id="singlewrap">'."\n";
 
 $url_login = urlencode($login);
 

@@ -12,6 +12,7 @@ font-size: 16px;
 
 #header{
 min-width: 0;
+padding-top: 25px;
 }
 
 #header-top {
@@ -24,10 +25,6 @@ z-index: 9999;
 
 #notifier_panel {
 position:fixed;
-}
-
-#header-center {
-margin-top: 25px;
 }
 
 #header-top .logo-mnm{
@@ -44,7 +41,7 @@ width:45px;
 font-size: small;
 }
 
-#sidebar {
+#sidebar, #edlist, .logo-ed, .widescreen {
 display:none;
 width: 0px;
 min-width: 0;
@@ -74,12 +71,12 @@ max-width: auto;
 }
 
 #searchform {
-width:125px;
+width:150px;
 margin-right:2px;
 }
 
 #searchform #searchbox {
-width:100px;
+width:125px;
 }
 
 #header-center .edname{
@@ -93,12 +90,12 @@ overflow:hidden;
 overflow: auto;
 height:auto;
 white-space:normal;
+margin-bottom: 0px;
 padding: 0 5px 0 5px;
 line-height: 180%;
 }
 
 .subheader{
-margin-top: -20px;
 height:auto;
 padding-left:5px;
 line-height: 180%;

@@ -359,27 +359,33 @@ function do_vertical_tags($what=false) {
 	$min_pts = 8;
 	$max_pts = 22;
 
-	// Delete old tags, they are not used anywhere else
-	$db->query("delete from tags where tag_lang = '$dblang' and tag_date < date_sub(now(), interval 8 day)");
-
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
-	$from_where = "FROM tags, links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link AND tag_lang='$dblang' and tag_date > '$min_date' and link_id = tag_link_id and status $status $meta_cond GROUP BY tag_words";
+	$from_where = "FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link and link_date > '$min_date' and link_status $status $meta_cond";
 	$max = 3;
 
-	$res = $db->get_results("select lower(tag_words) as word, count(*) as count $from_where order by count desc limit 20");
+	$res = $db->get_col("select link_tags $from_where");
 	if ($res) {
 		$url = $globals['base_url'].'cloud.php';
 		$title = _('etiquetas');
 		$content = '';
-		foreach ($res as $item) {
-			$words[$item->word] = $item->count;
-			if ($item->count > $max) $max = $item->count;
+
+		foreach ($res as $line) {
+			$list = explode(',', mb_strtolower($line));
+			foreach ($list as $w) {
+				$w = trim($w);
+				$words[$w]++;
+				if ($words[$w] > $max) $max = $words[$w];
+			}
 		}
+
+		
+
 		$coef = ($max_pts - $min_pts)/($max-1);
+		arsort($words);
+		$words = array_slice($words, 0, 20);
 		ksort($words);
-		$max_count = 0;
+
 		foreach ($words as $word => $count) {
-			if ($count > $max_count) $max_count = $count;
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$op = round(0.4 + 0.6*$count/$max, 2);
 			$content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
@@ -390,7 +396,7 @@ function do_vertical_tags($what=false) {
 			}
 			$content .= urlencode($word).'">'.$word.'</a>  ';
 		}
-		if ($max_count > 2) {
+		if ($max > 2) {
 			$vars = compact('content', 'title', 'url');
 			$output = Haanga::Load('tags_sidebox.html', $vars, true);
 			echo $output;

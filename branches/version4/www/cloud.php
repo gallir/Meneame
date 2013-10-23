@@ -10,7 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 
 $min_pts = 10;
-$max_pts = 44;
+$max_pts = 50;
 $words_limit = 100;
 
 $line_height = $max_pts * 0.75;
@@ -27,13 +27,7 @@ if($from > count($range_values) || ! $range_values[$from] ) {
 }
 // we use this to allow sql caching
 $from_time = '"'.date("Y-m-d H:00:00", time() - 86400 * $range_values[$from]).'"';
-$from_where = "FROM tags, links WHERE  tag_lang='$dblang' and tag_date > $from_time and link_id = tag_link_id and link_status != 'discard'";
-$from_where .= " GROUP BY tag_words";
-
-$max = max($db->get_var("select count(*) as words $from_where order by words desc limit 1"), 2);
-//echo "MAX= $max\n";
-
-$coef = ($max_pts - $min_pts)/($max-1);
+$from_where = "FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link AND link_date > $from_time and link_status != 'discard'";
 
 
 do_header(_('nube de etiquetas') . ' | '._('menéame'));
@@ -52,12 +46,24 @@ echo '<div id="newswrap">'."\n";
 
 echo '<div class="topheading"><h2>+ '.$words_limit.'</h2></div>';
 echo '<div style="margin: 0px 0 20px 0; line-height: '.$line_height.'pt; margin-left: 25px;">';
-$res = $db->get_results("select tag_words, count(*) as count $from_where order by count desc limit $words_limit");
+$res = $db->get_col("select link_tags $from_where");
 if ($res) {
-	foreach ($res as $item) {
-		$words[$item->tag_words] = $item->count;
+	$max = 0;
+	$words = array();
+	foreach ($res as $line) {
+		$list = explode(',', mb_strtolower($line));
+		foreach ($list as $w) {
+			$w = trim($w);
+			$words[$w]++;
+			if ($words[$w] > $max) $max = $words[$w];
+		}
 	}
+
+	$coef = ($max_pts - $min_pts)/($max-1);
+	arsort($words);
+	$words = array_slice($words, 0, $words_limit);
 	ksort($words);
+
 	foreach ($words as $word => $count) {
 		$size = round($min_pts + ($count-1)*$coef, 1);
 		echo '<span style="font-size: '.$size.'pt"><a href="'.$globals['base_url'].'search.php?p=tag&amp;q='.urlencode($word).'">'.$word.'</a></span>&nbsp;&nbsp; ';
