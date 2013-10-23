@@ -2181,6 +2181,7 @@ margin-right: 5px;
 
 .semiopaque {
 opacity:0.3;
+vertical-align:middle;
 }
 
 .semiopaque:hover {

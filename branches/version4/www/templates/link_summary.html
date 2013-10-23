@@ -150,7 +150,7 @@
 	{% endif %}
 	{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
-	{% if globals.link && type != 'short' %}
+	{% if type != 'short' %}
 			<div class="news-details">
 				<strong>{% trans _('negativos') %}</strong>: <span id="a-neg-{{ self.id }}">{{ self.negatives }}</span>&nbsp;&nbsp;
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
