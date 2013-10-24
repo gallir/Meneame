@@ -755,7 +755,7 @@ class Link extends LCPBase {
 	function check_warn() {
 		global $db, $globals;
 
-		if ($this->status == 'published') $neg_percent = 0.1;
+		if ($this->status == 'published') $neg_percent = 0.125;
 		else $neg_percent = 0.1;
 		if (!$this->votes_enabled || $this->negatives < 4 || $this->negatives < $this->votes * $neg_percent ) {
 			$this->warned = false;
@@ -1219,11 +1219,15 @@ class Link extends LCPBase {
 			&& $this->negatives < $this->votes/5) {
 			$w = $globals['karma_clicks_bonus'];
 			$this->clicks = $this->get_clicks(); // Just in case it was not read
-			$c = $w * log($this->clicks/($this->total_votes+$this->negatives));
-			$c = min($w*1.5, $c); $c = max($c, -0.1);
-			$this->karma = $this->karma * (1+$c);
-			$this->karma = round($this->karma);
+			$c = $this->clicks/($this->total_votes+$this->negatives) - 0.5;
+			$c = max($c, 0.005); // Be sure not to calculate log of zero or negative
+			$c = $w * log($c);
+			$c = min(0.6, $c); $c = max($c, -0.2);
+			$bonus = round($this->karma * $c);
+			$this->annotation .= _('Bonus clics').": $bonus<br/>";
+			$this->karma += $bonus;
 		}
+		$this->karma = round($this->karma);
 	}
 
 	// Bonus for sources than are not frequently sent
