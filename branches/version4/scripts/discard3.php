@@ -152,11 +152,12 @@ function depublish($site_id) {
 			
 			echo "Candidate $l->id ($l->karma) negative karma: $negatives positive karma: $positives\n";
 			// Adjust positives to the probability of votes/clicks
-			$positives = $positives * (1 + (1 - $prob) * 0.6);
-			echo "Probability: $prob New positives: $positives\n";
+			$c = (1 + (1 - $prob) * 0.6);
+			$positives = $positives * $c;
+			echo "Probability: $prob New positives: $positives ($c)\n";
 
 			if ($negatives > 10 && $negatives > $l->karma/6 && $l->negatives > $l->votes/6 && $l->negatives > 5
-				&& ($negatives > $positives || ($negatives > $l->karma/2 && $negatives > $positives/2) )) {
+				&& ($negatives > $positives || ($negatives > $c * $l->karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
 				$karma_old = $l->karma;
 				$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );

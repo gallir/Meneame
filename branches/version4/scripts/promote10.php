@@ -97,8 +97,8 @@ function promote($site_id) {
 	$min_votes = 5;
 	/////////////
 
-	$limit_karma = round(min($past_karma,$min_karma) * 0.50);
-	$bonus_karma = round(min($past_karma,$min_karma) * 0.40);
+	$limit_karma = round(min($past_karma,$min_karma) * 0.40);
+	$bonus_karma = round(min($past_karma,$min_karma) * 0.35);
 
 
 	/// Get common votes links' averages
