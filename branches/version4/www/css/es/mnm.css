@@ -312,7 +312,7 @@ margin-top:3px;
 
 /* search */
 
-#searchform {
+.searchform {
 font-size: 16px;
 width:300px;
 height:22px;
@@ -322,7 +322,7 @@ position:relative;
 float:right;
 }
 
-#searchform #searchglass {
+.searchform .searchglass {
 background-color: #fff;
 position:absolute;
 width:22px;
@@ -337,7 +337,7 @@ border-bottom-left-radius: 3px;
 vertical-align: middle;
 }
 
-#searchform #searchbox {
+.searchform .searchbox {
 border:0px;
 background-color:#fff;
 position:absolute;

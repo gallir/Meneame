@@ -126,7 +126,7 @@ white-space: nowrap;
 }
 
 
-#searchform {
+.searchform {
 float:none;
 position:relative;
 display:block;
@@ -135,12 +135,12 @@ width:150px;
 height:40px;
 }
 
-#searchform #searchglass {
+.searchform .searchglass {
 height:24px;
 line-height: normal;
 }
 
-#searchform #searchbox {
+.searchform .searchbox {
 width:125px;
 height:26px;
 }

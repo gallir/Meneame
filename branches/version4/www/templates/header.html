@@ -178,15 +178,15 @@ var mnm_start_time=(new Date()).getTime()
 	</div>
 
 <!--search-->
-  <div id="searchform">
+  <div id="searchform" class="searchform">
     <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
-		<a href="javascript:document.top_search.submit()" id="searchglass"><img src="{{ globals.base_static }}img/common/h9_search02.png" width="12" height="12" alt=""></a>
+		<span class="searchglass" onClick="$(this).closest('form').submit()"><img src="{{ globals.base_static }}img/common/h9_search02.png" width="12" height="12" alt=""></span>
 		{% if globals.search_options %}
 			{% for name, value in globals.search_options %}
 				<input type="hidden" name="{{name}}" value="{{value}}"/>
 			{% endfor %}
 		{% endif %}
-		<input id="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+		<input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
     </form>
   </div>
 <!--end search-->
@@ -205,10 +205,8 @@ var mnm_start_time=(new Date()).getTime()
 		<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
 	{% endfor %}
 
-	{% if not globals.mobile %}
-		{% if globals.help_url %}
-			<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
-		{% endif %}
+	{% if globals.help_url %}
+		<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
 	{% endif %}
 	</ul>
 
