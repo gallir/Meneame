@@ -218,7 +218,7 @@ if ($links) {
 		$link = Link::from_db($link_id);
 		if (!$link) continue;
 		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
-		$permalink = $link->get_short_permalink();
+		$permalink = $link->get_permalink();
 		echo "	<item>\n";
 
 		// Meneame own namespace
