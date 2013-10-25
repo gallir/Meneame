@@ -69,7 +69,10 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 		$n = 0;
 		foreach ($content as $text => $url) {
 	   		if ($selected === $n) $class_b = ' class = "selected"';
-			else $class_b='';
+			else {
+				if ($n > 3) $class_b=' class="widescreen"';
+				else $class_b='';
+			}
 	   		echo '<li'.$class_b.'>'."\n";
 	   		echo '<a href="'.$url.'">'.$text."</a>\n";
 	   		echo '</li>'."\n";
@@ -79,9 +82,9 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 	    echo '<li>'.$content.'</li>';
 	}
 
-	if ($rss) {
+	if ($rss && ! empty ($content)) {
 		if (!$rss_title) $rss_title = 'rss2';
-		echo '<li class="icon"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
+		echo '<li class="icon widescreen"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

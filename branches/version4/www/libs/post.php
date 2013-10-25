@@ -180,17 +180,13 @@ class Post extends LCPBase {
 		$this->show_avatar = true;
 
 		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a>';
+		//$author .= ' ('.$this->src.')';
 
-		if (! $globals['mobile']) {
-			$author .= ' ('.$this->src.')';
-			// Print dates
-			if ($globals['now'] - $this->date > 86400) {
-				$this->comment_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
-			} else {
-				$this->comment_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
-			}
+		// Print dates
+		if ($globals['now'] - $this->date > 86400) {
+			$this->comment_info = sprintf('<span class="widescreen">'._('el %s %s por ').'</span>'.'%s', get_date_time($this->date), '', $author);
 		} else {
-			$this->comment_info = $author;
+			$this->comment_info = sprintf('<span class="widescreen">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), '', $author);
 		}
 
 		$this->prepare_summary_text($length);

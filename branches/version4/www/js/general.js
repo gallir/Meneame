@@ -805,6 +805,40 @@ function show_answers(type, id) {
 	}
 }
 
+var tuneMobile = new function () {
+	var changed = false;
+	var currentStatus = '';
+	var menuButton;
+
+	this.init = function() {
+		tuneMobile.menuButton = $("#nav-menu");
+		tuneMobile.menuButton.on('click', function() {
+			$("#header-menu01").toggle();
+		});
+		$(window).on("resize", tuneMobile.onResize);
+		this.onResize();
+	}
+
+	this.onResize = function() {
+		if (tuneMobile.menuButton.is(':hidden')){
+			if (tuneMobile.currentStatus == 'normal') return;
+			tuneMobile.currentStatus = 'normal';
+			if (tuneMobile.changed) {
+				$("#header-center").append($('#searchform'));
+				$("#header-menu01").toggle(true);
+			}
+		} else {
+			if (tuneMobile.currentStatus == 'mobile') return;
+			tuneMobile.currentStatus = 'mobile';
+			$("#header-menu01").toggle(false);
+			$("#header-menu01").prepend($('#searchform'));
+			tuneMobile.changed = true;
+		}
+	}
+	
+}
+
+
 $(document).ready(function () {
 	var m, m2, target, canonical;
 
@@ -839,6 +873,9 @@ $(document).ready(function () {
 		}
 	}
 	$.ajaxSetup({ cache: false });
+
+	tuneMobile.init();
+
 	mDialog.init();
 	notifier.init();
 	fancyBox.init();

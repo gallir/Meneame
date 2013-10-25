@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 13; // internal version, to for reloads
+$globals['v'] = 14; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -290,7 +290,7 @@ $globals['sphinx_port'] = 9312;
 
 $globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 1024*1024;
-$globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
+$globals['avatars_allowed_sizes'] = Array (80, 40, 30, 25, 20);
 
 // If you use nginx define X-Accel-Redirect, or X-Sendfile for Apache module
 // See: https://tn123.org/mod_xsendfile/ http://wiki.nginx.org/XSendfile
@@ -369,7 +369,8 @@ $globals['js_main'] = 'general.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css';
 // Load webfonts from the specified url
-$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
+// $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
+// $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Roboto';
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

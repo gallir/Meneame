@@ -6,6 +6,14 @@ Authors: Ricardo Galli, Benjamí Villoslada, Damián Vila, Aníbal De Castro
 Licence: Affero GPL License (http://meneame.net/COPYING)
 */
 
+/* Fonts from http://www.google.com/fonts/ */
+@font-face {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+src: local('Roboto Regular'), local('Roboto-Regular'), url(http://themes.googleusercontent.com/static/fonts/roboto/v9/2UX7WLTfW3W8TclTUvlFyQ.woff) format('woff');
+}
+
 html * {
 margin: 0;
 padding: 0;
@@ -138,26 +146,36 @@ border-radius: 3px;
 #header{
 width: 100%;
 min-width: 790px;
-font-family:'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+padding-top: 30px;
+font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
 /* first header zone */
 
 #header-top{
-height:25px;
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+height:30px;
 background-color:#3c3c3c;
 overflow:hidden;
 white-space:nowrap;
+z-index: 10;
 }
 
 /* top logo */
+
+#nav-menu {
+display: none;
+}
 
 #header-top .logo-mnm{
 background-image:url('../../img/mnm/h9_logo_mnm.png');
 height:16px;
 width:96px;
 margin-left:25px;
-margin-top:4px;
+margin-top:5px;
 margin-right:0px;
 float:left;
 font: 0/0 serif;
@@ -177,7 +195,7 @@ background-image:url('../../img/mnm/h9_logo_ed.png');
 height:16px;
 width:10px;
 margin-left:20px;
-margin-top:4px;
+margin-top:7px;
 margin-right:15px;
 float:left;
 }
@@ -186,7 +204,7 @@ float:left;
 
 #header-top ul#edlist{
 list-style-type:none;
-margin:0;
+margin: 2px 0 0 0;
 padding:0;
 float:left;
 }
@@ -202,7 +220,7 @@ line-height:140%;
 
 #header-top ul#edlist li a{
 text-decoration:none;
-padding-bottom: 5px;
+height:27px;
 margin-right:20px;
 color:#fff;
 display:inline-block;
@@ -243,17 +261,17 @@ color:#ff0000;
 }
 
 #header-top .usertext{
-font-family:'Open Sans Condensed', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-font-size:14px;
+font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+font-size:15px;
 color:#fff;
 margin-right:10px;
-margin-top:3px;
+margin-top:4px;
 }
 
 #header-top .userlogin{
 width: 40px;
 text-align: center;
-margin-top:4px;
+margin-top:7px;
 
 }
 
@@ -339,19 +357,20 @@ border-bottom-right-radius: 3px;
 /* menu 01 header */
 
 #header-menu01{
+display: block;
 height:30px;
 background-color:#ececec;
 white-space:nowrap;
 overflow: hidden;
 font-size: 15px;
-padding: 0 20px 0 20px;
+padding: 0 0 0 20px;
 }
 
 /* menu 01 header left items */
 
 #header-menu01 ul#menu01-itemsl{
 list-style-type:none;
-margin: 3px 20px 0 0;
+margin-top: 3px;
 padding:0;
 float:left;
 }
@@ -376,14 +395,14 @@ text-decoration:none;
 
 #header-menu01 ul#menu01-itemsr{
 list-style-type:none;
-margin: 3px 0 0 20px;
+margin-top: 3px;
 padding:0;
 float:right;
 display: block;
 }
 
 #menu01-itemsr li {
-margin-left: 20px;
+margin: 0 10px;
 }
 
 #header-menu01 ul li a{
@@ -391,7 +410,7 @@ display:inline-block;
 padding-bottom: 5px;
 }
 
-#header-menu01 .selected{
+#header-menu01 .selected a{
 background: url('../../img/common/h9_underline_menu01.png') repeat-x 100% 100%;
 white-space: nowrap;
 }
@@ -507,7 +526,7 @@ vertical-align: middle;
 width: auto;
 height:30px;
 padding-left:25px;
-font-family:'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 list-style-type: none;
 }
 
@@ -521,12 +540,12 @@ visibility: hidden;
 
 .subheader li{
 margin-right:25px;
-margin-top: 3px;
+margin-top: 2px;
 float:left;
 }
 
 .subheader li a{
-font-size:14px;
+font-size:15px;
 color:#3c3c3c;
 text-decoration:none;
 }
@@ -1208,7 +1227,7 @@ left: 8px;
 width: 67px;
 height: 85px;
 border: 1px solid #ffeed6;
-font-family: 'Open Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 font-size: 12px;
 color: #ff6400;
 text-align: center;
@@ -1316,12 +1335,13 @@ background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABbCAYA
 }
 
 .bar .menealo a, .bar .menealo span {
-padding: 1px 0;
+font-size: 13px;
+padding-bottom: 3px;
 text-align: center;
 }
 
 .bar .mnm-published, .bar .mnm-queued, .bar .mnm-discarded {
-padding: 2px 5px;
+padding: 4px 5px;
 color: #ff6400;
 }
 
@@ -2190,12 +2210,12 @@ opacity:1.0;
 cursor:pointer;
 background:#666;
 color:#fff;
-font-size:14px;
+font-size:18px;
 font-weight:bold;
-height:25px;
-width:28px;
+height:30px;
+width:30px;
 text-align:center;
-padding-top:3px;
+padding-top:5px;
 }
 
 #notifier:hover{
@@ -2210,10 +2230,11 @@ color:#fff;
 
 
 #notifier_panel {
+font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 border-radius:3px;
-position:absolute;
+position:fixed;
 right:25px;
-top:26px;
+top:31px;
 padding: 2px 2px;
 color:#aaa;
 background:#fff;

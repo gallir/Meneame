@@ -283,14 +283,10 @@ class Comment extends LCPBase {
 			$this->avatar_img = get_no_avatar_url(20);
 		}
 
-		if (! $globals['mobile']) {
-			if ($globals['now'] - $this->date > 86400) {
-				$this->author_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), $edited, $author);
-			} else {
-				$this->author_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), $edited, $author);
-			}
+		if ($globals['now'] - $this->date > 86400) {
+				$this->author_info = sprintf('<span class="widescreen">'._('el %s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
 		} else {
-			$this->author_info = $author;
+				$this->author_info = sprintf('<span class="widescreen">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), $edited, $author);
 		}
 
 		$vars = array('self' => $this);

@@ -148,15 +148,17 @@ function print_shakeit_tabs($option=-1) {
 	}
 	$items[] = array('id' => 1, 'url' => 'shakeit.php'.$globals['meta_skip'], 'title' => _('todas'));
 
+	if (! $globals['mobile']) {
 	$metas = SitesMgr::get_metas();
-	if ($metas) {
-		foreach ($metas as $meta) {
-			$items[] = array(
-				'id'  => 9999, /* fake number */
-				'url' =>'shakeit.php?meta='.$meta->uri,
-				'selected' => $meta->id == $globals['meta_current'],
-				'title' => $meta->name
-			);
+		if ($metas) {
+			foreach ($metas as $meta) {
+				$items[] = array(
+					'id'  => 9999, /* fake number */
+					'url' =>'shakeit.php?meta='.$meta->uri,
+					'selected' => $meta->id == $globals['meta_current'],
+					'title' => $meta->name
+				);
+			}
 		}
 	}
 
@@ -171,13 +173,15 @@ function print_shakeit_tabs($option=-1) {
 	}
 
 	// Print RSS teasers
-	switch ($option) {
-		case 7: // Personalised, queued
-			$feed = array("url" => "?status=queued&amp;personal=".$current_user->user_id, "title" => "");
-			break;
-		default:
-			$feed = array("url" => "?status=queued&amp;meta=".$globals['meta_current'], "title" => "");
-			break;
+	if (! $globals['mobile']) {
+		switch ($option) {
+			case 7: // Personalised, queued
+				$feed = array("url" => "?status=queued&amp;personal=".$current_user->user_id, "title" => "");
+				break;
+			default:
+				$feed = array("url" => "?status=queued&amp;meta=".$globals['meta_current'], "title" => "");
+				break;
+		}
 	}
 	$vars = compact('items', 'option', 'feed');
 	return Haanga::Load('print_tabs.html', $vars);

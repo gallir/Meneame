@@ -12,7 +12,7 @@ font-size: 16px;
 
 #header{
 min-width: 0;
-padding-top: 25px;
+padding-top: 30px;
 }
 
 #header-top {
@@ -20,21 +20,37 @@ position: fixed;
 top: 0px;
 left: 0px;
 width: 100%;
-z-index: 9999;
+z-index: 10;
+}
+
+#header-top .logo-mnm {
+margin-left: 10px;
+}
+
+#header-center {
+display: none;
 }
 
 #notifier_panel {
 position:fixed;
 }
 
-#header-top .logo-mnm{
-margin-left:5px;
+#nav-menu {
+display: inline;
+color: #fff;
+margin:0 5px 0 5px;
+padding: 0;
+float: left;
+cursor: pointer;
+width: 30px;
+height: 30px;
+background-image: url('../img/common/icon-menu-20.png');
+background-repeat:no-repeat;
+background-position:center; 
 }
 
-#header-center .logo-eli{
-margin-left:5px;
-margin-right:5px;
-width:45px;
+#header-center {
+display: none;
 }
 
 .sneaker {
@@ -70,29 +86,63 @@ min-width: 0;
 max-width: auto;
 }
 
-#searchform {
-width:150px;
-margin-right:2px;
-}
-
-#searchform #searchbox {
-width:125px;
-}
-
-#header-center .edname{
-margin-top:8px;
-font-size:20px;
-max-width:45%;
-overflow:hidden;
-}
-
 #header-menu01{
+position: fixed;
+top: 31px;
+left: 0px;
+z-index: 10;
 overflow: auto;
 height:auto;
 white-space:normal;
 margin-bottom: 0px;
-padding: 0 5px 0 5px;
+padding: 0 25px 0 25px;
+font-size: 20px;
 line-height: 180%;
+width: auto;
+display: none;
+box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5)
+}
+
+#header-menu01 ul#menu01-itemsl {
+margin-bottom: 10px;
+}
+
+#header-menu01 ul, #header-menu01 ul li, #header-menu01 ul#menu01-itemsl, #header-menu01 ul#menu01-itemsr {
+float: none;
+margin-left: 0;
+}
+
+#header-menu01 ul li a{
+padding-bottom: 5px;
+white-space: nowrap;
+}
+
+#header-menu01 .selected a, #header-menu01 ul li a:hover{
+background: none;
+font-weight: bold;
+white-space: nowrap;
+}
+
+
+#searchform {
+float:none;
+position:relative;
+display:block;
+margin: 10px 0;
+width:150px;
+height:40px;
+}
+
+#searchform #searchglass {
+height:24px;
+line-height: normal;
+}
+
+#searchform #searchbox {
+width:125px;
+height:26px;
 }
 
 .subheader{
@@ -139,7 +189,7 @@ margin: 10px 0 0 0;
 margin-left: 5px;
 }
 
-#singlewrap, #singlewrap {
+#singlewrap {
 margin: 0;
 }
 
