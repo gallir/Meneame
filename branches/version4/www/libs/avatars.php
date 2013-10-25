@@ -72,9 +72,11 @@ function avatars_manage_upload($user, $name, $filename = false) {
 		avatars_remove_user_files($user);
 		return false;
 	}
-	avatar_resize("$file_base-orig.img", "$file_base-20.jpg", 20);
-	avatar_resize("$file_base-orig.img", "$file_base-25.jpg", 25);
-	avatar_resize("$file_base-orig.img", "$file_base-40.jpg", 40);
+	foreach ($globals['avatars_allowed_sizes'] as $size) {
+		if ($size != 80) {
+			avatar_resize("$file_base-orig.img", "$file_base-$size.jpg", $size);
+		}
+	}
 
 	// Store in S3 the other images and a higher quality one
 	if ($globals['Amazon_S3_media_bucket']) {
