@@ -28,12 +28,12 @@ overflow: hidden;
 .mnm-queued,
 .mnm-published,
 .mnm-discarded {
-width: 5.0em;
+width: 30px;
 background-color: transparent;
 float: left;
-font-size: 12px;
+font-size: 15px;
 padding: 1px 0 1px 0;
-margin: 0 0.5em 0 0;
+margin: 0 5px 0 0;
 text-align: center;
 }
 
@@ -69,7 +69,7 @@ float: left;
 font-size: 15px;
 font-family: Mono,Serif;
 font-weight: bold;
-margin: 3px 10px 0 10px;
+margin: 5px 5px 0 10px;
 color: #FFF;
 }
 
@@ -79,7 +79,9 @@ text-decoration: underline;
 }
 
 .close, .close:visited {
-margin: 3px 10px 0 10px;
+font-size: 15px;
+margin: 5px 5px 0 5px;
+vertical-align: middle;
 color: #FFF;
 }
 

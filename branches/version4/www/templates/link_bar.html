@@ -16,19 +16,18 @@
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
 {% endif %}
 
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css?v={{globals.v}}"/>
+
 {% if globals.mobile %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
-	{% else %}
-	<style type="text/css">
-	@import url({{globals.base_static}}css/handheld.css) print,tv,handheld,screen and (max-device-width: 680px);
-	</style>
+    <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
+{% else %}
+    <link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css?v={{ globals.v }}" />
 {% endif %}
 
 {% if globals.css_webfonts %}
 	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
 {% endif %}
 
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css?v={{globals.v}}"/>
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
@@ -95,7 +94,7 @@ mobile_client = {{ globals.mobile }};
 		{% endif %}
 
 		<a class="tooltip l:{{ self.id }} info">i</a>
-		<a class="close" href="{{ self.url }}">{% trans _('cerrar barra') %}</a>
+		<a class="close" href="{{ self.url }}" title="{% trans _('cerrar barra') %}">X</a>
 		</div>
 
 	{% include "header_userinfo.html" %}
