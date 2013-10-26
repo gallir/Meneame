@@ -1466,6 +1466,11 @@ font-weight: bold;
 color: #3D72C3;
 }
 
+.news-submitted .showmytitle {
+font-weight: bold;
+cursor: pointer;
+}
+
 /* trackback */
 
 .tab-trackback-url {
@@ -2255,10 +2260,11 @@ padding: 0 5px;
 vertical-align: center;
 text-align: center;
 font-weight: bold;
-font-size: 110%;
+font-size: 15px;
 height: 7ex;
 overflow: hidden;
 color: #101010;
+word-wrap: break-word;
 }
 
 #mDialog_options {

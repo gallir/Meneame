@@ -884,6 +884,9 @@ $(document).ready(function () {
 	mDialog.init();
 	notifier.init();
 	fancyBox.init();
+	$('.showmytitle').on('click', function () {
+		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
+	});
 });
 
 // Drop an image file

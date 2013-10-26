@@ -67,8 +67,9 @@
 	{% endif %}
 	{# {% if globals.ads %}<!-- google_ad_section_start -->{% endif %} #}
 
+	{% exec htmlspecialchars self.url as url %}
 	{% if globals.link %}<h1>{% else %}<h2>{% endif %}
-		<a href="{{ self.url|escape }}" class="{% if self.fancybox %}fancybox {% endif %}l:{{ self.id }}"
+		<a href="{{ url }}" class="{% if self.fancybox %}fancybox {% endif %}l:{{ self.id }}" 
 		{% if globals.click_counter %}
 			onmousedown="return clk(this, {{ self.id }})"
 		{% endif %}
@@ -87,7 +88,7 @@
 			<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img src="{% exec get_avatar_url self.author, self.avatar, 25 %}" width="25" height="25" alt=""/></a>
 		{% endif %}
 		{% trans _('por') %} <a href="{% exec get_user_uri self.username, 'history' %}">{{ self.username }}</a>
-		{% trans _('a') %} <strong>{{ self.url_str }}</strong><br />
+		{% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span><br />
 
 		{% if self.print_date %}
 			{% if self.status != 'published' %}
@@ -220,9 +221,9 @@
 		</div>
 	{% endif %}
 
+	{% exec do_banner_story as dummy %}
 	</div>
 </div>
-	{% exec do_banner_story as dummy %}
 
 {% if self.map_editable %}
 	<div id="geoedit" class="geoform" style="margin-left:20px">
