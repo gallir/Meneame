@@ -141,13 +141,16 @@ border-radius: 3px;
 /* END roundboxes */
 
 
+#header, #nav-panel, #notifier_panel, .subheader, .news-shakeit {
+font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
 /* whole header */
 
 #header{
 width: 100%;
 min-width: 790px;
 padding-top: 30px;
-font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
 /* first header zone */
@@ -165,16 +168,11 @@ z-index: 10;
 }
 
 /* top logo */
-
-#nav-menu {
-display: none;
-}
-
 #header-top .logo-mnm{
 background-image:url('../../img/mnm/h9_logo_mnm.png');
 height:16px;
 width:96px;
-margin-left:25px;
+margin-left:10px;
 margin-top:5px;
 margin-right:0px;
 float:left;
@@ -261,7 +259,6 @@ color:#ff0000;
 }
 
 #header-top .usertext{
-font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 font-size:15px;
 color:#fff;
 margin-right:10px;
@@ -272,7 +269,6 @@ margin-top:4px;
 width: 40px;
 text-align: center;
 margin-top:7px;
-
 }
 
 /* second header zone */
@@ -289,9 +285,9 @@ background-image:url('../../img/mnm/h9_eli.png');
 background-repeat: no-repeat;
 height:35px;
 width:55px;
-margin-left:50px;
+margin-left:25px;
 margin-top:5px;
-margin-right:55px;
+margin-right:45px;
 float:left;
 font: 0/0 serif;
 text-shadow: none;
@@ -356,7 +352,7 @@ border-bottom-right-radius: 3px;
 
 /* menu 01 header */
 
-#header-menu01{
+.header-menu01 {
 display: block;
 height:30px;
 background-color:#ececec;
@@ -368,24 +364,24 @@ padding: 0 0 0 20px;
 
 /* menu 01 header left items */
 
-#header-menu01 ul#menu01-itemsl{
+.header-menu01 ul.menu01-itemsl {
 list-style-type:none;
 margin-top: 3px;
 padding:0;
 float:left;
 }
 
-#menu01-itemsl li {
+.menu01-itemsl li {
 margin-right: 20px;
 }
 
-#header-menu01 ul li{
+.header-menu01 ul li{
 position:relative;
 float:left;
 line-height:145%
 }
 
-#header-menu01 ul li a{
+.header-menu01 ul li a{
 color:#ff6400;
 text-decoration:none;
 }
@@ -393,7 +389,7 @@ text-decoration:none;
 
 /* menu 01 header right items */
 
-#header-menu01 ul#menu01-itemsr{
+.header-menu01 ul.menu01-itemsr{
 list-style-type:none;
 margin-top: 3px;
 padding:0;
@@ -401,24 +397,109 @@ float:right;
 display: block;
 }
 
-#menu01-itemsr li {
+.menu01-itemsr li {
 margin: 0 10px;
 }
 
-#header-menu01 ul li a{
+.header-menu01 ul li a{
 display:inline-block;
 padding-bottom: 5px;
 }
 
-#header-menu01 .selected a{
+.header-menu01 .selected a{
 background: url('../../img/common/h9_underline_menu01.png') repeat-x 100% 100%;
 white-space: nowrap;
 }
 
-#header-menu01 ul li a:hover{
+.header-menu01 ul li a:hover{
 color:#ff6400;
 background: url('../../img/common/h9_underline_menu01.png') bottom left repeat-x;
 }
+
+#nav-menu {
+display: inline;
+color: #fff;
+margin:0 5px 0 5px;
+padding: 0;
+float: left;
+cursor: pointer;
+width: 10px;
+height: 30px;
+background-image: url('../../img/common/icon-menu-20.png');
+background-repeat:no-repeat;
+background-position:center;
+}
+
+#nav-panel {
+position: fixed;
+display: none;
+top: 31px;
+left: 0px;
+overflow: auto;
+z-index: 10;
+width: auto;
+height:auto;
+white-space:normal;
+margin-bottom: 0px;
+padding: 0 25px 0 25px;
+background-color: #ececec;
+box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+-webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5)
+}
+
+#nav-panel .header-menu01 {
+height: auto;
+padding: 0;
+margin: 0;
+font-size: 16px;
+}
+
+#nav-panel ul {
+margin-bottom: 10px;
+display: block;
+float: none;
+}
+
+#nav-panel ul li {
+float: none;
+margin-left: 0;
+margin-bottom: 5px;
+}
+
+#nav-panel ul li a {
+padding: 2px 0;
+white-space: nowrap;
+}
+
+#nav-panel ul li.selected a, #nav-panel ul li a:hover{
+background: none;
+font-weight: bold;
+display: block;
+}
+
+#nav-panel .searchform {
+float:none;
+position:relative;
+display:block;
+margin: 10px 0;
+width:150px;
+height:auto:;
+}
+
+#nav-panel .searchform .searchglass {
+padding-top: 2px;
+height:22px;
+line-height: normal;
+}
+
+#nav-panel .searchform .searchbox {
+width:125px;
+height:26px;
+}
+
+
+
 
 #wrap {
 padding-top: 2px;
@@ -526,7 +607,6 @@ vertical-align: middle;
 width: auto;
 height:30px;
 padding-left:25px;
-font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 list-style-type: none;
 }
 
@@ -1227,7 +1307,6 @@ left: 8px;
 width: 67px;
 height: 85px;
 border: 1px solid #ffeed6;
-font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 font-size: 12px;
 color: #ff6400;
 text-align: center;
@@ -2230,7 +2309,6 @@ color:#fff;
 
 
 #notifier_panel {
-font-family:Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 border-radius:3px;
 position:fixed;
 right:25px;

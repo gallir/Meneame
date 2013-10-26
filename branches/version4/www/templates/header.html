@@ -193,14 +193,15 @@ var mnm_start_time=(new Date()).getTime()
 
 </div><!--header-center-->
 
-<div id="header-menu01">
-  <ul id="menu01-itemsl">
+<div id="header-menu">
+<div class="header-menu01">
+  <ul class="menu01-itemsl">
 	{% for o in left_options %}
 	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
 	{% endfor %}
   </ul>
 
-	<ul id="menu01-itemsr">
+	<ul class="menu01-itemsr">
 	{% for o in right_options %}
 		<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
 	{% endfor %}
@@ -210,6 +211,7 @@ var mnm_start_time=(new Date()).getTime()
 	{% endif %}
 	</ul>
 
+</div>
 </div><!--header-menu01-->
 </div><!--header-->
 

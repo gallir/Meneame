@@ -805,37 +805,42 @@ function show_answers(type, id) {
 	}
 }
 
-var tuneMobile = new function () {
-	var changed = false;
-	var currentStatus = '';
-	var menuButton;
+var navMenu = new function () {
+	var panel = false;
 
 	this.init = function() {
-		tuneMobile.menuButton = $("#nav-menu");
-		tuneMobile.menuButton.on('click', function() {
-			$("#header-menu01").toggle();
+		$("#nav-menu").on('click', function() {
+			navMenu.prepare();
+			if (panel.is(":visible")) {
+				$('html').off('click', click_handler);
+				panel.hide();
+			} else {
+				$('html').on('click', click_handler);
+				panel.show();
+			}
 		});
-		$(window).on("resize", tuneMobile.onResize);
-		this.onResize();
 	}
 
-	this.onResize = function() {
-		if (tuneMobile.menuButton.is(':hidden')){
-			if (tuneMobile.currentStatus == 'normal') return;
-			tuneMobile.currentStatus = 'normal';
-			if (tuneMobile.changed) {
-				$("#header-center").append($('#searchform'));
-				$("#header-menu01").toggle(true);
-			}
+	this.prepare = function() {
+		if (panel !== false) return;
+		panel = $('<div id="nav-panel"></div>')
+		if (is_mobile) {
+			panel.append($('#searchform'));
+			panel.append($('#header-menu .header-menu01'));
 		} else {
-			if (tuneMobile.currentStatus == 'mobile') return;
-			tuneMobile.currentStatus = 'mobile';
-			$("#header-menu01").toggle(false);
-			$("#header-menu01").prepend($('#searchform'));
-			tuneMobile.changed = true;
+			panel.append($('#searchform').clone());
+			panel.append($('#header-menu .header-menu01').clone());
 		}
+		panel.appendTo("body");
 	}
-	
+
+	var click_handler = function (e) {
+		if (! panel.is(":visible")) return;
+		if ($(e.target).closest('#nav-panel, #nav-menu').length == 0) {
+			panel.hide();
+			e.preventDefault();
+		}
+	}	
 }
 
 
@@ -874,7 +879,7 @@ $(document).ready(function () {
 	}
 	$.ajaxSetup({ cache: false });
 
-	tuneMobile.init();
+	navMenu.init();
 
 	mDialog.init();
 	notifier.init();
@@ -1156,7 +1161,7 @@ var notifier = new function () {
 		if (! panel_visible) {
 			panel_visible = true;
 			$('<div id="notifier_panel"> </div>').appendTo("body");
-			$('html').bind('click', click_handler);
+			$('html').on('click', click_handler);
 
 			$.getJSON(base_url+"backend/notifications.json.php", function (data) {
 				for(var i=0; i<data.length; i++) {
@@ -1173,7 +1178,7 @@ var notifier = new function () {
 
 	this.hide = function () {
 		$("#notifier_panel").remove();
-		$('html').unbind('click', click_handler);
+		$('html').off('click', click_handler);
 		panel_visible = false;
 	}
 

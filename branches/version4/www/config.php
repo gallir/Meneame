@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 14; // internal version, to for reloads
+$globals['v'] = 15; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
