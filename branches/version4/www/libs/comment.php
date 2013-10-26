@@ -284,9 +284,9 @@ class Comment extends LCPBase {
 		}
 
 		if ($globals['now'] - $this->date > 86400) {
-				$this->author_info = sprintf('<span class="widescreen">'._('el %s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
+				$this->author_info = sprintf('<span class="wideonly">'._('el %s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
 		} else {
-				$this->author_info = sprintf('<span class="widescreen">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), $edited, $author);
+				$this->author_info = sprintf('<span class="wideonly">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), $edited, $author);
 		}
 
 		$vars = array('self' => $this);
@@ -473,9 +473,7 @@ class Comment extends LCPBase {
 				echo '<a href="'.get_auth_link().'login.php?return='.urlencode($globals['uri']).'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí.</a>'."\n";
 				echo '</div>'."\n";
 
-				echo '<div style="margin-top: 20px;text-align:center">';
 				print_oauth_icons();
-				echo '</div>'."\n";
 			}
 		}
 	}

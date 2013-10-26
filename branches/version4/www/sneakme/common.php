@@ -59,9 +59,9 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 
 	if ($current_user->user_id > 0 ) {
 		if (Post::can_add()) {
-			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva nota').'">&nbsp;'._('nueva nota').'<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
+			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva').'">&nbsp;'._('nota').'<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
 		} else {
-			echo '<li><span><a href="javascript:return;">'._('nueva nota').'</a></span></li>';
+			echo '<li><span><a href="javascript:return;">'._('nota').'</a></span></li>';
 		}
 	}
 
@@ -70,7 +70,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 		foreach ($content as $text => $url) {
 	   		if ($selected === $n) $class_b = ' class = "selected"';
 			else {
-				if ($n > 3) $class_b=' class="widescreen"';
+				if ($n > 3) $class_b=' class="wideonly"';
 				else $class_b='';
 			}
 	   		echo '<li'.$class_b.'>'."\n";
@@ -84,7 +84,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 
 	if ($rss && ! empty ($content)) {
 		if (!$rss_title) $rss_title = 'rss2';
-		echo '<li class="icon widescreen"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
+		echo '<li class="icon wideonly"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
 	}
 
 	echo '</ul>'."\n";

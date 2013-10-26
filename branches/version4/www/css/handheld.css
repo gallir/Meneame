@@ -39,7 +39,7 @@ position:fixed;
 font-size: small;
 }
 
-#sidebar, #edlist, .logo-ed, .widescreen {
+#sidebar, #edlist, .logo-ed, .wideonly {
 display:none;
 width: 0px;
 min-width: 0;
@@ -74,6 +74,11 @@ padding-left:5px;
 line-height: 180%;
 }
 
+#toplink .thumbnail.medium {
+width: 60px;
+height: 60px;
+}
+
 .news-body {
 padding-left: 5px;
 padding-right: 5px;
@@ -84,7 +89,7 @@ overflow: hidden;
 white-space: normal;
 }
 
-.news-details select {
+.news-details form {
 float: right;
 }
 

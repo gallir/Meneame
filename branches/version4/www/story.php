@@ -422,7 +422,7 @@ function print_story_tabs($option) {
 	echo '<ul class="subheader">'."\n";
 	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'">'._('comentarios'). '</a></li>'."\n";
 	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li class="'.$active[9].'widescreen"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
+	echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li class="'.$active[3].'"><a href="'.$globals['permalink'].'/voters">'._('votos'). '</a></li>'."\n";
@@ -431,17 +431,17 @@ function print_story_tabs($option) {
 			echo '<li class="'.$active[4].'"><a href="'.$globals['permalink'].'/log">'._('registros'). '</a></li>'."\n";
 		}
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
-			echo '<li class="'.$active[5].'widescreen"><a href="'.$globals['permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+			echo '<li class="'.$active[5].'wideonly"><a href="'.$globals['permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
 		}
 
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
-		echo '<li class="'.$active[6].'widescreen"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
+		echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
-		echo '<li class="'.$active[7].'widescreen"><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
+		echo '<li class="'.$active[7].'wideonly"><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
 	}
-	echo '<li class="'.$active[8].'widescreen"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
+	echo '<li class="'.$active[8].'wideonly"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>'."\n";
 }
 

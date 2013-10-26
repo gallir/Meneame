@@ -140,8 +140,7 @@ border-radius: 3px;
 
 /* END roundboxes */
 
-
-#header, #nav-panel, #notifier_panel, .subheader, .news-shakeit {
+#header, #nav-panel, #notifier_panel, .subheader, .news-shakeit, .news-details, .news-submitted, .news-tags, .comment-meta, #toplink .footer, .sidebox .votes, .header, .button, input, textarea, legend, button, select {
 font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
@@ -212,11 +211,11 @@ font-size:14px;
 color:#fff;
 position:relative;
 float:left;
-margin-top:1px;
 line-height:140%;
 }
 
 #header-top ul#edlist li a{
+padding-top: 1px;
 text-decoration:none;
 height:27px;
 margin-right:20px;
@@ -564,6 +563,11 @@ float: left;
 margin-right: 8px;
 }
 
+#toplink .thumbnail.medium {
+width: 110px;
+height: 110px;
+}
+
 #toplink p {
 color: #666;
 }
@@ -574,7 +578,7 @@ margin-top:5px;
 text-transform:capitalize;
 font-variant:small-caps;
 text-align:right;
-color:#aaa;
+color:#666;
 text-decoration:underline;
 }
 
@@ -692,7 +696,6 @@ background: #A84504;
 position: relative;
 margin: 0 0 10px;
 padding: 1px;
-font-family: 'Open-Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 font-weight: normal;
 text-align: center;
 }
@@ -739,7 +742,6 @@ box-shadow: 0 0 5px rgba(0,0,0,0.5);
 float: left;
 width: 40px;
 text-align: center;
-font-family: 'Open-Sans', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 border: 1px solid #ffeed6;
 text-align: center;
 font-size: 12px;
@@ -1254,12 +1256,18 @@ margin-top: 6px;
 color: #666;
 }
 
-.news-details select {
-border: none;
-letter-spacing: 0px;
-max-width: 8em;
-vertical-align: top;
+.news-details form {
+display: inline;
+margin-left:10px;
 padding: 0;
+overflow: hidden;
+}
+
+.news-details select {
+border: 0;
+letter-spacing: 0px;
+vertical-align: top;
+max-width: 6em;
 }
 
 .news-details .tool {
@@ -1272,7 +1280,7 @@ border-left-color: #666;
 .news-details .comments-counter {
 padding: 0 6px 0 0;
 border-left: none;
-font-size: 115%;
+font-size: 120%;
 }
 
 .comments-counter .counter {
@@ -1375,7 +1383,7 @@ background: #FFF url('../../img/common/bg-pressed.png') repeat-x bottom left;
 
 .news-shakeit .menealo span.negative, .bar .menealo span.negative  {
 color: #ccc;
-font-size: 10px;
+font-size: 11px;
 }
 
 .news-shakeit .clics {
@@ -2285,15 +2293,15 @@ opacity:1.0;
 }
 
 #notifier {
+padding-top: 5px;
 cursor:pointer;
 background:#666;
 color:#fff;
 font-size:18px;
 font-weight:bold;
-height:30px;
-width:30px;
+height:25px;
+width:35px;
 text-align:center;
-padding-top:5px;
 }
 
 #notifier:hover{
@@ -2359,3 +2367,13 @@ margin: 10px 0 4px 95px;
 white-space:nowrap;
 overflow:hidden;
 }
+
+.auth-buttons {
+margin-top: 20px;
+text-align:center;
+}
+
+.auth-buttons img {
+vertical-align:middle;
+margin: 5px 5px 5px 5px;
+

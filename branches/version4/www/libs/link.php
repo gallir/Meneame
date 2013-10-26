@@ -691,11 +691,8 @@ class Link extends LCPBase {
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
-		if ($globals['mobile']) $u_len = 30;
-		else $u_len = 60;
-		$this->url_str	   = htmlentities(txt_shorter(preg_replace('/^https*:\/\//', '', $this->url), $u_len));
-		$this->username_str = ' <a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a> ';
-		$this->print_date	= $globals['now'] - $this->date > 604800 || empty($_SERVER['HTTP_USER_AGENT']) || $globals['mobile']; // 7 days or user agent is empty
+		$this->url_str	= preg_replace('/^www\./', '', parse_url($this->url, 1));
+		$this->print_date	= $globals['now'] - $this->date > 1728000 || $globals['bot'] || $globals['mobile']; // 20 hours or user agent is empty
 		$this->thumb_url	= $this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&

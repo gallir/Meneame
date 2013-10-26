@@ -354,7 +354,7 @@ function get_date($epoch) {
 function get_date_time($epoch) {
 		global $globals;
 		//return date("Y-m-d H:i", $epoch);
-		if (abs($globals['now'] - $epoch) < 43200) // Difference is less than 12 hours
+		if (abs($globals['now'] - $epoch) < 1728000) // Difference is less than 20 hours
 			return date(" H:i T", $epoch);
 		else
 			return date(" d-m-Y H:i T", $epoch);
@@ -1241,6 +1241,7 @@ function print_oauth_icons($return = false) {
 	}
 	$return = htmlentities($return);
 
+	echo '<div class="auth-buttons">';
 	if ($globals['oauth']['twitter']['consumer_key']) {
 		$title = false;
 		if ($current_user->user_id) {
@@ -1255,7 +1256,7 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
+			echo '<img src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>';
 		}
 	}
 
@@ -1273,7 +1274,7 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle" src="'.$globals['base_static'].'img/external/signin-fb.gif" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
+			echo '<img src="'.$globals['base_static'].'img/external/signin-fb.gif" width="89" height="21" alt=""/></a>';
 		}
 	}
 
@@ -1291,9 +1292,10 @@ function print_oauth_icons($return = false) {
 		}
 		if ($title) {
 			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
-			echo '<img style="vertical-align:middle;" src="'.$globals['base_static'].'img/external/signin-gplus.png" width="89" height="21" alt=""/></a>&nbsp;&nbsp;'."\n";
+			echo '<img src="'.$globals['base_static'].'img/external/signin-gplus.png" width="89" height="21" alt=""/></a>';
 		}
 	}
+	echo '</div>';
 }
 
 function backend_call_string($program,$type,$page,$id) {

@@ -154,9 +154,7 @@ function do_login() {
 
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" /></p>'."\n";
 
-	echo '<div style="text-align:center">';
 	print_oauth_icons($_REQUEST['return']);
-	echo '</div>'."\n";
 
 	echo '<input type="hidden" name="processlogin" value="1"/>'."\n";
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";

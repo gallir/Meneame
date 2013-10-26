@@ -1,9 +1,9 @@
 <div id="toplink">
 
-{% if ! globals.mobile AND self.thumb_medium_url %}
-	<img src='{{ self.thumb_medium_url }}' width='110' height='110' alt='' class='thumbnail'/>
+{% if self.thumb_medium_url %}
+	<img src='{{ self.thumb_medium_url }}' alt="{{ self.title }}" class='thumbnail medium'/>
 {% else %} {% if self.thumb_url %}
-	<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
+	<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt="{{ self.title }}" class='thumbnail'/>
 {% endif %}{% endif %}
 
 <h1><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
