@@ -463,8 +463,7 @@ float: none;
 
 #nav-panel ul li {
 float: none;
-margin-left: 0;
-margin-bottom: 5px;
+margin: 0;
 }
 
 #nav-panel ul li a {
