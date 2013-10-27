@@ -1,22 +1,8 @@
-html, body {
-height: 100%;
-padding: 0;
-margin: 0;
-overflow: hidden;
+#header-center, #header-menu, #header .logo-ed, #edlist {
+display: none;
 }
 
-#header {
-margin: 0;
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-overflow: hidden;
-z-index: 1;
-}
-
-
-#header #votes {
+#header #bar {
 float: left;
 height: 100%;
 margin-left: 2.0em;
@@ -53,8 +39,8 @@ margin-left: 5px;
 .menealo a,
 .menealo span {
 background-color: white;
-padding-left: 0.3em;
-padding-right: 0.3em;
+padding-left: 2px;
+padding-right: 2px;
 font-size: 10px;
 padding: 0 4px 0 4px;
 }
@@ -63,7 +49,7 @@ padding: 0 4px 0 4px;
 font-size: x-small;
 }
 
-.info {
+.info  {
 display: inline;
 float: left;
 font-size: 15px;
@@ -79,15 +65,16 @@ text-decoration: underline;
 }
 
 .close, .close:visited {
-font-size: 15px;
-margin: 5px 5px 0 5px;
-vertical-align: middle;
+display: inline;
+float: left;
+font-size: 14px;
 color: #FFF;
+margin: 5px 0 0 10px;
 }
 
 #content {
 position: absolute;
-top: 25px;
+top: 30px;
 bottom: 0px;
 left: 0px;
 right: 0px;

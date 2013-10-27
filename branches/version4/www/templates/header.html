@@ -73,16 +73,16 @@
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
 {% endif %}
 
-{% for css in globals.extra_css %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}?v={{globals.v}}"/>
-{% endfor %}
-
 {# Definitions for mobile, iPad and TVs #}
 {% if globals.mobile %}
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
 {% else %}
 	<link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css?v={{ globals.v }}" />
 {% endif %}
+
+{% for css in globals.extra_css %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}?v={{globals.v}}"/>
+{% endfor %}
 
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
@@ -137,7 +137,7 @@
 
   <div id="nav-menu"></div>
 
-  <a href="{{ globals.base_url }}" title="{% trans _('portada') %}" class="logo-mnm">{% trans _('menéame') %}</a>
+  <a href="{{ globals.base_url }}" title="{% trans _('portada') %}" id="header-logo" class="logo-mnm">{% trans _('menéame') %}</a>
 
 	{% if not globals.mobile %}
 		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>

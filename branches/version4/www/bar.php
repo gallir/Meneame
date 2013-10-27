@@ -47,6 +47,9 @@ $link->get_box_class();
 $vars = compact('type');
 $vars['self'] = $link;
 
+$globals['extra_css'] = 'bar.css';
+do_header($link->title, 'post');
+
 Haanga::Load("link_bar.html", $vars);
 
 

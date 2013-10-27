@@ -1,110 +1,46 @@
-<!DOCTYPE html>
-<html lang="{{globals.lang}}">
-<head>
-<meta charset="utf-8" />
-<meta name="ROBOTS" content="NOARCHIVE" />
-<meta name="generator" content="meneame" />
+<div id="bar" class="bar">
+	<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong></div>
+	{% if self.votes_enabled %}
+		<div class="menealo" id="a-va-{{ self.id }}">
+		{% if not self.voted %}
+			<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+		{% else %}
+			{% if self.voted > 0 %}
+				<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
+			{% else %}
+				<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
+			{% endif %}
+		{% endif %}
+		</div>
+	{% endif %}
 
-<title>{{ self.title }}</title>
+	{% if self.can_vote_negative %}
+		<form  class="tool" action="" id="problem-{{ self.id }}">
+		<select name="ratings"	onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+			<option value="0" selected="selected">{% trans _('problema') %}</option>
+			{% for pkey, pvalue in globals.negative_votes_values %}
+				<option value="{{pkey}}">{{ pvalue }}</option>
+			{% endfor %}
+		</select>
+		</form>
+	{% endif %}
 
+	{% if current_user.user_id > 0 %}
+		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
+	{% endif %}
 
-{% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}?v={{globals.v}}"/>
-{% endif %}
-
-{% if globals.css_color %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
-{% endif %}
-
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/bar.css?v={{globals.v}}"/>
-
-{% if globals.mobile %}
-    <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
-{% else %}
-    <link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css?v={{ globals.v }}" />
-{% endif %}
-
-{% if globals.css_webfonts %}
-	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
-{% endif %}
-
-
-{% if globals.favicon %}
-	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
-	<link rel="icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
-{% else %}
-	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
-	<link rel="icon" href="{{globals.base_static}}img/favicons/favicon4.ico" type="image/x-icon"/>
-{% endif %}
-
-<script src="{{ globals.jquery }}" type="text/javascript"></script>
-<script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
-
+	<a class="tooltip l:{{ self.id }} info">i</a>
+	<a class="close" href="{{ self.url }}" title="{% trans _('cerrar barra') %}">X</a>
+</div>
 <script type="text/javascript">
-if(top.location != self.location)top.location = self.location;
-base_key="{{ globals.security_key }}";
-link_id = {{ self.id }};
-user_id = {{ current_user.user_id }};
-user_login = '{{ current_user.user_login }}';
-mobile_client = {{ globals.mobile }};
+	$("#header-logo").attr('href', '{{ self.permalink }}')
+		.attr('title', "{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}")
+		.after($('#bar'));
 </script>
 
-</head>
-
-
-<body>
-<div id="header">
-	<div id="header-top">
-
-	<a href="{{ self.permalink }}" title="{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}" class="logo-mnm">{% trans _('ir a noticia en menéame') %}</a>
-
-
-		<div id="votes" class="bar">
-			<div class="{{ self.box_class }}"><strong id="a-votes-{{ self.id}}">{{ self.total_votes }}</strong></div>
-
-			{% if self.votes_enabled %}
-				<div class="menealo" id="a-va-{{ self.id }}">
-				{% if not self.voted %}
-					<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
-				{% else %}
-					{% if self.voted > 0 %}
-					<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
-					{% else %}
-					<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
-					{% endif %}
-				{% endif %}
-				</div>
-			{% endif %}
-
-
-
-		{% if self.can_vote_negative %}
-			<form  class="tool" action="" id="problem-{{ self.id }}">
-			<select name="ratings"  onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
-				<option value="0" selected="selected">{% trans _('problema') %}</option>
-				{% for pkey, pvalue in globals.negative_votes_values %}
-					<option value="{{pkey}}">{{ pvalue }}</option>
-				{% endfor %}
-			</select>
-			</form>
-		{% endif %}
-
-		{% if current_user.user_id > 0 %}
-		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
-		{% endif %}
-
-		<a class="tooltip l:{{ self.id }} info">i</a>
-		<a class="close" href="{{ self.url }}" title="{% trans _('cerrar barra') %}">X</a>
-		</div>
-
-	{% include "header_userinfo.html" %}
-
-	</div><!--header-top-->
-
-{% try_include 'private/stats.html' %}
-</div>
-
+</div></div>
 <iframe id="content" frameborder="0" noresize="noresize" src="{{ self.url|escape }}"></iframe>
+{% try_include 'private/stats.html' %}
 </body>
-
 </html>
+
