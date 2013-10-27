@@ -852,7 +852,14 @@ $(document).ready(function () {
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
 		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
 			if ( target.length > 0) {
-				$("#"+m[1]+">:first").css("border-style","solid").css("border-width","1px");
+				var e = $("#"+m[1]+">:first");
+				e.css("border-style","solid").css("border-width","1px");
+				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
+				if (window.location.hash && $('#header-top').css('position') == 'fixed') {
+					$('html, body').animate({
+						scrollTop: e.offset().top - $('#header-top').height() - 10
+					}, 500);
+				}
 			} else {
 				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
 				canonical = $("link[rel^='canonical']");
@@ -864,17 +871,6 @@ $(document).ready(function () {
 		} else {
 			target.hide();
 			target.fadeIn(1000);
-		}
-
-		{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
-		if (window.location.hash && $('#header-top').css('position') == 'fixed') {
-			setTimeout(function () { 
-					var scroll = $(window).scrollTop();
-					var h = $('#header-top').height();
-					if (scroll >= h) {
-						$(window).scrollTop(scroll-h);
-					}
-			}, 1);
 		}
 	}
 	$.ajaxSetup({ cache: false });

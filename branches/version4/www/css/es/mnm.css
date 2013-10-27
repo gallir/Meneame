@@ -6,14 +6,6 @@ Authors: Ricardo Galli, Benjamí Villoslada, Damián Vila, Aníbal De Castro
 Licence: Affero GPL License (http://meneame.net/COPYING)
 */
 
-/* Fonts from http://www.google.com/fonts/ */
-@font-face {
-font-family: 'Roboto';
-font-style: normal;
-font-weight: 400;
-src: local('Roboto Regular'), local('Roboto-Regular'), url(http://themes.googleusercontent.com/static/fonts/roboto/v9/2UX7WLTfW3W8TclTUvlFyQ.woff) format('woff');
-}
-
 html * {
 margin: 0;
 padding: 0;
@@ -140,7 +132,7 @@ border-radius: 3px;
 
 /* END roundboxes */
 
-#header, #nav-panel, #notifier_panel, .subheader, .news-shakeit, .news-details, .news-submitted, .news-tags, .comment-meta, #toplink .footer, .sidebox .votes, .header, .button, input, textarea, legend, button, select {
+#header, #notifier_panel, .news-shakeit, .news-details, .news-submitted, .news-tags, .comment-meta  {
 font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
@@ -424,9 +416,7 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background-image: url('../../img/common/icon-menu-20.png');
-background-repeat:no-repeat;
-background-position:center;
+background: url('../../img/common/icon-menu-20.png') no-repeat center center;
 }
 
 #nav-panel {

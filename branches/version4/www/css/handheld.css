@@ -1,8 +1,7 @@
 /* Definitions for mobile, iPad and TVs */
 
 body {
-font-size: small;
-background: #fff;
+font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
 /* Avoid auto zoom */

@@ -7,7 +7,12 @@
 
 <meta name="viewport" content="width=device-width initial-scale=1"/>
 
+{% if globals.css_webfonts %}
+	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+{% endif %}
 
+{# Save bandwidth for mobiles #}
+{% if not globals.mobile %}
 {% if globals.noindex %}
 	<meta name="robots" content="noindex,follow" />
 {% endif %}
@@ -38,11 +43,19 @@
 	<meta property="og:description" content="{{ globals.description }}">
 {% endif %}
 
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url }}opensearch_plugin.php"/>
+<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php?status=queued" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss2.php" />
 
+{% if globals.link %}
+	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url }}xmlrpc.php"/>
+	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
+{% endif %}
 
-<script type="text/javascript">
-var mnm_start_time=(new Date()).getTime()
-</script>
+{% endif %}
+{# /Save bandwidth for mobiles #}
+
 
 <title>{{title}}</title>
 
@@ -71,23 +84,6 @@ var mnm_start_time=(new Date()).getTime()
 	<link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css?v={{ globals.v }}" />
 {% endif %}
 
-{#
-<!--[if lte IE 6]>
-<link rel="stylesheet" type="text/css" media="screen" href="{{globals.base_static}}css/ie6-hacks.css" />
-<![endif]-->
-#}
-
-
-{% if globals.link %}
-	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url }}xmlrpc.php"/>
-	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
-{% endif %}
-
-<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url }}opensearch_plugin.php"/>
-<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php?status=queued" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss2.php" />
-
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
 {% else %}
@@ -99,9 +95,6 @@ var mnm_start_time=(new Date()).getTime()
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
-{% if globals.css_webfonts %}
-	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
-{% endif %}
 {% if not globals.mobile %}
 	<script src="{{ globals.jquery2 }}" type="text/javascript"></script>
 {% else %}
@@ -119,11 +112,6 @@ var mnm_start_time=(new Date()).getTime()
 	{% endif %}
 {% endfor %}
 
-{% if globals.extra_js_text %}
-	<script type="text/javascript">
-	{{globals.extra_js_text}}
-	</script>
-{% endif %}
 
 <script type="text/javascript">
 	base_key="{{globals.security_key}}";
@@ -131,6 +119,10 @@ var mnm_start_time=(new Date()).getTime()
 	user_id = {{ current_user.user_id }};
 	user_login = '{{ current_user.user_login }}';
 	mobile_client = {{ globals.mobile }};
+	mnm_start_time=(new Date()).getTime()
+	{% if globals.extra_js_text %}
+		{{globals.extra_js_text}}
+	{% endif %}
 </script>
 
 {% if globals.extra_head %}

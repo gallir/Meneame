@@ -370,7 +370,7 @@ $globals['js_main'] = 'general.js.php';
 $globals['css_main'] = 'css/es/mnm.css';
 // Load webfonts from the specified url
 // $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
-// $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Roboto';
+$globals['css_webfonts'] = "//fonts.googleapis.com/css?family=Roboto:400,700";
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 
