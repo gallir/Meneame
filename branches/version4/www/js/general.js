@@ -819,11 +819,11 @@ var navMenu = new function () {
 				panel.show();
 			}
 		});
-		$( window ).on('unload', function() { panel.hide(); });
 	}
 
 	this.prepare = function() {
 		if (panel !== false) return;
+		$( window ).on('unload', function() { panel.hide(); });
 		panel = $('<div id="nav-panel"></div>')
 		if (is_mobile) {
 			panel.append($('#searchform'));

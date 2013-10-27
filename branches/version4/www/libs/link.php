@@ -1219,7 +1219,7 @@ class Link extends LCPBase {
 			$c = $this->clicks/($this->total_votes+$this->negatives) - 0.5;
 			$c = max($c, 0.005); // Be sure not to calculate log of zero or negative
 			$c = $w * log($c);
-			$c = min(0.6, $c); $c = max($c, -0.2);
+			$c = min(0.6, $c); $c = max($c, -0.3);
 			$bonus = round($this->karma * $c);
 			$this->annotation .= _('Bonus clics').": $bonus<br/>";
 			$this->karma += $bonus;
