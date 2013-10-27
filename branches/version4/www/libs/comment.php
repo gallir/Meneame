@@ -253,7 +253,6 @@ class Comment extends LCPBase {
 
 		$this->prepare_summary_text($length);
 
-		// $this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id  && $single_link && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->user_level != 'disabled';
 		$this->can_vote = $current_user->user_id > 0  && $this->author != $current_user->user_id && $this->date > $globals['now'] - $globals['time_enabled_comments'] && $this->user_level != 'disabled';
 
 		$this->user_can_vote = $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
@@ -285,7 +284,7 @@ class Comment extends LCPBase {
 		}
 
 		if ($globals['now'] - $this->date > 86400) {
-				$this->author_info = sprintf('<span class="wideonly">'._('el %s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
+				$this->author_info = sprintf('<span class="wideonly">'._('%s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
 		} else {
 				$this->author_info = sprintf('<span class="wideonly">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), $edited, $author);
 		}

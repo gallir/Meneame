@@ -14,7 +14,7 @@
 
 	{{ self.txt_content }}
 
-	{% if self.media_url %}
+	{% if self.media_size > 0 %}
 		&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img
 		class="thumb"
 		{% if globals.cache_redirector %}
