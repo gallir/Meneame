@@ -8,6 +8,11 @@
 
 
 class Upload {
+	static function get_url($type, $id, $version = 0, $ts = 0, $mime='image/jpg') {
+		global $globals;
+		return $globals['scheme'].'://'.get_server_name().$globals['base_url']."backend/media.php?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
+	}
+
 	static function get_cache_relative_dir($key = false) {
 		global $globals;
 

@@ -849,24 +849,6 @@ function do_last_blogs() {
 	}
 }
 
-function do_error($mess = false, $error = false, $send_status = true) {
-	global $globals;
-	$globals['ads'] = false;
-
-	if (! $mess ) $mess = _('algún error nos ha petado');
-
-	if ($error && $send_status) {
-		header("HTTP/1.0 $error $mess");
-		header("Status: $error $mess");
-	}
-
-	// do_header(_('error'));
-	Haanga::Load('error.html', compact('mess', 'error'));
-	// do_footer_menu();
-	// do_footer();
-	die;
-}
-
 function do_subheader($content, $selected = false) {
 // arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader">'."\n";

@@ -14,8 +14,8 @@
 
 	{{ self.txt_content }}
 
-	{% if self.media_size > 0 %}
-		&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=comment&amp;id={{ self.id }}&amp;ts={{ self.media_date }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}"><img
+	{% if self.media_url %}
+		&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img
 		class="thumb"
 		{% if globals.cache_redirector %}
 			src="{{ globals.base_static }}{{ self.media_thumb_dir }}/media_thumb-comment-{{ self.id }}.jpg?{{ self.media_date }}" width="{{ globals.media_thumb_size }}" height="{{ globals.media_thumb_size }}"

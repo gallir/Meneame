@@ -25,10 +25,10 @@ mb_internal_encoding('UTF-8');
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
-	$globals['url'] = 'https';
+	$globals['scheme'] = $globals['url'] = 'https';
 } else {
 	$globals['https'] = false;
-	$globals['url'] = 'http';
+	$globals['scheme'] = $globals['url'] = 'http';
 }
 
 // Use proxy and load balancer detection
@@ -76,6 +76,7 @@ if($_SERVER['HTTP_HOST']) {
 	}
 
 	// Check the user's referer.
+	/* Not used, save CPU cycles
 	if( !empty($_SERVER['HTTP_REFERER'])) {
 		if (preg_match('/http:\/\/'.preg_quote($_SERVER['HTTP_HOST']).'/', $_SERVER['HTTP_REFERER'])) {
 			$globals['referer'] = 'local';
@@ -87,6 +88,7 @@ if($_SERVER['HTTP_HOST']) {
 	} else {
 		$globals['referer'] = 'unknown';
 	}
+	*/
 
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port

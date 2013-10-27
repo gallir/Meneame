@@ -275,7 +275,8 @@ function fancybox_expand_images(event) {
 }
 
 function fancybox_gallery(type, user, link) {
-	if (! user_id > 0) {
+	var is_public = parseInt({{ globals.media_public }}) > 0;
+	if (! is_public && ! user_id > 0) {
 		mDialog.notify('{% trans _('Debe estar autentificado para visualizar imágenes') %}', 5);
 		return;
 	}

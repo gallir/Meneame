@@ -28,7 +28,7 @@ if ($user_id > 0) $user = "and user = $user_id";
 else $user = '';
 
 header('Content-Type: text/html; charset=utf-8');
-$media = $db->get_results("select type, id, version, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit 250");
+$media = $db->get_results("select type, id, version, unix_timestamp(date) as date, mime, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit 250");
 
 $images = array();
 
@@ -46,6 +46,7 @@ if ($media) {
 		}
 			
 		if ($karma > -10) {
+			$image->url = Upload::get_url($image->type, $image->id, $image->version, $image->date, $image->mime);
 			$images[] = $image;
 		}
 	}

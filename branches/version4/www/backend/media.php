@@ -19,15 +19,12 @@ $media = new Upload($type, $id, $version);
 if (! $media->read()) not_found();
 
 
-if ($media->access == 'restricted' && ! $current_user->user_id > 0) {
+if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_user->user_id > 0) {
 	//header("HTTP/1.0 403 Not authorized");
-	header("Content-Type: text/html");
-	echo '<b>'._('Debe estar autentificado para ver esta imagen') . '</b>';
+	error_image(_('Debe estar autentificado'));
 	die;
 } elseif ($media->access == 'private' && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) {
-	header("HTTP/1.0 403 Not authorized");
-	header("Content-Type: text/html");
-	echo '<b>'._('No está autorizado') . '</b>';
+	error_image(_('No está autorizado'));
 	die;
 }
 
@@ -43,4 +40,13 @@ if ($media->file_exists() && ! empty($globals['xsendfile'])) {
 	$media->readfile();
 }
 exit(0);
-?>
+
+function error_image($message) {
+	header("HTTP/1.0 403 Not authorized");
+	header("Content-type: image/png");
+	header('Cache-Control: max-age=10, must-revalidate');
+	header('Expires: ' . date('r', time()+10));
+	readfile(mnmpath.'/img/common/access_denied-01.png');
+	die;
+}
+

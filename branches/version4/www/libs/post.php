@@ -220,6 +220,7 @@ class Post extends LCPBase {
 
 		if ($this->media_size > 0) {
 			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
+			$this->media_url = Upload::get_url('post', $this->id, 0, $this->media_date, $this->media_mime);
 		}
 
 

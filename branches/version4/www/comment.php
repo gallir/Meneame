@@ -58,7 +58,9 @@ if ($comment->type != 'admin') $globals['search_options'] = array('w' => 'commen
 $comment->check_visibility();
 if (! $comment->hide_comment) {
 	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
-	if ($comment->avatar) {
+	if ($globals['media_public'] && $comment->media_size > 0) {
+		 $globals['thumbnail'] = Upload::get_url('comment', $comment->id, 0, $comment->media_date, $comment->media_mime);
+	} elseif ($comment->avatar) {
 		$globals['thumbnail'] = get_avatar_url($comment->author, $comment->avatar, 80);
 	}
 	$title = text_to_summary($comment->content, 120);

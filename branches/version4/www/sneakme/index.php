@@ -159,7 +159,6 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 }
 
 do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
-$post = new Post;
 
 $conversation_extra = '';
 if ($tab_option == 4) {
@@ -248,7 +247,6 @@ function onLoad(lat, lng, zoom, icon) {
 <?
 } else {
 	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
-	//$posts = $db->object_iterator("SELECT".Post::SQL."$from WHERE $where $order_by $limit", 'Post');
 	if ($posts) {
 		$ids = array();
 		echo '<ol class="comments-list">';

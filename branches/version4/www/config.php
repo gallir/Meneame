@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 24; // internal version, to for reloads
+$globals['v'] = 25; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -160,6 +160,7 @@ $globals['comment_hidden_karma'] = -100;
 
 
 // Upload images and files
+$globals['media_public'] = true;  // If true, anyone can read
 $globals['media_max_size'] = 1024*1024; // 1 MB;
 $globals['media_min_karma'] = 6;
 $globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day

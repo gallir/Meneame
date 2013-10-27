@@ -115,32 +115,4 @@ function do_pages($total, $page_size=15) {
 
 }
 
-function do_error($mess = false, $error = false, $send_status = true) {
-	global $globals;
-	$globals['ads'] = false;
-
-	if (! $mess ) $mess = _('algún error nos ha petado');
-
-	if ($error && $send_status) {
-		header("HTTP/1.0 $error $mess");
-		header("Status: $error $mess");
-	}
-
-	do_header(_('error'));
-	echo '<STYLE TYPE="text/css" MEDIA=screen>'."\n";
-	echo '<!--'."\n";
-	echo '.errt { text-align:center; padding-top:20px; font-size:150%; color:#FF6400;}'."\n";
-	echo '.errl { text-align:center; margin-top:20px; margin-bottom:20px; }'."\n";
-	echo '-->'."\n";
-	echo '</STYLE>'."\n";
-
-	echo '<div class="errt">'.$mess.'<br />'."\n";
-	if ($error) echo '('._('error').' '.$error.')</div>'."\n";
-
-	do_footer_menu();
-	do_footer();
-	die;
-}
-
-
 ?>

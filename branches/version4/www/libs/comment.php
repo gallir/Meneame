@@ -207,7 +207,8 @@ class Comment extends LCPBase {
 
 		if ($this->media_size > 0) {
 			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
-		}
+			$this->media_url = Upload::get_url('comment', $this->id, 0, $this->media_date, $this->media_mime);
+	 	}
 	}
 
 	function print_summary($link=0, $length=0, $single_link=true) {

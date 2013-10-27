@@ -550,25 +550,23 @@ function check_security_key($key) {
 	return $key == get_security_key($time_key[0]);
 }
 
-function not_found($mess = '') {
-	header("HTTP/1.0 404 Not Found");
-	header("Status: 404 Not Found");
-	echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' . "\n";
-	echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="'.$dblang.'" lang="'.$dblang.'">' . "\n";
-	echo '<head>' . "\n";
-	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' . "\n";
-	echo "<title>". _('error') . "</title>\n";
-	echo '<meta name="generator" content="meneame" />' . "\n";
-	echo '<link rel="icon" href="'.$globals['base_static'].'img/favicons/favicon4.ico" type="image/x-icon" />' . "\n";
-	echo '</head>' . "\n";
-	echo "<body>\n";
-	if (empty($mess)) {
-		echo '<h1>' . _('error') . ' 3.1415926536</h1><p>' . _('no encontrado') . '</p>';
-	} else {
-		echo $mess;
+function do_error($mess = false, $error = false, $send_status = true) {
+	global $globals;
+	$globals['ads'] = false;
+
+	if (! $mess ) $mess = _('algún error nos ha petado');
+
+	if ($error && $send_status) {
+		header("HTTP/1.0 $error $mess");
+		header("Status: $error $mess");
 	}
-	echo "</body></html>\n";
-	exit;
+
+	Haanga::Load('error.html', compact('mess', 'error'));
+	die;
+}
+
+function not_found($mess = '') {
+	do_error($mess, 404, 'Not found');
 }
 
 function get_uppercase_ratio($str) {
