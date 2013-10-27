@@ -1,9 +1,5 @@
 /* Definitions for mobile, iPad and TVs */
 
-body {
-font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-}
-
 /* Avoid auto zoom */
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="email"], input[type="url"], input[type="search"] {
 font-size: 16px; 

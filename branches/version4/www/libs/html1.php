@@ -714,6 +714,7 @@ function do_best_queued() {
 		foreach ($res as $l) {
 			$link = Link::from_db($l->link_id);
 			if ($link->negatives > $link->votes/10 && $link->karma < $warned_threshold) continue;
+			if ($link->clicks / $link->total_votes < 3) continue;
 			$link->url = $link->get_relative_permalink();
 			$link->thumb = $link->has_thumb();
 			$link->total_votes = $link->votes+$link->anonymous;

@@ -12,7 +12,7 @@ padding: 0;
 }
 
 body {
-font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 font-size: small;
 background-image: url('../../img/common/bkg-01.png');
 color: #000;
@@ -132,8 +132,8 @@ border-radius: 3px;
 
 /* END roundboxes */
 
-#header, #notifier_panel, .news-shakeit, .news-details, .news-submitted, .news-tags, .comment-meta  {
-font-family: Roboto, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+#header-top, .news-shakeit  {
+font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* whole header */
@@ -286,14 +286,13 @@ color: transparent;
 }
 
 #header-center .edname{
-margin:0;
+margin: 8px 0 0 0;
 padding:0;
 float:left;
 font-size:25px;
 color:#fff;
 position:relative;
 float:left;
-margin-top:3px;
 }
 
 
