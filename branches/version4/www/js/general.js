@@ -819,6 +819,7 @@ var navMenu = new function () {
 				panel.show();
 			}
 		});
+		$( window ).on('unload', function() { panel.hide(); });
 	}
 
 	this.prepare = function() {
