@@ -117,7 +117,7 @@ color: #aaa;
 /* Rounded boxes, CSS3 and temporary non-standar moz and webkit properties */
 
 /* All 3 px */
-#map, .commentform.warn, .warn, .box, fieldset, label {
+#map, .commentform.warn, .warn, .box, .searchbox, fieldset, label {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
@@ -286,7 +286,7 @@ color: transparent;
 }
 
 #header-center .edname{
-margin: 8px 0 0 0;
+margin: 6px 0 0 0;
 padding:0;
 float:left;
 font-size:25px;
@@ -295,49 +295,23 @@ position:relative;
 float:left;
 }
 
-
 /* search */
 
 .searchform {
-font-size: 16px;
-width:300px;
-height:22px;
-margin-top:13px;
-margin-right:10px;
+height:auto;
+margin: 10px 10px 0 0;
 position:relative;
 float:right;
 }
 
-.searchform .searchglass {
-background-color: #fff;
-position:absolute;
-width:22px;
-height: 16px;
-padding: 0 0px 2px 2px;
--webkit-border-top-left-radius: 3px;
--webkit-border-bottom-left-radius: 3px;
--moz-border-radius-topleft: 3px;
--moz-border-radius-bottomleft: 3px;
-border-top-left-radius: 3px;
-border-bottom-left-radius: 3px;
-vertical-align: middle;
-}
-
 .searchform .searchbox {
 border:0px;
-background-color:#fff;
-position:absolute;
-left:20px;
-width:275px;
-height: 18px;
+width:280px;
+height:24px;
+font-size: 16px;
 padding-top: 0px;
-padding-left: 2px;
--webkit-border-top-right-radius: 3px;
--webkit-border-bottom-right-radius: 3px;
--moz-border-radius-topright: 3px;
--moz-border-radius-bottomright: 3px;
-border-top-right-radius: 3px;
-border-bottom-right-radius: 3px;
+padding-left: 20px;
+background: #fff url('../../img/common/h9_search02.png') no-repeat 5px center;
 }
 
 /* menu 01 header */
@@ -469,23 +443,13 @@ display: block;
 float:none;
 position:relative;
 display:block;
-margin: 10px 0;
-width:150px;
-height:auto:;
-}
-
-#nav-panel .searchform .searchglass {
-padding-top: 2px;
-height:22px;
-line-height: normal;
+margin:10px 0 0 0;
+height:auto:
 }
 
 #nav-panel .searchform .searchbox {
-width:125px;
-height:26px;
+width:150px;
 }
-
-
 
 
 #wrap {

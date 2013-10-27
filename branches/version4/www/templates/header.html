@@ -172,7 +172,6 @@
 <!--search-->
   <div id="searchform" class="searchform">
     <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
-		<span class="searchglass" onClick="$(this).closest('form').submit()"><img src="{{ globals.base_static }}img/common/h9_search02.png" width="12" height="12" alt=""></span>
 		{% if globals.search_options %}
 			{% for name, value in globals.search_options %}
 				<input type="hidden" name="{{name}}" value="{{value}}"/>
