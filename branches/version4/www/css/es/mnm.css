@@ -389,7 +389,8 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background: url('../../img/common/icon-menu-20.png') no-repeat center center;
+background: url('../../img/common/icon-menu-28.png') no-repeat center center;
+background-size: 20px 14px;
 }
 
 #nav-panel {
