@@ -132,3 +132,8 @@ margin: 0 10px 10px 10px;
 .ads-interlinks {
 margin-left: 5px;
 }
+
+.share_icons img, .semiopaque {
+opacity:0.8;
+}
+

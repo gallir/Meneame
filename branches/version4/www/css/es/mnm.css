@@ -2386,4 +2386,22 @@ text-align:center;
 .auth-buttons img {
 vertical-align:middle;
 margin: 5px 5px 5px 5px;
+}
+
+.share_icons {
+display: inline;
+}
+
+.share_icons img {
+width: 16px;
+height: 16px;
+margin: 0 3px;
+padding: 0;
+opacity:0.6;
+vertical-align: text-top;
+}
+
+.share_icons img:hover {
+opacity:1.0;
+}
 

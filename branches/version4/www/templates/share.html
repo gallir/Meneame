@@ -6,10 +6,11 @@
 {% endif %}
 #}
 
+<div class="share_icons">
+<a href="http://www.facebook.com/share.php?u={{ link|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/external/fb-24.png" alt="fb" title="{% trans _('compartir en %s') "facebook" %}"/></a>
 
-&nbsp;&nbsp;<a href="https://twitter.com/intent/tweet?url={{ link|urlencode }}&amp;text={{ title |urlencode }}{% if globals.twitter_user %}&amp;via={{ globals.twitter_user }}{% endif %}" target="_blank"><img src="{{ globals.base_static }}img/external/tw-16.png" alt="twitter" title="{% trans _('compartir en %s') "twitter" %}" width="16" height="16"/></a>
-
-&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u={{ link|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/external/fb-16.png" alt="facebook" title="{% trans _('compartir en %s') "facebook" %}" width="16" height="16"/></a>
+<a href="https://twitter.com/intent/tweet?url={{ link|urlencode }}&amp;text={{ title |urlencode }}{% if globals.twitter_user %}&amp;via={{ globals.twitter_user }}{% endif %}" target="_blank"><img src="{{ globals.base_static }}img/external/tw-24.png" alt="tw" title="{% trans _('compartir en %s') "twitter" %}"/></a>
+</div>
 
 {#
 &nbsp;<a href="http://www.tuenti.com/share?url={{ link|urlencode }}" target="_blank"><img src="{{ globals.base_static }}img/favicons/tuenti.png" alt="tuenti" title="{% trans _('compartir en %s') "tuenti" %}" width="16" height="16"/></a>
