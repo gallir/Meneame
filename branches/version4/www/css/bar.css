@@ -1,4 +1,8 @@
-#header-center, #header-menu, #header .logo-ed, #edlist {
+body {
+overflow:hidden;
+}
+
+#header-center, #header-menu, #header .logo-ed, #edlisti, #wrap {
 display: none;
 }
 
