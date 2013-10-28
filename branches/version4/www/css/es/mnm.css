@@ -160,12 +160,11 @@ z-index: 10;
 
 /* top logo */
 #header-top .logo-mnm{
-background-image:url('../../img/mnm/h9_logo_mnm.png');
+background: url('../../img/mnm/h9_logo_mnm.png') no-repeat center center;
+background-size: 96px 16px;
 height:16px;
-width:96px;
-margin-left:10px;
-margin-top:5px;
-margin-right:0px;
+width:100px;
+margin: 5px 0 0 8px;
 float:left;
 font: 0/0 serif;
 text-shadow: none;
@@ -176,6 +175,15 @@ white-space: nowrap;
 overflow: hidden;
 */
 }
+
+/* From http://www.brettjankord.com/2012/11/28/cross-browser-retinahigh-resolution-media-queries/ */
+@media (-webkit-min-device-pixel-ratio: 1.5), 
+(min-resolution: 144dpi) {
+	#header-top .logo-mnm {
+	background-image:url('../../img/mnm/h9_logo_mnm-hires.png');
+	}
+}
+
 
 /* editions logo */
 
@@ -247,6 +255,11 @@ color:#fff;
 
 #header-top ul#userinfo li a:hover{
 color:#ff0000;
+}
+
+#userinfo #avatar {
+width:30px;
+height:30px;
 }
 
 #header-top .usertext{
@@ -389,8 +402,16 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background: url('../../img/common/icon-menu-28.png') no-repeat center center;
+background: url('../../img/common/icon-menu.png') no-repeat center center;
 background-size: 20px 14px;
+}
+
+/* From http://www.brettjankord.com/2012/11/28/cross-browser-retinahigh-resolution-media-queries/ */
+@media (-webkit-min-device-pixel-ratio: 1.5), 
+(min-resolution: 144dpi) {
+	#nav-menu {
+	background-image:url('../../img/common/icon-menu-hires.png');
+	}
 }
 
 #nav-panel {
