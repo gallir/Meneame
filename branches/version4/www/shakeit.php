@@ -54,7 +54,7 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from = ", links, link_clicks";
-		$where = "date > $from_time and status='queued' and link = link_id and link_id = link_clicks.id and link_clicks.counter/(link_votes+link_negatives) > 1.5 and link_karma > 20 ";
+		$where = "date > $from_time and status='queued' and link = link_id and link_id = link_clicks.id and link_clicks.counter/(link_votes+link_negatives) > 1.3 and link_karma > 20 ";
 		$order_by = "ORDER BY link_karma DESC";
 		$rows = -1;
 		$tab = 3;
