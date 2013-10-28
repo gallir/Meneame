@@ -1002,6 +1002,7 @@ function clear_invisible_unicode($input){
 	"\xc2\x92", // SET TRANSMIT STATE' (U+0092)
 	"\xc2\x93", // SET TRANSMIT STATE' (U+0093)
 	"\xc2\x94", // 'CANCEL CHARACTER' (U+0094)
+	"\xc2\x9d", // 'CANCEL CHARACTER' (U+009D)
 	"\xcc\xb7", // 'COMBINING SHORT SOLIDUS OVERLAY' (U+0337)
 	"\xcc\xb8", // 'COMBINING LONG SOLIDUS OVERLAY' (U+0338)
 	"\xcd\x8f", // 'COMBINING GRAPHEME JOINER' (U+034F)

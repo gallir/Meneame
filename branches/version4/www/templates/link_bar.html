@@ -37,7 +37,6 @@
 		.attr('title', "{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}")
 		.after($('#bar'));
 </script>
-
 </div></div>
 <iframe id="content" frameborder="0" noresize="noresize" src="{{ self.url|escape }}"></iframe>
 {% try_include 'private/stats.html' %}
