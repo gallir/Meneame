@@ -39,7 +39,7 @@ if(!$link->is_votable()) {
 }
 
 // Only if the link has been not published, let them play
-if ($current_user->user_id == 0 /*&& $link->status != 'published'*/) {
+if ($current_user->user_id == 0 && $link->status != 'published') {
 	if (! $anonnymous_vote) {
 		error(_('Los votos anónimos están temporalmente deshabilitados'));
 	} else {

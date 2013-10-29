@@ -96,11 +96,7 @@
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
-{% if not globals.mobile %}
-	<script src="{{ globals.jquery2 }}" type="text/javascript"></script>
-{% else %}
-	<script src="{{ globals.jquery }}" type="text/javascript"></script>
-{% endif %}
+<script src="{{ globals.jquery }}" type="text/javascript"></script>
 
 <script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
 
@@ -116,11 +112,13 @@
 
 <script type="text/javascript">
 	base_key="{{globals.security_key}}";
-	{% if globals.link %}link_id = {{ globals.link.id }}{% endif %};
+	{% if globals.link %}link_id = {{ globals.link.id }};{% endif %}
 	user_id = {{ current_user.user_id }};
 	user_login = '{{ current_user.user_login }}';
 	mobile_client = {{ globals.mobile }};
-	mnm_start_time=(new Date()).getTime()
+	{#
+	mnm_start_time=(new Date()).getTime());
+	#}
 	{% if globals.extra_js_text %}
 		{{globals.extra_js_text}}
 	{% endif %}
