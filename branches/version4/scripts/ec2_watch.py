@@ -62,6 +62,7 @@ def main():
 		print "Average load with %d instances: %5.2f%%" % (data.instances-1, data.total_load/(data.instances-1))
 
 	print "Last change: %s last action: %s (%s)" % (time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data.changed_ts)), time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data.action_ts)), data.action)
+	print "Last up: %s last down: %s" % (time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data.up_ts)), time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(data.down_ts)))
 
 
 	if now - data.changed_ts > 600 and now - data.action_ts > 600:
@@ -71,7 +72,7 @@ def main():
 	if	now - data.changed_ts > 300 and now - data.action_ts > 300:
 		data.check_avg_high()
 
-	if	now - data.changed_ts > 300 and now - data.action_ts > 300:
+	if	now - data.changed_ts > 300 and now - data.action_ts > 300 and now - data.up_ts > 1800:
 		data.check_avg_low()
 
 	data.store(configuration.annotation)
