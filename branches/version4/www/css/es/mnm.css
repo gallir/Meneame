@@ -177,8 +177,8 @@ overflow: hidden;
 }
 
 /* From http://www.brettjankord.com/2012/11/28/cross-browser-retinahigh-resolution-media-queries/ */
-@media (-webkit-min-device-pixel-ratio: 1.5), 
-	(min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), 
+	(min-resolution: 192dpi) {
 	#header-top .logo-mnm { background-image:url('../../img/mnm/h9_logo_mnm.svg'); }
 }
 
@@ -194,8 +194,8 @@ margin-top:7px;
 margin-right:15px;
 float:left;
 }
-@media (-webkit-min-device-pixel-ratio: 1.5),
-    (min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
     #header-top .logo-ed { background-image:url('../../img/mnm/h9_logo_ed.svg'); }
 }
 
@@ -283,8 +283,8 @@ color: transparent;
 cursor: pointer;
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5), 
-	(min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), 
+	(min-resolution: 192dpi) {
 	#header-top .userlogin { background-image:url('../../img/common/h9_login.svg'); }
 }
 
@@ -319,8 +319,8 @@ text-shadow: none;
 color: transparent;
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5), 
-	(min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), 
+	(min-resolution: 192dpi) {
 	#header-center .logo-eli { background-image:url('../../img/mnm/h9_eli.svg'); }
 }
 
@@ -354,8 +354,8 @@ background: #fff url('../../img/common/h9_search.png') no-repeat 4px center;
 background-size: 14px 14px;
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5), 
-	(min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), 
+	(min-resolution: 192dpi) {
 	.searchform .searchbox { background-image:url('../../img/common/h9_search.svg'); }
 }
 
@@ -438,8 +438,8 @@ background: url('../../img/common/icon-menu.png') no-repeat center center;
 background-size: 20px 14px;
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5), 
-	(min-resolution: 144dpi) {
+@media (-webkit-min-device-pixel-ratio: 2), 
+	(min-resolution: 192dpi) {
 	#nav-menu { background-image:url('../../img/common/icon-menu.svg'); }
 }
 
