@@ -32,6 +32,8 @@ class WatchData:
 		self.total_load = 0
 		self.avg_load = 0
 		self.max_load = 0
+		self.up_ts = 0
+		self.down_ts= 0
 		self.max_loaded = None
 		self.loads = {}
 		self.measures = {}

@@ -39,9 +39,13 @@ def main():
 	""" Retrieve and calculate previous values in the current instance """
 	data.action_ts = prev_data.action_ts
 	data.action = prev_data.action
+	data.up_ts = prev_data.up_ts
+	data.down_ts = prev_data.down_ts
 
 	if data.instances != prev_data.instances:
 		data.previous_instances = prev_data.instances
+		if data.instances > prev_data.instances: data.up_ts = time.time()
+		else: data.down_ts = time.time()
 	else:
 		data.previous_instances = prev_data.previous_instances
 		
