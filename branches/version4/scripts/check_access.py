@@ -224,18 +224,22 @@ def ban_ip(ip, reason, time):
 	if configuration.mail:
 		""" Generate a report """
 		try:
-			p = subprocess.Popen(["summary_access.py", ip, "-M", "1"], stdout=subprocess.PIPE)
+			summary = os.path.dirname(os.path.abspath(__file__)) + "/" + "summary_access.py"
+			p = subprocess.Popen([summary, ip, "-M", "1"], stdout=subprocess.PIPE)
 			(report, err) = p.communicate()
 		except Exception as e:
 			report = unicode(e)
 
-		msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason + "\n\nSUMMARY REPORT LAST MINUTE:\n" + unicode(report))
-		msg['Subject'] = "Automatic DoS ban"
-		msg['From'] = getpass.getuser()
-		msg['To'] = configuration.mail
-		s = smtplib.SMTP('localhost')
-		s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
-		s.quit()
+		try:
+			msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason + "\n\nSUMMARY REPORT LAST MINUTE:\n" + unicode(report))
+			msg['Subject'] = "Automatic DoS ban"
+			msg['From'] = getpass.getuser()
+			msg['To'] = configuration.mail
+			s = smtplib.SMTP('localhost')
+			s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
+			s.quit()
+		except Exception as e:
+			syslog.syslog(syslog.LOG_INFO, "Error sending email: " + reason + " (" + unicode(e) + ")")
 
 	return True
 
