@@ -742,6 +742,13 @@ box-shadow: 0 0 5px rgba(0,0,0,0.5);
 -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
+.sidebox img.thumbnail {
+width: 30px;
+height: 30px;
+}
+
+
+
 .sidebox .votes, .sidebox .clics {
 float: left;
 width: 40px;
@@ -797,6 +804,11 @@ text-align: center;
 
 .sidebox .comments {
 margin: 0 2px;
+}
+
+.sidebox img.avatar {
+width:20px;
+height:20px;
 }
 
 .sidebox .comments ul {
@@ -988,6 +1000,8 @@ box-shadow: 0 0 7px rgba(0,0,0,0.5);
 
 .news-submitted img {
 float: left;
+width: 25px;
+height: 25px;
 margin-right: 4px;
 vertical-align: bottom;
 }
@@ -1457,6 +1471,11 @@ background: none;
 border: none;
 }
 
+.news-body img.thumbnail {
+width: 60px;
+height: 60px;
+}
+
 .news-submitted {
 font-size: 85%;
 margin: 0 0 2px 0;
@@ -1678,6 +1697,17 @@ background:#fff;
 vertical-align: top;
 }
 
+.comment-body img.avatar {
+width: 40px;
+height: 40px;
+}
+
+.comment-body img.thumb.ok {
+width: 80px;
+height: 80px;
+}
+
+
 .comment-meta {
 font-size: 90%;
 color: #666;
@@ -1737,6 +1767,8 @@ text-align: right;
 
 .comment-info img {
 margin: 0 0 0 4px;
+width: 20px;
+height: 20px;
 }
 
 .comment-answers {

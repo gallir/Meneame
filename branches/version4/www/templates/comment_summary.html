@@ -39,7 +39,7 @@
 
 		<div class="comment-info">
 		{{ self.author_info }}
-		<img src="{{ self.avatar_img }}" width="20" height="20"
+		<img src="{{ self.avatar_img }}"
 		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
 			class="tooltip u:{{ self.author }}" alt="{{ self.username }}"
 		{% else %}

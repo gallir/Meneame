@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 34; // internal version, to for reloads
+$globals['v'] = 35; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -291,7 +291,7 @@ $globals['sphinx_port'] = 9312;
 
 $globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 1024*1024;
-$globals['avatars_allowed_sizes'] = Array (80, 40, 30, 25, 20);
+$globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 // If you use nginx define X-Accel-Redirect, or X-Sendfile for Apache module
 // See: https://tn123.org/mod_xsendfile/ http://wiki.nginx.org/XSendfile
