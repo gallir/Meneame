@@ -3,6 +3,7 @@ var base_url="{{ globals.base_url }}",
 	base_static="{{ globals.base_static }}",
 	mobile_client = false,
 	is_mobile = {{ globals.mobile }},
+	touchable = false,
 	base_key, link_id = 0, user_id, user_login;
 
 
@@ -311,13 +312,26 @@ Tooltips functions
 	var last = null;
 	var ajaxs = {'u': 'get_user_info.php', 'p': "get_post_tooltip.php", 'c': "get_comment_tooltip.php", 'l': "get_link.php"};
 
-	$(start);
 
-	function start() {
+	$.extend({
+		tooltip: function () {
+			if (! is_mobile) start();
+		}
+	});
+
+	function stop() {
+		hide();
+		$(document).off('mouseenter mouseleave', 'a.tooltip, img.tooltip');
+		$(document).off('touchstart', stop);
+		touchable = true;
+	}
+
+	function start(o) {
 		if (box == null) {
 			box = $("<div>").attr({ id: 'tooltip-text' });
 			$('body').append( box );
 		}
+		$(document).on('touchstart', stop); /* Touch detected, disable tooltips */
 		$(document).on('mouseenter mouseleave', 'a.tooltip, img.tooltip',
 			function (event) {
 				if (event.type == 'mouseenter') {
@@ -345,7 +359,7 @@ Tooltips functions
 		if (timer || active) hide();
 		active = true;
 
-		$(document).bind('mousemove.tooltip', function (e) { mouseMove(e) });
+		$(document).on('mousemove.tooltip', function (e) { mouseMove(e) });
 		if (box.outerWidth() > 0) {
 			if ($(window).width() - event.pageX < box.outerWidth() * 1.05) reverse = true;
 			else reverse = false;
@@ -367,7 +381,7 @@ Tooltips functions
 			clearTimeout(timer);
 			timer = null;
 		}
-		$(document).unbind('mousemove.tooltip');
+		$(document).off('mousemove.tooltip');
 		active = false;
 		box.hide();
 	}
@@ -898,6 +912,7 @@ $(document).ready(function () {
 	mDialog.init();
 	notifier.init();
 	fancyBox.init();
+	$.tooltip();
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});
