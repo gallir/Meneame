@@ -2392,7 +2392,8 @@ margin: 5px 5px 5px 5px;
 display: inline;
 }
 
-.share_icons img {
+.share_icons span {
+display: inline-block;
 width: 16px;
 height: 16px;
 margin: 0 3px;
@@ -2401,7 +2402,17 @@ opacity:0.6;
 vertical-align: text-top;
 }
 
-.share_icons img:hover {
+.share_icons span:hover {
 opacity:1.0;
+}
+
+.share_icons span.fb {
+background: url(../../img/external/fb-24.png) no-repeat center center;
+background-size: 16px 16px;
+}
+
+.share_icons span.tw {
+background: url(../../img/external/tw-24.png) no-repeat center center;
+background-size: 16px 16px;
 }
 

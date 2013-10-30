@@ -171,8 +171,8 @@
 			<div class="tool">
 			{% if ! self.is_discarded %}
 
-				{% exec htmlspecialchars_decode self.title as title %}
 				{% set link = self.permalink %}
+				{% set title = self.title %}
 
 				{% if not globals.mobile %}
 					{% exec self.get_short_permalink as short_link %}
