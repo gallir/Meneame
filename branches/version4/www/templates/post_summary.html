@@ -12,9 +12,9 @@
 		<div class="comment-votes-info">
 		{% if self.can_vote %}
 			{% if self.user_can_vote %}
-				<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"> </span>
+				<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"></span>
 				{% include 'post_summary_votes.html' %}
-				<span id="vc-n-{{ self.id }}" class="vote down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
+				<span id="vc-n-{{ self.id }}" class="vote right down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
 			{% else %}
 				{% if self.voted > 0 %}
 					<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>

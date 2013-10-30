@@ -1706,11 +1706,16 @@ margin: 0 4px 0 4px;
 
 .comment-meta .vote {
 display: inline-block;
-width: 28px; 
+width: 18px; 
 height: 16px;
 background-size: 18px 16px;
 cursor: pointer;
+margin-right: 8px;
 }
+
+.comment-meta .vote.right {
+margin-left: 8px;
+} 
 
 .comment-meta .vote.up {
 background: url(../../img/common/vote-up02.png) no-repeat bottom center;

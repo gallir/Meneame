@@ -55,8 +55,8 @@ function menealo_post(user, id, value)
 }
 
 function respond_comment_vote(id, value) {
-	$('#vc-p-'+id).addClass('voted');
-	$('#vc-n-'+id).addClass('voted');
+	$('#vc-p-'+id).addClass('voted').attr('onclick','').unbind('click');
+	$('#vc-n-'+id).addClass('voted').attr('onclick','').unbind('click');
 }
 
 
@@ -71,7 +71,6 @@ function update_comment_vote(id, value, data) {
 		if (value < 0) {
 			$('#vc-p-'+id).removeClass('up').addClass('down');
 		}
-		$('#vc-p-'+id).attr('onclick','').unbind('click');
 	}
 }
 
