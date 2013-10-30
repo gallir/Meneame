@@ -12,20 +12,14 @@
 		<div class="comment-votes-info">
 		{% if self.can_vote %}
 			{% if self.user_can_vote %}
-				<span id="vc-p-{{ self.id }}">
-				<a href="javascript:menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"><img src="{{ globals.base_static }}img/common/vote-up02.png" width="18" height="16" alt="{% trans _('voto positivo') %}"/></a>&nbsp;
-				</span>
-
+				<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"> </span>
 				{% include 'post_summary_votes.html' %}
-
- 				<span id="vc-n-{{ self.id }}">
- 				&nbsp;<a href="javascript:menealo_post({{current_user.user_id}},{{self.id}},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"><img src="{{ globals.base_static }}img/common/vote-down02.png" width="18" height="16" alt="{% trans _('voto negativo') %}"/></a>
- 				</span>
+				<span id="vc-n-{{ self.id }}" class="vote down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
 			{% else %}
 				{% if self.voted > 0 %}
-					<img src="{{ globals.base_static }}img/common/vote-up-gy02.png" width="18" height="16" alt="{% trans _('votado positivo') %}" title="{% trans _('votado positivo') %}"/>
+					<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>
 				{% else %}{% if self.voted < 0 %}
-					<img src="{{ globals.base_static }}img/common/vote-down-gy02.png" width="18" height="16" alt="{% trans _('votado negativo') %}" title="{% trans _('votado negativo') %}"/>
+					<span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"></span>
 				{% endif %}{% endif %}
 				{% include 'post_summary_votes.html' %}
 			{% endif %}

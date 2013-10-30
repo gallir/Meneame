@@ -1680,9 +1680,9 @@ vertical-align: top;
 
 .comment-meta {
 font-size: 90%;
-line-height: 180%;
 color: #666;
-margin: 0 0 15px 0;
+height: 22px;
+margin: 1px 0 15px 0;
 white-space: nowrap;
 overflow: hidden;
 }
@@ -1699,8 +1699,39 @@ font-weight: bold;
 text-decoration: none;
 }
 
+.comment-meta img {
+border: none;
+margin: 0 4px 0 4px;
+}
+
+.comment-meta .vote {
+display: inline-block;
+width: 28px; 
+height: 16px;
+background-size: 18px 16px;
+cursor: pointer;
+}
+
+.comment-meta .vote.up {
+background: url(../../img/common/vote-up02.png) no-repeat bottom center;
+}
+
+.comment-meta .vote.down {
+background: url(../../img/common/vote-down02.png) no-repeat bottom center;
+}
+
+.comment-meta .vote.voted {
+cursor: default;
+opacity:0.5;
+}
+
 .comment-info {
+float: right;
 text-align: right;
+}
+
+.comment-info img {
+margin: 0 0 0 4px;
 }
 
 .comment-answers {
@@ -1733,20 +1764,12 @@ padding: 0 3px 0 3px;
 .comment-votes-info {
 float: left;
 max-width: 60%;
-display: inline;
 overflow: hidden;
 }
 
-.comment-meta img {
-border: none;
-margin: 2px 4px 0 4px;
-vertical-align: top;
+.comment-votes-info img {
+margin-top: 2px;
 }
-
-.comment-info img {
-margin: 2px 0 0 4px;
-}
-
 
 .comments-list ul li {
 list-style: none;
@@ -2217,11 +2240,6 @@ font-weight: normal;
 color: #FF9400;
 }
 
-
-.link-icon {
-vertical-align: middle;
-padding: 0px 0px 2px 0px;
-}
 
 @media print {
 body { font-size: small }

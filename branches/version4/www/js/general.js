@@ -55,8 +55,8 @@ function menealo_post(user, id, value)
 }
 
 function respond_comment_vote(id, value) {
-	$('#vc-p-'+id).css('opacity', 0.2);
-	$('#vc-n-'+id).css('opacity', 0.2);
+	$('#vc-p-'+id).addClass('voted');
+	$('#vc-n-'+id).addClass('voted');
 }
 
 
@@ -67,10 +67,11 @@ function update_comment_vote(id, value, data) {
 	} else {
 		$('#vc-'+id).html(data.votes+"");
 		$('#vk-'+id).html(data.karma+"");
-		if (data.image.length > 0) {
-			$('#vc-n-'+id).hide();
-			$('#vc-p-'+id).css('opacity', 1).html('<img src="'+data.image+'"/>');
+		$('#vc-n-'+id).hide();
+		if (value < 0) {
+			$('#vc-p-'+id).removeClass('up').addClass('down');
 		}
+		$('#vc-p-'+id).attr('onclick','').unbind('click');
 	}
 }
 
