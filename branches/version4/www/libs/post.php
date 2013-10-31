@@ -183,7 +183,7 @@ class Post extends LCPBase {
 		//$author .= ' ('.$this->src.')';
 
 		// Print dates
-		if ($globals['now'] - $this->date > 86400) {
+		if ($globals['now'] - $this->date > 3600) {
 			$this->comment_info = sprintf('<span class="wideonly">'._('%s %s por ').'</span>'.'%s', get_date_time($this->date), '', $author);
 		} else {
 			$this->comment_info = sprintf('<span class="wideonly">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), '', $author);

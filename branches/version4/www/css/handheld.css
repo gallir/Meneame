@@ -100,8 +100,8 @@ margin: 0 10px 5px 0;
 font-size: 100%;
 }
 
-.comment-votes-info {
-max-width: 75%;
+.comment-meta a {
+font-weight: normal;
 }
 
 .comments, .notes {

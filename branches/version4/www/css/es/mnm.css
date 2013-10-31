@@ -1763,6 +1763,7 @@ opacity:0.5;
 .comment-info {
 float: right;
 text-align: right;
+overflow: visible;
 }
 
 .comment-info img {
