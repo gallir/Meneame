@@ -671,11 +671,12 @@ function post_add_form_text(text, tries, start, end) {
 	if (! tries) tries = 1;
 	var textarea = $('#post');
 	if (tries < 20 && textarea.length == 0) {
-			tries++;
-			setTimeout(function () { post_add_form_text(text,tries,start,end) }, 50);
+			setTimeout(function () { post_add_form_text(text,tries+1,start,end) }, 100);
 			return false;
 	}
-	if (textarea.length == 0 ) return false;
+	if (textarea.length == 0 ) {
+			return false;
+	}
 	var re = new RegExp(text);
 	var oldtext = textarea.val();
 	if (oldtext.match(re)) return false;
