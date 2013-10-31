@@ -39,7 +39,7 @@ $globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
-$globals['v'] = 35; // internal version, to for reloads
+$globals['v'] = 36; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -195,7 +195,7 @@ $globals['post_votes_multiplier'] = 1; //'importance' in karma calculations of p
 
 $globals['karma_points_by_votes'] = 5; // Max karma given to votes to other's links
 $globals['instant_karma_per_published'] = 1; //karma added when published
-$globals['instant_karma_per_depublished'] = 1.2; //karma substracted when depublished
+$globals['instant_karma_per_depublished'] = 1; //karma substracted when depublished
 $globals['instant_karma_per_discard'] = 0.2; //karma substracted when discarded
 $globals['karma_points_per_published'] = 2; //karma added by each published when recalculating new karma (max 4)
 $globals['karma_points_per_published_max'] = 4;
