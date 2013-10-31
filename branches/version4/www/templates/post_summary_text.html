@@ -9,11 +9,11 @@
 	{# PixeloPhilia icon from omercetin.deviantart.com #}
 	<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
 	{% if globals.cache_redirector %}
-		class="thumb ok"
-		src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.jpg?{{ self.media_date }}" 
+		class="thumb ok lazy"
+		data-src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.jpg?{{ self.media_date }}" 
 	{% else %}
-		class="thumb"
-		src="img/common/picture01.png" width="30" height="24"
+		class="thumb lazy"
+		data-src="img/common/picture01.png" width="30" height="24"
 	{% endif %}
 	alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
 {% endif %}

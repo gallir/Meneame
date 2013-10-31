@@ -520,7 +520,7 @@ function print_relevant_comments($link, $page) {
 	else $do_cache = false;
 
 	if($do_cache) {
-		$key = 'relevant_story_comments_'.$globals['css_main'].$link->id;
+		$key = 'relevant_story_comments_'.$globals['v'].'_'.$link->id;
 		if(memcache_mprint($key)) return;
 	}
 

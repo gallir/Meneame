@@ -2,17 +2,18 @@
 <a class="title" href="{{ link_url }}/best-comments" title="{% trans _('los sombreados de rojo son de usuarios que votaron negativo') %}">{% trans _('Comentarios destacados') %}:</a>&nbsp;
 {% for obj in objects %}
 	<a class="tooltip c:{{ obj.link_id }}-{{ obj.order }}" href="{{obj.link}}" rel="nofollow"><img 
+		src="{{ globals.base_static }}img/g.gif"
 		{% if obj.vote < 0 %}
-			src="{% exec get_avatar_url obj.user_id, obj.avatar, 25 %}" 
+			data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 25, false %}" 
 			alt="" width="25" height="25" 
-			class="avatar shadow-red"
+			class="avatar shadow-red lazy"
 		{% else %}
-			src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" 
+			data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 20, false %}" 
 			alt="" width="20" height="20" 
 			{% if obj.vote > 0 %}
-				class="avatar shadow-green"
+				class="avatar shadow-green lazy"
 			{% else %}
-				class="avatar"
+				class="avatar lazy"
 			{% endif %}
 		{% endif %}
 		/></a>&nbsp;
@@ -21,15 +22,16 @@
 	<div style="margin-top:5px;margin-bottom:3px">
 		<div style="float:left;">
 		<a class="tooltip c:{{ self.link_id }}-{{ self.c_order }}" href="{{self.url}}" rel="nofollow"><img 
-			src="{% exec get_avatar_url self.author, self.avatar, 25 %}" 
+			src="{{ globals.base_static }}img/g.gif"
+			data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" 
 			alt="" width="25" height="25" 
 			{% if self.vote < 0 %}
-				class="avatar shadow-red" 
+				class="avatar shadow-red lazy" 
 			{% else %}
 				{% if self.vote > 0 %}
-					class="avatar shadow-green" 
+					class="avatar shadow-green lazy" 
 				{% else %}
-					class="avatar" 
+					class="avatar lazy" 
 				{% endif %}
 			{% endif %}
 			style="vertical-align:text-top"

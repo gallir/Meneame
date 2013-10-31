@@ -693,7 +693,7 @@ class Link extends LCPBase {
 		$this->is_editable	= $this->is_editable();
 		$this->url_str	= preg_replace('/^www\./', '', parse_url($this->url, 1));
 		$this->print_date	= $globals['now'] - $this->date > 1728000 || $globals['bot'] || $globals['mobile']; // 20 hours or user agent is empty
-		$this->thumb_url	= $this->has_thumb();
+		$this->thumb_url	= $this->has_thumb(false);
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) &&
@@ -1376,10 +1376,13 @@ class Link extends LCPBase {
 		}
 	}
 
-	function has_thumb() {
+	function has_thumb($fullurl=true) {
 		global $globals;
 
 		if ($this->thumb_url) return $this->thumb_url;
+
+		if ($fullurl) $base = $globals['base_static'];
+		else $base = $globals['base_url'];
 
 		$link_year = getdate($this->date);
 		$link_year = $link_year['year'];

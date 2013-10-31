@@ -908,7 +908,7 @@ $(document).ready(function () {
 	}
 	$.ajaxSetup({ cache: false });
 
-	$('img.lazy').unveil({base_url: base_static, threshold: 50});
+	$('img.lazy').unveil({base_url: base_static, threshold: 100});
 	navMenu.init();
 
 	mDialog.init();
@@ -1308,12 +1308,8 @@ var notifier = new function () {
 
 
 /**
- * jQuery Unveil
- * A very lightweight jQuery plugin to lazy load images
+ * jQuery Unveil modified and improved to accept options and base_url
  * http://luis-almeida.github.com/unveil
- *
- * Licensed under the MIT license.
- * Copyright 2013 Luís Almeida
  * https://github.com/luis-almeida
  */
 
