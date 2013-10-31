@@ -1415,7 +1415,7 @@ class Link extends LCPBase {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
 			$this->thumb_medium_uri = $path . '/' . $base_medium_thumb;
 			$this->thumb_medium_url = $globals['base_static'] . $this->thumb_medium_uri;
-	}
+		}
 
 		return $this->thumb_url;
 	}

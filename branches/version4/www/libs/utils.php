@@ -479,7 +479,7 @@ function post_get_base_url($option='', $give_base=true) {
 	}
 }
 
-function get_avatar_url($user, $avatar, $size) {
+function get_avatar_url($user, $avatar, $size, $fullurl = true) {
 	global $globals, $db;
 
 	// If it does not get avatar status, check the database
@@ -491,25 +491,32 @@ function get_avatar_url($user, $avatar, $size) {
 		if ($globals['Amazon_S3_media_url'] && !$globals['Amazon_S3_local_cache']) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
+
+			if ($fullurl) $base = $globals['base_static'];
+			else $base = $globals['base_url'];
+
 			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";
 			$file_path = mnmpath.'/'.$file;
 			if (!$globals['cache_redirector']) {
 				if (is_readable($file_path)) {
-					return $globals['base_static'] . $file;
+					return $base . $file;
 				} else {
 					return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
 				}
 			} else {
-				return $globals['base_static'] . $file;
+				return $base . $file;
 			}
 		}
 	}
-	return get_no_avatar_url($size);
+	return get_no_avatar_url($size, $fullurl);
 }
 
-function get_no_avatar_url($size) {
+function get_no_avatar_url($size, $fullurl = true) {
 	global $globals;
-	return $globals['base_static'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
+	
+	if ($fullurl) $base =  $globals['base_static'];
+	else $base = $globals['base_url'];
+	return $base.'img/mnm/no-gravatar-2-'.$size.'.jpg';
 }
 
 function utf8_substr($str,$start)

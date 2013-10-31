@@ -109,7 +109,7 @@
 
 	{% if type == 'full' || type == 'preview' %}
 		{% if self.thumb_url %}
-			<img src='{{ self.thumb_url }}' alt='' class='thumbnail'/>
+			<img data-src='{{ self.thumb_url }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/>
 		{% endif %}
 		{{ self.content }}
 		{% if type != 'preview' %}

@@ -908,6 +908,7 @@ $(document).ready(function () {
 	}
 	$.ajaxSetup({ cache: false });
 
+	$('img.lazy').unveil({base_url: base_static, threshold: 50});
 	navMenu.init();
 
 	mDialog.init();
@@ -1304,5 +1305,79 @@ var notifier = new function () {
 		this.update();
 	}
 }
+
+
+/**
+ * jQuery Unveil
+ * A very lightweight jQuery plugin to lazy load images
+ * http://luis-almeida.github.com/unveil
+ *
+ * Licensed under the MIT license.
+ * Copyright 2013 Luís Almeida
+ * https://github.com/luis-almeida
+ */
+
+;(function($) {
+
+  $.fn.unveil = function(options, callback) {
+
+	var settings = {
+		threshold: 0,
+		base_url: '',
+	};
+
+    var $w = $(window),
+        retina = window.devicePixelRatio > 1,
+        attrib = retina? "data-high" : "data-src",
+        images = this,
+        loaded;
+
+	if (options) {
+		$.extend(settings, options);
+	}
+
+    this.one("unveil", function() {
+      var source = this.getAttribute(attrib);
+      source = source || this.getAttribute("data-src");
+      if (source) {
+		if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
+			if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
+				source = source.substr(1);
+			}
+			source = settings.base_url + source;
+		}
+        this.setAttribute("src", source);
+        if (typeof callback === "function") callback.call(this);
+      }
+    });
+
+    function unveil() {
+      var inview = images.filter(function() {
+        var $e = $(this);
+        if ($e.is(":hidden")) return;
+
+        var wt = $w.scrollTop(),
+            wb = wt + $w.height(),
+            et = $e.offset().top,
+            eb = et + $e.height();
+
+        return eb >= wt - settings.threshold && et <= wb + settings.threshold;
+      });
+
+      loaded = inview.trigger("unveil");
+      images = images.not(loaded);
+    }
+
+    $w.scroll(unveil);
+    $w.resize(unveil);
+
+    unveil();
+
+    return this;
+
+  };
+
+})(window.jQuery || window.Zepto);
+
 
 {% endspacefull %}

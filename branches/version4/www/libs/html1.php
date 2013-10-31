@@ -568,7 +568,7 @@ function do_best_story_comments($link) {
 	}
 
 	if($do_cache) {
-		$key = 'best_story_comments_'.$globals['v'].$link->id;
+		$key = 'best_story_comments_'.$globals['v'].'_'.$link->id;
 		if(memcache_mprint($key)) return;
 	}
 	echo '<!-- Calculating '.__FUNCTION__.' -->';

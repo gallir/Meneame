@@ -39,11 +39,13 @@
 
 		<div class="comment-info">
 		{{ self.author_info }}
-		<img src="{{ self.avatar_img }}"
+		<img 
 		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
-			class="tooltip u:{{ self.author }}" alt="{{ self.username }}"
+			data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}" src="{{ globals.base_static }}img/g.gif" 
+			class="tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
 		{% else %}
-			alt=""
+			data-src="{% exec get_no_avatar_url 20, false %}" src="{{ globals.base_static }}img/g.gif" 
+			class="lazy" alt=""
 		{% endif %}
 		/>
 		</div>

@@ -277,12 +277,6 @@ class Comment extends LCPBase {
 			$edited = sprintf('<strong title="'. _('editado %s después').'">*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
 		} else $edited = '';
 
-		if (!$this->hidden && $this->type != 'admin' && $this->avatar) {
-			$this->avatar_img = get_avatar_url($this->author, $this->avatar, 20);
-		} else {
-			$this->avatar_img = get_no_avatar_url(20);
-		}
-
 		if ($globals['now'] - $this->date > 3600) {
 				$this->author_info = sprintf('<span class="wideonly">'._('%s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
 		} else {

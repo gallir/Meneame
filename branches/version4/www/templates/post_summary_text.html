@@ -1,5 +1,5 @@
 {% if self.show_avatar %}
-	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" alt="{{ self.username }}"/></a>
+	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar lazy" data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}" {# data-high="{% exec get_avatar_url self.author, self.avatar, 80, false %}"#} src="{{ globals.base_static }}img/g.gif" alt="{{ self.username }}"/></a>
 {% endif %}
 
 	{{ self.content }}
@@ -7,13 +7,13 @@
 {% if self.media_size > 0 %}
 	&nbsp;
 	{# PixeloPhilia icon from omercetin.deviantart.com #}
-	<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img 
+	<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
 	{% if globals.cache_redirector %}
 		class="thumb ok"
-		src="{{ globals.base_static }}{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.jpg?{{ self.media_date }}" 
+		src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.jpg?{{ self.media_date }}" 
 	{% else %}
 		class="thumb"
-		src="{{ globals.base_static }}img/common/picture01.png" width="30" height="24"
+		src="img/common/picture01.png" width="30" height="24"
 	{% endif %}
 	alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
 {% endif %}
