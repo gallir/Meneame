@@ -25,9 +25,12 @@
 		</form>
 	{% endif %}
 
+	{#
 	<a class="tooltip l:{{ self.id }} info">i</a>
+	#}
+
 	{% if current_user.user_id > 0 %}
-		<span style="float:left;padding-top: 5px;display:inline-block;">
+		<span style="float:left;padding-top: 5px;margin-left: 20px;display:inline-block;">
 		<span id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
 		</span>
 	{% endif %}
