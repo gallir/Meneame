@@ -851,38 +851,41 @@ function share_tw(e) {
 	return false;
 }
 
-/* From http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ */
+/* From http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ 
+* Adapted with the help of http://benalman.com/news/2010/03/jquery-special-events/
+*/
 (function(){
-    var uid = 'D' + (+new Date());
-    var latency = 50;
-    $.event.special.scrollstop = {
-        setup: function() {
- 
-            var timer,
-                    handler = function(evt) {
- 
-                    var _self = this,
-                        _args = arguments;
- 
-                    if (timer) {
-                        clearTimeout(timer);
-                    }
- 
-                    timer = setTimeout( function(){
-                        timer = null;
-                        evt.type = 'scrollstop';
-						$(_self).trigger(evt, [_args]);
-                    }, latency);
- 
-                };
- 
-            jQuery(this).on('scroll', handler).data(uid, handler);
-        },
+	var uid = 'D' + (+new Date());
+	var latency = 50;
+	var handler;
+	$.event.special.scrollstop = {
+		setup: function() {
+			var timer;
 
-        teardown: function() {
-            jQuery(this).off( 'scroll', jQuery(this).data(uid) );
-        }
-    };
+			handler = function(evt) {
+ 
+				var _self = this,
+					_args = arguments;
+ 
+				if (timer) {
+					clearTimeout(timer);
+				}
+
+				timer = setTimeout( function(){
+					timer = null;
+					evt.type = 'scrollstop';
+					$(_self).trigger(evt, [_args]);
+				}, latency);
+
+			};
+ 
+			$(this).on('scroll', handler);
+		},
+
+		teardown: function() {
+			$(this).off('scroll', handler);
+		}
+	};
  
 })();
 
@@ -890,8 +893,8 @@ var navMenu = new function () {
 	var panel = false;
 
 	this.init = function() {
+		navMenu.prepare();
 		$("#nav-menu").on('click', function() {
-			navMenu.prepare();
 			if (panel.is(":visible")) {
 				$('html').off('click', click_handler);
 				panel.hide();
@@ -1335,21 +1338,21 @@ var notifier = new function () {
 		base_url: '',
 	};
 
-    var $w = $(window),
+	var $w = $(window),
 		timer,
-        retina = window.devicePixelRatio > 1,
-        data = retina? "high" : "src",
-        images = this,
+		retina = window.devicePixelRatio > 1,
+		data = retina? "high" : "src",
+		images = this,
 		selector = $(this).selector,
-        loaded;
+		loaded;
 
 
 	if (options) {
 		$.extend(settings, options);
 	}
-    this.one("unveil", handler);
+	this.one("unveil", handler);
 
-
+	/* We trigger a DOMChanged event when we add new elements */
 	$w.on("DOMChanged", function(event, parent) {
 		var $e = $(parent);
 		var n = $e.find(selector).not(images).not(loaded);
@@ -1360,44 +1363,48 @@ var notifier = new function () {
 	});
 
 	function handler() {
-	  var $e = $(this);
-      var source = $e.data(data);
-      source = source || $e.data("src");
-      if (source) {
-		if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
-			if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
-				source = source.substr(1);
+		var $e = $(this);
+		var source = $e.data(data);
+		source = source || $e.data("src");
+		if (source) {
+			if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
+				if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
+					source = source.substr(1);
+				}
+				source = settings.base_url + source;
 			}
-			source = settings.base_url + source;
+			$e.attr("src", source);
+			if (typeof callback === "function") callback.call(this);
 		}
-        $e.attr("src", source);
-        if (typeof callback === "function") callback.call(this);
-      }
-    }
+	}
 
-    function unveil() {
-      var wt = $w.scrollTop();
-      var wb = wt + $w.height();
+	function unveil() {
+		var wt = $w.scrollTop();
+		var wb = wt + $w.height();
 
-      var inview = images.filter(function() {
-        var $e = $(this);
-        if ($e.is(":hidden")) return;
+		var inview = images.filter(function() {
+			var $e = $(this);
+			if ($e.is(":hidden")) return;
 
-		var et = $e.offset().top,
-            eb = et + $e.height();
+			var et = $e.offset().top,
+				eb = et + $e.height();
 
-        return eb >= wt - settings.threshold && et <= wb + settings.threshold;
-      });
+			return eb >= wt - settings.threshold && et <= wb + settings.threshold;
+		});
 
-      loaded = inview.trigger("unveil");
-      images = images.not(loaded);
-    }
+		loaded = inview.trigger("unveil");
+		images = images.not(loaded);
 
-    $w.on('scrollstop resize', unveil);
+		/* Disable callback if there is no remaining images */
+		if (images.length == 0) {
+			$w.off('scrollstop resize', unveil);
+		}
+	}
 
-    unveil();
+	$w.on('scrollstop resize', unveil);
+	unveil();
 
-    return this;
+	return this;
 
   };
 
@@ -1436,6 +1443,7 @@ $(document).ready(function () {
 	$.ajaxSetup({ cache: false });
 
 	$('img.lazy').unveil({base_url: base_static, threshold: 100});
+
 	navMenu.init();
 	mDialog.init();
 	$.tooltip();
