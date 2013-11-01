@@ -851,37 +851,32 @@ function share_tw(e) {
 	return false;
 }
 
-/* From http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ 
-* Adapted with the help of http://benalman.com/news/2010/03/jquery-special-events/
+/* Original from http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ 
+* Adapted to jquery 1.9-10 and optimized with the help of 
+* http://benalman.com/news/2010/03/jquery-special-events/
 */
 (function(){
-	var uid = 'D' + (+new Date());
 	var latency = 50;
 	var handler;
 	$.event.special.scrollstop = {
 		setup: function() {
 			var timer;
-
 			handler = function(evt) {
- 
 				var _self = this,
 					_args = arguments;
  
 				if (timer) {
 					clearTimeout(timer);
 				}
-
 				timer = setTimeout( function(){
 					timer = null;
 					evt.type = 'scrollstop';
 					$(_self).trigger(evt, [_args]);
 				}, latency);
-
 			};
  
 			$(this).on('scroll', handler);
 		},
-
 		teardown: function() {
 			$(this).off('scroll', handler);
 		}
