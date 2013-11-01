@@ -28,6 +28,7 @@ if (!empty($_GET['id'])) {
 }
 $comment = Comment::from_db($id);
 if(!$comment) die;
+echo '<div class="comment-body">';
 if ( $comment->type != 'admin') {
 	if ($comment->avatar) {
 		echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
@@ -37,4 +38,5 @@ if ( $comment->type != 'admin') {
 	echo '<strong>' . get_server_name() . '</strong><br/>';
 }
 $comment->print_text(1000);
+echo '</div>';
 ?>

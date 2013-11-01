@@ -60,5 +60,7 @@ $post->id=$id;
 $post->read();
 if(!$post->read) die;
 $post->show_avatar = true;
+echo '<div class="comment-body">';
 $post->print_text();
+echo '</div>';
 ?>

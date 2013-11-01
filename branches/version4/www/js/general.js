@@ -374,6 +374,7 @@ Tooltips functions
 			if(typeof html == 'string')	box.html(html);
 			position();
 			box.show();
+			box.trigger("DOMChanged", box);
 		}
 	}
 
@@ -1279,16 +1280,29 @@ var notifier = new function () {
         retina = window.devicePixelRatio > 1,
         data = retina? "high" : "src",
         images = this,
+		selector = $(this).selector,
 		previous_wt = -100000,
 		min_mv,
         loaded;
+
 
 	if (options) {
 		$.extend(settings, options);
 	}
 	min_mv = settings.threshold/3;
+    this.one("unveil", handler);
 
-    this.one("unveil", function() {
+
+	$w.on("DOMChanged", function(event, parent) {
+		var $e = $(parent);
+		var n = $e.find(selector).not(images).not(loaded);
+		if (n.length == 0) return;
+		n.one("unveil", handler);
+		images = images.add(n);
+		n.trigger("unveil");
+	});
+
+	function handler() {
 	  var $e = $(this);
       var source = $e.data(data);
       source = source || $e.data("src");
@@ -1302,7 +1316,7 @@ var notifier = new function () {
         $e.attr("src", source);
         if (typeof callback === "function") callback.call(this);
       }
-    });
+    }
 
 	function schedule() {
 		if (previous_wt > 0) {
