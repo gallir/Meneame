@@ -1260,6 +1260,7 @@ var notifier = new function () {
 
 /**
  * jQuery Unveil modified and improved to accept options and base_url
+ * Heavely optimized with timer and checking por min movement between scroll
  * http://luis-almeida.github.com/unveil
  * https://github.com/luis-almeida
  */
@@ -1269,23 +1270,28 @@ var notifier = new function () {
   $.fn.unveil = function(options, callback) {
 
 	var settings = {
-		threshold: 0,
+		threshold: 10,
 		base_url: '',
 	};
 
     var $w = $(window),
+		timer,
         retina = window.devicePixelRatio > 1,
-        attrib = retina? "data-high" : "data-src",
+        data = retina? "high" : "src",
         images = this,
+		previous_wt = -100000,
+		min_mv,
         loaded;
 
 	if (options) {
 		$.extend(settings, options);
 	}
+	min_mv = settings.threshold/3;
 
     this.one("unveil", function() {
-      var source = this.getAttribute(attrib);
-      source = source || this.getAttribute("data-src");
+	  var $e = $(this);
+      var source = $e.data(data);
+      source = source || $e.data("src");
       if (source) {
 		if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
 			if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
@@ -1293,19 +1299,31 @@ var notifier = new function () {
 			}
 			source = settings.base_url + source;
 		}
-        this.setAttribute("src", source);
+        $e.attr("src", source);
         if (typeof callback === "function") callback.call(this);
       }
     });
 
+	function schedule() {
+		if (previous_wt > 0) {
+			clearTimeout(timer);
+			timer = setTimeout(unveil, 50);
+		} else {
+			unveil();
+		}
+	}
+
     function unveil() {
+      var wt = $w.scrollTop();
+	  if (Math.abs(wt-previous_wt) < min_mv) return;
+
+	  previous_wt = wt;
+      var wb = wt + $w.height();
       var inview = images.filter(function() {
         var $e = $(this);
         if ($e.is(":hidden")) return;
 
-        var wt = $w.scrollTop(),
-            wb = wt + $w.height(),
-            et = $e.offset().top,
+		var et = $e.offset().top,
             eb = et + $e.height();
 
         return eb >= wt - settings.threshold && et <= wb + settings.threshold;
@@ -1315,8 +1333,8 @@ var notifier = new function () {
       images = images.not(loaded);
     }
 
-    $w.scroll(unveil);
-    $w.resize(unveil);
+    $w.scroll(schedule);
+    $w.resize(schedule);
 
     unveil();
 
