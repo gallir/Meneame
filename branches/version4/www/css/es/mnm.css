@@ -1771,7 +1771,7 @@ width: 18px;
 background: url(../../img/common/reply02.png) no-repeat center center;
 }
 
-.news-details .favorite, .comment-meta .favorite {
+#bar .favorite, .news-details .favorite, .comment-meta .favorite {
 display: inline-block;
 background-size: 18px 16px;
 margin: 0 4px;
@@ -1781,7 +1781,7 @@ width: 18px;
 background: url(../../img/common/favourites_note_off-02.png) no-repeat center center;
 }
 
-.news-details .favorite.on, .comment-meta .favorite.on {
+#bar .favorite.on, .news-details .favorite.on, .comment-meta .favorite.on {
 background: url(../../img/common/favourites_note_on-02.png) no-repeat center center;
 }
 

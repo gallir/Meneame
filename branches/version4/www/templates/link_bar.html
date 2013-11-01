@@ -26,7 +26,9 @@
 	{% endif %}
 
 	{% if current_user.user_id > 0 %}
-		<a class="info" id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">{% exec favorite_teaser current_user.user_id self %}</a>
+		<span style="padding-top: 4px;display:inline-block;">
+		<span id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
+		</span>
 	{% endif %}
 
 	<a class="tooltip l:{{ self.id }} info">i</a>
@@ -35,7 +37,7 @@
 <script type="text/javascript">
 	$("#header-logo").attr('href', '{{ self.permalink }}')
 		.attr('title', "{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}")
-		.onclick(function () { location.href='{{ self.permalink }}' })
+		.click(function () { location.href='{{ self.permalink }}' })
 		.after($('#bar'));
 </script>
 </div></div>
