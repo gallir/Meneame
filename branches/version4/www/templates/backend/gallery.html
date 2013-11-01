@@ -18,7 +18,14 @@ function formatTitle() {
 
 	url = base_url + 'go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
 
-	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+'&nbsp;[<a href="'+this.href+'" target="_blank">{% trans _('imagen') %}</a>]'+'</div>';
+	var image_link;
+	if (! is_mobile) {
+		image_link = '&nbsp;[<a href="'+this.href+'" target="_blank">{% trans _('imagen') %}</a>]';
+	} else {
+		image_link = '';
+	}
+		
+	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+image_link+'</div>';
 
 	return who;
 }
@@ -27,14 +34,19 @@ function onComplete() {
 	reportAjaxStats('image', 'gallery', this.href);
 }
 
+var wh;
+if (is_mobile) wh = '100%';
+else wh = '75%';
+
 $("#gallery-container > a.fancybox").colorbox(
 	{
 		'type': "image",
 		'transition'	: 'none',
+		'current': "{current}/{total}",
 		'loop': true,
 		'onComplete': onComplete,
-		'width':"75%",
-		'height':"75%",
+		'width':wh,
+		'height':wh,
 		'opacity': 0.5,
 		'preloading': true,
 		'title': formatTitle,

@@ -8,30 +8,6 @@
 
 global $globals;
 
-/* Old favourite icon ***
-define('FAV_YES', '<img src="'.$globals['base_static'].'img/common/icon_favourites.png" alt="*" width="16" height="16" title="'._('en favoritos').'"/>');
-define('FAV_NO', '<img src="'.$globals['base_static'].'img/common/icon_favourites_no.png" alt="*" width="16" height="16" title="'._('agregar a favoritos').'"/>');
-****/
-define('FAV_YES', '<img src="'.$globals['base_static'].'img/common/favourites_note_on-02.png" alt="*" width="18" height="16" title="'._('en favoritos').'"/>');
-define('FAV_NO', '<img src="'.$globals['base_static'].'img/common/favourites_note_off-02.png" alt="*" width="18" height="16" title="'._('agregar a favoritos').'"/>');
-
-define('FAV_POST_YES', '<img src="'.$globals['base_static'].'img/common/favourites_note_on-02.png" alt="*" width="18" height="16" title="'._('en favoritos').'"/>');
-define('FAV_POST_NO', '<img src="'.$globals['base_static'].'img/common/favourites_note_off-02.png" alt="*" width="18" height="16" title="'._('agregar a favoritos').'"/>');
-
-function favorite_icon($status, $type='link') {
-	switch ($type) {
-		case 'post':
-		case 'comment':
-			if ($status) return FAV_POST_YES;
-			else return FAV_POST_NO;
-			break;
-		case 'link':
-		default:
-			if ($status) return FAV_YES;
-			else return FAV_NO;
-	}
-}
-
 function favorite_exists($user, $link, $type='link') {
 		global $db;
 		return intval($db->get_var("SELECT SQL_NO_CACHE count(*) FROM favorites WHERE favorite_user_id=$user and favorite_type='$type' and favorite_link_id=$link"));
@@ -51,18 +27,10 @@ function favorite_add_delete($user, $link, $type='link') {
 	global $globals;
 	if(favorite_exists($user, $link, $type)) {
 		favorite_delete($user, $link, $type);
-		return favorite_icon(false, $type);
+		return 0;
 	} else {
 		favorite_insert($user, $link, $type);
-		return favorite_icon(true, $type);
+		return 1;
 	}
 }
 
-function favorite_teaser($user, $object, $type='link') {
-	global $globals;
-	if ($object->favorite) {
-		return favorite_icon(true, $type);
-	} else {
-		return favorite_icon(false, $type);
-	}
-}

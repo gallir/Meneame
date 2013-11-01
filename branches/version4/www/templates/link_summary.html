@@ -162,9 +162,7 @@
 
 			{% if current_user.user_id > 0 %}
 				<span class="tool">
-				<a id="fav-{{ self.id }}" href="javascript:get_votes('get_favorite.php','{{ current_user.user_id }}', 'fav-{{ self.id }}',0,'{{self.id }}')">
-				{% exec favorite_teaser current_user.user_id self %}
-				</a>
+				<span id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
 				</span>
 			{% endif %}
 

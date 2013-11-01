@@ -35,6 +35,7 @@
 <script type="text/javascript">
 	$("#header-logo").attr('href', '{{ self.permalink }}')
 		.attr('title', "{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}")
+		.onclick(function () { location.href='{{ self.permalink }}' })
 		.after($('#bar'));
 </script>
 </div></div>

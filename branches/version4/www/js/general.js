@@ -188,6 +188,24 @@ function report_problem_yes(frm, user, id) {
 	return false;
 }
 
+function add_remove_fav(element, type, id) {
+	var url = base_url + 'backend/get_favorite.php?id='+id+'&user='+user_id+'&type='+type+'&key='+base_key;
+	$.getJSON(url,
+		 function(data) {
+				if (data.error) {
+					mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
+					return;
+				}
+				if (data.value) {
+					$('#'+element).addClass("on");
+				} else {
+					$('#'+element).removeClass("on");
+				}
+		}
+	);
+	reportAjaxStats('html', "get_favorite.php");
+}
+
 /* Get voters by Beldar <beldar.cat at gmail dot com>
 ** Generalized for other uses (gallir at gmail dot com)
 */
@@ -833,6 +851,41 @@ function share_tw(e) {
 	return false;
 }
 
+/* From http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ */
+(function(){
+    var uid = 'D' + (+new Date());
+    var latency = 50;
+    $.event.special.scrollstop = {
+        setup: function() {
+ 
+            var timer,
+                    handler = function(evt) {
+ 
+                    var _self = this,
+                        _args = arguments;
+ 
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
+ 
+                    timer = setTimeout( function(){
+                        timer = null;
+                        evt.type = 'scrollstop';
+						$(_self).trigger(evt, [_args]);
+                    }, latency);
+ 
+                };
+ 
+            jQuery(this).on('scroll', handler).data(uid, handler);
+        },
+
+        teardown: function() {
+            jQuery(this).off( 'scroll', jQuery(this).data(uid) );
+        }
+    };
+ 
+})();
+
 var navMenu = new function () {
 	var panel = false;
 
@@ -1066,7 +1119,7 @@ var fancyBox = new function () {
 		}
 
 		elements.not('[class*=" cbox"]').each(function(i) {
-			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, overlayClose = true, target = '';
+			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
 			var box = $(this), myHref = box.attr('href'), myTitle;
 
 
@@ -1075,7 +1128,7 @@ var fancyBox = new function () {
 			}
 
 			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
-				if (mobile_client) return;
+				if (mobile_client || is_mobile || touchable) return;
 				iframe = true;
 				title = '<a href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 				href = 'http://www.youtube.com/embed/'+v[1];
@@ -1099,13 +1152,20 @@ var fancyBox = new function () {
 				else title = '{% trans _('enlace original') %}';
 				title = '<a href="'+myHref+'"'+target+'>'+title+'</a>';
 				href = myHref;
-				maxWidth = '75%';
-				maxHeight = '75%';
+				if (is_mobile) {
+					width = '100%';
+					height = '100%';
+				} else {
+					maxWidth = '75%';
+					maxHeight = '75%';
+				}
 			}
 
 			$(this).colorbox({
 				'href': href,
 				'transition': 'none',
+				'width': width,
+				'height': height,
 				'maxWidth': maxWidth,
 				'maxHeight': maxHeight,
 				'opacity': 0.5,
@@ -1281,15 +1341,12 @@ var notifier = new function () {
         data = retina? "high" : "src",
         images = this,
 		selector = $(this).selector,
-		previous_wt = -100000,
-		min_mv,
         loaded;
 
 
 	if (options) {
 		$.extend(settings, options);
 	}
-	min_mv = settings.threshold/3;
     this.one("unveil", handler);
 
 
@@ -1318,21 +1375,10 @@ var notifier = new function () {
       }
     }
 
-	function schedule() {
-		if (previous_wt > 0) {
-			clearTimeout(timer);
-			timer = setTimeout(unveil, 50);
-		} else {
-			unveil();
-		}
-	}
-
     function unveil() {
       var wt = $w.scrollTop();
-	  if (Math.abs(wt-previous_wt) < min_mv) return;
-
-	  previous_wt = wt;
       var wb = wt + $w.height();
+
       var inview = images.filter(function() {
         var $e = $(this);
         if ($e.is(":hidden")) return;
@@ -1347,8 +1393,7 @@ var notifier = new function () {
       images = images.not(loaded);
     }
 
-    $w.scroll(schedule);
-    $w.resize(schedule);
+    $w.on('scrollstop resize', unveil);
 
     unveil();
 
@@ -1392,11 +1437,10 @@ $(document).ready(function () {
 
 	$('img.lazy').unveil({base_url: base_static, threshold: 100});
 	navMenu.init();
-
 	mDialog.init();
+	$.tooltip();
 	notifier.init();
 	fancyBox.init();
-	$.tooltip();
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});

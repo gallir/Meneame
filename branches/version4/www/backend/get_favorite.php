@@ -9,13 +9,18 @@
 include('../config.php');
 include(mnminclude.'favorites.php');
 
-header('Content-Type: text/plain; charset=UTF-8');
+header('Content-Type: application/json; charset=UTF-8');
 
-if(!($link=intval($_REQUEST['id']))) {
-	error(_('falta el ID del enlace'). " $link");
+if(!($id=intval($_REQUEST['id']))) {
+	error(_('falta el ID'). " $id");
 }
 
-if(!($user = intval($_REQUEST['type']))) {
+if(empty($_REQUEST['type'])) {
+	error(_('falta el tipo'));
+}
+$type = $_REQUEST['type'];
+
+if(!($user = intval($_REQUEST['user']))) {
 	error(_('falta el código de usuario'));
 }
 
@@ -27,12 +32,13 @@ if (! check_security_key($_REQUEST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
-
-echo favorite_add_delete($user, $link);
+$dict['value'] = favorite_add_delete($user, $id, $type);
+echo json_encode($dict);
 
 function error($mess) {
-	echo "ERROR: $mess\n";
-	die;
+	$dict['error'] = $mess;
+	echo json_encode($dict);
+    die;
 }
 
 ?>
