@@ -211,7 +211,10 @@ function add_remove_fav(element, type, id) {
 */
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type+"&key="+base_key;
-	$('#'+container).load(url);
+	$e = $('#'+container);
+	$e.load(url, function () {
+		$e.trigger("DOMChanged", $e);
+	});
 	reportAjaxStats('html', program);
 }
 
