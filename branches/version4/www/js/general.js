@@ -1,4 +1,3 @@
-{% spacefull %}
 var base_url="{{ globals.base_url }}",
 	base_static="{{ globals.base_static }}",
 	mobile_client = false,
@@ -160,7 +159,7 @@ function check_checkfield(fieldname, mess) {
 	var field = document.getElementById(fieldname);
 	if (field && !field.checked) {
 		mDialog.notify(mess, 5);
-		// box is not checked
+		/* box is not checked */
 		return false;
 	}
 }
@@ -189,8 +188,9 @@ function report_problem_yes(frm, user, id) {
 	return false;
 }
 
-// Get voters by Beldar <beldar.cat at gmail dot com>
-// Generalized for other uses (gallir at gmail dot com)
+/* Get voters by Beldar <beldar.cat at gmail dot com>
+** Generalized for other uses (gallir at gmail dot com)
+*/
 function get_votes(program,type,container,page,id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type+"&key="+base_key;
 	$('#'+container).load(url);
@@ -222,8 +222,9 @@ function eraseCookie(name) {
 }
 
 
-// This function report the ajax request to stats events if enabled in your account
-// http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
+/* This function report the ajax request to stats events if enabled in your account
+** http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
+*/
 function reportAjaxStats(category, action, url) {
 
 	if (typeof(_gaq) !=	'undefined') {
@@ -412,13 +413,14 @@ Tooltips functions
 				dataType: "html",
 				success: function(html) {
 					last = url;
-					show(html)
+					show(html);
 					reportAjaxStats('tooltip', script);
 				}
 			});
 		}
 	}
-})(jQuery)
+})(jQuery);
+
 /**
  *	Based on jqDialog from:
  *
@@ -437,7 +439,7 @@ var mDialog = new function() {
 	this.std_alert = function(message, callback) {
 		alert(strip_tags(message));
 		if (callback) callback();
-	}
+	};
 
 	this.std_confirm = function(message, callback_yes, callback_no) {
 		if (confirm(strip_tags(message))) {
@@ -445,7 +447,7 @@ var mDialog = new function() {
 		} else {
 			if (callback_no) callback_no();
 		}
-	}
+	};
 
 	this.std_prompt = function(message, content, callback_ok, callback_cancel) {
 		var res = prompt(message, content);
@@ -454,9 +456,8 @@ var mDialog = new function() {
 		} else {
 			if (callback_cancel) callback_cancel(res);
 		}
-	}
+	};
 
-	//________create a confirm box
 	this.confirm = function(message, callback_yes, callback_no) {
 		if (mobile_client) {
 			this.std_confirm(message, callback_yes, callback_no);
@@ -467,7 +468,7 @@ var mDialog = new function() {
 		this.btOk.hide(); this.btCancel.hide(); this.btClose.hide();
 		this.btYes.focus();
 
-		// just redo this everytime in case a new callback is presented
+		/* just redo this everytime in case a new callback is presented */
 		this.btYes.unbind().click( function() {
 			mDialog.close();
 			if(callback_yes) callback_yes();
@@ -479,7 +480,6 @@ var mDialog = new function() {
 		});
 	};
 
-	//________prompt dialog
 	this.prompt = function(message, content, callback_ok, callback_cancel) {
 		if (mobile_client) {
 			this.std_prompt(message, content, callback_ok, callback_cancel);
@@ -492,7 +492,7 @@ var mDialog = new function() {
 		this.btOk.show(); this.btCancel.show();
 		this.input.focus();
 
-		// just redo this everytime in case a new callback is presented
+		/* just redo this everytime in case a new callback is presented */
 		this.btOk.unbind().click( function() {
 			mDialog.close();
 			if(callback_ok) callback_ok(mDialog.input.val());
@@ -504,7 +504,6 @@ var mDialog = new function() {
 		});
 	};
 
-	//________create an alert box
 	this.alert = function(content, callback_ok) {
 		if (mobile_client) {
 			this.std_alert(content, callback_ok);
@@ -515,7 +514,6 @@ var mDialog = new function() {
 		this.btOk.show();
 		this.btOk.focus();
 
-		// just redo this everytime in case a new callback is presented
 		this.btOk.unbind().click( function() {
 			mDialog.close();
 			if(callback_ok) callback_ok();
@@ -523,7 +521,6 @@ var mDialog = new function() {
 	};
 
 
-	//________create a dialog with custom content
 	this.content = function(content, close_seconds) {
 		if (mobile_client) {
 			this.std_alert(content, false);
@@ -533,7 +530,6 @@ var mDialog = new function() {
 		this.divOptions.hide();
 	};
 
-	//________create an auto-hiding notification
 	this.notify = function(content, close_seconds) {
 		if (mobile_client) {
 			this.std_alert(content, false);
@@ -545,7 +541,6 @@ var mDialog = new function() {
 			this.closeTimer = setTimeout(function() { mDialog.close(); }, close_seconds*1000 );
 	};
 
-	//________dialog control
 	this.createDialog = function(content) {
 		if (this.divBox == null) this.init();
 		clearTimeout(this.closeTimer);
@@ -568,6 +563,7 @@ var mDialog = new function() {
 			}
 		);
 	};
+
 	this.maintainPosition = function() {
 		mDialog.w = mDialog.divBox.width();
 		mDialog.h = mDialog.divBox.height();
@@ -576,9 +572,8 @@ var mDialog = new function() {
 			mDialog.makeCenter();
 		} );
 
-	}
+	};
 
-	//________
 	this.init = function() {
 		if (mobile_client) return;
 		this.divBox = $("<div>").attr({ id: 'mDialog_box' });
@@ -647,9 +642,9 @@ function post_reply(id, user) {
 	var text = $('#pid-'+id).html();
 	var startSelection, endSelection, textarea;
 
-	while (a = regex.exec(text)) { // Add references to others
+	while (a = regex.exec(text)) { /* Add references to others */
 		u = decodeURIComponent(a[1]);
-		if ( ! u.match('^'+user_login)) { // exclude references to the reader
+		if ( ! u.match('^'+user_login)) { /* exclude references to the reader */
 			others = others + '@' + u + ' ';
 		}
 	}
@@ -694,7 +689,7 @@ function post_add_form_text(text, tries, start, end) {
 	}
 }
 
-// See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW
+/* See http://www.shiningstar.net/articles/articles/javascript/dynamictextareacounter.asp?ID=AW */
 var textCounter = function (field,cntfield,maxlimit) {
 	if (textCounter.timer) return;
 	textCounter.timer = setTimeout( function () {
@@ -730,15 +725,15 @@ function applyTag(id, tag) {
 
 function wrapText(obj, tag) {
 	if(typeof obj.selectionStart == 'number') {
-		// Mozilla, Opera and any other true browser
+		/* Mozilla, Opera and any other true browser */
 		var start = obj.selectionStart;
 		var end   = obj.selectionEnd;
 
 		if (start == end || end < start) return false;
 		obj.value = obj.value.substring(0, start) +  replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
 	} else if(document.selection) {
-		// Damn Explorer
-		// Checking we are processing textarea value
+		/* Damn Explorer */
+		/* Checking we are processing textarea value */
 		obj.focus();
 		var range = document.selection.createRange();
 		if(range.parentElement() != obj) return false;
@@ -823,7 +818,7 @@ function show_answers(type, id) {
 
 function share_fb(e) {
 	window.open(
-	'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(e.parent().data('url')), 
+		'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(e.parent().data('url')), 
 		'facebook-share-dialog',
 		'width=626,height=436'); 
 	return false;
@@ -851,12 +846,12 @@ var navMenu = new function () {
 				panel.show();
 			}
 		});
-	}
+	};
 
 	this.prepare = function() {
 		if (panel !== false) return;
 		$( window ).on('unload', function() { panel.hide(); });
-		panel = $('<div id="nav-panel"></div>')
+		panel = $('<div id="nav-panel"></div>');
 		if (is_mobile) {
 			panel.append($('#searchform'));
 			panel.append($('#header-menu .header-menu01'));
@@ -865,7 +860,7 @@ var navMenu = new function () {
 			panel.append($('#header-menu .header-menu01').clone());
 		}
 		panel.appendTo("body");
-	}
+	};
 
 	var click_handler = function (e) {
 		if (! panel.is(":visible")) return;
@@ -873,58 +868,14 @@ var navMenu = new function () {
 			panel.hide();
 			e.preventDefault();
 		}
-	}	
-}
+	};
+};
 
-
-$(document).ready(function () {
-	var m, m2, target, canonical;
-
-	if ((m = location.href.match(/#([\w\-]+)$/))) {
-		target = $('#'+m[1]);
-		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
-		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
-			if ( target.length > 0) {
-				var e = $("#"+m[1]+">:first");
-				e.css("border-style","solid").css("border-width","1px");
-				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
-				if (window.location.hash && $('#header-top').css('position') == 'fixed') {
-					$('html, body').animate({
-						scrollTop: e.offset().top - $('#header-top').height() - 10
-					}, 500);
-				}
-			} else {
-				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
-				canonical = $("link[rel^='canonical']");
-				if (canonical.length > 0) {
-					self.location = canonical.attr("href") + "/000" + m2[1];
-					return;
-				}
-			}
-		} else {
-			target.hide();
-			target.fadeIn(1000);
-		}
-	}
-	$.ajaxSetup({ cache: false });
-
-	$('img.lazy').unveil({base_url: base_static, threshold: 100});
-	navMenu.init();
-
-	mDialog.init();
-	notifier.init();
-	fancyBox.init();
-	$.tooltip();
-	$('.showmytitle').on('click', function () {
-		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
-	});
-});
-
-// Drop an image file
-// Modified from http://gokercebeci.com/dev/droparea
+/* Drop an image file
+** Modified from http://gokercebeci.com/dev/droparea
+*/
 (function( $ ){
 	var s;
-	// Methods
 	var m = {
 		init: function(e){},
 		start: function(e){},
@@ -949,7 +900,7 @@ $(document).ready(function () {
 		check_files: function(files, area) {
 			if (typeof File != "undefined"	&& files != undefined) {
 				for (var i = 0; i < files.length; i++) {
-					// File type control
+					/* File type control */
 					if (files[i].type.length > 0 && !files[i].type.match('image.*')) {
 						mDialog.notify("{% trans _('sólo se admiten imágenes') %}", 5);
 						return false;
@@ -976,14 +927,14 @@ $(document).ready(function () {
 
 			var xhr = new XMLHttpRequest();
 
-			// Update progress bar
+			/* Update progress bar */
 			xhr.upload.addEventListener("progress", function (e) {
 				if (e.lengthComputable) {
 					progress.attr("value", e.loaded);
 				}
 			}, false);
 
-			// File uploaded
+			/* File uploaded */
 			xhr.addEventListener("load", function (e) {
 				var r = jQuery.parseJSON(e.target.responseText);
 				if (typeof r.error === 'undefined') {
@@ -1002,7 +953,7 @@ $(document).ready(function () {
 
 			xhr.open("post", s.post, true);
 
-			// Set appropriate headers
+			/* Set appropriate headers */
 			xhr.setRequestHeader("Content-Type", "multipart/form-data-alternate");
 			if (typeof file.fileSize != "undefined") {
 				xhr.setRequestHeader("X-File-Size", file.fileSize);
@@ -1011,17 +962,17 @@ $(document).ready(function () {
 		}
 	};
 	$.fn.droparea = function(o) {
-		// Check support for HTML5 File API
+		/* Check support for HTML5 File API */
 		if (!window.File) return;
 
-		// Settings
+		/* Settings */
 		s = {
 			'post': base_url + 'backend/tmp_upload.php',
 			'init': m.init,
 			'start': m.start,
 			'complete': m.complete,
 			'error': m.error,
-			'maxsize': 500000, // Bytes
+			'maxsize': 500000, /* Bytes */
 			'show_thumb': true,
 			'hide_delay': 2000,
 			'backgroundColor': '#AFFBBB',
@@ -1035,7 +986,7 @@ $(document).ready(function () {
 			s.init(form);
 
 			form.find('input[type="file"]').change(function () {
-				m.traverse(this.files, $(this))
+				m.traverse(this.files, $(this));
 				$(this).val("");
 			});
 
@@ -1078,7 +1029,7 @@ $(document).ready(function () {
 					'background-color': area.css('background-color'),
 					'background-image': area.css('background-image'),
 					'background-position': area.css('background-position')
-				}
+				};
 				area.data("bg", bg);
 				this.addEventListener("drop", function (e) {
 					e.preventDefault();
@@ -1098,7 +1049,7 @@ var fancyBox = new function () {
 		$('#wrap').on("DOMChanged", function(event, element) {
 				fancyBox.scan(element);
 		});
-	}
+	};
 
 	this.scan = function (parent) {
 		var selector;
@@ -1168,10 +1119,10 @@ var fancyBox = new function () {
 				'onComplete': function() {
 					reportAjaxStats('image', 'single');
 				}
-			}); // colorbox
-		}); // each
+			}); /* colorbox */
+		}); /* each */
 	};
-}
+};
 
 var notifier = new function () {
 	var timeout = false;
@@ -1180,16 +1131,16 @@ var notifier = new function () {
 	var current_count = -1;
 	var has_focus = true;
 	var check_counter = 0;
-	var base_update = 15000; // Base check every 15 seconds
+	var base_update = 15000; /* Base check every 15 seconds */
 
 	var click_handler = function (e) {
 		if (! panel_visible) return;
 		if ($(e.target).closest('#notifier_panel').length == 0) {
-			// click happened outside of the notifier panel, hide it
+			/* click happened outside of the notifier panel, hide it */
 			notifier.hide();
 			e.preventDefault();
 		}
-	}
+	};
 
 	this.click = function () {
 		if (! panel_visible) {
@@ -1207,14 +1158,14 @@ var notifier = new function () {
 			notifier.hide();
 		}
 		return false;
-	}
+	};
 
 
 	this.hide = function () {
 		$("#notifier_panel").remove();
 		$('html').off('click', click_handler);
 		panel_visible = false;
-	}
+	};
 
 	this.update = function() {
 		var next_update;
@@ -1238,12 +1189,12 @@ var notifier = new function () {
 		}
 
 
-		if ( (is_mobile && check_counter < 5) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { // 6 hours
+		if ( (is_mobile && check_counter < 5) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { /* 6 hours */
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
 		}
-	}
+	};
 
 	this.update_panel = function() {
 		var count;
@@ -1267,7 +1218,7 @@ var notifier = new function () {
 			area.removeClass('nonzero');
 		}
 		current_count = count;
-	}
+	};
 
 	this.connect = function() {
 		var next_check;
@@ -1283,7 +1234,7 @@ var notifier = new function () {
 				createCookie("notifier_"+user_id+"_posts", data.posts, 1);
 				notifier.update_panel();
 			});
-	}
+	};
 
 	this.init = function () {
 		if (! user_id > 0 || (area = $('#notifier')).length == 0) return;
@@ -1303,8 +1254,8 @@ var notifier = new function () {
 			has_focus = false;
 		});
 		this.update();
-	}
-}
+	};
+};
 
 
 /**
@@ -1313,7 +1264,7 @@ var notifier = new function () {
  * https://github.com/luis-almeida
  */
 
-;(function($) {
+(function($) {
 
   $.fn.unveil = function(options, callback) {
 
@@ -1373,7 +1324,49 @@ var notifier = new function () {
 
   };
 
-})(window.jQuery || window.Zepto);
+})(window.jQuery);
 
 
-{% endspacefull %}
+$(document).ready(function () {
+	var m, m2, target, canonical;
+
+	if ((m = location.href.match(/#([\w\-]+)$/))) {
+		target = $('#'+m[1]);
+		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
+		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
+			if ( target.length > 0) {
+				var e = $("#"+m[1]+">:first");
+				e.css("border-style","solid").css("border-width","1px");
+				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
+				if (window.location.hash && $('#header-top').css('position') == 'fixed') {
+					$('html, body').animate({
+						scrollTop: e.offset().top - $('#header-top').height() - 10
+					}, 500);
+				}
+			} else {
+				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
+				canonical = $("link[rel^='canonical']");
+				if (canonical.length > 0) {
+					self.location = canonical.attr("href") + "/000" + m2[1];
+					return;
+				}
+			}
+		} else {
+			target.hide();
+			target.fadeIn(1000);
+		}
+	}
+	$.ajaxSetup({ cache: false });
+
+	$('img.lazy').unveil({base_url: base_static, threshold: 100});
+	navMenu.init();
+
+	mDialog.init();
+	notifier.init();
+	fancyBox.init();
+	$.tooltip();
+	$('.showmytitle').on('click', function () {
+		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
+	});
+});
+

@@ -1005,6 +1005,7 @@ function clear_invisible_unicode($input){
 	$invisible = array(
 	"\x1F",
 	"\xc2\xad", // 'SOFT HYPHEN' (U+00AD)
+	"\xc2\x81", // SET TRANSMIT STATE' (U+0081)
 	"\xc2\x91", // SET TRANSMIT STATE' (U+0091)
 	"\xc2\x92", // SET TRANSMIT STATE' (U+0092)
 	"\xc2\x93", // SET TRANSMIT STATE' (U+0093)
