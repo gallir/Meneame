@@ -664,9 +664,10 @@ function post_reply(id, user) {
 	var text = $('#pid-'+id).html();
 	var startSelection, endSelection, textarea;
 
+	var myself = new RegExp('^'+user_login+'([\s,]|$)', 'i' );
 	while (a = regex.exec(text)) { /* Add references to others */
 		u = decodeURIComponent(a[1]);
-		if ( ! u.match('^'+user_login)) { /* exclude references to the reader */
+		if (! u.match(myself)) { /* exclude references to the reader */
 			others = others + '@' + u + ' ';
 		}
 	}
