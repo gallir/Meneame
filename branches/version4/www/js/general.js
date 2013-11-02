@@ -681,7 +681,7 @@ function post_load_form(id, container) {
 				if (html.match(/^ERROR:/i)) {
 					mDialog.notify(html, 2);
 				} else {
-					$('#'+container).html(html);
+					$('#'+container).html(html).trigger('DOMChanged', $('#'+container));
 				}
 				reportAjaxStats('html', 'post_edit');
 			}
