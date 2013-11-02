@@ -37,7 +37,8 @@
 	</div>
 
 		<div class="comment-info">
-			{{ self.comment_info }}
+			<span class="ts nomobile showmytitle" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+			<a class="username" href="{%exec post_get_base_url self.username %}">{{ self.username }}</a>
 		</div>
 	</div>
 </div>

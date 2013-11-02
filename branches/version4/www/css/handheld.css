@@ -100,7 +100,8 @@ margin: 0 10px 5px 0;
 font-size: 100%;
 }
 
-.comment-meta a {
+.comment-meta .username {
+max-width: 6em;
 font-weight: normal;
 }
 
@@ -139,5 +140,22 @@ opacity:0.8;
 
 #cboxTitle { /* colorbox */
 font-weight: normal;
+}
+
+.ts.nomobile {
+text-decoration: underline;
+font-weight: bold;
+background: url('../../img/common/icon-calendar-12.png') no-repeat center center;
+background-size: 12px 12px;
+width:20px;
+height:16px;
+cursor: pointer;
+color: transparent;
+overflow: hidden;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
+    .ts.nomobile { background-image:url('../../img/common/icon-calendar-24.png'); }
 }
 

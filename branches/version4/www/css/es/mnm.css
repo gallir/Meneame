@@ -1721,12 +1721,23 @@ white-space: nowrap;
 overflow: hidden;
 }
 
+.comment-meta img {
+vertical-align: bottom;
+}
+
 .comment-meta.hidden, .comment-meta.hidden a {
 color: #aaa;
 }
 
 .comment-meta a {
 font-weight: bold;
+}
+
+.comment-meta .username {
+display: inline-block;
+margin-left: 5px;
+max-width: 14em;
+text-overflow: clip;
 }
 
 .comment-meta a:hover {
@@ -1744,11 +1755,11 @@ width: 18px;
 height: 16px;
 background-size: 18px 16px;
 cursor: pointer;
-margin-right: 8px;
+margin-right: 10px;
 }
 
 .comment-meta .vote.right {
-margin-left: 8px;
+margin-left: 10px;
 } 
 
 .comment-meta .vote.up {
@@ -1791,7 +1802,7 @@ background: url(../../img/common/favourites_note_on-02.png) no-repeat center cen
 .comment-info {
 float: right;
 text-align: right;
-overflow: visible;
+text-overflow: clip;
 }
 
 .comment-info img {
@@ -2498,5 +2509,18 @@ background-size: 18px 18px;
 .share_icons span.tw {
 background: url(../../img/external/tw-24.png) no-repeat center center;
 background-size: 18px 18px;
+}
+
+.ts {
+display: inline-block;
+text-overflow: clip;
+}
+
+.ts.visible {
+min-width: 2.5em;
+}
+
+.comment-meta .ts {
+font-size: 90%;
 }
 

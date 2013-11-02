@@ -1,3 +1,5 @@
 {# Votes info #}
-{% trans _('votos') %}: {% if self.has_votes_info %}<a class="fancybox" href="{{ globals.base_url }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('información de votos') %}">{% endif %}<span id="vc-{{ self.id }}">{{ self.votes }}</span>{% if self.has_votes_info %}</a>{% endif %}&nbsp;&nbsp;<span class="wideonly">{% trans _('karma') %}: </span><span class="votes-counter" id="vk-{{ self.id }}" title="{% trans _('karma') %}">{{ self.karma }}</span>
+<span class="wideonly">{% trans _('votos') %}: </span>{% if self.has_votes_info %}<a class="fancybox" href="{{ globals.base_url }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('información de votos') %}">{% endif %}<span id="vc-{{ self.id }}">{{ self.votes }}</span>{% if self.has_votes_info %}</a>{% endif %}
+&nbsp;&nbsp;&nbsp;
+<span class="wideonly">{% trans _('karma') %}: </span><span class="votes-counter" id="vk-{{ self.id }}" title="{% trans _('karma') %}">{{ self.karma }}</span>
 

@@ -90,20 +90,13 @@
 		{% trans _('por') %} <a href="{% exec get_user_uri self.username, 'history' %}">{{ self.username }}</a>
 		{% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span><br />
 
-		{% if self.print_date %}
-			{% if self.status != 'published' %}
-				{% trans _('enviado: ') %}
-			{% endif %}
-			{% exec get_date_time self.sent_date %}
-	    	{% if self.status == 'published' %}
-			    {% trans _('publicado: ') %} {% exec get_date_time self.date %}
-			{% endif %}
-		{% else %}
-			{% trans _('hace: ') %}
-			{% exec txt_time_diff self.sent_date %}
-			{% if self.status == 'published' %}
-				{% trans _('publicado hace:') %} {% exec txt_time_diff self.date %}
-	       	{% endif %}
+		{% if self.status != 'published' %}
+			{% trans _('enviado: ') %}
+		{% endif %}
+		<span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
+    	{% if self.status == 'published' %}
+		    {% trans _('publicado: ') %}
+			<span data-ts="{{ self.date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
 		{% endif %}
 	</div>
 

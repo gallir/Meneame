@@ -179,16 +179,6 @@ class Post extends LCPBase {
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
 		$this->show_avatar = true;
 
-		$author = '<a href="'.post_get_base_url($this->username).'">' . ' ' . $this->username.'</a>';
-		//$author .= ' ('.$this->src.')';
-
-		// Print dates
-		if ($globals['now'] - $this->date > 3600) {
-			$this->comment_info = sprintf('<span class="wideonly">'._('%s %s por ').'</span>'.'%s', get_date_time($this->date), '', $author);
-		} else {
-			$this->comment_info = sprintf('<span class="wideonly">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), '', $author);
-		}
-
 		$this->prepare_summary_text($length);
 
 		$vars = compact('post_meta_class', 'post_class', 'length');

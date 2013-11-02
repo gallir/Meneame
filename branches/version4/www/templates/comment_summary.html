@@ -38,7 +38,19 @@
 	</div>
 
 		<div class="comment-info">
-		{{ self.author_info }}
+		<span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+		{% set modified = self.modified - self.date %}
+		{% if modified > 10 %}
+			<span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
+		{% endif %}
+		{% if self.type != 'admin' %}
+			<a class="username" href="{%exec get_user_uri self.username %}" id="cauthor-{{ self.c_order }}">{{ self.username }}</a>
+		{% else %}
+			<strong>{% trans _('admin') %}</strong> 
+			{% if current_user.admin %}({{ self.username }}){% endif %}
+		{% endif %}
+
+
 		<img 
 		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
 			data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}" src="{{ globals.base_static }}img/g.gif" 

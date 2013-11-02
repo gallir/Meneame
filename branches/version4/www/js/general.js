@@ -6,14 +6,52 @@ var base_url="{{ globals.base_url }}",
 	base_key, link_id = 0, user_id, user_login;
 
 
-function redirect(url)
-{
+var now = (new Date);
+var now_ts = now.getTime();
+
+function to_date(index) {
+		var str = "";
+		var $e = $(this);
+		var ts = $e.data('ts');
+		if (typeof ts != 'number' || ! ts > 0) {
+			return;
+		}
+
+		ts *= 1000;
+
+		var d = new Date(ts);
+
+		var dd = function (d) {
+			if (d < 10) return "0"+d;
+			else return d;
+		};
+
+		if (now_ts - ts < 60000) {
+			str = "{% trans _('hace') %} " + Math.floor((now_ts - ts)/1000) + " {% trans _('seg') %}";
+		} else if (now_ts - ts < 3600000) {
+			str = "{% trans _('hace') %} " + Math.floor((now_ts - ts)/60000) + " {% trans _('min') %}";
+		} else {
+			if (now.getDay() != d.getDay() ) {
+				str += dd(d.getDate())+"/"+dd(d.getMonth() + 1)
+			}
+			if (now.getFullYear() != d.getFullYear()) {
+				str += "/"+d.getFullYear();
+			}
+			str += " " + dd(d.getHours())+":"+dd(d.getMinutes());
+		}
+
+		$e.attr('title', $e.attr('title') + str);
+		if (! $e.hasClass("novisible")) {
+			$e.html(str);
+		}
+}
+
+function redirect(url) {
 	document.location=url;
 	return false;
 }
 
-function menealo(user, id)
-{
+function menealo(user, id) {
 	var url = base_url + "backend/menealo.php";
 	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	url = url + "?" + content;
@@ -26,8 +64,7 @@ function menealo(user, id)
 	reportAjaxStats('vote', 'link');
 }
 
-function menealo_comment(user, id, value)
-{
+function menealo_comment(user, id, value) {
 	var url = base_url + "backend/menealo_comment.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
@@ -40,8 +77,7 @@ function menealo_comment(user, id, value)
 	reportAjaxStats('vote', 'comment');
 }
 
-function menealo_post(user, id, value)
-{
+function menealo_post(user, id, value) {
 	var url = base_url + "backend/menealo_post.php";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
@@ -1410,6 +1446,14 @@ var notifier = new function () {
 $(document).ready(function () {
 	var m, m2, target, canonical;
 
+	/* Put dates in <span class="ts"> */
+	$('span.ts').each(to_date);
+	$(window).on("DOMChanged", 
+		function(event, parent) {
+			$(parent).find('span.ts').each(to_date);
+		}
+	);
+
 	if ((m = location.href.match(/#([\w\-]+)$/))) {
 		target = $('#'+m[1]);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
@@ -1440,10 +1484,10 @@ $(document).ready(function () {
 
 	$('img.lazy').unveil({base_url: base_static, threshold: 100});
 
+	notifier.init();
 	navMenu.init();
 	mDialog.init();
 	$.tooltip();
-	notifier.init();
 	fancyBox.init();
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');

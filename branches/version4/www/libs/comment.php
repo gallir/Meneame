@@ -261,28 +261,6 @@ class Comment extends LCPBase {
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && isset($globals['link']) && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
 
-
-		if ($this->type == 'admin') {
-			$author = '<strong>'._('admin').'</strong> ';
-			if ($current_user->admin) {
-				$author .= ' ('.$this->username.')';
-			}
-		} elseif ($single_link) {
-			$author = '<a href="'.get_user_uri($this->username).'" id="cauthor-'.$this->c_order.'">'.$this->username.'</a>';
-		} else {
-			$author = '<a href="'.get_user_uri($this->username).'">'.$this->username.'</a>';
-		}
-
-		if ($this->modified > $this->date + 1) {
-			$edited = sprintf('<strong title="'. _('editado %s después').'">*&nbsp;</strong>', txt_time_diff($this->date, $this->modified));
-		} else $edited = '';
-
-		if ($globals['now'] - $this->date > 3600) {
-				$this->author_info = sprintf('<span class="wideonly">'._('%s %s por ').'</span>'.'%s', get_date_time($this->date), $edited, $author);
-		} else {
-				$this->author_info = sprintf('<span class="wideonly">'._('hace %s %s por ').'</span>'.'%s', txt_time_diff($this->date), $edited, $author);
-		}
-
 		$vars = array('self' => $this);
 		return Haanga::Load('comment_summary.html', $vars);
 	}
