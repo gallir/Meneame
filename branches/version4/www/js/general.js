@@ -10,7 +10,7 @@ var now = (new Date);
 var now_ts = now.getTime();
 
 function to_date(index) {
-		var str = "";
+		var str;
 		var $e = $(this);
 		var ts = $e.data('ts');
 		if (typeof ts != 'number' || ! ts > 0) {
@@ -26,12 +26,16 @@ function to_date(index) {
 			else return d;
 		};
 
-		if (now_ts - ts < 60000) {
-			str = "{% trans _('hace') %} " + Math.floor((now_ts - ts)/1000) + " {% trans _('seg') %}";
-		} else if (now_ts - ts < 3600000) {
-			str = "{% trans _('hace') %} " + Math.floor((now_ts - ts)/60000) + " {% trans _('min') %}";
+		var diff = Math.floor((now_ts - ts)/1000);
+		if (diff < 3600 && diff > 0) {
+			if (diff < 60) {
+				str = "{% trans _('hace') %} " + diff + " {% trans _('seg') %}";
+			} else {
+				str = "{% trans _('hace') %} " + Math.floor(diff/60) + " {% trans _('min') %}";
+			}
 		} else {
-			if (now.getDay() != d.getDay() ) {
+			str = "";
+			if (diff > 43200 ) { /* 12 hs */
 				str += dd(d.getDate())+"/"+dd(d.getMonth() + 1)
 			}
 			if (now.getFullYear() != d.getFullYear()) {
