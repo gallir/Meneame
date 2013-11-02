@@ -54,13 +54,14 @@ color: #888;
 
 input, textarea {
 margin: 0 0 10px 0;
+padding: 2px 2px;
 background: #fff;
-border: 1px solid #FF6400;
+border: none;
 color: #303030;
 }
 
 .button, button, input[type="button"], input[type="submit"] {
-border: 1px solid;
+border: none;
 font-weight: bold;
 margin: 4px 0 4px 0;
 padding: 2px 4px 2px 4px;
@@ -77,11 +78,11 @@ background: #feefe5;
 }
 
 fieldset {
-border: 1px solid;
+border: none;
 padding: 10px 10px;
 margin: 10px 0;
 border-color: #FF6400;
-background: #FEEFE5;
+background: #FFF1E2;
 }
 
 
@@ -1231,6 +1232,7 @@ border-color: #FF6400;
 
 .form-full {
 width: 100%;
+font-size: 16px;
 }
 
 .instruction-list {
@@ -1948,8 +1950,8 @@ margin: 10px 0 10px 0;
 }
 
 .genericform fieldset {
-border: 1px solid;
-background: #FEF6EF;
+border: none;
+background: #FFF1E2;
 border-color: #FF6400;
 }
 

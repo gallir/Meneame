@@ -855,10 +855,7 @@ function share_tw(e) {
 	return false;
 }
 
-/* Original from http://james.padolsey.com/javascript/special-scroll-events-for-jquery/ 
-* Adapted to jquery 1.9-10 and optimized with the help of 
-* http://benalman.com/news/2010/03/jquery-special-events/
-*/
+/* scrollstop plugin for jquery +1.9 */
 (function(){
 	var latency = 50;
 	var handler;
@@ -886,7 +883,7 @@ function share_tw(e) {
 		}
 	};
  
-})();
+})(jQuery);
 
 var navMenu = new function () {
 	var panel = false;
@@ -1407,7 +1404,7 @@ var notifier = new function () {
 
   };
 
-})(window.jQuery);
+})(jQuery);
 
 
 $(document).ready(function () {

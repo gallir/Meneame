@@ -63,7 +63,7 @@ function do_login() {
 
 	// Show menéame intro only if first try and the there were not previous logins
 	if (! $globals['mobile'] && $previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
-		echo '<div class="faq" style="float:right; width:55%; margin-top: 10px;">'."\n";
+		echo '<div class="faq wideonly" style="float:right; width:55%; margin-top: 10px;">'."\n";
 		// Only prints if the user was redirected from submit.php
 		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) {
 			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
@@ -138,7 +138,7 @@ function do_login() {
 		}
 	}
 	echo '<fieldset>'."\n";
-	echo '<legend><span class="sign">login</span></legend>'."\n";
+	echo '<legend><span class="sign">'._('usuario y contraseña').'</span></legend>'."\n";
 	echo '<p><label for="name">'._('usuario o email').':</label><br />'."\n";
 	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.htmlentities($username).'" /></p>'."\n";
 	echo '<p><label for="password">'._('clave').':</label><br />'."\n";

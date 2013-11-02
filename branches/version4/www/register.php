@@ -64,7 +64,7 @@ function do_register0() {
 
 	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
-	echo '<legend><span class="sign">' . _("registro") . '</span></legend>' . "\n";
+	echo '<legend><span class="sign">' . _("datos del usuario") . '</span></legend>' . "\n";
 	echo '<p><label for="name">' . _("nombre de usuario") . ':</label><br />' . "\n";
 
 	echo '<input type="text" name="username" id="name" value="" onkeyup="enablebutton(this.form.checkbutton1, this.form.submit, this)" size="25" tabindex="1"/>' . "\n";
