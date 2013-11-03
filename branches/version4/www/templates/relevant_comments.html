@@ -3,13 +3,11 @@
 {% for obj in objects %}
 	<a class="tooltip c:{{ obj.link_id }}-{{ obj.order }}" href="{{obj.link}}" rel="nofollow"><img 
 		src="{{ globals.base_static }}img/g.gif"
+		data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 25, false %}" 
+		alt="" width="25" height="25" 
 		{% if obj.vote < 0 %}
-			data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 25, false %}" 
-			alt="" width="25" height="25" 
 			class="avatar shadow-red lazy"
 		{% else %}
-			data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 20, false %}" 
-			alt="" width="20" height="20" 
 			{% if obj.vote > 0 %}
 				class="avatar shadow-green lazy"
 			{% else %}
