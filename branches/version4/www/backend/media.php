@@ -23,7 +23,10 @@ if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_u
 	//header("HTTP/1.0 403 Not authorized");
 	error_image(_('Debe estar autentificado'));
 	die;
-} elseif ($media->access == 'private' && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) {
+} elseif ($globals['bot']
+		|| ($media->access == 'private' 
+				&& ($current_user->user_id <= 0 
+					|| ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) ) {
 	error_image(_('No está autorizado'));
 	die;
 }
