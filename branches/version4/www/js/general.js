@@ -843,7 +843,6 @@ function get_total_answers_by_ids(type, ids) {
 }
 
 function get_total_answers(type, order, id, offset, size) {
-	if (is_mobile) return;
 	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
 		function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) });
 	reportAjaxStats('json', 'total_answers');
@@ -853,7 +852,7 @@ function show_total_answers(type, id, answers) {
 	if (type == 'comment') dom_id = '#cid-'+ id;
 	else dom_id = '#pid-'+ id;
 	element = $(dom_id).siblings(".comment-meta").children(".comment-votes-info");
-	element.append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}"><img style="margin-right:0px" src="{{ globals.base_static }}img/common/replies-01.png" width="16" height="14"/><span class="counter answers">'+answers+'</span></a>');
+	element.append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}" class="answers"><span class="counter">'+answers+'</span></a>');
 }
 
 function show_answers(type, id) {
@@ -1382,10 +1381,10 @@ var notifier = new function () {
 		selector = $(this).selector,
 		loaded;
 
-
 	if (options) {
 		$.extend(settings, options);
 	}
+
 	this.one("unveil", handler);
 
 	/* We trigger a DOMChanged event when we add new elements */
@@ -1418,9 +1417,8 @@ var notifier = new function () {
 		var wt = $w.scrollTop();
 		var wb = wt + $w.height();
 
-		var inview = images.filter(function() {
+		var inview = images.filter(":visible").filter(function() {
 			var $e = $(this);
-			if ($e.is(":hidden")) return;
 
 			var et = $e.offset().top,
 				eb = et + $e.height();
@@ -1430,11 +1428,6 @@ var notifier = new function () {
 
 		loaded = inview.trigger("unveil");
 		images = images.not(loaded);
-
-		/* Disable callback if there is no remaining images */
-		if (images.length == 0) {
-			$w.off('scrollstop resize', unveil);
-		}
 	}
 
 	$w.on('scrollstop resize', unveil);
