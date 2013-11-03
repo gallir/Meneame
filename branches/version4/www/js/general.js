@@ -852,7 +852,7 @@ function show_total_answers(type, id, answers) {
 	if (type == 'comment') dom_id = '#cid-'+ id;
 	else dom_id = '#pid-'+ id;
 	element = $(dom_id).siblings(".comment-meta").children(".comment-votes-info");
-	element.append('<a href="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}" class="answers"><span class="counter">'+answers+'</span></a>');
+	element.append('&nbsp;<span onClick="javascript:show_answers(\''+type+'\','+id+')" title="'+answers+' {% trans _('respuestas') %}" class="answers"><span class="counter">'+answers+'</span></span>');
 }
 
 function show_answers(type, id) {

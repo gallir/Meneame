@@ -48,8 +48,11 @@ margin: 5px 5px 0px 5px;
 background-image: none;
 }
 
+.comment-meta .comment-info {
+max-width: 25%;
+}
+
 .comment-meta .username {
-max-width: 8em;
 margin-left: 2px;
 }
 

@@ -1183,7 +1183,7 @@ background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
 border-color: #FF6400;
 }
 
-.counter {
+.comments-counter .counter {
 text-decoration: none;
 padding: 1px 4px;
 font-weight: bold;
@@ -1728,6 +1728,10 @@ color: #aaa;
 font-weight: bold;
 }
 
+.comment-votes-info span, .comment-votes-info div {
+vertical-align: top;
+}
+
 .comment-meta .username {
 display: inline-block;
 margin-left: 5px;
@@ -1747,7 +1751,7 @@ margin: 0 4px 0 4px;
 .comment-meta .vote {
 display: inline-block;
 width: 16px; 
-height: 18px;
+height: 100%;
 cursor: pointer;
 margin-right: 10px;
 background: url(../../img/common/icons-meta.png) no-repeat;
@@ -1775,7 +1779,7 @@ opacity:0.5;
 display: inline-block;
 margin: 0 2px;
 cursor: pointer;
-height: 16px;
+height: 100%;
 width: 18px;
 background: url(../../img/common/icons-meta.png) no-repeat;
 background-position: 0px -60px;
@@ -1786,7 +1790,7 @@ background-size: 20px 220px;
 display: inline-block;
 margin: 0 4px;
 cursor: pointer;
-height: 16px;
+height: 100%;
 width: 16px;
 background: url(../../img/common/icons-meta.png) no-repeat center center;
 background-size: 20px 220px;
@@ -1821,20 +1825,28 @@ color: #3D72C3;
 color: #FF9400;
 }
 
-
-
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
 background: url(../../img/common/icons-meta.png) no-repeat 0px -122px;
 background-size: 20px 220px;
 padding-left: 14px;
+cursor: pointer;
 padding-top: 4px;
 }
 
 .comment-meta .answers .counter {
+display: inline-block;
 font-size: 9px;
+color: #fff;
+font-weight: bold;
+text-align: center;
+min-height: 12px;
+min-width: 12px;
 background-color: #FFB600;
+-moz-border-radius: 50%;
+-webkit-border-radius: 50%;
+border-radius: 50%;
 }
 
 .comment-meta .votes-counter {
@@ -1844,7 +1856,9 @@ padding: 0 3px 0 3px;
 
 
 .comment-votes-info {
+display: block;
 float: left;
+height: 18px;
 max-width: 70%;
 overflow: hidden;
 }
@@ -2525,10 +2539,10 @@ font-size: 90%;
 
 a.permalink {
 display: inline-block;
-height: 18px;
+height: 100%;
 width: 18px;
-margin: 0 4px 0 10px;
-background: url(../../img/common/icons-meta.png) no-repeat 0px -39px;
+margin: 0px 4px 0px 4px;
+background: url(../../img/common/icons-meta.png) no-repeat 0px -40px;
 background-size: 20px 220px;
 overflow: hidden !important;
 color: transparent !important;
