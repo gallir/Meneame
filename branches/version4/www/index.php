@@ -25,8 +25,6 @@ include(mnminclude.'html1.php');
 
 meta_get_current();
 
-
-
 $page_size = 20;
 $page = get_current_page();
 $offset=($page-1)*$page_size;
@@ -93,10 +91,10 @@ if ($page < 2) {
 // do_categories_cloud('published');
 do_vertical_tags('published');
 do_last_blogs();
-echo '</div>' . "\n";
+echo '</div>';
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
+echo '<div id="newswrap">';
 
 do_banner_top_news();
 
@@ -104,8 +102,6 @@ if ($page == 1 && ($top = Link::top())) {
 	$vars = array('self' => $top);
 	Haanga::Load("link_top.html", $vars);
 }
-
-
 
 
 if($cat) {
@@ -129,7 +125,7 @@ if ($links) {
 
 
 do_pages($rows, $page_size);
-echo '</div>'."\n";
+echo '</div>';
 
 do_footer_menu();
 do_footer();

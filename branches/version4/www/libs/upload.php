@@ -111,6 +111,27 @@ class Upload {
 	function read() {
 		global $db, $current_user;
 
+		/* Check the original exists */
+		$extra_tables = $extra_where = "";
+
+		switch ($this->type) {
+			case 'private':
+				$extra_tables = ', privates';
+				$extra_where = 'AND `media.to` = privates.id';
+				break;
+			case 'post':
+				$extra_tables = ', posts';
+				$extra_where = 'AND `media.to` = posts.post_id';
+				break;
+			case 'comment':
+				$extra_tables = ', comments';
+				$extra_where = 'AND `media.to` = comments.comment_id';
+				break;
+		}
+				
+
+
+			
 		if(($result = $db->get_row("SELECT type, id, version, user, `to`, access, mime, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->read = true;

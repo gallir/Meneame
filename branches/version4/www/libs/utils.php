@@ -733,7 +733,11 @@ function meta_get_current() {
 	global $globals, $db, $current_user;
 
 	$globals['meta_current'] = 0;
-	$globals['meta']  = clean_input_string($_REQUEST['meta']);
+	if (!empty($_REQUEST['meta'])) {
+		$globals['meta']  = clean_input_string($_REQUEST['meta']);
+	} else {
+		$globals['meta'] = '';
+	}
 
 
 	//Check for personalisation
@@ -753,7 +757,7 @@ function meta_get_current() {
 		}
 	}
 
-	if ($_REQUEST['category']) {
+	if (!empty($_REQUEST['category'])) {
 		$_REQUEST['category'] = $cat = (int) $_REQUEST['category'];
 		if ($globals['meta'][0] == '_') {
 			$globals['meta_current'] = $globals['meta'];
@@ -768,7 +772,7 @@ function meta_get_current() {
 				$globals['meta_current_name'] = '';
 			}
 		}
-	} elseif ($globals['meta']) {
+	} elseif (!empty($globals['meta'])) {
 		// Special metas begin with _
 		if ($globals['meta'][0] == '_') {
 			return 0;

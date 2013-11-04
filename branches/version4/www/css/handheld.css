@@ -26,6 +26,12 @@ width: 30px;
 display: none;
 }
 
+#sidebar, #edlist, .logo-ed { /* Bug in iPhone */
+width: 0px;
+min-width: 0;
+}
+ 
+
 @media (min-width:500px) and (orientation:landscape) {
 .wide {
 display: inline-block;
@@ -54,6 +60,7 @@ max-width: 25%;
 
 .comment-meta .username {
 margin-left: 2px;
+font-weight: normal;
 }
 
 #footwrap {

@@ -157,7 +157,7 @@ overflow:hidden;
 white-space:nowrap;
 z-index: 10;
 }
-@media (min-height: 768px) {
+@media (min-height: 600px) {
 	#header-top {
 	position: fixed;
 	}
@@ -289,14 +289,6 @@ cursor: pointer;
 	(min-resolution: 192dpi) {
 	#header-top .userlogin { background-image:url('../../img/common/h9_login.svg'); }
 }
-
-/*
-#header-top .userlogin{
-width: 40px;
-text-align: center;
-margin-top:7px;
-}
-*/
 
 /* second header zone */
 

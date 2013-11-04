@@ -28,13 +28,17 @@ mobile_redirect();
 $globals['cache-control'][] = 'max-age=3';
 
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);
+	//$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);
+	/* explode() + ltrim() is +30% faster */
+	$url_args = explode('/', ltrim($_SERVER['PATH_INFO'], '/'),  3);
 	$link = Link::from_db($url_args[0], 'uri');
 	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);
 	}
 } else {
-	$url_args = preg_split('/\/+/', $_REQUEST['id'], 3, PREG_SPLIT_NO_EMPTY);
+	//$url_args = preg_split('/\/+/', $_REQUEST['id'], 3, PREG_SPLIT_NO_EMPTY);
+	/* explode() + ltrim() is +30% faster */
+	$url_args = explode('/', ltrim($_REQUEST['id'], '/'),  3);
 	if(is_numeric($url_args[0]) && $url_args[0] > 0 && ($link = Link::from_db($url_args[0])) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
 		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
@@ -101,11 +105,20 @@ if ($_POST['process']=='newcomment') {
 
 $offset = 0;
 $limit = '';
+
+
+$globals['page_base'] = (empty($url_args[1]) ? '' : '/'.$url_args[1]);
+
 switch ($url_args[1]) {
 	case '':
 		$tab_option = 1;
 		$order_field = 'comment_order';
 
+		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
+			if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
+			$offset=($current_page-1)*$globals['comments_page_size'];
+			$limit = "LIMIT $offset,".$globals['comments_page_size'];
+		}
 		// Geo check
 		// Don't show it if it's a mobile browser
 		if(!$globals['mobile'] && $globals['google_maps_in_links'] && $globals['google_maps_api']) {
@@ -117,16 +130,13 @@ switch ($url_args[1]) {
 				geo_init(null, null);
 			}
 		}
-		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
-			if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
-			$offset=($current_page-1)*$globals['comments_page_size'];
-			$limit = "LIMIT $offset,".$globals['comments_page_size'];
-		}
 		break;
 	case 'best-comments':
 		$tab_option = 2;
-		if ($globals['comments_page_size'] > 0 ) $limit = 'LIMIT ' . $globals['comments_page_size'];
 		$order_field = 'comment_karma desc, comment_id asc';
+		if (!$current_page) $current_page = 1;
+		$offset=($current_page-1)*$globals['comments_page_size'];
+		$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		break;
 	case 'voters':
 		$tab_option = 3;
@@ -182,10 +192,10 @@ if (!empty($link->tags))
 	$globals['tags']=$link->tags;
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_permalink().'" />'."\n";
+$globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_permalink().'" />';
 
 // add also a rel to the comments rss
-$globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />'."\n";
+$globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />';
 
 if ($link->has_thumb()) {
 	if ($link->thumb_medium_url) {
@@ -216,22 +226,17 @@ echo '<div id="sidebar">';
 do_banner_right();
 // GEO
 if ($link->latlng) {
-	echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>'."\n";
+	echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
 }
-/*
-if ($link->comments > 15) {
-	do_best_story_comments($link);
-}
-*/
 if (! $current_user->user_id) {
 	do_best_stories();
 }
 do_rss_box();
 do_banner_promotions();
-echo '</div>' . "\n";
+echo '</div>';
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
+echo '<div id="newswrap">';
 $link->print_summary();
 
 switch ($tab_option) {
@@ -241,8 +246,11 @@ case 2:
 
 	if($tab_option == 1) {
 		print_relevant_comments($link, $requested_page);
-		do_comment_pages($link->comments, $current_page);
+		$reverse = true;
+	} else {
+		$reverse = false;
 	}
+	do_comment_pages($link->comments, $current_page, $reverse);
 
 	$update_comments = false;
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
@@ -255,7 +263,6 @@ case 2:
 			if ($tab_option == 1) {
 				if ($comment->c_order != $order) {
 					if ($prev) {
-						// syslog(LOG_INFO, "Updating order for $prev->id, order: $prev->c_order");
 						$prev->update_order();
 					}
 					syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
@@ -271,18 +278,17 @@ case 2:
 			echo '<li>';
 			$comment->print_summary($link, 2500, true);
 			echo '</li>';
-			echo "\n";
 			$order++;
 		}
-		echo "</ol>\n";
+		echo '</ol>';
 	}
 
 	if($tab_option == 1) {
 		if ($update_comments) {
 			$link->update_comments();
 		}
-		do_comment_pages($link->comments, $current_page);
 	}
+	do_comment_pages($link->comments, $current_page, $reverse);
 
 	if ($link->comments > 5) {
 		echo '<script type="text/javascript">';
@@ -292,7 +298,7 @@ case 2:
 
 
 	Comment::print_form($link);
-	echo '</div>' . "\n";
+	echo '</div>';
 	break;
 
 
@@ -361,7 +367,7 @@ case 7:
 		foreach($trackbacks as $trackback_id) {
 			$trackback->id=$trackback_id;
 			$trackback->read();
-			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>' . "\n";
+			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>';
 		}
 		echo '</ul>';
 		echo '</fieldset>';
@@ -395,14 +401,13 @@ case 9:
 			echo '<li>';
 			$comment->print_summary($link, 2500, true);
 			echo '</li>';
-			echo "\n";
 		}
-		echo "</ol>\n";
+		echo '</ol>';
 		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 		Comment::print_form($link);
 	}
 
-	echo '</div>' . "\n";
+	echo '</div>';
 	break;
 
 }
@@ -419,30 +424,30 @@ function print_story_tabs($option) {
 	$active = array();
 	$active[$option] = 'selected ';
 
-	echo '<ul class="subheader">'."\n";
-	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'">'._('comentarios'). '</a></li>'."\n";
-	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>'."\n";
-	echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>'."\n";
+	echo '<ul class="subheader">';
+	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'">'._('comentarios'). '</a></li>';
+	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>';
+	echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>';
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
-			echo '<li class="'.$active[3].'"><a href="'.$globals['permalink'].'/voters">'._('votos'). '</a></li>'."\n";
+			echo '<li class="'.$active[3].'"><a href="'.$globals['permalink'].'/voters">'._('votos'). '</a></li>';
 		}
 		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
-			echo '<li class="'.$active[4].'"><a href="'.$globals['permalink'].'/log">'._('registros'). '</a></li>'."\n";
+			echo '<li class="'.$active[4].'"><a href="'.$globals['permalink'].'/log">'._('registros'). '</a></li>';
 		}
 		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
-			echo '<li class="'.$active[5].'wideonly"><a href="'.$globals['permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>'."\n";
+			echo '<li class="'.$active[5].'wideonly"><a href="'.$globals['permalink'].'/sneak">&micro;&nbsp;'._('fisgona'). '</a></li>';
 		}
 
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
-		echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>\n";
+		echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>";
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
-		echo '<li class="'.$active[7].'wideonly"><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>\n";
+		echo '<li class="'.$active[7].'wideonly"><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>";
 	}
 	echo '<li class="'.$active[8].'wideonly"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
-	echo '</ul>'."\n";
+	echo '</ul>';
 }
 
 function do_comment_pages($total, $current, $reverse = true) {
@@ -451,7 +456,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 
 	if ( ! empty($globals['base_story_url'])) {
-		$query = $globals['permalink'];
+		$query = $globals['permalink'] . $globals['page_base'];
 	} else {
 		$query=preg_replace('/\/[0-9]+(#.*)*$/', '', $_SERVER['QUERY_STRING']);
 		if(!empty($query)) {
@@ -472,9 +477,8 @@ function do_comment_pages($total, $current, $reverse = true) {
 		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" rel="prev">&#171; '._('anterior').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="prev">&#171; '._('anterior').'</a>';
 	}
-
 
 
 	$dots_before = $dots_after = false;
@@ -483,14 +487,14 @@ function do_comment_pages($total, $current, $reverse = true) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
 			if ($total_pages < 7 || abs($i-$current) < 3 || $i < 3 || abs($i-$total_pages) < 2) {
-				echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+				echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 			} else {
 				if ($i<$current && !$dots_before) {
 					$dots_before = true;
-					echo '<span>...</span>';
+					echo '<span>&hellip;</span>';
 				} elseif ($i>$current && !$dots_after) {
 					$dots_after = true;
-					echo '<span>...</span>';
+					echo '<span>&hellip;</span>';
 				}
 			}
 		}
@@ -498,17 +502,18 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query).'" rel="next">'._('siguiente').' &#187;</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="next">'._('siguiente').' &#187;</a>';
 	} else {
 		echo '<span class="nextprev">'._('siguiente'). ' &#187;</span>';
 	}
-	echo "</div>\n";
+	echo '</div>';
 
 }
 
-function get_comment_page_url($i, $total, $query) {
+function get_comment_page_url($i, $total, $query, $reverse = false) {
 	global $globals;
-	if ($i == $total) return $query;
+	if ($i == $total && $reverse) return $query;
+	elseif ($i == 1 && ! $reverse) return $query;
 	else return $query.'/'.$i;
 }
 
