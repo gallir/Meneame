@@ -8,6 +8,11 @@
 
 include('../config.php');
 
+$user_id = intval($_GET['user']);
+
+$limit = 250; 
+$show_all = false;
+
 switch ($_GET['type']) {
 	case 'comment':
 		$type_in = '("comment")';
@@ -23,34 +28,43 @@ switch ($_GET['type']) {
 
 }
 
-$user_id = intval($_GET['user']);
-if ($user_id > 0) $user = "and user = $user_id";
-else $user = '';
+if ($user_id > 0) {
+	$user = "and user = $user_id";
+	if ($current_user->user_id) {
+		$show_all = true;
+	}
+	if ($user_id == $current_user->user_id) {
+		$limit = 5000;
+	} else {
+		$limit = 500;
+	}
+} else $user = '';
 
 header('Content-Type: text/html; charset=utf-8');
-$media = $db->get_results("select type, id, version, unix_timestamp(date) as date, mime, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit 250");
+$media = $db->get_results("select type, id, version, unix_timestamp(date) as date, mime, user as uid, user_login as user from media, users where type in $type_in $user and version = 0 and user_id = media.user order by date desc limit $limit");
 
 $images = array();
 
 if ($media) {
 	foreach ($media as $image) {
-		switch ($image->type) {
-			case 'comment':
-				$karma = $db->get_var("select comment_karma from comments where comment_id = $image->id");
-				break;
-			case 'post':
-				$karma = $db->get_var("select post_karma from posts where post_id = $image->id");
-				break;
-			default:
-				$karma = 0;
+		if (! $show_all) {
+			switch ($image->type) {
+				case 'comment':
+					$karma = $db->get_var("select comment_karma from comments where comment_id = $image->id");
+					break;
+				case 'post':
+					$karma = $db->get_var("select post_karma from posts where post_id = $image->id");
+					break;
+				default:
+					$karma = 0;
+			}
 		}
 			
-		if ($karma > -10) {
+		if ($show_all || $karma > -10) {
 			$image->url = Upload::get_url($image->type, $image->id, $image->version, $image->date, $image->mime);
 			$images[] = $image;
 		}
 	}
 }
 if ($images) Haanga::Load("backend/gallery.html", compact('images'));
-
 ?>

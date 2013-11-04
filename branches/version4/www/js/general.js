@@ -205,8 +205,7 @@ function check_checkfield(fieldname, mess) {
 }
 
 function report_problem(frm, user, id) {
-	if (frm.ratings.value == 0)
-		return;
+	if (frm.ratings.value == 0) return;
 	mDialog.confirm("{% trans _('¿desea votar') %} <em>" + frm.ratings.options[frm.ratings.selectedIndex].text +"</em>?",
 		function () {report_problem_yes(frm, user, id)}, function () {report_problem_no(frm, user, id)});
 	return false;
@@ -598,7 +597,7 @@ var mDialog = new function() {
 			return;
 		}
 		this.content(content);
-		this.btClose.focus();
+		this.btClose.show().focus();
 		if(close_seconds)
 			this.closeTimer = setTimeout(function() { mDialog.close(); }, close_seconds*1000 );
 	};

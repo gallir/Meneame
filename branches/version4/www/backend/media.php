@@ -16,8 +16,15 @@ if (empty($type) || ! $id ) not_found();
 
 $media = new Upload($type, $id, $version);
 
-if (! $media->read()) not_found();
+/* The user requests to delete the image */
+if (! empty($_REQUEST['op'])) {
+	if ($_REQUEST['op'] == 'delete') {
+		delete_image($media);
+		exit(0);
+	}
+}
 
+if (! $media->read()) not_found();
 
 if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_user->user_id > 0) {
 	//header("HTTP/1.0 403 Not authorized");
@@ -51,5 +58,26 @@ function error_image($message) {
 	header('Expires: ' . date('r', time()+10));
 	readfile(mnmpath.'/img/common/access_denied-01.png');
 	die;
+}
+
+function delete_image($media) {
+	global $current_user, $globals;
+
+	$r = array();
+
+	if (! $media->read()) {
+		$r['ok'] = 0;
+		$r['text'] = _('imagen no existente');
+	} elseif (! $current_user->user_id > 0 || $media->user != $current_user->user_id) {
+		$r['ok'] = 0;
+		$r['text'] = _('no autorizado');
+	} else {
+		$media->delete();
+		$r['ok'] = 1;
+		$r['text'] = _('imagen eliminada');
+	}
+	header('Content-Type: application/json; charset=UTF-8');
+	echo json_encode($r);
+	exit(0);
 }
 

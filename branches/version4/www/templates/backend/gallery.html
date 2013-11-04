@@ -9,12 +9,18 @@
 {% endfor %}
 
 <script type="text/javascript">
+
+var $colorbox;
+
 function formatTitle() {
-	t_i_u = this.title.split(",");
+	var t_i_u = this.title.split(",");
 
 	script = 'get_'+t_i_u[0]+'_tooltip.php';
-	if (t_i_u[0] == 'post') type = '{% trans _('nota de') %}';
-	else type = '{% trans _('comentario de') %}';
+	if (t_i_u[0] == 'post') {
+		type = '{% trans _('nota de') %}';
+	} else {
+		type = '{% trans _('comentario de') %}';
+	}
 
 	url = base_url + 'go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
 
@@ -24,10 +30,36 @@ function formatTitle() {
 	} else {
 		image_link = '';
 	}
+
+	var extra = "";
+	if (t_i_u[2] == "{{ current_user.user_login }}" ) {
+		if ($.colorbox.element().data('deleted')) {
+			extra = ' [{% trans _("eliminada") %}]';
+		} else {
+			extra = ' <span id="delete">[<a href="javascript:delete_image(\''+t_i_u[0]+'\','+t_i_u[1]+')">{% trans _("eliminar") %}</a>]</span>';
+		}
+	}
 		
-	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+image_link+'</div>';
+	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+image_link+extra+'</div>';
 
 	return who;
+}
+
+function delete_image(type, id) {
+	mDialog.confirm("{% trans _('¿seguro desea eliminar definitivamente la imagen?') %}",
+        function () {
+			var url = base_url + 'backend/media.php?op=delete&id='+id+"&type="+type;
+			$.post(url, {op: "delete", type: type, id: id }, function (data) {
+				if (data.ok) {
+					$.colorbox.element().data('deleted', 1);
+					$('#delete').html(' [{% trans _("eliminada") %}]').attr('href', '');
+				} else {
+					mDialog.notify(data.text);
+				}
+			});
+		},
+		function () {return false});
+	return false;
 }
 
 function onComplete() {

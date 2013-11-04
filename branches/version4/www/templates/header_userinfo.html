@@ -5,7 +5,7 @@
 				<li class="usertext"><a href="{{ globals.base_url }}admin/bans.php">admin</a></li>
 			{% endif %}
 		<li id="notifier"></li>
-		<li><a href="{{ current_user.user_login|useruri }}"><img id="avatar" class="tooltip u:{{ current_user.user_id }}" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40 %}" alt="{{current_user.user_login}}"/></a></li>
+		<li><a href="{{ current_user.user_login|useruri }}"><img id="avatar" src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40 %}" alt="{{current_user.user_login}}"/></a></li>
 
 		<li class="userlogin" onclick="location.href='{{ globals.base_url }}login.php?op=logout&amp;return={{globals.uri|urlencode}}'" title="{%trans _('cerrar sesión')%}"> </li>
 	{# Following link could be deleted 
