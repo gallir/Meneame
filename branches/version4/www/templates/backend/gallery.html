@@ -36,7 +36,7 @@ function formatTitle() {
 		if ($.colorbox.element().data('deleted')) {
 			extra = ' [{% trans _("eliminada") %}]';
 		} else {
-			extra = ' <span id="delete">[<a href="javascript:delete_image(\''+t_i_u[0]+'\','+t_i_u[1]+')">{% trans _("eliminar") %}</a>]</span>';
+			extra = ' <span id="delete">[<span style="cursor: pointer; color: #0033B5" onClick="delete_image(\''+t_i_u[0]+'\','+t_i_u[1]+')">{% trans _("eliminar") %}</span>]</span>';
 		}
 	}
 		
