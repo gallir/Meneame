@@ -10,6 +10,7 @@ include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 include(mnminclude.'favorites.php');
 
+$page_size = $globals['page_size'];
 
 if ($globals['bot'] && get_current_page() > 2) {
 	do_error('Pages exceeded', 404);

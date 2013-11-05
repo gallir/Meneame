@@ -23,6 +23,8 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+$page_size = $globals['page_size'] * 2;
+
 meta_get_current();
 
 $page = get_current_page();

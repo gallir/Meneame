@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$page_size = 20;
+$page_size = $globals['page_size'];
 $current_page = get_current_page();
 $offset=($current_page-1)*$page_size;
 

@@ -25,9 +25,7 @@ include(mnminclude.'html1.php');
 
 meta_get_current();
 
-$page_size = 20;
-
-if ($globals['mobile']) $page_size = intval($page_size/2);
+$page_size = $globals['page_size'];
 
 $page = get_current_page();
 $offset=($page-1)*$page_size;

@@ -50,7 +50,7 @@ $globals['allowed_metas'] = false;
 // $globals['allowed_metas'] = array(100, 101, 102, 103);
 
 
-$globals['page_size'] = $page_size	= 30;
+$globals['page_size'] = 20;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['ads'] = true;
 $globals['external_ads'] = $external_ads = true;

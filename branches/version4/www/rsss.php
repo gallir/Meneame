@@ -12,7 +12,7 @@ include(mnminclude.'html1.php');
 $globals['ads'] = false;
 
 $rows = -1;
-$page_size = 25;
+$page_size = $globals['page_size'];
 $page = get_current_page();
 $offset=($page-1)*$page_size;
 

@@ -9,6 +9,8 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
+$page_size = $globals['page_size'];
+
 $range_names  = array(_('24 horas'), _('48 horas'), _('una semana'), _('un mes'));
 $range_values = array(1, 2, 7, 30);
 

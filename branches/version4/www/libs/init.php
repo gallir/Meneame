@@ -71,6 +71,10 @@ if($_SERVER['HTTP_HOST']) {
 		&& (isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT']))
 			&& ! preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT']) ) { // Don't treat iPad as mobiles
 		$globals['mobile'] = 1;
+		// Reduce page size for mobiles
+		$globals['comments_page_size'] = intval($globals['comments_page_size']/2);
+		$globals['page_size'] = intval($globals['page_size']/2);
+		
 	} else {
 		$globals['mobile'] = 0;
 	}

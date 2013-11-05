@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$page_size = 50;
+$page_size = $globals['page_size'] * 3;
 $comment = new Comment;
 
 if (!isset($_REQUEST['id']) && $globals['base_comment_url'] && $_SERVER['PATH_INFO']) {

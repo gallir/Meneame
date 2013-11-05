@@ -49,7 +49,7 @@ $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 
-$page_size = 20;
+$page_size = $globals['page_size'];
 $offset=(get_current_page()-1)*$page_size;
 
 $globals['noindex'] = true;

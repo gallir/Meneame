@@ -9,7 +9,7 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-$page_size = 20;
+$page_size = $globals['page_size'];
 
 $range_names  = array(_('48 horas'), _('una semana'), _('un mes'), _('un año'));
 $range_values = array(2, 7, 30, 365);
