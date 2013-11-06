@@ -1264,9 +1264,11 @@ var notifier = new function () {
 				$e.append("<div class='"+field+"'><a href='"+base_url+"backend/notifications.json.php?redirect="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
 			}
 			$e.show();
+			check_counter = 0;
 			
 		} else {
 			notifier.hide();
+			notifier.update();
 		}
 		return false;
 	};
@@ -1298,7 +1300,10 @@ var notifier = new function () {
 			next_update = 2000;
 		}
 
-		if ( (is_mobile && check_counter < 10) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { /* 6 hours */
+		if (is_mobile) next_update *= 3;
+
+		if ( (is_mobile && check_counter < 1)  /* Allow just one network update for mobiles */
+				||  (! is_mobile && check_counter < 3*3600*1000/base_update)) { /* 3 hours */
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
