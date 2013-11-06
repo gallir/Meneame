@@ -59,7 +59,7 @@ if ($res) {
 		}
 	}
 
-	$coef = ($max_pts - $min_pts)/min(($max-1), 1);
+	$coef = ($max_pts - $min_pts)/max(($max-1), 1);
 	arsort($words);
 	$words = array_slice($words, 0, $words_limit);
 	ksort($words);
