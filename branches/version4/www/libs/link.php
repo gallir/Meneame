@@ -1429,7 +1429,7 @@ class Link extends LCPBase {
 		return $this->thumb_url;
 	}
 
-	function thumb_download($basename = 'thumb') {
+	function thumb_download($basename = 'thumb', $delete = true) {
 		global $globals;
 
 		$file = Upload::get_cache_relative_dir($this->id) . "/$basename-$this->id.jpg";
@@ -1438,6 +1438,9 @@ class Link extends LCPBase {
 		if ($basename == "thumb_medium") {
 			$s3_base = "medium_";
 			$s3_filename = "medium_$this->id.jpg";
+		}elseif ($basename == "thumb_double") {
+			$s3_base = "double_";
+			$s3_filename = "double_$this->id.jpg";
 		} else {
 			$s3_base = "";
 			$s3_filename = "$this->id.jpg";
@@ -1449,7 +1452,7 @@ class Link extends LCPBase {
 			// Get thumbnail from S3
 			if (Media::get($s3_filename, 'thumbs', $filepath)) {
 				return $filepath;
-			} else {
+			} elseif ($delete) {
 				// Do extra check, if S3 is working, mark thumb as deleted
 				if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
 						&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
