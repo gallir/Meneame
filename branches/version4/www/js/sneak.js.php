@@ -334,11 +334,11 @@ function set_options_from_string(string) {
 
 function set_options_cookie() {
 	var options = get_options_string();
-	createCookie('mnm-sneak-options', options,10);
+	writeStorage('mnm-sneak-options_'+user_id, options);
 }
 
 function get_options_cookie() {
-	var options = readCookie('mnm-sneak-options');
+	var options = readStorage('mnm-sneak-options_'+user_id);
 	if (options != null) {
 		set_options_from_string(options);
 		return true;

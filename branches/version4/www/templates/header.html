@@ -136,7 +136,7 @@
 
   <div id="nav-menu"></div>
 
-  <a href="{{ globals.base_url }}" title="{% trans _('portada') %}" id="header-logo" class="logo-mnm" onclick="location.href='{{ globals.base_url }}'">{% trans _('menéame') %}</a>
+  <a href="{{ globals.base_url }}"title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
 
 	{% if not globals.mobile %}
 		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
@@ -154,7 +154,7 @@
 </div><!--header-top-->
 
 <div id="header-center">
-  <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('menéame') %}" onclick="location.href='{{ globals.base_url }}'">{% trans _('menéame') %}</a>
+  <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>
   <div class="edname">
 	{% trans _('edición') %} <b>{{ this_site.name_long }}</b>
 	{% if globals.facebook_page || globals.twitter_page %}
