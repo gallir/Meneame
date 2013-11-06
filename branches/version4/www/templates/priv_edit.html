@@ -15,14 +15,14 @@
 <input type="hidden" name="author" value="{{ self.author }}" />
 <label>{% trans _('A:') %}</label>&nbsp;<img id="to_user_avatar"
 	{% if self.to > 0 %}
-		src="{{ globals.base_url }}backend/get_avatar.php?user={{ self.to_username }}&amp;size=20"
+		src="{{ globals.base_url }}backend/get_avatar.php?user={{ self.to_username }}&amp;size=25"
 		style="vertical-align:text-bottom"
 	{% else %}
-		src="{% exec get_no_avatar_url 20 %}"
+		src="{% exec get_no_avatar_url 25 %}"
 		style="vertical-align:text-bottom;visibility:hidden"
 	{% endif %}
 	class="avatar"
- 	width="20" height="20"/>
+ 	width="25" height="25"/>
 
 <input type="text" name="to_user" id="to_user"
 	{% if self.to > 0 %}
@@ -50,7 +50,7 @@
 	<div style="float:right">
 	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/gif, image/jpeg, image/png"
 	{% if globals.mobile %}
-	style="width:150px"
+	style="width:100%"
 	{% endif %}
 	/>
 	</label>

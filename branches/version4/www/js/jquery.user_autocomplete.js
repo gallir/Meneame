@@ -36,7 +36,7 @@
 				extraParams: defaults.params,
 				showResult: function(value, data) {
 					if (defaults.params.avatar)
-						return '<img src="'+data[0]+'" width="12" height="12" style="vertical-align:bottom"/>&nbsp;'+value;
+						return '<img src="'+data[0]+'" width="20" height="20" style="vertical-align:bottom"/>&nbsp;'+value;
 					else
 						return value;
 				},

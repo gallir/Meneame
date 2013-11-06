@@ -3,7 +3,7 @@
 }
 .acResults {
 	padding: 0px;
-	border: 1px solid #FFD0B0;
+	border:1px solid #aaa;
 	background-color: #fff;
 	overflow: hidden;
 	z-index: 10000;
@@ -19,11 +19,11 @@
 
 .acResults li {
 	margin: 0px;
-	padding: 2px 5px;
+	padding: 4px 5px;
 	cursor: pointer;
 	display: block;
 	width: 100%;
-	font-size: 12px;
+	font-size: 13px;
 	overflow: hidden;
 	text-align: left;
 	vertical-align: bottom;

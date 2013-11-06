@@ -840,7 +840,15 @@ function priv_show(content) {
 }
 
 function priv_new(user_id) {
+	var w, h;
 	var url = base_url + 'backend/priv_edit.php?user_id='+user_id+"&key="+base_key;
+	if (is_mobile) {
+		w = h = '100%';
+	} else {
+		w = '500px';
+		h = '350px';
+
+	}
 	$.colorbox({href: url,
 		onComplete: function () { if (user_id > 0) $('#post').focus(); else $("#to_user").focus();},
 		overlayClose: false,
@@ -848,13 +856,13 @@ function priv_new(user_id) {
 		title: false,
 		scrolling: false,
 		open: true,
-		width: 500
+		width: w,
+		height: h
 	});
 }
 
 /* Answers */
 function get_total_answers_by_ids(type, ids) {
-	if (is_mobile) return;
 	$.ajax({
 		type: 'POST',
 		url: base_url + 'backend/get_total_answers.php',
