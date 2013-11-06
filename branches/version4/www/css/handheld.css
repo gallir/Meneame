@@ -24,13 +24,8 @@ width: 30px;
 
 #header-center, #header-menu, #sidebar, #edlist, .logo-ed, .wideonly, .wide {
 display: none;
+background: none;
 }
-
-#sidebar, #edlist, .logo-ed { /* Bug in iPhone */
-width: 0px;
-min-width: 0;
-}
- 
 
 @media (min-width:500px) and (orientation:landscape) {
 .wide {
