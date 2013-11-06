@@ -257,22 +257,29 @@ function get_votes(program,type,container,page,id) {
 	reportAjaxStats('html', program);
 }
 
-function createCookie(name,value,days) {
+function createCookie(name,value,days,path) {
 	if (days) {
 		var date = new Date();
 		date.setTime(date.getTime()+(days*24*60*60*1000));
 		var expires = "; expires="+date.toGMTString();
 	} else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
+
+	if (path == null)  path="/";
+
+	document.cookie = name+"="+value+expires+"; path=" + path;
 }
 
-function readCookie(name) {
+function readCookie(name, path) {
 	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
+	var ca = document.cookie ? document.cookie.split('; ') : [];
+	for(var i=0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		var parts = ca[i].split('=');
+		var key = parts.shift();
+		if (name == key) {
+			var value = parts.join('=');
+			return value;
+		}
 	}
 	return null;
 }
@@ -1230,6 +1237,7 @@ var notifier = new function () {
 	var has_focus = true;
 	var check_counter = 0;
 	var base_update = 15000; /* Base check every 15 seconds */
+	var last_connect = null;
 
 	var click_handler = function (e) {
 		if (! panel_visible) return;
@@ -1243,15 +1251,20 @@ var notifier = new function () {
 	this.click = function () {
 		if (! panel_visible) {
 			panel_visible = true;
-			$('<div id="notifier_panel"> </div>').appendTo("body");
-			$('html').on('click', click_handler);
+			$e = $('<div id="notifier_panel"> </div>');
+			$e.appendTo("body");
+			$('html').one('click', click_handler);
 
-			$.getJSON(base_url+"backend/notifications.json.php", function (data) {
-				for(var i=0; i<data.length; i++) {
-					o = data[i];
-					$("#notifier_panel").append("<div style='background:url(\"" + o.icon + "\") no-repeat 5px 5px'><a href='" + o.url + "'>" + o.count + " " + o.text + "</a></div>");
-				}
-			});
+			data = decode_data(readCookie("n_"+user_id));
+
+			var a = ['privates', 'posts', 'comments', 'friends'];
+			for (var i=0; i < a.length; i++) {
+				field = a[i];
+				var counter = (data && data[field]) ? data[field] : 0;
+				$e.append("<div class='"+field+"'><a href='"+base_url+"backend/notifications.json.php?redirect="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
+			}
+			$e.show();
+			
 		} else {
 			notifier.hide();
 		}
@@ -1261,7 +1274,6 @@ var notifier = new function () {
 
 	this.hide = function () {
 		$("#notifier_panel").remove();
-		$('html').off('click', click_handler);
 		panel_visible = false;
 	};
 
@@ -1270,11 +1282,11 @@ var notifier = new function () {
 		var now;
 
 		now = new Date().getTime();
-		last_check = readCookie("notifier_"+user_id+"_last_check");
+		var last_check = readCookie("n_"+user_id+"_ts");
 		if (last_check == null 
 				|| (check_counter == 0 && now - last_check > 3000) /* Don't allow too many refreshes */
 				|| now - last_check > base_update + check_counter * 20) {
-			createCookie("notifier_"+user_id+"_last_check", now, 1);
+			createCookie("n_"+user_id+"_ts", now, 0);
 			notifier.connect();
 		} else {
 			notifier.update_panel();
@@ -1286,8 +1298,7 @@ var notifier = new function () {
 			next_update = 2000;
 		}
 
-
-		if ( (is_mobile && check_counter < 5) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { /* 6 hours */
+		if ( (is_mobile && check_counter < 10) ||  (! is_mobile && check_counter < 6*3600*1000/base_update)) { /* 6 hours */
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
@@ -1298,38 +1309,44 @@ var notifier = new function () {
 		var count;
 		var posts;
 
-		count = readCookie("notifier_"+user_id+"_count");
-		if (count == current_count) return;
-		if (count > 0) {
+		
+		data = decode_data(readCookie("n_"+user_id));
+		if (! data) return;
+		if (data.total == current_count) return;
+		if (data.total > 0) {
 			check_counter = (check_counter + 1)/2; /* to update faster next times */
 		}
 
-		posts = readCookie("notifier_"+user_id+"_posts");
-
 		document.title = document.title.replace(/^\(\d+\) /, '');
-		area.html(count);
-		$('#p_c_counter').html(posts);
-		if (count > 0) {
+		area.html(data.total);
+		if (data.total > 0) {
 			area.addClass('nonzero');
-			document.title = '('+count+') ' + document.title;
+			document.title = '('+data.total+') ' + document.title;
 		} else {
 			area.removeClass('nonzero');
 		}
-		current_count = count;
+		current_count = data.total;
 	};
 
 	this.connect = function() {
 		var next_check;
 
+		var connect_time = new Date().getTime();
+
+		if (connect_time - last_connect < 2000) { /* Security measure to avoid flooding */
+			return;
+		}
+
 		check_counter++;
-		$.getJSON(base_url+'backend/notifications.json.php?totals'+"&check="+check_counter+"&has_focus="+has_focus,
+		last_connect = connect_time;
+
+		$.getJSON(base_url+"backend/notifications.json.php?check="+check_counter+"&has_focus="+has_focus,
 			function (data) {
 				var now;
 				now = new Date().getTime();
-				createCookie("notifier_"+user_id+"_last_check", now, 1);
+				createCookie("n_"+user_id+"_ts", now, 0);
 				if (current_count == data.total) return;
-				createCookie("notifier_"+user_id+"_count", data.total, 1);
-				createCookie("notifier_"+user_id+"_posts", data.posts, 1);
+				createCookie("n_"+user_id, encode_data(data), 0);
 				notifier.update_panel();
 			});
 	};
@@ -1353,6 +1370,27 @@ var notifier = new function () {
 		});
 		this.update();
 	};
+
+	function decode_data(str) {
+		if (! str) return null;
+		var a = str.split(",");
+		return {total: a[0], privates: a[1], posts: a[2], comments: a[3], friends: a[4]};
+	}
+
+	function encode_data(data) {
+		var a = [data.total, data.privates, data.posts, data.comments, data.friends];
+		return a.join(",");
+	}
+
+	function field_text(field) {
+		var a = {
+			privates: "{% trans _('privados nuevos') %}",
+			posts: "{% trans _('respuestas a notas') %}",
+			comments: "{% trans _('respuestas a comentarios') %}",
+			friends: "{% trans _('nuevos amigos') %}"
+		};
+		return a[field];
+	}
 };
 
 

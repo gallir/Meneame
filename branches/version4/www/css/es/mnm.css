@@ -156,6 +156,9 @@ background-color:#3c3c3c;
 overflow:hidden;
 white-space:nowrap;
 z-index: 10;
+user-select: none;
+-moz-user-select: none;
+-webkit-user-select: none;
 }
 @media (min-height: 600px) {
 	#header-top {
@@ -2439,10 +2442,12 @@ text-align: left;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+display: none;
 }
 
 #notifier_panel div {
 font-size: 13px;
+margin: 0;
 position: relative;
 color:#333;
 padding:7px 0px 2px 30px;
@@ -2462,6 +2467,22 @@ background-color:#ddd !important;
 #notifier_panel div a {
 color:#888;
 text-decoration: none;
+}
+
+#notifier_panel div.privates {
+background:url(../../img/common/icon_message-02.png) no-repeat 5px 5px;
+}
+
+#notifier_panel div.posts {
+background:url(../../img/common/icon_post-02.png) no-repeat 5px 5px;
+}
+
+#notifier_panel div.comments {
+background:url(../../img/common/icon_comment-01.png) no-repeat 5px 5px;
+}
+
+#notifier_panel div.friends {
+background:url(../../img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
 }
 
 .header_ad_200x20{ /* temporal: nivea for men ad */
