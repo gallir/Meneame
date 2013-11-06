@@ -45,9 +45,12 @@
 	<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
 {% endif %}
 
+<input class="button" type="submit" value="{% trans _('enviar') %}" style="float:right"/>
+
 {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-	<div style="float:right">
+	<br clear="right"/>
+	<div>
 	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/gif, image/jpeg, image/png"
 	{% if globals.mobile %}
 	style="width:100%"
@@ -63,7 +66,6 @@
 
 </div>
 
-<input class="button" type="submit" value="{% trans _('enviar') %}" />
 </form>
 </fieldset>
 </div>
@@ -83,7 +85,7 @@ var options = {
 	success: function(response) {
 		if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 		else {
-			priv_show(response);
+			$('#cboxLoadedContent').html(response);
 		}
 	}
 };
