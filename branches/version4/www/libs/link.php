@@ -1318,6 +1318,14 @@ class Link extends LCPBase {
 					$this->thumb_x = $thumbnail->getWidth();
 					$this->thumb_y = $thumbnail->getHeight();
 
+					// If everything goes OK, create a double size thumbnail
+					// TODO: this is a dirty hack for @jordisan, before going on vacation
+					$thumbnail_double = $img->scale($globals['thumb_size'] * 2);
+					$filepath_double = Upload::get_cache_dir($this->id) . "/thumb_double-$this->id.jpg";
+					if($thumbnail_double->save($filepath_double)) {
+						@chmod($filepath_double, 0777);
+					}
+
 					// If everything goes OK, create a bigger thumbnail
 					// TODO: this is a dirty hack for @jordisan, before going on vacation
 					$thumbnail_medium = $img->scale($globals['medium_thumb_size']);
@@ -1326,15 +1334,14 @@ class Link extends LCPBase {
 						@chmod($filepath_medium, 0777);
 					}
 
+					$this->thumb_status='local';
 					// Upload to S3
-					if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
-							//$this->thumb = $globals['Amazon_S3_media_url'] . "/thumbs/$this->id.jpg";
+					if ($globals['Amazon_S3_media_bucket'] && Media::put($filepath_medium, 'thumbs', "medium_$this->id.jpg")) {
+						// If images are served from S3, upload also smaller thumbs
+						if ($globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
 							$this->thumb_status = 'remote';
-							Media::put($filepath_medium, 'thumbs', "medium_$this->id.jpg");
-					} else {
-						//$this->thumb = $globals['base_url'].$globals['cache_dir'].'/thumbs';
-						//$this->thumb .= "/$chain/$this->id.jpg";
-						$this->thumb_status='local';
+							Media::put($filepath_double, 'thumbs', "double_$this->id.jpg");
+						}
 					}
 					// syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
 					if ($debug)
