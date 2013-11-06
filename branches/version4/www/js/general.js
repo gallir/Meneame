@@ -257,6 +257,23 @@ function get_votes(program,type,container,page,id) {
 	reportAjaxStats('html', program);
 }
 
+function readStorage(key) {
+	if(typeof(Storage)!=="undefined") {
+		return localStorage.getItem(key);
+	} else {
+		return readCookie(key);
+	}
+}
+
+function writeStorage(key, value) {
+	if(typeof(Storage)!=="undefined") {
+		localStorage.setItem(key, value);
+	} else {
+		createCookie("n_"+user_id+"_ts", value, 0);
+	}
+}
+
+
 function createCookie(name,value,days,path) {
 	if (days) {
 		var date = new Date();
@@ -1255,7 +1272,7 @@ var notifier = new function () {
 			$e.appendTo("body");
 			$('html').one('click', click_handler);
 
-			data = decode_data(readCookie("n_"+user_id));
+			data = decode_data(readStorage("n_"+user_id));
 
 			var a = ['privates', 'posts', 'comments', 'friends'];
 			for (var i=0; i < a.length; i++) {
@@ -1284,11 +1301,11 @@ var notifier = new function () {
 		var now;
 
 		now = new Date().getTime();
-		var last_check = readCookie("n_"+user_id+"_ts");
+		var last_check = readStorage("n_"+user_id+"_ts");
 		if (last_check == null 
 				|| (check_counter == 0 && now - last_check > 3000) /* Don't allow too many refreshes */
 				|| now - last_check > base_update + check_counter * 20) {
-			createCookie("n_"+user_id+"_ts", now, 0);
+			writeStorage("n_"+user_id+"_ts", now);
 			notifier.connect();
 		} else {
 			notifier.update_panel();
@@ -1315,12 +1332,9 @@ var notifier = new function () {
 		var posts;
 
 		
-		data = decode_data(readCookie("n_"+user_id));
+		data = decode_data(readStorage("n_"+user_id));
 		if (! data) return;
 		if (data.total == current_count) return;
-		if (data.total > 0) {
-			check_counter = (check_counter + 1)/2; /* to update faster next times */
-		}
 
 		document.title = document.title.replace(/^\(\d+\) /, '');
 		area.html(data.total);
@@ -1349,9 +1363,9 @@ var notifier = new function () {
 			function (data) {
 				var now;
 				now = new Date().getTime();
-				createCookie("n_"+user_id+"_ts", now, 0);
+				writeStorage("n_"+user_id+"_ts", now);
 				if (current_count == data.total) return;
-				createCookie("n_"+user_id, encode_data(data), 0);
+				writeStorage("n_"+user_id, encode_data(data));
 				notifier.update_panel();
 			});
 	};
