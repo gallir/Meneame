@@ -31,20 +31,6 @@ class UserAuth {
 		$this->authenticated = false;
 		$this->admin = false;
 
-		// Temporal, for migration to subdomain authentication
-		if ($this->version != self::CURRENT_VERSION) { // Update the key
-			if (isset($_COOKIE['mnm_key'])) {
-				$_COOKIE['ukey'] = $_COOKIE['mnm_key'];
-				setcookie ('mnm_key', '', $globals['now'] - 3600, $globals['base_url']);
-				setcookie ('mnm_key', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-			}
- 			if (isset($_COOKIE['mnm_user'])) {
-				$_COOKIE['u'] = $_COOKIE['mnm_user'];
-				setcookie ('mnm_user', '', $globals['now'] - 3600, $globals['base_url']);
-				setcookie ('mnm_user', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-			}
-		}
-
 		if(!isset($globals['no_auth']) && isset($_COOKIE['ukey']) && isset($_COOKIE['u'])
 					&& ($this->u = explode(":", $_COOKIE['u']))
 					&& $this->u[0] > 0
@@ -82,15 +68,11 @@ class UserAuth {
 				} elseif ($globals['now'] - $cookietime >  UserAuth::KEY_TTL) {
 					$this->SetIDCookie(2, $remember);
 				}
+				// Set the sticky cookie for use un LoadBalancers that allows it (as Amazon ELB)
+				setcookie ('sticky', '1', 0, $globals['base_url']);
 			}
 		}
 		// Mysql variables to use en join queries
-		/*
-		$db->query("set @user_id = $this->user_id, @ip_int = ".$globals['user_ip_int'].
-			", @ip_int = ".$globals['user_ip_int'].
-			", @enabled_votes = date_sub(now(), interval ". intval($globals['time_enabled_votes']/3600). " hour)".
-			", @site = " . SitesMgr::my_id() );
-		*/
 		$db->initial_query("set @user_id = $this->user_id, @ip_int = ".$globals['user_ip_int'].
 			", @enabled_votes = date_sub(now(), interval ". intval($globals['time_enabled_votes']/3600). " hour)"
 			// ", @site = " . SitesMgr::my_id() 
@@ -105,6 +87,7 @@ class UserAuth {
 				$this->user_id = 0;
 				setcookie ('ukey', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 				$this->SetUserCookie();
+				setcookie ('sticky', '', $globals['now'] - 3600,  $globals['base_url']);
 				break;
 			case 1: // User is logged, update the cookie
 				$this->AddClone();
