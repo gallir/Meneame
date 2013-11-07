@@ -1284,6 +1284,21 @@ class Link extends LCPBase {
 
 	// Thumbnails management
 
+	static function thumb_sizes($key = false) {
+		global $globals;
+
+		$all = array('thumb_medium' => $globals['medium_thumb_size'],
+					'thumb_double'  => $globals['thumb_size'] * 2,
+					'thumb' => $globals['thumb_size']);
+
+		if ($key) {
+			return $all[$key];
+		} else {
+			arsort($all); // Ordered by size, descending
+			return $all;
+		}
+	}
+
 	function get_thumb($debug = false, $url = false) {
 		global $globals;
 
@@ -1311,48 +1326,32 @@ class Link extends LCPBase {
 		if ($img) {
 			Upload::create_cache_dir($this->id);
 			$filepath = Upload::get_cache_dir($this->id) . "/thumb-$this->id.jpg";
+			$oks = 0;
 			if ($img->type == 'local') {
-				$thumbnail = $img->scale($globals['thumb_size']);
-				if($thumbnail != false && $thumbnail->save($filepath)) {
+				foreach (Link::thumb_sizes() as $b => $s) {
+					$filepath = Upload::get_cache_dir($this->id) . "/$b-$this->id.jpg";
+					$thumbnail = $img->scale($s);
+					$res = $thumbnail->save($filepath);
+					if (! $res) continue;
+					$oks++;
 					@chmod($filepath, 0777);
-					$this->thumb_x = $thumbnail->getWidth();
-					$this->thumb_y = $thumbnail->getHeight();
-
-					// If everything goes OK, create a double size thumbnail
-					// TODO: this is a dirty hack for @jordisan, before going on vacation
-					$thumbnail_double = $img->scale($globals['thumb_size'] * 2);
-					$filepath_double = Upload::get_cache_dir($this->id) . "/thumb_double-$this->id.jpg";
-					if($thumbnail_double->save($filepath_double)) {
-						@chmod($filepath_double, 0777);
+					if ($b == 'thumb') {
+						$this->thumb_x = $thumbnail->getWidth();
+						$this->thumb_y = $thumbnail->getHeight();
 					}
-
-					// If everything goes OK, create a bigger thumbnail
-					// TODO: this is a dirty hack for @jordisan, before going on vacation
-					$thumbnail_medium = $img->scale($globals['medium_thumb_size']);
-					$filepath_medium = Upload::get_cache_dir($this->id) . "/thumb_medium-$this->id.jpg";
-					if($thumbnail_medium->save($filepath_medium)) {
-						@chmod($filepath_medium, 0777);
+					if ($b == 'thumb_medium' && $globals['Amazon_S3_media_bucket']) {
+						Media::put($filepath, 'thumbs', "medium_$this->id.jpg");
 					}
-
-					$this->thumb_status='local';
-					// Upload to S3
-					if ($globals['Amazon_S3_media_bucket'] && Media::put($filepath_medium, 'thumbs', "medium_$this->id.jpg")) {
-						// If images are served from S3, upload also smaller thumbs
-						if ($globals['Amazon_S3_media_url'] && Media::put($filepath, 'thumbs', "$this->id.jpg")) {
-							$this->thumb_status = 'remote';
-							Media::put($filepath_double, 'thumbs', "double_$this->id.jpg");
-						}
-					}
+				}
+				if ($oks > 0) {
 					// syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
-					if ($debug)
-						echo "<!-- Meneame, new thumbnail $img->url -->\n";
+					if ($debug) echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				} else {
 					$this->thumb_status = 'error';
 					if ($debug)
 						echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
 				}
 			}
-			// if ($img->video) $this->content_type = 'video';
 		} elseif ($this->thumb_x || $this->thumb_y) {
 			$this->delete_thumb();
 			return false;
@@ -1382,6 +1381,51 @@ class Link extends LCPBase {
 		}
 	}
 
+	function try_thumb($base) {
+    	global $globals;
+
+		$final_size = Link::thumb_sizes($base);
+		if (! $final_size) return false;
+
+		$dir =  Upload::get_cache_dir($this->id);
+		$output_filename = "$base-$this->id.jpg";
+
+		require_once(mnminclude."simpleimage.php");
+		$f = false;
+		$input = new SimpleImage();
+    	foreach (Link::thumb_sizes() as $b => $s) {
+        	if ($b == 'thumb') {
+				$delete = true; // Mark as deleted if the last does not exist
+				$root = "";
+        	} else {
+				$delete = false;
+				$root = $b;
+			}
+			$filename = "$root-$this->id.jpg";
+			// Check first if the file exists
+			if (is_readable("$dir/$filename")) {
+				$f = "$dir/$filename";
+			} else {
+        		$f =  $this->thumb_download($b, $delete);
+			}
+        	if ($f && $input->load($f)) {
+				break;
+			}
+    	}
+		if (! $input->image) return false;
+		if ($input->getWidth() <= $final_size) {
+			if ($f != "$dir/$output_filename") {
+				copy($f, "$dir/$output_filename");
+			}
+		} else {
+			$input->resize($final_size, $final_size);
+			$input->save("$dir/$output_filename");
+		}
+		@chmod($f, 0777);
+		@chmod("$dir/$output_filename", 0777);
+    	return "$dir/$output_filename";
+	}
+
 	function has_thumb($fullurl=true) {
 		global $globals;
 
@@ -1390,16 +1434,9 @@ class Link extends LCPBase {
 		if ($fullurl) $base = $globals['base_static'];
 		else $base = $globals['base_url'];
 
-		$link_year = getdate($this->date);
-		$link_year = $link_year['year'];
-
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
 				$this->thumb_uri = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
-				if ($link_year > 2012) {
-					$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
-					$this->thumb_medium_uri = $this->thumb_medium_url = preg_replace('/\/(\d)/', '/medium_$1', $this->thumb_url);
-				}
 				return $this->thumb_url;
 			}
 			$base_thumb = "thumb-$this->id.jpg";
@@ -1413,6 +1450,7 @@ class Link extends LCPBase {
 				$this->thumb_uri = $path . '/' . $base_thumb;
 				$this->thumb_url = $globals['base_static'] . $this->thumb_uri;
 			} else {
+				// TODO: Use try_thumbs to get all sizes.
 				if ($this->thumb_download()) {
 					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
 					$this->thumb_uri = $path . '/' . $base_thumb;
@@ -1420,7 +1458,7 @@ class Link extends LCPBase {
 				}
 			}
 		}
-		if ($this->thumb_url && $link_year > 2012) {
+		if ($this->thumb_url) {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
 			$this->thumb_medium_uri = $path . '/' . $base_medium_thumb;
 			$this->thumb_medium_url = $globals['base_static'] . $this->thumb_medium_uri;

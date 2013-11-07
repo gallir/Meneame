@@ -36,12 +36,13 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 			$errn = 404;
 			break;
 		case "thumb":
+		case "thumb_double":
 		case "thumb_medium":
 			// Links' thumbnails
 			$base = $parts[0];
 			if (count($parts) == 2 && $parts[1] > 0) {
-				$link = Link::from_db(intval($parts[1]));
-				if ($link && ($pathname = $link->thumb_download($base))) {
+				$link = Link::from_db($parts[1]);
+				if ($link && ($pathname = $link->try_thumb($base))) {
 					header("HTTP/1.0 200 OK");
 					header('Content-Type: image/jpeg');
 					readfile($pathname);
@@ -114,3 +115,4 @@ switch($errn) {
 }
 
 do_error($errp, $errn, true);
+

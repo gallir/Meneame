@@ -49,7 +49,7 @@ class SimpleImage {
 		else return false;
 	}
 
-	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=80) {
+	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75) {
 		if (!$this->image) return false;
 
 		if ($image_type == -1) {
