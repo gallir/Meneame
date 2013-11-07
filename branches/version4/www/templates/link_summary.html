@@ -85,7 +85,7 @@
 
 	<div class="news-submitted">
 		{% if type != 'short' %}
-			<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" alt="" class="lazy"/></a>
+			<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" data-2x="s:-25.:-40." alt="" class="lazy"/></a>
 		{% endif %}
 		{% trans _('por') %} <a href="{% exec get_user_uri self.username, 'history' %}">{{ self.username }}</a>
 		{% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span><br />
@@ -102,7 +102,7 @@
 
 	{% if type == 'full' || type == 'preview' %}
 		{% if self.thumb_url %}
-			<img data-src='{{ self.thumb_url }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/>
+			<img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_url }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/>
 		{% endif %}
 		{{ self.content }}
 		{% if type != 'preview' %}

@@ -36,7 +36,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 			$errn = 404;
 			break;
 		case "thumb":
-		case "thumb_double":
+		case "thumb_2x":
 		case "thumb_medium":
 			// Links' thumbnails
 			$base = $parts[0];

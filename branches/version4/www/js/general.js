@@ -1441,7 +1441,6 @@ var notifier = new function () {
 	var $w = $(window),
 		timer,
 		retina = window.devicePixelRatio > 1,
-		data = retina? "high" : "src",
 		images = this,
 		selector = $(this).selector,
 		loaded;
@@ -1464,18 +1463,29 @@ var notifier = new function () {
 
 	function handler() {
 		var $e = $(this);
-		var source = $e.data(data);
-		source = source || $e.data("src");
-		if (source) {
-			if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
-				if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
-					source = source.substr(1);
+		var source = $e.data("src");
+		if (! source) return;
+
+		if (retina) {
+			var high = $e.data('2x');
+			if (high) {
+				if (high.indexOf("s:") == 0) {
+					var parts = high.split(":");
+					source = source.replace(parts[1], parts[2]);
+				} else {
+					source = high;
 				}
-				source = settings.base_url + source;
 			}
-			$e.attr("src", source);
-			if (typeof callback === "function") callback.call(this);
 		}
+		
+		if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
+			if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
+				source = source.substr(1);
+			}
+			source = settings.base_url + source;
+		}
+		$e.attr("src", source);
+		if (typeof callback === "function") callback.call(this);
 	}
 
 	function unveil() {

@@ -1288,7 +1288,7 @@ class Link extends LCPBase {
 		global $globals;
 
 		$all = array('thumb_medium' => $globals['medium_thumb_size'],
-					'thumb_double'  => $globals['thumb_size'] * 2,
+					'thumb_2x'  => $globals['thumb_size'] * 2,
 					'thumb' => $globals['thumb_size']);
 
 		if ($key) {
@@ -1476,9 +1476,9 @@ class Link extends LCPBase {
 		if ($basename == "thumb_medium") {
 			$s3_base = "medium_";
 			$s3_filename = "medium_$this->id.jpg";
-		}elseif ($basename == "thumb_double") {
-			$s3_base = "double_";
-			$s3_filename = "double_$this->id.jpg";
+		}elseif ($basename == "thumb_2x") {
+			$s3_base = "2x_";
+			$s3_filename = "2x_$this->id.jpg";
 		} else {
 			$s3_base = "";
 			$s3_filename = "$this->id.jpg";
