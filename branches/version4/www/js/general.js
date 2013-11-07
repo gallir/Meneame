@@ -421,10 +421,11 @@ Tooltips functions
 			function (event) {
 				if (event.type == 'mouseenter') {
 					try {
-						args = $(this).attr('class').split(' ')[1].split(':');
-						key = args[0];
-						value = args[1];
-						ajax = ajaxs[key];
+						var args = $(this).attr('class').split(' ');
+						args = args[args.length-1].split(':');
+						var key = args[0];
+						var value = args[1];
+						var ajax = ajaxs[key];
 						init(event);
 						timer = setTimeout(function() {ajax_request(event, ajax, value)}, 200);
 					}
@@ -1169,7 +1170,7 @@ var fancyBox = new function () {
 
 	this.init = function (parent) {
 		this.scan(parent);
-		$('#wrap').on("DOMChanged", function(event, element) {
+		$(window).on("DOMChanged", function(event, element) {
 				fancyBox.scan(element);
 		});
 	};

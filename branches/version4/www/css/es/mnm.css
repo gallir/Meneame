@@ -155,7 +155,7 @@ height:30px;
 background-color:#3c3c3c;
 overflow:hidden;
 white-space:nowrap;
-z-index: 10;
+z-index: 10000;
 user-select: none;
 -moz-user-select: none;
 -webkit-user-select: none;
@@ -169,8 +169,8 @@ user-select: none;
 
 /* top logo */
 #header-top .logo-mnm{
-background: url('../../img/mnm/h9_logo_mnm.png') no-repeat center center;
-background-size: 96px 16px;
+background: url('../../img/mnm/logos-common.png') no-repeat 0 0;
+background-size: 110px 50px;
 height:16px;
 width:100px;
 margin: 5px 0 0 8px;
@@ -179,12 +179,6 @@ font: 0/0 serif;
 text-shadow: none;
 color: transparent;
 cursor: pointer;
-}
-
-/* From http://www.brettjankord.com/2012/11/28/cross-browser-retinahigh-resolution-media-queries/ */
-@media (-webkit-min-device-pixel-ratio: 2), 
-	(min-resolution: 192dpi) {
-	#header-top .logo-mnm { background-image:url('../../img/mnm/h9_logo_mnm.svg'); }
 }
 
 /* editions logo */
@@ -277,8 +271,8 @@ margin-top:4px;
 }
 
 #header-top .userlogin {
-background: url('../../img/common/h9_login.png') no-repeat center center;
-background-size: 20px 20px;
+background: url(../../img/common/icons-common.png) no-repeat 10px -265px;
+background-size: 20px 300px;
 width:40px;
 height:30px;
 margin: 0;
@@ -286,11 +280,6 @@ font: 0/0 serif;
 text-shadow: none;
 color: transparent;
 cursor: pointer;
-}
-
-@media (-webkit-min-device-pixel-ratio: 2), 
-	(min-resolution: 192dpi) {
-	#header-top .userlogin { background-image:url('../../img/common/h9_login.svg'); }
 }
 
 /* second header zone */
@@ -348,8 +337,8 @@ height:24px;
 font-size: 16px;
 padding-top: 0px;
 padding-left: 20px;
-background: #fff url(../../img/common/icons-meta.png) no-repeat 0 -200px;
-background-size: 20px 220px;
+background: #fff url(../../img/common/icons-common.png) no-repeat 0 -200px;
+background-size: 20px 300px;
 }
 
 /* menu 01 header */
@@ -427,8 +416,8 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background: url('../../img/common/icon-menu.png') no-repeat center center;
-background-size: 20px 14px;
+background: url(../../img/common/icons-common.png) no-repeat 0px -225px;
+background-size: 20px 300px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), 
@@ -442,7 +431,7 @@ display: none;
 top: 31px;
 left: 0px;
 overflow: auto;
-z-index: 10;
+z-index: 10001;
 width: auto;
 height:auto;
 white-space:normal;
@@ -730,9 +719,6 @@ clear: both;
 
 .sidebox .thumbnail {
 margin:0px 0px 10px 10px;
-box-shadow: 0 0 5px rgba(0,0,0,0.5);
--moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
--webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
 .sidebox img.thumbnail {
@@ -899,8 +885,9 @@ color: #5073c5;
 #footthingy {
 clear: both;
 margin: 50px 20px 10px 13px;
-padding: 0 1em 0 145px;
-background: url('../../img/mnm/footeli02.png') no-repeat left top;
+padding: 0 1em 0 110px;
+background: url('../../img/mnm/logos-common.png') no-repeat 0 -25px;
+background-size: 110px 50px;
 position: relative;
 overflow: auto;
 }
@@ -986,9 +973,9 @@ margin-bottom: 5px;
 overflow: hidden;
 float: right;
 margin: 3px 3px 3px 5px;
-box-shadow: 0 0 7px rgba(0,0,0,0.5);
--moz-box-shadow: 0 0 7px rgba(0,0,0,0.5);
--webkit-box-shadow: 0 0 7px rgba(0,0,0,0.5);
+box-shadow: 0 0 1px rgba(0,0,0,0.8);
+-moz-box-shadow: 0 0 1px rgba(0,0,0,0.8);
+-webkit-box-shadow: 0 0 1px rgba(0,0,0,0.8);
 }
 
 .news-submitted img {
@@ -1738,8 +1725,8 @@ width: 16px;
 height: 18px;
 cursor: pointer;
 margin-right: 10px;
-background: url(../../img/common/icons-meta.png) no-repeat;
-background-size: 20px 220px;
+background: url(../../img/common/icons-common.png) no-repeat;
+background-size: 20px 300px;
 }
 
 .comment-meta .vote.right {
@@ -1765,9 +1752,9 @@ margin: 0 2px;
 cursor: pointer;
 height: 18px;
 width: 18px;
-background: url(../../img/common/icons-meta.png) no-repeat;
+background: url(../../img/common/icons-common.png) no-repeat;
 background-position: 0px -60px;
-background-size: 20px 220px;
+background-size: 20px 300px;
 }
 
 .favorite {
@@ -1776,8 +1763,8 @@ margin: 0 4px;
 cursor: pointer;
 height: 18px;
 width: 16px;
-background: url(../../img/common/icons-meta.png) no-repeat;
-background-size: 20px 220px;
+background: url(../../img/common/icons-common.png) no-repeat;
+background-size: 20px 300px;
 background-position: 0px -100px;
 }
 
@@ -1812,8 +1799,8 @@ color: #FF9400;
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
-background: url(../../img/common/icons-meta.png) no-repeat 0px -122px;
-background-size: 20px 220px;
+background: url(../../img/common/icons-common.png) no-repeat 0px -122px;
+background-size: 20px 300px;
 padding-left: 14px;
 cursor: pointer;
 padding-top: 4px;
@@ -2218,7 +2205,7 @@ text-align: left;
 position:absolute;
 display:none;
 margin: 0;
-z-index:15;
+z-index:10002;
 border: 1px solid;
 padding: 6px;
 font-size: 95%;
@@ -2510,8 +2497,8 @@ margin: 0 3px;
 padding: 0;
 opacity:0.6;
 vertical-align: text-top;
-background: url(../../img/common/icons-meta.png) no-repeat;
-background-size: 20px 220px;
+background: url(../../img/common/icons-common.png) no-repeat;
+background-size: 20px 300px;
 }
 
 .share_icons span:hover {
@@ -2544,16 +2531,19 @@ display: inline-block;
 height: 18px;
 width: 18px;
 margin: 0px 4px 0px 4px;
-background: url(../../img/common/icons-meta.png) no-repeat 0px -40px;
-background-size: 20px 220px;
+background: url(../../img/common/icons-common.png) no-repeat 0px -40px;
+background-size: 20px 300px;
 overflow: hidden !important;
 color: transparent !important;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink   { 
-		background-image:url(../../img/common/icons-meta-2x.png); 
+	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  {
+		background-image:url(../../img/common/icons-common-2x.png); 
 	}
+	#header-top .logo-mnm, #footthingy { background-image:url('../../img/mnm/logos-common-2x.png'); }
+}
+
 }
 
 

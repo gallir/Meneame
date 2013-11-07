@@ -20,6 +20,7 @@ z-index: 10;
 
 #nav-menu {
 width: 30px;
+background-position: 5px -225px;
 }
 
 #header-center, #header-menu, #sidebar, #edlist, .logo-ed, .wideonly, .wide {

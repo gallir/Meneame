@@ -18,8 +18,10 @@ function formatTitle() {
 	script = 'get_'+t_i_u[0]+'_tooltip.php';
 	if (t_i_u[0] == 'post') {
 		type = '{% trans _('nota de') %}';
+		tooltip_code = 'p';
 	} else {
 		type = '{% trans _('comentario de') %}';
+		tooltip_code = 'c';
 	}
 
 	url = base_url + 'go.php?what=' + t_i_u[0] + '&id=' + t_i_u[1];
@@ -40,7 +42,7 @@ function formatTitle() {
 		}
 	}
 		
-	who = '<div><a class="fancybox" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+image_link+extra+'</div>';
+	who = '<div><a class="fancybox tooltip '+tooltip_code+':'+t_i_u[1]+'" href="'+url+'" target="_blank" style="margin-bottom: 4px">' + type + '&nbsp;' + t_i_u[2] + '</a>'+image_link+extra+'</div>';
 
 	return who;
 }
