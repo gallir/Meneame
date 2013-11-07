@@ -1365,17 +1365,6 @@ border: 1px solid #ffc098;
 background-color: #ff6400;
 }
 
-.news-shakeit .menealo:before {
-content:" ";
-display: block;
-width: 5px;
-height: 4px;
-position: absolute;
-bottom:-5px;
-background-repeat: no-repeat;
-background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAECAYAAABGM/VAAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKHBIXHPd3KbUAAABGSURBVAjXPcixEUBAAEXB91wPWhCpghoUoBkFXC40owZ9ydwXseF6zqyELdC3kBboliv7/TAgtZNWBJMAoHpMjCXUPz+qL+NuF/d3z7O7AAAAAElFTkSuQmCC');
-}
-
 .news-shakeit .menealo a, .news-shakeit .menealo span, .bar .menealo a, .bar .menealo span {
 display: block;
 padding: 2px 0;

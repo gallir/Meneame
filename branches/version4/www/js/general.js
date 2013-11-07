@@ -1189,7 +1189,7 @@ var fancyBox = new function () {
 
 		elements.not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
-			var box = $(this), myHref = box.attr('href'), myTitle;
+			var box = $(this), myHref = box.attr('href'), myTitle, photo = false;
 
 
 			if (box.attr('target')) {
@@ -1216,6 +1216,9 @@ var fancyBox = new function () {
 					};
 				}
 			} else {
+				if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
+					photo = true;
+				}
 				myTitle = box.attr('title');
 				if (myTitle.length > 0 && myTitle.length < 30) title = myTitle;
 				else title = '{% trans _('enlace original') %}';
@@ -1231,6 +1234,7 @@ var fancyBox = new function () {
 			}
 
 			$(this).colorbox({
+				'photo': photo,
 				'href': href,
 				'transition': 'none',
 				'width': width,
