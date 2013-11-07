@@ -45,7 +45,7 @@ echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br
 if ($user->total_images > 0) {
 	echo '<strong>' . _('imágenes') . ':</strong>&nbsp;' . $user->total_images . '<br/>';
 }
-if ($current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_latlng = geo_latlng('user', $user->id)) && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
+if ($globals['google_maps_api'] && $current_user->user_id > 0 && $current_user->user_id != $user->id && ($her_latlng = geo_latlng('user', $user->id)) && ($my_latlng = geo_latlng('user', $current_user->user_id))) {
 	$distance = (int) geo_distance($my_latlng, $her_latlng);
 	echo '<strong>'._('distancia') . ':</strong>&nbsp;' . $distance . '&nbsp;kms<br/>';
 }
