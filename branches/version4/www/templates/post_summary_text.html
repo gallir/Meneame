@@ -1,5 +1,5 @@
 {% if self.show_avatar %}
-	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar lazy" data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}" {# data-high="{% exec get_avatar_url self.author, self.avatar, 80, false %}"#} src="{{ globals.base_static }}img/g.gif" alt="{{ self.username }}"/></a>
+	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar lazy" data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}" data-2x="s:-40.:-80." src="{{ globals.base_static }}img/g.gif" alt="{{ self.username }}"/></a>
 {% endif %}
 
 	{{ self.content }}

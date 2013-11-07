@@ -53,15 +53,19 @@
 
 
 
-		<img 
-		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
-			data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}" src="{{ globals.base_static }}img/g.gif" 
-			class="tooltip u:{{ self.author }} lazy wide" alt="{{ self.username }}"
-		{% else %}
-			data-src="{% exec get_no_avatar_url 20, false %}" src="{{ globals.base_static }}img/g.gif" 
-			class="lazy wide" alt=""
-		{% endif %}
+		{% if ! globals.mobile %}
+			<img 
+			data-2x="s:-20.:-40."
+			{% if self.type != 'admin' AND self.user_level != 'disabled' %}
+				data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
+				src="{{ globals.base_static }}img/g.gif" 
+				class="tooltip u:{{ self.author }} lazy wide" alt="{{ self.username }}"
+			{% else %}
+				data-src="{% exec get_no_avatar_url 20, false %}" src="{{ globals.base_static }}img/g.gif" 
+				class="lazy wide" alt=""
+			{% endif %}
 		/>
+		{% endif %}
 		</div>
 	</div>
 </div>

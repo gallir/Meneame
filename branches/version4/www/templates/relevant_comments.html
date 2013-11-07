@@ -4,6 +4,7 @@
 	<a class="tooltip c:{{ obj.link_id }}-{{ obj.order }}" href="{{obj.link}}" rel="nofollow"><img 
 		src="{{ globals.base_static }}img/g.gif"
 		data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 25, false %}" 
+		data-2x: "s:-25.:-40."
 		alt="" width="25" height="25" 
 		{% if obj.vote < 0 %}
 			class="avatar shadow-red lazy"
@@ -22,6 +23,7 @@
 		<a class="tooltip c:{{ self.link_id }}-{{ self.c_order }}" href="{{self.url}}" rel="nofollow"><img 
 			src="{{ globals.base_static }}img/g.gif"
 			data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" 
+			data-2x: "s:-25.:-40."
 			alt="" width="25" height="25" 
 			{% if self.vote < 0 %}
 				class="avatar shadow-red lazy" 

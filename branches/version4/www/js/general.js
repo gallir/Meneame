@@ -1440,7 +1440,7 @@ var notifier = new function () {
 
 	var $w = $(window),
 		timer,
-		retina = window.devicePixelRatio > 1,
+		retina = window.devicePixelRatio > 1.5,
 		images = this,
 		selector = $(this).selector,
 		loaded;
