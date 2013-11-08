@@ -340,6 +340,7 @@ function get_comment_page_suffix($page_size, $order, $total=0) {
 
 function get_current_page() {
 	if(($var=check_integer('page'))) {
+		if ($var < 0) do_error(_('página inexistente'), 404); 
 		return $var;
 	} else {
 		return 1;
