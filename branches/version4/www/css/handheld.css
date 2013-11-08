@@ -150,8 +150,8 @@ font-weight: normal;
 .ts.nomobile {
 text-decoration: underline;
 font-weight: bold;
-background: url('../../img/common/icons-meta.png') no-repeat 0px -140px;
-background-size: 20px 220px;
+background: url('../../img/common/icons-common.png') no-repeat 0px -140px;
+background-size: 20px 300px;
 width:12px;
 height:18px;
 cursor: pointer;
@@ -160,6 +160,6 @@ overflow: hidden;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .ts.nomobile { background-image:url('../../img/common/icons-meta.png'); }
+    .ts.nomobile { background-image:url('../../img/common/icons-common.png'); }
 }
 
