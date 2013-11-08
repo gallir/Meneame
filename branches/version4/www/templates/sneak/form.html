@@ -92,18 +92,20 @@
     </form>
 
     <script type="text/javascript">
-	$('#sneak-chat').on('submit', function() {$("#comment-input").focus()})
-	.droparea({maxsize: {{ globals.media_max_size }},
-		show_thumb: false,
-		hide_delay: 100,
-		complete:
-			function (r) {
-				if (typeof r.url != 'undefined') {
-					input = $('#comment-input');
-					input.val(input.val() + " " + r.url);
-					input.focus();
+	addPostCode(function () {
+		$('#sneak-chat').on('submit', function() {$("#comment-input").focus()})
+		.droparea({maxsize: {{ globals.media_max_size }},
+			show_thumb: false,
+			hide_delay: 100,
+			complete:
+				function (r) {
+					if (typeof r.url != 'undefined') {
+						input = $('#comment-input');
+						input.val(input.val() + " " + r.url);
+						input.focus();
+					}
 				}
-			}
+		});
 	});
 	</script>
 

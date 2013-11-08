@@ -96,32 +96,12 @@
 <link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
-<script src="{{ globals.jquery }}" type="text/javascript"></script>
-
-<script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
-
-
-{% for js in globals.extra_js %}
-	{% if js|substr:"0, 4" == 'http' || js|substr:"0, 2" == '//' %}
-		<script src="{{js}}" type="text/javascript"></script>
-	{% else %}
-		<script src="{{globals.base_static}}js/{{js}}?{{ globals.v }}" type="text/javascript"></script>
-	{% endif %}
-{% endfor %}
-
+{#
+<script src="{{ globals.base_url }}js/{{globals.js_basic}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
+#}
 
 <script type="text/javascript">
-	base_key="{{globals.security_key}}";
-	{% if globals.link %}link_id = {{ globals.link.id }};{% endif %}
-	user_id = {{ current_user.user_id }};
-	user_login = '{{ current_user.user_login }}';
-	mobile_client = {{ globals.mobile }};
-	{#
-	mnm_start_time=(new Date()).getTime());
-	#}
-	{% if globals.extra_js_text %}
-		{{globals.extra_js_text}}
-	{% endif %}
+	{% include 'js/basic.js' %}
 </script>
 
 {% if globals.extra_head %}

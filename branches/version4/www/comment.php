@@ -104,9 +104,7 @@ Comment::print_form($link, 8);
 echo '</div>';
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
-	echo '<script type="text/javascript">';
-	echo '$(function(){mDialog.notify(\''._('Aviso'). ": $new_comment_error".'\')}, 5);';
-	echo '</script>';
+	add_javascript('mDialog.notify("'._('Aviso'). ": $new_comment_error".'", 5);');
 }
 do_footer();
 exit(0);

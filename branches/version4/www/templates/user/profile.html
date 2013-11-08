@@ -63,7 +63,7 @@
         {% endif %}
 
 		{% if user.friendship > 0 %}
-			<button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="javascript:priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
+			<button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
 		{% endif %}
 
 
@@ -150,7 +150,7 @@
 				},
 				'json');
 	}
-	$("#use_bar").change(use_bar);
+	addPostCode(function () { $("#use_bar").change(use_bar);});
 	</script>
 	</td>
 

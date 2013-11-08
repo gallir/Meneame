@@ -38,14 +38,19 @@
 	<a class="close" href="{{ self.url }}" title="{% trans _('cerrar barra') %}">X</a>
 </div>
 <script type="text/javascript">
+addPostCode(function () {
 	$("#header-logo").attr('href', '{{ self.permalink }}')
 		.attr('href', '{{ self.permalink }}')
 		.attr('title', "{% trans _('ir a') %} «{{ self.title }}» {% trans _('en menéame') %}")
 		.click(function () { location.href='{{ self.permalink }}' })
 		.after($('#bar'));
+});
 </script>
 </div></div>
+{% include 'footer_js.html' %}
+
 <iframe id="content" frameborder="0" noresize="noresize" src="{{ self.url|escape }}"></iframe>
+
 {% try_include 'private/stats.html' %}
 </body>
 </html>

@@ -234,6 +234,8 @@ function do_profile() {
 	$options[_('categorías personalizadas')] = get_user_uri($user->username, 'categories');
 	if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
 		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
+		$globals['extra_js'][] = 'jquery.flot.min.js';
+		$globals['extra_js'][] = 'jquery.flot.time.min.js';
 	}
 
 	$post = new Post;

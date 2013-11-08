@@ -37,22 +37,7 @@
 
 </div>
 
-{# colorbox #}
-{% if globals.fancybox_enabled %}
-	<script type="text/javascript" src="{{globals.base_static}}js/jquery.colorbox-min.js"></script>
-{% endif %}
-
-{% if current_user.user_id %}
-	<script type="text/javascript" src="{{globals.base_static}}js/jquery.autosize.min.js"></script>
-{% endif %}
-
-{% for js in globals.post_js %}
-	{% if js|substr:"0, 4" == 'http' %}
-		<script src="{{js}}" type="text/javascript"></script>
-	{% else %}
-		<script src="{{globals.base_static}}js/{{js}}" type="text/javascript"></script>
-	{% endif %}
-{% endfor %}
+{% include 'footer_js.html' %}
 
 {# warn warn warn
   dont do stats of password recovering pages #}

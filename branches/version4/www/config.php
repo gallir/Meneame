@@ -365,7 +365,7 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 // Main javascript file
 $globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js';
-$globals['js_main'] = 'general.js.php';
+$globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'css/es/mnm.css';
 // Load webfonts from the specified url

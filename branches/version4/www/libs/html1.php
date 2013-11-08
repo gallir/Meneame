@@ -17,7 +17,6 @@ if (!empty($globals['lounge'])) {
 
 $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
-$globals['post_js'] = Array();
 
 
 class MenuOption{

@@ -50,7 +50,8 @@
 	        if (type == "links") { $("#p").attr("disabled", false); $("#s").attr("disabled", false); }
 	        else { $("#p").attr("disabled", true); $("#s").attr("disabled", true); }
         };
-	    $(document).ready(function() {
+
+	    addPostCode(function() {
 	        $("#w").change(do_change);
             do_change();
 	    });
@@ -66,5 +67,5 @@
     {% exec print_result as dummy %}
 </div>
 <script type="text/javascript">
-	$(".ac_user").user_autocomplete();
+	addPostCode(function () { $(".ac_user").user_autocomplete();});
 </script>

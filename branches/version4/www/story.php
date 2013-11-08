@@ -213,9 +213,7 @@ do_header($link->title, 'post');
 
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
-	echo '<script type="text/javascript">';
-	echo '$(function(){mDialog.notify(\''._('Aviso'). ": $new_comment_error".'\', 5)});';
-	echo '</script>';
+	add_javascript('mDialog.notify("'._('Aviso'). ": $new_comment_error".'", 5);');
 }
 
 do_tabs("main",_('noticia'), true);
@@ -291,11 +289,8 @@ case 2:
 	do_comment_pages($link->comments, $current_page, $reverse);
 
 	if ($link->comments > 5) {
-		echo '<script type="text/javascript">';
-		echo '$(window).load(get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].'));';
-		echo '</script>';
+		add_javascript('get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].');');
 	}
-
 
 	Comment::print_form($link);
 	echo '</div>';
@@ -333,6 +328,10 @@ case 6:
 
 case 4:
 	// Show logs
+
+	$globals['extra_js'][] = 'jquery.flot.min.js';
+	$globals['extra_js'][] = 'jquery.flot.time.min.js';
+
 	$logs = $db->get_results("select logs.*, UNIX_TIMESTAMP(logs.log_date) as ts, user_id, user_login, user_level, user_avatar from logs, users where log_type in ('link_new', 'link_publish', 'link_discard', 'link_edit', 'link_geo_edit', 'link_depublished') and log_ref_id=$link->id and user_id= log_user_id order by log_date desc");
 
 	foreach ($logs as $log) {
