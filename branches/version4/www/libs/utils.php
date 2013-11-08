@@ -339,8 +339,7 @@ function get_comment_page_suffix($page_size, $order, $total=0) {
 }
 
 function get_current_page() {
-	if(($var=check_integer('page'))) {
-		if ($var < 0) do_error(_('página inexistente'), 404); 
+	if(($var=check_integer('page')) && $var > 0) {
 		return $var;
 	} else {
 		return 1;
@@ -1377,7 +1376,7 @@ function reject_connection() {
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;
 
-	usleep(300000);
+	usleep(1000000);
 	header('HTTP/1.0 403 ' . 'Too many connections');
 	die;
 }
