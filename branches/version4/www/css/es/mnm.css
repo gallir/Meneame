@@ -2277,10 +2277,11 @@ text-align: right;
 
 .rich-edit-key {
 color: #fff;
-font-size: 10pt;
+font-size: 15px;
 text-align: center;
-padding: 2pt 0 1.5pt 0;
 width: 1.8em;
+height: 25px;
+width: 25px;
 margin-left: 5px;
 float: right;
 }

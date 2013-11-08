@@ -851,7 +851,16 @@ function priv_new(user_id) {
 
 	}
 	$.colorbox({href: url,
-		onComplete: function () { if (user_id > 0) $('#post').focus(); else $("#to_user").focus();},
+		onComplete: function () { 
+			if (user_id > 0) $('#post').focus();
+			else $("#to_user").focus();
+		},
+		'onOpen': function () {
+			historyManager.push('priv_new', $.colorbox.close);
+		},
+		'onClosed': function () {
+			historyManager.pop('priv_new');
+		},
 		overlayClose: false,
 		transition: 'none',
 		title: false,
@@ -1166,6 +1175,40 @@ var navMenu = new function () {
 	};
 })( jQuery );
 
+var historyManager = new function () {
+	var history = [];
+	
+	if (typeof window.history.pushState != "function") return;
+ 
+	console.log("historyManager");
+	window.addEventListener('popstate', onPop);
+
+	this.push = function (name, callback) {
+		if (typeof window.history.pushState != "function") return;
+
+		var state = { id: history.length, name: name, href: location.href};
+		window.history.pushState(state, '', location.href + "#" + name);
+		state.callback = callback;
+		history.push(state);
+		console.log("push: ", state.name + " " + state.id);
+	};
+
+	this.pop = function (name) {
+		if (history.length == 0) return;
+
+		window.history.go(-1);
+	};
+
+	function onPop(event) {
+		if (history.length == 0) return;
+
+		var state = history.pop();
+		if (typeof state.callback == "function") {
+			state.callback();
+		}
+	}
+};
+
 var fancyBox = new function () {
 
 	this.init = function (parent) {
@@ -1191,6 +1234,7 @@ var fancyBox = new function () {
 		elements.not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
 			var box = $(this), myHref = box.attr('href'), myTitle, photo = false;
+			var ajaxName = "iname";
 
 
 			if (box.attr('target')) {
@@ -1200,13 +1244,14 @@ var fancyBox = new function () {
 			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
 				if (mobile_client || is_mobile || touchable) return;
 				iframe = true;
-				title = '<a href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
+				title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 				href = 'http://www.youtube.com/embed/'+v[1];
 				if (typeof v[2] != "undefined") href += v[2];
 				innerWidth = 640;
 				innerHeight = 390;
 				maxWidth = false;
 				maxHeight = false;
+				ajaxName = "youtube";
 
 				myClass = box.attr('class');
 				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
@@ -1223,7 +1268,7 @@ var fancyBox = new function () {
 				myTitle = box.attr('title');
 				if (myTitle.length > 0 && myTitle.length < 30) title = myTitle;
 				else title = '{% trans _('enlace original') %}';
-				title = '<a href="'+myHref+'"'+target+'>'+title+'</a>';
+				title = '<a target="_blank" href="'+myHref+'"'+target+'>'+title+'</a>';
 				href = myHref;
 				if (is_mobile) {
 					width = '100%';
@@ -1253,6 +1298,12 @@ var fancyBox = new function () {
 
 				'onComplete': function() {
 					reportAjaxStats('image', 'single');
+				},
+				'onOpen': function () {
+					historyManager.push(ajaxName, $.colorbox.close);
+				},
+				'onClosed': function () {
+					 historyManager.pop(ajaxName);
 				}
 			}); /* colorbox */
 		}); /* each */
