@@ -420,11 +420,6 @@ background: url(../../img/common/icons-common.png) no-repeat 0px -225px;
 background-size: 20px 300px;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), 
-	(min-resolution: 192dpi) {
-	#nav-menu { background-image:url('../../img/common/icon-menu.svg'); }
-}
-
 #nav-panel {
 position: fixed;
 display: none;
