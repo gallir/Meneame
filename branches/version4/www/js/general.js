@@ -1180,7 +1180,6 @@ var historyManager = new function () {
 	
 	if (typeof window.history.pushState != "function") return;
  
-	console.log("historyManager");
 	window.addEventListener('popstate', onPop);
 
 	this.push = function (name, callback) {
@@ -1190,7 +1189,6 @@ var historyManager = new function () {
 		window.history.pushState(state, '', location.href + "#" + name);
 		state.callback = callback;
 		history.push(state);
-		console.log("push: ", state.name + " " + state.id);
 	};
 
 	this.pop = function (name) {
