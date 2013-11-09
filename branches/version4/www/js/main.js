@@ -1,3 +1,10 @@
+var base_url="{{ globals.base_url }}",
+    base_cache="{{ globals.cache_dir }}",
+    version_id="v_{{ globals.v }}",
+    base_static="{{ globals.base_static_noversion }}",
+    is_mobile={{ globals.mobile }},
+    touchable=false;
+
 var now = (new Date);
 var now_ts = now.getTime();
 
@@ -533,7 +540,7 @@ var mDialog = new function() {
 	};
 
 	this.confirm = function(message, callback_yes, callback_no) {
-		if (mobile_client) {
+		if (is_mobile) {
 			this.std_confirm(message, callback_yes, callback_no);
 			return;
 		}
@@ -555,7 +562,7 @@ var mDialog = new function() {
 	};
 
 	this.prompt = function(message, content, callback_ok, callback_cancel) {
-		if (mobile_client) {
+		if (is_mobile) {
 			this.std_prompt(message, content, callback_ok, callback_cancel);
 			return;
 		}
@@ -579,7 +586,7 @@ var mDialog = new function() {
 	};
 
 	this.alert = function(content, callback_ok) {
-		if (mobile_client) {
+		if (is_mobile) {
 			this.std_alert(content, callback_ok);
 			return;
 		}
@@ -596,7 +603,7 @@ var mDialog = new function() {
 
 
 	this.content = function(content, close_seconds) {
-		if (mobile_client) {
+		if (is_mobile) {
 			this.std_alert(content, false);
 			return;
 		}
@@ -605,7 +612,7 @@ var mDialog = new function() {
 	};
 
 	this.notify = function(content, close_seconds) {
-		if (mobile_client) {
+		if (is_mobile) {
 			this.std_alert(content, false);
 			return;
 		}
@@ -649,7 +656,7 @@ var mDialog = new function() {
 	};
 
 	this.init = function() {
-		if (mobile_client) return;
+		if (is_mobile) return;
 		this.divBox = $("<div>").attr({ id: 'mDialog_box' });
 		this.divHeader = $("<div>").attr({ id: 'mDialog_header' });
 		this.divContent = $("<div>").attr({ id: 'mDialog_content' });
@@ -1097,7 +1104,7 @@ var navMenu = new function () {
 			'show_thumb': true,
 			'hide_delay': 2000,
 			'backgroundColor': '#AFFBBB',
-			'backgroundImage': base_static +'img/common/picture_simple01.png'
+			'backgroundImage': base_static + version_id + '/img/common/picture_simple01.png'
 		};
 
 		this.each(function(){
@@ -1228,7 +1235,7 @@ var fancyBox = new function () {
 			}
 
 			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
-				if (mobile_client || is_mobile || touchable) return;
+				if (is_mobile || touchable) return;
 				iframe = true;
 				title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 				href = 'http://www.youtube.com/embed/'+v[1];
@@ -1478,6 +1485,8 @@ var notifier = new function () {
 	var settings = {
 		threshold: 10,
 		base_url: '',
+		version: false,
+		cache_dir: false
 	};
 
 	var $w = $(window),
@@ -1490,6 +1499,16 @@ var notifier = new function () {
 	if (options) {
 		$.extend(settings, options);
 	}
+
+	if (settings.base_url.charAt(settings.base_url.length-1) != '/') {
+		settings.base_url += "/";
+	}
+
+	var cache_regex;
+	if (settings.cache_dir) {
+		cache_regex = new RegExp("^"+settings.cache_dir+"/");
+	}
+
 
 	this.one("unveil", handler);
 
@@ -1508,6 +1527,8 @@ var notifier = new function () {
 		var source = $e.data("src");
 		if (! source) return;
 
+		if (source.charAt(0) == "/") source = source.substr(1);
+
 		if (retina) {
 			var high = $e.data('2x');
 			if (high) {
@@ -1520,11 +1541,13 @@ var notifier = new function () {
 			}
 		}
 		
-		if (settings.base_url.length > 1 && source.substr(0,4) != 'http') {
-			if (settings.base_url.charAt(settings.base_url.length-1) == '/' && source.charAt(0) == '/') {
-				source = source.substr(1);
+		var version_prefix;
+		var base_url = settings.base_url;
+		if (settings.version && settings.base_url.length > 1 && source.substr(0,4) != 'http') {
+			if (! cache_regex || ! cache_regex.test(source)) {
+				base_url += settings.version + "/";
 			}
-			source = settings.base_url + source;
+			source = base_url + source;
 		}
 		$e.attr("src", source);
 		if (typeof callback === "function") callback.call(this);
@@ -1581,34 +1604,7 @@ $(document).ready(function () {
 	}
 
 
-	if ((m = location.href.match(/#([\w\-]+)$/))) {
-		target = $('#'+m[1]);
-		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
-		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
-			if ( target.length > 0) {
-				var e = $("#"+m[1]+">:first");
-				e.css("border-style","solid").css("border-width","1px");
-				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
-				if (window.location.hash && $('#header-top').css('position') == 'fixed') {
-					$('html, body').animate({
-						scrollTop: e.offset().top - $('#header-top').height() - 10
-					}, 500);
-				}
-			} else {
-				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
-				canonical = $("link[rel^='canonical']");
-				if (canonical.length > 0) {
-					self.location = canonical.attr("href") + "/000" + m2[1];
-					return;
-				}
-			}
-		} else {
-			target.hide();
-			target.fadeIn(1000);
-		}
-	}
-
-	$('img.lazy').unveil({base_url: base_static, threshold: 100});
+	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
 
 	notifier.init();
 	navMenu.init();
@@ -1618,5 +1614,37 @@ $(document).ready(function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});
 
+});
+
+$(window).load(function () {
+	if (location.hash && (m = location.hash.match(/#([\w\-]+)$/)) && (target = $('#'+m[1])).length > 0 ) {
+
+		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
+		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
+			/* it's a comment */
+			if ( target.length > 0) {
+				var e = $("#"+m[1]+">:first");
+				e.css("border-style","solid").css("border-width","1px").css("border-color", "#FF6400");
+				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
+			} else {
+				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
+				canonical = $("link[rel^='canonical']");
+				if (canonical.length > 0) {
+					self.location = canonical.attr("href") + "/000" + m2[1];
+					return;
+				}
+			}
+		}
+		target.css('opacity', 0);
+		var scroll;
+		if ($('#header-top').css('position') == 'fixed') {
+			scroll = target.offset().top - $('#header-top').height() - 10;
+			
+		} else {
+			scroll = target.offset().top - 10;
+		}
+		$('html, body').animate({scrollTop: target.offset().top - $('#header-top').height() - 10}, {duration: 1000, queue: false});
+		target.animate({opacity: 1.0}, 1000);
+	}
 });
 

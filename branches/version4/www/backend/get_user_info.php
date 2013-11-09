@@ -40,7 +40,9 @@ echo '<br/>';
 if ($user->names) echo '<strong>' . _('nombre') . ':</strong>&nbsp;' . $user->names . '<br/>';
 if ($user->url) echo '<strong>' . _('web') . ':</strong>&nbsp;' . $user->url . '<br/>';
 echo '<strong>' . _('karma') . ':</strong>&nbsp;' . $user->karma . '<br/>';
+/*
 echo '<strong>' . _('ranking') . ':</strong>&nbsp;#' . $user->ranking() . '<br/>';
+*/
 echo '<strong>' . _('desde') . ':</strong>&nbsp;' . get_date($user->date) . '<br/>';
 if ($user->total_images > 0) {
 	echo '<strong>' . _('imágenes') . ':</strong>&nbsp;' . $user->total_images . '<br/>';

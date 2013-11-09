@@ -67,22 +67,22 @@
 {% endif %}
 
 {% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_main}}?v={{globals.v}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{globals.css_main}}"/>
 {% endif %}
 
 {% if globals.css_color %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}{{globals.css_color}}?v={{globals.v}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{globals.css_color}}"/>
 {% endif %}
 
 {# Definitions for mobile, iPad and TVs #}
 {% if globals.mobile %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css?v={{globals.v}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
 {% else %}
-	<link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css?v={{ globals.v }}" />
+	<link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css" />
 {% endif %}
 
 {% for css in globals.extra_css %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}?v={{globals.v}}"/>
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
 {% endfor %}
 
 {% if globals.favicon %}
@@ -97,7 +97,7 @@
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
 {#
-<script src="{{ globals.base_url }}js/{{globals.js_basic}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script>
 #}
 
 <script type="text/javascript">

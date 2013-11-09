@@ -492,7 +492,7 @@ function get_avatar_url($user, $avatar, $size, $fullurl = true) {
 			return $globals['Amazon_S3_media_url']."/avatars/$user-$avatar-$size.jpg";
 		} elseif ($globals['cache_dir']) {
 
-			if ($fullurl) $base = $globals['base_static'];
+			if ($fullurl) $base = $globals['base_static_noversion'];
 			else $base = $globals['base_url'];
 
 			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";

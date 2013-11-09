@@ -106,10 +106,12 @@ if($_SERVER['HTTP_HOST']) {
 }
 
 if (!empty($globals['static_server']) && ! $globals['https']) {
-	$globals['base_static'] = $globals['static_server'] . $globals['base_url'];
+	$globals['base_static_noversion'] = $globals['static_server'].$globals['base_url'];
 } else {
-	$globals['base_static'] = $globals['url'].'://'.$globals['server_name'].$globals['base_url'];
+	$globals['base_static_noversion'] = $globals['url'].'://'.$globals['server_name'].$globals['base_url'];
 }
+
+$globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
 
 $globals['url'] .= '//'.$globals['server_name'].htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
 
