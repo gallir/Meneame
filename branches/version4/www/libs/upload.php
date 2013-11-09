@@ -174,10 +174,33 @@ class Upload {
 		}
 	}
 
-	function create_thumbs() {
-		foreach (Upload::thumb_sizes() as $k => $s) {
-			$this->create_thumb($k);
+	function create_thumbs($key = false) {
+		$pathname = $this->pathname();
+
+		if (! file_exists($pathname)) {
+			if (! $this->restore()) return false;
 		}
+
+		require_once(mnminclude."simpleimage.php");
+		$thumb = new SimpleImage();
+		$thumb->load($pathname);
+		if ( ! $thumb->load($pathname)) {
+			$alternate_image = mnmpath . "/img/common/picture01-40x40.png";
+			syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
+			if (!$thumb->load($alternate_image)) return false;
+		}
+
+		$res = 0;
+		foreach (Upload::thumb_sizes() as $k => $s) {
+			if ($key && $key != $k) continue; // Generated just what was requested
+			$thumb->resize($s, $s, true);
+			if ($thumb->save($this->thumb_pathname($k))) {
+				$res++;
+				@chmod($this->thumb_pathname($k), 0777);
+				$this->thumb = $thumb;
+			}
+		}
+		return $res;
 	}
 
 	function from_temporal($file, $type = false) {
@@ -296,38 +319,26 @@ class Upload {
 		return $this->path() . "/$key-$this->type-$this->id.jpg";
 	}
 
-	function create_thumb($key = 'media_thumb') {
-		$pathname = $this->pathname();
-
-		if (! ($size = Upload::thumb_sizes($key))) return false;
-
-		if (! file_exists($pathname)) {
-			if (! $this->restore()) return false;
-		}
-
-		require_once(mnminclude."simpleimage.php");
-		$thumb = new SimpleImage();
-		$thumb->load($pathname);
-		if ( ! $thumb->load($pathname)) {
-			$alternate_image = mnmpath . "/img/common/picture01-40x40.png";
-			syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
-			if (!$thumb->load($alternate_image)) return false;
-		}
-		$thumb->resize($size, $size, true);
-		if ($thumb->save($this->thumb_pathname($key))) {
-			@chmod($this->thumb_pathname($key), 0777);
-			$this->thumb = $thumb;
-			return true;
-		}
-		return false;
-	}
-
 	function check_size_and_rotation($pathname) {
 		require_once(mnminclude."simpleimage.php");
+
+		$max_size = 2048;
+
 		$image = new SimpleImage();
 		if ($image->rotate_exif($pathname)) {
 			$image->save($pathname);
 		}
+		if (filesize($pathname) > 1024*1024) { // Bigger than 1 MB
+			if ($image->load($pathname) &&  ($image->getWidth() > $max_size || $image->getHeight())) {
+				if ($image->getWidth() > $image->getHeight) {
+					$image->resizeToWidth($max_size);
+				} else {
+					$image->resizeToHeight($max_size);
+				}
+				$image->save($pathname);
+			}
+		}
+			
 		@chmod($pathname, 0777);
 		return true;
 	}

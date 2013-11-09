@@ -27,7 +27,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 			if ($parts[1] != 'post' && $parts[1] != 'comment') break;
 			$media = new Upload($parts[1], $parts[2], 0);
 			if (! $media->read()) break;
-			if ($media->create_thumb($parts[0])) {
+			if ($media->create_thumbs($parts[0])) {
 				header("HTTP/1.0 200 OK");
 				header('Content-Type: image/jpeg');
 				$media->thumb->output();
