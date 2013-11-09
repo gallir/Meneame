@@ -32,7 +32,7 @@
 	{% endif %}
 />
 
-<textarea style="clear: both" name="post" rows="6" cols="40" id="post" class="droparea"
+<textarea style="clear: both" name="post" rows="5" cols="40" id="post" class="droparea"
 {% if ! globals.mobile %}
 	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
 {% endif %}

@@ -856,7 +856,7 @@ function priv_new(user_id) {
 		overlayClose: false,
 		transition: 'none',
 		title: false,
-		scrolling: false,
+		scrolling: true,
 		open: true,
 		width: w,
 		height: h
