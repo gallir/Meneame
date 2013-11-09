@@ -13,6 +13,20 @@ class Upload {
 		return $globals['scheme'].'://'.get_server_name().$globals['base_url']."backend/media.php?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
 	}
 
+	static function thumb_sizes($key = false) {
+		global $globals;
+
+		$all = array('media_thumb' => $globals['media_thumb_size'],
+					'media_thumb_2x' => $globals['media_thumb_size'] * 2);
+
+		if ($key) {
+			return $all[$key];
+		} else {
+			arsort($all); // Ordered by size, descending
+			return $all;
+		}
+	}
+
 	static function get_cache_relative_dir($key = false) {
 		global $globals;
 
@@ -37,7 +51,6 @@ class Upload {
 
 		if (file_exists(Upload::get_cache_dir($key))) return true;
 		$dir = Upload::get_cache_dir($key);
-		syslog(LOG_INFO, "Meneame, creating cache dir " . $dir);
 		$old_mask = umask(0);
 		$res = @mkdir($dir, 0777, true);
 		umask($old_mask);
@@ -128,9 +141,6 @@ class Upload {
 				$extra_where = 'AND `media.to` = comments.comment_id';
 				break;
 		}
-				
-
-
 			
 		if(($result = $db->get_row("SELECT type, id, version, user, `to`, access, mime, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
@@ -144,14 +154,30 @@ class Upload {
 	function delete() {
 		global $db, $globals;
 
+		// Check is read to read all data
+		if (! $this->read) $this->read();
+		if (! $this->read) return false;
+
 		$this->clean();
 		$this->delete_backup();
 		$db->query("delete from media where type = '$this->type' and id = $this->id and version = $this->version");
 	}
 
 	function clean() {
+		$this->delete_thumbs();
 		@unlink($this->pathname());
-		@unlink($this->thumb_pathname());
+	}
+
+	function delete_thumbs() {
+		foreach (Upload::thumb_sizes() as $k => $s) {
+			@unlink($this->thumb_pathname($k));
+		}
+	}
+
+	function create_thumbs() {
+		foreach (Upload::thumb_sizes() as $k => $s) {
+			$this->create_thumb($k);
+		}
 	}
 
 	function from_temporal($file, $type = false) {
@@ -166,9 +192,10 @@ class Upload {
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
+			@chmod($this->pathname(), 0777);
 			$this->check_size_and_rotation($this->pathname());
-			@unlink($this->thumb_pathname());
-			$this->create_thumb($globals['media_thumb_size']);
+			$this->delete_thumbs();
+			$this->create_thumbs();
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
@@ -191,25 +218,14 @@ class Upload {
 		Upload::create_cache_dir($this->id);
 		if (rename($pathname, $this->pathname())) {
 			$this->check_size_and_rotation($this->pathname());
-			@unlink($this->thumb_pathname());
+			$this->delete_thumbs();
 
 			// Check if it exists a thumb adn save it in jpg
 			$thumbname = Upload::get_cache_dir() . "/tmp/tmp_thumb-$filename";
 			if (file_exists($thumbname)) {
-				if (preg_match('/\.(jpeg|jpg)$/i', $filename)) {
-					// If it's already jpg, just rename it
-					rename($thumbname, $this->thumb_pathname());
-				} else {
-					// else convert it
-					require_once(mnminclude."simpleimage.php");
-					$thumb = new SimpleImage();
-					$thumb->load($thumbname);
-					$thumb->save($this->thumb_pathname());
-				}
-			} else {
-				$this->create_thumb($globals['media_thumb_size']);
+				@unlink($thumbname);
 			}
-
+			$this->create_thumbs();
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
@@ -262,7 +278,9 @@ class Upload {
 
 		if ($globals['Amazon_S3_media_bucket']) {
 			Upload::create_cache_dir($this->id);
-			return Media::get($this->filename(), $this->type, $this->pathname());
+			$res = Media::get($this->filename(), $this->type, $this->pathname());
+			@chmod($this->pathname(), 0777);
+			return $res;
 		}
 	}
 
@@ -274,19 +292,20 @@ class Upload {
 		}
 	}
 
-	function thumb_pathname() {
-		return $this->path() . "/media_thumb-$this->type-$this->id.jpg";
+	function thumb_pathname($key = 'media_thumb') {
+		return $this->path() . "/$key-$this->type-$this->id.jpg";
 	}
 
-	function create_thumb($x = 40, $y = false) {
+	function create_thumb($key = 'media_thumb') {
 		$pathname = $this->pathname();
+
+		if (! ($size = Upload::thumb_sizes($key))) return false;
 
 		if (! file_exists($pathname)) {
 			if (! $this->restore()) return false;
 		}
 
 		require_once(mnminclude."simpleimage.php");
-		if (! $y) $y = $x;
 		$thumb = new SimpleImage();
 		$thumb->load($pathname);
 		if ( ! $thumb->load($pathname)) {
@@ -294,8 +313,9 @@ class Upload {
 			syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
 			if (!$thumb->load($alternate_image)) return false;
 		}
-		$thumb->resize($x, $y, true);
-		if ($thumb->save($this->thumb_pathname())) {
+		$thumb->resize($size, $size, true);
+		if ($thumb->save($this->thumb_pathname($key))) {
+			@chmod($this->thumb_pathname($key), 0777);
 			$this->thumb = $thumb;
 			return true;
 		}
@@ -308,6 +328,7 @@ class Upload {
 		if ($image->rotate_exif($pathname)) {
 			$image->save($pathname);
 		}
+		@chmod($pathname, 0777);
 		return true;
 	}
 }

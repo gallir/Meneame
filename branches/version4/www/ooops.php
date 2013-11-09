@@ -22,11 +22,12 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 	$parts = explode('-', $base_filename);
 	switch ($parts[0]) {
 		case "media_thumb":
+		case "media_thumb_2x":
 			// Comments' and posts' thumnails
 			if ($parts[1] != 'post' && $parts[1] != 'comment') break;
 			$media = new Upload($parts[1], $parts[2], 0);
 			if (! $media->read()) break;
-			if ($media->create_thumb($globals['media_thumb_size'])) {
+			if ($media->create_thumb($parts[0])) {
 				header("HTTP/1.0 200 OK");
 				header('Content-Type: image/jpeg');
 				$media->thumb->output();
