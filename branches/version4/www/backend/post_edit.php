@@ -136,7 +136,7 @@ function store_image($post) {
 	} elseif(!empty($_FILES['image']['tmp_name'])) {
 		$post->store_image($_FILES['image']);
 	}
+	$post->media_date = time(); // To show the user the new thumbnail
 }
-
 
 ?>
