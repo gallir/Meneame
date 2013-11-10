@@ -286,6 +286,10 @@ class Upload {
 		return readfile($this->pathname());
 	}
 
+	function filesize() {
+		return filesize($this->pathname());
+	}
+
 
 	// Call S3 functions
 	function backup() {

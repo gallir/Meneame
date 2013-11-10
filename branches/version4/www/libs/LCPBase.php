@@ -124,7 +124,6 @@ class LCPBase {
 		if ($media->from_temporal($file, 'image')) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;
-			syslog(LOG_INFO, "To: $media->to, access: $media->access");
 			return true;
 		}
 		return false;

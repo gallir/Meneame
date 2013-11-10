@@ -27,13 +27,11 @@ if (! empty($_REQUEST['op'])) {
 if (! $media->read()) not_found();
 
 if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_user->user_id > 0) {
-	//header("HTTP/1.0 403 Not authorized");
 	error_image(_('Debe estar autentificado'));
 	die;
 } elseif ($globals['bot']
 		|| ($media->type == 'private' 
-				&& ($current_user->user_id <= 0 
-					|| ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) ) {
+			&& ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) ) {
 	error_image(_('No está autorizado'));
 	die;
 }
@@ -42,13 +40,18 @@ header("Content-Type: $media->mime");
 header('Last-Modified: ' . date('r', $media->date));
 header('Cache-Control: max-age=3600');
 if ($media->file_exists() && ! empty($globals['xsendfile'])) {
+	/* Be careful with privacy and rules in the server
+	* Good rule for nginx:
+    	location ~ \.media$ {
+        	internal;
+    	}
+	*/
 	header($globals['xsendfile'].': '.$media->url());
-} else {
-	if ($media->size > 0) {
-		header("Content-Length: $media->size");
-	}
-	$media->readfile();
+	die;
 }
+
+header("Content-Length: " .$media->filesize());
+$media->readfile();
 exit(0);
 
 function error_image($message) {
