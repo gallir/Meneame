@@ -212,7 +212,6 @@ class Upload {
 
 		if ($type && ! preg_match("/^$type\/[^ ]+$/", $file['type'])) return false;
 		$this->mime = $file['type'];
-		$this->size = $file['size'];
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
@@ -237,7 +236,6 @@ class Upload {
 		Upload::current_user_limit_exceded(filesize($pathname));
 
 		$this->mime = $type;
-		$this->size = filesize($pathname);
 		$this->user = $current_user->user_id;
 		Upload::create_cache_dir($this->id);
 		if (rename($pathname, $this->pathname())) {
@@ -327,12 +325,19 @@ class Upload {
 	function check_size_and_rotation($pathname) {
 		require_once(mnminclude."simpleimage.php");
 
+		$original = $pathname;
+		$tmp = "$pathname.tmp";
+
 		$max_size = 2048;
 
 		$image = new SimpleImage();
 		if ($image->rotate_exif($pathname)) {
-			$image->save($pathname);
+			if ($image->save($tmp)) {
+				$pathname = $tmp;
+				clearstatcache(); 
+			}
 		}
+
 		if (filesize($pathname) > 1024*1024) { // Bigger than 1 MB
 			if ($image->load($pathname) &&  ($image->getWidth() > $max_size || $image->getHeight())) {
 				if ($image->getWidth() > $image->getHeight) {
@@ -340,11 +345,23 @@ class Upload {
 				} else {
 					$image->resizeToHeight($max_size);
 				}
-				$image->save($pathname);
+			}
+			if ($image->save($tmp)) {
+				$pathname = $tmp;
+				clearstatcache(); 
 			}
 		}
-			
-		@chmod($pathname, 0777);
+
+		if ($pathname != $original && file_exists($pathname)) {
+			 if (! @rename($pathname, $original)) {
+				syslog(LOG_INFO, "Error renaming file $pathname -> $original");
+				@unlink($pathname);
+			}
+		}
+
+		$this->size = filesize($original);
+		@chmod($original, 0777);
+
 		return true;
 	}
 }
