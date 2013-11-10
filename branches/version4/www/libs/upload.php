@@ -175,6 +175,7 @@ class Upload {
 	}
 
 	function create_thumbs($key = false) {
+		if ($this->type == 'private' || $this->access == 'private') return false;
 		$pathname = $this->pathname();
 
 		if (! file_exists($pathname)) {
