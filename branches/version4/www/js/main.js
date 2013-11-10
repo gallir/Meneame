@@ -1259,7 +1259,7 @@ var fancyBox = new function () {
 					photo = true;
 				}
 				myTitle = box.attr('title');
-				if (myTitle.length > 0 && myTitle.length < 30) title = myTitle;
+				if (myTitle && myTitle.length > 0 && myTitle.length < 30) title = myTitle;
 				else title = '{% trans _('enlace original') %}';
 				title = '<a target="_blank" href="'+myHref+'"'+target+'>'+title+'</a>';
 				href = myHref;

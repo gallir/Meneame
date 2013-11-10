@@ -60,7 +60,7 @@ class LinkMobile extends Link{
 	}
 
 	function print_problem_form() {
-		global $current_user, $db, $anon_karma, $anonnymous_vote, $globals, $site_key;
+		global $current_user, $db, $globals, $site_key;
 
 		echo '<form  class="tool" action="" id="problem-'.$this->id.'">';
 		echo '<select '.$status.' name="ratings"  onchange="';

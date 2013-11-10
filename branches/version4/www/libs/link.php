@@ -692,7 +692,7 @@ class Link extends LCPBase {
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
 		$this->url_str	= preg_replace('/^www\./', '', parse_url($this->url, 1));
-		$this->thumb_url	= $this->has_thumb(false);
+		$this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) &&
@@ -1426,13 +1426,12 @@ class Link extends LCPBase {
     	return "$dir/$output_filename";
 	}
 
-	function has_thumb($fullurl=true) {
+	function has_thumb() {
 		global $globals;
 
-		if ($this->thumb_url) return $this->thumb_url;
+		if ($this->thumb_url) $this->thumb_url;
 
-		if ($fullurl) $base = $globals['base_static'];
-		else $base = $globals['base_url'];
+		$base = $globals['base_static_noversion'];
 
 		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
@@ -1448,20 +1447,20 @@ class Link extends LCPBase {
 			$file_thumb = $local_dir.'/'.$base_thumb;
 			if ($globals['cache_redirector'] || is_readable($file_thumb)) {
 				$this->thumb_uri = $path . '/' . $base_thumb;
-				$this->thumb_url = $globals['base_static'] . $this->thumb_uri;
+				$this->thumb_url = $base . $this->thumb_uri;
 			} else {
 				// TODO: Use try_thumbs to get all sizes.
 				if ($this->thumb_download()) {
 					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
 					$this->thumb_uri = $path . '/' . $base_thumb;
-					$this->thumb_url = $globals['base_static'] . $this->thumb_uri;
+					$this->thumb_url = $base . $this->thumb_uri;
 				}
 			}
 		}
 		if ($this->thumb_url) {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
 			$this->thumb_medium_uri = $path . '/' . $base_medium_thumb;
-			$this->thumb_medium_url = $globals['base_static'] . $this->thumb_medium_uri;
+			$this->thumb_medium_url = $base . $this->thumb_medium_uri;
 		}
 
 		return $this->thumb_url;

@@ -434,10 +434,10 @@ $globals['new_source_min_hours'] = 48;
 
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
-$anon_to_user_votes = 0.5;
+$globals['anon_to_user_votes'] = 0.2;
 $site_key = 12345679;
 // Check this
-$anon_karma	= 4;
+$globals['anon_karma']	= 4;
 
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';

@@ -199,9 +199,9 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 
 if ($link->has_thumb()) {
 	if ($link->thumb_medium_url) {
-		$globals['thumbnail'] = $link->thumb_medium_url;
+		$globals['thumbnail'] = $globals['base_static_noversion']. $link->thumb_medium_uri;
 	} else {
-		$globals['thumbnail'] = $link->thumb_url;
+		$globals['thumbnail'] = $globals['base_static_noversion']. $link->thumb_uri;
 	}
 } elseif ($link->avatar) {
 	$globals['thumbnail'] = get_avatar_url($link->author, $link->avatar, 80);
