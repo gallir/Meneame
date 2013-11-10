@@ -1,4 +1,7 @@
 /* Definitions for mobile, iPad and TVs */
+body {
+background: #fff;
+}
 
 /* Avoid auto zoom */
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="email"], input[type="url"], input[type="search"] {

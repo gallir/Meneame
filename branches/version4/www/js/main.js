@@ -1227,7 +1227,7 @@ var fancyBox = new function () {
 		elements.not('[class*=" cbox"]').each(function(i) {
 			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
 			var box = $(this), myHref = box.attr('href'), myTitle, photo = false;
-			var ajaxName = "iname";
+			var ajaxName = "image";
 
 
 			if (box.attr('target')) {

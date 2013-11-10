@@ -1008,14 +1008,15 @@ function clear_invisible_unicode($input){
 
 	$invisible = array(
 	"\x1F",
+	"\x7f", // (U+007f)
 	"\xc2\xad", // 'SOFT HYPHEN' (U+00AD)
-	"\xc2\x81", // SET TRANSMIT STATE' (U+0081)
-	"\xc2\x91", // SET TRANSMIT STATE' (U+0091)
-	"\xc2\x92", // SET TRANSMIT STATE' (U+0092)
-	"\xc2\x93", // SET TRANSMIT STATE' (U+0093)
-	"\xc2\x94", // 'CANCEL CHARACTER' (U+0094)
-	"\xc2\x9d", // 'CANCEL CHARACTER' (U+009D)
-	"\xcc\xb7", // 'COMBINING SHORT SOLIDUS OVERLAY' (U+0337)
+	"\xc2\x81", // (U+0081)
+	"\xc2\x91", // (U+0091)
+	"\xc2\x92", // (U+0092)
+	"\xc2\x93", // (U+0093)
+	"\xc2\x94", // (U+0094)
+	"\xc2\x9d", // (U+009D)
+	"\xcc\xb7", // (U+0337)
 	"\xcc\xb8", // 'COMBINING LONG SOLIDUS OVERLAY' (U+0338)
 	"\xcd\x8f", // 'COMBINING GRAPHEME JOINER' (U+034F)
 	"\xe1\x85\x9f", // 'HANGUL CHOSEONG FILLER' (U+115F)

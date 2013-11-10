@@ -102,7 +102,7 @@
 
 	{% if type == 'full' || type == 'preview' %}
 		{% if self.thumb_uri %}
-			<a href="{{ self.thumb_medium_url }}" class="fancybox" title="{% trans _('más grande') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
+			<a href="{{ self.thumb_medium_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
 		{% endif %}
 		{{ self.content }}
 		{% if type != 'preview' %}
