@@ -117,9 +117,14 @@ class LCPBase {
 
 	function store_image($type, $file) {
 		$media = new Upload($type, $this->id, 0);
+		if ($type == 'private') {
+			$media->to = $this->to;
+			$media->access = 'private';
+		}
 		if ($media->from_temporal($file, 'image')) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;
+			syslog(LOG_INFO, "To: $media->to, access: $media->access");
 			return true;
 		}
 		return false;
@@ -127,6 +132,10 @@ class LCPBase {
 
 	function move_tmp_image($type, $file, $mime) {
 		$media = new Upload($type, $this->id, 0);
+		if ($type == 'private') {
+			$media->to = $this->to;
+			$media->access = 'private';
+		}
 		if ($media->from_tmp_upload($file, $mime)) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;
