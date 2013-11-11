@@ -1605,8 +1605,7 @@ $(document).ready(function () {
 
 
 	if (location.hash && (m = location.hash.match(/#([\w\-]+)$/)) && (target = $('#'+m[1])).length > 0 ) {
-
-		target.css('opacity', 0);
+		target.css('opacity', 0.2);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
 		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
 			/* it's a comment */
