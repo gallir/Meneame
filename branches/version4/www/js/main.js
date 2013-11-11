@@ -1604,27 +1604,15 @@ $(document).ready(function () {
 	}
 
 
-	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
-
-	notifier.init();
-	navMenu.init();
-	$.tooltip();
-	fancyBox.init();
-	$('.showmytitle').on('click', function () {
-		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
-	});
-
-});
-
-$(window).load(function () {
 	if (location.hash && (m = location.hash.match(/#([\w\-]+)$/)) && (target = $('#'+m[1])).length > 0 ) {
 
+		target.css('opacity', 0);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
 		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
 			/* it's a comment */
 			if ( target.length > 0) {
 				var e = $("#"+m[1]+">:first");
-				e.css("border-style","solid").css("border-width","1px").css("border-color", "#FF6400");
+				e.css("border-style","solid").css("border-width","1px");
 				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
 			} else {
 				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
@@ -1635,16 +1623,25 @@ $(window).load(function () {
 				}
 			}
 		}
-		target.css('opacity', 0);
-		var scroll;
-		if ($('#header-top').css('position') == 'fixed') {
-			scroll = target.offset().top - $('#header-top').height() - 10;
-			
-		} else {
-			scroll = target.offset().top - 10;
-		}
-		$('html, body').animate({scrollTop: target.offset().top - $('#header-top').height() - 10}, {duration: 1000, queue: false});
-		target.animate({opacity: 1.0}, 1000);
+		/* Delay scrolling until the document is shown */
+		$(window).load(function () {
+			var $h = $('#header-top');
+			if ($h.css('position') == 'fixed' && $(document).scrollTop() > target.offset().top - $h.height() ) {
+				$('html, body').animate({scrollTop: target.offset().top - $h.height() - 10}, {duration: 500, queue: false});
+			}
+			target.animate({opacity: 1.0}, 1000);
+		});
 	}
+
+	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
+
+	notifier.init();
+	navMenu.init();
+	$.tooltip();
+	fancyBox.init();
+	$('.showmytitle').on('click', function () {
+		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
+	});
+
 });
 
