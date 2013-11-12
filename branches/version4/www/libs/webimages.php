@@ -120,7 +120,7 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url, $this->referer, 1000000);
+		$res = get_url($this->url, $this->referer, 1000000, false);
 		$this->checked = true;
 		if ($res && strlen($res['content']) < 1000000) { // Image is smaller than our limit
 			$this->content_type = $res['content_type'];
@@ -303,7 +303,7 @@ class HtmlImages {
 			}
 		}
 
-		$res = get_url($this->url, $this->referer);
+		$res = get_url($this->url, $this->referer, null, false);
 		if (!$res) {
 			if ($this->debug) echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
 			return;
@@ -597,7 +597,7 @@ class HtmlImages {
 						echo "<!-- Checking: $url -->\n";
 
 					$checked ++;
-					$res = get_url($url, $this->url);
+					$res = get_url($url, $this->url, null, false);
 
 					if (! $res || ! preg_match('/text\/html/i', $res['content_type'])) 
 						continue;

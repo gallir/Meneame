@@ -930,10 +930,13 @@ function memcache_mdelete ($key) {
 }
 
 // Generic function to get content from an url
-function get_url($url, $referer = false, $max=200000) {
+function get_url($url, $referer = false, $max=500000, $log =true) {
+	if ($max == null) $max = 500000; // Ensure default value
+
 	global $globals;
 	static $session = false;
 	static $previous_host = false;
+
 
 	$url = html_entity_decode($url);
 	$parsed = parse_url($url);
@@ -965,7 +968,7 @@ function get_url($url, $referer = false, $max=200000) {
 	curl_setopt($session, CURLOPT_COOKIEJAR, "/dev/null");
 	//curl_setopt($session,CURLOPT_RANGE,"0-$max"); // It gives error with some servers
 	$response = @curl_exec($session);
-	if (!$response) {
+	if (!$response && $log) {
 			syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
 			echo "<! -- CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session) . " -->\n";
 			return false;
