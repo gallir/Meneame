@@ -222,7 +222,7 @@ function do_pages_reverse($total, $page_size=25, $margin = true) {
 		echo '<span class="current">'.$current.'</span>';
 		if($current>2) {
 			echo "<span>$separator</span>";
-			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
+			echo '<a href="?page=1'.$query.'" title="'._('ir a página')." 1".'">1</a>';
 		}
 	}
 
@@ -304,7 +304,7 @@ function do_pages($total, $page_size=25, $margin = true) {
 		}
 	} else {
 		if($current>2) {
-			echo '<a href="?page=1" title="'._('ir a página')." 1".'">1</a>';
+			echo '<a href="?page=1'.$query.'" title="'._('ir a página')." 1".'">1</a>';
 			echo "<span>$separator</span>";
 		}
 		echo '<span class="current">'.$current.'</span>';

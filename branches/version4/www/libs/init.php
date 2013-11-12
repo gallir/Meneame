@@ -60,7 +60,7 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 if($_SERVER['HTTP_HOST']) {
 	// Check bots
 	if (empty($_SERVER['HTTP_USER_AGENT'])
-		|| preg_match('/(spider|httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
+		|| preg_match('/(spider|httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit|squider)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
 		$globals['bot'] = true;
 	} else {
 		$globals['bot'] = false;
