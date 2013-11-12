@@ -10,15 +10,19 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'sneak.php');
 
+$globals['ads'] = false;
+$globals['favicon'] = 'img/common/konsole.png';
 
+$globals['extra_css'][] = 'es/telnet.css';
 init_sneak();
 
-// Start html
-header("Content-type: text/html; charset=utf-8");
+do_header("telnet");
 
 Haanga::Load('sneak/telnet_base.html');
 
 $globals['sneak_telnet'] = true;
 Haanga::Load('sneak/form.html', compact('max_item'));
+
+do_footer();
 
 ?>

@@ -1,3 +1,13 @@
+#header, #footthingy {
+	display: none;
+}
+
+#wrap {
+	background: #000;
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	color: #167805;
 	margin: 0;
@@ -15,19 +25,20 @@ img {
 	opacity:0.3;
 	filter:alpha(opacity=30);
 }
-a {
-	color: #167805;
+
+a, label {
+	color: #167805 !important;
 	text-decoration: none;
 	outline: none;
 }
 
 a:hover, a:focus {
-	color: #1c9c06;
+	color: #1c9c06 !important;
 	text-decoration: underline;
 }
 
 a:active {
-	color: #1c9c06;
+	color: #1c9c06 !important;
 }
 
 form, input {

@@ -10,7 +10,7 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'sneak.php');
 
-$globals['favicon'] = $globals['base_static']+'img/favicons/favicon-sneaker.ico';
+$globals['favicon'] = 'img/favicons/favicon-sneaker.ico';
 
 init_sneak();
 
@@ -28,7 +28,7 @@ if ($current_user->user_id > 0) {
 //////
 
 // Start html
-$globals['extra_css'][] = 'es/sneak.css?'.$globals['sneak_version'];
+$globals['extra_css'][] = 'es/sneak.css';
 if (!empty($_REQUEST['friends'])) {
 	do_header(_('amigos en la fisgona'), _('fisgona'), sneak_menu_items($option));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {

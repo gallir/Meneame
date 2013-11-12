@@ -1,19 +1,4 @@
 {% spacefull %}
-<html lang="{{globals.lang}}">
-<head>
-<meta charset="utf-8" />
-<meta name="ROBOTS" content="NOARCHIVE" />
-<meta name="generator" content="meneame" />
-<title>{% trans _('fisgona') %} // {% trans _('menéame') %}</title>
-<meta name="generator" content="meneame" />
-<link rel="stylesheet" type="text/css" media="screen" href="{{ globals.base_static }}css/es/telnet.css?{{ globals.sneak_version }}" />
-<link rel="icon" href="{{ globals.base_static }}img/common/konsole.png" type="image/x-icon" />
-<script src="{{ globals.jquery }}" type="text/javascript"></script>
-<script src="{{ globals.base_url }}js/{{globals.js_basic}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
-<script src="{{ globals.base_url }}js/{{globals.js_main}}?v={{globals.v}}" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-
 <script type="text/javascript">
 //<![CDATA[
 var my_version = '{{ globals.sneak_version }}';
@@ -29,7 +14,7 @@ var is_admin = false;
 {% endif %}
 
 
-$(function(){start_sneak()});
+addPostCode(function(){start_sneak()});
 
 function to_html(data) {
 	var tstamp=new Date(data.ts*1000);
