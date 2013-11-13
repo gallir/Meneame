@@ -19,5 +19,4 @@ if (! $globals['mobile']) { /* Close @media bracket */
 	echo "}";
 }
 
-?>
 
