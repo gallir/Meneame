@@ -1441,25 +1441,25 @@ class Link extends LCPBase {
 			$base_thumb = "thumb-$this->id.jpg";
 			$base_medium_thumb = "thumb_medium-$this->id.jpg";
 
-			$path = Upload::get_cache_relative_dir($this->id);
+			$this->thumb_path = Upload::get_cache_relative_dir($this->id);
 
-			$local_dir = mnmpath . $path;
+			$local_dir = mnmpath . $this->thumb_path;
 			$file_thumb = $local_dir.'/'.$base_thumb;
 			if ($globals['cache_redirector'] || is_readable($file_thumb)) {
-				$this->thumb_uri = $path . '/' . $base_thumb;
+				$this->thumb_uri = $this->thumb_path . '/' . $base_thumb;
 				$this->thumb_url = $base . $this->thumb_uri;
 			} else {
 				// TODO: Use try_thumbs to get all sizes.
 				if ($this->thumb_download()) {
 					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
-					$this->thumb_uri = $path . '/' . $base_thumb;
+					$this->thumb_uri = $this->thumb_path . '/' . $base_thumb;
 					$this->thumb_url = $base . $this->thumb_uri;
 				}
 			}
 		}
 		if ($this->thumb_url) {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
-			$this->thumb_medium_uri = $path . '/' . $base_medium_thumb;
+			$this->thumb_medium_uri = $this->thumb_path . '/' . $base_medium_thumb;
 			$this->thumb_medium_url = $base . $this->thumb_medium_uri;
 		}
 
