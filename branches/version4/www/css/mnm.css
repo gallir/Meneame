@@ -14,7 +14,7 @@ padding: 0;
 body {
 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 font-size: small;
-background-image: url('../../img/common/bkg-01.png');
+background-image: url('../img/common/bkg-01.png');
 color: #000;
 background-color: #fff;
 margin:0px;
@@ -65,7 +65,7 @@ border: none;
 font-weight: bold;
 margin: 4px 0 4px 0;
 padding: 2px 4px 2px 4px;
-background: #FF6400 url('../../img/common/button-bck-01.png') top left repeat-x;
+background: #FF6400 url('../img/common/button-bck-01.png') top left repeat-x;
 color: #fff;
 }
 
@@ -169,7 +169,7 @@ user-select: none;
 
 /* top logo */
 #header-top .logo-mnm{
-background: url('../../img/mnm/logos-common.png') no-repeat 0 0;
+background: url('../img/mnm/logos-common.png') no-repeat 0 0;
 background-size: 110px 50px;
 height:16px;
 width:100px;
@@ -184,7 +184,7 @@ cursor: pointer;
 /* editions logo */
 
 #header-top .logo-ed{
-background:url('../../img/mnm/h9_logo_ed.png') no-repeat left top;
+background:url('../img/mnm/h9_logo_ed.png') no-repeat left top;
 background-size: 9px 16px;
 height:16px;
 width:9px;
@@ -193,9 +193,8 @@ margin-top:7px;
 margin-right:15px;
 float:left;
 }
-@media (-webkit-min-device-pixel-ratio: 2),
-    (min-resolution: 192dpi) {
-    #header-top .logo-ed { background-image:url('../../img/mnm/h9_logo_ed.svg'); }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #header-top .logo-ed { background-image:url('../img/mnm/h9_logo_ed.svg'); }
 }
 
 /* editions zone */
@@ -273,7 +272,7 @@ margin-top:4px;
 }
 
 #header-top .userlogin {
-background: url(../../img/common/icons-common.png) no-repeat 10px -265px;
+background: url(../img/common/icons-common.png) no-repeat 10px -265px;
 background-size: 20px 300px;
 width:40px;
 height:30px;
@@ -294,7 +293,7 @@ white-space: nowrap;
 }
 
 #header-center .logo-eli{
-background: url('../../img/mnm/h9_eli.png') no-repeat left top;
+background: url('../img/mnm/h9_eli.png') no-repeat left top;
 background-size: 39px 35px;
 height:35px;
 width:55px;
@@ -308,9 +307,8 @@ color: transparent;
 cursor: pointer;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), 
-	(min-resolution: 192dpi) {
-	#header-center .logo-eli { background-image:url('../../img/mnm/h9_eli.svg'); }
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	#header-center .logo-eli { background-image:url('../img/mnm/h9_eli.svg'); }
 }
 
 #header-center .edname{
@@ -339,7 +337,7 @@ height:24px;
 font-size: 16px;
 padding-top: 0px;
 padding-left: 20px;
-background: #fff url(../../img/common/icons-common.png) no-repeat 0 -200px;
+background: #fff url(../img/common/icons-common.png) no-repeat 0 -200px;
 background-size: 20px 300px;
 }
 
@@ -420,7 +418,7 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background: url(../../img/common/icons-common.png) no-repeat 0px -225px;
+background: url(../img/common/icons-common.png) no-repeat 0px -225px;
 background-size: 20px 300px;
 }
 
@@ -823,7 +821,7 @@ font-size: 90%;
 color: #039;
 display:block;
 padding-left: 24px;
-background: url(../../img/common/h9_rss.png) no-repeat 4px 0px;
+background: url(../img/common/h9_rss.png) no-repeat 4px 0px;
 margin: 10px 0 10px 0px;
 }
 
@@ -852,7 +850,7 @@ list-style-type: none;
 
 #footcol1 {
 width: 20%;
-background: url('../../img/common/rss-bigfoot.png') no-repeat 85% bottom;
+background: url('../img/common/rss-bigfoot.png') no-repeat 85% bottom;
 border-left: none;
 }
 
@@ -887,7 +885,7 @@ color: #5073c5;
 clear: both;
 margin: 50px 20px 10px 13px;
 padding: 0 1em 0 110px;
-background: url('../../img/mnm/logos-common.png') no-repeat 0 -25px;
+background: url('../img/mnm/logos-common.png') no-repeat 0 -25px;
 background-size: 110px 50px;
 position: relative;
 overflow: auto;
@@ -1162,7 +1160,7 @@ border: 1px solid;
 padding: 3px 10px 3px 30px ;
 margin: 0px 0 5px 0;
 font-size: 85%;
-background: #FEFBEA url(../../img/common/error_s.png) 5px 50% no-repeat;
+background: #FEFBEA url(../img/common/error_s.png) 5px 50% no-repeat;
 border-color: #FF6400;
 }
 
@@ -1183,7 +1181,7 @@ font-size: 120%;
 margin: 5px 0 0 0;
 padding: 25px 0 0 0;
 color: #FF6400;
-background: url(../../img/common/error.png) no-repeat;
+background: url(../img/common/error.png) no-repeat;
 }
 
 .error-text {
@@ -1197,7 +1195,7 @@ font-weight: bold;
 margin: 20px 0 10px 20px;
 padding: 5px 0 10px 30px;
 color: #FF5900;
-background: url(../../img/common/error.png) 0 50% no-repeat;
+background: url(../img/common/error.png) 0 50% no-repeat;
 }
 
 .form-error-submit {
@@ -1493,7 +1491,7 @@ color: #666;
 
 .tab-trackback-entry a {
 padding: 2px 0 0 20px;
-background: url(../../img/common/mnu-list-image02.png) no-repeat 0px 4px
+background: url(../img/common/mnu-list-image02.png) no-repeat 0px 4px
 }
 
 /* submit form */
@@ -1624,7 +1622,7 @@ color: #000;
 }
 
 .comment-body.high {
-background: #FFD5AD url(../../img/common/comment-high-01.png) 99% 5px no-repeat;
+background: #FFD5AD url(../img/common/comment-high-01.png) 99% 5px no-repeat;
 }
 
 .comment-body.user {
@@ -1726,7 +1724,7 @@ width: 16px;
 height: 18px;
 cursor: pointer;
 margin-right: 10px;
-background: url(../../img/common/icons-common.png) no-repeat;
+background: url(../img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
 }
 
@@ -1753,7 +1751,7 @@ margin: 0 2px;
 cursor: pointer;
 height: 18px;
 width: 18px;
-background: url(../../img/common/icons-common.png) no-repeat;
+background: url(../img/common/icons-common.png) no-repeat;
 background-position: 0px -60px;
 background-size: 20px 300px;
 }
@@ -1764,7 +1762,7 @@ margin: 0 4px;
 cursor: pointer;
 height: 18px;
 width: 16px;
-background: url(../../img/common/icons-common.png) no-repeat;
+background: url(../img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
 background-position: 0px -100px;
 }
@@ -1800,7 +1798,7 @@ color: #FF9400;
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
-background: url(../../img/common/icons-common.png) no-repeat 0px -122px;
+background: url(../img/common/icons-common.png) no-repeat 0px -122px;
 background-size: 20px 300px;
 padding-left: 14px;
 cursor: pointer;
@@ -2190,7 +2188,7 @@ border: 1px solid;
 text-decoration: none;
 border-color: #FF6400;
 border-color: #FFF;
-background: #fff url(../../img/common/tabs/tabsub-background.png) bottom left repeat-x;
+background: #fff url(../img/common/tabs/tabsub-background.png) bottom left repeat-x;
 border: 1px solid;
 }
 
@@ -2330,7 +2328,7 @@ user-select: none;
 
 #mDialog_header {
 width:100%;
-background: url(../../img/common/modal-header-bkg01.png) repeat;
+background: url(../img/common/modal-header-bkg01.png) repeat;
 color:#fff;
 font-weight:bold;
 height: 20px;
@@ -2447,19 +2445,19 @@ text-decoration: none;
 }
 
 #notifier_panel div.privates {
-background:url(../../img/common/icon_message-02.png) no-repeat 5px 5px;
+background:url(../img/common/icon_message-02.png) no-repeat 5px 5px;
 }
 
 #notifier_panel div.posts {
-background:url(../../img/common/icon_post-02.png) no-repeat 5px 5px;
+background:url(../img/common/icon_post-02.png) no-repeat 5px 5px;
 }
 
 #notifier_panel div.comments {
-background:url(../../img/common/icon_comment-01.png) no-repeat 5px 5px;
+background:url(../img/common/icon_comment-01.png) no-repeat 5px 5px;
 }
 
 #notifier_panel div.friends {
-background:url(../../img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
+background:url(../img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
 }
 
 .header_ad_200x20{ /* temporal: nivea for men ad */
@@ -2498,7 +2496,7 @@ margin: 0 3px;
 padding: 0;
 opacity:0.6;
 vertical-align: text-top;
-background: url(../../img/common/icons-common.png) no-repeat;
+background: url(../img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
 }
 
@@ -2532,18 +2530,15 @@ display: inline-block;
 height: 18px;
 width: 18px;
 margin: 0px 4px 0px 4px;
-background: url(../../img/common/icons-common.png) no-repeat 0px -40px;
+background: url(../img/common/icons-common.png) no-repeat 0px -40px;
 background-size: 20px 300px;
 overflow: hidden !important;
 color: transparent !important;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  {
-		background-image:url(../../img/common/icons-common-2x.png); 
-	}
-	#header-top .logo-mnm, #footthingy { background-image:url('../../img/mnm/logos-common-2x.png'); }
+	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url(../img/common/icons-common-2x.png); }
+	#header-top .logo-mnm, #footthingy { background-image:url('../img/mnm/logos-common-2x.png'); }
 }
-
 
 

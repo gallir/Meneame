@@ -61,24 +61,8 @@
 <title>{{title}}</title>
 
 
-{# colorbox #}
-{% if globals.fancybox_enabled %}
-	<link rel="stylesheet" href="{{globals.base_static}}css/colorbox/colorbox.css" type="text/css" media="screen" />
-{% endif %}
-
 {% if globals.css_main %}
 	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{globals.css_main}}"/>
-{% endif %}
-
-{% if globals.css_color %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{globals.css_color}}"/>
-{% endif %}
-
-{# Definitions for mobile, iPad and TVs #}
-{% if globals.mobile %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/handheld.css"/>
-{% else %}
-	<link rel="stylesheet" media="print,tv,handheld,screen and (max-width: 800px)" href="{{globals.base_static}}css/handheld.css" />
 {% endif %}
 
 {% for css in globals.extra_css %}
