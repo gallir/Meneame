@@ -20,3 +20,8 @@
     {% endif %}
 {% endfor %}
 
+{# Include Google Adsense Async javascript #}
+{% if globals.mobile AND globals.ads %}
+{% try_include 'private/ad-google-async.html' %}
+{% endif %}
+
