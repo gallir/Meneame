@@ -114,23 +114,11 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
 color: #aaa;
 }
 
-/* Rounded boxes, CSS3 and temporary non-standar moz and webkit properties */
-
-/* All 3 px */
-#map, .commentform.warn, .warn, .box, .searchbox, fieldset, label {
+#map, .commentform.warn, .warn, .box, .searchbox, fieldset, label, .button, button {
 border-radius: 3px;
 -moz-border-radius: 3px;
 -webkit-border-radius: 3px;
 }
-
-/* All 2 px */
-.button, button {
-border-radius: 3px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-}
-
-/* END roundboxes */
 
 #header-top, .news-shakeit, .answers .counter  {
 font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -824,8 +812,6 @@ padding-left: 24px;
 background: url(../img/common/h9_rss.png) no-repeat 4px 0px;
 margin: 10px 0 10px 0px;
 }
-
-/**** END SIDEBAR BOXES ************/
 
 #footwrap {
 margin: 5em 40px 0 40px;
@@ -2010,8 +1996,6 @@ color: #303030;
 color: #FF6400;
 }
 
-/* image forms */
-
 .sneaker {
 margin: 0;
 }
@@ -2458,10 +2442,6 @@ background:url(../img/common/icon_comment-01.png) no-repeat 5px 5px;
 
 #notifier_panel div.friends {
 background:url(../img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
-}
-
-.header_ad_200x20{ /* temporal: nivea for men ad */
-margin:0 0 -2px 15px;
 }
 
 .ads-interlinks {
