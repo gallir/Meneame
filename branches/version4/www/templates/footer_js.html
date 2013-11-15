@@ -1,6 +1,6 @@
 <script src="{{ globals.jquery }}" type="text/javascript"></script>
 
-<script src="{{ globals.base_static }}js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url }}v_{{ globals.v }}/js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
 
 {% for js in globals.extra_js %}
     {% if js|substr:"0, 4" == 'http' || js|substr:"0, 2" == '//' %}

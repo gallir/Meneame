@@ -27,13 +27,13 @@ background-position: 5px -225px;
 
 #header-center, #header-menu, #sidebar, #edlist, .logo-ed, .wideonly, .wide {
 display: none;
-background: none;
+background: none !important;
 }
 
 @media (min-width:500px) and (orientation:landscape) {
-.wide {
-display: inline-block;
-}
+	.wide {
+		display: inline-block;
+	}
 }
 
 #notifier_panel {
@@ -152,7 +152,7 @@ font-weight: normal;
 .ts.nomobile {
 text-decoration: underline;
 font-weight: bold;
-background: url('../../img/common/icons-common.png') no-repeat 0px -140px;
+background: url('{{ globals.base_static }}img/common/icons-common.png') no-repeat 0px -140px;
 background-size: 20px 300px;
 width:12px;
 height:18px;
@@ -162,6 +162,6 @@ overflow: hidden;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .ts.nomobile { background-image:url('../../img/common/icons-common.png'); }
+    .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common.png'); }
 }
 

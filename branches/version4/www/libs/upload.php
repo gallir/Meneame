@@ -186,7 +186,7 @@ class Upload {
 		$thumb = new SimpleImage();
 		$thumb->load($pathname);
 		if ( ! $thumb->load($pathname)) {
-			$alternate_image = mnmpath . "/img/common/picture01-40x40.png";
+			$alternate_image = mnmpath . "/img/common/picture02.png";
 			syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
 			if (!$thumb->load($alternate_image)) return false;
 		}
