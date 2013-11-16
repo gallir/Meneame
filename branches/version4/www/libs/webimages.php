@@ -120,13 +120,13 @@ class BasicThumb {
 	}
 
 	function get() {
-		$res = get_url($this->url, $this->referer, 1000000, false);
+		$res = get_url($this->url, $this->referer, 2000000, false);
 		$this->checked = true;
-		if ($res && strlen($res['content']) < 1000000) { // Image is smaller than our limit
+		if ($res && strlen($res['content']) < 2000000) { // Image is smaller than our limit
 			$this->content_type = $res['content_type'];
 			return $this->fromstring($res['content']);
 		} 
-		//echo "<!-- Failed to get $this->url -->\n";
+		// echo "<!-- Failed to get $this->url -->\n";
 		return false;
 	}
 
@@ -330,8 +330,8 @@ class HtmlImages {
 
 			// First check for thumbnail head metas
 			if ((
-				preg_match('/<meta\s+?name=[\'"]product-image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<meta\s+?property=[\'"]og:image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta\s+?name=[\'"]product-image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/favicon/i', $match[1])) { 
@@ -419,15 +419,6 @@ class HtmlImages {
 		$tags = array_merge($tags, $matches[1]);
 		if (! count($tags)) return false;
 		$this->images_count =  count($tags);
-
-		/*
-		if (!$this->get_other_html()) {
-			if ($this->debug) {
-				echo "<!-- No other html to compare -->\n";
-			}
-			return false;
-		}
-		*/
 
 		$other_html = $this->get_other_html();
 		if (!$other_html && $this->debug) {
