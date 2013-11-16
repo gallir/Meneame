@@ -932,7 +932,7 @@ function share_tw(e) {
 
 /* scrollstop plugin for jquery +1.9 */
 (function(){
-	var latency = 50;
+	var latency = 75;
 	var handler;
 	$.event.special.scrollstop = {
 		setup: function() {

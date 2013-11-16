@@ -10,7 +10,7 @@
 	{% if l.thumb %}
 		<img data-src="{{l.thumb}}" src="{{ globals.base_static }}img/g.gif" alt='' class="thumbnail lazy"/>
 	{% endif %}
-	<h5 {% if l.warn %}style="padding-left:20px;background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center"{% endif %}>
+	<h5 {% if l.warn %}class="warn"{% endif %}>
 	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a></h5>
 	</div>
 {% endfor %}

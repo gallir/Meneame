@@ -3,7 +3,7 @@
 </div>
 <div class="comments blue"><ul>
 {% for obj in objects %}
-	<li><img src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" alt="" width="20" height="20" class="tooltip u:{{ obj.user_id }} avatar"/>
+	<li><img data-src="{% exec get_avatar_url obj.user_id, obj.avatar, 20 %}" data-2x="s:-20.:-40." alt="" src="{{ globals.base_static }}img/g.gif" class="tooltip u:{{ obj.user_id }} avatar lazy"/>
 	<p><strong>{{obj.username}}</strong> <a class="tooltip_" href="{{obj.link}}" rel="nofollow">{{obj.title}}</a></p></li>
 {% endfor %}
 </ul></div></div></div>

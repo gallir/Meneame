@@ -148,6 +148,7 @@ user-select: none;
 -moz-user-select: none;
 -webkit-user-select: none;
 }
+
 @media (min-height: 600px) {
 	#header-top {
 	position: fixed;
@@ -1140,14 +1141,23 @@ font-size: 140%;
 text-align: right;
 }
 
-.warn {
+.news-summary .warn {
 position: relative;
-border: 1px solid;
-padding: 3px 10px 3px 30px ;
+padding: 5px 10px 5px 25px ;
 margin: 0px 0 5px 0;
 font-size: 85%;
 background: #FEFBEA url({{ globals.base_static }}img/common/error_s.png) 5px 50% no-repeat;
-border-color: #FF6400;
+background-size: 16px 16px;
+}
+
+.sidebox .warn {
+padding-left:20px;
+background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center;
+background-size: 16px 16px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1168,6 +1178,7 @@ margin: 5px 0 0 0;
 padding: 25px 0 0 0;
 color: #FF6400;
 background: url({{ globals.base_static }}img/common/error.png) no-repeat;
+background-size: 24px 24px;
 }
 
 .error-text {
@@ -1182,6 +1193,11 @@ margin: 20px 0 10px 20px;
 padding: 5px 0 10px 30px;
 color: #FF5900;
 background: url({{ globals.base_static }}img/common/error.png) 0 50% no-repeat;
+background-size: 24px 24px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.error, .form-error, .form-error-submit { background-image:url('{{ globals.base_static }}img/common/error-2x.png'); }
 }
 
 .form-error-submit {
@@ -1548,25 +1564,6 @@ font-weight: bold;
 text-align: center;
 background: #FF6400;
 color: #FFF;
-}
-
-.commentform.warn p, .commentform.warn ul {
-text-align: left;
-font-weight: normal;
-padding-left: 30px;
-}
-
-.commentform.warn li {
-line-height: 0px;
-margin-left: 25px;
-}
-
-.commentform.warn p {
-margin-top: 20px;
-}
-
-.commentform.warn em {
-font-weight: bold;
 }
 
 .comments-list {
