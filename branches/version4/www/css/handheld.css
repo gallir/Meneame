@@ -154,7 +154,7 @@ text-decoration: underline;
 font-weight: bold;
 background: url('{{ globals.base_static }}img/common/icons-common.png') no-repeat 0px -140px;
 background-size: 20px 300px;
-width:12px;
+width:14px;
 height:18px;
 cursor: pointer;
 color: transparent;
@@ -162,6 +162,6 @@ overflow: hidden;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common.png'); }
+    .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
 }
 
