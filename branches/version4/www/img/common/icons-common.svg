@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="icons-common.svg"
-   inkscape:export-filename="/home/gallir/Pictures/icons-common.png"
+   inkscape:export-filename="/home/gallir/meneame_dev/img/common/icons-common.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -29,7 +29,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="3.9590209"
      inkscape:cx="-34.926254"
-     inkscape:cy="172.44471"
+     inkscape:cy="111.82366"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -382,7 +382,8 @@
          style="fill:#ffffff;fill-opacity:1;stroke:none" />
     </g>
     <g
-       id="g3796">
+       id="g3796"
+       transform="translate(0,-4.000003)">
       <ellipse
          id="ellipse3"
          ry="76.000999"
