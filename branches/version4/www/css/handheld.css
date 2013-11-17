@@ -152,7 +152,7 @@ font-weight: normal;
 .ts.nomobile {
 text-decoration: underline;
 font-weight: bold;
-background: url('{{ globals.base_static }}img/common/icons-common.png') no-repeat 0px -140px;
+background: url('{{ globals.base_static }}img/common/icons-common.png') no-repeat 0px -141px;
 background-size: 20px 300px;
 width:14px;
 height:18px;

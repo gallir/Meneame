@@ -1681,7 +1681,7 @@ color: #aaa;
 font-weight: bold;
 }
 
-.news-details span, .news-details div, .comment-votes-info span, .comment-votes-info div {
+.news-details span, .news-details div, .comment-votes-info span, .comment-votes-info div, .comment-meta span {
 vertical-align: top;
 }
 
@@ -1690,6 +1690,7 @@ display: inline-block;
 margin-left: 5px;
 max-width: 14em;
 text-overflow: clip;
+vertical-align: top;
 }
 
 .comment-meta a:hover {
