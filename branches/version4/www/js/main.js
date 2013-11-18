@@ -391,7 +391,11 @@ function fancybox_gallery(type, user, link) {
 	var timer = null;
 	var active = false;
 	var last = null;
-	var ajaxs = {'u': 'get_user_info.php', 'p': "get_post_tooltip.php", 'c': "get_comment_tooltip.php", 'l': "get_link.php"};
+	var ajaxs = {'u': 'get_user_info.php',
+				'p': "get_post_tooltip.php",
+				'c': "get_comment_tooltip.php",
+				'l': "get_link.php",
+				'b': "get_ban_info.php"};
 
 
 	$.extend({
@@ -413,7 +417,7 @@ function fancybox_gallery(type, user, link) {
 			$('body').append( box );
 		}
 		$(document).on('touchstart', stop); /* Touch detected, disable tooltips */
-		$(document).on('mouseenter mouseleave', 'a.tooltip, img.tooltip',
+		$(document).on('mouseenter mouseleave', 'a.tooltip, img.tooltip, td.tooltip',
 			function (event) {
 				if (event.type == 'mouseenter') {
 					try {

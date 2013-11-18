@@ -213,8 +213,8 @@ function admin_bans($ban_type) {
 				$ban->ban_id = $ban_id;
 				$ban->read();
 				echo '<tr>';
-				echo '<td onmouseover="return tooltip.ajax_request(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.hide(event);" >'.clean_text($ban->ban_text).'</td>';
-				echo '<td style="overflow: hidden;white-space: nowrap;" onmouseover="return tooltip.ajax_request(event, \'get_ban_info.php\', '.$ban->ban_id.');" onmouseout="tooltip.hide(event);">'.clean_text(txt_shorter($ban->ban_comment, 50)).'</td>';
+				echo '<td>'.clean_text($ban->ban_text).'</td>';
+				echo '<td class="tooltip b:'.$ban->ban_id.'" style="overflow: hidden;white-space: nowrap;">'.clean_text(txt_shorter($ban->ban_comment, 50)).'</td>';
 				echo '<td>'.$ban->ban_date.'</td>';
 				echo '<td>'.$ban->ban_expire.'</td>';
 				echo '<td>';
