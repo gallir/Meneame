@@ -53,31 +53,20 @@ function do_banner_top_mobile () {
 function do_banner_right() { // side banner A
 	global $globals, $current_user;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile'] || ! $globals['ads']) return;
 //
 // WARNING!
 //
 // IMPORTANT! adapt this section to your contracted banners!!
 //
-	if($globals['external_ads'] && $globals['ads']) {
-		if ($globals['kalooga_categories'] && isset($_REQUEST['category']) && in_array($_REQUEST['category'], $globals['kalooga_categories'])) {
-			$globals['kalooga_right'] = true;
-		}
-		Haanga::Safe_Load('private/ad-right.html');
-	}
+	Haanga::Safe_Load('private/ad-right.html');
 }
 
 function do_banner_promotions() { 
 	global $globals;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile'] || ! $globals['ads']) return;
 
-/*
-	global $globals;
-	if(! $globals['mobile'] && $globals['external_ads'] && $globals['ads']) {
-		@include('ads/promotions.inc');
-	}
-*/
 	Haanga::Safe_Load('private/promotions.html');
 }
 
@@ -88,7 +77,7 @@ function do_banner_top_news() {
 
 function do_banner_story() {
 	global $globals, $current_user;
-	if ($globals['external_ads'] && $globals['ads'] && $globals['link']) {
+	if ($globals['ads']) {
 		Haanga::Safe_Load('private/ad-middle.html');
 	}
 }

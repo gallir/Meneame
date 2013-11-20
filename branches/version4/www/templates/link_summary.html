@@ -212,7 +212,9 @@
 		</div>
 	{% endif %}
 
-	{% exec do_banner_story as dummy %}
+	{% if globals.link %}
+		{% exec do_banner_story as dummy %}
+	{% endif %}
 	</div>
 </div>
 
