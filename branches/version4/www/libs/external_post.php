@@ -22,10 +22,10 @@ function twitter_post($text, $short_url) {
 
 	$maxlen = 140 - 24; //strlen($short_url);
 	$msg = mb_substr(text_to_summary(html_entity_decode($text), $maxlen), 0, $maxlen) . ' ' . $short_url;
-	$req_url = 'http://api.twitter.com/oauth/request_token';
-	$acc_url = 'http://api.twitter.com/oauth/access_token';
-	$authurl = 'http://api.twitter.com/oauth/authorize';
-	$api_url = 'http://api.twitter.com/1.1/statuses/update.json';
+	$req_url = 'https://api.twitter.com/oauth/request_token';
+	$acc_url = 'https://api.twitter.com/oauth/access_token';
+	$authurl = 'https://api.twitter.com/oauth/authorize';
+	$api_url = 'https://api.twitter.com/1.1/statuses/update.json';
 
 	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
 	$oauth->debug = 1;

@@ -43,7 +43,7 @@ class SitesMgr {
 	static public function get_info($id = false) {
 		global $db;
 
-		$id = self::my_id();
+		if ($id == false) $id = self::my_id();
 		return $db->get_row("select * from subs where id = $id");
 	}
 
