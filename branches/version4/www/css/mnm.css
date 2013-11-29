@@ -1344,7 +1344,8 @@ color: #ff6400;
 font-size: 18px;
 text-decoration: none;
 }
-.news-shakeit .menealo, .bar .menealo {
+
+.menealo {
 position: relative;
 left: -6px;
 display: inline-block;
@@ -1353,7 +1354,11 @@ border: 1px solid #ffc098;
 background-color: #ff6400;
 }
 
-.news-shakeit .menealo a, .news-shakeit .menealo span, .bar .menealo a, .bar .menealo span {
+.menealo:hover {
+border: 1px solid #ff6400;
+}
+
+.menealo a, .menealo span {
 display: block;
 padding: 2px 0;
 height: 18px;
@@ -1363,14 +1368,14 @@ border: 1px solid #FFF;
 background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKHBEpJevxBJkAAAAuSURBVAjXY/h/9wQTw4/PTAw/v0AwjP3jCxPDz89QGorfP2FieHieiYGBgVgMAAfwGZG+FivHAAAAAElFTkSuQmCC') repeat-x;
 }
 
-.news-shakeit .menealo span, .bar .menealo span {
+.menealo span {
 background-image: none;
 border: 1px solid #ff6300;
 border-bottom: 1px solid #ff914a;
 background: #FFF url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAaCAIAAAD5ZqGGAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKHBEpOxH+OfoAAAAvSURBVAjXjYixDQAgDMOsHMh1XJu2KkvFwMRgyTa9l8gQZZEW9Xh6ev59IRrBFwej9x6Vx7fq1wAAAABJRU5ErkJggg==') repeat-x bottom left;
 }
 
-.news-shakeit .menealo span.negative, .bar .menealo span.negative  {
+.menealo span.negative  {
 color: #ccc;
 font-size: 11px;
 }
@@ -2473,6 +2478,7 @@ height: 18px;
 margin: 0 3px;
 padding: 0;
 opacity:0.6;
+cursor:pointer;
 vertical-align: text-top;
 background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
