@@ -156,7 +156,6 @@ user-select: none;
 }
 
 
-/* top logo */
 #header-top .logo-mnm{
 background: url('{{ globals.base_static }}img/mnm/logos-common.png') no-repeat 0 0;
 background-size: 110px 50px;
