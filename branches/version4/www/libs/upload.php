@@ -339,16 +339,16 @@ class Upload {
 		}
 
 		if (filesize($pathname) > 1024*1024) { // Bigger than 1 MB
-			if ($image->load($pathname) &&  ($image->getWidth() > $max_size || $image->getHeight())) {
+			if ($image->load($pathname) &&  ($image->getWidth() > $max_size || $image->getHeight() > $max_size)) {
 				if ($image->getWidth() > $image->getHeight) {
 					$image->resizeToWidth($max_size);
 				} else {
 					$image->resizeToHeight($max_size);
 				}
-			}
-			if ($image->save($tmp)) {
-				$pathname = $tmp;
-				clearstatcache(); 
+				if ($image->save($tmp)) {
+					$pathname = $tmp;
+					clearstatcache(); 
+				}
 			}
 		}
 
