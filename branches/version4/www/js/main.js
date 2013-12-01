@@ -1,9 +1,9 @@
 var base_url="{{ globals.base_url }}",
-    base_cache="{{ globals.cache_dir }}",
-    version_id="v_{{ globals.v }}",
-    base_static="{{ globals.base_static_noversion }}",
-    is_mobile={{ globals.mobile }},
-    touchable=false;
+	base_cache="{{ globals.cache_dir }}",
+	version_id="v_{{ globals.v }}",
+	base_static="{{ globals.base_static_noversion }}",
+	is_mobile={{ globals.mobile }},
+	touchable=false;
 
 var now = (new Date);
 var now_ts = now.getTime();
@@ -309,11 +309,12 @@ function eraseCookie(name) {
 ** http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 */
 function reportAjaxStats(category, action, url) {
-
-	if (typeof(_gaq) !=	'undefined') {
-		_gaq.push(['_trackEvent', category, action]);
+	if (typeof(ga) != 'undefined') {
+		if (category && action) {
+			ga('send', 'event', category, action);
+		}
 		if (typeof url == 'string') {
-			_gaq.push(["_trackPageview", url]);
+			ga('send', 'pageview', url);
 		}
 	}
 }
@@ -1188,6 +1189,7 @@ var historyManager = new function () {
 		window.history.pushState(state, '', location.href + "#" + name);
 		state.callback = callback;
 		history.push(state);
+		reportAjaxStats('', '', location.href); 
 	};
 
 	this.pop = function (name) {
@@ -1292,18 +1294,14 @@ var fancyBox = new function () {
 				'innerHeight': innerHeight,
 				'overlayClose': overlayClose,
 				'onLoad': onLoad,
-
-				'onComplete': function() {
-					reportAjaxStats('image', 'single');
-				},
 				'onOpen': function () {
 					historyManager.push(ajaxName, $.colorbox.close);
 				},
 				'onClosed': function () {
 					 historyManager.pop(ajaxName);
 				}
-			}); /* colorbox */
-		}); /* each */
+			});
+		});
 	};
 };
 
@@ -1364,7 +1362,7 @@ var notifier = new function () {
 		now = new Date().getTime();
 		var last_check = readStorage("n_"+user_id+"_ts");
 		if (last_check == null 
-				|| (check_counter == 0 && now - last_check > 3000) /* Don't allow too many refreshes */
+				|| (check_counter == 0 && now - last_check > 3000) /* Avoid too many refreshes */
 				|| now - last_check > base_update + check_counter * 20) {
 			writeStorage("n_"+user_id+"_ts", now);
 			notifier.connect();
@@ -1380,8 +1378,8 @@ var notifier = new function () {
 
 		if (is_mobile) next_update *= 3;
 
-		if ( (is_mobile && check_counter < 1)  /* Allow just one network update for mobiles */
-				||  (! is_mobile && check_counter < 3*3600*1000/base_update)) { /* 3 hours */
+		if ( (is_mobile && check_counter < 1) /* one network update for mobiles */
+				|| (! is_mobile && check_counter < 3*3600*1000/base_update)) { 
 			timeout = setTimeout(notifier.update, next_update);
 		} else {
 			timeout = false;
