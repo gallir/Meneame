@@ -2367,24 +2367,26 @@ vertical-align:middle;
 opacity:1.0;
 }
 
-#notifier {
-padding-top: 5px;
+#header-top #notifier {
+display: inline-block;
 cursor:pointer;
 background:#666;
 color:#fff;
-font-size:18px;
+font-size:15px;
 font-weight:bold;
 height:25px;
 width:35px;
+padding-top: 5px;
 text-align:center;
+vertical-align: middle;
 }
 
-#notifier:hover{
+#header-top #notifier:hover{
 background:#fff;
 color: #f00;
 }
 
-#notifier.nonzero {
+#header-top #notifier.nonzero {
 background:#f00;
 color:#fff;
 }
@@ -2393,7 +2395,7 @@ color:#fff;
 #notifier_panel {
 border-radius:3px;
 position:fixed;
-right:25px;
+right:10px;
 top:31px;
 padding: 2px 2px;
 color:#aaa;
@@ -2408,14 +2410,14 @@ display: none;
 }
 
 #notifier_panel div {
-font-size: 13px;
+font-size: 14px;
 margin: 0;
 position: relative;
 color:#333;
-padding:7px 0px 2px 30px;
+padding:7px 4px 3px 30px;
 margin-bottom:0px;
 border-top:1px solid #ddd;
-height:22px;
+height:24px;
 }
 
 #notifier_panel div:first-child {

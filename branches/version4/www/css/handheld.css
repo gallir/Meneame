@@ -9,7 +9,7 @@ font-size: 16px;
 
 #header{
 min-width: 0;
-padding-top: 30px;
+padding-top: 40px;
 }
 
 #header-top {
@@ -17,13 +17,48 @@ position: fixed;
 top: 0px;
 left: 0px;
 width: 100%;
+height:40px;
 z-index: 10;
 }
 
 #nav-menu {
+margin-top: 5px;
 width: 30px;
 background-position: 5px -225px;
 }
+
+#header-top .logo-mnm {
+margin-top: 10px;
+}
+
+#header-top #notifier {
+padding-top: 7px;
+height:33px;
+width:40px;
+font-size:18px;
+}
+
+#notifier_panel {
+top:41px;
+}
+
+#notifier_panel div {
+font-size: 16px;
+}
+
+#header-top .usertext{
+margin-top: 9px;
+}
+
+#userinfo #avatar {
+width:40px;
+height:40px;
+}
+
+#header-top .userlogin {
+margin-top:5px;
+}
+
 
 #header-center, #header-menu, #sidebar, #edlist, .logo-ed, .wideonly, .wide {
 display: none;
@@ -145,7 +180,7 @@ margin-left: 5px;
 opacity:0.8;
 }
 
-#cboxTitle { /* colorbox */
+#cboxTitle {
 font-weight: normal;
 }
 
@@ -162,6 +197,6 @@ overflow: hidden;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
+	.ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
 }
 
