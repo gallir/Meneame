@@ -1,6 +1,5 @@
 /*
 Description: Menéame CSS file
-Version: 5
 Site URI: http://meneame.net
 Authors: Ricardo Galli, Benjamí Villoslada, Damián Vila, Aníbal De Castro
 Licence: Affero GPL License (http://meneame.net/COPYING)
@@ -120,19 +119,15 @@ border-radius: 3px;
 -webkit-border-radius: 3px;
 }
 
-#header-top, .news-shakeit, .answers .counter  {
+#header-top, .news-shakeit, .answers .counter, #notifier_panel  {
 font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
-
-/* whole header */
 
 #header{
 width: 100%;
 min-width: 790px;
 padding-top: 30px;
 }
-
-/* first header zone */
 
 #header-top{
 position: absolute;
@@ -169,8 +164,6 @@ color: transparent;
 cursor: pointer;
 }
 
-/* editions logo */
-
 #header-top .logo-ed{
 background:url('{{ globals.base_static }}img/mnm/h9_logo_ed.png') no-repeat left top;
 background-size: 9px 16px;
@@ -184,8 +177,6 @@ float:left;
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     #header-top .logo-ed { background-image:url('{{ globals.base_static }}img/mnm/h9_logo_ed.svg'); }
 }
-
-/* editions zone */
 
 #header-top ul#edlist{
 list-style-type:none;
@@ -222,8 +213,6 @@ color:#fff;
 #header-top ul#edlist li.selected a, #header-top ul#edlist li a:hover {
 background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAIAAADdv/LVAAAAFElEQVQI12P4//8/EwMDAxMDAwMAHgYDArjSWt4AAAAASUVORK5CYII=') bottom left repeat-x;
 }
-
-/* user zone */
 
 #header-top ul#userinfo{
 list-style-type:none;
@@ -271,8 +260,6 @@ color: transparent;
 cursor: pointer;
 }
 
-/* second header zone */
-
 #header-center{
 height:45px;
 background-color:#ccc;
@@ -309,8 +296,6 @@ position:relative;
 float:left;
 }
 
-/* search */
-
 .searchform {
 height:auto;
 margin: 10px 10px 0 0;
@@ -329,8 +314,6 @@ background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-re
 background-size: 20px 300px;
 }
 
-/* menu 01 header */
-
 .header-menu01 {
 display: block;
 height:30px;
@@ -340,8 +323,6 @@ overflow: hidden;
 font-size: 15px;
 padding: 0 0 0 20px;
 }
-
-/* menu 01 header left items */
 
 .header-menu01 ul.menu01-itemsl {
 list-style-type:none;
@@ -364,9 +345,6 @@ line-height:145%
 color:#ff6400;
 text-decoration:none;
 }
-
-
-/* menu 01 header right items */
 
 .header-menu01 ul.menu01-itemsr{
 list-style-type:none;
@@ -638,9 +616,6 @@ font-weight: bold;
 margin: 0px 0px 2px 2px !important;
 vertical-align: middle;
 }
-
-
-/**** SIDEBAR BOXES ************/
 
 .sidebox {
 margin-bottom:25px;
@@ -1031,7 +1006,6 @@ font-weight: bold;
 color: #FF6400;
 }
 
-/* h2 without underline */
 .topheading h2 {
 padding: 10px 0 20px 0;
 margin: 0 0 0 20px;
@@ -1223,8 +1197,6 @@ margin: 0;
 padding: 5px 0 5px 25px;
 }
 
-/* news */
-
 .news-summary {
 margin: 0;
 padding: 10px 0 10px 0;
@@ -1305,7 +1277,6 @@ text-decoration: none;
 }
 
 
-/* Counter box */
 .news-shakeit {
 position: absolute;
 top: 10px;
@@ -1469,8 +1440,6 @@ font-weight: bold;
 cursor: pointer;
 }
 
-/* trackback */
-
 .tab-trackback-url {
 font-weight: bold;
 font-size: 100%;
@@ -1501,7 +1470,6 @@ background: url({{ globals.base_static }}img/common/mnu-list-image02.png) no-rep
 }
 
 /* submit form */
-
 #thisform .column-list {
 margin: -15px 0 20px 0;
 min-height: 185px;
@@ -1516,8 +1484,6 @@ font-weight: normal;
 padding-left: 15px;
 margin: 0px;
 }
-
-/* comments [& incipient notes] */
 
 .comments {
 margin: 10px 5px 0 10px;
@@ -1844,8 +1810,6 @@ font-size: 85%;
 font-size: 85%;
 }
 
-/* pagination */
-
 .pages {
 padding: 10px 0 0 0;
 margin: 15px 0 50px 0;
@@ -1900,8 +1864,6 @@ border: 1px solid #FFE2C5;
 color: #FFE2C5;
 }
 
-
-/* faq page */
 
 .faq-title {
 margin: 0 30px 0 150px;
@@ -1959,7 +1921,6 @@ color: #303030;
 
 .genericform textarea {
 width: 100%;
-/* height: 128px;*/
 }
 
 .geoform {
