@@ -34,6 +34,7 @@ if (!$comment->read()) {
 $link = Link::from_db($comment->link, null, false);
 if ($link->is_discarded()) {
 	$globals['ads'] = false;
+	$globals['noindex'] = true;
 }
 
 $globals['link'] = $link;

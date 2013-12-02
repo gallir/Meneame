@@ -70,6 +70,7 @@ if ($link->is_discarded()) {
 	// Dont allow indexing of discarded links
 	if ($globals['bot']) not_found();
 	$globals['ads'] = false;
+	$globals['noindex'] = true;
 }
 
 
