@@ -391,7 +391,7 @@ background-size: 20px 300px;
 #nav-panel {
 position: fixed;
 display: none;
-top: 31px;
+top: 30px;
 left: 0px;
 overflow: auto;
 z-index: 10001;
@@ -400,7 +400,7 @@ height:auto;
 white-space:normal;
 margin-bottom: 0px;
 padding: 0 25px 0 25px;
-background-color: #ececec;
+background-color:#3c3c3c;
 box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -moz-box-shadow: 1px 1px 8px rgba(0,0,0,0.5);
 -webkit-box-shadow: 1px 1px 8px rgba(0,0,0,0.5)
@@ -411,6 +411,7 @@ height: auto;
 padding: 0;
 margin: 0;
 font-size: 16px;
+background-color:#3c3c3c;
 }
 
 #nav-panel ul {
@@ -427,6 +428,7 @@ margin: 0;
 #nav-panel ul li a {
 padding: 2px 0;
 white-space: nowrap;
+color: #fff;
 }
 
 #nav-panel ul li.selected a, #nav-panel ul li a:hover{
