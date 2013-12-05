@@ -1598,24 +1598,30 @@ function analyze_hash() {
 }
 
 var clickManager = new function () {
-	$(document).on("click", "a", parse);
+	$(document).on("click mousedown touchstart", "a", parse);
 
 	function parse(e) {
 		var m;
-		var href = $(this).attr("href");
-		var aClass = $(this).attr("class") || '';
+		var $a = $(this);
+		var href = $a.attr("href");
+		var aClass = $a.attr("class") || '';
+
+		if ($a.data('done')) return true;
+
+		if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/)) {
+			var id = m[1];
+			$a.attr('href', base_url + "go.php?id=" + id);
+			$a.data('done', 1);
+			return true;
+		}
+
+		if (e.type != 'click') return true;
 
 		if ( (aClass.match(/fancybox/)
 				|| href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
 			&& ! aClass.match(/cbox/) 
-			&& ! $(this).attr("target")) {
-			fancyBox.parse($(this));
-			return false;
-		}
-
-		if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/)) {
-			var id = m[1];
-			location.href = base_url + "go.php?id=" + id;
+			&& ! $a.attr("target")) {
+			fancyBox.parse($a);
 			return false;
 		}
 	}
