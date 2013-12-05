@@ -79,6 +79,12 @@ if($_SERVER['HTTP_HOST']) {
 		$globals['mobile'] = 0;
 	}
 
+	if (isset($_REQUEST['partial'])) {
+		$globals['partial'] = true;
+	} else {
+		$globals['partial'] = false;
+	}
+
 	// Check the user's referer.
 	/* Not used, save CPU cycles
 	if( !empty($_SERVER['HTTP_REFERER'])) {

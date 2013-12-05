@@ -1,4 +1,5 @@
 </div>
+{% meneame_endtime %}
 
 <div id="footthingy">
 <p>menéame</p>
@@ -28,25 +29,22 @@
 {% endif %}
 
 </ul>
-{#
-<ul id="stdcompliance">
-<li><a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:80px;height:15px" src="{{ globals.base_static }}img/common/valid-xhtml10.gif" alt="Valid XHTML 1.0 Transitional" width="80" height="15"/></a></li>
-<li><a href="http://jigsaw.w3.org/css-validator/check/referer?profile=css3"><img style="border:0;width:80px;height:15px" src="{{ globals.base_static }}img/common/valid-css.gif" alt="Valid CSS" width="80" height="15"/></a></li>
-<li><a href="http://feedvalidator.org/check.cgi?url=http://{{ globals.server_name }}/rss2.php?local"><img style="border:0;width:80px;height:15px" src="{{ globals.base_static }}img/common/valid-rss.gif" alt="Valid RSS" title="Validate my RSS feed" width="80" height="15"/></a></li>
-</ul>
-#}
 </div>
 
 </div>
+
+</div> {# #variable #}
 
 {% include 'footer_js.html' %}
 
-{# warn warn warn
-  dont do stats of password recovering pages #}
+{% meneame_endtime %}
 
-{% spacefull %}
+{% if ! globals.partial %}
+
+{# warn warn warn dont do stats of password recovering pages #}
+
 {% try_include 'private/stats.html' %}
 </body>
-{% meneame_endtime %}
-{% endspacefull %}
+{% endif %} {# PARTIAL #}
+
 </html>

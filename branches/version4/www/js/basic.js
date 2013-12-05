@@ -7,7 +7,7 @@ var base_key="{{globals.security_key}}",
     mnm_start_time=(new Date()).getTime());
     #}
 
-var onDocumentLoad = [];
+var onDocumentLoad = [], postJavascript = [];
 function addPostCode(code) {
 	onDocumentLoad.push(code);
 }

@@ -87,15 +87,12 @@ class LCPBase {
 
 
 			case 'h':
-				$suffix = $extra = '';
+				$suffix = '';
 				if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
 					$matches[4] = substr($matches[4], 0, -1);
 					$suffix = ')';
 				}
-				if (! $globals['mobile'] && preg_match('/\.(?:jpg|jpeg|gif|png)$|youtube.com\/(?:.*v=|embed)|youtu\.be\/.+/iS', $matches[4])) {
-					$extra = 'class="fancybox"';
-				}
-				return $matches[1].'<a '.$extra.' href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
+				return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 			/*
 			case '_':
 				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';

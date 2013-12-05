@@ -70,9 +70,6 @@
 	{% exec htmlspecialchars self.url as url %}
 	{% if globals.link %}<h1>{% else %}<h2>{% endif %}
 		<a href="{{ url }}" class="{% if self.fancybox %}fancybox {% endif %}l:{{ self.id }}" 
-		{% if globals.click_counter %}
-			onmousedown="return clk(this, {{ self.id }})"
-		{% endif %}
 		{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
 		</a>
 		{% if self.content_type == 'image' %}

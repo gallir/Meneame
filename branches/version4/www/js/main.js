@@ -3,7 +3,13 @@ var base_url="{{ globals.base_url }}",
 	version_id="v_{{ globals.v }}",
 	base_static="{{ globals.base_static_noversion }}",
 	is_mobile={{ globals.mobile }},
-	touchable=false;
+	touchable=false,
+	loadedJavascript = [],
+	do_partial=false;
+
+if (typeof window.history.pushState == "function") {
+	do_partial = true;
+}
 
 var now = (new Date);
 var now_ts = now.getTime();
@@ -335,11 +341,6 @@ function bindTogglePlusMinus(img_id, link_id, container_id) {
 	});
 }
 
-function clk(f, id) {
-	f.href=base_url + 'go.php?id=' + id;
-	return true;
-}
-
 function fancybox_expand_images(event) {
 	if (event.shiftKey) {
 		event.preventDefault();
@@ -446,6 +447,7 @@ function fancybox_gallery(type, user, link) {
 		if (timer || active) hide();
 		active = true;
 
+		$(document).on('onAjax', hide);
 		$(document).on('mousemove.tooltip', function (e) { mouseMove(e) });
 		if (box.outerWidth() > 0) {
 			if ($(window).width() - event.pageX < box.outerWidth() * 1.05) reverse = true;
@@ -983,7 +985,7 @@ var navMenu = new function () {
 
 	this.prepare = function() {
 		if (panel !== false) return;
-		$( window ).on('unload', function() { panel.hide(); });
+		$( window ).on('unload onAjax', function() { panel.hide(); });
 		panel = $('<div id="nav-panel"></div>');
 		if (is_mobile) {
 			panel.append($('#searchform'));
@@ -1186,10 +1188,16 @@ var historyManager = new function () {
 		if (typeof window.history.pushState != "function") return;
 
 		var state = { id: history.length, name: name, href: location.href};
-		window.history.pushState(state, '', location.href + "#" + name);
+		var new_href;
+		if (name.charAt(0) == "/")  {
+			new_href = name;
+		} else {
+			new_href = "#" + name;
+		}
+		window.history.pushState(state, '', new_href);
 		state.callback = callback;
 		history.push(state);
-		reportAjaxStats('', '', location.href); 
+		reportAjaxStats('', '', new_href); 
 	};
 
 	this.pop = function (name) {
@@ -1203,104 +1211,80 @@ var historyManager = new function () {
 
 		var state = history.pop();
 		if (typeof state.callback == "function") {
-			state.callback();
+			state.callback(state);
 		}
 	}
 };
 
 var fancyBox = new function () {
+	this.parse = function ($e) {
+		var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
+		var myHref = $e.attr('href'), myTitle, photo = false;
+		var ajaxName = "image";
 
-	this.init = function (parent) {
-		this.scan(parent);
-		$(window).on("DOMChanged", function(event, element) {
-				fancyBox.scan(element);
-		});
-	};
-
-	this.scan = function (parent) {
-		var selector;
-
-		if (! jQuery().colorbox) return;
-
-		if (typeof parent == 'object') {
-			elements = $(parent).find('a.fancybox');
-		} else if (typeof parent == 'string') {
-			elements = $(parent + ' > a.fancybox');
-		} else {
-			elements = $('a.fancybox');
+		if ($e.attr('target')) {
+			target = ' target="'+$e.attr('target')+'"';
 		}
 
-		elements.not('[class*=" cbox"]').each(function(i) {
-			var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
-			var box = $(this), myHref = box.attr('href'), myTitle, photo = false;
-			var ajaxName = "image";
+		if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
+			if (is_mobile || touchable) return;
+			iframe = true;
+			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
+			href = 'http://www.youtube.com/embed/'+v[1];
+			if (typeof v[2] != "undefined") href += v[2];
+			innerWidth = 640;
+			innerHeight = 390;
+			maxWidth = false;
+			maxHeight = false;
+			ajaxName = "youtube";
 
-
-			if (box.attr('target')) {
-				target = ' target="'+box.attr('target')+'"';
+			myClass = $e.attr('class');
+			if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
+				/* It's a link, call go.php */
+				var link = linkId[1];
+				onLoad = function() {
+					$.get(base_url + 'go.php?quiet=1&id='+link);
+				};
 			}
-
-			if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
-				if (is_mobile || touchable) return;
-				iframe = true;
-				title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
-				href = 'http://www.youtube.com/embed/'+v[1];
-				if (typeof v[2] != "undefined") href += v[2];
-				innerWidth = 640;
-				innerHeight = 390;
-				maxWidth = false;
-				maxHeight = false;
-				ajaxName = "youtube";
-
-				myClass = box.attr('class');
-				if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
-					/* It's a link, so we must call to go.php */
-					var link = linkId[1];
-					onLoad = function() {
-						$.get(base_url + 'go.php?quiet=1&id='+link);
-					};
-				}
+		} else {
+			if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
+				photo = true;
+			}
+			myTitle = $e.attr('title');
+			if (myTitle && myTitle.length > 0 && myTitle.length < 30) title = myTitle;
+			else title = '{% trans _('enlace original') %}';
+			title = '<a target="_blank" href="'+myHref+'"'+target+'>'+title+'</a>';
+			href = myHref;
+			if (is_mobile) {
+				width = '100%';
+				height = '100%';
 			} else {
-				if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
-					photo = true;
-				}
-				myTitle = box.attr('title');
-				if (myTitle && myTitle.length > 0 && myTitle.length < 30) title = myTitle;
-				else title = '{% trans _('enlace original') %}';
-				title = '<a target="_blank" href="'+myHref+'"'+target+'>'+title+'</a>';
-				href = myHref;
-				if (is_mobile) {
-					width = '100%';
-					height = '100%';
-				} else {
-					maxWidth = '75%';
-					maxHeight = '75%';
-				}
+				maxWidth = '75%';
+				maxHeight = '75%';
 			}
+		}
 
-			$(this).colorbox({
-				'photo': photo,
-				'href': href,
-				'transition': 'none',
-				'width': width,
-				'height': height,
-				'maxWidth': maxWidth,
-				'maxHeight': maxHeight,
-				'opacity': 0.5,
-
-				'title': title,
-				'iframe': iframe,
-				'innerWidth': innerWidth,
-				'innerHeight': innerHeight,
-				'overlayClose': overlayClose,
-				'onLoad': onLoad,
-				'onOpen': function () {
-					historyManager.push(ajaxName, $.colorbox.close);
-				},
-				'onClosed': function () {
-					 historyManager.pop(ajaxName);
-				}
-			});
+		$.colorbox({
+			'photo': photo,
+			'href': href,
+			'transition': 'none',
+			'width': width,
+			'height': height,
+			'maxWidth': maxWidth,
+			'maxHeight': maxHeight,
+			'opacity': 0.5,
+			'title': title,
+			'iframe': iframe,
+			'innerWidth': innerWidth,
+			'innerHeight': innerHeight,
+			'overlayClose': overlayClose,
+			'onLoad': onLoad,
+			'onOpen': function () {
+				historyManager.push(ajaxName, $.colorbox.close);
+			},
+			'onClosed': function () {
+				 historyManager.pop(ajaxName);
+			}
 		});
 	};
 };
@@ -1582,30 +1566,7 @@ var notifier = new function () {
 })(jQuery);
 
 
-$(document).ready(function () {
-	var m, m2, target, canonical;
-
-	/* Put dates in <span class="ts"> */
-	$('span.ts').each(to_date);
-	$.ajaxSetup({ cache: false });
-
-	$(window).on("DOMChanged", 
-		function(event, parent) {
-			$(parent).find('span.ts').each(to_date);
-		}
-	);
-
-	mDialog.init(); /* Important, befora calling extra javascripts */
-
-	for (var i= 0; i < onDocumentLoad.length; i++) {
-		if (typeof onDocumentLoad[i] == "function") {
-			onDocumentLoad[i]();
-		} else {
-			eval(onDocumentLoad[i]);
-		}
-	}
-
-
+function analyze_hash() {
 	if (location.hash && (m = location.hash.match(/#([\w\-]+)$/)) && (target = $('#'+m[1])).length > 0 ) {
 		target.css('opacity', 0.2);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
@@ -1634,15 +1595,145 @@ $(document).ready(function () {
 		});
 	}
 
+}
+
+var clickManager = new function () {
+	$(document).on("click", "a", parse);
+
+	function parse(e) {
+		var m;
+		var href = $(this).attr("href");
+		var aClass = $(this).attr("class") || '';
+
+		if ( (aClass.match(/fancybox/)
+				|| href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
+			&& ! aClass.match(/cbox/) 
+			&& ! $(this).attr("target")) {
+			fancyBox.parse($(this));
+			return false;
+		}
+
+		if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/)) {
+			var id = m[1];
+			location.href = base_url + "go.php?id=" + id;
+			return false;
+		}
+	}
+
+{# **** For partial-ajax load
+		var re = new RegExp("^/|//"+location.hostname);
+		if (re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|rss2/)) {
+			console.log("local: " + href);
+			load(href);
+			return false;
+		}
+	}
+
+	function load(href) {
+		var a = href;
+
+		if (a.indexOf("?") < 0) a += "?";
+		else  a += "&";
+		a += "partial";
+
+		console.log(a);
+		$e = $("#variable");
+		$.ajaxSetup({cache: false});
+		$(document.body).css('cursor', 'progress').trigger('onAjax');
+		$e.load(a, function (html) { 
+			$.ajaxSetup({cache: true});
+			$(document.body).css('cursor', 'default');
+			loaded($e, href, html);
+		});
+			
+	}
+
+	function loaded($e, href, html) {
+		window.scrollTo(0, 0);
+		console.log("Loaded: " + href);
+		execOnDocumentLoad();
+		$e.trigger("DOMChanged", $e);
+		analyze_hash();
+		historyManager.push(href, function (state) {
+			console.log(state);
+		});
+	}
+******* #}
+
+};
+
+
+function loadJS(url) {
+	return $.ajax({ url: url,
+		dataType: "script",
+		async: true,
+		cache: true,
+		success: function () {
+			loadedJavascript.push(this.url);
+		}
+	});
+}
+
+function execOnDocumentLoad() {
+	var deferred = $.Deferred();
+	deferred.resolve();
+
+	/*for (var i= 0; i < postJavascript.length; i++) {*/
+	$.each(postJavascript, function(ix, url) {
+		if ($.inArray(url, loadedJavascript) < 0) {
+			deferred = deferred.then(function () {
+				return loadJS(url);
+			});
+		}
+	});
+
+	deferred.then(function () {
+		postJavascript = [];
+
+		$.each(onDocumentLoad, function (ix, code) {
+			try {
+				if (typeof code == "function") {
+					code();
+				} else {
+					eval(code);
+				}
+			} catch(err) {
+				console.log(err);
+			}
+		});
+		onDocumentLoad = [];
+	});
+}
+
+$(document).ready(function () {
+	var m, m2, target, canonical;
+
+	/* Put dates in <span class="ts"> */
+	$('span.ts').each(to_date);
+	$.ajaxSetup({ cache: false });
+
+	$(window).on("DOMChanged", 
+		function(event, parent) {
+			$(parent).find('span.ts').each(to_date);
+		}
+	);
+
+	mDialog.init();
+
+	analyze_hash();
+
+	execOnDocumentLoad();
+
 	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
 
 	notifier.init();
 	navMenu.init();
 	$.tooltip();
-	fancyBox.init();
+
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});
+
 
 });
 

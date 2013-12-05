@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{globals.lang}}" prefix="og: http://ogp.me/ns#">
+
+{% if ! globals.partial %}
 <head>
 <meta charset="utf-8" />
+
 <meta name="ROBOTS" content="NOARCHIVE" />
 <meta name="generator" content="meneame" />
 
@@ -84,10 +87,6 @@
 <script src="{{ globals.base_url }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script>
 #}
 
-<script type="text/javascript">
-	{% include 'js/basic.js' %}
-</script>
-
 {% if globals.extra_head %}
 	{{ globals.extra_head}}
 {% endif %}
@@ -95,9 +94,7 @@
 </head>
 <body id="{{id}}" {{globals.body_args}}>
 
-<div id="header">
 <div id="header-top">
-
   <div id="nav-menu"></div>
 
   <a href="{{ globals.base_url }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
@@ -115,8 +112,18 @@
 
   {% include "header_userinfo.html" %}
 
-</div><!--header-top-->
+</div>
 
+<div id="variable">
+{% endif %} {# PARTIAL #}
+
+<script type="text/javascript">
+	{% include 'js/basic.js' %}
+</script>
+
+
+
+<div id="header">
 <div id="header-center">
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>
   <div class="edname">
