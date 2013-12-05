@@ -1678,7 +1678,6 @@ function execOnDocumentLoad() {
 	var deferred = $.Deferred();
 	deferred.resolve();
 
-	/*for (var i= 0; i < postJavascript.length; i++) {*/
 	$.each(postJavascript, function(ix, url) {
 		if ($.inArray(url, loadedJavascript) < 0) {
 			deferred = deferred.then(function () {
@@ -1708,7 +1707,7 @@ function execOnDocumentLoad() {
 $(document).ready(function () {
 	var m, m2, target, canonical;
 
-	/* Put dates in <span class="ts"> */
+	/* Put dates */
 	$('span.ts').each(to_date);
 	$.ajaxSetup({ cache: false });
 
