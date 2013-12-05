@@ -282,7 +282,7 @@ if ($links) {
 			if ($globals['click_counter'] > 0) {
 				echo ' onmousedown="this.href=\'http://'.get_server_name().$globals['base_url'].'go.php?id='.$link->id.'\'; return true"';
 			}
-			echo " $rel>"._('noticia original')."</a></p>";
+			echo " $rel>"._('noticia original')."</a> (".parse_url($link->url, 1).")</p>";
 
 			echo "]]></description>\n";
 		}
