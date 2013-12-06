@@ -64,12 +64,12 @@ border: none;
 font-weight: bold;
 margin: 4px 0 4px 0;
 padding: 2px 4px 2px 4px;
-background: #FF6400 url('{{ globals.base_static }}img/common/button-bck-01.png') top left repeat-x;
+background-color: #FF6400;
 color: #fff;
 }
 
 .button:hover, button:hover, input[type="button"]:hover, input[type="submit"]:hover {
-background: #FFB300;
+background-color: #FFB300;
 }
 
 .button:disabled, button:disabled, input[type="button"]:disabled, input[type="submit"]:disabled {
