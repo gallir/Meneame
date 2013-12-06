@@ -1704,6 +1704,7 @@ function execOnDocumentLoad() {
 				}
 			} catch(err) {
 				console.log(err);
+				console.log(code);
 			}
 		});
 		onDocumentLoad = [];
@@ -1720,6 +1721,7 @@ $(document).ready(function () {
 	$(window).on("DOMChanged", 
 		function(event, parent) {
 			$(parent).find('span.ts').each(to_date);
+			execOnDocumentLoad();
 		}
 	);
 
