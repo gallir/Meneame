@@ -39,6 +39,13 @@ if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_u
 header("Content-Type: $media->mime");
 header('Last-Modified: ' . date('r', $media->date));
 header('Cache-Control: max-age=3600');
+
+if (!empty($media->mime)) {
+	$ext = explode("/", $media->mime);
+	$ext = $ext[count($ext)-1];
+}
+header("Content-Disposition: filename=meneame-media-$type-$id." . $ext);
+
 if ($media->file_exists() && ! empty($globals['xsendfile'])) {
 	/* Be careful with privacy and rules in the server
 	* Good rule for nginx:
