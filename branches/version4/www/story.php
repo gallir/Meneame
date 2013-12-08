@@ -116,7 +116,14 @@ switch ($url_args[1]) {
 		$order_field = 'comment_order';
 
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
-			if (!$current_page) $current_page = ceil($link->comments/$globals['comments_page_size']);
+			if (!$current_page) {
+				if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
+					$last_com_first = true;
+					$current_page = ceil($link->comments/$globals['comments_page_size']);
+				} else {
+					$current_page = 1;
+				}
+			}
 			$offset=($current_page-1)*$globals['comments_page_size'];
 			$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		}
@@ -243,11 +250,10 @@ case 2:
 
 	if($tab_option == 1) {
 		print_relevant_comments($link, $requested_page);
-		$reverse = true;
 	} else {
-		$reverse = false;
+		$last_com_first = false;
 	}
-	do_comment_pages($link->comments, $current_page, $reverse);
+	do_comment_pages($link->comments, $current_page, $last_com_first);
 
 	$update_comments = false;
 	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
@@ -285,7 +291,7 @@ case 2:
 			$link->update_comments();
 		}
 	}
-	do_comment_pages($link->comments, $current_page, $reverse);
+	do_comment_pages($link->comments, $current_page, $last_com_first);
 
 	if ($link->comments > 5) {
 		add_javascript('get_total_answers("comment","'.$order_field.'",'.$link->id.','.$offset.','.$globals['comments_page_size'].');');
@@ -472,10 +478,10 @@ function do_comment_pages($total, $current, $reverse = true) {
 	echo '<div class="pages">';
 
 	if($current==1) {
-		echo '<span class="nextprev">&#171; '._('anterior'). '</span>';
+		echo '<span class="nextprev">&#171;</span>';
 	} else {
 		$i = $current-1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="prev">&#171; '._('anterior').'</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="prev">&#171;</a>';
 	}
 
 
@@ -484,7 +490,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 		if($i==$current) {
 			echo '<span class="current">'.$i.'</span>';
 		} else {
-			if ($total_pages < 7 || abs($i-$current) < 3 || $i < 3 || abs($i-$total_pages) < 2) {
+			if ($total_pages < 7 || abs($i-$current) < 1 || $i < 3 || abs($i-$total_pages) < 2) {
 				echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
 			} else {
 				if ($i<$current && !$dots_before) {
@@ -500,9 +506,9 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if($current<$total_pages) {
 		$i = $current+1;
-		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="next">'._('siguiente').' &#187;</a>';
+		echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="next">&#187;</a>';
 	} else {
-		echo '<span class="nextprev">'._('siguiente'). ' &#187;</span>';
+		echo '<span class="nextprev">&#187;</span>';
 	}
 	echo '</div>';
 

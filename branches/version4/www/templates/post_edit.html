@@ -53,11 +53,6 @@
 </div>
 
 <script type="text/javascript">
-$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
-</script>
-
-
-<script type="text/javascript">
 /* prepare Options Object */
 {% if self.id == 0 %}
 	var options = {
@@ -86,6 +81,9 @@ $('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
 	};
 {% endif %}
 /* wait for the DOM to be loaded */
-$('#thisform{{ self.id }}').ajaxForm(options);
-$(document).ready(function(){$('textarea').autosize();});
+addPostCode( function() {
+	$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
+	$('#thisform{{ self.id }}').ajaxForm(options);
+	$('textarea').autosize();
+});
 </script>
