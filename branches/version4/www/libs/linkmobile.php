@@ -33,7 +33,7 @@ class LinkMobile extends Link{
 		$this->total_votes = $this->votes+$this->anonymous;
 		$this->rpermalink  = $this->get_relative_permalink();
 		$this->author_html = '<a href="'.get_user_uri($this->username, 'history').'">'.$this->username.'</a>';
-		$this->normal_link = preg_replace('/\/mobile\//', '', $this->get_relative_permalink());
+		$this->normal_link = preg_replace('/\/mobile\//', '/', $this->get_relative_permalink());
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->thumb_url    = $this->has_thumb();
 
