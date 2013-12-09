@@ -11,11 +11,11 @@ define("mnminclude", dirname(__FILE__).'/libs/');
 ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 $globals['basic_config'] = true; include('../config.php');
-$globals['site_name'] = 'Menéame móvil';
+$globals['site_name'] = 'Menéame reduced';
 
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
-$globals['base_url'] = '/';
+$globals['base_url'] = '/mobile/';
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 $globals['static_server'] = '';
@@ -35,8 +35,8 @@ $globals['base_user_url'] = 'user/';
 
 $globals['mobile_version'] = true; // Mark we are using mobile version
 
-$globals['js_main'] = 'mobile.js.php?5';
-$globals['css_main'] = 'css/es/mnm-mobile.css?5';
+$globals['js_main'] = 'mobile.js.php';
+$globals['css_main'] = 'css/es/mnm-mobile.css';
 $globals['css_color'] = '';
 $globals['html_main'] = 'html1-mobile.php';
 $globals['comments_page_size'] = 50;
