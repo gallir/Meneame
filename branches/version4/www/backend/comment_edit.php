@@ -136,7 +136,7 @@ function save_comment () {
 		}
 
 
-		header('Location: '.$link->get_permalink() . '#c-'.$comment->c_order);
+		header('Location: '.$link->get_permalink() . '/000'.$comment->c_order);
 		die;
 	} else {
 		echo _('error actualizando, probablemente tiempo de edición excedido');
