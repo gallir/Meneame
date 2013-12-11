@@ -27,6 +27,7 @@ mobile_redirect();
 
 $globals['cache-control'][] = 'max-age=3';
 
+$argc = 0;
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	//$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);
 	/* explode() + ltrim() is +30% faster */
@@ -74,21 +75,28 @@ if ($link->is_discarded()) {
 }
 
 
+$total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
-$last_arg = count($url_args)-1;
-if ($last_arg > 0) {
+if (($argc = count($url_args)) > 1) {
 	// Dirty trick to redirect to a comment' page
-	if (preg_match('/^000/', $url_args[$last_arg])) {
-		header ('HTTP/1.1 303 Load');
-		if ((int) $url_args[$last_arg] > 0 && (int) $url_args[$last_arg] <= $link->comments) {
-			header('Location: ' . $link->get_permalink().get_comment_page_suffix($globals['comments_page_size'], (int) $url_args[$last_arg], $link->comments).'#c-'.(int) $url_args[$last_arg]);
-		} else {
+	if (preg_match('/^c0\d+$/', $url_args[1])) {
+		$c = intval(substr($url_args[1], 2));
+		if (! $c > 0 || $c > $link->comments) {
+			header ('HTTP/1.1 303 Load');
 			header('Location: ' . $link->get_permalink());
+			die;
 		}
-		die;
-	}
-	if ($url_args[$last_arg] > 0) {
-		$requested_page = $current_page = (int) $url_args[$last_arg];
+		$canonical_page = $current_page = intval($c/$globals['comments_page_size']) + 1;
+		unset($url_args[1]);
+	} elseif ((int) $url_args[$argc-1] > 0) {
+		$current_page = intval($url_args[$argc-1]);
+		if ($current_page > $total_pages) {
+			do_error(_('página inexistente'), 404);
+		}
+		if ($argc == 2) {
+			// If there is no other previous option, this the canonical "page"
+			$canonical_page = $current_page;
+		}
 		array_pop($url_args);
 	}
 }
@@ -119,14 +127,24 @@ switch ($url_args[1]) {
 			if (!$current_page) {
 				if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
 					$last_com_first = true;
-					$current_page = ceil($link->comments/$globals['comments_page_size']);
+					$canonical_page = $current_page = ceil($link->comments/$globals['comments_page_size']);
 				} else {
-					$current_page = 1;
+					$canonical_page = $current_page = 1;
 				}
 			}
 			$offset=($current_page-1)*$globals['comments_page_size'];
 			$limit = "LIMIT $offset,".$globals['comments_page_size'];
+		} else {
+			$canonical_page = 1;
 		}
+
+		if ($canonical_page > 1) {
+			$globals['extra_head'] .= '<link rel="prev" href="'.$link->get_canonical_permalink($canonical_page-1).'" />';
+		}
+		if ($canonical_page < $total_pages) {
+			$globals['extra_head'] .= '<link rel="next" href="'.$link->get_canonical_permalink($canonical_page+1).'" />';
+		}
+
 		// Geo check
 		// Don't show it if it's a mobile browser
 		if(!$globals['mobile'] && $globals['google_maps_in_links'] && $globals['google_maps_api']) {
@@ -200,7 +218,7 @@ if (!empty($link->tags))
 	$globals['tags']=$link->tags;
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="'.$link->get_canonical_permalink().'" />';
+$globals['extra_head'] .= '<link rel="canonical" href="'.$link->get_canonical_permalink($canonical_page).'" />';
 
 // add also a rel to the comments rss
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />';
@@ -249,7 +267,7 @@ case 2:
 	echo '<div class="comments">';
 
 	if($tab_option == 1) {
-		print_relevant_comments($link, $requested_page);
+		print_relevant_comments($link, $current_page);
 	} else {
 		$last_com_first = false;
 	}
@@ -570,13 +588,11 @@ function print_relevant_comments($link, $page) {
 			$obj->id = $comment->comment_id;
 			$obj->order = $comment->comment_order;
 			$obj->link_id = $link->id;
-			$obj->link = $link_url.'/000'.$comment->comment_order;
 			$obj->user_id = $comment->user_id;
 			$obj->avatar = $comment->user_avatar;
 			$obj->vote = $comment->vote_value;
 			$obj->val = $comment->val;
 			$obj->karma = $comment->comment_karma;
-			$obj->link_url = $link_url;
 			$objects[] = $obj;
 			if (! $page 
 					&& ! $self
@@ -606,7 +622,6 @@ function get_highlighted_comment($obj) {
 	// Read the object for printing the summary
 	$self = Comment::from_db($obj->id);
 	$self->link_id = $obj->link_id;
-	$self->url = $self->get_relative_individual_permalink();
 	$self->link_permalink =  $obj->link_url;
 	// Simplify text of the comment
 	$self->prepare_summary_text(1000);

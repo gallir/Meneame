@@ -40,12 +40,12 @@ class LCPBase {
 					$id = substr($matches[2], 1);
 					if (is_a($this, 'Comment')) {
 						if ($id > 0) {
-							return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
+							return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
 						} else {
 							return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
 						}
 					} elseif (is_a($this, 'Link')) {
-						return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/000'.$id.'" rel="nofollow">#'.$id.'</a>';
+						return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
 					}
 				} else {
 					switch (get_class($this)) {

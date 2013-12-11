@@ -2,7 +2,7 @@
 	<a href="{{ self.url }}"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
 {% else %}
 	{% if self.link_permalink %}
-		<a href="{{ self.link_permalink }}/000{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
+		<a href="{{ self.link_permalink }}/c0{{ self.c_order }}#c-{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
 	{% else %}
 		<strong>#{{ self.c_order }}</strong>&nbsp;&nbsp;
 	{% endif %}

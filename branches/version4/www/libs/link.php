@@ -996,13 +996,16 @@ class Link extends LCPBase {
 		return 'http://'.get_server_name().$this->get_relative_permalink();
 	}
 
-	function get_canonical_permalink() {
+	function get_canonical_permalink($page = false) {
 		global $globals;
 
+		if (! $page || $page == 1) $page = '';
+		else $page = "/$page";
+
 		if (!isset($globals['canonical_server_name']) || empty($globals['canonical_server_name'])) {
-			return $this->get_permalink();
+			return $this->get_permalink().$page;
 		} else {
-			return 'http://'.$globals['canonical_server_name'].$this->get_relative_permalink();
+			return 'http://'.$globals['canonical_server_name'].$this->get_relative_permalink().$page;
 		}
 	}
 

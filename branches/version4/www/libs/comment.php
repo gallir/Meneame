@@ -327,7 +327,7 @@ class Comment extends LCPBase {
 
 	// Add calls for tooltip javascript functions
 	function put_comment_tooltips(&$str) {
-		return preg_replace('/(^|[\(,;\.\s¿¡])#([1-9][0-9]*)/', "$1<a class='tooltip c:$this->link-$2' href=\"".$this->link_permalink."/000$2\" rel=\"nofollow\">#$2</a>", $str);
+		return preg_replace('/(^|[\(,;\.\s¿¡])#([1-9][0-9]*)/', "$1<a class='tooltip c:$this->link-$2' href=\"".$this->link_permalink."/c0$2#c-$2\" rel=\"nofollow\">#$2</a>", $str);
 	}
 
 	function same_text_count($min=30) {
@@ -593,7 +593,7 @@ class Comment extends LCPBase {
 
 			// Comment stored, just redirect to it page
 			header ('HTTP/1.1 303 Load');
-			header('Location: '.$link->get_permalink() . '/000'.$comment->c_order);
+			header('Location: '.$link->get_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
 			die;
 		}
 		$db->rollback();
