@@ -135,7 +135,7 @@ function depublish($site_id) {
 
 
 
-	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and date < date_sub(now(), interval 8 minute) and link = link_id and link_negatives > link_votes / 8");
+	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and date < date_sub(now(), interval 14 minute) and link = link_id and link_negatives > link_votes / 8");
 
 	if ($links) {
 		$votes_clicks = $db->get_col("select SQL_NO_CACHE link_votes/counter from links, sub_statuses, link_clicks where sub_statuses.id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and link = link_id and link_clicks.id = link");
@@ -156,7 +156,7 @@ function depublish($site_id) {
 			$positives = $positives * $c;
 			echo "Probability: $prob New positives: $positives ($c)\n";
 
-			if ($negatives > 10 && $negatives > $l->karma/6 && $l->negatives > $l->votes/6 && $l->negatives > 5
+			if ($negatives > 10 && $negatives > $c * $l->karma/6 && $l->negatives > $c * $l->votes/6 && $l->negatives > 5
 				&& ($negatives > $positives || ($negatives > $c * $l->karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
 				$karma_old = $l->karma;
@@ -186,7 +186,7 @@ function depublish($site_id) {
 				foreach ($ids as $id) {
 					$u = new User($id);
 					if ($u->read) {
-						$u->add_karma(0.25, _('Negativo a retirada de portada'));
+						$u->add_karma(0.20, _('Negativo a retirada de portada'));
 					}
 				}
 

@@ -33,7 +33,7 @@ if ($globals['click_counter'] && $hours > 20) {
 
 foreach ($link_sqls as $key => $sql) {
 	$res = $db->get_row($sql);
-	if (! $res) next;
+	if (! $res) continue;
 	$link = new Link;
 	$link->id = $res->id;
 	if ($link->read()) {
