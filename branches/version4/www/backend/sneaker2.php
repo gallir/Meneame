@@ -402,7 +402,7 @@ function get_comment($time, $type, $commentid, $userid) {
 
 	$foo_link->id=$event->link_id;
 	$foo_link->uri=$event->link_uri;
-	$json['link'] = $foo_link->get_relative_permalink()."/000$event->comment_order";
+	$json['link'] = $foo_link->get_relative_permalink()."/c0$event->comment_order#c-$event->comment_order";
 	$json['id'] = $commentid;
 	$json['status'] = get_status($event->link_status);
 	$json['ts'] = $time;
