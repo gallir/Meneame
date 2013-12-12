@@ -182,10 +182,10 @@ if ($comments) {
 
 		// Title must not carry htmlentities
 		echo "		<title>#$comment->order ".htmlentities2unicodeentities($link->title)."</title>\n";
-		echo "		<link>".$comment->link_permalink."/000".$comment->order."</link>\n";
+		echo "		<link>$comment->link_permalink/c0$comment->order#c-$comment->order</link>\n";
 		echo "		<pubDate>".date("r", $comment->date)."</pubDate>\n";
 		echo "		<dc:creator>$comment->username</dc:creator>\n";
-		echo "		<guid>".$comment->link_permalink."/000".$comment->order."</guid>\n";
+		echo "		<guid>$comment->link_permalink/c0$comment->order#c-$comment->order</guid>\n";
 		echo "		<description><![CDATA[<p>$content";
 		echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$comment->username.'</strong></p>';
 		echo "]]></description>\n";
