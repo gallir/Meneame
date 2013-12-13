@@ -29,7 +29,7 @@ if(!$link) {
 	error(_('artículo inexistente'));
 }
 
-if(!$link->is_votable()) {
+if(!$link->is_votable() || $link->total_votes == 0) {
 	error(_('votos cerrados'));
 }
 
