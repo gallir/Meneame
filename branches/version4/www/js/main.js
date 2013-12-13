@@ -845,7 +845,7 @@ function priv_new(user_id) {
 	if (is_mobile) {
 		w = h = '100%';
 	} else {
-		w = '500px';
+		w = '600px';
 		h = '350px';
 
 	}
