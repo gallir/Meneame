@@ -1384,6 +1384,22 @@ function reject_connection() {
 	die;
 }
 
+function redirect($url, $code = 301) {
+	global $globals;
+
+	if ($globals['partial']) {
+		if (preg_match('/\?/', $url)) {
+			$url .= '&partial';
+		} else {
+			$url .= '?partial';
+		}
+	}
+    header("HTTP/1.1 $code Moved");
+    header('Location: ' . $url);
+    header("Content-Length: 0");
+}
+
+
 function close_connection(){
 	if (function_exists('fastcgi_finish_request')) {
 		fastcgi_finish_request();

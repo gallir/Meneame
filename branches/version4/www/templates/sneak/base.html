@@ -36,7 +36,10 @@ var do_flip = false;
 var mnm_banner_reload = 180000;
 
 
-addPostCode(function(){start_sneak()});
+addPostCode(function(){
+	do_partial = false;
+	start_sneak();
+});
 
 function play_pause() {
 	if (is_playing()) {
@@ -115,11 +118,6 @@ function to_html(data) {
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
-			if (! global_options.show_admin) {
-				/* Call fancyBox to scan the new chat if it's not admin (i.e. not anonymized) */
-				var c = chat_counter;
-				setTimeout(function() {fancyBox.scan('#chat'+c)}, 1);
-			}
 			chat_counter += 1;
 			return html;
 			break;

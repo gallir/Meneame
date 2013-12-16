@@ -25,10 +25,10 @@ mb_internal_encoding('UTF-8');
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
-	$globals['scheme'] = $globals['url'] = 'https';
+	$globals['scheme'] = 'https';
 } else {
 	$globals['https'] = false;
-	$globals['scheme'] = $globals['url'] = 'http';
+	$globals['scheme'] = 'http';
 }
 
 // Use proxy and load balancer detection
@@ -74,7 +74,9 @@ if($_SERVER['HTTP_HOST']) {
 		// Reduce page size for mobiles
 		$globals['comments_page_size'] = intval($globals['comments_page_size']/2);
 		$globals['page_size'] = intval($globals['page_size']/2);
-		
+		if (preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT'])) {
+			$globals['ads'] = false;
+		}
 	} else {
 		$globals['mobile'] = 0;
 	}
@@ -114,12 +116,10 @@ if($_SERVER['HTTP_HOST']) {
 if (!empty($globals['static_server']) && ! $globals['https']) {
 	$globals['base_static_noversion'] = $globals['static_server'].$globals['base_url'];
 } else {
-	$globals['base_static_noversion'] = $globals['url'].'://'.$globals['server_name'].$globals['base_url'];
+	$globals['base_static_noversion'] = $globals['scheme'].'://'.$globals['server_name'].$globals['base_url'];
 }
 
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
-
-$globals['url'] .= '//'.$globals['server_name'].htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES);
 
 if (empty($globals['static_server_name'])) {
 	if ($globals['static_server']) $globals['static_server_name'] = preg_replace('/^http:\/\//', '', $globals['static_server']);
