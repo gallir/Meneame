@@ -58,13 +58,13 @@ if ($current_user->admin) {
 		if($uid) {
 			$user->id = $uid;
 		} else {
-			header('Location: ' . html_entity_decode(get_user_uri_by_uid($login, $_REQUEST['view'])));
+			redirect(html_entity_decode(get_user_uri_by_uid($login, $_REQUEST['view'])));
 			die;
 		}
 } else {
 		if($uid > 0) {
 			// Avoid anonymous and non admins users to use the id, it's a "duplicated" page
-			header('Location: ' . html_entity_decode(get_user_uri($login, $_REQUEST['view'])));
+			redirect(html_entity_decode(get_user_uri($login, $_REQUEST['view'])));
 			die;
 		}
 		$user->username = $login;

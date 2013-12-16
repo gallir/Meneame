@@ -20,6 +20,10 @@ margin:0px;
 padding:0px;
 }
 
+#ajaxinfo {
+display: none;
+}
+
 label {
 color: #FF6400;
 }

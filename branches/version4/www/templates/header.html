@@ -115,7 +115,14 @@
 </div>
 
 <div id="variable">
-{% endif %} {# PARTIAL #}
+{% else %} {# PARTIAL partial #}
+<span id="ajaxinfo" 
+	data-partial="1"
+	data-uri="{{ globals.uri|escape }}"
+	data-uid="{{ current_user.user_id }}"
+	data-title="{{ title }}">
+</span>
+{% endif %} {# PARTIAL partial #}
 
 <script type="text/javascript">
 	{% include 'js/basic.js' %}

@@ -7,7 +7,7 @@ var base_url="{{ globals.base_url }}",
 	loadedJavascript = [],
 	do_partial=false;
 
-if (typeof window.history.pushState == "function") {
+if (typeof window.history.pushState == "function" && navigator.userAgent.match(/meneame/i)) {
 	do_partial = true;
 }
 
@@ -967,26 +967,33 @@ function share_tw(e) {
  
 })(jQuery);
 
-var navMenu = new function () {
+(function () {
 	var panel = false;
 
-	this.init = function() {
-		navMenu.prepare();
-		$("#nav-menu").on('click', function() {
-			if (panel.is(":visible")) {
-				$('html').off('click', click_handler);
-				panel.hide();
-			} else {
-				$('html').on('click', click_handler);
-				panel.show();
-			}
-		});
-	};
 
-	this.prepare = function() {
-		if (panel !== false) return;
-		$( window ).on('unload onAjax', function() { panel.hide(); });
-		panel = $('<div id="nav-panel"></div>');
+	$("#nav-menu").on('click', function() {
+		prepare();
+		if (panel.is(":visible")) {
+			$('html').off('click', click_handler);
+			panel.hide();
+		} else {
+			$('html').on('click', click_handler);
+			panel.show();
+		}
+	});
+
+	function prepare() {
+		if (panel == false) {
+			panel = $('<div id="nav-panel"></div>');
+			panel.appendTo("body");
+			$(window).on('unload onAjax', function() {
+				panel.empty();
+				panel.hide(); 
+			});
+		} else if ( panel.children().length > 0 ) {
+			return;
+		}
+
 		if (is_mobile) {
 			panel.append($('#searchform'));
 			panel.append($('#header-menu .header-menu01'));
@@ -994,17 +1001,16 @@ var navMenu = new function () {
 			panel.append($('#searchform').clone());
 			panel.append($('#header-menu .header-menu01').clone());
 		}
-		panel.appendTo("body");
 	};
 
-	var click_handler = function (e) {
+	function click_handler(e) {
 		if (! panel.is(":visible")) return;
 		if ($(e.target).closest('#nav-panel, #nav-menu').length == 0) {
 			panel.hide();
 			e.preventDefault();
 		}
 	};
-};
+})();
 
 /* Drop an image file
 ** Modified from http://gokercebeci.com/dev/droparea
@@ -1182,7 +1188,13 @@ var historyManager = new function () {
 	
 	if (typeof window.history.pushState != "function") return;
  
-	window.addEventListener('popstate', onPop);
+	$(window).on("popstate", function(e) {
+		if (history.length == 0) return;
+		var state = history.pop();
+		if (typeof state.callback == "function") {
+			state.callback(state);
+		}
+	});
 
 	this.push = function (name, callback) {
 		if (typeof window.history.pushState != "function") return;
@@ -1206,14 +1218,6 @@ var historyManager = new function () {
 		window.history.go(-1);
 	};
 
-	function onPop(event) {
-		if (history.length == 0) return;
-
-		var state = history.pop();
-		if (typeof state.callback == "function") {
-			state.callback(state);
-		}
-	}
 };
 
 var fancyBox = new function () {
@@ -1289,26 +1293,40 @@ var fancyBox = new function () {
 	};
 };
 
-var notifier = new function () {
+/* notifier */
+(function () {
 	var timeout = false;
 	var area;
 	var panel_visible = false;
 	var current_count = -1;
 	var has_focus = true;
 	var check_counter = 0;
-	var base_update = 15000; /* Base check every 15 seconds */
+	var base_update = 15000; 
 	var last_connect = null;
 
-	var click_handler = function (e) {
+	if (! user_id > 0 || (area = $('#notifier')).length == 0) return;
+	$(window).on('unload onAjax', function() { hide(); });
+
+	area.click(click);
+	$(window).on("DOMChanged", function () {current_count = 0; restart(); });
+	$(window).focus(restart);
+
+	$(window).blur(function() {
+		has_focus = false;
+	});
+	update();
+
+
+	function click_handler(e) {
 		if (! panel_visible) return;
 		if ($(e.target).closest('#notifier_panel').length == 0) {
-			/* click happened outside of the notifier panel, hide it */
-			notifier.hide();
+			/* click happened outside */
+			hide();
 			e.preventDefault();
 		}
 	};
 
-	this.click = function () {
+	function click() {
 		if (! panel_visible) {
 			panel_visible = true;
 			$e = $('<div id="notifier_panel"> </div>');
@@ -1321,25 +1339,24 @@ var notifier = new function () {
 			for (var i=0; i < a.length; i++) {
 				field = a[i];
 				var counter = (data && data[field]) ? data[field] : 0;
-				$e.append("<div class='"+field+"'><a href='"+base_url+"backend/notifications.json.php?redirect="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
+				$e.append("<div class='"+field+"'><a href='"+base_url+"go.php?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
 			}
 			$e.show();
 			check_counter = 0;
-			
 		} else {
-			notifier.hide();
-			notifier.update();
+			hide();
+			update();
 		}
 		return false;
 	};
 
 
-	this.hide = function () {
+	function hide() {
 		$("#notifier_panel").remove();
 		panel_visible = false;
 	};
 
-	this.update = function() {
+	function update() {
 		var next_update;
 		var now;
 
@@ -1349,32 +1366,31 @@ var notifier = new function () {
 				|| (check_counter == 0 && now - last_check > 3000) /* Avoid too many refreshes */
 				|| now - last_check > base_update + check_counter * 20) {
 			writeStorage("n_"+user_id+"_ts", now);
-			notifier.connect();
+			connect();
 		} else {
-			notifier.update_panel();
+			update_panel();
 		}
 
 		if (! has_focus) {
-			next_update = 5000;
+			next_update = 8000;
 		} else {
-			next_update = 2000;
+			next_update = 4000;
 		}
 
-		if (is_mobile) next_update *= 3;
+		if (is_mobile) next_update *= 2;
 
 		if ( (is_mobile && check_counter < 1) /* one network update for mobiles */
 				|| (! is_mobile && check_counter < 3*3600*1000/base_update)) { 
-			timeout = setTimeout(notifier.update, next_update);
+			timeout = setTimeout(update, next_update);
 		} else {
 			timeout = false;
 		}
 	};
 
-	this.update_panel = function() {
+	function update_panel() {
 		var count;
 		var posts;
 
-		
 		data = decode_data(readStorage("n_"+user_id));
 		if (! data) return;
 		if (data.total == current_count) return;
@@ -1391,12 +1407,12 @@ var notifier = new function () {
 		current_count = data.total;
 	};
 
-	this.connect = function() {
+	function connect() {
 		var next_check;
 
 		var connect_time = new Date().getTime();
 
-		if (connect_time - last_connect < 2000) { /* Security measure to avoid flooding */
+		if (connect_time - last_connect < 2000) { /* to avoid flooding */
 			return;
 		}
 
@@ -1410,29 +1426,19 @@ var notifier = new function () {
 				writeStorage("n_"+user_id+"_ts", now);
 				if (current_count == data.total) return;
 				writeStorage("n_"+user_id, encode_data(data));
-				notifier.update_panel();
+				update_panel();
 			});
 	};
 
-	this.init = function () {
-		if (! user_id > 0 || (area = $('#notifier')).length == 0) return;
-
-		area.click(this.click);
-		$(window).focus(function() {
-			check_counter = 0;
-			has_focus = true;
-			if (timeout) {
-				clearTimeout(timeout);
-				timeout = false;
-			}
-			notifier.update();
-		});
-
-		$(window).blur(function() {
-			has_focus = false;
-		});
-		this.update();
-	};
+	function restart() {
+		check_counter = 0;
+		has_focus = true;
+		if (timeout) {
+			clearTimeout(timeout);
+			timeout = false;
+		}
+		update();
+	}
 
 	function decode_data(str) {
 		if (! str) return null;
@@ -1454,7 +1460,7 @@ var notifier = new function () {
 		};
 		return a[field];
 	}
-};
+})();
 
 
 /**
@@ -1566,7 +1572,7 @@ var notifier = new function () {
 })(jQuery);
 
 
-function analyze_hash() {
+function analyze_hash(force) {
 	if (location.hash && (m = location.hash.match(/#([\w\-]+)$/)) && (target = $('#'+m[1])).length > 0 ) {
 		target.css('opacity', 0.2);
 		{# Highlight a comment if it is referenced by the URL. Currently double border, width must be 3 at least #}
@@ -1580,25 +1586,45 @@ function analyze_hash() {
 				/* It's a link to a comment, check it exists, otherwise redirect to the right page */
 				canonical = $("link[rel^='canonical']");
 				if (canonical.length > 0) {
-					self.location = canonical.attr("href") + "/000" + m2[1];
+					self.location = canonical.attr("href") + "/c0" + m2[1] + '#c-' + m2[1];
 					return;
 				}
 			}
 		}
-		/* Delay scrolling until the document is shown */
-		$(window).load(function () {
-			var $h = $('#header-top');
-			if ($h.css('position') == 'fixed' && $(document).scrollTop() > target.offset().top - $h.height() ) {
-				$('html, body').animate({scrollTop: target.offset().top - $h.height() - 10}, {duration: 500, queue: false});
-			}
-			target.animate({opacity: 1.0}, 1000);
-		});
+		if (force) {
+			setTimeout(function () {animate(target, force)}, 10);
+		} else {
+			/* Delay scrolling until the document is shown */
+			$(window).load(function () {animate(target)});
+		}
+	}
+
+	function animate(target, force) {
+		var $h = $('#header-top');
+		if (force || $h.css('position') == 'fixed' && $(document).scrollTop() > target.offset().top - $h.height() ) {
+			$('html, body').animate({scrollTop: target.offset().top - $h.height() - 10}, {duration: 500, queue: false});
+		}
+		target.animate({opacity: 1.0}, 1000);
 	}
 
 }
 
-var clickManager = new function () {
+(function () { /* partial */
 	$(document).on("click mousedown touchstart", "a", parse);
+
+	var sequence = 0;
+	var last = 0;
+
+	String.prototype.decodeHTML = function() {
+		return $("<div>", {html: "" + this}).html();
+	};
+
+	$(window).on("popstate", function(e) {
+		state = e.originalEvent.state;
+		if (state != null && state.name == "partial" && state.sequence != last ) {
+			load(location.href, e.originalEvent.state);
+    	}
+	});
 
 	function parse(e) {
 		var m;
@@ -1624,49 +1650,90 @@ var clickManager = new function () {
 			fancyBox.parse($a);
 			return false;
 		}
-	}
 
-{# **** For partial-ajax load
-		var re = new RegExp("^/|//"+location.hostname);
-		if (re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|rss2/)) {
-			console.log("local: " + href);
+		if (! do_partial) return;
+
+		var re = new RegExp("^/|^\\?|//"+location.hostname);
+		if (location.protocol == "http:" && re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
 			load(href);
 			return false;
 		}
 	}
 
-	function load(href) {
+	function load(href, state) {
 		var a = href;
+
+		a = a.replace(/#.*/, '');
 
 		if (a.indexOf("?") < 0) a += "?";
 		else  a += "&";
 		a += "partial";
 
-		console.log(a);
 		$e = $("#variable");
-		$.ajaxSetup({cache: false});
-		$(document.body).css('cursor', 'progress').trigger('onAjax');
-		$e.load(a, function (html) { 
-			$.ajaxSetup({cache: true});
-			$(document.body).css('cursor', 'default');
-			loaded($e, href, html);
+		$("body").css('cursor', 'progress').trigger('onAjax');
+		var currentState = history.state || {};
+		if (! state) {
+			currentState.scroll =  $(window).scrollTop();
+			currentState.done = false;
+			history.replaceState(currentState, '', location.href);
+		}
+		$.ajax(a, {
+			cache: true,
+			dataType: "html",
+			success: function (html) { 
+				$("body").css('cursor', 'default');
+				var finalHref = loaded($e, href, html);
+				if (! finalHref) return false;
+				console.log("Loaded: " + href);
+				if (! state) {
+					sequence++;
+					last = sequence;
+					history.pushState({name: "partial", sequence: last}, '', finalHref);
+					window.scrollTo(0, 0);
+				} else {
+					if (state.scroll) {
+						window.scrollTo(0, state.scroll);
+					}
+					last = state.sequence;
+				}
+				execOnDocumentLoad();
+				$e.trigger("DOMChanged", $e);
+				analyze_hash(true);
+			},
+			error: function () {
+				location.href = href;
+				return false;
+			}
 		});
-			
+
 	}
 
 	function loaded($e, href, html) {
-		window.scrollTo(0, 0);
-		console.log("Loaded: " + href);
-		execOnDocumentLoad();
-		$e.trigger("DOMChanged", $e);
-		analyze_hash();
-		historyManager.push(href, function (state) {
-			console.log(state);
-		});
+		$e.html(html);
+		var $info = $e.find("#ajaxinfo");
+		if ($info.length) {
+			if ($info.data('uri')) {
+				var uri = $info.data('uri');
+				uri = uri.replace(/partial&|\?partial$|&partial/, '');
+				if (href.match(/#.*/)) {
+					var hash = href.replace(/.*(#.*)/, "$1");
+					uri = uri + hash;
+				}
+				href = uri;
+			}
+			if ($info.data('title')) {
+				document.title = $info.data('title');
+			}
+		} else {
+			/* Bad data */
+			console.log("Bad data, location to: " + location.href);
+			location.href = href;
+			return false;
+		}
+		return href;
 	}
-******* #}
 
-};
+})();
 
 
 function loadJS(url) {
@@ -1704,7 +1771,6 @@ function execOnDocumentLoad() {
 				}
 			} catch(err) {
 				console.log(err);
-				console.log(code);
 			}
 		});
 		onDocumentLoad = [];
@@ -1733,14 +1799,11 @@ $(document).ready(function () {
 
 	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
 
-	notifier.init();
-	navMenu.init();
 	$.tooltip();
 
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});
-
 
 });
 

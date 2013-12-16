@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//      http://www.affero.org/oagpl.html
+//		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('./config.php');
@@ -12,6 +12,25 @@ $id = intval($_GET['id']);
 if ($id > 0) {
 	$what = $_GET['what'];
 	switch ($what) {
+		/* From notifier */
+		case 'privates':
+			$url = post_get_base_url('_priv');
+			do_redirection($url);
+			exit(0);
+		case 'posts':
+			$url = post_get_base_url($current_user->user_login) . '/_conversation';
+			do_redirection($url);
+			exit(0);
+		case 'comments':
+			$url = get_user_uri($current_user->user_login, 'conversation');
+			do_redirection($url);
+			exit(0);
+		case 'friends':
+			$url = get_user_uri($current_user->user_login, 'friends_new');
+			do_redirection($url);
+			exit(0);
+
+
 		case 'post':
 			$url = 'http://'.get_server_name().post_get_base_url($id);
 			do_redirection($url);
@@ -52,7 +71,5 @@ function do_redirection($url, $code = 301) {
 	if (isset($_GET['quiet'])) {
 		return; // Don't redirect if the caller asked so
 	}
-	header("HTTP/1.1 $code Moved");
-	header('Location: ' . $url);
-	header("Content-Length: 0");
+	redirect($url, $code);
 }
