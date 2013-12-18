@@ -2,7 +2,7 @@ body {
 overflow:hidden;
 }
 
-#header-center, #header-menu, #header .logo-ed, #edlist, #wrap {
+#header-center, #header-menu, #header-top .logo-ed, #edlist, #wrap {
 display: none;
 }
 
