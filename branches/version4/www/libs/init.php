@@ -74,12 +74,19 @@ if($_SERVER['HTTP_HOST']) {
 		// Reduce page size for mobiles
 		$globals['comments_page_size'] = intval($globals['comments_page_size']/2);
 		$globals['page_size'] = intval($globals['page_size']/2);
-		if (preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT'])) {
-			$globals['ads'] = false;
-		}
 	} else {
 		$globals['mobile'] = 0;
 	}
+
+	if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
+		$globals['ads'] = false;
+		if (isset($_REQUEST['partial'])) {
+			$globals['partial'] = true;
+		} else {
+			$globals['partial'] = false;
+		}
+	}
+
 
 	if (isset($_REQUEST['partial'])) {
 		$globals['partial'] = true;

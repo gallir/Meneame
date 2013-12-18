@@ -5,9 +5,14 @@ var base_url="{{ globals.base_url }}",
 	is_mobile={{ globals.mobile }},
 	touchable=false,
 	loadedJavascript = [],
-	do_partial=false;
+	{% if globals.allow_partial %}
+		do_partial=true;
+	{% else %}
+		do_partial=false;
+	{% endif %}
 
-if (typeof window.history.pushState == "function" && navigator.userAgent.match(/meneame/i)) {
+if (typeof window.history.pushState == "function" 
+		&& (do_partial || navigator.userAgent.match(/meneame/i)) ) {
 	do_partial = true;
 }
 
@@ -1682,13 +1687,12 @@ function analyze_hash(force) {
 			dataType: "html",
 			success: function (html) { 
 				$("body").css('cursor', 'default');
-				var finalHref = loaded($e, href, html);
-				if (! finalHref) return false;
+				var newState = {name: "partial", sequence: last};
 				console.log("Loaded: " + href);
 				if (! state) {
 					sequence++;
 					last = sequence;
-					history.pushState({name: "partial", sequence: last}, '', finalHref);
+					history.pushState(newState, '', href);
 					window.scrollTo(0, 0);
 				} else {
 					if (state.scroll) {
@@ -1696,6 +1700,11 @@ function analyze_hash(force) {
 					}
 					last = state.sequence;
 				}
+				var finalHref = loaded($e, href, html);
+				if (! state && href != finalHref) {
+					history.pushState(newState, '', finalHref);
+				}
+				if (! finalHref) return false;
 				execOnDocumentLoad();
 				$e.trigger("DOMChanged", $e);
 				analyze_hash(true);
