@@ -1616,20 +1616,25 @@ function analyze_hash(force) {
 
 (function () { /* partial */
 	$(document).on("click mousedown touchstart", "a", parse);
+	if (do_partial) {
+		console.log("Enabled partial");
+		var sequence = 0;
+		var last = 0;
 
-	var sequence = 0;
-	var last = 0;
 
-	String.prototype.decodeHTML = function() {
-		return $("<div>", {html: "" + this}).html();
-	};
+		String.prototype.decodeHTML = function() {
+			return $("<div>", {html: "" + this}).html();
+		};
 
-	$(window).on("popstate", function(e) {
-		state = e.originalEvent.state;
-		if (state != null && state.name == "partial" && state.sequence != last ) {
-			load(location.href, e.originalEvent.state);
-    	}
-	});
+		$(window).on("popstate", function(e) {
+			state = e.originalEvent.state;
+			if (state != null) {
+				if (state.name == "partial" && state.sequence != last ) {
+					load(location.href, e.originalEvent.state);
+    			}
+			}
+		});
+	}
 
 	function parse(e) {
 		var m;
@@ -1661,12 +1666,13 @@ function analyze_hash(force) {
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
 		if (location.protocol == "http:" && re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
 			href = href.replace(/partial&|\?partial$|&partial/, '');
-			load(href);
+			load(href, null);
 			return false;
 		}
 	}
 
 	function load(href, state) {
+		var currentState;
 		var a = href;
 
 		a = a.replace(/#.*/, '');
@@ -1677,35 +1683,39 @@ function analyze_hash(force) {
 
 		$e = $("#variable");
 		$("body").css('cursor', 'progress').trigger('onAjax');
-		var currentState = history.state || {};
 		if (! state) {
-			currentState.scroll =  $(window).scrollTop();
-			currentState.done = false;
+			currentState = {name: "partial", scroll:  $(window).scrollTop() };
+			if ( ! history.state) {
+				currentState.sequence = 0;
+			} else {
+				currentState.sequence = history.state.sequence;
+			}
 			history.replaceState(currentState, '', location.href);
+
+			sequence++;
+			last = sequence;
+			currentState.sequence = last;
+			currentState.scroll = 0;
+			history.pushState(currentState, '', href);
+		} else {
+			currentState = state;
+			last = currentState.sequence;
 		}
+
 		$.ajax(a, {
 			cache: true,
 			dataType: "html",
 			success: function (html) { 
 				$("body").css('cursor', 'default');
-				var newState = {name: "partial", sequence: last};
-				console.log("Loaded: " + href);
-				if (! state) {
-					sequence++;
-					last = sequence;
-					history.pushState(newState, '', href);
-					window.scrollTo(0, 0);
-				} else {
-					if (state.scroll) {
-						window.scrollTo(0, state.scroll);
-					}
-					last = state.sequence;
-				}
+				console.log("Loaded: " + href + " scroll: " + currentState.scroll);
 				var finalHref = loaded($e, href, html);
 				if (! state && href != finalHref) {
-					history.pushState(newState, '', finalHref);
+					history.replaceState(currentState, '', finalHref);
 				}
 				if (! finalHref) return false;
+				if ('scroll' in currentState) {
+					window.scrollTo(0, currentState.scroll);
+				}
 				execOnDocumentLoad();
 				$e.trigger("DOMChanged", $e);
 				analyze_hash(true);
