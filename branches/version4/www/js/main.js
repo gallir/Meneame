@@ -1660,6 +1660,7 @@ function analyze_hash(force) {
 
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
 		if (location.protocol == "http:" && re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
+			href = href.replace(/partial&|\?partial$|&partial/, '');
 			load(href);
 			return false;
 		}
