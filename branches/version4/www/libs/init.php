@@ -78,22 +78,6 @@ if($_SERVER['HTTP_HOST']) {
 		$globals['mobile'] = 0;
 	}
 
-	if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
-		$globals['ads'] = false;
-		if (isset($_REQUEST['partial'])) {
-			$globals['partial'] = true;
-		} else {
-			$globals['partial'] = false;
-		}
-	}
-
-
-	if (isset($_REQUEST['partial'])) {
-		$globals['partial'] = true;
-	} else {
-		$globals['partial'] = false;
-	}
-
 	// Check the user's referer.
 	/* Not used, save CPU cycles
 	if( !empty($_SERVER['HTTP_REFERER'])) {
