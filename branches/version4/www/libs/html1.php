@@ -22,7 +22,7 @@ if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', 
 	$globals['ads'] = false;
 	if (isset($_REQUEST['partial'])) {
 		$globals['partial'] = true;
-		$_SERVER['QUERY_STRING'] =preg_replace('/partial&|\?partial$|&partial/g', '', $_SERVER['QUERY_STRING']);
+		$_SERVER['QUERY_STRING'] =preg_replace('/partial&|\?partial$|&partial/', '', $_SERVER['QUERY_STRING']);
 	} else {
 		$globals['partial'] = false;
 	}
