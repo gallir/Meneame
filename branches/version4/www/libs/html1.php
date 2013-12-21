@@ -530,7 +530,7 @@ function do_best_comments() {
 	$output = '';
 
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
-	//if(memcache_mprint($key)) return;
+	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours

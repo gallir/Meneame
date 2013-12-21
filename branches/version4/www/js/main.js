@@ -11,7 +11,7 @@ var base_url="{{ globals.base_url }}",
 		do_partial=false;
 	{% endif %}
 
-if (typeof window.history.pushState == "function" 
+if (typeof window.history == "object" 
 		&& (do_partial || navigator.userAgent.match(/meneame/i)) ) {
 	do_partial = true;
 }
@@ -1661,10 +1661,24 @@ function analyze_hash(force) {
 			return false;
 		}
 
-		if (! do_partial) return;
 
+		console.log(typeof window.history == "object" );
+		if (! do_partial) {
+			if (typeof window.history == "object") {
+				var c = loadedComment(href);
+				if (c) {
+					window.history.pushState(null, '', c);
+					analyze_hash(true);
+					return false;
+				}
+			}
+		
+			return;
+		}
+
+		/* Only if partial */
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
-		if (location.protocol == "http:" && re.exec(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
+		if (location.protocol == "http:" && re.test(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
 			href = href.replace(/partial&|\?partial$|&partial/, '');
 			load(href, null);
 			return false;
@@ -1726,6 +1740,15 @@ function analyze_hash(force) {
 			}
 		});
 
+	}
+
+	function loadedComment(href) {
+		var r = href.match(/(.+?\/c0)(\d+)#c\-(\d+)/);
+		if (r && r[2] == r[3] && href.indexOf(r[1]) >= 0 && $("#c-"+r[3]).length > 0 ) {
+			console.log(r);
+			return r[1]+r[2]+"#c-"+r[3];
+		}
+		return false;
 	}
 
 	function loaded($e, href, html) {
