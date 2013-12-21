@@ -530,7 +530,7 @@ function do_best_comments() {
 	$output = '';
 
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
-	if(memcache_mprint($key)) return;
+	//if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours
@@ -538,7 +538,7 @@ function do_best_comments() {
 	$now = intval($globals['now']/60) * 60;
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and LENGTH(comment_content) > 32 and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id order by value desc limit 10");
+	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and LENGTH(comment_content) > 32 and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id and user_level != 'disabled' order by value desc limit 10");
 	if ($res) {
 		$objects = array();
 		$title = _('mejores comentarios');
