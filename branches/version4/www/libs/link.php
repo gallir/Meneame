@@ -54,7 +54,7 @@ class Link extends LCPBase {
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id)
 	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id) ";
 
-	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links INNER JOIN users on (user_id = link_author) ";
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode FROM links INNER JOIN users on (user_id = link_author) ";
 
 
 	static function from_db($id, $key = 'id', $complete = true) {
@@ -111,12 +111,21 @@ class Link extends LCPBase {
 		global $db;
 		$trimmed = $db->escape(preg_replace('/\/$/', '', $url));
 		$list = "'$trimmed', '$trimmed/'";
-		if (preg_match('/^http:\/\/www\./', $trimmed)) {
-			$link_alternative = preg_replace('/^http:\/\/www\./', 'http://', $trimmed);
+		if (preg_match('/^http.{0,1}:\/\/www\./', $trimmed)) {
+			$link_alternative = preg_replace('/^(http.{0,1}):\/\/www\./', '$1://', $trimmed);
 		} else {
-			$link_alternative = preg_replace('/^http:\/\//', 'http://www.', $trimmed);
+			$link_alternative = preg_replace('/^(http.{0,1}):\/\//', '$1://www.', $trimmed);
 		}
 		$list .= ", '$link_alternative', '$link_alternative/'";
+
+		/* Alternative to http and https */
+		if (preg_match('/^http:/', $url)) {
+			$list2 = preg_replace('/http:\/\//', 'https://', $list);
+		} else {
+			$list2 = preg_replace('/https:\/\//', 'http://', $list);
+		}
+		$list .= ", $list2";
+
 
 		$site_id = SitesMgr::my_id();
 		$filter_by_site_sql = "(sub_statuses.id = $site_id ";
@@ -1291,7 +1300,7 @@ class Link extends LCPBase {
 		global $globals;
 
 		$all = array('thumb_medium' => $globals['medium_thumb_size'],
-					'thumb_2x'  => $globals['thumb_size'] * 2,
+					'thumb_2x'	=> $globals['thumb_size'] * 2,
 					'thumb' => $globals['thumb_size']);
 
 		if ($key) {
@@ -1385,22 +1394,22 @@ class Link extends LCPBase {
 	}
 
 	function try_thumb($base) {
-    	global $globals;
+		global $globals;
 
 		$final_size = Link::thumb_sizes($base);
 		if (! $final_size) return false;
 
-		$dir =  Upload::get_cache_dir($this->id);
+		$dir =	Upload::get_cache_dir($this->id);
 		$output_filename = "$base-$this->id.jpg";
 
 		require_once(mnminclude."simpleimage.php");
 		$f = false;
 		$input = new SimpleImage();
-    	foreach (Link::thumb_sizes() as $b => $s) {
-        	if ($b == 'thumb') {
+		foreach (Link::thumb_sizes() as $b => $s) {
+			if ($b == 'thumb') {
 				$delete = true; // Mark as deleted if the last does not exist
 				$root = "";
-        	} else {
+			} else {
 				$delete = false;
 				$root = $b;
 			}
@@ -1409,12 +1418,12 @@ class Link extends LCPBase {
 			if (is_readable("$dir/$filename")) {
 				$f = "$dir/$filename";
 			} else {
-        		$f =  $this->thumb_download($b, $delete);
+				$f =  $this->thumb_download($b, $delete);
 			}
-        	if ($f && $input->load($f)) {
+			if ($f && $input->load($f)) {
 				break;
 			}
-    	}
+		}
 		if (! $input->image) return false;
 		if ($input->getWidth() <= $final_size) {
 			if ($f != "$dir/$output_filename") {
@@ -1426,7 +1435,7 @@ class Link extends LCPBase {
 		}
 		@chmod($f, 0777);
 		@chmod("$dir/$output_filename", 0777);
-    	return "$dir/$output_filename";
+		return "$dir/$output_filename";
 	}
 
 	function has_thumb() {
