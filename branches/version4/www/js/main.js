@@ -1661,20 +1661,7 @@ function analyze_hash(force) {
 			return false;
 		}
 
-
-		console.log(typeof window.history == "object" );
-		if (! do_partial) {
-			if (typeof window.history == "object") {
-				var c = loadedComment(href);
-				if (c) {
-					window.history.pushState(null, '', c);
-					analyze_hash(true);
-					return false;
-				}
-			}
-		
-			return;
-		}
+		if (! do_partial) return;
 
 		/* Only if partial */
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
@@ -1740,15 +1727,6 @@ function analyze_hash(force) {
 			}
 		});
 
-	}
-
-	function loadedComment(href) {
-		var r = href.match(/(.+?\/c0)(\d+)#c\-(\d+)/);
-		if (r && r[2] == r[3] && href.indexOf(r[1]) >= 0 && $("#c-"+r[3]).length > 0 ) {
-			console.log(r);
-			return r[1]+r[2]+"#c-"+r[3];
-		}
-		return false;
 	}
 
 	function loaded($e, href, html) {
