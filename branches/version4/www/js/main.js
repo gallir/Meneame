@@ -46,10 +46,10 @@ function to_date(index) {
 		} else {
 			str = "";
 			if (diff > 43200 ) { /* 12 hs */
-				str += dd(d.getDate())+"/"+dd(d.getMonth() + 1)
-			}
-			if (now.getFullYear() != d.getFullYear()) {
-				str += "/"+d.getFullYear();
+				str += dd(d.getDate())+"/"+dd(d.getMonth() + 1);
+				if (now.getFullYear() != d.getFullYear()) {
+					str += "/"+d.getFullYear();
+				}
 			}
 			str += " " + dd(d.getHours())+":"+dd(d.getMinutes());
 		}
