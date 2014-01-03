@@ -61,7 +61,7 @@ if ($res) {
 
 	$coef = ($max_pts - $min_pts)/max(($max-1), 1);
 	arsort($words);
-	$words = array_slice($words, 0, $words_limit);
+	$words = array_slice($words, 0, $words_limit, true);
 	ksort($words);
 
 	foreach ($words as $word => $count) {
