@@ -53,7 +53,7 @@
 
 
 
-		{% if ! globals.mobile %}
+		{% if ! globals.mobile AND ! self.hide_comment %}
 			<img 
 			data-2x="s:-20.:-40."
 			{% if self.type != 'admin' AND self.user_level != 'disabled' %}
