@@ -1391,6 +1391,13 @@ class Link extends LCPBase {
 		if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url']) {
 			Media::rm("thumbs/$this->id*");
 		}
+		$dir = Upload::get_cache_dir($this->id);
+		$files = glob("$dir/thumb*-$this->id.jpg");
+		foreach($files as $file) {
+			if(is_file($file)) {
+				@unlink($file);
+			}
+		}
 	}
 
 	function try_thumb($base) {
