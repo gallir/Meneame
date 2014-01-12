@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import time
 import operator
@@ -231,7 +232,8 @@ def ban_ip(ip, reason, time):
 			report = unicode(e)
 
 		try:
-			msg = MIMEText("BANNED IP: " + ip +"\nReason: " + reason + "\n\nSUMMARY REPORT LAST MINUTE:\n" + unicode(report))
+			msg = "BANNED IP: " + ip +"\nReason: " + reason + "\n\nSUMMARY REPORT LAST MINUTE:\n" + unicode(report)
+			msg = MIMEText(msg.encode('utf-8'), 'plain', 'utf-8')
 			msg['Subject'] = "Automatic DoS ban"
 			msg['From'] = getpass.getuser()
 			msg['To'] = configuration.mail
