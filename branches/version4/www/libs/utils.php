@@ -892,7 +892,7 @@ function memcache_madd ($key, $value, $expire=3600) {
 	}
 
 	// Check for memcache
-	if (memcache_minit()) return $memcache->set($key, $str, false, $expire);
+	if (memcache_minit()) return $memcache->set($key, $value, 0, $expire);
 	return false;
 }
 
@@ -1340,38 +1340,50 @@ function check_ip_noaccess($steps = 0) {
 		}
 
 	if (! empty($globals['check_ip_noaccess_cache']) && $globals['check_ip_noaccess_cache'] > 0) {
-		$cache_key = 'no_access_'.$globals['user_ip'];
+		$cache_key = 'noaccess_'.$globals['user_ip'];
 	} else {
 		$cache_key = false;
 	}
 
 	if ($steps < 2 && $cache_key) { // Don't check cache if >= 2
-		$matches = memcache_mget($cache_key);
-		if ($matches !== false) {
-			if ($steps == 1 && $matches === 0) { // Only in cache and found it's 0
+		$match = memcache_mget($cache_key);
+		if ($match !== false) {
+			if ($steps == 1 && empty($match)) { // Only in cache and found it's 0
 				return true; // OK
-			} elseif ($matches > 0) {
-				reject_connection();
+			} elseif (!empty($match)) {
+				reject_connection($match);
 			} 
 		}
 		return false; // Not found in cache
 	} 
 
-	$matches = $db->get_var('SELECT count(*) FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now())');
+	$res = $db->get_var('SELECT ban_comment FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now()) LIMIT 1');
+	if ($res) {
+		// If the first word is an URL, force a redirection to it
+		// aka: eat you own dog food, bitch
+		$url = explode(' ', ltrim($res), 2);
+		if ($url && preg_match('/^https{0,1}:\/\/.{5,}/', $url[0])) {
+			$match = $url[0];
+		} else {
+			$match = 1;
+		}
+	} else {
+		$match = 0;
+	}
 
 	if ($cache_key) {
-		if ($matches) $ttl = 60; // Blocked IPs cached for 60 seconds
+		if ($match) $ttl = 60; // Blocked IPs cached for 60 seconds
 		else $ttl = $globals['check_ip_noaccess_cache'];
-		memcache_madd ($cache_key, (int) $matches, $ttl);
+		memcache_madd ($cache_key, $match, $ttl);
 	}
-	if ($matches) {
-		reject_connection();
+	if (! empty($match)) {
+		reject_connection($match);
 	}
 
 	return true;
 }
 
-function reject_connection() {
+function reject_connection($redirect = false) {
 	global $globals, $db;
 
 	if (is_object($db)) $db->close();
@@ -1379,8 +1391,12 @@ function reject_connection() {
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;
 
-	usleep(1000000);
-	header('HTTP/1.0 403 ' . 'Too many connections');
+	usleep(500000);
+	if (is_string($redirect) && strlen($redirect) > 10) {
+		redirect($redirect);
+	} else {
+		header('HTTP/1.0 403 ' . 'Too many connections');
+	}
 	die;
 }
 
