@@ -5,7 +5,7 @@
 {% if logs %}
 	{% for log in logs %}
 		<div style="width:100%; display: block; clear: both; border-bottom: 1px solid #FFE2C5;">
-		<div style="width:30%; float: left;padding: 4px 0 4px 0;">{% exec get_date_time log.ts %}</div>
+		<div style="width:30%; float: left;padding: 4px 0 4px 0;"><span data-ts="{{log.ts }}" class="ts"></span></div>
 		<div style="width:24%; float: left;padding: 4px 0 4px 0;"><strong>{{ log.log_type }}</strong></div>
 		<div style="width:45%; float: left;padding: 4px 0 4px 0;">
 		{% if link.author != log.user_id AND (log.user_level == 'admin' OR log.user_level == 'god') %}
@@ -55,18 +55,14 @@
 
 	<div id="flot" style="width:100%;height:250px;"></div>
 
-	{% spacefull %}
 	<script type="text/javascript">
-	//<!--
 	addPostCode(function () {
 		var options = {
 			lines: { show: true },
 			points: { show: true },
 			legend: { position: "nw" },
-			xaxis: { mode: "time", minTickSize: [1, "hour"], },
+			xaxis: { mode: "time", minTickSize: [1, "hour"], timezone: "browser"},
 			yaxes: [ { }, { position: "right" } ],
-			//yaxis: { min: 0 },
-			//y2axis: { min: 0 },
 			grid: { hoverable: true },
 		};
 		var data = [];
@@ -114,7 +110,7 @@
 					txt = txt + ' (' + pad(d.getUTCHours(),2) + ":" + pad(d.getUTCMinutes(),2) + " UTC)";
 
 					if (item.series.label == 'karma') {
-						var ktime = item.datapoint[0]/1000; // to epoch time
+						var ktime = item.datapoint[0]/1000;
 						if (k_old[ktime] != 0) {
 							txt = txt + '<br/><strong>previous karma:</strong> '+k_old[ktime];
 						}
@@ -129,13 +125,10 @@
 				$("#tooltip").remove();
 				previousPoint = null;
 			}
-		})
-
-
 		});
-	//-->
+
+	});
 	</script>
-	{% endspacefull %}
 	</fieldset>
 	</div>
 {% endif %}
