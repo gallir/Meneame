@@ -72,7 +72,7 @@ function menealo(user, id) {
 	disable_vote_link(id, -1, "...", '');
 	$.getJSON(url,
 		 function(data) {
-				parseLinkAnswer(id, data);
+			parseLinkAnswer(id, data);
 		}
 	);
 	reportAjaxStats('vote', 'link');
@@ -85,7 +85,7 @@ function menealo_comment(user, id, value) {
 	respond_comment_vote(id, value);
 	$.getJSON(url,
 		 function(data) {
-				update_comment_vote(id, value, data);
+			update_comment_vote(id, value, data);
 		}
 	);
 	reportAjaxStats('vote', 'comment');
@@ -1228,7 +1228,8 @@ var historyManager = new function () {
 var fancyBox = new function () {
 	this.parse = function ($e) {
 		var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
-		var myHref = $e.attr('href'), myTitle, photo = false;
+		var myHref = $e.data('real_href') || $e.attr('href');
+		var myTitle, photo = false;
 		var ajaxName = "image";
 
 		if ($e.attr('target')) {
@@ -1236,7 +1237,7 @@ var fancyBox = new function () {
 		}
 
 		if ((v = myHref.match(/(?:youtube\.com\/(?:embed\/|.*v=)|youtu\.be\/)([\w\-_]+).*?(#.+)*$/))) {
-			if (is_mobile || touchable) return;
+			if (is_mobile || touchable) return false;
 			iframe = true;
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
 			href = 'http://www.youtube.com/embed/'+v[1];
@@ -1246,15 +1247,6 @@ var fancyBox = new function () {
 			maxWidth = false;
 			maxHeight = false;
 			ajaxName = "youtube";
-
-			myClass = $e.attr('class');
-			if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
-				/* It's a link, call go.php */
-				var link = linkId[1];
-				onLoad = function() {
-					$.get(base_url + 'go.php?quiet=1&id='+link);
-				};
-			}
 		} else {
 			if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
 				photo = true;
@@ -1271,6 +1263,15 @@ var fancyBox = new function () {
 				maxWidth = '75%';
 				maxHeight = '75%';
 			}
+		}
+
+		myClass = $e.attr('class');
+		if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
+			/* It's a link, call go.php */
+			var link = linkId[1];
+			onLoad = function() {
+				$.get(base_url + 'go.php?quiet=1&id='+link);
+			};
 		}
 
 		$.colorbox({
@@ -1295,6 +1296,7 @@ var fancyBox = new function () {
 				 historyManager.pop(ajaxName);
 			}
 		});
+		return true;
 	};
 };
 
@@ -1642,26 +1644,25 @@ function analyze_hash(force) {
 		var href = $a.attr("href");
 		var aClass = $a.attr("class") || '';
 
-		if ($a.data('done')) return true;
-
-		if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/)) {
-			var id = m[1];
-			$a.attr('href', base_url + "go.php?id=" + id);
-			$a.data('done', 1);
+		if (e.type != "click") {
+			if ($a.data('done')) return true;
+			if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/) ) {
+				$a.attr('href', base_url + "go.php?id=" + m[1]);
+				$a.data('done', 1);
+				$a.data('real_href', href);
+			}
 			return true;
 		}
 
-		if (e.type != 'click') return true;
-
+		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
-				|| href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
+				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
 			&& ! aClass.match(/cbox/) 
 			&& ! $a.attr("target")) {
-			fancyBox.parse($a);
-			return false;
+			if (fancyBox.parse($a)) return false;
 		}
 
-		if (! do_partial) return;
+		if (! do_partial) return true;
 
 		/* Only if partial */
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
