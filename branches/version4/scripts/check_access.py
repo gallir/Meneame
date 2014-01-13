@@ -6,6 +6,8 @@ import operator
 import argparse
 import sys
 import os
+import pickle
+import json
 
 import dbconf
 from utils import *
@@ -21,8 +23,9 @@ import time
 import syslog
 
 class MySysLogger():
-	def __init__(self, seconds, quiet = False):
+	def __init__(self, seconds, annotation, quiet = False):
 		self.seconds = seconds
+		self.annotation = annotation
 		self.total = 0
 		self.partial = 0
 		self.time = self.start = time.time()
@@ -37,11 +40,27 @@ class MySysLogger():
 			return
 
 		self.time = time.time()
-		line = "partial %0.1f conn/sec %d (%.2f seconds), total %0.1f conn/sec %ld" % (self.partial/elapsed, self.partial, elapsed, self.total/(now-self.start), self.total)
+		if self.seconds > 0:
+			line = "partial %0.1f conn/sec %d (%.2f seconds), total %0.1f conn/sec %ld" % (self.partial/elapsed, self.partial, elapsed, self.total/(now-self.start), self.total)
+			if not self.quiet:
+				print line
+			syslog.syslog(syslog.LOG_INFO, line)
+
+		if self.annotation > 0:
+			try:
+				history = pickle.load(open("/tmp/access_history.p", "rb" ))
+			except:
+				 history = []
+			history.append([int(now), int(self.partial/elapsed)])
+			history = history[-self.annotation:]
+
+			pickle.dump(history, open("/tmp/access_history.p", "wb" ))
+
+			current = json.dumps(history)
+			store_annotation('access_history', current)
+				
+
 		self.partial = 0
-		if not self.quiet:
-			print line
-		syslog.syslog(syslog.LOG_INFO, line)
 
 	def increment(self):
 		self.partial += 1
@@ -253,6 +272,7 @@ if __name__ == '__main__':
 	parser.add_argument("--ban", "-b", action="store_true", help="Ban IPs")
 	parser.add_argument("-q", action="store_true", help="Quiet mode")
 	parser.add_argument("--syslog", "-s", type=int, help="Write a summary every x seconds")
+	parser.add_argument("--annotation", "-A", type=int, help="If syslog enabled, store in meneame.annotation the last X values")
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not store the ban in the DB")
 	parser.add_argument("--rate", "-r", type=int, default=15, help="Set the max number of connections per second, default 15")
 	parser.add_argument("--logfile", "-l", default="/var/log/meneame_access.log", help="Logfile pathname, default /var/log/meneame_access.log")
@@ -267,7 +287,7 @@ if __name__ == '__main__':
 	syslog.openlog("meneame", syslog.LOG_NDELAY, syslog.LOG_USER)
 	counter = 0
 	if configuration.syslog > 0:
-		syslogger = MySysLogger(configuration.syslog, configuration.q)
+		syslogger = MySysLogger(configuration.syslog, configuration.annotation, configuration.q)
 	else:
 		syslogger = None
 
