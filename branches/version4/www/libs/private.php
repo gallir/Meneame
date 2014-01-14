@@ -92,19 +92,6 @@ class PrivateMessage extends LCPBase {
 			$post_class .= ' new';
 		}
 
-		if ($this->author != $current_user->user_id) {
-			$author = '<a href="'.get_user_uri($this->username).'">' . ' ' . $this->username.'</a>';
-		} else {
-			$author = 'ti';
-		}
-
-		// Print dates
-		if ($globals['now'] - $this->date > 604800) { // 7 days
-			$this->comment_info = sprintf(_('el %s %s por %s'), get_date_time($this->date), '', $author);
-		} else {
-			$this->comment_info = sprintf(_('hace %s %s por %s'), txt_time_diff($this->date), '', $author);
-		}
-
 		if ($length > 0) {
 			$this->content = text_to_summary($this->content, $length);
 		}

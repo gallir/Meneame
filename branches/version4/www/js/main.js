@@ -54,7 +54,7 @@ function to_date(index) {
 			str += " " + dd(d.getHours())+":"+dd(d.getMinutes());
 		}
 
-		$e.attr('title', $e.attr('title') + str);
+		$e.attr('title', $e.attr('title') || '' + str);
 		if (! $e.hasClass("novisible")) {
 			$e.html(str);
 		}

@@ -17,8 +17,9 @@
 
 	<div class="{{ post_meta_class }}">
 		<div class="comment-votes-info">
-		{{ self.comment_info }}
+		<span class="ts" data-ts="{{ self.date }}">__</span>
 		{% if self.author != current_user.user_id %}
+			<a class="username" href="{{ self.username | useruri }}">{{ self.username }}</a>
 			<a href="javascript:priv_new({{ self.author }})" title="{% trans _('responder') %}"><img src="{{ globals.base_static }}img/common/reply02.png" width="18" height="16"/></a>
 		{% endif %}
 		</div>
