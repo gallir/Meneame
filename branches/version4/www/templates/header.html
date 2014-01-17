@@ -72,11 +72,13 @@
 <link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
 {% endfor %}
 
+<meta name="mobile-web-app-capable" content="yes">
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
 {% else %}
-	<link rel="icon" href="{{globals.base_static}}img/favicons/logo_128x128.png" type="image/png" sizes="128x128"/>
-	<link rel="icon" href="{{globals.base_static}}img/favicons/logo_64x64.png" type="image/png" sizes="64x64"/>
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_196x196.png" type="image/png" sizes="196x196"/>
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_128x128.png" type="image/png" sizes="128x128"/>
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_64x64.png" type="image/png" sizes="64x64"/>
 	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/logo_16x16.png" type="image/png" sizes="16x16"/>
 {% endif %}
 
