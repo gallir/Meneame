@@ -25,7 +25,7 @@
 
 <fieldset><legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
 
-{% if not link.is_new && current_user.admin %}
+{% if not link.is_new && (current_user.admin || current_user.user_level == "blogger") %}
 	<label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
 	<p><span class="note">{% trans _('url de la noticia') %}</span>
 	<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>
@@ -107,7 +107,7 @@
 {% endif %}
 
 
-{% if not link.is_new && current_user.admin > 0 %}
+{% if not link.is_new && (current_user.admin > 0 || current_user.user_level == "blogger") %}
 	{% if link.thumb_url %}
 	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 	{% else %}
