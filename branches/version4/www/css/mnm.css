@@ -2420,11 +2420,9 @@ background:url({{ globals.base_static }}img/common/icon_friend_bi_00.png) no-rep
 }
 
 .ads-interlinks {
-height: 95px;
-border-top: 1px solid #aaa;
-padding-top: 4px;
-border-bottom: 1px solid #aaa;
-margin: 10px 0 4px 95px;
+height: 90px;
+padding: 0;
+margin: 8px 0 8px 95px;
 white-space:nowrap;
 overflow:hidden;
 }
