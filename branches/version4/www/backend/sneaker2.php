@@ -81,7 +81,7 @@ if ($logs) {
 				if (empty($_REQUEST['noproblem']) && empty($_REQUEST['nodiscard'])) get_story($log->time, 'discarded', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_edit':
-				if (empty($_REQUEST['noedit']) && $current_user->admin) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
+				if (empty($_REQUEST['noedit']) && ($current_user->admin || $current_user->user_level == 'blogger') ) get_story($log->time, 'edited', $log->log_ref_id, $log->log_user_id);
 				break;
 			case 'link_geo_edit':
 				if (empty($_REQUEST['nogeoedit']) && $current_user->admin) get_story($log->time, 'geo_edited', $log->log_ref_id, $log->log_user_id);
