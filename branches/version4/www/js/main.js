@@ -1609,9 +1609,9 @@ function analyze_hash(force) {
 	function animate(target, force) {
 		var $h = $('#header-top');
 		if (force || $h.css('position') == 'fixed' && $(document).scrollTop() > target.offset().top - $h.height() ) {
-			$('html, body').animate({scrollTop: target.offset().top - $h.height() - 10}, {duration: 100, queue: false});
+			$(window).scrollTop(target.offset().top - $h.height() - 10);
 		}
-		target.animate({opacity: 1.0}, 500);
+		target.animate({opacity: 1.0}, 200);
 	}
 
 }
