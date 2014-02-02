@@ -101,6 +101,9 @@ if (($argc = count($url_args)) > 1) {
 	}
 }
 
+if (! $current_page ) $no_page = true;
+else $no_page = false;
+
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
 	$globals['time_enabled_comments'] = min($globals['time_enabled_comments_status'][$link->status],
@@ -124,7 +127,7 @@ switch ($url_args[1]) {
 		$order_field = 'comment_order';
 
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
-			if (!$current_page) {
+			if ($no_page) {
 				if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
 					$last_com_first = true;
 					$canonical_page = $current_page = ceil($link->comments/$globals['comments_page_size']);
@@ -267,7 +270,7 @@ case 2:
 	echo '<div class="comments">';
 
 	if($tab_option == 1) {
-		print_relevant_comments($link, $current_page);
+		print_relevant_comments($link, $no_page);
 	} else {
 		$last_com_first = false;
 	}
@@ -539,7 +542,7 @@ function get_comment_page_url($i, $total, $query, $reverse = false) {
 	else return $query.'/'.$i;
 }
 
-function print_relevant_comments($link, $page) {
+function print_relevant_comments($link, $no_page) {
 	global $globals, $db;
 
 	if ($globals['bot'] || $link->comments < 10 ) return;
@@ -594,7 +597,7 @@ function print_relevant_comments($link, $page) {
 			$obj->val = $comment->val;
 			$obj->karma = $comment->comment_karma;
 			$objects[] = $obj;
-			if (! $page 
+			if ($no_page 
 					&& ! $self
 					&& $obj->vote < 0
 					&& $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
@@ -606,7 +609,7 @@ function print_relevant_comments($link, $page) {
 			}
 			if (count($objects) > $limit) break;
 		}
-		if (! $page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
+		if ($no_page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
 			$self = get_highlighted_comment($objects[0]);
 			$objects[0]->summary = true;
 		}
