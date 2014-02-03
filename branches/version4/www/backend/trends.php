@@ -8,7 +8,7 @@ $q = preg_split('/,/', $_REQUEST['q'], 6, PREG_SPLIT_NO_EMPTY);
 header('Content-Type: application/json; charset=utf-8');
 
 
-$indices = 'links, links_delta';
+$indices = 'links';
 $queries = array();
 $series = array();
 $min_yymm = PHP_INT_MAX;
@@ -96,7 +96,7 @@ foreach ($series as $s) {
 		$miliseconds = mktime(0, 0, 0, $mm, 1, $yy) * 1000;
 		if (array_key_exists("$yymm", $s['objects'])) {
 			$d = $s['objects'][$yymm];
-			if (! $started && ($d->value < 0.0005 || $d->count < 2)) {
+			if (! $started && $d->count < 3) {
 				$suspect = new stdClass();
 				$suspect->data = array($miliseconds, $d->value);
 				$suspect->count = $d->count;
