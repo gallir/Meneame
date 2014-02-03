@@ -32,7 +32,7 @@ $globals['extra_js'][] = 'jquery.flot.time.min.js';
 
 $globals['noindex'] = true;
 
-do_header(sprintf(_('tendencias de «%s»'), htmlspecialchars($_REQUEST['words'])));
+do_header(_('tendencias'));
 //do_tabs('main',_('tendencias'), htmlentities($_SERVER['REQUEST_URI']));
 
 /*** SIDEBAR ****/
