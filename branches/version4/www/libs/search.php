@@ -82,6 +82,22 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 		$cl->SetFilterRange('date', $min_date, $max_date);
 	}
 
+	if ($_REQUEST['yymm']) {
+		$yymm = intval($_REQUEST['yymm']);
+		$yy = intval($yymm / 100);
+		$mm = $yymm - $yy*100;
+        $min_date = mktime(0, 0, 0, $mm, 1, $yy);
+        if ($mm == 12) {
+            $mm = 1;
+            $yy++;
+        } else {
+            $mm++;
+        }
+        $max_date = mktime(0, 0, 0, $mm, 1, $yy);
+		$cl->SetFilterRange('date', $min_date, $max_date);
+	}
+
+
 	if ($_REQUEST['w'] == 'links' && $_REQUEST['s']) {
 		if (preg_match('/^ *! */', $_REQUEST['s'])) {
 			// Allows to reject a status

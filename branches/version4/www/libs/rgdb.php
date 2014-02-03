@@ -9,18 +9,23 @@
 class RGDB extends mysqli {
 	const POINT_KEY = "rgdb_savepoint_";
 
-	function __construct($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost') {
+	function __construct($dbuser='', $dbpassword='', $dbname='', $dbhost='localhost', $check_ban = false) {
 		$this->dbuser = $dbuser;
 		$this->dbpassword = $dbpassword;
 		$this->dbname = $dbname;
 		$this->dbhost = $dbhost;
+		$this->port = null;
 		$this->connected = false;
 		$this->in_transaction = 0;
 		$this->show_errors = true;
 		$this->initial_query = false;
 		$this->connect_timeout = 10;
-		// Check the IP is not banned before doing anything more
-		$this->ban_checked = check_ip_noaccess(1); // 1 == only cache
+		if ($check_ban) {
+			// Check the IP is not banned before doing anything more
+			$this->ban_checked = check_ip_noaccess(1); // 1 == only cache
+		} else {
+			$this->ban_checked = true;
+		}
 
 	}
 
@@ -127,9 +132,9 @@ class RGDB extends mysqli {
 		@parent::init();
 		@parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, $this->connect_timeout);
 		if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
-			$this->connected = @parent::real_connect('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+			$this->connected = @parent::real_connect('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname, $this->port);
 		} else {
-			$this->connected = @parent::real_connect($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname);
+			$this->connected = @parent::real_connect($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname, $this->port);
 		}
 		if (! $this->connected) {
 			header('HTTP/1.1 503 Service Unavailable');

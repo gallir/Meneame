@@ -172,9 +172,9 @@ function __autoload($class) {
 
 // Allows a script to define to use the alternate server
 if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
-	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']]);
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']], true);
 } else {
-	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server']);
+	$db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['db_server'], true);
 	$db->persistent = $globals['mysql_persistent'];
 }
 

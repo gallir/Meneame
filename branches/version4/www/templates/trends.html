@@ -1,0 +1,85 @@
+<div id="newswrap">
+
+    <div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">
+    <fieldset>
+	<form id="thisform">
+		<label for="search">[PROTOTIPO] {% trans _("palabras o frases separadas por ','") %}</label>
+	    <input type="search" placeholder="palabra, o varias palabras," autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
+	    <input class="button" type="submit" value="{% trans _('enviar') %}" />
+
+	    <br />
+        </form>
+
+		{% if _REQUEST.words %}
+	    <script type="text/javascript">
+		var $flot;
+		var options = { 
+				xaxis: { mode: "time", timeformat: "%m/%y", minTickSize: [1, "month"] },
+				series: { lines: { show: true }, points: { show: true }},
+				grid: { hoverable: true, clickable: true },
+				yaxis: { min: 0 }
+		};
+
+        function showTooltip(x, y, contents) {
+			if ($('#tooltip').length>0) return;
+
+            $('<div id="tooltip">' + contents + '</div>').css( {
+                position: 'absolute',
+                display: 'none',
+                top: y,
+                left: x + 10,
+                border: '1px solid #e2d3b0',
+                padding: '3px',
+                'background-color': '#FFEEC7',
+                opacity: 0.85,
+                'text-align': 'left',
+                'font-size': '85%',
+            }).appendTo("body").fadeIn(200);
+        }
+
+
+		function loadData() {
+			var data = [];
+			var words = "{{ _REQUEST.words|escape}}";
+			if (!words) return; $.getJSON(base_url+"backend/trends.php",
+				{ q: words },
+				function (json) {
+					for (i=0; i<json.length; i++) {
+						data.push(json[i]);
+					}
+					$.plot($flot, data, options);
+				}
+			);
+		}
+
+		addPostCode( function () {
+			if (! $flot) $flot = $("#flot");
+			$flot.on("plothover", function (event, pos, item) {
+				if (item) {
+					showTooltip(item.pageX, item.pageY, '');
+					$.getJSON(base_url+"backend/info.php",
+						{id: item.series.id[item.dataIndex], fields: "title,total_votes,", what: "link" },
+						function (json) {
+							var html = '';
+							html += '<div><b>Total:</b> '+item.series.count[item.dataIndex]+'</div>';
+							html += '<div><b>Destacada:</b> '+json.title+'</div>';
+							html += '<div><b>Votos:</b> '+json.total_votes+'</div>';
+							$('#tooltip').html(html);
+						}
+					);
+				} else {
+					$("#tooltip").remove();
+				}
+			});
+
+			$flot.on('plotclick', function (event, pos, item) {
+				window.open(base_url+encodeURI('search.php?q='+item.series.label+'&yymm='+item.series.yymm[item.dataIndex]+'&root_time='+item.series.ts[item.dataIndex]));
+			});
+			loadData();
+		});
+	    </script>
+		{% endif %}
+    </fieldset>
+	</div>
+	<div id="flot" style="width:100%;height:250px;"></div>
+</div>
