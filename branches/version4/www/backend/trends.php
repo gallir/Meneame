@@ -56,14 +56,12 @@ foreach ($q as $words) {
 
 $results = $cl->RunQueries();
 
-$i = 0;
 foreach ($queries as $q) {
 	$res = $results[$q];
 	if (is_array($res["matches"])) {
 		foreach ( $res["matches"] as $id => $info ) {
 			$normalized = $info['attrs']['@count'] / $totals[$info['attrs']['@groupby']];
 			$o = new stdClass();
-			$i++;
 			$o->id = $id;
 			$o->date = $info['attrs']['date'];
 			$o->count =  $info['attrs']['@count'];
@@ -73,7 +71,6 @@ foreach ($queries as $q) {
 			$o->yymm =  $info['attrs']['@groupby'];
 			$series[$q]['objects']["$o->yymm"] = $o;
 			if ($o->yymm < $min_yymm) $min_yymm = $o->yymm;
-			//echo "$i --- $q $o->id $o->date $o->yymm  $o->count $o->votes\n";
 		}
 	}
 }

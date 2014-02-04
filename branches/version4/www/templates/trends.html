@@ -1,10 +1,10 @@
-<div id="newswrap">
+<div id="singlewrap">
 
-    <div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">
+    <div class="genericform" style="text-align: center; max-width: 75%; margin-left: auto; margin-right: auto">
     <fieldset>
-	<form id="thisform">
+	<form >
 		<label for="search">[PROTOTIPO] {% trans _("palabras o frases separadas por ','") %}</label>
-	    <input type="search" placeholder="palabra, o varias palabras," autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
+	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
 	    <input class="button" type="submit" value="{% trans _('enviar') %}" />
 
 	    <br />
@@ -90,5 +90,5 @@
 		{% endif %}
     </fieldset>
 	</div>
-	<div id="flot" style="width:100%;height:250px;"></div>
+	<div id="flot" style="width:90%;height:250px;margin-right:10%"></div>
 </div>

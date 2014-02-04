@@ -35,11 +35,6 @@ $globals['noindex'] = true;
 do_header(_('tendencias'));
 //do_tabs('main',_('tendencias'), htmlentities($_SERVER['REQUEST_URI']));
 
-/*** SIDEBAR ****/
-echo '<div id="sidebar">';
-do_banner_right();
-echo '</div>' . "\n";
-/*** END SIDEBAR ***/
 
 $options = array();
 
