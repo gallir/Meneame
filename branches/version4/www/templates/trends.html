@@ -5,9 +5,18 @@
 	<form >
 		<label for="search">[PROTOTIPO] {% trans _("palabras o frases separadas por ','") %}</label>
 	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
+	    <br />
+		{% for o,t in options %}
+			<input type = "radio" name="w" id="{{ o }}" value="{{ o }}" 
+			{% if _GET.w == o OR ! _GET.w AND o == "links" %} 
+				checked = "checked"
+			{% endif %}
+			/>
+			<label for = "{{ o }}">{{ t }}</label>
+		{% endfor %}
+	    <br />
 	    <input class="button" type="submit" value="{% trans _('enviar') %}" />
 
-	    <br />
         </form>
 
 		{% if _REQUEST.words %}
@@ -15,6 +24,8 @@
 		var $flot;
 		var lastRequest = new Date().getTime();
 		var lastQuery = -1;
+		var what;
+		var words;
 		var options = { 
 				xaxis: { mode: "time", timeformat: "%m/%y", minTickSize: [1, "month"] },
 				series: { lines: { show: true }, points: { show: true }},
@@ -42,9 +53,9 @@
 
 		function loadData() {
 			var data = [];
-			var words = "{{ _REQUEST.words|escape}}";
-			if (!words) return; $.getJSON(base_url+"backend/trends.php",
-				{ q: words },
+			if (!words) return;
+			$.getJSON(base_url+"backend/trends.php",
+				{ q: words, w: what },
 				function (json) {
 					for (i=0; i<json.length; i++) {
 						data.push(json[i]);
@@ -56,6 +67,9 @@
 
 		addPostCode( function () {
 			if (! $flot) $flot = $("#flot");
+			words = "{{ _REQUEST.words|escape}}";
+			what = $("input:radio[name=w]:checked" ).val();
+
 			$flot.on("plothover", function (event, pos, item) {
 				if (item) {
 					var now = new Date().getTime();
@@ -65,13 +79,25 @@
 					lastRequest = now;
 					lastQuery = item.dataIndex;
 					showTooltip(item.pageX, item.pageY, '');
+					var fields;
+					if (what == "links") fields = "title,total_votes";
+					else fields = "karma";
 					$.getJSON(base_url+"backend/info.php",
-						{id: item.series.id[item.dataIndex], fields: "title,total_votes,", what: "link" },
+						{id: item.series.id[item.dataIndex], fields: fields, what: what },
 						function (json) {
 							var html = '';
+							var yymm = item.series.yymm[item.dataIndex];
+							var yy = Math.floor(yymm/100);
+							var mm = yymm - yy * 100;
+							if (mm < 10) mm = '0'+mm;
+							html += '<div><b>'+mm+'/'+yy+'</b></div>';
 							html += '<div><b>Total:</b> '+item.series.count[item.dataIndex]+'</div>';
-							html += '<div><b>Destacada:</b> '+json.title+'</div>';
-							html += '<div><b>Votos:</b> '+json.total_votes+'</div>';
+							if (what == "links") {
+								html += '<div><b>Destacada:</b> '+json.title+'</div>';
+								html += '<div><b>Votos:</b> '+json.total_votes+'</div>';
+							} else {
+								html += '<div><b>Max karma:</b> '+json.karma+'</div>';
+							}
 							$('#tooltip').html(html);
 						}
 					);
@@ -82,7 +108,7 @@
 			});
 
 			$flot.on('plotclick', function (event, pos, item) {
-				window.open(base_url+encodeURI('search.php?q='+item.series.label+'&yymm='+item.series.yymm[item.dataIndex]+'&root_time='+item.series.ts[item.dataIndex]));
+				window.open(base_url+encodeURI('search.php?q='+item.series.label+'&w='+what+'&yymm='+item.series.yymm[item.dataIndex]+'&root_time='+item.series.ts[item.dataIndex]));
 			});
 			loadData();
 		});

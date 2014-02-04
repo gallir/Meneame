@@ -5,16 +5,29 @@ include(mnminclude.'search.php');
 $_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 100);
 $q = preg_split('/,/', $_REQUEST['q'], 6, PREG_SPLIT_NO_EMPTY);
 
+switch ($_REQUEST['w']) {
+	case 'comments':
+		$indices = 'comments';
+		$sort = 'karma';
+		break;
+	case 'posts':
+		$indices = 'posts';
+		$sort = 'karma';
+		break;
+	default:
+		$indices = 'links';
+		$sort = 'votes';
+}
+
 header('Content-Type: application/json; charset=utf-8');
 
 
-$indices = 'links';
 $queries = array();
 $series = array();
 $min_yymm = PHP_INT_MAX;
 $max_yymm = (int) date('Ym');
 
-$cache = new Annotation("sphinx-links");
+$cache = new Annotation("sphinx-$indices");
 if ($cache->read()) {
 	$totals = json_decode($cache->text, true);
 } else {
@@ -23,7 +36,7 @@ if ($cache->read()) {
 	$sp->port = 9306;
 	$sp->connect();
 
-	$res = $sp->get_results("select yearmonth(date) as yymm, @count from links group by yymm limit 2000 option ranker = none");
+	$res = $sp->get_results("select yearmonth(date) as yymm, @count from $indices group by yymm limit 2000 option ranker = none");
 	if ($res) {
 		foreach ($res as $o) {
 			$a = (array) $o;
@@ -42,7 +55,7 @@ $cl->SetMatchMode(SPH_MATCH_PHRASE);
 $cl->SetRankingMode(SPH_RANK_NONE);
 $cl->SetLimits(0, 100000, 1000);
 
-$cl->SetSortMode(SPH_SORT_ATTR_DESC, 'votes');
+$cl->SetSortMode(SPH_SORT_ATTR_DESC, $sort);
 $cl->SetGroupBy('date', SPH_GROUPBY_MONTH);
 
 foreach ($q as $words) {
@@ -66,7 +79,7 @@ foreach ($queries as $q) {
 			$o->date = $info['attrs']['date'];
 			$o->count =  $info['attrs']['@count'];
 			$o->value =  $normalized;
-			$o->votes = $info['attrs']['votes'];
+			$o->$sort = $info['attrs'][$sort];
 			$o->ts = $info['attrs']['date'];
 			$o->yymm =  $info['attrs']['@groupby'];
 			$series[$q]['objects']["$o->yymm"] = $o;
@@ -80,6 +93,7 @@ foreach ($series as $s) {
 	$started = false;
 	$o = new stdClass();
 	$o->label = $s['words'];
+	$o->sort = $sort;
 	$o->data = array();
 	$o->count = array();
 	$o->id = array();
@@ -99,7 +113,7 @@ foreach ($series as $s) {
 				$suspect->count = $d->count;
 				$suspect->id = $d->id;
 				$suspect->ts = $d->ts;
-				$suspect->ts = $d->yymm;
+				$suspect->yymm = $d->yymm;
 			} else {
 				if ($suspect) {
 					$o->data[] = $suspect->data;

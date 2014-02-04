@@ -36,7 +36,7 @@ do_header(_('tendencias'));
 //do_tabs('main',_('tendencias'), htmlentities($_SERVER['REQUEST_URI']));
 
 
-$options = array();
+$options = array('links' => _('historias'), 'comments' => _('comentarios'), 'posts' => _('notas'));
 
 Haanga::Load('trends.html', compact('options'));
 
