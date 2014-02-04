@@ -73,6 +73,7 @@ foreach ($queries as $q) {
 	$res = $results[$q];
 	if (is_array($res["matches"])) {
 		foreach ( $res["matches"] as $id => $info ) {
+			if (! $totals[$info['attrs']['@groupby']] > 0) continue;
 			$normalized = $info['attrs']['@count'] / $totals[$info['attrs']['@groupby']];
 			$o = new stdClass();
 			$o->id = $id;
@@ -101,7 +102,7 @@ foreach ($series as $s) {
 	$o->yymm = array();
 	$suspect = null;
 	$yymm = $min_yymm;
-	while($yymm < $max_yymm) {
+	while($yymm <= $max_yymm) {
 		$yy = floor($yymm / 100);
 		$mm = $yymm - $yy*100;
 		$miliseconds = mktime(0, 0, 0, $mm, 1, $yy) * 1000;
