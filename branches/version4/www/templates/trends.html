@@ -3,7 +3,7 @@
     <div class="genericform" style="text-align: center; max-width: 75%; margin-left: auto; margin-right: auto">
     <fieldset>
 	<form >
-		<label for="search">[PROTOTIPO] {% trans _("palabras o frases separadas por ','") %}</label>
+		<label for="search">{% trans _("palabras o frases separadas por ','") %}</label>
 	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
 	    <br />
 		{% for o,t in options %}
@@ -54,12 +54,14 @@
 		function loadData() {
 			var data = [];
 			if (!words) return;
-			$.getJSON(base_url+"backend/trends.php",
-				{ q: words, w: what },
+			var url = "http://"+location.hostname+encodeURI(base_url+"backend/trends.php?q="+words+"&w="+what);
+			$.getJSON(url,
 				function (json) {
 					for (i=0; i<json.length; i++) {
 						data.push(json[i]);
 					}
+					$("input:text[name=json]" ).val(url).css('visibility', 'visible');
+					$("#json-url" ).css('visibility', 'visible');
 					$.plot($flot, data, options);
 				}
 			);
@@ -67,7 +69,7 @@
 
 		addPostCode( function () {
 			if (! $flot) $flot = $("#flot");
-			words = "{{ _REQUEST.words|escape}}";
+			words = $('<div/>').html("{{ _REQUEST.words|escape}}").text().replace(/\s/g, '');
 			what = $("input:radio[name=w]:checked" ).val();
 
 			$flot.on("plothover", function (event, pos, item) {
@@ -116,5 +118,6 @@
 		{% endif %}
     </fieldset>
 	</div>
-	<div id="flot" style="width:90%;height:250px;margin-right:10%"></div>
+	<div id="flot" style="width:90%;height:250px;margin-right:10%;margin-bottom:10px;"></div>
+	<div id="json-url" style="visibility:hidden"><b>json:</b> <input style="width:60%" type="text" name="json" readonly></div>
 </div>

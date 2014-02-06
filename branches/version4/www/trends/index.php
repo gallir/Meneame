@@ -32,7 +32,12 @@ $globals['extra_js'][] = 'jquery.flot.time.min.js';
 
 $globals['noindex'] = true;
 
-do_header(_('trends/tendencias'));
+$title = _('trends/tendencias');
+if (! empty($_REQUEST['words'])) {
+	$title .= ' «'.htmlspecialchars($_REQUEST['words']).'»';
+}
+
+do_header($title);
 //do_tabs('main',_('tendencias'), htmlentities($_SERVER['REQUEST_URI']));
 
 
