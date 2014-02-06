@@ -69,7 +69,7 @@
 
 		addPostCode( function () {
 			if (! $flot) $flot = $("#flot");
-			words = $('<div/>').html("{{ _REQUEST.words|escape}}").text().replace(/\s/g, '');
+			words = $('<div/>').html("{{ _REQUEST.words|escape}}").text().replace(/,\s+/g, ',');
 			what = $("input:radio[name=w]:checked" ).val();
 
 			$flot.on("plothover", function (event, pos, item) {
