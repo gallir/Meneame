@@ -19,7 +19,7 @@ $globals['extra_js'] = Array();
 $globals['extra_css'] = Array();
 
 if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
-	$globals['ads'] = false;
+	if (! $globals['mobile']) $globals['ads'] = false;
 	if (isset($_REQUEST['partial'])) {
 		$globals['partial'] = true;
 		$_SERVER['QUERY_STRING'] =preg_replace('/partial&|\?partial$|&partial/', '', $_SERVER['QUERY_STRING']);

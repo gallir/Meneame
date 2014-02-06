@@ -4,7 +4,7 @@
     <fieldset>
 	<form >
 		<label for="search">{% trans _("palabras o frases separadas por ','") %}</label>
-	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" value="{{ _REQUEST.words|escape}}" class="form-full"/>
+	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" id="search" value="{{ _REQUEST.words|escape}}" class="form-full"/>
 	    <br />
 		{% for o,t in options %}
 			<input type = "radio" name="w" id="{{ o }}" value="{{ o }}" 
