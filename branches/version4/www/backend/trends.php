@@ -5,6 +5,7 @@ include(mnminclude.'search.php');
 $_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 100);
 $q = preg_split('/,/', $_REQUEST['q'], 6, PREG_SPLIT_NO_EMPTY);
 
+/* Select the Sphinx indices to use */
 switch ($_REQUEST['w']) {
 	case 'comments':
 		$indices = 'comments';
@@ -32,8 +33,10 @@ $sp->connect();
 
 $cache = new Annotation("sphinx-$indices");
 if ($cache->read()) {
+	/* If totals' cache is valid, just load the array */
 	$totals = json_decode($cache->text, true);
 } else {
+	/* Otherwise, query to Sphinx and fills $totals */
 	$totals = array();
 
 	$res = $sp->get_results("select yearmonth(date) as yymm, @count from $indices group by yymm limit 2000 option ranker = none");
@@ -50,10 +53,11 @@ if ($cache->read()) {
 
 $sql = '';
 $s = 0;
+/* Build de Sphinx SQL query for each word or phrase, each one is a "serie" */
 foreach ($q as $words) {
 	$words = trim($words);
-	//$q = $cl->AddQuery($words, $indices);
 	$series[$s] = array();
+	/* Common attributes for each serie */
 	$series[$s]['words'] = $words;
 	$series[$s]['objects'] = array();
 	$series[$s]['sort'] = $sort;
@@ -64,8 +68,10 @@ foreach ($q as $words) {
 $s = 0;
 if ($sp->multi_query($sql)) {
 	do {
+		/* For each query/serie */
 		if( ($result = $sp->store_result()) ) {
 			while (($row = $result->fetch_array())) {
+				/* We load the data in objets appended to an array for each serie */
 				load_row($series[$s], $row);
 			}
 		}
@@ -74,6 +80,7 @@ if ($sp->multi_query($sql)) {
 }
 $sp->close();
 
+/* Sort data and complete with information needed for Flotchart and the tooltip */
 $data = array();
 foreach ($series as $s) {
 	$started = false;
