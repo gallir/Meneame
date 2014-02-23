@@ -18,6 +18,7 @@ class WatchData:
 	high_limit = 90
 	high_urgent = 95
 	stats_period = 120
+	history_size = 0
 
 	def __init__(self):
 		self.name = ''
@@ -38,6 +39,7 @@ class WatchData:
 		self.loads = {}
 		self.measures = {}
 		self.emergency = False
+		self.history = None
 
 	def __getstate__(self):
 		""" Don't store these objets """
@@ -98,6 +100,11 @@ class WatchData:
 		return data
 
 	def store(self, annotation = False):
+		if self.history_size > 0:
+			if not self.history: self.history = []
+			self.history.append([int(time.time()), len(self.group.instances), int(round(self.total_load))])
+			self.history = self.history[-self.history_size:]
+
 		pickle.dump(self, open(self.datafile, "wb" ))
 
 		if annotation:

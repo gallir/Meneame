@@ -16,7 +16,7 @@ from ec2_watchdata import WatchData
 def main():
 	global configuration
 
-	now = time.time()
+	now = int(time.time())
 	data = WatchData()
 
 	""" Set default class values """
@@ -28,6 +28,8 @@ def main():
 		WatchData.high_limit = configuration.high
 	if configuration.high_urgent:
 		WatchData.high_urgent = configuration.high_urgent
+	if configuration.history:
+		WatchData.history_size = configuration.history
 
 
 
@@ -37,23 +39,24 @@ def main():
 	prev_data = WatchData.from_file()
 
 	""" Retrieve and calculate previous values in the current instance """
-	data.action_ts = prev_data.action_ts
+	data.action_ts = int(prev_data.action_ts)
 	data.action = prev_data.action
-	data.up_ts = prev_data.up_ts
-	data.down_ts = prev_data.down_ts
+	data.up_ts = int(prev_data.up_ts)
+	data.down_ts = int(prev_data.down_ts)
+	data.history = prev_data.history
 
 	if data.instances != prev_data.instances:
 		data.previous_instances = prev_data.instances
-		if data.instances > prev_data.instances: data.up_ts = time.time()
-		else: data.down_ts = time.time()
+		if data.instances > prev_data.instances: data.up_ts = int(time.time())
+		else: data.down_ts = int(time.time())
 	else:
 		data.previous_instances = prev_data.previous_instances
 		
 
 	if data.instances != prev_data.instances or data.desired != prev_data.desired:
-		data.changed_ts = time.time()
+		data.changed_ts = int(time.time())
 	else:
-		data.changed_ts = prev_data.changed_ts
+		data.changed_ts = int(prev_data.changed_ts)
 
 
 	print "%s values: instances: %d min: %d max: %d desired: %d" % (configuration.group, data.instances, data.group.min_size, data.group.max_size, data.group.desired_capacity)
@@ -105,6 +108,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--group", "-g", default="web", help="AutoScaler group")
 	parser.add_argument("--annotation", "-a", action="store_true", help="Store data in Meneame database as annotation")
+	parser.add_argument("--history", "-H", type=int, default=0, help="History size of CPU load")
 	parser.add_argument("--mail", "-m", help="Send email to this address when took an emergency action")
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not take actions")
 	parser.add_argument("--low", "-low", type=int, default=70, help="Low limit for CPU average")
