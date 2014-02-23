@@ -152,7 +152,7 @@ function depublish($site_id) {
 			
 			echo "Candidate $l->id ($l->karma) negative karma: $negatives positive karma: $positives\n";
 			// Adjust positives to the probability of votes/clicks
-			$c = (1 + (1 - $prob) * 0.6);
+			$c = (1 + (1 - $prob) * 0.7);
 			$positives = $positives * $c;
 			echo "Probability: $prob New positives: $positives ($c)\n";
 

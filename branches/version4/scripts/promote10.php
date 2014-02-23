@@ -14,7 +14,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 20);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.10);
+define (PUB_PERC, 0.12);
 
 $sites = SitesMgr::get_active_sites();
 
@@ -298,7 +298,7 @@ function promote($site_id) {
 					} else {
 						// Decrease for high affinity between voters
 						$c = $c - 1;
-						$bonus = - round($c * 0.35 * $link->karma);
+						$bonus = - round($c * 0.37 * $link->karma);
 						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
 					}
 					if (abs($bonus) > 10) {
@@ -312,7 +312,7 @@ function promote($site_id) {
 			// check differences, if > 4 store it
 			if (abs($link->old_karma - $link->karma) > 6) {
 				// Check percentage of low karma votes if difference > 20 (to avoid sending too many messages
-				if ($link->old_karma > $link->karma + 20  && !empty($globals['adm_email']) && intval($link->low_karma_perc) >= 85) {
+				if ($link->old_karma > $link->karma + 20  && !empty($globals['adm_email']) && intval($link->low_karma_perc) >= 90) {
 					echo "LOW KARMA WARN $link->uri\n";
 					$subject = _('AVISO: enlace con muchos votos de karma menor que la media');
 					$body = "Perc: $link->low_karma_perc% User votes: $link->votes Negatives: $link->negatives\n\n";
