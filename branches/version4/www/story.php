@@ -68,8 +68,8 @@ if ($db->get_var("select count(*) from sub_statuses where id=$site_id and link=$
 
 
 if ($link->is_discarded()) {
-	// Dont allow indexing of discarded links
-	if ($globals['bot']) not_found();
+	// Dont allow indexing of discarded links, nor anonymous users after 10 days
+	if ($globals['bot'] || (! $current_user->authenticated && $globals['now'] - $link->sent_date > 864000) ) not_found();
 	$globals['ads'] = false;
 	$globals['noindex'] = true;
 }
