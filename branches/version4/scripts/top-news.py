@@ -31,17 +31,17 @@ def do_site(site):
     """
     cursor.execute(query, (site,))
     links_total = 0
-    for row in cursor:
+    for link_id, link_uri, old in cursor:
         links_total += 1
         values = {}
-        values['uri'] = row[1]
+        values['uri'] = link_uri
         # How old in seconds
-        values['old'] = row[2]
+        values['old'] = old
         values['w'] = 0
         values['c'] = 0
         values['v'] = 0
         values['links_order'] = links_total
-        links[row[0]] = values
+        links[link_id] = values
 
     if not links_total:
         return
@@ -49,7 +49,8 @@ def do_site(site):
     links_format = ','.join(['%s'] * len(links))
     query = """
         select vote_link_id,
-            sum((1-(unix_timestamp(now())-unix_timestamp(vote_date))/36000)) as x,
+            sum((1-(unix_timestamp(now())
+                    - unix_timestamp(vote_date))/36000)) as x,
             count(*)
         from votes
         where vote_link_id in (%s)
@@ -65,14 +66,15 @@ def do_site(site):
     votes_links = 0
     v_total = 0
     v_list = {}
-    for row in cursor:
+    for link_id, old, votes in cursor:
         votes_links += 1
-        links[row[0]]['v'] = float(row[1])
-        v_total += float(row[1])
-        v_list[row[0]] = float(row[1])
-        links[row[0]]['votes'] = row[2]
-        votes_total += row[2]
-        links[row[0]]['votes_order'] = votes_links
+        votes_old = float(old)
+        links[link_id]['v'] = votes_old
+        v_total += votes_old
+        v_list[link_id] = votes_old
+        links[link_id]['votes'] = votes
+        votes_total += votes
+        links[link_id]['votes_order'] = votes_links
 
     if not votes_links:
         return
@@ -95,13 +97,14 @@ def do_site(site):
     comments_links = 0
     c_total = 0
     c_list = {}
-    for row in cursor:
+    for link_id, old, count in cursor:
+        comment_old = float(old)
         comments_links += 1
-        links[row[0]]['c'] = float(row[1])
-        c_total += float(row[1])
-        c_list[row[0]] = float(row[1])
-        links[row[0]]['comments'] = row[2]
-        comments_total += row[2]
+        links[link_id]['c'] = comment_old
+        c_total += comment_old
+        c_list[link_id] = comment_old
+        links[link_id]['comments'] = count
+        comments_total += count
 
     if not comments_links:
         return
@@ -111,20 +114,20 @@ def do_site(site):
     query = """
         select id, counter from link_clicks where id in (%s)
     """ % links_format
-    cursor.execute(query, tuple(links))
-    for row in cursor:
-        links[row[0]]['clicks'] = row[1]
+
+    for link_id, clicks in cursor.execute(query, tuple(links)):
+        links[link_id]['clicks'] = clicks
 
     cursor.close()
 
     print "Site:", site, "Votes average:", votes_average, v_average, \
             "Comments average:", comments_average, c_average
 
-    for link_key, link_value in links.items():
+    for link_id, link_value in links.items():
         if link_value['c'] > 0 \
                 and link_value['v'] > 0 \
                 and 'clicks' in link_value:
-            links[link_key]['w'] = (1 - link_value['old']/(1.5*86400)) \
+            links[link_id]['w'] = (1 - link_value['old']/(1.5*86400)) \
                            * (link_value['v'] \
                            + link_value['c'] \
                            + link_value['clicks'] \
