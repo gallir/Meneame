@@ -1,11 +1,10 @@
 #! /usr/bin/env python
 from __future__ import division
 
-import MySQLdb
 import gettext
 _ = gettext.gettext
 import dbconf
-from utils import *
+from utils import DBM
 
 def main():
     """ Main loop of top-news """
@@ -120,36 +119,40 @@ def do_site(site):
 
     print "Site:", site, "Votes average:", votes_average, v_average, \
             "Comments average:", comments_average, c_average
-    for id in links:
-        if links[id]['c'] > 0  and links[id]['v'] > 0 \
-            and 'clicks' in links[id]:
-            links[id]['w'] = (1 - links[id]['old']/(1.5*86400)) * \
-                (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * \
-                    (1 - links[id]['old']/86400) * 0.02)
+
+    for link_key, link_value in links.items():
+        if link_value['c'] > 0 \
+                and link_value['v'] > 0 \
+                and 'clicks' in link_value:
+            links[link_key]['w'] = (1 - link_value['old']/(1.5*86400)) \
+                           * (link_value['v'] \
+                           + link_value['c'] \
+                           + link_value['clicks'] \
+                           * (1 - link_value['old']/86400) * 0.01)
 
     sorted_ids = sorted(links, cmp=lambda x, y:
                                             cmp(links[y]['w'], links[x]['w']))
 
     if sorted_ids:
-        str = ','.join([unicode(x) for x in sorted_ids[:10]])
-        c = DBM.cursor('update')
+        annotations = ','.join([unicode(x) for x in sorted_ids[:10]])
+        cursor_update = DBM.cursor('update')
         query = """
             replace into annotations
                 (annotation_key, annotation_expire, annotation_text)
                 values (%s, date_add(now(), interval 15 minute), %s)
         """
-        c.execute(query, ('top-actives-'+site, str))
-        c.close()
+        cursor_update.execute(query, ('top-actives-'+site, annotations))
+        cursor_update.close()
         DBM.commit()
 
     i = 0
-    for id in sorted_ids:
-        if links[id]['w'] > 0 and i < 10:
+    for key in sorted_ids:
+        if links[key]['w'] > 0 and i < 10:
             i += 1
 
 
     # Select the top stories
-    str = ','.join([unicode(x) for x in sorted_ids
+    annotations = ','.join([unicode(x) for x in sorted_ids
                         if links[x]['w'] > dbconf.tops['min-weight']
                             and (links[x]['links_order'] > 1
                             or links[x]['old'] > 3600)
@@ -157,32 +160,32 @@ def do_site(site):
                             and links[x]['v'] > c_avrg(v_list, x) * 4
                             and links[x]['votes_order'] <= 10 ])
 
-    print "SELECT: ", site, str
+    print "SELECT: ", site, annotations
 
-    if str:
-        c = DBM.cursor('update')
+    if annotations:
+        cursor_update = DBM.cursor('update')
         query = """
             replace into annotations
                 (annotation_key, annotation_expire, annotation_text)
                 values (%s, date_add(now(), interval 10 minute), %s)
         """
-        c.execute(query, ('top-link-'+site, str))
-        c.close()
+        cursor_update.execute(query, ('top-link-'+site, annotations))
+        cursor_update.close()
         DBM.commit()
-        print "Stored:", str
+        print "Stored:", annotations
     else:
         print "No one selected"
 
 def c_avrg(the_dict, exclude):
     """ Calculate the average excluding the given element"""
-    i = 0
+    index = 0
     total = 0
-    for e in the_dict:
-        if e != exclude:
-            i += 1
-            total += the_dict[e]
-    if i>0:
-        return float(total/i)
+    for key in the_dict:
+        if key != exclude:
+            index += 1
+            total += the_dict[key]
+    if index > 0:
+        return float(total/index)
     else: return 0
 
 if __name__ == "__main__":
