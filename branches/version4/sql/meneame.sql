@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.32, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.35, for Linux (x86_64)
 --
 -- Host: db.meneame.net    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.5.27-log
+-- Server version	5.5.33-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -83,7 +83,8 @@ CREATE TABLE `bans` (
   `ban_expire` timestamp NULL DEFAULT NULL,
   `ban_comment` char(100) DEFAULT NULL,
   PRIMARY KEY (`ban_id`),
-  UNIQUE KEY `ban_type` (`ban_type`,`ban_text`)
+  UNIQUE KEY `ban_type` (`ban_type`,`ban_text`),
+  KEY `expire` (`ban_expire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -546,6 +547,22 @@ CREATE TABLE `media` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notifications` (
+  `user` int(10) unsigned NOT NULL,
+  `type` char(12) NOT NULL,
+  `counter` int(10) NOT NULL DEFAULT '0',
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `pageloads`
 --
 
@@ -810,7 +827,7 @@ CREATE TABLE `users` (
   `user_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_validated_date` timestamp NULL DEFAULT NULL,
   `user_ip` char(42) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `user_pass` char(64) COLLATE utf8_spanish_ci NOT NULL,
+  `user_pass` char(128) COLLATE utf8_spanish_ci NOT NULL,
   `user_email` char(64) COLLATE utf8_spanish_ci NOT NULL,
   `user_names` char(60) COLLATE utf8_spanish_ci NOT NULL,
   `user_login_register` char(32) COLLATE utf8_spanish_ci DEFAULT NULL,
@@ -902,4 +919,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-03 17:32:19
+-- Dump completed on 2014-02-25  2:24:07
