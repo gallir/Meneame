@@ -30,7 +30,7 @@ if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
 		//echo "$now, $time; $key == $key2\n";
 		if ($time > $now - 7200 && $time < $now && $key == $key2) {
 			$db->query("update users set user_validated_date = now() where user_id = $user->id and user_validated_date is null");
-			$current_user->Authenticate($user->username, $user->pass);
+			$current_user->Authenticate($user->username, false);
 			header('Location: '.get_user_uri($user->username));
 			die;
 		}
@@ -127,7 +127,7 @@ function show_profile() {
 function save_profile() {
 	global $db, $user, $current_user, $globals, $site_key;
 	$errors = 0; // benjami: control added (2005-12-22)
-	$pass_changed=false;
+	$new_pass=false;
 	$messages = '';
 	
 	$form_hash = md5($site_key.$user->id.mnminclude);
@@ -176,9 +176,10 @@ function save_profile() {
 			$messages .= '<p class="form-error">'._('las claves no son iguales, no se ha modificado').'</p>';
 			$errors = 1;
 		} else {
-			$user->pass=md5(trim($_POST['password']));
+			$new_pass = trim($_POST['password']);
+			$user->pass = UserAuth::hash($new_pass);
 			$messages .= '<p  class="form-error">'._('La clave se ha cambiado').'</p>';
-			$pass_changed = true;
+			$new_pass = true;
 		}
 	}
 
@@ -209,8 +210,8 @@ function save_profile() {
 		$user->store();
 		$user->read();
 		if ($current_user->user_login != $user->username || 
-					$current_user->user_email != $user->email || $pass_changed) {
-			$current_user->Authenticate($user->username, $user->pass);
+					$current_user->user_email != $user->email || $new_pass) {
+			$current_user->Authenticate($user->username, $new_pass);
 		}
 		$messages .= '<p class="form-error">'._('datos actualizados').'</p>';
 	}

@@ -117,7 +117,7 @@ class OAuthBase {
 		// syslog(LOG_INFO, "user_login: ". $this->return. "  COOKIE: ".$_COOKIE['return']);
 		if (!$current_user->user_id) {
 			$user = $this->user;
-			$current_user->Authenticate($user->username, $user->pass, true);
+			$current_user->Authenticate($user->username, false, true);
 			UserAuth::check_clon_from_cookies();
 		}
 		$this->user_return();

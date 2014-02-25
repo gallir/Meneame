@@ -12,6 +12,31 @@ class UserAuth {
 	const CURRENT_VERSION = '6';
 	const KEY_MAX_TTL = 2592000; // Expire key in 30 days
 	const KEY_TTL = 86400; // Renew every 24 hours
+	const HASH_ALGORITHM = 'sha256';
+
+	/* https://crackstation.net/hashing-security.htm
+	 * https://crackstation.net/hashing-security.htm#phpsourcecode
+	*/
+	static function hash($pass, $salt = false, $alg = false) {
+		if (! $salt) $salt = base64_encode(mcrypt_create_iv(24, MCRYPT_DEV_URANDOM));
+		if (! $alg) $alg = self::HASH_ALGORITHM;
+		return $alg.':'.$salt.':'.hash($alg, $salt.$pass);
+	}
+
+	static function check_hash($hash, $pass) {
+		$a = explode(':', $hash);
+		if (!$a) return false;
+		switch ($a[0]) {
+			case 'sha256':
+				$h = self::hash($pass, $a[1], $a[0]);
+				break;
+			default:
+				$h = md5($pass);
+		}
+		return $hash == $h;
+	}
+		
+	
 
 	static function domain() {
 		global $globals;
@@ -39,10 +64,10 @@ class UserAuth {
 			if($this->u[0] == $userInfo[0]) {
 				$this->version = $userInfo[2];
 				$cookietime = intval($userInfo[3]);
-				if (($globals['now'] - $cookietime) > UserAuth::KEY_MAX_TTL) $cookietime = 'expired'; // expiration is forced
+				if (($globals['now'] - $cookietime) > self::KEY_MAX_TTL) $cookietime = 'expired'; // expiration is forced
 
 				$user_id = intval($this->u[0]);
-				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, user_pass as md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
+				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
 
 				$key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
 
@@ -65,7 +90,7 @@ class UserAuth {
 				if ($this->version != self::CURRENT_VERSION) { // Update the key
 					$this->SetIDCookie(2, $remember);
 					$this->SetUserCookie();
-				} elseif ($globals['now'] - $cookietime >  UserAuth::KEY_TTL) {
+				} elseif ($globals['now'] - $cookietime >  self::KEY_TTL) {
 					$this->SetIDCookie(2, $remember);
 				}
 				// Set the sticky cookie for use un LoadBalancers that allows it (as Amazon ELB)
@@ -85,7 +110,7 @@ class UserAuth {
 		switch ($what) {
 			case 0:	// Expires cookie,logout
 				$this->user_id = 0;
-				setcookie ('ukey', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+				setcookie ('ukey', '', $globals['now'] - 3600, $globals['base_url'], self::domain());
 				$this->SetUserCookie();
 				setcookie ('sticky', '', $globals['now'] - 3600,  $globals['base_url']);
 				break;
@@ -93,7 +118,7 @@ class UserAuth {
 				$this->AddClone();
 				$this->SetUserCookie();
 			case 2: // Only update the key
-				if($remember) $time = $globals['now'] + UserAuth::KEY_MAX_TTL;
+				if($remember) $time = $globals['now'] + self::KEY_MAX_TTL;
 				else $time = 0;
 				$strCookie=base64_encode(
 						$this->user_id.':'
@@ -101,23 +126,29 @@ class UserAuth {
 						.self::CURRENT_VERSION.':' // Version number
 						.$globals['now'].':'
 						.$time);
-				setcookie('ukey', $strCookie, $time, $globals['base_url'], UserAuth::domain(), false, true);
+				setcookie('ukey', $strCookie, $time, $globals['base_url'], self::domain(), false, true);
 				break;
 		}
 	}
 
-	function Authenticate($username, $hash, $remember = false/* Just this session */) {
+	function Authenticate($username, $pass = false, $remember = false/* Just this session */) {
 		global $db, $globals;
 
 		$dbusername=$db->escape($username);
 		if (preg_match('/.+@.+\..+/', $username)) {
 			// It's an email address, get
-			$user=$db->get_row("SELECT user_id, user_login, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_email = '$dbusername'");
+			$user=$db->get_row("SELECT user_id, user_login, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_email = '$dbusername'");
 		} else {
-			$user=$db->get_row("SELECT user_id, user_login, user_pass md5_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
+			$user=$db->get_row("SELECT user_id, user_login, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
 		}
 		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
-		if ($user->user_id > 0 && $user->md5_pass == $hash) {
+		if ($user->user_id > 0 && ($pass === false || self::check_hash($user->user_pass, $pass))) {
+
+			if ($pass && strlen($pass) > 3 && strlen($user->user_pass) < 64) { // It's an old md5 pass, upgrade it
+				$user->user_pass = self::hash($pass);
+				$db->query("UPDATE users SET user_pass = '$user->user_pass' WHERE user_id = $user->user_id LIMIT 1");
+			}
+
 			foreach(get_object_vars($user) as $var => $value) $this->$var = $value;
 			$this->authenticated = true;
 			$this->SetIDCookie(1, $remember);
@@ -155,7 +186,7 @@ class UserAuth {
 					':'.$this->u[1].
 					':'.$globals['now'].
 					':'.$this->signature($this->user_id.$this->u[1].$globals['now']),
-					$expiration, $globals['base_url'], UserAuth::domain(), false, true);
+					$expiration, $globals['base_url'], self::domain(), false, true);
 	}
 
 	function AddClone() {
@@ -238,7 +269,7 @@ class UserAuth {
 					$visited[] = $id;
 					if ($globals['form_user_ip']) $ip = $globals['form_user_ip']; // Used in SSL forms
 					else $ip = $globals['user_ip'];
-					UserAuth::insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
+					self::insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
 				}
 			}
 		}

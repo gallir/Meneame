@@ -73,7 +73,7 @@ function do_login() {
 		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) && !ts_is_human()) {
 			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
-		} elseif ($current_user->Authenticate($username, md5($password), $_POST['persistent']) == false) {
+		} elseif (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
 			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
 			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
