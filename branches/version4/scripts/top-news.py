@@ -18,7 +18,19 @@ def do_site(site):
     """ Process a given site """
     links = {}
     cursor = DBM.cursor()
-    cursor.execute("select link_id, link_uri, unix_timestamp(now()) - unix_timestamp(link_date) from links, subs, sub_statuses where subs.name = '%s' and subs.id = sub_statuses.id and status = 'published' and date > date_sub(now(), interval 24 hour) and link = link_id and link_votes/20 > link_negatives order by link_date desc" % (site,))
+    query = """
+        select link_id, link_uri,
+            unix_timestamp(now()) - unix_timestamp(link_date)
+        from links, subs, sub_statuses
+        where subs.name = %s
+            and subs.id = sub_statuses.id
+            and status = 'published'
+            and date > date_sub(now(), interval 24 hour)
+            and link = link_id
+            and link_votes/20 > link_negatives
+        order by link_date desc
+    """
+    cursor.execute(query, (site,))
     links_total = 0
     for row in cursor:
         links_total += 1
@@ -36,9 +48,21 @@ def do_site(site):
         return
 
     links_format = ','.join(['%s'] * len(links))
-
-    cursor.execute("select vote_link_id, sum((1-(unix_timestamp(now())-unix_timestamp(vote_date))/36000)) as x, count(*) from votes where vote_link_id in (%s) and vote_type='links' and vote_date > date_sub(now(), interval 12 hour) and vote_user_id > 0 and vote_value > 6.1 group by vote_link_id order by x desc" % links_format, tuple(links))
-    votes_total = 0;
+    query = """
+        select vote_link_id,
+            sum((1-(unix_timestamp(now())-unix_timestamp(vote_date))/36000)) as x,
+            count(*)
+        from votes
+        where vote_link_id in (%s)
+            and vote_type='links'
+            and vote_date > date_sub(now(), interval 12 hour)
+            and vote_user_id > 0
+            and vote_value > 6.1
+        group by vote_link_id
+        order by x desc
+    """  % links_format
+    cursor.execute(query, tuple(links))
+    votes_total = 0
     votes_links = 0
     v_total = 0
     v_list = {}
@@ -57,8 +81,17 @@ def do_site(site):
     v_average = v_total/votes_links
     votes_average = votes_total/votes_links
 
-
-    cursor.execute("select comment_link_id, sum(1.5*(1-(unix_timestamp(now())-unix_timestamp(comment_date))/36000)), count(*)  from comments where comment_link_id in (%s) and comment_date > date_sub(now(), interval 12 hour) group by comment_link_id" % links_format, tuple(links))
+    query = """
+        select comment_link_id,
+            sum(1.5*(1-(unix_timestamp(now())
+                        - unix_timestamp(comment_date))/36000)),
+            count(*)
+        from comments
+        where comment_link_id in (%s)
+            and comment_date > date_sub(now(), interval 12 hour)
+        group by comment_link_id
+    """ % links_format
+    cursor.execute(query, tuple(links))
     comments_total = 0
     comments_links = 0
     c_total = 0
@@ -76,24 +109,36 @@ def do_site(site):
 
     c_average = c_total/comments_links
     comments_average = comments_total/comments_links
-
-    cursor.execute("select id, counter from link_clicks where id in (%s)" % links_format, tuple(links))
+    query = """
+        select id, counter from link_clicks where id in (%s)
+    """ % links_format
+    cursor.execute(query, tuple(links))
     for row in cursor:
         links[row[0]]['clicks'] = row[1]
 
     cursor.close()
 
-    print "Site:", site, "Votes average:", votes_average, v_average, "Comments average:", comments_average, c_average
+    print "Site:", site, "Votes average:", votes_average, v_average, \
+            "Comments average:", comments_average, c_average
     for id in links:
-        if links[id]['c'] > 0 and links[id]['v'] > 0 and 'clicks' in links[id]:
-            links[id]['w'] = (1 - links[id]['old']/(1.5*86400)) * (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.02)
+        if links[id]['c'] > 0  and links[id]['v'] > 0 \
+            and 'clicks' in links[id]:
+            links[id]['w'] = (1 - links[id]['old']/(1.5*86400)) * \
+                (links[id]['v'] + links[id]['c'] + links[id]['clicks'] * \
+                    (1 - links[id]['old']/86400) * 0.02)
 
-    sorted_ids = sorted(links, cmp=lambda x,y: cmp(links[y]['w'], links[x]['w']))
+    sorted_ids = sorted(links, cmp=lambda x, y:
+                                            cmp(links[y]['w'], links[x]['w']))
 
     if sorted_ids:
         str = ','.join([unicode(x) for x in sorted_ids[:10]])
         c = DBM.cursor('update')
-        c.execute("replace into annotations (annotation_key, annotation_expire, annotation_text) values (%s, date_add(now(), interval 15 minute), %s)", ('top-actives-'+site, str))
+        query = """
+            replace into annotations
+                (annotation_key, annotation_expire, annotation_text)
+                values (%s, date_add(now(), interval 15 minute), %s)
+        """
+        c.execute(query, ('top-actives-'+site, str))
         c.close()
         DBM.commit()
 
@@ -101,15 +146,27 @@ def do_site(site):
     for id in sorted_ids:
         if links[id]['w'] > 0 and i < 10:
             i += 1
-            # print i, links[id]['links_order'], links[id]['old'], id, links[id]['uri'], links[id]['w'], "votes:", links[id]['votes'], links[id]['votes_order'], links[id]['v'], "comments:", links[id]['comments'], links[id]['c'], "clicks:", links[id]['clicks'], links[id]['clicks'] * (1 - links[id]['old']/86400) * 0.004
+
 
     # Select the top stories
-    str = ','.join([unicode(x) for x in sorted_ids if links[x]['w'] > dbconf.tops['min-weight'] and (links[x]['links_order'] > 1 or links[x]['old'] > 3600) and links[x]['c'] > c_avrg(c_list, x) * 4 and links[x]['v'] > c_avrg(v_list, x) * 4 and links[x]['votes_order'] <= 10 ])
+    str = ','.join([unicode(x) for x in sorted_ids
+                        if links[x]['w'] > dbconf.tops['min-weight']
+                            and (links[x]['links_order'] > 1
+                            or links[x]['old'] > 3600)
+                            and links[x]['c'] > c_avrg(c_list, x) * 4
+                            and links[x]['v'] > c_avrg(v_list, x) * 4
+                            and links[x]['votes_order'] <= 10 ])
+
     print "SELECT: ", site, str
 
     if str:
         c = DBM.cursor('update')
-        c.execute("replace into annotations (annotation_key, annotation_expire, annotation_text) values (%s, date_add(now(), interval 10 minute), %s)", ('top-link-'+site, str))
+        query = """
+            replace into annotations
+                (annotation_key, annotation_expire, annotation_text)
+                values (%s, date_add(now(), interval 10 minute), %s)
+        """
+        c.execute(query, ('top-link-'+site, str))
         c.close()
         DBM.commit()
         print "Stored:", str
