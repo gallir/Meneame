@@ -9,7 +9,7 @@
 
 
 class UserAuth {
-	const CURRENT_VERSION = '6';
+	const CURRENT_VERSION = '7';
 	const KEY_MAX_TTL = 2592000; // Expire key in 30 days
 	const KEY_TTL = 86400; // Renew every 24 hours
 	const HASH_ALGORITHM = 'sha256';
@@ -35,8 +35,6 @@ class UserAuth {
 		}
 		return $hash == $h;
 	}
-		
-	
 
 	static function domain() {
 		global $globals;
@@ -67,9 +65,13 @@ class UserAuth {
 				if (($globals['now'] - $cookietime) > self::KEY_MAX_TTL) $cookietime = 'expired'; // expiration is forced
 
 				$user_id = intval($this->u[0]);
-				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
+				$user=$db->get_row("SELECT SQL_CACHE user_id, user_login, substring(user_pass, 8, 10) as pass_frag, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
 
-				$key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
+				if ($this->version == self::CURRENT_VERSION) {
+					$key = md5($site_key.$user->user_login.$user->user_id.$user->pass_frag.$cookietime);
+				} else  {
+					$key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
+				}
 
 				if ( !$user || !$user->user_id > 0 || $key !== $userInfo[1] ||
 					$user->user_level == 'disabled' || $user->user_level == 'autodisabled' ||
@@ -122,7 +124,7 @@ class UserAuth {
 				else $time = 0;
 				$strCookie=base64_encode(
 						$this->user_id.':'
-						.md5($this->user_email.$site_key.$this->user_login.$this->user_id.$globals['now']).':'
+						.md5($site_key.$this->user_login.$this->user_id.$this->pass_frag.$globals['now']).':'
 						.self::CURRENT_VERSION.':' // Version number
 						.$globals['now'].':'
 						.$time);
@@ -137,9 +139,9 @@ class UserAuth {
 		$dbusername=$db->escape($username);
 		if (preg_match('/.+@.+\..+/', $username)) {
 			// It's an email address, get
-			$user=$db->get_row("SELECT user_id, user_login, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_email = '$dbusername'");
+			$user=$db->get_row("SELECT user_id, user_login, user_pass, substring(user_pass, 8, 10) as pass_frag, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_email = '$dbusername'");
 		} else {
-			$user=$db->get_row("SELECT user_id, user_login, user_pass, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
+			$user=$db->get_row("SELECT user_id, user_login, user_pass, substring(user_pass, 8, 10) as pass_frag, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email FROM users WHERE user_login = '$dbusername'");
 		}
 		if ($user->user_level == 'disabled' || $user->user_level == 'autodisabled' || ! $user->user_date) return false;
 		if ($user->user_id > 0 && ($pass === false || self::check_hash($user->user_pass, $pass))) {
