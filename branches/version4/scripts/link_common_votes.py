@@ -27,9 +27,8 @@ def main():
                 limit 20"
         """
         cursor.execute(query)
-        for link_id in cursor:
+        for total, link_id in enumerate(cursor):
             average += get_link_average(link_id)
-            total += 1
 
         print average/total
 
