@@ -27,8 +27,10 @@ def main():
                 limit 20"
         """
         cursor.execute(query)
-        for total, link_id in enumerate(cursor):
+        for total, link_id in enumerate(cursor, start= 1):
             average += get_link_average(link_id)
+
+        assert total > 0, "No published links."
 
         print average/total
 
