@@ -1,15 +1,16 @@
 #! /usr/bin/env python
+"""
+Link common votes.
+"""
 from __future__ import division
 
-import MySQLdb
 import sys
-import time
 import gettext
 _ = gettext.gettext
-import dbconf
-from utils import *
+from utils import DBM
 
 def main():
+    """ Main loop, processing the top 20 published links"""
     if len(sys.argv) == 2:
         link_id = int(sys.argv[1])
     else:
@@ -36,9 +37,8 @@ def main():
         print average/total
 
 
-
-
 def get_link_average(link_id):
+    """ Get the average weight of a link """
     votes = {}
     values_sum = 0
     values_count = 0
