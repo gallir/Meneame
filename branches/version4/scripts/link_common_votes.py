@@ -6,6 +6,7 @@ from __future__ import division
 
 import sys
 import gettext
+import itertools
 _ = gettext.gettext
 from utils import DBM
 
@@ -56,22 +57,21 @@ def get_link_average(link_id):
     for user_id, vote_value in cursor:
         votes[user_id] = int(vote_value / abs(vote_value))
 
+    sorted_users = [(minor, major) for (minor, major)
+                                    in itertools.product(votes, repeat= 2)
+                                        if major > minor]
 
-    sorted_users = sorted(votes)
-    for minor in sorted_users:
-        for major in sorted_users:
-            if major <= minor:
-                continue
-            query = """
-                select value, UNIX_TIMESTAMP(date)
-                    from users_similarities
-                    where minor = %s
-                        and major = %s
-            """
-            cursor.execute(query, (minor, major))
-            row = cursor.fetchone()
-            values_sum += 0 if row is None else row[0]
-            values_count += 1
+    for minor, major in sorted_users:
+        query = """
+            select value, UNIX_TIMESTAMP(date)
+                from users_similarities
+                where minor = %s
+                    and major = %s
+        """
+        cursor.execute(query, (minor, major))
+        row = cursor.fetchone()
+        values_sum += 0 if row is None else row[0]
+        values_count += 1
 
     print values_sum, values_count
     average = values_sum/values_count
