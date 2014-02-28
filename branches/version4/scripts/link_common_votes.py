@@ -62,7 +62,7 @@ def get_link_average(link_id):
                                     in itertools.product(votes, repeat= 2)
                                         if major > minor]
 
-    for minor, major in sorted_users:
+    for values_count, (minor, major) in enumerate(sorted_users, start = 1):
         query = """
             select value, UNIX_TIMESTAMP(date)
                 from users_similarities
@@ -72,7 +72,6 @@ def get_link_average(link_id):
         cursor.execute(query, (minor, major))
         row = cursor.fetchone()
         values_sum += 0 if row is None else row[0]
-        values_count += 1
 
     print values_sum, values_count
     average = values_sum/values_count
