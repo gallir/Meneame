@@ -13,10 +13,6 @@ def main():
     """ Main loop, processing the top 20 published links"""
     if len(sys.argv) == 2:
         link_id = int(sys.argv[1])
-    else:
-        link_id = 0
-
-    if link_id > 0:
         print get_link_average(link_id)
     else:
         total = 0
@@ -30,8 +26,8 @@ def main():
                 limit 20"
         """
         cursor.execute(query)
-        for row in cursor:
-            average += get_link_average(row[0])
+        for link_id in cursor:
+            average += get_link_average(link_id)
             total += 1
 
         print average/total
@@ -57,8 +53,8 @@ def get_link_average(link_id):
                 OR link_status != 'published')
     """
     cursor.execute(query, (link_id, ))
-    for row in cursor:
-        votes[row[0]] = int(row[1] / abs(row[1]))
+    for user_id, vote_value in cursor:
+        votes[user_id] = int(vote_value / abs(vote_value))
 
 
     sorted_users = sorted(votes)
@@ -74,11 +70,7 @@ def get_link_average(link_id):
             """
             cursor.execute(query, (minor, major))
             row = cursor.fetchone()
-            if row:
-                value = row[0] ### *votes[major]*votes[minor]
-            else:
-                value = 0
-            values_sum += value
+            values_sum += 0 if row is None else row[0]
             values_count += 1
 
     print values_sum, values_count
