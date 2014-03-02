@@ -618,8 +618,9 @@ class Comment extends LCPBase {
 
 
 		$orders = array();
-		if (preg_match_all('/(?:^|\W)#(\d+)\b/', $this->content, $matches)) {
+		if (preg_match_all('/(?:^|\W)(#(?:\d+)|@(?:[^\s<>;:,\?\)]+))\b/', $this->content, $matches)) {
 			foreach ($matches[1] as $order) {
+				$order = substr($order, 1); // Delete the # or @
 				$orders[$order] += 1;
 			}
 		}
@@ -630,12 +631,15 @@ class Comment extends LCPBase {
 				syslog(LOG_NOTICE, "Meneame: too many references in comment: $this->id ($current_user->user_login)");
 				break;
 			}
-			if ($order == 0) {
+			if (! preg_match('/^\d+/', $order)) {
+				$username_to = $db->escape($order);
+				$to = $db->get_row("select 0 as id, user_id from users where user_login = '$username_to'");
+			} elseif ($order == 0) {
 				$to = $db->get_row("select 0 as id, link_author as user_id from links where link_id = $this->link");
 			} else {
 				$to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
 			}
-			if (! $to > 0) continue;
+			if (! $to) continue;
 
 			if (! in_array($to->id, $previous_ids) && ! in_array($to->id, $seen_ids)) {
 				if (User::friend_exists($to->user_id, $this->author) >= 0 
