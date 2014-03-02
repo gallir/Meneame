@@ -27,7 +27,7 @@
 				{% include 'post_summary_votes.html' %}
 		{% endif %}
 
-		<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink">permalink</a>
+		<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink"></a>
 
 
 		{% if current_user.user_id > 0 %}
