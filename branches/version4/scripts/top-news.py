@@ -115,7 +115,8 @@ def do_site(site):
         select id, counter from link_clicks where id in (%s)
     """ % links_format
 
-    for link_id, clicks in cursor.execute(query, tuple(links)):
+    cursor.execute(query, tuple(links))
+    for link_id, clicks in cursor:
         links[link_id]['clicks'] = clicks
 
     cursor.close()
