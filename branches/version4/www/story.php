@@ -591,6 +591,7 @@ function print_relevant_comments($link, $no_page) {
 			$obj->id = $comment->comment_id;
 			$obj->order = $comment->comment_order;
 			$obj->link_id = $link->id;
+			$obj->link_url = $link_url;
 			$obj->user_id = $comment->user_id;
 			$obj->avatar = $comment->user_avatar;
 			$obj->vote = $comment->vote_value;
