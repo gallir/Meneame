@@ -42,7 +42,7 @@ def main():
 	timeout = 10
 	socket.setdefaulttimeout(timeout)
 
-	""" Delete old entries """
+	# Delete old entries
 	c = DBM.cursor('update')
 	c.execute("delete from rss where date < date_sub(now(), interval %s day)", (dbconf.blogs['days_to_keep'],))
 	DBM.commit()
@@ -78,7 +78,7 @@ def main():
 
 
 def get_candidate_blogs(days, min_karma):
-	now = time.time();
+	now = time.time()
 	blogs = set()
 	results = set()
 	blogs_ids = set()
@@ -86,7 +86,7 @@ def get_candidate_blogs(days, min_karma):
 	cursor = DBM.cursor()
 	c = DBM.cursor()
 
-	""" Select users that have at least one published """
+	# Select users that have at least one published
 	cursor.execute("SELECT link_blog, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), count(*) as n  from links, blogs where link_status in ('published') and link_date > date_sub(now(), interval %s day) and blog_id = link_blog and blog_type='blog' and (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour)) group by blog_id", (days,))
 	for row in cursor:
 		o = BaseBlogs()
@@ -105,7 +105,7 @@ def get_candidate_blogs(days, min_karma):
 				blogs_ids.add(o.id)
 				users_ids.add(o.user_id)
 
-	""" Select active users that have no published posts """
+	# Select active users that have no published posts
 	cursor.execute("select blog_id, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), user_login, user_id, user_karma from users, blogs \
 			where user_karma >= %s and user_url like 'http://%%' and user_level not in ('disabled', 'autodisabled') \
 			and user_modification > date_sub(now(), interval %s day) \
@@ -127,15 +127,15 @@ def get_candidate_blogs(days, min_karma):
 				users_ids.add(o.user_id)
 				blogs_ids.add(o.id)
 
-	feeds_read = 0;
-	sorted_blogs = sorted(blogs, cmp=lambda x,y: cmp(x.read, y.read));
+	feeds_read = 0
+	sorted_blogs = sorted(blogs, cmp=lambda x,y: cmp(x.read, y.read))
 	for o in sorted_blogs:
 		if feeds_read >= dbconf.blogs['max_feeds']: break
 		if not o.is_banned():
-				""" Check the number of remaining entries """
+				# Check the number of remaining entries
 				c.execute("select count(*) from rss where user_id = %s and date > date_sub(now(), interval 1 day)", (o.user_id,))
 				n_entries, = c.fetchone()
-				""" Calculate the number of remaining entries """
+				# Calculate the number of remaining entries
 				o.max = int(round(o.karma/dbconf.blogs['karma_divisor'])) - n_entries
 				if not o.max > 0:
 					print "Max entries <= 0:", n_entries, o.karma, o.url
