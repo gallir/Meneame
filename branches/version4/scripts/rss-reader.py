@@ -1,16 +1,14 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
-import MySQLdb
 import time
 import gettext
 _ = gettext.gettext
 import dbconf
-from utils import *
+from utils import DBM
 import urllib
 import urllib2
 import socket
-import re
-
 
 
 """
@@ -68,14 +66,14 @@ def main():
 			for l in o.links:
 				post += " " + l
 			post += "\n"
-			
+
 		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
 		try:
 			f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
 			print f.read(100)
 			f.close()
-		except KeyError: 
+		except KeyError:
 			pass
 
 
