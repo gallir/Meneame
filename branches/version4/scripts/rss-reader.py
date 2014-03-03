@@ -44,7 +44,11 @@ def main():
 
 	# Delete old entries
 	c = DBM.cursor('update')
-	c.execute("delete from rss where date < date_sub(now(), interval %s day)", (dbconf.blogs['days_to_keep'],))
+	query = """
+		DELETE FROM rss
+			WHERE date < date_sub(now(), interval %s day)
+	"""
+	c.execute(query, (dbconf.blogs['days_to_keep'],))
 	DBM.commit()
 	c.close()
 
@@ -87,7 +91,21 @@ def get_candidate_blogs(days, min_karma):
 	c = DBM.cursor()
 
 	# Select users that have at least one published
-	cursor.execute("SELECT link_blog, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), count(*) as n  from links, blogs where link_status in ('published') and link_date > date_sub(now(), interval %s day) and blog_id = link_blog and blog_type='blog' and (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour)) group by blog_id", (days,))
+	query = """
+		SELECT link_blog, blog_url, blog_feed,
+				UNIX_TIMESTAMP(blog_feed_checked),
+				UNIX_TIMESTAMP(blog_feed_read),
+				count(*) as n
+			FROM links, blogs
+			WHERE link_status in ('published')
+				AND link_date > date_sub(now(), interval %s day)
+				AND blog_id = link_blog
+				AND blog_type='blog'
+				AND (blog_feed_read is null
+						OR blog_feed_read < date_sub(now(), interval 1 hour))
+			GROUP BY blog_id
+	"""
+	cursor.execute(query, (days,))
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.counter = row
@@ -96,8 +114,19 @@ def get_candidate_blogs(days, min_karma):
 			continue
 
 		if o.counter < days:
-			c.execute("select user_login, user_id, user_karma from users where user_url in (%s, %s, %s, %s, %s, %s) and user_karma > %s and user_level not in ('disabled', 'autodisabled') order by user_karma desc limit 1",
-					('http://'+o.base_url, 'http://www.'+o.base_url, 'http://'+o.base_url+'/', 'http://www.'+o.base_url+'/', o.base_url, 'www.'+o.base_url, min_karma))
+			query = """
+				SELECT user_login, user_id, user_karma
+					FROM users
+					WHERE user_url in (%s, %s, %s, %s, %s, %s)
+						AND user_karma > %s
+						AND user_level not in ('disabled', 'autodisabled')
+					ORDER BY user_karma desc limit 1"
+			"""
+			c.execute(query,('http://'+o.base_url,
+							 'http://www.'+o.base_url,
+							 'http://'+o.base_url+'/',
+							 'http://www.'+o.base_url+'/',
+							 o.base_url, 'www.'+o.base_url, min_karma))
 			r = c.fetchone()
 			if r is not None:
 				o.user, o.user_id, o.karma = r
@@ -106,18 +135,27 @@ def get_candidate_blogs(days, min_karma):
 				users_ids.add(o.user_id)
 
 	# Select active users that have no published posts
-	cursor.execute("select blog_id, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked), UNIX_TIMESTAMP(blog_feed_read), user_login, user_id, user_karma from users, blogs \
-			where user_karma >= %s and user_url like 'http://%%' and user_level not in ('disabled', 'autodisabled') \
-			and user_modification > date_sub(now(), interval %s day) \
-			and user_date < date_sub(now(), interval %s day) \
-			and blog_url in ( \
-				concat('http://www.',replace(replace(user_url, 'http://', ''), 'www.', '')), \
-				concat('http://',replace(replace(user_url, 'http://', ''), 'www.', '')), \
-				concat('http://www.',replace(replace(user_url, 'http://', ''), 'www.', ''), '/'), \
-				concat('http://',replace(replace(user_url, 'http://', ''), 'www.', ''), '/') \
-			) \
-			and (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour)) \
-			order by blog_id desc, user_karma desc", (dbconf.blogs['active_min_karma'], dbconf.blogs['active_min_activity'], dbconf.blogs['active_min_age']) )
+	query = """
+	SELECT blog_id, blog_url, blog_feed, UNIX_TIMESTAMP(blog_feed_checked),
+			UNIX_TIMESTAMP(blog_feed_read), user_login, user_id, user_karma
+		FROM users, blogs
+		WHERE user_karma >= %s
+			AND user_url like 'http://%%'
+			AND user_level not in ('disabled', 'autodisabled')
+			AND user_modification > date_sub(now(), interval %s day)
+			AND user_date < date_sub(now(), interval %s day)
+			AND blog_url in (
+				concat('http://www.',replace(replace(user_url, 'http://', ''), 'www.', '')),
+				concat('http://',replace(replace(user_url, 'http://', ''), 'www.', '')),
+				concat('http://www.',replace(replace(user_url, 'http://', ''), 'www.', ''), '/'),
+				concat('http://',replace(replace(user_url, 'http://', ''), 'www.', ''), '/')
+			)
+			AND (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour))
+			order by blog_id desc, user_karma desc
+	"""
+	cursor.execute(query, (dbconf.blogs['active_min_karma'],
+							dbconf.blogs['active_min_activity'],
+							dbconf.blogs['active_min_age']) )
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.user, o.user_id, o.karma = row
@@ -133,7 +171,13 @@ def get_candidate_blogs(days, min_karma):
 		if feeds_read >= dbconf.blogs['max_feeds']: break
 		if not o.is_banned():
 				# Check the number of remaining entries
-				c.execute("select count(*) from rss where user_id = %s and date > date_sub(now(), interval 1 day)", (o.user_id,))
+				query = """
+				SELECT count(*)
+					FROM rss
+					WHERE user_id = %s
+						AND date > date_sub(now(), interval 1 day)
+				"""
+				c.execute(query, (o.user_id,))
 				n_entries, = c.fetchone()
 				# Calculate the number of remaining entries
 				o.max = int(round(o.karma/dbconf.blogs['karma_divisor'])) - n_entries
