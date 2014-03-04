@@ -5,7 +5,7 @@ import time
 import gettext
 _ = gettext.gettext
 import dbconf
-from utils import DBM
+from utils import DBM, BaseBlogs
 import urllib
 import urllib2
 import socket
@@ -14,7 +14,8 @@ import socket
 """
 ALTER TABLE  `meneame`.`users` ADD INDEX (  `user_url` );
 
-ALTER TABLE  `blogs` ADD  `blog_feed` CHAR( 128 ) NULL DEFAULT NULL AFTER  `blog_url` ,
+ALTER TABLE  `blogs` ADD  `blog_feed` CHAR( 128 )
+	NULL DEFAULT NULL AFTER  `blog_url` ,
 ADD  `blog_feed_checked` TIMESTAMP NULL AFTER  `blog_feed`,
 ADD  `blog_feed_read` TIMESTAMP NULL AFTER  `blog_feed_checked`;
 
@@ -54,7 +55,8 @@ def main():
 
 	users = set()
 	news = set()
-	blogs = get_candidate_blogs(dbconf.blogs['days_published'], dbconf.blogs['min_karma'])
+	blogs = get_candidate_blogs(dbconf.blogs['days_published'],
+								dbconf.blogs['min_karma'])
 	for o in blogs:
 		entries = o.read_feed()
 		time.sleep(3)
@@ -74,7 +76,11 @@ def main():
 		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
 		try:
-			f = urllib2.urlopen('http://'+dbconf.domain+dbconf.blogs['newpost']+'?user='+dbconf.blogs['post_user']+'&key='+dbconf.blogs['post_key']+'&text='+urllib.quote_plus(post))
+			f = urllib2.urlopen('http://'+dbconf.domain+
+										dbconf.blogs['newpost']+
+									'?user='+dbconf.blogs['post_user']+
+									'&key='+dbconf.blogs['post_key']+
+									'&text='+urllib.quote_plus(post))
 			print f.read(100)
 			f.close()
 		except KeyError:
@@ -109,7 +115,8 @@ def get_candidate_blogs(days, min_karma):
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.counter = row
-		o.base_url = o.url.replace('http://', '').replace('https://', '').replace('www.', '')
+		o.base_url = o.url.replace('http://', '').\
+						replace('https://', '').replace('www.', '')
 		if o.is_banned():
 			continue
 
@@ -126,7 +133,10 @@ def get_candidate_blogs(days, min_karma):
 							 'http://www.'+o.base_url,
 							 'http://'+o.base_url+'/',
 							 'http://www.'+o.base_url+'/',
-							 o.base_url, 'www.'+o.base_url, min_karma))
+							 o.base_url,
+							 'www.'+o.base_url,
+							 min_karma))
+
 			r = c.fetchone()
 			if r is not None:
 				o.user, o.user_id, o.karma = r
@@ -154,21 +164,23 @@ def get_candidate_blogs(days, min_karma):
 			order by blog_id desc, user_karma desc
 	"""
 	cursor.execute(query, (dbconf.blogs['active_min_karma'],
-							dbconf.blogs['active_min_activity'],
-							dbconf.blogs['active_min_age']) )
+						dbconf.blogs['active_min_activity'],
+						dbconf.blogs['active_min_age']) )
 	for row in cursor:
 		o = BaseBlogs()
 		o.id, o.url, o.feed, o.checked, o.read, o.user, o.user_id, o.karma = row
-		o.base_url = o.url.replace('http://', '').replace('https://', '').replace('www.', '')
+		o.base_url = o.url.replace('http://', '').\
+							replace('https://', '').replace('www.', '')
 		if o.id not in blogs_ids and o.user_id not in users_ids:
 				blogs.add(o)
 				users_ids.add(o.user_id)
 				blogs_ids.add(o.id)
 
 	feeds_read = 0
-	sorted_blogs = sorted(blogs, cmp=lambda x,y: cmp(x.read, y.read))
+	sorted_blogs = sorted(blogs, cmp=lambda x, y: cmp(x.read, y.read))
 	for o in sorted_blogs:
-		if feeds_read >= dbconf.blogs['max_feeds']: break
+		if feeds_read >= dbconf.blogs['max_feeds']:
+			break
 		if not o.is_banned():
 				# Check the number of remaining entries
 				query = """
@@ -180,12 +192,15 @@ def get_candidate_blogs(days, min_karma):
 				c.execute(query, (o.user_id,))
 				n_entries, = c.fetchone()
 				# Calculate the number of remaining entries
-				o.max = int(round(o.karma/dbconf.blogs['karma_divisor'])) - n_entries
+				o.max = int(round(o.karma/dbconf.blogs['karma_divisor'])) \
+							- n_entries
 				if not o.max > 0:
 					print "Max entries <= 0:", n_entries, o.karma, o.url
 					continue
 
-				if (not o.feed and (not o.checked or o.checked < now - 86400)) or (o.checked and o.checked < now - 86400*7):
+				if (not o.feed and (not o.checked or
+									 o.checked < now - 86400)) \
+						or (o.checked and o.checked < now - 86400*7):
 					o.get_feed_info()
 
 				if o.feed and (not o.read or o.read < now - 3600):
