@@ -38,65 +38,73 @@ ALTER TABLE  `meneame`.`rss` ADD UNIQUE ( `url` );
 """
 
 def main():
-
+	"""
+	Main loop of the process
+	"""
 	# timeout in seconds
 	timeout = 10
 	socket.setdefaulttimeout(timeout)
 
 	# Delete old entries
-	c = DBM.cursor('update')
+	update_cursor = DBM.cursor('update')
 	query = """
 		DELETE FROM rss
 			WHERE date < date_sub(now(), interval %s day)
 	"""
-	c.execute(query, (dbconf.blogs['days_to_keep'],))
+	update_cursor.execute(query, (dbconf.blogs['days_to_keep'],))
 	DBM.commit()
-	c.close()
+	update_cursor.close()
 
 	users = set()
 	news = set()
 	blogs = get_candidate_blogs(dbconf.blogs['days_published'],
 								dbconf.blogs['min_karma'])
-	for o in blogs:
-		entries = o.read_feed()
+	for blog in blogs:
+		entries = blog.read_feed()
 		time.sleep(3)
 		if entries > 0:
-			users.add(o.user)
-			news.add(o)
+			users.add(blog.user)
+			news.add(blog)
 
 
 	if dbconf.blogs['post_user'] and dbconf.blogs['post_key'] and users:
 		post = _('Nuevo apunte en el blog de: ')
-		for o in news:
-			post += "@" + o.user
-			for l in o.links:
-				post += " " + l
+		for note in news:
+			post += "@" + note.user
+			for link in note.links:
+				post += " " + link
 			post += "\n"
 
 		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
 		try:
-			f = urllib2.urlopen('http://'+dbconf.domain+
+			urlpost = urllib2.urlopen('http://'+dbconf.domain+
 										dbconf.blogs['newpost']+
 									'?user='+dbconf.blogs['post_user']+
 									'&key='+dbconf.blogs['post_key']+
 									'&text='+urllib.quote_plus(post))
-			print f.read(100)
-			f.close()
+			print urlpost.read(100)
+			urlpost.close()
 		except KeyError:
 			pass
 
 
 def get_candidate_blogs(days, min_karma):
+	"""
+	Get the possible blog we can read
+	"""
 	now = time.time()
 	blogs = set()
 	results = set()
 	blogs_ids = set()
 	users_ids = set()
 	cursor = DBM.cursor()
-	c = DBM.cursor()
+	inner_cursor = DBM.cursor()
 
 	# Select users that have at least one published
+	# TODO: We can use the HAVING clause to avoid the
+	#    if o.counter < days  in the next loop
+
 	query = """
 		SELECT link_blog, blog_url, blog_feed,
 				UNIX_TIMESTAMP(blog_feed_checked),
@@ -113,14 +121,14 @@ def get_candidate_blogs(days, min_karma):
 	"""
 	cursor.execute(query, (days,))
 	for row in cursor:
-		o = BaseBlogs()
-		o.id, o.url, o.feed, o.checked, o.read, o.counter = row
-		o.base_url = o.url.replace('http://', '').\
-						replace('https://', '').replace('www.', '')
-		if o.is_banned():
+		blog = BaseBlogs()
+		blog.id, blog.url, blog.feed, blog.checked, blog.read, blog.counter = row
+		blog.base_url = blog.url.replace('http://', '').\
+							replace('https://', '').replace('www.', '')
+		if blog.is_banned():
 			continue
 
-		if o.counter < days:
+		if blog.counter < days:
 			query = """
 				SELECT user_login, user_id, user_karma
 					FROM users
@@ -129,20 +137,20 @@ def get_candidate_blogs(days, min_karma):
 						AND user_level not in ('disabled', 'autodisabled')
 					ORDER BY user_karma desc limit 1"
 			"""
-			c.execute(query,('http://'+o.base_url,
-							 'http://www.'+o.base_url,
-							 'http://'+o.base_url+'/',
-							 'http://www.'+o.base_url+'/',
-							 o.base_url,
-							 'www.'+o.base_url,
+			inner_cursor.execute(query,('http://'+blog.base_url,
+							 'http://www.'+blog.base_url,
+							 'http://'+blog.base_url+'/',
+							 'http://www.'+blog.base_url+'/',
+							 blog.base_url,
+							 'www.'+blog.base_url,
 							 min_karma))
 
-			r = c.fetchone()
-			if r is not None:
-				o.user, o.user_id, o.karma = r
-				blogs.add(o)
-				blogs_ids.add(o.id)
-				users_ids.add(o.user_id)
+			result = inner_cursor.fetchone()
+			if result is not None:
+				blog.user, blog.user_id, blog.karma = result
+				blogs.add(blog)
+				blogs_ids.add(blog.id)
+				users_ids.add(blog.user_id)
 
 	# Select active users that have no published posts
 	query = """
@@ -167,21 +175,25 @@ def get_candidate_blogs(days, min_karma):
 						dbconf.blogs['active_min_activity'],
 						dbconf.blogs['active_min_age']) )
 	for row in cursor:
-		o = BaseBlogs()
-		o.id, o.url, o.feed, o.checked, o.read, o.user, o.user_id, o.karma = row
-		o.base_url = o.url.replace('http://', '').\
+		blog = BaseBlogs()
+		blog.id, blog.url, blog.feed, \
+		blog.checked, blog.read, blog.user, blog.user_id, blog.karma = row
+		blog.base_url = blog.url.replace('http://', '').\
 							replace('https://', '').replace('www.', '')
-		if o.id not in blogs_ids and o.user_id not in users_ids:
-				blogs.add(o)
-				users_ids.add(o.user_id)
-				blogs_ids.add(o.id)
+		if blog.id not in blogs_ids and blog.user_id not in users_ids:
+				blogs.add(blog)
+				users_ids.add(blog.user_id)
+				blogs_ids.add(blog.id)
 
 	feeds_read = 0
+	# Sort the set of blogs by date of read
+	## TODO: This sort should be changed with rich comparators in BaseBlog
 	sorted_blogs = sorted(blogs, cmp=lambda x, y: cmp(x.read, y.read))
-	for o in sorted_blogs:
+	for blog in sorted_blogs:
 		if feeds_read >= dbconf.blogs['max_feeds']:
 			break
-		if not o.is_banned():
+		## TODO: Solve this with a list comprehension
+		if not blog.is_banned():
 				# Check the number of remaining entries
 				query = """
 				SELECT count(*)
@@ -189,23 +201,23 @@ def get_candidate_blogs(days, min_karma):
 					WHERE user_id = %s
 						AND date > date_sub(now(), interval 1 day)
 				"""
-				c.execute(query, (o.user_id,))
-				n_entries, = c.fetchone()
+				inner_cursor.execute(query, (blog.user_id,))
+				n_entries, = inner_cursor.fetchone()
 				# Calculate the number of remaining entries
-				o.max = int(round(o.karma/dbconf.blogs['karma_divisor'])) \
+				blog.max = int(round(blog.karma/dbconf.blogs['karma_divisor'])) \
 							- n_entries
-				if not o.max > 0:
-					print "Max entries <= 0:", n_entries, o.karma, o.url
+				if not blog.max > 0:
+					print "Max entries <= 0:", n_entries, blog.karma, blog.url
 					continue
 
-				if (not o.feed and (not o.checked or
-									 o.checked < now - 86400)) \
-						or (o.checked and o.checked < now - 86400*7):
-					o.get_feed_info()
+				if (not blog.feed and (not blog.checked or
+									 blog.checked < now - 86400)) \
+						or (blog.checked and blog.checked < now - 86400*7):
+					blog.get_feed_info()
 
-				if o.feed and (not o.read or o.read < now - 3600):
-					results.add(o)
-					print "Added ", o.id, o.user, o.url
+				if blog.feed and (not blog.read or blog.read < now - 3600):
+					results.add(blog)
+					print "Added ", blog.id, blog.user, blog.url
 					feeds_read += 1
 	cursor.close()
 	return results
