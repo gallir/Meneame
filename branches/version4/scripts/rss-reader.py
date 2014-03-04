@@ -144,7 +144,7 @@ def get_candidate_blogs(days, min_karma):
 							 min_karma))
 
 			result = inner_cursor.fetchone()
-			if result is not None:
+			if result:
 				blog.user, blog.user_id, blog.karma = result
 				blogs.add(blog)
 
