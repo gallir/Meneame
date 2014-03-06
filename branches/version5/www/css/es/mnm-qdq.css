@@ -1,0 +1,78 @@
+@import url("mnm.css");
+
+@media screen and (max-height: 650px) {
+	#top-mega {
+		display: none;
+	}
+}
+
+#header{
+background: #135999;
+}
+
+#naviwrap ul li a:hover, #naviwrap ul#navigation li a:hover {
+color:#135999;
+}
+
+ul.tabmain {
+border-bottom: solid 1px #135999;
+}
+
+ul.tabmain li{
+border-right: solid 1px #135999;
+border-left: solid 1px #135999;
+border-top: solid 1px #135999;
+}
+
+ul.tabmain li:hover {
+background-color: #B8CDE0;
+}
+
+ul.tabmain li a{
+color: #135999;
+}
+
+ul.tabmain li.tabmain-this{
+background-image:url("../../img/common/reload-bt-qdq.png");
+background-color: #B8CDE0;
+border-bottom: solid 1px #B8CDE0;
+}
+
+.subheader{
+background-color: #B8CDE0;
+}
+
+.subheader li.selected {
+border: solid 1px #135999;
+background-color: #135999;
+}
+
+.subheader li:hover {
+border: solid 1px #135999;
+}
+
+.subheader li a{
+color: #135999;
+}
+
+.subheader li.icon{
+background-color: #B8CDE0;
+border-color: #B8CDE0;
+}
+
+.tabsub, .tabsub li a {
+border-color: #135999;
+color: #135999;
+}
+
+.tabsub li.tabsub-this, .tabsub li a:hover {
+background-color: #B8CDE0;
+}
+
+.tabsub a:visited, .tabsub-shakeit a:visited {
+color: #135999;
+}
+
+.catsub-block {
+border-bottom: solid 1px #B8CDE0;
+}

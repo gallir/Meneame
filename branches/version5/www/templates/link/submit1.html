@@ -1,0 +1,12 @@
+{% if errors %}
+	{% include 'link/errors.html' %}
+{% endif %}
+
+{% if link %}
+	{% if not errors %}
+	<h2>{% trans _('paso 2 de 3') %}</h2>
+	{% endif %}
+	{% include 'link/edit.html' %}
+{% else %}
+	{% include 'link/submit_empty_form.html' %}
+{% endif %}

@@ -1,0 +1,85 @@
+{% if not globals.mobile %}
+<div id="footwrap">
+
+	<div id="footcol1">
+	<h5>{% trans _('suscripciones por RSS') %}</h5>
+	<ul>
+	<li><a href="{{ globals.base_url }}rss2.php" >{% trans _('publicadas') %}</a></li>
+	<li><a href="{{ globals.base_url }}rss2.php?status=queued" >{% trans _('en cola') %}</a></li>
+	<li><a href="{{ globals.base_url }}rss2.php?active" >{% trans _('más activas') %}</a></li>
+
+	{% if current_user.user_id > 0 %}
+		<li><a href="{{ globals.base_url }}comments_rss2.php?conversation_id={{ current_user.user_id }}"  title="{% trans _('comentarios de las noticias donde has comentado') %}">{% trans _('mis conversaciones') %}</a></li>
+		<li><a href="{{ globals.base_url }}comments_rss2.php?author_id={{ current_user.user_id }}" >{% trans _('comentarios a mis noticias') %}</a></li>
+	{% endif %}
+
+	<li><a href="{{ globals.base_url }}comments_rss2.php" >{% trans _('todos los comentarios') %}</a></li>
+	</ul>
+	</div>
+
+
+	<div id="footcol2">
+	{% if globals.is_meneame %}
+		<h5>ayuda</h5>
+		<ul id="helplist">
+		<li><a href="{{ globals.base_url }}faq-es.php">{% trans _('faq') %}</a></li>
+		<li><a href="http://meneame.wikispaces.com/Ayuda">{% trans _('ayuda') %}</a></li>
+		<li><a href="http://meneame.wikispaces.com/">{% trans _('wiki') %}</a></li>
+		<li><a href="http://meneame.wikispaces.com/Bugs">{% trans _('avisar errores') %}</a></li>
+		<li><a href="{{globals.legal}}#contact">{% trans _('avisar abusos') %}</a></li>
+		</ul>
+	{% endif %}
+	</div>
+
+
+	<div id="footcol3">
+	{% if globals.is_meneame %}
+		<h5>+menéame</h5>
+		<ul id="moremenelist">
+		<li><a href="{{ globals.base_url }}trends/">{% trans _('tendencias') %}</a></li>
+		<li><a href="{{ globals.base_url }}mobile/">{% trans _('versión reducida') %}</a></li>
+		<li><a href="http://twitter.com/meneame_net">{% trans _('síguenos en twitter') %}</a></li>
+		<li><a href="/notame/">{% trans _('nótame') %}</a></li>
+		<li><a href="http://blog.meneame.net/">{% trans _('blog') %}</a></li>
+		</ul>
+	{% endif %}
+	</div>
+
+	<div id="footcol4">
+	<h5>{% trans _('estadísticas') %}</h5>
+	<ul id="statisticslist">
+	<li><a href="{{ globals.base_url }}topusers.php">{% trans _('usuarios') %}</a></li>
+	<li><a href="{{ globals.base_url }}topstories.php">{% trans _('populares') %}</a></li>
+	<li><a href="{{ globals.base_url }}topcommented.php">{% trans _('más comentadas') %}</a></li>
+	<li><a href="{{ globals.base_url }}topcomments.php">{% trans _('mejores comentarios') %}</a></li>
+	<li><a href="{{ globals.base_url }}cloud.php">{% trans _('nube de etiquetas') %}</a></li>
+	<li><a href="{{ globals.base_url }}sitescloud.php">{% trans _('nube de webs') %}</a></li>
+	<li><a href="{{ globals.base_url }}promote.php">{% trans _('candidatas') %}</a></li>
+	<li><a href="{{ globals.base_url }}values.php">{% trans _('parámetros básicos') %}</a></li>
+	</ul>
+	</div>
+
+{#
+	<div id="footcol5" class="wideonly">
+	<h5>{% trans _('relax') %}</h5>
+	<ul id="mapslist">
+	{% if globals.fancybox_enabled %}
+		<li><a href="javascript:fancybox_gallery('all');">{% trans _('imágenes') %}</a></li>
+	{% endif %}
+	<li><a href="{{ globals.base_url }}geovision.php">{% trans _('geovisión') %}</a></li>
+	{% if globals.google_maps_in_links %}
+		<li><a href="{{ globals.base_url }}map.php">{% trans _('noticias') %}</a></li>
+	{% endif %}
+	</ul>
+	{% if globals.is_meneame %}
+		<h5>tienda</h5>
+		<ul id="shoplift">
+		<li><a href="http://meneame.wikispaces.com/menechandising">{% trans _('camisetas') %}</a></li>
+		<li><a href="http://www.socialmediasl.com/">{% trans _('publicidad') %}</a></li>
+		</ul>
+	{% endif %}
+	</div>
+#}
+
+</div>
+{% endif %}

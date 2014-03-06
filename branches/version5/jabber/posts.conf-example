@@ -1,0 +1,14 @@
+# Configuration file for post.pl
+# Must be renamed to  posts.conf
+
+server 			= talk.google.com
+port 			= 5222
+username 		= my_username # from my_username@my_jabber.net
+componentname 	= my_jabber.net # from my_username@my_jabber.net
+password 		= 27182818
+resource 		= meneame
+logfile 		= posts.log # file in the program directory, comment it out if you don't want the logs
+dbhost 			= localhost
+dbuser 			= meneame
+dbpassword 		=
+dbname 			= meneame

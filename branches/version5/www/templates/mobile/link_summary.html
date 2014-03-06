@@ -1,0 +1,91 @@
+<div class="news-summary">
+	<div class="news-body">
+        {% inline "mobile/link_abuse.html" %}
+
+        {% if self.show_shakebox %}
+	    <div class="news-shakeit">
+		    <div class="{{box_class }}">
+		        <a id="a-votes-{{self.id}}" href="{{self.rpermalink}}">
+                    {{self.total_votes}}
+                </a>
+            </div>
+		    <div class="menealo" id="a-va-{{self.id}}">
+                {% if self.votes_enabled == FALSE %}
+			        <span>{% trans _('cerrado') %}</span>
+                {% else %}
+                    {% if not self.voted %}
+			            <a href="javascript:menealo({{current_user.user_id}}, {{self.id}})" id="a-shake-{{self.id}}">{% trans _('menéalo') %}</a>
+                    {% else %}
+                        {% if self.voted > 0 %}
+			                <span id="a-shake-{{self.id}}">{% trans  _('¡chachi!') %}</span>
+                        {% else %}
+		                    <span id="a-shake-{{self.id}}" class="negative">{% exec get_negative_vote self.voted %}</span>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+
+			<div class="clics">{{ self.clicks }}</div>
+
+        </div>
+        {% endif %}
+		<h1>
+		    <a
+			{% if globals.click_counter %}
+				href="{{ globals.base_url }}go.php?id={{ self.id }}"
+			{% else %}
+				href="{{ self.url|escape }}"
+			{% endif %}
+		    {% if self.status != 'published' %} rel="nofollow"{% endif %}
+			>{{self.title}}</a>
+		</h1>
+		<div class="news-submitted">
+		    <strong>{{self.url|txt_shorter:40}}</strong><br/>
+            {% if globals.link %}
+                {% trans "por %s" self.author_html %}
+                {% if globals.now - self.date > 604800 %}
+                    {% if self.status == 'published' %}
+                        {% trans _("publicado el")%}{% exec get_date_time self.date %}
+                    {% else %}
+                        {% trans _("el")%}{% exec get_date_time self.sent_date %}
+                    {% endif %}
+                {% else %}
+                    {% if self.status == 'published' %}
+                        {% trans _("publicado hace") %}{% exec txt_time_diff self.date %}
+                    {% else %}
+                        {% trans _("hace")%}{% exec txt_time_diff self.sent_date %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+
+		{% if self.thumb_url %}
+			<img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt='' class='thumbnail'/>
+		{% endif %}
+
+        {{ text|text_to_html}}
+
+		<div class="news-details">
+		<span class="comments">
+        {% if self.comments > 0 %}
+            <a href="{% exec self.get_relative_permalink %}">{{self.comments}} {% trans _("comentarios") %}</a>
+        {% else %}
+            <a href="{% exec self.get_relative_permalink %}">{% trans _("sin comentarios") %}</a>
+        {% endif %}
+        </span>
+		&nbsp;<span class="tool">
+            <a href="{{ self.normal_link }}">
+                <strong>{% trans _('versión estándar') %}&nbsp;&#187;</strong>
+            </a>
+        </span>
+        </div>
+        {% if globals.link %}
+            <div class="news-details">
+			    <strong>karma</strong>: <span id="a-karma-{{self.id}}">{{self.karma|intval}}</span>&nbsp;&nbsp;
+			    <strong>{% trans _('negativos') %}</strong>: {{self.negatives}}&nbsp;&nbsp;
+			    <strong>{% trans _('usuarios') %}</strong>: {{self.votes}}&nbsp;&nbsp;
+			    <strong>{% trans _('anónimos') %}</strong>: {{self.anonymous}}&nbsp;&nbsp;
+            </div>
+        {% endif %}
+    </div>
+</div>

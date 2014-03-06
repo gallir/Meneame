@@ -1,0 +1,4 @@
+First of all: check the posts.conf-example, modify it and rename it to posts.conf
+
+posts.pl -d puts the program en daemon mode
+
