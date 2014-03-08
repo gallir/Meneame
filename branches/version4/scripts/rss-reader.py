@@ -102,14 +102,11 @@ def get_candidate_blogs(days, min_karma):
 	inner_cursor = DBM.cursor()
 
 	# Select users that have at least one published
-	# TODO: We can use the HAVING clause to avoid the
-	#    if o.counter < days  in the next loop
 
 	query = """
 		SELECT link_blog, blog_url, blog_feed,
 				UNIX_TIMESTAMP(blog_feed_checked),
 				UNIX_TIMESTAMP(blog_feed_read),
-				count(*) as n
 			FROM links, blogs
 			WHERE link_status in ('published')
 				AND link_date > date_sub(now(), interval %s day)
@@ -118,39 +115,39 @@ def get_candidate_blogs(days, min_karma):
 				AND (blog_feed_read is null
 						OR blog_feed_read < date_sub(now(), interval 1 hour))
 			GROUP BY blog_id
+			HAVING count(*) < %s
 	"""
-	cursor.execute(query, (days,))
+	cursor.execute(query, (days, days))
 	for row in cursor:
 		blog = BaseBlogs()
-		blog.id, blog.url, blog.feed, blog.checked, blog.read, blog.counter = row
+		blog.id, blog.url, blog.feed, blog.checked, blog.read = row
 		blog.base_url = blog.url.replace('http://', '').\
 							replace('https://', '').replace('www.', '')
 		if blog.is_banned():
 			continue
 
-		if blog.counter < days:
-			query = """
-				SELECT user_login, user_id, user_karma
-					FROM users
-					WHERE user_url in (%s, %s, %s, %s, %s, %s)
-						AND user_karma > %s
-						AND user_level not in ('disabled', 'autodisabled')
-					ORDER BY user_karma desc limit 1"
-			"""
-			inner_cursor.execute(query,('http://'+blog.base_url,
-							 'http://www.'+blog.base_url,
-							 'http://'+blog.base_url+'/',
-							 'http://www.'+blog.base_url+'/',
-							 blog.base_url,
-							 'www.'+blog.base_url,
-							 min_karma))
+		query = """
+			SELECT user_login, user_id, user_karma
+				FROM users
+				WHERE user_url in (%s, %s, %s, %s, %s, %s)
+					AND user_karma > %s
+					AND user_level not in ('disabled', 'autodisabled')
+				ORDER BY user_karma desc limit 1"
+		"""
+		inner_cursor.execute(query,('http://'+blog.base_url,
+						 'http://www.'+blog.base_url,
+						 'http://'+blog.base_url+'/',
+						 'http://www.'+blog.base_url+'/',
+						 blog.base_url,
+						 'www.'+blog.base_url,
+						 min_karma))
 
-			result = inner_cursor.fetchone()
-			if result:
-				blog.user, blog.user_id, blog.karma = result
-				blogs.add(blog)
-				blogs_ids.add(blog.id)
-				users_ids.add(blog.user_id)
+		result = inner_cursor.fetchone()
+		if result:
+			blog.user, blog.user_id, blog.karma = result
+			blogs.add(blog)
+			blogs_ids.add(blog.id)
+			users_ids.add(blog.user_id)
 
 
 
