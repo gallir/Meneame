@@ -77,24 +77,24 @@ function do_header($title, $id='home', $options = false) {
 
 	if (! is_array($options)) {
 		$left_options = array();
-		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit.php', $id, _('enviar nueva historia'));
+		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'));
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
-		$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', $id, _('menear noticias pendientes'));
-		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'topstories.php', $id, _('historias más votadas'));
-		$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'topclicked.php', $id, _('historias más visitadas/leídas'));
-		$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'topactive.php', $id, _('historias más activas'));
+		$left_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'queue', $id, _('menear noticias pendientes'));
+		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'popular', $id, _('historias más votadas'));
+		$left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'top_visited', $id, _('historias más visitadas/leídas'));
+		$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'top_active', $id, _('historias más activas'));
 
 		$right_options = array();
-		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
+		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
 		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	} else {
 		$left_options = $options;
 		$right_options = array();
 		//$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
-		$right_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'shakeit.php', '', _('menear noticias pendientes'));
+		$right_options[] = new MenuOption(_('pendientes'), $globals['base_url'].'queue', '', _('menear noticias pendientes'));
 
-		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak.php', $id, _('visualizador en tiempo real'));
+		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
 		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	}
@@ -141,7 +141,7 @@ function force_authentication() {
 	global $current_user, $globals;
 
 	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login.php?return='.$globals['uri']);
+		header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
 		die;
 	}
 	return true;
@@ -374,7 +374,7 @@ function do_vertical_tags($what=false) {
 
 	$res = $db->get_col("select link_tags $from_where");
 	if ($res) {
-		$url = $globals['base_url'].'cloud.php';
+		$url = $globals['base_url'].'cloud';
 		$title = _('etiquetas');
 		$content = '';
 
@@ -401,7 +401,7 @@ function do_vertical_tags($what=false) {
 			if ($globals['base_search_url']) {
 				$content .= $globals['base_url'].$globals['base_search_url'].'tag:';
 			} else {
-				$content .= $globals['base_url'].'search.php?p=tags&amp;q=';
+				$content .= $globals['base_url'].'search?p=tags&amp;q=';
 			}
 			$content .= urlencode($word).'">'.$word.'</a>  ';
 		}
@@ -443,7 +443,7 @@ function do_categories_cloud($what=false, $hours = 48) {
 	$res = $db->get_results("select count(*) as count, lower(category_name) as category_name, category_id $from_where order by count desc limit 10");
 
 	if ($res) {
-		if ($what == 'queued') $page = $globals['base_url'].'shakeit.php?category=';
+		if ($what == 'queued') $page = $globals['base_url'].'queue?category=';
 		else  $page = $globals['base_url'].'?category=';
 
 		$title = _('categorías populares');
@@ -542,7 +542,7 @@ function do_best_comments() {
 	if ($res) {
 		$objects = array();
 		$title = _('mejores comentarios');
-		$url = $globals['base_url'].'topcomments.php';
+		$url = $globals['base_url'].'top_comments';
 		foreach ($res as $comment) {
 			$obj = new stdClass();
 			$obj->id = $foo->id = $comment->comment_id;
@@ -619,7 +619,7 @@ function do_active_stories() {
 
 	$category_list	= '';
 	$title = _('destacadas');
-	$url = $globals['base_url'].'topactive.php';
+	$url = $globals['base_url'].'top_active';
 
 	$top = new Annotation('top-actives-'.$globals['site_shortname']);
 	if ($top->read() && ($ids = explode(',',$top->text))) {
@@ -668,7 +668,7 @@ function do_best_stories() {
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' order by value desc limit 5");
 	if ($res) {
 		$links = array();
-		$url = $globals['base_url'].'topstories.php';
+		$url = $globals['base_url'].'popular';
 		$link = new Link();
 		foreach ($res as $l) {
 			$link = Link::from_db($l->link_id);
@@ -717,7 +717,7 @@ function do_best_queued() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' $category_list order by link_karma desc limit 20");
 	if ($res) {
-		$url = $globals['base_url'].'shakeit.php?meta=_popular';
+		$url = $globals['base_url'].'queue?meta=_popular';
 		$links = array();
 		$link = new Link();
 		foreach ($res as $l) {
@@ -765,7 +765,7 @@ function do_most_clicked_stories() {
 	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
 	if ($res) {
 		$links = array();
-		$url = $globals['base_url'].'topclicked.php';
+		$url = $globals['base_url'].'top_visited';
 		$link = new Link();
 		foreach ($res as $l) {
 			$link = Link::from_db($l->link_id);
@@ -841,7 +841,7 @@ function do_last_blogs() {
 	if ($entries) {
 		$objects = array();
 		$title = _('apuntes de blogs');
-		$url = $globals['base_url'].'rsss.php';
+		$url = $globals['base_url'].'rsss';
 		foreach ($entries as $entry) {
 			$obj = new stdClass();
 			$obj->user_id = $entry->user_id;

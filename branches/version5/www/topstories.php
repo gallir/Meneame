@@ -98,7 +98,7 @@ function print_period_tabs() {
 	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) $current_range = 0;
 	echo '<ul class="subheader">'."\n";
 	if ($month> 0 && $year > 0) {
-		echo '<li class="selected"><a href="topstories.php?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
+		echo '<li class="selected"><a href="popular?month='.$month.'&amp;year='.$year.'">' ."$month-$year". '</a></li>'."\n";
 		$current_range = -1;
 	} elseif(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) {
 		$current_range = 0;
@@ -110,7 +110,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li'.$active.'><a href="topstories.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="popular?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

@@ -34,7 +34,7 @@ if(isset($_POST["process"])) {
 
 // Check the IP is right
 if(isset($_POST["process"]) && !check_form_auth_ip()) {
-	header("Location: http://".get_server_name().$globals['base_url']."login.php");
+	header("Location: http://".get_server_name().$globals['base_url']."login");
 	die;
 }
 
@@ -60,9 +60,9 @@ do_footer();
 exit;
 
 function do_register0() {
-	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>';
+	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>';
 
-	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
+	echo '<form action="'.get_auth_link().'register" method="post" id="thisform" onSubmit="return check_checkfield(\'acceptlegal\', \''._('no has aceptado las condiciones de uso').'\')">' . "\n";
 	echo '<fieldset>' . "\n";
 	echo '<legend><span class="sign">' . _("datos del usuario") . '</span></legend>' . "\n";
 	echo '<p><label for="name">' . _("nombre de usuario") . ':</label><br />' . "\n";
@@ -113,7 +113,7 @@ function do_register1() {
 	echo '<br style="clear:both" />';
 
 
-	echo '<form action="'.get_auth_link().'register.php" method="post" id="thisform">' . "\n";
+	echo '<form action="'.get_auth_link().'register" method="post" id="thisform">' . "\n";
 	echo '<fieldset><legend><span class="sign">'._('validación').'</span></legend>'."\n";
 	ts_print_form();
 	echo '<input type="submit" name="submit" class="button" value="'._('continuar').'" />';

@@ -55,7 +55,7 @@ function do_master($size) {
 function do_statics() {
 	global $globals;
 
-	$urls = Array('shakeit.php', 'sneak.php', 'geovision.php', 'notame/', 
+	$urls = Array('queue', 'sneak.php', 'geovision.php', 'notame/', 
 			'cloud.php', 'topstories.php', 'topcommented.php', 
 			'topcomments.php', 'sitescloud.php', 'topusers.php', 'faq-es.php');
 
@@ -90,7 +90,7 @@ function do_published($page) {
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.$server.$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
+		echo '<loc>http://'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
@@ -110,7 +110,7 @@ function do_last_published() {
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.$server.$globals['base_url'].$globals['base_story_url'].$uri.'</loc>'."\n";
+		echo '<loc>http://'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";

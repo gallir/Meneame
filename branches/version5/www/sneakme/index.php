@@ -6,9 +6,15 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include_once('../config.php');
 include('common.php');
 
+//echo "path: \n"; var_dump($globals["path"]); return 1;
+
+$argv = $globals['path'];
+$argv[0] = clean_input_string($argv[0]);
+
+/*
 if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
 	$argv[0] = clean_input_string($argv[0]);
@@ -16,6 +22,7 @@ if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
 	$argv = preg_split('/\/+/', $_REQUEST['id'], 4, PREG_SPLIT_NO_EMPTY);
 	$argv[0] = clean_input_string($argv[0]);
 }
+*/
 
 if ($argv[0] == _priv) {
 	// Load priv.php
@@ -307,6 +314,4 @@ function onLoad(lat, lng, zoom, icon) {
 echo '</div>';
 if ($rows > 15) do_footer_menu();
 do_footer();
-exit(0);
 
-?>

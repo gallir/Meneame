@@ -980,23 +980,20 @@ class Link extends LCPBase {
 			$server_name = $globals['url_shortener'] . '/';
 			$id = base_convert($this->id, 10, 36);
 		} else {
-			$server_name = get_server_name().$globals['base_url'].$globals['base_story_url'].'0';
+			$server_name = get_server_name().$globals['base_url'].'story/';
 			$id = $this->id;
 		}
-		if ($globals['base_story_url']) {
-			return 'http://'.$server_name.$id;
-		} else {
-			return $this->get_permalink();
-		}
+		return 'http://'.$server_name.$id;
 	}
 
 	function get_relative_permalink() {
 		global $globals;
 
-		if (!empty($this->uri) && !empty($globals['base_story_url']) ) {
-			return $globals['base_url'] . $globals['base_story_url'] . $this->uri;
+
+		if (!empty($this->uri)) {
+			return $globals['base_url'] . 'story/'. $this->uri;
 		} else {
-			return $globals['base_url'] . 'story.php?id=' . $this->id;
+			return $globals['base_url'] . 'story/' . $this->id;
 		}
 	}
 

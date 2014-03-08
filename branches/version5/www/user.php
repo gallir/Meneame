@@ -20,6 +20,7 @@ $offset=(get_current_page()-1)*$page_size;
 
 if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
+	array_shift($url_args);
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
 	$_REQUEST['view'] = $url_args[1];
 	$_REQUEST['uid'] = intval($url_args[2]);

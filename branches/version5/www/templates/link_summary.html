@@ -181,8 +181,8 @@
 
 
 		<span class="tool">
-		<a href="{{ globals.base_url }}{% if self.status != "published" %}shakeit.php{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">
-			{{ self.meta_name}}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}shakeit.php{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">
+		<a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">
+			{{ self.meta_name}}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">
 			{{self.category_name}}</a></span>
 		</span>
 		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">

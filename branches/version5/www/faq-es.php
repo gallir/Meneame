@@ -10,7 +10,7 @@
 <ol>
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Qué es menéame?</h4>
-<p>Es un web que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una noticia ésta queda en la <a href="shakeit.php"><em>cola de pendientes</em></a> hasta que reúne los votos suficientes para ser promovida a la página principal.
+<p>Es un web que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una noticia ésta queda en la <a href="queue"><em>cola de pendientes</em></a> hasta que reúne los votos suficientes para ser promovida a la página principal.
 También encontrarás más información, dudas, recomendaciones en el <a href="http://meneame.wikispaces.com/" title="wiki meneame">wiki del menéame</a>.
 </p>
 </li>
@@ -24,7 +24,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Cómo promover las historias?</h4>
-<p>Selecciona la opción <a href="shakeit.php"><em>menear historias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
+<p>Selecciona la opción <a href="queue"><em>menear historias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
 <p>No te olvides de leer las <a href="http://www.meneame.net/legal.php">condiciones de uso</a>.</p>
 </li>
 

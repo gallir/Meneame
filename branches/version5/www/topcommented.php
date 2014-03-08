@@ -93,7 +93,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li'.$active.'><a href="topcommented.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="top_commented?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }

@@ -69,7 +69,7 @@ function do_login() {
 			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
 		}
 		echo '<h3>'._('¿Qué es menéame?').'</h3>'."\n";
-		echo '<p>'._('Es un sitio que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="shakeit.php">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal').'.</p>'."\n";
+		echo '<p>'._('Es un sitio que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="queue">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal').'.</p>'."\n";
 
 		echo '<h3>'._('¿Todavía no eres usuario de menéame?').'</h3>'."\n";
 		echo '<p>'._('Como usuario registrado podrás, entre otras cosas').':</p>'."\n";

@@ -43,7 +43,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // If you user version, be careful to rewrite the directory for img, css and js
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
-$globals['v'] = 13; // internal version, to for reloads
+$globals['v'] = 1; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -101,7 +101,7 @@ $globals['click_counter'] = 1; // Put a value since which id should show in "lin
 $globals['base_url'] = '/';
 $globals['top_logo'] = 'img/mnm/eli.png';
 $globals['thumbnail_logo'] = 'img/mnm/eli_thumbnail.png';
-$globals['legal'] = '/legal.php';
+$globals['legal'] = '/legal';
 
 // Calculate affinity to the sender of the link
 $globals['karma_user_affinity'] = false;
@@ -118,9 +118,6 @@ $globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reache
 
 
 // leave empty if you don't have the rewrite rule in apache
-
-//RewriteRule ^/story/(.+)$ /story.php/$1  [L,NS]
-$globals['base_story_url'] = 'story/';
 
 //RewriteRule ^/c/(.+)$ /comment.php/$1  [L,NS]
 $globals['base_comment_url'] = 'c/';

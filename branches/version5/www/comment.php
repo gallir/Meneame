@@ -14,7 +14,7 @@ $comment = new Comment;
 
 if (!isset($_REQUEST['id']) && $globals['base_comment_url'] && $_SERVER['PATH_INFO']) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	array_shift($url_args); // The first element is always a "/"
+	$url_args = array_slice($url_args, 2); // Discard "/" and "c"
 	$comment->id = intval($url_args[0]);
 } else {
 	$url_args = preg_split('/\/+/', $_REQUEST['id']);

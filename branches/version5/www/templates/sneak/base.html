@@ -179,9 +179,9 @@ function to_html(data) {
 	if (data.status == '{% trans _('publicada') %}')
 		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'"><span class="sneaker-published">'+data.status+'<\/span><\/a><\/div>';
 	else if (data.status == '{% trans _('descartada') %}')
-		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'queue?meta=_discarded"><span class="sneaker-discarded">'+data.status+'<\/span><\/a><\/div>';
 	else
-		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'shakeit.php">'+data.status+'<\/a><\/div>';
+		html += '<div class="sneaker-status"><a target="_blank" href="'+base_url+'queue">'+data.status+'<\/a><\/div>';
 	return html;
 }
 

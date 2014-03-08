@@ -164,7 +164,7 @@ function do_submit1() {
 	$drafts = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id  and link_date > date_sub(now(), interval $minutes minute) and link_status='discard' and link_votes = 0");
 	if ($drafts > $globals['draft_limit']) {
 		add_submit_error( _('demasiados borradores'),
-			_('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="shakeit.php?meta=_discarded">'. _('cola de descartadas').'</a></p>');
+			_('has hecho demasiados intentos, debes esperar o continuar con ellos desde la'). ' <a href="queue?meta=_discarded">'. _('cola de descartadas').'</a></p>');
 		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): " . $_REQUEST['url']);
 		return false;
 	}
@@ -221,7 +221,7 @@ function do_submit1() {
 					_('necesitas votar como mínimo a'). " $needed " . _('envíos'));
 			}
 			add_submit_error( _('no votes de forma apresurada, penaliza el karma'),
-				'<a href="'.$globals['base_url'].'shakeit.php" target="_blank">'._('haz clic aquí para ir a votar').'</a>');
+				'<a href="'.$globals['base_url'].'queue" target="_blank">'._('haz clic aquí para ir a votar').'</a>');
 			return false;
 		}
 	}

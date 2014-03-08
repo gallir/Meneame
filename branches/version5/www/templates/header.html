@@ -150,7 +150,7 @@
 
 <!--search-->
   <div id="searchform" class="searchform">
-    <form action="{{ globals.base_url }}search.php" method="get" name="top_search">
+    <form action="{{ globals.base_url }}search" method="get" name="top_search">
 		{% if globals.search_options %}
 			{% for name, value in globals.search_options %}
 				<input type="hidden" name="{{name}}" value="{{value}}"/>

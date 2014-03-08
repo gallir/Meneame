@@ -13,28 +13,27 @@ include(mnminclude.'html1-mobile.php');
 
 $link = new LinkMobile;
 
-
-if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 3, PREG_SPLIT_NO_EMPTY);
+$url_args = $globals['path'];
+array_shift($url_args); // Discard "story"
+if (!isset($_REQUEST['id']) && $url_args[0] && !is_numeric($url_args[0])) { // Compatibility with story.php?id=x and /story/x
 	$link->uri = $db->escape($url_args[0]);
 	if (! $link->read('uri') ) {
 		not_found();
 	}
 } else {
-	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	$link->id=intval($url_args[0]);
-	if(is_numeric($url_args[0]) && $link->read('id') ) {
+	if (isset($_REQUEST['id'])) $link->id = intval($_REQUEST['id']);
+	else $link->id = intval($url_args[0]);
+	if($id > 0 && ($link->read()) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
-		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
-			if (!empty($url_args[1])) $extra_url = '/' . urlencode($url_args[1]);
-			header('Location: ' . $link->get_permalink(). $extra_url);
+		if (!empty($link->uri)) {
+			header ('HTTP/1.1 301 Moved Permanently');
+			header('Location: ' . $link->get_permalink());
 			die;
 		}
 	} else {
 		not_found();
 	}
 }
-
 
 if ($link->is_discarded()) {
 	// Dont allow indexing of discarded links

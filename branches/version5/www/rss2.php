@@ -133,7 +133,7 @@ if(!empty($_REQUEST['time'])) {
 			$title = $globals['site_name'].': '._('en cola');
 			$order_field = 'date';
 			$link_date = "date";
-			$home = "/shakeit.php";
+			$home = "/queue";
 			// disable feedburner for queued
 			$globals['redirect_feedburner'] = false;
 			break;

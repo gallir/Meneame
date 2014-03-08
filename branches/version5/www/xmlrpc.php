@@ -63,7 +63,7 @@ class Xmlrpc_server extends IXR_Server {
 		if ($urltest['host'] != get_server_name()) {
 			return new IXR_Error(0, 'Is there no link to us?');
 		}
-		$base_uri = preg_quote($globals['base_url'] . $globals['base_story_url'], '/');
+		$base_uri = preg_quote($globals['base_url'] . 'story/', '/');
 		$uri = preg_replace("/^$base_uri/", '', $urltest[path]);
 
 

@@ -27,8 +27,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	if ($tab_name == "main" ) {
 		$items = array(
 			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
-			array('url' => 'topstories.php', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-			array('url' => 'shakeit.php', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
+			array('url' => 'popular', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+			array('url' => 'queue', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
 		);
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
@@ -73,7 +73,7 @@ function force_authentication() {
 	global $current_user, $globals;
 
 	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login.php?return='.$globals['uri']);
+		header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
 		die;
 	}
 	return true;

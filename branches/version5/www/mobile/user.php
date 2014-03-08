@@ -12,21 +12,10 @@ include(mnminclude.'html1-mobile.php');
 
 $offset=(get_current_page()-1)*$page_size;
 
+$url_args = $globals['path'];
 
-if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	array_shift($url_args); // The first element is always a "/"
-	$_REQUEST['login'] = clean_input_string($url_args[0]);
-	$_REQUEST['view'] = $url_args[1];
-} else {
-	$_REQUEST['login'] = clean_input_string($_REQUEST['login']);
-	if (!empty($globals['base_user_url']) && !empty($_REQUEST['login'])) {
-		header('Location: ' . get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])));
-		die;
-	}
-}
+$login = clean_input_string($url_args[1]);
 
-$login = $_REQUEST['login'];
 if(empty($login)){
 	if ($current_user->user_id > 0) {
 		header('Location: ' . get_user_uri($current_user->user_login));

@@ -146,9 +146,9 @@ function print_shakeit_tabs($option=-1) {
 
 	$items = array();
 	if ($current_user->has_personal) {
-		$items[] = array('id' => 7, 'url' => 'shakeit.php', 'title' => _('personal'));
+		$items[] = array('id' => 7, 'url' => 'queue', 'title' => _('personal'));
 	}
-	$items[] = array('id' => 1, 'url' => 'shakeit.php'.$globals['meta_skip'], 'title' => _('todas'));
+	$items[] = array('id' => 1, 'url' => 'queue'.$globals['meta_skip'], 'title' => _('todas'));
 
 	if (! $globals['mobile']) {
 	$metas = SitesMgr::get_metas();
@@ -156,7 +156,7 @@ function print_shakeit_tabs($option=-1) {
 			foreach ($metas as $meta) {
 				$items[] = array(
 					'id'  => 9999, /* fake number */
-					'url' =>'shakeit.php?meta='.$meta->uri,
+					'url' =>'queue?meta='.$meta->uri,
 					'selected' => $meta->id == $globals['meta_current'],
 					'title' => $meta->name
 				);
@@ -164,14 +164,14 @@ function print_shakeit_tabs($option=-1) {
 		}
 	}
 
-	$items[] = array('id' => 3, 'url' => 'shakeit.php?meta=_popular', 'title' => _('candidatas'));
+	$items[] = array('id' => 3, 'url' => 'queue?meta=_popular', 'title' => _('candidatas'));
 
 	if ($current_user->user_id > 0) {
-		$items[] = array('id' => 2, 'url' => 'shakeit.php?meta=_friends', 'title' => _('amigos'));
+		$items[] = array('id' => 2, 'url' => 'queue?meta=_friends', 'title' => _('amigos'));
 	}
 
 	if (!$globals['bot']) {
-		$items [] = array('id' => 5, 'url' => 'shakeit.php?meta=_discarded', 'title' => _('descartadas'));
+		$items [] = array('id' => 5, 'url' => 'queue?meta=_discarded', 'title' => _('descartadas'));
 	}
 
 	// Print RSS teasers

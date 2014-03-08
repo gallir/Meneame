@@ -20,36 +20,34 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include_once('config.php');
 include(mnminclude.'html1.php');
 
 mobile_redirect();
 
 $globals['cache-control'][] = 'max-age=3';
 
+$url_args = $globals['path'];
+array_shift($url_args); // Discard "story"
+
 $argc = 0;
-if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
-	//$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'],  3, PREG_SPLIT_NO_EMPTY);
-	/* explode() + ltrim() is +30% faster */
-	$url_args = explode('/', ltrim($_SERVER['PATH_INFO'], '/'),  3);
+if (!isset($_REQUEST['id']) && $url_args[0] && !is_numeric($url_args[0])) { // Compatibility with story.php?id=x and /story/x
 	$link = Link::from_db($url_args[0], 'uri');
 	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);
 	}
 } else {
-	//$url_args = preg_split('/\/+/', $_REQUEST['id'], 3, PREG_SPLIT_NO_EMPTY);
-	/* explode() + ltrim() is +30% faster */
-	$url_args = explode('/', ltrim($_REQUEST['id'], '/'),  3);
-	if(is_numeric($url_args[0]) && $url_args[0] > 0 && ($link = Link::from_db($url_args[0])) ) {
+	if (isset($_REQUEST['id'])) $id = intval($_REQUEST['id']);
+	else $id = intval($url_args[0]);
+	if($id > 0 && ($link = Link::from_db($id)) ) {
 		// Redirect to the right URL if the link has a "semantic" uri
-		if (!empty($link->uri) && !empty($globals['base_story_url'])) {
+		if (!empty($link->uri)) {
 			header ('HTTP/1.1 301 Moved Permanently');
-			if (!empty($url_args[1])) $extra_url = '/' . urlencode($url_args[1]);
-			header('Location: ' . $link->get_permalink(). $extra_url);
+			header('Location: ' . $link->get_permalink());
 			die;
 		}
 	} else {
-		do_error(_('argumentos no reconocidos'), 404);
+		do_error(_('noticia no encontrada'), 404);
 	}
 }
 
@@ -73,7 +71,6 @@ if ($link->is_discarded()) {
 	$globals['ads'] = false;
 	$globals['noindex'] = true;
 }
-
 
 $total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
@@ -480,15 +477,7 @@ function do_comment_pages($total, $current, $reverse = true) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 
-	if ( ! empty($globals['base_story_url'])) {
-		$query = $globals['permalink'] . $globals['page_base'];
-	} else {
-		$query=preg_replace('/\/[0-9]+(#.*)*$/', '', $_SERVER['QUERY_STRING']);
-		if(!empty($query)) {
-			$query = htmlspecialchars($query);
-			$query = "?$query";
-		}
-	}
+	$query = $globals['permalink'] . $globals['page_base'];
 
 	$total_pages=ceil($total/$globals['comments_page_size']);
 	if (! $current) {
@@ -652,4 +641,3 @@ function print_votes_raw($link) {
 		printf("%s\t%d\t%s\t%3.1f\n", date("c", $v->ts), $v->vote_value, $v->user_login, $v->user_karma);
 	}
 }
-?>
