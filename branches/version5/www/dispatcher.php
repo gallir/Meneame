@@ -32,33 +32,5 @@ $routes = array(
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
 
-//$path = explode('/', $_SERVER["PATH_INFO"]);
-//var_dump($path); die;
-
 @include($routes[$path[0]]);
 
-/*
-switch ($path[1]) {
-	case '':
-		@include("index.php");
-		break;
-	case 'story':
-		@include("story.php");
-		break;
-	case 'queue':
-		@include('shakeit.php');
-		break;
-	case 'b':
-		@include('bar.php');
-		break;
-	case 'c':
-		@include('comment.php');
-		break;
-	case 'user':
-		@include('user.php');
-		break;
-	case 'search':
-		@include('search.php');
-		break;
-}
-*/
