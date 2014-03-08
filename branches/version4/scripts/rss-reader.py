@@ -191,7 +191,7 @@ def get_candidate_blogs(days, min_karma):
 	feeds_read = 0
 	# Sort the set of blogs by date of read
 	## TODO: This sort should be changed with rich comparators in BaseBlog
-	sorted_blogs = sorted(blogs, cmp=lambda x, y: cmp(x.read, y.read))
+	sorted_blogs = sorted(blogs, key=lambda x: x.read)
 	for blog in sorted_blogs:
 		if feeds_read >= dbconf.blogs['max_feeds']:
 			break
