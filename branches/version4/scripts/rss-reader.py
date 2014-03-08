@@ -96,6 +96,8 @@ def get_candidate_blogs(days, min_karma):
 	now = time.time()
 	blogs = set()
 	results = set()
+	blogs_ids = set()
+	users_ids = set()
 	cursor = DBM.cursor()
 	inner_cursor = DBM.cursor()
 
@@ -147,6 +149,9 @@ def get_candidate_blogs(days, min_karma):
 			if result:
 				blog.user, blog.user_id, blog.karma = result
 				blogs.add(blog)
+				blogs_ids.add(blog.id)
+				users_ids.add(blog.user_id)
+
 
 
 	# Select active users that have no published posts
@@ -177,7 +182,10 @@ def get_candidate_blogs(days, min_karma):
 		blog.checked, blog.read, blog.user, blog.user_id, blog.karma = row
 		blog.base_url = blog.url.replace('http://', '').\
 							replace('https://', '').replace('www.', '')
-		blogs.add(blog)
+		if blog.id not in blogs_ids and blog.user_id not in users_ids:
+			blogs.add(blog)
+			users_ids.add(blog.user_id)
+			blogs_ids.add(blog.id)
 
 
 	feeds_read = 0
