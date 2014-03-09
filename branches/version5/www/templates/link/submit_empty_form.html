@@ -22,7 +22,7 @@ img1.src = img_src1;
 
 <div class="genericform">
 <fieldset><legend><span class="sign">{% trans _('dirección de la historia') %}</span></legend>
-<form action="submit.php" method="post" id="thisform" onSubmit="$('#working').html('{% trans _('verificando') %}...&nbsp;<img src=\'' + img_src1 + '\'/>'); return true;">
+<form action="submit" method="post" id="thisform" onSubmit="$('#working').html('{% trans _('verificando') %}...&nbsp;<img src=\'' + img_src1 + '\'/>'); return true;">
 <p><label for="url">{% trans _('url') %}:</label><br />
 
 <input type="url" name="url" id="url" placeholder="http://"

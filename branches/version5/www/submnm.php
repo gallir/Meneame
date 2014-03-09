@@ -24,7 +24,7 @@ if (! isset($routes[$path[2]]) || in_array($path[2], $forbidden_routes)) {
 
 $globals['path'] = array_slice($path, 2);
 $globals['base_url'] .= $path[0] . '/' . $path[1] . '/';
-$res = include './'.$routes[$path[2]];
+$res = @include './'.$routes[$path[2]];
 if ($res === FALSE) {
 	not_found($path[1]);
 }

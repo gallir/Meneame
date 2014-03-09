@@ -292,7 +292,7 @@ if ($links) {
 		//echo '<wfw:comments>'.$link->comments().'</wfw:comments>';
 		// echo "		<trackback:ping>".get_trackback($link->id)."</trackback:ping>\n";  // no standard
 		//echo "<content:encoded><![CDATA[ ]]></content:encoded>\n";
-		echo '		<wfw:commentRss>http://'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'</wfw:commentRss>';
+		echo '		<wfw:commentRss>http://'.get_server_name().$globals['base_url'].'comments_rss?id='.$link->id.'</wfw:commentRss>';
 		echo "	</item>\n\n";
 	}
 }

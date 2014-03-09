@@ -1270,7 +1270,7 @@ var fancyBox = new function () {
 			/* It's a link, call go.php */
 			var link = linkId[1];
 			onLoad = function() {
-				$.get(base_url + 'go.php?quiet=1&id='+link);
+				$.get(base_url_sub + 'go?quiet=1&id='+link);
 			};
 		}
 
@@ -1346,7 +1346,7 @@ var fancyBox = new function () {
 			for (var i=0; i < a.length; i++) {
 				field = a[i];
 				var counter = (data && data[field]) ? data[field] : 0;
-				$e.append("<div class='"+field+"'><a href='"+base_url+"go.php?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
+				$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
 			}
 			$e.show();
 			check_counter = 0;
@@ -1647,7 +1647,7 @@ function analyze_hash(force) {
 		if (e.type != "click") {
 			if ($a.data('done')) return true;
 			if ((m = aClass.match(/l:(\d+)/)) && ! aClass.match(/tooltip/) ) {
-				$a.attr('href', base_url + "go.php?id=" + m[1]);
+				$a.attr('href', base_url_sub + "go?id=" + m[1]);
 				$a.data('done', 1);
 				$a.data('real_href', href);
 			}

@@ -722,7 +722,7 @@ function meta_get_current() {
 
 	//Check for personalisation
 	// Authenticated users
-	if ($current_user->user_id > 0) {
+	if (empty($globals['submnm']) && $current_user->user_id > 0) {
 		$categories = $db->get_col("SELECT SQL_CACHE pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category_".SitesMgr::my_id()."' order by pref_value");
 		if ($categories) {
 			// The user has selected categories
@@ -769,7 +769,7 @@ function meta_get_current() {
 		}
 	}
 
-	if ($globals['meta_current'] > 0) {
+	if (empty($globals['submnm']) && $globals['meta_current'] > 0) {
 		$globals['meta_categories'] = implode(',', SitesMgr::get_category_ids($globals['meta_current']));
 		if (!$globals['meta_categories']) {
 			$globals['meta_current'] = 0;

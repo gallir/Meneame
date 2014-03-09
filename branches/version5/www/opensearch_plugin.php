@@ -18,9 +18,9 @@ echo '<Image height="16" width="16">http://'.get_static_server_name().$globals['
 echo '<Url type="text/html" method="GET" template="http://'.get_server_name().$globals['base_url'].'search.php">'."\n";
 echo '<Param name="q" value="{searchTerms}"/>'."\n";
 echo '</Url>'."\n";
-echo '<Url type="application/rss+xml" template="http://'.get_server_name().$globals['base_url'].'rss2.php">'."\n";
+echo '<Url type="application/rss+xml" template="http://'.get_server_name().$globals['base_url'].'rss">'."\n";
 echo '<Param name="q" value="{searchTerms}"/>'."\n";
 echo '</Url>'."\n";
-echo '<SearchForm>http://'.get_server_name().$globals['base_url'].'search.php</SearchForm>'."\n";
+echo '<SearchForm>http://'.get_server_name().$globals['base_url'].'search</SearchForm>'."\n";
 echo '</OpenSearchDescription>'."\n";
 ?>

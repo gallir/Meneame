@@ -62,18 +62,13 @@ function do_header($title, $id='home', $options = false) {
 	if(!empty($globals['link_id'])) {
 		// Pingback autodiscovery
 		// http://www.hixie.ch/specs/pingback/pingback
-		header('X-Pingback: http://' . get_server_name() . $globals['base_url'] . 'xmlrpc.php');
+		header('X-Pingback: http://' . get_server_name() . $globals['base_url_general'] . 'xmlrpc.php');
 	}
 
 	$globals['security_key'] = get_security_key();
 	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
-
-/*
-	if ($globals['greetings']) $greeting = array_rand($globals['greetings'], 1);
-	else $greeting = _('hola');
-*/
 
 	if (! is_array($options)) {
 		$left_options = array();
@@ -129,7 +124,7 @@ function do_footer_menu() {
 	return Haanga::Load('footer_menu.html');
 }
 
-function do_rss_box($search_rss = 'rss2.php') {
+function do_rss_box($search_rss = 'rss') {
 	global $globals, $current_user;
 
 	if ($globals['mobile']) return;

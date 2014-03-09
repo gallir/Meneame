@@ -39,14 +39,14 @@ do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
 
 switch ($_REQUEST['w']) {
 	case 'posts':
-		$rss_program = 'sneakme_rss2.php';
+		$rss_program = 'sneakme_rss';
 		break;
 	case 'comments':
-		$rss_program = 'comments_rss2.php';
+		$rss_program = 'comments_rss';
 		break;
 	case 'links':
 	default:
-		$rss_program = 'rss2.php';
+		$rss_program = 'rss';
 }
 
 /*** SIDEBAR ****/

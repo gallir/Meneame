@@ -135,7 +135,7 @@ exit(0);
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile'] || (!empty($globals['submnm']) && ! $current_user->user_id)) return;
 
 	$items = array();
 	if (isset($current_user->has_personal)) {
@@ -143,8 +143,7 @@ function print_index_tabs($option=-1) {
 	}
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
 
-	$metas = SitesMgr::get_metas();
-	if ($metas) {
+	if (empty($globals['submnm']) && ($metas = SitesMgr::get_metas())) {
 		foreach ($metas as $meta) {
 			$items[] = array(
 				'id'  => 9999, /* fake number */

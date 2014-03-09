@@ -12,40 +12,40 @@
         {% if globals.link_id %}
             {% if globals.link.meta_name %}
             <li>
-			    <a href="{{globals.base_url}}rss2.php?meta={{globals.link.meta_id}}&amp;status=all" >{% trans _('temática') %}: <em>{{ globals.link.meta_name }}</em></a>
+			    <a href="{{globals.base_url}}rss?meta={{globals.link.meta_id}}&amp;status=all" >{% trans _('temática') %}: <em>{{ globals.link.meta_name }}</em></a>
             </li>
             {% endif %}
             {% if globals.link.category_name %}
             <li>
-			    <a href="{{globals.base_url}}rss2.php?category={{globals.link.category}}&amp;status=all" >{% trans _('categoría') %}: <em>{% trans globals.link.category_name %}</em></a>
+			    <a href="{{globals.base_url}}rss?category={{globals.link.category}}&amp;status=all" >{% trans _('categoría') %}: <em>{% trans globals.link.category_name %}</em></a>
             </li>
             {% endif %}
         {% endif %}
         <li>
-	        <a href="{{globals.base_url}}rss2.php" >{% trans _('publicadas') %}</a>
+	        <a href="{{globals.base_url}}rss" >{% trans _('publicadas') %}</a>
         </li>
         <li>
-	        <a href="{{globals.base_url}}rss2.php?status=queued" >{% trans _('en cola') %}</a>
+	        <a href="{{globals.base_url}}rss?status=queued" >{% trans _('en cola') %}</a>
         </li>
         {% if globals.link_id %}
 		<li>
-		<a href="{{globals.base_url}}comments_rss2.php?id={{globals.link_id}}" >
+		<a href="{{globals.base_url}}comments_rss?id={{globals.link_id}}" >
             {% trans _('comentarios de esta noticia') %}
         </a>
 		</li>
         {% endif %}
         {% if current_user.user_id > 0 %}
         <li>
-		<a href="{{globals.base_url}}comments_rss2.php?conversation_id={{current_user.user_id}}"  title="{% trans _('comentarios de las noticias donde has comentado') %}">
+		<a href="{{globals.base_url}}comments_rss?conversation_id={{current_user.user_id}}"  title="{% trans _('comentarios de las noticias donde has comentado') %}">
             {% trans _('mis conversaciones') %}
         </a>
         </li>
         <li>
-		    <a href="{{globals.base_url}}comments_rss2.php?author_id={{current_user.user_id}}" >{% trans _('comentarios a mis noticias') %}</a>
+		    <a href="{{globals.base_url}}comments_rss?author_id={{current_user.user_id}}" >{% trans _('comentarios a mis noticias') %}</a>
         </li>
         {% endif %}
 	    <li>
-	        <a href="{{ globals.base_url }}comments_rss2.php" >{% trans _('todos los comentarios') %}</a>
+	        <a href="{{ globals.base_url }}comments_rss" >{% trans _('todos los comentarios') %}</a>
 	    </li>
         </ul>
     </div>

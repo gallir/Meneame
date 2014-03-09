@@ -50,11 +50,7 @@ if ($id > 0) {
 				&& $current_user->user_id > 0
 				&& User::get_pref($current_user->user_id, 'use_bar')
 				&& $db->get_var("select blog_type from blogs where blog_id = $l->blog") != 'noiframe') {
-				if ($globals['base_bar_url']) {
-					$url = $globals['base_url'] . $globals['base_bar_url'] . $id;
-				} else {
-					$url = $globals['base_url'] . "bar.php?id=$id";
-				}
+				$url = $globals['base_url'] . 'b/' . $id;
 				do_redirection($url, 307);
 			} else {
 				do_redirection($l->url);

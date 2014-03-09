@@ -2,7 +2,7 @@
 
 	<div class="genericform">
 
-	<form action="submit.php" method="post" id="thisform" name="thisform">
+	<form action="submit" method="post" id="thisform" name="thisform">
 	<input type="hidden" name="url" id="url" value="{{ link.url | escape }}" />
 	<input type="hidden" name="phase" value="2" />
 	<fieldset><legend><span class="sign">{% trans _('información del enlace') %}</span></legend>
@@ -13,7 +13,7 @@
 {% else %}
 	<h2>{% trans _('editar noticia') %}</h2>
 	<div class="genericform">
-	<form action="editlink.php?user={{ current_user.user_id }}" method="post" id="thisform" name="thisform">
+	<form action="editlink?user={{ current_user.user_id }}" method="post" id="thisform" name="thisform">
 	<input type="hidden" name="phase" value="1" />
 {% endif %}
 

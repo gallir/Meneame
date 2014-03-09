@@ -79,7 +79,7 @@ switch ($argv[0]) {
 		$rows = Post::count();
 		$min_date = date("Y-m-d 00:00:00", time() - 86400*10);
 		//$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
-		$rss_option="sneakme_rss2.php";
+		$rss_option="sneakme_rss";
 		break;
 
 	default:
@@ -121,7 +121,7 @@ switch ($argv[0]) {
 					$order_by = "ORDER BY post_id desc";
 					$limit = "LIMIT $offset,$page_size";
 					$rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0");
-					$rss_option="sneakme_rss2.php?friends_of=$user->id";
+					$rss_option="sneakme_rss?friends_of=$user->id";
 					break;
 
 				case '_favorites':
@@ -133,7 +133,7 @@ switch ($argv[0]) {
 					$order_by = "ORDER BY post_id desc";
 					$limit = "";
 					$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post'");
-					$rss_option="sneakme_rss2.php?favorites_of=$user->id";
+					$rss_option="sneakme_rss?favorites_of=$user->id";
 					break;
 
 				case '_conversation':
@@ -145,7 +145,7 @@ switch ($argv[0]) {
 					$order_by = "ORDER BY post_id desc ";
 					$limit = "";
 					$rows = -1; // $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
-					$rss_option="sneakme_rss2.php?conversation_of=$user->id";
+					$rss_option="sneakme_rss?conversation_of=$user->id";
 					break;
 
 				default:
@@ -156,7 +156,7 @@ switch ($argv[0]) {
 					$order_by = "ORDER BY post_id desc";
 					$limit = "LIMIT $offset,$page_size";
 					$rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
-					$rss_option="sneakme_rss2.php?user_id=$user->id";
+					$rss_option="sneakme_rss?user_id=$user->id";
 			}
 		}
 }

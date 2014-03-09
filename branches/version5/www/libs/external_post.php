@@ -120,7 +120,7 @@ function pubsub_post() {
 	global $globals;
 
 	if (! $globals['pubsub']) return false;
-	$rss = 'http://'.get_server_name().$globals['base_url'].'rss2.php';
+	$rss = 'http://'.get_server_name().$globals['base_url'].'rss';
 	$p = new Publisher($globals['pubsub']);
 	if ($p->publish_update($rss)) {
 		syslog(LOG_NOTICE, "Meneame: posted to pubsub ($rss)");

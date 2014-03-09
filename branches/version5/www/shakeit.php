@@ -80,10 +80,6 @@ switch ($globals['meta']) {
 		if ($globals['meta_current'] > 0) {
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
 			$rows = -1;
-/*
-			if ($cat) $rows = Link::count('queued', $cat);
-			else $rows = Link::count('queued', $globals['meta_categories']);
-*/
 			$where = "status='queued' and date > $from_time and category in (".$globals['meta_categories'].") ";
 			$tab = false;
 		} else {
@@ -150,8 +146,8 @@ function print_shakeit_tabs($option=-1) {
 	}
 	$items[] = array('id' => 1, 'url' => 'queue'.$globals['meta_skip'], 'title' => _('todas'));
 
-	if (! $globals['mobile']) {
-	$metas = SitesMgr::get_metas();
+	if (empty($globals['submnm']) && ! $globals['mobile']) {
+		$metas = SitesMgr::get_metas();
 		if ($metas) {
 			foreach ($metas as $meta) {
 				$items[] = array(

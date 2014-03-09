@@ -361,7 +361,7 @@ function do_submit1() {
 	if ($same_blog > 0 && $current_user->user_karma < 12) {
 		syslog(LOG_NOTICE, "Meneame, forbidden due to short period between links to same site ($current_user->user_login): $link->url");
 		add_submit_error( _('ya has enviado un enlace al mismo sitio hace poco tiempo'),
-			_('debes esperar'). " $minutes " . _('minutos entre cada envío al mismo sitio.') . ', ' . '<a href="'.$globals['base_url'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a>');
+			_('debes esperar'). " $minutes " . _('minutos entre cada envío al mismo sitio.') . ', ' . '<a href="'.$globals['base_url_general'].'faq-'.$dblang.'.php">'._('lee el FAQ').'</a>');
 		return false;
 	}
 

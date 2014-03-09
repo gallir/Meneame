@@ -256,7 +256,7 @@ function do_profile() {
 	}
 
 	$selected  = 0;
-	$rss	   = 'rss2.php?sent_by='.$user->id;
+	$rss	   = 'rss?sent_by='.$user->id;
 	$rss_title = _('envíos en rss2');
 	$geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
 	$show_email = $current_user->user_id > 0 && !empty($user->public_info) &&
@@ -331,7 +331,7 @@ function do_history () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 0,
-		'rss2.php?sent_by='.$user->id, _('envíos en rss2'));
+		'rss?sent_by='.$user->id, _('envíos en rss2'));
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -350,7 +350,7 @@ function do_favorites () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 2,
-		'rss2.php?favorites='.$user->id.'&amp;option=favorites&amp;url=source', _('favoritos en rss2'));
+		'rss?favorites='.$user->id.'&amp;option=favorites&amp;url=source', _('favoritos en rss2'));
 	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
@@ -369,7 +369,7 @@ function do_shaken () {
 	if ($globals['bot']) return;
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 1,
-		'rss2.php?voted_by='.$user->id, _('votadas en rss2'));
+		'rss?voted_by='.$user->id, _('votadas en rss2'));
 	$link = new Link;
 	$rows = -1; //$db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
 	$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
@@ -421,7 +421,7 @@ function do_commented () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 0,
-		'comments_rss2.php?user_id='.$user->id, _('comentarios en rss2'));
+		'comments_rss?user_id='.$user->id, _('comentarios en rss2'));
 	$rows = -1; // $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
 	if ($comments) {
@@ -433,7 +433,7 @@ function do_conversation () {
 	global $db, $rows, $user, $offset, $page_size, $globals, $current_user;
 
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1,
-		'comments_rss2.php?answers_id='.$user->id, _('conversación en rss2'));
+		'comments_rss?answers_id='.$user->id, _('conversación en rss2'));
 	$rows = -1; //$db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$conversation = "SELECT distinct(conversation_from) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment' ORDER BY conversation_time desc LIMIT $offset,$page_size";
 	
@@ -553,7 +553,7 @@ function do_friends($option) {
 			do_user_subheader($header_options, $option);
 			break;
 		default:
-			do_user_subheader($header_options, $option, 'rss2.php?friends_of='.$user->id, _('envíos de amigos en rss2'));
+			do_user_subheader($header_options, $option, 'rss?friends_of='.$user->id, _('envíos de amigos en rss2'));
 			$prefered_type = 'from';
 	}
 	echo '<div style="padding: 5px 0px 10px 5px">';
@@ -583,7 +583,7 @@ function do_categories() {
 		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
 	}
 
-	do_user_subheader($options, 1, 'rss2.php?personal='.$user->id, _('categorías personalizadas en rss2'));
+	do_user_subheader($options, 1, 'rss?personal='.$user->id, _('categorías personalizadas en rss2'));
 
 	if (is_array($_POST['categories'])) {
 		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category_".SitesMgr::my_id()."'");

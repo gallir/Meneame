@@ -164,7 +164,7 @@ class Link extends LCPBase {
 			}
 		}
 		$visited[] = $id;
-		setcookie('v', implode('x', $visited), 0, $globals['base_url'], UserAuth::domain());
+		setcookie('v', implode('x', $visited), 0, $globals['base_url_general'], UserAuth::domain());
 		return $found !== false;
 	}
 
@@ -1016,7 +1016,7 @@ class Link extends LCPBase {
 
 	function get_trackback() {
 		global $globals;
-		return "http://".get_server_name().$globals['base_url'].'trackback.php?id='.$this->id;
+		return "http://".get_server_name().$globals['base_url_general'].'trackback.php?id='.$this->id;
 	}
 
 	function get_status_text($status = false) {

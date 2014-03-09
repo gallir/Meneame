@@ -9,22 +9,10 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-if (!isset($_REQUEST['id']) && $globals['base_bar_url'] && $_SERVER['PATH_INFO']) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	$url_args = array_splice($url_args, 2);
-	$id = intval($url_args[0]);
-} else {
-	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	$id=intval($url_args[0]);
-	if($id > 0 && $globals['base_bar_url']) {
-		// Redirect to the right URL if the link has a "semantic" uri
-		header ('HTTP/1.1 301 Moved Permanently');
-		header('Location: ' . $globals['base_url'] . $globals['base_bar_url'] . $id);
-		die;
-	}
-}
+$url_args = $globals['path'];
+$id = intval($globals['path'][1]);
 
-if (! ($link = Link::from_db($id))) {
+if (! $id > 0 || ! ($link = Link::from_db($id))) {
 	do_error(_('enlace no encontrado'), 404);
 }
 
@@ -51,5 +39,4 @@ $globals['extra_css'] = 'bar.css';
 do_header($link->title, 'post');
 
 Haanga::Load("link_bar.html", $vars);
-
 
