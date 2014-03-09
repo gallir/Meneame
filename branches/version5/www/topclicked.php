@@ -108,7 +108,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li'.$active.'><a href="topclicked.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="top_visited?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }
