@@ -12,20 +12,7 @@ include(mnminclude.'html1.php');
 $page_size = $globals['page_size'] * 3;
 $comment = new Comment;
 
-if (!isset($_REQUEST['id']) && $globals['base_comment_url'] && $_SERVER['PATH_INFO']) {
-	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
-	$url_args = array_slice($url_args, 2); // Discard "/" and "c"
-	$comment->id = intval($url_args[0]);
-} else {
-	$url_args = preg_split('/\/+/', $_REQUEST['id']);
-	$comment->id=intval($url_args[0]);
-	if($comment->id > 0 && $globals['base_comment_url']) {
-		// Redirect to the right URL if the link has a "semantic" uri
-		header ('HTTP/1.1 301 Moved Permanently');
-		header('Location: ' . $comment->get_relative_individual_permalink());
-		die;
-	}
-}
+$comment->id = intval($globals['path'][1]);
 
 if (!$comment->read()) {
 	do_error(_('comentario no encontrado'), 404);

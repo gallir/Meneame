@@ -1,5 +1,5 @@
 <?
-#phpinfo();
+#phpinfo(); return 1;
 
 $routes = array(
 	''			=> 'index.php',
