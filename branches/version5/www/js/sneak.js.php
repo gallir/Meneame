@@ -107,6 +107,7 @@ function get_data() {
 	options.k=mykey;
 	options.time=ts;
 	options.v=my_version;
+	options.site_id=site_id;
 	options.r=total_requests;
 	var date_object = new Date();
 	if(comment.length > 0) {

@@ -5,7 +5,7 @@
 // You can get copies of the licenses here:
 //				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include('config.php');
+include_once('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 include(mnminclude.'favorites.php');
@@ -18,7 +18,7 @@ if ($globals['bot'] && get_current_page() > 2) {
 
 $offset=(get_current_page()-1)*$page_size;
 
-if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
+if (!empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
 	array_shift($url_args);
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
@@ -32,7 +32,7 @@ if (!empty($globals['base_user_url']) && !empty($_SERVER['PATH_INFO'])) {
 } else {
 	$_REQUEST['login'] = clean_input_string($_REQUEST['login']);
 	$_REQUEST['uid'] = intval($_REQUEST['uid']);
-	if (!empty($globals['base_user_url']) && !empty($_REQUEST['login'])) {
+	if (!empty($_REQUEST['login'])) {
 		header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view']))));
 		die;
 	}

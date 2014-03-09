@@ -379,9 +379,9 @@ function get_auth_link() {
 		} else {
 			$path = '';
 		}
-		return 'https://'.$globals['ssl_server'].$globals['base_url'].$path;
+		return 'https://'.$globals['ssl_server'].$globals['base_url_general'].$path;
 	} else {
-		return $globals['base_url'];
+		return $globals['base_url_general'];
 	}
 }
 
@@ -397,13 +397,13 @@ function check_auth_page() {
 			} else {
 				$host = $_SERVER["SERVER_NAME"];
 			}
-			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url_general'], UserAuth::domain());
 			header('HTTP/1.1 302 Moved');
 			header('Location: http://'.$host.$_SERVER["REQUEST_URI"]);
 			die;
 		}
 	} elseif ($globals['ssl_server'] && $globals['secure_page']) {
-		setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
+		setcookie('return_site', get_server_name(), 0, $globals['base_url_general'], UserAuth::domain());
 		header('HTTP/1.1 302 Moved');
 		header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
 		die;
@@ -439,13 +439,8 @@ function check_form_auth_ip() {
 function get_user_uri($user, $view='') {
 	global $globals;
 
-	if (!empty($globals['base_user_url'])) {
-		$uri= $globals['base_url'] . $globals['base_user_url'] . htmlspecialchars($user);
-		if (!empty($view)) $uri .= "/$view";
-	} else {
-		$uri = $globals['base_url'].'user.php?login='.htmlspecialchars($user);
-		if (!empty($view)) $uri .= "&amp;view=$view";
-	}
+	$uri= $globals['base_url_general'] . 'user/' . htmlspecialchars($user);
+	if (!empty($view)) $uri .= "/$view";
 	return $uri;
 }
 
@@ -455,27 +450,15 @@ function get_user_uri_by_uid($user, $view='') {
 	$uid = guess_user_id($user);
 	if ($uid == 0) $uid = -1; // User does not exist, ensure it will give error later
 	$uri = get_user_uri($user, $view);
-	if (!empty($globals['base_user_url'])) {
-		$uri .= "/$uid";
-	} else {
-		$uri .= "&amp;uid=$uid";
-	}
+	$uri .= "/$uid";
 	return $uri;
 }
 
 function post_get_base_url($option='', $give_base=true) {
 	global $globals;
-	if ($give_base) $base = $globals['base_url'];
+	if ($give_base) $base = $globals['base_url_general'];
 	else $base = '';
-	if (empty($globals['base_sneakme_url'])) {
-		if (empty($option)) {
-			return $base.'sneakme/';
-		} else {
-			return $base.'sneakme/?id='.$option;
-		}
-	} else {
-		return $base.$globals['base_sneakme_url'].$option;
-	}
+	return $base.'notame/'.$option;
 }
 
 function get_avatar_url($user, $avatar, $size, $fullurl = true) {
@@ -492,7 +475,7 @@ function get_avatar_url($user, $avatar, $size, $fullurl = true) {
 		} elseif ($globals['cache_dir']) {
 
 			if ($fullurl) $base = $globals['base_static_noversion'];
-			else $base = $globals['base_url'];
+			else $base = $globals['base_url_general'];
 
 			$file = Upload::get_cache_relative_dir($user) ."/$user-$avatar-$size.jpg";
 			$file_path = mnmpath.'/'.$file;
@@ -500,7 +483,7 @@ function get_avatar_url($user, $avatar, $size, $fullurl = true) {
 				if (is_readable($file_path)) {
 					return $base . $file;
 				} else {
-					return $globals['base_url'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
+					return $globals['base_url_general'] . "backend/get_avatar.php?id=$user&amp;size=$size&amp;time=$avatar";
 				}
 			} else {
 				return $base . $file;
@@ -802,7 +785,7 @@ function fork($uri) {
 	$sock = @fsockopen(get_server_name(), $_SERVER['SERVER_PORT'], $errno, $errstr, 0.01 );
 
 	if ($sock) {
-		@fputs($sock, "GET {$globals['base_url']}$uri HTTP/1.0\r\n" . "Host: {$_SERVER['SERVER_NAME']}\r\n\r\n");
+		@fputs($sock, "GET {$globals['base_url_general']}$uri HTTP/1.0\r\n" . "Host: {$_SERVER['SERVER_NAME']}\r\n\r\n");
 		return true;
 	}
 	return false;
@@ -1267,7 +1250,7 @@ function print_oauth_icons($return = false) {
 			$text = _('login con Twitter');
 		}
 		if ($title) {
-			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+			echo '<a href="'.$globals['base_url_general'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
 			echo '<img src="'.$globals['base_static'].'img/external/signin-twitter2.png" width="89" height="21" alt=""/></a>';
 		}
 	}
@@ -1285,7 +1268,7 @@ function print_oauth_icons($return = false) {
 			$text = _('login con Facebook');
 		}
 		if ($title) {
-			echo '<a href="'.$globals['base_url'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
+			echo '<a href="'.$globals['base_url_general'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
 			echo '<img src="'.$globals['base_static'].'img/external/signin-fb.gif" width="89" height="21" alt=""/></a>';
 		}
 	}
@@ -1303,7 +1286,7 @@ function print_oauth_icons($return = false) {
 			$text = _('login con Google+');
 		}
 		if ($title) {
-			echo '<a href="'.$globals['base_url'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+			echo '<a href="'.$globals['base_url_general'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
 			echo '<img src="'.$globals['base_static'].'img/external/signin-gplus.png" width="89" height="21" alt=""/></a>';
 		}
 	}
@@ -1315,7 +1298,7 @@ function backend_call_string($program,$type,$page,$id) {
 	// it generates the string to link to a backend program given its arguments
 	global $globals;
 
-	return $globals['base_url']."backend/$program?id=$id&amp;p=$page&amp;type=$type&amp;key=".$globals['security_key'];
+	return $globals['base_url_general']."backend/$program?id=$id&amp;p=$page&amp;type=$type&amp;key=".$globals['security_key'];
 }
 
 function check_load($max=4) {

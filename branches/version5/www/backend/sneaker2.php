@@ -6,6 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+
 include('../config.php');
 include_once(mnminclude.'sneak.php');
 include_once(mnminclude.'ban.php');
@@ -36,6 +37,10 @@ if(!($time_f=floatval($_REQUEST['time'])) > 0 || $now-$time_f > 1200) {
 $time = intval($time_f);
 $dbtime = date("YmdHis", intval($time));
 $last_timestamp = $time_f;
+
+if (! empty($_REQUEST['site_id']) && $_REQUEST['site_id'] > 0) {
+	$globals['site_id'] = intval($_REQUEST['site_id']);
+}
 
 if(!empty($_REQUEST['items']) && intval($_REQUEST['items']) > 0) {
 	$max_items = intval($_REQUEST['items']);
