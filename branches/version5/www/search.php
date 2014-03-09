@@ -24,27 +24,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'search.php');
 
-// Manage "search" url and redirections accordingly
-if (!empty($globals['base_search_url'])) {
-	if (!empty($_SERVER['PATH_INFO']) ) {
-		$q = preg_quote($globals['base_url'].$globals['base_search_url']);
-		if(preg_match("{^$q}", $_SERVER['SCRIPT_URL'])) {
-			$_REQUEST['q'] = urldecode(substr($_SERVER['PATH_INFO'], 1));
-		}
-	} elseif (!empty($_REQUEST['q'])) {
-		$_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 300);
-		if (!preg_match('/\//', $_REQUEST['q']) ) {  // Freaking Apache rewrite that translate //+ to just one /
-														// for example "http://" is converted to http:/
-														// also it cheats the paht_info and redirections, so don't redirect
-			header('Location: http://'. get_server_name().$globals['base_url'].$globals['base_search_url'].urlencode($_REQUEST['q']));
-			die;
-		}
-	} elseif (isset($_REQUEST['q'])) {
-		header('Location: http://'. get_server_name().$globals['base_url']);
-		die;
-	}
-}
-
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
