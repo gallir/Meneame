@@ -25,7 +25,7 @@ $routes = array(
 	'top_comments'	=> 'topcomments.php',
 	'top_users'		=> 'topusers.php',
 	'top_commented'	=> 'topcommented.php',
-	'trends'	=> 'trends/index.php',
+	'trends'	=> 'trends.php',
 	'notame'	=> 'sneakme/dispatcher.php',
 	'mobile'	=> 'mobile/dispatcher.php',
 );
