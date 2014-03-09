@@ -47,13 +47,13 @@
 	<meta property="og:description" content="{{ globals.description }}">
 {% endif %}
 
-<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url }}opensearch_plugin.php"/>
-<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss2.php?status=queued" />
-<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss2.php" />
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url_general }}opensearch_plugin.php"/>
+<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss?status=queued" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss" />
 
 {% if globals.link %}
-	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url }}xmlrpc.php"/>
+	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url_general }}xmlrpc.php"/>
 	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
 {% endif %}
 
@@ -65,7 +65,7 @@
 
 
 {% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_url }}v_{{ globals.v }}/css/{{globals.css_main}}"/>
+	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}"/>
 {% endif %}
 
 {% for css in globals.extra_css %}
@@ -86,7 +86,7 @@
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
 {#
-<script src="{{ globals.base_url }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url_general }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script>
 #}
 
 {% if globals.extra_head %}
@@ -99,7 +99,7 @@
 <div id="header-top">
   <div id="nav-menu"></div>
 
-  <a href="{{ globals.base_url }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
+  <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
 
 	{% if not globals.mobile %}
 		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>

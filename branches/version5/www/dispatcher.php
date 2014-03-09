@@ -16,8 +16,11 @@ $routes = array(
 	'legal'		=> 'legal.php',
 	'b'			=> 'bar.php',
 	'c'			=> 'comment.php',
+	'm'			=> 'submnm.php',
 	'user'		=> 'user.php',
 	'search'	=> 'search.php',
+	'rss'		=> 'rss2.php',
+	'comments_rss'	=> 'comments_rss2.php',
 	'sneak'		=> 'sneak.php',
 	'popular'	=> 'topstories.php',
 	'top_visited'	=> 'topclicked.php',
@@ -30,7 +33,11 @@ $routes = array(
 	'mobile'	=> 'mobile/dispatcher.php',
 );
 
-$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
+$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
 
-@include($routes[$path[0]]);
+$res = include './'.$routes[$path[0]];
+if ($res === FALSE) {
+	include_once 'config.php';
+	not_found();
+}
 

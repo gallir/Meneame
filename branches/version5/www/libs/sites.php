@@ -16,10 +16,12 @@ class SitesMgr {
 		if ($id > 0) {
 			self::$id = $id;
 		} elseif (!isset($globals['site_id'])) {
+			if (empty($globals['site_shortname'])) {
+				echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
+			}
 			$res = $db->get_row("select id, parent from subs where name = '".$globals['site_shortname']."'");
 			self::$id = $res->id;
 			self::$parent = $res->parent;
-			if (! self::$id) echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 		} else {
 			self::$id = $globals['site_id'];
 		}

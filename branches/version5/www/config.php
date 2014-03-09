@@ -24,6 +24,9 @@
 // and/or "local.php"
 // They are automatically included
 //
+
+if (defined("mnmpath")) return TRUE; // If not "included_once"
+
 // WARN WARNING ALERT: we use $_SERVER['SERVER_NAME'] which is the first
 // server_name in NGInx and other servers
 // $globals['server_name']	= $_SERVER['SERVER_NAME'];

@@ -78,21 +78,6 @@ if($_SERVER['HTTP_HOST']) {
 		$globals['mobile'] = 0;
 	}
 
-	// Check the user's referer.
-	/* Not used, save CPU cycles
-	if( !empty($_SERVER['HTTP_REFERER'])) {
-		if (preg_match('/http:\/\/'.preg_quote($_SERVER['HTTP_HOST']).'/', $_SERVER['HTTP_REFERER'])) {
-			$globals['referer'] = 'local';
-		} elseif (preg_match('/q=|search/', $_SERVER['HTTP_REFERER']) ) {
-			$globals['referer'] = 'search';
-		} else {
-			$globals['referer'] = 'remote';
-		}
-	} else {
-		$globals['referer'] = 'unknown';
-	}
-	*/
-
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
 	if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
@@ -103,6 +88,8 @@ if($_SERVER['HTTP_HOST']) {
 } else {
 	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
 }
+
+$globals['base_url_general'] = $globals['base_url']; // Keep the original if it's modified in submnms
 
 if (!empty($globals['static_server']) && ! $globals['https']) {
 	$globals['base_static_noversion'] = $globals['static_server'].$globals['base_url'];
