@@ -134,6 +134,12 @@
 
 <div id="header">
 <div id="header-center">
+{% if globals.submnm %}
+  <a href="{{ globals.base_url }}" class="logo-eli" title="{{ globals.site_shortname }}">{{ globals.site_shortname }}</a>
+  <div class="edname">
+	<b>{{ globals.site_shortname }}</b>: {{ this_site.name_long }}
+  </div>
+{% else %}
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>
   <div class="edname">
 	{% trans _('edición') %} <b>{{ this_site.name_long }}</b>
@@ -147,6 +153,7 @@
 		{% endif %}
 	{% endif %}
 	</div>
+{% endif %}
 
 <!--search-->
   <div id="searchform" class="searchform">
