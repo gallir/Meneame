@@ -126,6 +126,8 @@ function promote($site_id) {
 		$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br/>";
 		//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 	}
+
+	$meta_coef[0] = 1;
 	foreach ($meta_coef as $m => $v) {
 		if ($v == 0) $v = 1;
 		$meta_coef[$m] = max(min($meta_avg/$v, 1.5), 0.7);
