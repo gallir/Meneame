@@ -1,0 +1,94 @@
+<div class="commentform" id="edit-form" style="text-align:left">
+<fieldset><legend><span class="sign">
+{% if self.id > 0 %}
+	{% trans _('edición') %}
+{% else %}
+	{% trans _('nuevo mensaje') %}
+{% endif %}
+</span></legend>
+
+
+<form action="{{ globals.base_url }}backend/priv_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
+{% exec print_simpleformat_buttons 'post' as dummy %}
+<input type="hidden" name="key" value="{{ self.randkey }}" />
+<input type="hidden" name="id" value="{{ self.id }}" />
+<input type="hidden" name="author" value="{{ self.author }}" />
+<label>{% trans _('A:') %}</label>&nbsp;<img id="to_user_avatar"
+	{% if self.to > 0 %}
+		src="{{ globals.base_url }}backend/get_avatar.php?user={{ self.to_username }}&amp;size=25"
+		style="vertical-align:text-bottom"
+	{% else %}
+		src="{% exec get_no_avatar_url 25 %}"
+		style="vertical-align:text-bottom;visibility:hidden"
+	{% endif %}
+	class="avatar"
+ 	width="25" height="25"/>
+
+<input type="text" name="to_user" id="to_user"
+	{% if self.to > 0 %}
+		readonly value="{{ self.to_username }}"
+	{% else %}
+		 class="ac_user"
+	{% endif %}
+/>
+
+<textarea style="clear: both" name="post" rows="5" cols="40" id="post" class="droparea"
+{% if ! globals.mobile %}
+	onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
+{% endif %}
+>{{ self.content }}</textarea>
+
+
+<div style="margin-top:-7px">
+{% if ! globals.mobile %}
+	<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
+	<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
+{% endif %}
+
+<input class="button" type="submit" value="{% trans _('enviar') %}" style="float:right"/>
+
+{% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
+	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+	<br clear="right"/>
+	<div>
+	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
+	{% if globals.mobile %}
+	style="width:100%"
+	{% endif %}
+	/>
+	</label>
+
+	<div class="droparea_info" style="min-height:50px"></div>
+
+	</div>
+{% endif %}
+
+
+</div>
+
+</form>
+</fieldset>
+</div>
+
+<script type="text/javascript">
+$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
+
+var ac_minChars = 2;
+var ac_friends = true;
+
+{# prepare form`s options #}
+var options = {
+	async: false,
+	success: function(response) {
+		if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
+		else {
+			$('#cboxLoadedContent').html(response).trigger('DOMChanged', $('#cboxLoadedContent'));
+		}
+	}
+};
+$('#thisform{{ self.id }}').ajaxForm(options);
+{% if  ! self.to > 0 %}
+	$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
+{% endif %}
+</script>
+

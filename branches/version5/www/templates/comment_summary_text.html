@@ -1,0 +1,42 @@
+{% if self.url %}
+	<a href="{{ self.url }}"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
+{% else %}
+	{% if self.link_permalink %}
+		<a href="{{ self.link_permalink }}/c0{{ self.c_order }}#c-{{ self.c_order }}" rel="nofollow"><strong>#{{ self.c_order }}</strong></a>&nbsp;&nbsp;
+	{% else %}
+		<strong>#{{ self.c_order }}</strong>&nbsp;&nbsp;
+	{% endif %}
+{% endif %}
+
+{% if self.hide_comment %}
+	&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
+{% else %}
+
+	{{ self.txt_content }}
+
+	{% if self.media_size > 0 %}
+		&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
+		{% if globals.cache_redirector %}
+			class="thumb ok lazy"
+			data-src="{{ self.media_thumb_dir }}/media_thumb-comment-{{ self.id }}.jpg?{{ self.media_date }}"
+			data-2x="s:thumb:thumb_2x"
+		{% else %}
+			class="thumb"
+			data-src="img/common/picture01.png" width="30" height="24"
+		{% endif %}
+
+		alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
+	{% endif %}
+
+
+	{% if self.can_edit %}
+		&nbsp;&nbsp;<a 
+		href="javascript:e=$('#c-{{ self.html_id }}'); e.load('{{ globals.base_url }}comment_edit?id={{ self.id }}', function () {e.trigger('DOMChanged', e)});"
+		title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+	{% endif %}
+
+	{% if self.is_truncated %}
+		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
+	{% endif %}
+
+{% endif %}

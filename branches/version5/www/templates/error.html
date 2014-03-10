@@ -1,0 +1,31 @@
+<html>
+<head>
+<STYLE TYPE="text/css" MEDIA=screen>
+<!--
+.errt { text-align:center; padding-top:50px; font-size:300%; color:#FF6400;}
+.errl { text-align:center; margin-top:50px; margin-bottom:100px; }
+-->
+</STYLE>
+</head>
+
+<body>
+
+<p class="errt">
+{% if mess %}
+    {{ mess }} 
+{% else %}
+    {% trans _('algún error nos ha petado') %}
+{% endif %}
+<br/>
+<span style="font-size: 80%">
+{% if error %}
+    {% trans _("error %s"), error %}
+{% endif %}
+</span>
+</p>
+<div class="errl">
+    <img src="{{globals.base_static}}img/mnm/lame_excuse_01.png" width="362" height="100" alt="ooops logo" />
+</div>
+
+</body>
+</html>

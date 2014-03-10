@@ -137,7 +137,7 @@ function do_register2() {
 
 	$username=clean_input_string(trim($_POST['username'])); // sanity check
 	$dbusername=$db->escape($username); // sanity check
-	$password=md5(trim($_POST['password']));
+	$password=UserAuth::hash(trim($_POST['password']));
 	$email=clean_input_string(trim($_POST['email'])); // sanity check
 	$dbemail=$db->escape($email); // sanity check
 	$user_ip = $globals['form_user_ip'];

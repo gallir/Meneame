@@ -1,0 +1,16 @@
+<h2>{% trans _('paso 1 de 3') %}</h2>
+{% if show_help %}
+	<div class="faq">
+	<h3>{% trans _('por favor, respeta estas instrucciones para mejorar la calidad:') %}</h3>
+	<ul class="instruction-list">
+	<li><strong>{% trans _('contenido externo') %}:</strong> {% trans _('Menéame no es un sitio para generar noticias, ni un sistema de <em>microblogging</em>') %}</li>
+	<li><strong>{% trans _('contenido interesante') %}:</strong> {% trans _('¿interesará a una cantidad razonable de lectores?') %}</li>
+	<li><strong>{% trans _('enlaza la fuente original') %}:</strong> {% trans _('no enlaces a sitios intermedios que no añaden nada al original') %}</li>
+	<li><strong>{% trans _('busca antes') %}:</strong> {% trans _('evita duplicar historias') %}</li>
+	<li><strong>{% trans _('sé descriptivo') %}:</strong> {% trans _('explica el enlace de forma fidedigna, no distorsiones') %}</li>
+	<li><strong>{% trans _('respeta el voto de los demás') %}</strong>. {% trans _('si los votos te pueden afectar personalmente, es mejor que no envíes la historia') %}</li>
+	<li><strong>¿{% trans _('has leído las') %} <a href="{{ globals.base_url_general }}legal#tos" target="_blank">{% trans _('condiciones de uso') %}</a>?</strong></li>
+	</ul></div>
+{% endif %}
+
+{% include 'link/submit_empty_form.html' %}

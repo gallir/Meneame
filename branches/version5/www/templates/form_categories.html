@@ -1,0 +1,18 @@
+<fieldset style="clear: both;">
+
+    <legend>{% trans _('selecciona la categoría más apropiada') %}</legend>
+
+    {% for meta in metas %}
+        <dl class="categorylist"><dt><label>{{meta.name }}</label></dt>
+	<div class="metadd">
+        {% for category in meta.categories %}
+	    <dd><label>
+                <input name="category" type="radio"{% if selected == category.id %} checked="true"{%endif%}
+                value="{{ category.id}}" />{% trans category.name %}
+            </label></dd>
+        {% endfor %}
+	</div>
+        </dl>
+    {% endfor %}
+	<br style="clear: both;"/>
+</fieldset>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="{{globals.lang}}" prefix="og: http://ogp.me/ns#">
+
+{% if ! globals.partial %}
+<head>
+<meta charset="utf-8" />
+
+<meta name="ROBOTS" content="NOARCHIVE" />
+<meta name="generator" content="meneame" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1{% if globals.mobile %}, user-scalable=no{% endif %}"/>
+
+{# Save bandwidth for mobiles #}
+{% if not globals.mobile %}
+
+{% if globals.css_webfonts %}
+	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+{% endif %}
+
+{% if globals.noindex %}
+	<meta name="robots" content="noindex,nofollow" />
+{% endif %}
+
+{% if globals.tags %}
+	<meta name="keywords" content="{{globals.tags}}" />
+{% endif %}
+
+{% if globals.description %}
+	<meta name="description" content="{{globals.description}}" />
+{% endif %}
+
+{% if globals.thumbnail %}
+   	<meta property="og:image" content="{{globals.thumbnail}}"/>
+	<link rel="image_src" href="{{globals.thumbnail}}"/>
+{% endif %}
+{% if globals.permalink AND title %}
+	{# Twitter Card #}
+	{% if globals.bot %}
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="{{title}}">
+		{% if globals.twitter_user %}
+			<meta name="twitter:site" content="@{{globals.twitter_user}}">
+		{% endif %}
+	{% endif %}
+	<meta property="og:url" content="{{ globals.permalink }}">
+	<meta property="og:title" content="{{title}}">
+	<meta property="og:description" content="{{ globals.description }}">
+{% endif %}
+
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="http://{{globals.server_name}}{{ globals.base_url_general }}opensearch_plugin.php"/>
+<link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="http://{{globals.server_name}}{{ globals.base_url }}rss?status=queued" />
+<link rel="alternate" type="application/rss+xml" title="{% trans _('comentarios')%}" href="http://{{globals.server_name}}{{ globals.base_url }}comments_rss" />
+
+{% if globals.link %}
+	<link rel="pingback" href="http://{{globals.server_name}}{{ globals.base_url_general }}xmlrpc.php"/>
+	{# <link rel="prefetch" href="{{ globals.link.url|escape }}"/> #}
+{% endif %}
+
+{% endif %}
+{# /Save bandwidth for mobiles #}
+
+
+<title>{{title}}</title>
+
+
+{% if globals.css_main %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}"/>
+{% endif %}
+
+{% for css in globals.extra_css %}
+<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
+{% endfor %}
+
+{# <meta name="mobile-web-app-capable" content="yes"> #}
+{% if globals.favicon %}
+	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+{% else %}
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_196x196.png" type="image/png" sizes="196x196"/>
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_128x128.png" type="image/png" sizes="128x128"/>
+	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_64x64.png" type="image/png" sizes="64x64"/>
+	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/logo_16x16.png" type="image/png" sizes="16x16"/>
+{% endif %}
+
+<link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
+<link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
+
+{#
+<script src="{{ globals.base_url_general }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script>
+#}
+
+{% if globals.extra_head %}
+	{{ globals.extra_head}}
+{% endif %}
+
+</head>
+<body id="{{id}}" {{globals.body_args}}>
+
+<div id="header-top">
+  <div id="nav-menu"></div>
+
+  <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
+
+	{% if not globals.mobile %}
+		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
+		<ul id="edlist">
+		{% for s in sites %}
+		<li {% if s.id == this_site.id %}class="selected"{% endif %}>
+			<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
+		</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+
+  {% include "header_userinfo.html" %}
+
+</div>
+
+<div id="variable">
+{% else %} {# PARTIAL partial #}
+<span id="ajaxinfo" 
+	data-partial="1"
+	data-uri="{{ globals.uri|escape }}"
+	data-uid="{{ current_user.user_id }}"
+	data-title="{{ title }}">
+</span>
+{% endif %} {# PARTIAL partial #}
+
+<script type="text/javascript">
+	{% include 'js/basic.js' %}
+</script>
+
+
+
+<div id="header">
+<div id="header-center">
+  <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>
+  <div class="edname">
+	{% trans _('edición') %} <b>{{ this_site.name_long }}</b>
+	{% if globals.facebook_page || globals.twitter_page %}
+		&nbsp;&nbsp;
+		{% if globals.facebook_page %}
+			<a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
+		{% endif %}
+		{% if globals.twitter_page %}
+			<a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
+		{% endif %}
+	{% endif %}
+	</div>
+
+<!--search-->
+  <div id="searchform" class="searchform">
+    <form action="{{ globals.base_url }}search" method="get" name="top_search">
+		{% if globals.search_options %}
+			{% for name, value in globals.search_options %}
+				<input type="hidden" name="{{name}}" value="{{value}}"/>
+			{% endfor %}
+		{% endif %}
+		<input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+    </form>
+  </div>
+<!--end search-->
+
+</div><!--header-center-->
+
+<div id="header-menu">
+<div class="header-menu01">
+  <ul class="menu01-itemsl">
+	{% for o in left_options %}
+	    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+	{% endfor %}
+  </ul>
+
+	<ul class="menu01-itemsr">
+	{% for o in right_options %}
+		<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+	{% endfor %}
+
+	{% if globals.help_url %}
+		<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
+	{% endif %}
+	</ul>
+
+</div>
+</div><!--header-menu01-->
+</div><!--header-->
+
+
+<div id="wrap">
+{% exec do_banner_top as foo%}
+<div id="container">

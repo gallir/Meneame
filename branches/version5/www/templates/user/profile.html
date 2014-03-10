@@ -1,0 +1,179 @@
+{% inline "user/subheader.html" %}
+
+{% if post %}
+	<div id="addpost"></div>
+	<ol class="comments-list" id="last_post">
+	<li>
+        {% exec post.print_summary %}
+    </li>
+   </ol>
+{% endif %}
+
+
+<fieldset>
+    <legend>{% trans _('perfil personal') %}</legend>
+	<div style="float:right;text-align:center">
+	    <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{user.username}}" title="avatar" />
+        {% if current_user.user_id == user.id %}
+            {% inline 'user/avatar_upload.html' %}
+        {% endif %}
+        {% if user.total_images %}
+			<br/><br/>
+			<button type="button" onclick="fancybox_gallery('all', {{ user.id }})">{% trans _('imágenes') %} [{{ user.total_images }}]</button>
+        {% endif %}
+
+    {% if globals.do_geo %}
+		<br/><br/>
+    	<div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden"></div>
+        {% if geodiv %}
+            {% exec geo_distance my_latlng, globals.latlng as distance %}
+			<p style="color: #FF9400; font-size: 90%">{{user.username}} {% trans _('está a') %}<strong>{{distance|intval}} kms</strong></p>
+        {% endif %}
+    {% endif %}
+	</div>
+
+	<table class="keyvalue">
+    {% if user.username %}
+        <tr><th>{% trans _('usuario') %}:</th>
+        <td>
+        {% if url %}
+            <a href="{{url}}" {{nofollow}}><strong>{{user.username}}</strong></a>
+        {% else %}
+            {{ user.username }}
+        {% endif %}
+
+        {% exec user.print_medals %}
+
+
+        {% if current_user.admin AND nclones %}
+        (<a class="fancybox" href="{{globals.base_url}}backend/ip_clones.php?id={{user.id}}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
+        {% endif %}
+
+        {% if friend_icon %}
+            &nbsp;<a id="friend-{{current_user.user_id}}-{{user.id}}" href="javascript:get_votes('get_friend.php','{{current_user.user_id}}','friend-{{current_user.user_id}}-{{user.id}}',0,'{{user.id}}')">{{ friend_icon }}</a>
+
+        {% endif %}
+
+        {% if user.id == current_user.user_id OR current_user.admin %}
+             ({% trans  _('id') %}: <em>{{user.id}}</em>, <em>{{user.level}}</em>)
+        {% endif %}
+
+        {% if current_user.admin %}
+            (<em>{{user.username_register}}</em>)
+        {% endif %}
+
+		{% if user.friendship > 0 %}
+			<button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
+		{% endif %}
+
+
+        </td></tr>
+    {% endif %}
+    {% if user.names %}
+		<tr><th>{% trans _('nombre') %}:</th><td>{{user.names}}</td></tr>
+    {% endif %}
+    {% if user.bio %}
+		<tr><th>{% trans _('bio') %}:</th><td style="font-weight:normal">{% exec text_to_html user.bio %}</td></tr>
+    {% endif %}
+    {% if show_email %}
+		<tr><th>{% trans _('IM/email') %}:</th><td> {{user.public_info}}</td></tr>
+    {% endif %}
+    {% if url %}
+		<tr><th>{% trans _('sitio web') %}:</th><td><a href="{{url}}" {{nofollow}}>{{url}}</a></td></tr>
+    {% endif %}
+	    <tr><th>{% trans _('desde') %}:</th><td>{% exec get_date_time user.date %}</td></tr>
+    {% if current_user.user_level == 'god' %}
+		<tr><th>{% trans _('email') %}:</th><td>{{user.email}} (<em>{{user->email_register}}</em>)</td></tr>
+    {% endif %}
+    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+	    <tr><th>{% trans _('clave API') %}:</th>
+        <td><a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{user.id}}" title="API key">{% trans _('leer clave API') %}</a> ({% trans _('no la divulgues') %})</td></tr>
+        {% if user.adcode %}
+			<tr><th>{% trans _('Código AdSense') %}:</th><td>{{user.adcode}}&nbsp;</td></tr>
+			<tr><th>{% trans _('Canal AdSense') %}:</th><td>{{user.adchannel}}&nbsp;</td></tr>
+        {% endif %}
+    {% endif %}
+	<tr><th>{% trans _('karma') %}:</th><td>{{user.karma}}
+    {% if (user.id == current_user.user_id || current_user.user_level == 'god' || current_user.user_level == 'admin') && user.karma_log %}
+		(<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
+    {% endif %}
+    </td></tr>
+	<tr><th>{% trans _('ranking') %}:</th><td>#{% exec user.ranking %}</td></tr>
+
+	{% if user.stats %}
+		<tr><th>{% trans _('noticias enviadas')%}:</th><td>{{user.total_links}}</td></tr>
+    	{% if entropy %}
+			<tr><th><em>{% trans _('entropía') %}</em>:</th><td>{{entropy}}%</td></tr>
+    	{% endif %}
+		<tr><th>{% trans _('noticias publicadas') %}:</th><td>{{user.published_links}} ({{percent}}%)</td></tr>
+		<tr><th>{% trans _('comentarios') %}:</th><td>{{user.total_comments}}</td></tr>
+		<tr><th>{% trans _('notas') %}:</th><td>{{user.total_posts}}</td></tr>
+		<tr><th>{% trans _('número de votos') %}:</th><td>{{user.total_votes}}</td></tr>
+	{% endif %}
+
+    {% if user.id == current_user.user_id %}
+		<tr><th>{% trans _('IP actual') %}:</th><td>{{globals.user_ip}}</td></tr>
+		<div style="margin-top: 20px" align="center">
+        {% exec print_oauth_icons _REQUEST.return as foo %}
+		</div>
+    {% endif %}
+    </table>
+</fieldset>
+
+{% if geo_form %}
+	<div class="geoform">
+		{{geo_form}}
+	</div>
+{% endif %}
+
+{% if user.id == current_user.user_id %}
+	<fieldset><legend>{% trans _('preferencias básicas') %}</legend>
+	<table class="keyvalue">
+
+	{# Use bar #}
+	<tr><th>{% trans _('abrir enlaces con barra superior') %}:</th>
+	<td><input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if prefs.use_bar %}checked="true"{% endif %}/></td>
+	</tr>
+
+	{# Use last_com_first #}
+	<tr><th>{% trans _('mostrar últimos comentarios primero') %}:</th>
+	<td><input name="last_com_first" id="last_com_first" type="checkbox" value="last_com_first" {% if prefs.last_com_first %}checked="true"{% endif %}/></td>
+	</tr>
+
+
+	<script type="text/javascript">
+	function check_prefs() {
+		var value;
+
+    	if (this.checked) value = 1;
+    	else value = 0;
+    	$.post(base_url + 'backend/pref.php',
+				{"id": {{ current_user.user_id }}, "value": value, "key": this.value},
+				function (data) {
+					if (data) this.checked = true;
+					else this.checked = false;
+				},
+				'json');
+	}
+
+	addPostCode(function () { 
+		$("#use_bar").change(check_prefs);
+		$("#last_com_first").change(check_prefs);
+	});
+	</script>
+	</table>
+	</fieldset>
+{% endif %}
+
+
+{% if user.total_votes > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
+    {% include "user/chart_votes.html" %}
+{% endif %}
+
+{% if addresses %}
+    <fieldset><legend>{% trans _('últimas direcciones IP') %}</legend>
+    {% for address in addresses %}
+        <p>{{address}}</p>
+    {% endfor %}
+    </fieldset>
+{% endif %}

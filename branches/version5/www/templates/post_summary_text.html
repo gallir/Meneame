@@ -1,0 +1,25 @@
+{% if self.show_avatar %}
+	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar lazy" data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}" data-2x="s:-40.:-80." src="{{ globals.base_static }}img/g.gif" alt="{{ self.username }}"/></a>
+{% endif %}
+
+	{{ self.content }}
+
+{% if self.media_size > 0 %}
+	&nbsp;
+	{# PixeloPhilia icon from omercetin.deviantart.com #}
+	<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
+	{% if globals.cache_redirector %}
+		class="thumb ok lazy"
+		data-src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.jpg?{{ self.media_date }}" 
+		data-2x="s:thumb:thumb_2x"
+	{% else %}
+		class="thumb lazy"
+		data-src="img/common/picture01.png" width="30" height="24"
+	{% endif %}
+	alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
+{% endif %}
+
+
+{% if self.can_edit %}
+	&nbsp;&nbsp;<a href="javascript:post_edit({{ self.id }})" title="{% trans _('editar') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+{% endif %}

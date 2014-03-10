@@ -1,0 +1,18 @@
+  <ul id="userinfo">
+	{% if current_user.user_id > 0 %}
+		<li class="usertext wideonly"><a href="{{ current_user.user_login|useruri }}" class="tooltip u:{{ current_user.user_id }}">{{current_user.user_login}}</a></li>
+			{% if current_user.admin %}
+				<li class="usertext"><a href="{{ globals.base_url_general }}admin/bans.php">adm</a></li>
+			{% endif %}
+		<li id="notifier"></li>
+		<li><a href="{{ current_user.user_login|useruri }}"><img id="avatar" src="{{ globals.base_static }}img/g.gif" data-2x="s:-40.:-80." data-src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40 %}" class="lazy" alt="{{current_user.user_login}}"/></a></li>
+
+		<li class="userlogin" onclick="location.href='{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}'" title="{%trans _('cerrar sesión')%}"> </li>
+	{# Following link could be deleted 
+	<a href="{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}">&nbsp;</a>
+	#}
+	{% else %}
+		<li class="usertext"><a href="{{ globals.base_url_general }}login?return={{globals.uri|urlencode}}">{% trans _('login') %}</a></li>
+		<li class="usertext"><a href="{{ globals.base_url_general }}register">{% trans _('registrarse') %}</a></li>
+    {% endif %}
+  </ul>

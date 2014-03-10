@@ -1,0 +1,39 @@
+<li id="c-{{self.c_order}}">
+    <div class="{{comment_class}}" id="cid-{{self.id}}">
+        <strong>#{{self.c_order}}</strong>&nbsp;&nbsp;
+        {% if self.hide_comment %}
+			&#187;&nbsp;<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans _('ver comentario') %}">{% trans _('ver comentario') %}</a>
+        {% else %}
+            {{ self.txt_content }} 
+
+		{% if self.media_size > 0 %}
+			<br/><a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ globals.base_url }}backend/media.php?type=comment&amp;id={{ self.id }}{% if current_user.user_id > 0 %}&amp;image.jpg{% endif %}"><img
+			class="thumb"
+			{% if globals.cache_redirector %}
+				src="{{ globals.base_static }}{{ self.media_thumb_dir }}/media_thumb-comment-{{ self.id }}.jpg"" width="{{ globals.media_thumb_size }}" height="{{ globals.media_thumb_size }}"
+			{% else %}
+				src="{{ globals.base_static }}img/common/picture01.png" width="30" height="24"
+			{% endif %}
+			alt="media"/></a>
+    	{% endif %}
+
+
+
+            {% if self.is_truncated %}
+			...&nbsp;&nbsp;
+			<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans _('resto del comentario') %}">
+                &#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
+            {% endif %}
+        {% endif %}
+    </div>
+	<div class="{{ comment_meta_class }}">
+
+    {% exec get_date_time self.date as date %}
+    {% trans _("por %s el %s") author date %}
+
+    {% if self.type != 'admin' AND self.user_level != 'disabled' %}
+	    &nbsp;&nbsp;{% trans  _('votos') %}: <span id="vc-{{self.id}}">{{self.votes}}</span>, 
+        {% trans _('karma') %}: <span id="vk-{{self.id }}">{{self.karma}}</span>
+    {% endif %}
+    </div>
+</li>

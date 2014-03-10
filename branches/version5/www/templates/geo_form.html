@@ -1,0 +1,31 @@
+<form action="#" name="geocoderform" id="geocoderform" onsubmit="return geo_show_address('{{ icontype }}')">
+<label for="address">{{ label }}</label><br/>
+<input type="text" size="40" maxlength="80" name="address" id="address" value="{{ latlng.text }}" />
+&nbsp;<input type="button" class="button" value="{% trans _('buscar') %}" onclick="return geo_show_address('{{ icontype }}');"/>
+&nbsp;<input type="button" class="button" id="geosave"  disabled="disabled"  value="{% trans _('grabar') %}" onclick="return geo_save_current('{{ type }}', {{ id }})"/>
+&nbsp;<input type="button" class="button" id="geodelete"
+	{% if ! latlng %}disabled="disabled"{% endif %}
+	value="{% trans _('borrar') %}" onclick="return geo_delete('{{ type }}', {{ id }})"
+	/>
+
+<br/><span class="note">{% trans _('puedes hacer clic en el mapa o buscar por «país», «ciudad, país» o «calle, ciudad, país»') %},
+{% trans _('también acepta coordenadas «lat, long», p.e. «1.234, -54.321»') %}</span>
+</form>
+
+
+{% spacefull %}
+<script type="text/javascript">
+//<![CDATA[
+// Check if there is a map container, otherwise it creates a container
+if ($('#map').length == 0 ) {
+	$('#geocoderform').before('<div id="map" style="width:300px;height:250px">&nbsp;<\/div>');
+	$('#geocoderform').after('<br/>');
+	if (typeof geo_coder_editor_load == 'function') { // Check if the geo.js has bees loaded
+		geo_coder_editor_load(false, false, 3, "{{ icontype }}");
+	} else {
+		$(function() {geo_coder_editor_load(false, false, 3, "{{ icontype }}")});
+	}
+}
+//]]>
+</script>
+{% endspacefull %}
