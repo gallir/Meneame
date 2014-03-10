@@ -135,7 +135,7 @@ function do_save($link) {
 }
 
 function link_edit_errors($link) {
-	global $current_user;
+	global $current_user, $globals;
 
 	$errors = array();
 
@@ -150,7 +150,7 @@ function link_edit_errors($link) {
 	if(time() - $_POST['timestamp'] > 900) {
 		array_push($errors, _('tiempo excedido'));
 	}
-	if(strlen($link->title) < 8  || strlen($link->content) < 30 ) {
+	if(strlen($link->title) < 8  || strlen($link->content) < 24 ) {
 		array_push($errors, _('título o texto incompletos'));
 	}
 	if(mb_strlen(html_entity_decode($link->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
@@ -162,7 +162,7 @@ function link_edit_errors($link) {
 	if(preg_match('/.*http:\//', $link->title)) {
 		array_push($errors, _('por favor, no pongas URLs en el título, no ofrece información'));
 	}
-	if(!$link->category > 0) {
+	if(empty($globals['submnm']) && ! $link->category > 0) {
 		array_push($errors, _('categoría no seleccionada'));
 	}
 	return $errors;

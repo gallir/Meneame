@@ -508,6 +508,8 @@ function check_link_key() {
 }
 
 function link_errors($link) {
+	global $globals;
+
 	$error = false;
 	// Errors
 	if(! check_link_key() || intval($_POST['randkey']) != $link->randkey) {
@@ -518,7 +520,7 @@ function link_errors($link) {
 		add_submit_error(_("la historia ya está en cola").": $link->status");
 		$error = true;
 	}
-	if(strlen($link->title) < 8  || strlen($link->content) < 30 ) {
+	if(strlen($link->title) < 8  || strlen($link->content) < 24 ) {
 		add_submit_error(_("título o texto incompletos"));
 		$error = true;
 	}
@@ -539,7 +541,7 @@ function link_errors($link) {
 		add_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
 		$error = true;
 	}
-	if(!$link->category > 0) {
+	if(empty($globals['submnm']) && ! $link->category > 0) {
 		add_submit_error(_("categoría no seleccionada"));
 		$error = true;
 	}

@@ -330,6 +330,8 @@ function do_pages($total, $page_size=25, $margin = true) {
 function print_categories_form($selected = 0) {
 	global $db, $dblang, $globals;
 
+	if (! empty($globals['submnm'])) return;
+
 	$metas = SitesMgr::get_metas();
 
 	foreach ($metas as &$meta) {

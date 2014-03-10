@@ -123,7 +123,6 @@ class SitesMgr {
 		}
 
 		if ($receivers) {
-			// echo "DEPLOY, $me->link cat: $me->category -> " . implode(', ', $receivers). " $me->status\n"; $delete_others = false;
 			foreach ($receivers as $r) {
 				self::store_status($r, $me);
 			}
@@ -143,11 +142,15 @@ class SitesMgr {
 		global $db;
 		if (! self::$id ) self::__init();
 
-		if ($strict) $extra = 'and (import or id = '.self::$id.')';
-		else $extra = '';
+		if ($category > 0) {
+			if ($strict) $extra = 'and (import or id = '.self::$id.')';
+			else $extra = '';
 
-		$receivers = $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled");
-		return array_unique($receivers);
+			$receivers = $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled");
+			return array_unique($receivers);
+		} else {
+			return array(self::$id);
+		}
 	}
 
 	static public function get_children($site_id) {
