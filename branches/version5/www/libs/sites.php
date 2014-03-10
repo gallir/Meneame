@@ -9,26 +9,29 @@
 class SitesMgr {
 	static private $id = 0;
 	static private $parent = false;
+	static private $info = false;
 
 	static function __init($id = false) {
 		global $globals, $db;
 
+		self::$info == false;
 		if ($id > 0) {
 			self::$id = $id;
 		} elseif (!isset($globals['site_id'])) {
 			if (empty($globals['site_shortname'])) {
 				echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 			}
-			$res = $db->get_row("select id, parent from subs where name = '".$globals['site_shortname']."'");
-			self::$id = $res->id;
-			self::$parent = $res->parent;
+			self::$info = $db->get_row("select * from subs where name = '".$globals['site_shortname']."'");
+			self::$id = self::$info->id;
 		} else {
 			self::$id = $globals['site_id'];
 		}
 
-		if (self::$parent === false && self::$id > 0) {
-			self::$parent = (int) $db->get_var("select parent from subs where id = ".self::$id);
+		if (self::$info == false) {
+			self::$info = $db->get_row("select * from subs where id = ".self::$id);
 		}
+
+		self::$parent = self::$info->parent;
 	}
 
 	static public function my_id() {
@@ -45,8 +48,12 @@ class SitesMgr {
 	static public function get_info($id = false) {
 		global $db;
 
-		if ($id == false) $id = self::my_id();
-		return $db->get_row("select * from subs where id = $id");
+		if ($id == false || $id == self::$id) {
+			if (! self::$id ) self::__init();
+			return self::$info;
+		} else {
+			return $db->get_row("select * from subs where id = $id");
+		}
 	}
 
 	static public function deploy($link, $full = false) {
