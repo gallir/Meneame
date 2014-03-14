@@ -78,11 +78,14 @@ def main():
 		post += '\nhttp://'+dbconf.domain+dbconf.blogs['viewer']+" #blogs"
 		print post
 		try:
-			urlpost = urllib2.urlopen('http://'+dbconf.domain+
-										dbconf.blogs['newpost']+
-									'?user='+dbconf.blogs['post_user']+
-									'&key='+dbconf.blogs['post_key']+
-									'&text='+urllib.quote_plus(post))
+			url = """
+				http://{d}{newpost}?user={post_user}&key={post_key}&text=t
+			""".format(d= dbconf.domain,
+						t= urllib.quote_plus(post),
+						**dbconf.blogs)
+			## TODO: Use timeout parameter instead of
+			##       socket.setdefaulttimeout(timeout)
+			urlpost = urllib2.urlopen(url)
 			print urlpost.read(100)
 			urlpost.close()
 		except KeyError:
@@ -106,7 +109,7 @@ def get_candidate_blogs(days, min_karma):
 	query = """
 		SELECT link_blog, blog_url, blog_feed,
 				UNIX_TIMESTAMP(blog_feed_checked),
-				UNIX_TIMESTAMP(blog_feed_read),
+				UNIX_TIMESTAMP(blog_feed_read)
 			FROM links, blogs
 			WHERE link_status in ('published')
 				AND link_date > date_sub(now(), interval %s day)
