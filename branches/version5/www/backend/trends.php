@@ -39,11 +39,11 @@ if ($cache->read()) {
 	/* Otherwise, query to Sphinx and fills $totals */
 	$totals = array();
 
-	$res = $sp->get_results("select yearmonth(date) as yymm, @count from $indices group by yymm limit 2000 option ranker = none");
+	$res = $sp->get_results("select yearmonth(date) as yymm, count(*) as _count from $indices group by yymm limit 2000 option ranker = none");
 	if ($res) {
 		foreach ($res as $o) {
 			$a = (array) $o;
-			$totals[$o->yymm] = intval($a["@count"]);
+			$totals[$o->yymm] = intval($a["_count"]);
 		}
 	}
 	$cache->text = json_encode($totals);
@@ -61,7 +61,7 @@ foreach ($q as $words) {
 	$series[$s]['words'] = $words;
 	$series[$s]['objects'] = array();
 	$series[$s]['sort'] = $sort;
-	$sql .= "select yearmonth(date) as yymm, $sort, date, @count from $indices where match('\"$words\"') group by yymm within group order by $sort desc limit 1000;";
+	$sql .= "select yearmonth(date) as yymm, $sort, date, count(*) as _count from $indices where match('\"$words\"') group by yymm within group order by $sort desc limit 1000;";
 	$s++;
 }
 
@@ -144,11 +144,11 @@ function load_row(&$serie, $row) {
 	global $min_yymm, $totals;
 
 	if (! $totals[$row['yymm']] > 0) continue;
-	$normalized = $row['@count'] / $totals[$row['yymm']];
+	$normalized = $row['_count'] / $totals[$row['yymm']];
 	$o = new stdClass();
 	$o->id = (int) $row['id'];
 	$o->date = $row['date'];
-	$o->count =  (int)$row['@count'];
+	$o->count =  (int)$row['_count'];
 	$o->value =  $normalized;
 	$o->$serie['sort'] = $row[$serie['sort']];
 	$o->ts = (int)$row['date'];
