@@ -32,7 +32,7 @@ $sp->port = 9306;
 $sp->connect();
 
 $cache = new Annotation("sphinx-$indices");
-if (false && $cache->read()) {
+if ($cache->read()) {
 	/* If totals' cache is valid, just load the array */
 	$totals = json_decode($cache->text, true);
 } else {
