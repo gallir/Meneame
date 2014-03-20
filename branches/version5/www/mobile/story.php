@@ -141,15 +141,7 @@ function do_comment_pages($total, $current) {
 
 	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
 
-	if (! empty($globals['base_story_url'])) {
-		$query = $globals['link_permalink'];
-	} else {
-		$query=preg_replace('/\/[0-9]+(#.*)$/', '', $_SERVER['QUERY_STRING']);
-		if(!empty($query)) {
-			$query = htmlspecialchars($query);
-			$query = "?$query";
-		}
-	}
+	$query = $globals['link_permalink'];
 
 	$total_pages=ceil($total/$globals['comments_page_size']);
 	if (! $current) $current = 1;

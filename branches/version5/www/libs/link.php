@@ -959,11 +959,13 @@ class Link extends LCPBase {
 	}
 
 	function get_uri() {
-		global $db, $globals;
+		global $db, $globals, $routes;
+
 		$seq = 0;
 		require_once(mnminclude.'uri.php');
 		$new_uri = $base_uri = get_uri($this->title);
-		while ($db->get_var("select count(*) from links where link_uri='$new_uri' and link_id != $this->id") && $seq < 20) {
+		while (! empty($routes[$new_uri]) && // The uri is not equal to a standard uri, from dispatch.php
+				$db->get_var("select count(*) from links where link_uri='$new_uri' and link_id != $this->id") && $seq < 20) {
 			$seq++;
 			$new_uri = $base_uri . "-$seq";
 		}

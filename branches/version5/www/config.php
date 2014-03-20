@@ -25,7 +25,8 @@
 // They are automatically included
 //
 
-if (defined("mnmpath")) return TRUE; // If not "included_once"
+if (defined("config_done")) return TRUE; // If not "included_once"
+define('config_done', 1);
 
 // WARN WARNING ALERT: we use $_SERVER['SERVER_NAME'] which is the first
 // server_name in NGInx and other servers
@@ -118,24 +119,6 @@ $globals['karma_news_start_decay'] =  7;
 $globals['karma_news_decay'] = 42;
 $globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reaches this value when clicks/votes = 10;
 
-
-
-// leave empty if you don't have the rewrite rule in apache
-
-//RewriteRule ^/c/(.+)$ /comment.php/$1  [L,NS]
-$globals['base_comment_url'] = 'c/';
-
-// Uncomment for /bar.php?id?ID to get /b/ID
-//$globals['base_bar_url'] = 'b/';
-
-//RewriteRule ^/search(/.*)$ /search.php$1 [L,NS,NE,PT]
-//$globals['base_search_url'] = 'search/';
-
-//RewriteRule ^/user/(.+)$ /user.php/$1  [L,NS]
-$globals['base_user_url'] = 'user/';
-
-//RewriteRule ^/notame(/.*)$ /sneakme/index.php$1 [L,NS]
-$globals['base_sneakme_url'] = 'notame/';
 
 // Memcache, set hostname if enabled
 //$globals['memcache_host'] = 'localhost';

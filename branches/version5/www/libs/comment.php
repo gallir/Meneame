@@ -671,11 +671,7 @@ class Comment extends LCPBase {
 	function get_relative_individual_permalink() {
 		// Permalink of the "comment page"
 		global $globals;
-		if ($globals['base_comment_url']) {
-			return $globals['base_url'] . $globals['base_comment_url'] . $this->id;
-		} else {
-			return $globals['base_url'] . 'comment.php?id=' . $this->id;
-		}
+		return $globals['base_url'] . 'c/'. $this->id;
 	}
 
 	function normalize_content() {
