@@ -56,7 +56,7 @@ $site_id = SitesMgr::my_id();
 if ($db->get_var("select count(*) from sub_statuses where id=$site_id and link=$link->id") <= 0) {
 	// The link does not correspond to the current site, find one
 	header ('HTTP/1.1 301 Moved Permanently');
-	header('Location: http://' . $link->get_canonical_permalink());
+	header('Location: ' . $link->get_canonical_permalink());
 	die;
 }
 

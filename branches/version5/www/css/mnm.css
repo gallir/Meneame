@@ -268,6 +268,21 @@ color: transparent;
 cursor: pointer;
 }
 
+#header-sub{
+position: relative;
+height:20px;
+background-color:#ccc;
+overflow:hidden;
+white-space:nowrap;
+font-size:16px;
+padding: 2px 10px;
+color:#fff;
+}
+
+#header-sub a {
+color: #fff;
+}
+
 #header-center{
 height:45px;
 background-color:#ccc;

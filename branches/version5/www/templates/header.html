@@ -102,10 +102,15 @@
 	{% if not globals.mobile %}
 		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
 		<ul id="edlist">
+		{% if this_site.sub %}
+			<li class="selected">
+				<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
+			</li>
+		{% endif %}
 		{% for s in sites %}
 			<li {% if s.id == this_site.id %}class="selected"{% endif %}>
 				<a href="http://{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
-		</li>
+			</li>
 		{% endfor %}
 		</ul>
 	{% endif %}
@@ -130,6 +135,12 @@
 
 
 <div id="header">
+{% if globals.mobile AND this_site.sub %}
+	<div id="header-sub">
+		<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name_long }}</a>
+	</div>
+{% endif %}
+
 <div id="header-center">
 {% if globals.submnm %}
   <a href="{{ globals.base_url }}" class="logo-eli" title="{{ this_site.name_long }}">{{ this_site.name }}</a>
