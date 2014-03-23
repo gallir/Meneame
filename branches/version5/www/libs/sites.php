@@ -264,8 +264,12 @@ class SitesMgr {
 			return $current_user->admin || $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
 		} elseif ($id == 0) {
 			return $current_user->admin;
-		} 
-		return $current_user->admin || $current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*4*365;
+		}
+		if ($current_user->admin) return true;
+
+		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
+		
+		return $n < 3 && ($current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*4*365);
 	}
 
 }

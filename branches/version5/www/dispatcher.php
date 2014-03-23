@@ -40,7 +40,7 @@ $routes = array(
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
 
-$res = @include './'.$routes[$path[0]];
+$res = include './'.$routes[$path[0]];
 if ($res === FALSE) {
 	include_once 'config.php';
 	not_found();

@@ -11,7 +11,13 @@
 <input type="hidden" name="created_from" value="{{ site.id }}" />
 
 
-<fieldset><legend><span class="sign">{% trans _('edición sub') %}</span></legend>
+<fieldset><legend>
+{% if sub.id %}
+	{% trans _('edición sub') %} <a href="{{ sub.base_url }}m/{{ sub.name }}">{{ sub.name }}</a>
+{% else %}
+	{% trans _('nuevo sub') %}
+{% endif %}
+</legend>
 
 {% if current_user.admin %}
 	<label for="name">user_id:</label><br/>
@@ -36,6 +42,29 @@
 <input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,32}" maxlength="32" style="width:60%"/>
 <br/>
 
+{% if current_user.admin %}
+	{% if copy_to %}
+		{% trans _('copiar a') %}:<br/>
+		{% for c in copy_to %}
+			<select name="copy_to[]">
+			<option value="{{ c.id }}" selected>{{ c.name }}</option>
+			<option value="0">{% trans _('eliminar') %}</option>
+			</select>
+			<br/>
+		{% endfor %}
+	{% endif %}
+	{% if candidates_to %}
+		{% trans _('añadir copiar a') %}:<br/>
+		<select name="copy_to[]">
+		<option value="0" selected>--</option>
+		{% for c in candidates_to %}
+			<option value="{{ c.id }}">{{ c.name }}</option>
+		{% endfor %}
+		</select>
+	{% endif %}
+{% endif %}
+
+<br/><br/>
 <input class="button" type="submit" value="{% trans _('guardar') %}" />
 </fieldset>
 </form>

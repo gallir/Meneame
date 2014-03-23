@@ -13,12 +13,18 @@ $globals['ads'] = false;
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 force_authentication();
-$id = intval($_REQUEST['id']);
+if (empty($_POST['id'])) {
+	$id = intval($_GET['id']);
+} else {
+	$id = intval($_POST['id']);
+}
 if (! $id) $id = -1;
-if (! SitesMgr::can_edit($id)) die;
 
 $errors = array();
 $site = SitesMgr::get_info();
+if (! SitesMgr::can_edit($id)) {
+	$errors[] = _("no puede editar o crear nuevos");
+}
 
 array_push($globals['cache-control'], 'no-cache');
 do_header(_("editar sub"));
@@ -26,24 +32,27 @@ do_header(_("editar sub"));
 echo '<div id="singlewrap">'."\n";
 
 if ($_POST['created_from']) {
-	$id = save_sub($errors);
-	$sub = (object) $_POST;
+	$id = save_sub($id, $errors);
+}
+$sub = SitesMgr::get_info($id);
+
+if ($current_user->admin) {
+	$candidates_to = $db->get_results("select id, name from subs where sub = 0 and id not in (select dst from subs_copy where src = $id)");
+	$copy_to = $db->get_results("select id, name from subs, subs_copy where src = $id and id = dst");
 } else {
-	$sub = SitesMgr::get_info($id);
+	$copy_to = $candidates_to = false;
 }
 
-Haanga::Load('sub_edit.html', compact('sub', 'errors', 'site'));
+Haanga::Load('sub_edit.html', compact('sub', 'errors', 'site', 'candidates_to', 'copy_to'));
 echo "</div>"."\n";
 
 do_footer();
 
-function save_sub(&$errors) {
+function save_sub($id, &$errors) {
 	global $current_user, $db;
 
 	// Double check
-	$id = intval($_POST['id']);
 	$owner = intval($_POST['owner']);
-	if (! $id) $id = -1;
 	if (! SitesMgr::can_edit($id)) {
 		array_push($errors, _('usuario no autorizado a editar'));
 		return false;
@@ -56,7 +65,6 @@ function save_sub(&$errors) {
 	if($owner != $current_user->user_id && ! $current_user->admin) {
 		array_push($errors, _('propietario erróneo'));
 	}
-		
 
 	$name = mb_substr(clean_input_string($_POST['name']), 0, 12);
 	if (mb_strlen($name) < 3) {
@@ -75,7 +83,7 @@ function save_sub(&$errors) {
 	}
 
 	if (empty($errors)) {
-
+		$db->transaction();
 		if ($id > 0) {
 			$r = $db->query("update subs set created_from = $site->id, owner = $owner, name = '$name', name_long = '$name_long' where id = $id");
 		} else {
@@ -85,13 +93,30 @@ function save_sub(&$errors) {
 		if ($r && $id > 0) {
 			// Copy values from first site
 			$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
+			// Update copy_to
+			if ($current_user->admin) {
+				sub_copy_to($id, $_POST['copy_to']);
+			}
 		} else {
 			array_push($errors, _('error actualizando la base de datos'));
 		}
+		if (empty($errors)) $db->commit();
+		else $db->rollback();
 
 	}
-
 	return $id;
+}
+
+function sub_copy_to($src, $dests) {
+	global $db;
+	$r = $db->query("delete from subs_copy where src = $src");
+	if (empty($dests) || ! is_array($dests)) return;
+	foreach ($dests as $dst) {
+		$dst = intval($dst);
+		if ($dst > 0) {
+			$db->query("insert into subs_copy (src, dst) values ($src, $dst)");
+		}
+	}
 }
 
 
