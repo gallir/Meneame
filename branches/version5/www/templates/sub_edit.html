@@ -1,0 +1,42 @@
+<div class="genericform">
+{% if errors %}
+    {% for e in errors %}
+        <div class="form-error-submit">&nbsp;&nbsp;{{ e }}</div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" id="thisform" name="thisform" autocomplete="off">
+<input type="hidden" name="id" value="{{ sub.id }}" />
+<input type="hidden" name="u" value="{{ current_user.user_id }}" />
+
+
+<fieldset><legend><span class="sign">{% trans _('edición sub') %}</span></legend>
+
+{% if current_user.admin %}
+	<label for="name">user_id:</label><br/>
+	<input type="number" id="owner" name="owner" value="{{ sub.owner }}" maxlength="10" pattern="[0-9]+"/>
+	<br/>
+{% else %}
+	<input type="hidden" id="owner" name="owner" 
+	{% if sub.name %}
+		value="{{ sub.owner }}"
+	{% else %}
+		value="{{ current_user.user_id }}"
+	{% endif %}
+	/>
+{% endif %}
+
+
+<label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
+<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="[A-Za-z]{3,12}" />
+<br/>
+
+<label for="name">{% trans _('título') %}:</label><br/>
+<input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,32}" maxlength="32" style="width:60%"/>
+<br/>
+
+<input class="button" type="submit" value="{% trans _('guardar') %}" />
+</fieldset>
+</form>
+</div>
+

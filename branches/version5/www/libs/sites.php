@@ -257,4 +257,15 @@ class SitesMgr {
 		return $db->get_col("select id from subs where parent = 0 and enabled");
 	}
 
+	static public function can_edit($id) {
+		global $current_user, $db;
+
+		if ($id > 0) {
+			return $current_user->admin || $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
+		} elseif ($id == 0) {
+			return $current_user->admin;
+		} 
+		return $current_user->admin || $current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*4*365;
+	}
+
 }
