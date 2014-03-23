@@ -8,6 +8,7 @@
 <form method="post" id="thisform" name="thisform" autocomplete="off">
 <input type="hidden" name="id" value="{{ sub.id }}" />
 <input type="hidden" name="u" value="{{ current_user.user_id }}" />
+<input type="hidden" name="created_from" value="{{ site.id }}" />
 
 
 <fieldset><legend><span class="sign">{% trans _('edición sub') %}</span></legend>
@@ -28,7 +29,7 @@
 
 
 <label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
-<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="[A-Za-z]{3,12}" />
+<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
 <br/>
 
 <label for="name">{% trans _('título') %}:</label><br/>

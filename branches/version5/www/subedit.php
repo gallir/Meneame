@@ -10,32 +10,35 @@ include('config.php');
 include(mnminclude.'html1.php');
 $globals['ads'] = false;
 
+if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
+
 force_authentication();
 $id = intval($_REQUEST['id']);
 if (! $id) $id = -1;
 if (! SitesMgr::can_edit($id)) die;
 
 $errors = array();
+$site = SitesMgr::get_info();
 
 array_push($globals['cache-control'], 'no-cache');
 do_header(_("editar sub"));
 
 echo '<div id="singlewrap">'."\n";
 
-if ($_POST['u']) {
-	$id = save_sub();
+if ($_POST['created_from']) {
+	$id = save_sub($errors);
+	$sub = (object) $_POST;
+} else {
+	$sub = SitesMgr::get_info($id);
 }
 
-$sub = SitesMgr::get_info($id);
-Haanga::Load('sub_edit.html', compact('sub', 'errors'));
+Haanga::Load('sub_edit.html', compact('sub', 'errors', 'site'));
 echo "</div>"."\n";
 
 do_footer();
 
-function save_sub($errors) {
+function save_sub(&$errors) {
 	global $current_user, $db;
-
-	$errors = array();
 
 	// Double check
 	$id = intval($_POST['id']);
@@ -43,7 +46,11 @@ function save_sub($errors) {
 	if (! $id) $id = -1;
 	if (! SitesMgr::can_edit($id)) {
 		array_push($errors, _('usuario no autorizado a editar'));
-		return $errors;
+		return false;
+	}
+	$site = SitesMgr::get_info();
+	if ($_POST['created_from'] != $site->id) {
+		array_push($errors, _('sitio erróneo'));
 	}
 
 	if($owner != $current_user->user_id && ! $current_user->admin) {
@@ -61,26 +68,27 @@ function save_sub($errors) {
 		array_push($errors, _('título erróneo'));
 	}
 
+	$name = $db->escape($name);
+	$name_long= $db->escape($name_long);
+	if ($db->get_var("select count(*) from subs where name = '$name' and id != $id") > 0) {
+		array_push($errors, _('nombre duplicado'));
+	}
+
 	if (empty($errors)) {
-		$name = $db->escape($name);
-		$name_long= $db->escape($name_long);
+
 		if ($id > 0) {
-			$r = $db->query("update subs set owner = $owner, name = '$name', name_long = '$name_long' where id = $id");
+			$r = $db->query("update subs set created_from = $site->id, owner = $owner, name = '$name', name_long = '$name_long' where id = $id");
 		} else {
-			$r = $db->query("insert into subs (owner, name, name_long, sub) values ($owner, '$name', '$name_long', 1)");
-			if ($r) {
-				$id = $db->insert_id;
-				if ($id > 0) {
-					// Copy values from first site
-					$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=1 set a.server_name = b.server_name, a.base_url = b.base_url");
-				} else {
-					array_push($errors, _('error insertando, quizás nombre duplicado'));
-				}
-			}
+			$r = $db->query("insert into subs (created_from, owner, name, name_long, sub) values ($site->id, $owner, '$name', '$name_long', 1)");
+			$id = $db->insert_id;
 		}
-		if (! $r) {
-			array_push($errors, _('error actualizando la bbdd'));
+		if ($r && $id > 0) {
+			// Copy values from first site
+			$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
+		} else {
+			array_push($errors, _('error actualizando la base de datos'));
 		}
+
 	}
 
 	return $id;
