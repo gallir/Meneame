@@ -739,7 +739,7 @@ DROP TABLE IF EXISTS `subs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subs` (
-  `id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` char(12) NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `parent` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -747,9 +747,31 @@ CREATE TABLE `subs` (
   `base_url` varchar(32) DEFAULT NULL,
   `name_long` char(32) NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
+  `sub` tinyint(4) NOT NULL DEFAULT '0',
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `nsfw` tinyint(4) NOT NULL DEFAULT '0',
+  `created_from` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`),
+  KEY `owner` (`owner`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Basic data for every sub site';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `subs_copy`
+--
+
+DROP TABLE IF EXISTS `subs_copy`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subs_copy` (
+  `src` int(11) NOT NULL,
+  `dst` int(11) NOT NULL,
+  UNIQUE KEY `uni` (`src`,`dst`),
+  KEY `dst_i` (`dst`),
+  CONSTRAINT `subs_copy_ibfk_1` FOREIGN KEY (`src`) REFERENCES `subs` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `subs_copy_ibfk_2` FOREIGN KEY (`dst`) REFERENCES `subs` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -919,4 +941,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-25  2:24:07
+-- Dump completed on 2014-03-23 19:04:46
