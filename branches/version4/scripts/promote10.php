@@ -110,8 +110,15 @@ function promote($site_id) {
 	/// Coeficients to balance metacategories
 	$days = 2;
 	$total_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day)");
-	$db_metas = $db->get_results("select category, category_name, calculated_coef from sub_categories, categories where id = $site_id and category_id = category and category_parent = 0 and category_id in (select category_parent from sub_categories, categories where id = $site_id and category_id = category and category_parent > 0)");
 
+	// Balance metas
+	if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) {
+		$db_metas = array();
+	} else {
+		$db_metas = $db->get_results("select category, category_name, calculated_coef from sub_categories, categories where id = $site_id and category_id = category and category_parent = 0 and category_id in (select category_parent from sub_categories, categories where id = $site_id and category_id = category and category_parent > 0)");
+	}
+
+	$meta_coef = array();
 	foreach ($db_metas as $dbmeta) {
 		$meta = $dbmeta->category;
 		$meta_previous_coef[$meta] = $dbmeta->calculated_coef;
@@ -127,7 +134,6 @@ function promote($site_id) {
 		//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
 	}
 
-	$meta_coef[0] = 1;
 	foreach ($meta_coef as $m => $v) {
 		if ($v == 0) $v = 1;
 		$meta_coef[$m] = max(min($meta_avg/$v, 1.5), 0.7);
@@ -218,7 +224,6 @@ function promote($site_id) {
 			}
 
 
-			//$karma_new = $link->karma * $meta_coef[$dblink->parent];
 			$karma_new = $link->karma;
 			$link->message = '';
 			$changes = 0;
