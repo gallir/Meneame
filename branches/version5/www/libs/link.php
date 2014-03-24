@@ -1303,6 +1303,9 @@ class Link extends LCPBase {
 
 	// Read affinity values using annotations
 	function metas_coef_get() {
+		global $globals;
+
+		if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) return false;
 		$log = new Annotation("metas-coef-".SitesMgr::my_id());
 		if (!$log->read()) return false;
 		$dict = unserialize($log->text);
