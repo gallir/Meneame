@@ -65,7 +65,9 @@ function do_save($link) {
 
 	$link->read_content_type_buttons($_POST['type']);
 
-	$link->category=intval($_POST['category']);
+	if (!empty($_POST['category'])) {
+		$link->category=intval($_POST['category']);
+	}
 	if ($current_user->admin || $current_user->user_level == 'blogger') {
 		if (!empty($_POST['url'])) {
 			$link->url = clean_input_url($_POST['url']);
@@ -130,6 +132,7 @@ function do_save($link) {
 
 	}
 	$link->read();
+	$link->permalink = $link->get_permalink();
 
 	Haanga::Load('link/edit_result.html', compact('link', 'errors'));
 }

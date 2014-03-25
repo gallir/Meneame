@@ -840,6 +840,11 @@ class Link extends LCPBase {
 				$r = $db->query("update links set link_karma=link_karma+$karma_value where link_id = $this->id");
 			}
 
+			if ($r) {
+				// Update in all statuses where not published
+				$r = $db->query("update sub_statuses set karma=karma+$karma_value where link = $this->id and status != 'published'");
+			}
+
 			if (! $r) {
 				syslog(LOG_INFO, "failed transaction in Link::insert_vote: $this->id ($r)");
 				$value = false;
@@ -966,8 +971,8 @@ class Link extends LCPBase {
 		$seq = 0;
 		require_once(mnminclude.'uri.php');
 		$new_uri = $base_uri = get_uri($this->title);
-		while (! empty($routes[$new_uri]) && // The uri is not equal to a standard uri, from dispatch.php
-				$db->get_var("select count(*) from links where link_uri='$new_uri' and link_id != $this->id") && $seq < 20) {
+		while ( (! empty($routes[$new_uri]) ||  // The uri is not equal to a standard uri, from dispatch.php
+				$db->get_var("select count(*) from links where link_uri='$new_uri' and link_id != $this->id")) && $seq < 20) {
 			$seq++;
 			$new_uri = $base_uri . "-$seq";
 		}
@@ -995,11 +1000,10 @@ class Link extends LCPBase {
 		global $globals;
 
 		if (! $this->is_sub || ($this->allow_main_link && $this->created_from == SitesMgr::my_id()) ) {
-			$base = $this->base_url . 'story/';
+			$base = $this->base_url.'story/';
 		} else {
 			$base = $this->base_url . 'm/'.$this->sub_name.'/';
 		}
-
 
 		if (!empty($this->uri)) {
 			return $base . $this->uri;
@@ -1010,7 +1014,6 @@ class Link extends LCPBase {
 
 	function get_permalink() {
 		global $globals;
-
 		
 		if (empty($globals['server_name'])) {
 			$server_name =  $this->server_name;
@@ -1682,6 +1685,7 @@ class Link extends LCPBase {
 			foreach($response['ids'] as $id) {
 				if ($id == $this->id) continue;
 				$l = Link::from_db($id);
+				if (! $l) continue;
 				if (empty($l->permalink)) $l->permalink = $l->get_permalink();
 				$related[] = $l;
 			}

@@ -63,9 +63,17 @@ class SitesMgr {
 
 		$delete_others = false;
 
-		$db->transaction();
 
 		$me = self::get_status(self::$id, $link);
+		if (! $full && $me->status == $link->status && $me->category == $link->category) {
+			// Update in all statuses where not published and finish
+			$db->query("update sub_statuses set karma=$link->karma where link = $link->id and status != 'published'");
+			return;
+		}
+		if ($me->category < 0 ) $me->category = 0; // TODO: check later
+
+		$db->transaction();
+
 		$strict = false;
 
 		if ($me->status != $link->status) {
@@ -114,13 +122,14 @@ class SitesMgr {
 		if ($me->category != $link->category) {
 			$delete_others = true;
 			$me->category = $link->category;
+			$me->origen = self::get_real_origen(self::$id, $link);
 		}
 
-		$receivers = self::get_receivers($me->category, $strict);
+		$receivers = self::get_receivers(self::get_real_origen(self::$id, $link), $me->category, $strict);
 
-		if (! $full) {
+		if (! $full && ! $link->is_sub) {
 			$my_conf = self::get_category_configuration(self::$id, $link->category);
-			if ($me->category == 0 || ! $my_conf->export) {
+			if ($me->category <= 0 || ! $my_conf->export) {
 				// We don't have to export our links to other sites
 				$receivers = array_intersect(array(self::$id), $receivers);
 				$delete_others = false;
@@ -131,11 +140,13 @@ class SitesMgr {
 
 		if ($receivers) {
 			foreach ($receivers as $r) {
-				self::store_status($r, $me);
+				$db->query("replace into sub_statuses (id, status, date, category, link, origen) values ($r, '$me->status', from_unixtime($me->date), $me->category, $me->link, $me->origen)");
+				$db->query("update sub_statuses set karma=$link->karma where link = $link->id and (status != 'published' or id = $me->id)");
+				//self::store_status($r, $me);
 			}
 		}
 
-		// We delete those old statues belong to the old category that were not changed before
+		// We delete those old statuses belong to the old category that were not changed before
 		if ($delete_others) {
 			$avoid = implode(',', $receivers);
 			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
@@ -144,20 +155,44 @@ class SitesMgr {
 		$db->commit();
 	}
 
-	// Receivers are categories from other sub sites that have importe as true
-	static public function get_receivers($category, $strict = false) {
-		global $db;
-		if (! self::$id ) self::__init();
+	// TODO: transient, for migration, edit/modify later
+	static function get_real_origen($id, $link) {
+		global $db; 
 
-		if ($category > 0) {
-			if ($strict) $extra = 'and (import or id = '.self::$id.')';
-			else $extra = '';
 
-			$receivers = $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled");
-			return array_unique($receivers);
-		} else {
-			return array(self::$id);
+		if ($link->category > 0) {
+			$transition = array('100' => 37, '101' => 39, '102' => 40, '103' => 38);
+			$meta = $db->get_var("select category_parent from categories where category_id = $link->category");
+			
+			if ($meta && $transition[$meta] > 0) {
+				$origin = $transition[$meta];
+				if ($db->get_var("select count(*) from subs_copy where src = $origin and dst = $id") ){
+					return $origin;
+				}
+			}
 		}
+		if ($link->sub_id > 0) return $link->sub_id;
+		return $id;
+	}
+
+	// Receivers are categories from other sub sites that have importe as true
+	static public function get_receivers($id, $category, $strict = false) {
+		global $db;
+
+		$receivers = array($id);
+		if ($category > 0) {
+			if ($strict) $extra = "and (import or id = $id)";
+			else $extra = '';
+			$receivers = array_merge($receivers, $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled"));
+		}
+
+		// it serves for submnm
+		if (! $strict) { // Don't "publish" to parents
+			$receivers = array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
+		}
+
+		$receivers = array_unique($receivers);
+		return $receivers;
 	}
 
 	static public function get_children($site_id) {
@@ -179,13 +214,14 @@ class SitesMgr {
 
 		if (! $status) {
 			// Create and object that can be later stored
+			$origen = self::get_real_origen(self::$id, $link);
 			$status = new stdClass();
-			$status->id = $id;
+			$status->id = $origen;
 			$status->link = $link->id;
 			$status->date = $link->date;
 			$status->status = 'new';
-			$status->category = 0;
-			$status->origen = self::$id;
+			$status->category = -1;
+			$status->origen = $origen;
 			$status->karma = 0;
 			$status->found = 0;
 		}
@@ -270,7 +306,7 @@ class SitesMgr {
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 		
-		return $n < 3 && ($current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*4*365);
+		return $n < 2 && ($current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*4*365);
 	}
 
 }

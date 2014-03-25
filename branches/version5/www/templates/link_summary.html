@@ -184,7 +184,7 @@
 		{% if self.category > 0 AND self.meta_name AND self.category_name %}
 			<a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">{{ self.meta_name }}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">{{self.category_name}}</a></span>
 		{% else %}
-			{% trans _('de') %}: <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}">{{ self.sub_name }}</a>
+			{% trans _('de') %}: <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}">{{ self.sub_name }}</a>
 		{% endif %}
 		</span>
 		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
