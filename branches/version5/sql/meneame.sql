@@ -751,6 +751,7 @@ CREATE TABLE `subs` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `nsfw` tinyint(4) NOT NULL DEFAULT '0',
   `created_from` int(11) NOT NULL DEFAULT '0',
+  `allow_main_link` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `owner` (`owner`)
@@ -941,4 +942,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-23 19:04:46
+-- Dump completed on 2014-03-25  1:06:58
