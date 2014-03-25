@@ -43,6 +43,12 @@
 <br/>
 
 {% if current_user.admin %}
+	{% if sub.id > 0 %}
+		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>{% trans _("habilitado") %}
+		<input type="checkbox" name="allow_main_link" value="1" {% if sub.allow_main_link %}checked{% endif %}>{% trans _("permitir enlace principal") %}
+		<br/>
+	{% endif %}
+
 	{% if copy_to %}
 		{% trans _('copiar a') %}:<br/>
 		{% for c in copy_to %}

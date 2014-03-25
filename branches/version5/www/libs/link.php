@@ -47,7 +47,7 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, meta.category_uri as meta_uri, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.base_url, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, meta.category_uri as meta_uri, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.base_url, subs.created_from, subs.allow_main_link, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN (categories as cat, categories as meta) on (links.link_category > 0 AND cat.category_id = links.link_category AND meta.category_id = cat.category_parent)
 	LEFT JOIN (sub_statuses, subs) ON (sub_statuses.link=links.link_id and sub_statuses.id=sub_statuses.origen and sub_statuses.id=subs.id)
@@ -55,7 +55,7 @@ class Link extends LCPBase {
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id)
 	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id) ";
 
-	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.base_url FROM links
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.base_url, subs.created_from, subs.allow_main_link  FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN (sub_statuses, subs) ON (sub_statuses.link=links.link_id and sub_statuses.id=sub_statuses.origen and sub_statuses.id=subs.id)";
 
@@ -994,10 +994,10 @@ class Link extends LCPBase {
 	function get_relative_permalink() {
 		global $globals;
 
-		if ($this->is_sub) {
-			$base = $this->base_url . 'm/'.$this->sub_name.'/story/';
-		} else {
+		if (! $this->is_sub || ($this->allow_main_link && $this->created_from == SitesMgr::my_id()) ) {
 			$base = $this->base_url . 'story/';
+		} else {
+			$base = $this->base_url . 'm/'.$this->sub_name.'/';
 		}
 
 

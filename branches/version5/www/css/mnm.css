@@ -1077,7 +1077,6 @@ table.decorated {
 border-collapse: collapse;
 width: 100%;
 margin-bottom: 16px;
-clear: both;
 }
 
 table.decorated th, table.decorated td {

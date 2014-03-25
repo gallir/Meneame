@@ -6,6 +6,7 @@ $routes = array(
 	'story'		=> 'story.php',
 	'submit'	=> 'submit.php',
 	'subedit'	=> 'subedit.php',
+	'subs'		=> 'subs.php',
 	'editlink'	=> 'editlink.php',
 	'comment_edit'	=> 'backend/comment_edit.php',
 	'login'		=> 'login.php',

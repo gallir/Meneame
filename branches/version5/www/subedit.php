@@ -82,10 +82,18 @@ function save_sub($id, &$errors) {
 		array_push($errors, _('nombre duplicado'));
 	}
 
+	if ($current_user->admin) {
+		$enabled = intval($_POST['enabled']);
+		$allow_main_link = intval($_POST['allow_main_link']);
+	} else {
+		// Keep the values
+		$enabled = 'enabled';
+		$allow_main_link = 'allow_main_link';
+	}
 	if (empty($errors)) {
 		$db->transaction();
 		if ($id > 0) {
-			$r = $db->query("update subs set created_from = $site->id, owner = $owner, name = '$name', name_long = '$name_long' where id = $id");
+			$r = $db->query("update subs set created_from = $site->id, owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, name = '$name', name_long = '$name_long' where id = $id");
 		} else {
 			$r = $db->query("insert into subs (created_from, owner, name, name_long, sub) values ($site->id, $owner, '$name', '$name_long', 1)");
 			$id = $db->insert_id;

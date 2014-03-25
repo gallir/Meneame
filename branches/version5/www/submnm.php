@@ -12,7 +12,7 @@ if (empty($globals['submnm']) || ! SitesMgr::my_id()) {
 
 $forbidden_routes = array('m', 'user', 'legal', 'notame', 'mobile', 'register', 'login', 'trends', 'backend');
 
-if (! isset($routes[$path[2]]) || in_array($path[2], $forbidden_routes)) {
+if (in_array($path[2], $forbidden_routes)) {
 	syslog(LOG_INFO, "Forbidden in subs: ".$path[2]);
 	// Redirect to the root
 	$uri = preg_split('/\/+/', $_SERVER['REQUEST_URI'], 10, PREG_SPLIT_NO_EMPTY);
@@ -24,8 +24,14 @@ if (! isset($routes[$path[2]]) || in_array($path[2], $forbidden_routes)) {
 
 $globals['path'] = array_slice($path, 2);
 $globals['base_url'] .= $path[0] . '/' . $path[1] . '/';
-$res = @include './'.$routes[$path[2]];
-if ($res === FALSE) {
-	not_found($path[1]);
+
+if ( !empty($routes[$path[2]]) ) {
+	$res = include './'.$routes[$path[2]];
+	if ($res === FALSE) {
+		not_found($path[1]);
+	}
+} else {
+	// Try with story
+	include './story.php';
 }
 

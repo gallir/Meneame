@@ -1,0 +1,20 @@
+<div class="topheading"><h2>{% trans _('subs menéames') %}</h2></div>
+{% if can_edit %}
+	<a href="{{ globals.base_url }}subedit"><b>{% trans _('crear sub') %}</b></a><br/><br/>
+{% endif %}
+
+<table class="decorated">
+{% for s in subs %}
+	<tr>
+		<th><a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }} {% endif %}">{{ s.name }}</a></th>
+		<td>
+		{% if current_user.admin || s.owner == current_user.user_id %}
+			[<a href="{{ s.base_url }}subedit?id={{ s.id }}">edit</a>]
+		{% endif %}
+		{% if ! s.enabled %}*{% endif %}
+		</td>
+		<td>{{ s.name_long }}</td>
+	</tr>
+
+{% endfor %}
+</table>

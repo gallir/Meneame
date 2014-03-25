@@ -28,7 +28,9 @@ mobile_redirect();
 $globals['cache-control'][] = 'max-age=3';
 
 $url_args = $globals['path'];
-array_shift($url_args); // Discard "story"
+if ($url_args[0] == 'story') {
+	array_shift($url_args); // Discard "story", TODO: but it should be discarded in dispatch and submnm
+}
 
 $argc = 0;
 if (!isset($_REQUEST['id']) && $url_args[0] && !is_numeric($url_args[0])) { // Compatibility with story.php?id=x and /story/x

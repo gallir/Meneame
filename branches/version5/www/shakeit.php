@@ -98,7 +98,7 @@ $pagetitle = _('noticias pendientes');
 if ($page > 1) {
     $pagetitle .= " ($page)";
 }
-do_header($pagetitle, _('pendientes'));
+do_header($pagetitle, _('nuevas'));
 do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
