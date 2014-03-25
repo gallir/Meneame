@@ -26,7 +26,7 @@ class LCPBase {
 			$regexp .= '|@\p{L}[\.\d\-_\p{L}]+\w';
 		}
 
-		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\.])';
+		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\?\.])';
 		$regexp .= '|\|(\p{L}+)';
 		$regexp = '/([\s\(\[{}¡;,:¿>\*]|^)('.$regexp.')/Smu';
 		return preg_replace_callback($regexp, array( &$this, 'to_html_cb'), $string);
