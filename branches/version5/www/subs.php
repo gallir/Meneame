@@ -34,7 +34,7 @@ if ($current_user->admin) {
 	$where = "where (enabled = 1 or owner = $current_user->user_id) and sub = $my_id ";
 }
 $subs = $db->get_results("select * from subs $where order by id asc");
-if ($my_id == 1 && SitesMgr::can_edit(1)) $can_edit = true;
+if ($my_id == 1 && SitesMgr::can_edit(0)) $can_edit = true;
 else $can_edit = false;
 
 Haanga::Load('subs.html', compact('subs', 'can_edit'));

@@ -260,11 +260,12 @@ class SitesMgr {
 	static public function can_edit($id) {
 		global $current_user, $db;
 
+		if (! $current_user->user_id) return false;
+
 		if ($id > 0) {
 			return $current_user->admin || $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
-		} elseif ($id == 0) {
-			return $current_user->admin;
 		}
+
 		if ($current_user->admin) return true;
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
