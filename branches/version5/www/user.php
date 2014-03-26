@@ -139,6 +139,7 @@ switch ($view) {
 		$globals['noindex'] = true;
 		breaK;
 	case 'profile':
+	case 'subs':
 		$globals['noindex'] = false;
 		breaK;
 	default:
@@ -167,6 +168,9 @@ echo '<div id="singlewrap">'."\n";
 $url_login = urlencode($login);
 
 switch ($view) {
+	case 'subs':
+		do_subs();
+		break;
 	case 'history':
 		do_history();
 		if (! $globals['bot']) do_pages($rows, $page_size);
@@ -637,6 +641,18 @@ function do_user_subheader($options, $selected = false, $rss = false, $rss_title
 		'options', 'selected', 'rss', 'rss_title'
 	);
 	return Haanga::Load('/user/subheader.html', $vars);
+}
+
+function do_subs() {
+	global $db, $user;
+
+	$title = _('subs de') . " $user->username";
+	$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
+	$subs = $db->get_results($sql);
+	if (SitesMgr::can_edit(0)) $can_edit = true;
+	else $can_edit = false;
+
+	Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));
 }
 
 ?>

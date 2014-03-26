@@ -28,6 +28,7 @@ echo '</div>';
 echo '<div id="newswrap">';
 
 $my_id =  SitesMgr::my_id();
+$title = _('subs más activos');
 /*
 if ($current_user->admin) {
 	$where = '';
@@ -42,7 +43,7 @@ $subs = $db->get_results($sql);
 if ($my_id == 1 && SitesMgr::can_edit(0)) $can_edit = true;
 else $can_edit = false;
 
-Haanga::Load('subs.html', compact('subs', 'can_edit'));
+Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));
 echo '</div>';
 
 do_footer();

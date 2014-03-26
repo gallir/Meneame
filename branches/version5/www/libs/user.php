@@ -230,6 +230,9 @@ class User {
 		global $globals, $current_user;
 
 		switch ($view) {
+			case 'subs':
+				$id = _('subs');
+				break;
 			case 'history':
 			case 'shaken':
 			case 'friends_shaken':
@@ -261,6 +264,7 @@ class User {
 		$items = array();
 		$items[] = new MenuOption(_('perfil'), get_user_uri($user), $id, _('información de usuario'));
 		$items[] = new MenuOption(_('relaciones'), get_user_uri($user, 'friends'), $id, _('amigos e ignorados'));
+		$items[] = new MenuOption(_('subs'), get_user_uri($user, 'subs'), $id, _('sub menéames'));
 		$items[] = new MenuOption(_('historias'), get_user_uri($user, 'history'), $id, _('información de envíos'));
 		$items[] = new MenuOption(_('comentarios'), get_user_uri($user, 'commented'), $id, _('información de comentarios'));
 		$items[] = new MenuOption(_('notas'), post_get_base_url($user), $id, _('página de notas'));
