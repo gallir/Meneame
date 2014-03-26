@@ -56,9 +56,18 @@ if (! $comment->hide_comment) {
 	$title = '';
 }
 
+// Canonical url
 if (isset($globals['canonical_server_name']) && !empty($globals['canonical_server_name'])) {
-	$globals['extra_head'] = '<link rel="canonical" href="http://'.$globals['canonical_server_name'].$comment->get_relative_individual_permalink().'" />';
+	$canonical_server = $globals['canonical_server_name'];
+} else {
+	$canonical_server = $link->server_name;
 }
+$canonical_base = $link->base_url;
+if ($link->is_sub) $canonical_base .= 'm/'.$link->sub_name.'/';
+$canonical_base .= 'c/';
+$globals['extra_head'] = '<link rel="canonical" href="http://'.$canonical_server.$canonical_base.$comment->id.'"/>';
+
+
 do_header($title. ' | ' . $globals['site_name']);
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
@@ -137,4 +146,3 @@ function print_answers($id, $level, $visited = false) {
 	return $printed;
 }
 
-?>

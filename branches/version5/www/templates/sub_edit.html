@@ -19,11 +19,7 @@
 {% endif %}
 </legend>
 
-{% if current_user.admin %}
-	<label for="name">user_id:</label><br/>
-	<input type="number" id="owner" name="owner" value="{{ sub.owner }}" maxlength="10" pattern="[0-9]+"/>
-	<br/>
-{% else %}
+{% if ! current_user.admin %}
 	<input type="hidden" id="owner" name="owner" 
 	{% if sub.name %}
 		value="{{ sub.owner }}"
@@ -43,6 +39,11 @@
 <br/>
 
 {% if current_user.admin %}
+	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
+
+	<label for="name">user_id:</label><br/>
+	<input type="number" id="owner" name="owner" value="{{ sub.owner }}" maxlength="10" pattern="[0-9]+"/>
+	<br/>
 	{% if sub.id > 0 %}
 		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>{% trans _("habilitado") %}
 		<input type="checkbox" name="allow_main_link" value="1" {% if sub.allow_main_link %}checked{% endif %}>{% trans _("permitir enlace principal") %}

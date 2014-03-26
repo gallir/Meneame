@@ -70,9 +70,15 @@ function do_header($title, $id='home', $options = false) {
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
 
+	$sites = $db->get_results("select * from subs where visible order by id asc");
+	$this_site = SitesMgr::get_info();
+
+
 	if (! is_array($options)) {
 		$left_options = array();
-		$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'));
+		if ($this_site->enabled) {
+			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'));
+		}
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
 		$left_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', $id, _('menear noticias pendientes'));
 		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'popular', $id, _('historias más votadas'));
@@ -95,9 +101,6 @@ function do_header($title, $id='home', $options = false) {
 		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	}
-
-	$sites = $db->get_results("select * from subs where visible order by id asc");
-	$this_site = SitesMgr::get_info();
 
 	$vars = compact('title', 'greeting', 'id', 'left_options', 'right_options', 'sites', 'this_site');
 	return Haanga::Load('header.html', $vars);

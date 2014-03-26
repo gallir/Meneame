@@ -222,7 +222,11 @@ class Comment extends LCPBase {
 		}
 
 		/* Get info about the comment and author */
-		$this->link_permalink =  $link->get_relative_permalink();
+		if ($globals['permalink']) {
+			$this->link_permalink = $globals['permalink'];
+		} else {
+			$this->link_permalink =  $link->get_relative_permalink();
+		}
 		$this->single_link = $single_link;
 
 		$this->check_visibility();
