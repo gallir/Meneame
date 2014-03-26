@@ -28,7 +28,7 @@ function promote($site_id) {
 	global $db, $globals;
 
 	SitesMgr::__init($site_id);
-	echo "Parent: ". SitesMgr::my_parent()."\n";
+	echo "Parent: ". SitesMgr::my_parent()." IS SUB: $site_info->sub\n";
 
 	$min_karma_coef = $globals['min_karma_coef'];
 
@@ -165,12 +165,12 @@ function promote($site_id) {
 
 
 
-	$where = "id = $site_id AND date > $from_time AND status = 'queued' AND link_id = link AND link_votes>=$min_votes AND (link_karma > $limit_karma or (date > date_sub(now(), interval 2 hour) and link_karma > $bonus_karma)) and user_id = link_author and category_id = category";
+	$where = "id = $site_id AND date > $from_time AND status = 'queued' AND link_id = link AND link_votes>=$min_votes AND (link_karma > $limit_karma or (date > date_sub(now(), interval 2 hour) and link_karma > $bonus_karma)) and user_id = link_author ";
 	$sort = "ORDER BY link_karma DESC, link_votes DESC";
 
 	$thumbs_queue = array();
 
-	$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma, category_parent as parent from sub_statuses, links, users, categories where $where $sort LIMIT 30");
+	$links = $db->get_results("SELECT SQL_NO_CACHE link_id, link_karma as karma from sub_statuses, links, users  where $where $sort LIMIT 30");
 	$rows = $db->affected_rows;
 	echo "SELECTED $rows ARTICLES\n";
 
@@ -260,13 +260,6 @@ function promote($site_id) {
 				$karma_new *= 0.75;
 				$link->message .= $globals['ban_message'].'<br/>';
 			}
-			/*
-			 elseif ($meta_coef[$dblink->parent] < 1 && ($link->content_type == 'image')) {
-				// check if it's "media" and the metacategory coefficient is low
-				$karma_new *= 0.9;
-				$link->message .= 'Image/Video '.$meta_coef[$dblink->parent].'<br/>';
-			}
-			*/
 
 			// Check if it was depubished before
 
@@ -348,7 +341,7 @@ function promote($site_id) {
 
 			if ($link->votes >= $min_votes && $link->karma >= $karma_threshold && $published < $max_to_publish) {
 				$published++;
-				publish($link);
+				publish($site_id, $link);
 				$changes = 3; // to show a "published" later
 			} else {
 				if (( $must_publish || $link->karma > $min_past_karma)
@@ -371,7 +364,7 @@ function promote($site_id) {
 			if ($link->read()) {
 				$link->message = "Last resort: selected with the best karma";
 				$output .= print_row($link, 3);
-				publish($link);
+				publish($site_id, $link);
 				// Recheck for images, some sites add images after the article has been published
 				if ($link->thumb_status != 'local' && $link->thumb_status != 'remote'
 						&& $link->thumb_status != 'deleted' && ! in_array($link->id, $thumbs_queue) ) {
@@ -442,8 +435,10 @@ function print_row($link, $changes, $log = '') {
 }
 
 
-function publish($link) {
+function publish($site, $link) {
 	global $globals, $db;
+
+	$site_info = SitesMgr::get_info($site);
 
 	if (DEBUG) return;
 
@@ -464,8 +459,13 @@ function publish($link) {
 
 	// Increase user's karma
 	$user = new User($link->author);
+	if ($site_info->sub) {
+		$karma_bonus = $globals['instant_karma_per_published'] / 3;
+	} else {
+		$karma_bonus = $globals['instant_karma_per_published'];
+	}
 	if ($user->read) {
-		$user->add_karma($globals['instant_karma_per_published'], _('noticia publicada'));
+		$user->add_karma($karma_bonus, _('noticia publicada'));
 	}
 
 	// Add the publish event/log
@@ -476,6 +476,12 @@ function publish($link) {
 
 	$my_id = SitesMgr::my_id();
 
+
+	// ALERT: Don't post if sub
+	if ($site_info->sub) {
+		echo "It's SUB, not posting\n";
+		return;
+	}
 
 	// Get all sites that are "children" and try to post links
 	// And that "import" the link->category
