@@ -644,10 +644,14 @@ function do_user_subheader($options, $selected = false, $rss = false, $rss_title
 }
 
 function do_subs() {
-	global $db, $user;
+	global $db, $user, $current_user;
 
 	$title = _('subs de') . " $user->username";
-	$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
+	if ($current_user->admin) {
+		$sql = "select subs.* from subs where subs.sub = 1 and (subs.owner = $user->id or subs.owner = 0)";
+	} else {
+		$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
+	}
 	$subs = $db->get_results($sql);
 	if (SitesMgr::can_edit(0)) $can_edit = true;
 	else $can_edit = false;
