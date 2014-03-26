@@ -14,7 +14,7 @@ class SitesMgr {
 	static function __init($id = false) {
 		global $globals, $db;
 
-		self::$info == false;
+		self::$info = false;
 		if ($id > 0) {
 			self::$id = $id;
 		} elseif (!isset($globals['site_id'])) {
@@ -125,7 +125,10 @@ class SitesMgr {
 			$me->origen = self::get_real_origen(self::$id, $link);
 		}
 
-		$receivers = self::get_receivers(self::get_real_origen(self::$id, $link), $me->category, $strict);
+		// TODO: ALERT: check what's would do in case on pubslish
+		if ($strict) $id = self::$id;
+		else $id = self::get_real_origen(self::$id, $link);
+		$receivers = self::get_receivers($id, $me->category, $strict);
 
 		if (! $full && ! $link->is_sub) {
 			$my_conf = self::get_category_configuration(self::$id, $link->category);

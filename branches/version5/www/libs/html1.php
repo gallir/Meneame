@@ -73,6 +73,11 @@ function do_header($title, $id='home', $options = false) {
 	$sites = $db->get_results("select * from subs where visible order by id asc");
 	$this_site = SitesMgr::get_info();
 
+	if ($this_site->nsfw) {
+		$globals['ads'] = false;
+	}
+
+
 
 	if (! is_array($options)) {
 		$left_options = array();

@@ -38,6 +38,9 @@
 <input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,32}" maxlength="32" style="width:60%"/>
 <br/>
 
+{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}>
+<br/>
+
 {% if current_user.admin %}
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
 

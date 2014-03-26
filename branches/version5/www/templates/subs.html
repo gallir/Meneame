@@ -8,7 +8,7 @@
 	<tr>
 		<th><a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }} {% endif %}">{{ s.name }}</a></th>
 		<td>
-		{% if current_user.admin || s.owner == current_user.user_id %}
+		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
 			[<a href="{{ s.base_url }}subedit?id={{ s.id }}">edit</a>]
 		{% endif %}
 		{% if ! s.enabled %}*{% endif %}

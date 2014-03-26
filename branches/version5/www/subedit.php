@@ -90,12 +90,14 @@ function save_sub($id, &$errors) {
 		$enabled = 'enabled';
 		$allow_main_link = 'allow_main_link';
 	}
+	$nsfw = intval($_POST['nsfw']);
+
 	if (empty($errors)) {
 		$db->transaction();
 		if ($id > 0) {
-			$r = $db->query("update subs set created_from = $site->id, owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, name = '$name', name_long = '$name_long' where id = $id");
+			$r = $db->query("update subs set created_from = $site->id, owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long' where id = $id");
 		} else {
-			$r = $db->query("insert into subs (created_from, owner, name, name_long, sub) values ($site->id, $owner, '$name', '$name_long', 1)");
+			$r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1)");
 			$id = $db->insert_id;
 		}
 		if ($r && $id > 0) {
