@@ -25,7 +25,7 @@ if ($link->is_discarded()) {
 }
 
 $globals['link'] = $link;
-$globals['permalink'] = 'http://'.get_server_name().$comment->get_relative_individual_permalink();
+$globals['permalink'] = $link->get_permalink();
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {

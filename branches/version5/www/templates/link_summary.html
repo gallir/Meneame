@@ -188,7 +188,11 @@
 		{% endif %}
 		</span>
 		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
-			{{ self.karma|intval }}
+			{% if self.status == 'published' %}
+				{{ self.sub_karma|intval }}
+			{% else %}
+				{{ self.karma|intval }}
+			{% endif %}
 		</span></span>
 
 		{% if self.can_vote_negative %}

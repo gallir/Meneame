@@ -556,6 +556,7 @@ class User {
 
 		$this->karma = min($globals['max_karma'], $this->karma + $inc);
 		$this->karma = max($globals['min_karma'], $this->karma);
+		$this->karma = round($this->karma, 2);
 		if (! empty($log) && mb_strlen($log) > 5) {
 			$this->karma_log .= "$log: $inc, " . _('nuevo karma') . ": $this->karma\n";
 			$this->karma_calculated = time();

@@ -22,7 +22,12 @@ class SitesMgr {
 				echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 			}
 			self::$info = $db->get_row("select * from subs where name = '".$globals['site_shortname']."'");
-			self::$id = self::$info->id;
+			if (self::$info) {
+				self::$id = self::$info->id;
+			} else {
+				self::$id = 0;
+				return;
+			}
 		} else {
 			self::$id = $globals['site_id'];
 		}
@@ -32,6 +37,9 @@ class SitesMgr {
 		}
 
 		self::$parent = self::$info->parent;
+		if (self::$id > 0) {
+			$db->query('set @site_id = '.self::$id);
+		}
 	}
 
 	static public function my_id() {
@@ -66,8 +74,6 @@ class SitesMgr {
 
 		$me = self::get_status(self::$id, $link);
 		if (! $full && $me->status == $link->status && $me->category == $link->category) {
-			// Update in all statuses where not published and finish
-			$db->query("update sub_statuses set karma=$link->karma where link = $link->id and status != 'published'");
 			return;
 		}
 		if ($me->category < 0 ) $me->category = 0; // TODO: check later
