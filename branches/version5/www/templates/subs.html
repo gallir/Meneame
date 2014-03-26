@@ -1,4 +1,4 @@
-<div class="topheading"><h2>{% trans _('subs menéames') %}</h2></div>
+<div class="topheading"><h2>{% trans _('subs más activos') %}</h2></div>
 {% if can_edit %}
 	<a href="{{ globals.base_url }}subedit"><b>{% trans _('crear sub') %}</b></a><br/><br/>
 {% endif %}
@@ -6,10 +6,11 @@
 <table class="decorated">
 {% for s in subs %}
 	<tr>
-		<th><a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }} {% endif %}">{{ s.name }}</a></th>
 		<td>
+		<img width="20" height="20" data-src="{% exec get_avatar_url s.user_id, s.user_avatar, 20, false %}" data-2x="s:-20.:-40." alt="" src="{{ globals.base_static }}img/g.gif" class="tooltip u:{{ s.user_id }} avatar lazy"/>&nbsp;
+		<a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }}/queue {% endif %}"><b>{{ s.name }}</b></a>
 		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
-			[<a href="{{ s.base_url }}subedit?id={{ s.id }}">edit</a>]
+			&nbsp;[<a href="{{ s.base_url }}subedit?id={{ s.id }}">edit</a>]
 		{% endif %}
 		{% if ! s.enabled %}*{% endif %}
 		</td>
