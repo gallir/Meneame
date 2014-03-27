@@ -485,7 +485,7 @@ function publish($site, $link) {
 
 	// Get all sites that are "children" and try to post links
 	// And that "import" the link->category
-	$sites = array_intersect(SitesMgr::get_children($my_id), SitesMgr::get_receivers($link->category));
+	$sites = array_intersect(SitesMgr::get_children($my_id), SitesMgr::get_receivers($my_id, $link->category));
 
 	// Add my own
 	$sites[] = $my_id;
