@@ -58,7 +58,7 @@ $site_id = SitesMgr::my_id();
 if ($site_id != $link->sub_id && ($site_id != $link->created_from || empty($link->sub_status))) {
 	// The link does not correspond to the current site, find one
 	header ('HTTP/1.1 301 Moved Permanently');
-	header('Location: ' . $link->get_canonical_permalink());
+	header ('Location: ' . $link->get_canonical_permalink());
 	die;
 }
 

@@ -1001,10 +1001,10 @@ class Link extends LCPBase {
 		return 'http://'.$server_name.$id;
 	}
 
-	function get_relative_permalink() {
+	function get_relative_permalink($strict = false) {
 		global $globals;
 
-		if (! $this->is_sub || ($this->allow_main_link && $this->created_from == SitesMgr::my_id()) ) {
+		if (! $this->is_sub || (! $strict && $this->allow_main_link && $this->created_from == SitesMgr::my_id()) ) {
 			$base = $this->base_url.'story/';
 		} else {
 			$base = $this->base_url . 'm/'.$this->sub_name.'/';
@@ -1039,7 +1039,7 @@ class Link extends LCPBase {
 		} else {
 			$server_name = $globals['canonical_server_name'];
 		}
-		return 'http://'.$server_name.$this->get_relative_permalink().$page;
+		return 'http://'.$server_name.$this->get_relative_permalink(true).$page;
 	}
 
 	function get_trackback() {
