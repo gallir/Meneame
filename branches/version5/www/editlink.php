@@ -42,6 +42,7 @@ do_footer();
 function do_edit($link) {
 	global $dblang, $db, $current_user, $globals;
 
+	$link->status = $link->sub_status;
 	$link->discarded = $link->is_discarded();
 	$link->status_text = $link->get_status_text();
 	$link->key = md5($globals['now'].$link->randkey);

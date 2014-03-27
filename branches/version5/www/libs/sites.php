@@ -142,6 +142,7 @@ class SitesMgr {
 		// TODO: ALERT: check what's would do in case on pubslish
 		if ($strict) $id = self::$id;
 		else $id = self::get_real_origen(self::$id, $link);
+
 		if ($strict && $link->is_sub && $link->sub_id == $id) {
 			$strict = 2;
 		}
@@ -169,7 +170,9 @@ class SitesMgr {
 
 		// We delete those old statuses belong to the old category that were not changed before
 		if ($delete_others) {
-			$avoid = implode(',', $receivers);
+			$keep = array_merge(self::get_receivers($id, $me->category, false), self::get_receivers(self::get_real_origen(self::$id, $link), $me->category, false));
+			$keep = array_unique($keep);
+			$avoid = implode(',', $keep);
 			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
 		}
 
