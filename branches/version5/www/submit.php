@@ -131,7 +131,7 @@ function do_submit1() {
 	}
 
 	// Check the number of links sent by a user
-	$queued_24_hours = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id");
+	$queued_24_hours = (int) $db->get_var("select count(*) from links, subs, sub_statuses where link_status='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
 		add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
@@ -341,7 +341,7 @@ function do_submit1() {
 	// Check the user does not send too many images or vídeos
 	// they think this is a fotolog
 	if ($sents > 5 && ($link->content_type == 'image' || $link->content_type == 'video')) {
-		$image_links = intval($db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video')"));
+		$image_links = intval($db->get_var("select count(*) from links, subs, sub_statuses where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60  day) and link_content_type in ('image', 'video') and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0"));
 		if ($image_links > $sents * 0.8) {
 			syslog(LOG_NOTICE, "Meneame, forbidden due to too many images or video sent by user ($current_user->user_login): $link->url");
 			add_submit_error( _('ya has enviado demasiadas imágenes o vídeos'));
