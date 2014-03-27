@@ -33,8 +33,12 @@ echo '<div id="singlewrap">'."\n";
 
 if ($_POST['created_from']) {
 	$id = save_sub($id, $errors);
+	$sub = (object) $_POST; // Copy the data for the form, in case it failed to store
 }
-$sub = SitesMgr::get_info($id);
+
+if ($id > 0) {
+	$sub = SitesMgr::get_info($id);
+}
 
 if ($current_user->admin) {
 	$candidates_to = $db->get_results("select id, name from subs where sub = 0 and id not in (select dst from subs_copy where src = $id)");
