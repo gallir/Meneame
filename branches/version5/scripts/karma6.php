@@ -145,7 +145,7 @@ foreach ($res as $dbuser) {
 		$output .= _('Último voto').': '. get_date_time($dbuser->ts) . "\n";
 
 		// Test with published during last three days
-		$n_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > date_sub($now, interval 3 day) and link_status = 'published'");
+		$n_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses, subs, links where link_author = $user->id and link_date > date_sub($now, interval 3 day) and link_id = sub_statuses.link and subs.id = sub_statuses.id and subs.sub = 0 and subs.parent = 0 and link_id = sub_statuses.link and sub_statuses.status = 'published'");
 
 		$karma0 = $points_per_published * $n_published;
 		// Max: 4 published
