@@ -94,7 +94,7 @@ function promote($site_id) {
 	if ($decay >= 1) $max_to_publish = 3;
 	else $max_to_publish = 1;
 
-	$min_votes = 5;
+	$min_votes = 4;
 	/////////////
 
 	$limit_karma = round(min($past_karma,$min_karma) * 0.40);
@@ -460,7 +460,7 @@ function publish($site, $link) {
 	// Increase user's karma
 	$user = new User($link->author);
 	if ($site_info->sub) {
-		$karma_bonus = $globals['instant_karma_per_published'] / 3;
+		$karma_bonus = $globals['instant_karma_per_published'] / 2; // currently these published don't receive extra karma
 	} else {
 		$karma_bonus = $globals['instant_karma_per_published'];
 	}
