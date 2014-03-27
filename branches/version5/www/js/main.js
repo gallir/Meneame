@@ -728,6 +728,11 @@ function post_edit(id) {
 	post_load_form(id, 'pcontainer-'+id);
 }
 
+function comment_edit(id, DOMid) {
+	e=$('#' + DOMid);
+	e.load(base_url + 'comment_edit?id='+id, function () {e.trigger('DOMChanged', e)});
+}
+
 function post_reply(id, user) {
 	var ref = '@' + user + ',' + id + ' ';
 	var others = '';

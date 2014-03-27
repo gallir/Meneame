@@ -31,7 +31,7 @@
 
 	{% if self.can_edit %}
 		&nbsp;&nbsp;<a 
-		href="javascript:e=$('#c-{{ self.html_id }}'); e.load('{{ globals.base_url }}comment_edit?id={{ self.id }}', function () {e.trigger('DOMChanged', e)});"
+		href="javascript:comment_edit({{ self.id }}, 'c-{{ self.html_id }}')"
 		title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
 	{% endif %}
 
