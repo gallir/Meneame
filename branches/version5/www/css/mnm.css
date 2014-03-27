@@ -1081,7 +1081,7 @@ margin-bottom: 16px;
 
 table.decorated th, table.decorated td {
 text-align: left;
-font-size: 85%;
+font-size: 12px;
 padding: 6px;
 border-bottom: 1px solid;
 }

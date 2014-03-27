@@ -38,7 +38,7 @@ if ($current_user->admin) {
 $subs = $db->get_results("select * from subs $where order by id asc");
 */
 
-$sql = "select subs.*, user_id, user_login, user_avatar, count(*) as c from links, subs, sub_statuses, users where link_date > date_sub(now(), interval 3 day) and link = link_id and subs.id = sub_statuses.id and sub_statuses.id = sub_statuses.origen and subs.sub = 1 and user_id = owner group by subs.id order by c desc limit 50";
+$sql = "select subs.*, user_id, user_login, user_avatar, count(*) as c from subs, sub_statuses, users where date > date_sub(now(), interval 4 day) and subs.id = sub_statuses.id and sub_statuses.id = sub_statuses.origen and subs.sub = 1 and user_id = owner group by subs.id order by c desc limit 50";
 $subs = $db->get_results($sql);
 if ($my_id == 1 && SitesMgr::can_edit(0)) $can_edit = true;
 else $can_edit = false;
