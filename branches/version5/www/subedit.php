@@ -67,7 +67,7 @@ function save_sub($id, &$errors) {
 	}
 
 	$name = mb_substr(clean_input_string($_POST['name']), 0, 12);
-	if (mb_strlen($name) < 3) {
+	if (mb_strlen($name) < 3 || ! preg_match('/^\p{L}+$/u', $name)) {
 		array_push($errors, _('nombre erróneo'). ' ' . $_POST['name']);
 	}
 	

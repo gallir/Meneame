@@ -31,7 +31,7 @@
 
 
 <label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
-<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="[A-Za-z0-9]{3,12}" />
+<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="\S{3,12}" />
 <br/>
 
 <label for="name">{% trans _('título') %}:</label><br/>
