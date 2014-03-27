@@ -1390,6 +1390,10 @@ border-radius: 0 0 4px 4px;
 border: none;
 }
 
+.news-shakeit.mnm-subpublished .clics {
+background-image: none;
+}
+
 .news-shakeit.mnm-queued .votes, .news-shakeit.mnm-queued .clics {
 border-color: #FF883D;
 background-image: none;
