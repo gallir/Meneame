@@ -78,7 +78,6 @@ function check_already_sent() {
 function do_submit0() {
 	global $current_user, $site_key;
 
-
 	$link = new Link;
 	$link->randkey = rand(10000,10000000);
 	$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
@@ -97,7 +96,7 @@ function do_submit0() {
 function do_submit1() {
 	global $db, $dblang, $current_user, $globals, $errors;
 
-
+	$site_info = SitesMgr::get_info();
 
 	$url = clean_input_url(urldecode($_POST['url']));
 	$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
@@ -288,7 +287,7 @@ function do_submit1() {
 		//echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
 		$e = _('error leyendo el url').': '. htmlspecialchars($url);
 		// Dont allow new users with low karma to post wrong URLs
-		if ($current_user->user_karma < 8 && $current_user->user_level == 'normal') {
+		if ($current_user->user_karma < 8 && $current_user->user_level == 'normal' && ! $site_info->owner) {
 			add_submit_error( $e, _('URL inválido, incompleto o no permitido. Está fuera de línea, o tiene mecanismos antibots.'));
 			return false;
 		}
@@ -399,9 +398,10 @@ function do_submit1() {
 		return false;
 	}
 
+
 	// check there is no an "overflow" of images
-	if ($link->content_type == 'image' || $link->content_type == 'video') {
-		$image_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video')"));
+	if ($site_info->owner == 0 && ($link->content_type == 'image' || $link->content_type == 'video')) {
+		$image_links = intval($db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video') and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0"));
 		if ($image_links > 5 && $image_links > $links_12hs * 0.15) { // Only 15% images and videos
 			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
 			add_submit_error( _('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
