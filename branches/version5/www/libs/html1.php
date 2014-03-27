@@ -356,7 +356,7 @@ function print_categories_form($selected = 0) {
 function do_vertical_tags($what=false) {
 	global $db, $globals, $dblang;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile'] || $globals['submnm'] ) return;
 
 	if (!empty($what)) {
 		$status = '= "'.$what. '"';
