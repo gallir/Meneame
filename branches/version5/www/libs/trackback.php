@@ -74,6 +74,7 @@ class Trackback {
 		if (empty($this->url)) return;
 
 		$this->title = clean_input_url($link->url);
+		syslog(LOG_INFO, "Sending trackback ".$link->get_canonical_permalink());
 
 		if (preg_match('/^ping:/', $this->url)) { // we got a pingback adress
 			require_once(mnminclude.'IXR_Library.inc.php');
@@ -82,17 +83,17 @@ class Trackback {
 			$client->timeout = 3;
 			$client->useragent .= ' -- Meneame/2';
 			$client->debug = false;
-			if ($client->query('pingback.ping', $link->get_permalink(), $this->link )) {
+			if ($client->query('pingback.ping', $link->get_canonical_permalink(), $this->link )) {
 				$this->status='ok';
 				$this->store();
-				//syslog(LOG_NOTICE, "Meneame, pingback sent: $this->link, $this->url");
+				syslog(LOG_NOTICE, "Meneame, pingback sent: $this->link, $this->url");
 				return true;
 			} else {
 				// Be quiet for pingbacks
 				$this->status='error';
 				$this->title = $client->getErrorMessage();
 				$this->store();
-				// syslog(LOG_NOTICE, "Meneame, out pingback error: $url ".$link->get_permalink().': '.$client->getErrorCode().' '.$client->getErrorMessage());
+				// syslog(LOG_NOTICE, "Meneame, out pingback error: $url ".$link->get_canonical_permalink().': '.$client->getErrorCode().' '.$client->getErrorMessage());
 				return false;
 			}
 		}
@@ -104,7 +105,7 @@ class Trackback {
 
 		$blog_name = urlencode(get_server_name());
 		$tb_url = $this->url;
-		$url = urlencode($link->get_permalink());
+		$url = urlencode($link->get_canonical_permalink());
 		$query_string = "charset=UTF-8&title=$title&url=$url&blog_name=$blog_name&excerpt=$excerpt";
 		$trackback_url = parse_url($this->url);
 		$http_request  = 'POST ' . $trackback_url['path'] . ($trackback_url['query'] ? '?'.$trackback_url['query'] : '') . " HTTP/1.0\r\n";
@@ -130,7 +131,7 @@ class Trackback {
 			@fclose($fs);
 			$this->status='ok';
 			$this->store();
-			// syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
+			syslog(LOG_NOTICE, "Meneame, trackback sent: $this->link, $this->url");
 			return true;	
 		}
 		$this->status='error';	
