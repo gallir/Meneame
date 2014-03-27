@@ -16,6 +16,8 @@ $globals['favicon'] = 'img/common/konsole.png';
 $globals['extra_css'][] = 'es/telnet.css';
 init_sneak();
 
+$globals['site_id'] = SitesMgr::my_id();
+
 do_header("telnet");
 
 Haanga::Load('sneak/telnet_base.html');

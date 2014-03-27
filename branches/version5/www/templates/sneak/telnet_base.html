@@ -6,6 +6,7 @@ var ts={{ globals.now }} - 3600; // just due a freaking IE cache problem
 var server_name = '{{ globals.server_name }}';
 var sneak_base_url = 'http://{{ globals.server_name }}{{ globals.base_url }}backend/sneaker2.php';
 var mykey = {% exec rand 100 999  %};
+var site_id = {{ globals.site_id }};
 
 {% if current_user.admin %}
 var is_admin = true;
