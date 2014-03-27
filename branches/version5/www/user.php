@@ -647,7 +647,7 @@ function do_subs() {
 	global $db, $user, $current_user;
 
 	$title = _('subs de') . " $user->username";
-	if ($current_user->admin) {
+	if ($current_user->admin && $user->id == $current_user->user_id) {
 		$sql = "select subs.* from subs where subs.sub = 1 and (subs.owner = $user->id or subs.owner = 0)";
 	} else {
 		$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
