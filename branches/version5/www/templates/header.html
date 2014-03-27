@@ -137,7 +137,7 @@
 <div id="header">
 {% if globals.mobile AND this_site.sub %}
 	<div id="header-sub">
-		<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name_long }}</a>
+		<a href="{{ this_site.base_url }}m/{{ this_site.name }}"><span style="font-variant:small-caps">{{ this_site.name }}</span>: <span style="text-transform:lowercase">{{ this_site.name_long }}</span></a>
 	</div>
 {% endif %}
 
