@@ -829,7 +829,7 @@ class Link extends LCPBase {
 				}
 			}
 		} else {
-			$karma_value = 0;
+			$karma_value=round($value);
 		}
 		$vote->value=$value;
 		$db->transaction();

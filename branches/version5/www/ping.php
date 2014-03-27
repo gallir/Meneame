@@ -10,8 +10,11 @@ header("Content-Type: text/plain");
 // Chech for cache typical dirs
 for ($i=0; $i<10; $i++) {
 	if ( is_dir($globals['cache_dir'].'/0'.$i)) {
-		// echo "pong (" . SitesMgr::my_id() . ")\n"; // Force a DB access
-		echo "pong\n"; // Force a DB access
+		if (empty($globals['maintenance'])) {
+			echo "pong (" . SitesMgr::my_id() . ")\n"; // Force a DB access
+		} else {
+			echo "pong\n"; 
+		}
 		die;
 	}
 }
