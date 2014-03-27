@@ -113,7 +113,7 @@ class SitesMgr {
 					break;
 				case 'published':
 					// TODO: check, also editor for admins
-					if (! $full) $strict = true; // Change only to those that import the category (i.e. not to the parent)
+					if (! $full) $strict = 1; // Change only to those that import the category (i.e. not to the parent)
 
 					$me->karma = $link->karma;
 					$me->status = $link->status;
@@ -121,13 +121,13 @@ class SitesMgr {
 					break;
 				case 'metapublished':
 					// TODO: check, also editor for admins
-					$strict = true; // We don't change the status of our parent, publication is local
+					$strict = 1; // We don't change the status of our parent, publication is local
 
 					$me->date = $link->date;
 					$me->karma = $link->karma;
 					$me->status = 'published';
 				default:
-					$strict = true;
+					$strict = 1;
 					syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
 			}
 
@@ -142,7 +142,11 @@ class SitesMgr {
 		// TODO: ALERT: check what's would do in case on pubslish
 		if ($strict) $id = self::$id;
 		else $id = self::get_real_origen(self::$id, $link);
+		if ($strict && $link->is_sub && $link->sub_id == $id) {
+			$strict = 2;
+		}
 		$receivers = self::get_receivers($id, $me->category, $strict);
+
 
 		if (! $full && ! $link->is_sub) {
 			$my_conf = self::get_category_configuration(self::$id, $link->category);
@@ -197,9 +201,10 @@ class SitesMgr {
 		global $db;
 
 		$receivers = array($id);
-		if ($category > 0) {
-			if ($strict) $extra = "and (import or id = $id)";
-			else $extra = '';
+		if ($category > 0 && $strict != 2) {
+			if ($strict) {
+				$extra = "and (import or id = $id)";
+			} else $extra = '';
 			$receivers = array_merge($receivers, $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled"));
 		}
 
