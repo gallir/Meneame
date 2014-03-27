@@ -47,6 +47,14 @@ class SitesMgr {
 		return self::$id;
 	}
 
+	static public function is_owner() {
+		global $current_user;
+
+		if (! self::$id ) self::__init();
+
+		return $current_user->user_id > 0 && ($current_user->admin || self::$info->owner == $current_user->user_id);
+	}
+
 	static public function my_parent() {
 		if (! self::$id ) self::__init();
 

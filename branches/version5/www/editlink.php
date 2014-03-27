@@ -48,6 +48,7 @@ function do_edit($link) {
 	$link->chars_left = 550 - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 	$link->thumb_url = $link->has_thumb();
 	$link->is_new = false;
+	$link->is_sub_owner = SitesMgr::is_owner();
 	Haanga::Load('link/edit.html', compact('link'));
 }
 
@@ -68,7 +69,7 @@ function do_save($link) {
 	if (!empty($_POST['category'])) {
 		$link->category=intval($_POST['category']);
 	}
-	if ($current_user->admin || $current_user->user_level == 'blogger') {
+	if ($current_user->admin || $current_user->user_level == 'blogger' || SitesMgr::is_owner()) {
 		if (!empty($_POST['url'])) {
 			$link->url = clean_input_url($_POST['url']);
 		}
@@ -88,9 +89,9 @@ function do_save($link) {
 
 	// change the status
 	if ($_POST['status'] != $link->status
-		&& ($_POST['status'] == 'autodiscard' || $current_user->admin)
+		&& ($_POST['status'] == 'autodiscard' || $current_user->admin || SitesMgr::is_owner())
 		&& preg_match('/^[a-z]{4,}$/', $_POST['status'])
-		&& ( ! $link->is_discarded() || $current_user->admin)) {
+		&& ( ! $link->is_discarded() || $current_user->admin || SitesMgr::is_owner())) {
 		if (preg_match('/discard|abuse|duplicated|autodiscard/', $_POST['status'])) {
 			// Insert a log entry if the link has been manually discarded
 			$insert_discard_log = true;

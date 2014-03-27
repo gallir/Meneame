@@ -1,6 +1,4 @@
 <?
-#phpinfo(); return 1;
-
 $routes = array(
 	''			=> 'index.php',
 	'story'		=> 'story.php',
@@ -41,8 +39,7 @@ $routes = array(
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
 
-$res = @include './'.$routes[$path[0]];
-if ($res === FALSE) {
+if (empty($routes[$path[0]]) || (include './'.$routes[$path[0]]) === FALSE) {
 	include_once 'config.php';
 	not_found();
 }

@@ -34,6 +34,12 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 if($_REQUEST['search']) $_REQUEST['q'] = $_REQUEST['search'];
 
 $site_id = SitesMgr::my_id();
+$site_info = SitesMgr::get_info();
+
+if ($site_info->sub && $site_info->owner > 0) {
+	$globals['site_name'] = $site_info->name;
+}
+
 
 if(!empty($_REQUEST['time'])) {
 	/////
@@ -266,14 +272,6 @@ if ($links) {
 			}
 			echo '<p>'.$content.'</p>';
 			echo '<p><strong>' . _('etiquetas') . '</strong>: ' . preg_replace('/,([^ ])/', ', $1', $link->tags) . '</p>';
-
-			/* Disabled
-			* to avoid wrong IP blocks
-			if (time() - $link->date < 172800) { // Only add the votes/comments image if the link has less than two days
-				echo '<p><a href="'.$permalink.'"><img src="http://'. get_server_name() .$globals['base_url'].'backend/vote_com_img.php?id='. $link->id .'" alt="votes" width="200" height="16"/></a></p>';
-			}
-			*
-			*/
 
 			if ($link->status != 'published') $rel = 'rel="nofollow"';
 			else $rel = '';

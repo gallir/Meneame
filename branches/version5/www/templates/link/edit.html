@@ -40,7 +40,7 @@
 {% include 'link/content_type_buttons.html' %}
 
 {% if not link.is_new && (link.votes > 0 && (link.status != 'published' || current_user.user_level == 'god') &&
-		(( not link.discarded && current_user.user_id == link.author) || current_user.admin)) %}
+		(( not link.discarded && current_user.user_id == link.author) || current_user.admin || link.is_sub_owner)) %}
 
 	&nbsp;&nbsp;&nbsp;&nbsp;
 	<select name="status">
@@ -56,7 +56,7 @@
 			{% endif %}
 	{% else %}
 		{% if link.discarded %}
-			{% if current_user.admin %}
+			{% if current_user.admin || link.is_sub_owner%}
 				<option value="queued">{% exec link.get_status_text 'queued' %}</option>
 				<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
 				<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>

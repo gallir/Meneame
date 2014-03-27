@@ -30,6 +30,12 @@ if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
 }
 
 $site_id = SitesMgr::my_id();
+$site_info = SitesMgr::get_info();
+
+if ($site_info->sub && $site_info->owner > 0) {
+	$globals['site_name'] = $site_info->name;
+}
+
 
 $individual_user = false;
 if ($_REQUEST['q']) {
