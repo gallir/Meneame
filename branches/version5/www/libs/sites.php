@@ -161,7 +161,7 @@ class SitesMgr {
 				if ($do_current) {
 					$new->karma = $link->karma;
 				}
-				$db->query("replace into sub_statuses (id, status, date, category, link, origen) values ($r, '$new->status', from_unixtime($new->date), $new->category, $new->link, $new->origen)");
+				$db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->category, $new->link, $new->origen, $new->karma)");
 			}
 		}
 
