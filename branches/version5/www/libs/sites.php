@@ -72,7 +72,7 @@ class SitesMgr {
 		}
 	}
 
-	static public function deploy($link, $full = false) {
+	static public function deploy($link) {
 		global $db;
 
 		if (! self::$id ) self::__init();
@@ -81,118 +81,109 @@ class SitesMgr {
 
 
 		$me = self::get_status(self::$id, $link);
-		if (! $full && $me->status == $link->status && $me->category == $link->category) {
+		if ($me->status == $link->status && $me->origen == $me->origen && $me->category == $link->category) {
 			return;
 		}
-		if ($me->category < 0 ) $me->category = 0; // TODO: check later
+
+		$do_changed_id = $do_current = $do_all = $do_delete = false;
+
+		$current = self::$id;
+		$origen = $me->origen; //Already translated from category
+
+		if ($me->category != $link->category || $me->origen != $link->sub_id) {
+			if ($me->status != 'new') {
+				$do_changed_id = true;  // Force to save all statuses
+			} else {
+				$me->status = $link->status;
+			}
+			$do_all = true;
+			$me->category = $link->category > 0 ? $link->category : $me->category;
+			$me->category = $me->category < 0 ? 0 : $me->category;
+			$link->origen = $me->origen = $origen = self::get_real_origen($current, $link);
+		} else { // If category or origen have changed, don't do the rest
+			$me->date = $link->date;
+			if ($me->status != $link->status) {
+				switch ($link->status) {
+					case 'discard':
+					case 'autodiscard':
+					case 'abuse':
+						$me->date = $link->sent_date;
+						$do_all = true;
+						break;
+					case 'queued':
+						$me->date = $link->sent_date;
+						switch ($me->status) {
+							case 'published':
+								$do_current = true;
+								break;
+							default:
+								$do_all = true;
+						}
+						break;
+					case 'published':
+					case 'metapublished':
+						$do_current = true;
+						$me->karma = $link->karma;
+						$me->date = $link->date;
+						break;
+					default:
+						$do_current = true;
+						syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
+				}
+				$me->status = $link->status;
+			}
+		}
+
+		$receivers = array();
+		if ($do_current) {
+			$receivers[] = $current;
+		} elseif ($do_all) {
+			$receivers[] = $origen;
+			$receivers = array_merge($receivers, self::get_receivers($origen));
+			$receivers = array_unique($receivers);
+		}
+
 
 		$db->transaction();
-
-		$strict = false;
-
-		if ($me->status != $link->status) {
-			switch ($link->status) {
-				case 'discard':
-				case 'autodiscard':
-				case 'abuse':
-					$me->date = $link->sent_date;
-					$me->status = $link->status;
-					break;
-				case 'queued':
-					switch ($me->status) {
-						case 'published':
-						case 'discard':
-						case 'autodiscard':
-						case 'abuse':
-							$me->date = $link->sent_date;
-							break;
-						default:
-							$me->date = $link->date;
-					}
-					$me->status = $link->status;
-					break;
-				case 'published':
-					// TODO: check, also editor for admins
-					if (! $full) $strict = 1; // Change only to those that import the category (i.e. not to the parent)
-
-					$me->karma = $link->karma;
-					$me->status = $link->status;
-					$me->date = $link->date;
-					break;
-				case 'metapublished':
-					// TODO: check, also editor for admins
-					$strict = 1; // We don't change the status of our parent, publication is local
-
-					$me->date = $link->date;
-					$me->karma = $link->karma;
-					$me->status = 'published';
-				default:
-					$strict = 1;
-					syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
-			}
-
-		}
-
-		if ($me->category != $link->category) {
-			$delete_others = true;
-			$me->category = $link->category;
-			$me->origen = self::get_real_origen(self::$id, $link);
-		}
-
-		// TODO: ALERT: check what's would do in case on pubslish
-		if ($strict) $id = self::$id;
-		else $id = self::get_real_origen(self::$id, $link);
-
-		if ($strict && $link->is_sub && $link->sub_id == $id) {
-			$strict = 2;
-		}
-		$receivers = self::get_receivers($id, $me->category, $strict);
-
-
-		if (! $full && ! $link->is_sub) {
-			$my_conf = self::get_category_configuration(self::$id, $link->category);
-			if ($me->category <= 0 || ! $my_conf->export) {
-				// We don't have to export our links to other sites
-				$receivers = array_intersect(array(self::$id), $receivers);
-				$delete_others = false;
-			}
-		} else {
-			$delete_others = true;
-		}
-
 		if ($receivers) {
 			foreach ($receivers as $r) {
-				$db->query("replace into sub_statuses (id, status, date, category, link, origen) values ($r, '$me->status', from_unixtime($me->date), $me->category, $me->link, $me->origen)");
-				$db->query("update sub_statuses set karma=$link->karma where link = $link->id and (status != 'published' or id = $me->id)");
-				//self::store_status($r, $me);
+				$new = $db->get_row("select * from sub_statuses where id = $r and link = $link->id");
+				if (! $new) {
+					$new = $me;
+					$new->karma = 0;
+				}
+				$new->date = $me->date;
+				$new->category = $me->category;
+				$new->origen = $me->origen;
+				if (! $do_changed_id) {  // Category or origen have changed, don't modify the status
+					$new->status = $me->status;
+				}
+				if ($do_current) {
+					$new->karma = $link->karma;
+				}
+				$db->query("replace into sub_statuses (id, status, date, category, link, origen) values ($r, '$new->status', from_unixtime($new->date), $new->category, $new->link, $new->origen)");
 			}
 		}
 
 		// We delete those old statuses belong to the old category that were not changed before
-		if ($delete_others) {
-			$keep = array_merge(self::get_receivers($id, $me->category, false), self::get_receivers(self::get_real_origen(self::$id, $link), $me->category, false));
-			$keep = array_unique($keep);
-			$avoid = implode(',', $keep);
+		if ($do_changed_id) {
+			$avoid = implode(',', $receivers);
 			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
 		}
-
 		$db->commit();
+
 	}
 
 	// TODO: transient, for migration, edit/modify later
 	static function get_real_origen($id, $link) {
 		global $db; 
 
-
 		if ($link->category > 0) {
 			$transition = array('100' => 37, '101' => 39, '102' => 40, '103' => 38);
 			$meta = $db->get_var("select category_parent from categories where category_id = $link->category");
 			
 			if ($meta && $transition[$meta] > 0) {
-				$origin = $transition[$meta];
-				if ($db->get_var("select count(*) from subs_copy where src = $origin and dst = $id") ){
-					return $origin;
-				}
+				return $transition[$meta];
 			}
 		}
 		if ($link->sub_id > 0) return $link->sub_id;
@@ -200,23 +191,11 @@ class SitesMgr {
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
-	static public function get_receivers($id, $category, $strict = false) {
+	static public function get_receivers($id) {
 		global $db;
 
-		$receivers = array($id);
-		if ($category > 0 && $strict != 2) {
-			if ($strict) {
-				$extra = "and (import or id = $id)";
-			} else $extra = '';
-			$receivers = array_merge($receivers, $db->get_col("select distinct id from sub_categories where category = $category $extra and enabled"));
-		}
-
-		// it serves for submnm
-		if (! $strict) { // Don't "publish" to parents
-			$receivers = array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
-		}
-
-		$receivers = array_unique($receivers);
+		$receivers = array();
+		$receivers = array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
 		return $receivers;
 	}
 

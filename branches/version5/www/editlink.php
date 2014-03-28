@@ -167,7 +167,7 @@ function link_edit_errors($link) {
 	if(preg_match('/.*http:\//', $link->title)) {
 		array_push($errors, _('por favor, no pongas URLs en el título, no ofrece información'));
 	}
-	if(empty($globals['submnm']) && ! $link->category > 0) {
+	if(empty($globals['submnm']) && ! $link->is_sub && ! $link->sub_id > 0 && ! $link->category > 0) {
 		array_push($errors, _('categoría no seleccionada'));
 	}
 	return $errors;
