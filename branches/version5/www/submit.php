@@ -387,15 +387,18 @@ function do_submit1() {
 
 
 
-	$links_12hs = $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour)");
+	if (! $site_info->owner) { // Only for the main subs
+		$links_12hs = $db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
 
-	// check there is no an "overflow" from the same site
-	$site_links = intval($db->get_var("select count(*) from links where link_date > date_sub(now(), interval 12 hour) and link_blog=$link->blog and link_status in ('queued')"));
-	if ($site_links > 10 && $site_links > $links_12hs * 0.05) { // Only 5% from the same site
-		syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $link->url");
-		add_submit_error( _('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor'),
-			_('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
-		return false;
+		// check there is no an "overflow" from the same site
+		$site_links = intval($db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and link_blog=$link->blog and link_status in ('queued') and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0"));
+
+		if ($site_links > 10 && $site_links > $links_12hs * 0.05) { // Only 5% from the same site
+			syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $link->url");
+			add_submit_error( _('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor'),
+				_('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
+			return false;
+		}
 	}
 
 
