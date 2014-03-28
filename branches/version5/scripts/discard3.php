@@ -29,8 +29,11 @@ $sites = SitesMgr::get_active_sites();
 foreach ($sites as $site) {
 	echo "START SITE: $site\n";
 	SitesMgr::__init($site);
+	$site_info = SitesMgr::get_info($site_id);
 	depublish($site);
-	discard($site);
+	if (! $site_info->sub) {
+		discard($site);
+	}
 }
 
 punish_comments();
@@ -43,6 +46,7 @@ function discard($site_id) {
 
 
 	echo "STARTING discard for $site_id\n";
+	$site_info = SitesMgr::get_info($site_id);
 
 	// Discard links
 	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) ) order by link_id asc");
@@ -56,16 +60,18 @@ function discard($site_id) {
 	foreach ($negatives as $id) {
 		$l = Link::from_db($id);
 
-		$user = new User($l->author);
-		if ($user->read) {
-			$user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
-			echo "$user->username: $user->karma\n";
-		}
-
 		$l->status = 'discard';
 		$db->query("update links set link_status='discard' where link_id = $l->id");
 		echo "Discard id: ".$l->id."\n"; // benjami 18-08-2012
 		SitesMgr::deploy($l);
+
+		if (! $site_info->sub) {
+			$user = new User($l->author);
+			if ($user->read) {
+				$user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
+				echo "$user->username: $user->karma\n";
+			}
+		}
 
 		// Add the discard to log/event
 		Log::insert('link_discard', $l->id, $l->author);
@@ -132,6 +138,7 @@ function depublish($site_id) {
 	$days = 4;
 
 	echo "STARTING depublish for $site_id\n";
+	$site_info = SitesMgr::get_info($site_id);
 
 
 
@@ -173,20 +180,22 @@ function depublish($site_id) {
 				$l->save_annotation('link-karma');
 				Log::insert('link_depublished', $l->id, $l->author);
 
-				// Add the discard to log/event
-				$user = new User($l->author);
-				if ($user->read) {
-					echo "$user->username: $user->karma\n";
-					$user->add_karma(-$globals['instant_karma_per_depublished'], _('Retirada de portada'));
-				}
+				if (! $site_info->sub) {
+					// Add the discard to log/event
+					$user = new User($l->author);
+					if ($user->read) {
+						echo "$user->username: $user->karma\n";
+						$user->add_karma(-$globals['instant_karma_per_depublished'], _('Retirada de portada'));
+					}
 
-				// Increase karma to users that voted negative
-				$ids = $db->get_col("select vote_user_id from votes where vote_type = 'links' and vote_link_id = $l->id and vote_user_id > 0 and vote_value < 0");
+					// Increase karma to users that voted negative
+					$ids = $db->get_col("select vote_user_id from votes where vote_type = 'links' and vote_link_id = $l->id and vote_user_id > 0 and vote_value < 0");
 
-				foreach ($ids as $id) {
-					$u = new User($id);
-					if ($u->read) {
+					foreach ($ids as $id) {
+						$u = new User($id);
+						if ($u->read) {
 						$u->add_karma(0.20, _('Negativo a retirada de portada'));
+						}
 					}
 				}
 
