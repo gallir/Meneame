@@ -55,7 +55,7 @@ if (!isset($_REQUEST['id']) && $url_args[0] && !is_numeric($url_args[0])) { // C
 
 // Check the link belong to the current site
 $site_id = SitesMgr::my_id();
-if ($site_id != $link->sub_id && ($site_id != $link->created_from || empty($link->sub_status))) {
+if ($site_id != $link->sub_id && (empty($link->sub_status) || ! $link->allow_main_link)) {
 	// The link does not correspond to the current site, find one
 	header ('HTTP/1.1 301 Moved Permanently');
 	header ('Location: ' . $link->get_canonical_permalink());
