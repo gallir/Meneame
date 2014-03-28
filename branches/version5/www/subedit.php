@@ -13,31 +13,36 @@ $globals['ads'] = false;
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 force_authentication();
-if (empty($_POST['id'])) {
-	$id = intval($_GET['id']);
-} else {
+
+if (!empty($_POST['id'])) {
 	$id = intval($_POST['id']);
+} else {
+	if ($globals['submnm']) {
+		$id = SitesMgr::my_id();
+	} else {
+		$id = intval($_GET['id']);
+	}
 }
 if (! $id) $id = -1;
 
 $errors = array();
 $site = SitesMgr::get_info();
-if (! SitesMgr::can_edit($id)) {
-	$errors[] = _("no puede editar o crear nuevos");
-}
 
 array_push($globals['cache-control'], 'no-cache');
-do_header(_("editar sub"));
 
-echo '<div id="singlewrap">'."\n";
-
-if ($_POST['created_from']) {
-	$id = save_sub($id, $errors);
-	$sub = (object) $_POST; // Copy the data for the form, in case it failed to store
+if (! SitesMgr::can_edit($id)) {
+	$errors[] = _("no puede editar o crear nuevos");
+} else {
+	if ($_POST['id'] == $id && $_POST['created_from']) {
+		$id = save_sub($id, $errors);
+		if (! $id) {
+			$sub = (object) $_POST; // Copy the data for the form, in case it failed to store
+		}
+	}
 }
 
 if ($id > 0) {
-	$sub = SitesMgr::get_info($id);
+	$globals['submnm_info'] = $sub = SitesMgr::get_info($id, true);
 }
 
 if ($current_user->admin) {
@@ -47,6 +52,8 @@ if ($current_user->admin) {
 	$copy_to = $candidates_to = false;
 }
 
+do_header(_("editar sub"));
+echo '<div id="singlewrap">'."\n";
 Haanga::Load('sub_edit.html', compact('sub', 'errors', 'site', 'candidates_to', 'copy_to'));
 echo "</div>"."\n";
 
@@ -99,7 +106,7 @@ function save_sub($id, &$errors) {
 	if (empty($errors)) {
 		$db->transaction();
 		if ($id > 0) {
-			$r = $db->query("update subs set created_from = $site->id, owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long' where id = $id");
+			$r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long' where id = $id");
 		} else {
 			$r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1)");
 			$id = $db->insert_id;
@@ -115,7 +122,10 @@ function save_sub($id, &$errors) {
 			array_push($errors, _('error actualizando la base de datos'));
 		}
 		if (empty($errors)) $db->commit();
-		else $db->rollback();
+		else {
+			$db->rollback();
+			$id = 0;
+		}
 
 	}
 	return $id;

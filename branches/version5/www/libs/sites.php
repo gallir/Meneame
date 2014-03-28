@@ -61,11 +61,11 @@ class SitesMgr {
 		return self::$parent > 0 ? self::$parent : self::$id;
 	}
 
-	static public function get_info($id = false) {
+	static public function get_info($id = false, $force = false) {
 		global $db;
 
 		if ($id == false || $id == self::$id) {
-			if (! self::$id ) self::__init();
+			if (! self::$id || $force) self::__init();
 			return self::$info;
 		} else {
 			return $db->get_row("select * from subs where id = $id");

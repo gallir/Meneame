@@ -16,7 +16,7 @@
 		<a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }}/queue {% endif %}"><b>{{ s.name }}</b></a>
 		{% if s.nsfw %}(nsfw){% endif %}
 		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
-			&nbsp;[<a href="{{ s.base_url }}subedit?id={{ s.id }}">edit</a>]
+			&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
 		{% endif %}
 		{% if ! s.enabled %}*{% endif %}
 		</td>

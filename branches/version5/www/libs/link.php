@@ -280,7 +280,11 @@ class Link extends LCPBase {
 		$dict['votes'] = $this->votes;
 		$dict['anonymous'] = $this->anonymous;
 		$dict['negatives'] = $this->negatives;
-		$dict['karma'] = intval($this->karma);
+		if ($this->sub_status == 'published') {
+			$dict['karma'] = intval($this->sub_karma);
+		} else {
+			$dict['karma'] = intval($this->karma);
+		}
 		return json_encode($dict);
 	}
 
@@ -699,7 +703,6 @@ class Link extends LCPBase {
 
 		if(!$this->read) return;
 
-
 		$this->is_votable();
 
 		if (!empty($this->sub_status)) {
@@ -812,24 +815,27 @@ class Link extends LCPBase {
 		$vote = new Vote('links', $this->id, $current_user->user_id);
 		if ($vote->exists(true)) return false;
 		// For karma calculation
-		if ($this->status != 'published') {
+		$status = ( ! empty($this->sub_status) ? $this->sub_status : $this->status);
+		$vote_value = ($value > 0 ? $value : -$current_user->user_karma);
+
+		if ($status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
 				if ($globals['karma_user_affinity'] && $current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) <  0 ) {
 					$karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
 				} else {
-					$karma_value = round(-$current_user->user_karma);
+					$karma_value = round($vote_value);
 				}
 			} else {
 				if ($globals['karma_user_affinity'] && $current_user->user_id  > 0 && $current_user->user_id != $this->author &&
 						($affinity = User::get_affinity($this->author, $current_user->user_id)) > 0 ) {
 					$karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
 				} else {
-					$karma_value=round($value);
+					$karma_value=round($vote_value);
 				}
 			}
 		} else {
-			$karma_value=round($value);
+			$karma_value=round($vote_value);
 		}
 		$vote->value=$value;
 		$db->transaction();
@@ -858,7 +864,7 @@ class Link extends LCPBase {
 				}
 
 				// Update karma and check votes
-				if ($this->status != 'published') {
+				if ($status != 'published') {
 					$this->karma += $karma_value;
 					$this->update_votes();
 				}

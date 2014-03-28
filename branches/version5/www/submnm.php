@@ -6,7 +6,7 @@ $globals['submnm'] = $path[1];
 include_once 'config.php';
 
 $globals['site_shortname'] = $globals['submnm'];
-if (empty($globals['submnm']) || ! SitesMgr::my_id()) {
+if (empty($globals['submnm']) || ! ($info = SitesMgr::get_info())) {
 	not_found();
 }
 
