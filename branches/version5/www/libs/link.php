@@ -1006,10 +1006,10 @@ class Link extends LCPBase {
 	function get_relative_permalink($strict = false) {
 		global $globals;
 
-		if (! $this->is_sub || (! $strict && $this->allow_main_link && $this->sub_status) ) {
-			$base = $this->base_url.'story/';
-		} else {
+		if ( $this->is_sub && ($strict || $this->sub_id == SitesMgr::my_id() || ! $this->sub_status || ! $this->allow_main_link)) {
 			$base = $this->base_url . 'm/'.$this->sub_name.'/';
+		} else {
+			$base = $this->base_url.'story/';
 		}
 
 		if (!empty($this->uri)) {
