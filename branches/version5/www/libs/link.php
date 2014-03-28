@@ -764,11 +764,7 @@ class Link extends LCPBase {
 				break;
 			case 'published': // default for published
 			default:
-				if ($this->status != $this->sub_status) {
-					$this->box_class = 'mnm-subpublished';
-				} else {
-					$this->box_class = 'mnm-published';
-				}
+				$this->box_class = 'mnm-published';
 				break;
 		}
 	}
