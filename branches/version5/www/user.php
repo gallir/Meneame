@@ -653,7 +653,7 @@ function do_subs() {
 		$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
 	}
 	$subs = $db->get_results($sql);
-	if (SitesMgr::can_edit(0)) $can_edit = true;
+	if ($current_user->user_id > 0 && $user->id == $current_user->user_id && SitesMgr::can_edit(0)) $can_edit = true;
 	else $can_edit = false;
 
 	Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));

@@ -21,9 +21,9 @@ class LCPBase {
 		}
 
 		if (is_a($this, 'Post')) { // references to @users
-			$regexp .= '|@\p{L}+(?:,\d+){0,1}';
+			$regexp .= '|@\p{L}[\-_\p{L}]+(?:,\d+){0,1}';
 		} elseif (is_a($this, 'Comment')) {
-			$regexp .= '|@\p{L}+\w';
+			$regexp .= '|@\p{L}[\-_\p{L}]+\w';
 		}
 
 		$regexp .= '|\|(\p{L}+)';
