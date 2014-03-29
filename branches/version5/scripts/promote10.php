@@ -460,12 +460,14 @@ function publish($site, $link) {
 	// Increase user's karma
 	$user = new User($link->author);
 	if ($site_info->sub) {
-		$karma_bonus = $globals['instant_karma_per_published'] / 2; // currently these published don't receive extra karma
+		$karma_bonus = $globals['instant_karma_per_published'] / 10; // currently these published don't receive extra karma
+		$log = false;
 	} else {
 		$karma_bonus = $globals['instant_karma_per_published'];
+		$log =  _('noticia publicada');
 	}
 	if ($user->read) {
-		$user->add_karma($karma_bonus, _('noticia publicada'));
+		$user->add_karma($karma_bonus, $log);
 	}
 
 	// Add the publish event/log
