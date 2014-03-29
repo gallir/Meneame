@@ -149,7 +149,7 @@ function check_email($email) {
 }
 
 function check_username($name) {
-	return (preg_match('/^\p{L}[_\p{L}\d]+$/ui', $name) && mb_strlen($name) > 2 && mb_strlen($name) <= 24 &&
+	return (preg_match('/^\p{L}[\._\p{L}\d]+$/ui', $name) && mb_strlen($name) > 2 && mb_strlen($name) <= 24 &&
 				! preg_match('/^admin/i', $name) ); // Does not allow nicks begining with "admin"
 }
 
