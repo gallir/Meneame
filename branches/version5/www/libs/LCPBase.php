@@ -21,13 +21,13 @@ class LCPBase {
 		}
 
 		if (is_a($this, 'Post')) { // references to @users
-			$regexp .= '|@\p{L}[\-_\p{L}]+(?:,\d+){0,1}';
+			$regexp .= '|@\p{L}[\d\-_\p{L}]+(?:,\d+){0,1}';
 		} elseif (is_a($this, 'Comment')) {
-			$regexp .= '|@\p{L}[\-_\p{L}]+\w';
+			$regexp .= '|@\p{L}[\d\-_\p{L}]+\w';
 		}
 
-		$regexp .= '|\|(\p{L}+)';
 		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\.])';
+		$regexp .= '|\|(\p{L}+)';
 		$regexp = '/([\s\(\[{}¡;,:¿>\*]|^)('.$regexp.')/Smu';
 		return preg_replace_callback($regexp, array( &$this, 'to_html_cb'), $string);
 	}
@@ -96,7 +96,7 @@ class LCPBase {
 				return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 
 			case '|':
-				return ' <a href="'.$globals['base_url_general'].'m/'.$matches[3].'">|'.$matches[3].'</a>';
+				return ' <a href="'.$globals['base_url_general'].'m/'.$matches[5].'">|'.$matches[5].'</a>';
 			/*
 			case '_':
 				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
