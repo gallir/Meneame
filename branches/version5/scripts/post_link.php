@@ -4,14 +4,15 @@
 // Argument required: hostname, link_id
 
 
-if (count($argv) != 3) {
+if (count($argv) < 3) {
 	syslog(LOG_INFO, "Usage: ".basename(__FILE__)." site_id hostname link_id");
-	echo "Usage: ".basename(__FILE__)." site_id hostname link_id\n";
+	echo "Usage: ".basename(__FILE__)." site_id hostname link_id status\n";
 	die;
 }
 
 $hostname = $argv[1];
 $link_id = (int) $argv[2];
+$status = $argv[3];
 
 $_SERVER['SERVER_NAME'] = $hostname;
 
@@ -30,6 +31,10 @@ $link = Link::from_db($link_id);
 if (! $link) {
 	syslog(LOG_INFO, "Meneame, post_link.php, link not found $link_id");
 	echo "Link $link_id not found\n";
+	die;
+}
+if (! $link->sub_status || (!empty($status) && $link->sub_status != $status) ) { // Don't post 
+	echo "Status check ($status, $link->sub_status) didn't pass, exiting\n";
 	die;
 }
 
