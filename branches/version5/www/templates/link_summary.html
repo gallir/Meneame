@@ -181,10 +181,10 @@
 
 
 		<span class="tool">
-		{% if self.category > 0 AND self.meta_name AND self.category_name %}
-			<a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">{{ self.meta_name }}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">{{self.category_name}}</a></span>
-		{% else %}
+		{% if self.sub_name  %}
 			<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}">{{ self.sub_name }}</a>
+		{% else %}
+			<a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">{{ self.meta_name }}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">{{self.category_name}}</a></span>
 		{% endif %}
 		</span>
 		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">

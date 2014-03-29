@@ -35,6 +35,11 @@ if (! SitesMgr::can_edit($id)) {
 } else {
 	if ($_POST['id'] == $id && $_POST['created_from']) {
 		$id = save_sub($id, $errors);
+		$sub = SitesMgr::get_info($id, true);
+		if ($id && empty($errors)) {
+			header("Location: ".$globals['base_url']."m/$site->name/subedit");
+			die;
+		}
 		if (! $id) {
 			$sub = (object) $_POST; // Copy the data for the form, in case it failed to store
 		}
@@ -42,7 +47,7 @@ if (! SitesMgr::can_edit($id)) {
 }
 
 if ($id > 0) {
-	$globals['submnm_info'] = $sub = SitesMgr::get_info($id, true);
+	$globals['submnm_info'] = $sub = SitesMgr::get_info($id);
 }
 
 if ($current_user->admin) {
