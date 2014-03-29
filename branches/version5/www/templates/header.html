@@ -137,7 +137,7 @@
 <div id="header">
 {% if globals.mobile AND this_site.sub %}
 	<div id="header-sub">
-		<a href="{{ this_site.base_url }}m/{{ this_site.name }}"><span style="font-variant:small-caps">{{ this_site.name }}</span>: <span style="text-transform:lowercase">{{ this_site.name_long }}</span></a>
+		<a href="{{ this_site.base_url }}m/{{ this_site.name }}"><span style="font-variant:small-caps">{{ this_site.name }} {% if this_site.nsfw %}[NSFW]{% endif %}</span>: <span style="text-transform:lowercase">{{ this_site.name_long }}</span></a>
 	</div>
 {% endif %}
 
@@ -146,6 +146,7 @@
   <a href="{{ globals.base_url }}" class="logo-eli" title="{{ this_site.name_long }}">{{ this_site.name }}</a>
   <div class="edname">
 	<b>{{ this_site.name }}</b>: {{ this_site.name_long }}
+	{% if this_site.nsfw %}[NSFW]{% endif %}
 	{% if current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
 		<sup><a title="edit" href="{{ globals.base_url }}subedit">*</sup>
 	{% endif %}
