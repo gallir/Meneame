@@ -297,7 +297,7 @@ class SitesMgr {
 		return $db->get_col("select id from subs where parent = 0 and enabled");
 	}
 
-	static public function can_edit($id) {
+	static public function can_edit($id = -1) {
 		global $current_user, $db;
 
 		if (! $current_user->user_id) return false;
@@ -310,7 +310,7 @@ class SitesMgr {
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 		
-		return $n < 2 && ($current_user->user_level == 'blogger' || time() - $current_user->user_date > 86400*2*365);
+		return $n < 3;
 	}
 
 }

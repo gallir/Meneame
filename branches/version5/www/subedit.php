@@ -33,11 +33,11 @@ array_push($globals['cache-control'], 'no-cache');
 if (! SitesMgr::can_edit($id)) {
 	$errors[] = _("no puede editar o crear nuevos");
 } else {
-	if ($_POST['id'] == $id && $_POST['created_from']) {
+	if ($_POST['created_from']) {
 		$id = save_sub($id, $errors);
 		$sub = SitesMgr::get_info($id, true);
 		if ($id && empty($errors)) {
-			header("Location: ".$globals['base_url']."m/$site->name/subedit");
+			header("Location: ".$globals['base_url']."m/$sub->name/subedit");
 			die;
 		}
 		if (! $id) {
@@ -83,7 +83,7 @@ function save_sub($id, &$errors) {
 	}
 
 	$name = mb_substr(clean_input_string($_POST['name']), 0, 12);
-	if (mb_strlen($name) < 3 || ! preg_match('/^\p{L}+$/u', $name)) {
+	if (mb_strlen($name) < 3 || ! preg_match('/^\p{L}[\p{L}\d_]+$/u', $name)) {
 		array_push($errors, _('nombre erróneo'). ' ' . $_POST['name']);
 	}
 	
@@ -123,17 +123,17 @@ function save_sub($id, &$errors) {
 			if ($current_user->admin) {
 				sub_copy_to($id, $_POST['copy_to']);
 			}
+		}
+		if ($r && $id > 0) {
+			$db->commit();
+			return $id;
 		} else {
 			array_push($errors, _('error actualizando la base de datos'));
-		}
-		if (empty($errors)) $db->commit();
-		else {
 			$db->rollback();
-			$id = 0;
 		}
 
 	}
-	return $id;
+	return false;
 }
 
 function sub_copy_to($src, $dests) {
