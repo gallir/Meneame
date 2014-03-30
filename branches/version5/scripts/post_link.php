@@ -34,7 +34,7 @@ if (! $link) {
 	die;
 }
 if (! $link->sub_status || (!empty($status) && $link->sub_status != $status) ) { // Don't post 
-	echo "Status check ($status, $link->sub_status) didn't pass, exiting\n";
+	syslog(LOG_INFO, "Status check ($status, $link->sub_status) didn't pass, exiting");
 	die;
 }
 

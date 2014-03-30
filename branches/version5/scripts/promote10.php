@@ -453,7 +453,6 @@ function publish($site, $link) {
 
 	$db->transaction();
 	$db->query("update links set link_status='published', link_date=now(), link_votes_avg=$link->votes_avg where link_id=$link->id");
-	// Publish to all sub sites: this and children who import the link category
 	SitesMgr::deploy($link);
 	$db->commit();
 
@@ -477,14 +476,13 @@ function publish($site, $link) {
 
 
 	$my_id = SitesMgr::my_id();
+	$server_name = SitesMgr::get_info($my_id)->server_name;
+	syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
+	passthru(dirname(__FILE__)."/post_link.php $server_name $link->id published");
+	return;
 
 
-	// ALERT: Don't post if sub
-	if ($site_info->sub) {
-		echo "It's SUB, not posting\n";
-		return;
-	}
-
+	/*
 	// Get all sites that are "children" and try to post links
 	// And that "import" the link->category
 	$sites = array_intersect(SitesMgr::get_children($my_id), SitesMgr::get_receivers($my_id, $link->category));
@@ -495,8 +493,9 @@ function publish($site, $link) {
 	foreach ($sites as $s) {
 		$server_name = SitesMgr::get_info($s)->server_name;
 		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
-		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id");
+		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id published");
 	}
+	*/
 
 }
 
