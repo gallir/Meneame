@@ -6,11 +6,11 @@
 </div>
 {% for l in links %}
 	<div class="cell">
-	<div class="votes{% if l.status == 'queued' %} queued{% endif %}"><span>{{ l.total_votes }}</span></div>
+	<div class="votes{% if l.sub_status == 'queued' %} queued{% endif %}"><span>{{ l.total_votes }}</span></div>
 	{% if l.thumb %}
 		<img data-src="{{l.thumb}}" src="{{ globals.base_static }}img/g.gif" alt='' class="thumbnail lazy"/>
 	{% endif %}
-	<h5 {% if l.warn %}class="warn"{% endif %}>
+	<h5 {% if l.warned %}class="warn"{% endif %}>
 	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a></h5>
 	</div>
 {% endfor %}

@@ -783,18 +783,20 @@ class Link extends LCPBase {
 
 		$coef = min(1, $age/3600); // Percentage increases with time, until 1 hour
 
-		if ($this->status == 'published') $neg_percent = 0.125 / $coef;
+		if ($this->sub_status == 'published') $neg_percent = 0.125 / $coef;
 		else $neg_percent = 0.1 / $coef;
 
-		if (!$this->votes_enabled || $this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
+		if ($this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
 			$this->warned = false;
 			return false;
 		}
+
 		// Dont do further analisys for published or discarded links
-		if ($this->status == 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400*3) {
+		if ($this->sub_status == 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400*3) {
 			$this->warned = true;
 			return true;
 		}
+
 		// Check positive and negative karmas
 		$pos = $db->get_row("select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0");
 		$neg = $db->get_row("select sum(user_karma) as karma, avg(user_karma) as avg from votes, users where vote_type = 'links' and vote_link_id = $this->id and vote_value < 0 and user_id = vote_user_id and user_level not in ('autodisabled','disabled')");
@@ -909,7 +911,8 @@ class Link extends LCPBase {
 	}
 
 	function is_discarded() {
-		return $this->status == 'discard' || $this->status == 'abuse' ||  $this->status == 'autodiscard';
+		$status = (empty($this->sub_status) ? $this->status : $this->sub_status);
+		return $status == 'discard' || $status == 'abuse' ||  $status == 'autodiscard';
 	}
 
 	function is_editable() {
@@ -917,11 +920,11 @@ class Link extends LCPBase {
 
 		if($current_user->user_id) {
 			if(($this->author == $current_user->user_id
-					&& ($this->status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
+					&& ($this->sub_status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
 					&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id
 					&& $current_user->special
-					&& $this->status == 'queued'
+					&& $this->sub_status == 'queued'
 					&& $globals['now'] - $this->sent_date < 10400)
 			|| ($this->author != $current_user->user_id
 					&& $current_user->user_level == 'blogger'

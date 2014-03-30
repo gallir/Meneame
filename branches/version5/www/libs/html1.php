@@ -641,7 +641,7 @@ function do_active_stories() {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
-			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$link->check_warn();
 			$links[] = $link;
 		}
 		$subclass = 'red';
@@ -686,7 +686,7 @@ function do_best_stories() {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
-			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$link->check_warn();
 			$links[] = $link;
 		}
 		$subclass = '';
@@ -738,7 +738,7 @@ function do_best_queued() {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
-			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$link->check_warn();
 			$links[] = $link;
 		}
 		$subclass = '';
@@ -783,7 +783,7 @@ function do_most_clicked_stories() {
 				$link->thumb_x = round($link->thumb_x / 2);
 				$link->thumb_y = round($link->thumb_y / 2);
 			}
-			if ($link->negatives >= $link->votes/10) $link->warn = true;
+			$link->check_warn();
 			$links[] = $link;
 		}
 		$vars = compact('links', 'title', 'url');

@@ -8,7 +8,7 @@
 	{% if l.thumb %}
 		<img src="{{l.thumb}}" width="{{l.thumb_x}}" height="{{l.thumb_y}}" alt='' class="thumbnail"/>
 	{% endif %}
-	<h5 {% if l.warn %}class="warn"{% endif %}>
+	<h5 {% if l.warned %}class="warn"{% endif %}>
 	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a></h5>
 	</div>
 {% endfor %}
