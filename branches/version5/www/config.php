@@ -96,8 +96,6 @@ $globals['click_counter'] = 1; // Put a value since which id should show in "lin
 
 //URL shortener (used in menea.me)
 //$globals['url_shortener'] = 'menea.me';
-//$globals['url_shortener_to'] = 'meneame.net';
-//$globals['url_shortener_mobile_to'] = 'm.meneame.net'; // Automatic redirection to mobile version
 
 
 // Specify you base url, "/" if is the root document
