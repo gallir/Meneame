@@ -775,16 +775,25 @@ class Link extends LCPBase {
 	function check_warn() {
 		global $db, $globals;
 
-		if ($this->status == 'published') $neg_percent = 0.125;
-		else $neg_percent = 0.1;
-		if (!$this->votes_enabled || $this->negatives < 4 || $this->negatives < $this->votes * $neg_percent ) {
+		$age = $globals['now'] - $this->sent_date;
+		if ($age < 600) { // Don't warn the first x/60 minutes
 			$this->warned = false;
-			return $this->warned;
+			return false;
+		}
+
+		$coef = min(1, $age/3600); // Percentage increases with time, until 1 hour
+
+		if ($this->status == 'published') $neg_percent = 0.125 / $coef;
+		else $neg_percent = 0.1 / $coef;
+
+		if (!$this->votes_enabled || $this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
+			$this->warned = false;
+			return false;
 		}
 		// Dont do further analisys for published or discarded links
-		if ($this->status == 'published' || $this->is_discarded() || $globals['now'] - $this->date > 86400*3) {
+		if ($this->status == 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400*3) {
 			$this->warned = true;
-			return $this->warned;
+			return true;
 		}
 		// Check positive and negative karmas
 		$pos = $db->get_row("select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0");
@@ -796,7 +805,7 @@ class Link extends LCPBase {
 			return $this->warned;
 		}
 		$this->warned = true;
-		return $this->warned;
+		return true;
 	}
 
 	function vote_exists($user) {

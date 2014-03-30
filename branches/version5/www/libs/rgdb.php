@@ -276,6 +276,7 @@ class RGDB extends mysqli {
 			$this->query($query);
 		}
 		// Send back array of objects. Each row is an object
+		if (empty($this->last_result)) return array();
 		return $this->last_result;
 	}
 

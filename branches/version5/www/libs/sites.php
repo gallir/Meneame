@@ -233,10 +233,16 @@ class SitesMgr {
 		return $status;
 	}
 
-	static private function store_status($id, $s) {
+	static public function store($s) { // Store a sub_statuses, as is.
 		global $db;
 
-		$db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($id, '$s->status', from_unixtime($s->date), $s->category, $s->link, $s->origen, $s->karma)");
+		if (is_numeric($s->date)) {
+			$date = "from_unixtime($s->date)";
+		} else {
+			$date = "'$s->date'";
+		}
+
+		return $db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($s->id, '$s->status', $date, $s->category, $s->link, $s->origen, $s->karma)");
 	}
 
 	static public function get_metas($ids = false) {
