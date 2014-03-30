@@ -622,7 +622,7 @@ class Comment extends LCPBase {
 
 
 		$orders = array();
-		if (preg_match_all('/(?:^|\W)(#(?:\d+)|@(?:[^\s<>;:,\?\)]+))\b/', $this->content, $matches)) {
+		if (preg_match_all('/(?:^|\W)(#(?:\d+)|@(?:\p{L}[\.\d\-_\p{L}]+))\b/u', $this->content, $matches)) {
 			foreach ($matches[1] as $order) {
 				$order = substr($order, 1); // Delete the # or @
 				$orders[$order] += 1;
