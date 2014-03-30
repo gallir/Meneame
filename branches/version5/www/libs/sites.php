@@ -310,7 +310,7 @@ class SitesMgr {
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 		
-		return $n < 3;
+		return $n < 3 && time() - $current_user->user_date > 86400*30;
 	}
 
 }
