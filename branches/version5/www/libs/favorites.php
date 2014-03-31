@@ -10,17 +10,23 @@ global $globals;
 
 function favorite_exists($user, $link, $type='link') {
 		global $db;
-		return intval($db->get_var("SELECT SQL_NO_CACHE count(*) FROM favorites WHERE favorite_user_id=$user and favorite_type='$type' and favorite_link_id=$link"));
+
+	$type = $db->escape($type);
+	return intval($db->get_var("SELECT SQL_NO_CACHE count(*) FROM favorites WHERE favorite_user_id=$user and favorite_type='$type' and favorite_link_id=$link"));
 }
 
 function favorite_insert($user, $link, $type='link') {
 	global $db, $globals;
+
+	$type = $db->escape($type);
 	return $db->query("REPLACE INTO favorites (favorite_user_id, favorite_type, favorite_link_id) VALUES ($user, '$type', $link)");
 }
 
 function favorite_delete($user, $link, $type='link') {
-		global $db;
-		return $db->query("DELETE FROM favorites WHERE favorite_user_id=$user and favorite_type='$type' and favorite_link_id=$link");
+	global $db;
+
+	$type = $db->escape($type);
+	return $db->query("DELETE FROM favorites WHERE favorite_user_id=$user and favorite_type='$type' and favorite_link_id=$link");
 }
 
 function favorite_add_delete($user, $link, $type='link') {

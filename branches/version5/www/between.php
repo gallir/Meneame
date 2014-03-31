@@ -104,6 +104,7 @@ if ($id1 > 0 && $id2 >0) {
 	$thread = array();
 	$leaves = array();
 	foreach($sorted as $id) {
+		$id = intval($id); // Filter id, could be anything from $sorted
 		if ( ! $show_thread ) {
 			if (isset($all[$id])) {
 				foreach ($all[$id] as $e) {
