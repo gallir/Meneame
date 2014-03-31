@@ -29,7 +29,7 @@ class Post extends LCPBase {
 
 	// Regular expression to detect referencies to other post, like @user,post_id
 	// const REF_PREG = "/(^|\W)@([^\s<>;:,\?\)]+(?:,\d+){0,1})/u";
-	const REF_PREG = "/(^|\W)@(\p{L}[\.\d\-_\p{L}]+(?:,\d+){0,1})/u";
+	const REF_PREG = "/(^|\W)@([\p{L}\.][\.\d\-_\p{L}]+(?:,\d+){0,1})/u";
 
 	static function from_db($id) {
 		global $db, $current_user;
