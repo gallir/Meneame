@@ -623,6 +623,7 @@ class User {
 		global $db, $current_user;
 
 		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		$key = $db->escape($key);
 
 		return intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key' limit 1"));
 	}
