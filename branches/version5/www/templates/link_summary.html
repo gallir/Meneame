@@ -131,7 +131,7 @@
 		{% exec explode "," self.tags as tags_array %}
 		{% for id, tag in tags_array %}
 			{% if id > 0 %}, {% endif %}
-			{% if globals.base_search_url %}<a href="{{ globals.base_url }}{{globals.base_search_url}}tag:{{ tag|urlencode }}">{{ tag }}</a>{% else %}<a href='{{ globals.base_url }}search.php?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>{% endif %}
+			<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>
 		{% endfor %}
 
 		{# Show link to analyze the tags #}

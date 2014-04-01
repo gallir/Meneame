@@ -110,7 +110,7 @@
 			});
 
 			$flot.on('plotclick', function (event, pos, item) {
-				window.open(base_url+encodeURI('search.php?q='+item.series.label+'&w='+what+'&yymm='+item.series.yymm[item.dataIndex]+'&root_time='+item.series.ts[item.dataIndex]));
+				window.open(base_url+encodeURI('search?q='+item.series.label+'&w='+what+'&yymm='+item.series.yymm[item.dataIndex]+'&root_time='+item.series.ts[item.dataIndex]));
 			});
 			loadData();
 		});
