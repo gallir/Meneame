@@ -737,45 +737,6 @@ function meta_get_current() {
 		}
 	}
 
-	if (!empty($_REQUEST['category'])) {
-		$_REQUEST['category'] = $cat = (int) $_REQUEST['category'];
-		if ($globals['meta'][0] == '_') {
-			$globals['meta_current'] = $globals['meta'];
-		} else {
-			$res = $db->get_row("select SQL_CACHE meta.category_id as category_id, meta.category_name as category_name from categories as meta, categories as sub where sub.category_id = $cat and sub.category_parent > 0 and meta.category_id = sub.category_parent");
-			if ($res) {
-				$globals['meta_current'] = $res->category_id;
-				$globals['meta_current_name'] = $res->category_name;
-				$globals['meta'] = '';	// Security measure
-			} else {
-				$globals['meta_current'] = 0;
-				$globals['meta_current_name'] = '';
-			}
-		}
-	} elseif (!empty($globals['meta'])) {
-		// Special metas begin with _
-		if ($globals['meta'][0] == '_') {
-			return 0;
-		}
-		$meta = $db->escape($globals['meta']);
-		$res = $db->get_row("select SQL_CACHE category_id, category_name from categories where category_uri = '$meta' and category_parent = 0");
-		if ($res) {
-			$globals['meta_current'] = $res->category_id;
-			$globals['meta_current_name'] = $res->category_name;
-			$globals['meta'] = '';	// Security measure
-		} else {
-			$globals['meta_current'] = 0;
-			$globals['meta_current_name'] = '';
-		}
-	}
-
-	if (empty($globals['submnm']) && $globals['meta_current'] > 0) {
-		$globals['meta_categories'] = implode(',', SitesMgr::get_category_ids($globals['meta_current']));
-		if (!$globals['meta_categories']) {
-			$globals['meta_current'] = 0;
-		}
-	}
-
 	return $globals['meta_current'];
 }
 

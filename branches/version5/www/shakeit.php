@@ -78,6 +78,7 @@ switch ($globals['meta']) {
 		$globals['tag_status'] = 'queued';
 		$order_by = "ORDER BY date DESC";
 		if ($globals['meta_current'] > 0) {
+			// TODO: show selected subs.
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
 			$rows = -1;
 			$where = "status='queued' and date > $from_time and category in (".$globals['meta_categories'].") ";
@@ -147,16 +148,14 @@ function print_shakeit_tabs($option=-1) {
 	$items[] = array('id' => 1, 'url' => 'queue'.$globals['meta_skip'], 'title' => _('todas'));
 
 	if (empty($globals['submnm']) && ! $globals['mobile']) {
-		$metas = SitesMgr::get_metas();
-		if ($metas) {
-			foreach ($metas as $meta) {
-				$items[] = array(
-					'id'  => 9999, /* fake number */
-					'url' =>'queue?meta='.$meta->uri,
-					'selected' => $meta->id == $globals['meta_current'],
-					'title' => $meta->name
-				);
-			}
+		$subs = SitesMgr::get_sub_subs();
+		foreach ($subs as $sub) {
+			$items[] = array(
+				'id'  => 9999, /* fake number */
+				'url' =>'m/'.$sub->name.'/queue',
+				'selected' => false,
+				'title' => $sub->name
+			);
 		}
 	}
 

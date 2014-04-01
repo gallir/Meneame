@@ -129,10 +129,7 @@
 		{% if self.show_tags AND self.tags %}
 		<br/><span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}
-		{% for id, tag in tags_array %}
-			{% if id > 0 %}, {% endif %}
-			<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>
-		{% endfor %}
+		{% for id, tag in tags_array %}{% if id > 0 %}, {% endif %}<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>{% endfor %}
 
 		{# Show link to analyze the tags #}
 		{% if globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}

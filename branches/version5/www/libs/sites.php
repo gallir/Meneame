@@ -245,6 +245,16 @@ class SitesMgr {
 		return $db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($s->id, '$s->status', $date, $s->category, $s->link, $s->origen, $s->karma)");
 	}
 
+	static public function get_sub_subs($id = false) {
+		global $globals, $db;
+
+		if ($id == false) {
+			$id = SitesMgr::my_id();
+		}
+
+		return $db->get_results("select id, name from subs, subs_copy where dst = $id and id = src");
+	}
+
 	static public function get_metas($ids = false) {
 		global $globals, $db;
 

@@ -43,32 +43,28 @@ do_tabs('main','published');
 
 $from = '';
 
-if ($globals['meta_current'] > 0) {
-	$where = "status='published' and category in (".$globals['meta_categories'].") ";
-	print_index_tabs(); // No other view
-} else {
-	switch ($globals['meta']) {
-		case '_personal':
-			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
-			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$where = "status='published' and date > $from_time and category in (".$globals['meta_categories'].") ";
-			$rows = -1;
-			//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
-			print_index_tabs(7); // Show "personal" as default
-			break;
-		case '_friends':
-			if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
-			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-			$from = ", friends, links";
-			$where = "date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
-			$rows = -1;
-			print_index_tabs(1); // Friends
-			break;
-		default:
-			print_index_tabs(0); // All
-			$rows = Link::count('published');
-			$where = "status='published' ";
-	}
+switch ($globals['meta']) {
+	case '_personal':
+		// TODO: Show here the subs followed by the user
+		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+		$where = "status='published' and date > $from_time and category in (".$globals['meta_categories'].") ";
+		$rows = -1;
+		//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+		print_index_tabs(7); // Show "personal" as default
+		break;
+	case '_friends':
+		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
+		$from = ", friends, links";
+		$where = "date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
+		$rows = -1;
+		print_index_tabs(1); // Friends
+		break;
+	default:
+		print_index_tabs(0); // All
+		$rows = Link::count('published');
+		$where = "status='published' ";
 }
 
 
@@ -143,13 +139,13 @@ function print_index_tabs($option=-1) {
 	}
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
 
-	if (empty($globals['submnm']) && ($metas = SitesMgr::get_metas())) {
-		foreach ($metas as $meta) {
+	if (empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
+		foreach ($subs as $sub) {
 			$items[] = array(
 				'id'  => 9999, /* fake number */
-				'url' =>'?meta='.$meta->uri,
-				'selected' => $meta->id == $globals['meta_current'],
-				'title' => $meta->name
+				'url' => 'm/'.$sub->name,
+				'selected' => false,
+				'title' => $sub->name,
 			);
 		}
 	}
