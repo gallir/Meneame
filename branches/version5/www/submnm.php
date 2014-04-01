@@ -2,7 +2,7 @@
 
 #var_dump($globals['path']); die;
 $path = $globals['path'];
-$globals['submnm'] = $path[1];
+$globals['submnm'] = preg_replace('/[^\p{L}\d_]/u', ':', $path[1]);
 include_once 'config.php';
 
 $globals['site_shortname'] = $globals['submnm'];
