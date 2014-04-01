@@ -26,7 +26,7 @@ foreach ($sites as $site) {
 
 	promote($site);
 	if (! $site_info->sub) {
-		promote_from_subs($site, 12, 50, 4);
+		promote_from_subs($site, 12, 60, 5);
 	}
 }
 

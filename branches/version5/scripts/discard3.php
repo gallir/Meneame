@@ -31,7 +31,7 @@ foreach ($sites as $site) {
 	SitesMgr::__init($site);
 	$site_info = SitesMgr::get_info($site_id);
 	depublish($site);
-	if (! $site_info->sub) {
+	if ($site_info->sub) { // Only discard in the subs
 		discard($site);
 	}
 }
@@ -61,11 +61,10 @@ function discard($site_id) {
 		$l = Link::from_db($id);
 
 		$l->status = 'discard';
-		$db->query("update links set link_status='discard' where link_id = $l->id");
-		echo "Discard id: ".$l->id."\n"; // benjami 18-08-2012
-		SitesMgr::deploy($l);
+		$l->store();
+		echo "Discard id: $l->id\n"; 
 
-		if (! $site_info->sub) {
+		if ($site_info->sub) { // Double check
 			$user = new User($l->author);
 			if ($user->read) {
 				$user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
