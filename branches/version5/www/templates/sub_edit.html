@@ -35,7 +35,7 @@
 <br/>
 
 <label for="name">{% trans _('título') %}:</label><br/>
-<input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,32}" maxlength="32" style="width:60%"/>
+<input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,40}" maxlength="40" style="width:60%"/>
 <br/>
 
 {% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}>

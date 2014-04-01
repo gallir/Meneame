@@ -29,9 +29,9 @@ img1.src = img_src1;
 	{% if link.url %}
 		value="{{ link.url | escape }}"
 	{% else %}
-		value="http://"
+		value=""
 	{% endif %}
-		class="form-full" onblur="if(this.value=='') this.value='http://'" onclick="if(this.value=='http://') this.value=''"
+		class="form-full" 
 	/></p>
 
 <input type="hidden" name="phase" value="1" />

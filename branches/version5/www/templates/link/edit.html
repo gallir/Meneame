@@ -98,7 +98,7 @@
 <div style="margin-top:-7px">
 <input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" /><span class="note">{% trans _('caracteres libres') %}</span></div>
 
-{% exec print_categories_form link.category as dummy %}
+{% exec print_subs_form link.sub_id as dummy %}
 
 {% if link.trackback %}
 	<p><label for="trackback">{% trans _('trackback') %}:</label><br />

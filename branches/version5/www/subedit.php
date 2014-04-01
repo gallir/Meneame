@@ -87,7 +87,7 @@ function save_sub($id, &$errors) {
 		array_push($errors, _('nombre erróneo'). ' ' . $_POST['name']);
 	}
 	
-	$name_long = mb_substr(clean_text($_POST['name_long']), 0, 32);
+	$name_long = mb_substr(clean_text($_POST['name_long']), 0, 40);
 	if (mb_strlen($name_long) < 6) {
 		array_push($errors, _('título erróneo'));
 	}

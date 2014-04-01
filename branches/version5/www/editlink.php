@@ -64,12 +64,12 @@ function do_save($link) {
 	$link_old->category = $link->category_name;
 	$link_old->tags = $link->tags;
 	$link_old->status = $link->status;
+	$link_old->sub_id = $link->sub_id;
 
 	$link->read_content_type_buttons($_POST['type']);
 
-	if (!empty($_POST['category'])) {
-		$link->category=intval($_POST['category']);
-	}
+	$link->sub_id=intval($_POST['sub_id']);
+
 	if ($current_user->admin || $current_user->user_level == 'blogger' || SitesMgr::is_owner()) {
 		if (!empty($_POST['url'])) {
 			$link->url = clean_input_url($_POST['url']);
@@ -167,8 +167,8 @@ function link_edit_errors($link) {
 	if(preg_match('/.*http:\//', $link->title)) {
 		array_push($errors, _('por favor, no pongas URLs en el título, no ofrece información'));
 	}
-	if(empty($globals['submnm']) && ! $link->is_sub && ! $link->sub_id > 0 && ! $link->category > 0) {
-		array_push($errors, _('categoría no seleccionada'));
+	if(empty($globals['submnm']) && ! $link->sub_id > 0) {
+		array_push($errors, _('sub no seleccionado'));
 	}
 	return $errors;
 }

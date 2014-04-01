@@ -337,6 +337,25 @@ function do_pages($total, $page_size=25, $margin = true) {
 }
 
 //Used in editlink.php and submit.php
+function print_subs_form($selected = false) {
+	global $db, $globals;
+
+
+	if ($selected == false) {
+		$selected = SitesMgr::my_id();
+	}
+
+	if (! empty($globals['submnm'])) {
+		$subs = false;
+	} else {
+		$subs = SitesMgr::get_sub_subs();
+	}
+
+	$vars = compact('selected', 'subs');
+	return Haanga::Load('form_subs.html', $vars);
+}
+
+//Used in editlink.php and submit.php
 function print_categories_form($selected = 0) {
 	global $db, $dblang, $globals;
 

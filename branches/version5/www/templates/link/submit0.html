@@ -1,5 +1,5 @@
 <h2>{% trans _('paso 1 de 3') %}</h2>
-{% if show_help %}
+{% if show_help && ! globals.submnm %}
 	<div class="faq">
 	<h3>{% trans _('por favor, respeta estas instrucciones para mejorar la calidad:') %}</h3>
 	<ul class="instruction-list">

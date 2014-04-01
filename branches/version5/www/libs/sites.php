@@ -81,7 +81,7 @@ class SitesMgr {
 
 
 		$me = self::get_status(self::$id, $link);
-		if ($me->status == $link->status && $me->origen == $me->origen && $me->category == $link->category) {
+		if ($me->status == $link->status && $me->origen == $link->origen && $me->category == $link->category) {
 			return;
 		}
 
@@ -89,6 +89,7 @@ class SitesMgr {
 
 		$current = self::$id;
 		$origen = $me->origen; //Already translated from category
+
 
 		if ($me->category != $link->category || $me->origen != $link->sub_id) {
 			if ($me->status != 'new') {
@@ -178,7 +179,7 @@ class SitesMgr {
 	static function get_real_origen($id, $link) {
 		global $db; 
 
-		if ($link->category > 0) {
+		if (! $link->is_sub && $link->category > 0) {
 			$transition = array('100' => 37, '101' => 39, '102' => 40, '103' => 38);
 			$meta = $db->get_var("select category_parent from categories where category_id = $link->category");
 			
@@ -252,7 +253,7 @@ class SitesMgr {
 			$id = SitesMgr::my_id();
 		}
 
-		return $db->get_results("select id, name from subs, subs_copy where dst = $id and id = src");
+		return $db->get_results("select subs.* from subs, subs_copy where dst = $id and id = src");
 	}
 
 	static public function get_metas($ids = false) {

@@ -456,7 +456,7 @@ function do_submit2() {
 		$link->content_type = 'video';
 	}
 
-	$link->category=intval($_POST['category']);
+	$link->sub_id=intval($_POST['sub_id']);
 	$link->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
 	$link->tags = tags_normalize_string($_POST['tags']);
 	$link->key = $_POST['key'];
@@ -469,8 +469,6 @@ function do_submit2() {
 	}
 
 	$link->store();
-	// Disabled table tags
-	// tags_insert_string($link->id, $dblang, $link->tags);
 	$link->read();
 	$link->randkey = $_POST['randkey'];
 
@@ -547,8 +545,8 @@ function link_errors($link) {
 		add_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
 		$error = true;
 	}
-	if(empty($globals['submnm']) && ! $link->category > 0) {
-		add_submit_error(_("categoría no seleccionada"));
+	if(! $link->sub_id > 0) {
+		add_submit_error(_("sub no seleccionado"));
 		$error = true;
 	}
 	return $error;
