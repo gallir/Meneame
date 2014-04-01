@@ -81,7 +81,7 @@ class Link extends LCPBase {
 		} else {
 			$sql = "SELECT".Link::SQL_BASIC."WHERE $selector";
 		}
-			
+
 
 		if(($object = $db->get_object($sql, 'Link'))) {
 			$object->read = true;
@@ -674,7 +674,7 @@ class Link extends LCPBase {
 
 	function read($key='id') {
 		global $db, $current_user;
-	
+
 		SitesMgr::my_id(); // Force to read current sub_id
 		switch ($key)  {
 			case 'id':
@@ -1033,7 +1033,7 @@ class Link extends LCPBase {
 
 	function get_permalink() {
 		global $globals;
-		
+
 		if (empty($globals['server_name'])) {
 			$server_name =  $this->server_name;
 		} else {
@@ -1199,8 +1199,8 @@ class Link extends LCPBase {
 			$karma_neg_user = max(-($karma_pos_user+$karma_pos_ano), $karma_neg_user * pow((1+$r), 2));
 		}
 
-		// Get met categories coefficientes that will be used below
-		$meta_coef = $this->metas_coef_get();
+		// Get met subs coefficientes that will be used below
+		$meta_coef = $this->subs_coef_get();
 
 		// BONUS
 		// Give more karma to news voted very fast during the first two hours (ish)
@@ -1214,7 +1214,7 @@ class Link extends LCPBase {
 			// if it's has bonus and therefore time-related, use the base min_karma
 		} elseif ($karma_pos_user+$karma_pos_ano > abs($karma_neg_user)) {
 			// Aged karma
-			if ($globals['news_meta'] > 0 && $this->meta_id != $globals['news_meta']) {
+			if ($globals['news_sub'] > 0 && $this->sub_id != $globals['news_sub']) {
 				$plain_hours = $globals['karma_start_decay'];
 				$max_hours = $globals['karma_decay'];
 			} else {
@@ -1251,11 +1251,11 @@ class Link extends LCPBase {
 		*/
 
 		$this->karma = ($karma_pos_user+$karma_pos_ano+$karma_neg_user)*$this->coef;
-		if ($meta_coef && $meta_coef[$this->meta_id]) {
-			$this->karma *= $meta_coef[$this->meta_id];
+		if ($meta_coef && $meta_coef[$this->sub_id]) {
+			$this->karma *= $meta_coef[$this->sub_id];
 			// Annotate meta's coeeficient if the variation > 5%
-			if (abs(1 - $meta_coef[$this->meta_id]) > 0.05) {
-				$this->annotation .= _('Coeficiente categoría').' ('.$this->meta_id.') : '.round($meta_coef[$this->meta_id], 2)."<br/>";
+			if (abs(1 - $meta_coef[$this->sub_id]) > 0.05) {
+				$this->annotation .= _('Coeficiente sub').' ('.$this->sub_name.') : '.round($meta_coef[$this->sub_id], 2)."<br/>";
 			}
 		}
 
@@ -1324,11 +1324,11 @@ class Link extends LCPBase {
 	}
 
 	// Read affinity values using annotations
-	function metas_coef_get() {
+	function subs_coef_get() {
 		global $globals;
 
 		if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) return false;
-		$log = new Annotation("metas-coef-".SitesMgr::my_id());
+		$log = new Annotation("subs-coef-".SitesMgr::my_id());
 		if (!$log->read()) return false;
 		$dict = unserialize($log->text);
 		if (!$dict || ! is_array($dict)) return false; // Failed to unserialize
