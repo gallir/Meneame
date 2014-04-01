@@ -44,10 +44,11 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 }
 
 function promote($site_id) {
-	global $db, $globals;
+	global $db, $globals, $output;
 
 	SitesMgr::__init($site_id);
 	echo "Parent: ". SitesMgr::my_parent()." IS SUB: $site_info->sub\n";
+	$output = '';
 
 	$min_karma_coef = $globals['min_karma_coef'];
 
@@ -63,11 +64,9 @@ function promote($site_id) {
 	echo "BEGIN\n";
 	$output .= "<p><b>BEGIN</b>: ".get_date_time($now)."<br/>\n";
 
-	//$from_time = "date_sub(now(), interval 9 day)";
+
 	$hours = intval($globals['time_enabled_votes']/3600);
 	$from_time = "date_sub(now(), interval $hours hour)";
-	#$from_where = "FROM votes, links WHERE
-
 
 	$last_published = $db->get_var("SELECT SQL_NO_CACHE UNIX_TIMESTAMP(max(date)) from sub_statuses WHERE id = $site_id and status='published'");
 	if (!$last_published) $last_published = $now - 24*3600*30;
@@ -82,11 +81,6 @@ function promote($site_id) {
 	}
 
 	$decay = min(MAX, MAX - ($diff/$interval)*(MAX-MIN) );
-	/*
-	if ($decay > MIN && ($links_published_projection < $pub_estimation * 0.9 || $links_published < $pub_estimation * 0.9)) {
-		$decay = MIN;
-	}
-	*/
 	$decay = max($min_karma_coef, $decay);
 
 	if ($diff > $interval * 2) {
@@ -126,54 +120,13 @@ function promote($site_id) {
 
 	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 
-	/// Coeficients to balance metacategories
-	$days = 2;
-	$total_published = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day)");
-
 	// Balance metas
 	if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) {
 		$db_metas = array();
 	} else {
 		$db_metas = $db->get_results("select category, category_name, calculated_coef from sub_categories, categories where id = $site_id and category_id = category and category_parent = 0 and category_id in (select category_parent from sub_categories, categories where id = $site_id and category_id = category and category_parent > 0)");
 	}
-
-	$meta_coef = array();
-	foreach ($db_metas as $dbmeta) {
-		$meta = $dbmeta->category;
-		$meta_previous_coef[$meta] = $dbmeta->calculated_coef;
-		$meta_names[$meta] = $dbmeta->category_name;
-		$x = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses, categories where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and category = category_id and category_parent = $meta");
-		$y = (int) $db->get_var("select SQL_NO_CACHE count(*) from sub_statuses, categories where id = $site_id and status in ('published', 'queued') and date > date_sub(now(), interval $days day) and category = category_id and category_parent = $meta");
-		if ($y == 0) $y = 1;
-		$meta_coef[$meta] = $x/$y;
-		if ($total_published == 0) $total_published = 1;
-		$meta_coef[$meta] = 0.7 * $meta_coef[$meta] + 0.3 * $x / $total_published / count($db_metas) ;
-		$meta_avg += $meta_coef[$meta] / count($db_metas);
-		$output .= "$days days stats for <b>$meta_names[$meta]</b> (queued/published/total): $y/$x/$total_published -> $meta_coef[$meta]<br/>";
-		//echo "$meta: $meta_coef[$meta] - $x / $y<br>";
-	}
-
-	foreach ($meta_coef as $m => $v) {
-		if ($v == 0) $v = 1;
-		$meta_coef[$m] = max(min($meta_avg/$v, 1.5), 0.7);
-		if ($meta_previous_coef[$m]  > 0.6 && $meta_previous_coef[$m]  < 1.5) {
-			//echo "Previous: $meta_previous_coef[$m], current: $meta_coef[$m] <br>";
-			$meta_coef[$m] = 0.05 * $meta_coef[$m] + 0.95 * $meta_previous_coef[$m] ;
-		}
-		$output .= "Karma coefficient for <b>$meta_names[$m]</b>: $meta_coef[$m]<br/>";
-		// Store current coef in DB
-		if (! DEBUG) {
-			// $db->query("update categories set category_calculated_coef = $meta_coef[$m] where (category_id = $m || category_parent = $m)");
-			$db->query("update sub_categories set calculated_coef = $meta_coef[$m] where id = $site_id and category = $m");
-
-			$log = new Annotation("metas-coef-$site_id");
-			$log->text = serialize($meta_coef);
-			$log->store();
-		}
-	}
-
-	echo "DONE METAS\n";
-	// Karma average:  It's used for each link to check the balance of users' votes
+	$subs_coef = get_subs_coef($site_id, 2);
 
 	$globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval 72 hour) and link_id = link");
 
@@ -204,7 +157,6 @@ function promote($site_id) {
 		} else {
 			echo "OUTPUT:\n. ".strip_tags($output)."\n";
 		}
-		// die; benjami 18-08-2012
 		return;
 	}
 
@@ -213,7 +165,7 @@ function promote($site_id) {
 	$best_karma = 0;
 	$output .= "<table>\n";
 	if ($links) {
-		$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>coef</th><th>karma</th><th>meta</th><th>title</th><th>changes</th></tr>\n";
+		$output .= "<tr class='thead'><th>votes</th><th>anon</th><th>neg.</th><th>coef</th><th>karma</th><th>sub</th><th>title</th><th>changes</th></tr>\n";
 		$i=0;
 		foreach($links as $dblink) {
 			$link = Link::from_db($dblink->link_id);
@@ -228,7 +180,7 @@ function promote($site_id) {
 
 			User::calculate_affinity($link->author, $past_karma*0.3);
 
-			
+
 			// Calculate the real karma for the link
 			$link->calculate_karma();
 
@@ -246,7 +198,7 @@ function promote($site_id) {
 			$karma_new = $link->karma;
 			$link->message = '';
 			$changes = 0;
-			if (DEBUG ) $link->message .= "Meta: $link->meta_id coef: ".$meta_coef[$link->meta_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
+			if (DEBUG ) $link->message .= "Sub: $link->sub_id coef: ".$subs_coef[$link->sub_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
 
 			// Verify last published from the same site
 			$hours = 8;
@@ -424,7 +376,7 @@ function print_row($link, $changes, $log = '') {
 	$mod = $row%2;
 
 	$output = "<tr><td class='tnumber$mod'>".$link->votes."</td><td class='tnumber$mod'>".$link->anonymous."</td><td class='tnumber$mod'>".$link->negatives."</td><td class='tnumber$mod'>" . sprintf("%0.2f", $link->coef). "</td><td class='tnumber$mod'>".intval($link->karma)."</td>";
-	$output .= "<td class='tdata$mod'>$link->meta_name</td>\n";
+	$output .= "<td class='tdata$mod'>$link->sub_name</td>\n";
 	$output .= "<td class='tdata$mod'><a href='".$link->get_relative_permalink()."/log'>$link->title</a>\n";
 	if (!empty($link->message)) {
 		$output .= "<br/>$link->message";
@@ -450,7 +402,6 @@ function print_row($link, $changes, $log = '') {
 	flush();
 	$row++;
 	return $output;
-
 }
 
 
@@ -499,24 +450,76 @@ function publish($site, $link) {
 	syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
 	passthru(dirname(__FILE__)."/post_link.php $server_name $link->id published");
 	return;
-
-
-	/*
-	// Get all sites that are "children" and try to post links
-	// And that "import" the link->category
-	$sites = array_intersect(SitesMgr::get_children($my_id), SitesMgr::get_receivers($my_id, $link->category));
-
-	// Add my own
-	$sites[] = $my_id;
-
-	foreach ($sites as $s) {
-		$server_name = SitesMgr::get_info($s)->server_name;
-		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
-		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id published");
-	}
-	*/
-
 }
 
+function get_subs_coef($site_id, $days = 3) {
+	global $globals, $db, $output;
 
-?>
+	if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) {
+		return array();
+	}
+
+
+	/// Coeficients to balance metacategories
+	$imported = $db->get_col("select src from subs_copy where dst = $site_id");
+	if (empty($imported)) return array();
+
+	$imported = implode(',', $imported);
+
+	$totals = $db->get_results("select SQL_NO_CACHE origen, status, subs.name as name from sub_statuses, subs where sub_statuses.id = $site_id and status in ('queued', 'published') and date > date_sub(now(), interval $days day) and origen in ($imported) and origen = subs.id");
+	$totals_sent = array();
+	$totals_published = array();
+	$names = array();
+	$subs = array();
+
+	$total_published = 0;
+	$total_sent = 0;
+	foreach ($totals as $sub) {
+		$names[$sub->origen] = $sub->name;
+		switch ($sub->status) {
+			case 'published':
+				$total_published++;
+				$totals_published[$sub->origen]++;
+			default:
+				$total_sent++;
+				$totals_sent[$sub->origen]++;
+		}
+		if (! in_array($sub->origen, $subs)) {
+			$subs[] = $sub->origen;
+		}
+
+	}
+	var_dump($totals_published);
+	$average = $total_published / $total_sent;
+
+	$average = $total_published / $total_sent;
+
+	$subs_coef = array();
+
+
+	foreach ($subs as $s) {
+		$x = $totals_published[$s];
+		$y = $totals_sent[$s];
+		if ($y == 0) $y = 1;
+
+		$c = $x/$y;
+
+		$subs_coef[$s] = 0.7 * $c + 0.3 * $x / $total_published / count($subs);
+
+		$output .= "$days days stats for <b>$names[$s]</b> (queued/published/total): $y/$x/$total_published -> $subs_coef[$s]<br/>";
+	}
+
+	foreach ($subs_coef as $s => $v) {
+		$subs_coef[$s] = max(min($average/$v, 1.5), 0.7);
+		$output .= "Karma coefficient for <b>$names[$s]</b>: $subs_coef[$s]<br/>";
+	}
+
+	// Store current coef in DB
+	$log = new Annotation("subs-coef-$site_id");
+	$log->text = serialize($subs_coef);
+	$log->store();
+
+	echo "DONE META SUBS\n";
+	return $subs_coef;
+}
+
