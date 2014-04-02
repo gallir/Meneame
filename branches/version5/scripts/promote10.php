@@ -47,7 +47,6 @@ function promote($site_id) {
 	global $db, $globals, $output;
 
 	SitesMgr::__init($site_id);
-	echo "Parent: ". SitesMgr::my_parent()." IS SUB: $site_info->sub\n";
 	$output = '';
 
 	$min_karma_coef = $globals['min_karma_coef'];
