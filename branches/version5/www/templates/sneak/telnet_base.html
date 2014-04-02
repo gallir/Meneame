@@ -4,9 +4,14 @@
 var my_version = '{{ globals.sneak_version }}';
 var ts={{ globals.now }} - 3600; // just due a freaking IE cache problem
 var server_name = '{{ globals.server_name }}';
-var sneak_base_url = 'http://{{ globals.server_name }}{{ globals.base_url }}backend/sneaker2.php';
+var sneak_base_url = '{{ globals.base_url }}backend/sneaker2';
 var mykey = {% exec rand 100 999  %};
 var site_id = {{ globals.site_id }};
+{% if globals.submnm %}
+	var submnm = true;
+{% else %}
+	var submnm = false;
+{% endif %}
 
 {% if current_user.admin %}
 var is_admin = true;
@@ -31,6 +36,12 @@ function to_html(data) {
 
 	html = '<div class="sneaker-ts">'+timeStr+'</div>';
 
+	if (data.sub_name) {
+		html += '<div class="sneaker-sub"><a target="_blank" href="'+base_url+'m/'+data.sub_name+'">'+data.sub_name+'</a></div>';
+	} else {
+		html += '<div class="sneaker-sub">&nbsp;</div>';
+	}
+
 	/* If it's a comment */
 	if (data.type == 'chat') {
 		html += '<div class="sneaker-type">T</div>';
@@ -38,8 +49,7 @@ function to_html(data) {
 		// Open in a new window
 		data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
 		html += '<div class="sneaker-chat">'+data.title+'</div>';
-		html += '<div class="sneaker-who">';
-		html += '<a target="_blank" href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
+		html += '<div class="sneaker-who"><a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'</a></div>';
 		html += '<div class="sneaker-status">'+data.status+'</div>';
 		return html;
 	}
@@ -79,7 +89,7 @@ function to_html(data) {
 		html += '<div class="sneaker-who"><span class="sneaker-problem">'+data.who+'</span></div>';
 	else if (data.uid > 0)  {
 		html += '<div class="sneaker-who">';
-		html += '<a target="_blank" href="user.php?login='+data.who+'">'+data.who.substring(0,15)+'</a></div>';
+		html += '<a target="_blank" href="user/'+data.who+'">'+data.who.substring(0,15)+'</a></div>';
 	} else 
 		html += '<div class="sneaker-who">'+data.who.substring(0,15)+'</div>';
 	if (data.status == '{% trans _('publicada') %}')
@@ -94,5 +104,5 @@ function to_html(data) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://{{ globals.server_name }}{{ globals.base_url }}js/sneak.js.php?{{ globals['sneak_version'] }}"></script>
+<script type="text/javascript" src="{{ globals.base_url_general }}js/sneak.js.php?{{ globals['sneak_version'] }}"></script>
 {% endspacefull %}

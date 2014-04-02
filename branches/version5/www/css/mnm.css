@@ -2016,18 +2016,23 @@ text-align: center;
 overflow: hidden;
 }
 
-.sneaker-ts, .sneaker-type, .sneaker-votes, .sneaker-story, .sneaker-chat, .sneaker-who, .sneaker-status, .sneaker-chat-friends, .sneaker-chat-admin {
+.sneaker-ts, .sneaker-sub, .sneaker-type, .sneaker-votes, .sneaker-story, .sneaker-chat, .sneaker-who, .sneaker-status, .sneaker-chat-friends, .sneaker-chat-admin {
 float: left;
 display: block;
 }
 
 .sneaker-ts {
-width: 7%;
+width: 6%;
 text-align: left;
 }
 
+.sneaker-sub {
+width: 9%;
+font-variant:small-caps;
+}
+
 .sneaker-type {
-width: 7%;
+width: 5%;
 }
 
 .sneaker-type img {
@@ -2041,19 +2046,19 @@ width: 8%;
 }
 
 .sneaker-story {
-width: 53%;
+width: 50%;
 text-align: left;
 overflow: hidden;
 }
 
 .sneaker-chat, .sneaker-chat-friends, .sneaker-chat-admin {
-width: 53%;
+width: 50%;
 text-align: left;
 overflow: hidden;
 }
 
 .sneaker-who {
-width: 16%;
+width: 15%;
 text-align: left;
 }
 
@@ -2066,7 +2071,7 @@ vertical-align: bottom;
 }
 
 .sneaker-status {
-width: 8%;
+width: 6%;
 text-align: right;
 }
 
@@ -2229,7 +2234,7 @@ width: 18%;
 }
 
 .mini-sneaker-who {
-width: 24%;
+width: 21%;
 text-align: left;
 }
 

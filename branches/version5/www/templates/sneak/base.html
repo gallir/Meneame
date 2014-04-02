@@ -4,9 +4,14 @@
 var my_version = '{{ globals.sneak_version }}';
 var ts={{ globals.now }} - 3600; // just due a freaking IE cache problem
 var server_name = '{{ globals.server_name }}';
-var sneak_base_url = '{{ globals.base_url_general }}backend/sneaker2.php';
+var sneak_base_url = '{{ globals.base_url }}backend/sneaker2';
 var mykey = {% exec rand 100 999  %};
 var site_id = {{ globals.site_id }};
+{% if globals.submnm %}
+	var submnm = true;
+{% else %}
+	var submnm = false;
+{% endif %}
 
 var chat_counter = 0;
 
@@ -68,6 +73,12 @@ function to_html(data) {
 	timeStr  += ((seconds < 10) ? ":0" : ":") + seconds;
 
 	html = '<div class="sneaker-ts">'+timeStr+'<\/div>';
+	if (data.sub_name) {
+		html += '<div class="sneaker-sub"><a target="_blank" href="'+base_url+'m/'+data.sub_name+'">'+data.sub_name+'</a></div>';
+	} else {
+		html += '<div class="sneaker-sub">&nbsp;</div>';
+	}
+
 
 	html += '<div class="sneaker-type">';
 
@@ -86,9 +97,9 @@ function to_html(data) {
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined && data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
 			}
-			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+			html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			return html;
 			break;
@@ -115,9 +126,9 @@ function to_html(data) {
 			html += '<div id="chat'+chat_counter+'" class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined &&  data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
 			}
-			html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+			html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			chat_counter += 1;
 			return html;
@@ -171,9 +182,9 @@ function to_html(data) {
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who">';
 		if (data.icon != undefined && data.icon.length > 0) {
-			html += '<a target="_blank" href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+			html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
 		}
-		html += '&nbsp;<a target="_blank" href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+		html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {
 		html += '<div class="sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';
 	}
@@ -349,7 +360,7 @@ function flipChar(c) {
 
 //]]>
 </script>
-<script type="text/javascript" src="http://{{ globals.server_name }}{{ globals.base_url_general }}js/sneak.js.php?storage_{{ globals['sneak_version'] }}" charset="utf-8"></script>
+<script type="text/javascript" src="{{ globals.base_url_general }}js/sneak.js.php?storage_{{ globals['sneak_version'] }}" charset="utf-8"></script>
 <script type="text/javascript">
 {% if current_user.user_id > 0 %}
 	{% if _REQUEST['friends'] %}

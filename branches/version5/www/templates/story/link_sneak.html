@@ -18,7 +18,7 @@ var link_karma = 0;
 var ts={{ globals.now }} - 86400;  // just due a freaking IE cache problem
 var server_name = '{{ globals.server_name }}';
 var base_url = '{{ globals.base_url }}';
-var sneak_base_url = 'http://{{ globals.server_name }}{{ globals.base_url }}backend/link_sneaker.php';
+var sneak_base_url = 'http://{{ globals.server_name }}{{ globals.base_url }}backend/link_sneaker';
 
 
 var default_gravatar = 'http://'+server_name+'/img/mnm/no-gravatar-2-20.jpg';
@@ -175,9 +175,9 @@ function to_html(data) {
 	else if (data.uid > 0)  {
 		html += '<div class="mini-sneaker-who">';
 		if (data.icon != undefined && data.icon.length > 0) {
-			html += '<a href="'+base_url+'user.php?login='+data.who+'"><img src="'+data.icon+'" width=20 height=20 /><\/a>';
+			html += '<a href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 /><\/a>';
 		}
-		html += '&nbsp;<a href="'+base_url+'user.php?login='+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
+		html += '&nbsp;<a href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else
 		html += '<div class="mini-sneaker-who">&nbsp;'+data.who.substring(0,15)+'<\/div>';
 

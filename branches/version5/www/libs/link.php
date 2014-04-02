@@ -47,18 +47,18 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
-	LEFT JOIN (sub_statuses as s, subs) ON (s.link=links.link_id and s.id=s.origen and s.id=subs.id)
+	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
 	LEFT JOIN votes ON (link_date > @enabled_votes and vote_type='links' and vote_link_id = links.link_id and vote_user_id = @user_id and ( @user_id > 0  OR vote_ip_int = @ip_int ) )
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id)
 	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id) ";
 
-	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link  FROM links
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
-	LEFT JOIN (sub_statuses as s, subs) ON (s.link=links.link_id and s.id=s.origen and s.id=subs.id)";
+	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)";
 
 
 	static function from_db($id, $key = 'id', $complete = true) {
@@ -128,25 +128,19 @@ class Link extends LCPBase {
 		}
 		$list .= ", $list2";
 
-
+/***** TODO: check and decid how duplicated must be dealt with
+		$subs = array();
 		$site_id = SitesMgr::my_id();
-		$filter_by_site_sql = "(sub_statuses.id = $site_id ";
-		$site_parent = SitesMgr::my_parent();
-		if ($site_parent > 0 && $site_parent != $site_id) {
-			$filter_by_site_sql .= " OR sub_statuses.id = $site_parent ";
-		}
-		$site_children = SitesMgr::get_children($site_id); // array
-		if (is_array($site_children) && count($site_children) > 0 ) {
-			$filter_by_site_sql .= " OR sub_statuses.id in (" . implode(',', $site_children).")";
-		}
-		$filter_by_site_sql .= ")";
-
-
-
-
+		$subs[] = $site_id;
+		$subs = array_merge($subs, SitesMgr::get_senders(), SitesMgr::get_receivers());
+		$subs = implode(',', $subs);
 
 		// If it was abuse o autodiscarded allow other to send it again
-		$found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND $filter_by_site_sql ORDER by link_id asc limit 1");
+		$found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND sub_statuses.id in ($subs) ORDER by link_id asc limit 1");
+*******/
+
+		// If it was abuse o autodiscarded allow other to send it again
+		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
 		return $found;
 	}
 
@@ -1792,6 +1786,11 @@ class Link extends LCPBase {
 		$this->mean_common_votes = $values_total/$total_values;
 		$db->query("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))");
 		return $this->mean_common_votes;
+	}
+
+	function get_a_status() {
+		if ($this->sub_status) return $this->sub_status;
+		return $this->status;
 	}
 
 }

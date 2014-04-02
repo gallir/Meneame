@@ -1,6 +1,5 @@
 <?
 
-#var_dump($globals['path']); die;
 $path = $globals['path'];
 $globals['submnm'] = preg_replace('/[^\p{L}\d_]/u', ':', $path[1]);
 include_once 'config.php';
@@ -10,7 +9,7 @@ if (empty($globals['submnm']) || ! ($info = SitesMgr::get_info())) {
 	not_found();
 }
 
-$forbidden_routes = array('m', 'user', 'legal', 'notame', 'mobile', 'register', 'login', 'trends', 'backend');
+$forbidden_routes = array('m', 'user', 'legal', 'notame', 'mobile', 'register', 'login', 'trends');
 
 if (in_array($path[2], $forbidden_routes)) {
 	syslog(LOG_INFO, "Forbidden in subs: ".$path[2]);

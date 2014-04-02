@@ -26,6 +26,7 @@ $routes = array(
 	'comments_rss'	=> 'comments_rss2.php',
 	'sneakme_rss'	=> 'sneakme_rss2.php',
 	'sneak'		=> 'sneak.php',
+	'telnet'		=> 'telnet.php',
 	'popular'	=> 'topstories.php',
 	'top_visited'	=> 'topclicked.php',
 	'top_active'	=> 'topactive.php',
@@ -33,6 +34,7 @@ $routes = array(
 	'top_users'		=> 'topusers.php',
 	'top_commented'	=> 'topcommented.php',
 	'trends'	=> 'trends.php',
+	'backend'	=> 'backend/dispatcher.php',
 	'notame'	=> 'sneakme/dispatcher.php',
 	'mobile'	=> 'mobile/dispatcher.php',
 );

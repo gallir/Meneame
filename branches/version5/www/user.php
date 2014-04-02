@@ -579,61 +579,6 @@ function do_friends($option) {
 	}
 }
 
-function do_categories() {
-	global $globals, $current_user, $db, $user, $login;
-
-	$options = array();
-	$options[$user->username] = get_user_uri($user->username);
-	$options[_('categorías personalizadas')] = get_user_uri($user->username, 'categories');
-	if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
-		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
-	}
-
-	do_user_subheader($options, 1, 'rss?personal='.$user->id, _('categorías personalizadas en rss2'));
-
-	if (is_array($_POST['categories'])) {
-		$db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = 'category_".SitesMgr::my_id()."'");
-		$total = count(SitesMgr::get_categories());
-		if (count($_POST['categories']) < $total) {
-			for ($i=0; $i<count($_POST['categories']); $i++){
-				$cat = intval($_POST['categories'][$i]);
-				$db->query("insert into prefs (pref_user_id, pref_key, pref_value) values ($current_user->user_id, 'category_".SitesMgr::my_id()."', $cat)");
-			}
-		}
-	}
-	print_categories_checkboxes($user);
-}
-
-function print_categories_checkboxes($user) {
-	global $db, $current_user;
-
-
-	// Get selected categories
-	$selected_set = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $user->id and pref_key = 'category_".SitesMgr::my_id()."'");
-	$selected = array();
-	if ($selected_set) {
-		foreach ($selected_set as $cat) {
-			$selected[$cat] = true;
-		}
-	}
-
-	$metas = SitesMgr::get_metas();
-	$categories = array();
-	foreach ($metas as $meta) {
-		$categories[$meta->id] = SitesMgr::get_categories($meta->id);
-		if ( $selected ) {
-			// Check if all categories are selected for the current meta
-			$all = true;
-			foreach ($categories[$meta->id] as $sel) {
-				if (!isset($selected[$sel->id])) $all = false;
-			}
-			if ($all) $selected[$meta->id] = true;
-		}
-	}
-
-	Haanga::Load('user/categories.html', compact('user', 'metas', 'categories', 'selected'));
-}
-
 function do_user_subheader($options, $selected = false, $rss = false, $rss_title = '') {
 	global $globals;
 

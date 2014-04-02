@@ -56,7 +56,7 @@ function sneak_menu_items($id) {
 	if ($current_user->admin) {
 		$items[] = new MenuOption(_('admin'), $globals['base_url'].'sneak?admin=1', $id, _('admin'));
 	}
-	$items[] = new MenuOption(_('consola'), $globals['base_url'].'telnet.php', $id, _('consola'));
+	$items[] = new MenuOption(_('consola'), $globals['base_url'].'telnet', $id, _('consola'));
 
 	return $items;
 }

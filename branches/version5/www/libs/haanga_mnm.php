@@ -39,6 +39,11 @@ class Haanga_Extension_Filter_TxtShorter
 	}
 }
 
+class Haanga_Extension_Filter_SubName
+{
+	public $php_alias = 'SitesMgr::get_name';
+}
+
 class Haanga_Extension_Filter_CleanUrl
 {
 	public $php_alias = 'clean_input_url';

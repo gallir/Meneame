@@ -61,7 +61,6 @@ function do_save($link) {
 	$link_old->url = $link->url;
 	$link_old->title = $link->title;
 	$link_old->content = $link->content;
-	$link_old->category = $link->category_name;
 	$link_old->tags = $link->tags;
 	$link_old->status = $link->status;
 	$link_old->sub_id = $link->sub_id;

@@ -55,12 +55,6 @@ class SitesMgr {
 		return $current_user->user_id > 0 && ($current_user->admin || self::$info->owner == $current_user->user_id);
 	}
 
-	static public function my_parent() {
-		if (! self::$id ) self::__init();
-
-		return self::$parent > 0 ? self::$parent : self::$id;
-	}
-
 	static public function get_info($id = false, $force = false) {
 		global $db;
 
@@ -71,6 +65,18 @@ class SitesMgr {
 			return $db->get_row("select * from subs where id = $id");
 		}
 	}
+
+	static public function get_name($id = false, $force = false) {
+		global $db;
+
+		if ($id == false || $id == self::$id) {
+			if (! self::$id || $force) self::__init();
+			return self::$info->name;
+		} else {
+			return $db->get_var("select name from subs where id = $id");
+		}
+	}
+
 
 	static public function deploy($link) {
 		global $db;
@@ -192,24 +198,26 @@ class SitesMgr {
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
-	static public function get_receivers($id) {
+	static public function get_receivers($id = false) {
 		global $db;
 
+		if ($id == false) {
+			$id = self::my_id();
+		}
 		$receivers = array();
 		$receivers = array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
 		return $receivers;
 	}
 
-	static public function get_children($site_id) {
+	static public function get_senders($id = false) {
 		global $db;
-		if (! self::$id ) self::__init();
 
-		return $db->get_col("select id from subs where parent = $site_id");
-	}
-
-	static private function get_category_configuration($id, $category) {
-		global $db;
-		return $db->get_row("select * from sub_categories where id = $id and category = $category");
+		if ($id == false) {
+			$id = self::my_id();
+		}
+		$senders = array();
+		$senders = array_merge($senders, $db->get_col("select src from subs_copy where dst=$id"));
+		return $senders;
 	}
 
 	static private function get_status($id, $link) {
@@ -250,62 +258,10 @@ class SitesMgr {
 		global $globals, $db;
 
 		if ($id == false) {
-			$id = SitesMgr::my_id();
+			$id = self::my_id();
 		}
 
 		return $db->get_results("select subs.* from subs, subs_copy where dst = $id and id = src");
-	}
-
-	static public function get_metas($ids = false) {
-		global $globals, $db;
-
-		if ($ids) {
-			if (is_array($ids)) {
-				$extra = 'and category in ('.implode(',', $ids).')';
-			} else {
-				$extra = 'and category = '.(int) $ids;
-			}
-		} else {
-			$extra = '';
-		}
-
-		if ($globals['allowed_metas']) {
-			$extra .= ' and category in ('.implode(',',$globals['allowed_metas']).')';
-		}
-
-		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra AND category_parent = 0 ORDER BY category_name ASC");
-	}
-
-	static public function get_categories($parent = false) {
-		global $globals, $db;
-
-		if ($parent !== false) {
-			$extra = 'and category_parent = '.(int) $parent;
-		} else {
-			$extra = 'and category_parent != 0';
-		}
-
-		if ($globals['allowed_metas']) {
-			$extra .= ' and category_parent in ('.implode(',',$globals['allowed_metas']).')';
-		}
-
-		return $db->get_results("SELECT SQL_CACHE category as id, category_name as name, category_uri as uri FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_name ASC");
-	}
-
-	static public function get_category_ids($parent = false) {
-		global $globals, $db;
-
-		if ($parent !== false) {
-			$extra = 'and category_parent = '.(int) $parent;
-		} else {
-			$extra = 'and category_parent != 0';
-		}
-
-		if ($globals['allowed_metas']) {
-			$extra .= ' and category_parent in ('.implode(',',$globals['allowed_metas']).')';
-		}
-
-		return $db->get_col("SELECT SQL_CACHE category FROM categories, sub_categories WHERE id = ".self::my_id()." AND category_id = category $extra ORDER BY category_id ASC");
 	}
 
 	static public function get_active_sites($children = false) {

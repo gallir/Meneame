@@ -12,7 +12,6 @@ include_once(mnminclude.'sneak.php');
 include_once(mnminclude.'ban.php');
 
 
-$foo_link = new Link;
 $events = array();
 $data = array();
 
@@ -50,11 +49,16 @@ if ($max_items < 1 || $max_items > 100) {
 	$max_items = 100; // Avoid abuse
 }
 
-if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
+// Get the logs by sub, if it's a sub
+if ($globals['submnm']) {
+	$subs = array_merge(array(SitesMgr::my_id()), SitesMgr::get_senders(), SitesMgr::get_receivers());
+	$globals['subs'] = $subs = implode(',', $subs);
+	$site_filter = "and log_sub in ($subs)";
+} else {
+	$site_filter = '';
+}
 
-// Get the logs
-if ($current_user->admin) $site_filter = '';
-else $site_filter = 'and log_sub = ' . SitesMgr::my_parent();
+if (empty($_REQUEST['novote']) || empty($_REQUEST['noproblem'])) get_votes($dbtime);
 
 $logs = $db->get_results("select UNIX_TIMESTAMP(log_date) as time, log_type, log_ref_id, log_user_id from logs where log_type != 'login_failed' and log_date > $dbtime $site_filter order by log_date desc limit $max_items");
 
@@ -262,6 +266,7 @@ function get_chat() {
 		$json['votes'] = 0;
 		$json['com'] = 0;
 		$json['link'] = 0;
+		$json['sub_name'] = '';
 
 
 		$chat_text = put_smileys(text_to_html(preg_replace("/[\r\n]+/", ' ¬ ', preg_replace('/&&user&&/', $current_user->user_login, $event->chat_text))));
@@ -291,11 +296,20 @@ function get_chat() {
 
 // Check last votes
 function get_votes($dbtime) {
-	global $db, $events, $last_timestamp, $foo_link, $max_items, $current_user;
+	global $db, $globals, $events, $last_timestamp, $max_items, $current_user;
+	
+	if ($globals['subs']) {
+		$filter = 'and sub_statuses.id in ('.$globals['subs'].')';
+	} else {
+		$filter = '';
+	}
 
-	$res = $db->get_results("select vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments from votes, links, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." and vote_type='links' and vote_date > $dbtime and link_id = sub_statuses.link and sub_statuses.link = vote_link_id and vote_user_id != link_author order by vote_date desc limit $max_items");
+	$res = $db->get_results("select vote_link_id, vote_id, unix_timestamp(vote_date) as timestamp, vote_value, INET_NTOA(vote_ip_int) as vote_ip, vote_user_id, user_login, user_level from votes LEFT JOIN users on (user_id = vote_user_id), sub_statuses where vote_type='links' and vote_date > $dbtime and sub_statuses.link = vote_link_id $filter order by vote_date desc limit $max_items");
 	if (!$res) return;
 	foreach ($res as $event) {
+		$link = Link::from_db($event->vote_link_id, null, false);
+		if (!$link) continue;
+
 		if ($current_user->user_id > 0) {
 			if (!empty($_REQUEST['friends']) && $event->vote_user_id != $current_user->user_id) {
 				// Check the user is a friend
@@ -308,23 +322,19 @@ function get_votes($dbtime) {
 					}
 				}
 			} elseif (!empty($_REQUEST['admin']) && $current_user->admin) {
-				$user_level = $db->get_var("select user_level from users where user_id=$event->vote_user_id");
-				if ($user_level != 'admin' && $user_level != 'god') continue;
+				if ($event->user_level != 'admin' && $event->user_level != 'god') continue;
 			}
 		}
 		if ($event->vote_value >= 0) {
 			if ($_REQUEST['novote']) continue;
-			if ($event->link_status == 'published' && $_REQUEST['nopubvotes']) continue;
+			if ($link->get_a_status() == 'published' && $_REQUEST['nopubvotes']) continue;
 		} else {
 			if ($_REQUEST['noproblem']) continue;
 		}
-		$foo_link->id=$event->link_id;
-		$foo_link->uri=$event->link_uri;
-		$foo_link->get_relative_permalink();
+
 		$uid = $event->vote_user_id;
 		if($event->vote_user_id > 0) {
-			$res = $db->get_row("select user_login from users where user_id = $event->vote_user_id");
-			$user = $res->user_login;
+			$user = $event->user_login;
 		} else {
 			$user= preg_replace('/\.[0-9]+$/', '', $event->vote_ip);
 		}
@@ -342,16 +352,17 @@ function get_votes($dbtime) {
 				}
 			}
 		}
-		$json['status'] = get_status($event->link_status);
+		$json['status'] = get_status($link->get_a_status());
+		$json['sub_name'] = $link->sub_name;
 		$json['type'] = $type;
 		$json['ts'] = $event->timestamp;
-		$json['votes'] = $event->link_votes+$event->link_anonymous;
-		$json['com'] = $event->link_comments;
-		$json['link'] = $foo_link->get_relative_permalink();
-		$json['title'] = $event->link_title;
+		$json['votes'] = $link->total_votes;
+		$json['com'] = $link->comments;
+		$json['link'] = $link->get_relative_permalink();
+		$json['title'] = $link->title;
 		$json['who'] = $who;
 		$json['uid'] = $event->vote_user_id;
-		$json['id'] = $event->link_id;
+		$json['id'] = $link->id;
 		if ($event->vote_user_id >0) $json['icon'] = get_avatar_url($event->vote_user_id, -1, 20);
 		$key = $event->timestamp . ':votes:'.$event->vote_id;;
 		$events[$key] = $json;
@@ -361,14 +372,14 @@ function get_votes($dbtime) {
 
 
 function get_story($time, $type, $linkid, $userid) {
-	global $db, $events, $last_timestamp, $foo_link;
+	global $db, $events, $last_timestamp;
 
 	$link = Link::from_db($linkid, null, false);
 	if (!$link) return;
 
 	$json['link'] = $link->get_relative_permalink();
 	$json['id'] = $linkid;
-	$json['status'] = get_status($link->status);
+	$json['status'] = get_status($link->get_a_status());
 	$json['ts'] = $time;
 	$json['type'] = $type;
 	$json['votes'] = $link->total_votes;
@@ -377,6 +388,7 @@ function get_story($time, $type, $linkid, $userid) {
 	$json['thumb'] = $link->has_thumb();
 	$json['who'] = $link->username;
 	$json['uid'] = $userid;
+	$json['sub_name'] = $link->sub_name;
 
 	if ($userid >0) $json['icon'] = get_avatar_url($userid, -1, 20);
 
@@ -397,24 +409,24 @@ function get_story($time, $type, $linkid, $userid) {
 }
 
 function get_comment($time, $type, $commentid, $userid) {
-	global $db, $events, $last_timestamp, $foo_link, $max_items, $globals;
+	global $db, $events, $last_timestamp, $max_items, $globals;
 
-	$event = $db->get_row("select user_login, comment_user_id, comment_type, comment_order, link_id, link_title, link_uri, link_status, link_date, link_votes, link_anonymous, link_comments, media.size as media_size from comments LEFT JOIN media ON (media.type='comment' and media.id = comments.comment_id and media.version = 0), links, users where comment_id = $commentid and link_id = comment_link_id and user_id=$userid ");
+	$event = $db->get_row("select user_login, comment_user_id, comment_link_id, comment_type, comment_order, media.size as media_size from comments LEFT JOIN media ON (media.type='comment' and media.id = comments.comment_id and media.version = 0), users where comment_id = $commentid and user_id=$userid ");
 
 
 	if (!$event) return;
 
 
-	$foo_link->id=$event->link_id;
-	$foo_link->uri=$event->link_uri;
-	$json['link'] = $foo_link->get_relative_permalink()."/c0$event->comment_order#c-$event->comment_order";
+	$link = Link::from_db($event->comment_link_id, null, false); // Read simple
+	$json['link'] = $link->get_relative_permalink()."/c0$event->comment_order#c-$event->comment_order";
 	$json['id'] = $commentid;
-	$json['status'] = get_status($event->link_status);
+	$json['status'] = get_status($link->get_a_status());
 	$json['ts'] = $time;
 	$json['type'] = $type;
-	$json['votes'] = $event->link_votes+$event->link_anonymous;
-	$json['com'] = $event->link_comments;
-	$json['title'] = $event->link_title;
+	$json['votes'] = $link->total_votes;
+	$json['com'] = $link->comments;
+	$json['title'] = $link->title;
+	$json['sub_name'] = $link->sub_name;
 	if ( $event->comment_type == 'admin') {
 		$json['who'] = get_server_name();
 		$userid = 0;
@@ -433,10 +445,11 @@ function get_comment($time, $type, $commentid, $userid) {
 }
 
 function get_post($time, $type, $postid, $userid) {
-	global $db, $current_user, $events, $last_timestamp, $foo_link, $max_items;
+	global $db, $current_user, $events, $last_timestamp, $max_items;
 	$event = $db->get_row("select user_login, post_user_id, post_content, media.size as media_size from posts LEFT JOIN media ON (media.type='post' and media.id = posts.post_id and media.version = 0), users where post_id = $postid and user_id=$userid");
 	if (!$event) return;
 	$json['link'] = post_get_base_url($postid);
+	$json['sub_name'] = '';
 	$json['ts'] = $time;
 	$json['type'] = $type;
 	$json['who'] = $event->user_login;
