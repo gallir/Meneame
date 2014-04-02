@@ -34,6 +34,7 @@ $cat = $_REQUEST['category'];
 
 $from = '';
 switch ($globals['meta']) {
+/* TODO: with subs
 	case '_personal':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -41,6 +42,7 @@ switch ($globals['meta']) {
 		$order_by = "ORDER BY date DESC";
 		$tab = 7;
 		break;
+*/
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -81,7 +83,7 @@ switch ($globals['meta']) {
 			// TODO: show selected subs.
 			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
 			$rows = -1;
-			$where = "status='queued' and date > $from_time and category in (".$globals['meta_categories'].") ";
+			$where = "status='queued' and date > $from_time) ";
 			$tab = false;
 		} else {
 			$rows = Link::count('queued');
@@ -107,7 +109,7 @@ print_shakeit_tabs($tab);
 echo '<div id="sidebar">';
 do_banner_right();
 if ($globals['show_popular_queued']) do_best_queued();
-do_last_blogs();
+//do_last_blogs();
 //do_best_comments();
 //do_categories_cloud('queued', 24);
 do_vertical_tags('queued');

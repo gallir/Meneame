@@ -44,6 +44,7 @@ do_tabs('main','published');
 $from = '';
 
 switch ($globals['meta']) {
+/*
 	case '_personal':
 		// TODO: Show here the subs followed by the user
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
@@ -53,6 +54,7 @@ switch ($globals['meta']) {
 		//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
 		print_index_tabs(7); // Show "personal" as default
 		break;
+*/
 	case '_friends':
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';

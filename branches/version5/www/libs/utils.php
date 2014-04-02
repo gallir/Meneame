@@ -720,6 +720,7 @@ function meta_get_current() {
 	}
 
 
+/* TODO: personalization with subs
 	//Check for personalisation
 	// Authenticated users
 	if (empty($globals['submnm']) && $current_user->user_id > 0) {
@@ -736,6 +737,7 @@ function meta_get_current() {
 			$globals['meta_categories'] = false;
 		}
 	}
+*/
 
 	return $globals['meta_current'];
 }
