@@ -7,10 +7,9 @@ if (! preg_match('/\.php$/', $script)) {
 	$script .= '.php';
 }
 
-if ((include $script) === FALSE) {
-	echo "failed $script\n";
-    include_once 'config.php';
-    not_found();
+if (!file_exists($script) || (include $script) === FALSE) {
+    include_once '../config.php';
+    not_found("script no found", 404);
 }
 
 

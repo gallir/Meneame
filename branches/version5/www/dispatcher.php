@@ -41,8 +41,8 @@ $routes = array(
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
 
-if (empty($routes[$path[0]]) || (include './'.$routes[$path[0]]) === FALSE) {
+if (empty($routes[$path[0]]) || !file_exists($routes[$path[0]]) || (include './'.$routes[$path[0]]) === FALSE) {
 	include_once 'config.php';
-	not_found();
+	not_found("not found", 404, true);
 }
 

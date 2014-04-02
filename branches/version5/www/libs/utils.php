@@ -541,11 +541,15 @@ function do_error($mess = false, $error = false, $send_status = true) {
 	global $globals;
 	$globals['ads'] = false;
 
+	if (headers_sent($file, $line)) {
+		syslog(LOG_INFO, "Headers already sent, file $file line $line, uri: ".$_SERVER["DOCUMENT_URI"]." mess: $mess");
+	}
+
 	if (! $mess ) $mess = _('algún error nos ha petado');
 
 	if ($error && $send_status) {
-		header("HTTP/1.0 $error $mess");
-		header("Status: $error $mess");
+		@header("HTTP/1.0 $error $mess");
+		@header("Status: $error $mess");
 	}
 
 	Haanga::Load('error.html', compact('mess', 'error'));
