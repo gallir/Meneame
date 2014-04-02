@@ -47,9 +47,8 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, cat.category_name as category_name, cat.category_uri as category_uri, meta.category_id as meta_id, meta.category_name as meta_name, meta.category_uri as meta_uri, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_category as category, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
 	INNER JOIN users on (user_id = link_author)
-	LEFT JOIN (categories as cat, categories as meta) on (links.link_category > 0 AND cat.category_id = links.link_category AND meta.category_id = cat.category_parent)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
 	LEFT JOIN (sub_statuses as s, subs) ON (s.link=links.link_id and s.id=s.origen and s.id=subs.id)
 	LEFT JOIN votes ON (link_date > @enabled_votes and vote_type='links' and vote_link_id = links.link_id and vote_user_id = @user_id and ( @user_id > 0  OR vote_ip_int = @ip_int ) )
@@ -90,25 +89,22 @@ class Link extends LCPBase {
 		return false;
 	}
 
-	static function count($status='', $cat='', $force = false) {
+	static function count($status='', $force = false) {
 		global $db, $globals;
 
 		$my_id = SitesMgr::my_id();
 
-		if (!$status) return Link::count('published', $cat, $force) +
-							Link::count('queued', $cat, $force) +
-							Link::count('discard', $cat, $force) +
-							Link::count('abuse', $cat, $force) +
-							Link::count('autodiscard', $cat, $force);
+		if (!$status) return Link::count('published', $force) +
+							Link::count('queued', $force) +
+							Link::count('discard', $force) +
+							Link::count('abuse', $force) +
+							Link::count('autodiscard', $force);
 
 
-		$count = get_count("$my_id.$status.$cat");
+		$count = get_count("$my_id.$status");
 		if ($count === false || $force) {
-			if (! empty($cat)) {
-				$extra = "and category in ($cat)";
-			} else $extra = '';
-			$count = $db->get_var("select count(*) from sub_statuses where id = $my_id and status = '$status' $extra");
-			set_count("$my_id.$status.$cat", $count);
+			$count = $db->get_var("select count(*) from sub_statuses where id = $my_id and status = '$status'");
+			set_count("$my_id.$status", $count);
 		}
 		return $count;
 	}
@@ -829,6 +825,8 @@ class Link extends LCPBase {
 		$status = ( ! empty($this->sub_status) ? $this->sub_status : $this->status);
 		$vote_value = ($value > 0 ? $value : -$current_user->user_karma);
 
+		$karma_value=round($vote_value);
+/******* Simplified, it doesn't make much sense with subs
 		if ($status != 'published') {
 			if($value < 0 && $current_user->user_id > 0) {
 				if ($globals['karma_user_affinity'] && $current_user->user_id != $this->author &&
@@ -848,6 +846,7 @@ class Link extends LCPBase {
 		} else {
 			$karma_value=round($vote_value);
 		}
+*/
 		$vote->value=$value;
 		$db->transaction();
 		if($vote->insert()) {

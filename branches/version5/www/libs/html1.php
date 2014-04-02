@@ -355,23 +355,6 @@ function print_subs_form($selected = false) {
 	return Haanga::Load('form_subs.html', $vars);
 }
 
-//Used in editlink.php and submit.php
-function print_categories_form($selected = 0) {
-	global $db, $dblang, $globals;
-
-	if (! empty($globals['submnm'])) return;
-
-	$metas = SitesMgr::get_metas();
-
-	foreach ($metas as &$meta) {
-		$meta->categories = SitesMgr::get_categories($meta->id);
-	}
-	unset($meta);
-
-	$vars = compact('selected', 'metas');
-	return Haanga::Load('form_categories.html', $vars);
-}
-
 function do_vertical_tags($what=false) {
 	global $db, $globals, $dblang;
 
@@ -382,11 +365,8 @@ function do_vertical_tags($what=false) {
 	} else {
 		$status = "!= 'discarded'";
 	}
-	if(!empty($globals['meta_categories'])) {
-		$meta_cond = 'and link in ('.$globals['meta_categories'].')';
-	}
 
-	$cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status.$meta_cond;
+	$cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status;
 	if(memcache_mprint($cache_key)) return;
 
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
@@ -395,7 +375,7 @@ function do_vertical_tags($what=false) {
 	$max_pts = 22;
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
-	$from_where = "FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link and link_date > '$min_date' and link_status $status $meta_cond";
+	$from_where = "FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link and link_date > '$min_date' and link_status $status";
 	$max = 3;
 
 	$res = $db->get_col("select link_tags $from_where");
@@ -439,64 +419,6 @@ function do_vertical_tags($what=false) {
 			$output = ' ';
 		}
 		memcache_madd($cache_key, $output, 900);
-	}
-}
-
-function do_categories_cloud($what=false, $hours = 48) {
-	global $db, $globals, $dblang;
-
-	if ($globals['mobile']) return;
-
-	$cache_key = 'categories_cloud_'.$globals['site_shortname'].$globals['v'].$what;
-	if(memcache_mprint($cache_key)) return;
-	echo '<!-- Calculating '.__FUNCTION__.' -->';
-
-	if (!empty($what)) {
-		$status = '= "'.$what. '"';
-	} else {
-		$status = "!= 'discarded'";
-	}
-
-
-	$min_pts = 8;
-	$max_pts = 22;
-
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - $hours*3600);
-	$from_where = "from categories, links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND link_status $status and date > '$min_date' and category = category_id group by category_name";
-	$max = 0;
-
-
-	$res = $db->get_results("select count(*) as count, lower(category_name) as category_name, category_id $from_where order by count desc limit 10");
-
-	if ($res) {
-		if ($what == 'queued') $page = $globals['base_url'].'queue?category=';
-		else  $page = $globals['base_url'].'?category=';
-
-		$title = _('categorías populares');
-
-		$counts = array();
-		$names = array();
-
-		foreach ($res as $item) {
-			if ($item->count > 1) {
-				if ($item->count > $max) $max = $item->count;
-				$counts[$item->category_id] = $item->count;
-				$names[$item->category_name] = $item->category_id;
-			}
-		}
-		ksort($names);
-		$coef = (($max - 1) > 0)?(($max_pts - $min_pts)/($max-1)):0;
-
-		foreach ($names as $name => $id) {
-			$count = $counts[$id];
-			$size = round($min_pts + ($count-1)*$coef, 1);
-			$op = round(0.3 + 0.7*$count/$max, 2);
-			$content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="'.$page.$id.'">'.$name.'</a> ';
-		}
-		$vars = compact('content', 'title', 'url');
-		$output = Haanga::Load('tags_sidebox.html', $vars, true);
-		echo $output;
-		memcache_madd($cache_key, $output, 600);
 	}
 }
 
@@ -639,7 +561,7 @@ function do_active_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'active_stories_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
+	$key = 'active_stories_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -676,22 +598,16 @@ function do_best_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'best_stories_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
+	$key = 'best_stories_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
-	if ($globals['meta_current'] && $globals['meta_categories']) {
-			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = sprintf(_('más votadas «%s»'), $globals['meta_current_name']);
-	} else {
-		$category_list	= '';
-		$title = _('más votadas');
-	}
+	$title = _('más votadas');
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' order by value desc limit 5");
+	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'popular';
@@ -721,27 +637,20 @@ function do_best_queued() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
+	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
-	if ($globals['meta_current'] && $globals['meta_categories']) {
-			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title =sprintf( _('candidatas en «%s»'), $globals['meta_current_name']);
-			$min_karma = intval($avg_karma/5);
-	} else {
-		$min_karma = intval($avg_karma/4);
-		$category_list	= '';
-		$title = _('candidatas');
-	}
+	$min_karma = intval($avg_karma/4);
+	$title = _('candidatas');
 	$warned_threshold = intval($min_karma * 1.5);
 
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*3); // 3 days
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' $category_list order by link_karma desc limit 20");
+	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' order by link_karma desc limit 20");
 	if ($res) {
 		$url = $globals['base_url'].'queue?meta=_popular';
 		$links = array();
@@ -773,22 +682,16 @@ function do_most_clicked_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'most_clicked_'.$globals['site_shortname'].$globals['v'].'_'.$globals['meta_current'];
+	$key = 'most_clicked_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
-	if ($globals['meta_current'] && $globals['meta_categories']) {
-			$category_list = 'and link_category in ('.$globals['meta_categories'].')';
-			$title = sprintf(_('más visitadas «%s»'), $globals['meta_current_name']);
-	} else {
-		$category_list	= '';
-		$title = _('más visitadas');
-	}
+	$title = _('más visitadas');
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
+	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
 	if ($res) {
 		$links = array();
 		$url = $globals['base_url'].'top_visited';

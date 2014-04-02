@@ -39,16 +39,6 @@ function do_master($size) {
 	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?last</loc>'."\n";
 	echo '</sitemap>'."\n";
 
-	/*
-	* Simplified with last published in the previos lines
-	$count = (int) Link::count('published');
-	$indexes = ceil($count/$size);
-	for ($i = 0; $i < $indexes; $i++) {
-		echo '<sitemap>'."\n";
-		echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?page='.$i.'</loc>'."\n";
-		echo '</sitemap>'."\n";
-	}
-	*/
 	echo '</sitemapindex>'."\n";
 }
 

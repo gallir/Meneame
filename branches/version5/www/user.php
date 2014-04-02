@@ -211,9 +211,11 @@ switch ($view) {
 		do_shaken_comments();
 		if (! $globals['bot']) do_pages($rows, $page_size);
 		break;
+/*
 	case 'categories':
 		do_categories();
 		break;
+*/
 	case 'conversation':
 		do_conversation();
 		if (! $globals['bot']) do_pages($rows, $page_size, false);
@@ -236,7 +238,7 @@ function do_profile() {
 
 	$options = array();
 	$options[$user->username] = get_user_uri($user->username);
-	$options[_('categorías personalizadas')] = get_user_uri($user->username, 'categories');
+	//$options[_('categorías personalizadas')] = get_user_uri($user->username, 'categories');
 	if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
 		$options[_('modificar perfil').' &rarr;'] = $globals['base_url'].'profile.php?login='.urlencode($login);
 		$globals['extra_js'][] = 'jquery.flot.min.js';
