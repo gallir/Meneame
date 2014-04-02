@@ -49,14 +49,6 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
 	// Function to filter by sub site
 	if ($_REQUEST['w'] == 'links') {
-		$allowed_categories = SitesMgr::get_categories();
-		if ($allowed_categories) {
-			$cats = array();
-			foreach ($allowed_categories as $c) {
-				$cats[] = (int) $c->id;
-			}
-			$cl->SetFilter('category', $cats);
-		}
 	}
 
 	$response['rows'] = 0;
