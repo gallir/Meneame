@@ -11,25 +11,24 @@ def main():
 	cursor = DBM.cursor()
 	cursor.execute("select id, name from subs where enabled = 1")
 	for row in cursor:
-		do_site(row[1])
+		do_site(row[0], row[1])
 
-def do_site(site):
+def do_site(site_id, site):
 	""" Process a given site """
 	links = {}
 	cursor = DBM.cursor()
 	query = """
 		select link_id, link_uri,
 			unix_timestamp(now()) - unix_timestamp(link_date)
-		from links, subs, sub_statuses
-		where subs.name = %s
-			and subs.id = sub_statuses.id
+		from links, sub_statuses
+		where sub_statuses.id = %s
 			and status = 'published'
 			and date > date_sub(now(), interval 24 hour)
 			and link = link_id
 			and link_votes/20 > link_negatives
 		order by link_date desc
 	"""
-	cursor.execute(query, (site,))
+	cursor.execute(query, (site_id,))
 	links_total = 0
 	for link_id, link_uri, old in cursor:
 		links_total += 1
@@ -139,6 +138,7 @@ def do_site(site):
 
 	if sorted_ids:
 		annotations = ','.join([unicode(x) for x in sorted_ids[:10]])
+		print "top-actives:", annotations
 		cursor_update = DBM.cursor('update')
 		query = """
 			replace into annotations
@@ -164,9 +164,9 @@ def do_site(site):
 							and links[x]['v'] > c_avrg(v_list, x) * 4
 							and links[x]['votes_order'] <= 10 ])
 
-	print "SELECT: ", site, annotations
 
 	if annotations:
+		print "top-link: ", annotations
 		cursor_update = DBM.cursor('update')
 		query = """
 			replace into annotations

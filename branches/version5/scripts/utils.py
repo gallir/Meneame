@@ -1,4 +1,7 @@
 import sys
+import codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+
 import socket
 import urllib2
 import httplib
