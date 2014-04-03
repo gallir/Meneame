@@ -135,7 +135,7 @@ def get_candidate_blogs(days, min_karma):
 				WHERE user_url in (%s, %s, %s, %s, %s, %s)
 					AND user_karma > %s
 					AND user_level not in ('disabled', 'autodisabled')
-				ORDER BY user_karma desc limit 1"
+				ORDER BY user_karma desc limit 1
 		"""
 		inner_cursor.execute(query,('http://'+blog.base_url,
 						 'http://www.'+blog.base_url,
