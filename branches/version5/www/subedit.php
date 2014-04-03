@@ -127,7 +127,7 @@ function save_sub($id, &$errors) {
 			}
 
 			// Update colors
-			$color_regex = '/^#[a-f0-0]{6}/i';
+			$color_regex = '/^#[a-f0-9]{6}/i';
 			if (preg_match($color_regex, $_POST['color1'])) $color1 = $db->escape($_POST['color1']);
 			else $color1 = '';
 			if (preg_match($color_regex, $_POST['color2'])) $color2 = $db->escape($_POST['color2']);
