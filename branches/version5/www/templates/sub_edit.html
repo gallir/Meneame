@@ -38,6 +38,13 @@
 <input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,40}" maxlength="40" style="width:60%"/>
 <br/>
 
+<label for="name">{% trans _('color título') %}:</label>
+<input type="text" id="color1" name="color1" value="{{ sub.color1 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
+&nbsp;&nbsp;
+<label for="name">{% trans _('color fondo') %}:</label>
+<input type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
+
+<br/>
 {% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}>
 <br/>
 

@@ -107,6 +107,8 @@ function save_sub($id, &$errors) {
 		$allow_main_link = 'allow_main_link';
 	}
 	$nsfw = intval($_POST['nsfw']);
+	
+
 
 	if (empty($errors)) {
 		$db->transaction();
@@ -123,6 +125,15 @@ function save_sub($id, &$errors) {
 			if ($current_user->admin) {
 				sub_copy_to($id, $_POST['copy_to']);
 			}
+
+			// Update colors
+			$color_regex = '/^#[a-f0-0]{6}/i';
+			if (preg_match($color_regex, $_POST['color1'])) $color1 = $db->escape($_POST['color1']);
+			else $color1 = '';
+			if (preg_match($color_regex, $_POST['color2'])) $color2 = $db->escape($_POST['color2']);
+			else $color2 = '';
+		
+			$db->query("update subs set color1 = '$color1', color2 = '$color2' where id = $id");
 		}
 		if ($r && $id > 0) {
 			$db->commit();

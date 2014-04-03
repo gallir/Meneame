@@ -297,7 +297,7 @@ height:35px;
 width:55px;
 margin-left:25px;
 margin-top:5px;
-margin-right:24px;
+margin-right:14px;
 float:left;
 font: 0/0 serif;
 text-shadow: none;
@@ -310,13 +310,17 @@ cursor: pointer;
 }
 
 #header-center .edname{
-margin: 6px 0 0 0;
+margin: 6px 0 0 10px;
 padding:0;
 float:left;
 font-size:25px;
 color:#fff;
 position:relative;
 float:left;
+}
+
+.edname a {
+color:#fff;
 }
 
 .searchform {
