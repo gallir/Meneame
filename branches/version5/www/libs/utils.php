@@ -537,7 +537,7 @@ function check_security_key($key) {
 	return $key == get_security_key($time_key[0]);
 }
 
-function do_error($mess = false, $error = false, $send_status = true) {
+function do_error($mess = false, $error = false, $send_status = "Error") {
 	global $globals;
 	$globals['ads'] = false;
 
@@ -547,7 +547,7 @@ function do_error($mess = false, $error = false, $send_status = true) {
 
 	if (! $mess ) $mess = _('algún error nos ha petado');
 
-	if ($error && $send_status) {
+	if ($error) {
 		@header("HTTP/1.0 $error $mess");
 		@header("Status: $error $mess");
 	}

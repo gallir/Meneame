@@ -120,7 +120,6 @@ if (! $user->disabled()
 
 // Check if it should be index AND if they are valids options, otherwise call do_error()
 switch ($view) {
-	case 'categories':
 	case 'history':
 	case 'shaken':
 	case 'friends_shaken':
