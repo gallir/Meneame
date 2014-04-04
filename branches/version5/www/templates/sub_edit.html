@@ -45,6 +45,8 @@
 <input type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
 
 <br/>
+{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}>
+&nbsp;&nbsp;
 {% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}>
 <br/>
 
