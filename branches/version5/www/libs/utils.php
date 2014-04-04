@@ -716,34 +716,29 @@ function normalize_smileys($str) {
 function meta_get_current() {
 	global $globals, $db, $current_user;
 
-	$globals['meta_current'] = 0;
-	if (!empty($_REQUEST['meta'])) {
+	$globals['meta_current'] = '';
+	if (!empty($_REQUEST['meta']) && $_REQUEST['meta'][0] == '_') {
 		$globals['meta']  = clean_input_string($_REQUEST['meta']);
 	} else {
 		$globals['meta'] = '';
 	}
 
 
-/* TODO: personalization with subs
 	//Check for personalisation
 	// Authenticated users
 	if (empty($globals['submnm']) && $current_user->user_id > 0) {
-		$categories = $db->get_col("SELECT SQL_CACHE pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'category_".SitesMgr::my_id()."' order by pref_value");
-		if ($categories) {
-			// The user has selected categories
-			$current_user->has_personal = true;
+		$subs = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'sub_follow' order by pref_value");
+		if ($subs) {
+			$current_user->has_subs = true;
 			$globals['meta_skip'] = '?meta=_all';
 			if (! $globals['meta']) {
-				$globals['meta_categories'] = implode(',', $categories);
-				$globals['meta']= '_personal';
+				$globals['meta_subs'] = implode(',', $subs);
+				$globals['meta'] = '_subs';
 			}
 		} else {
-			$globals['meta_categories'] = false;
+			$globals['meta_subs'] = false;
 		}
 	}
-*/
-
-	return $globals['meta_current'];
 }
 
 function fork($uri) {

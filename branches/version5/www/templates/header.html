@@ -138,12 +138,13 @@
 {% if globals.mobile AND this_site.sub %}
 	<div id="header-sub" {% if this_site.color2 %}style="background-color:{{ this_site.color2 }}"{% endif %}>
 		<a href="{{ this_site.base_url }}m/{{ this_site.name }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}><span style="font-variant:small-caps">{{ this_site.name }} {% if this_site.nsfw %}[NSFW]{% endif %}</span>: <span style="text-transform:lowercase">{{ this_site.name_long }}</span></a>
+		{% exec print_follow_sub this_site.id as dummy %}
 	</div>
 {% endif %}
 
 <div id="header-center" {% if this_site.color2 %}style="background-color:{{ this_site.color2 }}"{% endif %}>
 
-{% if globals.submnm %}
+{% if this_site.sub %}
   {% if this_site.owner == 0 %}
   	<a href="{{ globals.base_url }}" class="logo-eli" title="{{ this_site.name_long }}">{{ this_site.name }}</a>
   {% endif %}
@@ -153,6 +154,7 @@
 	{% if current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
 		<sup><a title="edit" href="{{ globals.base_url }}subedit">*</a></sup>
 	{% endif %}
+	{% exec print_follow_sub this_site.id as dummy %}
   </div>
 {% else %}
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>

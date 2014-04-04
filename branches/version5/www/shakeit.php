@@ -34,20 +34,20 @@ $cat = $_REQUEST['category'];
 
 $from = '';
 switch ($globals['meta']) {
-/* TODO: with subs
-	case '_personal':
+	case '_subs':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$where = "date > $from_time and status='queued' and category in (".$globals['meta_categories'].") ";
+		$where = "sub_statuses.id in (".$globals['meta_subs'].") AND status='queued' and date > $from_time";
 		$order_by = "ORDER BY date DESC";
+		$rows = -1;
 		$tab = 7;
+		Link::$original_status = true; // Show status in original sub
 		break;
-*/
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
 		$from = ", friends, links";
-		$where = "date > $from_time and status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND date > $from_time and status='queued' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
 		$rows = -1;
 		$order_by = "ORDER BY date DESC";
 		$tab = 2;
@@ -58,7 +58,7 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from = ", links, link_clicks";
-		$where = "date > $from_time and status='queued' and link = link_id and link_id = link_clicks.id and link_clicks.counter/(link_votes+link_negatives) > 1.3 and link_karma > 20 ";
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND date > $from_time and status='queued' and link = link_id and link_id = link_clicks.id and link_clicks.counter/(link_votes+link_negatives) > 1.3 and link_karma > 20 ";
 		$order_by = "ORDER BY link_karma DESC";
 		$rows = -1;
 		$tab = 3;
@@ -69,7 +69,7 @@ switch ($globals['meta']) {
 		$globals['noindex'] = true;
 		$globals['ads'] = false;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
-		$where = "status in ('discard', 'abuse', 'autodiscard') " ;
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status in ('discard', 'abuse', 'autodiscard') " ;
 		$order_by = "ORDER BY date DESC ";
 		$tab = 5;
 		$globals['tag_status'] = 'discard';
@@ -79,17 +79,9 @@ switch ($globals['meta']) {
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = "ORDER BY date DESC";
-		if ($globals['meta_current'] > 0) {
-			// TODO: show selected subs.
-			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-			$rows = -1;
-			$where = "status='queued' and date > $from_time) ";
-			$tab = false;
-		} else {
-			$rows = Link::count('queued');
-			$where = "status='queued' ";
-			$tab = 1;
-		}
+		$rows = Link::count('queued');
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status='queued' ";
+		$tab = 1;
 		break;
 }
 
@@ -119,7 +111,7 @@ echo '</div>' . "\n";
 
 echo '<div id="newswrap">'."\n";
 
-$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND $where $order_by LIMIT $offset,$page_size) as ids on (ids.link = link_id)";
+$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids on (ids.link = link_id)";
 
 $links = $db->object_iterator($sql, "Link");
 if ($links) {
@@ -144,8 +136,8 @@ function print_shakeit_tabs($option=-1) {
 	global $globals, $current_user, $db;
 
 	$items = array();
-	if ($current_user->has_personal) {
-		$items[] = array('id' => 7, 'url' => 'queue', 'title' => _('personal'));
+	if ($current_user->has_subs) {
+		$items[] = array('id' => 7, 'url' => 'queue', 'title' => _('suscripciones'));
 	}
 	$items[] = array('id' => 1, 'url' => 'queue'.$globals['meta_skip'], 'title' => _('todas'));
 
@@ -175,10 +167,10 @@ function print_shakeit_tabs($option=-1) {
 	if (! $globals['mobile']) {
 		switch ($option) {
 			case 7: // Personalised, queued
-				$feed = array("url" => "?status=queued&amp;personal=".$current_user->user_id, "title" => "");
+				$feed = array("url" => "?status=queued&amp;subs=".$current_user->user_id, "title" => "");
 				break;
 			default:
-				$feed = array("url" => "?status=queued&amp;meta=".$globals['meta_current'], "title" => "");
+				$feed = array("url" => "?status=queued", "title" => "");
 				break;
 		}
 	}
@@ -186,4 +178,3 @@ function print_shakeit_tabs($option=-1) {
 	return Haanga::Load('print_tabs.html', $vars);
 }
 
-?>

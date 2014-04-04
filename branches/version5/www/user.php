@@ -592,17 +592,27 @@ function do_user_subheader($options, $selected = false, $rss = false, $rss_title
 function do_subs() {
 	global $db, $user, $current_user;
 
-	$title = _('subs de') . " $user->username";
+	$sql = "select subs.* from subs, prefs where pref_user_id = $user->id and pref_key = 'sub_follow' and subs.id = pref_value order by name asc";
+	$subs = $db->get_results($sql);
+	if ($subs) {
+		$title = _('suscripciones');
+		Haanga::Load('subs_simple.html', compact('title', 'subs'));
+	}
+
+
 	if ($current_user->admin && $user->id == $current_user->user_id) {
 		$sql = "select subs.* from subs where subs.sub = 1 and (subs.owner = $user->id or subs.owner = 0)";
 	} else {
 		$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
 	}
 	$subs = $db->get_results($sql);
-	if ($current_user->user_id > 0 && $user->id == $current_user->user_id && SitesMgr::can_edit(0)) $can_edit = true;
-	else $can_edit = false;
+	if ($subs) {
+		$title = _('subs de') . " $user->username";
+		if ($current_user->user_id > 0 && $user->id == $current_user->user_id && SitesMgr::can_edit(0)) $can_edit = true;
+		else $can_edit = false;
 
-	Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));
+		Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));
+	}
 }
 
 ?>

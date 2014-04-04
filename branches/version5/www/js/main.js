@@ -237,9 +237,32 @@ function report_problem_yes(frm, user, id) {
 	return false;
 }
 
+function add_remove_sub(id, change) {
+	var url = base_url + 'backend/sub_follow';
+
+	change = (change ? 1 : 0);
+
+	$.post(url,
+		{ id: id, key: base_key, change: change },
+		function(data) {
+			if (data.error) {
+				mDialog.notify("{% trans _('Error:') %}"+data.error, 5);
+				return;
+			}
+			$button = $('#follow_b_'+id);
+			if (data.value) {
+				$button.addClass("on").removeClass("off");
+			} else {
+				$button.addClass("off").removeClass("on");
+			}
+		}
+	, "json");
+	reportAjaxStats('html', "sub_follow");
+}
+
 function add_remove_fav(element, type, id) {
 	var url = base_url + 'backend/get_favorite.php?id='+id+'&user='+user_id+'&type='+type+'&key='+base_key;
-	$.getJSON(url,
+	$.post(url,
 		 function(data) {
 				if (data.error) {
 					mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
@@ -251,7 +274,7 @@ function add_remove_fav(element, type, id) {
 					$('#'+element).removeClass("on");
 				}
 		}
-	);
+	, "json");
 	reportAjaxStats('html', "get_favorite.php");
 }
 
@@ -1326,7 +1349,8 @@ var fancyBox = new function () {
 	$(window).blur(function() {
 		has_focus = false;
 	});
-	update();
+	
+	setTimeout(update, 1500); /* We are not in a hurry */
 
 
 	function click_handler(e) {

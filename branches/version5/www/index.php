@@ -44,29 +44,27 @@ do_tabs('main','published');
 $from = '';
 
 switch ($globals['meta']) {
-/*
-	case '_personal':
+	case '_subs':
 		// TODO: Show here the subs followed by the user
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-		$where = "status='published' and date > $from_time and category in (".$globals['meta_categories'].") ";
+		$where = "sub_statuses.id in (".$globals['meta_subs'].") AND status='published' and date > $from_time";
 		$rows = -1;
-		//$from_where = "FROM links WHERE link_status='published' and link_category in (".$globals['meta_categories'].") ";
+		Link::$original_status = true; // Show status in original sub
 		print_index_tabs(7); // Show "personal" as default
 		break;
-*/
 	case '_friends':
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
 		$from = ", friends, links";
-		$where = "date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
 		$rows = -1;
 		print_index_tabs(1); // Friends
 		break;
 	default:
 		print_index_tabs(0); // All
 		$rows = Link::count('published');
-		$where = "status='published' ";
+		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status='published' ";
 }
 
 
@@ -108,10 +106,10 @@ if($cat) {
 }
 $order_by = "ORDER BY date DESC ";
 
-if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND $where");
+if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE $where");
 
 // We use a "INNER JOIN" in order to avoid "order by" whith filesorting. It was very bad for high pages
-$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND $where $order_by LIMIT $offset,$page_size) as ids ON (ids.link = link_id)";
+$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids ON (ids.link = link_id)";
 
 $links = $db->object_iterator($sql, "Link");
 if ($links) {
@@ -133,15 +131,15 @@ exit(0);
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
-	if ($globals['mobile'] || (!empty($globals['submnm']) && ! $current_user->user_id)) return;
+	if (($globals['mobile'] && ! $current_user->has_subs) || (!empty($globals['submnm']) && ! $current_user->user_id)) return;
 
 	$items = array();
-	if (isset($current_user->has_personal)) {
-		$items[] = array('id' => 7, 'url' => '', 'title' => _('personal'));
-	}
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
+	if (isset($current_user->has_subs)) {
+		$items[] = array('id' => 7, 'url' => '', 'title' => _('suscripciones'));
+	}
 
-	if (empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
+	if (! $globals['mobile'] && empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
 		foreach ($subs as $sub) {
 			$items[] = array(
 				'id'  => 9999, /* fake number */
@@ -154,10 +152,10 @@ function print_index_tabs($option=-1) {
 	// RSS teasers
 	switch ($option) {
 		case 7: // Personalised, published
-			$feed = array("url" => "?personal=".$current_user->user_id, "title" => _('categoría personalizadas'));
+			$feed = array("url" => "?subs=".$current_user->user_id, "title" => _('suscripciones'));
 			break;
 		default:
-			$feed = array("url" => "?meta=".$globals['meta_current'], "title" => "");
+			$feed = array("url" => '', "title" => "");
 			break;
 	}
 
@@ -169,4 +167,3 @@ function print_index_tabs($option=-1) {
 	return Haanga::Load('print_tabs.html', $vars);
 }
 
-?>

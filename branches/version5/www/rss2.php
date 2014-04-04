@@ -156,7 +156,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta']) && empty($_REQUEST['personal'])) {
+	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta']) && empty($_REQUEST['subs'])) {
 		if ($status == 'published') {
 			$globals['main_published_rss'] = true;
 		}
@@ -167,15 +167,18 @@ if(!empty($_REQUEST['time'])) {
 
 
 
-	if($status == 'all' || $status == 'all_local') {
+	$from_where = '';
+	if ($status == 'all' || $status == 'all_local') {
 		$from_where = "FROM links, sub_statuses WHERE id = $site_id AND status in ('published', 'queued') AND date > date_sub(now(), interval 7 day) AND link_id = link";
-	} else {
-		$from_where = "FROM links, sub_statuses WHERE id = $site_id AND status='$status' AND date > date_sub(now(), interval 7 day) AND link_id = link";
-	}
-
-
-	// Check if it's search
-	if($_REQUEST['q']) {
+ 	} elseif (($uid=check_integer('subs'))) {
+		$subs = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'sub_follow' order by pref_value");
+		$user_login = $db->get_var("select user_login from users where user_id=$uid");
+		$title .= " -$user_login-";
+		if ($subs) {
+			$subs = implode(',', $subs);
+			$from_where = "FROM sub_statuses, links WHERE sub_statuses.id in ($subs) AND status='$status' AND date > date_sub(now(), interval 7 day) AND link_id = link";
+		}
+	} elseif ($_REQUEST['q']) {
 		$order_field = 'link_date'; // Because sub_statuses is not used
 		if($search) {
 			$from_where = "FROM links WHERE $search ";
@@ -183,14 +186,9 @@ if(!empty($_REQUEST['time'])) {
 			$from_where = "FROM links WHERE false "; // Force to return empty set
 		}
 		$title = $globals['site_name'] . ": " . htmlspecialchars(strip_tags($_REQUEST['q']));
-	} elseif (($uid=check_integer('personal'))) {
-		$categories = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $uid and pref_key = 'category_".SitesMgr::my_id()."' ");
-		$user_login = $db->get_var("select user_login from users where user_id=$uid");
-		$title .= " -$user_login-";
-		if ($categories) {
-			$cats = implode(',', $categories);
-			$from_where .= " AND category in ($cats) ";
-		}
+	}
+	if (empty($from_where)) {
+		$from_where = "FROM sub_statuses, links WHERE id = $site_id AND status='$status' AND date > date_sub(now(), interval 7 day) AND link_id = link";
 	}
 
 	$order_by = " ORDER BY $order_field DESC ";

@@ -10,6 +10,7 @@ require_once(mnminclude.'favorites.php');
 
 class Link extends LCPBase {
 	private static $clicked = 0; // Must add a click to this link->id
+	public static $original_status = false;
 
 	var $id = 0;
 	var $author = -1;
@@ -695,9 +696,8 @@ class Link extends LCPBase {
 
 		$this->is_votable();
 
-		if (!empty($this->sub_status)) {
-			$this->status = $this->sub_status;
-		}
+		$this->status = $this->get_a_status();
+
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
 		$this->permalink	 = $this->get_permalink();
@@ -1789,7 +1789,12 @@ class Link extends LCPBase {
 	}
 
 	function get_a_status() {
-		if ($this->sub_status) return $this->sub_status;
+        if (self::$original_status) {
+            return $this->sub_status_origen;
+        }
+		if (!empty($this->sub_status)) {
+            return $this->sub_status;
+        }
 		return $this->status;
 	}
 

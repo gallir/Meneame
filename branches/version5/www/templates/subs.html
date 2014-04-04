@@ -9,11 +9,18 @@
 <table class="decorated">
 {% for s in subs %}
 	<tr>
-		<td style="text-transform:lowercase">
+		<td>
 		{% if s.user_id && s.user_avatar %}
 			<img width="20" height="20" data-src="{% exec get_avatar_url s.user_id, s.user_avatar, 20, false %}" data-2x="s:-20.:-40." alt="" src="{{ globals.base_static }}img/g.gif" class="tooltip u:{{ s.user_id }} avatar lazy"/>&nbsp;
 		{% endif %}
-		<a href="{{ s.base_url }}{% if s.sub %}m/{{ s.name }}/queue {% endif %}"><b>{{ s.name }}</b></a>
+
+		<span class="subname"><a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}"
+			style="
+			{% if s.color1 %}color:{{ s.color1 }};{% endif %}
+			{% if s.color2 %}background-color:{{ s.color2 }};{% endif %}
+			"> {{ s.name }} </a></span>
+
+
 		{% if s.nsfw %}(nsfw){% endif %}
 		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
 			&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
