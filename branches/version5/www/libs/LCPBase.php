@@ -96,7 +96,7 @@ class LCPBase {
 				return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 
 			case '|':
-				return ' <a href="'.$globals['base_url_general'].'m/'.$matches[5].'">|'.$matches[5].'</a>';
+				return $matches[1].'<a href="'.$globals['base_url_general'].'m/'.$matches[5].'">|'.$matches[5].'</a>';
 			/*
 			case '_':
 				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
