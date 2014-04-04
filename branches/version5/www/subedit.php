@@ -37,7 +37,7 @@ if (! SitesMgr::can_edit($id)) {
 		$id = save_sub($id, $errors);
 		$sub = SitesMgr::get_info($id, true);
 		if ($id && empty($errors)) {
-			header("Location: ".$globals['base_url']."m/$sub->name/subedit");
+			header("Location: ".$globals['base_url_general']."m/$sub->name/subedit");
 			die;
 		}
 		if (! $id) {

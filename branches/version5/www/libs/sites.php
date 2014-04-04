@@ -59,7 +59,7 @@ class SitesMgr {
 		global $db;
 
 		if ($id == false || $id == self::$id) {
-			if (! self::$id || $force) self::__init();
+			if (! self::$id || $force) self::__init($id);
 			return self::$info;
 		} else {
 			return $db->get_row("select * from subs where id = $id");
