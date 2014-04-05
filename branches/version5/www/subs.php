@@ -12,6 +12,7 @@ include(mnminclude.'html1.php');
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 do_header(_("subs menéame"), 'm/');
+print_tabs();
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -28,7 +29,6 @@ echo '</div>';
 echo '<div id="newswrap">';
 
 $my_id =  SitesMgr::my_id();
-$title = _('subs más activos');
 /*
 if ($current_user->admin) {
 	$where = '';
@@ -38,13 +38,42 @@ if ($current_user->admin) {
 $subs = $db->get_results("select * from subs $where order by id asc");
 */
 
-$sql = "select subs.*, user_id, user_login, user_avatar, count(*) as c from subs, sub_statuses, users where date > date_sub(now(), interval 4 day) and subs.id = sub_statuses.id and sub_statuses.id = sub_statuses.origen and subs.sub = 1 and user_id = owner group by subs.id order by c desc limit 50";
+if (isset($_GET['all'])) {
+	$all = true;
+	$page_size = 50;
+	$page = get_current_page();
+	$offset=($page-1)*$page_size;
+
+	$sql = "select subs.*, user_id, user_login, user_avatar from subs, users where subs.sub = 1 and created_from = ".SitesMgr::my_id()." and user_id = owner order by name asc limit $offset, $page_size";
+	$rows = -1;
+} else {
+	$all = false;
+	$sql = "select subs.*, user_id, user_login, user_avatar, count(*) as c from subs, sub_statuses, users where date > date_sub(now(), interval 5 day) and subs.id = sub_statuses.id and sub_statuses.id = sub_statuses.origen and sub_statuses.status = 'published' and subs.sub = 1 and user_id = owner group by subs.id order by c desc limit 50";
+}
+
 $subs = $db->get_results($sql);
 if ($my_id == 1 && SitesMgr::can_edit(0)) $can_edit = true;
 else $can_edit = false;
 
-Haanga::Load('subs.html', compact('title', 'subs', 'can_edit'));
+Haanga::Load('subs.html', compact('title', 'subs', 'can_edit', $all));
 echo '</div>';
 
+if ($all) {
+	do_pages($rows, $page_size, false);
+}
+
 do_footer();
+
+function print_tabs() {
+	$items = array();
+    $items[] = array('id' => 0, 'url' => 'subs', 'title' => _('más activos'));
+	$items[] = array('id' => 1, 'url' => 'subs?all', 'title' => _('todos'));
+
+	if (isset($_GET['all'])) $option = 1;
+	else $option = 0;
+
+	$vars = compact('items', 'option');
+	return Haanga::Load('print_tabs.html', $vars);
+}
+
 

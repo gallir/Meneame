@@ -63,7 +63,6 @@ if (!($memcache_key
 
 do_header(_('más visitadas') . ' | ' . $globals['site_name'], _('más visitadas'));
 $globals['tag_status'] = 'published';
-do_tabs('main', 'topclicked');
 print_period_tabs();
 
 /*** SIDEBAR ****/

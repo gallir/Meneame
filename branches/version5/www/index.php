@@ -39,7 +39,6 @@ if ($page > 1) {
 do_header($pagetitle, _('portada'));
 
 $from = '';
-
 switch ($globals['meta']) {
 	case '_subs':
 		// TODO: Show here the subs followed by the user
