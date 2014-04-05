@@ -19,13 +19,7 @@ print_tabs();
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-if ($globals['show_popular_published']) {
-	do_active_stories();
-	do_best_stories();
-	do_most_clicked_stories();
-}
 do_banner_promotions();
-do_most_clicked_sites();
 echo '</div>';
 /*** END SIDEBAR ***/
 echo '<div id="newswrap">';
