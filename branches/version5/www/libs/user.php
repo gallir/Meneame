@@ -619,13 +619,18 @@ class User {
 		}
 	}
 
-	static function get_pref($user, $key) {
+	static function get_pref($user, $key, $value = false) {
 		global $db, $current_user;
 
 		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
 		$key = $db->escape($key);
 
-		return intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key' limit 1"));
+		if ($value != false) {
+			$value = intval($value);
+			$extra = "and pref_value=$value";
+		} else $extra = '';
+
+		return intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key' $extra limit 1"));
 	}
 
 	static function set_pref($user, $key, $value) {
@@ -640,6 +645,17 @@ class User {
 		} else {
 			return $db->query("replace into prefs set pref_value = $value, pref_user_id = $user, pref_key = '$key'");
 		}
+	}
+
+	static function delete_pref($user, $key, $value = false) {
+		global $db;
+		$key = $db->escape($key);
+
+		if ($value != false) {
+			$value = intval($value);
+			$extra = "and pref_value=$value";
+		} else $extra = '';
+		return $db->query("delete from prefs where pref_user_id=$user and pref_key='$key' $extra");
 	}
 }
 

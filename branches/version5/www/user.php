@@ -319,13 +319,12 @@ function do_profile() {
 		}
 	}
 
-	$prefs = array();
 	$prefs['use_bar'] = User::get_pref($user->id, 'use_bar');
 	$prefs['last_com_first'] = User::get_pref($user->id, 'last_com_first');
 	$vars = compact(
 		'post', 'options', 'selected', 'rss', 'rss_title', 'geodiv',
 		'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
-		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon', 'prefs'
+		'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
 	);
 
 	return Haanga::Load('/user/profile.html', $vars);

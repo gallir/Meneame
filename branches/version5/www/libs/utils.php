@@ -728,12 +728,19 @@ function meta_get_current() {
 	// Authenticated users
 	if (empty($globals['submnm']) && $current_user->user_id > 0) {
 		$subs = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'sub_follow' order by pref_value");
+		$current_user->subs = implode(',', $subs);
 		if ($subs) {
 			$current_user->has_subs = true;
-			$globals['meta_skip'] = '?meta=_all';
-			if (! $globals['meta']) {
-				$globals['meta_subs'] = implode(',', $subs);
-				$globals['meta'] = '_subs';
+			$current_user->subs_default = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'subs_default'");
+			if ($current_user->subs_default) {
+				$globals['meta_skip'] = '?meta=_all';
+				$globals['meta_subs'] = '';
+				if (! $globals['meta']) {
+					$globals['meta'] = '_subs';
+				}
+			} else {
+				$globals['meta_skip'] = '';
+				$globals['meta_subs'] = '?meta=_subs';
 			}
 		} else {
 			$globals['meta_subs'] = false;
@@ -1371,4 +1378,3 @@ function add_javascript($code) {
     echo '</script>';
 }
 
-?>

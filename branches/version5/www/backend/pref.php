@@ -8,14 +8,21 @@
 
 include('../config.php');
 
+if (! check_security_key($_POST['control_key'])) {
+	die;
+}
 
 $user = intval($_POST['id']);
 $key = $_POST['key'];
+$value = intval($_POST['value']);
+
+
+if (!$value) $value = false;
 
 if (! $user || $user != $current_user->user_id) die;
 if (empty($key)) die;
 
-if (isset($_POST['value'])) {
+if (!empty($_POST['set'])) {
 	$value = intval($_POST['value']);
 	if (User::set_pref($user, $key, $value)) {
 		$res = $value;
@@ -23,9 +30,8 @@ if (isset($_POST['value'])) {
 		$res = false;
 	}
 } else {
-	$res = User::get_pref($user, $key);
+	$res = User::get_pref($user, $key, $value);
 }
-
 
 header('Content-Type: application/json; charset=UTF-8');
 echo json_encode($res);

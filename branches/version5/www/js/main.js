@@ -237,6 +237,36 @@ function report_problem_yes(frm, user, id) {
 	return false;
 }
 
+function pref_input_check (id) {
+	var $e = $('#'+id);
+	var value;
+	var key = $e.val();
+	var backend = base_url + 'backend/pref';
+
+	$.post(backend,
+		{"id": {{ current_user.user_id }}, "key": key, "control_key": base_key },
+		function (data) {
+			if (data) $e.prop('checked', true);
+			else $e.prop('checked', false);
+
+			$e.on('change', onChange);
+		},
+	'json');
+
+	function onChange() {
+		if (this.checked) value = 1;
+		else value = 0;
+		$.post(backend,
+			{"id": {{ current_user.user_id }}, "value": value, "key": this.value, "set": 1, "control_key": base_key},
+			function (data) {
+				if (data) this.checked = true;
+				else this.checked = false;
+			},
+		'json');
+	}
+}
+
+
 function add_remove_sub(id, change) {
 	var url = base_url + 'backend/sub_follow';
 

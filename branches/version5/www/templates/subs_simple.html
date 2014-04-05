@@ -2,13 +2,24 @@
 <div class="topheading"><h2>{{ title }}</h2></div>
 {% endif %}
 
-<div style="margin: 0 40px 20px 40px">
+<div style="margin: 0 20px 20px 20px">
+{% if current_user.user_id && subs %}
+<input name="subs_default" id="subs_default" type="checkbox" value="subs_default"/>
+<label for="subs_default">{% trans _('mostrar suscripciones por defecto en la portada') %}</label><br/>
+<script type="text/javascript">
+    addPostCode(function () {
+        pref_input_check("subs_default");
+    });
+</script>
+
+{% endif %}
+
 {% for s in subs %}
 	<span class="subname"><a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}"
     	style="
     	{% if s.color1 %}color:{{ s.color1 }};{% endif %}
     	{% if s.color2 %}background-color:{{ s.color2 }};{% endif %}
-	"> {{ s.name }} </a></span>
+	">{{ s.name }}</a></span>
 
 	{% if s.nsfw %}(nsfw){% endif %}
 	{% if s.owner == current_user.user_id %}
@@ -16,7 +27,7 @@
 	{% endif %}
 	{% if ! s.enabled %}*{% endif %}
 	{% exec print_follow_sub s.id as dummy %}
-	&nbsp;&nbsp;&nbsp;&nbsp;
+	&nbsp;&nbsp;&nbsp;
 
 {% endfor %}
 </div>
