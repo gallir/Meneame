@@ -66,7 +66,7 @@ function insert_sub($uid, $id) {
 	// Check if it's the first subscription, if so, add the defaults
 	if ($total == 0) {
 		$site = SitesMgr::my_parent();
-		$defaults = array_map("get_sub_id", SitesMgr::get_sub_subs($site));
+		$defaults = SitesMgr::get_sub_subs_ids($site);
 		foreach ($defaults as $s) {
 			$db->query("REPLACE INTO prefs (pref_user_id, pref_key, pref_value) VALUES ($uid, 'sub_follow', $s)");
 		}
@@ -91,16 +91,12 @@ function check_delete_defaults($uid) {
 
 	// Get original site
 	$site = SitesMgr::my_parent();
-	$defaults = array_map("get_sub_id", SitesMgr::get_sub_subs($site));
+	$defaults = SitesMgr::get_sub_subs_ids($site);
 
 	$suscriptions = $db->get_col("select pref_value from prefs where pref_user_id=$uid and pref_key='sub_follow'");
 	if (count($defaults) == count($suscriptions) && count(array_diff($defaults, $suscriptions)) == 0) {
 		delete_subs($uid);
 	}
-}
-
-function get_sub_id($sub) {
-	return $sub->id;
 }
 
 

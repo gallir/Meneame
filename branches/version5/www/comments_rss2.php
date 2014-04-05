@@ -141,7 +141,7 @@ if ($_REQUEST['q']) {
 		You have been warned
 	***/
 
-	if (!$search && empty($_REQUEST['category'])) {
+	if (!$search)) {
 		check_redirect_to_feedburner();
 	}
 

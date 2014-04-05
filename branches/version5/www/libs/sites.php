@@ -264,6 +264,16 @@ class SitesMgr {
 		return $db->get_results("select subs.* from subs, subs_copy where dst = $id and id = src");
 	}
 
+	static public function get_sub_subs_ids($id = false) {
+		global $globals, $db;
+
+		if ($id == false) {
+			$id = self::my_id();
+		}
+
+		return $db->get_col("select id from subs, subs_copy where dst = $id and id = src");
+	}
+
 	static public function get_active_sites($children = false) {
 		global $db;
 

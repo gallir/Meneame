@@ -51,7 +51,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 	if ($_REQUEST['w'] == 'links' && $globals['submnm']) {
 		$subs = array();
 		$subs[] = SitesMgr::my_id();
-		$subs = array_merge($subs, SitesMgr::get_sub_subs());
+		$subs = array_merge($subs, SitesMgr::get_sub_subs_ids());
 		$cl->SetFilter('sub', $subs);
 	}
 

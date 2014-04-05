@@ -156,7 +156,7 @@ if(!empty($_REQUEST['time'])) {
 		comment it out
 		You have been warned ******/
 
-	if (!$_REQUEST['q'] && empty($_REQUEST['category']) && empty($_REQUEST['meta']) && empty($_REQUEST['subs'])) {
+	if (!$_REQUEST['q'] && empty($_REQUEST['meta']) && empty($_REQUEST['subs'])) {
 		if ($status == 'published') {
 			$globals['main_published_rss'] = true;
 		}
@@ -210,7 +210,6 @@ if ($links) {
 	foreach($links as $link_id) {
 		$link = Link::from_db($link_id);
 		if (!$link) continue;
-		$category_name = $db->get_var("SELECT category_name FROM categories WHERE category_id = $link->category AND category_lang='$dblang'");
 		$permalink = $link->get_permalink();
 		echo "	<item>\n";
 
@@ -232,7 +231,7 @@ if ($links) {
 			echo "		<pubDate>".date("r", $link->$link_date)."</pubDate>\n";
 		else echo "      <pubDate>".date("r", $link->date)."</pubDate>\n";
 		echo "		<dc:creator>$link->username</dc:creator>\n";
-		echo "		<category><![CDATA[$category_name]]></category>\n";
+		echo "		<category><![CDATA[$link->sub_name]]></category>\n";
 		// Add tags as categories
 		if (!empty($link->tags)) {
 			$tags_array = explode(",", $link->tags);
