@@ -15,6 +15,7 @@
 		&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
 	{% endif %}
 	{% if ! s.enabled %}*{% endif %}
+	{% exec print_follow_sub s.id as dummy %}
 	&nbsp;&nbsp;&nbsp;&nbsp;
 
 {% endfor %}

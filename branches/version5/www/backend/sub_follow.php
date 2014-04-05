@@ -7,7 +7,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('../config.php');
-include(mnminclude.'favorites.php');
 
 header('Content-Type: application/json; charset=UTF-8');
 
@@ -24,20 +23,24 @@ if (! check_security_key($_POST['key'])) {
 	error(_('clave de control incorrecta'));
 }
 
-$exists = intval($db->get_var("SELECT SQL_NO_CACHE count(*) FROM prefs WHERE pref_user_id=$user and pref_key='sub_follow' and pref_value=$id"));
+$db->transaction();
+$exists = total_subs($user, $id);
 if (empty($_POST['change'])) {
 	$dict['value'] = $exists;
 } else {
 	if ($exists) {
-		$db->query("delete from prefs where pref_user_id=$user and pref_key='sub_follow' and pref_value=$id");
+		delete_subs($user, $id);
 		$dict['value'] = 0;
 	} else {
-		$db->query("REPLACE INTO prefs (pref_user_id, pref_key, pref_value) VALUES ($user, 'sub_follow', $id)");
+		insert_sub($user, $id);
 		$dict['value'] = 1;
 	}
 }
+$db->commit();
 
 echo json_encode($dict);
+
+// end
 
 function error($mess) {
 	$dict['error'] = $mess;
@@ -45,4 +48,59 @@ function error($mess) {
     die;
 }
 
-?>
+function total_subs($uid, $id = false) {
+	global $db;
+
+	if ($id > 0) {
+		$extra = "and pref_value=$id";
+	}
+	return intval($db->get_var("SELECT SQL_NO_CACHE count(*) FROM prefs WHERE pref_user_id=$uid and pref_key='sub_follow' $extra"));
+}
+
+function insert_sub($uid, $id) {
+	global $db;
+
+	$total = total_subs($uid);
+	$db->query("REPLACE INTO prefs (pref_user_id, pref_key, pref_value) VALUES ($uid, 'sub_follow', $id)");
+
+	// Check if it's the first subscription, if so, add the defaults
+	if ($total == 0) {
+		$site = SitesMgr::my_parent();
+		$defaults = array_map("get_sub_id", SitesMgr::get_sub_subs($site));
+		foreach ($defaults as $s) {
+			$db->query("REPLACE INTO prefs (pref_user_id, pref_key, pref_value) VALUES ($uid, 'sub_follow', $s)");
+		}
+	}
+}
+
+function delete_subs($uid, $id = false) {
+	global $db;
+
+	if ($id > 0) {
+		$extra = "and pref_value=$id";
+	}
+	$db->query("delete from prefs where pref_user_id=$uid and pref_key='sub_follow' $extra");
+	if ($id > 0) { // If we deleted a specific sub, check
+		check_delete_defaults($uid);
+	}
+}
+
+function check_delete_defaults($uid) {
+	// Check if the user is suscribed to all default
+	global $db;
+
+	// Get original site
+	$site = SitesMgr::my_parent();
+	$defaults = array_map("get_sub_id", SitesMgr::get_sub_subs($site));
+
+	$suscriptions = $db->get_col("select pref_value from prefs where pref_user_id=$uid and pref_key='sub_follow'");
+	if (count($defaults) == count($suscriptions) && count(array_diff($defaults, $suscriptions)) == 0) {
+		delete_subs($uid);
+	}
+}
+
+function get_sub_id($sub) {
+	return $sub->id;
+}
+
+

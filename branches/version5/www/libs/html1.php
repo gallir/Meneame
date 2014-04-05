@@ -58,13 +58,6 @@ function do_header($title, $id='home', $options = false) {
 	header('X-UA-Compatible: IE=edge,chrome=1');
 	http_cache();
 
-
-	if(!empty($globals['link_id'])) {
-		// Pingback autodiscovery
-		// http://www.hixie.ch/specs/pingback/pingback
-		header('X-Pingback: http://' . get_server_name() . $globals['base_url_general'] . 'xmlrpc.php');
-	}
-
 	$globals['security_key'] = get_security_key();
 	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 

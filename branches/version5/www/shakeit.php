@@ -37,7 +37,7 @@ switch ($globals['meta']) {
 	case '_subs':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$where = "sub_statuses.id in (".$globals['meta_subs'].") AND status='queued' and date > $from_time";
+		$where = "id in (".$globals['meta_subs'].") AND status='queued' and id = origen and date > $from_time";
 		$order_by = "ORDER BY date DESC";
 		$rows = -1;
 		$tab = 7;
@@ -94,7 +94,6 @@ if ($page > 1) {
     $pagetitle .= " ($page)";
 }
 do_header($pagetitle, _('nuevas'));
-do_tabs("main","shakeit");
 print_shakeit_tabs($tab);
 
 /*** SIDEBAR ****/

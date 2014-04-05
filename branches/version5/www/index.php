@@ -31,15 +31,12 @@ $page = get_current_page();
 $offset=($page-1)*$page_size;
 $globals['ads_section'] = 'portada';
 
-$cat=$_REQUEST['category'];
-
 $pagetitle = $globals['site_name'];
 if ($page > 1) {
 	$pagetitle .= " ($page)";
 }
 
 do_header($pagetitle, _('portada'));
-do_tabs('main','published');
 
 $from = '';
 
@@ -48,7 +45,7 @@ switch ($globals['meta']) {
 		// TODO: Show here the subs followed by the user
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-		$where = "sub_statuses.id in (".$globals['meta_subs'].") AND status='published' and date > $from_time";
+		$where = "id in (".$globals['meta_subs'].") AND status='published' AND id = origen and date > $from_time";
 		$rows = -1;
 		Link::$original_status = true; // Show status in original sub
 		print_index_tabs(7); // Show "personal" as default
@@ -101,9 +98,6 @@ if ($page == 1 && ($top = Link::top())) {
 }
 
 
-if($cat) {
-	$where .= " AND category=$cat ";
-}
 $order_by = "ORDER BY date DESC ";
 
 if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE $where");

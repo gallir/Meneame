@@ -36,7 +36,7 @@ class SitesMgr {
 			self::$info = $db->get_row("select * from subs where id = ".self::$id);
 		}
 
-		self::$parent = self::$info->parent;
+		self::$parent = self::$info->created_from;
 		if (self::$id > 0) {
 			$db->query('set @site_id = '.self::$id);
 		}
@@ -284,6 +284,14 @@ class SitesMgr {
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 		
 		return $n < 3 && time() - $current_user->user_date > 86400*30;
+	}
+
+	static public function my_parent() {
+		// Get original site
+		if (! self::$id ) self::__init();
+
+		if (self::$parent > 0) return self::$parent;
+		else return self::$id;
 	}
 
 }

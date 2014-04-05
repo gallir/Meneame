@@ -177,9 +177,6 @@ switch ($url_args[1]) {
 	case 'favorites':
 		$tab_option = 6;
 		break;
-	case 'trackbacks':
-		$tab_option = 7;
-		break;
 	case 'related':
 		$tab_option = 8;
 		break;
@@ -373,29 +370,6 @@ case 5:
 	Haanga::Load('story/link_sneak.html', compact('link'));
 	break;
 
-
-
-case 7:
-	// Show trackback
-
-	$trackbacks = $db->get_col("SELECT trackback_id FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok' ORDER BY trackback_date DESC limit 50");
-	if ($trackbacks) {
-		echo '<div class="voters" id="voters">';
-		echo '<fieldset><legend>'._('lugares que enlazan esta noticia').'</legend>';
-		echo '<ul class="tab-trackback">';
-		$trackback = new Trackback;
-		foreach($trackbacks as $trackback_id) {
-			$trackback->id=$trackback_id;
-			$trackback->read();
-			echo '<li class="tab-trackback-entry"><a href="'.$trackback->url.'" rel="nofollow">'.$trackback->title.'</a> ['.preg_replace('/https*:\/\/([^\/]+).*/', "$1", $trackback->url).']</li>';
-		}
-		echo '</ul>';
-		echo '</fieldset>';
-		echo '</div>';
-	}
-
-	break;
-
 case 8:
 	$related = $link->get_related(10);
 	if ($related) {
@@ -462,9 +436,6 @@ function print_story_tabs($option) {
 	}
 	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
 		echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>";
-	}
-	if (($c = $db->get_var("SELECT count(*) FROM trackbacks WHERE trackback_link_id=$link->id AND trackback_type='in' and trackback_status = 'ok'")) > 0) {
-		echo '<li class="'.$active[7].'wideonly"><a href="'.$globals['permalink'].'/trackbacks">'._('trackbacks'). "&nbsp;($c)</a></li>";
 	}
 	echo '<li class="'.$active[8].'wideonly"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>';
