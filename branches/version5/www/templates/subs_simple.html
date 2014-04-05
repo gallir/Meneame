@@ -15,6 +15,7 @@
 {% endif %}
 
 {% for s in subs %}
+	<div style="display:inline-block;white-space:nowrap;margin:0 10px 10px 0">
 	<span class="subname"><a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}"
     	style="
     	{% if s.color1 %}color:{{ s.color1 }};{% endif %}
@@ -27,7 +28,6 @@
 	{% endif %}
 	{% if ! s.enabled %}*{% endif %}
 	{% exec print_follow_sub s.id as dummy %}
-	&nbsp;&nbsp;&nbsp;
-
+	</div>
 {% endfor %}
 </div>
