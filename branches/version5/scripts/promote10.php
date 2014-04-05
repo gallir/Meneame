@@ -12,7 +12,7 @@ header("Content-Type: text/html");
 
 define(MAX, 1.15);
 define (MIN, 1.0);
-define (PUB_MIN, 20);
+define (PUB_MIN, 1);
 define (PUB_MAX, 75);
 define (PUB_PERC, 0.12);
 
@@ -26,7 +26,7 @@ foreach ($sites as $site) {
 
 	promote($site);
 	if (! $site_info->sub) {
-		promote_from_subs($site, 12, 60, 5);
+		promote_from_subs($site, 12, 80, 8);
 	}
 }
 
@@ -34,7 +34,7 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 	global $db;
 
 	echo "Promote to main: $destination\n";
-	$res = $db->get_results("select sub_statuses.* from sub_statuses, subs, links where date > date_sub(now(), interval $hours hour) and status = 'published' and karma >= $min_karma and sub_statuses.id = origen and subs.id = sub_statuses.id and subs.created_from = $destination and not subs.nsfw and sub_statuses.id not in (select src from subs_copy where dst=$destination) and $destination not in (select id from sub_statuses as t where t.link=sub_statuses.link) and link_id = sub_statuses.link and link_votes >= $min_votes");
+	$res = $db->get_results("select sub_statuses.* from sub_statuses, subs, links where date > date_sub(now(), interval $hours hour) and status = 'published' and karma >= $min_karma and sub_statuses.id = origen and subs.id = sub_statuses.id and subs.created_from = $destination and not subs.private and not subs.nsfw and sub_statuses.id not in (select src from subs_copy where dst=$destination) and $destination not in (select id from sub_statuses as t where t.link=sub_statuses.link) and link_id = sub_statuses.link and link_votes >= $min_votes");
 	foreach ($res as $status) {
 		$status->id = $destination;
 		$status->status = 'queued';
@@ -106,7 +106,7 @@ function promote($site_id) {
 	if ($decay >= 1) $max_to_publish = 3;
 	else $max_to_publish = 1;
 
-	$min_votes = 4;
+	$min_votes = 3;
 	/////////////
 
 	$limit_karma = round(min($past_karma,$min_karma) * 0.40);
