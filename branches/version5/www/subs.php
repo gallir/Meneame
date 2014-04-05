@@ -12,6 +12,8 @@ include(mnminclude.'html1.php');
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 do_header(_("subs menéame"), 'm/');
+
+
 print_tabs();
 
 /*** SIDEBAR ****/
@@ -28,15 +30,6 @@ echo '</div>';
 /*** END SIDEBAR ***/
 echo '<div id="newswrap">';
 
-$my_id =  SitesMgr::my_id();
-/*
-if ($current_user->admin) {
-	$where = '';
-} else {
-	$where = "where (enabled = 1 or owner = $current_user->user_id) and sub = $my_id ";
-}
-$subs = $db->get_results("select * from subs $where order by id asc");
-*/
 
 if (isset($_GET['all'])) {
 	$all = true;
@@ -52,10 +45,8 @@ if (isset($_GET['all'])) {
 }
 
 $subs = $db->get_results($sql);
-if ($my_id == 1 && SitesMgr::can_edit(0)) $can_edit = true;
-else $can_edit = false;
 
-Haanga::Load('subs.html', compact('title', 'subs', 'can_edit', $all));
+Haanga::Load('subs.html', compact('title', 'subs'));
 echo '</div>';
 
 if ($all) {
@@ -65,9 +56,16 @@ if ($all) {
 do_footer();
 
 function print_tabs() {
+	if (SitesMgr::my_id() == 1 && SitesMgr::can_edit(0)) $can_edit = true;
+	else $can_edit = false;
+
 	$items = array();
     $items[] = array('id' => 0, 'url' => 'subs', 'title' => _('más activos'));
 	$items[] = array('id' => 1, 'url' => 'subs?all', 'title' => _('todos'));
+	if ($can_edit) {
+		$items[] = array('id' => 2, 'url' => 'subedit', 'title' => _('crear sub'));
+	}
+
 
 	if (isset($_GET['all'])) $option = 1;
 	else $option = 0;
