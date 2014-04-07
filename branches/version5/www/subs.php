@@ -75,7 +75,7 @@ function print_tabs($option) {
 	$items = array();
 	
 	if ($current_user->user_id) {
-    	$items[] = array('id' => 0, 'url' => 'subs', 'title' => _('suscriptos'));
+    	$items[] = array('id' => 0, 'url' => 'subs', 'title' => _('suscripciones'));
 	}
     $items[] = array('id' => 1, 'url' => 'subs?active', 'title' => _('más activos'));
 	$items[] = array('id' => 2, 'url' => 'subs?all', 'title' => _('todos'));
