@@ -11,6 +11,17 @@ class SitesMgr {
 	static private $parent = false;
 	static private $info = false;
 
+	const PREFERENCES_KEY = 'sub_preferences_';
+	static public $extended_properties = array(
+			'no_link_allowed' => 0,
+			'intro_max_len' => 500,
+			'intro_min_len' => 20,
+			'no_anti_spam' => 0,
+			'allow_local_links' => 0,
+			'rules' => '',
+			'message' => '',
+	);
+
 	static function __init($id = false) {
 		global $globals, $db;
 
@@ -302,6 +313,34 @@ class SitesMgr {
 
 		if (self::$parent > 0) return self::$parent;
 		else return self::$id;
+	}
+
+	static public function store_extended_properties($id = false, &$prefs) {
+		if ($id == false) {
+			$id = self::my_id();
+		}
+		$dict = array();
+		foreach (self::$extended_properties as $k => $v) {
+			if (isset($prefs[$k])) $dict[$k] = $prefs[$k];
+			else $prefs[$k] = $v;
+		}
+		$json = json_encode($dict);
+		$key = self::PREFERENCES_KEY.$id;
+		$a = new Annotation($key);
+		$a->text = $json;
+		return $a->store();
+	}
+
+	static public function get_extended_properties($id = false) {
+		if ($id == false) {
+			$id = self::my_id();
+		}
+		$key = self::PREFERENCES_KEY.$id;
+		$a = new Annotation($key);
+		$a->read();
+		$r = json_decode($a->text, true); // We use associative array
+		if ($r) return $r;
+		else return self::$extended_properties; // Return default values
 	}
 
 }
