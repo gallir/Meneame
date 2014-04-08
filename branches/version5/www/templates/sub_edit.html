@@ -67,7 +67,7 @@
 	<br/><br/>
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
 
-	<label for="name">user_id:</label><br/>
+	<label for="name">user_id:</label>
 	<input type="number" id="owner" name="owner" value="{{ sub.owner }}" maxlength="10" pattern="[0-9]+"/>
 	<br/>
 	{% if sub.id > 0 %}
@@ -76,21 +76,21 @@
 		<br/>
 	{% endif %}
 
-	{% if copy_to %}
-		{% trans _('copiar a') %}:<br/>
-		{% for c in copy_to %}
-			<select name="copy_to[]">
+	{% if copy_from %}
+		{% trans _('copiar desde') %}:<br/>
+		{% for c in copy_from %}
+			<select name="copy_from[]">
 			<option value="{{ c.id }}" selected>{{ c.name }}</option>
 			<option value="0">{% trans _('eliminar') %}</option>
 			</select>
 			<br/>
 		{% endfor %}
 	{% endif %}
-	{% if candidates_to %}
-		{% trans _('añadir copiar a') %}:<br/>
-		<select name="copy_to[]">
+	{% if candidates_from %}
+		{% trans _('añadir copiar desde') %}:<br/>
+		<select name="copy_from[]">
 		<option value="0" selected>--</option>
-		{% for c in candidates_to %}
+		{% for c in candidates_from %}
 			<option value="{{ c.id }}">{{ c.name }}</option>
 		{% endfor %}
 		</select>

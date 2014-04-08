@@ -52,15 +52,15 @@ if ($id > 0) {
 }
 
 if ($current_user->admin) {
-	$candidates_to = $db->get_results("select id, name from subs where sub = 0 and id not in (select dst from subs_copy where src = $id)");
-	$copy_to = $db->get_results("select id, name from subs, subs_copy where src = $id and id = dst");
+	$candidates_from = $db->get_results("select id, name from subs where owner = 0 and id not in (select src from subs_copy where dst = $id)");
+	$copy_from = $db->get_results("select id, name from subs, subs_copy where dst = $id and id = src");
 } else {
-	$copy_to = $candidates_to = false;
+	$copy_from = $candidates_from = false;
 }
 
 do_header(_("editar sub"));
 echo '<div id="singlewrap">'."\n";
-Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_to', 'copy_to'));
+Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_from', 'copy_from'));
 echo "</div>"."\n";
 
 do_footer();
@@ -131,9 +131,9 @@ function save_sub($id, &$errors) {
 		if ($r && $id > 0) {
 			// Copy values from first site
 			$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
-			// Update copy_to
+			// Update copy_from
 			if ($current_user->admin) {
-				sub_copy_to($id, $_POST['copy_to']);
+				sub_copy_from($id, $_POST['copy_from']);
 			}
 
 			// Update colors
@@ -158,14 +158,14 @@ function save_sub($id, &$errors) {
 	return false;
 }
 
-function sub_copy_to($src, $dests) {
+function sub_copy_from($id, $from) {
 	global $db;
-	$r = $db->query("delete from subs_copy where src = $src");
-	if (empty($dests) || ! is_array($dests)) return;
-	foreach ($dests as $dst) {
-		$dst = intval($dst);
-		if ($dst > 0) {
-			$db->query("insert into subs_copy (src, dst) values ($src, $dst)");
+	$r = $db->query("delete from subs_copy where dst = $id");
+	if (empty($from) || ! is_array($from)) return;
+	foreach ($from as $src) {
+		$src = intval($src);
+		if ($src > 0) {
+			$db->query("insert into subs_copy (src, dst) values ($src, $id)");
 		}
 	}
 }
