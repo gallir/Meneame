@@ -331,8 +331,11 @@ function do_pages($total, $page_size=25, $margin = true) {
 
 //Used in editlink.php and submit.php
 function print_subs_form($selected = false) {
-	global $db, $globals;
+	global $db, $globals, $current_user;
 
+	function id($s) {
+		return $s->id;
+	}
 
 	if ($selected == false) {
 		$selected = SitesMgr::my_id();
@@ -342,9 +345,18 @@ function print_subs_form($selected = false) {
 		$subs = false;
 	} else {
 		$subs = SitesMgr::get_sub_subs();
+		$ids = array_map('id', $subs);
+		$extras = SitesMgr::get_subscriptions($current_user->user_id);
+		// Don't repeat the same subs
+		$subscriptions = array();
+		foreach ($extras as $s) {
+			if (! in_array($s->id, $ids)) {
+				$subscriptions[] = $s;
+			}
+		}
 	}
 
-	$vars = compact('selected', 'subs');
+	$vars = compact('selected', 'subs', 'subscriptions');
 	return Haanga::Load('form_subs.html', $vars);
 }
 

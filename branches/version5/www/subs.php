@@ -35,7 +35,7 @@ echo '<div id="newswrap">';
 
 switch ($option) {
 	case 0:
-		$sql = "select subs.* from subs, prefs where pref_user_id = $current_user->user_id and pref_key = 'sub_follow' and subs.id = pref_value order by name asc";
+		$subs = SitesMgr::get_subscriptions($current_user->user_id);
 		$template = 'subs_simple.html';
 		$all = false;
 		break;
@@ -43,6 +43,7 @@ switch ($option) {
 		$all = false;
 		$template = 'subs.html';
 		$sql = "select subs.*, user_id, user_login, user_avatar, count(*) as c from subs LEFT JOIN users ON (user_id = owner), sub_statuses where date > date_sub(now(), interval 5 day) and subs.id = sub_statuses.id and sub_statuses.id = sub_statuses.origen and sub_statuses.status = 'published' and subs.sub = 1 group by subs.id order by c desc limit 50";
+		$subs = $db->get_results($sql);
 		break;
 	default:
 		$all = true;
@@ -53,6 +54,7 @@ switch ($option) {
 
 		$sql = "select subs.*, user_id, user_login, user_avatar from subs, users where subs.sub = 1 and created_from = ".SitesMgr::my_id()." and user_id = owner order by name asc limit $offset, $page_size";
 		$rows = -1;
+		$subs = $db->get_results($sql);
 }
 
 $subs = $db->get_results($sql);

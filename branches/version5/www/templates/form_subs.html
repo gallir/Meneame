@@ -6,6 +6,20 @@
         <input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
 	    <label for "sub">{{ sub.name }}</label>&nbsp;<span class="note">({{ sub.name_long }})</span><br/>
     {% endfor %}
+
+	{% if subscriptions %}
+		<fieldset>
+    	<legend>{% trans _('suscripciones') %}</legend>
+    	{% for sub in subscriptions %}
+			<span style="white-space:nowrap;">
+        	<input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
+	    	<label for "sub">{{ sub.name }}</label>
+			</span>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+    	{% endfor %}
+		</fieldset>
+	{% endif %}
+	
 {% else %}
 	<input name="sub_id" type="hidden" value="{{ selected }}">
 {% endif %}

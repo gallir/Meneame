@@ -315,6 +315,12 @@ class SitesMgr {
 		else return self::$id;
 	}
 
+	static public function get_subscriptions($user) {
+		global $db;
+
+		return $db->get_results("select subs.* from subs, prefs where pref_user_id = $user and pref_key = 'sub_follow' and subs.id = pref_value order by name asc");
+	}
+
 	static public function store_extended_properties($id = false, &$prefs) {
 		if ($id == false) {
 			$id = self::my_id();

@@ -45,12 +45,26 @@
 <input type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
 
 <br/>
-{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}>
+{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
 &nbsp;&nbsp;
-{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}>
+{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
+&nbsp;&nbsp;
+
+{# TODO: enable later
+{% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link_allowed" value="1" {% if extended.no_link_allowed %}checked{% endif %}/>
+{% trans _('sin control antispam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
+<br/>
+
+{% trans _('máxima longitud entradilla') %}: <input type="number" name="intro_max_len" min="0" max="2000" 
+		value="{% if extended.intro_max_len %}{{ extended.intro_max_len }}{% else %}500{% endif %}"/>
+&nbsp;&nbsp;
+{% trans _('mínima longitud entradilla') %}: <input type="number" name="intro_min_len" min="0" max="200" 
+		value="{% if extended.intro_min_len %}{{ extended.intro_min_len }}{% else %}20{% endif %}"/>
+#}
 <br/>
 
 {% if current_user.admin %}
+	<br/><br/>
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
 
 	<label for="name">user_id:</label><br/>

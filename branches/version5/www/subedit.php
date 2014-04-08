@@ -48,6 +48,7 @@ if (! SitesMgr::can_edit($id)) {
 
 if ($id > 0) {
 	$globals['submnm_info'] = $sub = SitesMgr::get_info($id);
+	$extended = SitesMgr::get_extended_properties($id);
 }
 
 if ($current_user->admin) {
@@ -59,7 +60,7 @@ if ($current_user->admin) {
 
 do_header(_("editar sub"));
 echo '<div id="singlewrap">'."\n";
-Haanga::Load('sub_edit.html', compact('sub', 'errors', 'site', 'candidates_to', 'copy_to'));
+Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_to', 'copy_to'));
 echo "</div>"."\n";
 
 do_footer();
@@ -110,6 +111,13 @@ function save_sub($id, &$errors) {
 	$nsfw = intval($_POST['nsfw']);
 	$private = intval($_POST['private']);
 	
+	// Check the extended info
+	$_POST['no_link_allowed'] = intval($_POST['no_link_allowed']);
+	$_POST['no_anti_spam'] = intval($_POST['no_anti_spam']);
+	$_POST['allow_local_links'] = intval($_POST['allow_local_links']);
+	$_POST['intro_max_len'] = intval($_POST['intro_max_len']);
+	$_POST['introl_min_len'] = intval($_POST['introl_min_len']);
+	
 
 
 	if (empty($errors)) {
@@ -138,6 +146,7 @@ function save_sub($id, &$errors) {
 			$db->query("update subs set color1 = '$color1', color2 = '$color2' where id = $id");
 		}
 		if ($r && $id > 0) {
+			SitesMgr::store_extended_properties($id, $_POST);
 			$db->commit();
 			return $id;
 		} else {
