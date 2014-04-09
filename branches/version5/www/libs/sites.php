@@ -14,8 +14,9 @@ class SitesMgr {
 	const PREFERENCES_KEY = 'sub_preferences_';
 	static public $extended_properties = array(
 			'no_link_allowed' => 0,
-			'intro_max_len' => 500,
+			'intro_max_len' => 550,
 			'intro_min_len' => 20,
+			'intro_lines' => 0,
 			'no_anti_spam' => 0,
 			'allow_local_links' => 0,
 			'rules' => '',
@@ -326,27 +327,41 @@ class SitesMgr {
 			$id = self::my_id();
 		}
 		$dict = array();
-		foreach (self::$extended_properties as $k => $v) {
-			if (isset($prefs[$k])) $dict[$k] = $prefs[$k];
-			else $prefs[$k] = $v;
+		$defaults = self::$extended_properties;
+		foreach ($prefs as $k => $v) {
+			if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v ) {
+				$dict[$k] = $v;
+			}
 		}
-		$json = json_encode($dict);
+
 		$key = self::PREFERENCES_KEY.$id;
 		$a = new Annotation($key);
-		$a->text = $json;
-		return $a->store();
+
+		if (!empty($dict)) {
+			$json = json_encode($dict);
+			$a->text = $json;
+			return $a->store();
+		}
+		return $a->delete();
 	}
 
 	static public function get_extended_properties($id = false) {
 		if ($id == false) {
 			$id = self::my_id();
 		}
+		$properties = self::$extended_properties;
+
 		$key = self::PREFERENCES_KEY.$id;
 		$a = new Annotation($key);
-		$a->read();
-		$r = json_decode($a->text, true); // We use associative array
-		if ($r) return $r;
-		else return self::$extended_properties; // Return default values
+		if ($a->read() && !empty($a->text)) {
+			$res = json_decode($a->text, true); // We use associative array
+			if ($res) {
+				foreach ($res as $k => $v) {
+					$properties[$k] = $v;
+				}
+			}
+		}
+		return $properties;
 	}
 
 }

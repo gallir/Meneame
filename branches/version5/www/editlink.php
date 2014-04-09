@@ -50,11 +50,14 @@ function do_edit($link) {
 	$link->thumb_url = $link->has_thumb();
 	$link->is_new = false;
 	$link->is_sub_owner = SitesMgr::is_owner();
+	$link->site_properties = SitesMgr::get_extended_properties();
 	Haanga::Load('link/edit.html', compact('link'));
 }
 
 function do_save($link) {
 	global $dblang, $globals, $current_user, $db;
+
+	$site_properties = SitesMgr::get_extended_properties();
 
 	// Store previous value for the log
 	$link_old = new stdClass;
@@ -144,31 +147,21 @@ function link_edit_errors($link) {
 	$errors = array();
 
 	// only checks if the user is not special or god
-	if(!$link->check_url($link->url, false) && ! $current_user->admin) {
-		array_push($errors, _('url incorrecto'));
+	if(! $link->check_url($link->url, false) && ! $current_user->admin) {
+		$errors[] = _('url incorrecto');
 	}
+	
 	if($_POST['key'] !== md5($_POST['timestamp'].$link->randkey)) {
-		array_push($errors, _('clave incorrecta'));
+		$errors[] = _('clave incorrecta');
 		$error = true;
 	}
+	
 	if(time() - $_POST['timestamp'] > 900) {
-		array_push($errors, _('tiempo excedido'));
+		$errors[] =  _('tiempo excedido');
 	}
-	if(strlen($link->title) < 8  || strlen($link->content) < 24 ) {
-		array_push($errors, _('título o texto incompletos'));
-	}
-	if(mb_strlen(html_entity_decode($link->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
-		array_push($errors, _('título o texto demasiado largos'));
-	}
-	if(strlen($link->tags) < 3 ) {
-		array_push($errors, _('no has puesto etiquetas'));
-	}
-	if(preg_match('/.*http:\//', $link->title)) {
-		array_push($errors, _('por favor, no pongas URLs en el título, no ofrece información'));
-	}
-	if(empty($globals['submnm']) && ! $link->sub_id > 0) {
-		array_push($errors, _('sub no seleccionado'));
-	}
+	
+	$errors = array_merge($errors, $link->check_field_errors());
+	
 	return $errors;
 }
 

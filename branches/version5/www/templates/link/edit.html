@@ -83,20 +83,22 @@
 <p><span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
 <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" /></p>
 
-{% exec print_simpleformat_buttons 'bodytext' as dummy %}
+{% if link.site_properties.intro_max_len > 0 %}
+	{% exec print_simpleformat_buttons 'bodytext' as dummy %}
 
-<p><label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label>
-<br /><span class="note"><strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong></span>
+	<p><label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label>
+	<br /><span class="note"><strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong> ({{ link.site_properties.intro_min_len }} - {{ link.site_properties.intro_max_len }})</span>
 
-<br/>
-<textarea name="bodytext" rows="10" style="width:100%" id="bodytext"
-	onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"
-	onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,550)"
-	>{{ link.content }}</textarea>
+	<br/>
+	<textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ link.site_properties.intro_max_len }}"
+		onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
+		onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
+		>{{ link.content }}</textarea>
+	</p>
 
-</p>
-<div style="margin-top:-7px">
-<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" /><span class="note">{% trans _('caracteres libres') %}</span></div>
+	<div style="margin-top:-7px">
+	<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" /><span class="note">{% trans _('caracteres libres') %}</span></div>
+{% endif %}
 
 {% exec print_subs_form link.sub_id as dummy %}
 

@@ -16,6 +16,15 @@ class Annotation {
 		return;
 	}
 
+	function delete() {
+		global $db;
+
+		if (empty($this->key)) return false;
+
+		$key = $db->escape($this->key);
+		return $db->query("DELETE FROM annotations WHERE annotation_key = '$key'");
+	}
+
 	function store($expire = false) {
 		global $db;
 
@@ -25,7 +34,7 @@ class Annotation {
 		else $expire = "FROM_UNIXTIME($expire)";
 		$key = $db->escape($this->key);
 		$text = $db->escape($this->text);
-		$db->query("REPLACE INTO annotations (annotation_key, annotation_text, annotation_expire) VALUES ('$key', '$text', $expire)");
+		return $db->query("REPLACE INTO annotations (annotation_key, annotation_text, annotation_expire) VALUES ('$key', '$text', $expire)");
 	}
 
 	function read($key = false) {

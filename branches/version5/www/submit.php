@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include_once('config.php');
 include_once(mnminclude.'html1.php');
 include_once(mnminclude.'tags.php');
 include_once(mnminclude.'ban.php');
@@ -97,6 +97,7 @@ function do_submit1() {
 	global $db, $dblang, $current_user, $globals, $errors;
 
 	$site_info = SitesMgr::get_info();
+	$site_properties = SitesMgr::get_extended_properties();
 
 	$url = clean_input_url(urldecode($_POST['url']));
 	$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
@@ -430,7 +431,8 @@ function do_submit1() {
 	if (mb_strlen($link->url_description) > 40) {
 		$link->content = $link->url_description;
 	}
-	$link->chars_left = 550 - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
+	$link->site_properties = $site_properties;
+	$link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 	Haanga::Load('link/submit1.html', compact('link', 'errors'));
 	return true;
@@ -443,7 +445,8 @@ function do_submit2() {
 	$link=new Link;
 	$link->id=$link_id = intval($_POST['id']);
 	$link->read();
-
+	
+	
 	if(report_duplicated($link->url)) return true;
 	$link->read_content_type_buttons($_POST['type']);
 
@@ -464,6 +467,8 @@ function do_submit2() {
 	if (link_errors($link)) {
 		// Show the edit form again
 		$link->is_new = true; // Disable several options in the editing form
+		$site_properties = $link->site_properties = SitesMgr::get_extended_properties();
+		$link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 		Haanga::Load('link/submit1.html', compact('link', 'errors'));
 		return true;
 	}
@@ -520,35 +525,22 @@ function link_errors($link) {
 		add_submit_error(_("clave incorrecta"));
 		$error = true;
 	}
+	
 	if($link->status != 'discard') {
 		add_submit_error(_("la historia ya está en cola").": $link->status");
 		$error = true;
 	}
-	if(strlen($link->title) < 8  || strlen($link->content) < 24 ) {
-		add_submit_error(_("título o texto incompletos"));
+	
+	// TODO: simplify this, return just $errors as array()
+	// as in editlink
+	$res = $link->check_field_errors();
+	if (! empty($res)) {
 		$error = true;
-	}
-	if(get_uppercase_ratio($link->title) > 0.4  || get_uppercase_ratio($link->content) > 0.25 ) {
-		add_submit_error(_("demasiadas mayúsculas en el título o texto"));
-		$error = true;
-	}
-	if(mb_strlen(html_entity_decode($link->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120  || mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 550 ) {
-		add_submit_error(_("título o texto demasiado largos"));
-		$error = true;
-	}
-	if(strlen($link->tags) < 3 ) {
-		add_submit_error(_("no has puesto etiquetas"));
-		$error = true;
+		foreach($res as $e) {
+			add_submit_error($e);
+		}
 	}
 
-	if(preg_match('/.*http:\//', $link->title)) {
-		add_submit_error(_("por favor, no pongas URLs en el título, no ofrece información"));
-		$error = true;
-	}
-	if(! $link->sub_id > 0) {
-		add_submit_error(_("sub no seleccionado"));
-		$error = true;
-	}
 	return $error;
 }
 

@@ -112,13 +112,11 @@ function save_sub($id, &$errors) {
 	$private = intval($_POST['private']);
 	
 	// Check the extended info
-	$_POST['no_link_allowed'] = intval($_POST['no_link_allowed']);
-	$_POST['no_anti_spam'] = intval($_POST['no_anti_spam']);
-	$_POST['allow_local_links'] = intval($_POST['allow_local_links']);
-	$_POST['intro_max_len'] = intval($_POST['intro_max_len']);
-	$_POST['introl_min_len'] = intval($_POST['introl_min_len']);
-	
-
+	foreach (array('no_link_allowed', 'no_anti_spam', 'allow_local_links', 'intro_max_len', 'intro_min_len') as $k) {
+		if (isset($_POST[$k]) && $_POST[$k] !== '') {
+			$_POST[$k] = intval($_POST[$k]);
+		}
+	}
 
 	if (empty($errors)) {
 		$db->transaction();

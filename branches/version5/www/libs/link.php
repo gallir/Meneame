@@ -1798,4 +1798,54 @@ class Link extends LCPBase {
 		return $this->status;
 	}
 
+	function check_field_errors() {
+		global $globals;
+
+		$errors = array();
+
+		if(! $this->sub_id > 0) {
+			$errors[] = _("sub no seleccionado");
+			$site_id = SitesMgr::my_id();
+		} else {
+			$site_id = $this->sub_id;
+		}
+		
+		$properties = SitesMgr::get_extended_properties($site_id);
+
+		if(strlen($this->title) < 8) {
+			$errors[] = _("título incompleto");
+		}
+
+		if(get_uppercase_ratio($this->title) > 0.5) {
+			$errors[] = ("demasiadas mayúsculas en el título");
+		}
+
+		if(mb_strlen(html_entity_decode($this->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120) {
+			$errors[] = ("título demasiado largo");
+		}
+
+		if($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && strlen($this->content) < $properties['intro_min_len'] ) {
+			$errors[] = _("texto incompleto");
+		}
+
+		if(get_uppercase_ratio($this->content) > 0.3 ) {
+			$errors[] = ("demasiadas mayúsculas en el texto");
+		}
+
+		if( $properties['intro_max_len'] > 0 && mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > $properties['intro_max_len'] ) {
+			$errors[] = ("texto demasiado largo");
+		}
+
+		if(strlen($this->tags) < 3 ) {
+			$errors[] = ("no has puesto etiquetas");
+		}
+
+		if(preg_match('/.*http:\//', $this->title)) {
+			$errors[] = ("no pongas URLs en el título, no ofrece información");
+		}
+
+		return $errors;
+		
+	}
+
 }
