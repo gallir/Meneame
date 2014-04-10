@@ -64,7 +64,7 @@ $url_db = $url;
 if (! $unique) {
 	$url_db = addcslashes($url, '%_');
 	$url_db = preg_replace('/\/$/', '', $url_db);
-	$links = $db->get_col("select _NO_CACHE link_id from links where link_url like '$url_db%' order by link_date DESC limit 100");
+	$links = $db->get_col("select SQL_NO_CACHE link_id from links where link_url like '$url_db%' order by link_date DESC limit 100");
 } else {
 	$url_db = preg_replace('/\/$/', '', $url_db);
 	$links = $db->get_col("select SQL_NO_CACHE link_id from links where link_url in ('$url_db', '$url_db/')");
