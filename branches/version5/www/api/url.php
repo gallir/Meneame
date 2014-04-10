@@ -64,33 +64,35 @@ $url_db = $url;
 if (! $unique) {
 	$url_db = addcslashes($url, '%_');
 	$url_db = preg_replace('/\/$/', '', $url_db);
-	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url like '$url_db%' order by link_date DESC limit 100");
+	$links = $db->get_col("select _NO_CACHE link_id from links where link_url like '$url_db%' order by link_date DESC limit 100");
 } else {
 	$url_db = preg_replace('/\/$/', '', $url_db);
-	$links = $db->get_results("select SQL_NO_CACHE link_id, link_votes, link_anonymous, link_negatives, link_status, link_karma from links where link_url in ('$url_db', '$url_db/')");
+	$links = $db->get_col("select SQL_NO_CACHE link_id from links where link_url in ('$url_db', '$url_db/')");
 }
 
 if ($links) {
 	$dict['status'] = 'OK';
 	$dict['data'] = array();
-	foreach ($links as $dblink) {
+	foreach ($links as $link_id) {
+		$link = Link::from_db($link_id, null, false);
 		if ($json) {
 			$data = array();
-			$data['url'] = 'http://'.get_server_name().'/story.php?id='.$dblink->link_id;
-			$data['status'] = $dblink->link_status;
-			$data['votes'] = intval($dblink->link_votes);
-			$data['anonymous'] = intval($dblink->link_anonymous);
-			$data['karma'] = intval($dblink->link_karma);
+			$data['id'] = $link_id;
+			$data['url'] = $link->get_canonical_permalink();
+			$data['status'] = $link->status;
+			$data['votes'] = intval($link->votes);
+			$data['anonymous'] = intval($link->anonymous);
+			$data['karma'] = intval($link->karma);
 			array_push($dict['data'], $data);
 		} else {
-			$response = 'OK http://'.get_server_name().'/story.php?id='.$dblink->link_id.' '.($dblink->link_votes+$dblink->link_anonymous).' '.$dblink->link_status."\n";
+			$response = 'OK '. $link->get_canonical_permalink()." $link->total_votes $link->status $link_id\n";
 		}
 	}
 } else {
 	if ($json) {
 		$dict['status'] = 'KO';
-		$dict['submit_url'] = 'http://'.get_server_name().'/submit.php?url='.$url;
-	} else $response = 'KO http://'.get_server_name().'/submit.php?url='.$url;
+		$dict['submit_url'] = 'http://'.get_server_name().'/submit?url='.$url;
+	} else $response = 'KO http://'.get_server_name().'/submit?url='.$url;
 }
 
 if ($json) {
