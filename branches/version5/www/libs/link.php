@@ -1806,6 +1806,10 @@ class Link extends LCPBase {
 		
 		$properties = SitesMgr::get_extended_properties($site_id);
 		
+		if (empty($this->url) && empty($properties['no_link'])) {
+			$errors[] = _("falta url enlace");
+		}
+		
 		// Filter content and title
 		
 		// It also deletes punctuaction marks at the end

@@ -13,7 +13,7 @@ class SitesMgr {
 
 	const PREFERENCES_KEY = 'sub_preferences_';
 	static public $extended_properties = array(
-			'no_link_allowed' => 0,
+			'no_link' => 0,
 			'intro_max_len' => 550,
 			'intro_min_len' => 20,
 			'intro_lines' => 0,
