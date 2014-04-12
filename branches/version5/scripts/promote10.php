@@ -36,6 +36,11 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 	echo "Promote to main: $destination\n";
 	$res = $db->get_results("select sub_statuses.* from sub_statuses, subs, links where date > date_sub(now(), interval $hours hour) and status = 'published' and karma >= $min_karma and sub_statuses.id = origen and subs.id = sub_statuses.id and subs.created_from = $destination and not subs.private and not subs.nsfw and sub_statuses.id not in (select src from subs_copy where dst=$destination) and $destination not in (select id from sub_statuses as t where t.link=sub_statuses.link) and link_id = sub_statuses.link and link_votes >= $min_votes");
 	foreach ($res as $status) {
+		$properties = SitesMgr::get_extended_properties($status->id);
+		if (!empty($properties['no_link'])) {
+			echo "NO LINK, $status->id\n";
+			continue;
+		}
 		$status->id = $destination;
 		$status->status = 'queued';
 		echo "--->\n";
@@ -488,7 +493,6 @@ function get_subs_coef($site_id, $days = 3) {
 		}
 
 	}
-	var_dump($totals_published);
 	$average = $total_published / $total_sent;
 
 	$average = $total_published / $total_sent;
