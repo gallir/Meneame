@@ -495,8 +495,6 @@ function get_subs_coef($site_id, $days = 3) {
 	}
 	$average = $total_published / $total_sent;
 
-	$average = $total_published / $total_sent;
-
 	$subs_coef = array();
 
 
