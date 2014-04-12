@@ -19,6 +19,7 @@ class SitesMgr {
 			'intro_lines' => 0,
 			'no_anti_spam' => 0,
 			'allow_local_links' => 0,
+			'allow_paragraphs' => 0,
 			'rules' => '',
 			'message' => '',
 	);

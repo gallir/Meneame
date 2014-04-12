@@ -421,15 +421,9 @@ class Link extends LCPBase {
 		}
 
 		if(preg_match('/< *meta +name=[\'"]description[\'"] +content=[\'"]([^<>]+)[\'"] *\/*>/si', $this->html, $matches)) {
-			$url_description=clean_text($matches[1]);
-			// Further clean up to eliminate links and tags inside the description
-			$url_description = html_entity_decode($url_description, ENT_COMPAT, 'UTF-8');
-			$url_description = strip_tags($url_description);
-			$url_description = @htmlspecialchars($url_description, ENT_COMPAT, 'UTF-8');
-			if (mb_strlen($url_description) > 20) {
-				$this->url_description=text_to_summary($url_description, 400);
-			}
+			$this->url_description=clean_text_with_tags($matches[1], 0, false, 400);
 		}
+
 		return true;
 	}
 
@@ -1811,8 +1805,20 @@ class Link extends LCPBase {
 		}
 		
 		$properties = SitesMgr::get_extended_properties($site_id);
+		
+		// Filter content and title
+		
+		// It also deletes punctuaction marks at the end
+		$this->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $this->title), 50, true, 120);
 
-		if(strlen($this->title) < 8) {
+		if ($properties['allow_paragraphs']) $replace_nl = false;
+		else $replace_nl = true;
+
+		$this->content = clean_text_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
+
+
+
+		if(mb_strlen($this->title) < 8) {
 			$errors[] = _("título incompleto");
 		}
 
@@ -1820,11 +1826,13 @@ class Link extends LCPBase {
 			$errors[] = ("demasiadas mayúsculas en el título");
 		}
 
+/* The length is already constrained in clean_text()
 		if(mb_strlen(html_entity_decode($this->title, ENT_COMPAT, 'UTF-8'), 'UTF-8') > 120) {
 			$errors[] = ("título demasiado largo");
 		}
+*/
 
-		if($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && strlen($this->content) < $properties['intro_min_len'] ) {
+		if($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($this->content) < $properties['intro_min_len'] ) {
 			$errors[] = _("texto incompleto");
 		}
 
@@ -1832,9 +1840,11 @@ class Link extends LCPBase {
 			$errors[] = ("demasiadas mayúsculas en el texto");
 		}
 
+/* Already constrained in clean_text_with_tags()
 		if( $properties['intro_max_len'] > 0 && mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8') > $properties['intro_max_len'] ) {
 			$errors[] = ("texto demasiado largo");
 		}
+*/
 
 		if(strlen($this->tags) < 3 ) {
 			$errors[] = ("no has puesto etiquetas");

@@ -95,6 +95,11 @@
 		onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
 		>{{ link.content }}</textarea>
 	</p>
+	<script type="text/javascript">
+	addPostCode( function () {
+		$('textarea').autosize();
+	});
+	</script>
 
 	<div style="margin-top:-7px">
 	<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" /><span class="note">{% trans _('caracteres libres') %}</span></div>

@@ -112,11 +112,13 @@ function save_sub($id, &$errors) {
 	$private = intval($_POST['private']);
 	
 	// Check the extended info
-	foreach (array('no_link_allowed', 'no_anti_spam', 'allow_local_links', 'intro_max_len', 'intro_min_len') as $k) {
+	foreach (array('no_link', 'no_anti_spam', 'allow_local_links', 'intro_max_len', 'intro_min_len') as $k) {
 		if (isset($_POST[$k]) && $_POST[$k] !== '') {
 			$_POST[$k] = intval($_POST[$k]);
 		}
 	}
+	
+	if ($_POST['intro_max_len'] > 5000) $_POST['intro_max_len'] = 5000;
 
 	if (empty($errors)) {
 		$db->transaction();

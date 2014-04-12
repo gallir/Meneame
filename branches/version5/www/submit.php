@@ -460,10 +460,10 @@ function do_submit2() {
 	}
 
 	$link->sub_id=intval($_POST['sub_id']);
-	$link->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $_POST['title']), 40);  // It also deletes punctuaction signs at the end
+	$link->title = $_POST['title'];  // It also deletes punctuaction signs at the end
 	$link->tags = tags_normalize_string($_POST['tags']);
 	$link->key = $_POST['key'];
-	$link->content = clean_text_with_tags($_POST['bodytext']);
+	$link->content = $_POST['bodytext']; // Warn, has to call $link->check_field_errors later
 	if (link_errors($link)) {
 		// Show the edit form again
 		$link->is_new = true; // Disable several options in the editing form

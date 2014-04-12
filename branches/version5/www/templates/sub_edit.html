@@ -51,20 +51,23 @@
 &nbsp;&nbsp;
 
 {# TODO: enable later
-{% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link_allowed" value="1" {% if extended.no_link_allowed %}checked{% endif %}/>
+{% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link" value="1" {% if extended.no_link %}checked{% endif %}/>
 {% trans _('sin control antispam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
 <br/>
 #}
 
-{% trans _('mínima longitud entradilla') %}: <input type="number" name="intro_min_len" min="0" max="200" 
-		value="{{ extended.intro_min_len }}"/>
-&nbsp;&nbsp;
-{% trans _('máxima longitud entradilla') %}: <input type="number" name="intro_max_len" min="0" max="2000" 
-		value="{{ extended.intro_max_len }}"/>
+<fieldset><legend>{% trans _('entradilla') %}</legend>
+	{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200" 
+			value="{{ extended.intro_min_len }}"/>
+	&nbsp;&nbsp;
+	{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000" 
+			value="{{ extended.intro_max_len }}"/><br/>
+	{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
+</fieldset>
+
 <br/>
 
 {% if current_user.admin %}
-	<br/><br/>
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
 
 	<label for="name">user_id:</label>

@@ -86,9 +86,10 @@ function do_save($link) {
 			$link->get_thumb(false, $url);
 		}
 	}
-	$link->title = clean_text($_POST['title'], 50);
-	$link->content = clean_text_with_tags($_POST['bodytext']);
+	$link->title = $_POST['title'];
+	$link->content = $_POST['bodytext'];
 	$link->tags = tags_normalize_string($_POST['tags']);
+	$errors = link_edit_errors($link);
 
 	// change the status
 	if ($_POST['status'] != $link->status
@@ -101,7 +102,8 @@ function do_save($link) {
 		}
 		$link->status = $_POST['status'];
 	}
-	$errors = link_edit_errors($link);
+	
+
 	if (! $errors) {
 		if (empty($link->uri)) $link->get_uri();
 		// Check the blog_id
