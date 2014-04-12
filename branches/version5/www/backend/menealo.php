@@ -74,7 +74,7 @@ if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if
 
 // Check for clicks vs votes
 // to avoid "cowboy votes" without reading the article
-if ($globals['click_counter'] 
+if (!empty($link->url) && $globals['click_counter'] 
 	&& ! $link->user_clicked()) {
 	if ($link->votes > 3 && $link->negatives  > 2 && $current_user->user_id > 0 && $link->votes/10 < $link->negatives && $link->get_clicks() < $link->total_votes * 1.5) {
 		error(_('enlace no leído, con muchos negativos'));
