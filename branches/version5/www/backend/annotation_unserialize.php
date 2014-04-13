@@ -16,7 +16,7 @@ if ($annotation->read()) {
 	}
 	echo '</ul>';
 } else {
-	echo _('objeto inexistente').': ', $id;
+	echo _('objeto inexistente').': ', htmlentities($id);
 }
 echo '</div>';
 ?>
