@@ -89,7 +89,7 @@ function do_login() {
 		}
 	}
 	echo '<p><label for="name">'._('usuario o email').':</label><br />'."\n";
-	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.htmlentities($username).'" /></p>'."\n";
+	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.__($username).'" /></p>'."\n";
 	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
 	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
 	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";

@@ -215,7 +215,7 @@ function do_ignore($string) {
 		$user_id = $db->get_var("select user_id from users where user_login='$user_login'");
 		if ($user_id > 0 && $user_id != $current_user->user_id) {
 			User::friend_insert($current_user->user_id, $user_id, -1);
-			$comment = _('Usuario') . ' <em>' . htmlentities($array[1]). '</em> ' . _('agregado a la lista de ignorados');
+			$comment = _('Usuario') . ' <em>' . __($array[1]). '</em> ' . _('agregado a la lista de ignorados');
 		}
 	} else {
 		$users = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from=$current_user->user_id and friend_value < 0 and user_id = friend_to order by user_login asc");

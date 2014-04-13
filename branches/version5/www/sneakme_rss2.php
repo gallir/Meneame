@@ -152,7 +152,7 @@ function do_header($title) {
 	echo ' >'. "\n";
 	echo '<channel>'."\n";
 	echo '	<title>'.$title.'</title>'."\n";
-	echo '	<atom:link href="http://'.get_server_name().htmlentities(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
+	echo '	<atom:link href="http://'.get_server_name().__(clean_input_url($_SERVER['REQUEST_URI'])).'" rel="self" type="application/rss+xml" />'."\n";
 	echo '	<link>http://'.get_server_name().post_get_base_url().'</link>'."\n";
 	echo "	<image><title>".$title."</title><link>http://".get_server_name().post_get_base_url()."</link><url>http://".get_static_server_name().$globals['base_url']."img/common/eli-rss.png</url></image>\n";
 	echo '	<description>'._('Sitio colaborativo de publicación y comunicación entre blogs').'</description>'."\n";

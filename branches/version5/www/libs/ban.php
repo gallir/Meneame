@@ -63,9 +63,9 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 		$ban = array();
 		$ban['date'] = $match->date;
 		$ban['expire'] = $match->expire;
-		$ban['text'] = htmlentities($ban_text);
+		$ban['text'] = __($ban_text);
 		// For security
-		$ban['match']  = htmlentities(trim($match->ban_text));
+		$ban['match']  = __(trim($match->ban_text));
 		$ban['comment'] = $match->ban_comment;
 		return $ban;
 	}
