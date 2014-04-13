@@ -79,7 +79,7 @@ def main():
 		print post
 		try:
 			url = """
-				http://{d}{newpost}?user={post_user}&key={post_key}&text=t
+				http://{d}{newpost}?user={post_user}&key={post_key}&text={t}
 			""".format(d= dbconf.domain,
 						t= urllib.quote_plus(post),
 						**dbconf.blogs)
@@ -89,6 +89,7 @@ def main():
 			print urlpost.read(100)
 			urlpost.close()
 		except KeyError:
+			print "Error posting", url
 			pass
 
 
