@@ -58,7 +58,7 @@ function do_link_item($sql) {
 			$link->id=$link_id;
 			$link->read();
 			if ($_REQUEST['url'] == 'source') {
-				$url = htmlentities($link->url);
+				$url = __($link->url);
 			} else {
 				$url = $link->get_permalink();
 			}

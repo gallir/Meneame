@@ -32,7 +32,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		);
 		if ($extra_tab) {
 			if ($globals['link_permalink']) $url = $globals['link_permalink'];
-			else $url = htmlentities($globals['uri']);
+			else $url = __($globals['uri']);
 			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
 		}
 		$tabname = 'tabmain';

@@ -305,7 +305,7 @@ class HtmlImages {
 
 		$res = get_url($this->url, $this->referer, null, false);
 		if (!$res) {
-			if ($this->debug) echo "<!-- Error getting " . htmlentities($this->url) . "-->\n";
+			if ($this->debug) echo "<!-- Error getting " . __($this->url) . "-->\n";
 			return;
 		}
 		if ($this->debug) echo "<!-- Got $this->url (". strlen($res['content']) .") -->\n";
@@ -430,17 +430,17 @@ class HtmlImages {
 			$img = new WebThumb($match, $this->base);
 			if ($img->surface() < 120000 && $this->check_in_other($match)) continue;
 			if ($this->debug)
-				echo "<!-- PRE CANDIDATE: ". htmlentities($match) ." -->\n";
+				echo "<!-- PRE CANDIDATE: ". __($match) ." -->\n";
 			if ($img->candidate && $img->good($other_html == false)) {
 				$goods++;
 				$img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
 				if ($this->debug)
-					echo "<!-- CANDIDATE: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
+					echo "<!-- CANDIDATE: ". __($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
 				if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
 					$this->selected = $img;
 					$n++;
 					if ($this->debug)
-						echo "<!-- SELECTED: ". htmlentities($img->url)." X: $img->html_x Y: $img->html_y -->\n";
+						echo "<!-- SELECTED: ". __($img->url)." X: $img->html_x Y: $img->html_y -->\n";
 				}
 			}
 			if ($goods > 5 && $n > 0) break;
@@ -650,7 +650,7 @@ class HtmlImages {
 				$n++;
 				if ($n >= $times) {
 					if ($this->debug)
-						echo "<!-- Skip ($times): " . htmlentities($str). "-->\n";
+						echo "<!-- Skip ($times): " . __($str). "-->\n";
 					return true;
 				}
 		}

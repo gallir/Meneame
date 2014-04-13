@@ -22,7 +22,7 @@ $_REQUEST['q'] = trim(stripslashes($_REQUEST['q']));
 $response = do_search(false, $offset, $page_size);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(sprintf(_('búsqueda de «%s»'), $search_txt));
-do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
+do_tabs('main',_('búsqueda'), __($_SERVER['REQUEST_URI']));
 
 echo '<div id="newswrap">'."\n";
 

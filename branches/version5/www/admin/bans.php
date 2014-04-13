@@ -50,7 +50,7 @@ function admin_tabs($tab_selected = false) {
 
 	// url with parameters?
 	if (!empty($_SERVER['QUERY_STRING']))
-		$query = "?".htmlentities($_SERVER['QUERY_STRING']);
+		$query = "?".__($_SERVER['QUERY_STRING']);
 
 	// START STANDARD TABS
 	// First the standard and always present tabs

@@ -35,7 +35,7 @@ $globals['noindex'] = true;
 
 $response = do_search(false, $offset, $page_size);
 do_header(sprintf(_('búsqueda de «%s»'), htmlspecialchars($_REQUEST['words'])));
-do_tabs('main',_('búsqueda'), htmlentities($_SERVER['REQUEST_URI']));
+do_tabs('main',_('búsqueda'), __($_SERVER['REQUEST_URI']));
 
 switch ($_REQUEST['w']) {
 	case 'posts':

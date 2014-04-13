@@ -212,6 +212,14 @@ require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 
+function __($text) {
+    return htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+}
+
+function _e($text) {
+    echo htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+}
+
 function shutdown() {
 	global $globals, $current_user, $db;
 
