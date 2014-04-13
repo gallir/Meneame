@@ -32,11 +32,11 @@ function do_master($size) {
 	echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
 	echo '<sitemap>'."\n";
-	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?statics</loc>'."\n";
+	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap?statics</loc>'."\n";
 	echo '</sitemap>'."\n";
 
 	echo '<sitemap>'."\n";
-	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap.php?last</loc>'."\n";
+	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap?last</loc>'."\n";
 	echo '</sitemap>'."\n";
 
 	echo '</sitemapindex>'."\n";
@@ -45,9 +45,9 @@ function do_master($size) {
 function do_statics() {
 	global $globals;
 
-	$urls = Array('queue', 'sneak.php', 'geovision.php', 'notame/', 
-			'cloud.php', 'topstories.php', 'topcommented.php', 
-			'topcomments.php', 'sitescloud.php', 'topusers.php', 'faq-es.php');
+	$urls = Array('queue', 'sneak', 'notame/', 
+			'cloud', 'popular', 'top_commented', 
+			'top_comments', 'top_users', 'legal', 'faq-es.php');
 
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	// The index
