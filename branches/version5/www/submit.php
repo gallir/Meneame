@@ -149,7 +149,7 @@ function do_submit1() {
 	}
 
 	// Check the number of links sent by a user
-	$queued_24_hours = (int) $db->get_var("select count(*) from links, subs, sub_statuses where link_status='published' and link_date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
+	$queued_24_hours = (int) $db->get_var("select count(*) from links, subs, sub_statuses where status!='published' and date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
 
 	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
 		add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
@@ -157,14 +157,12 @@ function do_submit1() {
 		return false;
 	}
 
-	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute)");
+	// Check tbe number of links sent by the user in the last minutes
+	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute) and link_author=$current_user->user_id");
 	if ($current_user->user_karma > $globals['limit_3_minutes_karma']) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
 	else $enqueued_limit = $globals['limit_3_minutes'];
 
 	if ($enqueued_last_minutes > $enqueued_limit) {
-		//echo '<p class="error"><strong>'._('exceso de envíos').':</strong></p>';
-		//echo '<p>'._('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'). ' </p>';
-		//echo '</div>'. "\n";
 		add_submit_error( _('exceso de envíos'),
 			_('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'));
 		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): " . $_REQUEST['url']);
