@@ -247,7 +247,7 @@ $globals['post_highlight_karma'] = 100;
 $globals['post_hide_karma'] = -50;
 
 $globals['draft_time'] = 1200; // Time unsent drafts will be kept (20 minutes)
-$globals['draft_limit'] = 3; // Max unset drafts at the same time
+$globals['draft_limit'] = 5; // Max unset drafts at the same time
 
 
 // Don't forget to add a redirect to ooops.php in case of 404 error,

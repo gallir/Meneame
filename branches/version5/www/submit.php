@@ -25,43 +25,42 @@ if(isset($_POST["phase"])) {
 	switch ($_POST["phase"]) {
 		case 1:
 			do_header(_('enviar historia') . " 2/3", _('enviar historia'));
-			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit1()) {
 				// Just to display error messages
 				$link = new Link;
 				$link->randkey = rand(10000,10000000);
 				$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+				echo '<div id="singlewrap">';
 				Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+				echo '</div>';
 			}
 			break;
 		case 2:
 			do_header(_('enviar historia') . " 3/3", _('enviar historia'));
-			echo '<div id="singlewrap">' . "\n";
 			if (! do_submit2()) {
 				// Just to display error messages
 				$link = new Link;
 				$link->randkey = rand(10000,10000000);
 				$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+				echo '<div id="singlewrap">';
 				Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+				echo '</div>';
 			}
 			break;
 		case 3:
 			do_submit3();
 			break;
 	}
-} elseif (! empty($site_properties['no_link'])) {
+} elseif ($site_properties['no_link'] == 2) {
 	// The sub does not need a link 
 	do_header(_('enviar historia') . " 2/3", _('enviar historia'));
-	echo '<div id="singlewrap">' . "\n";
 	do_submit1();
 } else {
 	check_already_sent();
 	force_authentication();
 	do_header(_('enviar historia') . " 1/3", _('enviar historia'));
-	echo '<div id="singlewrap">' . "\n";
 	do_submit0();
 }
-echo "</div>\n"; // singlewrap
 
 do_footer();
 exit;
@@ -82,11 +81,12 @@ function check_already_sent() {
 }
 
 function do_submit0() {
-	global $current_user, $site_key;
+	global $current_user, $site_key, $site_properties;
 
 	$link = new Link;
 	$link->randkey = rand(10000,10000000);
 	$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+	$link->site_properties = $site_properties;
 	if (!empty($_GET['url'])) {
 		$link->url = clean_input_url($_GET['url']);
 	}
@@ -105,7 +105,12 @@ function do_submit1() {
 	$site_info = SitesMgr::get_info();
 	$new_user = false;
 
-	if (empty($site_properties['no_link'])) {
+	if (empty($_POST['url']) && empty($site_properties['no_link'])) {
+		add_submit_error( _('debe especificar enlace'));
+		return false;
+	}
+
+	if (! empty($_POST['url'])) {
 
 		$url = clean_input_url(urldecode($_POST['url']));
 		$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
@@ -178,6 +183,7 @@ function do_submit1() {
 		syslog(LOG_NOTICE, "Meneame, too many drafts ($current_user->user_login): " . $_REQUEST['url']);
 		return false;
 	}
+
 	// Delete dangling drafts
 	if ($drafts > 0) {
 		$db->query("delete from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 minute) and link_date < date_sub(now(), interval 10 minute) and link_status='discard' and link_votes = 0");
@@ -272,7 +278,7 @@ function do_submit1() {
 
 	$edit = false;
 
-	if (empty($site_properties['no_link']) ) {
+	if (! empty($link->url) ) {
 		if(report_duplicated($url)) return true; // Don't output error messages
 
 
@@ -462,7 +468,7 @@ function do_submit2() {
 	$link->read();
 	
 	
-	if (empty($site_properties['no_link'])) {
+	if (! empty($link->url) || empty($site_properties['no_link'])) {
 		if(report_duplicated($link->url)) return true;
 		$link->read_content_type_buttons($_POST['type']);
 
@@ -480,11 +486,11 @@ function do_submit2() {
 	$link->title = $_POST['title'];  // It also deletes punctuaction signs at the end
 	$link->tags = tags_normalize_string($_POST['tags']);
 	$link->key = $_POST['key'];
+	$link->site_properties = $site_properties;
 	$link->content = $_POST['bodytext']; // Warn, has to call $link->check_field_errors later
 	if (link_errors($link)) {
 		// Show the edit form again
 		$link->is_new = true; // Disable several options in the editing form
-		$link->site_properties = $site_properties;
 		$link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 		Haanga::Load('link/submit1.html', compact('link', 'errors'));
 		return true;
@@ -588,4 +594,4 @@ function add_submit_error() {
 	}
 	return true;
 }
-?>
+

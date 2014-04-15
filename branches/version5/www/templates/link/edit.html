@@ -29,7 +29,7 @@
 
 <fieldset><legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
 
-{% if not link.is_new && not link.site_properties.no_link && (current_user.admin || current_user.user_level == "blogger") %}
+{% if not link.is_new && link.url && (current_user.admin || current_user.user_level == "blogger") %}
 	<label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
 	<p><span class="note">{% trans _('url de la noticia') %}</span>
 	<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>

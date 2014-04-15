@@ -48,8 +48,11 @@
 {% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
 &nbsp;&nbsp;
 {% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
-&nbsp;&nbsp;
-{% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link" value="1" {% if extended.no_link %}checked{% endif %}/>
+<br/>
+{% trans _('enlace') %}: 
+{% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
+{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
+{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
 
 {# TODO: enable later
 {% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link" value="1" {% if extended.no_link %}checked{% endif %}/>
