@@ -88,7 +88,7 @@ function print_period_tabs() {
 		} else {
 			$active = "";
 		}
-		echo '<li'.$active.'><a href="cloud.php?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
+		echo '<li'.$active.'><a href="cloud?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
 }
