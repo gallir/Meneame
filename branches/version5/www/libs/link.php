@@ -1813,7 +1813,7 @@ class Link extends LCPBase {
 		// Filter content and title
 		
 		// It also deletes punctuaction marks at the end
-		$this->title = clean_text(preg_replace('/(\w) *[;.,] *$/', "$1", $this->title), 50, true, 120);
+		$this->title = clean_text(preg_replace('/(\w) *[.,] *$/', "$1", $this->title), 50, true, 120);
 
 		if ($properties['allow_paragraphs']) $replace_nl = false;
 		else $replace_nl = true;
