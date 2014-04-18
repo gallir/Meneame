@@ -337,15 +337,23 @@ function print_subs_form($selected = false) {
 		return $s->id;
 	}
 
-	if ($selected == false) {
-		$selected = SitesMgr::my_id();
-	}
 
 	if (! empty($globals['submnm'])) {
 		$subs = false;
 	} else {
 		$subs = SitesMgr::get_sub_subs();
 		$ids = array_map('id', $subs);
+
+		// A link in a sub is edited from another sub, or from the main site
+		// Add its selected sub.
+		if ($selected != false && ! in_array($selected, $ids)) {
+			$e = SitesMgr::get_info($selected);
+			if ($e) {
+				array_unshift($subs, $e); // Add to the form
+				array_unshift($ids, $selected); // Avoid to show it again if subscribed to
+			}
+		}
+
 		$extras = SitesMgr::get_subscriptions($current_user->user_id);
 		// Don't repeat the same subs
 		$subscriptions = array();
@@ -356,6 +364,9 @@ function print_subs_form($selected = false) {
 		}
 	}
 
+	if ($selected == false) {
+		$selected = SitesMgr::my_id();
+	}
 	$vars = compact('selected', 'subs', 'subscriptions');
 	return Haanga::Load('form_subs.html', $vars);
 }
