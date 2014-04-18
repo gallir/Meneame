@@ -11,7 +11,7 @@
 
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
-	header('Location: http://'.get_server_name().$globals['base_url'].$globals['lounge']);
+	header('Location: http://'.get_server_name().$globals['base_url_general'].$globals['lounge']);
 	die;
 }
 
@@ -139,7 +139,7 @@ function force_authentication() {
 	global $current_user, $globals;
 
 	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
+		header('Location: '.$globals['base_url_general'].'login?return='.$globals['uri']);
 		die;
 	}
 	return true;
