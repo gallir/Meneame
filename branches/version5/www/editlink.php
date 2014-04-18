@@ -149,7 +149,7 @@ function link_edit_errors($link) {
 	$errors = array();
 
 	// only checks if the user is not special or god
-	if(! $link->check_url($link->url, false) && ! $current_user->admin) {
+	if(! empty($link->url) && ! $link->check_url($link->url, false) && ! $current_user->admin) {
 		$errors[] = _('url incorrecto');
 	}
 	
