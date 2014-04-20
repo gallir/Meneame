@@ -25,7 +25,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Cómo promover las historias?</h4>
 <p>Selecciona la opción <a href="queue"><em>menear historias</em></a> y te aparecerán las noticias no publicadas, ordenadas descendentemente por fecha de envío. Sólo tienes que "menear" aquellas que más te agradan o consideres importantes. Una vez superado unos umbrales de votos y <em>karma</em> serán promovidas a la página principal.</p>
-<p>No te olvides de leer las <a href="http://www.meneame.net/legal.php">condiciones de uso</a>.</p>
+<p>No te olvides de leer las <a href="http://www.meneame.net/legal">condiciones de uso</a>.</p>
 </li>
 
 
@@ -44,7 +44,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Cómo enviar historias?</h4>
-<p>Debes <a href="register.php">registrarte</a> antes, es muy fácil y rápido. Luego seleccionas <a href="submit.php"><em>enviar historia</em></a>. En un proceso de tres pasos simples la historia será enviada a la cola de pendientes. Por supuesto, te recomendamos que votes por tu historia, por algo la has puesto :-).
+<p>Debes <a href="register">registrarte</a> antes, es muy fácil y rápido. Luego seleccionas <a href="submit"><em>enviar historia</em></a>. En un proceso de tres pasos simples la historia será enviada a la cola de pendientes. Por supuesto, te recomendamos que votes por tu historia, por algo la has puesto :-).
 </p>
 </li>
 
@@ -105,7 +105,7 @@ También encontrarás más información, dudas, recomendaciones en el <a href="h
 <p>Comenzó como un proyecto personal y <em>amateur</em> de <a href="http://gallir.wordpress.com/">Ricardo Galli</a>, con la colaboración de <a href="http://blog.bitassa.cat">Benjamí Villoslada</a>. Ambos son socios fundadores de <strong>Menéame Comunicacions S.L</strong> (con sede en Sineu, Mallorca), la responsable legal y fiscal actual de los sitios web <a href="http://www.meneame.net/">meneame.net</a>, <a href="http://mueveme.net/">mueveme.net</a> y <a href="http://www.notame.net">notame.net</a>.
 </p>
 <p>
-Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.net/legal.php#contact">la página de condiciones legales</a>.
+Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.net/legal#contact">la página de condiciones legales</a>.
 </p>
 </li>
 
@@ -158,7 +158,7 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 <li id="<? echo "q$q";$q++;?>">
 <h4>¿Dónde notificamos errores, problemas o sugerencias?</h4>
-<p>Ver la <a href="http://www.meneame.net/legal.php#contact">sección de contacto</a> en la condiciones legales y de uso.
+<p>Ver la <a href="http://www.meneame.net/legal#contact">sección de contacto</a> en la condiciones legales y de uso.
 </p>
 </li>
 

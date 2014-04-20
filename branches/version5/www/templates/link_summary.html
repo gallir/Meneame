@@ -140,7 +140,7 @@
 
 		{# Show link to analyze the tags #}
 		{% if globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
-		&nbsp;[<a class="fancybox" href="{{ globals.base_url_general }}backend/tags_analysis.php?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
+		&nbsp;[<a class="fancybox" href="{{ globals.base_url_general }}backend/tags_analysis?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
 		{% endif %}
 
 		</span>
