@@ -231,7 +231,8 @@ function shutdown() {
 	}
 
 	if ($globals['access_log'] && !empty($globals['user_ip'])) {
-		if (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
+		if (! empty($globals['script'])) $script = $globals['script'];
+		elseif (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
 		else $script = $_SERVER['SCRIPT_NAME'];
 
 		if (!empty($globals['ip_blocked'])) $user = 'B'; // IP is banned

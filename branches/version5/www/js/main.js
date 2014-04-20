@@ -66,7 +66,7 @@ function redirect(url) {
 }
 
 function menealo(user, id) {
-	var url = base_url + "backend/menealo.php";
+	var url = base_url + "backend/menealo";
 	var content = "id=" + id + "&user=" + user + "&key=" + base_key + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	url = url + "?" + content;
 	disable_vote_link(id, -1, "...", '');
@@ -79,7 +79,7 @@ function menealo(user, id) {
 }
 
 function menealo_comment(user, id, value) {
-	var url = base_url + "backend/menealo_comment.php";
+	var url = base_url + "backend/menealo_comment";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
 	respond_comment_vote(id, value);
@@ -92,7 +92,7 @@ function menealo_comment(user, id, value) {
 }
 
 function menealo_post(user, id, value) {
-	var url = base_url + "backend/menealo_post.php";
+	var url = base_url + "backend/menealo_post";
 	var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id ;
 	url = url + "?" + content;
 	respond_comment_vote(id, value);
@@ -190,7 +190,7 @@ function enablebutton (button, button2, target)
 
 function checkfield (type, form, field)
 {
-	var url = base_url + 'backend/checkfield.php?type='+type+'&name=' + encodeURIComponent(field.value);
+	var url = base_url + 'backend/checkfield?type='+type+'&name=' + encodeURIComponent(field.value);
 	$.get(url,
 		 function(html) {
 			if (html == 'OK') {
@@ -227,7 +227,7 @@ function report_problem_no(frm, user, id) {
 
 function report_problem_yes(frm, user, id) {
 	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key	+ "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
-	var url = base_url + "backend/problem.php?" + content;
+	var url = base_url + "backend/problem?" + content;
 	$.getJSON(url,
 		 function(data) {
 			parseLinkAnswer(id, data);
@@ -291,7 +291,7 @@ function add_remove_sub(id, change) {
 }
 
 function add_remove_fav(element, type, id) {
-	var url = base_url + 'backend/get_favorite.php?id='+id+'&user='+user_id+'&type='+type+'&key='+base_key;
+	var url = base_url + 'backend/get_favorite?id='+id+'&user='+user_id+'&type='+type+'&key='+base_key;
 	$.post(url,
 		 function(data) {
 				if (data.error) {
@@ -305,7 +305,7 @@ function add_remove_fav(element, type, id) {
 				}
 		}
 	, "json");
-	reportAjaxStats('html', "get_favorite.php");
+	reportAjaxStats('html', "get_favorite");
 }
 
 /* Get voters by Beldar <beldar.cat at gmail dot com>
@@ -425,7 +425,7 @@ function fancybox_gallery(type, user, link) {
 		mDialog.notify('{% trans _('Debe estar autentificado para visualizar imágenes') %}', 5);
 		return;
 	}
-	var url = base_url +'backend/gallery.php?type='+type;
+	var url = base_url +'backend/gallery?type='+type;
 	if (typeof(user) != 'undefined') url = url + '&user=' + user;
 	if (typeof(link) != 'undefined') url = url + '&link=' + link;
 
@@ -451,11 +451,11 @@ function fancybox_gallery(type, user, link) {
 	var timer = null;
 	var active = false;
 	var last = null;
-	var ajaxs = {'u': 'get_user_info.php',
-				'p': "get_post_tooltip.php",
-				'c': "get_comment_tooltip.php",
-				'l': "get_link.php",
-				'b': "get_ban_info.php"};
+	var ajaxs = {'u': 'get_user_info',
+				'p': "get_post_tooltip",
+				'c': "get_comment_tooltip",
+				'l': "get_link",
+				'b': "get_ban_info"};
 
 
 	$.extend({
@@ -759,7 +759,7 @@ function comment_reply(id) {
 }
 
 function post_load_form(id, container) {
-	var url = base_url + 'backend/post_edit.php?id='+id+"&key="+base_key;
+	var url = base_url + 'backend/post_edit?id='+id+"&key="+base_key;
 	$.get(url, function (html) {
 			if (html.length > 0) {
 				if (html.match(/^ERROR:/i)) {
@@ -789,7 +789,7 @@ function comment_edit(id, DOMid) {
 function post_reply(id, user) {
 	var ref = '@' + user + ',' + id + ' ';
 	var others = '';
-	var regex = /get_post_url.php\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig;
+	var regex = /get_post_url(?:\.php){0,1}\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig; /* TODO: delete later (?:\.php)*/
 	var text = $('#pid-'+id).html();
 	var startSelection, endSelection, textarea;
 
@@ -904,7 +904,7 @@ function priv_show(content) {
 
 function priv_new(user_id) {
 	var w, h;
-	var url = base_url + 'backend/priv_edit.php?user_id='+user_id+"&key="+base_key;
+	var url = base_url + 'backend/priv_edit?user_id='+user_id+"&key="+base_key;
 	if (is_mobile) {
 		w = h = '100%';
 	} else {
@@ -937,7 +937,7 @@ function priv_new(user_id) {
 function get_total_answers_by_ids(type, ids) {
 	$.ajax({
 		type: 'POST',
-		url: base_url + 'backend/get_total_answers.php',
+		url: base_url + 'backend/get_total_answers',
 		dataType: 'json',
 		data: { "ids": ids, "type": type },
 		success: function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) }
@@ -946,7 +946,7 @@ function get_total_answers_by_ids(type, ids) {
 }
 
 function get_total_answers(type, order, id, offset, size) {
-	$.getJSON(base_url + 'backend/get_total_answers.php', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
+	$.getJSON(base_url + 'backend/get_total_answers', { "id": id, "type": type, "offset": offset, "size": size, "order": order },
 		function (data) { $.each(data, function (ids, answers) { show_total_answers(type, ids, answers) } ) });
 	reportAjaxStats('json', 'total_answers');
 }
@@ -962,10 +962,10 @@ function show_answers(type, id) {
 	var program, dom_id, answers;
 
 	if (type == 'comment') {
-		program = 'get_comment_answers.php';
+		program = 'get_comment_answers';
 		dom_id = '#cid-'+ id;
 	} else {
-		program = 'get_post_answers.php';
+		program = 'get_post_answers';
 		dom_id = '#pid-'+ id;
 	}
 	answers = $('#answers-'+id);
@@ -1171,7 +1171,7 @@ function share_tw(e) {
 
 		/* Settings */
 		s = {
-			'post': base_url + 'backend/tmp_upload.php',
+			'post': base_url + 'backend/tmp_upload',
 			'init': m.init,
 			'start': m.start,
 			'complete': m.complete,
@@ -1485,7 +1485,7 @@ var fancyBox = new function () {
 		check_counter++;
 		last_connect = connect_time;
 
-		$.getJSON(base_url+"backend/notifications.json.php?check="+check_counter+"&has_focus="+has_focus,
+		$.getJSON(base_url+"backend/notifications.json?check="+check_counter+"&has_focus="+has_focus,
 			function (data) {
 				var now;
 				now = new Date().getTime();

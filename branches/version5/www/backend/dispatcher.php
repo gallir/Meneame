@@ -7,9 +7,16 @@ if (! preg_match('/\.php$/', $script)) {
 	$script .= '.php';
 }
 
-if (!file_exists($script) || (include $script) === FALSE) {
+if (!file_exists($script)) {
     include_once '../config.php';
-    not_found("script no found", 404);
+    do_error("script no found", 404);
+}
+
+$globals['script'] = '/backend/'.$globals['path'][1];
+
+if ((include $script) === FALSE) {
+    include_once '../config.php';
+    do_error("bad request", 400);
 }
 
 
