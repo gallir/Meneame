@@ -774,9 +774,7 @@ function do_last_blogs() {
 
 	if ($globals['mobile'] || $globals['submnm']) return;
 
-	$foo = new Comment();
 	$output = '';
-
 	$key = 'last_blogs_'.$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
@@ -808,9 +806,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 
 	if ($globals['mobile'] || $globals['submnm']) return;
 
-	$foo = new Comment();
 	$output = ' ';
-
 	$key = "last_subs_$status-$count-$order_".$globals['v'];
 	//if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
