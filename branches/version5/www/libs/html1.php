@@ -803,6 +803,45 @@ function do_last_blogs() {
 	}
 }
 
+function do_last_subs($status = 'published', $count = 10, $order = 'date') {
+	global $db, $globals, $dblang;
+
+	if ($globals['mobile'] || $globals['submnm']) return;
+
+	$foo = new Comment();
+	$output = ' ';
+
+	$key = "last_subs_$status-$count-$order_".$globals['v'];
+	//if(memcache_mprint($key)) return;
+	echo '<!-- Calculating '.__FUNCTION__.' -->';
+
+
+	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link order by $order desc limit $count");
+	if ($ids) {
+		$links = array();
+		$title = _('en subs de usuarios');
+		foreach($ids as $id) {
+			$link = Link::from_db($id);
+			$link->print_subname = true;
+			$link->url = $link->get_permalink();
+			$link->thumb = $link->has_thumb();
+			$link->total_votes = $link->votes+$link->anonymous;
+			if ($link->thumb) {
+				$link->thumb_x = round($link->thumb_x / 2);
+				$link->thumb_y = round($link->thumb_y / 2);
+			}
+			$links[] = $link;
+		}
+		$subclass = 'brown';
+		$url = $globals['base_url_general'].'subs';
+		$vars = compact('links', 'title', 'subclass', 'url');
+		$output = Haanga::Load('best_stories.html', $vars, true);
+		echo $output;
+	}
+	memcache_madd($key, $output, 300);
+}
+
+
 function do_subheader($content, $selected = false) {
 // arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader">'."\n";

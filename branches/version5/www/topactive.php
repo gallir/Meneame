@@ -17,6 +17,7 @@ do_tabs('main', 'active');
 echo '<div id="sidebar">';
 do_banner_right();
 do_best_stories();
+do_last_subs('published', 5, 'link_votes');
 do_banner_promotions();
 do_best_comments();
 echo '</div>' . "\n";

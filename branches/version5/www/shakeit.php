@@ -100,6 +100,7 @@ print_shakeit_tabs($tab);
 echo '<div id="sidebar">';
 do_banner_right();
 if ($globals['show_popular_queued']) do_best_queued();
+do_last_subs('queued', 15, 'link_karma');
 //do_last_blogs();
 //do_best_comments();
 //do_categories_cloud('queued', 24);

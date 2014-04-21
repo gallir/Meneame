@@ -82,6 +82,7 @@ if ($page < 2) {
 	do_best_comments();
 }
 // do_categories_cloud('published');
+do_last_subs('published');
 do_vertical_tags('published');
 do_last_blogs();
 echo '</div>';
