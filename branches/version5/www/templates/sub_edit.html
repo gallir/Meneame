@@ -75,7 +75,13 @@
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
 
 	<label for="name">user_id:</label>
-	<input type="number" id="owner" name="owner" value="{{ sub.owner }}" maxlength="10" pattern="[0-9]+"/>
+	<input type="number" id="owner" name="owner" maxlength="10" pattern="[0-9]+"
+	{% if sub.name %}
+		value="{{ sub.owner }}"
+	{% else %}
+		value="{{ current_user.user_id }}"
+	{% endif %}
+	/>
 	<br/>
 	{% if sub.id > 0 %}
 		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>{% trans _("habilitado") %}
