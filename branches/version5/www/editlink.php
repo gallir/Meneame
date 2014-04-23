@@ -71,6 +71,9 @@ function do_save($link) {
 	$link->read_content_type_buttons($_POST['type']);
 
 	$link->sub_id=intval($_POST['sub_id']);
+	if ($link->sub_id != $link_old->sub_id) {
+		$link->sub_changed = true; // To force to delete old statuses with another origin
+	}
 
 	if ($current_user->admin || $current_user->user_level == 'blogger' || SitesMgr::is_owner()) {
 		if (!empty($_POST['url'])) {

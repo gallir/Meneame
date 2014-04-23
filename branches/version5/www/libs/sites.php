@@ -100,27 +100,23 @@ class SitesMgr {
 
 
 		$me = self::get_status(self::$id, $link);
-		if ($me->status == $link->status && $me->origen == $link->origen && $me->category == $link->category) {
+		if ($me->status == $link->status && $me->origen == $link->sub_id && empty($link->sub_changed)) {
 			return;
 		}
 
 		$do_changed_id = $do_current = $do_all = $do_delete = false;
 
 		$current = self::$id;
-		$origen = $me->origen; //Already translated from category
+		$origen = $me->origen;
 
-
-		if ($me->category != $link->category || $me->origen != $link->sub_id) {
-			if ($me->status != 'new') {
-				$do_changed_id = true;  // Force to save all statuses
-			} else {
+		if ($me->origen != $link->sub_id || ! empty($link->sub_changed)) {
+			$do_changed_id = true;  // Force to save all statuses
+			if ($me->status == 'new') {
 				$me->status = $link->status;
 			}
 			$do_all = true;
-			$me->category = $link->category > 0 ? $link->category : $me->category;
-			$me->category = $me->category < 0 ? 0 : $me->category;
-			$link->origen = $me->origen = $origen = self::get_real_origen($current, $link);
-		} else { // If category or origen have changed, don't do the rest
+			$me->origen = $origen = self::get_real_origen($current, $link);
+		} else { // If origen has changed, don't do the rest
 			$me->date = $link->date;
 			if ($me->status != $link->status) {
 				switch ($link->status) {
@@ -163,7 +159,6 @@ class SitesMgr {
 			$receivers = array_unique($receivers);
 		}
 
-
 		$db->transaction();
 		if ($receivers) {
 			foreach ($receivers as $r) {
@@ -173,19 +168,18 @@ class SitesMgr {
 					$new->karma = 0;
 				}
 				$new->date = $me->date;
-				$new->category = $me->category;
 				$new->origen = $me->origen;
-				if (! $do_changed_id) {  // Category or origen have changed, don't modify the status
+				if (! $do_changed_id) {  // Origen has changed, don't modify the status
 					$new->status = $me->status;
 				}
 				if ($do_current) {
 					$new->karma = $link->karma;
 				}
-				$db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->category, $new->link, $new->origen, $new->karma)");
+				$db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
 			}
 		}
 
-		// We delete those old statuses belong to the old category that were not changed before
+		// We delete those old statuses belong to the old sub that were not changed before
 		if ($do_changed_id) {
 			$avoid = implode(',', $receivers);
 			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
@@ -198,14 +192,6 @@ class SitesMgr {
 	static function get_real_origen($id, $link) {
 		global $db; 
 
-		if (! $link->is_sub && $link->category > 0) {
-			$transition = array('100' => 37, '101' => 39, '102' => 40, '103' => 38);
-			$meta = $db->get_var("select category_parent from categories where category_id = $link->category");
-			
-			if ($meta && $transition[$meta] > 0) {
-				return $transition[$meta];
-			}
-		}
 		if ($link->sub_id > 0) return $link->sub_id;
 		return $id;
 	}
@@ -236,7 +222,7 @@ class SitesMgr {
 	static private function get_status($id, $link) {
 		global $db;
 
-		$status = $db->get_row("select id, status, unix_timestamp(date) as date, category, link, origen, karma, 1 as found from sub_statuses where id = $id and link = $link->id");
+		$status = $db->get_row("select id, status, unix_timestamp(date) as date, link, origen, karma, 1 as found from sub_statuses where id = $id and link = $link->id");
 
 		if (! $status) {
 			// Create and object that can be later stored
@@ -246,7 +232,6 @@ class SitesMgr {
 			$status->link = $link->id;
 			$status->date = $link->date;
 			$status->status = 'new';
-			$status->category = -1;
 			$status->origen = $origen;
 			$status->karma = 0;
 			$status->found = 0;
