@@ -286,14 +286,16 @@ class Link extends LCPBase {
 		echo "encoding: " . $this->encoding . "<br>\n";
 	}
 
-	function check_url($url, $check_local = true, $first_level = false) {
+	function check_url($url, $check_ban = true, $first_level = false) {
 		global $globals, $current_user;
 		if(!preg_match('/^http[s]*:/', $url)) return false;
 		$url_components = @parse_url($url);
 		if (!$url_components) return false;
 		if (!preg_match('/[a-z]+/', $url_components['host'])) return false;
+
+		if (! $check_ban) return true;
 		$quoted_domain = preg_quote(get_server_name());
-		if($check_local && preg_match("/^$quoted_domain$/", $url_components['host'])) {
+		if(preg_match("/^$quoted_domain$/", $url_components['host'])) {
 			$this->ban = array();
 			$this->ban['comment'] = _('el servidor es local');
 			syslog(LOG_NOTICE, "Meneame, server name is local name ($current_user->user_login): $url");
@@ -308,7 +310,7 @@ class Link extends LCPBase {
 		return true;
 	}
 
-	function get($url, $maxlen = 150000, $check_local = true) {
+	function get($url, $maxlen = 150000, $check_ban = true) {
 		global $globals, $current_user;
 		$url=trim($url);
 		$url_components = @parse_url($url);
@@ -331,7 +333,7 @@ class Link extends LCPBase {
 			if (!empty($new_url) && $new_url != $url) {
 				syslog(LOG_NOTICE, "Meneame, redirected ($current_user->user_login): $url -> $new_url");
 				/* Check again the url */
-				if (!$this->check_url($new_url, $check_local, true)) {
+				if (!$this->check_url($new_url, $check_ban, true)) {
 					$this->url = $new_url;
 					return false;
 				}
@@ -594,14 +596,11 @@ class Link extends LCPBase {
 			$r = $db->query("UPDATE links set link_author=$link_author, link_blog=$link_blog, link_status='$link_status', link_randkey=$link_randkey, link_category=$link_category, link_date=FROM_UNIXTIME($link_date), link_sent_date=FROM_UNIXTIME($link_sent_date), link_published_date=FROM_UNIXTIME($link_published_date), link_karma=$link_karma, link_votes_avg=$link_votes_avg, link_content_type='$link_content_type' WHERE link_id=$this->id");
 		}
 
-		if (! $r) {
-			syslog(LOG_INFO, "failed insert of update in store_basic: $this->id ($r)");
+		if (! $r || ! SitesMgr::deploy($this)) { // Deploy changes to other sub sites
+			syslog(LOG_INFO, "failed insert of update in store_basic: $this->id");
 			$db->rollback();
 			return false;
 		}
-
-		// Deploy changes to other sub sites
-		SitesMgr::deploy($this);
 
 		if (! $really_basic) {
 			if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {

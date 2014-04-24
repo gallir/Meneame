@@ -111,6 +111,11 @@ function do_submit1() {
 	}
 
 	if (! empty($_POST['url'])) {
+		if (! empty($site_properties['no_anti_spam'])) {
+			$anti_spam = false;
+		} else {
+			$anti_spam = true;
+		}
 
 		$url = clean_input_url(urldecode($_POST['url']));
 		$url = preg_replace('/#[^\/]*$/', '', $url); // Remove the "#", people just abuse
@@ -132,46 +137,8 @@ function do_submit1() {
 			add_submit_error( _('clave incorrecta'));
 			return false;
 		}
-	}
-
-	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
-		add_submit_error( _('no tienes el mínimo de karma para enviar una nueva historia'));
-		return false;
-	}
-
-
-	// Don't allow to send a link by a clone
-	$hours = intval($globals['user_links_clon_interval']);
-	$clones = $current_user->get_clones($hours+1);
-	if ($hours > 0 && $clones) {
-		$l = implode(',', $clones);
-		$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
-		if ($c > 0) {
-			add_submit_error( _('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'));
-			syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): " . $_REQUEST['url']);
-			return false;
-		}
-	}
-
-	// Check the number of links sent by a user
-	$queued_24_hours = (int) $db->get_var("select count(*) from links, subs, sub_statuses where status!='published' and date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
-
-	if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
-		add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
-		syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): " . $_REQUEST['url']);
-		return false;
-	}
-
-	// Check tbe number of links sent by the user in the last minutes
-	$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute) and link_author=$current_user->user_id");
-	if ($current_user->user_karma > $globals['limit_3_minutes_karma']) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
-	else $enqueued_limit = $globals['limit_3_minutes'];
-
-	if ($enqueued_last_minutes > $enqueued_limit) {
-		add_submit_error( _('exceso de envíos'),
-			_('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'));
-		syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): " . $_REQUEST['url']);
-		return false;
+	} else {
+		$anti_spam = false;
 	}
 
 	// Check the user does not have too many drafts
@@ -189,17 +156,6 @@ function do_submit1() {
 		$db->query("delete from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 minute) and link_date < date_sub(now(), interval 10 minute) and link_status='discard' and link_votes = 0");
 	}
 
-
-	// Check for banned IPs
-	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
-		if ($ban['expire'] > 0) {
-			$expires = _('caduca').': '.get_date_time($ban['expire']);
-		} else $expires = '';
-		add_submit_error( _('dirección IP no permitida para enviar'), $expires);
-		syslog(LOG_NOTICE, "Meneame, banned IP ".$globals['user_ip']." ($current_user->user_login): $url");
-		return false;
-	}
-
 	// Number of links sent by the user
 	$total_sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id") - $drafts;
 	if ($total_sents > 0) {
@@ -212,6 +168,21 @@ function do_submit1() {
 	$register_date = $current_user->Date();
 	if ($globals['now'] - $register_date < $globals['new_user_time'] ) {
 		$new_user = true;
+	}
+
+	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
+		add_submit_error( _('no tienes el mínimo de karma para enviar una nueva historia'));
+		return false;
+	}
+
+	// Check for banned IPs
+	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
+		if ($ban['expire'] > 0) {
+			$expires = _('caduca').': '.get_date_time($ban['expire']);
+		} else $expires = '';
+		add_submit_error( _('dirección IP no permitida para enviar'), $expires);
+		syslog(LOG_NOTICE, "Meneame, banned IP ".$globals['user_ip']." ($current_user->user_login): $url");
+		return false;
 	}
 
 	// check that a new user also votes, not only sends links
@@ -242,30 +213,67 @@ function do_submit1() {
 		}
 	}
 
-	// avoid spams, an extra security check
-	// it counts the numbers of links in the last hours
-	if ($new_user) {
-		$user_links_limit = $globals['new_user_links_limit'];
-		$user_links_interval = intval($globals['new_user_links_interval'] / 3600);
-	} else {
-		$user_links_limit = $globals['user_links_limit'];
-		$user_links_interval = intval($globals['user_links_interval'] / 3600);
-	}
-	$same_user = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author=$current_user->user_id") - $drafts;
-	$same_ip = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_ip = '".$globals['user_ip']."'") - $drafts;
-	if ($same_user >  $user_links_limit  || $same_ip >  $user_links_limit  ) {
-		add_submit_error( _('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'));
-		return false;
-	}
 
-	// avoid users sending continuous "rubbish" or "propaganda", specially new users
-	// it takes in account the number of positive votes in the last six hours
-	if ($same_user > 1 && $current_user->user_karma < $globals['karma_propaganda']) {
-		$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
-		$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
-		if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
-			add_submit_error( _('debes esperar, has tenido demasiados votos negativos en tus últimos envíos'));
+	if ($anti_spam) {
+		// Don't allow to send a link by a clone
+		$hours = intval($globals['user_links_clon_interval']);
+		$clones = $current_user->get_clones($hours+1);
+		if ($hours > 0 && $clones) {
+			$l = implode(',', $clones);
+			$c = (int) $db->get_var("select count(*) from links where link_status!='published' and link_date > date_sub(now(), interval $hours hour) and link_author in ($l)");
+			if ($c > 0) {
+				add_submit_error( _('ya se envió con otro usuario «clon» en las últimas horas'). ", "._('disculpa las molestias'));
+				syslog(LOG_NOTICE, "Meneame, clon submit ($current_user->user_login): " . $_REQUEST['url']);
+				return false;
+			}
+		}
+
+		// Check the number of links sent by a user
+		$queued_24_hours = (int) $db->get_var("select count(*) from links, subs, sub_statuses where status!='published' and date > date_sub(now(), interval 24 hour) and link_author=$current_user->user_id and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
+
+		if ($globals['limit_user_24_hours'] && $queued_24_hours > $globals['limit_user_24_hours']) {
+			add_submit_error( _('debes esperar, tienes demasiados envíos en cola de las últimas 24 horas'). " ($queued_24_hours), "._('disculpa las molestias') );
+			syslog(LOG_NOTICE, "Meneame, too many queued in 24 hours ($current_user->user_login): " . $_REQUEST['url']);
 			return false;
+		}
+
+		// Check the number of links sent by the user in the last minutes
+		$enqueued_last_minutes = (int) $db->get_var("select count(*) from links where link_status='queued' and link_date > date_sub(now(), interval 3 minute) and link_author=$current_user->user_id");
+		if ($current_user->user_karma > $globals['limit_3_minutes_karma']) $enqueued_limit = $globals['limit_3_minutes'] * 1.5;
+		else $enqueued_limit = $globals['limit_3_minutes'];
+
+		if ($enqueued_last_minutes > $enqueued_limit) {
+			add_submit_error( _('exceso de envíos'),
+				_('se han enviado demasiadas historias en los últimos 3 minutos'). " ($enqueued_last_minutes > $enqueued_limit), "._('disculpa las molestias'));
+			syslog(LOG_NOTICE, "Meneame, too many queued ($current_user->user_login): " . $_REQUEST['url']);
+			return false;
+		}
+
+		// avoid spams, an extra security check
+		// it counts the numbers of links in the last hours
+		if ($new_user) {
+			$user_links_limit = $globals['new_user_links_limit'];
+			$user_links_interval = intval($globals['new_user_links_interval'] / 3600);
+		} else {
+			$user_links_limit = $globals['user_links_limit'];
+			$user_links_interval = intval($globals['user_links_interval'] / 3600);
+		}
+		$same_user = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author=$current_user->user_id") - $drafts;
+		$same_ip = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_ip = '".$globals['user_ip']."'") - $drafts;
+		if ($same_user >  $user_links_limit  || $same_ip >  $user_links_limit  ) {
+			add_submit_error( _('debes esperar, ya se enviaron varias con el mismo usuario o dirección IP'));
+			return false;
+		}
+
+		// avoid users sending continuous "rubbish" or "propaganda", specially new users
+		// it takes in account the number of positive votes in the last six hours
+		if ($same_user > 1 && $current_user->user_karma < $globals['karma_propaganda']) {
+			$positives_received = $db->get_var("select sum(link_votes) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
+			$negatives_received = $db->get_var("select sum(link_negatives) from links where link_date > date_sub(now(), interval $user_links_interval hour) and link_author = $current_user->user_id");
+			if ($negatives_received > 10 && $negatives_received > $positives_received * 1.5) {
+				add_submit_error( _('debes esperar, has tenido demasiados votos negativos en tus últimos envíos'));
+				return false;
+			}
 		}
 	}
 
@@ -281,8 +289,7 @@ function do_submit1() {
 	if (! empty($link->url) ) {
 		if(report_duplicated($url)) return true; // Don't output error messages
 
-
-		if(!$link->check_url($url, true, true) || !$link->get($url)) {
+		if(!$link->check_url($url, $anti_spam, true) || !$link->get($url, null,  $anti_spam)) {
 			$e = _('URL erróneo o no permitido') . ': ';
 			if ($link->ban && $link->ban['match']) {
 				$e .= $link->ban['match'];
@@ -317,14 +324,16 @@ function do_submit1() {
 		}
 		$link->trackback=htmlspecialchars($link->trackback);
 
-
 		$link->create_blog_entry();
 		$blog = new Blog;
 		$blog->id = $link->blog;
 		$blog->read();
 
 		$blog_url_components = @parse_url($blog->url);
-		$blog_url = $blog_url_components['host'].$blog_url_components['path'];
+		$blog_url = $blog_url_components['host'].$blog_url_components['path'];		
+	}
+
+	if ($anti_spam) {
 		// Now we check again against the blog table
 		// it's done because there could be banned blogs like http://lacotelera.com/something
 		if(($ban = check_ban($blog->url, 'hostname', false, true))) {
@@ -336,7 +345,6 @@ function do_submit1() {
 			syslog(LOG_NOTICE, "Meneame, banned site ($current_user->user_login): $blog->url <- " . $_REQUEST['url']);
 			return false;
 		}
-
 
 		// check for users spamming several sites and networks
 		// it does not allow a low "entropy"
@@ -400,8 +408,6 @@ function do_submit1() {
 			}
 		}
 
-
-
 		if (! $site_info->owner) { // Only for the main subs
 			$links_12hs = $db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0");
 
@@ -414,26 +420,25 @@ function do_submit1() {
 					_('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
 				return false;
 			}
-		}
 
 
-		// check there is no an "overflow" of images
-		if ($site_info->owner == 0 && ($link->content_type == 'image' || $link->content_type == 'video')) {
-			$image_links = intval($db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video') and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0"));
-			if ($image_links > 5 && $image_links > $links_12hs * 0.15) { // Only 15% images and videos
-				syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
-				add_submit_error( _('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
-					_('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
-				return false;
+			// check there is no an "overflow" of images
+			if ($link->content_type == 'image' || $link->content_type == 'video') {
+				$image_links = intval($db->get_var("select count(*) from links, subs, sub_statuses where link_date > date_sub(now(), interval 12 hour) and link_content_type in ('image', 'video') and sub_statuses.link=link_id and subs.id = sub_statuses.id and sub_statuses.origen = sub_statuses.id and subs.parent=0 and subs.owner = 0"));
+				if ($image_links > 5 && $image_links > $links_12hs * 0.15) { // Only 15% images and videos
+					syslog(LOG_NOTICE, "Meneame, forbidden due to overflow images ($current_user->user_login): $link->url");
+					add_submit_error( _('ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
+						_('total en 12 horas').": $image_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
+					return false;
+				}
+			}
+
+			if(($ban = check_ban($link->url, 'punished_hostname', false, true))) {
+				add_submit_error( _('Aviso').' '.$ban['match']. ': <em>'.$ban['comment'].'</em>',
+					_('mejor enviar el enlace a la fuente original'));
 			}
 		}
-
-		if(($ban = check_ban($link->url, 'punished_hostname', false, true))) {
-			add_submit_error( _('Aviso').' '.$ban['match']. ': <em>'.$ban['comment'].'</em>',
-				_('mejor enviar el enlace a la fuente original, si no, será penalizado'));
-		}
-	}
-
+	} // END anti_spam
 
 	// Now stores new draft
 	$link->sent_date = $link->date=time();

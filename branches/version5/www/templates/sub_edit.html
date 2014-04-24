@@ -32,6 +32,8 @@
 
 <label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
 <input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="\S{3,12}" />
+&nbsp;&nbsp;
+[<a href="http://meneame.wikispaces.com/Subs">{% trans _('ayuda') %}</a>]
 <br/>
 
 <label for="name">{% trans _('título') %}:</label><br/>
@@ -48,6 +50,8 @@
 {% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
 &nbsp;&nbsp;
 {% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
+&nbsp;&nbsp;
+{% trans _('deshabilitar control anti spam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
 <br/>
 {% trans _('enlace') %}: 
 {% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;

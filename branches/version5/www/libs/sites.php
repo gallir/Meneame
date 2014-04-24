@@ -101,7 +101,7 @@ class SitesMgr {
 
 		$me = self::get_status(self::$id, $link);
 		if ($me->status == $link->status && $me->origen == $link->sub_id && empty($link->sub_changed)) {
-			return;
+			return true;
 		}
 
 		$do_changed_id = $do_current = $do_all = $do_delete = false;
@@ -159,6 +159,7 @@ class SitesMgr {
 			$receivers = array_unique($receivers);
 		}
 
+		$r = true; // Result of operations, for commit/rollback
 		$db->transaction();
 		if ($receivers) {
 			foreach ($receivers as $r) {
@@ -175,16 +176,24 @@ class SitesMgr {
 				if ($do_current) {
 					$new->karma = $link->karma;
 				}
-				$db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
+				$r = $db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
 			}
 		}
 
 		// We delete those old statuses belong to the old sub that were not changed before
-		if ($do_changed_id) {
+		if ($r && $do_changed_id) {
 			$avoid = implode(',', $receivers);
-			$db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
+			$r = $db->query("delete from sub_statuses where link = $link->id and id not in ($avoid)");
 		}
+
+		if (! $r) {
+			$db->rollback();
+			syslog(LOG_INFO, "Failed transaction in deploy: ".$link->get_permalink());
+			return false;
+		}
+
 		$db->commit();
+		return true;
 
 	}
 
@@ -316,7 +325,7 @@ class SitesMgr {
 		$defaults = self::$extended_properties;
 		foreach ($prefs as $k => $v) {
 			if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v ) {
-				$dict[$k] = $v;
+				$dict[$k] = clean_input_string($v);
 			}
 		}
 
