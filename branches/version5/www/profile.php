@@ -74,7 +74,7 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 if (isset($_POST['process'])) {
 	if (!check_form_auth_ip()) {
-		header("Location: http://".get_server_name().$globals['base_url']."profile.php");
+		header("Location: http://".get_server_name().$globals['base_url']."profile");
 		die;
 	}
 	$globals['secure_page'] = True;

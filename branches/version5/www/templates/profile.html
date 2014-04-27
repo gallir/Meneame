@@ -19,7 +19,7 @@
 {% endif %}
 
 
-<form  enctype="multipart/form-data" action="{{ form.auth_link }}profile.php" method="post" id="thisform" name="thisform" AUTOCOMPLETE="off">
+<form  enctype="multipart/form-data" action="{{ form.auth_link }}profile?login={{ user.username }}" method="post" id="thisform" name="thisform" autocomplete="off">
 <fieldset><legend>
 <span class="sign">{% trans _('opciones de usuario') %} <a href="{%exec  get_user_uri user.username %}">{{ user.username }}</a>: {{ user.level }}</span></legend>
 
@@ -34,8 +34,8 @@
 {% endif %}
 
 <p><label>{% trans _('usuario') %}:</label><br/>
-<input type="text" autocomplete="off" name="username" id="username" value="{{ user.username }}" onkeyup="enablebutton(this.form.checkbutton1, null, this)" />
-&nbsp;&nbsp;<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="{% trans _('verificar') %}" onclick="checkfield('username', this.form, this.form.username)"/></span>
+<input type="text" autocomplete="off" name="username" id="username" value="{{ user.username }}" onkeyup="enablebutton(this.form.checkbutton1, null, this)" autocomplete="off"/>
+&nbsp;&nbsp;<span id="checkit"><input type="button" class="button" id="checkbutton1" disabled="disabled" value="{% trans _('verificar') %}" onclick="checkfield('username', this.form, this.form.username)" autocomplete="off"/></span>
 &nbsp;<span id="usernamecheckitvalue"></span>
 </p>
 

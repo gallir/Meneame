@@ -33,6 +33,7 @@ $routes = array(
 	'top_comments'	=> 'topcomments.php',
 	'top_users'		=> 'topusers.php',
 	'top_commented'	=> 'topcommented.php',
+	'profile'	=> 'profile.php',
 	'sitemap'	=> 'sitemap.php',
 	'trends'	=> 'trends.php',
 	'faq-es'	=> 'faq-es.php',
