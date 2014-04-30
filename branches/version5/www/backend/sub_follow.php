@@ -27,6 +27,7 @@ $db->transaction();
 $exists = User::get_pref($user, 'sub_follow', $id);
 if (empty($_POST['change'])) {
 	$dict['value'] = $exists;
+	$globals['access_log'] = false; // Don't log it, to avoid IP blocks
 } else {
 	if ($exists) {
 		User::delete_pref($user, 'sub_follow', $id);
