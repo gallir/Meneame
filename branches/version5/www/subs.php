@@ -19,6 +19,8 @@ if (isset($_GET['all'])) {
 	$option = 0; // Show suscribed
 }
 
+$char_selected = $chars = false; // User for index by first letter
+
 
 do_header(_("subs menéame"), 'm/');
 
@@ -47,19 +49,30 @@ switch ($option) {
 		break;
 	default:
 		$all = true;
+		$chars = $db->get_col("select distinct(left(ucase(name), 1)) from subs");
+
+		// Check if we must show just those beginning with a letter
+		if (!empty($_GET['c']) && 
+			($char_selected = substr(clean_input_string($_GET['c']), 0, 1)) ) {
+			$extra = "subs.name like '$char_selected%' and";
+			$rows = $db->get_var("select count(*) from subs where $extra subs.sub = 1 and created_from = ".SitesMgr::my_id());
+		} else { 
+			$extra = '';
+			$rows = -1;
+		}
+
 		$template = 'subs.html';
 		$page_size = 50;
 		$page = get_current_page();
 		$offset=($page-1)*$page_size;
 
-		$sql = "select subs.*, user_id, user_login, user_avatar from subs, users where subs.sub = 1 and created_from = ".SitesMgr::my_id()." and user_id = owner order by name asc limit $offset, $page_size";
-		$rows = -1;
+		$sql = "select subs.*, user_id, user_login, user_avatar from subs, users where $extra subs.sub = 1 and created_from = ".SitesMgr::my_id()." and user_id = owner order by name asc limit $offset, $page_size";
 		$subs = $db->get_results($sql);
 }
 
 $subs = $db->get_results($sql);
 
-Haanga::Load($template, compact('title', 'subs'));
+Haanga::Load($template, compact('title', 'subs', 'chars', 'char_selected'));
 echo '</div>';
 
 if ($all) {

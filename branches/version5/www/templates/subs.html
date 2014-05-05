@@ -6,6 +6,20 @@
 	<a href="{{ globals.base_url }}subedit"><b>{% trans _('crear sub') %}</b></a><br/><br/>
 {% endif %}
 
+{% if chars %}
+	<div style="margin: 0 20px 20px 20px;font-variant:small-caps;font-size: 110%">
+	{% for c in chars %}
+		<a href="{{globals.base_url_general}}subs?all&amp;c={{ c }}">
+			{% if c == char_selected %}
+				<span style="text-decoration:underline;font-weight:900">{{ c }}</span>
+			{% else %}
+				{{ c }}
+			{% endif %}
+		</a>&nbsp;
+	{% endfor %}
+	</div>
+{% endif %}
+
 <table class="decorated">
 {% for s in subs %}
 	<tr>
