@@ -54,7 +54,7 @@
 		function loadData() {
 			var data = [];
 			if (!words) return;
-			var url = "http://"+location.hostname+encodeURI(base_url+"backend/trends.php?q="+words+"&w="+what);
+			var url = "http://"+location.hostname+encodeURI(base_url+"backend/trends?q="+words+"&w="+what);
 			$.getJSON(url,
 				function (json) {
 					for (i=0; i<json.length; i++) {
@@ -84,7 +84,7 @@
 					var fields;
 					if (what == "links") fields = "title,total_votes";
 					else fields = "karma";
-					$.getJSON(base_url+"backend/info.php",
+					$.getJSON(base_url+"backend/info",
 						{id: item.series.id[item.dataIndex], fields: fields, what: what },
 						function (json) {
 							var html = '';

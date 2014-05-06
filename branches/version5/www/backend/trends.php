@@ -61,7 +61,7 @@ foreach ($q as $words) {
 	$series[$s]['words'] = $words;
 	$series[$s]['objects'] = array();
 	$series[$s]['sort'] = $sort;
-	$sql .= "select yearmonth(date) as yymm, $sort, date, count(*) as _count from $indices where match('\"$words\"') group by yymm within group order by $sort desc limit 1000;";
+	$sql .= "select id, yearmonth(date) as yymm, $sort, date, count(*) as _count from $indices where match('\"$words\"') group by yymm within group order by $sort desc limit 1000;";
 	$s++;
 }
 
