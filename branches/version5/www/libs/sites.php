@@ -156,6 +156,11 @@ class SitesMgr {
 		} elseif ($do_all) {
 			$receivers[] = $origen;
 			$receivers = array_merge($receivers, self::get_receivers($origen));
+
+			// If the post has been copied/promoted to another site
+			$copies = $db->get_col("select id from sub_statuses where link = $link->id");
+			$receivers = array_merge($receivers, $copies);
+
 			$receivers = array_unique($receivers);
 		}
 

@@ -904,21 +904,21 @@ class Link extends LCPBase {
 	function is_editable() {
 		global $current_user, $db, $globals;
 
-		if($current_user->user_id) {
-			if(($this->author == $current_user->user_id
-					&& ($this->sub_status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
-					&& $globals['now'] - $this->sent_date < 1800)
+		if (! $current_user->user_id) return false;
+
+		if(($this->author == $current_user->user_id
+				&& ($this->sub_status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
+				&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id
-					&& $current_user->special
-					&& $this->sub_status == 'queued'
-					&& $globals['now'] - $this->sent_date < 10400)
+				&& $current_user->special
+				&& $this->sub_status == 'queued'
+				&& $globals['now'] - $this->sent_date < 10400)
 			|| ($this->author != $current_user->user_id
-					&& $current_user->user_level == 'blogger'
-					&& $globals['now'] - $this->date < 3600)
+				&& $current_user->user_level == 'blogger'
+				&& $globals['now'] - $this->date < 3600)
 			|| $current_user->user_id == $this->sub_owner
 			|| $current_user->admin) {
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}

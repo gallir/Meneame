@@ -57,6 +57,7 @@ function do_edit($link) {
 function do_save($link) {
 	global $dblang, $globals, $current_user, $db;
 
+	$link->status = $link->sub_status;
 	$site_properties = SitesMgr::get_extended_properties();
 
 	// Store previous value for the log
@@ -105,7 +106,6 @@ function do_save($link) {
 		}
 		$link->status = $_POST['status'];
 	}
-	
 
 	if (! $errors) {
 		if (empty($link->uri)) $link->get_uri();
