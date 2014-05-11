@@ -30,7 +30,9 @@ foreach ($sites as $site) {
 	echo "START SITE: $site\n";
 	SitesMgr::__init($site);
 	$site_info = SitesMgr::get_info($site_id);
-	depublish($site);
+	if ($site_info->owner == 0) { // Only depublish in main subs
+		depublish($site);
+	}
 	if ($site_info->sub) { // Only discard in the subs
 		discard($site);
 	}
