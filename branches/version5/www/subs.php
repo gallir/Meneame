@@ -70,7 +70,14 @@ switch ($option) {
 		$subs = $db->get_results($sql);
 }
 
-$subs = $db->get_results($sql);
+$all_subs = $db->get_results($sql);
+
+$subs = array();
+foreach ($all_subs as $s) {
+	if ($s->enabled) {
+		$subs[] = $s;
+	}
+}
 
 Haanga::Load($template, compact('title', 'subs', 'chars', 'char_selected'));
 echo '</div>';

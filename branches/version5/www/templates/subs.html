@@ -32,8 +32,8 @@
 
 		<span class="subname big"><a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}"
 			style="
-			{% if s.color1 %}color:{{ s.color1 }};{% endif %}
-			{% if s.color2 %}background-color:{{ s.color2 }};{% endif %}
+			{% if s.color1 %}color:{{ s.color1 }} !important;{% endif %}
+			{% if s.color2 %}background-color:{{ s.color2 }} !important;{% endif %}
 			"> {{ s.name }} </a></span>
 
 
