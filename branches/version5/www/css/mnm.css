@@ -325,13 +325,16 @@ float:left;
 color:#fff;
 }
 
-.subname, .subname a:visited, .subname a {
+.subname, .subname a:visited, .subname a:link {
 font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-color:#fff;
+color:#fff !important;
 background-color:#ccc;
 font-variant:small-caps;
-font-size: 110%;
 padding: 0 1px;
+}
+
+.subname .big {
+font-size: 110%;
 }
 
 .searchform {

@@ -143,7 +143,16 @@
   	<a href="{{ globals.base_url }}" class="logo-eli" title="{{ this_site.name_long }}">{{ this_site.name }}</a>
   {% endif %}
   <div class="edname">
-	<a href="{{ this_site.base_url }}m/{{ this_site.name }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}><b>{{ this_site.name }}</b>: {{ this_site.name_long }}</a>
+	<a href="{{ this_site.base_url }}m/{{ this_site.name }}" class="subname"
+		{% if this_site.owner > 0 %}
+			style="
+				{% if this_site.color1 %}color:{{ this_site.color1 }} !important;{% endif %}
+				{% if this_site.color2 %}background-color:{{ this_site.color2 }} !important;{% endif %}
+			"
+		{% endif %}
+		><b>{{ this_site.name }}</b>: {{ this_site.name_long }}</a>
+
+
 	{% if this_site.nsfw %}[NSFW]{% endif %}
 	{% if current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
 		<sup><a title="edit" href="{{ globals.base_url }}subedit">*</a></sup>

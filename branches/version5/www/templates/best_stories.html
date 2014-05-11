@@ -12,7 +12,7 @@
 	{% endif %}
 	<h5 {% if l.warned %}class="warn"{% endif %}>
 	{% if l.print_subname %}
-		<a class="subname" href="{{ globals.base_url_general }}m/{{ l.sub_name }}{% if l.sub_status_origen != 'published' %}/queue{% endif %}">{{ l.sub_name }}</a>&nbsp;
+		<a class="subname big" href="{{ globals.base_url_general }}m/{{ l.sub_name }}{% if l.sub_status_origen != 'published' %}/queue{% endif %}">{{ l.sub_name }}</a>&nbsp;
 	{% endif %}
 	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a>
 	</h5>

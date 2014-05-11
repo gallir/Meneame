@@ -185,11 +185,15 @@
 
 
 		<span class="tool">
-		{% if self.sub_name  %}
-			<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}">{{ self.sub_name }}</a>
-		{% else %}
-			<a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri}}" title="{% trans _('meta') %}: {{ self.meta_name }}">{{ self.meta_name }}</a><span class="wideonly">, <a href="{{ globals.base_url }}{% if self.status != "published" %}queue{% endif %}?meta={{ self.meta_uri }}&amp;category={{ self.category }}" title="{% trans _('categoría') %}: {{ self.category_name }}">{{self.category_name}}</a></span>
-		{% endif %}
+		<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
+			{% if self.sub_owner > 0 %}
+				class="subname"
+				style="
+					{% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
+					{% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
+				"
+			{% endif %}
+			>{{ self.sub_name }}</a>
 		</span>
 		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
 			{% if self.status == 'published' && self.sub_karma > 0 %}
