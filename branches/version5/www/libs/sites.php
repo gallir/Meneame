@@ -104,7 +104,7 @@ class SitesMgr {
 			return true;
 		}
 
-		$do_changed_id = $do_current = $do_all = $do_delete = false;
+		$do_changed_id = $do_current = $do_all = $do_delete = $status_changed = false;
 
 		$current = self::$id;
 		$origen = $me->origen;
@@ -119,6 +119,7 @@ class SitesMgr {
 		} else { // If origen has changed, don't do the rest
 			$me->date = $link->date;
 			if ($me->status != $link->status) {
+				$status_changed = true;
 				switch ($link->status) {
 					case 'discard':
 					case 'autodiscard':
@@ -157,8 +158,8 @@ class SitesMgr {
 			$receivers[] = $origen;
 			$receivers = array_merge($receivers, self::get_receivers($origen));
 
-			// If the post has been copied/promoted to another site
-			if ($link->votes + $link->negatives > 1) {
+			// If the post has been copied/promoted to another site and its status has changed (tipically, to discarded)
+			if ($status_changed && $link->votes + $link->negatives > 1) {
 				$copies = $db->get_col("select id from sub_statuses where link = $link->id");
 				$receivers = array_merge($receivers, $copies);
 			}
@@ -244,10 +245,18 @@ class SitesMgr {
 			// Create and object that can be later stored
 			$origen = self::get_real_origen(self::$id, $link);
 			$status = new stdClass();
+
+			// Retrieve original status in any sub, if it exists
+			$original_status = $db->get_var("select status from sub_statuses where link=$link->id and id=origen");
+			if ($original_status) {
+				$status->status = $original_status;
+			} else {
+				$status->status = 'new';
+			}
+
 			$status->id = $origen;
 			$status->link = $link->id;
 			$status->date = $link->date;
-			$status->status = 'new';
 			$status->origen = $origen;
 			$status->karma = 0;
 			$status->found = 0;
