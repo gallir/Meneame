@@ -33,7 +33,7 @@ if ($url_args[0] == 'story') {
 }
 
 $argc = 0;
-if (!isset($_REQUEST['id']) && $url_args[0] && !is_numeric($url_args[0])) { // Compatibility with story.php?id=x and /story/x
+if (!isset($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // Compatibility with story.php?id=x and /story/x
 	$link = Link::from_db($url_args[0], 'uri');
 	if (! $link ) {
 		do_error(_('noticia no encontrada'), 404);
