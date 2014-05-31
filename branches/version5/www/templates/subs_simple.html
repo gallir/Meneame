@@ -5,7 +5,7 @@
 <div style="margin: 0 20px 20px 20px">
 {% if current_user.user_id && subs %}
 <input name="subs_default" id="subs_default" type="checkbox" value="subs_default"/>
-<label for="subs_default">{% trans _('mostrar suscripciones por defecto en la portada') %}</label><br/>
+<label for="subs_default">{% trans _('mostrar suscripciones por defecto en la portada') %}</label>
 <script type="text/javascript">
     addPostCode(function () {
         pref_input_check("subs_default");
@@ -13,6 +13,8 @@
 </script>
 
 {% endif %}
+&nbsp;&nbsp;
+[<a href="http://meneame.wikispaces.com/Subs"><b>{% trans _('ayuda') %}</a></b>]</br>
 
 {% for s in subs %}
 	<div style="display:inline-block;white-space:nowrap;margin:0 10px 10px 0">
