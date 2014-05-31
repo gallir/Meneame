@@ -115,7 +115,7 @@ def get_candidate_blogs(days, min_karma):
 			WHERE link_status in ('published')
 				AND link_date > date_sub(now(), interval %s day)
 				AND blog_id = link_blog
-				AND blog_type='blog'
+				AND blog_type in ('blog', 'noiframe')
 				AND (blog_feed_read is null
 						OR blog_feed_read < date_sub(now(), interval 1 hour))
 			GROUP BY blog_id
