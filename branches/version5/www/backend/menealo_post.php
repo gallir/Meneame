@@ -53,7 +53,6 @@ if ($vote->exists()) {
 }
 
 
-
 $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='posts' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_ip_int = ".$globals['user_ip_int']));
 
 $freq = 6;
@@ -74,33 +73,33 @@ if ($votes_freq > $freq) {
 }
 
 $vote->value = $value * $current_user->user_karma;
-$votes_info = $db->get_row("select post_user_id, post_votes, post_karma, UNIX_TIMESTAMP(post_date) as date from posts where post_id=$id");
 
-if ($votes_info->post_user_id == $current_user->user_id) {
+$post = Post::from_db($id);
+
+if (! $post) {
+	error(_('nota no existente'));
+}
+
+if ($post->author == $current_user->user_id) {
 	error(_('no puedes votar a tus comentarios'));
 }
 
-if ($votes_info->date < time() - $globals['time_enabled_votes']) {
+if ($post->date < time() - $globals['time_enabled_votes']) {
 	error(_('votos cerrados'));
 }
 
-if (!$vote->insert()) {
+if (! $post->insert_vote()) {
 	error(_('ya ha votado antes'));
 }
 
 
-$votes_info->post_votes++;
-$votes_info->post_karma += $vote->value;
-
 $dict = array();
 $dict['id'] = $id;
-$dict['votes'] = $votes_info->post_votes;
-$dict['value'] = $vote->value;
-$dict['karma'] = $votes_info->post_karma;
+$dict['votes'] = $post->votes + 1;
+$dict['value'] = round($vote->value);
+$dict['karma'] = round($post->karma + $vote->value);
 
 echo json_encode($dict);
-
-$db->query("update posts set post_votes=post_votes+1, post_karma=post_karma+$vote->value, post_date=post_date where post_id=$id and post_user_id != $current_user->user_id");
 
 function error($mess) {
 	$dict['error'] = $mess;
@@ -108,4 +107,3 @@ function error($mess) {
 	die;
 }
 
-?>
