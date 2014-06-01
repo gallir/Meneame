@@ -88,7 +88,7 @@ if ($post->date < time() - $globals['time_enabled_votes']) {
 	error(_('votos cerrados'));
 }
 
-if (! $post->insert_vote()) {
+if (! $post->insert_vote($current_user->user_id, $vote->value)) {
 	error(_('ya ha votado antes'));
 }
 
