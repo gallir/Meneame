@@ -268,12 +268,12 @@ function promote($site_id) {
 						} else {
 							$low_karma_coef = 1;
 						}
-						$bonus = round($c * 0.37 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
+						$bonus = round($c * 0.4 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
 						echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
 					} else {
 						// Decrease for high affinity between voters
 						$c = $c - 1;
-						$bonus = - round($c * 0.37 * $link->karma);
+						$bonus = - round($c * 0.4 * $link->karma);
 						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
 					}
 					if (abs($bonus) > 10) {
