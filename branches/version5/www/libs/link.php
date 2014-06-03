@@ -703,6 +703,7 @@ class Link extends LCPBase {
 		$this->map_editable = $this->geo && $this->is_map_editable();
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) &&
+				$type != 'short' &&
 				$type != 'preview';
 
 
