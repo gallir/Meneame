@@ -25,7 +25,10 @@ def read_annotation(key):
 		c.execute("SELECT annotation_text FROM annotations WHERE annotation_key = '%s' AND (annotation_expire is null or annotation_expire > now())" % (key,))
 		row = c.fetchone()
 		c.close()
-		return row[0]
+		if row:
+			return row[0]
+		else:
+			return None
 	except Exception as e:
 		print "Error in read annotation: " + key + " " + unicode(e)
 		syslog.syslog(syslog.LOG_INFO, "Error in read annotaion: " + key + " " + unicode(e))
