@@ -564,7 +564,7 @@ height: 120px;
 color: #666;
 }
 
-#toplink .footer {
+#toplink .footer, .topbox .footer {
 display:block;
 margin-top:5px;
 text-transform:capitalize;
@@ -592,6 +592,10 @@ font-variant:small-caps;
 text-align:right;
 color:#aaa;
 font-size:120%;
+}
+
+.topbox .footer {
+text-decoration: none;
 }
 
 .mini-icon-text {

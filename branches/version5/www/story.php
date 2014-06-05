@@ -262,6 +262,7 @@ case 2:
 	echo '<div class="comments">';
 
 	if($tab_option == 1) {
+		print_external_anaylsis($link);
 		print_relevant_comments($link, $no_page);
 	} else {
 		$last_com_first = false;
@@ -498,6 +499,14 @@ function get_comment_page_url($i, $total, $query, $reverse = false) {
 	if ($i == $total && $reverse) return $query;
 	elseif ($i == 1 && ! $reverse) return $query;
 	else return $query.'/'.$i;
+}
+
+function print_external_anaylsis($link) {
+	$data = Annotation::from_db("analysis_$link->id");
+	if ($data) {
+		$objects = json_decode($data->text);
+		Haanga::Load('link_external_analysis.html', compact('objects'));
+	}
 }
 
 function print_relevant_comments($link, $no_page) {

@@ -1,0 +1,7 @@
+<div class="topbox">
+{% for key,obj in objects %}
+	<span class="title" title="{{ obj.title }}">{{ key }}</span>:
+	<a style="white-space:normal;font-size:15px;color:#666;a:link{color:#FF0000;}" href="{{ obj.url }}" title="{{ obj.title }}">{{ obj.title }}</a>
+{% endfor %}
+<span class="footer">{% trans _('Análisis') %}</span>
+</div>

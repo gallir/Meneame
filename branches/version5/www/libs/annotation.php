@@ -16,6 +16,17 @@ class Annotation {
 		return;
 	}
 
+	static function from_db($key) {
+		global $db;
+
+		$key = $db->escape($key);
+		if(($result = $db->get_object("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())", 'Annotation'))) {
+			return $result;
+		}
+		return false;
+
+	}
+
 	function delete() {
 		global $db;
 
