@@ -601,6 +601,7 @@ text-decoration: none;
 
 .topbox.opinion {
 background: #f9f9f9 url({{ globals.base_static }}img/common/opinion_01.png) 99% 5px no-repeat;
+padding-right: 40px;
 }
 
 .mini-icon-text {
