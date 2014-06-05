@@ -4,6 +4,7 @@ sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
 import socket
 import urllib2
+import urllib
 import httplib
 from BeautifulSoup import BeautifulSoup,  SoupStrainer
 import re
@@ -18,6 +19,23 @@ import syslog
 
 re_link = re.compile(r'<link ([^>]+(?:text\/xml|application\/atom\+xml|application\/rss\+xml)[^>]+[^>]+)/*>',re.I)
 re_href = re.compile(r'''href=['"]*([^"']+)["']''', re.I)
+
+def post_note(text):
+	try:
+		url = """
+			http://{d}{newpost}?user={post_user}&key={post_key}&text={t}
+		""".format(d= dbconf.domain,
+					t= urllib.quote_plus(text),
+					**dbconf.blogs)
+		## TODO: Use timeout parameter instead of
+		##		 socket.setdefaulttimeout(timeout)
+		urlpost = urllib2.urlopen(url)
+		print urlpost.read(100)
+		urlpost.close()
+	except KeyError:
+		return False
+	return True
+
 
 def read_annotation(key):
 	try:

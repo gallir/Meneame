@@ -4,12 +4,12 @@
 import time
 import feedparser
 import dbconf
-from utils import DBM, clean_url, read_annotation, store_annotation
+from utils import DBM, clean_url, read_annotation, store_annotation, post_note
 import re
 import json
 
 
-URLS = { "ArdeInternet": "https://gdata.youtube.com/feeds/base/users/ArdeInternet/uploads" }
+URLS = { u"Vídeo Arde Internet": "https://gdata.youtube.com/feeds/base/users/ArdeInternet/uploads" }
 
 KEY = "analysis_"
 
@@ -48,8 +48,6 @@ def main():
 	if modified:
 		data = json.dumps(data)
 		store_annotation(KEY+"checked", data)
-		
-
 
 
 def analyze_entry(site, e):
@@ -66,19 +64,26 @@ def analyze_entry(site, e):
 		else: content = e.description
 
 		try:
-			g = re.search(r'Noticia en Men&eacute;ame: http://menea.me/(\w+) ', content)
+			g = re.search(r'Noticia en Men&eacute;ame: (http://menea.me/(\w+)) ', content)
 		except:
 			return False
 
 		if g:
-			alpha = g.group(1)
-			id = int(alpha, 36)
+			id = int(g.group(2), 36)
+			original_url = g.group(1)
 			entry = dict()
+			entry["site"] = site.encode('ascii', 'xmlcharrefreplace')
 			entry["title"] = e.title.encode('ascii', 'xmlcharrefreplace')
 			entry['url'] =  clean_url(e.link)
 			entry['ts'] = int(timestamp)
 			entry['id'] = id
-			return store(site, entry)
+			res = store(site, entry)
+			if res:
+				post = "%s: &laquo;%s&raquo; %s (%s)" % (entry["site"], entry["title"], entry['url'], original_url)
+				print "Posting", post
+				if not post_note(post):
+					print "Error posting"
+				return res
 
 		return False
 
@@ -97,7 +102,7 @@ def store(site, entry):
 		data = json.loads(annotation)
 		if data[site]:
 			if data[site]['ts'] >= entry['ts']:
-				return data[site]['ts']
+				return False
 
 			del(data[site])
 
