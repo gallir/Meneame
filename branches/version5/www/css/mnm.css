@@ -580,6 +580,7 @@ background:#f9f9f9;
 border:#ddd 1px solid;
 padding: 7px 5px 3px 5px;
 margin: 0 0px 15px 0;
+min-height: 32px;
 vertical-align:middle;
 overflow: hidden;
 white-space: nowrap;
@@ -596,6 +597,10 @@ font-size:120%;
 
 .topbox .footer {
 text-decoration: none;
+}
+
+.topbox.opinion {
+background: #f9f9f9 url({{ globals.base_static }}img/common/opinion_01.png) 99% 5px no-repeat;
 }
 
 .mini-icon-text {
