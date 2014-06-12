@@ -1305,6 +1305,20 @@ var fancyBox = new function () {
 			maxWidth = false;
 			maxHeight = false;
 			ajaxName = "youtube";
+		} else if ( (v = myHref.match(/(?:vine\.co\/v\/(\w+))/)) ) {
+			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vine') %}</a>';
+			if (is_mobile)  {
+				innerWidth = 320;
+				innerHeight = 320;
+			} else {
+				innerWidth = 480;
+				innerHeight = 480;
+			}
+			maxWidth = false;
+			maxHeight = false;
+			ajaxName = "vine";
+			href = 'https://vine.co/v/'+v[1]+'/embed/simple';
+			iframe = true;
 		} else {
 			if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
 				photo = true;
@@ -1715,7 +1729,7 @@ function analyze_hash(force) {
 
 		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
-				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
+				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
 			&& ! aClass.match(/cbox/) 
 			&& ! $a.attr("target")) {
 			if (fancyBox.parse($a)) return false;
