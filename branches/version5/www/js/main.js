@@ -1305,6 +1305,20 @@ var fancyBox = new function () {
 			maxWidth = false;
 			maxHeight = false;
 			ajaxName = "youtube";
+		} else if ( (v = myHref.match(/(?:vimeo\.com\/(\d+))/)) ) {
+			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vimeo') %}</a>';
+			if (is_mobile)  {
+				width = '100%';
+				height = '100%';
+			} else {
+				innerWidth = 640;
+				innerHeight = 400;
+			}
+			maxWidth = "100%";
+			maxHeight = "100%";
+			ajaxName = "vimeo";
+			href = '//player.vimeo.com/video/'+v[1];
+			iframe = true;
 		} else if ( (v = myHref.match(/(?:vine\.co\/v\/(\w+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vine') %}</a>';
 			if (is_mobile)  {
@@ -1729,7 +1743,7 @@ function analyze_hash(force) {
 
 		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
-				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
+				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
 			&& ! aClass.match(/cbox/) 
 			&& ! $a.attr("target")) {
 			if (fancyBox.parse($a)) return false;
