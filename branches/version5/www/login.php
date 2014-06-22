@@ -98,13 +98,13 @@ function do_login() {
 	} else {
 		echo '<div class="genericform" style="float:auto;">'."\n";
 	}
-	echo '<form action="'.get_auth_link().'login.php" id="thisform" method="post">'."\n";
+	echo '<form action="'.get_auth_link().'login" id="thisform" method="post">'."\n";
 
 	if($_POST["processlogin"] == 1) {
 		// Check the IP, otherwise redirect
 		if (!$form_ip_check) {
 			header ('HTTP/1.1 303 Load');
-			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login.php");
+			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login");
 			die;
 		}
 
@@ -160,7 +160,7 @@ function do_login() {
 	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
 	echo '</fieldset>'. "\n";
 	echo '</form>'."\n";
-	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login.php?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
+	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
 	echo '</div>'."\n";
 	echo '<br/>&nbsp;';
 }
@@ -201,7 +201,7 @@ function do_recover() {
 		}
 	}
 	if (!$sent) {
-		echo '<form action="login.php" id="thisform-recover" method="post">'."\n";
+		echo '<form action="login" id="thisform-recover" method="post">'."\n";
 		echo '<label for="name" style="font-size:120%">'._('indica el email de la cuenta').':</label><br />'."\n";
 		echo '<input type="text" name="email" size="25" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" />'."\n";
 		echo '<p>'._('(recibirás un e-mail que te permitirá editar tus datos)').'</p>&nbsp;<br/>';

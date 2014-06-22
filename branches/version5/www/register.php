@@ -123,7 +123,9 @@ function do_register1() {
 	echo '<input type="hidden" name="password" value="'.clean_input_string($_POST["password"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="password2" value="'.clean_input_string($_POST["password2"]).'" />'; // extra sanity, in fact not needed
 	get_form_auth_ip();
-	echo '</fieldset></form>'."\n";
+	echo '</fieldset></form>';
+	// Add extra check: base_key is added on submit
+	echo '<script type="text/javascript">addPostCode(function () { $("#thisform").submit(function () { $(this).append($("<input>", { type: "hidden", name: "base_key", value: base_key})); return true; });})</script>';
 }
 
 function do_register2() {
@@ -134,6 +136,12 @@ function do_register2() {
 	}
 
 	if (!check_user_fields())  return;
+
+	// Extra check
+	if (! check_security_key($_POST['base_key'])) {
+		register_error(_('código incorrecto o pasó demasiado tiempo'));
+		return;
+	}
 
 	$username=clean_input_string(trim($_POST['username'])); // sanity check
 	$dbusername=$db->escape($username); // sanity check
