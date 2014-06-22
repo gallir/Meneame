@@ -162,6 +162,7 @@ function do_register2() {
 				$sent = send_recover_mail($user);
 				$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
 				Log::insert('user_new', $user->id, $user->id);
+				syslog(LOG_INFO, "New user $user->id $user->username $email $user_ip (". $_SERVER["HTTP_USER_AGENT"] .")");
 			}
 			echo '</fieldset>'."\n";
 		} else {
