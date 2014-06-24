@@ -13,6 +13,7 @@ $globals['ads'] = false;
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 force_authentication();
+array_push($globals['cache-control'], 'no-cache');
 
 if (!empty($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -28,7 +29,6 @@ if (! $id) $id = -1;
 $errors = array();
 $site = SitesMgr::get_info();
 
-array_push($globals['cache-control'], 'no-cache');
 
 if (! SitesMgr::can_edit($id)) {
 	$errors[] = _("no puede editar o crear nuevos");

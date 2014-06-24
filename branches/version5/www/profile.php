@@ -29,7 +29,7 @@ if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
 		$now = time();
 		$key2 = md5($user->id.$user->pass.$time.$site_key.get_server_name());
 		//echo "$now, $time; $key == $key2\n";
-		if ($time > $now - 7200 && $time < $now && $key == $key2) {
+		if ($time > $now - 900 && $time < $now && $key == $key2) {
 			$db->query("update users set user_validated_date = now() where user_id = $user->id and user_validated_date is null");
 			$current_user->Authenticate($user->username, false);
 			header('Location: '.get_user_uri($user->username));

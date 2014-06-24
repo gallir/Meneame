@@ -38,7 +38,7 @@ function send_recover_mail ($user) {
 	$to      = $user->email;
 	$subject = _('Recuperación o verificación de contraseña de '). get_server_name();
 	$subject = mb_encode_mimeheader($subject,"UTF-8", "B", "\n");
-	$message = $to . ': '._('para poder acceder sin la clave, conéctate a la siguiente dirección en menos de dos horas:') . "\n\n$url\n\n";
+	$message = $to . ': '._('para poder acceder sin la clave, conéctate a la siguiente dirección en menos de 15 minutos:') . "\n\n$url\n\n";
 	$message .= _('Pasado este tiempo puedes volver a solicitar acceso en: ') . "\nhttp://".get_server_name().$globals['base_url']."login?op=recover\n\n";
 	$message .= _('Una vez en tu perfil, puedes cambiar la clave de acceso.') . "\n" . "\n";
 	$message .= "\n\n". _('Este mensaje ha sido enviado a solicitud de la dirección: ') . $globals['user_ip'] . "\n\n";
