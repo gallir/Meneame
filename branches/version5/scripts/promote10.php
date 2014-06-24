@@ -173,22 +173,14 @@ function promote($site_id) {
 		$i=0;
 		foreach($links as $dblink) {
 			$link = Link::from_db($dblink->link_id);
-			echo "START WITH $link->uri\n";
-			$user = new User;
-			$user->id = $link->author;
-			$user->read();
-			$karma_pos_user = 0;
-			$karma_neg_user = 0;
-			$karma_pos_ano = 0;
+			$changes = update_link_karma($site_id, $link);
+			
+			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
+				echo "Adding $link->id to thumb queue\n";
+				array_push($thumbs_queue, $link->id);
+			}
 
-
-			User::calculate_affinity($link->author, $past_karma*0.3);
-
-
-			// Calculate the real karma for the link
-			$link->calculate_karma();
-
-			if ($link->coef > 1) {
+			if (!empty($link->coef) && $link->coef > 1) {
 				if ($decay > 1)
 					$karma_threshold = $past_karma;
 				else
@@ -197,123 +189,6 @@ function promote($site_id) {
 				// Otherwise use normal decayed min_karma
 				$karma_threshold = $min_karma;
 			}
-
-
-			$karma_new = $link->karma;
-			$link->message = '';
-			$changes = 0;
-			if (DEBUG ) $link->message .= "Sub: $link->sub_id coef: ".$subs_coef[$link->sub_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
-
-			// Verify last published from the same site
-			$hours = 8;
-			$min_pub_coef = 0.8;
-			$last_site_published = (int) $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from sub_statuses, links where id = $site_id and status = 'published' and date > date_sub(now(), interval $hours hour) and link_id = link and link_blog = $link->blog ");
-			if ($last_site_published > 0) {
-				$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
-				$karma_new *= $pub_coef;
-				$link->message .= 'Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.<br/>';
-			}
-
-
-			if(($ban = check_ban($link->url, 'hostname', false, true))) {
-				// Check if the  domain is banned
-				$karma_new *= 0.5;
-				$link->message .= 'Domain banned.<br/>';
-				$link->annotation .= _('dominio baneado').": ".$ban['comment']."<br/>";
-			} elseif ($user->level == 'disabled' || $user->level == 'autodisabled' ) {
-				// Check if the user is banned disabled
-				if ($user->level == 'autodisabled') {
-					$link->message .= "$user->username disabled herself, penalized.<br/>";
-					$karma_new *= 0.2;
-				} else {
-					$link->message .= "$user->username disabled, probably due to abuses, penalized.<br/>";
-					$karma_new *= 0.4;
-				}
-				$link->annotation .= _('cuenta deshabilitada'). "<br/>";
-			} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
-				// Check domain and user punishments
-				$karma_new *= 0.75;
-				$link->message .= $globals['ban_message'].'<br/>';
-			}
-
-			// Check if it was depubished before
-
-			$depublished = (int) $db->get_var("select count(*) from logs where log_type = 'link_depublished' and log_ref_id = $link->id");
-			if ($depublished > 0) {
-				$karma_new *= 0.4;
-				$link->message .= 'Previously depublished' . '<br/>';
-				$link->annotation .= _('previamente quitada de portada')."<br/>";
-			}
-
-			$link->karma = round($karma_new);
-
-			/// Commons votes
-			if ($link->karma > 20) {
-				echo "Calculating diversity\n";
-				$common = $link->calculate_common_votes();
-				if ($common != false && $commons_votes && count($commons_votes) > 5) {
-					$common_probability =  cdf($commons_votes, $common);
-					$p = round($common_probability, 2);
-					echo "common: $common common_probability: $common_probability\n";
-					$link->common_probability = $common_probability;
-					$link->message .= 'Voters density: ' . sprintf("%5.2f", $common) . ' diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)." Probability: $p<br/>";
-					$link->annotation .= _('Densidad diversidad').': '. sprintf("%5.2f", $common) . ' ' . _('coeficiente').": ".sprintf("%3.2f%%", (1-$common_probability)*100)." ("._('probabilidad').": $p)<br/>";
-
-					// Bonus for diversity
-					$c = $common_probability/0.5;
-					if ($c <= 1) {
-						$c = 1 - $c;
-						if ($link->low_karma_perc > 50) {
-							$low_karma_coef =  (100 - ($link->low_karma_perc - 50)) / 100;
-						} else {
-							$low_karma_coef = 1;
-						}
-						$bonus = round($c * 0.4 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
-						echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
-					} else {
-						// Decrease for high affinity between voters
-						$c = $c - 1;
-						$bonus = - round($c * 0.4 * $link->karma);
-						echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
-					}
-					if (abs($bonus) > 10) {
-						$old = $link->karma;
-						$link->karma += $bonus;
-						$link->annotation .= _('Karma por diversidad').": $old -> $link->karma<br/>";
-					}
-				}
-			}
-
-			// check differences, if > 4 store it
-			if (abs($link->old_karma - $link->karma) > 6) {
-				// Check percentage of low karma votes if difference > 20 (to avoid sending too many messages
-				if ($link->old_karma > $link->karma + 20  && !empty($globals['adm_email']) && intval($link->low_karma_perc) >= 90 && $link->votes > 50) {
-					echo "LOW KARMA WARN $link->uri\n";
-					$subject = _('AVISO: enlace con muchos votos de karma menor que la media');
-					$body = "Perc: $link->low_karma_perc% User votes: $link->votes Negatives: $link->negatives\n\n";
-					$body .= $link->get_permalink();
-					mail($globals['adm_email'], $subject, $body);
-				}
-
-				$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $link->old_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
-				//$link->annotation .= _('ajuste'). ": $link->old_karma -&gt; $link->karma <br/>";
-				if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later
-				else $changes = 2; // increase
-				if (! DEBUG) {
-					$link->save_annotation('link-karma');
-					// Update relevant values
-					$db->query("UPDATE links set link_karma=$link->karma, link_votes_avg=$link->votes_avg WHERE link_id=$link->id");
-				} else {
-					$link->message .= "To store: previous: $link->old_karma new: $link->karma<br>\n";
-				}
-			}
-			// $db->commit();
-
-			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
-				echo "Adding $link->id to thumb queue\n";
-				array_push($thumbs_queue, $link->id);
-			}
-
 			if ($link->votes >= $min_votes && $link->karma >= $karma_threshold && $published < $max_to_publish) {
 				$published++;
 				publish($site_id, $link);
@@ -525,3 +400,141 @@ function get_subs_coef($site_id, $days = 3) {
 	return $subs_coef;
 }
 
+
+function update_link_karma($site, $link) {
+	global $db, $globals;
+	
+	if (time() - $link->time_annotation('link-karma') < 120) {
+		echo "ALREADY CALCULATED $link->uri, ignoring\n";
+		return 0;
+	}
+
+	
+	echo "START WITH $link->uri\n";
+	$user = new User;
+	$user->id = $link->author;
+	$user->read();
+	
+	$karma_pos_user = 0;
+	$karma_neg_user = 0;
+	$karma_pos_ano = 0;
+
+
+	User::calculate_affinity($link->author, $past_karma*0.3);
+
+
+	// Calculate the real karma for the link
+	$link->calculate_karma();
+
+	$karma_new = $link->karma;
+	$link->message = '';
+	$changes = 0;
+	// TODO: $subs_coef is not available 
+	// if (DEBUG ) $link->message .= "Sub: $link->sub_id coef: ".$subs_coef[$link->sub_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
+
+	// Verify last published from the same site
+	$hours = 8;
+	$min_pub_coef = 0.8;
+	$last_site_published = (int) $db->get_var("select SQL_NO_CACHE UNIX_TIMESTAMP(max(link_date)) from sub_statuses, links where id = $site and status = 'published' and date > date_sub(now(), interval $hours hour) and link_id = link and link_blog = $link->blog ");
+	if ($last_site_published > 0) {
+		$pub_coef = $min_pub_coef  + ( 1- $min_pub_coef) * (time() - $last_site_published)/(3600*$hours);
+		$karma_new *= $pub_coef;
+		$link->message .= 'Last published: '. intval((time() - $last_site_published)/3600) . ' hours ago.<br/>';
+	}
+
+
+	if(($ban = check_ban($link->url, 'hostname', false, true))) {
+		// Check if the  domain is banned
+		$karma_new *= 0.5;
+		$link->message .= 'Domain banned.<br/>';
+		$link->annotation .= _('dominio baneado').": ".$ban['comment']."<br/>";
+	} elseif ($user->level == 'disabled' || $user->level == 'autodisabled' ) {
+		// Check if the user is banned disabled
+		if ($user->level == 'autodisabled') {
+			$link->message .= "$user->username disabled herself, penalized.<br/>";
+			$karma_new *= 0.2;
+		} else {
+			$link->message .= "$user->username disabled, probably due to abuses, penalized.<br/>";
+			$karma_new *= 0.4;
+		}
+		$link->annotation .= _('cuenta deshabilitada'). "<br/>";
+	} elseif (check_ban($link->url, 'punished_hostname', false, true)) {
+		// Check domain and user punishments
+		$karma_new *= 0.75;
+		$link->message .= $globals['ban_message'].'<br/>';
+	}
+
+	// Check if it was depubished before
+
+	$depublished = (int) $db->get_var("select count(*) from logs where log_type = 'link_depublished' and log_ref_id = $link->id");
+	if ($depublished > 0) {
+		$karma_new *= 0.4;
+		$link->message .= 'Previously depublished' . '<br/>';
+		$link->annotation .= _('previamente quitada de portada')."<br/>";
+	}
+
+	$link->karma = round($karma_new);
+
+	/// Commons votes
+	if ($link->karma > 20) {
+		echo "Calculating diversity\n";
+		$common = $link->calculate_common_votes();
+		if ($common != false && $commons_votes && count($commons_votes) > 5) {
+			$common_probability =  cdf($commons_votes, $common);
+			$p = round($common_probability, 2);
+			echo "common: $common common_probability: $common_probability\n";
+			$link->common_probability = $common_probability;
+			$link->message .= 'Voters density: ' . sprintf("%5.2f", $common) . ' diversity coef: '.sprintf("%3.2f%%", (1-$common_probability)*100)." Probability: $p<br/>";
+			$link->annotation .= _('Densidad diversidad').': '. sprintf("%5.2f", $common) . ' ' . _('coeficiente').": ".sprintf("%3.2f%%", (1-$common_probability)*100)." ("._('probabilidad').": $p)<br/>";
+
+			// Bonus for diversity
+			$c = $common_probability/0.5;
+			if ($c <= 1) {
+				$c = 1 - $c;
+				if ($link->low_karma_perc > 50) {
+					$low_karma_coef =  (100 - ($link->low_karma_perc - 50)) / 100;
+				} else {
+					$low_karma_coef = 1;
+				}
+				$bonus = round($c * 0.4 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
+				echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
+			} else {
+				// Decrease for high affinity between voters
+				$c = $c - 1;
+				$bonus = - round($c * 0.4 * $link->karma);
+				echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
+			}
+			if (abs($bonus) > 10) {
+				$old = $link->karma;
+				$link->karma += $bonus;
+				$link->annotation .= _('Karma por diversidad').": $old -> $link->karma<br/>";
+			}
+		}
+	}
+
+	// check differences, if > 4 store it
+	if (abs($link->old_karma - $link->karma) > 6) {
+		// Check percentage of low karma votes if difference > 20 (to avoid sending too many messages
+		if ($link->old_karma > $link->karma + 20  && !empty($globals['adm_email']) && intval($link->low_karma_perc) >= 90 && $link->votes > 50) {
+			echo "LOW KARMA WARN $link->uri\n";
+			$subject = _('AVISO: enlace con muchos votos de karma menor que la media');
+			$body = "Perc: $link->low_karma_perc% User votes: $link->votes Negatives: $link->negatives\n\n";
+			$body .= $link->get_permalink();
+			mail($globals['adm_email'], $subject, $body);
+		}
+
+		$link->message = sprintf ("updated karma: %6d (%d, %d, %d) -> %-6d<br/>\n", $link->old_karma, $link->votes, $link->anonymous, $link->negatives, $link->karma ) . $link->message;
+		//$link->annotation .= _('ajuste'). ": $link->old_karma -&gt; $link->karma <br/>";
+		if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later
+		else $changes = 2; // increase
+		if (! DEBUG) {
+			$link->save_annotation('link-karma');
+			// Update relevant values
+			$db->query("UPDATE links set link_karma=$link->karma, link_votes_avg=$link->votes_avg WHERE link_id=$link->id");
+		} else {
+			$link->message .= "To store: previous: $link->old_karma new: $link->karma<br>\n";
+		}
+	}
+	return $changes;
+
+}
