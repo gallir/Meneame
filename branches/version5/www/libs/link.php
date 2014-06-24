@@ -1310,6 +1310,16 @@ class Link extends LCPBase {
 		return $array;
 	}
 
+	function time_annotation($key) {
+		$key .= "-$this->id";
+		$log = Annotation::from_db($key);
+		if ($log) {
+			return $log->time;
+		} else {
+			return 0;
+		}
+	}
+
 	// Read affinity values using annotations
 	function subs_coef_get() {
 		global $globals;
