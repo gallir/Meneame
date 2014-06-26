@@ -767,7 +767,7 @@ class Link extends LCPBase {
 
 		$coef = min(1, $age/3600); // Percentage increases with time, until 1 hour
 
-		if ($this->sub_status == 'published') $neg_percent = 0.125 / $coef;
+		if ($this->sub_status == 'published') $neg_percent = 0.11 / $coef;
 		else $neg_percent = 0.1 / $coef;
 
 		if ($this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
