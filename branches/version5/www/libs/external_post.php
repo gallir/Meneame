@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function twitter_post($text, $short_url) {
+function twitter_post($text, $short_url, $image = false) {
 	global $globals;
 
 	if (!class_exists("OAuth")) {
@@ -26,23 +26,31 @@ function twitter_post($text, $short_url) {
 	$acc_url = 'https://api.twitter.com/oauth/access_token';
 	$authurl = 'https://api.twitter.com/oauth/authorize';
 	$api_url = 'https://api.twitter.com/1.1/statuses/update.json';
+	$api_media_url = 'https://api.twitter.com/1.1/statuses/update_with_media.json';
 
 	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
 	$oauth->debug = 1;
+	$oauth->setRequestEngine( OAUTH_REQENGINE_CURL ); // For posting images
 	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);
 
 	$api_args = array("status" => $msg, "empty_param" => NULL);
-	/* No using geo yet
-	if (isset($entry['lat'])) {
-		$api_args['lat'] = $entry['lat'];
-		$api_args['long'] = $entry['long'];
+
+	if ($image && mb_strlen($msg < $maxlen - 24)) {
+		echo "Adding image: $image\n";
+		$api_args['@media[]'] = '@'.$image;
+		$url = $api_media_url;
+	} else {
+		$url = $api_url;
 	}
-	*/
+
 	try {
-		$oauth->fetch($api_url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
+		$oauth->fetch($url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
 	} catch (Exception $e) {
 		syslog(LOG_INFO, 'Menéame, Twitter caught exception: '.  $e->getMessage(). " in ".basename(__FILE__)."\n");
 	}
+
+	// $response_info = $oauth->getLastResponseInfo();
+	// echo $oauth->getLastResponse() . "\n";
 }
 
 function twitter_post_basic($text, $short_url) {
