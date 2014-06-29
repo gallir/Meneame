@@ -122,7 +122,6 @@ function promote($site_id) {
 
 	$days = 7;
 
-	$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site_id and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 
 	// Balance metas
 	if (empty($globals['sub_balance_metas']) || ! in_array(SitesMgr::my_id(), $globals['sub_balance_metas'])) {
@@ -477,8 +476,10 @@ function update_link_karma($site, $link) {
 
 	/// Commons votes
 	if ($link->karma > 20) {
-		echo "Calculating diversity\n";
+		$days = 7;
+		$commons_votes = $db->get_col("select SQL_NO_CACHE value from sub_statuses, link_commons where id = $site and status = 'published' and sub_statuses.date > date_sub(now(), interval $days day) and link_commons.link = sub_statuses.link order by value asc");
 		$common = $link->calculate_common_votes();
+		echo "Calculating diversity ($common-" .  count($commons_votes) . ")\n";
 		if ($common != false && $commons_votes && count($commons_votes) > 5) {
 			$common_probability =  cdf($commons_votes, $common);
 			$p = round($common_probability, 2);
