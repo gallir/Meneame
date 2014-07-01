@@ -110,7 +110,7 @@ class Link extends LCPBase {
 		return $count;
 	}
 
-	static function duplicates($url) {
+	static function duplicates($url, $site = false) {
 		global $db;
 		$trimmed = $db->escape(preg_replace('/\/$/', '', $url));
 		$list = "'$trimmed', '$trimmed/'";
@@ -140,8 +140,14 @@ class Link extends LCPBase {
 		$found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND sub_statuses.id in ($subs) ORDER by link_id asc limit 1");
 *******/
 
+		if ($site > 0) {
+			$from_extra = ', sub_statuses';
+			$where_extra = "and sub_statuses.id = $site and sub_statuses.link = link_id";
+		} else {
+			$from_extra = $where_extra = '';
+		}
 		// If it was abuse o autodiscarded allow other to send it again
-		$found = $db->get_var("SELECT link_id FROM links WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 ORDER by link_id asc limit 1");
+		$found = $db->get_var("SELECT link_id FROM links $from_extra WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 $where_extra ORDER by link_id asc limit 1");
 		return $found;
 	}
 

@@ -143,7 +143,7 @@ echo json_encode($data);
 function load_row(&$serie, $row) {
 	global $min_yymm, $totals;
 
-	if (! $totals[$row['yymm']] > 0) continue;
+	if (! $totals[$row['yymm']] > 0) return;
 	$normalized = $row['_count'] / $totals[$row['yymm']];
 	$o = new stdClass();
 	$o->id = (int) $row['id'];
