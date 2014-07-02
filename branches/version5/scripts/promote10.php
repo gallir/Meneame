@@ -424,8 +424,8 @@ function update_link_karma($site, $link) {
 	}
 
 	
-	echo "START WITH $link->uri\n";
 	$site_info = SitesMgr::get_info($site);
+	echo "START $site_info->name WITH $link->uri\n";
 
 	$user = new User;
 	$user->id = $link->author;
@@ -559,7 +559,7 @@ function update_link_karma($site, $link) {
 		if ($link->old_karma > $link->karma) $changes = 1; // to show a "decrease" later
 		else $changes = 2; // increase
 		if (! DEBUG) {
-			$link->save_annotation('link-karma');
+			$link->save_annotation('link-karma', $site_info->name);
 			// Update relevant values
 			$db->query("UPDATE links set link_karma=$link->karma, link_votes_avg=$link->votes_avg WHERE link_id=$link->id");
 		} else {
