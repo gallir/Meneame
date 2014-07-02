@@ -425,6 +425,8 @@ function update_link_karma($site, $link) {
 
 	
 	echo "START WITH $link->uri\n";
+	$site_info = SitesMgr::get_info($site);
+
 	$user = new User;
 	$user->id = $link->author;
 	$user->read();
@@ -488,7 +490,7 @@ function update_link_karma($site, $link) {
 	}
 
 	// Check if the are previously published during last hours from the same sub
-	if ($link->sub_id > 0 && $link->is_sub && $link->sub_owner > 0 ) {
+	if ($link->sub_id > 0 && $link->is_sub && $link->sub_owner > 0 && $link->sub_id != $site && $site_info->owner == 0) {
 		$sub_published = $db->get_var("select UNIX_TIMESTAMP(date) from sub_statuses where id = $site and origen = $link->sub_id and status = 'published' and date > date_sub(now(), interval 24 hour) order by date desc limit 1");
 		if ($sub_published > 0) {
 			$m_diff = intval((time() - $sub_published) / 60);
