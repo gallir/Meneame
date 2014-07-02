@@ -215,8 +215,10 @@ if ($links) {
 
 		// Meneame own namespace
 		echo "		<meneame:link_id>$link->id</meneame:link_id>\n";
+		echo "		<meneame:sub>$link->sub_name</meneame:sub>\n";
 		echo "		<meneame:status>$link->status</meneame:status>\n";
 		echo "		<meneame:user>$link->username</meneame:user>\n";
+		echo "		<meneame:clicks>".$link->clicks."</meneame:clicks>\n";
 		echo "		<meneame:votes>".intval($link->votes+$link->anonymous)."</meneame:votes>\n";
 		echo "		<meneame:negatives>$link->negatives</meneame:negatives>\n";
 		echo "		<meneame:karma>".intval($link->karma)."</meneame:karma>\n";
