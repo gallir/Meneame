@@ -37,8 +37,10 @@
 	var k_coef = new Array();
 	var k_old = new Array();
 	var k_annotation = new Array();
+	var k_site = new Array();
 
 	{% for log in annotations %}
+		k_site[{{ log['time'] }}] = '{{ log['site_name'] }}';
 		k_coef[{{ log['time'] }}] = {{ log['coef'] }};
 		k_old[{{ log['time'] }}] = parseInt({{ log['old_karma'] }});
 
@@ -112,6 +114,9 @@
 
 					if (item.series.label == 'karma') {
 						var ktime = item.datapoint[0]/1000;
+
+						if (k_site[ktime] != '') txt = txt + '<br/><strong>site: ' + k_site[ktime] + '</strong>';
+
 						if (k_old[ktime] != 0) {
 							txt = txt + '<br/><strong>previous karma:</strong> '+k_old[ktime];
 						}

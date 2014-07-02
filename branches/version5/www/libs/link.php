@@ -1122,7 +1122,11 @@ class Link extends LCPBase {
 		if (! $globals['users_karma_avg'] ) {
 			$globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
 		}
-		$this->annotation = '';
+
+		if (empty($this->annotation)) {
+			$this->annotation = '';
+		}
+
 		// Read the stored affinity for the author
 		$affinity = User::get_affinity($this->author);
 
@@ -1280,7 +1284,7 @@ class Link extends LCPBase {
 		return 0;
 	}
 
-	function save_annotation($key) {
+	function save_annotation($key, $site_name = false) {
 		global $globals;
 
 		$key .= "-$this->id";
@@ -1288,6 +1292,7 @@ class Link extends LCPBase {
 		if ($log->read()) $array = unserialize($log->text);
 		if (!$array || ! is_array($array)) $array = array();
 		$dict = array();
+		$dict['site_name'] = $site_name;
 		$dict['time'] = time();
 		$dict['positives'] = $this->votes;
 		$dict['negatives'] = $this->negatives;
