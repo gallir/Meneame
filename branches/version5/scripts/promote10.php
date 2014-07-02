@@ -41,7 +41,7 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 		// If there are more of the same sub in queue or published, multiply minimums
 		$promoted = $db->get_var("select count(*) from sub_statuses where id = $destination and origen = $status->id and date > date_sub(now(), interval $hours hour)");
 		echo "PROMOTED $status->id -> $destination: $promoted\n";
-		if ($promoted > 0 && $status->link_karma < min(4, $promoted + 1) * $min_karma && $status->link_votes < min(4, $promoted + 1) *  $min_votes) {
+		if ($promoted > 0 && $status->link_karma < min(4, $promoted*0.5 + 1) * $min_karma && $status->link_votes < min(4, $promoted*0.5 + 1) *  $min_votes) {
 			echo "Already in main $promoted, doesn't have minimums, $status->link_url\n";
 			continue;
 		}
