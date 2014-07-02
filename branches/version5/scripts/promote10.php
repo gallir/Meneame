@@ -34,8 +34,18 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 	global $db;
 
 	echo "Promote to main: $destination\n";
-	$res = $db->get_results("select sub_statuses.*, link_url from sub_statuses, subs, links where date > date_sub(now(), interval $hours hour) and status = 'published' and link_karma >= $min_karma and sub_statuses.id = origen and subs.id = sub_statuses.id and subs.created_from = $destination and not subs.private and not subs.nsfw and sub_statuses.id not in (select src from subs_copy where dst=$destination) and $destination not in (select id from sub_statuses as t where t.link=sub_statuses.link) and link_id = sub_statuses.link and link_votes >= $min_votes");
+
+	$res = $db->get_results("select sub_statuses.*, link_url, link_karma, link_votes from sub_statuses, subs, links where date > date_sub(now(), interval $hours hour) and status = 'published' and link_karma >= $min_karma and sub_statuses.id = origen and subs.id = sub_statuses.id and subs.created_from = $destination and not subs.private and not subs.nsfw and sub_statuses.id not in (select src from subs_copy where dst=$destination) and $destination not in (select id from sub_statuses as t where t.link=sub_statuses.link) and link_id = sub_statuses.link and link_votes >= $min_votes");
 	foreach ($res as $status) {
+
+		// If there are more of the same sub in queue or published, multiply minimums
+		$promoted = $db->get_var("select count(*) from sub_statuses where id = $destination and origen = $status->id and date > date_sub(now(), interval $hours hour)");
+		echo "PROMOTED $status->id -> $destination: $promoted\n";
+		if ($promoted > 0 && $status->link_karma < min(4, $promoted + 1) * $min_karma && $status->link_votes < min(4, $promoted + 1) *  $min_votes) {
+			echo "Already in main $promoted, doesn't have minimums, $status->link_url\n";
+			continue;
+		}
+
 		$properties = SitesMgr::get_extended_properties($status->id);
 		if (!empty($properties['no_link']) && empty($status->link_url)) {
 			echo "NO LINK, $status->id\n";
@@ -408,7 +418,7 @@ function get_subs_coef($site_id, $days = 3) {
 function update_link_karma($site, $link) {
 	global $db, $globals;
 	
-	if (time() - $link->time_annotation('link-karma') < 120) {
+	if (time() - $link->time_annotation('link-karma') < 75) {
 		echo "ALREADY CALCULATED $link->uri, ignoring\n";
 		return 0;
 	}
@@ -476,6 +486,19 @@ function update_link_karma($site, $link) {
 		$link->message .= 'Previously depublished' . '<br/>';
 		$link->annotation .= _('previamente quitada de portada')."<br/>";
 	}
+
+	// Check if the are previously published during last hours from the same sub
+	if ($link->sub_id > 0 && $link->is_sub && $link->sub_owner > 0 ) {
+		$sub_published = $db->get_var("select UNIX_TIMESTAMP(date) from sub_statuses where id = $site and origen = $link->sub_id and status = 'published' and date > date_sub(now(), interval 24 hour) order by date desc limit 1");
+		if ($sub_published > 0) {
+			$m_diff = intval((time() - $sub_published) / 60);
+			$c = min(1, max(0.3, $m_diff/1440));
+			$karma_new *= $c;
+			$link->message .= 'Published from the same sub, c' . sprintf(': %4.2f <br/>', $c);
+			$link->annotation .= _('publicada del mismo sub recientemente, coeficiente').sprintf(': %4.2f <br/>', $c);
+		}
+	}
+
 
 	$link->karma = round($karma_new);
 
