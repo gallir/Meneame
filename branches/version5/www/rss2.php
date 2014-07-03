@@ -19,9 +19,10 @@ if (check_ban_proxy()) {
 }
 
 if(!empty($_REQUEST['rows'])) {
-	$rows = intval($_REQUEST['rows']);
-	if ($rows > 200) $rows = 50; //avoid abuses
-} else $rows = 50;
+	$rows = min(2000, intval($_REQUEST['rows']));
+} else {
+	$rows = 50;
+}
 
 // Bug in FeedBurner, it needs all items
 if (preg_match('/feedburner/i', $_SERVER['HTTP_USER_AGENT'])) {
