@@ -10,10 +10,11 @@ include('config.php');
 include(mnminclude.'html1.php');
 $globals['ads'] = false;
 
+array_push($globals['cache-control'], 'no-cache');
+
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
 
 force_authentication();
-array_push($globals['cache-control'], 'no-cache');
 
 if (!empty($_POST['id'])) {
 	$id = intval($_POST['id']);
