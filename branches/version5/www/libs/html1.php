@@ -837,6 +837,19 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 	memcache_madd($key, $output, 300);
 }
 
+// Print the "message" of the sub, if it exists
+function do_sub_message_right() {
+	global $db, $globals;
+
+	if ($globals['mobile'] || ! $globals['submnm']) return;
+
+	$properties = SitesMgr::get_extended_properties();
+	if (empty($properties['message'])) return;
+
+	$message = LCPBase::html($properties['message']);
+	Haanga::Load('message_right.html', compact('message'));
+	return;
+}
 
 function do_subheader($content, $selected = false) {
 // arguments: hash array with "button text" => "button URI"; Nº of the selected button

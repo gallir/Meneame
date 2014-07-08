@@ -64,13 +64,25 @@
 <br/>
 #}
 
-<fieldset><legend>{% trans _('entradilla') %}</legend>
+<fieldset><legend>{% trans _('límites de entradilla') %}</legend>
 	{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200" 
 			value="{{ extended.intro_min_len }}"/>
 	&nbsp;&nbsp;
 	{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000" 
 			value="{{ extended.intro_max_len }}"/><br/>
 	{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
+</fieldset>
+
+<br/>
+
+<fieldset><legend>{% trans _('mensajes') %}</legend>
+	<label>{% trans _('reglas para el envío') %}<br/>
+		<textarea name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
+	</label>
+	<br />
+	<label>{% trans _('mensaje barra lateral') %}<br/>
+		<textarea name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
+	</label>
 </fieldset>
 
 <br/>

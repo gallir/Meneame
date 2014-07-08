@@ -341,7 +341,14 @@ class SitesMgr {
 		$defaults = self::$extended_properties;
 		foreach ($prefs as $k => $v) {
 			if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v ) {
-				$dict[$k] = clean_input_string($v);
+				switch ($k) {
+					case 'rules':
+					case 'message':
+						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
+						break;
+					default:
+						$dict[$k] = clean_input_string($v);
+				}
 			}
 		}
 
@@ -357,9 +364,14 @@ class SitesMgr {
 	}
 
 	static public function get_extended_properties($id = false) {
+		static $properties = false, $last_id = false;
 		if ($id == false) {
 			$id = self::my_id();
 		}
+
+		if ($properties && $last_id = id) return $properties;
+
+		$last_id = $id;
 		$properties = self::$extended_properties;
 
 		$key = self::PREFERENCES_KEY.$id;

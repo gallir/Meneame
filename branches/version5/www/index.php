@@ -66,6 +66,7 @@ switch ($globals['meta']) {
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
+do_sub_message_right();
 do_banner_right();
 if ($globals['show_popular_published']) {
 	do_active_stories();

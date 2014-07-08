@@ -14,5 +14,13 @@
 	</ul></div>
 {% endif %}
 
+{% if globals.submnm && link.rules %}
+	<div class="faq">
+	<h3>{% trans _('por favor, respeta las normas del sub') %}</h3>
+	<p>{{ link.rules }}</p>
+	</div>
+
+{% endif %}
+
 {% include 'link/submit_empty_form.html' %}
 </div>

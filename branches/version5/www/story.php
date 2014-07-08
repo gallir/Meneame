@@ -240,6 +240,7 @@ print_story_tabs($tab_option);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
+do_sub_message_right();
 do_banner_right();
 // GEO
 if ($link->latlng) {

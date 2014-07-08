@@ -8,6 +8,13 @@
 
 
 class LCPBase {
+	
+	// Static function tht allows to convert to html for anonymous strings
+	public static function html($string, $fancy = true) {
+		$o = new LCPBase();
+		return $o->to_html($string, $fancy);
+	}
+
 	function to_html($string, $fancy = true) {
 		global $globals;
 

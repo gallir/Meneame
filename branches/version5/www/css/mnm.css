@@ -674,10 +674,14 @@ vertical-align: middle;
 margin-bottom:25px;
 padding: 4px;
 border: 1px solid #dadada;
--moz-border-radius: 4px 4px 0 0;
-border-radius: 4px 4px 0 0;
 }
 
+.sidebox.message, .sidebox.message a:visited, .sidebox.message a:link {
+color:#fff !important;
+background-color:#ccc;
+margin-bottom: 4px;
+font-size: 110%;
+}
 
 .sidebox .header {
 background-color: #aaa;

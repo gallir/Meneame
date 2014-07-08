@@ -87,6 +87,9 @@ function do_submit0() {
 	$link->randkey = rand(10000,10000000);
 	$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 	$link->site_properties = $site_properties;
+	if (! empty($link->site_properties['rules'])) {
+		$link->rules = LCPBase::html($link->site_properties['rules']);
+	}
 	if (!empty($_GET['url'])) {
 		$link->url = clean_input_url($_GET['url']);
 	}
