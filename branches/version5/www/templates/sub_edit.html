@@ -77,11 +77,11 @@
 
 <fieldset><legend>{% trans _('mensajes') %}</legend>
 	<label>{% trans _('reglas para el envío') %}<br/>
-		<textarea name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
+		<textarea maxlength="300" name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
 	</label>
 	<br />
 	<label>{% trans _('mensaje barra lateral') %}<br/>
-		<textarea name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
+		<textarea maxlength="300" name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
 	</label>
 </fieldset>
 

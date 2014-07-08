@@ -347,7 +347,7 @@ class SitesMgr {
 						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
 						break;
 					default:
-						$dict[$k] = clean_input_string($v);
+						$dict[$k] = mb_substr(clean_input_string($v), 100);
 				}
 			}
 		}
