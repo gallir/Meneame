@@ -317,7 +317,7 @@ function search_parse_query() {
 			case 'https':
 				$_REQUEST['words'] = $_REQUEST['q'];
 				$_REQUEST['o'] = 'date';
-				$_REQUEST['p'] = 'url_db';
+				$_REQUEST['p'] = 'url';
 				break;
 			case 'date':
 				$_REQUEST['o'] = 'date';
