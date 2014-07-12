@@ -578,12 +578,18 @@ function do_friends($option) {
 }
 
 function do_user_subheader($options, $selected = false, $rss = false, $rss_title = '') {
-	global $globals;
+	global $globals, $user, $current_user;
+
+	if ($current_user->user_id > 0 && $user->id != $current_user->user_id) { // Add link to discussion among them
+		$between = "type=comments&amp;u1=$user->username&amp;u2=$current_user->user_login";
+	} else {
+		$between = false;
+	}
 
 	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 
 	$vars = compact(
-		'options', 'selected', 'rss', 'rss_title'
+		'options', 'selected', 'rss', 'rss_title', 'between'
 	);
 	return Haanga::Load('/user/subheader.html', $vars);
 }

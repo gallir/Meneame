@@ -22,6 +22,7 @@ $routes = array(
 	'm'			=> 'submnm.php',
 	'user'		=> 'user.php',
 	'search'	=> 'search.php',
+	'between'	=> 'between.php',
 	'rss'		=> 'rss2.php',
 	'comments_rss'	=> 'comments_rss2.php',
 	'sneakme_rss'	=> 'sneakme_rss2.php',

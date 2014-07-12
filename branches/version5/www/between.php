@@ -139,7 +139,7 @@ if ($id1 > 0 && $id2 >0) {
 		if (! isset($all[$id]) && ! in_array($id, $leaves)) {
 			$code = urlencode(base64_encode(gzcompress(implode(",", $thread))));
 			echo '<div style="margin: -5px 0 15px 0;text-align:center; color: #888">';
-			echo '[<a href="'.$globals['base_url'].'between.php?type='.$type.'&amp;u1='.$u1.'&amp;u2='.$u2.'&amp;id='.$code.'">'._('enlace permanente').'</a>]<br/>';
+			echo '[<a href="'.$globals['base_url'].'between?type='.$type.'&amp;u1='.$u1.'&amp;u2='.$u2.'&amp;id='.$code.'">'._('enlace permanente').'</a>]<br/>';
 			echo '<strong style="font-size: 15pt;text-shadow: 1px 1px 3px #aaa">&bull; &bull; &bull;</strong>';
 			echo '</div>';
 			$thread = array();
