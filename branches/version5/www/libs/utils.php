@@ -139,12 +139,13 @@ function email_exists($email, $check_previous_registered = true) {
 function check_email($email) {
 	global $globals;
 	require_once(mnminclude.'ban.php');
-	if (! preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,4}$/i', $email)) return false;
+	if (! preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,6}$/i', $email)) return false;
 
 	$username = preg_replace('/@.+$/', '', $email);
 	if ( substr_count($username, '.') > 3 || preg_match('/\.{2,}/', $username) ) return false; // Doesn't allow "..+" or more than 2 dots
 
-	if(check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
+	// check both, the full address and the domain
+	if(check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false; 
 	return true;
 }
 
