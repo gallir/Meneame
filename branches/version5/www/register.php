@@ -160,9 +160,13 @@ function do_register2() {
 			} else {
 				require_once(mnminclude.'mail.php');
 				$sent = send_recover_mail($user);
-				$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
-				Log::insert('user_new', $user->id, $user->id);
-				syslog(LOG_INFO, "New user $user->id $user->username $email $user_ip (". $_SERVER["HTTP_USER_AGENT"] .")");
+				if ($sent) {
+					$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
+					Log::insert('user_new', $user->id, $user->id);
+					syslog(LOG_INFO, "New user $user->id $user->username $email $user_ip (". $_SERVER["HTTP_USER_AGENT"] .")");
+				} else {
+					register_error(_("error enviando el correo electrónico, seguramente está bloqueado"));
+				}
 			}
 			echo '</fieldset>'."\n";
 		} else {

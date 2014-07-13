@@ -9,6 +9,8 @@
 function send_mail($to, $subject, $message) {
 	global $globals;
 
+	if (! check_email($to)) return false;
+
 	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
 	else $domain = get_server_name();
 
@@ -22,10 +24,13 @@ function send_mail($to, $subject, $message) {
 	$headers .= 'MIME-Version: 1.0' . "\n";
 
 	mail($to, $subject, $message, $headers);
+	return true;
 }
 
 function send_recover_mail ($user) {
 	global $site_key, $globals;
+
+	if (! check_email($user->email)) return false;
 
 	$now = time();
 

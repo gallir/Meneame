@@ -82,8 +82,11 @@
 		<tr><th>{% trans _('sitio web') %}:</th><td><a href="{{url}}" {{nofollow}}>{{url}}</a></td></tr>
     {% endif %}
 	    <tr><th>{% trans _('desde') %}:</th><td>{% exec get_date_time user.date %}</td></tr>
-    {% if current_user.user_level == 'god' %}
-		<tr><th>{% trans _('email') %}:</th><td>{{user.email}} (<em>{{user->email_register}}</em>)</td></tr>
+    {% if current_user.user_id == user.id || current_user.user_level == 'god' %}
+		<tr><th>{% trans _('email') %}:</th>
+		<td>{{user.email}} 
+		{% if current_user.user_level == 'god' %}(<em>{{user->email_register}}</em>){% endif %}
+		</td></tr>
     {% endif %}
     {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
 	    <tr><th>{% trans _('clave API') %}:</th>
