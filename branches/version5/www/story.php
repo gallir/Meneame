@@ -549,6 +549,10 @@ function print_relevant_comments($link, $no_page) {
 			// The commenter has voted negative
 			if ($comment->vote_value < 0 && $comment->comment_len > 60) {
 				$comment->val *= 2;
+				// If the link has many negatives ("warned"), add little more weight to criticism
+				if ($link->has_warning) {
+					$comment->val *= 1.5;
+				}
 			}
 			// Gives a little advantage to larger comments
 			$comment->val *=  min(1.5, log($comment->comment_len, 10) / 1.8);
