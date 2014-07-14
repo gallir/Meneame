@@ -83,6 +83,9 @@ function do_save($link) {
 		if ($_POST['thumb_delete']) {
 			$link->delete_thumb();
 		}
+		if ($_POST['uri_update']) {
+			$link->get_uri();
+		}
 		if ($_POST['thumb_get']) {
 			$link->get_thumb();
 		} elseif (!empty($_POST['thumb_url'])) {
