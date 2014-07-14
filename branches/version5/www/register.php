@@ -163,7 +163,7 @@ function do_register2() {
 				if ($sent) {
 					$globals['user_ip'] = $user_ip; //we force to insert de log with the same IP as the form
 					Log::insert('user_new', $user->id, $user->id);
-					syslog(LOG_INFO, "New user $user->id $user->username $email $user_ip (". $_SERVER["HTTP_USER_AGENT"] .")");
+					syslog(LOG_INFO, "new user $user->id $user->username $email $user_ip");
 				} else {
 					register_error(_("error enviando el correo electrónico, seguramente está bloqueado"));
 				}
