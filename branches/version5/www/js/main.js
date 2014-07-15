@@ -1325,7 +1325,7 @@ var fancyBox = new function () {
 						if (typeof data.html != "undefined" && data.html.length > 0 ) {
 							$('#cboxLoadedContent').html(data.html);
 						} else {
-							window.location.href = myHref; /* to twitter.com */
+							$('#cboxLoadedContent').html('<a target="_blank" href="'+myHref+'">Not found</a>');
 						}
 					});
 			};
