@@ -1,6 +1,8 @@
 <?
 include_once('../config.php');
 
+// Designed originally to download and cache Twitter oembed
+
 header('Content-Type: application/json; charset=utf-8');
 
 $service = clean_input_string($_GET['s']);
@@ -29,16 +31,19 @@ if ($cache) {
 }
 
 // Get the url if not cached
+$cache = new Annotation($key);
+
 $res = get_url($url);
 if (! $res || ! $res['content'] || $res['http_code'] != 200) {
-	die;
+	$cache->time = time() + 3600; // if it failed, cache for one hour
+	$cache->text = '{}'; // Return empty object
+	
+} else {
+	$cache->time = time() + 86400 * 7; // 7 days in cache
+	$cache->text = $res['content'];
 }
 
-$cache = new Annotation($key);
-$cache->text = $res['content'];
-$cache->time = time() + 86400 * 7; // 7 days in cache
 $cache->store();
-
 echo $cache->text;
 
 

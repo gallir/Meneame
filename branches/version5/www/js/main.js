@@ -1307,7 +1307,7 @@ var fancyBox = new function () {
 			ajaxName = "youtube";
 		} else if ( (v = myHref.match(/twitter\.com\/.+?\/status\/(\d+)/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('en Twitter') %}</a>';
-			html="Loading..";
+			html=" ";
 			if (is_mobile)  {
 				width = '100%';
 				height = '100%';
@@ -1322,8 +1322,10 @@ var fancyBox = new function () {
 				var options = { s: "tweet", id: v[1] };
 				$.getJSON(base_url+"backend/json_cache", options, 
 					function (data) {
-						if (typeof data.html != "undefined") {
+						if (typeof data.html != "undefined" && data.html.length > 0 ) {
 							$('#cboxLoadedContent').html(data.html);
+						} else {
+							window.location.href = myHref; /* to twitter.com */
 						}
 					});
 			};
