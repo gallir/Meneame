@@ -920,7 +920,6 @@ function get_url($url, $referer = false, $max=500000, $log =true) {
 	$response = @curl_exec($session);
 	if (!$response && $log) {
 			syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
-			echo "<! -- CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session) . " -->\n";
 			return false;
 	}
 	$header_size = curl_getinfo($session,CURLINFO_HEADER_SIZE);
@@ -928,7 +927,6 @@ function get_url($url, $referer = false, $max=500000, $log =true) {
 	$result['content'] = substr($response, $header_size, $max);
 	if (preg_match('/Content-Encoding: *gzip/i', $result['header'])) {
 			$result['content'] = gzBody($result['content']);
-			echo "<!-- get_url gzinflating -->\n";
 	}
 	$result['http_code'] = curl_getinfo($session,CURLINFO_HTTP_CODE);
 	$result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);

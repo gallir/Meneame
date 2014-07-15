@@ -1285,7 +1285,7 @@ var historyManager = new function () {
 
 var fancyBox = new function () {
 	this.parse = function ($e) {
-		var iframe = false, title, href, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
+		var iframe = false, title = false, html = false, href = false, innerWidth = false, innerHeight = false, maxWidth, maxHeight, onLoad = false, onComplete = false, v, myClass, width = false, height = false, overlayClose = true, target = '';
 		var myHref = $e.data('real_href') || $e.attr('href');
 		var myTitle, photo = false;
 		var ajaxName = "image";
@@ -1305,6 +1305,28 @@ var fancyBox = new function () {
 			maxWidth = false;
 			maxHeight = false;
 			ajaxName = "youtube";
+		} else if ( (v = myHref.match(/twitter\.com\/.+?\/status\/(\d+)/)) ) {
+			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('en Twitter') %}</a>';
+			html="Loading..";
+			if (is_mobile)  {
+				width = '100%';
+				height = '100%';
+			} else {
+				innerWidth = 550;
+				innerHeight = 500;
+			}
+			maxWidth = false;
+			maxHeight = false;
+			ajaxName = "tweet";
+			onComplete = function() {
+				var options = { s: "tweet", id: v[1] };
+				$.getJSON(base_url+"backend/json_cache", options, 
+					function (data) {
+						if (typeof data.html != "undefined") {
+							$('#cboxLoadedContent').html(data.html);
+						}
+					});
+			};
 		} else if ( (v = myHref.match(/(?:vimeo\.com\/(\d+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vimeo') %}</a>';
 			if (is_mobile)  {
@@ -1355,12 +1377,13 @@ var fancyBox = new function () {
 		if ( typeof myClass == "string" && (linkId = myClass.match(/l:(\d+)/))) {
 			/* It's a link, call go.php */
 			var link = linkId[1];
-			onLoad = function() {
+			setTimeout(function() {
 				$.get(base_url_sub + 'go?quiet=1&id='+link);
-			};
+			}, 10);
 		}
 
 		$.colorbox({
+			'html': html,
 			'photo': photo,
 			'href': href,
 			'transition': 'none',
@@ -1378,6 +1401,7 @@ var fancyBox = new function () {
 			'onOpen': function () {
 				historyManager.push(ajaxName, $.colorbox.close);
 			},
+			'onComplete': onComplete,
 			'onClosed': function () {
 				 historyManager.pop(ajaxName);
 			}
@@ -1743,7 +1767,7 @@ function analyze_hash(force) {
 
 		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
-				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+/i))
+				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+|twitter\.com\/.+?\/status\/\d+/i))
 			&& ! aClass.match(/cbox/) 
 			&& ! $a.attr("target")) {
 			if (fancyBox.parse($a)) return false;
