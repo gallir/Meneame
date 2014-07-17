@@ -1305,7 +1305,7 @@ var fancyBox = new function () {
 			maxWidth = false;
 			maxHeight = false;
 			ajaxName = "youtube";
-		} else if ( (v = myHref.match(/twitter\.com\/.+?\/status\/(\d+)/)) ) {
+		} else if ( (v = myHref.match(/twitter\.com\/.+?\/(?:status|statuses)\/(\d+)/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('en Twitter') %}</a>';
 			html=" ";
 			if (is_mobile)  {
@@ -1769,7 +1769,7 @@ function analyze_hash(force) {
 
 		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
-				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+|twitter\.com\/.+?\/status\/\d+/i))
+				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+|twitter\.com\/.+?\/(?:status|statuses)\/\d+/i))
 			&& ! aClass.match(/cbox/) 
 			&& ! $a.attr("target")) {
 			if (fancyBox.parse($a)) return false;
