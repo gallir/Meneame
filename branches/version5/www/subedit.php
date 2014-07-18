@@ -29,6 +29,7 @@ if (! $id) $id = -1;
 
 $errors = array();
 $site = SitesMgr::get_info();
+$extended = array();
 
 
 if (! SitesMgr::can_edit($id)) {

@@ -364,7 +364,7 @@ class SitesMgr {
 	}
 
 	static public function get_extended_properties($id = false) {
-		static $properties = false, $last_id = false;
+		static $properties = array(), $last_id = false;
 		if ($id == false) {
 			$id = self::my_id();
 		}
