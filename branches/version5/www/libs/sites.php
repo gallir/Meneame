@@ -369,7 +369,7 @@ class SitesMgr {
 			$id = self::my_id();
 		}
 
-		if ($properties && $last_id = id) return $properties;
+		if (! empty($properties) && $last_id == $id) return $properties;
 
 		$last_id = $id;
 		$properties = self::$extended_properties;
