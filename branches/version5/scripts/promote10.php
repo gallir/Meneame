@@ -14,7 +14,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 1);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.12);
+define (PUB_PERC, 0.15);
 
 $sites = SitesMgr::get_active_sites();
 
@@ -527,12 +527,12 @@ function update_link_karma($site, $link) {
 				} else {
 					$low_karma_coef = 1;
 				}
-				$bonus = round($c * 0.4 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
+				$bonus = round($c * 0.5 * $link->karma * $low_karma_coef * (1 - 5 * $link->negatives/$link->votes));
 				echo "BONUS: $link->karma $p, $c -> $bonus ($link->low_karma_perc, $low_karma_coef, $link->negatives/$link->votes)\n";
 			} else {
 				// Decrease for high affinity between voters
 				$c = $c - 1;
-				$bonus = - round($c * 0.4 * $link->karma);
+				$bonus = - round($c * 0.5 * $link->karma);
 				echo "PENALIZATION: $link->karma $p, $c -> $bonus\n";
 			}
 			if (abs($bonus) > 10) {
