@@ -228,10 +228,19 @@ def ban_ip(ip, reason, time):
 	if not configuration.dry:
 		try:
 			c = DBM.cursor('update')
-			c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
+			c.execute("select ban_text from bans where ban_type = %s AND ban_text = %s AND (ban_expire IS null OR ban_expire > now())", ('noaccess', ip))
+			exists = c.rowcount
+
+			if not exists:
+				c.execute("REPLACE INTO bans (ban_type, ban_text, ban_comment, ban_expire) VALUES (%s, %s, %s, date_add(now(), interval %s second))", ("noaccess", ip, reason, time))
+
 			c.close()
 			DBM.commit()
 			DBM.close('update')
+
+			if exists: 
+				return True
+
 		except Exception as e:
 			DBM.close('update')
 			syslog.syslog(syslog.LOG_INFO, "Error in DB blocking IP: " + ip + " " + unicode(e))
