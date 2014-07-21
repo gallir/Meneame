@@ -73,8 +73,8 @@ if ($globals['show_popular_published']) {
 }
 // do_banner_promotions();
 if ($globals['show_popular_published']) {
-	do_best_stories();
 	do_most_clicked_stories();
+	do_best_stories();
 }
 do_banner_promotions();
 // do_best_sites();
