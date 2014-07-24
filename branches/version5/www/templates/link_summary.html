@@ -100,7 +100,7 @@
 		<span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
     	{% if self.status == 'published' %}
 		    {% trans _('publicado: ') %}
-			<span data-ts="{{ self.date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
+			<span data-ts="{{ self.sub_date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
 		{% endif %}
 	</div>
 
