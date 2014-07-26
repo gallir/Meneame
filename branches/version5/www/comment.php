@@ -120,7 +120,7 @@ function print_answers($id, $level, $visited = false) {
 	$answers = $db->get_col($sql);
 	if ($answers) {
 		$type = 'comment';
-		echo '<div style="padding-left: 6%">'."\n";
+		echo '<div style="padding-left: 6%">';
 		echo '<ol class="comments-list">';
 		foreach ($answers as $dbanswer) {
 			if (in_array($dbanswer, $visited)) continue;
@@ -136,8 +136,8 @@ function print_answers($id, $level, $visited = false) {
 			$visited[] = $answer->id;
 			echo '</li>';
 		}
-		echo "</ol>\n";
-		echo '</div>'."\n";
+		echo '</ol>';
+		echo '</div>';
 		if ($level == 0) {
 			$ids = implode(',', $printed);
 			Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));

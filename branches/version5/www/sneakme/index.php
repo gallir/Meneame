@@ -231,31 +231,31 @@ if ($current_user->user_id > 0) {
 if ($argv[0] == '_geo') {
 	echo '<div class="topheading"><h2>'._('notas de las últimas 24 horas').'</h2></div>';
 	echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px;"></div></div>';
-?>
-<script type="text/javascript">
-var baseicon;
-var geo_marker_mgr = null;
+	?>
+	<script type="text/javascript">
+	var baseicon;
+	var geo_marker_mgr = null;
 
-function onLoad(lat, lng, zoom, icon) {
-	baseicon = new GIcon();
-	baseicon.iconSize = new GSize(20, 25);
-	baseicon.iconAnchor = new GPoint(10, 25);
-	baseicon.infoWindowAnchor = new GPoint(10, 10);
-	if (geo_basic_load(lat||18, lng||15, zoom||2)) {
-		geo_map.addControl(new GLargeMapControl());
-		geo_marker_mgr = new GMarkerManager(geo_map);
-		geo_load_xml('post', '', 0, base_url+"img/geo/common/geo-newnotame01.png");
-		GEvent.addListener(geo_map, 'click', function (overlay, point) {
-			if (overlay && overlay.myId > 0) {
-				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
-				overlay.openInfoWindowHtml(data);
-				});
-			} //else if (point) geo_map.panTo(point);
-		});
+	function onLoad(lat, lng, zoom, icon) {
+		baseicon = new GIcon();
+		baseicon.iconSize = new GSize(20, 25);
+		baseicon.iconAnchor = new GPoint(10, 25);
+		baseicon.infoWindowAnchor = new GPoint(10, 10);
+		if (geo_basic_load(lat||18, lng||15, zoom||2)) {
+			geo_map.addControl(new GLargeMapControl());
+			geo_marker_mgr = new GMarkerManager(geo_map);
+			geo_load_xml('post', '', 0, base_url+"img/geo/common/geo-newnotame01.png");
+			GEvent.addListener(geo_map, 'click', function (overlay, point) {
+				if (overlay && overlay.myId > 0) {
+					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
+					overlay.openInfoWindowHtml(data);
+					});
+				} //else if (point) geo_map.panTo(point);
+			});
+		}
 	}
-}
-</script>
-<?
+	</script>
+	<?
 } else {
 	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
 	if ($posts) {
@@ -283,25 +283,12 @@ function onLoad(lat, lng, zoom, icon) {
             			'title' => $page_title);
 			Haanga::Load('share.html', $vars);
 			echo '</div>';
+			
+			print_answers($post_id, 1);
 
-			// Print "conversation" for a given note
-			$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE conversation_type='post' and conversation_to = $post_id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
-
-			if ($answers) {
-				echo '<div style="padding-left: 40px; padding-top: 10px">';
-				echo '<ol class="comments-list">';
-				foreach ($answers as $answer) {
-					echo '<li>';
-					$answer->print_summary();
-					echo '</li>';
-					$ids[] = $answer->id;
-				}
-				echo "</ol>";
-				echo '</div>'."\n";
-			}
+		} else {
+			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
 		}
-
-		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
 
 		// Update conversation time
 		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
@@ -316,3 +303,43 @@ echo '</div>';
 if ($rows > 15) do_footer_menu();
 do_footer();
 
+function print_answers($id, $level, $visited = false) {
+	// Print "conversation" for a given note
+	global $db;
+
+	if (! $visited) {
+		$visited = array();
+		$visited[] = $id;
+	}
+	$printed = array();
+
+	$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE conversation_type='post' and conversation_to = $id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
+	$parent_reference = "/@\p{L}[\._\p{L}\d]+,$id/ui"; // To check that the notes references to $id
+
+	if ($answers) {
+		echo '<div style="padding-left: 5%; padding-top: 5px;">';
+		echo '<ol class="comments-list">';
+		foreach ($answers as $answer) {
+			if (in_array($answer->id, $visited)) continue;
+			
+			// Check the post has a real reference to the parent (with the id), ignore othewrise
+			if (! preg_match($parent_reference, $answer->content)) continue;
+
+			echo '<li>';
+			$answer->print_summary();
+			echo '</li>';
+			if ($level > 0) {
+				$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
+				$visited = array_merge($visited, $res);
+			}
+			$printed[] = $answer->id;
+			$visited[] = $answer->id;
+		}
+		echo '</ol>';
+		echo '</div>';
+		if ($level == 0) {
+			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $printed)));
+		}
+	}
+	return $printed;
+}
