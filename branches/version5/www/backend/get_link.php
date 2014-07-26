@@ -25,7 +25,7 @@ if ($link->avatar) {
 }
 echo '<strong>' . $link->title . '</strong><br/>';
 echo _('por') . ' <strong>' . $user_login . '</strong><br/>';
-echo '<strong>' . $link->meta_name.', '.$link->category_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</strong></p>';
+echo '<strong>' . $link->sub_name.'&nbsp;|&nbsp;karma:&nbsp;'. intval($link->karma). '&nbsp;|&nbsp;'._('negativos').':&nbsp;'. $link->negatives. '</strong></p>';
 echo '<p style="margin-top: 4px">';
 if (($image = $link->has_thumb()) ) {
 	echo "<img src='$image' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
