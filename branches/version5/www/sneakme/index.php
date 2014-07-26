@@ -313,9 +313,6 @@ function print_answers($id, $level, $visited = false) {
 	}
 	$printed = array();
 
-
-	//$answers = $db->object_iterator("SELECT".Post::SQL.", conversations WHERE conversation_type='post' and conversation_to = $id and post_id = conversation_from ORDER BY conversation_from asc LIMIT 100", 'Post');
-
 	$answers = $db->get_col("SELECT conversation_from FROM conversations WHERE conversation_type='post' and conversation_to = $id ORDER BY conversation_from asc LIMIT 100");
 	$parent_reference = "/@\p{L}[\._\p{L}\d]+,$id/ui"; // To check that the notes references to $id
 
@@ -326,6 +323,7 @@ function print_answers($id, $level, $visited = false) {
 			if (in_array($post_id, $visited)) continue;
 			$answer = Post::from_db($post_id);
 			if (! $answer) continue;
+			if ( $answer->user_level == 'autodisabled' || $answers->user_level == 'disabled') continue;
 			
 			// Check the post has a real reference to the parent (with the id), ignore othewrise
 			if (! preg_match($parent_reference, $answer->content)) continue;
