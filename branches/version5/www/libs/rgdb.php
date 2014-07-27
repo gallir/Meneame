@@ -37,7 +37,7 @@ class RGDB extends mysqli {
 		if (! $this->connected) return;
 
 		// Rollback dangling transactions
-		if ($this->transactions > 0) {
+		if ($this->in_transaction > 0) {
 			parent::rollback();
 			syslog(LOG_INFO, "Dangling transactions, rollback forced ".$_SERVER['SCRIPT_NAME']);
 		}
