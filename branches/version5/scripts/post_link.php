@@ -46,7 +46,7 @@ function do_posts($link) {
 
 	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
-	// echo "Posting $link->uri: ".$globals['server_name']. "--".$globals["site_shortname"]."---". $globals['twitter_consumer_key'] ."\n"; die;
+	echo "Posting $link->uri: ".$globals['server_name']. "--".$globals["site_shortname"]."---". $globals['twitter_consumer_key'] ."\n"; 
 	$url = $link->get_permalink();
 	$image = $link->try_thumb('thumb_medium');
 	if ($image && ! file_exists($image)) {
@@ -60,11 +60,23 @@ function do_posts($link) {
 	}
 
 	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
-		twitter_post($link->title, $url, $image);
+		$r = false;
+		$tries = 0;
+		while (! $res && $tries < 4) {
+			$r = twitter_post($link->title, $url, $image);
+			$tries++;
+			if (! $r) sleep(4);
+		}
 	}
 
 	if ($globals['facebook_token']) {
-		facebook_post($link);
+		$r = false;
+		$tries = 0;
+		while (! $res && $tries < 4) {
+			$r = facebook_post($link);
+			$tries++;
+			if (! $r) sleep(4);
+		}
 	}
 
 	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
