@@ -20,8 +20,10 @@ function twitter_post($text, $short_url, $image = false) {
 			return;
 	}
 
-	$maxlen = 140 - 24; //strlen($short_url);
-	$msg = mb_substr(text_to_summary(html_entity_decode($text), $maxlen), 0, $maxlen) . ' ' . $short_url;
+	$maxlen = 140 - 24; // minus the url length
+	$msg = mb_substr(text_to_summary(html_entity_decode($text), $maxlen), 0, $maxlen);
+	$msg_full = $msg . ' ' . $short_url;
+
 	$req_url = 'https://api.twitter.com/oauth/request_token';
 	$acc_url = 'https://api.twitter.com/oauth/access_token';
 	$authurl = 'https://api.twitter.com/oauth/authorize';
@@ -33,9 +35,9 @@ function twitter_post($text, $short_url, $image = false) {
 	$oauth->setRequestEngine( OAUTH_REQENGINE_CURL ); // For posting images
 	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);
 
-	$api_args = array("status" => $msg, "empty_param" => NULL);
+	$api_args = array("status" => $msg_full, "empty_param" => NULL);
 
-	if ($image && mb_strlen($msg < $maxlen - 24)) {
+	if ($image && mb_strlen($msg) < $maxlen - 24) { // If there is enough space for the image
 		echo "Adding image: $image\n";
 		$api_args['@media[]'] = '@'.$image;
 		$url = $api_media_url;
@@ -47,10 +49,14 @@ function twitter_post($text, $short_url, $image = false) {
 		$oauth->fetch($url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
 	} catch (Exception $e) {
 		syslog(LOG_INFO, 'Menéame, Twitter caught exception: '.  $e->getMessage(). " in ".basename(__FILE__)."\n");
+		echo "Twitter post failed: $msg " . mb_strlen($msg) . "\n";
+		return false;
 	}
 
 	// $response_info = $oauth->getLastResponseInfo();
 	// echo $oauth->getLastResponse() . "\n";
+
+	return true;
 }
 
 function twitter_post_basic($text, $short_url) {
@@ -173,5 +179,7 @@ function facebook_post($link, $text = '') {
 		$r = $facebook->api('/me/links', 'POST', $data);
 	} catch (Exception $e) {
 		syslog(LOG_INFO, 'Menéame, Facebook caught exception: '.  $e->getMessage(). " in ".basename(__FILE__)."\n");
+		return false;
 	}
+	return true;
 }
