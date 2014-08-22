@@ -593,7 +593,7 @@ class Link extends LCPBase {
 			$link_ip = $db->escape($this->ip);
 			$this->ip_int = $globals['user_ip_int'];
 
-			$r = $db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip_int, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', $this->ip_int, '$link_ip')");
+			$r = $db->query("INSERT INTO links (link_author, link_blog, link_status, link_randkey, link_date, link_sent_date, link_published_date, link_karma, link_anonymous, link_votes_avg, link_content_type, link_ip_int, link_ip) VALUES ($link_author, $link_blog, '$link_status', $link_randkey, FROM_UNIXTIME($link_date), FROM_UNIXTIME($link_sent_date), FROM_UNIXTIME($link_published_date), $link_karma, $link_anonymous, $link_votes_avg, '$link_content_type', $this->ip_int, '$link_ip')");
 			$this->id = $db->insert_id;
 		} else {
 		// update
