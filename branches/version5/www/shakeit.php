@@ -30,7 +30,6 @@ meta_get_current();
 $page = get_current_page();
 $offset = ($page-1)*$page_size;
 $rows = -1; // Don't show page numbers by default
-$cat = $_REQUEST['category'];
 
 $from = '';
 switch ($globals['meta']) {
@@ -85,9 +84,6 @@ switch ($globals['meta']) {
 		break;
 }
 
-if($cat) {
-	$where .= " AND category=$cat ";
-}
 
 $pagetitle = _('noticias pendientes');
 if ($page > 1) {

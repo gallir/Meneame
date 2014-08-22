@@ -274,7 +274,7 @@ class SitesMgr {
 			$date = "'$s->date'";
 		}
 
-		return $db->query("replace into sub_statuses (id, status, date, category, link, origen, karma) values ($s->id, '$s->status', $date, $s->category, $s->link, $s->origen, $s->karma)");
+		return $db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($s->id, '$s->status', $date, $s->link, $s->origen, $s->karma)");
 	}
 
 	static public function get_sub_subs($id = false) {
