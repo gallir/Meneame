@@ -306,7 +306,7 @@ if __name__ == '__main__':
 				logfile = openfile(configuration.logfile)
 			except (IOError), e:
 				print >> sys.stderr, e
-				syslog.syslog(syslog.LOG_INFO, "check_access IOError: " + e)
+				syslog.syslog(syslog.LOG_INFO, "check_access IOError: " + unicode(e))
 				exit(1)
 
 			counter += 1

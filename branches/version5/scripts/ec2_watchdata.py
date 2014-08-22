@@ -12,7 +12,7 @@ from boto.ec2.autoscale import AutoScaleConnection
 from boto.ec2.cloudwatch import CloudWatchConnection
 
 class WatchData:
-	datafile = "/tmp/watchdata.p"
+	datafile = "/var/tmp/watchdata.p"
 	dry = False
 	low_limit = 70
 	high_limit = 90

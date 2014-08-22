@@ -127,11 +127,9 @@ def do_site(site_id, site):
 		if link_value['c'] > 0 \
 				and link_value['v'] > 0 \
 				and 'clicks' in link_value:
-			links[link_id]['w'] = (1 - link_value['old']/(1.5*86400)) \
-						   * (link_value['v'] \
+			links[link_id]['w'] = (1 - link_value['old']/(1.5*86400)) * (link_value['v'] \
 						   + link_value['c'] \
-						   + link_value['clicks'] \
-						   * (1 - link_value['old']/86400) * 0.01)
+						   + link_value['clicks'] * (1 - link_value['old']/86400) * 0.03)
 
 	sorted_ids = sorted(links, cmp=lambda x, y:
 											cmp(links[y]['w'], links[x]['w']))
