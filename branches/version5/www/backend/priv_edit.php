@@ -89,6 +89,7 @@ function save_post ($message_id) {
 		// Verify that there are a period of 1 minute between posts.
 		if(intval($db->get_var("select count(*) from privates where user= $current_user->user_id and date > date_sub(now(), interval 15 second)"))> 0) {
 			echo 'ERROR: ' . _('debe esperar 15 segundos entre mensajes');
+			$db->rollback();
 			die;
 		};
 
