@@ -477,7 +477,6 @@ function do_most_clicked_sites() {
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
-	//$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' $category_list and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
 	if ($res) {
 		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 		echo $output;
@@ -581,7 +580,6 @@ function do_active_stories() {
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
-	$category_list	= '';
 	$title = _('destacadas');
 	$url = $globals['base_url'].'top_active';
 
