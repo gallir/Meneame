@@ -164,7 +164,7 @@ class RGDB extends mysqli {
 			header('Content-Type: text/plain');
 			echo "$str ($this->error)\n";
 		}
-		syslog(LOG_NOTICE, "DB ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
+		syslog(LOG_NOTICE, "rgdb.php ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
 	}
 
 	function flush() {

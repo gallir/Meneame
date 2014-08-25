@@ -185,6 +185,11 @@ class SitesMgr {
 					$new->karma = $link->karma;
 				}
 				$r = $db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
+				if (! $r) {
+					$db->rollback();
+					syslog(LOG_INFO, "Failed transaction replace sub_statuses: ".$link->get_permalink());
+					return false;
+				}
 			}
 		}
 
@@ -200,9 +205,7 @@ class SitesMgr {
 			return false;
 		}
 
-		$db->commit();
-		return true;
-
+		return $db->commit();
 	}
 
 	// TODO: transient, for migration, edit/modify later

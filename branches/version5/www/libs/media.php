@@ -16,6 +16,7 @@ class Media {
 
 //	private static $__access_key = $globals['Amazon_access_key'];
 //	private static $__secret_key = $globals['Amazon_secret_key'];
+	static $lastHTTPCode = 0;
 
 
 	public static function put($file, $type, $name = false) {
@@ -24,13 +25,17 @@ class Media {
 		if (empty($type)) $type = 'notype';
 		$uri = "$type/$name";
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
-		if (S3::putObjectFile($file, $globals['Amazon_S3_media_bucket'], $uri, S3::ACL_PUBLIC_READ, array(), array(
+		$response = S3::putObjectFile($file, $globals['Amazon_S3_media_bucket'], $uri, S3::ACL_PUBLIC_READ, array(), array(
 			"Cache-Control" => "max-age=864000",
-			"Expires" => gmdate("D, d M Y H:i:s T", time() + 864000) )) ) {
+			"Expires" => gmdate("D, d M Y H:i:s T", time() + 864000) ));
+
+		if ($response) {
 			// syslog(LOG_NOTICE, "Meneame, uploaded $uri to S3");
+			$lastHTTPCode = 200;
 			return true;
 		}
 		syslog(LOG_NOTICE, "Meneame, failed to upload $uri to S3");
+		$lastHTTPCode = 0;
 		return false;
 	}
 
@@ -38,7 +43,10 @@ class Media {
 		global $globals;
 		$uri = "$type/$file";
 		S3::setAuth($globals['Amazon_access_key'], $globals['Amazon_secret_key']);
-		if ( ($object = @S3::getObject($globals['Amazon_S3_media_bucket'], $uri, $output)) ) {
+		$object = @S3::getObject($globals['Amazon_S3_media_bucket'], $uri, $output);
+		$lastHTTPCode =  $object->code;
+		
+		if ($object) {
 			return $object;
 		}
 		// syslog(LOG_NOTICE, "Meneame, failed to get $uri from S3 to $output code: " . S3::$lastHTTPCode);
@@ -73,4 +81,3 @@ class Media {
 	}
 }
 
-?>

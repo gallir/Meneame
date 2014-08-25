@@ -158,14 +158,14 @@ function avatar_get_from_db($user, $size=0) {
 			$delete_it = true;
 			$original = "$file_base-orig.jpg";
 		} else {
-			$http_code = S3::$lastHTTPCode;
+			$http_code = Media::$lastHTTPCode;
 			if ((is_readable($file_base . '-80.jpg') && filesize($file_base . '-80.jpg') > 0)
 					|| Media::get("$user-$time-80.jpg", 'avatars', "$file_base-80.jpg") ) {
 				$original = $file_base . '-80.jpg';
 			}
 		}
 
-		if ($globals['Amazon_S3_delete_allowed'] && ! $original && $http_code == 404 && S3::$lastHTTPCode == 404) { // The images were not found in S3
+		if ($globals['Amazon_S3_delete_allowed'] && ! $original && $http_code == 404 && Media::$lastHTTPCode == 404) { // The images were not found in S3
 			if (is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
 				syslog(LOG_INFO, "Meneame, removing avatars not found in S3 user $user time $time");
 				avatars_remove($user);
