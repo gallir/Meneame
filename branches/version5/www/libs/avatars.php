@@ -59,7 +59,12 @@ function avatars_manage_upload($user, $name, $filename = false) {
 	if($name) {
 		move_uploaded_file($filename, $file_base . '-orig.img');
 	} else {
-		rename($filename, $file_base . '-orig.img');
+		$r = copy($filename, $file_base . '-orig.img');
+		@unlink($filename);
+		if (! $r) {
+			syslog(LOG_INFO, "Error copying avatar from $filename to $file_base" . '-orig.img');
+			return false;
+		}
 	}
 
 	avatar_resize("$file_base-orig.img", "$file_base-80.jpg", 80);
