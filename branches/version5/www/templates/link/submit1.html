@@ -7,6 +7,14 @@
 	{% if not errors %}
 	<h2>{% trans _('paso 2 de 3') %}</h2>
 	{% endif %}
+
+	{% if link.rules %}
+		<div class="faq">
+		<h3>{% trans _('normas de envío') %}</h3>
+		<p>{{ link.rules }}</p>
+		</div>
+	{% endif %}
+
 	{% include 'link/edit.html' %}
 {% else %}
 	{% include 'link/submit_empty_form.html' %}
