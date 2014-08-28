@@ -452,7 +452,7 @@ foreach ($res as $dbuser) {
 		$user->karma_calculated = time();
 		$user->store();
 		// If we run in the same server as the database master, wait few milliseconds
-		if (!$db->dbmaster) {
+		if (! isset($db->dbmaster)) {
 			usleep(5000); // wait 1/200 seconds
 		}
 	}
