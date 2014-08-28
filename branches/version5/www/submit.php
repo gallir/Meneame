@@ -111,7 +111,7 @@ function do_submit1() {
 	if (empty($_POST['url']) && empty($site_properties['no_link'])) {
 		add_submit_error( _('debe especificar enlace'));
 		return false;
-	}
+	} 
 
 	if (! empty($_POST['url'])) {
 		if (! empty($site_properties['no_anti_spam'])) {
@@ -285,6 +285,11 @@ function do_submit1() {
 	$link->is_new = true; // Disable several options in the editing form
 	$link->status='discard';
 	$link->author=$current_user->user_id;
+
+	if (! empty($site_properties['rules']) && $site_properties['no_link'] == 2) {
+		$link->rules = LCPBase::html($site_properties['rules']);
+	}
+
 
 
 	$edit = false;
