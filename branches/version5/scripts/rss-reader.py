@@ -111,9 +111,10 @@ def get_candidate_blogs(days, min_karma):
 		SELECT link_blog, blog_url, blog_feed,
 				UNIX_TIMESTAMP(blog_feed_checked),
 				UNIX_TIMESTAMP(blog_feed_read)
-			FROM links, blogs
-			WHERE link_status in ('published')
-				AND link_date > date_sub(now(), interval %s day)
+			FROM sub_statuses, links, blogs
+			WHERE 
+				id = 1 AND status = "published" AND date > date_sub(now(), interval %s day)
+				AND link_id = link
 				AND blog_id = link_blog
 				AND blog_type in ('blog', 'noiframe')
 				AND (blog_feed_read is null
@@ -121,7 +122,7 @@ def get_candidate_blogs(days, min_karma):
 			GROUP BY blog_id
 			HAVING count(*) < %s
 	"""
-	cursor.execute(query, (days, days))
+	cursor.execute(query, (days, days/3))
 	for row in cursor:
 		blog = BaseBlogs()
 		blog.id, blog.url, blog.feed, blog.checked, blog.read = row
@@ -132,19 +133,24 @@ def get_candidate_blogs(days, min_karma):
 
 		query = """
 			SELECT user_login, user_id, user_karma
-				FROM users
-				WHERE user_url in (%s, %s, %s, %s, %s, %s)
+				FROM users USE INDEX (user_url) 
+				WHERE user_url in (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 					AND user_karma > %s
 					AND user_level not in ('disabled', 'autodisabled')
 				ORDER BY user_karma desc limit 1
 		"""
-		inner_cursor.execute(query,('http://'+blog.base_url,
-						 'http://www.'+blog.base_url,
-						 'http://'+blog.base_url+'/',
-						 'http://www.'+blog.base_url+'/',
-						 blog.base_url,
-						 'www.'+blog.base_url,
-						 min_karma))
+		inner_cursor.execute(query,(
+						'http://'+blog.base_url,
+						'http://www.'+blog.base_url,
+						'http://'+blog.base_url+'/',
+						'http://www.'+blog.base_url+'/',
+						'https://'+blog.base_url,
+						'https://www.'+blog.base_url,
+						'https://'+blog.base_url+'/',
+						'https://www.'+blog.base_url+'/',
+						blog.base_url,
+						'www.'+blog.base_url,
+						min_karma))
 
 		result = inner_cursor.fetchone()
 		if result:
@@ -153,7 +159,7 @@ def get_candidate_blogs(days, min_karma):
 			blogs_ids.add(blog.id)
 			users_ids.add(blog.user_id)
 
-
+	print("End published blogs (%s)" % len(blogs))
 
 	# Select active users that have no published posts
 	query = """
@@ -161,7 +167,7 @@ def get_candidate_blogs(days, min_karma):
 			UNIX_TIMESTAMP(blog_feed_read), user_login, user_id, user_karma
 		FROM users, blogs
 		WHERE user_karma >= %s
-			AND user_url like 'http://%%'
+			AND user_url like 'http%%'
 			AND user_level not in ('disabled', 'autodisabled')
 			AND user_modification > date_sub(now(), interval %s day)
 			AND user_date < date_sub(now(), interval %s day)
@@ -174,6 +180,10 @@ def get_candidate_blogs(days, min_karma):
 			AND (blog_feed_read is null or blog_feed_read < date_sub(now(), interval 1 hour))
 			order by blog_id desc, user_karma desc
 	"""
+	print(query % (dbconf.blogs['active_min_karma'],
+						dbconf.blogs['active_min_activity'],
+						dbconf.blogs['active_min_age']) )
+
 	cursor.execute(query, (dbconf.blogs['active_min_karma'],
 						dbconf.blogs['active_min_activity'],
 						dbconf.blogs['active_min_age']) )
