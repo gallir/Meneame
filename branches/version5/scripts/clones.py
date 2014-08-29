@@ -56,19 +56,20 @@ def main():
 		for clon, ip_int in cursor:
 			ip = IPAddress(ip_int)
 			# print u, clon, ip
-			clones.add((u, clon, str(ip)))
-
-			if str(ip) not in ips_counter:
-				ips_counter[str(ip)] = 1
+			clones.add((u, clon, ip))
+			subnet = IPSubnet(ip)
+			if subnet not in ips_counter:
+				ips_counter[subnet] = 1
 			else:
-				ips_counter[str(ip)] += 1
+				ips_counter[subnet] += 1
 
 	#print clones, ips_counter
 
 	c = 0
 	for u, clon, ip in clones:
-		if ips_counter[ip] < 20:
-			print "Clon:", u, clon, ip, ips_counter[ip]
+		subnet = IPSubnet(ip)
+		if ips_counter[subnet] < 30:
+			print "Clon:", u, clon, ip, ips_counter[subnet]
 			insert = """REPLACE INTO clones (clon_from, clon_to, clon_ip) VALUES (%s, %s, %s)"""
 			update_cursor.execute(insert, (u, clon, ip))
 			insert = """INSERT IGNORE INTO clones (clon_to, clon_from, clon_ip) VALUES (%s, %s,	%s)"""
@@ -76,6 +77,8 @@ def main():
 			c += 1
 			if c % 10 == 0:
 				DBM.commit()
+		else:
+			print "Rejected: ", str(ip), subnet, ips_counter[subnet]
 	DBM.commit()
 	
 
@@ -85,6 +88,14 @@ def IPAddress(ip_int):
 		return ipaddr.IPAddress(long(ip_int))
 	except:
 		return False
+
+def IPSubnet(ip):
+	if ip.max_prefixlen <= 32:
+		prefix = 24
+	else:
+		prefix = 64
+	network = ipaddr.IPNetwork("%s/%d" % (str(ip), prefix))
+	return network.masked()
 
 def add_user_ip(user, ip, dictionary):
 	if not ip or ip.is_private:
