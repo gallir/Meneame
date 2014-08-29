@@ -19,7 +19,7 @@ def main():
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
-	parser.add_argument("user", help="Shows the users' clones")
+	parser.add_argument("user", help="Shows the user's clones")
 	configuration = parser.parse_args()
 	main()
 
