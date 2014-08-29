@@ -48,13 +48,13 @@ class MySysLogger():
 
 		if self.annotation > 0:
 			try:
-				history = pickle.load(open("/tmp/access_history.p", "rb" ))
+				history = pickle.load(open("/var/tmp/access_history.p", "rb" ))
 			except:
 				 history = []
 			history.append([int(now), int(self.partial/elapsed)])
 			history = history[-self.annotation:]
 
-			pickle.dump(history, open("/tmp/access_history.p", "wb" ))
+			pickle.dump(history, open("/var/tmp/access_history.p", "wb" ))
 
 			current = json.dumps(history)
 			store_annotation('access_history', current)

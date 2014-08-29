@@ -14,7 +14,7 @@ from boto.ec2.cloudwatch import CloudWatchConnection
 class WatchData:
 	datafile = "/var/tmp/watchdata.p"
 	dry = False
-	low_limit = 70
+	low_limit = 75
 	high_limit = 90
 	high_urgent = 95
 	stats_period = 120
