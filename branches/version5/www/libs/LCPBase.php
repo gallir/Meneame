@@ -67,7 +67,7 @@ class LCPBase {
 							$w = 'posts';
 							break;
 					}
-					return $matches[1].'<a href="'.$globals['base_url'].'search.php?w='.$w.'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
+					return $matches[1].'<a href="'.$globals['base_url'].'search?w='.$w.'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
 				}
 				break;
 
