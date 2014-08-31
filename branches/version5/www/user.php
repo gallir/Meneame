@@ -340,6 +340,7 @@ function do_history () {
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
+		Link::$original_status = true; // Show status in original sub
 		foreach($links as $link_id) {
 			$link->id=$link_id;
 			$link->read();

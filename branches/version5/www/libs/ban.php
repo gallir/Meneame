@@ -79,6 +79,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 }
 
 function subclasses_list($ip) {
+	// TODO: do it for IPv6, for at most the first 48 bits
 	$list = "'$ip'";
 	$array = explode('.', $ip);
 	$size = count($array) - 1;

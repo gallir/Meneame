@@ -47,7 +47,7 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
 	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
@@ -693,7 +693,7 @@ class Link extends LCPBase {
 
 		$this->is_votable();
 
-		$this->status = $this->get_a_status();
+		$this->get_current_sub_status_and_date();
 
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
@@ -1801,13 +1801,18 @@ class Link extends LCPBase {
 		return $this->mean_common_votes;
 	}
 
-	function get_a_status() {
+	function get_current_sub_status_and_date() {
         if (self::$original_status) {
-            return $this->sub_status_origen;
+            $this->status = $this->sub_status_origen;
+            $this->sub_date = $this->sub_date_origen; // Show the published date of the original sub
+        } elseif (!empty($this->sub_status)) {
+            $this->status = $this->sub_status;
         }
-		if (!empty($this->sub_status)) {
-            return $this->sub_status;
-        }
+	}
+
+	/* TODO: Used in backend/sneaker2.php, could be avoided */
+	function get_a_status() {
+		$this->get_current_sub_status_and_date();
 		return $this->status;
 	}
 
