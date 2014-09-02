@@ -36,6 +36,15 @@ if ($id ) {
 	$inner_join = "SELECT comment_id FROM comments WHERE comment_link_id = $id $order LIMIT $offset, $size";
 	$sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations INNER JOIN ($inner_join) as comment_id ON comment_id = conversation_to WHERE conversation_type='$type' GROUP BY conversation_to";
 } elseif (! empty($_POST['ids'])){
+	
+	// Don't count answers (posts) of disabled users
+	if ($type == 'post') {
+		$extra_from = ', posts, users';
+		$extra_where = 'and post_id = conversation_from and user_id = post_user_id and user_level not in ("disabled", "autodisabled")';
+	} else {
+		$extra_from = $extra_where = '';
+	}
+
 	// It selects the answers to a list of ids
 	$a = explode(',', $_REQUEST['ids'], 200);
 	if ($a && ($c = count($a)) > 0) {
@@ -43,7 +52,7 @@ if ($id ) {
 			$a[$i] = intval($a[$i]);
 		}
 		$ids = implode(',', $a);
-		$sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations WHERE conversation_type='$type' and conversation_to IN ($ids) GROUP BY conversation_to";
+		$sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations $extra_from WHERE conversation_type='$type' and conversation_to IN ($ids) $extra_where GROUP BY conversation_to";
 	}
 
 } else {
