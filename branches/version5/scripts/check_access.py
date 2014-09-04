@@ -30,8 +30,7 @@ class MySysLogger():
 		self.partial = 0
 		self.time = self.start = time.time()
 		self.quiet = quiet
-		if not self.quiet:
-			print "Starting syslogger"
+		print_message("Starting syslogger")
 
 	def run(self):
 		now = time.time()
@@ -42,9 +41,7 @@ class MySysLogger():
 		self.time = time.time()
 		if self.seconds > 0:
 			line = "partial %0.1f conn/sec %d (%.2f seconds), total %0.1f conn/sec %ld" % (self.partial/elapsed, self.partial, elapsed, self.total/(now-self.start), self.total)
-			if not self.quiet:
-				print line
-			syslog.syslog(syslog.LOG_INFO, line)
+			print_message(line)
 
 		if self.annotation > 0:
 			try:
@@ -67,9 +64,14 @@ class MySysLogger():
 		self.total += 1
 
 
-def openfile(filename):
+def openfile(filename, reopen = False):
 	logfile = open(filename,"rU")
-	logfile.seek(0,2)
+	if reopen:
+		""" Begining of file """
+		logfile.seek(0,0)
+	else:
+		""" End of file """
+		logfile.seek(0,2)
 	return logfile
 	
 def analyze(logfile):
@@ -118,9 +120,9 @@ def analyze(logfile):
 			rate = counter/configuration.period
 			ip_periods_seen = {}
 
-			if total > 0:
+			if not configuration.q and total > 0:
 				print rate, "c/sec"
-			if empties > 2:
+			if empties > 1:
 				return total
 			if counter == 0:
 				empties += 1
@@ -182,10 +184,11 @@ def analyze(logfile):
 						to_ban.add(ip)
 						ip_periods_seen[ip] = 2
 
-					low_intersection = set.intersection(*ip_periods)
-					for ip in [x for x in ip_low_exceeded if x in low_intersection and x not in ip_banned]:
-						to_ban.add(ip)
-						ip_periods_seen[ip] = low_history + 1
+					if ip_periods:
+						low_intersection = set.intersection(*ip_periods)
+						for ip in [x for x in ip_low_exceeded if x in low_intersection and x not in ip_banned]:
+							to_ban.add(ip)
+							ip_periods_seen[ip] = low_history + 1
 				
 					for ip in to_ban.copy():
 						rate = ip_counter[ip]/configuration.period
@@ -243,12 +246,11 @@ def ban_ip(ip, reason, time):
 
 		except Exception as e:
 			DBM.close('update')
-			syslog.syslog(syslog.LOG_INFO, "Error in DB blocking IP: " + ip + " " + unicode(e))
+			print_message("Error in DB blocking IP: " + ip + " " + unicode(e))
 			return False
 			
 
-	print "BAN:", ip, reason
-	syslog.syslog(syslog.LOG_INFO, "Block IP: " + ip + " " + reason)
+	print_message("Block IP: " + ip + " " + reason)
 
 	if configuration.mail:
 		""" Generate a report """
@@ -269,10 +271,17 @@ def ban_ip(ip, reason, time):
 			s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 			s.quit()
 		except Exception as e:
-			syslog.syslog(syslog.LOG_INFO, "Error sending email: " + reason + " (" + unicode(e) + ")")
+			print_message("Error sending email: " + reason + " (" + unicode(e) + ")")
 
 	return True
 
+def print_message(mess):
+	global configuration
+
+	if not configuration.q:
+		print mess
+	else:
+		syslog.syslog(syslog.LOG_INFO, mess)
 
 
 if __name__ == '__main__':
@@ -300,24 +309,30 @@ if __name__ == '__main__':
 	else:
 		syslogger = None
 
+	restart = False
+	fails = 0
 	while True:
 		try:
 			try:
-				logfile = openfile(configuration.logfile)
+				logfile = openfile(configuration.logfile, restart)
+				fails = 0
 			except (IOError), e:
-				print >> sys.stderr, e
-				syslog.syslog(syslog.LOG_INFO, "check_access IOError: " + unicode(e))
-				exit(1)
+				fails += 1
+				print_message("check_access IOError (%d): %s" % (fails, unicode(e)))
+				if fails > 10:
+					print_message("check_access exiting")
+					exit(1)
+
+				time.sleep(5)
+				continue
 
 			counter += 1
 			lines = analyze(logfile)
-			mess = "check_access, end: %d, %d, restarting in 1 second" % (counter, lines)
-			if not configuration.q:
-				print mess
-			else:
-				syslog.syslog(syslog.LOG_INFO, mess)
-			time.sleep(1)
+			restart = True
+			mess = "check_access, end: %d, %d, restarting in 5 seconds" % (counter, lines)
+			print_message(mess)
+			time.sleep(5)
 		except (KeyboardInterrupt), e:
-			print
+			print_message("Interrupted")
 			exit(0)
 	
