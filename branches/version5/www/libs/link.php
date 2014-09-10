@@ -1255,7 +1255,7 @@ class Link extends LCPBase {
 		}
 
 		// Give a small bonus (= $w) to links according to their clicks
-		if ($this->karma > 0 && $globals['click_counter'] && $this->id >= $globals['click_counter']
+		if (! empty($this->url) && $this->karma > 0 && $globals['click_counter'] && $this->id >= $globals['click_counter']
 			&& $globals['karma_clicks_bonus'] > 0
 			&& $this->negatives < $this->votes/5) {
 			$w = $globals['karma_clicks_bonus'];
