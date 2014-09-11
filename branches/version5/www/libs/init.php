@@ -19,8 +19,9 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 }
 
 // Basic initialization
-
-mb_internal_encoding('UTF-8');
+// mb_internal_encoding('UTF-8');
+// Use instead: 
+// default_charset = "UTF-8" in php ini
 
 
 if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
