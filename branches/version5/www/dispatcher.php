@@ -42,6 +42,7 @@ $routes = array(
 	'backend'	=> 'backend/dispatcher.php',
 	'notame'	=> 'sneakme/dispatcher.php',
 	'mobile'	=> 'mobile/dispatcher.php',
+	'captcha'	=> 'captcha.php',
 );
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
