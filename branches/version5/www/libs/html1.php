@@ -770,7 +770,7 @@ function do_best_posts() {
 function do_last_blogs() {
 	global $db, $globals, $dblang;
 
-	if ($globals['mobile'] || $globals['submnm']) return;
+	if (! empty($globals['mobile']) || !empty($globals['submnm'])) return;
 
 	$output = '';
 	$key = 'last_blogs_'.$globals['v'];

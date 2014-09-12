@@ -362,7 +362,7 @@ function get_date_time($epoch) {
 
 function get_server_name() {
 	global $globals;
-	return isset($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
+	return ! empty($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
 }
 
 function get_static_server_name() {
@@ -789,14 +789,13 @@ function json_encode_single($dict) {
 //
 // Memcache functions
 //
-// Uses also xcache if enabled and available
 
 $memcache = false;
 
 function memcache_menabled () {
 	global $globals;
 
-	return !empty($globals['memcache_host']) || ($globals['xcache_enabled'] && defined('XC_TYPE_VAR'));
+	return !empty($globals['memcache_host']);
 }
 
 function memcache_minit () {
@@ -807,8 +806,8 @@ function memcache_minit () {
 		$memcache = new Memcache;
 		if (!isset($globals['memcache_port'])) $globals['memcache_port'] = 11211;
 		if ( ! @$memcache->pconnect($globals['memcache_host'], $globals['memcache_port']) ) {
+			syslog(LOG_INFO, "Meneame: memcache init failed " . $globals['memcache_host']);
 			$memcache = false;
-			syslog(LOG_INFO, "Meneame: memcache init failed");
 			return false;
 		}
 		return true;
@@ -819,15 +818,6 @@ function memcache_minit () {
 function memcache_mget ($key) {
 	global $memcache, $globals;
 
-	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		if (xcache_isset($key)) {
-			return xcache_get($key);
-		} else {
-			return false;
-		}
-	}
-
 	// Check for memcache
 	if (memcache_minit()) return $memcache->get($key);
 	return false;
@@ -837,11 +827,6 @@ function memcache_mget ($key) {
 function memcache_madd ($key, $value, $expire=3600) {
 	global $memcache, $globals;
 
-	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		return xcache_set($key, $value, $expire);
-	}
-
 	// Check for memcache
 	if (memcache_minit()) return $memcache->set($key, $value, 0, $expire);
 	return false;
@@ -849,15 +834,6 @@ function memcache_madd ($key, $value, $expire=3600) {
 
 function memcache_mprint ($key) {
 	global $memcache, $globals;
-
-	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		if (xcache_isset($key)) {
-			echo xcache_get($key);
-			return true;
-		}
-		return false;
-	}
 
 	// Check for memcache
 	if (memcache_minit() && ($value = $memcache->get($key))) {
@@ -870,10 +846,7 @@ function memcache_mprint ($key) {
 function memcache_mdelete ($key) {
 	global $memcache, $globals;
 
-	// Use xcache vars if enabled and available
-	if ($globals['xcache_enabled'] && defined('XC_TYPE_VAR')) {
-		return xcache_unset($key);
-	} elseif (memcache_minit()) {
+	if (memcache_minit()) {
 		return $memcache->delete($key);
 	}
 	return false;

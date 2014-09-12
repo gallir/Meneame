@@ -122,7 +122,6 @@ $globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reache
 // Memcache, set hostname if enabled
 //$globals['memcache_host'] = 'localhost';
 $globals['memcache_port'] = 11211; // optional
-$globals['xcache_enabled'] = false; // enable it if want to use xcache vars
 
 
 // Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")

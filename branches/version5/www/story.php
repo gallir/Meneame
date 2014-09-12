@@ -197,6 +197,8 @@ if ($tab_option != 1 || $link->status == 'discard') {
 	$globals['noindex'] = true;
 }
 
+if (preg_match('/nsfw/i', $link->title)) $globals['ads'] = false;
+
 do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->status.'-'.$link->comments.'-'.$link->modified);
 
 // Enable user AdSense
