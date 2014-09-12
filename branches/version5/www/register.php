@@ -8,7 +8,7 @@
 
 include('config.php');
 include_once(mnminclude.'html1.php');
-include_once(mnminclude.'ts.php');
+include_once(mnminclude.'recaptcha2.php');
 include_once(mnminclude.'ban.php');
 
 $globals['ads'] = false;
