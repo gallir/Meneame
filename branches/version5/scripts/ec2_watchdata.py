@@ -11,13 +11,14 @@ import boto
 from boto.ec2.autoscale import AutoScaleConnection
 from boto.ec2.cloudwatch import CloudWatchConnection
 
+
 class WatchData:
 	datafile = "/var/tmp/watchdata.p"
 	dry = False
-	low_limit = 75
+	low_limit = 72
 	high_limit = 90
 	high_urgent = 95
-	stats_period = 120
+	stats_period = 60
 	history_size = 0
 
 	def __init__(self):
@@ -40,6 +41,9 @@ class WatchData:
 		self.measures = {}
 		self.emergency = False
 		self.history = None
+		self.trend = 0
+		self.exponential_average = 0
+		self.ts = 0
 
 	def __getstate__(self):
 		""" Don't store these objets """
@@ -59,6 +63,7 @@ class WatchData:
 		self.instances = len(self.group.instances)
 		self.desired = self.group.desired_capacity
 		self.name = groupname
+		self.ts = int(time.time())
 
 	def get_instances_info(self):
 		ids = [i.instance_id for i in self.group.instances]
@@ -66,27 +71,32 @@ class WatchData:
 	
 	def get_CPU_loads(self):
 		""" Read instances load and store in data """
+		measures = 0
 		for instance in self.group.instances:
 			load = self.get_instance_CPU_load(instance.instance_id)
 			if load is None:
 				continue
+			measures += 1
 			self.total_load += load
 			self.loads[instance.instance_id] = load
 			if load > self.max_load:
 				self.max_load = load
 				self.max_loaded = instance.instance_id
 
-		self.avg_load = self.total_load/self.instances
+		if measures > 0:
+			self.avg_load = self.total_load/measures
 
 	def get_instance_CPU_load(self, instance):
 		end = datetime.datetime.now()
-		start = end - datetime.timedelta(seconds=300)
+		start = end - datetime.timedelta(seconds=int(self.stats_period*3))
 
 		m = self.cw.get_metric_statistics(self.stats_period, start, end, "CPUUtilization", "AWS/EC2", ["Average"], {"InstanceId": instance})
 		if len(m) > 0:
-			self.measures[instance] = len(m)
-			ordered = sorted(m, key=lambda x: x['Timestamp'], reverse=True)
-			return ordered[0]['Average']
+			measures = self.measures[instance] = len(m)
+			ordered = sorted(m, key=lambda x: x['Timestamp'])
+			averages = [ x['Average'] for x in ordered]
+			average = reduce(lambda x, y: 0.4*x + 0.6*y, averages[-2:])
+			return average
 
 		return None
 
@@ -102,7 +112,7 @@ class WatchData:
 	def store(self, annotation = False):
 		if self.history_size > 0:
 			if not self.history: self.history = []
-			self.history.append([int(time.time()), len(self.group.instances), int(round(self.total_load))])
+			self.history.append([int(time.time()), len(self.group.instances), int(round(self.total_load)), int(round(self.avg_load))])
 			self.history = self.history[-self.history_size:]
 
 		pickle.dump(self, open(self.datafile, "wb" ))
@@ -157,8 +167,8 @@ class WatchData:
 
 	def kill_instance(self, id):
 		if self.action:
-			print self.action
-		print "Kill instance", id
+			print(self.action)
+		print("Kill instance", id)
 		syslog.syslog(syslog.LOG_INFO, "ec2_watch kill_instance: %s instances: %d (%s)" % (id, self.instances, self.action))
 		if self.dry:
 			return
@@ -167,8 +177,8 @@ class WatchData:
 
 	def set_desired(self, desired):
 		if self.action:
-			print self.action
-		print "Setting instances from %d to %d" % (self.instances, desired)
+			print(self.action)
+		print("Setting instances from %d to %d" % (self.instances, desired))
 		syslog.syslog(syslog.LOG_INFO, "ec2_watch set_desired: %d -> %d (%s)" % (self.instances, desired, self.action))
 		if self.dry:
 			return
