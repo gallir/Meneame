@@ -43,7 +43,7 @@ class User {
 	static function get_notification($id, $type) {
 		global $db;
 
-		$r =  $db->get_var("select counter from notifications where user = $id and type = '$type'");
+		$r =  intval($db->get_var("select counter from notifications where user = $id and type = '$type'"));
 
 		if ($r < 0) {
 			User::reset_notification($id, $type);
