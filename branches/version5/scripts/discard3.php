@@ -195,7 +195,12 @@ function depublish($site_id) {
 					foreach ($ids as $id) {
 						$u = new User($id);
 						if ($u->read) {
-						$u->add_karma(0.20, _('Negativo a retirada de portada'));
+							// Avoid abuse of users voting negative just to get more karma
+							$voted = $db->get_var("select count(*) from logs where log_type = 'user_depublished_vote' and log_user_id = $id and log_date > date_sub(now(), interval 48 hour)");
+							if ($voted < 5) {
+								$u->add_karma(0.20, _('Negativo a retirada de portada'));
+								Log::insert('user_depublished_vote', $l->id, $id);
+							}
 						}
 					}
 				}
