@@ -168,14 +168,11 @@
 
 
   <div class="edname">
-	{% if this_site_properties.facebook_page || this_site_properties.twitter_page %}
-		&nbsp;&nbsp;
-		{% if this_site_properties.facebook_page %}
-			<a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
-		{% endif %}
-		{% if this_site_properties.twitter_page %}
-			<a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
-		{% endif %}
+	{% if this_site_properties.facebook_page %}
+		<a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
+	{% endif %}
+	{% if this_site_properties.twitter_page %}
+		<a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
 	{% endif %}
   </div>
 
