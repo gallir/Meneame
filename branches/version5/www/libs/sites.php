@@ -328,12 +328,12 @@ class SitesMgr {
 		global $current_user, $db;
 
 		if (! $current_user->user_id) return false;
+		if ($current_user->admin) return true;
 
 		if ($id > 0) {
-			return $current_user->admin || $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
+			return $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
 		}
 
-		if ($current_user->admin) return true;
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 		
