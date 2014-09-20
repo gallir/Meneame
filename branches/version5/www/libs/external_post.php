@@ -121,7 +121,7 @@ function facebook_post($auth, $link, $text = '') {
 	$data = array(
 				'link' => $permalink,
 				'message' => $text,
-				'access_token' => $globals['facebook_token'],
+				'access_token' => $auth['facebook_token'],
 				'picture' => $thumb
 			);
 
