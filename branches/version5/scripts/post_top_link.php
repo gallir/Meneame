@@ -16,6 +16,7 @@ if (! $my_id > 0) {
 }
 
 SitesMgr::__init($my_id);
+$info = SitesMgr::get_info();
 $properties = SitesMgr::get_extended_properties();
 
 
@@ -38,7 +39,7 @@ if (! in_array($tops[0], $history) ) {
 		echo "Error reading link ". $tops[0] . "\n";
 		exit;
 	}
-	$url = $link->get_permalink(true);
+	$url = $link->get_permalink($info->sub);
 	if ($globals['url_shortener']) {
 		$short_url = $link->get_short_permalink();
 	} else {

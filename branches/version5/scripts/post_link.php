@@ -50,7 +50,7 @@ function do_posts($link) {
 
 	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
-	$url = $link->get_permalink(true);
+	$url = $link->get_permalink($info->sub);
 	echo "Posting $url: ".$globals['server_name']."\n"; 
 
 	$image = $link->try_thumb('thumb_medium');

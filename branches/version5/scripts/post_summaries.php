@@ -48,7 +48,7 @@ foreach ($link_sqls as $key => $sql) {
 	$link = new Link;
 	$link->id = $res->id;
 	if ($link->read()) {
-		$url = $link->get_permalink(true);
+		$url = $link->get_permalink($info->sub);
 		if ($globals['url_shortener']) {
 			$short_url = $link->get_short_permalink();
 		} else {
