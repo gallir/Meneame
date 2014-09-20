@@ -1022,7 +1022,7 @@ class Link extends LCPBase {
 		}
 	}
 
-	function get_permalink() {
+	function get_permalink($strict = false) {
 		global $globals;
 
 		if (empty($globals['server_name'])) {
@@ -1030,7 +1030,7 @@ class Link extends LCPBase {
 		} else {
 			$server_name = $globals['server_name'];
 		}
-		return 'http://'.$server_name.$this->get_relative_permalink();
+		return 'http://'.$server_name.$this->get_relative_permalink($strict);
 	}
 
 	function get_canonical_permalink($page = false) {

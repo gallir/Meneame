@@ -65,6 +65,7 @@ function do_header($title, $id='home', $options = false) {
 
 	$sites = $db->get_results("select * from subs where visible order by id asc");
 	$this_site = SitesMgr::get_info();
+	$this_site_properties = SitesMgr::get_extended_properties();
 
 	if ($this_site->nsfw) {
 		$globals['ads'] = false;
@@ -100,7 +101,7 @@ function do_header($title, $id='home', $options = false) {
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	}
 
-	$vars = compact('title', 'greeting', 'id', 'left_options', 'right_options', 'sites', 'this_site');
+	$vars = compact('title', 'greeting', 'id', 'left_options', 'right_options', 'sites', 'this_site', 'this_site_properties');
 	return Haanga::Load('header.html', $vars);
 }
 

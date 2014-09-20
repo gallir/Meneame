@@ -24,6 +24,18 @@ class SitesMgr {
 			'message' => '',
 	);
 
+	static public $extra_extended_properties = array(
+			'twitter_page' => '',
+			'twitter_consumer_key' => '',
+			'twitter_consumer_secret' => '',
+			'twitter_token' => '',
+			'twitter_token_secret' => '',
+			'facebook_page' => '',
+			'facebook_key' => '',
+			'facebook_secret' => '',
+			'facebook_token' => '',
+	);
+
 	static function __init($id = false) {
 		global $globals, $db;
 
@@ -90,6 +102,12 @@ class SitesMgr {
 		}
 	}
 
+	static public function get_id($name) {
+		global $db;
+
+		$name = $db->escape($name);
+		return $db->get_var("select id from subs where name = '$name'");
+	}
 
 	static public function deploy($link) {
 		global $db;
@@ -341,7 +359,7 @@ class SitesMgr {
 			$id = self::my_id();
 		}
 		$dict = array();
-		$defaults = self::$extended_properties;
+		$defaults = array_merge(self::$extended_properties, self::$extra_extended_properties);
 		foreach ($prefs as $k => $v) {
 			if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v ) {
 				switch ($k) {
@@ -350,7 +368,7 @@ class SitesMgr {
 						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
 						break;
 					default:
-						$dict[$k] = mb_substr(clean_input_string($v), 0, 100);
+						$dict[$k] = mb_substr(clean_input_string($v), 0, 140);
 				}
 			}
 		}

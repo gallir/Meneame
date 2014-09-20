@@ -32,7 +32,9 @@ $site = SitesMgr::get_info();
 $extended = array();
 
 
-if (! SitesMgr::can_edit($id)) {
+$can_edit = SitesMgr::can_edit($id);
+
+if (! $can_edit) {
 	$errors[] = _("no puede editar o crear nuevos");
 } else {
 	if ($_POST['created_from']) {
@@ -48,7 +50,7 @@ if (! SitesMgr::can_edit($id)) {
 	}
 }
 
-if ($id > 0) {
+if ($id > 0 && $can_edit) {
 	$globals['submnm_info'] = $sub = SitesMgr::get_info($id);
 	$extended = SitesMgr::get_extended_properties($id);
 }

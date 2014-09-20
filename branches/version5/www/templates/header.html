@@ -163,17 +163,21 @@
   <a href="{{ globals.base_url }}" class="logo-eli" title="{% trans _('portada') %} {{ globals.site_name }}">{% trans _('portada') %} {{ globals.site_name }}</a>
   <div class="edname">
 	<a href="{{ globals.base_url }}">{% trans _('edición') %} <b>{{ this_site.name_long }}</b></a>
-	{% if globals.facebook_page || globals.twitter_page %}
+  </div>
+{% endif %}
+
+
+  <div class="edname">
+	{% if this_site_properties.facebook_page || this_site_properties.twitter_page %}
 		&nbsp;&nbsp;
-		{% if globals.facebook_page %}
-			<a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
+		{% if this_site_properties.facebook_page %}
+			<a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
 		{% endif %}
-		{% if globals.twitter_page %}
-			<a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
+		{% if this_site_properties.twitter_page %}
+			<a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
 		{% endif %}
 	{% endif %}
-	</div>
-{% endif %}
+  </div>
 
 <!--search-->
   <div id="searchform" class="searchform">

@@ -6,16 +6,20 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function twitter_post($text, $short_url, $image = false) {
+function twitter_post($auth, $text, $short_url, $image = false) {
 	global $globals;
+
+	if (empty($auth['twitter_token']) || empty($auth['twitter_token_secret']) || empty($auth['twitter_consumer_key']) ||  empty($auth['twitter_consumer_secret'])) {
+		return false;
+	}	
 
 	if (!class_exists("OAuth")) {
 			syslog(LOG_NOTICE, "Meneame: pecl/oauth is not installed");
 			return;
 	}
 
-	if (! $globals['twitter_consumer_key'] || ! $globals['twitter_consumer_secret']
-		|| ! $globals['twitter_token'] || ! $globals['twitter_token_secret']) {
+	if (! $auth['twitter_consumer_key'] || ! $auth['twitter_consumer_secret']
+		|| ! $auth['twitter_token'] || ! $auth['twitter_token_secret']) {
 			syslog(LOG_NOTICE, "Meneame: consumer_key, consumer_secret, token, or token_secret not defined");
 			return;
 	}
@@ -30,10 +34,10 @@ function twitter_post($text, $short_url, $image = false) {
 	$api_url = 'https://api.twitter.com/1.1/statuses/update.json';
 	$api_media_url = 'https://api.twitter.com/1.1/statuses/update_with_media.json';
 
-	$oauth = new OAuth($globals['twitter_consumer_key'],$globals['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
+	$oauth = new OAuth($auth['twitter_consumer_key'],$auth['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
 	$oauth->debug = 1;
 	$oauth->setRequestEngine( OAUTH_REQENGINE_CURL ); // For posting images
-	$oauth->setToken($globals['twitter_token'], $globals['twitter_token_secret']);
+	$oauth->setToken($auth['twitter_token'], $auth['twitter_token_secret']);
 
 	$api_args = array("status" => $msg_full, "empty_param" => NULL);
 
@@ -57,65 +61,6 @@ function twitter_post($text, $short_url, $image = false) {
 	// echo $oauth->getLastResponse() . "\n";
 
 	return true;
-}
-
-function twitter_post_basic($text, $short_url) {
-	global $globals;
-
-	$t_status = urlencode(text_to_summary($text, 115) . ' ' . $short_url);
-	syslog(LOG_NOTICE, "Meneame: twitter updater called, $short_url");
-	$t_url = "http://twitter.com/statuses/update.xml";
-
-	if (!function_exists('curl_init')) {
-		syslog(LOG_NOTICE, "Meneame: curl is not installed");
-		return;
-	}
-	$session = curl_init();
-	curl_setopt($session, CURLOPT_URL, $t_url);
-	curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-	curl_setopt($session, CURLOPT_HEADER, false);
-	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
-	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
-	curl_setopt($session, CURLOPT_TIMEOUT, 20);
-	curl_setopt($session, CURLOPT_USERPWD, $globals['twitter_user'] . ":" . $globals['twitter_password']);
-	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($session, CURLOPT_POST, 1);
-	curl_setopt($session, CURLOPT_POSTFIELDS,"status=" . $t_status);
-	$result = curl_exec($session);
-	curl_close($session);
-}
-
-
-function jaiku_post($text, $short_url) {
-	global $globals;
-
-	syslog(LOG_NOTICE, "Meneame: jaiku updater called, $short_url");
-	$url = "http://api.jaiku.com/json";
-
-	if (!function_exists('curl_init')) {
-		syslog(LOG_NOTICE, "Meneame: curl is not installed");
-		return;
-	}
-
-
-	$postdata =  "method=presence.send";
-	$postdata .= "&user=" . urlencode($globals['jaiku_user']);
-	$postdata .= "&personal_key=" . $globals['jaiku_key'];
-	$postdata .= "&icon=337"; // Event
-	$postdata .= "&message=" . urlencode(text_to_summary(html_entity_decode($text), 115). ' ' . $short_url);
-
-	$session = curl_init();
-	curl_setopt($session, CURLOPT_URL, $url);
-	curl_setopt($session, CURLOPT_HEADER, false);
-	curl_setopt($session, CURLOPT_USERAGENT, "meneame.net");
-	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 15);
-	curl_setopt($session, CURLOPT_TIMEOUT, 20);
-	curl_setopt ($session, CURLOPT_FOLLOWLOCATION,1);
-	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($session, CURLOPT_POST, 1);
-	curl_setopt($session, CURLOPT_POSTFIELDS,$postdata);
-	$result = curl_exec($session);
-	curl_close($session);
 }
 
 function fon_gs($url) {
@@ -144,14 +89,19 @@ function pubsub_post() {
 }
 
 
-function facebook_post($link, $text = '') {
-	require_once(mnminclude.'facebook-php-sdk/facebook.php');
+function facebook_post($auth, $link, $text = '') {
 	global $globals;
+
+	if (empty($auth['facebook_token']) || empty($auth['facebook_key']) || empty($auth['facebook_secret'])) {
+		return false;
+	}
+
+	require_once(mnminclude.'facebook/facebook.php');
 
 
 	$facebook = new Facebook(array(
-		 'appId'  => $globals['facebook_key'],
-		 'secret' => $globals['facebook_secret'],
+		 'appId'  => $auth['facebook_key'],
+		 'secret' => $auth['facebook_secret'],
 		 'cookie' => true,
 		 'perms' => 'read_stream, publish_stream',
 	));

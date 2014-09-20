@@ -129,6 +129,52 @@
 <br/><br/>
 <input class="button" type="submit" value="{% trans _('guardar') %}" />
 </fieldset>
+
+
+<br/>
+<fieldset><legend>{% trans _('opciones avanzadas') %}</legend>
+
+	<fieldset><legend>{% trans _('publicar en Twitter') %} (<a href="https://dev.twitter.com/oauth/overview/application-owner-access-tokens">help!</a>)</legend>
+		<label for="twitter_page">{% trans _('perfil') %}</label>
+		<input type="url" value="{{ extended.twitter_page }}" placeholder="https://twitter.com/usuario" id="twitter_page" name="twitter_page" size="60" maxlength="60"/><br/>
+
+		<label for="twitter_consumer_key">{% trans _('consumer key') %}</label>
+		<input type="text" value="{{ extended.twitter_consumer_key }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_key" name="twitter_consumer_key" size="24" maxlength="24" pattern="[A-Za-z0-9\-]{20,24}"/><br/>
+
+		<label for="twitter_consumer_secret">{% trans _('consumer secret') %}</label>
+		<input type="text" value="{{ extended.twitter_consumer_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_secret" name="twitter_consumer_secret" size="48" maxlength="48" pattern="[A-Za-z0-9\-]{32,48}"/><br/>
+
+		<label for="twitter_token">{% trans _('token') %}</label>
+		<input type="text" value="{{ extended.twitter_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="twitter_token" name="twitter_token" size="60" maxlength="60" pattern="[A-Za-z0-9\-]{50,60}"/><br/>
+
+		<label for="twitter_token_secret">{% trans _('token secret') %}</label>
+		<input type="text" value="{{ extended.twitter_token_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_token_secret" name="twitter_token_secret" size="48" maxlength="48" pattern="[A-Za-z0-9\-]{32,48}"/><br/>
+
+	</fieldset>
+
+{# Enabled facebook only to admins, for the time being, until Twitter is tested end perhaps improved #}
+{% if current_user.admin %}
+	<fieldset><legend>{% trans _('publicar en Facebook') %} (<a href="https://developers.facebook.com/docs/facebook-login/access-tokens">help!</a>)</legend>
+		<label for="facebook_page">{% trans _('página') %}</label>
+		<input type="url" value="{{ extended.facebook_page }}" placeholder="https://www.facebook.com/página" id="facebook_page" name="facebook_page" size="60" maxlength="60"/><br/>
+
+		<label for="facebook_key">{% trans _('key') %}</label>
+		<input type="text" value="{{ extended.facebook_key }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_key" name="facebook_key" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+
+		<label for="facebook_secret">{% trans _('secret') %}</label>
+		<input type="text" value="{{ extended.facebook_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_secret" name="facebook_secret" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+
+		<label for="facebook_token">{% trans _('token') %}</label>
+		<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" size="120" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/><br/>
+
+	</fieldset>
+{% endif %}
+
+
+
+</fieldset>
+
+<input class="button" type="submit" value="{% trans _('guardar') %}" />
 </form>
 </div>
 

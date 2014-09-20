@@ -442,7 +442,15 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
 	@include('local.php');
-	@include($_SERVER['SERVER_NAME'].'-local.php');
+	if (php_sapi_name() == 'cli') {
+		$globals['cli'] = True;
+		/* Definition only for scripts executed "off-line" */
+		@include('cli-local.php');
+	} else {
+		$globals['cli'] = False;
+		@include($_SERVER['SERVER_NAME'].'-local.php');
+	}
+		
 	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 
