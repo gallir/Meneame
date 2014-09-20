@@ -10,22 +10,22 @@ if (count($argv) < 3) {
 	die;
 }
 
-$hostname = $argv[1];
+$site_name = $argv[1];
 $link_id = (int) $argv[2];
 $status = $argv[3];
-
-$_SERVER['SERVER_NAME'] = $hostname;
 
 include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');
 
-$my_id = SitesMgr::my_id();
+$my_id = SitesMgr::get_id($site_name);
 
 if (! $my_id > 0) {
-	syslog(LOG_INFO, "Meneame, post_link.php, site not found $hostname");
+	syslog(LOG_INFO, "Meneame, post_link.php, site not found $site_name");
 	echo "No site id found\n";
 	die;
 }
+
+SitesMgr::__init($my_id);
 
 $link = Link::from_db($link_id);
 if (! $link) {
@@ -38,16 +38,21 @@ if (! $link->sub_status || (!empty($status) && $link->sub_status != $status) ) {
 	die;
 }
 
+
 do_posts($link);
 
 
 function do_posts($link) {
 	global $globals;
 
+	$info = SitesMgr::get_info();
+	$properties = SitesMgr::get_extended_properties();
+
 	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
-	echo "Posting $link->uri: ".$globals['server_name']. "--".$globals["site_shortname"]."\n"; 
-	$url = $link->get_permalink();
+	$url = $link->get_permalink(true);
+	echo "Posting $url: ".$globals['server_name']."\n"; 
+
 	$image = $link->try_thumb('thumb_medium');
 	if ($image && ! file_exists($image)) {
 		$image = false;
@@ -59,30 +64,29 @@ function do_posts($link) {
 		$short_url = $url;
 	}
 
-	if ($globals['twitter_token'] && $globals['twitter_token_secret']) {
+	if (! empty($properties['twitter_token']) && ! empty($properties['twitter_token_secret']) && ! empty($properties['twitter_consumer_key']) && ! empty($properties['twitter_consumer_secret']) ) {
 		$r = false;
 		$tries = 0;
 		while (! $r && $tries < 4) {
-			$r = twitter_post($link->title, $url, $image);
+			$r = twitter_post($properties, $link->title, $url, $image);
 			$tries++;
 			if (! $r) sleep(4);
 		}
 	}
 
-	if ($globals['facebook_token']) {
+	if (! empty($properties['facebook_token']) && ! empty($properties['facebook_key']) && ! empty($properties['facebook_secret'])) {
 		$r = false;
 		$tries = 0;
 		while (! $r && $tries < 4) {
-			$r = facebook_post($link);
+			$r = facebook_post($properties, $link);
 			$tries++;
 			if (! $r) sleep(4);
 		}
 	}
 
-	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-		jaiku_post($link->title, $short_url);
-	}
+	/*
 	if ($globals['pubsub']) {
 		pubsub_post();
 	}
+	*/
 }

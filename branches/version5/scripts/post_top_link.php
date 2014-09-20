@@ -1,23 +1,32 @@
 #! /usr/bin/env php
 <?
 // Post to Twitter/Jaiku the "top story"
-// Check which hostname server we run for, for example: e.meneame.net or www.meneame.net
-if (!empty($argv[1])) {
-	$_SERVER['SERVER_NAME'] = $argv[1];
-}
+// Check which hostname server we run for, for example: mnm, emnm
 
 include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');
 
-$my_name = $globals['site_shortname'];
-$a_tops = new Annotation('top-link-'.$my_name);
-echo 'top-link-'.$my_name."\n";
+$site_name = $argv[1];
+$my_id = SitesMgr::get_id($site_name);
+
+if (! $my_id > 0) {
+	syslog(LOG_INFO, "Meneame, ".basename(__FILE__)." site not found $site_name");
+	echo "No site id found\n";
+	die;
+}
+
+SitesMgr::__init($my_id);
+$properties = SitesMgr::get_extended_properties();
+
+
+$a_tops = new Annotation('top-link-'.$site_name);
+echo 'top-link-'.$site_name."\n";
 if(!$a_tops->read()) {
 	exit;
 }
 $tops = explode(',', $a_tops->text);
 
-$a_history = new Annotation('top-link-history-'.$my_name);
+$a_history = new Annotation('top-link-history-'.$site_name);
 if($a_history->read()) {
 	$history = explode(',',$a_history->text);
 } else {
@@ -29,7 +38,7 @@ if (! in_array($tops[0], $history) ) {
 		echo "Error reading link ". $tops[0] . "\n";
 		exit;
 	}
-	$url = $link->get_permalink();
+	$url = $link->get_permalink(true);
 	if ($globals['url_shortener']) {
 		$short_url = $link->get_short_permalink();
 	} else {
@@ -45,16 +54,8 @@ if (! in_array($tops[0], $history) ) {
 	$a_history->store();
 
 
-	// Post to Twitter, Jaiku and Facebook
-	if ($globals['twitter_token']) {
-		twitter_post($text, $url); 
-	}
-	if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-		jaiku_post($text, $short_url); 
-	}
-	if ($globals['facebook_token']) {
-		facebook_post($link, $intro);
-	}
+	twitter_post($properties, $text, $url); 
+	facebook_post($properties, $link, $intro);
 }
 
 ?>

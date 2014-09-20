@@ -2,17 +2,28 @@
 <?php
 
 global $_SERVER;
-// Check which hostname server we run for, for example: e.meneame.net or www.meneame.net
-if (!empty($argv[2])) {
-	$_SERVER['SERVER_NAME'] = $argv[2];
-}
+// Check which hostname server we run for, for example: mnm, emnm, etc.
+$site_name = $argv[2];
 
 
 // Post to Twitter/Jaiku the most voted and commented during last 24 hr
 include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'external_post.php');
 
-syslog(LOG_INFO, "Meneame, running ".basename(__FILE__)." for ".get_server_name());
+$my_id = SitesMgr::get_id($site_name);
+
+if (! $my_id > 0) {
+    syslog(LOG_INFO, "Meneame, ".basename(__FILE__)." site not found $site_name");
+    echo "No site id found\n";
+    die;
+}
+
+SitesMgr::__init($my_id);
+
+syslog(LOG_INFO, "Meneame, running ".basename(__FILE__)." for $site_name");
+
+$info = SitesMgr::get_info();
+$properties = SitesMgr::get_extended_properties();
 
 if (intval($argv[1]) > 0) {
 	$hours = intval($argv[1]);
@@ -37,7 +48,7 @@ foreach ($link_sqls as $key => $sql) {
 	$link = new Link;
 	$link->id = $res->id;
 	if ($link->read()) {
-		$url = $link->get_permalink();
+		$url = $link->get_permalink(true);
 		if ($globals['url_shortener']) {
 			$short_url = $link->get_short_permalink();
 		} else {
@@ -52,15 +63,8 @@ foreach ($link_sqls as $key => $sql) {
 		}
 		$text = "$intro: $link->title";
 
-		if ($globals['twitter_token']) {
-			twitter_post($text, $url); 
-		}
-		if ($globals['jaiku_user'] && $globals['jaiku_key']) {
-			jaiku_post($text, $short_url); 
-		}
-		if ($globals['facebook_token']) {
-			facebook_post($link, $intro);
-		}
+		twitter_post($properties, $text, $url); 
+		facebook_post($properties, $link, $intro);
 
 		echo "$text $short_url\n"; continue;
 	}

@@ -337,11 +337,10 @@ function publish($site, $link) {
 	$link->annotation .= _('publicación'). "<br/>";
 	$link->save_annotation('link-karma');
 
-	// TODO: read twitter and facebok configuration from subs' extended info
+	// read twitter and facebok configuration from subs' extended info
 	if (! $site_info->sub || $site_info->visible ) { // Only post if it's not a sub or it's visible (dmnm in mnm, f.e.)
-		$server_name = $site_info->server_name;
-		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $server_name $link->id");
-		passthru(dirname(__FILE__)."/post_link.php $server_name $link->id published");
+		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $site_info->name $link->id");
+		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
 	}
 	return;
 }
