@@ -367,7 +367,8 @@ function get_server_name() {
 
 function get_static_server_name() {
 	global $globals;
-	return $globals['static_server_name'];
+
+	return preg_replace('/^.*?\/\//', '', $globals['static_server']);
 }
 
 function get_auth_link() {

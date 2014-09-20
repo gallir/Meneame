@@ -32,8 +32,7 @@ mbstring.http_output = UTF-8
 */
 
 
-
-if ($_SERVER["SERVER_PORT"] == 443 || $_SERVER['HTTPS'] == 'on') {
+if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
 	$globals['scheme'] = 'https';
 } else {
@@ -52,6 +51,7 @@ if ($globals['check_behind_proxy']) {
 	$globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
 	$globals['proxy_ip'] = false;
 }
+
 
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 
@@ -103,19 +103,13 @@ if($_SERVER['HTTP_HOST']) {
 
 $globals['base_url_general'] = $globals['base_url']; // Keep the original if it's modified in submnms
 
-if (!empty($globals['static_server']) && ! $globals['https']) {
-	$globals['base_static_noversion'] = $globals['static_server'].$globals['base_url'];
+if (!empty($globals['static_server'])) {
+	$globals['base_static_noversion'] = $globals['scheme'].'://'.$globals['static_server'].$globals['base_url'];
 } else {
 	$globals['base_static_noversion'] = $globals['scheme'].'://'.$globals['server_name'].$globals['base_url'];
 }
 
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
-
-if (empty($globals['static_server_name'])) {
-	if ($globals['static_server']) $globals['static_server_name'] = preg_replace('/^http:\/\//', '', $globals['static_server']);
-	else $globals['static_server_name'] = $globals['server_name'];
-}
-
 
 // Votes' tags
 $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
