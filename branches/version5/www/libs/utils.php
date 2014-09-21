@@ -1324,9 +1324,9 @@ function redirect($url, $code = 301) {
 			$url .= '?partial';
 		}
 	}
-    header("HTTP/1.1 $code Moved");
-    header('Location: ' . $url);
-    header("Content-Length: 0");
+	header("HTTP/1.1 $code Moved");
+	header('Location: ' . $url);
+	header("Content-Length: 0");
 }
 
 
@@ -1338,7 +1338,7 @@ function close_connection(){
 
 function add_javascript($code) {
 	echo '<script type="text/javascript">';
-    echo 'addPostCode(\''.$code.'\');';
-    echo '</script>';
+	echo 'addPostCode(\''.$code.'\');';
+	echo '</script>';
 }
 

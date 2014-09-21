@@ -38,6 +38,9 @@ define('config_done', 1);
 // If you want to use the same cookie for subdomains, set de .domain.com
 // $globals['cookies_domain'] = '.domain.com';
 
+// If you want for force all html connection to pass throu ssl
+// $globals['force_ssl'] = True;
+
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
 $globals['ssl_server'] = False; 
 

@@ -37,7 +37,11 @@ if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || $_SERVER['SERVER_PORT'] == 
 	$globals['scheme'] = 'https:';
 } else {
 	$globals['https'] = false;
-	$globals['scheme'] = 'http:';
+	if (!empty($globals['force_ssl'])) {
+		$globals['scheme'] = 'https:';
+	} else {
+		$globals['scheme'] = 'http:';
+	}
 }
 
 
