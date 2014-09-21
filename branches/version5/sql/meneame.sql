@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.35, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.19, for debian-linux-gnu (x86_64)
 --
 -- Host: db.meneame.net    Database: meneame
 -- ------------------------------------------------------
--- Server version	5.5.33-log
+-- Server version	5.6.19-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -163,8 +163,11 @@ CREATE TABLE `clones` (
   `clon_to` int(10) unsigned NOT NULL,
   `clon_ip` char(48) NOT NULL DEFAULT '',
   `clon_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`clon_from`,`clon_to`,`clon_ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`clon_from`,`clon_to`,`clon_ip`),
+  KEY `to_date` (`clon_to`,`clon_date`),
+  KEY `from_date` (`clon_from`,`clon_date`),
+  KEY `clon_date` (`clon_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -506,9 +509,9 @@ DROP TABLE IF EXISTS `logs`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
-  `log_sub` smallint(5) unsigned NOT NULL DEFAULT '1',
+  `log_sub` int(11) DEFAULT '1',
   `log_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit','user_new','user_delete','link_depublished') NOT NULL,
+  `log_type` enum('link_new','comment_new','link_publish','link_discard','comment_edit','link_edit','post_new','post_edit','login_failed','spam_warn','link_geo_edit','user_new','user_delete','link_depublished','user_depublished_vote') NOT NULL,
   `log_ref_id` int(11) unsigned NOT NULL,
   `log_user_id` int(11) NOT NULL,
   `log_ip_int` decimal(39,0) NOT NULL,
@@ -717,16 +720,15 @@ DROP TABLE IF EXISTS `sub_statuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sub_statuses` (
-  `id` smallint(5) unsigned NOT NULL,
+  `id` int(11) unsigned NOT NULL,
   `status` enum('discard','queued','published','abuse','duplicated','autodiscard','metapublished') NOT NULL DEFAULT 'discard',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `category` smallint(5) unsigned NOT NULL,
   `link` int(10) NOT NULL,
-  `origen` smallint(5) unsigned NOT NULL,
+  `origen` int(11) NOT NULL,
   `karma` decimal(10,2) NOT NULL DEFAULT '0.00',
   UNIQUE KEY `link_id` (`link`,`id`),
-  KEY `id_status_category_date` (`id`,`status`,`category`,`date`),
-  KEY `id_status_date_category` (`id`,`status`,`date`,`category`),
+  KEY `date_status_id` (`date`,`status`,`id`),
+  KEY `id_status_date` (`id`,`status`,`date`),
   CONSTRAINT `sub_statuses_ibfk_1` FOREIGN KEY (`link`) REFERENCES `links` (`link_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Store the status for each link in every sub site';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -745,13 +747,17 @@ CREATE TABLE `subs` (
   `parent` smallint(5) unsigned NOT NULL DEFAULT '0',
   `server_name` varchar(32) DEFAULT NULL,
   `base_url` varchar(32) DEFAULT NULL,
-  `name_long` char(32) NOT NULL,
+  `name_long` char(40) DEFAULT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '0',
-  `sub` tinyint(4) NOT NULL DEFAULT '0',
+  `sub` tinyint(1) DEFAULT '0',
+  `meta` tinyint(1) DEFAULT '0',
   `owner` int(11) NOT NULL DEFAULT '0',
-  `nsfw` tinyint(4) NOT NULL DEFAULT '0',
+  `nsfw` tinyint(1) DEFAULT '0',
   `created_from` int(11) NOT NULL DEFAULT '0',
-  `allow_main_link` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_main_link` tinyint(1) DEFAULT '0',
+  `color1` char(7) DEFAULT NULL,
+  `color2` char(7) DEFAULT NULL,
+  `private` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `owner` (`owner`)
@@ -942,4 +948,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-25  1:06:58
+-- Dump completed on 2014-09-21 14:02:39
