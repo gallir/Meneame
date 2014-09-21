@@ -108,14 +108,11 @@ if($_SERVER['HTTP_HOST']) {
 
 $globals['base_url_general'] = $globals['base_url']; // Keep the original if it's modified in submnms
 
+// Add always the scheme, it's necessary for headers and rss's
 if (!empty($globals['static_server'])) {
-	$globals['base_static_noversion'] = '//'.$globals['static_server'].$globals['base_url'];
+	$globals['base_static_noversion'] = $globals['scheme'].'//'.$globals['static_server'].$globals['base_url'];
 } else {
-	$globals['base_static_noversion'] = '//'.$globals['server_name'].$globals['base_url'];
-}
-
-if (!empty($globals['scheme_strict'])) {
-	 $globals['base_static_noversion'] = $globals['scheme'].$globals['base_static_noversion'];
+	$globals['base_static_noversion'] = $globals['scheme'].'//'.$globals['server_name'].$globals['base_url'];
 }
 
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
