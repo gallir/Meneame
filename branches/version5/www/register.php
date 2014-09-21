@@ -32,12 +32,6 @@ if(isset($_POST["process"])) {
 	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
 
-// Check the IP is right
-if(isset($_POST["process"]) && !check_form_auth_ip()) {
-	header("Location: http://".get_server_name().$globals['base_url']."login");
-	die;
-}
-
 do_header(_("registro"), "post");
 
 echo '<div class="genericform">'."\n";
@@ -96,7 +90,6 @@ function do_register0() {
 	echo '</div>'."\n";
 
 	echo '</fieldset>' . "\n";
-	get_form_auth_ip();
 	echo '</form>' . "\n";
 
 
@@ -122,7 +115,6 @@ function do_register1() {
 	echo '<input type="hidden" name="username" value="'.clean_input_string($_POST["username"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="password" value="'.clean_input_string($_POST["password"]).'" />'; // extra sanity, in fact not needed
 	echo '<input type="hidden" name="password2" value="'.clean_input_string($_POST["password2"]).'" />'; // extra sanity, in fact not needed
-	get_form_auth_ip();
 	echo '</fieldset></form>';
 	// Add extra check: base_key is added on submit
 	echo '<script type="text/javascript">addPostCode(function () { $("#thisform").submit(function () { $(this).append($("<input>", { type: "hidden", name: "base_key", value: base_key})); return true; });})</script>';
@@ -148,7 +140,7 @@ function do_register2() {
 	$password=UserAuth::hash(trim($_POST['password']));
 	$email=clean_input_string(trim($_POST['email'])); // sanity check
 	$dbemail=$db->escape($email); // sanity check
-	$user_ip = $globals['form_user_ip'];
+	$user_ip = $globals['user_ip'];
 	if (!user_exists($username)) {
 		if ($db->query("INSERT INTO users (user_login, user_login_register, user_email, user_email_register, user_pass, user_date, user_ip) VALUES ('$dbusername', '$dbusername', '$dbemail', '$dbemail', '$password', now(), '$user_ip')")) {
 			echo '<fieldset>'."\n";
@@ -221,7 +213,7 @@ function check_user_fields() {
 
 	if (empty($globals['skip_ip_register'])) {
 		// Check registers from the same IP network
-		$user_ip = $globals['form_user_ip'];
+		$user_ip = $globals['user_ip'];
 		$ip_classes = explode(".", $user_ip);
 
 		// From the same IP

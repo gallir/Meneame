@@ -12,6 +12,9 @@ include(mnminclude.'avatars.php');
 
 $globals['ads'] = false;
 
+$globals['secure_page'] = True;
+check_auth_page();
+
 // We need it because we modify headers
 ob_start();
 
@@ -73,16 +76,11 @@ if($current_user->user_id == $user->id && $globals['external_user_ads'] && !empt
 
 
 if (isset($_POST['process'])) {
-	if (!check_form_auth_ip()) {
-		header("Location: http://".get_server_name().$globals['base_url']."profile");
-		die;
-	}
-	$globals['secure_page'] = True;
 	$messages = save_profile();
 } else {
-	$globals['secure_page'] = False;
+	//$globals['secure_page'] = False;
 	// This allows to send the user back to the original cross domain authentication and ssl_server
-	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
+	//setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 	$messages = array();
 }
 

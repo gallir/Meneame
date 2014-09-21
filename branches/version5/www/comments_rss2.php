@@ -9,6 +9,7 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
+$globals['scheme_strict'] = true;
 include('config.php');
 
 include_once(mnminclude.'ban.php');

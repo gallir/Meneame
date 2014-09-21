@@ -24,7 +24,7 @@ if($_GET["op"] == 'logout') {
 	} else {
 		header ('HTTP/1.1 303 Load');
 		setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-		header("Location: http://".$_COOKIE['return_site'].$globals['base_url']);
+		header("Location: ".$_COOKIE['return_site'].$globals['base_url']);
 		exit();
 	}
 }
@@ -35,10 +35,10 @@ ob_start();
 if ($_POST["processlogin"] == 1) {
 	$globals['secure_page'] = True;
 	if(!isset($_COOKIE['return_site'])) {
-		$_COOKIE['return_site'] = get_server_name();
+		$_COOKIE['return_site'] = $globals['scheme'].'//'.get_server_name();
 	}
 } else {
-	setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
+	setcookie('return_site', $globals['scheme'].'//'.get_server_name(), 0, $globals['base_url'], UserAuth::domain());
 }
 
 do_header("login");
@@ -58,8 +58,7 @@ do_footer();
 function do_login() {
 	global $current_user, $globals;
 
-	$form_ip_check = check_form_auth_ip();
-	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
+	$previous_login_failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
 
 	// Show menéame intro only if first try and the there were not previous logins
 	if (! $globals['mobile'] && $previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
@@ -101,38 +100,27 @@ function do_login() {
 	echo '<form action="'.get_auth_link().'login" id="thisform" method="post">'."\n";
 
 	if($_POST["processlogin"] == 1) {
-		// Check the IP, otherwise redirect
-		if (!$form_ip_check) {
-			header ('HTTP/1.1 303 Load');
-			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login");
-			die;
-		}
-
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 
 		// Check form
 		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) )
 				&& !ts_is_human()) {
-			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'). " ($previous_login_failed)");
 		} elseif (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
-			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['user_ip_int'], 0);
 			$previous_login_failed++;
 			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'). " ($previous_login_failed)");
 		} else {
 			UserAuth::check_clon_from_cookies();
 
-			// If the user is authenticating from a mobile device, keep her in the standard version
-			if ($globals['mobile']) {
-				setcookie('nomobile', '1', 0, $globals['base_url'], UserAuth::domain());
-			}
-
 			header ('HTTP/1.1 303 Load');
+			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 			if(!empty($_REQUEST['return'])) {
-				header('Location: http://'.$_COOKIE['return_site'].$_REQUEST['return']);
+				header('Location: '.$_COOKIE['return_site'].$_REQUEST['return']);
  			} else {
-				header('Location: http://'.$_COOKIE['return_site'].$globals['base_url']);
+				header('Location: '.$_COOKIE['return_site'].$globals['base_url']);
 			}
 			die;
 		}
@@ -149,8 +137,6 @@ function do_login() {
 	if ($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) {
 		ts_print_form();
 	}
-
-	get_form_auth_ip();
 
 	echo '<p><input type="submit" value="login" class="button" tabindex="4" /></p>'."\n";
 

@@ -269,9 +269,7 @@ class UserAuth {
 			foreach ($clones as $id) {
 				if ($current_user->user_id != $id && !in_array($id, $visited)) {
 					$visited[] = $id;
-					if ($globals['form_user_ip']) $ip = $globals['form_user_ip']; // Used in SSL forms
-					else $ip = $globals['user_ip'];
-					self::insert_clon($current_user->user_id, $id, 'COOK:'.$ip);
+					self::insert_clon($current_user->user_id, $id, 'COOK:'.$globals['user_ip']);
 				}
 			}
 		}

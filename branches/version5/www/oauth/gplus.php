@@ -34,7 +34,7 @@ class GPlusOAuth extends OAuthBase {
 		}
 		$this->service = 'gplus';
 
-		$callback = 'http://'.get_server_name().$globals['base_url'].'oauth/signin.php?service=gplus';
+		$callback = $globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=gplus';
 
 		$this->client = new apiClient();
 		$this->client->setClientId($globals['oauth']['gplus']['consumer_key']);

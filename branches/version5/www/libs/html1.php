@@ -52,7 +52,6 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 function do_header($title, $id='home', $options = false) {
 	global $current_user, $dblang, $globals, $db;
 
-	check_auth_page();
 	header('Content-Type: text/html; charset=utf-8');
 	header('X-Frame-Options: SAMEORIGIN');
 	header('X-UA-Compatible: IE=edge,chrome=1');

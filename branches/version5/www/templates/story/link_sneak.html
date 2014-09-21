@@ -18,10 +18,10 @@ var link_karma = 0;
 var ts={{ globals.now }} - 86400;  // just due a freaking IE cache problem
 var server_name = '{{ globals.server_name }}';
 var base_url = '{{ globals.base_url }}';
-var sneak_base_url = 'http://{{ globals.server_name }}{{ globals.base_url }}backend/link_sneaker';
+var sneak_base_url = '//{{ globals.server_name }}{{ globals.base_url }}backend/link_sneaker';
 
 
-var default_gravatar = 'http://'+server_name+'/img/mnm/no-gravatar-2-20.jpg';
+var default_gravatar = '//'+server_name+'/img/mnm/no-gravatar-2-20.jpg';
 var do_animation = true;
 var animating = false;
 var animation_colors = Array("#ffc387", "#ffc891", "#ffcd9c", "#ffd2a6", "#ffd7b0", "#ffddba", "#ffe7cf", "#ffecd9", "#fff1e3", "#fff6ed", "#fffbf7", "transparent");

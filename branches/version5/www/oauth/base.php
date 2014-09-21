@@ -130,9 +130,9 @@ class OAuthBase {
 		setcookie('return', '', time() - 10000, $globals['base_url'], UserAuth::domain());
 		setcookie('return', '', time() - 10000, $globals['base_url']);
 		if(!empty($this->return)) {
-			header('Location: http://'.get_server_name().$this->return);
+			header('Location: '.$globals['scheme'].'//'.get_server_name().$this->return);
 		} else {
-			header('Location: http://'.get_server_name().$globals['base_url']);
+			header('Location: '.$globals['scheme'].'//'.get_server_name().$globals['base_url']);
 		}
 		exit;
 	}

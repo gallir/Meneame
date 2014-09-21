@@ -46,7 +46,7 @@ class TwitterOAuth extends OAuthBase {
 		try {
 			if (($request_token_info = 
 					$this->oauth->getRequestToken($this->request_token_url,
-						'http://'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
+						$globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
 				// if [oauth_callback_confirmed] => true then is oauth 1.0a
 				setcookie('oauth_token', $request_token_info['oauth_token'], 0);
 				setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], 0);

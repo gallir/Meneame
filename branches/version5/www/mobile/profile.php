@@ -53,10 +53,6 @@ if(!$user->read()) {
 
 
 if (isset($_POST['process'])) {
-	if (!check_form_auth_ip()) {
-		header("Location: http://".get_server_name().$globals['base_url']."profile.php");
-		die;
-	}
 	$globals['secure_page'] = True;
 	$save_messages = save_profile();
 } else {
@@ -83,7 +79,6 @@ function show_profile() {
 	echo '<input type="hidden" name="process" value="1" />';
 	echo '<input type="hidden" name="user_id" value="'.$user->id.'" />';
 	echo '<input type="hidden" name="form_hash" value="'. md5($site_key.$user->id.mnminclude) .'" />';
-	get_form_auth_ip();
 
 	echo '<p><label>'._('usuario').':</label><br/>';
 	echo '<input type="text" autocomplete="off" name="username" id="username" value="'.$user->username.'"/>';

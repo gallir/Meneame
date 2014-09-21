@@ -1298,7 +1298,7 @@ var fancyBox = new function () {
 			if (is_mobile || touchable) return false;
 			iframe = true;
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Youtube') %}</a>';
-			href = 'http://www.youtube.com/embed/'+v[1];
+			href = 'https://www.youtube.com/embed/'+v[1];
 			if (typeof v[2] != "undefined") href += v[2];
 			innerWidth = 640;
 			innerHeight = 390;
@@ -1639,7 +1639,7 @@ var fancyBox = new function () {
 		var source = $e.data("src");
 		if (! source) return;
 
-		if (source.charAt(0) == "/") source = source.substr(1);
+		if (source.charAt(0) == "/" && source.charAt(1) != "/") source = source.substr(1);
 
 		if (retina) {
 			var high = $e.data('2x');
@@ -1655,7 +1655,7 @@ var fancyBox = new function () {
 		
 		var version_prefix;
 		var base_url = settings.base_url;
-		if (settings.version && settings.base_url.length > 1 && source.substr(0,4) != 'http') {
+		if (settings.version && settings.base_url.length > 1 && source.substr(0,4) != 'http' && source.substr(0,2) != '//') {
 			if (! cache_regex || ! cache_regex.test(source)) {
 				base_url += settings.version + "/";
 			}
@@ -1779,7 +1779,7 @@ function analyze_hash(force) {
 
 		/* Only if partial */
 		var re = new RegExp("^/|^\\?|//"+location.hostname);
-		if (location.protocol == "http:" && re.test(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
+		if ((location.protocol == "http:" || location.protocol == "https:" ) && re.test(href) && ! href.match(/\/backend\/|\/login|\/register|\/profile|\/sneak|rss2/)) {
 			href = href.replace(/partial&|\?partial$|&partial/, '');
 			load(href, null);
 			return false;

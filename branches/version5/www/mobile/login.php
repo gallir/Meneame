@@ -54,27 +54,20 @@ do_footer();
 function do_login() {
 	global $current_user, $globals;
 
-	$form_ip_check = check_form_auth_ip();
-	$previous_login_failed =  Log::get_date('login_failed', $globals['form_user_ip_int'], 0, 300);
+	$previous_login_failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
 
 	echo '<form action="'.get_auth_link().'login.php" id="xxxthisform" method="post">'."\n";
 	
 	if ($_POST["processlogin"] == 1) {
-		// Check the IP, otherwise redirect
-		if (!$form_ip_check) {
-			header ('HTTP/1.1 303 Load');
-			header("Location: http://".$_COOKIE['return_site'].$globals['base_url']."login.php");
-			die;
-		}
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
 
 		// Check form
 		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) && !ts_is_human()) {
-			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['user_ip_int'], 0);
 			recover_error(_('el código de seguridad no es correcto'));
 		} elseif (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
-			Log::insert('login_failed', $globals['form_user_ip_int'], 0);
+			Log::insert('login_failed', $globals['user_ip_int'], 0);
 			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'));
 			$previous_login_failed++;
 		} else {
@@ -98,8 +91,6 @@ function do_login() {
 	if ($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data())) {
 		ts_print_form();
 	}
-
-	get_form_auth_ip();
 
 	echo '<p><input type="submit" value="login" tabindex="4" />'."\n";
 	echo '<input type="hidden" name="processlogin" value="1"/></p>'."\n";

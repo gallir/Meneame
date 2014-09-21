@@ -34,11 +34,12 @@ mbstring.http_output = UTF-8
 
 if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
-	$globals['scheme'] = 'https';
+	$globals['scheme'] = 'https:';
 } else {
 	$globals['https'] = false;
-	$globals['scheme'] = 'http';
+	$globals['scheme'] = 'http:';
 }
+
 
 // Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
@@ -104,9 +105,13 @@ if($_SERVER['HTTP_HOST']) {
 $globals['base_url_general'] = $globals['base_url']; // Keep the original if it's modified in submnms
 
 if (!empty($globals['static_server'])) {
-	$globals['base_static_noversion'] = $globals['scheme'].'://'.$globals['static_server'].$globals['base_url'];
+	$globals['base_static_noversion'] = '//'.$globals['static_server'].$globals['base_url'];
 } else {
-	$globals['base_static_noversion'] = $globals['scheme'].'://'.$globals['server_name'].$globals['base_url'];
+	$globals['base_static_noversion'] = '//'.$globals['server_name'].$globals['base_url'];
+}
+
+if (!empty($globals['scheme_strict'])) {
+	 $globals['base_static_noversion'] = $globals['scheme'].$globals['base_static_noversion'];
 }
 
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';

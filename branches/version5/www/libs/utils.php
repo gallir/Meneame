@@ -390,22 +390,8 @@ function get_auth_link() {
 function check_auth_page() {
 	global $globals;
 
-	if ($globals['https']) {
-		// If it's not a page that need SSL, redirect to the standard server
-		if (!$globals['secure_page']) {
-			// Send the user back to the origial page if it exists the cookie
-			if (!empty($_COOKIE['return_site'])) {
-				$host = $_COOKIE['return_site'];
-			} else {
-				$host = $_SERVER["SERVER_NAME"];
-			}
-			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url_general'], UserAuth::domain());
-			header('HTTP/1.1 302 Moved');
-			header('Location: http://'.$host.$_SERVER["REQUEST_URI"]);
-			die;
-		}
-	} elseif ($globals['ssl_server'] && $globals['secure_page']) {
-		setcookie('return_site', get_server_name(), 0, $globals['base_url_general'], UserAuth::domain());
+	if (!$globals['https'] && $globals['ssl_server'] && $globals['secure_page']) {
+		setcookie('return_site', $global['scheme'].'//'.get_server_name(), 0, $globals['base_url_general'], UserAuth::domain());
 		header('HTTP/1.1 302 Moved');
 		header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
 		die;
@@ -416,11 +402,14 @@ function get_form_auth_ip() {
 	global $globals, $site_key;
 	if (check_form_auth_ip()) { // We reuse the values
 		$ip = $_REQUEST['userip'];
+		$scheme = $_REQUEST['userscheme'];
 		$control = $_REQUEST['useripcontrol'];
 	} else {
 		$ip = $globals['user_ip'];
+		$scheme = $globals['scheme'];
 		$control = sha1($ip.$site_key.base64_encode($ip.$site_key));
 	}
+	echo '<input type="hidden" name="userscheme" value="'.$scheme.'"/>';
 	echo '<input type="hidden" name="userip" value="'.$ip.'"/>';
 	echo '<input type="hidden" name="useripcontrol" value="'.$control.'"/>';
 }
@@ -428,12 +417,14 @@ function get_form_auth_ip() {
 function check_form_auth_ip() {
 	global $globals, $site_key;
 	if ($_REQUEST['userip'] && $_REQUEST['useripcontrol'] && sha1($_REQUEST['userip'].$site_key.base64_encode($_REQUEST['userip'].$site_key)) == $_REQUEST['useripcontrol']) {
+		$globals['form_scheme'] = $_REQUEST['userscheme'];
 		$globals['form_user_ip'] = $_REQUEST['userip'];
-		$globals['form_user_ip_int'] = sprintf("%u", ip2long($globals['form_user_ip']));
+		$globals['form_user_ip_int'] = inet_ptod($_REQUEST['userip']);
 		return true;
 	} else {
 		$globals['form_user_ip'] = $globals['user_ip'];
 		$globals['form_user_ip_int'] = $globals['user_ip_int'];
+		$globals['form_scheme'] = $globals['scheme'];
 		return false;
 	}
 }

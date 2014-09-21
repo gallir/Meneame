@@ -32,11 +32,11 @@ function do_master($size) {
 	echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
 	echo '<sitemap>'."\n";
-	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap?statics</loc>'."\n";
+	echo '<loc>'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'sitemap?statics</loc>'."\n";
 	echo '</sitemap>'."\n";
 
 	echo '<sitemap>'."\n";
-	echo '<loc>http://'.get_server_name().$globals['base_url'].'sitemap?last</loc>'."\n";
+	echo '<loc>'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'sitemap?last</loc>'."\n";
 	echo '</sitemap>'."\n";
 
 	echo '</sitemapindex>'."\n";
@@ -52,13 +52,13 @@ function do_statics() {
 	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	// The index
 	echo '<url>'."\n";
-	echo '<loc>http://'.get_server_name().$globals['base_url'].'</loc>'."\n";
+	echo '<loc>'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'</loc>'."\n";
 	echo '<priority>1.0</priority>'."\n";
 	echo '</url>'."\n";
 	// Secondary pages
 	foreach ($urls as $url) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.get_server_name().$globals['base_url'].$url.'</loc>'."\n";
+		echo '<loc>'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].$url.'</loc>'."\n";
 		echo '<priority>0.8</priority>'."\n";
 		echo '</url>'."\n";
 	}
@@ -77,10 +77,10 @@ function do_published($page) {
 	} else {
 		$server = get_server_name();
 	}
-	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+	echo '<urlset xmlns="'.$globals['scheme'].'//www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
+		echo '<loc>'.$globals['scheme'].'//'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
@@ -97,10 +97,10 @@ function do_last_published() {
 	} else {
 		$server = get_server_name();
 	}
-	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+	echo '<urlset xmlns="'.$globals['scheme'].'//www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 	foreach ($result as $uri) {
 		echo '<url>'."\n";
-		echo '<loc>http://'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
+		echo '<loc>'.$globals['scheme'].'//'.$server.$globals['base_url'].'story/'.$uri.'</loc>'."\n";
 		echo '</url>'."\n";
 	}
 	echo '</urlset>'."\n";
