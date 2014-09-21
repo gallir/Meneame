@@ -99,7 +99,11 @@
 		<ul id="edlist">
 		{% if this_site.sub %}
 			<li class="selected">
-				<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
+				{% if this_site.meta %}
+					<a href="{{ this_site.base_url }}">{{ this_site.name }}</a>
+				{% else %}
+					<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
+				{% endif %}
 			</li>
 		{% endif %}
 		{% for s in sites %}
