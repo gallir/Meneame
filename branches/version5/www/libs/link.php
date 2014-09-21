@@ -1034,7 +1034,7 @@ class Link extends LCPBase {
 		} else {
 			$server_name = $globals['server_name'];
 		}
-		return $global['scheme'].'//'.$server_name.$this->get_relative_permalink($strict);
+		return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink($strict);
 	}
 
 	function get_canonical_permalink($page = false) {
@@ -1048,12 +1048,12 @@ class Link extends LCPBase {
 		} else {
 			$server_name = $globals['canonical_server_name'];
 		}
-		return $global['scheme'].'//'.$server_name.$this->get_relative_permalink(true).$page;
+		return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink(true).$page;
 	}
 
 	function get_trackback() {
 		global $globals;
-		return $global['scheme'].'//'.get_server_name().$globals['base_url_general'].'trackback.php?id='.$this->id;
+		return $globals['scheme'].'//'.get_server_name().$globals['base_url_general'].'trackback.php?id='.$this->id;
 	}
 
 	function get_status_text($status = false) {
