@@ -7,6 +7,8 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
+
+$globals['force_ssl'] = False; // We open the bar always as http to allow loading no https pages
 include(mnminclude.'html1.php');
 
 $url_args = $globals['path'];

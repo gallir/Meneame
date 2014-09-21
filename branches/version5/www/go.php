@@ -29,8 +29,6 @@ if ($id > 0) {
 			$url = get_user_uri($current_user->user_login, 'friends_new');
 			do_redirection($url);
 			exit(0);
-
-
 		case 'post':
 			$url = 'http://'.get_server_name().post_get_base_url($id);
 			do_redirection($url);
@@ -51,7 +49,7 @@ if ($id > 0) {
 				&& $current_user->user_id > 0
 				&& User::get_pref($current_user->user_id, 'use_bar')
 				&& $db->get_var("select blog_type from blogs where blog_id = $l->blog") != 'noiframe') {
-				$url = $globals['base_url'] . 'b/' . $id;
+				$url = 'http://'.get_server_name().$globals['base_url'] . 'b/' . $id; // we use always http to load no https pages
 				do_redirection($url, 307);
 			} else {
 				if (empty($l->url)) $url = $l->get_permalink();
