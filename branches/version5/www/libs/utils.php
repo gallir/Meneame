@@ -210,57 +210,53 @@ function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 
 function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	$string = add_tags(clean_text($string, $wrap, $replace_nl, $maxlength));
-	$string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', 'enable_tags_callback', $string);
+	$string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', function ($matches) {
+			global $globals;
+			static $open_tags = array();
+
+			if (preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
+				if ($matches[1] == '/') {
+					if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] != $matches[2]) {
+						return $matches[0];
+					}
+					array_pop($open_tags);
+					return "</$matches[2]>";
+				}
+				$open_tags[] =	$matches[2];
+				return "<$matches[2]>";
+			}
+			return $matches[0];
+		}, $string); 
 	$string = close_tags($string);
 	$string = preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", $string); // Deletes useless close+open tags
 	//$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
 	return $string;
 }
 
-function enable_tags_callback($matches) {
-	global $globals;
-	static $open_tags = array();
-
-	if (preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
-		if ($matches[1] == '/') {
-			if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] != $matches[2]) {
-				return $matches[0];
-			}
-			array_pop($open_tags);
-			return "</$matches[2]>";
-		}
-		$open_tags[] =	$matches[2];
-		return "<$matches[2]>";
-	}
-	return $matches[0];
-}
-
 function close_tags(&$string) {
-	return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', 'close_tags_callback', $string);
-}
+	return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', function($matches) {
+			static $open_tags = array();
 
-function close_tags_callback($matches) {
-	static $open_tags = array();
-
-	if (empty($matches[0])) {
-		// End of text, close open tags
-		$end = '';
-		while (($t = array_pop($open_tags))) {
-			$end .= "</$t>";
-		}
-		if ($end) $end = "\n$end\n";
-		return $end;
-	}
-	if ($matches[1] && $matches[1][0] == '/') {
-		if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] == $matches[2]) {
-			array_pop($open_tags);
-		} else {
-			return ' '; // Don't allow misplaced or wrong tags
-		}
-	} else {
-		$open_tags[] = $matches[2];
-	}
-	return $matches[0];
+			if (empty($matches[0])) {
+				// End of text, close open tags
+				$end = '';
+				while (($t = array_pop($open_tags))) {
+					$end .= "</$t>";
+				}
+				if ($end) $end = "\n$end\n";
+				return $end;
+			}
+			if ($matches[1] && $matches[1][0] == '/') {
+				if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] == $matches[2]) {
+					array_pop($open_tags);
+				} else {
+					return ' '; // Don't allow misplaced or wrong tags
+				}
+			} else {
+				$open_tags[] = $matches[2];
+			}
+			return $matches[0];
+		}, $string);
 }
 
 function clean_lines($string) {
@@ -283,21 +279,19 @@ function text_to_summary($string, $length=50) {
 function add_tags($string) {
 	// Convert to em, strong and strike tags
 	$regexp = '_[^\s<>_]+_\b|\*[^\s<>]+\*|\-([^\s\-<>]+)\-';
-	return preg_replace_callback('/([ \t\r\n\(\[{¿]|^)('.$regexp.')/u', 'add_tags_callback', $string);
-}
+	return preg_replace_callback('/([ \t\r\n\(\[{¿]|^)('.$regexp.')/u', function ($matches) {
+			global $globals;
 
-function add_tags_callback($matches) {
-	global $globals;
-
-	switch ($matches[2][0]) {
-		case '_':
-			return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
-		case '*':
-			return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
-		case '-':
-			return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
-	}
-	return $matches[1].$matches[2];
+			switch ($matches[2][0]) {
+				case '_':
+					return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
+				case '*':
+					return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
+				case '-':
+					return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
+			}
+			return $matches[1].$matches[2];
+		}, $string);
 }
 
 function text_to_html(&$string) {
@@ -630,7 +624,7 @@ function put_smileys($str) {
 	return $str;
 }
 
-function put_smileys_callback(&$matches) {
+function put_smileys_callback($matches) {
 	global $globals;
 	static $translations = false;
 	if (!$translations) {

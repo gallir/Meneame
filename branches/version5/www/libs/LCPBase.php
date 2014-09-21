@@ -36,84 +36,75 @@ class LCPBase {
 		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\.])';
 		$regexp .= '|\|([\p{L}\d_]+)';
 		$regexp = '/([\s\(\[{}¡;,:¿>\*]|^)('.$regexp.')/Smu';
-		return preg_replace_callback($regexp, array( &$this, 'to_html_cb'), $string);
-	}
+		$callback = function ($matches) {
+			global $globals;
 
-	function to_html_cb(&$matches) {
-		global $globals;
-
-		switch ($matches[2][0]) {
-			case '#':
-				if (preg_match('/^#\d+$/', $matches[2])) {
-					$id = substr($matches[2], 1);
-					if (is_a($this, 'Comment')) {
-						if ($id > 0) {
-							return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
-						} else {
-							return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
+			switch ($matches[2][0]) {
+				case '#':
+					if (preg_match('/^#\d+$/', $matches[2])) {
+						$id = substr($matches[2], 1);
+						if (is_a($this, 'Comment')) {
+							if ($id > 0) {
+								return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
+							} else {
+								return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
+							}
+						} elseif (is_a($this, 'Link')) {
+							return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
 						}
-					} elseif (is_a($this, 'Link')) {
-						return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
-					}
-				} else {
-					switch (get_class($this)) {
-						case 'Link':
-							$w = 'links';
-							break;
-						case 'Comment':
-							$w = 'comments';
-							break;
-						case 'Post':
-							$w = 'posts';
-							break;
-					}
-					return $matches[1].'<a href="'.$globals['base_url'].'search?w='.$w.'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
-				}
-				break;
-
-			case '@':
-				$ref = substr($matches[2], 1);
-				if (is_a($this, 'Post')) {
-					$a = explode(',', $ref);
-					if (count($a) > 1) {
-						$user = $a[0];
-						$id = ','.$a[1];
 					} else {
-						$user = $ref;
-						$id = '';
+						switch (get_class($this)) {
+							case 'Link':
+								$w = 'links';
+								break;
+							case 'Comment':
+								$w = 'comments';
+								break;
+							case 'Post':
+								$w = 'posts';
+								break;
+						}
+						return $matches[1].'<a href="'.$globals['base_url'].'search?w='.$w.'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
 					}
-					$user_url = urlencode($user);
-					return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url?id=$user_url$id;".$this->date."'>@$user</a>";
-				} else {
-					return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
-				}
-				break;
+					break;
 
-			case '{':
-				$m = array($matches[2], substr($matches[2], 1, -1));
-				return $matches[1].put_smileys_callback($m);
+				case '@':
+					$ref = substr($matches[2], 1);
+					if (is_a($this, 'Post')) {
+						$a = explode(',', $ref);
+						if (count($a) > 1) {
+							$user = $a[0];
+							$id = ','.$a[1];
+						} else {
+							$user = $ref;
+							$id = '';
+						}
+						$user_url = urlencode($user);
+						return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url?id=$user_url$id;".$this->date."'>@$user</a>";
+					} else {
+						return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
+					}
+					break;
 
+				case '{':
+					$m = array($matches[2], substr($matches[2], 1, -1));
+					return $matches[1].put_smileys_callback($m);
 
-			case 'h':
-				$suffix = '';
-				if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
-					$matches[4] = substr($matches[4], 0, -1);
-					$suffix = ')';
-				}
-				return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
+				case 'h':
+					$suffix = '';
+					if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
+						$matches[4] = substr($matches[4], 0, -1);
+						$suffix = ')';
+					}
+					return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
 
-			case '|':
-				return $matches[1].'<a href="'.$globals['base_url_general'].'m/'.$matches[5].'">|'.$matches[5].'</a>';
-			/*
-			case '_':
-				return $matches[1].'<i>'.substr($matches[2], 1, -1).'</i>';
-			case '*':
-				return $matches[1].'<b>'.substr($matches[2], 1, -1).'</b>';
-			case '-':
-				return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
-			*/
-		}
-		return $matches[1].$matches[2];
+				case '|':
+					return $matches[1].'<a href="'.$globals['base_url_general'].'m/'.$matches[5].'">|'.$matches[5].'</a>';
+			}
+			return $matches[1].$matches[2];
+		};
+
+		return preg_replace_callback($regexp, $callback, $string);
 	}
 
 	function sanitize($string) {

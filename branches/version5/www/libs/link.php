@@ -697,8 +697,8 @@ class Link extends LCPBase {
 
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
-		$this->permalink	 = $this->get_permalink();
 		$this->relative_permalink	 = $this->get_relative_permalink();
+		$this->permalink	 = $this->get_permalink(false, $this->relative_permalink); // To avoid double verification
 		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
@@ -1009,6 +1009,10 @@ class Link extends LCPBase {
 	function get_relative_permalink($strict = false) {
 		global $globals;
 
+		if (empty($this->base_url)) {
+			$this->base_url = $globals['base_url_general'];
+		}
+
 		if ( $this->is_sub && ($globals['submnm'] || $strict || self::$original_status) ) {
 			if ($this->sub_status_id == SitesMgr::my_id() && ! $strict && ! self::$original_status) {
 				$base = $this->base_url . 'm/'.$globals['submnm'].'/';
@@ -1026,7 +1030,7 @@ class Link extends LCPBase {
 		}
 	}
 
-	function get_permalink($strict = false) {
+	function get_permalink($strict = false, $relative = false) {
 		global $globals;
 
 		if (empty($globals['server_name'])) {
@@ -1034,7 +1038,12 @@ class Link extends LCPBase {
 		} else {
 			$server_name = $globals['server_name'];
 		}
-		return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink($strict);
+
+		if (empty($relative)) {
+			$relative = $this->get_relative_permalink($strict);
+		}
+
+		return $globals['scheme'].'//'.$server_name.$relative;
 	}
 
 	function get_canonical_permalink($page = false) {
