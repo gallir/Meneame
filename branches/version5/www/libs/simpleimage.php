@@ -32,25 +32,32 @@ class SimpleImage {
 		switch($this->image_type) {
 		case IMAGETYPE_JPEG:
 			$this->image = @imagecreatefromjpeg($filename);
-			return true;
+			break;
 		case IMAGETYPE_GIF:
 			$this->image = @imagecreatefromgif($filename);
-			return true;
+			break;
 		case IMAGETYPE_PNG:
 			$this->image = @imagecreatefrompng($filename);
-			return true;
+			break;
 		case IMAGETYPE_WBMP:
 			$this->image = @imagecreatefromwbmp($filename);
-			return true;
+			break;
 		default:
 			$this->image = false;
 		}
-		if ($this->image) return true;
-		else return false;
+		if ($this->image) {
+			return true;
+		} else {
+			yslog(LOG_INFO, "SimpleImage::load(): Image not loaded, $filename, $this->image_type");
+			return false;
+		}
 	}
 
 	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=80) {
-		if (!$this->image) return false;
+		if (!$this->image) {
+			syslog(LOG_INFO, "SimpleImage::save(): Image not loaded, $filename, $image_type, $compression");
+			return false;
+		}
 
 		if ($image_type == -1) {
 			// Save in the same format
@@ -198,7 +205,7 @@ class SimpleImage {
 			break;
 
 		case 3: // 180 rotate left
-			$this->image = imagerotate($this->image, 180, -1);
+			$this->image = imagerotate($this->image, 180, 255);
 			break;
 
 		case 4: // vertical flip
@@ -207,20 +214,20 @@ class SimpleImage {
 
 		case 5: // vertical flip + 90 rotate right
 			$this->flip();
-			$this->image = imagerotate($this->image, -90, -1);
+			$this->image = imagerotate($this->image, -90, 255);
 			break;
 
 		case 6: // 90 rotate right
-			$this->image = imagerotate($this->image, -90, -1);
+			$this->image = imagerotate($this->image, -90, 255);
 			break;
 
 		case 7: // horizontal flip + 90 rotate right
 			$this->flip();
-			$this->image = imagerotate($this->image, -90, -1);
+			$this->image = imagerotate($this->image, -90, 255);
 			break;
 
 		case 8: // 90 rotate left
-			$this->image = imagerotate($this->image, 90, -1);
+			$this->image = imagerotate($this->image, 90, 255);
 			break;
 
 		default:
