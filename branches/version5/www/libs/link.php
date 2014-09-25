@@ -198,16 +198,18 @@ class Link extends LCPBase {
 
 		$key = 'clicks_cache';
 		$cache = memcache_mget($key);
-		if (!$cache) {
+		if (! $cache) {
 			$cache = array();
 			$cache['time'] = $globals['start_time'];
 			$cache[$id] = 1;
+			$in_cache = false;
 		} else {
 			$cache[$id]++;
+			$in_cache = true;
 		}
 
 		if ($globals['start_time'] - $cache['time'] > 4.0) {
-			if( !memcache_mdelete($key)) {
+			if($in_cache && !memcache_mdelete($key)) {
 				memcache_madd($key, array());
 				syslog(LOG_INFO, "store_clicks: Delete failed");
 			}
