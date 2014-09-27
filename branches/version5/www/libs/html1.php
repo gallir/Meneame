@@ -388,7 +388,7 @@ function do_vertical_tags($what=false) {
 		$status = "!= 'discarded'";
 	}
 
-	$cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status;
+	$cache_key = $globals['scheme'].'tags_'.$globals['site_shortname'].$globals['v'].$status;
 	if(memcache_mprint($cache_key)) return;
 
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
@@ -452,7 +452,7 @@ function do_best_sites() {
 
 	$output = '';
 
-	$key = 'best_sites_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'best_sites_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -475,7 +475,7 @@ function do_most_clicked_sites() {
 
 	$output = '';
 
-	$key = 'most_clicked_sites_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'most_clicked_sites_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -498,7 +498,7 @@ function do_best_comments() {
 	$foo = new Comment();
 	$output = '';
 
-	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'best_comments_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -546,7 +546,7 @@ function do_best_story_comments($link) {
 	}
 
 	if($do_cache) {
-		$key = 'best_story_comments_'.$globals['v'].'_'.$link->id;
+		$key = $globals['scheme'].'best_story_comments_'.$globals['v'].'_'.$link->id;
 		if(memcache_mprint($key)) return;
 	}
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
@@ -582,7 +582,7 @@ function do_active_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'active_stories_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'active_stories_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -618,7 +618,7 @@ function do_best_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'best_stories_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'best_stories_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -657,9 +657,8 @@ function do_best_queued() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'best_queued_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
-	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
 	$min_karma = intval($avg_karma/4);
@@ -702,7 +701,7 @@ function do_most_clicked_stories() {
 
 	if ($globals['mobile']) return;
 
-	$key = 'most_clicked_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'most_clicked_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -742,7 +741,7 @@ function do_best_posts() {
 
 	$output = '';
 
-	$key = 'best_posts_'.$globals['site_shortname'].$globals['v'];
+	$key = $globals['scheme'].'best_posts_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
@@ -779,10 +778,8 @@ function do_last_blogs() {
 	if (! empty($globals['mobile']) || !empty($globals['submnm'])) return;
 
 	$output = '';
-	$key = 'last_blogs_'.$globals['v'];
+	$key = $globals['scheme'].'last_blogs_'.$globals['v'];
 	if(memcache_mprint($key)) return;
-	echo '<!-- Calculating '.__FUNCTION__.' -->';
-
 
 	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date desc limit 10");
 	if ($entries) {
@@ -811,10 +808,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 	if ($globals['mobile'] || $globals['submnm']) return;
 
 	$output = ' ';
-	$key = "last_subs_$status-$count-$order_".$globals['v'];
-	//if(memcache_mprint($key)) return;
-	echo '<!-- Calculating '.__FUNCTION__.' -->';
-
+	$key = $globals['scheme']."last_subs_$status-$count-$order_".$globals['v'];
 
 	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link order by $order desc limit $count");
 	if ($ids) {
