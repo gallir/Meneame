@@ -129,6 +129,8 @@ class UserAuth {
 						.$globals['now'].':'
 						.$time);
 				setcookie('ukey', $strCookie, $time, $globals['base_url'], self::domain(), false, true);
+				// The user has authenticated at least once, used to avoid cookies message
+				setcookie('a', '1', $time, $globals['base_url'], self::domain(), false, false);
 				break;
 		}
 	}

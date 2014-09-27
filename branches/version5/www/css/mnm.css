@@ -146,7 +146,7 @@ height:30px;
 background-color:#3c3c3c;
 overflow:hidden;
 white-space:nowrap;
-z-index: 10000;
+z-index: 900;
 user-select: none;
 -moz-user-select: none;
 -webkit-user-select: none;
@@ -435,7 +435,7 @@ display: none;
 top: 30px;
 left: 0px;
 overflow: auto;
-z-index: 10001;
+z-index: 901;
 width: auto;
 height:auto;
 white-space:normal;
@@ -2216,7 +2216,7 @@ text-align: left;
 position:absolute;
 display:none;
 margin: 0;
-z-index:10002;
+z-index:1002;
 border: 1px solid;
 padding: 6px;
 font-size: 95%;
@@ -2320,7 +2320,7 @@ body { font-size: small }
 
 #mDialog_box {
 position: absolute;
-z-index: 15000;
+z-index: 1500;
 width: 25%;
 min-width: 250px;
 height: 18.5ex;
