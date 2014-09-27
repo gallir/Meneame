@@ -350,7 +350,6 @@ function createCookie(name,value,days,path) {
 }
 
 function readCookie(name, path) {
-	var nameEQ = name + "=";
 	var ca = document.cookie ? document.cookie.split('; ') : [];
 	for(var i=0; i < ca.length; i++) {
 		var c = ca[i];
@@ -1939,6 +1938,15 @@ $(document).ready(function () {
 	$('.showmytitle').on('click', function () {
 		mDialog.content('<span style="font-size: 12px">'+$(this).attr('title')+'</span>');
 	});
+
+	if (! readCookie("sticky") && ! readCookie("a") ) {
+		setTimeout(function() {
+			$.getScript(base_static + "js/cookiechoices.js", function () {
+				cookieChoices.showCookieConsentBar('Nos obligan a molestarte con la obviedad de que este sitio usa cookies', 
+					'cerrar', 'más información', base_url + "legal#cookies");
+				});
+			}, 2000);
+	}
 
 });
 
