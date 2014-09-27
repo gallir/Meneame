@@ -1941,9 +1941,14 @@ $(document).ready(function () {
 
 	if (! readCookie("sticky") && ! readCookie("a") ) {
 		setTimeout(function() {
-			$.getScript(base_static + "js/cookiechoices.js", function () {
-				cookieChoices.showCookieConsentBar('Nos obligan a molestarte con la obviedad de que este sitio usa cookies', 
+			$.ajax({
+				cache: true,
+				url: base_static + "js/cookiechoices.js",
+				dataType: "script",
+				success: function () {
+					cookieChoices.showCookieConsentBar('Nos obligan a molestarte con la obviedad de que este sitio usa cookies', 
 					'cerrar', 'más información', base_url + "legal#cookies");
+					}
 				});
 			}, 2000);
 	}
