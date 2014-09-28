@@ -2216,7 +2216,7 @@ text-align: left;
 position:absolute;
 display:none;
 margin: 0;
-z-index:1002;
+z-index:10002;
 border: 1px solid;
 padding: 6px;
 font-size: 95%;
@@ -2320,7 +2320,7 @@ body { font-size: small }
 
 #mDialog_box {
 position: absolute;
-z-index: 1500;
+z-index: 15000;
 width: 25%;
 min-width: 250px;
 height: 18.5ex;
