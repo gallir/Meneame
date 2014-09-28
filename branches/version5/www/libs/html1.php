@@ -59,8 +59,15 @@ function do_header($title, $id='home', $options = false) {
 	global $current_user, $dblang, $globals, $db;
 
 	header('Content-Type: text/html; charset=utf-8');
+
+	// Security headers
 	header('X-Frame-Options: SAMEORIGIN');
 	header('X-UA-Compatible: IE=edge,chrome=1');
+	if ($globals['force_ssl'] && $globals['https']) {
+		header('Strict-Transport-Security: max-age=2592000');
+	}
+
+
 	http_cache();
 
 	$globals['security_key'] = get_security_key();
