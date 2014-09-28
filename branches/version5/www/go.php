@@ -30,13 +30,13 @@ if ($id > 0) {
 			do_redirection($url);
 			exit(0);
 		case 'post':
-			$url = 'http://'.get_server_name().post_get_base_url($id);
+			$url = $globals['scheme'].'//'.get_server_name().post_get_base_url($id);
 			do_redirection($url);
 			exit(0);
 		case 'comment':
 			$c = new Comment();
 			$c->id = $id;
-			$url = 'http://'.get_server_name().$c->get_relative_individual_permalink();
+			$url = $globals['scheme'].'//'.get_server_name().$c->get_relative_individual_permalink();
 			do_redirection($url);
 			exit(0);
 		default:

@@ -21,6 +21,11 @@ if (! $id > 0 || ! ($link = Link::from_db($id))) {
 // Mark as read, add click if necessary
 $link->add_click();
 
+if ($globals['https'] && ! preg_match('/^https:/', $link->url)) {
+	redirect($link->url);
+	die;
+}
+
 $link->title = text_to_summary($link->title, 80);
 
 // From libs/html1.php do_header()
