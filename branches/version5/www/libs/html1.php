@@ -64,7 +64,7 @@ function do_header($title, $id='home', $options = false) {
 	header('X-Frame-Options: SAMEORIGIN');
 	header('X-UA-Compatible: IE=edge,chrome=1');
 	if ($globals['force_ssl'] && $globals['https']) {
-		header('Strict-Transport-Security: max-age=2592000');
+		header('Strict-Transport-Security: max-age=15638400'); // 181 days, ssllabs doesn't like less than 180
 	}
 
 
