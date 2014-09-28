@@ -47,9 +47,10 @@ if ($id > 0) {
 				&& ! $globals['mobile_version']
 				&& ! empty($l->url)
 				&& $current_user->user_id > 0
+				&& (empty($globals['https']) || preg_match('/^https:/', $l->url))
 				&& User::get_pref($current_user->user_id, 'use_bar')
 				&& $db->get_var("select blog_type from blogs where blog_id = $l->blog") != 'noiframe') {
-				$url = 'http://'.get_server_name().$globals['base_url'] . 'b/' . $id; // we use always http to load no https pages
+				$url = $globals['scheme'].'//'.get_server_name().$globals['base_url'] . 'b/' . $id; // we use always http to load no https pages
 				do_redirection($url, 307);
 			} else {
 				if (empty($l->url)) $url = $l->get_permalink();
