@@ -85,6 +85,10 @@ function utf8_for_xml($string) {
 	return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
+function url_no_scheme($url) {
+	return preg_replace('/^https{0,1}:/', '', $url);
+}
+
 function clean_input_url($string) {
 	$string = preg_replace('/ /', '+', trim(stripslashes(mb_substr($string, 0, 512))));
 	$string = preg_replace('/[<>\r\n\t]/', '', $string);
@@ -482,8 +486,12 @@ function get_avatar_url($user, $avatar, $size, $fullurl = true) {
 
 function get_no_avatar_url($size, $fullurl = true) {
 	global $globals;
-	
-	return $globals['base_static'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
+
+	$url = $globals['base_static'].'img/mnm/no-gravatar-2-'.$size.'.jpg';
+	if (!  $fullurl) {
+		$url = url_no_scheme($url);
+	}
+	return $url;
 }
 
 function utf8_substr($str,$start)

@@ -6,7 +6,7 @@
 	<div class="cell">
 	<div class="clics"><span>{{ l.clicks }}<br/>{% trans _('clics') %}</span></div>
 	{% if l.thumb %}
-		<img src="{{l.thumb}}" width="{{l.thumb_x}}" height="{{l.thumb_y}}" alt='' class="thumbnail"/>
+		<img src="{{l.thumb | noscheme}}" width="{{l.thumb_x}}" height="{{l.thumb_y}}" alt='' class="thumbnail"/>
 	{% endif %}
 	<h5 {% if l.warned %}class="warn"{% endif %}>
 	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a></h5>

@@ -8,7 +8,7 @@
 	<div class="cell">
 	<div class="votes{% if l.sub_status == 'queued' %} queued{% endif %}"><span>{{ l.total_votes }}</span></div>
 	{% if l.thumb %}
-		<img data-src="{{l.thumb}}" src="{{ globals.base_static }}img/g.gif" alt='' class="thumbnail lazy"/>
+		<img data-src="{{l.thumb | noscheme}}" src="{{ globals.base_static | noscheme }}img/g.gif" alt='' class="thumbnail lazy"/>
 	{% endif %}
 	<h5 {% if l.warned %}class="warn"{% endif %}>
 	{% if l.print_subname %}

@@ -1,5 +1,10 @@
 <?php
 
+class Haanga_Extension_Filter_NoScheme
+{
+	public $php_alias = 'url_no_scheme';
+}
+
 class Haanga_Extension_Filter_TextToHTML
 {
 	public $php_alias = 'text_to_html';
