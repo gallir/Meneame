@@ -16,7 +16,7 @@ if (!empty($globals['lounge'])) {
 }
 
 if (!empty($globals['force_ssl']) && ! $globals['https'] && ! isset($_GET['force'])) {
-	header('HTTP/1.1 302 Moved');
+	header('HTTP/1.1 301 Moved');
 	header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
 	die;
 }
