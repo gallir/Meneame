@@ -48,7 +48,7 @@
 	<meta property="og:description" content="{{ globals.description }}">
 {% endif %}
 
-<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="//{{globals.server_name}}{{ globals.base_url_general }}opensearch"/>
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}opensearch"/>
 <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss" />
 <link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss?status=queued" />
 
