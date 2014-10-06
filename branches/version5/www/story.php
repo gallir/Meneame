@@ -216,7 +216,7 @@ if (!empty($link->tags))
 $globals['extra_head'] .= '<link rel="canonical" href="'.$link->get_canonical_permalink($canonical_page).'" />';
 
 // add also a rel to the comments rss
-$globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'comments_rss2.php?id='.$link->id.'" />';
+$globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'comments_rss?id='.$link->id.'" />';
 
 if ($link->has_thumb()) {
 	if ($link->thumb_medium_url) {
