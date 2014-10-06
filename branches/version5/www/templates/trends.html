@@ -54,7 +54,7 @@
 		function loadData() {
 			var data = [];
 			if (!words) return;
-			var url = "http://"+location.hostname+encodeURI(base_url+"backend/trends?q="+words+"&w="+what);
+			var url = "//"+location.hostname+encodeURI(base_url+"backend/trends?q="+words+"&w="+what);
 			$.getJSON(url,
 				function (json) {
 					for (i=0; i<json.length; i++) {
