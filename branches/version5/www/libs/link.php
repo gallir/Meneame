@@ -790,12 +790,16 @@ class Link extends LCPBase {
 		// Check positive and negative karmas
 		$pos = $db->get_row("select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0");
 		$neg = $db->get_row("select sum(user_karma) as karma, avg(user_karma) as avg from votes, users where vote_type = 'links' and vote_link_id = $this->id and vote_value < 0 and user_id = vote_user_id and user_level not in ('autodisabled','disabled')");
-		$karma_neg_corrected = $neg->karma * $neg->avg/$pos->avg; // Adjust to averages for each type
-		//echo "Pos: $pos->karma avg: $pos->avg Neg: $neg->karma avg: $neg->avg Corrected: $karma_neg_corrected<br/>\n";
-		if ($karma_neg_corrected < $pos->karma*$neg_percent) {
-			$this->warned = false;
-			return $this->warned;
+
+		if ($neg->karma > 0 && $neg->avg > 0 && $pos->avg > 0) { // To avoid division by zero
+			$karma_neg_corrected = $neg->karma * $neg->avg/$pos->avg; // Adjust to averages for each type
+			//echo "Pos: $pos->karma avg: $pos->avg Neg: $neg->karma avg: $neg->avg Corrected: $karma_neg_corrected<br/>\n";
+			if ($karma_neg_corrected < $pos->karma*$neg_percent) {
+				$this->warned = false;
+				return $this->warned;
+			}
 		}
+
 		$this->warned = true;
 		return true;
 	}
