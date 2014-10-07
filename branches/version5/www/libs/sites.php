@@ -199,7 +199,9 @@ class SitesMgr {
 				if (! $do_changed_id) {  // Origen has changed, don't modify the status
 					$new->status = $me->status;
 				}
-				if ($do_current) {
+				if ($do_current &&  // changed status to published or from published to queued
+						(round($new->karma) == 0 || $link->karma < $new->karma )) {
+						// If karma was never updated (new published) or the link karma is negative/smaller
 					$new->karma = $link->karma;
 				}
 				$r = $db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
