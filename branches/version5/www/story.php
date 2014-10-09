@@ -575,8 +575,9 @@ function print_relevant_comments($link, $no_page) {
 					&& $obj->vote < 0
 					&& $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
 					&& (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
-					&& count($res) >= count($objects) * 2
+					&& count($res) >= count($objects) 
 				) {
+				// Show the most negative relevant comment
 				$self = get_highlighted_comment($obj);
 				$obj->summary = true;
 			}
