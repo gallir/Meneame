@@ -782,7 +782,7 @@ function post_edit(id) {
 
 function comment_edit(id, DOMid) {
 	e=$('#' + DOMid);
-	e.load(base_url + 'comment_edit?id='+id, function () {e.trigger('DOMChanged', e)});
+	e.load(base_url_sub + 'comment_edit?id='+id, function () {e.trigger('DOMChanged', e)});
 }
 
 function post_reply(id, user) {

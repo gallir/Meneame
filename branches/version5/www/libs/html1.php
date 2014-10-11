@@ -79,6 +79,19 @@ function do_header($title, $id='home', $options = false) {
 	$this_site = SitesMgr::get_info();
 	$this_site_properties = SitesMgr::get_extended_properties();
 
+	// Check if the sub has a logo and calculate the width
+	if ($this_site->media_id > 0 && $this_site->media_dim1 > 0 && $this_site->media_dim2 > 0) {
+		$r = $this_site->media_dim1/$this_site->media_dim2;
+		if ( $globals['mobile']) {
+			$this_site->logo_height = $globals['media_sublogo_height_mobile'];
+		} else {
+			$this_site->logo_height = $globals['media_sublogo_height'];
+		}
+		$this_site->logo_width = round($r * $this_site->logo_height);
+		$this_site->logo_url = Upload::get_cache_relative_dir($this_site->id).'/media_thumb-sub_logo-'.$this_site->id.'.'.$this_site->media_extension.'?'.$this_site->media_date;
+		echo "<!-- $this_site->logo_url $this_site->logo_width $this_site->logo_height -->\n";
+	}
+
 	if ($this_site->nsfw) {
 		$globals['ads'] = false;
 	}
@@ -422,7 +435,7 @@ function do_vertical_tags($what=false) {
 			}
 		}
 
-		
+
 
 		$coef = ($max_pts - $min_pts)/($max-1);
 		arsort($words);

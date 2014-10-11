@@ -25,6 +25,15 @@ height:40px;
 z-index: 10;
 }
 
+#header-sub{
+height: 28px;
+padding: 2px 4px;
+}
+
+#header-sub img {
+vertical-align: text-bottom;
+}
+
 #nav-menu {
 margin-top: 5px;
 width: 30px;

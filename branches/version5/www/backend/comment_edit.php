@@ -135,8 +135,7 @@ function save_comment () {
 			$comment->store_image($_FILES['image']);
 		}
 
-
-		header('Location: '.$link->get_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
+		header('Location: '.$link->get_relative_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
 		die;
 	} else {
 		echo _('error actualizando, probablemente tiempo de edición excedido');

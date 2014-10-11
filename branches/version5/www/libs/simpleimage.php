@@ -46,40 +46,59 @@ class SimpleImage {
 			$this->image = false;
 		}
 		if ($this->image) {
+			$this->extension = @image_type_to_extension($this->image_type, false);
 			return true;
 		} else {
-			yslog(LOG_INFO, "SimpleImage::load(): Image not loaded, $filename, $this->image_type");
+			$this->extension = '';
+			syslog(LOG_INFO, "SimpleImage::load(): Image not loaded, $filename, $this->image_type");
 			return false;
 		}
 	}
 
-	function save($filename, $image_type=IMAGETYPE_JPEG, $compression=80) {
+	function save($filename, $image_type=-1, $compression=80) {
 		if (!$this->image) {
 			syslog(LOG_INFO, "SimpleImage::save(): Image not loaded, $filename, $image_type, $compression");
 			return false;
 		}
 
+
 		if ($image_type == -1) {
-			// Save in the same format
-			$image_type = $this->image_type;
+			if (!empty($this->image_type) && $this->extension) {
+				// Save in the same format
+				$image_type = $this->image_type;
+			} else {
+				$image_type = IMAGETYPE_JPEG;
+			}
+		}
+
+		// If filename has no extension, add it
+		if (! preg_match('/\.[a-z]{3,6}$/i', $filename) && ! empty($this->extension)) {
+			$filename .= '.'.$this->extension;
 		}
 
 		switch($image_type) {
-		case IMAGETYPE_JPEG:
-			$res = imagejpeg($this->image, $filename, $compression);
-			break;
 		case IMAGETYPE_GIF:
 			$res = imagegif($this->image, $filename);
 			break;
 		case IMAGETYPE_PNG:
-			$res = imagepng($this->image, $filename);
+			imagesavealpha($this->image, true);
+			$res = imagepng($this->image, $filename, 9, PNG_ALL_FILTERS);
+			break;
+		case IMAGETYPE_JPEG:
+			$res = imagejpeg($this->image, $filename, $compression);
 			break;
 		default:
 			syslog(LOG_INFO, "IMAGE not type found: $image_type");
 			return false;
 		}
-		if ($res) return true;
-		else return false;
+		if ($res) {
+			$this->last_saved = $filename;
+		} else {
+			$this->last_saved = false;
+		}
+
+		return $this->last_saved;
+
 	}
 
 	function output($image_type=IMAGETYPE_JPEG) {
@@ -89,7 +108,8 @@ class SimpleImage {
 		case IMAGETYPE_GIF:
 			imagegif($this->image);
 		case IMAGETYPE_PNG:
-			imagepng($this->image);
+			imagesavealpha($this->image, true);
+			imagepng($this->image, 9, PNG_ALL_FILTERS);
 		default:
 			return false;
 		}
@@ -105,15 +125,11 @@ class SimpleImage {
 	}
 
 	function resizeToHeight($height) {
-		$ratio = $height / $this->getHeight();
-		$width = $this->getWidth() * $ratio;
-		$this->resize($width,$height);
+		$this->resize(false,$height);
 	}
 
 	function resizeToWidth($width) {
-		$ratio = $width / $this->getWidth();
-		$height = $this->getheight() * $ratio;
-		$this->resize($width,$height);
+		$this->resize($width,false);
 	}
 
 	function scale($scale) {
@@ -124,6 +140,15 @@ class SimpleImage {
 
 	function resize($width, $height, $crop = false) {
 		if (! $this->image) return false;
+
+		if ($width == false) { // resize to keep aspect to a fixed height
+			$ratio = $height / $this->getHeight();
+			$width = round($this->getWidth() * $ratio);
+		} elseif ($height == false) { // resize to keep aspect to a fixed width
+			$ratio = $width / $this->getWidth();
+			$height = round($this->getheight() * $ratio);
+		}
+
 		if (! $crop) {
 			$src_x = 0;
 			$src_y = 0;
@@ -141,7 +166,20 @@ class SimpleImage {
 			$src_h = $view_h;
 		}
 		$new_image = imagecreatetruecolor($width, $height);
-		imagefill($new_image, 0, 0, imagecolorallocate($new_image, 255, 255, 255));
+		switch($this->image_type) {
+			case IMAGETYPE_PNG:
+				$background = imagecolorallocatealpha($new_image, 255, 255, 255, 127);
+				$tcolor = imagecolortransparent($this->image);
+				if ($tcolor >= 0) {
+					imagecolortransparent($new_image, $tcolor);
+				}
+				imagealphablending($new_image, false);
+				imagesavealpha($new_image, true);
+				break;
+			default:
+				$background = imagecolorallocate($new_image, 255, 255, 255);
+				imagefill($new_image, 0, 0, $background);
+		}
 		if (! @imagecopyresampled($new_image, $this->image, 0, 0, $src_x, $src_y, $width, $height, $src_w, $src_h)) return false;
 		$this->image = $new_image;
 		return true;

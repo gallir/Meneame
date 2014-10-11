@@ -12,6 +12,11 @@ class SitesMgr {
 	static private $info = false;
 
 	const PREFERENCES_KEY = 'sub_preferences_';
+	const SQL_BASIC = "SELECT subs.*, media.id as media_id, media.size as media_size, media.dim1 as media_dim1, media.dim2 as media_dim2,
+			media.extension as media_extension, UNIX_TIMESTAMP(media.date) as media_date
+			FROM subs
+			LEFT JOIN media ON (media.type='sub_logo' and media.id = subs.id and media.version = 0) ";
+
 	static public $extended_properties = array(
 			'no_link' => 0,
 			'intro_max_len' => 550,
@@ -46,7 +51,7 @@ class SitesMgr {
 			if (empty($globals['site_shortname'])) {
 				echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 			}
-			self::$info = $db->get_row("select * from subs where name = '".$globals['site_shortname']."'");
+			self::$info = $db->get_row(SitesMgr::SQL_BASIC."where subs.name = '".$globals['site_shortname']."'");
 			if (self::$info) {
 				self::$id = self::$info->id;
 			} else {
@@ -58,7 +63,7 @@ class SitesMgr {
 		}
 
 		if (self::$info == false) {
-			self::$info = $db->get_row("select * from subs where id = ".self::$id);
+			self::$info = $db->get_row(SitesMgr::SQL_BASIC."where subs.id = ".self::$id);
 		}
 
 		self::$parent = self::$info->created_from;
@@ -87,7 +92,7 @@ class SitesMgr {
 			if (! self::$id || $force) self::__init($id);
 			return self::$info;
 		} else {
-			return $db->get_row("select * from subs where id = $id");
+			return $db->get_row(SitesMgr::SQL_BASIC."where subs.id = $id");
 		}
 	}
 
@@ -230,7 +235,7 @@ class SitesMgr {
 
 	// TODO: transient, for migration, edit/modify later
 	static function get_real_origen($id, $link) {
-		global $db; 
+		global $db;
 
 		if ($link->sub_id > 0) return $link->sub_id;
 		return $id;
@@ -338,7 +343,7 @@ class SitesMgr {
 
 
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
-		
+
 		return $n < 10 && time() - $current_user->user_date > 86400*10;
 	}
 

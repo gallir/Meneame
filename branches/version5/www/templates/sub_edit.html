@@ -5,7 +5,7 @@
     {% endfor %}
 {% endif %}
 
-<form method="post" id="thisform" name="thisform" autocomplete="off">
+<form method="post" id="thisform" name="thisform" autocomplete="off" enctype="multipart/form-data">
 <input type="hidden" name="id" value="{{ sub.id }}"/>
 <input type="hidden" name="u" value="{{ current_user.user_id }}"/>
 <input type="hidden" name="created_from" value="{{ site.id }}"/>
@@ -20,7 +20,7 @@
 </legend>
 
 {% if ! current_user.admin %}
-	<input type="hidden" id="owner" name="owner" 
+	<input type="hidden" id="owner" name="owner"
 	{% if sub.name %}
 		value="{{ sub.owner }}"
 	{% else %}
@@ -53,7 +53,7 @@
 &nbsp;&nbsp;
 {% trans _('deshabilitar control anti spam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
 <br/>
-{% trans _('enlace') %}: 
+{% trans _('enlace') %}:
 {% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
 {% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
 {% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
@@ -65,10 +65,10 @@
 #}
 
 <fieldset><legend>{% trans _('límites de entradilla') %}</legend>
-	{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200" 
+	{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200"
 			value="{{ extended.intro_min_len }}"/>
 	&nbsp;&nbsp;
-	{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000" 
+	{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000"
 			value="{{ extended.intro_max_len }}"/><br/>
 	{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
 </fieldset>
@@ -85,7 +85,23 @@
 	</label>
 </fieldset>
 
+
+
+
+{# Image options #}
+
+
+
+<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+<label>{% trans _('Imagen logo') %}: <input type="file" autocomplete="off" name="logo_image" id="fileInput" accept="image/*"/></label>
+{% if sub.media_size > 0 %}
+	&nbsp;<label>{% trans _('Eliminar') %}: <input type="checkbox" name="logo_image_delete" value="1"/></label>
+{% endif %}
+
 <br/>
+
+
+
 
 {% if current_user.admin %}
 	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>

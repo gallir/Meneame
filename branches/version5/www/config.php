@@ -50,7 +50,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // If you user version, be careful to rewrite the directory for img, css and js
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
-$globals['v'] = 15; // internal version, to for reloads
+$globals['v'] = 16; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -154,6 +154,8 @@ $globals['media_min_karma'] = 6;
 $globals['media_max_bytes_per_day'] = 2 * 1024 * 1024; // 2 MB/day
 $globals['media_max_upload_per_day'] = 10;
 $globals['media_thumb_size'] = 80;
+$globals['media_sublogo_height'] = 30;
+$globals['media_sublogo_height_mobile'] = 20;
 
 
 

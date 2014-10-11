@@ -1,0 +1,8 @@
+{% if this_site.logo_url %}
+	<img src="{{ globals.base_static }}img/g.gif"
+		class="thumb ok lazy"
+		data-src="{{ this_site.logo_url }}"
+		{# data-2x="s:thumb:thumb_2x" #}
+		width="{{ this_site.logo_width }}" height="{{ this_site.logo_height }}"
+		alt="{{ this_site.name }}" style="margin-right:5px"/>
+{% endif %}

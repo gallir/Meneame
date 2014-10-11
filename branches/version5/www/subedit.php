@@ -152,6 +152,7 @@ function save_sub($id, &$errors) {
 		if ($r && $id > 0) {
 			SitesMgr::store_extended_properties($id, $_POST);
 			$db->commit();
+			store_image($site);
 			return $id;
 		} else {
 			array_push($errors, _('error actualizando la base de datos'));
@@ -174,4 +175,20 @@ function sub_copy_from($id, $from) {
 	}
 }
 
-
+function store_image($site) {
+	$media = new Upload('sub_logo', $site->id, 0);
+	$media->media_size = 0;
+	$media->media_mime = '';
+		
+	if(!empty($_FILES['logo_image']['tmp_name'])) {
+		$media->access = 'public';
+		if ($media->from_temporal($_FILES['logo_image'], 'image')) {
+			$site->media_size = $media->size;
+			$site->media_mime = $media->mime;
+			$site->media_dim1 = $media->dim1;
+			$site->media_dimd = $media->dim2;
+		}
+	} elseif ($_POST['logo_image_delete']) {
+		$media->delete();
+	}
+}

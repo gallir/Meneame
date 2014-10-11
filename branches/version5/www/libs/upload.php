@@ -13,11 +13,22 @@ class Upload {
 		return $globals['scheme'].'//'.get_server_name().$globals['base_url_general']."backend/media.php?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
 	}
 
-	static function thumb_sizes($key = false) {
+	static function is_thumb_public($type) {
+		$types = array('post', 'comment', 'sub_logo');
+		return in_array($type, $types);
+	}
+
+	static function thumb_sizes($type, $key = false) {
 		global $globals;
 
-		$all = array('media_thumb' => $globals['media_thumb_size'],
-					'media_thumb_2x' => $globals['media_thumb_size'] * 2);
+		switch ($type) {
+			case 'sub_logo':
+				$all = array('media_thumb' => array(false, $globals['media_sublogo_height'] * 2, false));
+				break;
+			default:
+				$all = array('media_thumb' => array($globals['media_thumb_size'], $globals['media_thumb_size'], true),
+					'media_thumb_2x' => array($globals['media_thumb_size'] * 2, $globals['media_thumb_size'] * 2, true));
+		}
 
 		if ($key) {
 			return $all[$key];
@@ -115,8 +126,10 @@ class Upload {
 		if (! $this->user) $this->user = $current_user->user_id;
 
 		$mime = $db->escape($this->mime);
+		$extension = $db->escape($this->extension);
 		$access = $db->escape($this->access);
-		$db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+		$db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, extension, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', '$extension', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+
 		$this->backup();
 		return true;
 	}
@@ -141,8 +154,8 @@ class Upload {
 				$extra_where = 'AND `media.to` = comments.comment_id';
 				break;
 		}
-			
-		if(($result = $db->get_row("SELECT type, id, version, user, `to`, access, mime, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
+
+		if(($result = $db->get_row("SELECT type, id, version, user, `to`, access, mime, extension, size, UNIX_TIMESTAMP(date) as date, dim1, dim2 FROM media WHERE type = '$this->type' and id = $this->id and version = $this->version"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
 			$this->read = true;
 			return true;
@@ -169,8 +182,9 @@ class Upload {
 	}
 
 	function delete_thumbs() {
-		foreach (Upload::thumb_sizes() as $k => $s) {
-			@unlink($this->thumb_pathname($k));
+		foreach (Upload::thumb_sizes($this->type) as $k => $s) {
+			$pattern = $this->thumb_pathname($k) . '.*';
+			array_map('unlink', glob($pattern));
 		}
 	}
 
@@ -192,18 +206,19 @@ class Upload {
 		}
 
 		$res = 0;
-		foreach (Upload::thumb_sizes() as $k => $s) {
-			if ($key && $key != $k) continue; // Generated just what was requested
-			$thumb->resize($s, $s, true);
-			if ($thumb->save($this->thumb_pathname($k))) {
+		foreach (Upload::thumb_sizes($this->type) as $k => $s) {
+			if ($key && $key != $k) continue; // Generate just what was requested
+			$thumb->resize($s[0], $s[1], $s[2]);
+			if (($name = $thumb->save($this->thumb_pathname($k))) ) { // SimpleImage->save return the final name
 				$res++;
-				@chmod($this->thumb_pathname($k), 0777);
+				@chmod($name, 0777);
 				$this->thumb = $thumb;
 			}
 		}
 		return $res;
 	}
 
+	// Store the image from a file uploaded from the form
 	function from_temporal($file, $type = false) {
 		global $current_user, $globals;
 
@@ -226,6 +241,7 @@ class Upload {
 		return false;
 	}
 
+	// Store the image from a file uploaded with AJAX
 	function from_tmp_upload($filename, $type) {
 		global $current_user, $globals;
 
@@ -242,7 +258,7 @@ class Upload {
 			$this->check_size_and_rotation($this->pathname());
 			$this->delete_thumbs();
 
-			// Check if it exists a thumb adn save it in jpg
+			// Check if it exists a thumb and save it
 			$thumbname = Upload::get_cache_dir() . "/tmp/tmp_thumb-$filename";
 			if (file_exists($thumbname)) {
 				@unlink($thumbname);
@@ -319,7 +335,7 @@ class Upload {
 	}
 
 	function thumb_pathname($key = 'media_thumb') {
-		return $this->path() . "/$key-$this->type-$this->id.jpg";
+		return $this->path() . "/$key-$this->type-$this->id";
 	}
 
 	function check_size_and_rotation($pathname) {
@@ -334,20 +350,28 @@ class Upload {
 		if ($image->rotate_exif($pathname)) {
 			if ($image->save($tmp)) {
 				$pathname = $tmp;
-				clearstatcache(); 
+				clearstatcache();
 			}
 		}
 
+		if ($image->load($pathname)) {
+			$dim1 = $image->getWidth();
+			$dim2 = $image->getHeight();
+			$this->extension = $image->extension;
+		}
+
 		if (filesize($pathname) > 1024*1024) { // Bigger than 1 MB
-			if ($image->load($pathname) &&  ($image->getWidth() > $max_size || $image->getHeight() > $max_size)) {
-				if ($image->getWidth() > $image->getHeight) {
+			if ($image->image &&  ($dim1 > $max_size || $dim2 > $max_size)) {
+				if ($dim1 > $dim2) {
 					$image->resizeToWidth($max_size);
 				} else {
 					$image->resizeToHeight($max_size);
 				}
+				$dim1 = $image->getWidth();
+				$dim2 = $image->getHeight();
 				if ($image->save($tmp)) {
 					$pathname = $tmp;
-					clearstatcache(); 
+					clearstatcache();
 				}
 			}
 		}
@@ -362,8 +386,18 @@ class Upload {
 		$this->size = filesize($original);
 		@chmod($original, 0777);
 
+		$dim1 = $image->getWidth();
+		$dim2 = $image->getHeight();
+
+		if ($dim1 > 0) {
+			$this->dim1 = $dim1;
+		}
+		if ($dim2 > 0) {
+			$this->dim2 = $dim2;
+		}
+
+
 		return true;
 	}
 }
 
-?>
