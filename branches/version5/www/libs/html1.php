@@ -89,7 +89,6 @@ function do_header($title, $id='home', $options = false) {
 		}
 		$this_site->logo_width = round($r * $this_site->logo_height);
 		$this_site->logo_url = Upload::get_cache_relative_dir($this_site->id).'/media_thumb-sub_logo-'.$this_site->id.'.'.$this_site->media_extension.'?'.$this_site->media_date;
-		echo "<!-- $this_site->logo_url $this_site->logo_width $this_site->logo_height -->\n";
 	}
 
 	if ($this_site->nsfw) {
