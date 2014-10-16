@@ -127,7 +127,7 @@ class SitesMgr {
 			return true;
 		}
 
-		$do_changed_id = $do_current = $do_all = $do_delete = $status_changed = false;
+		$do_changed_id = $do_current = $do_all = $do_delete = $status_changed = $copy_link_karma = false;
 
 		$current = self::$id;
 		$origen = $me->origen;
@@ -165,6 +165,7 @@ class SitesMgr {
 						$do_current = true;
 						$me->karma = $link->karma;
 						$me->date = $link->date;
+						$copy_link_karma = true;
 						break;
 					default:
 						$do_current = true;
@@ -205,7 +206,7 @@ class SitesMgr {
 					$new->status = $me->status;
 				}
 				if ($do_current &&  // changed status to published or from published to queued
-						(round($new->karma) == 0 || $link->karma < $new->karma )) {
+						($copy_link_karma || round($new->karma) == 0 || $link->karma < $new->karma )) {
 						// If karma was never updated (new published) or the link karma is negative/smaller
 					$new->karma = $link->karma;
 				}
