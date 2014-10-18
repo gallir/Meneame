@@ -31,6 +31,10 @@ mbstring.http_output = UTF-8
 
 */
 
+// we don't force https if the server name is not the same as de requested host from the client
+if (!empty($globals['force_ssl']) && $_SERVER["SERVER_NAME"] != $_SERVER["HTTP_HOST"]) {
+	$globals['force_ssl'] = false;
+}
 
 if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] == 'on') {
 	$globals['https'] = true;
