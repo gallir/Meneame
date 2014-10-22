@@ -208,7 +208,7 @@ class Link extends LCPBase {
 			$in_cache = true;
 		}
 
-		if ($globals['start_time'] - $cache['time'] > 4.0) {
+		if ($globals['start_time'] - $cache['time'] > (3.0 + rand(0, 100)/100) ) { // We use random to minimize race conditions for deleting the cache
 			if($in_cache && !memcache_mdelete($key)) {
 				memcache_madd($key, array());
 				syslog(LOG_INFO, "store_clicks: Delete failed");
