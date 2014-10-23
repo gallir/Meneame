@@ -198,7 +198,7 @@ class Link extends LCPBase {
 
 		$key = 'clicks_cache';
 		$cache = memcache_mget($key);
-		if (! $cache) {
+		if (! $cache || ! is_array($cache)) {
 			$cache = array();
 			$cache['time'] = $globals['start_time'];
 			$cache[$id] = 1;
