@@ -528,7 +528,7 @@ function check_security_key($key) {
 
 	$time_key = preg_split('/-/', $key);
 	if (count($time_key) != 2) return false;
-	if ($globals['now'] - intval($time_key[0]) > 7200) return false;
+	if ($globals['now'] - intval($time_key[0]) > 14400) return false;
 	return $key == get_security_key($time_key[0]);
 }
 
