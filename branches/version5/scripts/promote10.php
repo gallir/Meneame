@@ -342,6 +342,15 @@ function publish($site, $link) {
 		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $site_info->name $link->id");
 		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
 	}
+
+	
+	if ($site_info->meta && ($senders = SitesMgr::get_senders($site))) {
+		if (in_array($link->sub_id, $senders) && $link->sub_status_origen == 'queued') {
+			syslog(LOG_INFO, "Meneame, publishing for sender $link->sub_name");
+			publish($link->sub_id, $link);
+		}
+	}
+
 	return;
 }
 
