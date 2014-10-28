@@ -49,6 +49,13 @@ switch ($globals['meta']) {
 		Link::$original_status = true; // Show status in original sub
 		print_index_tabs(7); // Show "personal" as default
 		break;
+	case '_*':
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+		$where = "status='published' AND id = origen and date > $from_time";
+		$rows = -1;
+		Link::$original_status = true; // Show status in original sub
+		print_index_tabs(8);
+		break;
 	case '_friends':
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - 86400*4).'"';
@@ -133,6 +140,8 @@ function print_index_tabs($option=-1) {
 	if (isset($current_user->has_subs)) {
 		$items[] = array('id' => 7, 'url' => $globals['meta_subs'], 'title' => _('suscripciones'));
 	}
+
+	$items[] = array('id' => 8, 'url' => '?meta=_*', 'title' => _('m/*'));
 
 	if (! $globals['mobile'] && empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
 		foreach ($subs as $sub) {

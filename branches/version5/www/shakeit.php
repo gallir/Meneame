@@ -42,6 +42,15 @@ switch ($globals['meta']) {
 		$tab = 7;
 		Link::$original_status = true; // Show status in original sub
 		break;
+	case '_*':
+		$globals['tag_status'] = 'queued';
+		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+		$where = "status='queued' and id = origen and date > $from_time";
+		$order_by = "ORDER BY date DESC";
+		$rows = -1;
+		$tab = 8;
+		Link::$original_status = true; // Show status in original sub
+		break;
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -137,6 +146,8 @@ function print_shakeit_tabs($option=-1) {
 	if ($current_user->has_subs) {
 		$items[] = array('id' => 7, 'url' => 'queue'.$globals['meta_subs'], 'title' => _('suscripciones'));
 	}
+
+	$items [] = array('id' => 8, 'url' => 'queue?meta=_*', 'title' => _('m/*'));
 
 	if (empty($globals['submnm']) && ! $globals['mobile']) {
 		$subs = SitesMgr::get_sub_subs();
