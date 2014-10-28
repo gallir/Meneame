@@ -1357,7 +1357,7 @@ var fancyBox = new function () {
 			href = 'https://vine.co/v/'+v[1]+'/embed/simple';
 			iframe = true;
 		} else {
-			if (myHref.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
+			if (myHref.match(/\.(x\-){0,1}(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$/)) {
 				photo = true;
 			}
 			myTitle = $e.attr('title');
