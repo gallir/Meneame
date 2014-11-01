@@ -45,8 +45,9 @@ switch ($globals['meta']) {
 	case '_*':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$where = "status='queued' and id = origen and date > $from_time";
-		$order_by = "ORDER BY date DESC";
+		$from = ", subs";
+		$where = "sub_statuses.status='queued' AND sub_statuses.id = sub_statuses.origen and sub_statuses.date > $from_time and sub_statuses.origen = subs.id and subs.owner > 0";
+		$order_by = "ORDER BY sub_statuses.date DESC";
 		$rows = -1;
 		$tab = 8;
 		Link::$original_status = true; // Show status in original sub
@@ -147,8 +148,6 @@ function print_shakeit_tabs($option=-1) {
 		$items[] = array('id' => 7, 'url' => 'queue'.$globals['meta_subs'], 'title' => _('suscripciones'));
 	}
 
-	$items [] = array('id' => 8, 'url' => 'queue?meta=_*', 'title' => _('m/*'));
-
 	if (empty($globals['submnm']) && ! $globals['mobile']) {
 		$subs = SitesMgr::get_sub_subs();
 		foreach ($subs as $sub) {
@@ -160,6 +159,8 @@ function print_shakeit_tabs($option=-1) {
 			);
 		}
 	}
+
+	$items [] = array('id' => 8, 'url' => 'queue?meta=_*', 'title' => _('m/*'));
 
 	$items[] = array('id' => 3, 'url' => 'queue?meta=_popular', 'title' => _('candidatas'));
 

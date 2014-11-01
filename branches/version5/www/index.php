@@ -51,7 +51,8 @@ switch ($globals['meta']) {
 		break;
 	case '_*':
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-		$where = "status='published' AND id = origen and date > $from_time";
+		$from = ", subs";
+		$where = "sub_statuses.status='published' AND sub_statuses.id = sub_statuses.origen and sub_statuses.date > $from_time and sub_statuses.origen = subs.id and subs.owner > 0";
 		$rows = -1;
 		Link::$original_status = true; // Show status in original sub
 		print_index_tabs(8);
@@ -141,8 +142,6 @@ function print_index_tabs($option=-1) {
 		$items[] = array('id' => 7, 'url' => $globals['meta_subs'], 'title' => _('suscripciones'));
 	}
 
-	$items[] = array('id' => 8, 'url' => '?meta=_*', 'title' => _('m/*'));
-
 	if (! $globals['mobile'] && empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
 		foreach ($subs as $sub) {
 			$items[] = array(
@@ -153,6 +152,9 @@ function print_index_tabs($option=-1) {
 			);
 		}
 	}
+
+	$items[] = array('id' => 8, 'url' => '?meta=_*', 'title' => _('m/*'));
+
 	// RSS teasers
 	switch ($option) {
 		case 7: // Personalised, published
