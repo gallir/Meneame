@@ -531,13 +531,14 @@ DROP TABLE IF EXISTS `media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media` (
-  `type` enum('comment','link','post','avatar','thumb','private','other') NOT NULL,
+  `type` char(12) NOT NULL DEFAULT '',
   `id` int(10) unsigned NOT NULL,
   `version` tinyint(3) unsigned NOT NULL,
   `user` int(10) unsigned NOT NULL,
   `to` int(10) unsigned NOT NULL DEFAULT '0',
   `access` enum('restricted','public','friends','private') NOT NULL DEFAULT 'restricted',
   `mime` char(32) NOT NULL,
+  `extension` char(6) NOT NULL DEFAULT 'jpg',
   `size` int(10) unsigned NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `dim1` smallint(5) unsigned NOT NULL,
@@ -948,4 +949,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-09-21 14:02:39
+-- Dump completed on 2014-11-01 11:03:01
