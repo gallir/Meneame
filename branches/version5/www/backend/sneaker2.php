@@ -336,7 +336,7 @@ function get_votes($dbtime) {
 		if($event->vote_user_id > 0) {
 			$user = $event->user_login;
 		} else {
-			$user= preg_replace('/\.[0-9]+$/', '', $event->vote_ip);
+			$user= preg_replace('/(\.[0-9]+|){2}$|(:[0-9a-f]*){4}$/i', '', $event->vote_ip) . '&hellip;';
 		}
 		if ($event->vote_value >= 0) {
 			$type = 'vote';
