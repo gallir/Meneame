@@ -317,10 +317,9 @@ function do_submit1() {
 
 		$link->randkey = intval($_POST['randkey']);
 		if(!$link->valid) {
-			//echo '<p class="error"><strong>'._('error leyendo el url').':</strong> '.htmlspecialchars($url).'</p>';
 			$e = _('error leyendo el url').': '. htmlspecialchars($url);
 			// Dont allow new users with low karma to post wrong URLs
-			if ($current_user->user_karma < 8 && $current_user->user_level == 'normal' && ! $site_info->owner) {
+			if ($current_user->user_karma < 7 && $current_user->user_level == 'normal' && ! $site_info->owner) {
 				add_submit_error( $e, _('URL inválido, incompleto o no permitido. Está fuera de línea, o tiene mecanismos antibots.'));
 				return false;
 			}
@@ -424,7 +423,7 @@ function do_submit1() {
 
 			if ($site_links > 10 && $site_links > $links_12hs * 0.05) { // Only 5% from the same site
 				syslog(LOG_NOTICE, "Meneame, forbidden due to overflow to the same site ($current_user->user_login): $link->url");
-				add_submit_error( _('ya se han enviado demasiadas artículos del mismo sitio, espera unos minutos por favor'),
+				add_submit_error( _('hay en cola demasiados envíos del mismo sitio, espera unos minutos por favor'),
 					_('total en 12 horas').": $site_links , ". _('el máximo actual es'). ': ' . intval($links_12hs * 0.05));
 				return false;
 			}
