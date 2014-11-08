@@ -1,4 +1,4 @@
-<?
+<?php
 
 $path = $globals['path'];
 $globals['submnm'] = preg_replace('/[^\p{L}\d_]/u', ':', $path[1]);

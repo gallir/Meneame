@@ -1,4 +1,4 @@
-<?
+<?php
 require_once (mnminclude.'sphinxapi.php');
 
 function do_search($by_date = false, $start = 0, $count = 50, $proximity = true) {

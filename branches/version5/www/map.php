@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2007 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
@@ -97,7 +97,7 @@ function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 }
 //]]>
 </script>
-<?
+<?php
 
 do_footer_menu();
 do_footer();

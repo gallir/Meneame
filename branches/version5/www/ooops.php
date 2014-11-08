@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005-2009 by
 // Benjamí Villoslada <benjami at bitassa dot cat>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.

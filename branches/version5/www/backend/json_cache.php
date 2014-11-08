@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('../config.php');
 
 // Designed originally to download and cache Twitter oembed

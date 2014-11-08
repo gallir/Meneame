@@ -1,4 +1,4 @@
-<?
+<?php
 include('config.php');
 
 $user_id = intval($_GET['user_id']);

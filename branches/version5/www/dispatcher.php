@@ -1,4 +1,4 @@
-<?
+<?php
 $routes = array(
 	''			=> 'index.php',
 	'story'		=> 'story.php',

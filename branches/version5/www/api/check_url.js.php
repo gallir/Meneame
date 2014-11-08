@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
@@ -11,7 +11,7 @@ header('Cache-Control: max-age=3600');
 ?>
 
 var url_clean =document.URL.replace(/(#.*$)/, '');
-var url = 'http://<? echo $_SERVER['HTTP_HOST']; ?>/api/check_url.php?url='+encodeURIComponent(url_clean);
+var url = 'http://<?php echo $_SERVER['HTTP_HOST']; ?>/api/check_url.php?url='+encodeURIComponent(url_clean);
 
 function write_iframe() {
 	var span = document.getElementById("meneame");

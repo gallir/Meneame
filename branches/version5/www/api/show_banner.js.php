@@ -1,4 +1,4 @@
-<?
+<?php
 header('Content-Type: text/javascript; charset=UTF-8');
 header('Cache-Control: max-age=3600');
 ?>

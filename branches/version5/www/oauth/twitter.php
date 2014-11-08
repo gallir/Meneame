@@ -1,4 +1,4 @@
-<?
+<?php
 // The Meneame source code is Free Software, Copyright (C) 2005-2010 by
 // Ricardo Galli <gallir at gmail dot com> and Menéame Comunicacions S.L.
 //

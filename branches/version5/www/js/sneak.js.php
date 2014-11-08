@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'sneak.php');
 header('Content-Type: application/x-javascript; charset=utf-8');
@@ -8,7 +8,7 @@ header('Cache-Control: max-age=3600');
 
 
 var new_items = 0;
-var max_items = <? echo $max_items; ?>;
+var max_items = <?php echo $max_items; ?>;
 var data_timer;
 var min_update = 15000;
 var next_update = 3000;
@@ -29,7 +29,7 @@ var user_login = '';
 var recent_nicks = new Array();
 var friend_nicks = new Array();
 
-<?
+<?php
 if ($current_user->user_id > 0) {
 	echo "user_login = '$current_user->user_login';\n";
 	$friends = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from = $current_user->user_id and friend_value > 0 and user_id = friend_to");
@@ -189,7 +189,7 @@ function received_data(data) {
 		requests = 0;
 		total_requests = 0;
 		next_update = 100;
-		mDialog.confirm('<? echo _('Fisgón: ¿desea continuar conectado?');?>', do_play, do_pause);
+		mDialog.confirm('<?php echo _('Fisgón: ¿desea continuar conectado?');?>', do_play, do_pause);
 		return;
 	}
 	data_timer = setTimeout(get_data, next_update);
@@ -201,19 +201,19 @@ function send_chat(form) {
 	if(check_command(form.comment.value)) return false;
 
 	if(!is_playing()) {
-		mDialog.notify("<? echo _('está en pausa'); ?>", 3);
+		mDialog.notify("<?php echo _('está en pausa'); ?>", 3);
 		return false;
 	}
 	if(global_options.show_chat == false) {
-		mDialog.notify("<? echo _('tiene deshabilitado los comentarios'); ?>", 3);
+		mDialog.notify("<?php echo _('tiene deshabilitado los comentarios'); ?>", 3);
 		return false;
 	}
 	if(!form.comment.value.match(/^!/) && form.comment.value.length < 4) {
-		mDialog.notify("<? echo _('mensaje demasiado corto'); ?>", 3);
+		mDialog.notify("<?php echo _('mensaje demasiado corto'); ?>", 3);
 		return false;
 	}
 	if( currentTime.getTime() < last_comment_sent + (comment_period*1000)) {
-		mDialog.notify("<? echo _('sólo se puede enviar un mensaje cada');?> " + comment_period + " <? echo _('segundos');?>", 3);
+		mDialog.notify("<?php echo _('sólo se puede enviar un mensaje cada');?> " + comment_period + " <?php echo _('segundos');?>", 3);
 		return false;
 	}
 	abort_request();
