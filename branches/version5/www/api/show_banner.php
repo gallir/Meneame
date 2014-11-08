@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
@@ -71,30 +71,30 @@ switch ($format) {
 }
 
 ?>
-<div style="padding: 0 0 0 0; font-family: sans-serif; font-size: <? echo $font_pt;?>pt; line-height: 1.1em; color : #<? echo $color_text;?>; background: #<?echo $color_bg ?>; border: 1px solid #<?echo $color_border?>; width: <? echo $width-2; ?>px; height: <? echo $height-2; ?>px; ">
+<div style="padding: 0 0 0 0; font-family: sans-serif; font-size: <?php echo $font_pt;?>pt; line-height: 1.1em; color : #<?php echo $color_text;?>; background: #<?php echo $color_bg ?>; border: 1px solid #<?php echo $color_border?>; width: <?php echo $width-2; ?>px; height: <?php echo $height-2; ?>px; ">
 
-<?echo $div1;?>
-<a href="<? echo $url['published']?>" style="color: #<? echo $color_link;?>; text-decoration: none;" target="_parent"><strong><? echo _('Última publicada'); ?></strong></a><br />
-<? echo $title['published'] ?>
+<?php echo $div1;?>
+<a href="<?php echo $url['published']?>" style="color: #<?php echo $color_link;?>; text-decoration: none;" target="_parent"><strong><?php echo _('Última publicada'); ?></strong></a><br />
+<?php echo $title['published'] ?>
 </div>
-<?echo $div2;?>
-<a href="<? echo $url['sent']?>" style="color: #<? echo $color_link;?>; text-decoration: none;" target="_parent"><strong><? echo _('Última enviada'); ?></strong></a><br />
-<? echo $title['sent'] ?>
+<?php echo $div2;?>
+<a href="<?php echo $url['sent']?>" style="color: #<?php echo $color_link;?>; text-decoration: none;" target="_parent"><strong><?php echo _('Última enviada'); ?></strong></a><br />
+<?php echo $title['sent'] ?>
 </div>
-<?echo $div3;?>
-<a href="<? echo $url['most']?>" style="color: #<? echo $color_link;?>; text-decoration: none;" target="_parent"><strong><? echo _('Caliente'); ?></strong></a><br />
-<? echo $title['most'] ?>
+<?php echo $div3;?>
+<a href="<?php echo $url['most']?>" style="color: #<?php echo $color_link;?>; text-decoration: none;" target="_parent"><strong><?php echo _('Caliente'); ?></strong></a><br />
+<?php echo $title['most'] ?>
 </div>
-<?echo $div4;?>
-<a href="<? echo $url['commented']?>" style="color: #<? echo $color_link;?>; text-decoration: none;" target="_parent"><strong><? echo _('Última comentada'); ?></strong></a><br />
-<? echo $title['commented'] ?>
-</div>
-
-<div style="position: absolute; left: 0; bottom: 0px; font-size: 8pt; background: #<? echo $color_border;?>; color: #<?echo $color_bg ?>; height: 10pt; width: 100%; text-align: right;">
-<a href="http://<?echo get_server_name();?>" style="color : #<?echo $color_bg ?>; text-decoration: none" target="_parent" ><?echo $signature;?></a>&nbsp;
-</div>
+<?php echo $div4;?>
+<a href="<?php echo $url['commented']?>" style="color: #<?php echo $color_link;?>; text-decoration: none;" target="_parent"><strong><?php echo _('Última comentada'); ?></strong></a><br />
+<?php echo $title['commented'] ?>
 </div>
 
-<?
+<div style="position: absolute; left: 0; bottom: 0px; font-size: 8pt; background: #<?php echo $color_border;?>; color: #<?php echo $color_bg ?>; height: 10pt; width: 100%; text-align: right;">
+<a href="http://<?php echo get_server_name();?>" style="color : #<?php echo $color_bg ?>; text-decoration: none" target="_parent" ><?php echo $signature;?></a>&nbsp;
+</div>
+</div>
+
+<?php
 echo '</body></html>';
 ?>

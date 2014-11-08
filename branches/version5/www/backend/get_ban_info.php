@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
 // David Martín :: Suki_ :: <david at sukiweb dot net>.
 // Beldar <beldar.cat at gmail dot com>

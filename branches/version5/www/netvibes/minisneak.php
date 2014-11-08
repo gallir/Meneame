@@ -1,4 +1,4 @@
-<? 
+<?php 
 include('../config.php');
 header('Content-Type: text/html; charset=utf-8'); 
 ?>
@@ -8,7 +8,7 @@ header('Content-Type: text/html; charset=utf-8');
 <head profile="http://www.netvibes.com/api/0.3/profile">
 <title>minifisgón</title>
 <link rel="stylesheet" type="text/css" href="http://www.netvibes.com/api/0.3/style.css" />
-<link rel="icon" type="image/png" href="http://<? echo get_server_name().$globals['base_url']; ?>favicon.ico" />
+<link rel="icon" type="image/png" href="http://<?php echo get_server_name().$globals['base_url']; ?>favicon.ico" />
 <style type="text/css">
 .sneaker { font-size: 8pt; }
 
@@ -30,16 +30,16 @@ header('Content-Type: text/html; charset=utf-8');
 var initialized = false;
 var enabled = true;
 var items = Array();
-var ts=<? echo (time()-3600); ?>;
+var ts=<?php echo (time()-3600); ?>;
 var busy = false;
 var animating = false;
-var base_url = 'http://<? echo get_server_name().$globals['base_url']; ?>backend/sneaker.php';
-var mykey = <? echo rand(100,999); ?>;
+var base_url = 'http://<?php echo get_server_name().$globals['base_url']; ?>backend/sneaker.php';
+var mykey = <?php echo rand(100,999); ?>;
 var items = Array();
 var new_items = 0;
-var max_items =  '<? if(empty($_COOKIE['minifisgon_items'])) echo '15'; else echo $_COOKIE['minifisgon_items']; ?>';
+var max_items =  '<?php if(empty($_COOKIE['minifisgon_items'])) echo '15'; else echo $_COOKIE['minifisgon_items']; ?>';
 var min_update = 20000;
-var next_update =  '<? if(empty($_COOKIE['minifisgon_secs'])) echo '20'; else echo $_COOKIE['minifisgon_secs']; ?>';
+var next_update =  '<?php if(empty($_COOKIE['minifisgon_secs'])) echo '20'; else echo $_COOKIE['minifisgon_secs']; ?>';
 var requests = 0;
 var max_requests = 1000;
 var timer;
@@ -120,33 +120,33 @@ function to_html(data) {
 	var html= '';
 	/* All the others */
 	if (data.type == 'vote')
-		if (data.status == '<? echo _('publicada');?>')
-			html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-vote-publishedS.png" width="15" height="12" alt="voto" title="voto publicada" /></div>';
+		if (data.status == '<?php echo _('publicada');?>')
+			html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-vote-publishedS.png" width="15" height="12" alt="voto" title="voto publicada" /></div>';
 		else
-			html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-voteS.png" width="15" height="12" alt="voto" title="voto pendiente" /></div>';
+			html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-voteS.png" width="15" height="12" alt="voto" title="voto pendiente" /></div>';
 	else if (data.type == 'problem')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-problemS.png" width="15" height="12" alt="problema" title="problema" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-problemS.png" width="15" height="12" alt="problema" title="problema" /></div>';
 	else if (data.type == 'comment')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-commentS.png" width="15" height="12" alt="comentario" title="comentario" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-commentS.png" width="15" height="12" alt="comentario" title="comentario" /></div>';
 	else if (data.type == 'new')
-		html += '<div class="sneakertype""><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-newS.png" width="15" height="12" alt="nueva" title="nueva"/></div>';
+		html += '<div class="sneakertype""><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-newS.png" width="15" height="12" alt="nueva" title="nueva"/></div>';
 	else if (data.type == 'published')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-publishedS.png" width="15" height="12" alt="publicada" title="publicada" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-publishedS.png" width="15" height="12" alt="publicada" title="publicada" /></div>';
 	else if (data.type == 'discarded')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-rejectS.png" width="15" height="12" alt="publicada" title="descartada" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-rejectS.png" width="15" height="12" alt="publicada" title="descartada" /></div>';
 	else if (data.type == 'edited')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-edit-noticeS.png" width="15" height="12" alt="publicada" title="editada" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-edit-noticeS.png" width="15" height="12" alt="publicada" title="editada" /></div>';
 	else if (data.type == 'cedited')
-		html += '<div class="sneakertype"><img src="http://<? echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-edit-commentS.png" width="15" height="12" alt="publicada" title="comentario editado" /></div>';
+		html += '<div class="sneakertype"><img src="http://<?php echo get_server_name().$globals['base_url'];?>netvibes/icons/sneak-edit-commentS.png" width="15" height="12" alt="publicada" title="comentario editado" /></div>';
 	else
 		html += '<div class="sneakertype">'+data.type+'</div>';
 
 	html += '<div class="sneakervotes">'+data.votes+'</div>';
-	html += '<div class="sneakerstory"><a href="http://<? echo get_server_name(); ?>'+data.link+'">'+data.title+'</a></div>';
+	html += '<div class="sneakerstory"><a href="http://<?php echo get_server_name(); ?>'+data.link+'">'+data.title+'</a></div>';
 	if (data.type == 'problem')
 		html += '<div class="sneakerwho"><span class="sneakerproblem">'+data.who+'</span></div>';
 	else if (data.uid > 0) 
-		html += '<div class="sneakerwho"><a href="http://<? echo get_server_name().$globals['base_url'];?>user.php?login='+data.who+'">'+data.who+'</a></div>';
+		html += '<div class="sneakerwho"><a href="http://<?php echo get_server_name().$globals['base_url'];?>user.php?login='+data.who+'">'+data.who+'</a></div>';
 	else 
 		html += '<div class="sneakerwho">'+data.who+'</div>';
 	return html;
@@ -161,7 +161,7 @@ function to_html(data) {
 <fieldset>
   <label>Items :</label>
   <select name="minifisgon_items">
- <? for ($i = 10; $i <= 25 ; $i+=5) {
+ <?php for ($i = 10; $i <= 25 ; $i+=5) {
 	if ($max_items == $i ) $sel = 'selected="selected"';
 	else $sel='';
 	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
@@ -170,7 +170,7 @@ function to_html(data) {
   </select>
   <label>Segundos :</label>
   <select name="minifisgon_secs">
- <? for ($i = 10; $i <= 60 ; $i+=5) {
+ <?php for ($i = 10; $i <= 60 ; $i+=5) {
 	if ($next_update == $i ) $sel = 'selected="selected"';
 	else $sel='';
 	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';

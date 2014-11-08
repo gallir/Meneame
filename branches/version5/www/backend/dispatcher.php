@@ -1,4 +1,4 @@
-<?
+<?php
 
 chdir(dirname(__FILE__));
 $script = './'.$globals['path'][1];

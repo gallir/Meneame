@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2007 by
 // Ricardo Galli <gallir at uib dot es> and 
 // Beldar <beldar.cat at gmail dot com>

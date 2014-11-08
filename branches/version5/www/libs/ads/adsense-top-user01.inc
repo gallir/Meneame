@@ -1,4 +1,4 @@
-<?
+<?php
 // This is an example for preparing the scripts for users' ads
 echo '<script type="text/javascript"><!--' . "\n";
 echo 'google_ad_client = "'.$globals['user_adcode'].'";' . "\n";

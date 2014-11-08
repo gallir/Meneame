@@ -1,4 +1,4 @@
-<?
+<?php
 // Don't check the user is logged
 $globals['no_auth'] = true;
 $globals['no_lounge'] = true;

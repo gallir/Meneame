@@ -1,4 +1,4 @@
-<?
+<?php
 include_once('../config.php');
 $forbidden = array('ip', 'email', 'ip_int', 'user_level');
 
