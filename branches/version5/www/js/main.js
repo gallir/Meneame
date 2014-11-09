@@ -293,6 +293,7 @@ function add_remove_sub(id, change) {
 function add_remove_fav(element, type, id) {
 	var url = base_url + 'backend/get_favorite?id='+id+'&user='+user_id+'&type='+type+'&key='+base_key;
 	$.post(url,
+		{ id: id, key: base_key, element: element, type: type },
 		 function(data) {
 				if (data.error) {
 					mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
