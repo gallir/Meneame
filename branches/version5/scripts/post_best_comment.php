@@ -31,7 +31,7 @@ if (intval($argv[1]) > 0) {
 $now = intval(time()/60) * 60;
 $min_karma = $globals['comment_highlight_karma'];
 
-$sql = "select comment_id, karma, comment_karma*(1-($now-unix_timestamp(comment_date))*0.8/($hours*3600)) as value from comments, sub_statuses where id = $my_id AND status in ('published') AND comment_date > date_sub(now(), interval $hours hour) and LENGTH(comment_content) > 120 and comment_karma > $min_karma and comment_link_id = link order by value desc limit 1";
+$sql = "select comment_id, karma, comment_karma*(1-($now-unix_timestamp(comment_date))*0.8/($hours*3600)) as value from comments, sub_statuses where id = $my_id AND status in ('published') AND comment_date > date_sub(now(), interval $hours hour) and LENGTH(comment_content) > 120 and comment_karma > $min_karma AND value > $min_karma AND comment_link_id = link order by value desc limit 1";
 
 $res = $db->get_row($sql);
 if (! $res) {

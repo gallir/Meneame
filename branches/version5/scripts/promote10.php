@@ -343,11 +343,14 @@ function publish($site, $link) {
 		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
 	}
 
-	
+	// Publish the links of the source subs	
 	if ($site_info->meta && ($senders = SitesMgr::get_senders($site))) {
 		if (in_array($link->sub_id, $senders) && $link->sub_status_origen == 'queued') {
-			syslog(LOG_INFO, "Meneame, publishing for sender $link->sub_name");
+			syslog(LOG_INFO, "Meneame, publishing for sender $link->sub_name ($link->sub_id)");
+			// "Simulate" the other site, needed for deploy
+			SitesMgr::__init($link->sub_id);
 			publish($link->sub_id, $link);
+			SitesMgr::__init($site); // Back to the original site
 		}
 	}
 
