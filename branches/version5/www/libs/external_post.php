@@ -24,30 +24,33 @@ function twitter_post($auth, $text, $short_url, $image = false) {
 			return;
 	}
 
-	$maxlen = 140 - 24; // minus the url length
-	$msg = mb_substr(text_to_summary(html_entity_decode($text), $maxlen), 0, $maxlen);
-	$msg_full = $msg . ' ' . $short_url;
-
 	$req_url = 'https://api.twitter.com/oauth/request_token';
 	$acc_url = 'https://api.twitter.com/oauth/access_token';
 	$authurl = 'https://api.twitter.com/oauth/authorize';
 	$api_url = 'https://api.twitter.com/1.1/statuses/update.json';
 	$api_media_url = 'https://api.twitter.com/1.1/statuses/update_with_media.json';
 
-	$oauth = new OAuth($auth['twitter_consumer_key'],$auth['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
-	$oauth->debug = 1;
-	$oauth->setRequestEngine( OAUTH_REQENGINE_CURL ); // For posting images
-	$oauth->setToken($auth['twitter_token'], $auth['twitter_token_secret']);
+	$api_args = array("empty_param" => NULL);
 
-	$api_args = array("status" => $msg_full, "empty_param" => NULL);
-
-	if ($image && mb_strlen($msg) < $maxlen - 24) { // If there is enough space for the image
+	$maxlen = 140 - 24; // minus the url length
+	if ($image) {
+		$maxlen -= 24;
 		echo "Adding image: $image\n";
 		$api_args['@media[]'] = '@'.$image;
 		$url = $api_media_url;
 	} else {
 		$url = $api_url;
 	}
+
+	$msg = mb_substr(text_to_summary(html_entity_decode($text), $maxlen), 0, $maxlen);
+	$msg_full = $msg . ' ' . $short_url;
+	$api_args["status"] = $msg_full;
+
+	$oauth = new OAuth($auth['twitter_consumer_key'],$auth['twitter_consumer_secret'],OAUTH_SIG_METHOD_HMACSHA1,OAUTH_AUTH_TYPE_URI);
+	$oauth->debug = 1;
+	$oauth->setRequestEngine( OAUTH_REQENGINE_CURL ); // For posting images
+	$oauth->setToken($auth['twitter_token'], $auth['twitter_token_secret']);
+
 
 	try {
 		$oauth->fetch($url, $api_args, OAUTH_HTTP_METHOD_POST, array("User-Agent" => "pecl/oauth"));
