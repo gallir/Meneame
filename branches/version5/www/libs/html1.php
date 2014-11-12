@@ -15,7 +15,7 @@ if (!empty($globals['lounge'])) {
 	die;
 }
 
-if (!empty($globals['force_ssl']) && ! $globals['https'] && ! isset($_GET['force'])) {
+if (PHP_SAPI != 'cli' && !empty($globals['force_ssl']) && ! $globals['https'] && ! isset($_GET['force'])) {
 	header('HTTP/1.1 301 Moved');
 	header('Location: https://'.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
 	die;
