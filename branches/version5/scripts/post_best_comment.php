@@ -54,5 +54,5 @@ if ($comment->media_size > 0) {
 
 $url = $globals[scheme].'//'.get_server_name().$comment->get_relative_individual_permalink();
 syslog(LOG_INFO, "Meneame, posting comment $url");
-twitter_post($properties, _('#comentario').' '.$comment->content, $url, $image);
+twitter_post($properties, '&#x1f4ac; '.$comment->content, $url, $image);
 
