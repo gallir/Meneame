@@ -27,6 +27,20 @@ class Annotation {
 
 	}
 
+	static function get_text($key) {
+		$annotation = Annotation::from_db($key);
+		if ($annotation) {
+			return $annotation->text;
+		}
+		return '';
+	}
+
+	static function store_text($key, $text, $expire = false) {
+		$annotation = new Annotation($key);
+		$annotation->text = $text;
+		return $annotation->store($expire);
+	}
+
 	function delete() {
 		global $db;
 
