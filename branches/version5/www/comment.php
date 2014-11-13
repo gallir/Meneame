@@ -25,7 +25,7 @@ if ($link->is_discarded()) {
 }
 
 $globals['link'] = $link;
-//$globals['permalink'] = 'http://'.get_server_name().$comment->get_relative_individual_permalink();
+$globals['permalink'] = $globals['scheme'].'//'.get_server_name().$comment->get_relative_individual_permalink();
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
@@ -68,7 +68,7 @@ $canonical_base .= 'c/';
 $globals['extra_head'] = '<link rel="canonical" href="http://'.$canonical_server.$canonical_base.$comment->id.'"/>';
 
 
-do_header($title. ' | ' . $globals['site_name']);
+do_header($title);
 //do_subheader(_('comentario de') . ' ' . $username);
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -88,7 +88,7 @@ echo '<li>';
 $comment->print_summary($link, 0, false);
 
 echo '<div style="text-align:right">';
-$vars = array('link' => 'http://'.get_server_name().$comment->get_relative_individual_permalink(),
+$vars = array('link' => $globals['permalink'],
 			'title' => $title);
 Haanga::Load('share.html', $vars);
 echo '</div>';

@@ -29,9 +29,8 @@ if (! $media->read()) not_found();
 if (! $globals['media_public'] && $media->access == 'restricted' && ! $current_user->user_id > 0) {
 	error_image(_('Debe estar autentificado'));
 	die;
-} elseif ($globals['bot']
-		|| ($media->type == 'private' 
-			&& ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) ) {
+} elseif ($media->type == 'private' 
+			&& ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id)) ) {
 	error_image(_('No está autorizado'));
 	die;
 }
