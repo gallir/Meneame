@@ -221,12 +221,16 @@ class Comment extends LCPBase {
 			$this->link_object = $link;
 		}
 
-		/* Get info about the comment and author */
-		if ($globals['permalink']) {
+		if (! empty($link)) {
+			if (! empty($link->relative_permalink)) {
+				$this->link_permalink = $link->relative_permalink;
+			} else {
+				$this->link_permalink = $link->get_relative_permalink();
+			}
+		} elseif ($globals['permalink']) {
 			$this->link_permalink = $globals['permalink'];
-		} else {
-			$this->link_permalink =  $link->get_relative_permalink();
 		}
+
 		$this->single_link = $single_link;
 
 		$this->check_visibility();
