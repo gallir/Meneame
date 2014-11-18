@@ -204,7 +204,7 @@ do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_i
 if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_adcode)) {
 	$globals['do_user_ad'] = $link->user_karma;
 	$globals['user_adcode'] = $link->user_adcode;
-	$globals['user_adchannel'] = $user->adchannel;
+	$globals['user_adchannel'] = $link->user_adchannel;
 }
 
 if ($link->status != 'published')
@@ -306,6 +306,13 @@ case 2:
 			$link->update_comments();
 		}
 	}
+
+	/* Force to show the last ad for anonymous users only */
+	if (! $current_user->user_id) {
+		$counter = $page_size = $globals['comments_page_size'];
+		Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+	}
+
 	do_comment_pages($link->comments, $current_page, $last_com_first);
 
 	if ($link->comments > 5) {
@@ -407,6 +414,8 @@ case 9:
 	break;
 
 }
+
+
 echo '</div>';
 
 $globals['tag_status'] = $globals['link']->status;

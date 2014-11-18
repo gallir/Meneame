@@ -209,7 +209,7 @@ function save_profile() {
 		$_POST['adcode'] = trim($_POST['adcode']);
 		$_POST['adchannel'] = trim($_POST['adchannel']);
 		if (!empty($_POST['adcode']) && $user->adcode != $_POST['adcode']) {
-			if ( !preg_match('/^pub-[0-9]{16}$/', $_POST['adcode'])) {
+			if ( !preg_match('/pub-[0-9]{16}$/', $_POST['adcode'])) {
 				array_push($messages, _('código AdSense incorrecto, no se ha grabado'));
 				$_POST['adcode'] = '';
 				$errors++;

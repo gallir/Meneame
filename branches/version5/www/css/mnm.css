@@ -2481,8 +2481,9 @@ background:url({{ globals.base_static }}img/common/icon_friend_bi_00.png) no-rep
 
 .ads-interlinks {
 height: 90px;
-padding: 0;
-margin: 8px 0 8px 95px;
+max-width: 728px;
+padding: 0 0 0 95px;;
+margin: 10px 0;
 white-space:nowrap;
 overflow:hidden;
 }

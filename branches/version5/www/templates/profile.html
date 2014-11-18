@@ -97,9 +97,9 @@ addPostCode(function(){$('textarea').autosize();});
 
 {% if globals.external_user_ads %}
 	<p><label for="adcode">{% trans _('codigo AdSense') %}:</label><br/>
-	<span class="note">{% trans _('tu código de usuario de AdSense, del tipo pub-123456789') %}</span><br/>
-	<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="20" value="{{ user.adcode }}" /><br />
-	<span class="note">{% trans _('canal AdSense (opcional), del tipo 1234567890') %}</span><br/>
+	<span class="note">{% trans _('tu código de usuario de AdSense, del tipo ca-pub-123456789') %}</span><br/>
+	<input type="text" autocomplete="off" name="adcode" id="adcode" maxlength="24" value="{{ user.adcode }}" /><br />
+	<span class="note">{% trans _('ID del anuncio, del tipo 1234567890, de 468x60') %}</span><br/>
 	<input type="text" autocomplete="off" name="adchannel" id="adchannel" maxlength="12" value="{{ user.adchannel }}" />
 	</p>
 {% endif %}
