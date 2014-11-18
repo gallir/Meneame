@@ -15,7 +15,7 @@ def main():
 
 	cursor.execute(query, (user,))
 	for clon, level, ip, date in cursor:
-		print("%-16s\t%s\t%s\t%s" % (clon, ip, level, date))
+		print("%-16s\t%-16s\t%s\t%s\t%s" % (clon, configuration.user, ip, level, date))
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()

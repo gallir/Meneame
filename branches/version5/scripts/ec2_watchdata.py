@@ -15,7 +15,7 @@ from boto.ec2.cloudwatch import CloudWatchConnection
 class WatchData:
 	datafile = "/var/tmp/watchdata.p"
 	dry = False
-	low_limit = 72
+	low_limit = 70
 	high_limit = 90
 	high_urgent = 95
 	stats_period = 60
@@ -150,19 +150,23 @@ class WatchData:
 	def check_avg_high(self):
 		threshold = self.high_limit
 		if self.instances == 1:
-			threshold = threshold * 0.9 # Increase faster if there is just one instance
+			threshold = threshold * 0.95 # Increase faster if there is just one instance
 		
 		if self.avg_load > threshold:
-			self.action = "WARN, high load: %d -> %d " % (self.instances, self.instances + 1)
+			self.action = "WARN, high load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances + 1)
 			self.set_desired(self.instances + 1)
 			return True
 
 	def check_avg_low(self):
 		if self.instances <= self.group.min_size:
 			return False
+
+		threshold = self.low_limit
+		if self.instances < 3:
+			threshold = threshold * 0.95
 		
-		if self.total_load/(self.instances-1) < self.low_limit:
-			self.action = "low load: %d -> %d " % (self.instances, self.instances - 1)
+		if self.total_load/(self.instances-1) < threshold:
+			self.action = "low load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances - 1)
 			self.set_desired(self.instances - 1)
 
 	def kill_instance(self, id):

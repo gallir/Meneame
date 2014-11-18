@@ -121,7 +121,7 @@ if __name__ == '__main__':
 	parser.add_argument("--mail", "-m", help="Send email to this address when took an emergency action")
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not take actions")
 	parser.add_argument("--low", "-low", type=int, default=70, help="Low limit for CPU average")
-	parser.add_argument("--high", "-high", type=int, default=85, help="High limit for CPU average")
+	parser.add_argument("--high", "-high", type=int, default=90, help="High limit for CPU average")
 	parser.add_argument("--high_urgent", "-u", type=int, default=95, help="Kill overloaded instance, or increase instances at this individual CPU load")
 	configuration = parser.parse_args()
 	main()
