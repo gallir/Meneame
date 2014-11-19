@@ -201,7 +201,7 @@ do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_i
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
-if ($link->status == 'published' && $link->user_karma > 7 && !empty($link->user_adcode)) {
+if ($link->status == 'published' && $link->user_karma > 6 && !empty($link->user_adcode)) {
 	$globals['do_user_ad'] = $link->user_karma;
 	$globals['user_adcode'] = $link->user_adcode;
 	$globals['user_adchannel'] = $link->user_adchannel;
