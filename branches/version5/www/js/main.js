@@ -455,7 +455,8 @@ function fancybox_gallery(type, user, link) {
 				'p': "get_post_tooltip",
 				'c': "get_comment_tooltip",
 				'l': "get_link",
-				'b': "get_ban_info"};
+				'b': "get_ban_info",
+				'w': "get_comment_warn_tooltip"};
 
 
 	$.extend({
@@ -466,7 +467,7 @@ function fancybox_gallery(type, user, link) {
 
 	function stop() {
 		hide();
-		$(document).off('mouseenter mouseleave', 'a.tooltip, img.tooltip');
+		$(document).off('mouseenter mouseleave', '.tooltip');
 		$(document).off('touchstart', stop);
 		touchable = true;
 	}
@@ -477,7 +478,7 @@ function fancybox_gallery(type, user, link) {
 			$('body').append( box );
 		}
 		$(document).on('touchstart', stop); /* Touch detected, disable tooltips */
-		$(document).on('mouseenter mouseleave', 'a.tooltip, img.tooltip, td.tooltip',
+		$(document).on('mouseenter mouseleave', '.tooltip',
 			function (event) {
 				if (event.type == 'mouseenter') {
 					try {
@@ -518,9 +519,13 @@ function fancybox_gallery(type, user, link) {
 	function show(html) {
 		if (active) {
 			if(typeof html == 'string')	box.html(html);
-			position();
-			box.show();
-			box.trigger("DOMChanged", box);
+			if (box.html().length > 0) {
+				position();
+				box.show();
+				box.trigger("DOMChanged", box);
+			} else {
+				hide();
+			}
 		}
 	}
 
@@ -554,7 +559,6 @@ function fancybox_gallery(type, user, link) {
 		if (url == last) {
 			show();
 		} else {
-			show('');
 			$.ajax({
 				url: url,
 				dataType: "html",

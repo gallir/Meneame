@@ -46,7 +46,7 @@
 			</div>
 		{% else %}
 			{% if self.has_warning %}
-				<div class="warn"><strong>{% trans _('Aviso automático') %}</strong>:
+				<div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}"><strong>{% trans _('Aviso automático') %}</strong>:
 				{% if self.status == 'published' %}
 					{% trans _('noticia errónea o controvertida, por favor lee los comentarios.') %}
 				{% else %}
