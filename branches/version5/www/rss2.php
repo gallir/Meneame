@@ -265,10 +265,7 @@ if ($links) {
 			if ($link->status != 'published') $rel = 'rel="nofollow"';
 			else $rel = '';
 
-			echo '<p>&#187;&nbsp;<a href="'.htmlspecialchars($link->url).'"';
-			if ($globals['click_counter'] > 0) {
-				echo ' onmousedown="this.href=\'http://'.get_server_name().$globals['base_url'].'go.php?id='.$link->id.'\'; return true"';
-			}
+			echo '<p>&#187;&nbsp;<a href="http://'.get_server_name().$globals['base_url'].'go?id='.$link->id.'"';
 			echo " $rel>"._('noticia original')."</a> (".parse_url($link->url, 1).")</p>";
 
 			echo "]]></description>\n";
