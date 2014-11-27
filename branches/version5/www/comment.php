@@ -53,7 +53,7 @@ if (! $comment->hide_comment) {
 	}
 	$title = text_to_summary($comment->content, 120);
 } else {
-	$title = '';
+	$title = 'Comentario | Menéame';
 }
 
 // Canonical url
