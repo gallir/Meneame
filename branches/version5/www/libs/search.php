@@ -161,7 +161,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 		$cl->SetSortMode(SPH_SORT_EXPR, $exp);
 	}
 
-	// $cl->SetMatchMode (SPH_MATCH_EXTENDED2); // Deprectaed
+	$cl->SetMatchMode (SPH_MATCH_EXTENDED); // TODO: Alert, deprecated in 2.2
 
 	if ($words_count == 1 || $_REQUEST['p'] == 'url' ) $cl->SetRankingMode(SPH_RANK_NONE); // Don't use rank ofr one word
 	elseif ($proximity) $cl->SetRankingMode(SPH_RANK_PROXIMITY_BM25); // Default: freq and proximity
