@@ -50,7 +50,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // If you user version, be careful to rewrite the directory for img, css and js
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
-$globals['v'] = 16; // internal version, to for reloads
+$globals['v'] = 17; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
