@@ -522,15 +522,14 @@ function print_external_anaylsis($link) {
 function print_relevant_comments($link, $no_page) {
 	global $globals, $db;
 
-	if ($globals['bot'] || $link->comments < 10 ) return;
+	if ($link->comments < 10 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 
 	if($do_cache) {
-		$key = 'relevant_story_comments_'.$globals['v'].'_'.$link->id;
+		$key = 'r_s_c_'.$globals['v'].'_'.$link->id;
 		if(memcache_mprint($key)) return;
 	}
-
 
 	$karma = intval($globals['comment_highlight_karma']/2);
 	$limit = min(15, intval($link->comments/10));
