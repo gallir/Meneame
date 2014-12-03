@@ -533,8 +533,8 @@ function update_link_karma($site, $link) {
 			$c = $common_probability/0.5;
 			if ($c <= 1) {
 				$c = 1 - $c;
-				if ($link->low_karma_perc > 50) {
-					$low_karma_coef =  (100 - ($link->low_karma_perc - 50)) / 100;
+				if ($link->low_karma_perc > 60) {
+					$low_karma_coef =  (50 - ($link->low_karma_perc - 50)) / 50;
 				} else {
 					$low_karma_coef = 1;
 				}
