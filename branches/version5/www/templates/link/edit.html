@@ -81,8 +81,6 @@
 
 <br/>
 <input type="text" id="title" name="title" value="{{ link.title }}" style="width:100%" maxlength="120" />
-
-
 </p>
 
 <label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
@@ -107,20 +105,22 @@
 	});
 	</script>
 
-	<div style="margin-top:-7px">
-	<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" /><span class="note">{% trans _('caracteres libres') %}</span></div>
+	<div style="margin-top:-7px;float:left">
+	<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" />
+	{% if ! globals.mobile %}
+		<span class="note">{% trans _('caracteres libres') %}</span>
+	{% endif %}
+	</div>
 {% endif %}
-
 
 {% if link.site_properties.allow_images %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
-	<div style="float:right;">
-		<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
+	<div style="margin:0;padding:0;float:right;">
+		<label>{% trans _('imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
 		{% if globals.mobile %}
 			style="width:150px"
 		{% endif %}
 		/></label>
-
 		<div class="droparea_info" style></div>
 	</div>
 
@@ -144,10 +144,12 @@
 
 {% if not link.is_new && (current_user.admin > 0 || current_user.user_level == "blogger") %}
 	{% if link.thumb_url || link.media_size > 0 %}
-	<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
+		<label>{% trans _('eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 	{% else %}
-	<label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
-	<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:100%" /></label><br/>
+		{% if link.url %}
+			<label>{% trans _('obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+		{% endif %}
+		<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:100%" /></label><br/>
 	{% endif %}
 	<label>{% trans _('actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
 {% endif %}
