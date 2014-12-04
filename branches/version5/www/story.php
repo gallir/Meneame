@@ -219,11 +219,7 @@ $globals['extra_head'] .= '<link rel="canonical" href="'.$link->get_canonical_pe
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'comments_rss?id='.$link->id.'" />';
 
 if ($link->has_thumb()) {
-	if ($link->thumb_medium_url) {
-		$globals['thumbnail'] = $globals['base_static_noversion']. $link->thumb_medium_uri;
-	} else {
-		$globals['thumbnail'] = $globals['base_static_noversion']. $link->thumb_uri;
-	}
+	$globals['thumbnail'] = $link->media_url;
 }
 
 $globals['description'] = text_to_summary($link->content, 200);
@@ -578,12 +574,12 @@ function print_relevant_comments($link, $no_page) {
 			$obj->val = $comment->val;
 			$obj->karma = $comment->comment_karma;
 			$objects[] = $obj;
-			if ($no_page 
+			if ($no_page
 					&& ! $self
 					&& $obj->vote < 0
 					&& $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
 					&& (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
-					&& count($res) >= count($objects) 
+					&& count($res) >= count($objects)
 				) {
 				// Show the most negative relevant comment
 				$self = get_highlighted_comment($obj);

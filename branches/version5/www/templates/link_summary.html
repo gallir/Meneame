@@ -70,7 +70,7 @@
 	{% if self.url %}
 		{% exec htmlspecialchars self.url as url %}
 		{% if globals.link %}<h1>{% else %}<h2>{% endif %}
-			<a href="{{ url }}" class="l:{{ self.id }}" 
+			<a href="{{ url }}" class="l:{{ self.id }}"
 			{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
 			</a>
 			{% if self.content_type == 'image' %}
@@ -81,7 +81,7 @@
 			{% endif %}
 		{% if globals.link %}</h1>{% else %}</h2>{% endif %}
 	{% else %}
-		<h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1> 
+		<h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
 	{% endif %}
 
 	{% if ! globals.bot %}
@@ -107,10 +107,14 @@
 	{% endif %}
 
 	{% if type == 'full' || type == 'preview' %}
+
+
 		{% if self.thumb_uri %}
-			<a href="{{ self.thumb_medium_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
+			<a href="{{ self.media_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
 		{% endif %}
+
 		{{ self.content }}
+
 		{% if type != 'preview' %}
 			{% if self.is_editable %}
 				&nbsp;&nbsp;<a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>

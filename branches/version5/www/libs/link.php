@@ -47,18 +47,20 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
 	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
 	LEFT JOIN votes ON (link_date > @enabled_votes and vote_type='links' and vote_link_id = links.link_id and vote_user_id = @user_id and ( @user_id > 0  OR vote_ip_int = @ip_int ) )
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'link' and favorite_link_id = links.link_id)
-	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id) ";
+	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id)
+	LEFT JOIN media ON (media.type='link' and media.id = link_id and media.version = 0) ";
 
-	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen FROM links
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
-	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)";
+	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
+	LEFT JOIN media ON (media.type='link' and media.id = link_id and media.version = 0) ";
 
 
 	static function from_db($id, $key = 'id', $complete = true) {
@@ -1022,7 +1024,7 @@ class Link extends LCPBase {
 		if ( $this->is_sub && ($globals['submnm'] || $strict || self::$original_status) ) {
 			if ($this->sub_status_id == SitesMgr::my_id() && ! $strict && ! self::$original_status) {
 				$base = $this->base_url . 'm/'.$globals['submnm'].'/';
-			} else { 
+			} else {
 				$base = $this->base_url . 'm/'.$this->sub_name.'/';
 			}
 		} else {
@@ -1514,11 +1516,18 @@ class Link extends LCPBase {
 	function has_thumb() {
 		global $globals;
 
-		if ($this->thumb_url) $this->thumb_url;
+		if (! empty($this->thumb_url)) return $this->thumb_url;
 
 		$base = $globals['base_static_noversion'];
 
-		if ($this->thumb_x > 0 && $this->thumb_y > 0) {
+		if ($this->media_size > 0) { // New format
+			$this->thumb_uri = Upload::get_cache_relative_dir($this->id)."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
+			$this->thumb_url = $base.$this->thumb_uri;
+			$this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
+			$this->thumb_x = $this->thumb_y = $globals['thumb_size'];
+			return $this->thumb_url;
+
+	 	} elseif ($this->thumb_x > 0 && $this->thumb_y > 0) {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
 				$this->thumb_uri = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
 				return $this->thumb_url;
@@ -1542,10 +1551,14 @@ class Link extends LCPBase {
 				}
 			}
 		}
+
 		if ($this->thumb_url) {
 			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
 			$this->thumb_medium_uri = $this->thumb_path . '/' . $base_medium_thumb;
 			$this->thumb_medium_url = $base . $this->thumb_medium_uri;
+
+			// OK
+			$this->media_url = $base . $this->thumb_medium_uri;
 		}
 
 		return $this->thumb_url;
@@ -1846,15 +1859,15 @@ class Link extends LCPBase {
 		} else {
 			$site_id = $this->sub_id;
 		}
-		
+
 		$properties = SitesMgr::get_extended_properties($site_id);
-		
+
 		if (empty($this->url) && empty($properties['no_link'])) {
 			$errors[] = _("falta url enlace");
 		}
-		
+
 		// Filter content and title
-		
+
 		// It also deletes punctuaction marks at the end
 		$this->title = clean_text(preg_replace('/(\w) *[.,] *$/', "$1", $this->title), 50, true, 120);
 
@@ -1902,7 +1915,18 @@ class Link extends LCPBase {
 		}
 
 		return $errors;
-		
+
 	}
 
+	function store_image($file) {
+		return parent::store_image('link', $file);
+	}
+
+	function move_tmp_image($file, $mime) {
+		return parent::move_tmp_image('link', $file, $mime);
+	}
+
+	function delete_image() {
+		return parent::delete_image('link');
+	}
 }

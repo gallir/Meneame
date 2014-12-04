@@ -51,9 +51,9 @@
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
 	<br clear="right"/>
 	<div>
-	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
+	<label>{% trans _('imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
 	{% if globals.mobile %}
-	style="width:100%"
+		style="width:100%"
 	{% endif %}
 	/>
 	</label>

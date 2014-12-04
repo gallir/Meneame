@@ -10,24 +10,29 @@
 class Upload {
 	static function get_url($type, $id, $version = 0, $ts = 0, $mime='image/jpg') {
 		global $globals;
-		return $globals['scheme'].'//'.get_server_name().$globals['base_url_general']."backend/media.php?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
+		return $globals['scheme'].'//'.get_server_name().$globals['base_url_general']."backend/media?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
 	}
 
 	static function is_thumb_public($type) {
-		$types = array('post', 'comment', 'sub_logo');
+		$types = array('post', 'comment', 'sub_logo', 'link');
 		return in_array($type, $types);
 	}
 
 	static function thumb_sizes($type, $key = false) {
 		global $globals;
 
+		$size = $globals['media_thumb_size'];
 		switch ($type) {
 			case 'sub_logo':
 				$all = array('media_thumb' => array(false, $globals['media_sublogo_height'] * 2, false));
 				break;
+			case 'link':
+				if (! empty($globals['thumb_size'])) {
+					$size = $globals['thumb_size'];
+				}
 			default:
-				$all = array('media_thumb' => array($globals['media_thumb_size'], $globals['media_thumb_size'], true),
-					'media_thumb_2x' => array($globals['media_thumb_size'] * 2, $globals['media_thumb_size'] * 2, true));
+				$all = array('media_thumb' => array($size, $size, true),
+					'media_thumb_2x' => array($size * 2, $size * 2, true));
 		}
 
 		if ($key) {
@@ -395,7 +400,6 @@ class Upload {
 		if ($dim2 > 0) {
 			$this->dim2 = $dim2;
 		}
-
 
 		return true;
 	}

@@ -19,11 +19,10 @@ switch ($_GET['type']) {
 		break;
 	case 'post':
 		$type_in = '("post")';
-		$type_in = '("post")';
 		break;
 	case 'all':
 	default:
-		$type_in = '("comment", "post", "link")';
+		$type_in = '("comment", "post")';
 		break;
 
 }

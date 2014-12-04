@@ -47,7 +47,7 @@ function do_edit($link) {
 	$link->status_text = $link->get_status_text();
 	$link->key = md5($globals['now'].$link->randkey);
 	$link->chars_left = 550 - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-	$link->thumb_url = $link->has_thumb();
+	$link->has_thumb();
 	$link->is_new = false;
 	$link->is_sub_owner = SitesMgr::is_owner();
 	$link->site_properties = SitesMgr::get_extended_properties();
@@ -82,6 +82,7 @@ function do_save($link) {
 		}
 		if ($_POST['thumb_delete']) {
 			$link->delete_thumb();
+			$link->delete_image();
 		}
 		if ($_POST['uri_update']) {
 			$link->get_uri();
@@ -142,6 +143,13 @@ function do_save($link) {
 		}
 		$db->commit();
 
+		// Check image upload
+		if (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+			$link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+		} elseif (!empty($_FILES['image']['tmp_name'])) {
+			$link->store_image($_FILES['image']);
+		}
+
 	}
 	$link->read();
 	$link->permalink = $link->get_permalink();
@@ -158,18 +166,18 @@ function link_edit_errors($link) {
 	if(! empty($link->url) && ! $link->check_url($link->url, false) && ! $current_user->admin) {
 		$errors[] = _('url incorrecto');
 	}
-	
+
 	if($_POST['key'] !== md5($_POST['timestamp'].$link->randkey)) {
 		$errors[] = _('clave incorrecta');
 		$error = true;
 	}
-	
+
 	if(time() - $_POST['timestamp'] > 900) {
 		$errors[] =  _('tiempo excedido');
 	}
-	
+
 	$errors = array_merge($errors, $link->check_field_errors());
-	
+
 	return $errors;
 }
 

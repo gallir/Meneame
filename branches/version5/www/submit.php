@@ -52,7 +52,7 @@ if(isset($_POST["phase"])) {
 			break;
 	}
 } elseif ($site_properties['no_link'] == 2) {
-	// The sub does not need a link 
+	// The sub does not need a link
 	do_header(_('enviar historia') . " 2/3", _('enviar historia'));
 	do_submit1();
 } else {
@@ -111,7 +111,7 @@ function do_submit1() {
 	if (empty($_POST['url']) && empty($site_properties['no_link'])) {
 		add_submit_error( _('debe especificar enlace'));
 		return false;
-	} 
+	}
 
 	if (! empty($_POST['url'])) {
 		if (! empty($site_properties['no_anti_spam'])) {
@@ -337,7 +337,7 @@ function do_submit1() {
 		$blog->read();
 
 		$blog_url_components = @parse_url($blog->url);
-		$blog_url = $blog_url_components['host'].$blog_url_components['path'];		
+		$blog_url = $blog_url_components['host'].$blog_url_components['path'];
 	}
 
 	if ($anti_spam) {
@@ -478,8 +478,8 @@ function do_submit2() {
 	$link=new Link;
 	$link->id=$link_id = intval($_POST['id']);
 	$link->read();
-	
-	
+
+
 	if (! empty($link->url) || empty($site_properties['no_link'])) {
 		if(report_duplicated($link->url)) return true;
 		$link->read_content_type_buttons($_POST['type']);
@@ -509,6 +509,15 @@ function do_submit2() {
 	}
 
 	$link->store();
+	// Check image upload or delete
+	if ($_POST['image_delete']) {
+		$link->delete_image();
+	} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+		$link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+	} elseif (!empty($_FILES['image']['tmp_name'])) {
+		$link->store_image($_FILES['image']);
+	}
+
 	$link->read();
 	$link->randkey = $_POST['randkey'];
 
@@ -561,12 +570,12 @@ function link_errors($link) {
 		add_submit_error(_("clave incorrecta"));
 		$error = true;
 	}
-	
+
 	if($link->status != 'discard') {
 		add_submit_error(_("la historia ya está en cola").": $link->status");
 		$error = true;
 	}
-	
+
 	// TODO: simplify this, return just $errors as array()
 	// as in editlink
 	$res = $link->check_field_errors();

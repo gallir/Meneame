@@ -25,6 +25,7 @@ class SitesMgr {
 			'no_anti_spam' => 0,
 			'allow_local_links' => 0,
 			'allow_paragraphs' => 0,
+			'allow_images' => 0,
 			'rules' => '',
 			'message' => '',
 	);
@@ -376,7 +377,11 @@ class SitesMgr {
 						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
 						break;
 					default:
-						$dict[$k] = mb_substr(clean_input_string($v), 0, 140);
+						if (isset($defaults[$k]) && is_int($defaults[$k])) {
+							$dict[$k] = intval($v);
+						} else {
+							$dict[$k] = mb_substr(clean_input_string($v), 0, 140);
+						}
 				}
 			}
 		}

@@ -8,7 +8,7 @@
 
 
 class LCPBase {
-	
+
 	// Static function tht allows to convert to html for anonymous strings
 	public static function html($string, $fancy = true) {
 		$o = new LCPBase();
@@ -142,5 +142,11 @@ class LCPBase {
 		return false;
 	}
 
+	function delete_image($type) {
+		$media = new Upload($type, $this->id, 0);
+		$media->delete();
+		$this->media_size = 0;
+		$this->media_mime = '';
+	}
 }
 

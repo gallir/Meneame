@@ -34,9 +34,9 @@
 {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
 	<div style="float:right">
-	<label>{% trans _('Subir imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*" 
+	<label>{% trans _('imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
 	{% if globals.mobile %}
-	style="width:150px"
+		style="width:150px"
 	{% endif %}
 	/></label>
 
@@ -61,7 +61,7 @@
 			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
 			else {
 				element = $("#newpost");
-				element.html(response); 
+				element.html(response);
 				$("#addpost").hide("fast");
 				element.trigger('DOMChanged', element);
 			}
