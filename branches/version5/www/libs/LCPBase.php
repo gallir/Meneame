@@ -123,9 +123,18 @@ class LCPBase {
 		if ($media->from_temporal($file, 'image')) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;
+			$this->media_extension = $media->extension;
 			return true;
 		}
 		return false;
+	}
+
+	function get_media($type) {
+		$media = new Upload($type, $this->id);
+		if ($media) {
+			$media->read();
+		}
+		return $media;
 	}
 
 	function move_tmp_image($type, $file, $mime) {
@@ -137,6 +146,7 @@ class LCPBase {
 		if ($media->from_tmp_upload($file, $mime)) {
 			$this->media_size = $media->size;
 			$this->media_mime = $media->mime;
+			$this->media_extension = $media->extension;
 			return true;
 		}
 		return false;

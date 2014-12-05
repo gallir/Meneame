@@ -1363,7 +1363,7 @@ class Link extends LCPBase {
 	}
 
 	// Thumbnails management
-
+	// OLD formar
 	static function thumb_sizes($key = false) {
 		global $globals;
 
@@ -1404,40 +1404,29 @@ class Link extends LCPBase {
 		$this->thumb_status = 'checked';
 		$this->thumb = '';
 		if ($img) {
-			Upload::create_cache_dir($this->id);
-			$filepath = Upload::get_cache_dir($this->id) . "/thumb-$this->id.jpg";
-			$oks = 0;
-			if ($img->type == 'local') {
-				foreach (Link::thumb_sizes() as $b => $s) {
-					$filepath = Upload::get_cache_dir($this->id) . "/$b-$this->id.jpg";
-					$thumbnail = $img->scale($s);
-					$res = $thumbnail->save($filepath);
-					if (! $res) continue;
-					$oks++;
-					@chmod($filepath, 0777);
-					if ($b == 'thumb') {
-						$this->thumb_x = $thumbnail->getWidth();
-						$this->thumb_y = $thumbnail->getHeight();
-					}
-					if ($b == 'thumb_medium' && $globals['Amazon_S3_media_bucket']) {
-						Media::put($filepath, 'thumbs', "medium_$this->id.jpg");
-					}
-				}
-				if ($oks > 0) {
-					// syslog(LOG_NOTICE, "Meneame, new thumbnail $img->url to " . $this->get_permalink());
-					if ($debug) echo "<!-- Meneame, new thumbnail $img->url -->\n";
-				} else {
-					$this->thumb_status = 'error';
-					if ($debug)
-						echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
+			$filepath = Upload::get_cache_dir() . "/tmp/thumb-$this->id.jpg";
+			$thumbnail = $img->scale($globals['medium_thumb_size']);
+			$thumbnail->save($filepath, IMAGETYPE_JPEG);
+			if (! $this->move_tmp_image(basename($filepath), 'image/jpeg') ) {
+				$this->thumb_status = 'error';
+				if ($debug)
+					echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
+			} else {
+				if ($debug) {
+					echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				}
 			}
-		} elseif ($this->thumb_x || $this->thumb_y) {
-			$this->delete_thumb();
-			return false;
+		} else {
+			$this->thumb_status = 'error';
 		}
-		$this->store_thumb();
+		$this->store_thumb_status();
 		return $this->has_thumb();
+	}
+
+	function store_thumb_status() {
+		global $db;
+		$this->thumb = $db->escape($this->thumb);
+		$db->query("update links set link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
 	function store_thumb() {
@@ -1448,6 +1437,15 @@ class Link extends LCPBase {
 
 	function delete_thumb($base = '') {
 		global $globals;
+
+		if ($this->media_size > 0) {
+			$this->delete_image();
+			$this->thumb_status = 'deleted';
+			$this->store_thumb_status();
+			return;
+		}
+
+		// OLD format
 		if (!empty($base)) { // Don't delete if not the original (smaller) thumbnail
 			return;
 		}
@@ -1468,8 +1466,13 @@ class Link extends LCPBase {
 		}
 	}
 
+	// OLD format
 	function try_thumb($base) {
 		global $globals;
+
+		if (! $this->thumb_x > 0 || ! $this->thumb_y > 0 || $this->thumb_status == 'deleted') {
+			return false;
+		}
 
 		$final_size = Link::thumb_sizes($base);
 		if (! $final_size) return false;
@@ -1527,7 +1530,7 @@ class Link extends LCPBase {
 			$this->thumb_x = $this->thumb_y = $globals['thumb_size'];
 			return $this->thumb_url;
 
-	 	} elseif ($this->thumb_x > 0 && $this->thumb_y > 0) {
+	 	} elseif ($this->thumb_x > 0 && $this->thumb_y > 0 && $this->thumb_status != 'deleted') {
 			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
 				$this->thumb_uri = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
 				return $this->thumb_url;
@@ -1916,6 +1919,10 @@ class Link extends LCPBase {
 
 		return $errors;
 
+	}
+
+	function get_media() {
+		return parent::get_media('link');
 	}
 
 	function store_image($file) {

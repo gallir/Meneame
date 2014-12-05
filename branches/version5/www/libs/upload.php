@@ -254,7 +254,9 @@ class Upload {
 		if (! file_exists($pathname)) return false;
 
 		// Check __again__ the limits
-		Upload::current_user_limit_exceded(filesize($pathname));
+		if ($current_user->user_id > 0) {
+			Upload::current_user_limit_exceded(filesize($pathname));
+		}
 
 		$this->mime = $type;
 		$this->user = $current_user->user_id;

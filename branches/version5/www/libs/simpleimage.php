@@ -55,7 +55,7 @@ class SimpleImage {
 		}
 	}
 
-	function save($filename, $image_type=-1, $compression=80) {
+	function save($filename, $image_type=-1, $compression=90) {
 		if (!$this->image) {
 			syslog(LOG_INFO, "SimpleImage::save(): Image not loaded, $filename, $image_type, $compression");
 			return false;
