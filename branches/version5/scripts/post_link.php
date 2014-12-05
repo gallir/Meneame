@@ -53,9 +53,18 @@ function do_posts($link) {
 	$url = $link->get_permalink($info->sub);
 	echo "Posting $url: ".$globals['server_name']."\n"; 
 
+	// OLD format
 	$image = $link->try_thumb('thumb_medium');
 	if ($image && ! file_exists($image)) {
 		$image = false;
+	}
+
+	// NEW format
+	if (! $image && $link->has_thumb()) {
+		$media = $link->get_media();
+		if ($media && file_exists($media->pathname())) {
+			$image = $media->pathname();
+		}
 	}
 
 	if ($globals['url_shortener']) {
