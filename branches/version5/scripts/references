@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+if [ $# -eq 0 ]
+then
+	echo "No word supplied"
+fi
+
+word=$1
+
+find . -type f -and -not -path '*/.git/*' -and -not -path '*/.svn/*' -exec grep -H $word {} \;
