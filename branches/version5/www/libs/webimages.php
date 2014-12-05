@@ -275,10 +275,32 @@ class HtmlImages {
 	public $fallback = false;
 
 	function __construct($url, $site = false) {
+		global $db;
 		$this->url = $url;
 		$this->parsed_url = parse_url($url);
 		$this->base = $url;
 		$this->site = $site;
+		// Create table for previous if it does not exist
+		$db->query('CREATE TABLE IF NOT EXISTS `html_images_seen` (`hash` CHAR( 40 ) NOT NULL PRIMARY KEY)');
+
+	}
+
+	function seen_add($url) {
+		global $db;
+
+		if (empty($url)) return false;
+
+		$hash = md5($url);
+		return $db->query("INSERT IGNORE INTO html_images_seen VALUE ('$hash')");
+	}
+
+	function seen($url) {
+		global $db;
+
+		if (empty($url)) return false;
+
+		$hash = md5($url);
+		return $db->get_var("SELECT count(*) FROM html_images_seen WHERE hash ='$hash'");
 	}
 
 	function get() {
@@ -340,7 +362,7 @@ class HtmlImages {
 				if ($this->debug)
 					echo "<!-- Try to select from $url -->\n";
 				$img = new BasicThumb($url);
-				if ($img->get() && $img->is_not_black()) {
+				if (!$this->seen($img->url) && $img->get() && $img->is_not_black()) {
 						$img->type = 'local';
 						$img->candidate = true;
 					if ($img->x > 150 && $img->y > 150) {
@@ -428,7 +450,7 @@ class HtmlImages {
 		$goods = $n = 0;
 		foreach ($tags as $match) {
 			$img = new WebThumb($match, $this->base);
-			if ($img->surface() < 120000 && $this->check_in_other($match)) continue;
+			if ($this->seen($img->url) || ($img->surface() < 120000 && $this->check_in_other($match))) continue;
 			if ($this->debug)
 				echo "<!-- PRE CANDIDATE: ". __($match) ." -->\n";
 			if ($img->candidate && $img->good($other_html == false)) {

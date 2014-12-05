@@ -1412,6 +1412,7 @@ class Link extends LCPBase {
 				if ($debug)
 					echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
 			} else {
+				$this->image_parser->seen_add($img->url);
 				if ($debug) {
 					echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				}
