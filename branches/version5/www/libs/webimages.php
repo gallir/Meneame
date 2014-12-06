@@ -352,7 +352,7 @@ class HtmlImages {
 
 			// First check for thumbnail head metas
 			if ((
-				preg_match('/<meta\s+?(?:name|property)=[\'"](?:thumbnail_url|og:image|twitter:image:src|product-image)[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta\s+?(?:name|property)=[\'"](?:thumbnail_url|og:image|twitter:image:src|product-image)[\'"]\s+?[^>]*?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/favicon/i', $match[1])) {
 				$url = $match[1];
