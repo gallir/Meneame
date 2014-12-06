@@ -144,9 +144,21 @@ function do_save($link) {
 
 		// Check image upload
 		if (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-			$link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
+			if ($link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype'])) {
+				$link->thumb_status = 'local';
+			} else {
+				$link->thumb_status = 'error';
+
+			}
+			$link->store_thumb_status();
 		} elseif (!empty($_FILES['image']['tmp_name'])) {
-			$link->store_image($_FILES['image']);
+			if ($link->store_image($_FILES['image'])) {
+				$link->thumb_status = 'local';
+			} else {
+				$link->thumb_status = 'error';
+
+			}
+			$link->store_thumb_status();
 		}
 
 	}

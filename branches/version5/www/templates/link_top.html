@@ -1,10 +1,8 @@
 <div id="toplink">
 
-{% if self.thumb_medium_url %}
-	<a href="{{ self.thumb_medium_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img src="{{ globals.base_static_noversion }}{{ self.thumb_path }}/thumb_2x-{{ self.id }}.jpg" alt="{{ self.title }}" class='thumbnail medium'/></a>
-{% else %} {% if self.thumb_url %}
-	<a href="{{ self.thumb_medium_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt="{{ self.title }}" class='thumbnail'/></a>
-{% endif %}{% endif %}
+{% if self.thumb_url %}
+	<a href="{{ self.media_url }}" class="fancybox" title="{% trans _('miniatura') %}"><img src='{{ self.thumb_url }}' width='{{ self.thumb_x }}' height='{{ self.thumb_y }}' alt="{{ self.title }}" class='thumbnail'/></a>
+{% endif %}
 
 <h1><a href="{% exec self.get_permalink %}">{{ self.title }}</a></h1>
 

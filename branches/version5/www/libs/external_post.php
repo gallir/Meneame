@@ -111,8 +111,8 @@ function facebook_post($auth, $link, $text = '') {
 
 	$thumb = $link->has_thumb();
 	if ($thumb) {
-		if ($link->thumb_medium_url) {
-			$thumb = $link->thumb_medium_url;
+		if ($link->media_url) {
+			$thumb = $link->media_url;
 		}
 	} else {
 		$thumb = get_avatar_url($link->author, $link->avatar, 80);

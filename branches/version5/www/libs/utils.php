@@ -149,7 +149,7 @@ function check_email($email) {
 	if ( substr_count($username, '.') > 3 || preg_match('/\.{2,}/', $username) ) return false; // Doesn't allow "..+" or more than 2 dots
 
 	// check both, the full address and the domain
-	if(check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false; 
+	if(check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
 	return true;
 }
 
@@ -230,7 +230,7 @@ function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) 
 				return "<$matches[2]>";
 			}
 			return $matches[0];
-		}, $string); 
+		}, $string);
 	$string = close_tags($string);
 	$string = preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", $string); // Deletes useless close+open tags
 	//$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
@@ -875,7 +875,7 @@ function get_url($url, $referer = false, $max=500000, $log =true) {
 	}
 	$url = preg_replace('/ /', '%20', $url);
 	curl_setopt($session, CURLOPT_URL, $url);
-	curl_setopt($session, CURLOPT_USERAGENT, $globals['user_agent']);
+	curl_setopt($session, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36");
 	if ($referer) curl_setopt($session, CURLOPT_REFERER, $referer);
 	curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 20);
 	curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
@@ -887,7 +887,7 @@ function get_url($url, $referer = false, $max=500000, $log =true) {
 	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($session, CURLOPT_SSL_VERIFYHOST, 2);
 	curl_setopt($session, CURLOPT_COOKIESESSION, true);
-	curl_setopt($session, CURLOPT_COOKIEFILE, "/dev/null");
+	curl_setopt($session, CURLOPT_COOKIEFILE, "");
 	curl_setopt($session, CURLOPT_COOKIEJAR, "/dev/null");
 	//curl_setopt($session,CURLOPT_RANGE,"0-$max"); // It gives error with some servers
 	$response = @curl_exec($session);
@@ -973,7 +973,7 @@ function clear_unicode_spaces($input){
 	//	"\xa", // 'LINE FEED (LF)' (U+000A)
 	"\xb", // 'LINE TABULATION' (U+000B)
 	"\xc", // 'FORM FEED (FF)' (U+000C)
-	"\x10", 
+	"\x10",
 	//	"\xd", // 'CARRIAGE RETURN (CR)' (U+000D)
 	"\x20", // 'SPACE' (U+0020)
 	"\xc2\xa0", // 'NO-BREAK SPACE' (U+00A0)
@@ -1274,10 +1274,10 @@ function check_ip_noaccess($steps = 0) {
 				return true; // OK
 			} elseif (!empty($match)) {
 				reject_connection($match);
-			} 
+			}
 		}
 		return false; // Not found in cache
-	} 
+	}
 
 	$res = $db->get_var('SELECT ban_comment FROM bans WHERE ban_text = "'.$globals['user_ip'].'" AND ban_type = "noaccess" AND (ban_expire IS null OR ban_expire > now()) LIMIT 1');
 	if ($res) {

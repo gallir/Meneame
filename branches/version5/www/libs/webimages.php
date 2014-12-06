@@ -1,4 +1,4 @@
-<?
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2008 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
@@ -159,7 +159,7 @@ class WebThumb extends BasicThumb {
 		// poster captures also HTML5 video thumbnails
 		if (!preg_match('/(?:src|poster) *=["\'](.+?)["\']/i', $this->tag, $matches)
 			&& !preg_match('/(?:src|poster) *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
-			if (!preg_match('/["\']((http:){0,1}[\.\d\w\-\/]+\.jpg)["\']/i', $this->tag, $matches)) {
+			if (!preg_match('/["\']((https*:){0,1}[\.\d\w\-\/]+\.jpg)["\']/i', $this->tag, $matches)) {
 				return;
 			}
 		} else {
@@ -352,15 +352,14 @@ class HtmlImages {
 
 			// First check for thumbnail head metas
 			if ((
-				preg_match('/<meta\s+?property=[\'"]og:image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
-				preg_match('/<meta\s+?name=[\'"]product-image[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
-				preg_match('/<meta\s+?name=[\'"]thumbnail_url[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
+				preg_match('/<meta\s+?(?:name|property)=[\'"](?:thumbnail_url|og:image|twitter:image:src|product-image)[\'"]\s+?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
 				preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
 				&& ! preg_match('/favicon/i', $match[1])) {
 				$url = $match[1];
 				$url = build_full_url($url, $this->url);
-				if ($this->debug)
+				if ($this->debug) {
 					echo "<!-- Try to select from $url -->\n";
+				}
 				$img = new BasicThumb($url);
 				if (!$this->seen($img->url) && $img->get() && $img->is_not_black()) {
 						$img->type = 'local';
@@ -434,10 +433,10 @@ class HtmlImages {
 		preg_match_all('/(<video\s.+?poster.+?>)/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Try with plain links in javascripts (RTVE uses it...)
-		preg_match_all('/["\']image["\'][, ]+(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\'])/is', $html, $matches);
+		preg_match_all('/["\']image["\'][, ]+(["\'](https*:){0,1}[\.\d\w\-\/]+\.jpg["\'])/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		// Now try with images in JS arrays (Clarin uses it...)
-		preg_match_all('/\( *(["\'](http:){0,1}[\.\d\w\-\/]+\.jpg["\']) *[\),]/is', $html, $matches);
+		preg_match_all('/\( *(["\'](https*:){0,1}[\.\d\w\-\/]+\.jpg["\']) *[\),]/is', $html, $matches);
 		$tags = array_merge($tags, $matches[1]);
 		if (! count($tags)) return false;
 		$this->images_count =  count($tags);
@@ -720,7 +719,7 @@ class HtmlImages {
 	// Youtube detection
 	function check_youtube() {
 		if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-			(preg_match('/http:\/\/www\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
+			(preg_match('/\/\/www\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
 			$video_id = $match[1];
 			if ($this->debug)
 				echo "<!-- Detect Youtube, id: $video_id -->\n";
@@ -744,7 +743,7 @@ class HtmlImages {
 
 	function get_youtube_thumb($videoid) {
 		$thumbnail = false;
-		if(($res = get_url("http://gdata.youtube.com/feeds/api/videos/$videoid"))) {
+		if(($res = get_url("https://gdata.youtube.com/feeds/api/videos/$videoid"))) {
 			$vrss = $res['content'];
 			$previous = 0;
 			if($vrss &&
@@ -847,7 +846,7 @@ class HtmlImages {
 
 	// Vimeo detection
 	function check_vimeo() {
-		if (preg_match('/=["\'](?:http:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=|http:\/\/player.vimeo.com\/video\/)(\d+)/i', $this->html, $match) &&
+		if (preg_match('/=["\'](?:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=|\/\/player.vimeo.com\/video\/)(\d+)/i', $this->html, $match) &&
 				(preg_match('/vimeo\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
 			$video_id = $match[1];
 			if ($this->debug)

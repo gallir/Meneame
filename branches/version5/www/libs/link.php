@@ -47,7 +47,7 @@ class Link extends LCPBase {
 	var $clicks = 0;
 
 	// sql fields to build an object from mysql
-	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
+	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, favorite_link_id as favorite, clicks.counter as clicks, votes.vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
 	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
@@ -56,7 +56,7 @@ class Link extends LCPBase {
 	LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id)
 	LEFT JOIN media ON (media.type='link' and media.id = link_id and media.version = 0) ";
 
-	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, link_thumb_x as thumb_x, link_thumb_y as thumb_y, link_thumb as thumb, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
+	const SQL_BASIC = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,	UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM links
 	INNER JOIN users on (user_id = link_author)
 	LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
 	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
@@ -560,9 +560,6 @@ class Link extends LCPBase {
 		$link_title = $db->escape($this->title);
 		$link_tags = $db->escape($this->tags);
 		$link_content = $db->escape($this->content);
-		$link_thumb = $db->escape($this->thumb);
-		$link_thumb_x = intval($this->thumb_x);
-		$link_thumb_y = intval($this->thumb_y);
 		$link_thumb_status = $db->escape($this->thumb_status);
 		$db->transaction();
 		if (! $this->store_basic()) {
@@ -570,7 +567,7 @@ class Link extends LCPBase {
 			return false;
 		}
 
-		$r = $db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb='$link_thumb', link_thumb_x=$link_thumb_x, link_thumb_y=$link_thumb_y, link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
+		$r = $db->query("UPDATE links set link_url='$link_url', link_uri='$link_uri', link_url_title='$link_url_title', link_title='$link_title', link_content='$link_content', link_tags='$link_tags', link_thumb_status='$link_thumb_status' WHERE link_id=$this->id");
 		$db->commit();
 		return $r;
 
@@ -1362,23 +1359,6 @@ class Link extends LCPBase {
 		return $dict; // Asked for the whole dict
 	}
 
-	// Thumbnails management
-	// OLD formar
-	static function thumb_sizes($key = false) {
-		global $globals;
-
-		$all = array('thumb_medium' => $globals['medium_thumb_size'],
-					'thumb_2x'	=> $globals['thumb_size'] * 2,
-					'thumb' => $globals['thumb_size']);
-
-		if ($key) {
-			return $all[$key];
-		} else {
-			arsort($all); // Ordered by size, descending
-			return $all;
-		}
-	}
-
 	function get_thumb($debug = false, $url = false) {
 		global $globals;
 
@@ -1413,12 +1393,11 @@ class Link extends LCPBase {
 					echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
 			} else {
 				$this->image_parser->seen_add($img->url);
+				$this->thumb_status = 'remote';
 				if ($debug) {
 					echo "<!-- Meneame, new thumbnail $img->url -->\n";
 				}
 			}
-		} else {
-			$this->thumb_status = 'error';
 		}
 		$this->store_thumb_status();
 		return $this->has_thumb();
@@ -1430,12 +1409,6 @@ class Link extends LCPBase {
 		$db->query("update links set link_thumb_status = '$this->thumb_status' where link_id = $this->id");
 	}
 
-	function store_thumb() {
-		global $db;
-		$this->thumb = $db->escape($this->thumb);
-		$db->query("update links set link_content_type = '$this->content_type', link_thumb = '$this->thumb', link_thumb_x = $this->thumb_x, link_thumb_y = $this->thumb_y, link_thumb_status = '$this->thumb_status' where link_id = $this->id");
-	}
-
 	function delete_thumb($base = '') {
 		global $globals;
 
@@ -1443,78 +1416,7 @@ class Link extends LCPBase {
 			$this->delete_image();
 			$this->thumb_status = 'deleted';
 			$this->store_thumb_status();
-			return;
 		}
-
-		// OLD format
-		if (!empty($base)) { // Don't delete if not the original (smaller) thumbnail
-			return;
-		}
-		$this->thumb = '';
-		$this->thumb_status = 'deleted';
-		$this->thumb_x = 0;
-		$this->thumb_y = 0;
-		$this->store_thumb();
-		if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_media_url']) {
-			Media::rm("thumbs/$this->id*");
-		}
-		$dir = Upload::get_cache_dir($this->id);
-		$files = glob("$dir/thumb*-$this->id.jpg");
-		foreach($files as $file) {
-			if(is_file($file)) {
-				@unlink($file);
-			}
-		}
-	}
-
-	// OLD format
-	function try_thumb($base) {
-		global $globals;
-
-		if (! $this->thumb_x > 0 || ! $this->thumb_y > 0 || $this->thumb_status == 'deleted') {
-			return false;
-		}
-
-		$final_size = Link::thumb_sizes($base);
-		if (! $final_size) return false;
-
-		$dir =	Upload::get_cache_dir($this->id);
-		$output_filename = "$base-$this->id.jpg";
-
-		require_once(mnminclude."simpleimage.php");
-		$f = false;
-		$input = new SimpleImage();
-		foreach (Link::thumb_sizes() as $b => $s) {
-			if ($b == 'thumb') {
-				$delete = true; // Mark as deleted if the last does not exist
-				$root = "";
-			} else {
-				$delete = false;
-				$root = $b;
-			}
-			$filename = "$root-$this->id.jpg";
-			// Check first if the file exists
-			if (is_readable("$dir/$filename")) {
-				$f = "$dir/$filename";
-			} else {
-				$f =  $this->thumb_download($b, $delete);
-			}
-			if ($f && $input->load($f)) {
-				break;
-			}
-		}
-		if (! $input->image) return false;
-		if ($input->getWidth() <= $final_size) {
-			if ($f != "$dir/$output_filename") {
-				copy($f, "$dir/$output_filename");
-			}
-		} else {
-			$input->resize($final_size, $final_size);
-			$input->save("$dir/$output_filename");
-		}
-		@chmod($f, 0777);
-		@chmod("$dir/$output_filename", 0777);
-		return "$dir/$output_filename";
 	}
 
 	function has_thumb() {
@@ -1522,84 +1424,17 @@ class Link extends LCPBase {
 
 		if (! empty($this->thumb_url)) return $this->thumb_url;
 
-		$base = $globals['base_static_noversion'];
 
 		if ($this->media_size > 0) { // New format
+			$base = $globals['base_static_noversion'];
 			$this->thumb_uri = Upload::get_cache_relative_dir($this->id)."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
 			$this->thumb_url = $base.$this->thumb_uri;
 			$this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
 			$this->thumb_x = $this->thumb_y = $globals['thumb_size'];
 			return $this->thumb_url;
+	 	}
 
-	 	} elseif ($this->thumb_x > 0 && $this->thumb_y > 0 && $this->thumb_status != 'deleted') {
-			if (!$globals['Amazon_S3_local_cache'] && $globals['Amazon_S3_media_url']) {
-				$this->thumb_uri = $this->thumb_url = $globals['Amazon_S3_media_url']."/thumbs/$this->id.jpg";
-				return $this->thumb_url;
-			}
-			$base_thumb = "thumb-$this->id.jpg";
-			$base_medium_thumb = "thumb_medium-$this->id.jpg";
-
-			$this->thumb_path = Upload::get_cache_relative_dir($this->id);
-
-			$local_dir = mnmpath . $this->thumb_path;
-			$file_thumb = $local_dir.'/'.$base_thumb;
-			if ($globals['cache_redirector'] || is_readable($file_thumb)) {
-				$this->thumb_uri = $this->thumb_path . '/' . $base_thumb;
-				$this->thumb_url = $base . $this->thumb_uri;
-			} else {
-				// TODO: Use try_thumbs to get all sizes.
-				if ($this->thumb_download()) {
-					$this->thumb_download('thumb_medium'); // Download the bigger thumbnail
-					$this->thumb_uri = $this->thumb_path . '/' . $base_thumb;
-					$this->thumb_url = $base . $this->thumb_uri;
-				}
-			}
-		}
-
-		if ($this->thumb_url) {
-			$this->thumb_medium_x = $this->thumb_medium_y = $globals['medium_thumb_size'];
-			$this->thumb_medium_uri = $this->thumb_path . '/' . $base_medium_thumb;
-			$this->thumb_medium_url = $base . $this->thumb_medium_uri;
-
-			// OK
-			$this->media_url = $base . $this->thumb_medium_uri;
-		}
-
-		return $this->thumb_url;
-	}
-
-	function thumb_download($basename = 'thumb', $delete = true) {
-		global $globals;
-
-		$file = Upload::get_cache_relative_dir($this->id) . "/$basename-$this->id.jpg";
-		$filepath = mnmpath."/$file";
-
-		if ($basename == "thumb_medium") {
-			$s3_base = "medium_";
-			$s3_filename = "medium_$this->id.jpg";
-		}elseif ($basename == "thumb_2x") {
-			$s3_base = "2x_";
-			$s3_filename = "2x_$this->id.jpg";
-		} else {
-			$s3_base = "";
-			$s3_filename = "$this->id.jpg";
-		}
-
-		if ($this->thumb_x > 0 && $this->thumb_y > 0
-			&& $globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_local_cache']) {
-			Upload::create_cache_dir($this->id);
-			// Get thumbnail from S3
-			if (Media::get($s3_filename, 'thumbs', $filepath)) {
-				return $filepath;
-			} elseif ($delete) {
-				// Do extra check, if S3 is working, mark thumb as deleted
-				if (($buckets = Media::buckets(false)) && in_array($globals['Amazon_S3_media_bucket'], $buckets)
-						&& is_writable(mnmpath.'/'.$globals['cache_dir'])) { // Double check
-					syslog(LOG_NOTICE, "Meneame, deleting unexisting thumb for ${base}_$this->id");
-					$this->delete_thumb($s3_base);
-				}
-			}
-		}
+	 	$this->thumb_url = false;
 		return false;
 	}
 
