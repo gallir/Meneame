@@ -73,6 +73,7 @@ $total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 if (($argc = count($url_args)) > 1) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^c0\d+$/', $url_args[1])) {
+		// Link to comment in its page
 		$c = intval(substr($url_args[1], 2));
 		if (! $c > 0 || $c > $link->comments) {
 			header ('HTTP/1.1 303 Load');
@@ -81,6 +82,7 @@ if (($argc = count($url_args)) > 1) {
 		}
 		$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
 		unset($url_args[1]);
+		$no_page = false;
 	} elseif ((int) $url_args[$argc-1] > 0) {
 		$current_page = intval($url_args[$argc-1]);
 		if ($current_page > $total_pages) {
@@ -91,11 +93,13 @@ if (($argc = count($url_args)) > 1) {
 			$canonical_page = $current_page;
 		}
 		array_pop($url_args);
+		$no_page = false;
+	} else {
+		$no_page = true;
 	}
+} else {
+	$no_page = true;
 }
-
-if (! $current_page ) $no_page = true;
-else $no_page = false;
 
 // Change to a min_value is times is changed for the current link_status
 if ($globals['time_enabled_comments_status'][$link->status]) {
@@ -518,7 +522,7 @@ function print_external_anaylsis($link) {
 function print_relevant_comments($link, $no_page) {
 	global $globals, $db;
 
-	if ($link->comments < 10 ) return;
+	if (! $no_page || $link->comments < 10 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 
@@ -574,8 +578,7 @@ function print_relevant_comments($link, $no_page) {
 			$obj->val = $comment->val;
 			$obj->karma = $comment->comment_karma;
 			$objects[] = $obj;
-			if ($no_page
-					&& ! $self
+			if (! $self
 					&& $obj->vote < 0
 					&& $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
 					&& (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
@@ -587,7 +590,7 @@ function print_relevant_comments($link, $no_page) {
 			}
 			if (count($objects) > $limit) break;
 		}
-		if ($no_page && ! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
+		if (! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
 			$self = get_highlighted_comment($objects[0]);
 			$objects[0]->summary = true;
 		}
