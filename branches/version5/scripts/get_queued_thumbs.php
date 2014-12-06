@@ -1,6 +1,6 @@
 #! /usr/bin/env php
-<?
-include('../config.php');
+<?php
+include(dirname(__FILE__).'/../config.php');
 include(mnminclude.'webimages.php');
 
 
@@ -8,9 +8,7 @@ $sql = "select link_id from links where link_status='queued' and link_thumb_stat
 
 $res = $db->get_col($sql);
 foreach ($res as $l) {
-	$link = new Link();
-	$link->id = $l;
-	$link->read();
+	$link = Link::from_db($l, null, false);
 	echo $link->get_permalink().": ";
 	if (($thumb = $link->get_thumb())) {
 		echo $thumb;
