@@ -38,11 +38,12 @@ $now = intval(time()/60) * 60;
 $coef = 0.8;
 $min_karma = $globals['comment_highlight_karma'] * 2;
 $min_value = $globals['comment_highlight_karma'];
+$min_length = 400;
 
 $sql_value =   "comment_karma*(1-($now-unix_timestamp(comment_date))*$coef/($hours*3600)) as value";
 $where_value = "comment_karma*(1-($now-unix_timestamp(comment_date))*$coef/($hours*3600)) > $min_value";
 
-$sql = "select comment_id, karma, $sql_value from comments, sub_statuses where id = $my_id AND status in ('published') AND comment_date > date_sub(now(), interval $hours hour) and LENGTH(comment_content) > 300 and comment_karma > $min_karma AND $where_value AND comment_link_id = link $extra order by value desc limit 1";
+$sql = "select comment_id, karma, $sql_value from comments, sub_statuses where id = $my_id AND status in ('published') AND comment_date > date_sub(now(), interval $hours hour) and LENGTH(comment_content) > $min_length and comment_karma > $min_karma AND $where_value AND comment_link_id = link $extra order by value desc limit 1";
 
 $res = $db->get_row($sql);
 if (! $res) {
