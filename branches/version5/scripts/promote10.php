@@ -230,8 +230,7 @@ function promote($site_id) {
 				$output .= print_row($link, 3);
 				publish($site_id, $link);
 				// Recheck for images, some sites add images after the article has been published
-				if ($link->thumb_status != 'local' && $link->thumb_status != 'remote'
-						&& $link->thumb_status != 'deleted' && ! in_array($link->id, $thumbs_queue) ) {
+				if (! $link->has_thumb() && $link->thumb_status != 'deleted' && ! in_array($link->id, $thumbs_queue) ) {
 					echo "Adding $link->id to thumb queue\n";
 					array_push($thumbs_queue, $link->id);
 				}
@@ -253,12 +252,12 @@ function promote($site_id) {
 
 	// Get THUMBS
 	foreach($thumbs_queue as $id) {
-		$link = new Link;
-		$link->id=$id;
-		$link->read();
-		echo "GETTING THUMB $link->id\n";
-		$link->get_thumb(true);
-		echo "DONE GETTING THUMB\n";
+		$link = Link::from_db($id, null, false);
+		if ($link && ! $link->has_thumb() && $link->thumb_status != 'deleted') {
+			echo "GETTING THUMB $link->id\n";
+			$link->get_thumb(true);
+			echo "DONE GETTING THUMB\n";
+		}
 	}
 }
 
