@@ -32,6 +32,7 @@
 
 {% if globals.thumbnail %}
    	<meta property="og:image" content="{{globals.thumbnail}}"/>
+   	<meta name="twitter:image" content="{{globals.thumbnail}}"/>
 	<link rel="image_src" href="{{globals.thumbnail}}"/>
 {% endif %}
 {% if globals.permalink AND title %}
