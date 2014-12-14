@@ -62,8 +62,8 @@ if ($link->is_sub && $site_id != $link->sub_id && empty($link->sub_status)) {
 
 
 if ($link->is_discarded()) {
-	// Dont allow indexing of discarded links, nor anonymous users after 10 days
-	if ($globals['bot'] || (! $current_user->authenticated && $globals['now'] - $link->sent_date > 864000) ) not_found();
+	// Dont allow indexing of discarded links, nor anonymous users after 90 days
+	if ($globals['bot'] || (! $current_user->authenticated && $globals['now'] - $link->sent_date > 86400 * 90) ) not_found();
 	$globals['ads'] = false;
 	$globals['noindex'] = true;
 }
