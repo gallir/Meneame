@@ -295,26 +295,20 @@ function do_profile() {
 
 	$addresses	  = array();
 	if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' &&  ! $user->admin) ) { // gods and admins know each other for sure, keep privacy
-		$dbaddresses = $db->get_results("select INET_NTOA(vote_ip_int) as ip from votes where vote_type='links' and vote_user_id = $user->id order by vote_date desc limit 30");
+		$dbaddresses = $db->get_results("select distinct(vote_ip_int) as ip from votes where vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id order by vote_date desc limit 30");
 
 		// Try with comments
 		if (! $dbaddresses) {
-			$dbaddresses = $db->get_results("select comment_ip as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
+			$dbaddresses = $db->get_results("select distinct(comment_ip_int) as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
 		}
 
-		if (! $dbaddresses) {
-			// Use register IP
-			$dbaddresses = $db->get_results("select user_ip as ip from users where user_id = $user->id");
-		}
-
-		$prev_address = '';
-		foreach ($dbaddresses as $dbaddress) {
-			$ip_pattern = preg_replace('/\.[0-9]+$/', '', $dbaddress->ip);
-			if($ip_pattern != $prev_address) {
-				$addresses[] = $ip_pattern;
-				$clone_counter++;
-				$prev_address = $ip_pattern;
-				if ($clone_counter >= 30) break;
+		if ($dbaddresses) {
+			foreach ($dbaddresses as $dbaddress) {
+				$ip = inet_dtop($dbaddress->ip);
+				$ip_pattern = preg_replace('/[\.\:][0-9a-f]+$/i', '', $ip);
+				if (! in_array($ip_pattern, $addresses)) {
+					$addresses[] = $ip_pattern;
+				}
 			}
 		}
 	}
