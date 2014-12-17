@@ -70,6 +70,7 @@ if ($link->is_discarded()) {
 
 $total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
+$no_page = true; // Show highlighted
 if (($argc = count($url_args)) > 1) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^c0\d+$/', $url_args[1])) {
@@ -82,7 +83,6 @@ if (($argc = count($url_args)) > 1) {
 		}
 		$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
 		unset($url_args[1]);
-		$no_page = false;
 	} elseif ((int) $url_args[$argc-1] > 0) {
 		$current_page = intval($url_args[$argc-1]);
 		if ($current_page > $total_pages) {
@@ -94,11 +94,7 @@ if (($argc = count($url_args)) > 1) {
 		}
 		array_pop($url_args);
 		$no_page = false;
-	} else {
-		$no_page = true;
 	}
-} else {
-	$no_page = true;
 }
 
 // Change to a min_value is times is changed for the current link_status
