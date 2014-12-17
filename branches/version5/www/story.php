@@ -70,7 +70,8 @@ if ($link->is_discarded()) {
 
 $total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
-$no_page = true; // Show highlighted
+$no_page = true; 
+$show_relevants = true; // Show highlighted comments
 if (($argc = count($url_args)) > 1) {
 	// Dirty trick to redirect to a comment' page
 	if (preg_match('/^c0\d+$/', $url_args[1])) {
@@ -82,6 +83,7 @@ if (($argc = count($url_args)) > 1) {
 			die;
 		}
 		$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
+		$no_page = false;
 		unset($url_args[1]);
 	} elseif ((int) $url_args[$argc-1] > 0) {
 		$current_page = intval($url_args[$argc-1]);
@@ -94,6 +96,7 @@ if (($argc = count($url_args)) > 1) {
 		}
 		array_pop($url_args);
 		$no_page = false;
+		$show_relevants = false;
 	}
 }
 
@@ -260,7 +263,9 @@ case 2:
 
 	if($tab_option == 1) {
 		print_external_anaylsis($link);
-		print_relevant_comments($link, $no_page);
+		if ($show_relevants || $no_page) {
+			print_relevant_comments($link);
+		}
 	} else {
 		$last_com_first = false;
 	}
@@ -515,10 +520,10 @@ function print_external_anaylsis($link) {
 	}
 }
 
-function print_relevant_comments($link, $no_page) {
+function print_relevant_comments($link) {
 	global $globals, $db;
 
-	if (! $no_page || $link->comments < 10 ) return;
+	if ($link->comments < 10 ) return;
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) $do_cache = true;
 	else $do_cache = false;
 
