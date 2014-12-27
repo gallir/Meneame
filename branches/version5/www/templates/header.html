@@ -30,17 +30,16 @@
 	<meta name="description" content="{{globals.description}}" />
 {% endif %}
 
-{% if globals.thumbnail %}
-   	<meta property="og:image" content="{{globals.thumbnail}}"/>
-   	<meta name="twitter:image" content="{{globals.thumbnail}}"/>
-	<link rel="image_src" href="{{globals.thumbnail}}"/>
-{% endif %}
 {% if globals.permalink AND title %}
 	{# Twitter Card #}
 	<meta name="twitter:card" content="summary">
 	<meta name="twitter:title" content="{{title}}">
 	{% if globals.twitter_user %}
 		<meta name="twitter:site" content="@{{globals.twitter_user}}">
+	{% endif %}
+	{% if globals.thumbnail %}
+   		<meta property="og:image" content="{{globals.thumbnail}}"/>
+   		<meta name="twitter:image" content="{{globals.thumbnail}}"/>
 	{% endif %}
 	<meta property="og:url" content="{{ globals.permalink }}">
 	<meta property="og:title" content="{{title}}">
