@@ -1,6 +1,12 @@
 body {
 background: #fff;
+font-size: 15px;
 }
+
+.news-body h1, .news-body h2 {
+font-size: 18px;
+}
+
 
 /* Avoid auto zoom */
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="email"], input[type="url"], input[type="search"] {
