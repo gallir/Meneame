@@ -145,7 +145,7 @@
 				{% endif %}
 
 			{% if this_site.nsfw %} [nsfw]{% endif %}
-			&nbsp;{% exec print_follow_sub this_site.id as dummy %}
+			&nbsp;{% if this_site.owner > 0 %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
 		</div>
 	{% endif %}
 
@@ -170,7 +170,7 @@
 		{% if current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
 			<sup><a title="edit" href="{{ globals.base_url }}m/{{ this_site.name }}/subedit">*</a></sup>
 		{% endif %}
-		{% exec print_follow_sub this_site.id as dummy %}
+		{% if this_site.owner > 0 %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
 	  </div>
 
 
