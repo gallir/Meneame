@@ -87,7 +87,7 @@ class SitesMgr {
 	}
 
 	static public function get_info($id = false, $force = false) {
-		global $db;
+		global $db, $globals;
 
 		if ($id == false || $id == self::$id) {
 			if (! self::$id || $force) self::__init($id);

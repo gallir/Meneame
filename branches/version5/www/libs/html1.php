@@ -79,6 +79,12 @@ function do_header($title, $id='home', $options = false) {
 	$this_site = SitesMgr::get_info();
 	$this_site_properties = SitesMgr::get_extended_properties();
 
+	if ($this_site->sub) {
+		$this_site->url = $this_site->base_url.'m/'.$this_site->name;
+	} else {
+		$this_site->url = $this_site->base_url;
+	}
+
 	// Check if the sub has a logo and calculate the width
 	if ($this_site->media_id > 0 && $this_site->media_dim1 > 0 && $this_site->media_dim2 > 0) {
 		$r = $this_site->media_dim1/$this_site->media_dim2;

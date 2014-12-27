@@ -4,7 +4,7 @@ background: #fff;
 
 /* Avoid auto zoom */
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="email"], input[type="url"], input[type="search"] {
-font-size: 16px; 
+font-size: 16px;
 }
 
 #variable {
@@ -26,12 +26,23 @@ z-index: 10;
 }
 
 #header-sub{
+position: relative;
 height: 28px;
-padding: 2px 4px;
+background-color:#ccc;
+overflow:hidden;
+white-space:nowrap;
+font-size:16px;
+padding: 2px 10px;
+color:#fff;
+}
+
+#header-sub .favorite {
+vertical-align: middle;
 }
 
 #header-sub img {
-vertical-align: text-bottom;
+vertical-align: bottom;
+margin-top: 4px;
 }
 
 #nav-menu {
