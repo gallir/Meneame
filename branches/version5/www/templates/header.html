@@ -166,7 +166,7 @@
 			<a href="{{ this_site.url }}" title="{{ this_site.name }}">{% if this_site.owner > 0 && ! this_site.logo_url %}<b>{{ this_site.name }}</b>: {% endif %}{{ this_site.name_long }}</a>
 
 		{% if this_site.nsfw %}[nsfw]{% endif %}
-		{% if current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
+		{% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
 			<sup><a title="edit" href="{{ globals.base_url }}m/{{ this_site.name }}/subedit">*</a></sup>
 		{% endif %}
 		{% if this_site.owner > 0 %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
