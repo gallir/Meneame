@@ -152,7 +152,7 @@ function save_sub($id, &$errors) {
 		if ($r && $id > 0) {
 			SitesMgr::store_extended_properties($id, $_POST);
 			$db->commit();
-			store_image($site);
+			store_image($id);
 			return $id;
 		} else {
 			array_push($errors, _('error actualizando la base de datos'));
@@ -175,8 +175,8 @@ function sub_copy_from($id, $from) {
 	}
 }
 
-function store_image($site) {
-	$media = new Upload('sub_logo', $site->id, 0);
+function store_image($id) {
+	$media = new Upload('sub_logo', $id, 0);
 	$media->media_size = 0;
 	$media->media_mime = '';
 		
