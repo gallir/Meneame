@@ -32,6 +32,12 @@
 
 <label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
 <input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="\S{3,12}" />
+
+{% if sub.id %}
+	&nbsp;&nbsp;
+	{% trans _("envíos habilitados") %} <input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>
+{% endif %}
+
 &nbsp;&nbsp;
 [<a href="http://meneame.wikispaces.com/Subs">{% trans _('ayuda') %}</a>]
 <br/>
@@ -40,73 +46,67 @@
 <input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,40}" maxlength="40" style="width:60%"/>
 <br/>
 
-<label for="name">{% trans _('color título') %}:</label>
-<input type="text" id="color1" name="color1" value="{{ sub.color1 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
-&nbsp;&nbsp;
-<label for="name">{% trans _('color fondo') %}:</label>
-<input type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
 
-<br/>
-{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
-&nbsp;&nbsp;
-{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
-&nbsp;&nbsp;
-{% trans _('deshabilitar control anti spam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
-&nbsp;&nbsp;
-{% trans _('subir imagen') %}: <input type="checkbox" name="allow_images" value="1" {% if extended.allow_images %}checked{% endif %}/>
-<br/>
-{% trans _('enlace') %}:
-{% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
-{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
-{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
 
-{# TODO: enable later
-{% trans _('sin enlace (microblogging)') %}: <input type="checkbox" name="no_link" value="1" {% if extended.no_link %}checked{% endif %}/>
-{% trans _('sin control antispam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
-<br/>
-#}
 
-<fieldset><legend>{% trans _('límites de entradilla') %}</legend>
-	{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200"
-			value="{{ extended.intro_min_len }}"/>
+{% if sub.id %}
+
+	{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
 	&nbsp;&nbsp;
-	{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000"
-			value="{{ extended.intro_max_len }}"/><br/>
-	{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
-</fieldset>
-
-<br/>
-
-<fieldset><legend>{% trans _('mensajes') %}</legend>
-	<label>{% trans _('reglas para el envío') %}<br/>
-		<textarea maxlength="300" name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
-	</label>
-	<br />
-	<label>{% trans _('mensaje barra lateral') %}<br/>
-		<textarea maxlength="300" name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
-	</label>
-</fieldset>
+	{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
+	&nbsp;&nbsp;
+	{% trans _('deshabilitar control anti spam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
+	&nbsp;&nbsp;
+	{% trans _('subir imagen') %}: <input type="checkbox" name="allow_images" value="1" {% if extended.allow_images %}checked{% endif %}/>
+	<br/>
+	{% trans _('enlace') %}:
+	{% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
+	{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
+	{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
 
 
+	<fieldset><legend>{% trans _('colores y logo de la cabecera') %}</legend>
+		<label for="name">{% trans _('color título') %}:</label>
+		<input type="text" id="color1" name="color1" value="{{ sub.color1 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
+		&nbsp;&nbsp;
+		<label for="name">{% trans _('color fondo') %}:</label>
+		<input type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
+		<br/>
+
+		{# Image options #}
+
+		<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+		<label>{% trans _('Imagen logo') %}: <input type="file" autocomplete="off" name="logo_image" id="fileInput" accept="image/*"/></label>
+		{% if sub.media_size > 0 %}
+			&nbsp;<label>{% trans _('Eliminar') %}: <input type="checkbox" name="logo_image_delete" value="1"/></label>
+		{% endif %}
+	</fieldset>
 
 
-{# Image options #}
+	<fieldset><legend>{% trans _('límites de entradilla') %}</legend>
+		{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200"
+				value="{{ extended.intro_min_len }}"/>
+		&nbsp;&nbsp;
+		{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000"
+				value="{{ extended.intro_max_len }}"/><br/>
+		{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
+	</fieldset>
 
+	<fieldset><legend>{% trans _('mensajes') %}</legend>
+		<label>{% trans _('reglas para el envío') %}<br/>
+			<textarea maxlength="300" name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
+		</label>
+		<br />
+		<label>{% trans _('mensaje barra lateral') %}<br/>
+			<textarea maxlength="300" name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
+		</label>
+	</fieldset>
 
-
-<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-<label>{% trans _('Imagen logo') %}: <input type="file" autocomplete="off" name="logo_image" id="fileInput" accept="image/*"/></label>
-{% if sub.media_size > 0 %}
-	&nbsp;<label>{% trans _('Eliminar') %}: <input type="checkbox" name="logo_image_delete" value="1"/></label>
 {% endif %}
-
-<br/>
-
-
 
 
 {% if current_user.admin %}
-	{% trans _('¡ALERTA admins! las siguientes opciones son delicadas') %}<br/><br/>
+	<fieldset><legend>{% trans _('¡ALERTA admins! opciones son delicadas') %}</legend>
 
 	<label for="name">user_id:</label>
 	<input type="number" id="owner" name="owner" maxlength="10" pattern="[0-9]+"
@@ -118,7 +118,6 @@
 	/>
 	<br/>
 	{% if sub.id > 0 %}
-		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>{% trans _("habilitado") %}
 		<input type="checkbox" name="allow_main_link" value="1" {% if sub.allow_main_link %}checked{% endif %}>{% trans _("permitir enlace principal") %}
 		<br/>
 	{% endif %}
@@ -142,57 +141,57 @@
 		{% endfor %}
 		</select>
 	{% endif %}
+	</fieldset>
 {% endif %}
-
-<br/><br/>
-<input class="button" type="submit" value="{% trans _('guardar') %}" />
-</fieldset>
-
 
 <br/>
-<fieldset><legend>{% trans _('opciones avanzadas') %}</legend>
-
-	<fieldset><legend>{% trans _('publicar en Twitter') %} (<a href="https://dev.twitter.com/oauth/overview/application-owner-access-tokens">help!</a>)</legend>
-		<label for="twitter_page">{% trans _('perfil') %}</label>
-		<input type="url" value="{{ extended.twitter_page }}" placeholder="https://twitter.com/usuario" id="twitter_page" name="twitter_page" size="60" maxlength="60"/><br/>
-
-		<label for="twitter_consumer_key">{% trans _('consumer key') %}</label>
-		<input type="text" value="{{ extended.twitter_consumer_key }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_key" name="twitter_consumer_key" size="32" maxlength="32" pattern="[A-Za-z0-9\-]{20,32}"/><br/>
-
-		<label for="twitter_consumer_secret">{% trans _('consumer secret') %}</label>
-		<input type="text" value="{{ extended.twitter_consumer_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_secret" name="twitter_consumer_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
-
-		<label for="twitter_token">{% trans _('token') %}</label>
-		<input type="text" value="{{ extended.twitter_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="twitter_token" name="twitter_token" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{50,64}"/><br/>
-
-		<label for="twitter_token_secret">{% trans _('token secret') %}</label>
-		<input type="text" value="{{ extended.twitter_token_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_token_secret" name="twitter_token_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
-
-	</fieldset>
-
-{# Enabled facebook only to admins, for the time being, until Twitter is tested end perhaps improved #}
-{% if current_user.admin %}
-	<fieldset><legend>{% trans _('publicar en Facebook') %} (<a href="https://developers.facebook.com/docs/facebook-login/access-tokens">help!</a>)</legend>
-		<label for="facebook_page">{% trans _('página') %}</label>
-		<input type="url" value="{{ extended.facebook_page }}" placeholder="https://www.facebook.com/página" id="facebook_page" name="facebook_page" size="60" maxlength="60"/><br/>
-
-		<label for="facebook_key">{% trans _('key') %}</label>
-		<input type="text" value="{{ extended.facebook_key }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_key" name="facebook_key" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
-
-		<label for="facebook_secret">{% trans _('secret') %}</label>
-		<input type="text" value="{{ extended.facebook_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_secret" name="facebook_secret" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
-
-		<label for="facebook_token">{% trans _('token') %}</label>
-		<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" size="120" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/><br/>
-
-	</fieldset>
-{% endif %}
-
-
-
+<input class="button" type="submit" value="{% trans _('guardar') %}" />
 </fieldset>
 
-<input class="button" type="submit" value="{% trans _('guardar') %}" />
+{% if sub.id %}
+	<br/>
+	<fieldset><legend>{% trans _('opciones avanzadas') %}</legend>
+
+		<fieldset><legend>{% trans _('publicar en Twitter') %} (<a href="https://dev.twitter.com/oauth/overview/application-owner-access-tokens">help!</a>)</legend>
+			<label for="twitter_page">{% trans _('perfil') %}</label>
+			<input type="url" value="{{ extended.twitter_page }}" placeholder="https://twitter.com/usuario" id="twitter_page" name="twitter_page" size="60" maxlength="60"/><br/>
+
+			<label for="twitter_consumer_key">{% trans _('consumer key') %}</label>
+			<input type="text" value="{{ extended.twitter_consumer_key }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_key" name="twitter_consumer_key" size="32" maxlength="32" pattern="[A-Za-z0-9\-]{20,32}"/><br/>
+
+			<label for="twitter_consumer_secret">{% trans _('consumer secret') %}</label>
+			<input type="text" value="{{ extended.twitter_consumer_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_secret" name="twitter_consumer_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
+
+			<label for="twitter_token">{% trans _('token') %}</label>
+			<input type="text" value="{{ extended.twitter_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="twitter_token" name="twitter_token" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{50,64}"/><br/>
+
+			<label for="twitter_token_secret">{% trans _('token secret') %}</label>
+			<input type="text" value="{{ extended.twitter_token_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_token_secret" name="twitter_token_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
+
+		</fieldset>
+
+	{# Enabled facebook only to admins, for the time being, until Twitter is tested end perhaps improved #}
+	{% if current_user.admin %}
+		<fieldset><legend>{% trans _('publicar en Facebook') %} (<a href="https://developers.facebook.com/docs/facebook-login/access-tokens">help!</a>)</legend>
+			<label for="facebook_page">{% trans _('página') %}</label>
+			<input type="url" value="{{ extended.facebook_page }}" placeholder="https://www.facebook.com/página" id="facebook_page" name="facebook_page" size="60" maxlength="60"/><br/>
+
+			<label for="facebook_key">{% trans _('key') %}</label>
+			<input type="text" value="{{ extended.facebook_key }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_key" name="facebook_key" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+
+			<label for="facebook_secret">{% trans _('secret') %}</label>
+			<input type="text" value="{{ extended.facebook_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_secret" name="facebook_secret" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+
+			<label for="facebook_token">{% trans _('token') %}</label>
+			<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" size="120" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/><br/>
+
+		</fieldset>
+	{% endif %}
+	</fieldset>
+
+	<input class="button" type="submit" value="{% trans _('guardar') %}" />
+{% endif %}
+
 </form>
 </div>
 
