@@ -101,6 +101,10 @@ function do_header($title, $id='home', $options = false) {
 		$globals['ads'] = false;
 	}
 
+	if (!empty($this_site_properties['post_html'])) {
+		$globals['post_html'] = $this_site_properties['post_html'];
+	}
+
 
 
 	if (! is_array($options)) {

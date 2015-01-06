@@ -141,6 +141,8 @@
 		{% endfor %}
 		</select>
 	{% endif %}
+
+
 	</fieldset>
 {% endif %}
 
@@ -185,6 +187,12 @@
 			<label for="facebook_token">{% trans _('token') %}</label>
 			<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" size="120" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/><br/>
 
+		</fieldset>
+
+		<fieldset><legend>{% trans _('HTML al final de página') %}</legend>
+		<label>{% trans _('ALERTA, se añadirá todo al final del html') %}<br/>
+			<textarea maxlength="2000" name="post_html" rows="4" id="post_html" style="width:60%">{{ extended.post_html | escape }}</textarea>
+		</label>
 		</fieldset>
 	{% endif %}
 	</fieldset>

@@ -36,11 +36,16 @@
 
 {% include 'footer_js.html' %}
 
+
 {% meneame_endtime %}
 
 {% if ! globals.partial %}
 
 {# warn warn warn dont do stats of password recovering pages #}
+
+{% if globals.post_html %}
+	{{ globals.post_html }}
+{% endif %}
 
 {% try_include 'private/stats.html' %}
 </body>

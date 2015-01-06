@@ -28,6 +28,7 @@ class SitesMgr {
 			'allow_images' => 0,
 			'rules' => '',
 			'message' => '',
+			'post_html' => '',
 	);
 
 	static public $extra_extended_properties = array(
@@ -375,6 +376,9 @@ class SitesMgr {
 					case 'rules':
 					case 'message':
 						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
+						break;
+					case 'post_html': // TODO: validate the HTML
+						$dict[$k] = $v;
 						break;
 					default:
 						if (isset($defaults[$k]) && is_int($defaults[$k])) {
