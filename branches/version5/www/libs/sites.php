@@ -18,6 +18,7 @@ class SitesMgr {
 			LEFT JOIN media ON (media.type='sub_logo' and media.id = subs.id and media.version = 0) ";
 
 	static public $extended_properties = array(
+			'new_disabled' => 0,
 			'no_link' => 0,
 			'intro_max_len' => 550,
 			'intro_min_len' => 20,

@@ -109,7 +109,7 @@ function do_header($title, $id='home', $options = false) {
 
 	if (! is_array($options)) {
 		$left_options = array();
-		if ($this_site->enabled) {
+		if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
 			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'));
 		}
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));

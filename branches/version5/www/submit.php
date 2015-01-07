@@ -14,8 +14,8 @@ include_once(mnminclude.'ban.php');
 $globals['ads'] = false;
 
 $site = SitesMgr::get_info();
-if (! $site->enabled) die;
 $site_properties = SitesMgr::get_extended_properties();
+if (! $site->enabled || ! empty($site_properties['new_disabled'])) die;
 
 global $errors;
 $errors = array();

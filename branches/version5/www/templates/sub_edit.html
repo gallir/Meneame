@@ -35,7 +35,7 @@
 
 {% if sub.id %}
 	&nbsp;&nbsp;
-	{% trans _("envíos habilitados") %} <input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>
+	{% trans _("envíos deshabilitados") %} <input type="checkbox" name="new_disabled" value="1" {% if extended.new_disabled %}checked{% endif %}>
 {% endif %}
 
 &nbsp;&nbsp;
@@ -107,6 +107,11 @@
 
 {% if current_user.admin %}
 	<fieldset><legend>{% trans _('¡ALERTA admins! opciones son delicadas') %}</legend>
+
+	<label>{% trans _("habilitado") %} </label>
+		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>
+
+	&nbsp;&nbsp;
 
 	<label for="name">user_id:</label>
 	<input type="number" id="owner" name="owner" maxlength="10" pattern="[0-9]+"
