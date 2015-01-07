@@ -159,34 +159,37 @@ function do_submit1() {
 		$db->query("delete from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 30 minute) and link_date < date_sub(now(), interval 10 minute) and link_status='discard' and link_votes = 0");
 	}
 
-	// Number of links sent by the user
-	$total_sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id") - $drafts;
-	if ($total_sents > 0) {
-		$sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day)") - $drafts;
-	} else {
-		$new_user = true;
-		$sents = 0;
-	}
+	$new_user = false;
+	if ($anti_spam) {
+		// Number of links sent by the user
+		$total_sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id") - $drafts;
+		if ($total_sents > 0) {
+			$sents = (int) $db->get_var("select count(*) from links where link_author=$current_user->user_id and link_date > date_sub(now(), interval 60 day)") - $drafts;
+		} else {
+			$new_user = true;
+			$sents = 0;
+		}
 
-	$register_date = $current_user->Date();
-	if ($globals['now'] - $register_date < $globals['new_user_time'] ) {
-		$new_user = true;
-	}
+		$register_date = $current_user->Date();
+		if ($globals['now'] - $register_date < $globals['new_user_time'] ) {
+			$new_user = true;
+		}
 
-	if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
-		add_submit_error( _('no tienes el mínimo de karma para enviar una nueva historia'));
-		return false;
-	}
+		if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links'] ) {
+			add_submit_error( _('no tienes el mínimo de karma para enviar una nueva historia'));
+			return false;
+		}
 
-	// Check for banned IPs
-	if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
-		if ($ban['expire'] > 0) {
-			$expires = _('caduca').': '.get_date_time($ban['expire']);
-		} else $expires = '';
-		add_submit_error( _('dirección IP no permitida para enviar'), $expires);
-		syslog(LOG_NOTICE, "Meneame, banned IP ".$globals['user_ip']." ($current_user->user_login): $url");
-		return false;
-	}
+		// Check for banned IPs
+		if(($ban = check_ban($globals['user_ip'], 'ip', true)) || ($ban = check_ban_proxy())) {
+			if ($ban['expire'] > 0) {
+				$expires = _('caduca').': '.get_date_time($ban['expire']);
+			} else $expires = '';
+			add_submit_error( _('dirección IP no permitida para enviar'), $expires);
+			syslog(LOG_NOTICE, "Meneame, banned IP ".$globals['user_ip']." ($current_user->user_login): $url");
+			return false;
+		}
+	} // END anti_spam
 
 	// check that a new user also votes, not only sends links
 	// it requires $globals['min_user_votes'] votes
@@ -278,7 +281,7 @@ function do_submit1() {
 				return false;
 			}
 		}
-	}
+	} // END anti_spam
 
 	$link=new Link;
 	$link->url = $url;
