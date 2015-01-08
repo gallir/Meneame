@@ -53,7 +53,7 @@ if (!isset($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // 
 
 // Check the link belong to the current site
 $site_id = SitesMgr::my_id();
-if ($link->is_sub && $site_id != $link->sub_id && empty($link->sub_status)) {
+if ($link->is_sub && $site_id != $link->sub_id && (empty($link->sub_status) || ! $link->allow_main_link) ) {
 	// The link does not correspond to the current site, find one
 	header ('HTTP/1.1 301 Moved Permanently');
 	header ('Location: ' . $link->get_canonical_permalink());
@@ -70,7 +70,7 @@ if ($link->is_discarded()) {
 
 $total_pages = 1 + intval($link->comments / $globals['comments_page_size']);
 // Check for a page number which has to come to the end, i.e. ?id=xxx/P or /story/uri/P
-$no_page = true; 
+$no_page = true;
 $show_relevants = true; // Show highlighted comments
 if (($argc = count($url_args)) > 1) {
 	// Dirty trick to redirect to a comment' page
@@ -183,6 +183,13 @@ switch ($url_args[1]) {
 		break;
 	case 'answered':
 		$tab_option = 9;
+		break;
+	case 'threaded':
+		if (!$current_page) $current_page = 1;
+		//$globals['comments_page_size'] = $globals['comments_page_size'] * 2;
+		$offset=($current_page-1)*$globals['comments_page_size'];
+		$limit = "LIMIT $offset,".$globals['comments_page_size'];
+		$tab_option = 10;
 		break;
 	default:
 		do_error(_('página inexistente'), 404);
@@ -413,6 +420,89 @@ case 9:
 
 	echo '</div>';
 	break;
+
+
+
+
+
+//////////////////////////////
+/////////////////////////////
+////////////////////////////
+////////////////////////////
+
+
+
+
+
+case 10:
+
+
+
+	// $comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
+
+	include_once(mnminclude.'commenttree.php');
+	$tree = new CommentTree();
+
+
+/*
+	$res = $db->get_results("select conversation_from as child, conversation_to as parent, comment_karma + 100 * (comment_user_id = $link->author) as w from conversations, comments where comment_link_id =  $link->id and conversation_type='comment' and conversation_to = comment_id order by w desc limit 200");
+	*/
+
+	$res=$db->get_results("select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN conversations as c ON conversation_type='comment' and conversation_to = t1.comment_id LEFT JOIN comments as t2 ON c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit");
+
+	foreach ($res as $c) {
+		$tree->addByIds($c->parent, $c->child);
+	}
+
+	$nodes = $tree->deepFirst(5);
+	if (empty($nodes)) {
+		break;
+	}
+
+
+	$ids = implode(',', array_map(function ($node) { return $node->id; }, $nodes));
+
+	$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
+	$comments = $db->object_iterator($sql, "Comment");
+
+	if (! $comments) {
+		break;
+	}
+
+	echo '<div class="comments">';
+
+	echo '<ol class="comments-list">';
+	$max = 0;
+	$objects = array();
+
+	foreach ($comments as $c) {
+		$objects[$c->id] = $c;
+	}
+
+	foreach($nodes as $n) {
+		$comment = $objects[$n->id];
+		if ($n->level > 0) {
+			$margin = min(30, $n->level * 5);
+			echo "<li style='margin-left:${margin}%'>";
+		} else {
+			echo '<li>';
+		}
+
+		$comment->print_summary($link, 500, true);
+		echo '</li>';
+	}
+	echo '</ol>';
+	//Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
+	do_comment_pages($link->comments, $current_page, false);
+	Comment::print_form($link);
+
+	echo '</div>';
+	break;
+
+	///////////////////////////////////////
+	/////////////////////////////////////
+	////////////////////////////////////
+
 
 }
 
