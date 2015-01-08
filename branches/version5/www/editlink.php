@@ -173,6 +173,15 @@ function link_edit_errors($link) {
 
 	$errors = array();
 
+
+	$site_info = SitesMgr::get_info($link->sub_id);
+	$site_properties = SitesMgr::get_extended_properties($link->sub_id);
+	if (! $site_info->enabled || ! empty($site_properties['new_disabled'])) {
+		$errors[] = _('no se puede enviar a ese sub');
+		$error = true;
+	}
+
+
 	// only checks if the user is not special or god
 	if(! empty($link->url) && ! $link->check_url($link->url, false) && ! $current_user->admin) {
 		$errors[] = _('url incorrecto');
