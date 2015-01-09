@@ -93,7 +93,7 @@ function save_sub($id, &$errors) {
 	if (mb_strlen($name) < 3 || ! preg_match('/^\p{L}[\p{L}\d_]+$/u', $name)) {
 		array_push($errors, _('nombre erróneo'). ' ' . $_POST['name']);
 	}
-	
+
 	$name_long = mb_substr(clean_text($_POST['name_long']), 0, 40);
 	if (mb_strlen($name_long) < 6) {
 		array_push($errors, _('título erróneo'));
@@ -117,14 +117,14 @@ function save_sub($id, &$errors) {
 	$enabled = intval($_POST['enabled']);
 	$nsfw = intval($_POST['nsfw']);
 	$private = intval($_POST['private']);
-	
+
 	// Check the extended info
 	foreach (array('no_link', 'no_anti_spam', 'allow_local_links', 'intro_max_len', 'intro_min_len') as $k) {
 		if (isset($_POST[$k]) && $_POST[$k] !== '') {
 			$_POST[$k] = intval($_POST[$k]);
 		}
 	}
-	
+
 	if ($_POST['intro_max_len'] > 5000) $_POST['intro_max_len'] = 5000;
 
 	if (empty($errors)) {
@@ -149,7 +149,7 @@ function save_sub($id, &$errors) {
 			else $color1 = '';
 			if (preg_match($color_regex, $_POST['color2'])) $color2 = $db->escape($_POST['color2']);
 			else $color2 = '';
-		
+
 			$db->query("update subs set color1 = '$color1', color2 = '$color2' where id = $id");
 		}
 		if ($r && $id > 0) {
@@ -179,10 +179,12 @@ function sub_copy_from($id, $from) {
 }
 
 function store_image($id) {
+	global $site;
+
 	$media = new Upload('sub_logo', $id, 0);
 	$media->media_size = 0;
 	$media->media_mime = '';
-		
+
 	if(!empty($_FILES['logo_image']['tmp_name'])) {
 		$media->access = 'public';
 		if ($media->from_temporal($_FILES['logo_image'], 'image')) {

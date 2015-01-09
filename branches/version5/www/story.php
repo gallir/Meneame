@@ -433,10 +433,6 @@ case 9:
 	echo '</div>';
 	break;
 
-
-/////////////////////////////
-////////////////////////////
-////////////////////////////
 /////////////// TODO: in progress
 case 10:
 
@@ -444,18 +440,15 @@ case 10:
 	$tree = new CommentTree();
 
 
+	if ($show_relevants || $no_page) {
+		print_external_anaylsis($link);
+		print_relevant_comments($link);
+	}
+
 
 	$sqls = array();
 
 	if ($link->page_mode == 'interview') {
-		// A /url/c0#comment_order all, we add it
-		if (!empty($globals['referenced_comment'])) {
-			$order = intval($globals['referenced_comment']);
-			$id = $db->get_var("select comment_id from comments where comment_link_id = $link->id and comment_order = $order");
-			if ($id) {
-				$tree->addByIds($id);
-			}
-		}
 		$sql = "select comment_id as parent, comment_karma + 200 * (comment_user_id = $link->author and comment_karma > 0) as w1 FROM comments where comment_link_id = $link->id and comment_karma > 80 order by w1 desc $limit";
 
 		$bests = $db->get_results($sql);
@@ -464,13 +457,19 @@ case 10:
 		}
 
 		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id AND c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit";
-		// $sqls[] = "select conversation_from as child, conversation_to as parent FROM conversations where conversation_type = 'comment' and conversation_to in ($in) LIMIT $my_limit";
-		// $sqls[] = "select conversation_from as child, conversation_to as parent FROM conversations where conversation_type = 'comment' and conversation_from in ($in) LIMIT $my_limit";
 	} else {
 		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1
 		LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";
 	}
 
+	// A /url/c0#comment_order all, we add it
+	if (!empty($globals['referenced_comment'])) {
+		$order = intval($globals['referenced_comment']);
+		$id = $db->get_var("select comment_id from comments where comment_link_id = $link->id and comment_order = $order");
+		if ($id) {
+			$tree->addByIds($id);
+		}
+	}
 
 	foreach ($sqls as $sql) {
 		$res = $db->get_results($sql);
@@ -497,7 +496,6 @@ case 10:
 	}
 
 	echo '<div class="comments">';
-
 	echo '<ol class="comments-list">';
 	$max = 0;
 	$objects = array();
@@ -526,12 +524,6 @@ case 10:
 
 	echo '</div>';
 	break;
-
-	///////////////////////////////////////
-	/////////////////////////////////////
-	////////////////////////////////////
-
-
 }
 
 echo '</div>';
