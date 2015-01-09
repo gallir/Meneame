@@ -1733,6 +1733,7 @@ background-position: 0px 0px;
 
 .comment-meta .vote.down {
 background-position: 0px -20px;
+margin-right: 20px;
 }
 
 .comment-meta .vote.voted {
@@ -1742,7 +1743,7 @@ opacity:0.5;
 
 .comment-meta .reply {
 display: inline-block;
-margin: 0 2px;
+margin: 0 2px 0 6px;
 cursor: pointer;
 height: 18px;
 width: 18px;

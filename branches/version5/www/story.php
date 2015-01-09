@@ -281,7 +281,7 @@ case 2:
 	echo '<div class="comments">';
 
 	if($tab_option == 1) {
-		print_external_anaylsis($link);
+		print_external_analysis($link);
 		if ($show_relevants || $no_page) {
 			print_relevant_comments($link);
 		}
@@ -441,7 +441,7 @@ case 10:
 
 
 	if ($show_relevants || $no_page) {
-		print_external_anaylsis($link);
+		print_external_analysis($link);
 		print_relevant_comments($link);
 	}
 
@@ -480,13 +480,13 @@ case 10:
 		}
 	}
 
-	$nodes = $tree->deepFirst(6);
-	if (empty($nodes)) {
+	$nodes_ids = $tree->deepFirst();
+	if (empty($nodes_ids)) {
 		break;
 	}
 
 
-	$ids = implode(',', array_map(function ($node) { return $node->id; }, $nodes));
+	$ids = implode(',', $nodes_ids);
 
 	$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
 	$comments = $db->object_iterator($sql, "Comment");
@@ -505,15 +505,17 @@ case 10:
 	}
 
 	$ids = array();
-	foreach($nodes as $n) {
-		$comment = $objects[$n->id];
-		$ids[] = $n->id;
+	foreach($nodes_ids as $id) {
+		$n = $tree->nodesIds[$id];
+		$comment = $objects[$id];
+		$ids[] = $id;
 		if ($n->level > 0) {
-			$margin = min(30, $n->level * 5);
+			$margin = min(25, $n->level * 4);
 			echo "<li class='threaded' style='margin-left:${margin}%'>";
 		} else {
 			echo '<li class="threaded">';
 		}
+		$comment->thread_level = $n->level;
 		$comment->print_summary($link, 500, true);
 		echo '</li>';
 	}
@@ -624,7 +626,7 @@ function get_comment_page_url($i, $total, $query, $reverse = false) {
 	else return $query.'/'.$i;
 }
 
-function print_external_anaylsis($link) {
+function print_external_analysis($link) {
 	$data = Annotation::from_db("analysis_$link->id");
 	if ($data) {
 		$objects = json_decode($data->text);

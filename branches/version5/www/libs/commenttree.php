@@ -22,19 +22,19 @@ class CommentTreeNode {
 		return False;
 	}
 
-	public function deepFirst($max = 5, $level = 0, $seen = False) {
+	public function deepFirst($max = 100, $level = 0, $seen = False) {
 		if ($seen === false) {
 			$seen = array();
 		}
 
-		if ($level >= $max || in_array($this, $seen)) {
+		if ($level >= $max || in_array($this->id, $seen)) {
 			return $seen;
 		}
 
 		$this->level = $level;
-		$seen[] = $this;
+		$seen[] = $this->id;
 		foreach ($this->children as $child) {
-			if (! in_array($child, $seen)) {
+			if (! in_array($child->id, $seen)) {
 				$seen = $child->deepFirst($max, $level + 1, $seen);
 			}
 		}
@@ -96,7 +96,7 @@ class CommentTree {
 		}
 	}
 
-	public function deepFirst($max = 5) {
+	public function deepFirst($max = 100) {
 		$seen = array();
 		ksort($this->rootsIds);
 		foreach ($this->rootsIds as $n) {
