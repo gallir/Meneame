@@ -491,10 +491,6 @@ case 10:
 	$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
 	$comments = $db->object_iterator($sql, "Comment");
 
-	if (! $comments) {
-		break;
-	}
-
 	echo '<div class="comments">';
 	echo '<ol class="comments-list">';
 	$max = 0;

@@ -268,7 +268,7 @@ class Comment extends LCPBase {
 		$this->modified_time = txt_time_diff($this->date, $this->modified);
 
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
-		$this->can_reply = $current_user->user_id > 0 && isset($globals['link']) && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
+		$this->can_reply = $current_user->user_id > 0 && $this->date > $globals['now'] - $globals['time_enabled_comments'];
 
 		$vars = array('self' => $this);
 		return Haanga::Load('comment_summary.html', $vars, $return_string);

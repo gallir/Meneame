@@ -26,9 +26,9 @@
 
 		{% endif %}
 
-		{% if self.thread_level < 1 %}
-			<a href="{% exec self.get_relative_individual_permalink %}" title="permalink" class="permalink"></a>
+		<a href="{% exec self.get_relative_individual_permalink %}" title="permalink" class="permalink"></a>
 
+		{% if self.thread_level < 1 %}
 			{% if current_user.user_id > 0 %}
 				<span id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'comment', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
 			{% endif %}
