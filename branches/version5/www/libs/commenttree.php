@@ -19,7 +19,6 @@ class CommentTreeNode {
 			$this->children[] = $child;
 			return True;
 		}
-
 		return False;
 	}
 
@@ -32,11 +31,8 @@ class CommentTreeNode {
 			return $seen;
 		}
 
-
 		$this->level = $level;
 		$seen[] = $this;
-		$tab = str_repeat("  ", $level);
-		//echo "$tab $level $this->id\n";
 		foreach ($this->children as $child) {
 			if (! in_array($child, $seen)) {
 				$seen = $child->deepFirst($max, $level + 1, $seen);
@@ -50,15 +46,11 @@ class CommentTree {
 	public $rootsIds;
 	public $roots;
 	public $nodesIds;
-	public $childrenIds;
-	public $parents;
 
 	public function __construct() {
 		$this->nodesIds = array();
 		$this->rootsIds = array();
 		$this->roots = array();
-		$this->parents = array();
-		$this->childrenIds = array();
 	}
 
 	protected function getNodeById($id) {
@@ -73,15 +65,11 @@ class CommentTree {
 	protected function addToIndexes($node, $parent = false) {
 		if (! isset($this->nodesIds[$node->id])) {
 			$this->nodesIds[$node->id] = $node;
-
-
 			if (! $parent) {
 				if( ! isset($this->rootsIds[$node->id])) {
 					$this->rootsIds[$node->id] = $node;
 					$this->roots[] = $node;
 				}
-			} else {
-				$this->childrenIds[$node->id] = $parent->id;
 			}
 		}
 
@@ -113,10 +101,7 @@ class CommentTree {
 		ksort($this->rootsIds);
 		foreach ($this->rootsIds as $n) {
 			$seen = $n->deepFirst($max, 0, $seen);
-			//echo "$max, ".count($seen)." ".count($walked)." ".$n->id."\n";
-			//$seen = array_merge($seen, $walked);
 		}
 		return $seen;
 	}
-
 }
