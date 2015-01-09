@@ -73,7 +73,8 @@ class CommentTree {
 			}
 		}
 
-		if ($parent && isset($this->rootsIds[$node->id]) ) {
+		if ($parent && isset($this->rootsIds[$node->id]) 
+			&& isset($this->rootsIds[$parent->id]) ) { // Only remove if the parent is root
 			unset($this->rootsIds[$node->id]);
 			if(($key = array_search($node, $this->roots)) !== false) {
 				unset($this->roots[$key]);
@@ -83,7 +84,7 @@ class CommentTree {
 
 	public function addByIds($parent_id, $child_id = 0) {
 		if ($parent_id == $child_id) {
-			return false;
+			$child_id = 0;
 		}
 
 		$parent = $this->getNodeById($parent_id);
