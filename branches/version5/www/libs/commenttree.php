@@ -97,6 +97,14 @@ class CommentTree {
 		}
 	}
 
+	public function in($id) {
+		return isset($nodesIds[$id]);
+	}
+
+	public function size() {
+		return count($this->nodesIds);
+	}
+
 	public function deepFirst($max = 100) {
 		$seen = array();
 		ksort($this->rootsIds);

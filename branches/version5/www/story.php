@@ -196,7 +196,7 @@ switch ($url_args[1]) {
 		$tab_option = 9;
 		break;
 	case 'interview':
-		$globals['comments_page_size'] = $globals['comments_page_size'] * 2;
+		$globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
 	case 'threads':
 		if (!$current_page) $current_page = 1;
 		$offset=($current_page-1)*$globals['comments_page_size'];
@@ -449,14 +449,11 @@ case 10:
 	$sqls = array();
 
 	if ($link->page_mode == 'interview') {
-		$sql = "select comment_id as parent, comment_karma + 200 * (comment_user_id = $link->author and comment_karma > 0) as w1 FROM comments where comment_link_id = $link->id and comment_karma > 80 order by w1 desc $limit";
-
-		$bests = $db->get_results($sql);
-		foreach ($bests as $c) {
-			$tree->addByIds($c->parent);
-		}
-
 		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id AND c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit";
+
+		$sqls[] = "select comment_id as child, conversation_to as parent FROM comments, conversations WHERE comment_link_id = $link->id and comment_user_id = $link->author and conversation_type='comment' and conversation_from = comment_id and conversation_to > 0 order by comment_karma desc $limit";
+
+
 	} else {
 		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1
 		LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";
