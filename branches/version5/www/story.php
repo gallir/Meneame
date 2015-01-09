@@ -481,41 +481,38 @@ case 10:
 	}
 
 	$nodes_ids = $tree->deepFirst();
-	if (empty($nodes_ids)) {
-		break;
-	}
+	if ($nodes_ids) {
+		$ids = implode(',', $nodes_ids);
 
+		$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
+		$comments = $db->object_iterator($sql, "Comment");
 
-	$ids = implode(',', $nodes_ids);
+		echo '<div class="comments">';
+		echo '<ol class="comments-list">';
+		$max = 0;
+		$objects = array();
 
-	$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
-	$comments = $db->object_iterator($sql, "Comment");
-
-	echo '<div class="comments">';
-	echo '<ol class="comments-list">';
-	$max = 0;
-	$objects = array();
-
-	foreach ($comments as $c) {
-		$objects[$c->id] = $c;
-	}
-
-	$ids = array();
-	foreach($nodes_ids as $id) {
-		$n = $tree->nodesIds[$id];
-		$comment = $objects[$id];
-		$ids[] = $id;
-		if ($n->level > 0) {
-			$margin = min(25, $n->level * 4);
-			echo "<li class='threaded' style='margin-left:${margin}%'>";
-		} else {
-			echo '<li class="threaded">';
+		foreach ($comments as $c) {
+			$objects[$c->id] = $c;
 		}
-		$comment->thread_level = $n->level;
-		$comment->print_summary($link, 500, true);
-		echo '</li>';
+
+		$ids = array();
+		foreach($nodes_ids as $id) {
+			$n = $tree->nodesIds[$id];
+			$comment = $objects[$id];
+			$ids[] = $id;
+			if ($n->level > 0) {
+				$margin = min(25, $n->level * 4);
+				echo "<li class='threaded' style='margin-left:${margin}%'>";
+			} else {
+				echo '<li class="threaded">';
+			}
+			$comment->thread_level = $n->level;
+			$comment->print_summary($link, 500, true);
+			echo '</li>';
+		}
+		echo '</ol>';
 	}
-	echo '</ol>';
 	//Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 	do_comment_pages($link->comments, $current_page, false);
 	Comment::print_form($link);
