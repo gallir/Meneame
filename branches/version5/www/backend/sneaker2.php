@@ -418,6 +418,12 @@ function get_comment($time, $type, $commentid, $userid) {
 
 
 	$link = Link::from_db($event->comment_link_id, null, false); // Read simple
+
+	if (! $link) {
+		syslog(LOG_INFO, "Warn, link doesn't exist: $type $commentid $userid (sneaker2)");
+		return;
+	}
+
 	$json['link'] = $link->get_relative_permalink()."/c0$event->comment_order#c-$event->comment_order";
 	$json['id'] = $commentid;
 	$json['status'] = get_status($link->get_a_status());

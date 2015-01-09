@@ -33,7 +33,7 @@
 		{% endif %}
 
 		{% if self.can_reply %}
-			<span onclick="comment_reply({{self.c_order}})" title="{% trans _('responder') %}" class="reply"></span>
+			<span onclick="comment_reply({{self.id}})" title="{% trans _('responder') %}" class="reply"></span>
 		{% endif %}
 
 	</div>

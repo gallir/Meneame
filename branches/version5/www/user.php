@@ -91,7 +91,6 @@ if ($current_user->user_id) {
 
 // For editing notes and sending privates
 if ($current_user->user_id == $user->id || $current_user->admin || $user->friendship) {
-	$globals['extra_js'][] = 'jquery.form.min.js';
 	$globals['extra_js'][] = 'ajaxupload.min.js';
 }
 

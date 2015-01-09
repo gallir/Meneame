@@ -211,7 +211,7 @@ class Comment extends LCPBase {
 	 	}
 	}
 
-	function print_summary($link=0, $length=0, $single_link=true) {
+	function print_summary($link=0, $length=0, $single_link=true, $return_string = false) {
 		global $current_user, $globals;
 
 		if(!$this->read) return;
@@ -270,7 +270,7 @@ class Comment extends LCPBase {
 		$this->can_reply = $current_user->user_id > 0 && isset($globals['link']) && $globals['link']->date > $globals['now'] - $globals['time_enabled_comments'];
 
 		$vars = array('self' => $this);
-		return Haanga::Load('comment_summary.html', $vars);
+		return Haanga::Load('comment_summary.html', $vars, $return_string);
 	}
 
 	function vote_exists() {
@@ -459,7 +459,7 @@ class Comment extends LCPBase {
 	}
 
 
-	static function save_from_post($link) {
+	static function save_from_post($link, $redirect = true) {
 		global $db, $current_user, $globals;
 
 		require_once(mnminclude.'ban.php');
@@ -582,7 +582,7 @@ class Comment extends LCPBase {
 			$db->rollback();
 			$user = new User($current_user->user_id);
 			$user->add_karma(-$karma_penalty, _('texto repetido o abuso de enlaces en comentarios'));
-			return ('penalización de karma por texto repetido o abuso de enlaces');
+			return _('penalización de karma por texto repetido o abuso de enlaces');
 		}
 
 		if (!is_null($r) && $comment->store()) {
@@ -599,10 +599,14 @@ class Comment extends LCPBase {
 				$comment->store_image($_FILES['image']);
 			}
 
-			// Comment stored, just redirect to it page
-			header ('HTTP/1.1 303 Load');
-			header('Location: '.$link->get_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
-			die;
+			if ($redirect) {
+				// Comment stored, just redirect to it page
+				header ('HTTP/1.1 303 Load');
+				header('Location: '.$link->get_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
+				die;
+			} else {
+				return $comment;
+			}
 		}
 		$db->rollback();
 		return _('error insertando comentario');

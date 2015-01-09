@@ -13,7 +13,6 @@ if (! $current_user->user_id) {
 	do_error(_('debe autentificarse'), 401);
 }
 
-$globals['extra_js'][] = 'jquery.form.min.js';
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';

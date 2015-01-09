@@ -120,7 +120,7 @@ function print_answers($id, $level, $visited = false) {
 	$answers = $db->get_col($sql);
 	if ($answers) {
 		$type = 'comment';
-		echo '<div style="padding-left: 6%">';
+		echo '<div style="padding-left: 5%">';
 		echo '<ol class="comments-list">';
 		foreach ($answers as $dbanswer) {
 			if (in_array($dbanswer, $visited)) continue;

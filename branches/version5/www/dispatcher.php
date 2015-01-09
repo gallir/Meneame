@@ -7,6 +7,7 @@ $routes = array(
 	'subs'		=> 'subs.php',
 	'editlink'	=> 'editlink.php',
 	'comment_edit'	=> 'backend/comment_edit.php',
+	'comment_ajax'	=> 'backend/comment_ajax.php',
 	'login'		=> 'login.php',
 	'register'	=> 'register.php',
 	'cloud'		=> 'cloud.php',

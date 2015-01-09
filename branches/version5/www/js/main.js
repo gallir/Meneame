@@ -750,16 +750,72 @@ var mDialog = new function() {
 
 };
 
+function comment_edit(id, DOMid) {
+	$target=$('#' + DOMid);
+	$.getJSON(base_url_sub + 'comment_ajax', { id: id }, function (data) {
+		if ( ! data.error ) {
+			$target.html(data.html);
+			$target.find('textarea').setFocusToEnd();
+			var options = {
+				async: false,
+				dataType: 'json',
+				success: function (data) {
+					if (! data.error) {
+						$target.html(data.html);
+					} else {
+						mDialog.notify("error: " + data.error, 5)
+					}
+					$target.trigger('DOMChanged', $target);
+				},
+				error: function () {
+					mDialog.notify("error", 3);
+				},
+			};
+			$('#c_edit_form').ajaxForm(options);
+		} else {
+			mDialog.notify("error: " + data.error, 5);
+		}
+	});
+}
+
 function comment_reply(id) {
-	var ref = '#' + id + ' ';
-	var textarea = $('#comment');
-	if (textarea.length == 0 ) return;
-	var re = new RegExp(ref);
-	var oldtext = textarea.val();
-	if (oldtext.match(re)) return;
-	if (oldtext.length > 0 && oldtext.charAt(oldtext.length-1) != "\n") oldtext = oldtext + "\n";
-	textarea.val(oldtext + ref);
-	textarea.get(0).focus();
+	var $parent = $("#cid-"+id).parent().parent();
+	if ($parent.find('#comment_ajax_form').length > 0) {
+		return;
+	}
+
+	$('#comment_ajax_form').remove();
+	var $target = $('<div style="padding-left:5%"></div>');
+	$parent.append($target);
+
+	$.getJSON(base_url_sub + 'comment_ajax', { reply_to: id }, function (data) {
+		if ( ! data.error ) {
+			var $e = $('<div id="comment_ajax_form" style="margin: 10px 0 10px 0"></div>');
+			$e.append(data.html);
+			$target.append($e).find('textarea').setFocusToEnd();
+
+			var options = {
+				async: false,
+				dataType: 'json',
+				success: function (data) {
+					if (! data.error) {
+						$e.remove();
+						$target.append(data.html);
+					} else {
+						mDialog.notify("error: " + data.error, 5);
+					}
+					$target.trigger('DOMChanged', $target);
+				},
+				error: function () {
+					mDialog.notify("error", 3);
+				},
+			};
+			$('#c_edit_form').ajaxForm(options);
+		} else {
+			mDialog.notify("error", 3);
+		}
+		$target.trigger('DOMChanged', $target);
+	});
 }
 
 function post_load_form(id, container) {
@@ -783,11 +839,6 @@ function post_new() {
 
 function post_edit(id) {
 	post_load_form(id, 'pcontainer-'+id);
-}
-
-function comment_edit(id, DOMid) {
-	e=$('#' + DOMid);
-	e.load(base_url_sub + 'comment_edit?id='+id, function () {e.trigger('DOMChanged', e)});
 }
 
 function post_reply(id, user) {
@@ -1732,6 +1783,15 @@ function analyze_hash(force) {
 	}
 
 }
+
+(function($){
+	$.fn.setFocusToEnd = function() {
+		this.focus();
+        var $initialVal = this.val();
+		this.val('').val($initialVal);
+		return this;
+	};
+})(jQuery);
 
 (function () { /* partial */
 	$(document).on("click mousedown touchstart", "a", parse);

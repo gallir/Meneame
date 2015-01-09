@@ -63,7 +63,14 @@
 	{% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
 	{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
 	{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
-
+	<br/>
+	{% trans _('presentación de los comentarios') %}: 
+		<select name="page_mode">
+		{% for k, v in page_modes %}
+				<option value="{{ v }}" {% if v == sub.page_mode %}selected{% endif %}>{{ k }}</option>
+		{% endfor %}
+		</select>
+		<br/>
 
 	<fieldset><legend>{% trans _('colores y logo de la cabecera') %}</legend>
 		<label for="name">{% trans _('color título') %}:</label>

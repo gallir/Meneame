@@ -62,9 +62,11 @@ if ($current_user->admin) {
 	$copy_from = $candidates_from = false;
 }
 
+$page_modes = SitesMgr::$page_modes;
+
 do_header(_("editar sub"));
 echo '<div id="singlewrap">'."\n";
-Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_from', 'copy_from'));
+Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_from', 'copy_from', 'page_modes'));
 echo "</div>"."\n";
 
 do_footer();
@@ -102,6 +104,7 @@ function save_sub($id, &$errors) {
 	if ($db->get_var("select count(*) from subs where name = '$name' and id != $id") > 0) {
 		array_push($errors, _('nombre duplicado'));
 	}
+	$page_mode = $db->escape($_POST['page_mode']);
 
 	if ($current_user->admin) {
 		$allow_main_link = intval($_POST['allow_main_link']);
@@ -127,7 +130,7 @@ function save_sub($id, &$errors) {
 	if (empty($errors)) {
 		$db->transaction();
 		if ($id > 0) {
-			$r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long', private = $private where id = $id");
+			$r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long', private = $private, page_mode = '$page_mode' where id = $id");
 		} else {
 			$r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub, private) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1, $private)");
 			$id = $db->insert_id;

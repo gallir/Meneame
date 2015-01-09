@@ -82,7 +82,11 @@ if (($argc = count($url_args)) > 1) {
 			header('Location: ' . $link->get_permalink());
 			die;
 		}
-		$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
+
+		$globals['referenced_comment'] = $c; // This comment has to be displayed
+		if ($link->page_mode != 'threads' ) {
+			$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
+		}
 		$no_page = false;
 		unset($url_args[1]);
 	} elseif ((int) $url_args[$argc-1] > 0) {
@@ -107,6 +111,7 @@ if ($globals['time_enabled_comments_status'][$link->status]) {
 }
 
 // Check for comment post
+// TODO: don't redirect, force to show the comment if it threaded
 if ($_POST['process']=='newcomment') {
 	$new_comment_error = Comment::save_from_post($link);
 }
@@ -115,10 +120,16 @@ $offset = 0;
 $limit = '';
 
 
-$globals['page_base'] = (empty($url_args[1]) ? '' : '/'.$url_args[1]);
+if (empty($url_args[1])) {
+	$url_args[1] = $link->page_mode;
+	$globals['page_base'] = '';
+} else {
+	$globals['page_base'] = '/'.$url_args[1];
+}
 
 switch ($url_args[1]) {
 	case '':
+	case 'default':
 		$tab_option = 1;
 		$order_field = 'comment_order';
 
@@ -184,9 +195,10 @@ switch ($url_args[1]) {
 	case 'answered':
 		$tab_option = 9;
 		break;
-	case 'threaded':
+	case 'interview':
+		$globals['comments_page_size'] = $globals['comments_page_size'] * 2;
+	case 'threads':
 		if (!$current_page) $current_page = 1;
-		//$globals['comments_page_size'] = $globals['comments_page_size'] * 2;
 		$offset=($current_page-1)*$globals['comments_page_size'];
 		$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		$tab_option = 10;
@@ -422,39 +434,54 @@ case 9:
 	break;
 
 
-
-
-
-//////////////////////////////
 /////////////////////////////
 ////////////////////////////
 ////////////////////////////
-
-
-
-
-
+/////////////// TODO: in progress
 case 10:
-
-
-
-	// $comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 
 	include_once(mnminclude.'commenttree.php');
 	$tree = new CommentTree();
 
 
-/*
-	$res = $db->get_results("select conversation_from as child, conversation_to as parent, comment_karma + 100 * (comment_user_id = $link->author) as w from conversations, comments where comment_link_id =  $link->id and conversation_type='comment' and conversation_to = comment_id order by w desc limit 200");
-	*/
 
-	$res=$db->get_results("select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN conversations as c ON conversation_type='comment' and conversation_to = t1.comment_id LEFT JOIN comments as t2 ON c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit");
+	$sqls = array();
 
-	foreach ($res as $c) {
-		$tree->addByIds($c->parent, $c->child);
+	if ($link->page_mode == 'interview') {
+		// A /url/c0#comment_order all, we add it
+		if (!empty($globals['referenced_comment'])) {
+			$order = intval($globals['referenced_comment']);
+			$id = $db->get_var("select comment_id from comments where comment_link_id = $link->id and comment_order = $order");
+			if ($id) {
+				$tree->addByIds($id);
+			}
+		}
+		$sql = "select comment_id as parent, comment_karma + 200 * (comment_user_id = $link->author and comment_karma > 0) as w1 FROM comments where comment_link_id = $link->id and comment_karma > 80 order by w1 desc $limit";
+
+		$bests = $db->get_results($sql);
+		foreach ($bests as $c) {
+			$tree->addByIds($c->parent);
+		}
+
+		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id AND c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit";
+		// $sqls[] = "select conversation_from as child, conversation_to as parent FROM conversations where conversation_type = 'comment' and conversation_to in ($in) LIMIT $my_limit";
+		// $sqls[] = "select conversation_from as child, conversation_to as parent FROM conversations where conversation_type = 'comment' and conversation_from in ($in) LIMIT $my_limit";
+	} else {
+		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1
+		LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";
 	}
 
-	$nodes = $tree->deepFirst(5);
+
+	foreach ($sqls as $sql) {
+		$res = $db->get_results($sql);
+		if (! $res) continue;
+
+		foreach ($res as $c) {
+			$tree->addByIds($c->parent, $c->child);
+		}
+	}
+
+	$nodes = $tree->deepFirst(6);
 	if (empty($nodes)) {
 		break;
 	}
@@ -479,15 +506,16 @@ case 10:
 		$objects[$c->id] = $c;
 	}
 
+	$ids = array();
 	foreach($nodes as $n) {
 		$comment = $objects[$n->id];
+		$ids[] = $n->id;
 		if ($n->level > 0) {
 			$margin = min(30, $n->level * 5);
 			echo "<li style='margin-left:${margin}%'>";
 		} else {
 			echo '<li>';
 		}
-
 		$comment->print_summary($link, 500, true);
 		echo '</li>';
 	}
@@ -506,7 +534,6 @@ case 10:
 
 }
 
-
 echo '</div>';
 
 $globals['tag_status'] = $globals['link']->status;
@@ -515,15 +542,16 @@ exit(0);
 
 
 function print_story_tabs($option) {
-	global $globals, $db, $link;
+	global $globals, $db, $link, $current_user;
 
 	$active = array();
 	$active[$option] = 'selected ';
 
 	echo '<ul class="subheader">';
-	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'">'._('comentarios'). '</a></li>';
+	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'/default">'._('ordenados'). '</a></li>';
+	echo '<li class="'.$active[10].'"><a href="'.$globals['permalink'].'/threads">'._('hilos'). '</a></li>';
 	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>';
-	echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>';
+	//echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>';
 	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
 		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
 			echo '<li class="'.$active[3].'"><a href="'.$globals['permalink'].'/voters">'._('votos'). '</a></li>';
@@ -536,8 +564,10 @@ function print_story_tabs($option) {
 		}
 
 	}
-	if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
-		echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>";
+	if ($current_user->user_id > 0) {
+		if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
+			echo '<li class="'.$active[6].'wideonly"><a href="'.$globals['permalink'].'/favorites">'._('favoritos')."&nbsp;($c)</a></li>";
+		}
 	}
 	echo '<li class="'.$active[8].'wideonly"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>';

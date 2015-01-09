@@ -17,6 +17,14 @@ class SitesMgr {
 			FROM subs
 			LEFT JOIN media ON (media.type='sub_logo' and media.id = subs.id and media.version = 0) ";
 
+	static public $page_modes = array(
+			'normal' => '',
+			'best comments' => 'best-comments',
+			'threads' => 'threads',
+			'smart threads' => 'interview',
+
+	);
+
 	static public $extended_properties = array(
 			'new_disabled' => 0,
 			'no_link' => 0,

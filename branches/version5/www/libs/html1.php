@@ -75,6 +75,10 @@ function do_header($title, $id='home', $options = false) {
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
 
+	if ($current_user->user_id > 0) {
+		$globals['extra_js'][] = 'jquery.form.min.js';
+	}
+
 	$sites = $db->get_results("select * from subs where visible order by id asc");
 	$this_site = SitesMgr::get_info();
 	$this_site_properties = SitesMgr::get_extended_properties();

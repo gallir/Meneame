@@ -76,7 +76,7 @@ class CommentTree {
 
 
 			if (! $parent) {
-				if( ! isset($this->rootsId[$node->id])) {
+				if( ! isset($this->rootsIds[$node->id])) {
 					$this->rootsIds[$node->id] = $node;
 					$this->roots[] = $node;
 				}
@@ -85,8 +85,8 @@ class CommentTree {
 			}
 		}
 
-		if ($parent && isset($this->rootsId[$node->id]) ) {
-			unset($this->rootsId[$node->id]);
+		if ($parent && isset($this->rootsIds[$node->id]) ) {
+			unset($this->rootsIds[$node->id]);
 			if(($key = array_search($node, $this->roots)) !== false) {
 				unset($this->roots[$key]);
 			}
@@ -110,7 +110,8 @@ class CommentTree {
 
 	public function deepFirst($max = 5) {
 		$seen = array();
-		foreach ($this->roots as $n) {
+		ksort($this->rootsIds);
+		foreach ($this->rootsIds as $n) {
 			$seen = $n->deepFirst($max, 0, $seen);
 			//echo "$max, ".count($seen)." ".count($walked)." ".$n->id."\n";
 			//$seen = array_merge($seen, $walked);
