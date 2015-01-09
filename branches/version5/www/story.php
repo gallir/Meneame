@@ -510,9 +510,9 @@ case 10:
 		$ids[] = $n->id;
 		if ($n->level > 0) {
 			$margin = min(30, $n->level * 5);
-			echo "<li style='margin-left:${margin}%'>";
+			echo "<li class='threaded' style='margin-left:${margin}%'>";
 		} else {
-			echo '<li>';
+			echo '<li class="threaded">';
 		}
 		$comment->print_summary($link, 500, true);
 		echo '</li>';

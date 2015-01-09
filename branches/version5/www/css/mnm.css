@@ -1590,6 +1590,10 @@ padding: 0;
 margin-bottom: 10px;
 }
 
+.comments-list li.threaded {
+margin-bottom: 5px;
+}
+
 .comment-body {
 padding: 5px 5px 10px 10px;
 line-height: 120%;
@@ -1602,6 +1606,10 @@ border-color: #FF6400;
 border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
+}
+
+.threaded .comment-body {
+padding: 2px 5px 3px 10px;
 }
 
 .comment-body a strong {
@@ -1681,6 +1689,10 @@ height: 22px;
 margin: 1px 0 15px 0;
 white-space: nowrap;
 overflow: hidden;
+}
+
+.threaded .comment-meta {
+margin-bottom: 0;
 }
 
 .comment-meta img {
