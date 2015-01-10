@@ -84,9 +84,6 @@ if (($argc = count($url_args)) > 1) {
 		}
 
 		$globals['referenced_comment'] = $c; // This comment has to be displayed
-		if ($link->page_mode != 'threads' ) {
-			$canonical_page = $current_page = intval(($c-1)/$globals['comments_page_size']) + 1;
-		}
 		$no_page = false;
 		unset($url_args[1]);
 	} elseif ((int) $url_args[$argc-1] > 0) {
@@ -134,6 +131,11 @@ switch ($url_args[1]) {
 	case 'default':
 		$tab_option = 1;
 		$order_field = 'comment_order';
+
+
+		if (!empty($globals['referenced_comment'])) {
+			$canonical_page = $current_page = intval(($globals['referenced_comment']-1)/$globals['comments_page_size']) + 1;
+		}
 
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
 			if ($no_page) {
