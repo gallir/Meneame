@@ -364,43 +364,13 @@ $globals['css_main'] = 'mnm.php';
 $globals['css_webfonts'] = "//fonts.googleapis.com/css?family=Roboto:400";
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
+$globals['thread_padding_percent'] = 2.5; // Padding for threaded comments
+$globals['thread_padding_max_percent'] = 30; // Don't pad more than this %
 
 // Store access stats
 $globals['save_pageloads'] = false;
 
 $globals['enabled_tags'] = 'b|i|em|strong|del|sup|sub'; // HTML tags allowed for comments and posts
-
-// Greeting in several languages
-// Unfortunately, array constructor does not work properly with GNU _()
-/*
-$globals['greetings'] = array('bienvenid@'=>'españolo y española ;-)','hola'=>'español','kaixo'=>'euskera',
-		'apa'=>'catalán','com va'=>'catalán','va bé?'=>'catalán','cómo andás'=>'argentino','epa'=>'catalán',
-		'aupa'=>'español','ieup'=>'vasco','gñap'=>'gñapés','aiya'=>'quenya','hello'=>'inglés',
-		'uep com anam'=>'catalán','hey'=>'inglés','hi'=>'inglés','hunga hunga'=>'troglodita',
-		'salut'=>'francés','bonjour'=>'francés','hallo'=>'alemán','guten tag'=>'alemán','moin moin'=>'frisón',
-		'Dobrý deň'=>'eslovaco','Dobrý den'=>'checo','helo'=>'SMTP','minjhani'=>'tsonga','kunjhani'=>'tsonga','ciao'=>'italiano',
-		'hej'=>'danés','god dag'=>'noruego','have a nice day'=>'inglés','as-salaam-aleykum'=>'árabe',
-		'marhabah'=>'árabe','sabbah-el-khair'=>'árabe','salaam or do-rood'=>'árabe','namaste'=>'hindi',
-		'ahn nyeong ha se yo'=>'coreano','ahn nyeong'=>'coreano','goedendag'=>'neerlandés','priviet'=>'ruso',
-		'zdravstvuyte'=>'ruso','ni hao'=>'mandarín','nei ho'=>'cantonés','shalom'=>'hebreo','hei'=>'finés',
-		'oi'=>'portugués','olá'=>'portugués','hej'=>'sueco','god dag'=>'sueco','mingalarbar'=>'birmano',
-		'merhaba'=>'turco','ciao'=>'italiano','kumusta ka'=>'tagalo','saluton'=>'esperanto','vanakkam'=>'tamil',
-		'jambo'=>'swahili','mbote'=>'lingala','namaskar'=>'malayalam','dzień dobry'=>'polaco','cześć'=>'polaco',
-		'aloha'=>'hawaiano','jo napot'=>'húngaro','szervusz'=>'húngaro','dobriy ranok'=>'ucraniano',
-		'labdien'=>'letón','sveiki'=>'letón','chau'=>'letón','hyvää päivää'=>'finés','moi'=>'finés',
-		'hei'=>'finés','yia sou'=>'griego','yia sas'=>'griego','góðan dag'=>'islandés','hæ'=>'islandés',
-		'ellohay'=>'pig latin','namaskkaram'=>'telugú','adaab'=>'urdu','baagunnara'=>'telugú','niltze'=>'náhuatl',
-		'hao'=>'náhuatl','bok'=>'croata','ya\'at\'eeh'=>'navajo','merħba'=>'maltés','mambo'=>'congo',
-		'salam aleikum'=>'senegalés','grüzi'=>'alemán suizo','haj'=>'escandinavo','hallå'=>'escandinavo',
-		'moïen'=>'luxemburgués','talofa'=>'samoano','malo'=>'samoano','malo e lelei'=>'tongano',
-		'ia ora na'=>'tahitiano','kia ora'=>'maorí','buna ziua'=>'rumano','kem che'=>'guyaratí',
-		'namaskar'=>'canarés','kwe kwe'=>'tailandés','hola, ho,'=>'asturiano','oh'=>'nicolino',
-		'vary'=>'nicolino','Привет'=>'ruso','konnichiwa'=>'japonés','hello world'=>'holamundo',
-		'klaatu barada nikto'=>'el idioma de Klatu y Gort',
-		'ola'=>'gallego','boas'=>'gallego', 'bonos díes'=>'asturiano', 'nuqneH'=>'klingon',
-		'Mba\'eichapa' => 'guaraní', 'Mba\'eteko' => 'guaraní'
-	);
-*/
 
 // This is for SMS messages
 // Put your authorised addresses

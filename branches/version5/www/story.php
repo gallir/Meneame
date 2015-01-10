@@ -508,7 +508,7 @@ case 10:
 			$comment = $objects[$id];
 			$ids[] = $id;
 			if ($n->level > 0) {
-				$margin = min(25, $n->level * 4);
+				$margin = min($globals['thread_padding_max_percent'], $n->level * $globals['thread_padding_percent']);
 				echo "<li class='threaded' style='margin-left:${margin}%'>";
 			} else {
 				echo '<li class="threaded">';
