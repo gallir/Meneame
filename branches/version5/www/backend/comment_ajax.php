@@ -59,9 +59,13 @@ function print_edit_form($comment, $link) {
 
 	$html = '';
 
+	if ($comment->id == 0) {
+		$comment->randkey = rand(1000000,100000000);
+	}
+
 	$html .= '<div class="commentform">';
 	$html .= '<form action="'.$globals['base_url']."comment_ajax?reply_to=$reply_to&amp;link=$link->id&amp;id=$comment->id&amp;user=$current_user->user_id".'" class="comment" method="post" enctype="multipart/form-data" id="c_edit_form">';
-	$html .= '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />';
+	$html .= '<input type="hidden" name="randkey" value="'.$comment->randkey.'" />';
 
 	$html .= '<input type="hidden" name="process" value="editcomment" />';
 	$html .= '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />';
@@ -69,16 +73,6 @@ function print_edit_form($comment, $link) {
 
 	//print_simpleformat_buttons('edit-comment-'.$comment->id);
 	//$html .= '<div style="clear: right">';
-	$html .= '<textarea name="comment_content" class="droparea" id="edit-comment-'.$comment->id.'" rows="5">'.$comment->content.'</textarea>';
-	//$html .= '</div>';
-
-
-	$html .= '<input class="button" style="width:9em" type="submit" name="submit" value="'._('enviar').'" />';
-	// Allow gods to put "admin" comments which does not allow votes
-	if ($current_user->user_level == 'god') {
-		if ($comment->type == 'admin') $checked = 'checked="true"';
-		$html .= '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin" '.$checked.'/></label>';
-	}
 
 	$vars = compact('link', 'comment');
 	$html .= Haanga::Load('comment_edit.html', $vars, true);

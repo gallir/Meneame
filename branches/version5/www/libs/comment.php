@@ -140,7 +140,7 @@ class Comment extends LCPBase {
 		global $db;
 
 		if ($this->id == 0 || $this->link == 0) return false;
-		
+
 		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if (! $order) {
 			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->c_order");
@@ -399,6 +399,10 @@ class Comment extends LCPBase {
 		global $current_user, $globals;
 
 		if (!$link->votes > 0) return;
+
+		$comment = new Comment(); // Foo comment
+		$comment->randkey = rand(1000000,100000000);
+
 		if($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
 			// Comments already closed
 			echo '<div class="commentform warn">'."\n";
@@ -413,22 +417,17 @@ class Comment extends LCPBase {
 			echo '<form action="" method="post" enctype="multipart/form-data" class="comment">'."\n";
 
 			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
-			echo '<input type="hidden" name="randkey" value="'.rand(1000000,100000000).'" />'."\n";
+			echo '<input type="hidden" name="randkey" value="'.$comment->randkey.'" />'."\n";
 
 			echo '<fieldset>'."\n";
 			echo '<legend>'._('envía un comentario').'</legend>'."\n";
 			print_simpleformat_buttons('comment');
 			echo '<label for="comment">'. _('texto del comentario').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-			echo '<div><textarea name="comment_content" class="droparea" id="comment" rows="'.$rows.'"></textarea></div>'."\n";
 
 
-			echo '<input class="button" type="submit" name="submit" value="'._('enviar el comentario').'" />'."\n";
-			// Allow gods to put "admin" comments which does not allow votes
-			if ($current_user->user_level == 'god') {
-				echo '&nbsp;&nbsp;&nbsp;&nbsp;<label><strong>'._('admin').' </strong><input name="type" type="checkbox" value="admin"/></label>'."\n";
-			}
 
-			$comment = new Comment(); // Foo comment
+
+
 			$vars = compact('link', 'comment');
 			Haanga::Load('comment_edit.html', $vars);
 
@@ -655,7 +654,7 @@ class Comment extends LCPBase {
 			if (! $to) continue;
 
 			if (! in_array($to->id, $previous_ids) && ! in_array($to->id, $seen_ids)) {
-				if (User::friend_exists($to->user_id, $this->author) >= 0 
+				if (User::friend_exists($to->user_id, $this->author) >= 0
 						&& $to->user_id != $this->author
 						&& ! in_array($to->user_id, $seen_users)  // Limit the number of references to avoid abuses/spam and multip
 						&& ! in_array($to->user_id, $previous_users)) {

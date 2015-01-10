@@ -39,30 +39,25 @@
 >{{ self.content }}</textarea>
 
 
-<div style="margin-top:-7px">
-{% if ! globals.mobile %}
-	<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
-	<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
-{% endif %}
-
-<input class="button" type="submit" value="{% trans _('enviar') %}" style="float:right"/>
-
-{% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
-	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-	<br clear="right"/>
-	<div>
-	<label>{% trans _('imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*"
-	{% if globals.mobile %}
-		style="width:100%"
+<div style="margin-top:-7px;">
+	{% if ! globals.mobile %}
+		<div style="float:right">
+		<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
+		</div>
 	{% endif %}
-	/>
-	</label>
 
-	<div class="droparea_info" style="min-height:50px"></div>
+	<input class="button" type="submit" value="{% trans _('enviar') %}"/>
+	{% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
+		&nbsp;&nbsp;
+		<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+		<input type="file" autocomplete="off" name="image"
+			id="fileInput{{ self.id }}"
+			class="uploadFile"
+			accept="image/*"
+			/>
 
-	</div>
-{% endif %}
-
+		<div class="droparea_info"></div>
+	{% endif %}
 
 </div>
 
@@ -71,24 +66,25 @@
 </div>
 
 <script type="text/javascript">
-$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
+	$('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
+	$("#fileInput{{ self.id  }}").nicefileinput();
 
-var ac_minChars = 2;
-var ac_friends = true;
+	var ac_minChars = 2;
+	var ac_friends = true;
 
-{# prepare form`s options #}
-var options = {
-	async: false,
-	success: function(response) {
-		if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
-		else {
-			$('#cboxLoadedContent').html(response).trigger('DOMChanged', $('#cboxLoadedContent'));
+	{# prepare form`s options #}
+	var options = {
+		async: false,
+		success: function(response) {
+			if (/^ERROR:/.test(response)) mDialog.notify(response, 5);
+			else {
+				$('#cboxLoadedContent').html(response).trigger('DOMChanged', $('#cboxLoadedContent'));
+			}
 		}
-	}
-};
-$('#thisform{{ self.id }}').ajaxForm(options);
-{% if  ! self.to > 0 %}
-	$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
-{% endif %}
+	};
+	$('#thisform{{ self.id }}').ajaxForm(options);
+	{% if  ! self.to > 0 %}
+		$(".ac_user").user_autocomplete({ minChars: 2, params: {friends: 1} });
+	{% endif %}
 </script>
 

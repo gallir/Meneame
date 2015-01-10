@@ -1,27 +1,41 @@
 <input type="hidden" name="link_id" value="{{ link.id }}" />
 <input type="hidden" name="user_id" value="{{ current_user.user_id }}"/>
 
+<div><textarea name="comment_content" class="droparea" id="edit-comment-{{ comment.randkey }}" rows="5">{{ comment.content }}</textarea></div>
+
+
+<input class="button" style="width:9em" type="submit" name="submit" value="{% trans _('enviar') %}" />
+
+{% if current_user.user_level == 'god' %}
+	&nbsp;&nbsp;&nbsp;<label><strong>{% trans _('admin') %}</strong>
+	<input name="type" type="checkbox" value="admin"
+	{% if comment.type == 'admin' %}
+		checked="true"
+	{% endif %}
+	/></label>
+{% endif %}
+
+
 {% if comment.media_size > 0 %}
 	&nbsp;&nbsp;<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="image_delete" value="1"/></label>&nbsp;
 {% endif %}
 
 {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
 	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
-	<div style="float:right;">
-	<label>{% trans _('imagen') %}: <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*" size="5"
-	{% if globals.mobile %}
-		style="width:150px"
-	{% endif %}
-	/></label>
+	<input type="file" autocomplete="off" name="image"
+		id="fileInput{{ comment.randkey }}"
+		class="uploadFile"
+		accept="image/*"
+	/>
 
 	<div class="droparea_info"></div>
 
-	</div>
 
 	<script type="text/javascript">
 	addPostCode( function () {
 		$('form.comment').droparea({maxsize: {{ globals.media_max_size }} });
 		$('textarea').autosize();
+		$("#fileInput{{ comment.randkey }}").nicefileinput();
 	});
 	</script>
 

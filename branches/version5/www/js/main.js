@@ -11,7 +11,7 @@ var base_url="{{ globals.base_url_general }}",
 		do_partial=false;
 	{% endif %}
 
-if (typeof window.history == "object" 
+if (typeof window.history == "object"
 		&& (do_partial || navigator.userAgent.match(/meneame/i)) ) {
 	do_partial = true;
 }
@@ -756,6 +756,7 @@ function comment_edit(id, DOMid) {
 		if ( ! data.error ) {
 			$target.html(data.html);
 			$target.find('textarea').setFocusToEnd();
+			$target.trigger('DOMChanged', $target);
 			var options = {
 				async: false,
 				dataType: 'json',
@@ -968,7 +969,7 @@ function priv_new(user_id) {
 
 	}
 	$.colorbox({href: url,
-		onComplete: function () { 
+		onComplete: function () {
 			if (user_id > 0) $('#post').focus();
 			else $("#to_user").focus();
 		},
@@ -1038,20 +1039,20 @@ function show_answers(type, id) {
 
 function share_fb(e) {
 	var $e = $(e);
-	
+
 	window.open(
-		'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent($e.parent().data('url')), 
+		'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent($e.parent().data('url')),
 		'facebook-share-dialog',
-		'width=626,height=436'); 
+		'width=626,height=436');
 	return false;
 }
 
 function share_tw(e) {
 	var $e = $(e);
 	window.open(
-		'https://twitter.com/intent/tweet?url='+encodeURIComponent($e.parent().data('url'))+'&text='+encodeURIComponent($e.parent().data('title')), 
+		'https://twitter.com/intent/tweet?url='+encodeURIComponent($e.parent().data('url'))+'&text='+encodeURIComponent($e.parent().data('title')),
 		'twitter-share-dialog',
-		'width=550,height=420'); 
+		'width=550,height=420');
 	return false;
 }
 
@@ -1065,7 +1066,7 @@ function share_tw(e) {
 			handler = function(evt) {
 				var _self = this,
 					_args = arguments;
- 
+
 				if (timer) {
 					clearTimeout(timer);
 				}
@@ -1075,14 +1076,14 @@ function share_tw(e) {
 					$(_self).trigger(evt, [_args]);
 				}, latency);
 			};
- 
+
 			$(this).on('scroll', handler);
 		},
 		teardown: function() {
 			$(this).off('scroll', handler);
 		}
 	};
- 
+
 })(jQuery);
 
 (function () {
@@ -1106,7 +1107,7 @@ function share_tw(e) {
 			panel.appendTo("body");
 			$(window).on('unload onAjax', function() {
 				panel.empty();
-				panel.hide(); 
+				panel.hide();
 			});
 		} else if ( panel.children().length > 0 ) {
 			return;
@@ -1175,30 +1176,18 @@ function share_tw(e) {
 
 		upload: function(file, area) {
 			var form = area.parents('form');
-			var progress = form.find('progress').show();
-			var thumb = form.find('.droparea_info img');
+			var thumb = form.find('.droparea_info img').attr('src', s.loaderImage).show();
 			var submit = form.find(':submit');
 
 			submit.attr('disabled', 'disabled');
 
-			progress.attr('max', file.fileSize);
-			progress.attr('vaue', 0);
-
 			var xhr = new XMLHttpRequest();
-
-			/* Update progress bar */
-			xhr.upload.addEventListener("progress", function (e) {
-				if (e.lengthComputable) {
-					progress.attr("value", e.loaded);
-				}
-			}, false);
 
 			/* File uploaded */
 			xhr.addEventListener("load", function (e) {
 				var r = jQuery.parseJSON(e.target.responseText);
 				if (typeof r.error === 'undefined') {
 					thumb.attr('src', r.thumb).show();
-					progress.attr("value", file.fileSize);
 					form.find('input[name="tmp_filename"], input[name="tmp_filetype"]').remove();
 					form.append('<input type="hidden" name="tmp_filename" value="'+r.name+'"/>');
 					form.append('<input type="hidden" name="tmp_filetype" value="'+r.type+'"/>');
@@ -1207,7 +1196,6 @@ function share_tw(e) {
 					s.error(r);
 				}
 				submit.removeAttr('disabled');
-				setTimeout(function () {progress.hide();}, s.hide_delay);
 			}, false);
 
 			xhr.open("post", s.post, true);
@@ -1235,7 +1223,8 @@ function share_tw(e) {
 			'show_thumb': true,
 			'hide_delay': 2000,
 			'backgroundColor': '#AFFBBB',
-			'backgroundImage': base_static + version_id + '/img/common/picture_simple01.png'
+			'backgroundImage': base_static + version_id + '/img/common/upload-2x.png',
+			'loaderImage': base_static + version_id + '/img/common/loader.gif'
 		};
 
 		this.each(function(){
@@ -1250,12 +1239,9 @@ function share_tw(e) {
 			});
 
 			if (s.show_thumb) {
-				var thumb = $('<img width="40" height="40" style="float:right;"/>').hide();
+				var thumb = $('<img width="32" height="32"/>').hide();
 				form.find('.droparea_info').append(thumb);
 			}
-
-			var progress = $('<progress value="0" max="0" style="float:right;margin-right:4px;"></progress>').hide();
-			form.find('.droparea_info').append(progress);
 
 			form.find('.droparea')
 			.bind({
@@ -1273,7 +1259,6 @@ function share_tw(e) {
 						'background-position': 'center',
 						'background-repeat': 'no-repeat'
 						});
-
 				},
 
 				dragover: function (e) {
@@ -1301,11 +1286,77 @@ function share_tw(e) {
 	};
 })( jQuery );
 
+/*
+	FileInput bsed on jQuery.NiceFileInput.js
+	By Jorge Moreno - @alterebro
+*/
+(function($) {
+	$.fn.nicefileinput = function(options) {
+		var settings = {
+			label : '',
+		};
+		if(options) { $.extend(settings, options); };
+
+		return this.each(function() {
+			var self = this;
+
+			if ($(self).attr('data-styled') === undefined) {
+
+				var r = Math.round(Math.random()*10000);
+				var d = new Date();
+				var guid = d.getTime()+r.toString();
+
+				var wrapper = $("<div>")
+					.css({
+						'overflow': 'hidden',
+						'position': 'relative',
+						'display': 'inline-block',
+						'white-space': 'nowrap',
+						'text-align': 'center'
+					})
+					.addClass('uploadFile-button upload'+guid)
+					.html(settings.label);
+
+
+
+				$(self).wrap(wrapper);
+
+				$('.uploadFile'+guid).wrapAll('<div class="uploadFile-wrapper" id="upload-wrapper-'+guid+'" />');
+				$('.uploadFile-wrapper').css({
+					'overflow': 'auto',
+					'display': 'inline-block'
+				});
+				$("#uploadFile-wrapper-"+guid).addClass($(self).attr("class"));
+
+				$(self)
+					.css({
+						'visibility': 'visible',
+						'opacity': 0,
+						'position': 'absolute',
+						'border': 'none',
+						'margin': 0,
+						'padding': 0,
+						'top': 0,
+						'right': 0,
+						'cursor': 'pointer',
+						'height': '30px'
+					})
+					.addClass('uploadFile-current');
+				$(self).on("change", function() {
+                                });
+				$(self).attr('data-styled', true);
+			}
+		});
+
+	};
+})(jQuery);
+
+
 var historyManager = new function () {
 	var history = [];
-	
+
 	if (typeof window.history.pushState != "function") return;
- 
+
 	$(window).on("popstate", function(e) {
 		if (history.length == 0) return;
 		var state = history.pop();
@@ -1327,7 +1378,7 @@ var historyManager = new function () {
 		window.history.pushState(state, '', new_href);
 		state.callback = callback;
 		history.push(state);
-		reportAjaxStats('', '', new_href); 
+		reportAjaxStats('', '', new_href);
 	};
 
 	this.pop = function (name) {
@@ -1375,7 +1426,7 @@ var fancyBox = new function () {
 			ajaxName = "tweet";
 			onComplete = function() {
 				var options = { s: "tweet", id: v[1] };
-				$.getJSON(base_url+"backend/json_cache", options, 
+				$.getJSON(base_url+"backend/json_cache", options,
 					function (data) {
 						if (typeof data.html != "undefined" && data.html.length > 0 ) {
 							$('#cboxLoadedContent').html(data.html);
@@ -1475,7 +1526,7 @@ var fancyBox = new function () {
 	var current_count = -1;
 	var has_focus = true;
 	var check_counter = 0;
-	var base_update = 15000; 
+	var base_update = 15000;
 	var last_connect = null;
 
 	if (! user_id > 0 || (area = $('#notifier')).length == 0) return;
@@ -1488,7 +1539,7 @@ var fancyBox = new function () {
 	$(window).blur(function() {
 		has_focus = false;
 	});
-	
+
 	setTimeout(update, 1500); /* We are not in a hurry */
 
 
@@ -1537,7 +1588,7 @@ var fancyBox = new function () {
 
 		now = new Date().getTime();
 		var last_check = readStorage("n_"+user_id+"_ts");
-		if (last_check == null 
+		if (last_check == null
 				|| (check_counter == 0 && now - last_check > 3000) /* Avoid too many refreshes */
 				|| now - last_check > base_update + check_counter * 20) {
 			writeStorage("n_"+user_id+"_ts", now);
@@ -1555,7 +1606,7 @@ var fancyBox = new function () {
 		if (is_mobile) next_update *= 2;
 
 		if ( (is_mobile && check_counter < 1) /* one network update for mobiles */
-				|| (! is_mobile && check_counter < 3*3600*1000/base_update)) { 
+				|| (! is_mobile && check_counter < 3*3600*1000/base_update)) {
 			timeout = setTimeout(update, next_update);
 		} else {
 			timeout = false;
@@ -1707,7 +1758,7 @@ var fancyBox = new function () {
 				}
 			}
 		}
-		
+
 		var version_prefix;
 		var base_url = settings.base_url;
 		if (settings.version && settings.base_url.length > 1 && source.substr(0,4) != 'http' && source.substr(0,2) != '//') {
@@ -1834,7 +1885,7 @@ function analyze_hash(force) {
 		var real_href = $a.data('real_href') || $a.attr('href');
 		if ( (aClass.match(/fancybox/)
 				|| real_href.match(/\.(gif|jpeg|jpg|pjpeg|pjpg|png|tif|tiff)$|vimeo.com\/\d+|vine\.co\/v\/\w+|youtube.com\/(.*v=|embed)|youtu\.be\/.+|twitter\.com\/.+?\/(?:status|statuses)\/\d+/i))
-			&& ! aClass.match(/cbox/) 
+			&& ! aClass.match(/cbox/)
 			&& ! $a.attr("target")) {
 			if (fancyBox.parse($a)) return false;
 		}
@@ -1884,7 +1935,7 @@ function analyze_hash(force) {
 		$.ajax(a, {
 			cache: true,
 			dataType: "html",
-			success: function (html) { 
+			success: function (html) {
 				$("body").css('cursor', 'default');
 				console.log("Loaded: " + href + " scroll: " + currentState.scroll);
 				var finalHref = loaded($e, href, html);
@@ -1983,7 +2034,7 @@ $(document).ready(function () {
 	$('span.ts').each(to_date);
 	$.ajaxSetup({ cache: false });
 
-	$(window).on("DOMChanged", 
+	$(window).on("DOMChanged",
 		function(event, parent) {
 			$(parent).find('span.ts').each(to_date);
 			execOnDocumentLoad();
@@ -2011,7 +2062,7 @@ $(document).ready(function () {
 				url: base_static + "js/cookiechoices.js",
 				dataType: "script",
 				success: function () {
-					cookieChoices.showCookieConsentBar('Nos obligan a molestarte con la obviedad de que este sitio usa cookies', 
+					cookieChoices.showCookieConsentBar('Nos obligan a molestarte con la obviedad de que este sitio usa cookies',
 					'cerrar', 'más información', base_url + "legal#cookies");
 					}
 				});
