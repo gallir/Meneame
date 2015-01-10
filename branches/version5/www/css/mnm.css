@@ -2534,8 +2534,7 @@ color: transparent !important;
 .droparea_info {
 display:inline-block;
 vertical-align: bottom;
-background-color: #fff;
-padding: 1px;
+padding: 0;
 }
 
 .droparea_info img {
