@@ -1070,11 +1070,11 @@ table.keyvalue th {
 text-align: right;
 padding-right: 4px;
 vertical-align: top;
-white-space: nowrap;
 }
 
 table.keyvalue td {
 padding-left: 4px;
+vertical-align: bottom;
 }
 
 table.keyvalue td img {
@@ -1527,6 +1527,12 @@ margin: 15px 5px 0 15px;
 margin: 0;
 }
 
+
+.commentform {
+width: 100%;
+overflow-x: hidden;
+padding-right: 2px;
+}
 
 .commentform a:link, .commentform a:visited {
 border-bottom-width: 1px;
