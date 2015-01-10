@@ -133,9 +133,12 @@
 	<fieldset><legend>{% trans _('preferencias básicas') %}</legend>
 	<table class="keyvalue">
 
-	{# Use bar #}
-	<tr><th>{% trans _('abrir enlaces con barra superior') %}:</th>
-	<td><input name="use_bar" id="use_bar" type="checkbox" value="use_bar"/></td>
+	<tr><th>{% trans _('mostrar suscripciones por defecto en la portada') %}:</th>
+	<td><input name="subs_default" id="subs_default" type="checkbox" value="subs_default"/></td>
+	</tr>
+
+	<tr><th>{% trans _('comentarios por orden cronológico') %}:</th>
+	<td><input name="com_order" id="com_order" type="checkbox" value="com_order"/></td>
 	</tr>
 
 	{# Use last_com_first #}
@@ -143,13 +146,14 @@
 	<td><input name="last_com_first" id="last_com_first" type="checkbox" value="last_com_first"/></td>
 	</tr>
 
-	<tr><th>{% trans _('mostrar suscripciones por defecto en la portada') %}:</th>
-	<td><input name="subs_default" id="subs_default" type="checkbox" value="subs_default"/></td>
+	{# Use bar #}
+	<tr><th>{% trans _('abrir enlaces con barra superior') %}:</th>
+	<td><input name="use_bar" id="use_bar" type="checkbox" value="use_bar"/></td>
 	</tr>
-
 
 	<script type="text/javascript">
 	addPostCode(function () {
+		pref_input_check("com_order");
 		pref_input_check("use_bar");
 		pref_input_check("last_com_first");
 		pref_input_check("subs_default");

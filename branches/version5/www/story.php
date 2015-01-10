@@ -119,9 +119,10 @@ if ($_POST['process']=='newcomment') {
 $offset = 0;
 $limit = '';
 
-
 if (empty($url_args[1])) {
-	$url_args[1] = $link->page_mode;
+	if (! $current_user->user_id || ! User::get_pref($current_user->user_id, 'com_order')) {
+		$url_args[1] = $link->page_mode;
+	}
 	$globals['page_base'] = '';
 } else {
 	$globals['page_base'] = '/'.$url_args[1];
@@ -129,6 +130,7 @@ if (empty($url_args[1])) {
 
 switch ($url_args[1]) {
 	case '':
+	case 'standard':
 	case 'default':
 		$tab_option = 1;
 		$order_field = 'comment_order';
@@ -532,7 +534,7 @@ function print_story_tabs($option) {
 	$active[$option] = 'selected ';
 
 	echo '<ul class="subheader">';
-	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'/default">'._('ordenados'). '</a></li>';
+	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'/standard">'._('ordenados'). '</a></li>';
 	echo '<li class="'.$active[10].'"><a href="'.$globals['permalink'].'/threads">'._('hilos'). '</a></li>';
 	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>';
 	//echo '<li class="'.$active[9].'wideonly"><a href="'.$globals['permalink'].'/answered">'._('+ respondidos'). '</a></li>';
