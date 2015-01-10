@@ -1193,6 +1193,7 @@ function share_tw(e) {
 					form.append('<input type="hidden" name="tmp_filetype" value="'+r.type+'"/>');
 					s.complete(r);
 				} else {
+					thumb.hide();
 					s.error(r);
 				}
 				submit.removeAttr('disabled');
@@ -1224,7 +1225,7 @@ function share_tw(e) {
 			'hide_delay': 2000,
 			'backgroundColor': '#AFFBBB',
 			'backgroundImage': base_static + version_id + '/img/common/upload-2x.png',
-			'loaderImage': base_static + version_id + '/img/common/loader.gif'
+			'loaderImage': base_static + version_id + '/img/common/uploading.gif'
 		};
 
 		this.each(function(){
