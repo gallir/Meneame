@@ -137,10 +137,15 @@ switch ($url_args[1]) {
 			$canonical_page = $current_page = intval(($globals['referenced_comment']-1)/$globals['comments_page_size']) + 1;
 		}
 
+		if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
+			$last_com_first = true;
+		} else {
+			$last_com_first = false;
+		}
+
 		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
 			if ($no_page) {
-				if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
-					$last_com_first = true;
+				if ($last_com_first) {
 					$canonical_page = $current_page = ceil($link->comments/$globals['comments_page_size']);
 				} else {
 					$canonical_page = $current_page = 1;
