@@ -1294,6 +1294,7 @@ function share_tw(e) {
 	$.fn.nicefileinput = function(options) {
 		var settings = {
 			label : '',
+			title : '{% trans _("subir imagen") %}',
 		};
 		if(options) { $.extend(settings, options); };
 
@@ -1314,10 +1315,7 @@ function share_tw(e) {
 						'white-space': 'nowrap',
 						'text-align': 'center'
 					})
-					.addClass('uploadFile-button upload'+guid)
-					.html(settings.label);
-
-
+					.addClass('uploadFile-button upload'+guid).html(settings.label).attr("title", settings.title);
 
 				$(self).wrap(wrapper);
 
@@ -1341,9 +1339,8 @@ function share_tw(e) {
 						'cursor': 'pointer',
 						'height': '30px'
 					})
-					.addClass('uploadFile-current');
-				$(self).on("change", function() {
-                                });
+					.addClass('uploadFile-current').attr("title", settings.title);
+				$(self).on("change", function() {});
 				$(self).attr('data-styled', true);
 			}
 		});
