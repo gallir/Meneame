@@ -255,6 +255,11 @@ if ($link->has_thumb()) {
 
 $globals['description'] = text_to_summary($link->content, 200);
 
+// Increase click counter if it's without external link.
+if (empty($link->url)) {
+	$link->add_click();
+}
+
 do_header($link->title, 'post');
 
 // Show the error if the comment couldn't be inserted
