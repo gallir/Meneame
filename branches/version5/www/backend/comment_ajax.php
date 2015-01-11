@@ -71,9 +71,6 @@ function print_edit_form($comment, $link) {
 	$html .= '<input type="hidden" name="key" value="'.md5($comment->randkey.$site_key).'" />';
 	$html .= '<input type="hidden" name="id" value="'.$comment->id.'" />';
 
-	//print_simpleformat_buttons('edit-comment-'.$comment->id);
-	//$html .= '<div style="clear: right">';
-
 	$vars = compact('link', 'comment');
 	$html .= Haanga::Load('comment_edit.html', $vars, true);
 

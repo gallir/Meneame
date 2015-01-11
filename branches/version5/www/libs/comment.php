@@ -414,22 +414,17 @@ class Comment extends LCPBase {
 						|| $current_user->user_id == $link->author)) {
 			// User can comment
 			echo '<div class="commentform">'."\n";
-			echo '<form action="" method="post" enctype="multipart/form-data" class="comment">'."\n";
+			echo '<form action="" method="post" enctype="multipart/form-data" class="comment">';
 
-			echo '<input type="hidden" name="process" value="newcomment" />'."\n";
-			echo '<input type="hidden" name="randkey" value="'.$comment->randkey.'" />'."\n";
+			echo '<input type="hidden" name="process" value="newcomment" />';
+			echo '<input type="hidden" name="randkey" value="'.$comment->randkey.'" />';
 
 			echo '<fieldset>'."\n";
-			echo '<legend>'._('envía un comentario').'</legend>'."\n";
-			print_simpleformat_buttons('comment');
-			echo '<label for="comment">'. _('texto del comentario').'<br /><span class="note">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</span></label>'."\n";
-
-
-
-
-
+			echo '<legend>'._('envía un comentario').'</legend>';
 			$vars = compact('link', 'comment');
 			Haanga::Load('comment_edit.html', $vars);
+
+			echo '<div class="note" style="margin-top:10px">'._('comentarios xenófobos, racistas o difamatorios causarán la anulación de la cuenta').'</div>';
 
 			echo '</fieldset>'."\n";
 			echo '</form>'."\n";

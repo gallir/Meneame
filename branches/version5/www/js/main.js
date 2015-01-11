@@ -791,7 +791,7 @@ function comment_reply(id) {
 
 	$.getJSON(base_url_sub + 'comment_ajax', { reply_to: id }, function (data) {
 		if ( ! data.error ) {
-			var $e = $('<div id="comment_ajax_form" style="margin: 10px 0 10px 0"></div>');
+			var $e = $('<div id="comment_ajax_form" style="margin: 10px 0 20px 0"></div>');
 			$e.append(data.html);
 			$target.append($e).find('textarea').setFocusToEnd();
 
@@ -922,8 +922,9 @@ textCounter.length = 0;
   2006/10/01, jotape @ http://jplopez.net
 */
 
-function applyTag(id, tag) {
-	var obj = document.getElementById(id);
+function applyTag(caller, tag) {
+	/* find first parent form and the textarea */
+	var obj = $(caller).parents("form").find("textarea")[0];
 	if (obj) wrapText(obj, tag, tag);
 	return false;
 }

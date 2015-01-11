@@ -9,7 +9,8 @@
 
 
 <form action="{{ globals.base_url }}backend/priv_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
-{% exec print_simpleformat_buttons 'post' as dummy %}
+
+{% include 'simpleformat_buttons.html' %}
 <input type="hidden" name="key" value="{{ self.randkey }}" />
 <input type="hidden" name="id" value="{{ self.id }}" />
 <input type="hidden" name="author" value="{{ self.author }}" />

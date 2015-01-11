@@ -623,15 +623,6 @@ function guess_user_id ($str) {
 	}
 }
 
-function print_simpleformat_buttons($id) {
-	global $globals, $current_user;
-
-	// To avoid too many bolds and italics from new users and trolls
-	if ($current_user->user_karma < 6.001) return;
-
-	Haanga::Load('simpleformat_buttons.html', compact('id'));
-}
-
 function put_smileys($str) {
 	global $globals;
 

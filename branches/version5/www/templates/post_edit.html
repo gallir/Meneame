@@ -7,13 +7,13 @@
 {% endif %}
 </span></legend>
 
-{% exec print_simpleformat_buttons 'post' as dummy %}
-
 
 <form action="{{ globals.base_url }}backend/post_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
 	<input type="hidden" name="key" value="{{ self.randkey }}" />
 	<input type="hidden" name="post_id" value="{{ self.id }}" />
 	<input type="hidden" name="user_id" value="{{ self.author }}" />
+
+	{% include 'simpleformat_buttons.html' %}
 	<textarea style="clear: both" name="post" class="droparea" rows="5" id="post"
 	{% if ! globals.mobile %}
 		onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"

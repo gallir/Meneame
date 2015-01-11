@@ -88,8 +88,8 @@
 <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" /></p>
 
 {% if link.site_properties.intro_max_len > 0 %}
-	{% exec print_simpleformat_buttons 'bodytext' as dummy %}
 
+	{% include 'simpleformat_buttons.html' %}
 	<p><label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label>
 	<br /><span class="note"><strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong> ({{ link.site_properties.intro_min_len }} - {{ link.site_properties.intro_max_len }})</span>
 
