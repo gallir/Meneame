@@ -2276,11 +2276,12 @@ text-align: right;
 
 .rich-edit-key {
 color: #fff;
-font-size: 15px;
+font-size: 14px;
 text-align: center;
-height: 25px;
-width: 25px;
-margin-left: 5px;
+height: 20px;
+width: 20px;
+margin: 1px 4px;
+padding-bottom: 3px;
 float: right;
 }
 

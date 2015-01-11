@@ -1,10 +1,8 @@
 <input type="hidden" name="link_id" value="{{ link.id }}" />
 <input type="hidden" name="user_id" value="{{ current_user.user_id }}"/>
 
-<div>
-	{% include 'simpleformat_buttons.html' %}
-	<textarea name="comment_content" class="droparea" id="edit-comment-{{ comment.randkey }}" rows="5">{{ comment.content }}</textarea>
-</div>
+{% include 'simpleformat_buttons.html' %}
+<textarea name="comment_content" class="droparea" id="edit-comment-{{ comment.randkey }}" rows="5">{{ comment.content }}</textarea>
 
 
 
