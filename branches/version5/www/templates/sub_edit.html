@@ -64,7 +64,7 @@
 	{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
 	{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
 	<br/>
-	{% trans _('presentación de los comentarios') %}: 
+	{% trans _('presentación de los comentarios') %}:
 		<select name="page_mode">
 		{% for k, v in page_modes %}
 				<option value="{{ v }}" {% if v == sub.page_mode %}selected{% endif %}>{{ k }}</option>
@@ -83,12 +83,25 @@
 		{# Image options #}
 
 		<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-		<label>{% trans _('Imagen logo') %}: <input type="file" autocomplete="off" name="logo_image" id="fileInput" accept="image/*"/></label>
+		<label>{% trans _('Imagen logo') %}:
+			<input type="file" autocomplete="off" name="logo_image"
+				id="fileInput" class="uploadFile" accept="image/*"/>
+		</label>
+
+		<div class="droparea_info"></div>
+
+		<script type="text/javascript">
+			addPostCode( function () {
+				$("#fileInput").nicefileinput({ title: "subir imagen de logo"});
+				$('form').droparea({maxsize: {{ globals.media_max_size }} });
+
+			});
+		</script>
+
 		{% if sub.media_size > 0 %}
 			&nbsp;<label>{% trans _('Eliminar') %}: <input type="checkbox" name="logo_image_delete" value="1"/></label>
 		{% endif %}
 	</fieldset>
-
 
 	<fieldset><legend>{% trans _('límites de entradilla') %}</legend>
 		{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200"

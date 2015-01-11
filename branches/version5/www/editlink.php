@@ -143,24 +143,10 @@ function do_save($link) {
 		$db->commit();
 
 		// Check image upload
-		if (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-			if ($link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype'])) {
-				$link->thumb_status = 'local';
-			} else {
-				$link->thumb_status = 'error';
-
-			}
-			$link->store_thumb_status();
-		} elseif (!empty($_FILES['image']['tmp_name'])) {
-			if ($link->store_image($_FILES['image'])) {
-				$link->thumb_status = 'local';
-			} else {
-				$link->thumb_status = 'error';
-
-			}
+		if ($link->store_image_from_form('image')) {
+			$link->thumb_status = 'local';
 			$link->store_thumb_status();
 		}
-
 	}
 	$link->read();
 	$link->permalink = $link->get_permalink();

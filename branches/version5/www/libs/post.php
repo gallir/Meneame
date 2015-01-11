@@ -66,7 +66,7 @@ class Post extends LCPBase {
 		$key = 'p_last_read';
 
 		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
-		
+
 		$n = User::get_notification($user, 'post');
 		if (is_null($n)) {
 			$last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
@@ -213,8 +213,6 @@ class Post extends LCPBase {
 			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
 			$this->media_url = Upload::get_url('post', $this->id, 0, $this->media_date, $this->media_mime);
 		}
-
-
 	}
 
 	function print_text($length = 0) {
@@ -359,12 +357,16 @@ class Post extends LCPBase {
 		foreach ($to_unnotify as $to) {
 			User::add_notification($to, 'post', -1);
 		}
-			
+
 	}
 
 	function normalize_content() {
 		$this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
 		return $this->content;
+	}
+
+	function store_image_from_form($field = 'image') {
+		return parent::store_image_from_form('post', $field);
 	}
 
 	function store_image($file) {

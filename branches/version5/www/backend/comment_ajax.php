@@ -151,10 +151,8 @@ function check_and_save($comment, $link) {
 		// Check image upload or delete
 		if ($_POST['image_delete']) {
 			$comment->delete_image();
-		} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-			$comment->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
-		} elseif (!empty($_FILES['image']['tmp_name'])) {
-			$comment->store_image($_FILES['image']);
+		} else {
+			$comment->store_image_from_form('image');
 		}
 		return $comment;
 

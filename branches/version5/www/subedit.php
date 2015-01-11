@@ -186,14 +186,12 @@ function store_image($id) {
 	$media->media_size = 0;
 	$media->media_mime = '';
 
-	if(!empty($_FILES['logo_image']['tmp_name'])) {
-		$media->access = 'public';
-		if ($media->from_temporal($_FILES['logo_image'], 'image')) {
-			$site->media_size = $media->size;
-			$site->media_mime = $media->mime;
-			$site->media_dim1 = $media->dim1;
-			$site->media_dimd = $media->dim2;
-		}
+	$media->access = 'public';
+	if($media->from_form('logo_image', 'image')) {
+		$site->media_size = $media->size;
+		$site->media_mime = $media->mime;
+		$site->media_dim1 = $media->dim1;
+		$site->media_dimd = $media->dim2;
 	} elseif ($_POST['logo_image_delete']) {
 		$media->delete();
 	}

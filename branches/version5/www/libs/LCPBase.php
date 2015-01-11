@@ -114,6 +114,21 @@ class LCPBase {
 		return $string;
 	}
 
+	function store_image_from_form($type, $field = 'image') {
+		$media = new Upload($type, $this->id, 0);
+		if ($type == 'private') {
+			$media->to = $this->to;
+			$media->access = 'private';
+		}
+		if ($media->from_form($field, 'image')) {
+			$this->media_size = $media->size;
+			$this->media_mime = $media->mime;
+			$this->media_extension = $media->extension;
+			return true;
+		}
+		return false;
+	}
+
 	function store_image($type, $file) {
 		$media = new Upload($type, $this->id, 0);
 		if ($type == 'private') {

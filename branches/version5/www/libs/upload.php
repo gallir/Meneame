@@ -117,6 +117,7 @@ class Upload {
 		$this->to = 0;
 		$this->access = 'restricted';
 		$this->version = $version;
+		$this->stored = false;
 		if (! $time ) {
 			$this->date = $globals['now'];
 		} else {
@@ -133,7 +134,10 @@ class Upload {
 		$mime = $db->escape($this->mime);
 		$extension = $db->escape($this->extension);
 		$access = $db->escape($this->access);
-		$db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, extension, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', '$extension', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+		$res = $db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, extension, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', '$extension', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+		if ($res) {
+			$this->stored = true;
+		}
 
 		$this->backup();
 		return true;
@@ -274,6 +278,18 @@ class Upload {
 			return $this->store();
 		} else {
 			syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
+		}
+		return false;
+	}
+
+	// Check if the file has been uploaded from AJAX or the form
+	function from_form($field, $type = false) {
+		if (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
+			return $this->from_tmp_upload($_POST['tmp_filename'], $_POST['tmp_filetype']);
+		}
+
+		if (!empty($_FILES[$field]['tmp_name'])) {
+			return $this->from_temporal($_FILES['image'], $type);
 		}
 		return false;
 	}

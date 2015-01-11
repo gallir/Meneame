@@ -515,10 +515,8 @@ function do_submit2() {
 	// Check image upload or delete
 	if ($_POST['image_delete']) {
 		$link->delete_image();
-	} elseif (!empty($_POST['tmp_filename']) && !empty($_POST['tmp_filetype']) ) {
-		$link->move_tmp_image($_POST['tmp_filename'], $_POST['tmp_filetype']);
-	} elseif (!empty($_FILES['image']['tmp_name'])) {
-		$link->store_image($_FILES['image']);
+	} else {
+		$link->store_image_from_form('image');
 	}
 
 	$link->read();

@@ -135,6 +135,10 @@ class PrivateMessage extends LCPBase {
 		return $this->content;
 	}
 
+	function store_image_from_form($field = 'image') {
+		return parent::store_image_from_form('private', $field);
+	}
+
 	function store_image($file) {
 		return parent::store_image('private', $file);
 	}

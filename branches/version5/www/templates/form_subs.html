@@ -1,28 +1,26 @@
-<fieldset style="clear: both;">
-
 {% if subs %}
-    <legend>{% trans _('selecciona el sub más apropiado') %}</legend>
-    {% for sub in subs %}
-        <input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
-	    <label for "sub">{{ sub.name }}</label>&nbsp;<span class="note">({{ sub.name_long }})</span><br/>
-    {% endfor %}
+	<fieldset style="clear: both;">
+		<legend>{% trans _('selecciona el sub más apropiado') %}</legend>
+		{% for sub in subs %}
+			<input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
+			<label for "sub">{{ sub.name }}</label>&nbsp;<span class="note">({{ sub.name_long }})</span><br/>
+		{% endfor %}
 
-	{% if subscriptions %}
-		<fieldset>
-    	<legend>{% trans _('suscripciones') %}</legend>
-    	{% for sub in subscriptions %}
-			<span style="white-space:nowrap;">
-        	<input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
-	    	<label for "sub">{{ sub.name }}</label>
-			</span>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-    	{% endfor %}
-		</fieldset>
-	{% endif %}
-	
+		{% if subscriptions %}
+			<fieldset>
+			<legend>{% trans _('suscripciones') %}</legend>
+			{% for sub in subscriptions %}
+				<span style="white-space:nowrap;">
+				<input name="sub_id" type="radio"{% if selected == sub.id %} checked="true"{%endif%} value="{{ sub.id}}" />
+				<label for "sub">{{ sub.name }}</label>
+				</span>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+			</fieldset>
+		{% endif %}
+	</fieldset>
 {% else %}
 	<input name="sub_id" type="hidden" value="{{ selected }}">
 {% endif %}
 
 <br/>
-</fieldset>
