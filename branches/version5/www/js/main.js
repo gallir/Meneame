@@ -930,6 +930,7 @@ function applyTag(caller, tag) {
 }
 
 function wrapText(obj, tag) {
+	obj.focus();
 	if(typeof obj.selectionStart == 'number') {
 		/* Mozilla, Opera and any other true browser */
 		var start = obj.selectionStart;
@@ -940,14 +941,14 @@ function wrapText(obj, tag) {
 	} else if(document.selection) {
 		/* Damn Explorer */
 		/* Checking we are processing textarea value */
-		obj.focus();
 		var range = document.selection.createRange();
 		if(range.parentElement() != obj) return false;
 		if (range.text == "") return false;
 		if(typeof range.text == 'string')
 			document.selection.createRange().text =  replaceText(range.text, tag);
-	} else
+	} else {
 		obj.value += text;
+	}
 }
 
 function replaceText(text, tag) {
