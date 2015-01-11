@@ -107,14 +107,15 @@ function save_sub($id, &$errors) {
 	$page_mode = $db->escape($_POST['page_mode']);
 
 	if ($current_user->admin) {
+		$enabled = intval($_POST['enabled']);
 		$allow_main_link = intval($_POST['allow_main_link']);
 	} else {
 		// Keep the values
+		$enabled = $site->enabled;
 		$allow_main_link = $site->allow_main_link;
 		unset($_POST['post_html']);
 	}
 
-	$enabled = intval($_POST['enabled']);
 	$nsfw = intval($_POST['nsfw']);
 	$private = intval($_POST['private']);
 
