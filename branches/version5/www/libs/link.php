@@ -1761,6 +1761,10 @@ class Link extends LCPBase {
 		return parent::get_media('link');
 	}
 
+	function store_image_from_form($field = 'image') {
+		return parent::store_image_from_form('link', $field);
+	}
+
 	function store_image($file) {
 		return parent::store_image('link', $file);
 	}
