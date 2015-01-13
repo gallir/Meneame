@@ -764,6 +764,12 @@ class Link extends LCPBase {
 	function check_warn() {
 		global $db, $globals;
 
+		// Don't warn it hasn't an url and it's in the original sub
+		if (empty($this->url) && SitesMgr::my_id() == $this->sub_id) {
+			$this->warned = false;
+			return false;
+		}
+
 		$age = $globals['now'] - $this->sent_date;
 		if ($age < 600) { // Don't warn the first x/60 minutes
 			$this->warned = false;
