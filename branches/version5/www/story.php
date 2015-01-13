@@ -205,7 +205,6 @@ switch ($url_args[1]) {
 		$tab_option = 9;
 		break;
 	case 'interview':
-		$globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
 	case 'threads':
 		if (!$current_page) $current_page = 1;
 		$offset=($current_page-1)*$globals['comments_page_size'];
@@ -463,14 +462,19 @@ case 10:
 	$sqls = array();
 
 	if ($link->page_mode == 'interview') {
+		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments INNER JOIN (select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc $limit) t1 ON t1.comment_id = comments.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id order by t1.comment_id, t2.comment_id";
+
+/*
 		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id AND c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit";
 
 		$sqls[] = "select comment_id as child, conversation_to as parent FROM comments, conversations WHERE comment_link_id = $link->id and comment_user_id = $link->author and conversation_type='comment' and conversation_from = comment_id and conversation_to > 0 order by comment_karma desc $limit";
+		*/
 
 
 	} else {
-		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1
-		LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";
+		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments INNER JOIN (select comment_id from comments WHERE comment_link_id = $link->id order by comment_id asc $limit) t1 ON t1.comment_id = comments.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id order by t1.comment_id, t2.comment_id";
+
+		/* $sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";*/
 	}
 
 	// A /url/c0#comment_order all, we add it
@@ -508,7 +512,11 @@ case 10:
 		}
 
 		$ids = array();
+		$displayed = 0;
 		foreach($nodes_ids as $id) {
+			if ($displayed > $globals['comments_page_size'] * 4) {
+				break;
+			}
 			$n = $tree->nodesIds[$id];
 			$comment = $objects[$id];
 			$ids[] = $id;
@@ -521,8 +529,10 @@ case 10:
 			$comment->thread_level = $n->level;
 			$comment->print_summary($link, 500, true);
 			echo '</li>';
+			$displayed++;
 		}
 		echo '</ol>';
+		echo "<!--- comments displayed: $displayed -->";
 	}
 	//Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 	do_comment_pages($link->comments, $current_page, false);
