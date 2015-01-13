@@ -387,7 +387,7 @@ class SitesMgr {
 				switch ($k) {
 					case 'rules':
 					case 'message':
-						$dict[$k] = clean_text_with_tags($v, 0, false, 300);
+						$dict[$k] = clean_text_with_tags($v, 0, false, 3000);
 						break;
 					case 'post_html': // TODO: validate the HTML
 						$dict[$k] = $v;
