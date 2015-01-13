@@ -1,5 +1,11 @@
-<div class="sidebox message">
+<div class="sidebox message"
+	style="
+		{% if self.box_color %}color: {{ self.box_color }}; {% endif %}
+		{% if self.box_background %}background-color: {{ self.box_background }}; {% endif %}
+		{% if self.box_bordercolor %}border-color: {{ self.box_bordercolor }}; {% endif %}
+	"
+>
 
-{{ message }}
+{{ self.message_html }}
 
 </div>

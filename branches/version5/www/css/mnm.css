@@ -662,11 +662,15 @@ padding: 4px;
 border: 1px solid #dadada;
 }
 
-.sidebox.message, .sidebox.message a:visited, .sidebox.message a:link {
+.sidebox.message {
 color:#fff !important;
 background-color:#ccc;
-margin-bottom: 4px;
 font-size: 110%;
+}
+
+.sidebox.message a:visited, .sidebox.message a:link {
+color: inherit;
+text-decoration: underline;
 }
 
 .sidebox .header {

@@ -37,6 +37,9 @@ class SitesMgr {
 			'allow_images' => 0,
 			'rules' => '',
 			'message' => '',
+			'box_color' => '',
+			'box_background' => '',
+			'box_bordercolor' => '',
 			'post_html' => '',
 	);
 

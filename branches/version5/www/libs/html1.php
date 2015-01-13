@@ -878,8 +878,8 @@ function do_sub_message_right() {
 	$properties = SitesMgr::get_extended_properties();
 	if (empty($properties['message'])) return;
 
-	$message = LCPBase::html($properties['message']);
-	Haanga::Load('message_right.html', compact('message'));
+	$properties['message_html'] = LCPBase::html($properties['message']);
+	Haanga::Load('message_right.html', array('self' => $properties));
 	return;
 }
 
