@@ -1148,7 +1148,7 @@ text-align: right;
 
 .news-summary .warn {
 position: relative;
-padding: 5px 10px 5px 25px ;
+padding: 5px 10px 5px 28px ;
 margin: 0px 0 5px 0;
 font-size: 85%;
 background: #FEFBEA url({{ globals.base_static }}img/common/error_s.png) 5px 50% no-repeat;
@@ -1604,6 +1604,7 @@ padding: 2px 5px 3px 10px;
 
 .comment-body a strong {
 color: #FF6400;
+margin-left: -5px;
 }
 
 .comment-body .tooltip {

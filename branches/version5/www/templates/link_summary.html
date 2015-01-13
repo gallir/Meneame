@@ -46,17 +46,17 @@
 			</div>
 		{% else %}
 			{% if self.has_warning %}
-				<div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}"><strong>{% trans _('Aviso automático') %}</strong>:
+				<div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}">
 				{% if self.status == 'published' %}
-					{% trans _('noticia errónea o controvertida, por favor lee los comentarios.') %}
+					{% trans _('Envío erróneo o controvertido, por favor lee los comentarios.') %}
 				{% else %}
 				{% if self.author == current_user.user_id AND self.is_editable %}
-					{% trans _('Esta noticia tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
+					{% trans _('Este envío tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
 				{% else %}
 					{% if self.negative_text %}
-						{% trans  _('Esta noticia podría ser') %} <strong>{{ self.negative_text }}</strong>
+						{% trans  _('Este envío podría ser') %} <strong>{{ self.negative_text }}</strong>
 					{% else %}
-						{% trans _('Esta noticia tiene varios votos negativos.') %}
+						{% trans _('Este envío tiene varios votos negativos.') %}
 					{% endif %}
 					<a href="{{ self.relative_permalink }}">{% trans _('Asegúrate') %}</a> {% trans _('antes de menear') %}
 				{% endif %}
