@@ -542,7 +542,12 @@ case 10:
 				echo '<li class="threaded">';
 			}
 			$comment->thread_level = $n->level;
-			$comment->print_summary($link, 500, true);
+			if ($link->page_mode == 'interview' && $comment->author == $link->author) {
+				$len = 2000;
+			} else {
+				$len = 500;
+			} 
+			$comment->print_summary($link, $len, true);
 			echo '</li>';
 			$displayed++;
 		}
