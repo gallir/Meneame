@@ -80,7 +80,10 @@ function save_sub($id, &$errors) {
 		array_push($errors, _('usuario no autorizado a editar'));
 		return false;
 	}
+
 	$site = SitesMgr::get_info();
+	$extended = SitesMgr::get_extended_properties($id);
+
 	if ($_POST['created_from'] != $site->id) {
 		array_push($errors, _('sitio erróneo'));
 	}
@@ -113,7 +116,7 @@ function save_sub($id, &$errors) {
 		// Keep the values
 		$enabled = $site->enabled;
 		$allow_main_link = $site->allow_main_link;
-		unset($_POST['post_html']);
+		$_POST['post_html'] = $extended['post_html'];
 	}
 
 	$nsfw = intval($_POST['nsfw']);
