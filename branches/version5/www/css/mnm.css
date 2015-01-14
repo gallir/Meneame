@@ -666,6 +666,7 @@ border: 1px solid #dadada;
 color:#fff !important;
 background-color:#ccc;
 font-size: 110%;
+padding: 8px;
 }
 
 .sidebox.message a:visited, .sidebox.message a:link {
