@@ -1024,8 +1024,8 @@ class Link extends LCPBase {
 			$this->base_url = $globals['base_url_general'];
 		}
 
-		if ( $this->is_sub && ($globals['submnm'] || $strict || self::$original_status) ) {
-			if ($this->sub_status_id == SitesMgr::my_id() && ! $strict && ! self::$original_status) {
+		if ( $this->is_sub && ($globals['submnm'] || $strict || self::$original_status || ! $this->allow_main_link) ) {
+			if (! empty($globals['submnm']) && $this->sub_status_id == SitesMgr::my_id() && ! $strict && ! self::$original_status) {
 				$base = $this->base_url . 'm/'.$globals['submnm'].'/';
 			} else {
 				$base = $this->base_url . 'm/'.$this->sub_name.'/';

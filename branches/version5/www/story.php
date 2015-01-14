@@ -205,10 +205,8 @@ switch ($url_args[1]) {
 		$tab_option = 9;
 		break;
 	case 'interview':
+		// $globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
 	case 'threads':
-		if (!$current_page) $current_page = 1;
-		$offset=($current_page-1)*$globals['comments_page_size'];
-		$limit = "LIMIT $offset,".$globals['comments_page_size'];
 		$tab_option = 10;
 		break;
 	default:
@@ -452,29 +450,60 @@ case 10:
 	include_once(mnminclude.'commenttree.php');
 	$tree = new CommentTree();
 
+	if (!$current_page) $current_page = 1;
+	$offset=($current_page-1)*$globals['comments_page_size'];
+	$limit = $globals['comments_page_size'];
+	$global_limit = $limit * 2; // The limit including references
 
 	if ($show_relevants || $no_page) {
 		print_external_analysis($link);
 		print_relevant_comments($link);
 	}
 
-
-	$sqls = array();
-
 	if ($link->page_mode == 'interview') {
-		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments INNER JOIN (select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc $limit) t1 ON t1.comment_id = comments.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id order by t1.comment_id, t2.comment_id";
+		$sql = "select t1.comment_id as parent, t1.w1 as w1, t2.comment_id as child, t2.comment_karma + 200 * (t2.comment_user_id = $link->author) as w2 FROM comments as t0 INNER JOIN (select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc LIMIT $offset, $limit) t1 ON t1.comment_id = t0.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t0.comment_id and c.conversation_from = t2.comment_id order by w1 desc, w2 desc LIMIT $global_limit";
+
+		$res = $db->get_results($sql);
+		if ($res) {
+			foreach ($res as $c) {
+				$tree->addByIds($c->parent, $c->child);
+			}
+		}
 
 /*
-		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child, t1.comment_karma + 200 * (t1.comment_user_id = $link->author) as w1, t2.comment_karma + 100 * (t2.comment_user_id = $link->author) as w2 FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id AND c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by w1 desc, w2 desc $limit";
+ * Two steps, not convinced it's better
+		$sql_parents = "select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc LIMIT $offset, $limit";
+		$res = $db->get_col($sql_parents);
+		if ($res) {
+			foreach ($res as $c) {
+				$tree->addByIds($c);
+			}
 
-		$sqls[] = "select comment_id as child, conversation_to as parent FROM comments, conversations WHERE comment_link_id = $link->id and comment_user_id = $link->author and conversation_type='comment' and conversation_from = comment_id and conversation_to > 0 order by comment_karma desc $limit";
-		*/
+			$new_limit = $global_limit - count($res);
+			$pids = implode(',', $res);
 
+			$sql_to = "select conversation_to as parent, conversation_from as child, comment_karma + 200 * (comment_user_id = $link->author) as w1 from conversations, comments where conversation_type = 'comment' and conversation_to in ($pids) and comment_id = conversation_from order by w1 desc limit $new_limit";
+			echo "<br>$sql_to<br>";
 
+			$res = $db->get_results($sql_to);
+			if ($res) {
+				foreach ($res as $c) {
+					$tree->addByIds($c->parent, $c->child);
+				}
+			}
+		}
+*/
+		$sort_roots = true;
 	} else {
-		$sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments INNER JOIN (select comment_id from comments WHERE comment_link_id = $link->id order by comment_id asc $limit) t1 ON t1.comment_id = comments.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id order by t1.comment_id, t2.comment_id";
+		$sql = "select t1.comment_id as parent, c.conversation_from as child FROM comments as t0 INNER JOIN (select comment_id from comments WHERE comment_link_id = $link->id order by comment_id asc LIMIT $offset, $limit) t1 ON t1.comment_id = t0.comment_id LEFT JOIN conversations c ON c.conversation_type='comment' and c.conversation_to = t0.comment_id order by t0.comment_id, c.conversation_from LIMIT $global_limit";
+		$res = $db->get_results($sql);
+		if ($res) {
+			foreach ($res as $c) {
+				$tree->addByIds($c->parent, $c->child);
+			}
+		}
+		$sort_roots = false;
 
-		/* $sqls[] = "select t1.comment_id as parent, t2.comment_id as child FROM comments as t1 LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t1.comment_id and c.conversation_from = t2.comment_id where t1.comment_link_id = $link->id order by t1.comment_id, t2.comment_id $limit";*/
 	}
 
 	// A /url/c0#comment_order all, we add it
@@ -486,16 +515,7 @@ case 10:
 		}
 	}
 
-	foreach ($sqls as $sql) {
-		$res = $db->get_results($sql);
-		if (! $res) continue;
-
-		foreach ($res as $c) {
-			$tree->addByIds($c->parent, $c->child);
-		}
-	}
-
-	$nodes_ids = $tree->deepFirst();
+	$nodes_ids = $tree->deepFirst(100, $sort_roots);
 	if ($nodes_ids) {
 		$ids = implode(',', $nodes_ids);
 

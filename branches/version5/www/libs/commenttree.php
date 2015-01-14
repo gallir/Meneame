@@ -73,7 +73,7 @@ class CommentTree {
 			}
 		}
 
-		if ($parent && isset($this->rootsIds[$node->id]) 
+		if ($parent && isset($this->rootsIds[$node->id])
 			&& isset($this->rootsIds[$parent->id]) ) { // Only remove if the parent is root
 			unset($this->rootsIds[$node->id]);
 			if(($key = array_search($node, $this->roots)) !== false) {
@@ -105,9 +105,11 @@ class CommentTree {
 		return count($this->nodesIds);
 	}
 
-	public function deepFirst($max = 100) {
+	public function deepFirst($max = 100, $sort_roots = false) {
 		$seen = array();
-		ksort($this->rootsIds);
+		if ($sort_roots) {
+			ksort($this->rootsIds);
+		}
 		foreach ($this->rootsIds as $n) {
 			$seen = $n->deepFirst($max, 0, $seen);
 		}
