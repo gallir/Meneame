@@ -22,23 +22,18 @@ class Comment extends LCPBase {
 	var $ip = '';
 	var $thread_level = 0;
 
-	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime,  media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM comments
+	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as `order`, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM comments
 	INNER JOIN users on (user_id = comment_user_id)
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'comment' and favorite_link_id = comment_id)
 	LEFT JOIN votes ON (comment_date > @enabled_votes and @user_id > 0 and vote_type='comments' and vote_link_id = comment_id and vote_user_id = @user_id)
 	LEFT JOIN media ON (media.type='comment' and media.id = comment_id and media.version = 0) ";
 
-	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as c_order, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified FROM comments ";
+	const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as `order`, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, 1 as `read` FROM comments ";
 
 
 	static function from_db($id) {
 		global $db, $current_user;
-		if(($result = $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id", 'Comment'))) {
-			$result->order = $result->c_order; // Order is a reserved word in SQL
-			$result->read = true;
-			return $result;
-		}
-		return false;
+		return $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id", 'Comment');
 	}
 
 	static function update_read_conversation($time = false) {
@@ -90,12 +85,12 @@ class Comment extends LCPBase {
 			$previous = $db->get_var("select count(*) from comments where comment_link_id=$this->link FOR UPDATE");
 			if (! $previous > 0 && $previous !== '0') {
 				syslog(LOG_INFO, "Failed to assign order to comment $this->id in insert");
-				$this->c_order = 0;
+				$this->order = 0;
 			} else {
-				$this->c_order = intval($previous)+1;
+				$this->order = intval($previous)+1;
 			}
 
-			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->c_order)");
+			$r = $db->query("INSERT INTO comments (comment_user_id, comment_link_id, comment_type, comment_karma, comment_ip_int, comment_ip, comment_date, comment_randkey, comment_content, comment_order) VALUES ($this->author, $this->link, '$comment_type', $this->karma, $this->ip_int, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey, '$comment_content', $this->order)");
 			$new_id = $db->insert_id;
 
 			if ($r) {
@@ -127,7 +122,7 @@ class Comment extends LCPBase {
 		}
 
 		// Check we got a good order value
-		if (!$this->c_order) {
+		if (!$this->order) {
 			syslog(LOG_INFO, "Trying to assign order to comment $this->id after commit");
 			$this->update_order();
 		}
@@ -143,27 +138,24 @@ class Comment extends LCPBase {
 
 		$order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
 		if (! $order) {
-			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->c_order");
+			syslog(LOG_INFO, "Failed to get order in update_order for $this->id, old value $this->order");
 			return false;
 		}
-		if ($order != $this->c_order) {
+		if ($order != $this->order) {
 			$db->query("update comments set comment_order=$order where comment_id=$this->id");
 			$rows = $db->affected_rows;
 			if ($rows > 0) {
-				syslog(LOG_INFO, "Fixing order for $this->id, $this->c_order -> $order");
+				syslog(LOG_INFO, "Fixing order for $this->id, $this->order -> $order");
 			}
-			$this->c_order = $order;
+			$this->order = $order;
 		}
-		return $this->c_order;
+		return $this->order;
 	}
 
 	function read() {
 		global $db, $current_user;
-		$id = $this->id;
-		if(($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $id"))) {
+		if(($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $this->id"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
-			$this->order = $this->c_order; // Order is a reserved word in SQL
-			$this->read = true;
 			return true;
 		}
 		$this->read = false;
@@ -199,7 +191,7 @@ class Comment extends LCPBase {
 	function prepare_summary_text($length = 0) {
 		global $globals, $current_user;
 
-		if ($this->single_link) $this->html_id = $this->c_order;
+		if ($this->single_link) $this->html_id = $this->order;
 		else $this->html_id = $this->id;
 
 		$this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary ) && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
@@ -595,7 +587,7 @@ class Comment extends LCPBase {
 			if ($redirect) {
 				// Comment stored, just redirect to it page
 				header ('HTTP/1.1 303 Load');
-				header('Location: '.$link->get_permalink() . '/c0'.$comment->c_order.'#c-'.$comment->c_order);
+				header('Location: '.$link->get_permalink() . '/c0'.$comment->order.'#c-'.$comment->order);
 				die;
 			} else {
 				return $comment;

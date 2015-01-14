@@ -15,7 +15,7 @@ class PrivateMessage extends LCPBase {
 	var $date = false;
 	var $content = '';
 
-	const SQL = " SQL_NO_CACHE privates.id as id, privates.user as author, users.user_login as username, privates.`to` as `to`, users_to.user_login as to_username, users_to.user_avatar as to_avatar, randkey, privates.ip, users.user_avatar as avatar, texts.content as content, UNIX_TIMESTAMP(privates.date) as date, UNIX_TIMESTAMP(privates.read) as date_read, media.size as media_size, media.mime as media_mime, media.access as media_access FROM privates
+	const SQL = " SQL_NO_CACHE privates.id as id, privates.user as author, users.user_login as username, privates.`to` as `to`, users_to.user_login as to_username, users_to.user_avatar as to_avatar, randkey, privates.ip, users.user_avatar as avatar, texts.content as content, UNIX_TIMESTAMP(privates.date) as date, UNIX_TIMESTAMP(privates.read) as date_read, media.size as media_size, media.mime as media_mime, media.access as media_access, 1 as `read` FROM privates
 	LEFT JOIN users on (user_id = privates.user)
 	LEFT JOIN users as users_to on (users_to.user_id = privates.to)
 	LEFT JOIN texts on (texts.key = 'privates' and texts.id = privates.id)
@@ -26,10 +26,7 @@ class PrivateMessage extends LCPBase {
 
 	static function from_db($id) {
 		global $db, $current_user;
-		if(($result = $db->get_object("SELECT".PrivateMessage::SQL."WHERE privates.id = $id", 'PrivateMessage'))) {
-			return $result;
-		}
-		return null;
+		return $db->get_object("SELECT".PrivateMessage::SQL."WHERE privates.id = $id", 'PrivateMessage');
 	}
 
 	static function get_unread($id) {

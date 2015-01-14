@@ -21,7 +21,7 @@ class Post extends LCPBase {
 	var $src = 'web';
 	var $read = false;
 
-	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_src as src, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date FROM posts
+	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM posts
 	LEFT JOIN users on (user_id = post_user_id)
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id)
 	LEFT JOIN votes ON (post_date > @enabled_votes and @user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id)
@@ -33,14 +33,7 @@ class Post extends LCPBase {
 
 	static function from_db($id) {
 		global $db, $current_user;
-		if(($result = $db->get_object("SELECT".Post::SQL."WHERE post_id = $id", 'Post'))) {
-			if ($result->src == 'im') {
-				$result->src = 'jabber';
-			}
-			$result->read = true;
-			return $result;
-		}
-		return null;
+		return $db->get_object("SELECT".Post::SQL."WHERE post_id = $id", 'Post');
 	}
 
 	static function update_read_conversation($time = false) {
@@ -125,10 +118,6 @@ class Post extends LCPBase {
 		global $db, $current_user;
 		if(($result = $db->get_row("SELECT".Post::SQL."WHERE post_id = $this->id"))) {
 			foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
-			if ($this->src == 'im') {
-				$this->src = 'jabber';
-			}
-			$this->read = true;
 			return true;
 		}
 		$this->read = false;

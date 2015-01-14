@@ -180,7 +180,7 @@ if ($comments) {
 		echo "	<item>\n";
 		echo "		<meneame:comment_id>$comment->id</meneame:comment_id>\n";
 		echo "		<meneame:link_id>$comment->link</meneame:link_id>\n";
-		echo "		<meneame:order>$comment->c_order</meneame:order>\n";
+		echo "		<meneame:order>$comment->order</meneame:order>\n";
 		echo "		<meneame:user>$comment->username</meneame:user>\n";
 		echo "		<meneame:votes>".intval($comment->votes)."</meneame:votes>\n";
 		echo "		<meneame:karma>".intval($comment->karma)."</meneame:karma>\n";

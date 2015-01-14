@@ -302,7 +302,7 @@ case 2:
 	do_comment_pages($link->comments, $current_page, $last_com_first);
 
 	$update_comments = false;
-	$comments = $db->object_iterator("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
+	$comments = $db->get_results("SELECT".Comment::SQL."WHERE comment_link_id=$link->id ORDER BY $order_field $limit", "Comment");
 	if ($comments) {
 		$order = $offset + 1;
 		$prev = false;
@@ -310,11 +310,11 @@ case 2:
 		foreach($comments as $comment) {
 			// Check the comment order is correct, otherwise, force an update
 			if ($tab_option == 1) {
-				if ($comment->c_order != $order) {
+				if ($comment->order != $order) {
 					if ($prev) {
 						$prev->update_order();
 					}
-					syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->c_order -> $order");
+					syslog(LOG_INFO, "Updating order for $comment->id, order: $comment->order -> $order");
 					$comment->update_order();
 					$update_comments = true;
 					$prev = false;
@@ -322,7 +322,6 @@ case 2:
 					$prev = $comment;
 				}
 			}
-
 
 			echo '<li>';
 			$comment->print_summary($link, 2500, true);
@@ -520,16 +519,12 @@ case 10:
 		$ids = implode(',', $nodes_ids);
 
 		$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
-		$comments = $db->object_iterator($sql, "Comment");
+		$comments = $db->get_results($sql, "Comment", 'id');
 
 		echo '<div class="comments">';
 		echo '<ol class="comments-list">';
 		$max = 0;
 		$objects = array();
-
-		foreach ($comments as $c) {
-			$objects[$c->id] = $c;
-		}
 
 		$ids = array();
 		$displayed = 0;
@@ -538,7 +533,7 @@ case 10:
 				break;
 			}
 			$n = $tree->nodesIds[$id];
-			$comment = $objects[$id];
+			$comment = $comments[$id];
 			$ids[] = $id;
 			if ($n->level > 0) {
 				$margin = min($globals['thread_padding_max_percent'], $n->level * $globals['thread_padding_percent']);
@@ -552,7 +547,7 @@ case 10:
 			$displayed++;
 		}
 		echo '</ol>';
-		echo "<!--- comments displayed: $displayed -->";
+		echo "<!--- displayed: $displayed -->";
 	}
 	//Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 	do_comment_pages($link->comments, $current_page, false);

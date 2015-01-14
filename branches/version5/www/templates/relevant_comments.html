@@ -20,7 +20,7 @@
 {% if self %}
 	<div style="margin-top:5px;margin-bottom:5px">
 		<div style="float:left;">
-		<a class="tooltip c:{{ self.link_id }}-{{ self.c_order }}" href="{{link_url}}/c0{{ self.order }}#c-{{ self.order }}" rel="nofollow"><img 
+		<a class="tooltip c:{{ self.link_id }}-{{ self.order }}" href="{{link_url}}/c0{{ self.order }}#c-{{ self.order }}" rel="nofollow"><img 
 			src="{{ globals.base_static | noscheme }}img/g.gif"
 			data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" 
 			data-2x="s:-25.:-40."

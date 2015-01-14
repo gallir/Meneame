@@ -47,7 +47,7 @@
 			<span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
 		{% endif %}
 		{% if self.type != 'admin' %}
-			<a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.c_order }}">{{ self.username }}</a>
+			<a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
 		{% else %}
 			<strong>{% trans _('admin') %}</strong> 
 			{% if current_user.admin %}({{ self.username }}){% endif %}

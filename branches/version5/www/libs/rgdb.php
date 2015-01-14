@@ -52,7 +52,7 @@ class RGDB extends mysqli {
 	function show_errors() {
 		$this->show_errors = true;
 	}
-	
+
 	function initial_query($query) {
 		$this->initial_query = $query;
 		if ($this->connected) {
@@ -67,7 +67,7 @@ class RGDB extends mysqli {
 		}
 		return '';
 	}
-	
+
 	function transaction() {
 		$this->in_transaction++;
 		//syslog(LOG_INFO, __FUNCTION__ ." ".$this->savepoint_name() . " ".$_SERVER['SCRIPT_NAME']);
@@ -171,7 +171,7 @@ class RGDB extends mysqli {
 		$this->last_result = array();
 	}
 
-	function query($query) {
+	function query($query, $class_name = null, $index_name = null ) {
 		$is_select = preg_match("/^ *(select|show)\s/i",$query);
 
 		$this->connect();
@@ -186,10 +186,19 @@ class RGDB extends mysqli {
 			return false;
 		}
 
+		if (!$class_name) {
+			$class_name = "stdClass";
+		}
+
 		if ($is_select) {
 			$num_rows=0;
-			while ( $row = @$result->fetch_object() ) {
-				$this->last_result[$num_rows] = $row;
+			while ( $row = $result->fetch_object($class_name) ) {
+				if ($class_name && $index_name) {
+					$index = $row->$index_name;
+				} else {
+					$index = $num_rows;
+				}
+				$this->last_result[$index] = $row;
 				$num_rows++;
 			}
 			@$result->close();
@@ -232,21 +241,13 @@ class RGDB extends mysqli {
 		return (isset($values[$x]) && $values[$x]!=='')?$values[$x]:null;
 	}
 
-	function get_object($query,$class) {
-		$this->connect();
-		$result = parent::query($query);
-		if ( ! $result ) {
-			$this->print_error('error un get_object');
-			return false;
-		}
-		$object = $result->fetch_object($class);
-		$result->close();
-		return $object?$object:null;
+	function get_object($query, $class) {
+		return $this->get_row($query, 0, $class);
 	}
 
-	function get_row($query=null,$y=0) {
+	function get_row($query=null, $y=0, $class_name = null) {
 		if ( $query ) {
-			$this->query($query);
+			$this->query($query, $class_name);
 		}
 
 		return isset($this->last_result[$y])?$this->last_result[$y]:null;
@@ -270,10 +271,10 @@ class RGDB extends mysqli {
 	}
 
 	// Return the the query as a result set - see docs for more details
-	function get_results($query=null) {
+	function get_results($query=null, $class_name = null, $index_name = null) {
 		// If there is a query then perform it if not then use cached results..
 		if ( $query ) {
-			$this->query($query);
+			$this->query($query, $class_name, $index_name);
 		}
 		// Send back array of objects. Each row is an object
 		if (empty($this->last_result)) return array();

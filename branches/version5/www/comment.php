@@ -10,11 +10,9 @@ include('config.php');
 include(mnminclude.'html1.php');
 
 $page_size = $globals['page_size'] * 3;
-$comment = new Comment;
+$comment = Comment::from_db(intval($globals['path'][1]));
 
-$comment->id = intval($globals['path'][1]);
-
-if (!$comment->read()) {
+if (!$comment) {
 	do_error(_('comentario no encontrado'), 404);
 }
 
