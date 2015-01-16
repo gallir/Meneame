@@ -465,33 +465,9 @@ case 10:
 		$res = $db->get_results($sql);
 		if ($res) {
 			foreach ($res as $c) {
-				$tree->addByIds((int)$c->parent, (int)$c->child);
+				$tree->addByIds($c->parent, $c->child);
 			}
 		}
-
-/*
- * Two steps, not convinced it's better
-		$sql_parents = "select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc LIMIT $offset, $limit";
-		$res = $db->get_col($sql_parents);
-		if ($res) {
-			foreach ($res as $c) {
-				$tree->addByIds($c);
-			}
-
-			$new_limit = $global_limit - count($res);
-			$pids = implode(',', $res);
-
-			$sql_to = "select conversation_to as parent, conversation_from as child, comment_karma + 200 * (comment_user_id = $link->author) as w1 from conversations, comments where conversation_type = 'comment' and conversation_to in ($pids) and comment_id = conversation_from order by w1 desc limit $new_limit";
-			echo "<br>$sql_to<br>";
-
-			$res = $db->get_results($sql_to);
-			if ($res) {
-				foreach ($res as $c) {
-					$tree->addByIds($c->parent, $c->child);
-				}
-			}
-		}
-*/
 		$sort_roots = true;
 	} else {
 		$sql = "select t1.comment_id as parent, c.conversation_from as child FROM comments as t0 INNER JOIN (select comment_id from comments WHERE comment_link_id = $link->id order by comment_id asc LIMIT $offset, $limit) t1 ON t1.comment_id = t0.comment_id LEFT JOIN conversations c ON c.conversation_type='comment' and c.conversation_to = t0.comment_id order by t0.comment_id, c.conversation_from LIMIT $global_limit";

@@ -786,7 +786,7 @@ function comment_reply(id) {
 	}
 
 	$('#comment_ajax_form').remove();
-	var $target = $('<div style="padding-left:3%"></div>');
+	var $target = $('<div class="threader"></div>');
 	$parent.append($target);
 
 	$.getJSON(base_url_sub + 'comment_ajax', { reply_to: id }, function (data) {
