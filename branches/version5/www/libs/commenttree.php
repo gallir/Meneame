@@ -6,7 +6,6 @@ class CommentTreeNode {
 	public function __construct($id, $child = false) {
 		$this->children = array();
 		$this->id = $id;
-		$this->last_child = false;
 		$this->level = 0;
 		if ($child) {
 			$this->addChild($child);

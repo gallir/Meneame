@@ -8,6 +8,7 @@
 
 include('config.php');
 include(mnminclude.'html1.php');
+include_once(mnminclude.'commenttree.php');
 
 $page_size = $globals['page_size'] * 3;
 $comment = Comment::from_db(intval($globals['path'][1]));
@@ -63,84 +64,76 @@ if (isset($globals['canonical_server_name']) && !empty($globals['canonical_serve
 $canonical_base = $link->base_url;
 if ($link->is_sub) $canonical_base .= 'm/'.$link->sub_name.'/';
 $canonical_base .= 'c/';
-$globals['extra_head'] = '<link rel="canonical" href="http://'.$canonical_server.$canonical_base.$comment->id.'"/>';
+$globals['extra_head'] = '<link rel="canonical" href="'.$globals['scheme'].'//'.$canonical_server.$canonical_base.$comment->id.'"/>';
 
 
 do_header($title);
-//do_subheader(_('comentario de') . ' ' . $username);
+
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
 //do_best_stories();
 do_best_comments();
 do_banner_promotions();
-echo '</div>' . "\n";
+echo '</div>';
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
+echo '<div id="newswrap">';
+echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
-echo '<h3 style="text-shadow: 0 1px #ccc"><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 
-echo '<ol class="comments-list">';
-echo '<li>';
-$comment->print_summary($link, 0, false);
+$tree = new CommentTree();
+$tree->addByIds($comment->id);
 
+for ($i = 0; $i < 4; $i++) {
+	if (! fill_tree($tree) || $tree->size() > 30) {
+		break;
+	}
+}
+
+echo '<div class="comments">';
 echo '<div style="text-align:right">';
 $vars = array('link' => $globals['permalink'],
 			'title' => $title);
 Haanga::Load('share.html', $vars);
 echo '</div>';
-echo "</li>\n";
-echo "</ol>\n";
 
-print_answers($comment->id, 1);
+Comment::print_tree($tree, $link);
+echo '</div></div>';
 
-Comment::print_form($link, 8);
-echo '</div>';
-// Show the error if the comment couldn't be inserted
-if (!empty($new_comment_error)) {
-	add_javascript('mDialog.notify("'._('Aviso'). ": $new_comment_error".'", 5);');
-}
+
 do_footer();
 exit(0);
 
-function print_answers($id, $level, $visited = false) {
-	// Print answers to the comment
-	global $db, $page_size;
+function fill_tree($tree, $limit = 30) {
+	global $globals, $db;
 
-	if (! $visited) {
-		$visited = array();
-		$visited[] = $id;
+	if (empty($tree->nodesIds)) {
+		return false;
 	}
 
-	$printed = array();
-	$sql = "SELECT conversation_from FROM conversations, comments WHERE conversation_type='comment' and conversation_to = $id and comment_id = conversation_from ORDER BY conversation_from asc LIMIT $page_size";
-	$answers = $db->get_col($sql);
-	if ($answers) {
-		$type = 'comment';
-		echo '<div style="padding-left: 5%">';
-		echo '<ol class="comments-list">';
-		foreach ($answers as $dbanswer) {
-			if (in_array($dbanswer, $visited)) continue;
-			$answer = Comment::from_db($dbanswer);
-			$answer->url = $answer->get_relative_individual_permalink();
-			echo '<li>';
-			$answer->print_summary($link);
-			if ($level > 0) {
-				$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
-				$visited = array_merge($visited, $res);
+	$nodesKeys = array_keys($tree->nodesIds);
+
+	if (!empty($tree->previous_keys)) {
+		$parents = array_diff_key($nodesKeys, $tree->previous_keys); // To avoid requesting for the same parents
+	} else {
+		$parents = $nodesKeys;
+	}
+	$tree->previous_keys = $nodesKeys;
+	$inserted = 0;
+	$ids = implode(',', $parents);
+	$sql = "SELECT conversation_to as parent, conversation_from as child FROM conversations WHERE conversation_type='comment' and conversation_to in ($ids) ORDER BY conversation_from asc LIMIT $limit";
+	$res = $db->get_results($sql);
+
+	if ($res) {
+		foreach ($res as $n) {
+			if (! $tree->in($n->parent) || ! $tree->in($n->parent)) {
+				$tree->addByIds($n->parent, $n->child);
+				$inserted++;
 			}
-			$printed[] = $answer->id;
-			$visited[] = $answer->id;
-			echo '</li>';
-		}
-		echo '</ol>';
-		echo '</div>';
-		if ($level == 0) {
-			$ids = implode(',', $printed);
-			Haanga::Load('get_total_answers_by_ids.html', compact('type', 'ids'));
 		}
 	}
-	return $printed;
+
+	return $inserted;
 }
 

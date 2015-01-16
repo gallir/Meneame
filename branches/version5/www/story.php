@@ -324,7 +324,8 @@ case 2:
 			}
 
 			echo '<li>';
-			$comment->print_summary($link, 2500, true);
+			$comment->link_object = $link;
+			$comment->print_summary(2500, true);
 			echo '</li>';
 			$order++;
 		}
@@ -432,7 +433,8 @@ case 9:
 			$ids[] = $res->id;
 			$comment = Comment::from_db($res->id);
 			echo '<li>';
-			$comment->print_summary($link, 2500, true);
+			$comment->link_object = $link;
+			$comment->print_summary(2500, true);
 			echo '</li>';
 		}
 		echo '</ol>';
@@ -489,21 +491,8 @@ case 10:
 		}
 	}
 
-	if ($tree->rootsIds && $tree->nodesIds) {
+	Comment::print_tree($tree, $link, $sort_roots);
 
-		$ids = implode(',', array_keys($tree->nodesIds));
-		$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
-		$comments = $db->get_results($sql, "Comment", 'id');
-
-		if ($sort_roots) {
-			ksort($tree->rootsIds);
-		}
-
-		$seen = array();
-		foreach ($tree->rootsIds as $id => $node) {
-			print_comments_tree($node, $comments, $link, $seen);
-		}
-	}
 	do_comment_pages($link->comments, $current_page, false);
 	Comment::print_form($link);
 
@@ -517,36 +506,6 @@ $globals['tag_status'] = $globals['link']->status;
 do_footer();
 exit(0);
 
-// Print the comments recursively
-function print_comments_tree($node, $comments, $link, &$seen, $level = 0) {
-
-		if (in_array($node->id, $seen)) {
-			return $seen;
-		}
-
-		$seen[] = $node->id;
-		if ($level == 0 || $level > 6) {
-			echo '<div class="threader zero">';
-		} else {
-			echo '<div class="threader">';
-		}
-
-		if ($link->page_mode == 'interview' && $comment->author == $link->author) {
-			$len = 2000;
-		} else {
-			$len = 500;
-		}
-
-		$comment = $comments[$node->id];
-		$comment->thread_level = $level;
-		$comment->print_summary($link, $len, true);
-
-		foreach ($node->children as $child) {
-			print_comments_tree($child, $comments, $link, $seen, $level + 1);
-		}
-		echo '</div>';
-		return;
-}
 
 function print_story_tabs($option) {
 	global $globals, $db, $link, $current_user;

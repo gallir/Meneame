@@ -97,7 +97,8 @@ function print_result() {
 					break;
 				case 'comments':
 					if ($obj->type == 'admin' && !$current_user->admin) continue;
-					$obj->print_summary(false, 800);
+					// link_object
+					$obj->print_summary(800);
 					break;
 				case 'links':
 				default:

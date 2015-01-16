@@ -20,7 +20,7 @@ class Comment extends LCPBase {
 	var $content = '';
 	var $read = false;
 	var $ip = '';
-	var $thread_level = 0;
+	var $link_object = null;
 
 	const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as `order`, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM comments
 	INNER JOIN users on (user_id = comment_user_id)
@@ -68,6 +68,63 @@ class Comment extends LCPBase {
 		}
 		return $n;
 
+	}
+
+	// Print the comments recursively, $tree is a CommentTree instance
+	static function print_tree($tree, $link = null, $sort_roots = null, $initial_level = 0, $length = 0) {
+		global $db;
+
+		if (empty($tree->rootsIds)) {
+			return;
+		}
+
+		$ids = implode(',', array_keys($tree->nodesIds));
+		$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
+		$comments = $db->get_results($sql, "Comment", 'id');
+
+		if ($sort_roots) {
+			ksort($tree->rootsIds);
+		}
+
+		$seen = array();
+		$traverse = function ($node, $level) use (&$comments, &$link, &$seen, &$traverse) {
+			if (in_array($node->id, $seen)) {
+				return $seen;
+			}
+
+			$seen[] = $node->id;
+			$comment = $comments[$node->id];
+
+			if ($level == 0 || $level > 6) {
+				echo '<div class="threader zero">';
+			} else {
+				echo '<div class="threader">';
+			}
+
+			if ($link && $length) {
+				if ($link->page_mode == 'interview' && $comment->author == $link->author) {
+					$len = 2000;
+				} else {
+					$len = 500;
+				}
+			} else {
+				$len = $length;
+			}
+
+			$comment->thread_level = $level;
+			$comment->link_object = $link;
+			$comment->print_summary($len, !empty($link));
+
+			foreach ($node->children as $child) {
+				$traverse($child, $level + 1);
+			}
+			echo '</div>';
+			return;
+		};
+
+		foreach ($tree->rootsIds as $id => $node) {
+			$traverse($node, $initial_level);
+		}
 	}
 
 	function store($full = true) {
@@ -204,23 +261,24 @@ class Comment extends LCPBase {
 	 	}
 	}
 
-	function print_summary($link=0, $length=0, $single_link=true, $return_string = false) {
+	function print_summary($length = 0, $single_link=true, $return_string = false) {
 		global $current_user, $globals;
 
 		if(!$this->read) return;
 
-		if (! $link && $this->link > 0) {
-			$link = Link::from_db($this->link);
-			$this->link_object = $link;
+		if ((! $this->link_object || $this->link_object->id != $this->link) && $this->link > 0) {
+			$this->link_object = Link::from_db($this->link);
 		}
 
-		if (! empty($link)) {
+		$link = $this->link_object;
+
+		if ($link) {
 			if (! empty($link->relative_permalink)) {
 				$this->link_permalink = $link->relative_permalink;
 			} else {
 				$this->link_permalink = $link->get_relative_permalink();
 			}
-		} elseif ($globals['permalink']) {
+		} elseif (! empty($globals['permalink'])) {
 			$this->link_permalink = $globals['permalink'];
 		}
 

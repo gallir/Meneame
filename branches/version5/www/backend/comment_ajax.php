@@ -92,8 +92,9 @@ function save_comment ($comment, $link) {
 
 	if (is_a($res, "Comment", false) ) {
 		$comment = Comment::from_db($res->id);
+		$comment->link_object = $link;
 		//$data['html'] = "<b>$comment->id, $comment->read, $comment->link</b>";
-		$data['html'] = $comment->print_summary(null, null, true, true);
+		$data['html'] = $comment->print_summary(null, true, true);
 		$data['error'] = '';
 	} else {
 		$data['html'] = '';

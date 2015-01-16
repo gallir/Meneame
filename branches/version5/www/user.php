@@ -329,15 +329,13 @@ function do_history () {
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 0,
 		'rss?sent_by='.$user->id, _('envíos en rss2'));
-	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		Link::$original_status = true; // Show status in original sub
 		foreach($links as $link_id) {
-			$link->id=$link_id;
-			$link->read();
-			if ($link->votes > 0) {
+			$link = Link::from_db($link_id);
+			if ($link && $link->votes > 0) {
 				$link->print_summary('short');
 			}
 		}
@@ -349,13 +347,11 @@ function do_favorites () {
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 2,
 		'rss?favorites='.$user->id.'&amp;option=favorites&amp;url=source', _('favoritos en rss2'));
-	$link = new Link;
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
 	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		foreach($links as $link_id) {
-			$link->id=$link_id;
-			$link->read();
+			$link = Link::from_db($link_id);
 			$link->print_summary('short');
 		}
 	}
@@ -368,13 +364,11 @@ function do_shaken () {
 
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 1,
 		'rss?voted_by='.$user->id, _('votadas en rss2'));
-	$link = new Link;
 	$rows = -1; //$db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
 	$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		foreach($links as $linkdb) {
-			$link->id=$linkdb->id;
-			$link->read();
+			$link = Link::from_db($linkdb->id);
 			if ($link->author == $user->id) continue;
 			echo '<div style="max-width: 60em">';
 			$link->print_summary('short', 0, false);
@@ -454,10 +448,10 @@ function do_favorite_comments () {
 	if ($comments) {
 		echo '<ol class="comments-list">';
 		foreach($comments as $comment_id) {
-			$comment->id=$comment_id;
-			$comment->read();
+			$comment = Comment::from_db($comment_id);
 			echo '<li>';
-			$comment->print_summary($link, 2000, false);
+			// $comment->link_object;
+			$comment->print_summary(2000, false);
 			echo '</li>';
 		}
 		echo "</ol>\n";
@@ -469,19 +463,18 @@ function do_shaken_comments () {
 
 	do_user_subheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 2);
 
-	$comment = new Comment;
 	$rows = -1; $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
 	$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id  and comment_id = vote_link_id and comment_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 	if ($comments) {
 		echo '<ol class="comments-list">';
 		foreach($comments as $c) {
-			$comment->id=$c->id;
+			$comment = Comment::from_db($c->id);
 			if ($c->value > 0) $color = '#00d';
 			else $color = '#f00';
-			$comment->read();
 			if ($comment->author != $user->id && ! $comment->admin) {
 				echo '<li>';
-				$comment->print_summary(false, 1000, false);
+				// link_object
+				$comment->print_summary(1000, false);
 				echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
 				echo '</li>';
 			}
@@ -513,7 +506,8 @@ function print_comment_list($comments, $user) {
 		if ($comment->date > $timestamp_read) $timestamp_read = $comment->date;
 		echo '<ol class="comments-list">';
 		echo '<li>';
-		$comment->print_summary($link, 2000, false);
+		$comment->link_object = $link;
+		$comment->print_summary(2000, false);
 		echo '</li>';
 		echo "</ol>\n";
 		$ids[] = $comment->id;
