@@ -71,7 +71,7 @@ class Comment extends LCPBase {
 	}
 
 	// Print the comments recursively, $tree is a CommentTree instance
-	static function print_tree($tree, $link = null, $length = 0, $sort_roots = null, $initial_level = 0, $lenght = 0) {
+	static function print_tree($tree, $link = null, $length = 0, $sort_roots = null, $initial_level = 0) {
 		global $db;
 
 		if (empty($tree->rootsIds)) {
