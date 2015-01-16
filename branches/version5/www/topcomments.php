@@ -45,7 +45,8 @@ if ($comments) {
 		}
 		echo '<ol class="comments-list">';
 		echo '<li>';
-		$comment->print_summary($link, 2000, false);
+		$comment->link_object = $link;
+		$comment->print_summary(2000, false);
 		echo '</li>';
 		if ($last_link != $link->id) {
 			$last_link = $link->id;

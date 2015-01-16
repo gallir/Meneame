@@ -779,8 +779,9 @@ function comment_edit(id, DOMid) {
 	});
 }
 
-function comment_reply(id) {
-	var $parent = $("#cid-"+id).parent();
+function comment_reply(id, prefix) {
+	prefix != null ? prefix : '';
+	var $parent = $("#cid-"+prefix+id).parent();
 	if ($parent.find('#comment_ajax_form').length > 0) {
 		return;
 	}
