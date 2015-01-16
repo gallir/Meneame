@@ -1850,8 +1850,8 @@ font-size: 85%;
 
 .threader {
 border-left: 1px dotted #ddc;
-margin: 5px 0 6px 1.5%;
-padding: 0 0 0 1.5%;
+margin: 0px 0px 0px 1.5%;
+padding: 5px 0px 6px 1.5%;
 }
 
 .threader.zero {
