@@ -109,7 +109,7 @@ function fill_tree($tree, $limit = 30) {
 	global $globals, $db;
 
 	if (empty($tree->nodesIds)) {
-		return false;
+		return 0;
 	}
 
 	$nodesKeys = array_keys($tree->nodesIds);
@@ -119,6 +119,11 @@ function fill_tree($tree, $limit = 30) {
 	} else {
 		$parents = $nodesKeys;
 	}
+
+	if (empty($parents)) {
+		return 0;
+	}
+
 	$tree->previous_keys = $nodesKeys;
 	$inserted = 0;
 	$ids = implode(',', $parents);
