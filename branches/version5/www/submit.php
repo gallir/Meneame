@@ -13,6 +13,8 @@ include_once(mnminclude.'ban.php');
 
 $globals['ads'] = false;
 
+force_authentication();
+
 $site = SitesMgr::get_info();
 $site_properties = SitesMgr::get_extended_properties();
 if (! $site->enabled || ! empty($site_properties['new_disabled'])) die;
@@ -21,7 +23,6 @@ global $errors;
 $errors = array();
 
 if(isset($_POST["phase"])) {
-	force_authentication();
 	switch ($_POST["phase"]) {
 		case 1:
 			do_header(_('enviar historia') . " 2/3", _('enviar historia'));
@@ -57,7 +58,6 @@ if(isset($_POST["phase"])) {
 	do_submit1();
 } else {
 	check_already_sent();
-	force_authentication();
 	do_header(_('enviar historia') . " 1/3", _('enviar historia'));
 	do_submit0();
 }
