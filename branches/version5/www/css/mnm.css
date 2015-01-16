@@ -1521,7 +1521,7 @@ margin: 0px;
 }
 
 .comments {
-margin: 10px 5px 0 10px;
+margin: 10px 4px 0 4px;
 }
 
 .notes {
@@ -1531,7 +1531,6 @@ margin: 15px 5px 0 15px;
 .comments h3 {
 margin: 0;
 }
-
 
 .commentform {
 width: 100%;
@@ -1587,12 +1586,8 @@ padding: 0;
 margin-bottom: 10px;
 }
 
-.comments-list li.threaded {
-margin-bottom: 5px;
-}
-
 .comment-body {
-padding: 5px 5px 10px 10px;
+padding: 4px 5px 5px 10px;
 line-height: 120%;
 text-align: left;
 overflow: hidden;
@@ -1603,9 +1598,6 @@ border-color: #FF6400;
 border-radius: 2px;
 }
 
-.threaded .comment-body {
-padding: 2px 5px 3px 10px;
-}
 
 .comment-body a strong {
 color: #FF6400;
@@ -1685,10 +1677,6 @@ height: 22px;
 margin: 1px 0 15px 0;
 white-space: nowrap;
 overflow: hidden;
-}
-
-.threaded .comment-meta {
-margin-bottom: 9px;
 }
 
 .comment-meta img {
@@ -1858,6 +1846,27 @@ background: #FFF;
 
 .comments .comment-info select {
 font-size: 85%;
+}
+
+.threader {
+border-left: 1px dotted #ddd;
+margin: 5px 0 6px 1.5%;
+padding: 0 0 0 1.5%;
+}
+
+.threader.zero {
+border-left: none;
+padding-left: 0;
+margin-left: 0;
+padding-left: 0;
+}
+
+.threader .comment-body {
+margin-top: 5px;
+}
+
+.threader .comment-meta {
+margin-bottom: 0;
 }
 
 #tolerance, #tolerance select {

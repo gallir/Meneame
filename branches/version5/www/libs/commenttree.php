@@ -2,13 +2,12 @@
 
 
 class CommentTreeNode {
-	public $id;
-	public $children;
-	public $level;
 
 	public function __construct($id, $child = false) {
 		$this->children = array();
 		$this->id = $id;
+		$this->last_child = false;
+		$this->level = 0;
 		if ($child) {
 			$this->addChild($child);
 		}
@@ -22,7 +21,7 @@ class CommentTreeNode {
 		return False;
 	}
 
-	public function deepFirst($max = 100, $level = 0, $seen = False) {
+	public function deepFirst($max = 100, $level = 0, &$seen = False) {
 		if ($seen === false) {
 			$seen = array();
 		}
@@ -83,6 +82,9 @@ class CommentTree {
 	}
 
 	public function addByIds($parent_id, $child_id = 0) {
+		$parent_id = (int) $parent_id;
+		$child_id = (int) $child_id;
+
 		if ($parent_id == $child_id) {
 			$child_id = 0;
 		}

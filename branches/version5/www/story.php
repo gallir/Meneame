@@ -445,7 +445,7 @@ case 9:
 
 /////////////// TODO: in progress
 case 10:
-
+	echo '<div class="comments">';
 	include_once(mnminclude.'commenttree.php');
 	$tree = new CommentTree();
 
@@ -465,7 +465,7 @@ case 10:
 		$res = $db->get_results($sql);
 		if ($res) {
 			foreach ($res as $c) {
-				$tree->addByIds($c->parent, $c->child);
+				$tree->addByIds((int)$c->parent, (int)$c->child);
 			}
 		}
 
@@ -502,7 +502,6 @@ case 10:
 			}
 		}
 		$sort_roots = false;
-
 	}
 
 	// A /url/c0#comment_order all, we add it
@@ -514,47 +513,21 @@ case 10:
 		}
 	}
 
-	$nodes_ids = $tree->deepFirst(100, $sort_roots);
-	if ($nodes_ids) {
-		$ids = implode(',', $nodes_ids);
+	if ($tree->rootsIds && $tree->nodesIds) {
 
+		$ids = implode(',', array_keys($tree->nodesIds));
 		$sql = "SELECT".Comment::SQL."WHERE comment_id in ($ids)";
 		$comments = $db->get_results($sql, "Comment", 'id');
 
-		echo '<div class="comments">';
-		echo '<ol class="comments-list">';
-		$max = 0;
-		$objects = array();
-
-		$ids = array();
-		$displayed = 0;
-		foreach($nodes_ids as $id) {
-			if ($displayed > $globals['comments_page_size'] * 4) {
-				break;
-			}
-			$n = $tree->nodesIds[$id];
-			$comment = $comments[$id];
-			$ids[] = $id;
-			if ($n->level > 0) {
-				$margin = min($globals['thread_padding_max_percent'], $n->level * $globals['thread_padding_percent']);
-				echo "<li class='threaded' style='margin-left:${margin}%'>";
-			} else {
-				echo '<li class="threaded">';
-			}
-			$comment->thread_level = $n->level;
-			if ($link->page_mode == 'interview' && $comment->author == $link->author) {
-				$len = 2000;
-			} else {
-				$len = 500;
-			} 
-			$comment->print_summary($link, $len, true);
-			echo '</li>';
-			$displayed++;
+		if ($sort_roots) {
+			ksort($tree->rootsIds);
 		}
-		echo '</ol>';
-		echo "<!--- displayed: $displayed -->";
+
+		$seen = array();
+		foreach ($tree->rootsIds as $id => $node) {
+			print_comments_tree($node, $comments, $link, $seen);
+		}
 	}
-	//Haanga::Load('get_total_answers_by_ids.html', array('type' => 'comment', 'ids' => implode(',', $ids)));
 	do_comment_pages($link->comments, $current_page, false);
 	Comment::print_form($link);
 
@@ -568,6 +541,36 @@ $globals['tag_status'] = $globals['link']->status;
 do_footer();
 exit(0);
 
+// Print the comments recursively
+function print_comments_tree($node, $comments, $link, &$seen, $level = 0) {
+
+		if (in_array($node->id, $seen)) {
+			return $seen;
+		}
+
+		$seen[] = $node->id;
+		if ($level == 0 || $level > 6) {
+			echo '<div class="threader zero">';
+		} else {
+			echo '<div class="threader">';
+		}
+
+		if ($link->page_mode == 'interview' && $comment->author == $link->author) {
+			$len = 2000;
+		} else {
+			$len = 500;
+		}
+
+		$comment = $comments[$node->id];
+		$comment->thread_level = $level;
+		$comment->print_summary($link, $len, true);
+
+		foreach ($node->children as $child) {
+			print_comments_tree($child, $comments, $link, $seen, $level + 1);
+		}
+		echo '</div>';
+		return;
+}
 
 function print_story_tabs($option) {
 	global $globals, $db, $link, $current_user;

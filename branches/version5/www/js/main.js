@@ -780,13 +780,13 @@ function comment_edit(id, DOMid) {
 }
 
 function comment_reply(id) {
-	var $parent = $("#cid-"+id).parent().parent();
+	var $parent = $("#cid-"+id).parent();
 	if ($parent.find('#comment_ajax_form').length > 0) {
 		return;
 	}
 
 	$('#comment_ajax_form').remove();
-	var $target = $('<div style="padding-left:5%"></div>');
+	var $target = $('<div style="padding-left:3%"></div>');
 	$parent.append($target);
 
 	$.getJSON(base_url_sub + 'comment_ajax', { reply_to: id }, function (data) {

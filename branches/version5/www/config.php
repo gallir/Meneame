@@ -50,7 +50,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // If you user version, be careful to rewrite the directory for img, css and js
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
-$globals['v'] = 29; // internal version, to for reloads
+$globals['v'] = 30; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -364,8 +364,6 @@ $globals['css_main'] = 'mnm.php';
 $globals['css_webfonts'] = "//fonts.googleapis.com/css?family=Roboto:400";
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
-$globals['thread_padding_percent'] = 3; // Padding for threaded comments
-$globals['thread_padding_max_percent'] = 20; // Don't pad more than this %
 
 // Store access stats
 $globals['save_pageloads'] = false;
