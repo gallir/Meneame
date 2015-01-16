@@ -71,7 +71,7 @@ class Comment extends LCPBase {
 	}
 
 	// Print the comments recursively, $tree is a CommentTree instance
-	static function print_tree($tree, $link = null, $sort_roots = null, $initial_level = 0, $length = 0) {
+	static function print_tree($tree, $link = null, $length = 0, $sort_roots = null, $initial_level = 0, $lenght = 0) {
 		global $db;
 
 		if (empty($tree->rootsIds)) {
@@ -87,7 +87,7 @@ class Comment extends LCPBase {
 		}
 
 		$seen = array();
-		$traverse = function ($node, $level) use (&$comments, &$link, &$seen, &$traverse) {
+		$traverse = function ($node, $level) use (&$comments, $link, &$seen, $length, &$traverse) {
 			if (in_array($node->id, $seen)) {
 				return;
 			}
@@ -101,12 +101,8 @@ class Comment extends LCPBase {
 				echo '<div class="threader">';
 			}
 
-			if ($link && $length) {
-				if ($link->page_mode == 'interview' && $comment->author == $link->author) {
-					$len = 2000;
-				} else {
-					$len = 500;
-				}
+			if ($link && $len && $link->page_mode == 'interview' && $comment->author == $link->author) {
+				$len = $length * 4; 
 			} else {
 				$len = $length;
 			}

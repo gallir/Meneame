@@ -491,7 +491,7 @@ case 10:
 		}
 	}
 
-	Comment::print_tree($tree, $link, $sort_roots);
+	Comment::print_tree($tree, $link, 800, $sort_roots);
 
 	do_comment_pages($link->comments, $current_page, false);
 	Comment::print_form($link);
