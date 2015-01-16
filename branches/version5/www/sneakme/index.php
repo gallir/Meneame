@@ -6,23 +6,20 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
+
+// TODO: this page just became unreadable
+//		Must add printing the threads with CommentTree and split the
+//		page with only one post.
+
+
 include_once('../config.php');
 include('common.php');
 
-//echo "path: \n"; var_dump($globals["path"]); return 1;
 
 $argv = $globals['path'];
 $argv[0] = clean_input_string($argv[0]);
 
-/*
-if (!isset($_REQUEST['id']) && !empty($_SERVER['PATH_INFO'])) {
-	$argv = preg_split('/\/+/', $_SERVER['PATH_INFO'], 4, PREG_SPLIT_NO_EMPTY);
-	$argv[0] = clean_input_string($argv[0]);
-} else {
-	$argv = preg_split('/\/+/', $_REQUEST['id'], 4, PREG_SPLIT_NO_EMPTY);
-	$argv[0] = clean_input_string($argv[0]);
-}
-*/
+
 
 if ($argv[0] == _priv) {
 	// Load priv.php
@@ -90,7 +87,7 @@ switch ($argv[0]) {
 			}
 			$globals['permalink'] = 'http://'.get_server_name().post_get_base_url($post_id);
 			// Fill title
-			$summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250); 
+			$summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250);
 			$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': '. $summary;
 			$page_title = text_to_summary($summary, 120);
 			if ($user->avatar) {
@@ -270,7 +267,7 @@ if ($argv[0] == '_geo') {
 				if (! $post_id) $ids[] = $post->id;
 			}
 		}
-	
+
 		echo "</ol>\n";
 
 		if ($post_id > 0) {
@@ -280,7 +277,7 @@ if ($argv[0] == '_geo') {
             			'title' => $page_title);
 			Haanga::Load('share.html', $vars);
 			echo '</div>';
-			
+
 			print_answers($post_id, 1);
 
 		} else {
@@ -321,7 +318,7 @@ function print_answers($id, $level, $visited = false) {
 			$answer = Post::from_db($post_id);
 			if (! $answer) continue;
 			if ( $answer->user_level == 'autodisabled' || $answers->user_level == 'disabled') continue;
-			
+
 			// Check the post has a real reference to the parent (with the id), ignore othewrise
 			if (! preg_match($parent_reference, $answer->content)) continue;
 
