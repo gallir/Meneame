@@ -425,6 +425,7 @@ function do_vertical_tags($what=false) {
 	if(memcache_mprint($cache_key)) return;
 
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$min_pts = 8;
 	$max_pts = 22;
@@ -434,7 +435,7 @@ function do_vertical_tags($what=false) {
 	$max = 3;
 
 	$res = $db->get_col("select link_tags $from_where");
-	if ($res) {
+	if ($res && count($res) > 5) {
 		$url = $globals['base_url'].'cloud';
 		$title = _('etiquetas');
 		$content = '';
@@ -470,11 +471,9 @@ function do_vertical_tags($what=false) {
 			$vars = compact('content', 'title', 'url');
 			$output = Haanga::Load('tags_sidebox.html', $vars, true);
 			echo $output;
-		} else {
-			$output = ' ';
 		}
-		memcache_madd($cache_key, $output, 900);
 	}
+	memcache_madd($cache_key, $output, 900);
 }
 
 function do_best_sites() {
@@ -483,7 +482,7 @@ function do_best_sites() {
 	if ($globals['mobile']) return;
 	$title = _('sitios más votados');
 
-	$output = '';
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$key = 'best_sites_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
@@ -493,11 +492,11 @@ function do_best_sites() {
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(link_votes + link_anonymous) as total_count, sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 		echo $output;
-		memcache_madd($key, $output, 300);
 	}
+	memcache_madd($key, $output, 300);
 }
 
 function do_most_clicked_sites() {
@@ -506,7 +505,7 @@ function do_most_clicked_sites() {
 	if ($globals['mobile']) return;
 	$title = _('sitios más visitados');
 
-	$output = '';
+	$output = ' '; // Use a space to be sure it's memcached.
 
 	$key = 'most_clicked_sites_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
@@ -516,11 +515,11 @@ function do_most_clicked_sites() {
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 		echo $output;
-		memcache_madd($key, $output, 300);
 	}
+	memcache_madd($key, $output, 300);
 }
 
 function do_best_comments() {
@@ -529,7 +528,7 @@ function do_best_comments() {
 	if ($globals['mobile'] || $globals['bot']) return;
 
 	$foo = new Comment();
-	$output = '';
+	$output = ' '; // Use a space to be sure it's memcached.
 
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
@@ -541,7 +540,7 @@ function do_best_comments() {
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and LENGTH(comment_content) > 32 and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id and user_level != 'disabled' order by value desc limit 10");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$objects = array();
 		$title = _('mejores comentarios');
 		$url = $globals['base_url'].'top_comments';
@@ -559,8 +558,8 @@ function do_best_comments() {
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 300);
 	}
+	memcache_madd($key, $output, 300);
 }
 
 function do_best_story_comments($link) {
@@ -569,7 +568,7 @@ function do_best_story_comments($link) {
 	if ($globals['mobile']) return;
 
 	$do_cache = false;
-	$output = '';
+	$output = ' '; // Use a space to be sure it's memcached
 
 	if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) {
 		$do_cache = true;
@@ -586,7 +585,7 @@ function do_best_story_comments($link) {
 
 	$limit = min(15, intval($link->comments/5));
 	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$objects = array();
 		$title = _('mejores comentarios');
 		$url = $link->get_relative_permalink().'/best-comments';
@@ -604,9 +603,9 @@ function do_best_story_comments($link) {
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
-		if($do_cache) {
-			memcache_madd($key, $output, 300);
-		}
+	}
+	if($do_cache) {
+		memcache_madd($key, $output, 300);
 	}
 }
 
@@ -653,6 +652,8 @@ function do_best_stories() {
 
 	$key = 'best_stories_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
+
+	$output = ' '; // Use a space to be sure it's memcached
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$title = _('más votadas');
@@ -661,7 +662,7 @@ function do_best_stories() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' order by value desc limit 5");
-	if ($res) {
+	if ($res && count($res) > 4 ) {
 		$links = array();
 		$url = $globals['base_url'].'popular';
 		$link = new Link();
@@ -681,8 +682,8 @@ function do_best_stories() {
 		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 180);
 	}
+	memcache_madd($key, $output, 180);
 }
 
 function do_best_queued() {
@@ -692,6 +693,8 @@ function do_best_queued() {
 
 	$key = 'best_queued_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
+
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
 	$min_karma = intval($avg_karma/4);
@@ -703,7 +706,7 @@ function do_best_queued() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' order by link_karma desc limit 20");
-	if ($res) {
+	if ($res && count($res) > 5) {
 		$url = $globals['base_url'].'queue?meta=_popular';
 		$links = array();
 		$link = new Link();
@@ -725,14 +728,16 @@ function do_best_queued() {
 		$vars = compact('links', 'title', 'url', 'subclass');
 		$output = Haanga::Load('best_stories.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 120);
 	}
+	memcache_madd($key, $output, 120);
 }
 
 function do_most_clicked_stories() {
 	global $db, $globals, $dblang;
 
 	if ($globals['mobile']) return;
+
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$key = 'most_clicked_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
@@ -744,7 +749,7 @@ function do_most_clicked_stories() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$links = array();
 		$url = $globals['base_url'].'top_visited';
 		$link = new Link();
@@ -763,8 +768,9 @@ function do_most_clicked_stories() {
 		$vars = compact('links', 'title', 'url');
 		$output = Haanga::Load('most_clicked_stories.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 180);
 	}
+
+	memcache_madd($key, $output, 180);
 }
 
 function do_best_posts() {
@@ -772,7 +778,7 @@ function do_best_posts() {
 
 	if ($globals['mobile']) return;
 
-	$output = '';
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$key = 'best_posts_'.$globals['site_shortname'].$globals['v'];
 	if(memcache_mprint($key)) return;
@@ -780,7 +786,7 @@ function do_best_posts() {
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
-	if ($res) {
+	if ($res && count($res) > 4) {
 		$objects = array();
 		$title = _('mejores notas');
 		$url = post_get_base_url('_best');
@@ -801,8 +807,8 @@ function do_best_posts() {
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('best_comments_posts.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 300);
 	}
+	memcache_madd($key, $output, 300);
 }
 
 function do_last_blogs() {
@@ -810,9 +816,10 @@ function do_last_blogs() {
 
 	if (! empty($globals['mobile']) || !empty($globals['submnm'])) return;
 
-	$output = '';
 	$key = 'last_blogs_'.$globals['v'];
 	if(memcache_mprint($key)) return;
+
+	$output = ' '; // Use a space to be sure it's memcached
 
 	$entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar from rss, users where rss.user_id = users.user_id order by rss.date desc limit 10");
 	if ($entries) {
@@ -831,8 +838,8 @@ function do_last_blogs() {
 		$vars = compact('objects', 'title', 'url');
 		$output = Haanga::Load('last_blogs.html', $vars, true);
 		echo $output;
-		memcache_madd($key, $output, 300);
 	}
+	memcache_madd($key, $output, 300);
 }
 
 function do_last_subs($status = 'published', $count = 10, $order = 'date') {
@@ -840,9 +847,10 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 
 	if ($globals['mobile'] || $globals['submnm']) return;
 
-	$output = ' ';
 	$key = "last_subs_$status-$count-$order_".$globals['v'];
 	if(memcache_mprint($key)) return;
+
+	$output = ' ';
 
 	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link order by $order desc limit $count");
 	if ($ids) {

@@ -276,10 +276,11 @@ if ($link->latlng) {
 	echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
 }
 if (! $current_user->user_id) {
+	do_most_clicked_stories();
+	do_banner_promotions();
 	do_best_stories();
 }
 do_rss_box();
-do_banner_promotions();
 echo '</div>';
 /*** END SIDEBAR ***/
 
@@ -491,7 +492,7 @@ case 10:
 		}
 	}
 
-	Comment::print_tree($tree, $link, 800, $sort_roots);
+	Comment::print_tree($tree, $link, 500, $sort_roots);
 
 	do_comment_pages($link->comments, $current_page, false);
 	Comment::print_form($link);
