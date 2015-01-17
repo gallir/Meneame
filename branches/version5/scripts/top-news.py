@@ -29,6 +29,9 @@ def do_site(site_id, site):
 		order by link_date desc
 	"""
 	cursor.execute(query, (site_id,))
+	if cursor.rowcount < 4:
+		return
+
 	links_total = 0
 	for link_id, link_uri, old in cursor:
 		links_total += 1
