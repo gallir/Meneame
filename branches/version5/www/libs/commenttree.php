@@ -88,8 +88,10 @@ class CommentTree {
 			$child_id = 0;
 		}
 
-		$parent = $this->getNodeById($parent_id);
-		$this->addToIndexes($parent);
+		if ($parent_id > 0) {
+			$parent = $this->getNodeById($parent_id);
+			$this->addToIndexes($parent);
+		}
 
 		if ($child_id > 0) {
 			$child = $this->getNodeById($child_id);
