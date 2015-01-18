@@ -34,14 +34,17 @@ $rows = -1; // Don't show page numbers by default
 $from = '';
 switch ($globals['meta']) {
 	case '_subs':
-		$globals['tag_status'] = 'queued';
-		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
-		$where = "id in ($current_user->subs) AND status='queued' and id = origen and date > $from_time";
-		$order_by = "ORDER BY date DESC";
-		$rows = -1;
-		$tab = 7;
-		Link::$original_status = true; // Show status in original sub
-		break;
+		if ($current_user->user_id && $current_user->has_subs) {
+			$globals['tag_status'] = 'queued';
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
+			$where = "id in ($current_user->subs) AND status='queued' and id = origen and date > $from_time";
+			$order_by = "ORDER BY date DESC";
+			$rows = -1;
+			$tab = 7;
+			Link::$original_status = true; // Show status in original sub
+			break;
+		}
+		// NOTE: If the user has no subscriptions it will fall into next: _*
 	case '_*':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';

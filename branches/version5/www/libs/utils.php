@@ -718,13 +718,14 @@ function meta_get_current() {
 	}
 
 
+	// TODO: Move this function as static of login manager.
 	//Check for personalisation
 	// Authenticated users
 	if (empty($globals['submnm']) && $current_user->user_id > 0) {
 		$subs = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'sub_follow' order by pref_value");
-		$current_user->subs = implode(',', $subs);
 		if ($subs) {
 			$current_user->has_subs = true;
+			$current_user->subs = implode(',', $subs);
 			$current_user->subs_default = $db->get_col("SELECT pref_value FROM prefs WHERE pref_user_id = $current_user->user_id and pref_key = 'subs_default'");
 			if ($current_user->subs_default) {
 				$globals['meta_skip'] = '?meta=_all';
@@ -737,6 +738,7 @@ function meta_get_current() {
 				$globals['meta_subs'] = '?meta=_subs';
 			}
 		} else {
+			$current_user->has_subs = false;
 			$globals['meta_subs'] = false;
 		}
 	}

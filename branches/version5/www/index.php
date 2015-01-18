@@ -41,14 +41,15 @@ do_header($pagetitle, _('portada'));
 $from = '';
 switch ($globals['meta']) {
 	case '_subs':
-		// TODO: Show here the subs followed by the user
-		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
-		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
-		$where = "id in ($current_user->subs) AND status='published' AND id = origen and date > $from_time";
-		$rows = -1;
-		Link::$original_status = true; // Show status in original sub
-		print_index_tabs(7); // Show "personal" as default
-		break;
+		if ($current_user->user_id && $current_user->has_subs) {
+			$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
+			$where = "id in ($current_user->subs) AND status='published' AND id = origen and date > $from_time";
+			$rows = -1;
+			Link::$original_status = true; // Show status in original sub
+			print_index_tabs(7); // Show "personal" as default
+			break;
+		}
+		// NOTE: If the user has no subscriptions it will fall into next: _*
 	case '_*':
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']).'"';
 		$from = ", subs";
