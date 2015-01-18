@@ -61,4 +61,3 @@ echo '</div>';
 do_footer_menu();
 do_footer();
 
-?>

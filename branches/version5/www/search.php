@@ -109,4 +109,3 @@ function print_result() {
 	do_pages($rows, $page_size);
 }
 
-?>

@@ -207,4 +207,3 @@ function recover_error($message) {
 	echo "</div>\n";
 }
 
-?>

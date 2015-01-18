@@ -165,4 +165,3 @@ function do_footer() {
 	echo "</channel>\n</rss>\n";
 }
 
-?>

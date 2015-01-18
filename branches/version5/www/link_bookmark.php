@@ -67,4 +67,3 @@ function do_link_item($sql) {
 	}
 }
 
-?>

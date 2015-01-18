@@ -187,4 +187,3 @@ function link_edit_errors($link) {
 	return $errors;
 }
 
-?>

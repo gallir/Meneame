@@ -608,4 +608,3 @@ function do_subs() {
 	}
 }
 
-?>

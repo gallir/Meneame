@@ -40,4 +40,3 @@ if ($links) {
 }
 echo '</div>';
 do_footer();
-?>

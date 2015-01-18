@@ -23,4 +23,3 @@ echo '<Param name="q" value="{searchTerms}"/>'."\n";
 echo '</Url>'."\n";
 echo '<SearchForm>http://'.get_server_name().$globals['base_url'].'search</SearchForm>'."\n";
 echo '</OpenSearchDescription>'."\n";
-?>

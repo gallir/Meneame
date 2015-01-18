@@ -247,4 +247,3 @@ function check_redirect_to_feedburner() {
 	header("Location: http://feeds.feedburner.com/meneame/comments");
 	exit();
 }
-?>

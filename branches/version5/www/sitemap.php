@@ -105,4 +105,3 @@ function do_last_published() {
 	}
 	echo '</urlset>'."\n";
 }
-?>

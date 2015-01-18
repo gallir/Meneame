@@ -92,4 +92,3 @@ function print_period_tabs() {
 	}
 	echo '</ul>'."\n";
 }
-?>

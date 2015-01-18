@@ -259,4 +259,3 @@ function register_error($message) {
 	echo "</div>\n";
 }
 
-?>

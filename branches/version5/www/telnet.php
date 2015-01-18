@@ -27,4 +27,3 @@ Haanga::Load('sneak/form.html', compact('max_item'));
 
 do_footer();
 
-?>

@@ -207,4 +207,3 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 
 	do_footer_menu();
 	do_footer();
-?>

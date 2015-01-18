@@ -170,4 +170,3 @@ function between($id1, $id2, $table, $prefix, $rows=25, $pos = 0) {
 	return $rels;
 
 }
-?>

@@ -102,4 +102,3 @@ function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 
 do_footer_menu();
 do_footer();
-?>

@@ -40,4 +40,3 @@ echo '</div>'."\n";
 do_footer_menu();
 do_footer();
 
-?>

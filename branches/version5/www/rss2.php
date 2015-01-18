@@ -341,4 +341,3 @@ function check_redirect_to_feedburner($status) {
 	}
 
 }
-?>
