@@ -112,4 +112,3 @@ function error($mess) {
 	die;
 }
 
-?>

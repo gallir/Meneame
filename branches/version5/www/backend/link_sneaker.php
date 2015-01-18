@@ -152,4 +152,3 @@ function get_status($status) {
 	}
 	return $status;
 }
-?>

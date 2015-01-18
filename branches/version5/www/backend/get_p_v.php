@@ -60,4 +60,3 @@ do_contained_pages($id, $post->post_votes, $votes_page, $votes_page_size, 'get_p
 echo '</div>';
 echo '</div>';
 
-?>

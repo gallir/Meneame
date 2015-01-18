@@ -63,4 +63,3 @@ $post->show_avatar = true;
 echo '<div class="comment-body">';
 $post->print_text();
 echo '</div>';
-?>

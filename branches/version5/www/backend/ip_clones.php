@@ -68,4 +68,3 @@ do_contained_pages($user_id, $nclones, $users_page, $users_page_size, 'ip_clones
 echo '</div>';
 echo '</div>';
 
-?>

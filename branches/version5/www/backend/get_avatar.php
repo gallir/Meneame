@@ -47,4 +47,3 @@ if ($img) {
 	header('HTTP/1.1 307 Image not found');
 	header('Location: ' . get_no_avatar_url($size));
 }
-?>

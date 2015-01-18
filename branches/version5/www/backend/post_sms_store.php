@@ -105,4 +105,3 @@ if(intval($db->get_var("select count(*) from posts where post_user_id = $user->i
 	$user->karma = $user->karma + 0.1;
 	$user->store();
 }
-?>

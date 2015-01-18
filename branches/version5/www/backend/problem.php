@@ -79,4 +79,3 @@ function error($mess) {
 	echo json_encode($dict);
 	die;
 }
-?>

@@ -19,4 +19,3 @@ $post->id=$id;
 if (! $post->read()) die;
 if(!$post->read) die;
 $post->print_text(0);
-?>

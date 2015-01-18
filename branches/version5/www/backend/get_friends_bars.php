@@ -77,4 +77,3 @@ if ($dbusers) {
 	do_contained_pages($prefered_id, $prefered_total, $prefered_page, $prefered_page_size, 'get_friends_bars.php', $prefered_type, $prefered_type.'-container');
 	echo "<br clear='all'/>\n";
 }
-?>

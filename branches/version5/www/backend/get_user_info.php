@@ -65,4 +65,3 @@ if ($post->read_last($user->id)) {
 	$post->print_text(150);
 }
 */
-?>

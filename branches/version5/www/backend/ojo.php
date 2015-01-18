@@ -40,4 +40,3 @@ $ojo_messages = array ("en la biblia",
 				"en la frase \"Tú sigue chupando que yo te aviso\"",
 				"en que existen culos con orejas",
 				"en JOVENCITAS UNIVERSITARIAS BUSCAN HOMBRE PARA HACER SEXO EN GRUPO GRATIS, SOLO POR VICIO 806229XXX");
-?>

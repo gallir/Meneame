@@ -31,4 +31,3 @@ if (($image = $link->has_thumb()) ) {
 	echo "<img src='$image' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
 }
 echo $link->to_html($link->content) . '</p>';
-?>

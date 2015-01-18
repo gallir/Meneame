@@ -280,4 +280,3 @@ function do_rae($string) {
 	}
 }
 
-?>

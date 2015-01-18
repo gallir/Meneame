@@ -39,4 +39,3 @@ if ( $comment->type != 'admin') {
 }
 $comment->print_text(1000);
 echo '</div>';
-?>

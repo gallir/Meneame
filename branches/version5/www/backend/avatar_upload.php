@@ -49,4 +49,3 @@ function json_error($mess) {
 	echo json_encode($dict);
 	die;
 }
-?>

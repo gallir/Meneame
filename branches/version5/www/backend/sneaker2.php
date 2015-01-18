@@ -516,4 +516,3 @@ function update_conversations(&$data) {
 	$data['c_conv_c'] = Comment::get_unread_conversations($current_user->user_id);
 }
 
-?>

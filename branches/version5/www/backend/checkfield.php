@@ -128,4 +128,3 @@ switch ($type) {
 	default:
 		echo "KO $type";
 }
-?>

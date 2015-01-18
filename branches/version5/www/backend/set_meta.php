@@ -40,4 +40,3 @@ function error($mess) {
 	die;
 }
 
-?>

@@ -12,4 +12,3 @@ if ($time) {
 	header('Location: ' . get_avatar_url($id, $time, $size));
 }
 die;
-?>

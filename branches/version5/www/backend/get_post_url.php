@@ -63,4 +63,3 @@ if(!$post->read) {
 header('Location:  http://'.get_server_name().post_get_base_url($post->id));
 echo $link;
 
-?>

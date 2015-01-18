@@ -57,4 +57,3 @@ foreach ($matches[2] as $match) {
 		$tb->send($link);
 	}
 }
-?>

@@ -25,4 +25,3 @@ if (!empty($link->url_title)) {
 } else {
 	echo '<strong>'.$link->title.'</strong>';
 }
-?>

@@ -60,4 +60,3 @@ do_contained_pages($id, $comment->comment_votes, $votes_page, $votes_page_size, 
 echo '</div>';
 echo '</div>';
 
-?>

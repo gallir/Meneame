@@ -38,5 +38,3 @@ if (($res = $db->get_results("select floor(unix_timestamp(vote_date)/3600)*3600 
 	}
 }
 echo json_encode($objects);
-?>
-

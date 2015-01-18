@@ -66,4 +66,3 @@ if ($media) {
 	}
 }
 if ($images) Haanga::Load("backend/gallery.html", compact('images'));
-?>

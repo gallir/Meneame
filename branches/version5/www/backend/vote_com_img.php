@@ -24,4 +24,3 @@ header("Content-type: image/png");
 header('Cache-Control: max-age=120, must-revalidate');
 header('Expires: ' . date('r', time()+120));
 imagepng($im);
-?>

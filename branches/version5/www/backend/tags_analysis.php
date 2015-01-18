@@ -68,4 +68,3 @@ foreach ($a as $w) {
 
 Haanga::Load('backend/tags_analysis.html', compact('results', 'words'));
 
-?>

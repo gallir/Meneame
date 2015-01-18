@@ -43,5 +43,3 @@ if ( ($array = $link->read_annotation("link-karma")) != false ) {
 	}
 	echo json_encode($objects);
 }
-?>
-

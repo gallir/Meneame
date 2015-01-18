@@ -19,4 +19,3 @@ if ($annotation->read()) {
 	echo _('objeto inexistente').': ', __($id);
 }
 echo '</div>';
-?>

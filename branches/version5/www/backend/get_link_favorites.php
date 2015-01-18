@@ -43,4 +43,3 @@ foreach ( $favorites as $vote ){
 }
 echo "</div>\n";
 do_contained_pages($globals['link_id'], $favorites_users, $favorites_page, $favorites_page_size, 'get_link_favorites.php', 'voters', 'voters-container');
-?>

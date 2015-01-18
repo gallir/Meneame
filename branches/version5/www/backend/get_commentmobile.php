@@ -24,4 +24,3 @@ $link = Link::from_db($comment->link);
 $comment->link_permalink =  $link->get_relative_permalink();
 
 $comment->print_text(0);
-?>

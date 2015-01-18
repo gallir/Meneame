@@ -26,4 +26,3 @@ $user = new User;
 $user->id=$id;
 if (! $user->read()) die;
 echo $user->get_api_key();
-?>

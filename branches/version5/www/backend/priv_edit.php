@@ -133,4 +133,3 @@ function notify_user($from, $to, $text) {
 	require_once(mnminclude.'mail.php');
 	send_mail($user->email, $subject, $message);
 }
-?>

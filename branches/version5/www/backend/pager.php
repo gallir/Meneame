@@ -48,4 +48,3 @@ function do_contained_page_link($id, $i, $program, $type, $container) {
 	echo '<a href="javascript:get_votes(\''.$program.'\',\''.$type.'\',\''.$container.'\','.$i.','.$id.')" title="'._('ir a página')." $i".'">'.$i.'</a>';
 }
 
-?>

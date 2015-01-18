@@ -25,4 +25,3 @@ if ($user->karma_log) {
 	print _('no hay registros para este usuario');
 }
 echo '</div>';
-?>

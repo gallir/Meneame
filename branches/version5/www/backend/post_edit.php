@@ -138,4 +138,3 @@ function store_image($post) {
 	$post->media_date = time(); // To show the user the new thumbnail
 }
 
-?>

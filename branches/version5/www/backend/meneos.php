@@ -89,4 +89,3 @@ if ($no_show_voters) {
 	do_contained_pages($globals['link_id'], $votes_users, $votes_page, $votes_page_size, 'meneos.php', 'voters', 'voters-container');
 }
 
-?>
