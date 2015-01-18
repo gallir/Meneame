@@ -107,4 +107,4 @@ function do_credits_mobile() {
 	echo '</div>'."\n";
 }
 
-?>
+

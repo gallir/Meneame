@@ -114,4 +114,3 @@ function do_pages($total, $page_size=15) {
 
 }
 
-?>

@@ -1033,4 +1033,3 @@ function unify_path_query($path, $query) {
 		return $path_query;
 }
 
-?>

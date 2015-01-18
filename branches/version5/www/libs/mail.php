@@ -59,4 +59,4 @@ function send_recover_mail ($user) {
 	echo '<p><strong>' ._ ('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.') . '</strong></p>';
 	return true;
 }
-?>
+

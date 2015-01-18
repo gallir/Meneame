@@ -157,4 +157,4 @@ function remove_shorts($string) {
 	}
 	return $string;
 }
-?>
+

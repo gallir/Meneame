@@ -816,4 +816,3 @@ class IXR_ClientMulticall extends IXR_Client {
 	}
 }
 
-?>

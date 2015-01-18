@@ -750,4 +750,4 @@ class Comment extends LCPBase {
 	}
 
 }
-?>
+

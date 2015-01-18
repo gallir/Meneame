@@ -352,4 +352,3 @@ class QueryResult extends MySQLi_Result implements IteratorAggregate {
 
 
 
-?>

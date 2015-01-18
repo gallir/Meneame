@@ -88,4 +88,4 @@ function geo_coder_print_form($type, $id, $latlng, $label, $icontype = 'queued')
 
 	Haanga::Load('geo_form.html', compact('type', 'id', 'latlng', 'label', 'icontype'));
 }
-?>
+

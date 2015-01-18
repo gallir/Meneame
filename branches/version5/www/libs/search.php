@@ -342,4 +342,3 @@ function search_parse_query() {
 	if (isset($_REQUEST['o']) && ! preg_match('/^(date|relevance|pure)$/', $_REQUEST['o'])) unset($_REQUEST['o']);
 }
 
-?>

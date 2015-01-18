@@ -132,4 +132,4 @@ function ts_print_form() {
 		echo recaptcha_get_html($globals['recaptcha_public_key'],null,$globals['https']);
 	}
 }
-?>
+

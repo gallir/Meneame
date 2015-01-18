@@ -255,4 +255,4 @@ function avatars_remove_user_files($user) {
 		}
 	}
 }
-?>
+

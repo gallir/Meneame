@@ -45,4 +45,4 @@ class Log {
 		return $db->get_var("select count(*) from annotations where annotation_key = 'log-$id'");
 	}
 }
-?>
+

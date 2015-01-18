@@ -34,4 +34,3 @@ function init_sneak() {
 	if ($current_user->user_id > 0) $globals['show_conv_counters'] = true;
 }
 
-?>

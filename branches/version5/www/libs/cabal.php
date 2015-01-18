@@ -63,4 +63,3 @@ $cabal_messages = array ("recordad, hay que censurar toda crítica al menéame, 
 				'el hombre es esclavo de lo que menea, dueño de lo que publica y temeroso de lo que descarta',
 				'el demonio dice "cuando veas tus visitas bajar, al menéame has de criticar"',
 				"llego la hora que menees un poco, el cabal siempre te escucha");
-?>

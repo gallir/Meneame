@@ -71,4 +71,3 @@ function ts_print_form() {
 	echo '<input type="text" size="20" name="ts_code" /><br/>'."\n";
 }
 
-?>

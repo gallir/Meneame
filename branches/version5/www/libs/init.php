@@ -256,4 +256,4 @@ function shutdown() {
 		exit(0);
 	}
 }
-?>
+

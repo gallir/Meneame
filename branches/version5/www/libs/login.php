@@ -300,4 +300,4 @@ class UserAuth {
 }
 
 $current_user = new UserAuth();
-?>
+
