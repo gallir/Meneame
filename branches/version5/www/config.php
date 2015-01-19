@@ -139,7 +139,6 @@ $globals['fancybox_enabled'] = true;
 
 // Comment pages
 $globals['comments_page_size'] = 100;
-$globals['comments_page_threshold'] = 1.10;
 
 // Min karma to highlights comments
 // The negative is used to hide comments

@@ -63,7 +63,7 @@ if ($last_arg > 0) {
 
 $order_field = 'comment_order';
 
-if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
+if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']) {
 	if (!$current_page) $current_page = 1; // previously: ceil($link->comments/$globals['comments_page_size']);
 	$offset=($current_page-1)*$globals['comments_page_size'];
 	$limit = "LIMIT $offset,".$globals['comments_page_size'];
@@ -139,7 +139,7 @@ if (!empty($new_comment_error)) {
 function do_comment_pages($total, $current) {
 	global $db, $globals;
 
-	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
+	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']) return;
 
 	$query = $globals['link_permalink'];
 

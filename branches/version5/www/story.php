@@ -127,8 +127,13 @@ if (empty($url_args[1])) {
 
 switch ($url_args[1]) {
 	case '':
-	case 'standard':
+	case 'interview':
+		// $globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
 	case 'default':
+	case 'threads':
+		$tab_option = 10;
+		break;
+	case 'standard':
 		$tab_option = 1;
 		$order_field = 'comment_order';
 
@@ -143,7 +148,7 @@ switch ($url_args[1]) {
 			$last_com_first = false;
 		}
 
-		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']*$globals['comments_page_threshold']) {
+		if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']) {
 			if ($no_page) {
 				if ($last_com_first) {
 					$canonical_page = $current_page = ceil($link->comments/$globals['comments_page_size']);
@@ -203,11 +208,6 @@ switch ($url_args[1]) {
 		break;
 	case 'answered':
 		$tab_option = 9;
-		break;
-	case 'interview':
-		// $globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
-	case 'threads':
-		$tab_option = 10;
 		break;
 	default:
 		do_error(_('página inexistente'), 404);
@@ -543,7 +543,7 @@ function print_story_tabs($option) {
 function do_comment_pages($total, $current, $reverse = true) {
 	global $db, $globals;
 
-	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']*$globals['comments_page_threshold']) return;
+	if ( ! $globals['comments_page_size'] || $total <= $globals['comments_page_size']) return;
 
 	$query = $globals['permalink'] . $globals['page_base'];
 
