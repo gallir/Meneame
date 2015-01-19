@@ -91,11 +91,15 @@ class CommentTree {
 		if ($parent_id > 0) {
 			$parent = $this->getNodeById($parent_id);
 			$this->addToIndexes($parent);
+		} else {
+			$parent = false;
 		}
 
 		if ($child_id > 0) {
 			$child = $this->getNodeById($child_id);
-			$parent->addChild($child);
+			if ($parent) {
+				$parent->addChild($child);
+			}
 			$this->addToIndexes($child, $parent);
 		}
 	}

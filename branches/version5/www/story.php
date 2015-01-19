@@ -490,9 +490,9 @@ case 10:
 	// A /url/c0#comment_order all, we add it
 	if (!empty($globals['referenced_comment'])) {
 		$order = intval($globals['referenced_comment']);
-		$id = $db->get_var("select comment_id from comments where comment_link_id = $link->id and comment_order = $order");
-		if ($id) {
-			$tree->addByIds($id);
+		$pair = $db->get_row("select comment_id as child, conversation_to as parent FROM comments LEFT JOIN (conversations) ON conversation_type='comment' and conversation_from = comment_id WHERE comment_link_id = $link->id and comment_order = $order");
+		if ($pair) {
+			$tree->addByIds($pair->parent, $pair->child);
 		}
 	}
 
