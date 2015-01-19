@@ -117,7 +117,11 @@ $offset = 0;
 $limit = '';
 
 if (empty($url_args[1])) {
-	if (! $current_user->user_id || ! User::get_pref($current_user->user_id, 'com_order')) {
+	if ($current_user->user_id && User::get_pref($current_user->user_id, 'com_order')) {
+		// Check the preference of the user
+		$url_args[1] = 'standard';
+	} else {
+		// Use the mode defined in the sub
 		$url_args[1] = $link->page_mode;
 	}
 	$globals['page_base'] = '';
@@ -129,10 +133,10 @@ switch ($url_args[1]) {
 	case '':
 	case 'interview':
 		// $globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
-	case 'default':
 	case 'threads':
 		$tab_option = 10;
 		break;
+	case 'default':
 	case 'standard':
 		$tab_option = 1;
 		$order_field = 'comment_order';
