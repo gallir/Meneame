@@ -14,12 +14,11 @@ if (! defined('mnmpath')) {
 
 if (empty($_GET['id'])) die;
 $id = intval($_GET['id']);
-$comment = new Comment;
-$comment->id=$id;
-$comment->read();
-if(!$comment->read) die;
-$link = new Link;
-$link->id = $comment->link;
-if(!$link->read_basic()) die;
+$comment = Comment::from_db($id);
+if(!$comment) die;
+
+$link = Link::from_db($comment->link);
+if(!$link) die;
+
 $comment->link_permalink =  $link->get_relative_permalink();
 $comment->print_text(0);

@@ -28,15 +28,15 @@
 		alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
 	{% endif %}
 
-
-	{% if self.can_edit %}
-		&nbsp;&nbsp;<a 
-		href="javascript:comment_edit({{ self.id }}, 'c-{{ self.html_id }}')"
-		title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
-	{% endif %}
-
 	{% if self.is_truncated %}
 		&nbsp;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">&#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
 	{% endif %}
+
+	{% if self.can_edit %}
+		&nbsp;&nbsp;<a 
+		href="javascript:comment_edit({{ self.id }}, 'cid-{{ self.prefix_id }}{{ self.id }}')"
+		title="{% trans _('editar comentario') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+	{% endif %}
+
 
 {% endif %}

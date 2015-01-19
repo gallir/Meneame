@@ -751,7 +751,7 @@ var mDialog = new function() {
 };
 
 function comment_edit(id, DOMid) {
-	$target=$('#' + DOMid);
+	$target=$('#' + DOMid).parent();
 	$.getJSON(base_url_sub + 'comment_ajax', { id: id }, function (data) {
 		if ( ! data.error ) {
 			$target.html(data.html);
