@@ -16,6 +16,7 @@ class WatchData:
 	datafile = "/var/tmp/watchdata.p"
 	dry = False
 	low_limit = 70
+	low_counter_limit = 0 # at least 5 times below threshold
 	high_limit = 90
 	high_urgent = 95
 	stats_period = 60
@@ -35,7 +36,8 @@ class WatchData:
 		self.avg_load = 0
 		self.max_load = 0
 		self.up_ts = 0
-		self.down_ts= 0
+		self.down_ts = 0
+		self.low_counter = 0 # count the consecutive times a low conditions has been observed
 		self.max_loaded = None
 		self.loads = {}
 		self.measures = {}
@@ -94,9 +96,12 @@ class WatchData:
 		if len(m) > 0:
 			measures = self.measures[instance] = len(m)
 			ordered = sorted(m, key=lambda x: x['Timestamp'])
+			return ordered[-1]['Average'] # Return last measure
+			""" 
 			averages = [ x['Average'] for x in ordered]
 			average = reduce(lambda x, y: 0.4*x + 0.6*y, averages[-2:])
 			return average
+			"""
 
 		return None
 
@@ -150,7 +155,7 @@ class WatchData:
 	def check_avg_high(self):
 		threshold = self.high_limit
 		if self.instances == 1:
-			threshold = threshold * 0.95 # Increase faster if there is just one instance
+			threshold = threshold * 0.90 # Increase faster if there is just one instance
 		
 		if self.avg_load > threshold:
 			self.action = "WARN, high load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances + 1)
@@ -159,6 +164,7 @@ class WatchData:
 
 	def check_avg_low(self):
 		if self.instances <= self.group.min_size:
+			self.low_counter = 0
 			return False
 
 		threshold = self.low_limit
@@ -166,8 +172,13 @@ class WatchData:
 			threshold = threshold * 0.95
 		
 		if self.total_load/(self.instances-1) < threshold:
-			self.action = "low load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances - 1)
-			self.set_desired(self.instances - 1)
+			self.low_counter += 1
+			if self.low_counter > self.low_counter_limit:
+				self.low_counter = 0
+				self.action = "low load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances - 1)
+				self.set_desired(self.instances - 1)
+		else:
+			self.low_counter = 0
 
 	def kill_instance(self, id):
 		if self.action:

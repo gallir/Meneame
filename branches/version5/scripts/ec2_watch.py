@@ -30,6 +30,8 @@ def main():
 		WatchData.high_urgent = configuration.high_urgent
 	if configuration.history:
 		WatchData.history_size = configuration.history
+	if configuration.low_counter:
+		WatchData.low_counter_limit = configuration.low_counter
 
 
 
@@ -43,6 +45,7 @@ def main():
 	data.action = prev_data.action
 	data.up_ts = int(prev_data.up_ts)
 	data.down_ts = int(prev_data.down_ts)
+	data.low_counter = int(prev_data.low_counter)
 	data.history = prev_data.history
 
 	""" Calculate the trend, increasing or decreasing CPU usage """
@@ -117,10 +120,11 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--group", "-g", default="web", help="AutoScaler group")
 	parser.add_argument("--annotation", "-a", action="store_true", help="Store data in Meneame database as annotation")
-	parser.add_argument("--history", "-H", type=int, default=1500, help="History size of CPU load")
+	parser.add_argument("--history", "-H", type=int, default=1800, help="History size of CPU load")
 	parser.add_argument("--mail", "-m", help="Send email to this address when took an emergency action")
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not take actions")
 	parser.add_argument("--low", "-low", type=int, default=70, help="Low limit for CPU average")
+	parser.add_argument("--low_counter", type=int, default=5, help="Minimum times below low limit before reducing fleet")
 	parser.add_argument("--high", "-high", type=int, default=90, help="High limit for CPU average")
 	parser.add_argument("--high_urgent", "-u", type=int, default=95, help="Kill overloaded instance, or increase instances at this individual CPU load")
 	configuration = parser.parse_args()
