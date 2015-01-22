@@ -138,10 +138,9 @@
 
 				{% if this_site.logo_url %}
 					{% include 'header_sub_logo.html' %}
-					<a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}>{{ this_site.name_long }}</a>
-				{% else %}
-					<a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}><span style="font-size:125%;font-variant:small-caps;font-weight:bold;">{{ this_site.name }}</span></a>
 				{% endif %}
+				<a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}>{{ this_site.name_long }}</a>
+
 
 			{% if this_site.nsfw %} [nsfw]{% endif %}
 			&nbsp;{% if this_site.owner > 0 %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
