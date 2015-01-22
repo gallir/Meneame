@@ -14,8 +14,8 @@ class CommentTreeNode {
 
 
 	public function addChild($child) {
-		if (! in_array($child, $this->children, true)) {
-			$this->children[] = $child;
+		if (! isset($this->children[$child->id])) {
+			$this->children[$child->id] = $child;
 			return True;
 		}
 		return False;
@@ -26,13 +26,13 @@ class CommentTreeNode {
 			$seen = array();
 		}
 
-		if ($level >= $max || in_array($this->id, $seen, true)) {
+		if ($level >= $max || isset($seen[$this->id])) {
 			return $seen;
 		}
 
 		$this->level = $level;
-		$seen[] = $this->id;
-		foreach ($this->children as $child) {
+		$seen[$this->id] = true;
+		foreach ($this->children as $id => $child) {
 			if (! in_array($child->id, $seen, true)) {
 				$seen = $child->deepFirst($max, $level + 1, $seen);
 			}
