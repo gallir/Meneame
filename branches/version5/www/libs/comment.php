@@ -88,11 +88,11 @@ class Comment extends LCPBase {
 
 		$seen = array();
 		$traverse = function ($node, $level) use (&$comments, $link, &$seen, $length, &$traverse) {
-			if (in_array($node->id, $seen) || ! isset($comments[$node->id])) {
+			if (isset($seen[$node->id]) || ! isset($comments[$node->id])) {
 				return;
 			}
 
-			$seen[] = $node->id;
+			$seen[$node->id] = true;
 			$comment = $comments[$node->id];
 
 			if ($level == 0 || $level > 6) {

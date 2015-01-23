@@ -33,7 +33,7 @@ class CommentTreeNode {
 		$this->level = $level;
 		$seen[$this->id] = true;
 		foreach ($this->children as $id => $child) {
-			if (! in_array($child->id, $seen, true)) {
+			if (! isset($seen[$id])) {
 				$seen = $child->deepFirst($max, $level + 1, $seen);
 			}
 		}
