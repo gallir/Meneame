@@ -132,7 +132,6 @@ if (empty($url_args[1])) {
 switch ($url_args[1]) {
 	case '':
 	case 'interview':
-		// $globals['comments_page_size'] = intval($globals['comments_page_size'] * 1.5);
 	case 'threads':
 		$tab_option = 10;
 		break;
@@ -194,24 +193,29 @@ switch ($url_args[1]) {
 		break;
 	case 'voters':
 		$tab_option = 3;
+		$globals['noindex'] = true;
 		break;
 	case 'log':
 		$tab_option = 4;
 		break;
 	case 'votes_raw':
+		$globals['noindex'] = true;
 		print_votes_raw($link);
 		die;
 	case 'sneak':
 		$tab_option = 5;
+		$globals['noindex'] = true;
 		break;
 	case 'favorites':
 		$tab_option = 6;
+		$globals['noindex'] = true;
 		break;
 	case 'related':
 		$tab_option = 8;
 		break;
 	case 'answered':
 		$tab_option = 9;
+		$globals['noindex'] = true;
 		break;
 	default:
 		do_error(_('página inexistente'), 404);
@@ -223,7 +227,7 @@ $globals['link_id'] = $link->id;
 $globals['permalink'] = $globals['link']->get_permalink();
 
 // to avoid search engines penalisation
-if ($tab_option != 1 || $link->status == 'discard') {
+if ($link->status != 'published' && $globals['now'] - $link->date > 864000) {
 	$globals['noindex'] = true;
 }
 
@@ -254,7 +258,7 @@ if ($link->has_thumb()) {
 	$globals['thumbnail'] = $link->media_url;
 }
 
-$globals['description'] = text_to_summary($link->content, 200);
+$globals['description'] = text_to_summary($link->content, 250);
 
 // Increase click counter if it's without external link.
 if (empty($link->url)) {

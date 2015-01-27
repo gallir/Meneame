@@ -44,15 +44,18 @@ if ($comment->type != 'admin') $globals['search_options'] = array('w' => 'commen
 
 $comment->check_visibility();
 if (! $comment->hide_comment) {
-	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. text_to_summary($comment->content, 250);
+	$description = text_to_summary($comment->content, 250);
+	$title = text_to_summary($description, 117);
+
+	$globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. $description;
 	if ($globals['media_public'] && $comment->media_size > 0) {
 		 $globals['thumbnail'] = Upload::get_url('comment', $comment->id, 0, $comment->media_date, $comment->media_mime);
 	} elseif ($comment->avatar) {
 		$globals['thumbnail'] = get_avatar_url($comment->author, $comment->avatar, 80);
 	}
-	$title = text_to_summary($comment->content, 120);
 } else {
 	$title = '';
+	$globals['noindex'] = true;
 }
 
 // Canonical url

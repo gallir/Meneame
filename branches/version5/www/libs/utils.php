@@ -271,9 +271,7 @@ function clean_lines($string) {
 
 function text_to_summary($string, $length=50) {
 	$string = strip_tags($string);
-	$string = preg_replace('/<.*?\>/', '', $string); // Remove tags
-	$string = preg_replace('/#\d+\s/', '', $string); // Remove references to comments
-	$string = preg_replace("/[\r\n\t]+/", ' ', $string);
+	$string = preg_replace('/(?:#\d+|[\r\n\t]+|@[\p{L}\.\d\-_,]+|http\S+|{.+?})\s*/u', '', $string); // Remove references to comments
 	$len = mb_strlen($string);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {

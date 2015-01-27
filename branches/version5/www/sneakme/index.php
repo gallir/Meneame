@@ -106,6 +106,7 @@ switch ($argv[0]) {
 			if(!$user->read() || $user->disabled()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
+			$globals['noindex'] = true;
 			switch($argv[1]) {
 				case '_friends':
 					$view = 1;
