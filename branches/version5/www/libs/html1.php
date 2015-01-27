@@ -627,6 +627,7 @@ function do_active_stories() {
 		$ids = array_slice($ids, 0, 5);
 		foreach($ids as $id) {
 			$link = Link::from_db($id);
+			if (! $link) continue;
 			$link->url = $link->get_relative_permalink();
 			$link->thumb = $link->has_thumb();
 			$link->total_votes = $link->votes+$link->anonymous;
@@ -858,6 +859,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 		$title = _('en subs de usuarios');
 		foreach($ids as $id) {
 			$link = Link::from_db($id);
+			if (! $link) continue;
 			$link->print_subname = true;
 			$link->url = $link->get_permalink();
 			$link->thumb = $link->has_thumb();
