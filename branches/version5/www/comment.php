@@ -21,7 +21,10 @@ $link = Link::from_db($comment->link, null, false);
 if ($link->is_discarded()) {
 	$globals['ads'] = false;
 	$globals['noindex'] = true;
+} elseif ($comment->karma < 50 || mb_strlen($comment->content) < 100 ) {
+	$globals['noindex'] = true;
 }
+
 
 $globals['link'] = $link;
 $globals['permalink'] = $globals['scheme'].'//'.get_server_name().$comment->get_relative_individual_permalink();
