@@ -272,7 +272,7 @@ function clean_lines($string) {
 function text_to_summary($string, $length=50) {
 	$string = strip_tags($string);
 	// Remove references to comments and number in notes referemces
-	$string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s*/u', '', $string); 
+	$string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string); 
 	$len = mb_strlen($string);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
