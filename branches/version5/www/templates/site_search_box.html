@@ -1,0 +1,15 @@
+{# See https://developers.google.com/webmasters/structured-data/slsb-overview #}
+
+<script type="application/ld+json">
+{
+   "@context": "{{ globals.schema }}//schema.org",
+   "@type": "WebSite",
+   "url": "{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}",
+   "potentialAction": {
+     "@type": "SearchAction",
+     "target": "{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}search?q={search_term_string}",
+     "query-input": "required name=search_term_string"
+   }
+}
+</script>
+
