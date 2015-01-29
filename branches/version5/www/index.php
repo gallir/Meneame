@@ -68,6 +68,7 @@ switch ($globals['meta']) {
 		break;
 	default:
 		print_index_tabs(0); // All
+		Haanga::Load('site_search_box.html'); // Search box for search engines
 		$rows = Link::count('published');
 		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status='published' ";
 }
