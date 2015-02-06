@@ -143,7 +143,7 @@ function depublish($site_id) {
 
 
 
-	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and date < date_sub(now(), interval 14 minute) and link = link_id and link_negatives > link_votes / 8");
+	$links = $db->get_col("select SQL_NO_CACHE link_id as id from links, sub_statuses where id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and date < date_sub(now(), interval 14 minute) and link = link_id and link_negatives > link_votes / 5");
 
 	if ($links) {
 		$votes_clicks = $db->get_col("select SQL_NO_CACHE link_votes/counter from links, sub_statuses, link_clicks where sub_statuses.id = $site_id and status = 'published' and date > date_sub(now(), interval $days day) and link = link_id and link_clicks.id = link");
@@ -158,19 +158,21 @@ function depublish($site_id) {
 			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
 			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
 			
-			echo "Candidate $l->id ($l->karma) negative karma: $negatives positive karma: $positives\n";
+			echo "Candidate $l->uri\n  karma: $l->sub_karma ($l->karma) negative karma: $negatives positive karma: $positives\n";
 			// Adjust positives to the probability of votes/clicks
 			$c = (1 + (1 - $prob) * 0.5);
 			$positives = $positives * $c;
-			echo "Probability: $prob New positives: $positives ($c)\n";
+			echo "  probability: $prob New positives: $positives ($c)\n";
 
-			if ($negatives > 10 && $negatives > $c * $l->karma/6 && $l->negatives > $c * $l->votes/6 && $l->negatives > 5
-				&& ($negatives > $positives || ($negatives > $c * $l->karma/2 && $negatives > $positives/2) )) {
+			if ($negatives > 10 && $negatives > $c * $l->sub_karma/6 && $l->negatives > $c * $l->votes/6 && $l->negatives > 5
+				&& ($negatives > $positives || ($negatives > $c * $l->sub_karma/2 && $negatives > $positives/2) )) {
 				echo "Queued again: $l->id negative karma: $negatives positive karma: $positives\n";
-				$karma_old = $l->karma;
-				$karma_new = intval($l->karma/ $globals['depublish_karma_divisor'] );
+				$karma_old = $l->sub_karma;
+				$karma_new = intval($l->sub_karma/ $globals['depublish_karma_divisor'] );
 
 				$l->status = 'queued';
+				$l->sub_karma = $l->karma = $karma_new;
+
 				$db->query("update links set link_status='queued', link_date = link_sent_date, link_karma=$karma_new where link_id = $l->id");
 				SitesMgr::deploy($l);
 

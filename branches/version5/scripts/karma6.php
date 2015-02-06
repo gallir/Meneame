@@ -160,7 +160,7 @@ foreach ($res as $dbuser) {
 		/////////////////////
 
 		$total_user_links=intval($db->get_var("SELECT SQL_NO_CACHE count(distinct link_id) FROM links, votes WHERE link_author = $user->id and vote_type='links' and vote_link_id = link_id and vote_date > date_sub(now(), interval 1 year)"));
-		
+
 		if ($total_user_links > 0) {
 			$positive_karma_received = $negative_karma_received = 0;
 			//$karmas = $db->get_col("SELECT SQL_NO_CACHE link_karma FROM links WHERE link_author = $user->id and link_date > $history_from and link_karma > 0 and link_status in ('published', 'queued')");
@@ -179,7 +179,7 @@ foreach ($res as $dbuser) {
 			$karma_received = $positive_karma_received - $negative_karma_received;
 			$karma1 = min(12, $karma_received);
 			$karma1 = max(-12, $karma1);
-			
+
 			// Check if the user has links tagged as abuse
 			$link_abuse = (int) $db->get_var("select SQL_NO_CACHE count(*) from links where link_author = $user->id and link_date > $history_from and link_status = 'abuse'");
 			if ($link_abuse > 0) {
@@ -192,7 +192,7 @@ foreach ($res as $dbuser) {
 
 			$output .= _('Karma recibido en envíos propios').",  karma1: ";
 			$output .= sprintf("%4.2f\n", $karma1);
-		} 
+		}
 
 		///////////////////////////////
 		/////// Karma for votes to links
@@ -201,9 +201,9 @@ foreach ($res as $dbuser) {
 		$user_votes = $db->get_row("SELECT SQL_NO_CACHE count(*) as count, $sql_points_calc FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and link_date > $history_from  and vote_value > 0 AND link_id = vote_link_id AND link_status = 'published' and vote_date < link_date and link_author != $user->id");
 		$published_points = (int) $user_votes->points;
 		$published_given = (int) $user_votes->count;
-		if ($user_votes->points > 0) 
+		if ($user_votes->points > 0)
 			$published_average = $published_points/$published_given;
-		else 
+		else
 			$published_average = 0;
 
 		$nopublished_given = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes,links WHERE vote_type='links' and vote_user_id = $user->id and vote_date > $history_from and vote_date < $ignored_nonpublished and vote_value > 0 AND link_id = vote_link_id AND link_status != 'published' and link_author != $user->id");
@@ -231,8 +231,8 @@ foreach ($res as $dbuser) {
 
 		// Bot and karmawhoring warning!!!
 		if ($karma2 > 0 && $published_given > $published_links/8 && $published_given > $nopublished_given*1.5 &&
-				($published_average < 0.45 || 
-				($total_comments < $published_given/2 && $sent_links == 0)) 
+				($published_average < 0.45 ||
+				($total_comments < $published_given/2 && $sent_links == 0))
 			) {
 			$penalized += 1;
 			if ($total_comments == 0 && $sent_links == 0) {
@@ -271,8 +271,8 @@ foreach ($res as $dbuser) {
 
 		if ($negative_discarded > $negative_no_discarded/4) { // To fight against karma whores and bots
 			$karma3 = $points_discarded * ($negative_discarded + 4 * $negative_abuse - $negative_no_discarded * $negative_user_ratio);
-		} 
-		
+		}
+
 		if ($karma3 != 0) {
 			$negative_discarded_total = $negative_discarded + $negative_abuse;
 			$output .= _('Votos negativos a descartadas').": $negative_discarded_total, "._('no descartadas').": $negative_no_discarded, karma3: ";
@@ -296,7 +296,7 @@ foreach ($res as $dbuser) {
 		if ($comments_count > 0)  {
 			$comments_total = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from comments where comment_user_id = $user->id and comment_date > $history_from");
 			$comment_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and  vote_date > $history_from and vote_user_id != $user->id");
-			// It calculates a coefficient for the karma, 
+			// It calculates a coefficient for the karma,
 			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
 			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct comment_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
 			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, comments where comment_user_id = $user->id and comment_date > $history_from and comment_votes > 1 and vote_type='comments' and vote_link_id = comment_id and vote_user_id != $user->id");
@@ -319,22 +319,22 @@ foreach ($res as $dbuser) {
 				$old_karma4 = $karma4;
 				if ($karma4 > 0) $karma4 /= $karma4_coef;
 				else $karma4 *= $karma4_coef;
-				$output .= sprintf("%s: %d %6.2f -> %6.2f\n", _('Penalización por comentarios karma negativo'), $comments_low_karma, $old_karma4, $karma4);	
-				
+				$output .= sprintf("%s: %d %6.2f -> %6.2f\n", _('Penalización por comentarios karma negativo'), $comments_low_karma, $old_karma4, $karma4);
+
 			} elseif ($comments_total - $comments_low_karma > 0) {
 				// Give few tenths to comments that were not penalized
 				$old_karma4 = $karma4;
 				$karma4 += min(1, 0.05 * ($comments_total - $comments_low_karma));
-				$output .= sprintf("%s: %6.2f\n", _('Bonificación por comentar'), $karma4 - $old_karma4);	
+				$output .= sprintf("%s: %6.2f\n", _('Bonificación por comentar'), $karma4 - $old_karma4);
 			}
 
 		}
-		
+
 		// Limit karma to users that do not send links and do not vote
 		if ( $karma4 > 0 && $karma1 == 0 && $karma2 == 0 && $karma3 == 0 ) $karma4 = $karma4 * 0.5;
 		if ($karma4 != 0) {
 			$output .= _('Votos a comentarios contabilizados').": $comment_votes_count (karma: $comment_votes_sum), karma4: ";
-			$output .= sprintf("%4.2f\n", $karma4);	
+			$output .= sprintf("%4.2f\n", $karma4);
 		}
 
 		// Penalize to unfair negative comments' votes
@@ -351,7 +351,7 @@ foreach ($res as $dbuser) {
 		if ($karma5 != 0) {
 			$penalized += 1;
 			$output .= _('Exceso de votos negativos injustos a comentarios').": $negative_abused_comment_votes_count, karma5: ";
-			$output .= sprintf("%4.2f\n", $karma5);	
+			$output .= sprintf("%4.2f\n", $karma5);
 		}
 
 
@@ -363,7 +363,7 @@ foreach ($res as $dbuser) {
 		if ($posts_count > 0)  {
 			$posts_total = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from posts where post_user_id = $user->id and post_date > $history_from");
 			$post_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(*) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_date > $history_from and vote_user_id != $user->id");
-			// It calculates a coefficient for the karma, 
+			// It calculates a coefficient for the karma,
 			// if number of distinct votes comments >= 10 -> coef = 1, if comments = 1 -> coef = 0.1
 			$distinct_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct post_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
 			$distinct_user_votes_count = (int) $db->get_var("SELECT SQL_NO_CACHE count(distinct vote_user_id) from votes, posts where post_user_id = $user->id and post_date > $history_from and post_votes > 1 and vote_type='posts' and vote_link_id = post_id and vote_user_id != $user->id");
@@ -400,10 +400,10 @@ foreach ($res as $dbuser) {
 		// If the new value is negative or the user is penalized do not use the highest calculated karma base
 		if (($karma_extra < 0 && $user->karma <= $karma_base) || $penalized > 1) {
 			$karma_base_user = $karma_base;
-			$output .= _('Limitación karma base por penalizaciones').": $karma_base_user\n"; 
+			$output .= _('Limitación karma base por penalizaciones').": $karma_base_user\n";
 			if ($penalized > 2) {
 				$karma_extra = min($karma_extra, 1);
-				$output .= _('Karma extra máximo por penalizaciones').": 1\n"; 
+				$output .= _('Karma extra máximo por penalizaciones').": 1\n";
 			}
 		}
 		$karma = max($karma_base_user+$karma_extra, $min_karma);
@@ -426,36 +426,36 @@ foreach ($res as $dbuser) {
 	$output .= sprintf("Karma base: %4.2f\n", $karma_base_user);
 	$karma = round($karma, 2);
 
-	if ($user->karma != $karma || ! empty($output)) {
-		$old_karma = $user->karma;
-		if ($user->karma > $karma) {
-			if ($karma < $karma_base || $penalized > 1) {
-				$user->karma = 0.7*$user->karma + 0.3*$karma; // In case of very low karma, penalized more
-			} else {
-				// Decrease very slowly
-				$user->karma = 0.95*$user->karma + 0.05*$karma;
-			}
+	$old_karma = $user->karma;
+	if ($user->karma > $karma) {
+		if ($karma < $karma_base || $penalized > 1) {
+			$user->karma = 0.7*$user->karma + 0.3*$karma; // In case of very low karma, penalized more
 		} else {
-			// Increase/decrease faster
-			$user->karma = 0.8*$user->karma + 0.2*$karma;
+			// Decrease very slowly
+			$user->karma = 0.95*$user->karma + 0.05*$karma;
 		}
-		if ($user->karma > $special_karma_gain && $user->level == 'normal') {
-			$user->level = 'special';
-		} else {
-			if ($user->level == 'special' && $user->karma < $special_karma_loss) {
-				$user->level = 'normal';
-			}
-		}
-		$output .= sprintf(_('Karma final').": %4.2f,  ".('cálculo actual').": %4.2f, ".('karma anterior').": %4.2f\n", 
-					$user->karma, $karma, $old_karma);
-		$user->karma_log = $output;
-		$user->karma_calculated = time();
-		$user->store();
-		// If we run in the same server as the database master, wait few milliseconds
-		if (! isset($db->dbmaster)) {
-			usleep(5000); // wait 1/200 seconds
+	} else {
+		// Increase/decrease faster
+		$user->karma = 0.8*$user->karma + 0.2*$karma;
+	}
+	if ($user->karma > $special_karma_gain && $user->level == 'normal') {
+		$user->level = 'special';
+	} else {
+		if ($user->level == 'special' && $user->karma < $special_karma_loss) {
+			$user->level = 'normal';
 		}
 	}
+	$output .= sprintf(_('Karma final').": %4.2f,  ".('cálculo actual').": %4.2f, ".('karma anterior').": %4.2f\n",
+				$user->karma, $karma, $old_karma);
+	$user->karma_log = $output;
+	$user->karma_calculated = time();
+	$user->store();
+
+	// If we run in the same server as the database master, wait few milliseconds
+	if (! isset($db->dbmaster)) {
+		usleep(5000); // wait 1/200 seconds
+	}
+
 	if (!empty($output)) {
 		$annotation = new Annotation("karma-$user->id");
 		$annotation->text = $output;
@@ -466,4 +466,4 @@ foreach ($res as $dbuser) {
 }
 if ($annotation) $annotation->optimize();
 echo "Calculated: $calculated, Ignored: $no_calculated\n";
-?>
+

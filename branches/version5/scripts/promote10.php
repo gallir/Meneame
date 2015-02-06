@@ -49,10 +49,10 @@ function promote_from_subs($destination, $hours, $min_karma, $min_votes) {
 		$properties = SitesMgr::get_extended_properties($status->id);
 		if (!empty($properties['no_link']) && empty($status->link_url)) {
 			echo "NO LINK, $status->id\n";
-			continue;
+			// continue;
 		}
 
-		if (Link::duplicates($status->link_url, $destination)) {
+		if (!empty($status->link_url) && Link::duplicates($status->link_url, $destination)) {
 			echo "Duplicated in destination, $status->link_url\n";
 			continue;
 		}
