@@ -28,6 +28,13 @@ class RGDB extends mysqli {
 			$this->ban_checked = true;
 		}
 
+		// In case it's run from a web server we limit the number of rows
+		if (!empty($_SERVER['HTTP_HOST'])) {
+			$this->max_rows = self::MAX_ROWS;
+		} else {
+			$this->max_rows = PHP_INT_MAX;
+		}
+
 	}
 
 	function __destruct() {
@@ -193,7 +200,7 @@ class RGDB extends mysqli {
 
 		if ($is_select) {
 			$num_rows=0;
-			while ( ($row = $result->fetch_object($class_name)) && $num_rows < self::MAX_ROWS) { // We put a limit
+			while ( ($row = $result->fetch_object($class_name)) && $num_rows < $this->max_rows) { // We put a limit
 				if ($class_name && $index_name) {
 					$index = $row->$index_name;
 				} else {
@@ -202,7 +209,7 @@ class RGDB extends mysqli {
 				$this->last_result[$index] = $row;
 				$num_rows++;
 			}
-			if ($num_rows >= self::MAX_ROWS) {
+			if ($num_rows >= $this->max_rows) {
 				syslog(LOG_INFO, 'MAX_ROWS reached by '.$globals['user_ip'].' in '.$_SERVER["REQUEST_URI"]);
 			}
 			@$result->close();
@@ -330,7 +337,7 @@ class ObjectIterator implements Iterator {
 	}
 
 	public function valid() {
-		return $this->position < $this->Result->num_rows && $this->position < RGDB::MAX_ROWS;
+		return $this->position < $this->Result->num_rows;
 	}
 
 	public function current() {
