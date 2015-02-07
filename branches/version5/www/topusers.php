@@ -42,6 +42,8 @@ switch ($sortby) {
 		$from_where = " FROM users ";
 		$order_by = " ORDER BY user_karma DESC ";
 		break;
+/* Disabled because it's to much for the database
+   TODO: Implement a cache, with Haanga
 	case 2:
 		$select = "SELECT user_id, count(*) as count ";
 		$from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_author=user_id GROUP BY link_author";
@@ -62,6 +64,7 @@ switch ($sortby) {
 		$from_where = " FROM votes, users WHERE vote_type='links' and vote_user_id=user_id GROUP BY vote_user_id";
 		$order_by = " ORDER BY count DESC ";
 		break;
+*/
 }
 
 $sql = "$select $from_where $order_by LIMIT $page_size";
@@ -81,12 +84,12 @@ echo '<table class="decorated"><tr>';
 // Print headers
 for($i=0; $i<count($items); $i++) {
 	echo '<th class="short">';
-	if($i==$sortby)
+	if($i==$sortby) {
 		echo '<span class="info_s">'.$items[$i].'</span>';
-	elseif ($i <= 3 && $i > 0) {
+	 } elseif ($i <= 1 && $i > 0) { // Disabled other options, we need a cached system
 		// Don't show order by votes or comment
 		// Too much CPU and disk IO consuption
-		echo '<a href="topusers.php?sortby='.$i.'">'.$items[$i].'</a>';
+		echo '<a href="top_users?sortby='.$i.'">'.$items[$i].'</a>';
 	} else {
 		echo $items[$i];
 	}
