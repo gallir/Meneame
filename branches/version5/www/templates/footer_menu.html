@@ -48,7 +48,9 @@
 	<div id="footcol4">
 	<h5>{% trans _('estadísticas') %}</h5>
 	<ul id="statisticslist">
-	<li><a href="{{ globals.base_url_general }}top_users">{% trans _('usuarios') %}</a></li>
+	{% if current_user.user_id %}
+		<li><a href="{{ globals.base_url_general }}top_users">{% trans _('usuarios') %}</a></li>
+	{% endif %}
 	<li><a href="{{ globals.base_url }}popular">{% trans _('populares') %}</a></li>
 	<li><a href="{{ globals.base_url }}top_commented">{% trans _('más comentadas') %}</a></li>
 	<li><a href="{{ globals.base_url }}top_comments">{% trans _('mejores comentarios') %}</a></li>
