@@ -52,7 +52,7 @@ if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login
 	if ($current_user->user_id > 0) {
 		$fallback = get_user_uri($current_user->user_login);
 	} else {
-		$fallback = $globals['base_url'].'login.php';
+		$fallback = $globals['base_url'].'login';
 	}
 	header("Location: $fallback");
 	die;

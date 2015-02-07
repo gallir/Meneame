@@ -11,6 +11,8 @@ include(mnminclude.'html1.php');
 
 include_once(mnminclude.'ban.php');
 
+force_authentication();
+
 $page_size = $globals['page_size'] * 2;
 
 $items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos últimos 2 meses'));
