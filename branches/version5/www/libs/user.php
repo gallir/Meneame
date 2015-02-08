@@ -462,7 +462,7 @@ class User {
 				$obj = unserialize($stats->text);
 		} else {
 
-			if ($globals['bot'] && $current_user->user_id == 0) return; // Don't calculate stats por bots
+			if ($globals['bot'] || $current_user->user_id == 0) return; // Don't calculate stats por bots
 
 			$obj = new stdClass;
 			$obj->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
