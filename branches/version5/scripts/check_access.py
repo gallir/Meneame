@@ -22,6 +22,8 @@ import subprocess
 import time
 import syslog
 
+import codecs
+
 class MySysLogger():
 	def __init__(self, seconds, annotation, quiet = False):
 		self.seconds = seconds
@@ -65,7 +67,7 @@ class MySysLogger():
 
 
 def openfile(filename, reopen = False):
-	logfile = open(filename,"rU")
+	logfile = codecs.open(filename,"rU", "utf-8")
 	if reopen:
 		""" Begining of file """
 		logfile.seek(0,0)
@@ -172,7 +174,7 @@ def analyze(logfile):
 						else: print " ",
 
 						print "%5d %4d %s" % (conns, conns/configuration.period, ip),
-						print ','.join([x for x in sorted(ip_users[ip], key=str.lower)])
+						print ','.join([x for x in sorted(ip_users[ip], key=lambda user:user.lower())])
 					print
 
 				if configuration.ban:
@@ -200,7 +202,7 @@ def analyze(logfile):
 						""" Increase de seconds according to how much it exceeded """
 						seconds = int(seconds * ip_counter[ip]/float(max_count))
 
-						users = ','.join([x for x in sorted(ip_users[ip], key=str.lower)])
+						users = ','.join([x for x in sorted(ip_users[ip], key=lambda user:user.lower())])
 						reason = "Automatic (%s) %d conn/sec during %d seconds, blocked for %02d:%02d:%02d hs" % \
 								(users, rate, ip_periods_seen[ip]*configuration.period, seconds/3600, (seconds%3600)/60, seconds%60)
 						# reason = "Automatic (" + ','.join([x for x in sorted(ip_users[ip], key=str.lower)]) + ") " + rate + " conn/sec during " + str(ip_periods_seen[ip]*configuration.period) + " seconds, blocked for " + str(seconds/3600) + ":" + str((seconds%3600)/60) + str(seconds%60)
@@ -271,7 +273,7 @@ def ban_ip(ip, reason, time):
 			s.sendmail(getpass.getuser(), configuration.mail, msg.as_string())
 			s.quit()
 		except Exception as e:
-			print_message("Error sending email: " + reason + " (" + unicode(e) + ")")
+			print_message("Error sending email:  (" + unicode(e) + ")")
 
 	return True
 
@@ -309,12 +311,19 @@ if __name__ == '__main__':
 	else:
 		syslogger = None
 
-	restart = False
+	restart = from_begining = False
 	fails = 0
 	while True:
 		try:
 			try:
-				logfile = openfile(configuration.logfile, restart)
+				""" If the file is large start from the end """
+				statinfo = os.stat(configuration.logfile)
+				if restart and statinfo.st_size < 100000:
+					from_begining = True
+				else:
+					from_begining = False
+
+				logfile = openfile(configuration.logfile, from_begining)
 				fails = 0
 			except (IOError), e:
 				fails += 1

@@ -11,6 +11,8 @@ import dbconf
 import utils
 import re
 
+import codecs
+
 def analize(what, data, logfile):
 	global configuration
 
@@ -49,7 +51,7 @@ def analize(what, data, logfile):
 		if configuration.maxitems > 0:
 			sorted_vals = sorted_vals[:configuration.maxitems]
 		for v in sorted_vals:
-			print "%8d %6.2f%% %s" % (v[1], 100 * v[1]/float(total), v[0].decode('utf8', 'ignore')) 
+			print "%8d %6.2f%% %s" % (v[1], 100 * v[1]/float(total), v[0]) 
 
 
 if __name__ == '__main__':
@@ -75,7 +77,7 @@ if __name__ == '__main__':
 	configuration = parser.parse_args()
 
 	try:
-		logfile = open(configuration.logfile,"rU")
+		logfile = codecs.open(configuration.logfile,"rU", "utf-8")
 
 		if configuration.megabytes >= 0:
 			if configuration.megabytes > 0:
