@@ -7,7 +7,6 @@ $globals['force_ssl'] = false;
 
 header("Content-Type: text/plain");
 
-
 if (empty($globals['maintenance'])) {
 	// Check cache dir
 	if ( ! is_dir($globals['cache_dir'])) {
@@ -18,7 +17,8 @@ if (empty($globals['maintenance'])) {
 	}
 
 	// Check access to DB
-	if ( ! SitesMgr::my_id() ) { // Force DB access
+	$db->connect();
+	if ( ! $db->connected ) { // Force DB access
 		ping_error('DB not available');
 	}
 
@@ -38,7 +38,8 @@ echo "pong\n";
 function ping_error($log) {
 	header('HTTP/1.1 500 Server error');
 	if (! empty($log)) {
-		syslog(LOG_INFO, "ping: $log");
+		echo("ERROR ping: $log");
+		syslog(LOG_INFO, "ERROR ping: $log");
 	}
 	die;
 }

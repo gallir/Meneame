@@ -1307,10 +1307,10 @@ function reject_connection($redirect = false) {
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;
 
-	usleep(500000);
 	if (is_string($redirect) && strlen($redirect) > 10) {
 		redirect($redirect);
 	} else {
+		usleep(100000);
 		header('HTTP/1.0 403 ' . 'Too many connections');
 	}
 	die;
