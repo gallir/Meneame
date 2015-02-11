@@ -51,7 +51,9 @@ function discard($site_id) {
 	$site_info = SitesMgr::get_info($site_id);
 
 	// Discard links
-	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) ) order by link_id asc");
+	// $negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) ) order by link_id asc");
+	// Simlified version 
+	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < -20 and link_negatives > 5 and link_negatives > link_votes + 2 and (link_date < $max_date or link_karma < -100) order by link_id asc");
 
 	//$db->debug();
 	if( !$negatives) {
