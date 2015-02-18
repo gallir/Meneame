@@ -17,7 +17,10 @@ force_authentication();
 
 $site = SitesMgr::get_info();
 $site_properties = SitesMgr::get_extended_properties();
-if (! $site->enabled || ! empty($site_properties['new_disabled'])) die;
+$new_disabled = false;
+if (! empty($site_properties['new_disabled']) && $current_user->user_id != $site->owner) $new_disabled = true;
+if (! $site->enabled || $new_disabled ) die;
+
 
 global $errors;
 $errors = array();
