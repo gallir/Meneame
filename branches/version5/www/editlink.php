@@ -159,10 +159,7 @@ function link_edit_errors($link) {
 
 	$errors = array();
 
-
-	$site_info = SitesMgr::get_info($link->sub_id);
-	$site_properties = SitesMgr::get_extended_properties($link->sub_id);
-	if (! $site_info->enabled || (! SitesMgr::is_owner() && ! empty($site_properties['new_disabled'] ) )) {
+	if ($link->sub_id > 0 && ! SitesMgr::is_owner() && ! SitesMgr::can_send($link->sub_id)) {
 		$errors[] = _('no se puede enviar a ese sub');
 		$error = true;
 	}

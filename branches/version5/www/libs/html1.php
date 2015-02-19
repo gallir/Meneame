@@ -385,7 +385,7 @@ function print_subs_form($selected = false) {
 
 		// A link in a sub is edited from another sub, or from the main site
 		// Add its selected sub.
-		if ($selected != false && ! in_array($selected, $ids)) {
+		if ($selected != false && ! in_array($selected, $ids) && SitesMgr::can_send($selected)) {
 			$e = SitesMgr::get_info($selected);
 			if ($e) {
 				array_unshift($subs, $e); // Add to the form
@@ -397,7 +397,7 @@ function print_subs_form($selected = false) {
 		// Don't repeat the same subs
 		$subscriptions = array();
 		foreach ($extras as $s) {
-			if (! in_array($s->id, $ids)) {
+			if (! in_array($s->id, $ids)  && SitesMgr::can_send($s->id)) {
 				$subscriptions[] = $s;
 			}
 		}

@@ -15,9 +15,10 @@ $globals['ads'] = false;
 
 force_authentication();
 
+if (! SitesMgr::can_send()) die;
+
 $site = SitesMgr::get_info();
 $site_properties = SitesMgr::get_extended_properties();
-if (! $site->enabled || ! empty($site_properties['new_disabled'])) die;
 
 global $errors;
 $errors = array();
@@ -569,6 +570,11 @@ function link_errors($link) {
 	// Errors
 	if(! check_link_key() || intval($_POST['randkey']) != $link->randkey) {
 		add_submit_error(_("clave incorrecta"));
+		$error = true;
+	}
+
+	if ( $link->sub_id > 0 && ! SitesMgr::can_send($link->sub_id) ) {
+		add_submit_error(_("envío deshabilitados en")." $link->sub_name");
 		$error = true;
 	}
 

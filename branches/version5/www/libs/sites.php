@@ -438,4 +438,19 @@ class SitesMgr {
 		return $properties;
 	}
 
+	static public function can_send($id = false) {
+		if ($id == false) {
+			$id = self::my_id();
+		}
+		$info = self::get_info($id);
+		if (! $info->enabled) return false;
+
+		$properties = self::get_extended_properties($id);
+		if (!empty($properties['new_disabled'])) {
+			return false;
+		}
+
+		return true;
+	}
+
 }
