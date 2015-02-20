@@ -32,6 +32,8 @@ def main():
 		WatchData.history_size = configuration.history
 	if configuration.low_counter:
 		WatchData.low_counter_limit = configuration.low_counter
+	if configuration.low_counter:
+		WatchData.high_counter_limit = configuration.high_counter
 
 
 
@@ -45,8 +47,15 @@ def main():
 	data.action = prev_data.action
 	data.up_ts = int(prev_data.up_ts)
 	data.down_ts = int(prev_data.down_ts)
-	data.low_counter = int(prev_data.low_counter)
 	data.history = prev_data.history
+	try:
+		data.low_counter = int(prev_data.low_counter)
+	except AttributeError:
+		data.low_counter = 0
+	try:
+		data.high_counter = int(prev_data.high_counter)
+	except AttributeError:
+		data.high_counter = 0
 
 	""" Calculate the trend, increasing or decreasing CPU usage """
 	alpha = min((data.ts - prev_data.ts) / 60.0 * 0.3, 1)
@@ -125,6 +134,7 @@ if __name__ == '__main__':
 	parser.add_argument("--dry", "-d", action="store_true", help="Do not take actions")
 	parser.add_argument("--low", "-low", type=int, default=70, help="Low limit for CPU average")
 	parser.add_argument("--low_counter", type=int, default=5, help="Minimum times below low limit before reducing fleet")
+	parser.add_argument("--high_counter", type=int, default=2, help="Minimum times above limit before increasing fleet")
 	parser.add_argument("--high", "-high", type=int, default=90, help="High limit for CPU average")
 	parser.add_argument("--high_urgent", "-u", type=int, default=95, help="Kill overloaded instance, or increase instances at this individual CPU load")
 	configuration = parser.parse_args()

@@ -16,7 +16,8 @@ class WatchData:
 	datafile = "/var/tmp/watchdata.p"
 	dry = False
 	low_limit = 70
-	low_counter_limit = 0 # at least 5 times below threshold
+	low_counter_limit = 0
+	high_counter_limit = 0
 	high_limit = 90
 	high_urgent = 95
 	stats_period = 60
@@ -38,6 +39,7 @@ class WatchData:
 		self.up_ts = 0
 		self.down_ts = 0
 		self.low_counter = 0 # count the consecutive times a low conditions has been observed
+		self.high_counter = 0 # count the consecutive times a high conditions has been observed
 		self.max_loaded = None
 		self.loads = {}
 		self.measures = {}
@@ -158,9 +160,15 @@ class WatchData:
 			threshold = threshold * 0.90 # Increase faster if there is just one instance
 		
 		if self.avg_load > threshold:
-			self.action = "WARN, high load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances + 1)
-			self.set_desired(self.instances + 1)
-			return True
+			self.high_counter += 1
+			if self.high_counter > self.high_counter_limit:
+				self.high_counter = 0
+				self.action = "WARN, high load (%5.2f/%5.2f): %d -> %d " % (self.avg_load, threshold, self.instances, self.instances + 1)
+				self.set_desired(self.instances + 1)
+				return True
+
+		else:
+			self.high_counter = 0
 
 	def check_avg_low(self):
 		if self.instances <= self.group.min_size:
