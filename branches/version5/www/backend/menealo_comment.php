@@ -90,7 +90,27 @@ if ($votes_freq > $freq) {
 	}
 }
 
-$value = round($value * $current_user->user_karma);
+// EXPERIMENTAL: the negative karma to comments depends upon the number of comments and posts
+$hours = 48;
+$comments = $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval $hours hour)");
+$posts = $db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval $hours hour)");
+$negatives = $db->get_var("select count(*) from votes where vote_type = 'comments' and vote_user_id = $current_user->user_id and vote_date > date_sub(now(), interval $hours hour) and vote_value < 0");
+
+
+if (! $current_user->admin && ! $current_user->special) {
+	if ($value < 0)  {
+		$points = 2 * $comments + $posts - $negatives;
+		$value = round(-1 * max(min($points, $current_user->user_karma), 1)); // Min is -1 
+	} else {
+		$points = 4 * $comments + $posts - $negatives;
+		$value = round(max(min($points, $current_user->user_karma), 4)); // Min is 4
+	}
+} else {
+	$value = round($value * $current_user->user_karma);
+}
+
+
+
 if (!$comment->insert_vote($value)) {
 	error(_('ya se votó antes con el mismo usuario o IP'));
 }
