@@ -102,8 +102,8 @@ if (! $current_user->admin && ! $current_user->special) {
 		$points = 2 * $comments + $posts - $negatives;
 		$value = round(-1 * max(min($points, $current_user->user_karma), 1)); // Min is -1 
 	} else {
-		$points = 4 * $comments + $posts;
-		$value = round(max(min($points, $current_user->user_karma), 4)); // Min is 4
+		$points = 4 * $comments + $posts - $negatives;
+		$value = round(max(min($points, $current_user->user_karma), 3)); // Min is 3
 	}
 } else {
 	$value = round($value * $current_user->user_karma);
