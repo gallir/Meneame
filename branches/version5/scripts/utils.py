@@ -75,46 +75,38 @@ def clean_url(string):
 	string = re.sub(r'&', '&amp;', string)
 	return string
 
-def follow_log(thefile, show_bad=False):
-	prev = ""
-	while True:
-		line = thefile.readline()
-		if not line:
-			#time.sleep(0.00001)
-			#continue
-			yield None
-		else:
-			log = parse_logline(line)
-			if log:
-				yield log
-			else:
-				if show_bad:
-					print >> sys.stderr, "BAD:", line
-
 def parse_logline(line):
 	""" This works with the following rsyslog format template 
-	$template ReducedLog,"%timereported% %fromhost-ip% %msg%\n"
+	template(name="Connections" type="list") {
+        property(name="timestamp" dateFormat="unixtimestamp")
+        constant(value=" ")
+        property(name="fromhost-ip")
+        constant(value=" ")
+        property(name="msg" droplastlf="on" )
+        constant(value="\n")
+        }
+
 	and used as:
-	if $programname == 'meneame_accesslog' then /mnt/meneame_access.log;ReducedLog
+	if $programname == 'meneame_accesslog' then /ssd/meneame_access.log;Connections
 	& ~
 	"""
 
 	fields = line.split()
-	if len(fields) >= 9:
+	if len(fields) >= 7:
 		log = dict()
 		try:
-			log['_date'] = fields[0] + " " + fields[1] + " " + fields[2]
-			log['server_ip'] = fields[3]
-			log['ip'] = fields[4]
-			log['user'] = fields[5]
+			log['ts'] = int(fields[0])
+			log['server_ip'] = fields[1]
+			log['ip'] = fields[2]
+			log['user'] = fields[3]
 
-			if fields[5] == 'B':
+			if fields[3] == 'B':
 				log['_blocked'] = True
 			else: log['_blocked'] = False
 
-			log['time'] = float(fields[6])
-			log['server'] = fields[7]
-			log['script'] = fields[8]
+			log['time'] = float(fields[4])
+			log['server'] = fields[5]
+			log['script'] = fields[6]
 		except (ValueError, TypeError) as e:
 			print >> sys.stderr, "Bad line in parse_logline", e, line
 			return None
@@ -123,7 +115,7 @@ def parse_logline(line):
 		return None
 
 def add_log2dict(log, d):
-	for k in [x for x in log if x != 'time' and x[0] != "_"]:
+	for k in [x for x in log if x != 'time' and x != 'ts' and x[0] != "_"]:
 		if k not in d:
 			d[k] = {}
 		if log[k] not in d[k]:
@@ -148,16 +140,11 @@ def time_position_log(logfile, minutes):
 			continue
 		log = parse_logline(line)
 		try:
-			log_date = datetime.datetime.strptime(log["_date"], "%b %d %H:%M:%S")
+			log_date = datetime.datetime.fromtimestamp(log['ts'])
 		except (ValueError, TypeError) as e:
 			print >> sys.stderr, "Bad line in time_position_log:", e, line
 			base = pos
 			continue
-		if log_date.year < 2000:
-			if log_date.month <= now.month:
-				log_date = log_date.replace(year=now.year)
-			else:
-				log_date = log_date.replace(year=now.year-1)
 
 		if log_date < goal:
 			base = pos

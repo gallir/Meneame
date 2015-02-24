@@ -12,6 +12,7 @@ import utils
 import re
 
 import codecs
+import datetime
 
 def analize(what, data, logfile):
 	global configuration
@@ -32,7 +33,7 @@ def analize(what, data, logfile):
 		total_lines += 1
 		log = utils.parse_logline(line)
 		if not first_read and log:
-			print "Reading from %s (UTC)..." % (log['_date'])
+			print "Reading from %s (UTC)..." % (datetime.datetime.fromtimestamp(log['ts']).strftime('%Y-%m-%d %H:%M:%S'))
 			sys.stdout.flush()
 			first_read = True
 		if not log or (not regex and log[what] != data) or (regex and not re.match(regex, log[what])):

@@ -24,6 +24,7 @@ import syslog
 
 import codecs
 
+
 class MySysLogger():
 	def __init__(self, seconds, annotation, quiet = False):
 		self.seconds = seconds
@@ -66,16 +67,31 @@ class MySysLogger():
 		self.total += 1
 
 
-def openfile(filename, reopen = False):
+def openfile(filename):
+	""" Get a positione neat the end of the file """
+	statinfo = os.stat(filename)
+	pos = min(max(0, statinfo.st_size - 1000000), statinfo.st_size);
+
 	logfile = codecs.open(filename,"rU", "utf-8")
-	if reopen:
-		""" Begining of file """
-		logfile.seek(0,0)
-	else:
-		""" End of file """
-		logfile.seek(0,2)
+	logfile.seek(pos, 0)
 	return logfile
 	
+def follow_log(thefile, show_bad=False):
+	prev = ""
+	while True:
+		line = thefile.readline()
+		if not line:
+			#time.sleep(0.00001)
+			#continue
+			yield None
+		else:
+			log = parse_logline(line)
+			if log:
+				yield log
+			else:
+				if show_bad:
+					print >> sys.stderr, "BAD:", line
+
 def analyze(logfile):
 	global configuration, syslogger
 
@@ -86,17 +102,26 @@ def analyze(logfile):
 	""" Number of previous periods to store """
 	low_history = 4 
 
+	""" Check the log timestamp to avoid reading old entries"""
+	low_time = int(time.time()) - configuration.period 
+
 	ip_scripts = {}
 	ip_users = {}
 	ip_counter = {}
 	ip_warned = set()
 	ip_banned = set()
 	ip_periods = []
+
 	
 
 	for log in loglines:
 		if log:
 			empties = 0
+
+			""" ignore old logs """
+			if low_time and log['ts'] < low_time:
+				continue
+
 			counter += 1
 			total += 1
 
@@ -115,6 +140,8 @@ def analyze(logfile):
 
 			
 		else:
+			low_time = int(time.time()) - configuration.period
+
 			ip_exceeded = set()
 			ip_low_exceeded = set()
 			ip_high_exceeded = set()
@@ -160,7 +187,7 @@ def analyze(logfile):
 					
 				if not configuration.q:
 					print "Top IPs"
-					print "    %5s %4s %s" % ("Conn.", "c/s", "IP")
+					print "    %5s %5s  %s" % ("Conn.", "c/s", "IP")
 					r = min(len(sorted_ips), 10)
 					for i in range(r):
 						ip, conns = sorted_ips[i]
@@ -173,7 +200,7 @@ def analyze(logfile):
 						if ip in ip_warned: print "*",
 						else: print " ",
 
-						print "%5d %4d %s" % (conns, conns/configuration.period, ip),
+						print "%5d %5.1f  %s" % (conns, conns/float(configuration.period), ip),
 						print ','.join([x for x in sorted(ip_users[ip], key=lambda user:user.lower())])
 					print
 
@@ -311,21 +338,13 @@ if __name__ == '__main__':
 	else:
 		syslogger = None
 
-	restart = from_begining = False
 	fails = 0
 	while True:
 		try:
 			try:
-				""" If the file is large start from the end """
-				statinfo = os.stat(configuration.logfile)
-				if restart and statinfo.st_size < 100000:
-					from_begining = True
-				else:
-					from_begining = False
-
-				logfile = openfile(configuration.logfile, from_begining)
+				logfile = openfile(configuration.logfile)
 				fails = 0
-			except (IOError), e:
+			except (IOError, OSError), e:
 				fails += 1
 				print_message("check_access IOError (%d): %s" % (fails, unicode(e)))
 				if fails > 10:
@@ -337,7 +356,6 @@ if __name__ == '__main__':
 
 			counter += 1
 			lines = analyze(logfile)
-			restart = True
 			mess = "check_access, end: %d, %d, restarting in 5 seconds" % (counter, lines)
 			print_message(mess)
 			time.sleep(5)
