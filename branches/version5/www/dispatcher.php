@@ -40,7 +40,6 @@ $routes = array(
 	'faq-es'	=> 'faq-es.php',
 	'opensearch' => 'opensearch_plugin.php',
 	'backend'	=> 'backend/dispatcher.php',
-	'media'		=> 'backend/media.php',
 	'notame'	=> 'sneakme/dispatcher.php',
 	'mobile'	=> 'mobile/dispatcher.php',
 	'captcha'	=> 'captcha.php',

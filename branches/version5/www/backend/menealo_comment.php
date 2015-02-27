@@ -91,7 +91,7 @@ if ($votes_freq > $freq) {
 }
 
 // EXPERIMENTAL: the negative karma to comments depends upon the number of comments and posts
-$hours = 96;
+$hours = 168;
 $comments = $db->get_var("select count(*) from comments where comment_user_id = $current_user->user_id and comment_date > date_sub(now(), interval $hours hour) and comment_karma > 0");
 $posts = $db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval $hours hour) and post_karma >= 0");
 $negatives = $db->get_var("select count(*) from votes where vote_type = 'comments' and vote_user_id = $current_user->user_id and vote_date > date_sub(now(), interval $hours hour) and vote_value < 0");

@@ -179,7 +179,7 @@ $globals['max_karma']=20; //max user karma
 $globals['special_karma_gain']=17; //karma to gain 'special' status (max * 0.85)
 $globals['special_karma_loss']=12; //karma to loss 'special' status (max * 0.6)
 
-$globals['comment_votes_multiplier'] = 5; //'importance' in karma calculations of comment votes
+$globals['comment_votes_multiplier'] = 7; //'importance' in karma calculations of comment votes
 $globals['post_votes_multiplier'] = 1; //'importance' in karma calculations of post votes
 
 $globals['karma_points_by_votes'] = 5; // Max karma given to votes to other's links
