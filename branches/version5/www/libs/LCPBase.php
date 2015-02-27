@@ -88,7 +88,7 @@ class LCPBase {
 
 				case '{':
 					$m = array($matches[2], substr($matches[2], 1, -1));
-					return $matches[1].put_smileys_callback($m);
+					return $matches[1].put_emojis_callback($m);
 
 				case 'h':
 					$suffix = '';
@@ -105,6 +105,18 @@ class LCPBase {
 		};
 
 		return preg_replace_callback($regexp, $callback, $string);
+	}
+
+	function truncate($length) {
+		$this->is_truncated  = FALSE;
+		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
+			$this->is_truncated = TRUE;
+			$this->content = rtrim(preg_replace('/(?:[&<\{]\w{1,10}|[^}>\s]{1,15}|http\S+)$/u', '', mb_substr($this->content, 0 , $length)));
+			$this->content .= '&hellip;';
+			if (preg_match('/<\w+>/', $this->content)) {
+				$this->content = close_tags($this->content);
+			}
+		}
 	}
 
 	function sanitize($string) {

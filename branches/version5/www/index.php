@@ -120,6 +120,7 @@ $links = $db->object_iterator($sql, "Link");
 if ($links) {
 	$counter = 0;
 	foreach($links as $link) {
+		$link->max_len = 600;
 		$link->print_summary();
 		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
 	}

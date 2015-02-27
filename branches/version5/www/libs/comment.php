@@ -102,7 +102,7 @@ class Comment extends LCPBase {
 			}
 
 			if ($link && $length && $link->page_mode == 'interview' && $comment->author == $link->author) {
-				$len = $length * 4; 
+				$len = $length * 4;
 			} else {
 				$len = $length;
 			}
@@ -227,19 +227,6 @@ class Comment extends LCPBase {
 						|| ($this->user_level == 'disabled' && $this->type != 'admin');
 		$this->hide_comment = ! isset($this->not_ignored) && ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0));
 	}
-
-	function truncate($length) {
-		$this->is_truncated  = FALSE;
-		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->is_truncated = TRUE;
-			$this->content = rtrim(preg_replace('/(?:[&<\{]\w{1,10}|[^}>\s]{1,15}|http\S+)$/u', '', mb_substr($this->content, 0 , $length)));
-			$this->content .= '&hellip;';
-			if (preg_match('/<\w+>/', $this->content)) {
-				$this->content = close_tags($this->content);
-			}
-		}
-	}
-
 
 	function prepare_summary_text($length = 0) {
 		global $globals, $current_user;

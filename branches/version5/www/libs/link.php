@@ -689,6 +689,9 @@ class Link extends LCPBase {
 
 		$this->get_current_sub_status_and_date();
 
+		if (!empty($this->max_len) &&  $this->max_len > 0) {
+			$this->truncate($this->max_len);
+		}
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
 		$this->relative_permalink	 = $this->get_relative_permalink();

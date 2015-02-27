@@ -127,6 +127,7 @@ $links = $db->object_iterator($sql, "Link");
 if ($links) {
 	foreach($links as $link) {
 		if ($link->votes == 0 && $link->author != $current_user->user_id) continue;
+		$link->max_len = 600;
 		if ($offset < 1000) {
 			$link->print_summary('full', 16);
 		} else {
