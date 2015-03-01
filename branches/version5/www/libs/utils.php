@@ -156,7 +156,7 @@ function check_email($email) {
 function check_username($name) {
 	global $current_user;
 
-	return (preg_match('/^\p{L}[\._\p{L}\d]+$/ui', $name) && mb_strlen($name) > 2 && mb_strlen($name) <= 24 
+	return (preg_match('/^\p{L}[\._\p{L}\d]+$/ui', $name) && mb_strlen($name) > 2 && mb_strlen($name) <= 24
 				&& ($current_user->admin || ! preg_match('/^admin/i', $name)) ); // Does not allow nicks begining with "admin"
 }
 
@@ -203,12 +203,13 @@ function txt_shorter($string, $len=70) {
 function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	$string = stripslashes(trim($string));
 	$string = preg_replace('/\r\n/u', "\n", $string); // Change \r\n to \n to show right chars' counter
+	$string = preg_replace('/\t/s', "&nbsp;&nbsp;", $string); // Change \t to 2 hard spaces
 	$string = clear_whitespace($string);
 	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
 	// Replace two "-" by a single longer one, to avoid problems with xhtml comments
 	//$string = preg_replace('/--/', '–', $string);
 	if ($wrap>0) $string = wordwrap($string, $wrap, " ", 1);
-	if ($replace_nl) $string = preg_replace('/[\n\t\r]+/su', ' ', $string);
+	if ($replace_nl) $string = preg_replace('/[\n\r]+/su', ' ', $string);
 	if ($maxlength > 0) $string = mb_substr($string, 0, $maxlength);
 	$string = @htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 	return preg_replace('/(\d+) +(\d{3,})/u', "$1&nbsp;$2", $string); // Avoid to wrap in the middle of numbers with thousands' space separator
@@ -272,7 +273,7 @@ function clean_lines($string) {
 function text_to_summary($string, $length=50) {
 	$string = strip_tags($string);
 	// Remove references to comments and number in notes referemces
-	$string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string); 
+	$string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string);
 	$len = mb_strlen($string);
 	$string = mb_substr($string,  0, $length);
 	if (mb_strlen($string) < $len) {
@@ -626,7 +627,7 @@ function put_smileys($str) {
 	global $globals;
 
 	if ($globals['bot']) return $str;
-	$str = preg_replace_callback('/\{([a-z]{3,10})\}/', 'put_smileys_callback', $str);
+	$str = preg_replace_callback('/\{([a-z]{3,10})\}/', 'put_emojis_callback', $str);
 	return $str;
 }
 
@@ -669,6 +670,48 @@ function put_smileys_callback($matches) {
 		);
 	}
 	return isset($translations[$matches[1]]) ? $translations[$matches[1]] : $matches[0];
+}
+
+function put_emojis_callback($matches) {
+	global $globals;
+	static $translations = false;
+	if (!$translations) {
+		$translations = array(
+
+			'angry' => 'angry.png" alt="&gt;&#58;-(" title="&gt;&#58;-(" width="18" height="18"',
+			'blank' => 'blank.png" alt=":-|" title=":-| :|" width="18" height="18"',
+			'cheesy' => 'cheesy.png" alt=":-&gt;" title=":-&gt;" width="18" height="18"',
+			'confused' => 'confused.png" alt=":-S" title=":-S :S" width="18" height="18"',
+			'cool' => 'cool.png" alt="8-D" title=":cool: 8-D" width="18" height="18"',
+			'cry' => 'cry.png" alt=":\'(" title=":cry: :\'(" width="18" height="18"',
+			'ffu' => 'ffu.png" alt=":ffu:" title=":ffu:" width="23" height="18"',
+			'goatse' => 'goatse.png" alt="goatse" title="goat-ish" width="18" height="18"',
+			'grin' =>'grin.png" alt=":-D" title=":-D" width="18" height="18"',
+			'hug' => 'hug.png" alt="hug" title="hug" width="35" height="18"',
+			'huh' => 'huh.png" alt="?(" title="?(" width="16" height="21"',
+			'kiss' => 'kiss.png" alt=":-*" title=":-* :*" width="18" height="18"',
+			'lipssealed' => 'lipssealed.png" alt=":-x" title=":-x" width="18" height="18"',
+			'lol' => 'lol.png" alt="xD" title=":lol: xD" width="18" height="18"',
+			'oops' => 'oops.png" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" width="18" height="18"',
+			'palm' => 'palm.png" alt=":palm:" title=":palm:" width="18" height="18"',
+			'roll' => 'roll.png" alt=":roll:" title=":roll:" width="18" height="18"',
+			'sad' => 'sad.png" alt=":-(" title=":-(" width="18" height="18"',
+			'shame' =>'shame.png" alt="¬¬" title="¬¬ :shame:" width="18" height="18"',
+			'shit' => 'shit.png" alt="shit" title="shit" width="18" height="18"',
+			'shocked' => 'shocked.png" alt=":-O" title=":-O" width="18" height="18"',
+			'smiley' => 'smiley.png" alt=":-)" title=":-)" width="18" height="18"',
+			'tongue' => 'tongue.png" alt=":-P" title=":-P" width="18" height="18"',
+			'troll' => 'troll.png" alt=":troll:" title=":troll:" width="18" height="18"',
+			'undecided' => 'undecided.png" alt=":-/" title=":-/ :/" width="18" height="18"',
+			'wall' => 'wall.png" alt=":wall:" title=":wall:" width="24" height="18"',
+			'wink' => 'wink.png" alt=";)" title=";)" width="18" height="18"',
+			'wow' => 'wow.png" alt="o_o" title="o_o :wow:" width="18" height="18"',		);
+	}
+	if (isset($translations[$matches[1]])) {
+		return '<img data-src="'.$globals['base_static'].'img/menemojis/18/'.$translations[$matches[1]].' src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="lazy" />';
+	} else {
+		return $matches[0];
+	}
 }
 
 function normalize_smileys($str) {
