@@ -203,7 +203,7 @@ function txt_shorter($string, $len=70) {
 function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
 	$string = stripslashes(trim($string));
 	$string = preg_replace('/\r\n/u', "\n", $string); // Change \r\n to \n to show right chars' counter
-	$string = preg_replace('/\t/s', "&nbsp;&nbsp;", $string); // Change \t to 2 hard spaces
+	$string = preg_replace('/\t/s', '&#8195;', $string); // &emsp; &#x2003;
 	$string = clear_whitespace($string);
 	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
 	// Replace two "-" by a single longer one, to avoid problems with xhtml comments
@@ -1016,6 +1016,8 @@ function clear_unicode_spaces($input){
 	"\xc2\xa0", // 'NO-BREAK SPACE' (U+00A0)
 	"\xe1\x9a\x80", // 'OGHAM SPACE MARK' (U+1680)
 	"\xe1\xa0\x8e", // 'MONGOLIAN VOWEL SEPARATOR' (U+180E)
+
+/* Allow theses spaces
 	"\xe2\x80\x80", // 'EN QUAD' (U+2000)
 	"\xe2\x80\x81", // 'EM QUAD' (U+2001)
 	"\xe2\x80\x82", // 'EN SPACE' (U+2002)
@@ -1027,6 +1029,8 @@ function clear_unicode_spaces($input){
 	"\xe2\x80\x88", // 'PUNCTUATION SPACE' (U+2008)
 	"\xe2\x80\x89", // 'THIN SPACE' (U+2009)
 	"\xe2\x80\x8a", // 'HAIR SPACE' (U+200A)
+*/
+
 	"\xe2\x80\xa8", // 'LINE SEPARATOR' (U+2028)
 	"\xe2\x80\xa9", // 'PARAGRAPH SEPARATOR' (U+2029)
 	"\xe2\x80\xaf", // 'NARROW NO-BREAK SPACE' (U+202F)
