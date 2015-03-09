@@ -631,47 +631,6 @@ function put_smileys($str) {
 	return $str;
 }
 
-function put_smileys_callback($matches) {
-	global $globals;
-	static $translations = false;
-	if (!$translations) {
-		$translations = array(
-			'wall' => ' <img src="'.$globals['base_static'].'img/smileys/wall2.gif" alt=":wall:" title=":wall:" width="24" height="18" /> ',
-			'troll' => ' <img src="'.$globals['base_static'].'img/smileys/trollface2.gif" alt=":troll:" title=":troll:" width="15" height="15" /> ',
-			'ffu' => ' <img src="'.$globals['base_static'].'img/smileys/fu.gif" alt=":ffu:" title=":ffu:" width="19" height="15" /> ',
-			'palm' => ' <img src="'.$globals['base_static'].'img/smileys/palm.gif" alt=":palm:" title=":palm:" width="15" height="15" /> ',
-			'goatse' => ' <img src="'.$globals['base_static'].'img/smileys/goat.gif" alt="goat" title="goat-ish" width="15" height="15" /> ',
-
-			'wow' => ' <img src="'.$globals['base_static'].'img/smileys/wow.gif" alt="o_o" title="o_o :wow:" width="15" height="15" /> ',
-			'shame' =>' <img src="'.$globals['base_static'].'img/smileys/shame.gif" alt="¬¬" title="¬¬ :shame:" width="15" height="15" /> ',
-			'grin' =>' <img src="'.$globals['base_static'].'img/smileys/grin.gif" alt=":-D" title=":-D" width="15" height="15" /> ',
-			'oops' => ' <img src="'.$globals['base_static'].'img/smileys/embarassed.gif" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;("  width="15" height="15"/> ',
-			'cool' => ' <img src="'.$globals['base_static'].'img/smileys/cool.gif" alt="8-D" title=":cool: 8-D" width="15" height="15"/> ',
-			'roll' => ' <img src="'.$globals['base_static'].'img/smileys/rolleyes.gif" alt=":roll:" title=":roll:"	width="15" height="15"/> ',
-			'cry' => ' <img src="'.$globals['base_static'].'img/smileys/cry.gif" alt=":\'(" title=":cry: :\'("	width="15" height="15"/> ',
-			'lol' => ' <img src="'.$globals['base_static'].'img/smileys/laugh.gif" alt="xD" title=":lol: xD"  width="15" height="15"/> ',
-
-
-			'smiley' => ' <img src="'.$globals['base_static'].'img/smileys/smiley.gif" alt=":-)" title=":-)" width="15" height="15" /> ',
-			'wink' => ' <img src="'.$globals['base_static'].'img/smileys/wink.gif" alt=";)" title=";)"	width="15" height="15" /> ',
-			'cheesy' => ' <img src="'.$globals['base_static'].'img/smileys/cheesy.gif" alt=":-&gt;" title=":-&gt;"	width="15" height="15" /> ',
-			'angry' => ' <img src="'.$globals['base_static'].'img/smileys/angry.gif" alt="&gt;&#58;-(" title="&gt;&#58;-("	width="15" height="15" /> ',
-			'huh' => ' <img src="'.$globals['base_static'].'img/smileys/huh.gif" alt="?(" title="?("  width="15" height="22" /> ',
-			'sad' => ' <img src="'.$globals['base_static'].'img/smileys/sad.gif" alt=":-(" title=":-("	width="15" height="15" /> ',
-			'shocked' => ' <img src="'.$globals['base_static'].'img/smileys/shocked.gif" alt=":-O" title=":-O"	width="15" height="15" />',
-			'tongue' => ' <img src="'.$globals['base_static'].'img/smileys/tongue.gif" alt=":-P" title=":-P"  width="15" height="15" /> ',
-			'lipssealed' => ' <img src="'.$globals['base_static'].'img/smileys/lipsrsealed.gif" alt=":-x" title=":-x"  width="15" height="15"/> ',
-			'undecided' => ' <img src="'.$globals['base_static'].'img/smileys/undecided.gif" alt=":-/" title=":-/ :/"  width="15" height="15"/> ',
-			'confused' => ' <img src="'.$globals['base_static'].'img/smileys/confused.gif" alt=":-S" title=":-S :S" width="15" height="15"/> ',
-			'blank' => ' <img src="'.$globals['base_static'].'img/smileys/blank.gif" alt=":-|" title=":-| :|" width="15" height="15"/> ',
-			'kiss' => ' <img src="'.$globals['base_static'].'img/smileys/kiss.gif" alt=":-*" title=":-* :*" width="15" height="15" /> ',
-			'hug' => ' <img src="'.$globals['base_static'].'img/smileys/hug.gif" alt="hug" title="hug" width="39" height="15" /> ',
-			'shit' => ' <img src="'.$globals['base_static'].'img/smileys/shit.gif" alt="shit" title="shit" width="15" height="15" /> ',
-		);
-	}
-	return isset($translations[$matches[1]]) ? $translations[$matches[1]] : $matches[0];
-}
-
 function put_emojis_callback($matches) {
 	global $globals;
 	static $translations = false;
@@ -683,27 +642,27 @@ function put_emojis_callback($matches) {
 			'cheesy' => 'cheesy.png" alt=":-&gt;" title=":-&gt;" width="18" height="18"',
 			'confused' => 'confused.png" alt=":-S" title=":-S :S" width="18" height="18"',
 			'cool' => 'cool.png" alt="8-D" title=":cool: 8-D" width="18" height="18"',
-			'cry' => 'cry.png" alt=":\'(" title=":cry: :\'(" width="18" height="18"',
+			'cry' => 'cry.gif" alt=":\'(" title=":cry: :\'(" width="18" height="18"',
 			'ffu' => 'ffu.png" alt=":ffu:" title=":ffu:" width="23" height="18"',
-			'goatse' => 'goatse.png" alt="goatse" title="goat-ish" width="18" height="18"',
+			'goatse' => 'goatse.png" alt=":goatse:" title=":goatse:" width="18" height="18"',
 			'grin' =>'grin.png" alt=":-D" title=":-D" width="18" height="18"',
-			'hug' => 'hug.png" alt="hug" title="hug" width="35" height="18"',
+			'hug' => 'hug.png" alt=":hug:" title=":hug:" width="35" height="18"',
 			'huh' => 'huh.png" alt="?(" title="?(" width="16" height="21"',
-			'kiss' => 'kiss.png" alt=":-*" title=":-* :*" width="18" height="18"',
+			'kiss' => 'kiss.gif" alt=":-*" title=":-* :*" width="18" height="18"',
 			'lipssealed' => 'lipssealed.png" alt=":-x" title=":-x" width="18" height="18"',
-			'lol' => 'lol.png" alt="xD" title=":lol: xD" width="18" height="18"',
+			'lol' => 'lol.gif" alt="xD" title=":lol: xD" width="18" height="18"',
 			'oops' => 'oops.png" alt="&lt;&#58;(" title="&#58;oops&#58; &lt;&#58;(" width="18" height="18"',
 			'palm' => 'palm.png" alt=":palm:" title=":palm:" width="18" height="18"',
-			'roll' => 'roll.png" alt=":roll:" title=":roll:" width="18" height="18"',
+			'roll' => 'roll.gif" alt=":roll:" title=":roll:" width="18" height="18"',
 			'sad' => 'sad.png" alt=":-(" title=":-(" width="18" height="18"',
 			'shame' =>'shame.png" alt="¬¬" title="¬¬ :shame:" width="18" height="18"',
-			'shit' => 'shit.png" alt="shit" title="shit" width="18" height="18"',
-			'shocked' => 'shocked.png" alt=":-O" title=":-O" width="18" height="18"',
+			'shit' => 'shit.png" alt=":shit:" title=":shit:" width="18" height="18"',
+			'shocked' => 'shocked.gif" alt=":-O" title=":-O" width="18" height="18"',
 			'smiley' => 'smiley.png" alt=":-)" title=":-)" width="18" height="18"',
 			'tongue' => 'tongue.png" alt=":-P" title=":-P" width="18" height="18"',
 			'troll' => 'troll.png" alt=":troll:" title=":troll:" width="18" height="18"',
 			'undecided' => 'undecided.png" alt=":-/" title=":-/ :/" width="18" height="18"',
-			'wall' => 'wall.png" alt=":wall:" title=":wall:" width="24" height="18"',
+			'wall' => 'wall.gif" alt=":wall:" title=":wall:" width="24" height="18"',
 			'wink' => 'wink.png" alt=";)" title=";)" width="18" height="18"',
 			'wow' => 'wow.png" alt="o_o" title="o_o :wow:" width="18" height="18"',		);
 	}

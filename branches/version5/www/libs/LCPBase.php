@@ -88,7 +88,7 @@ class LCPBase {
 
 				case '{':
 					$m = array($matches[2], substr($matches[2], 1, -1));
-					return $matches[1].put_smileys_callback($m);
+					return $matches[1].put_emojis_callback($m);
 
 				case 'h':
 					$suffix = '';
