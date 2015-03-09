@@ -175,8 +175,7 @@ function checkEqualFields(field, against) {
 	return false;
 }
 
-function enablebutton (button, button2, target)
-{
+function enablebutton (button, button2, target) {
 	var string = target.value;
 	if (button2 != null) {
 		button2.disabled = false;
@@ -188,8 +187,7 @@ function enablebutton (button, button2, target)
 	}
 }
 
-function checkfield (type, form, field)
-{
+function checkfield (type, form, field) {
 	var url = base_url + 'backend/checkfield?type='+type+'&name=' + encodeURIComponent(field.value);
 	$.get(url,
 		 function(html) {
@@ -1710,7 +1708,7 @@ var fancyBox = new function () {
 
 	var $w = $(window),
 		timer,
-		retina = window.devicePixelRatio > 1.5,
+		retina = window.devicePixelRatio > 1.2,
 		images = this,
 		selector = $(this).selector,
 		loaded;

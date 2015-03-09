@@ -171,15 +171,16 @@ function received_data(data) {
 			remaining -= 1;
 			html = to_html(events[i]);
 			if (!html) continue;
-			html = $('<div class="sneaker-item">'+html+'</div>');
-			items.prepend(html);
+			$html = $('<div class="sneaker-item">'+html+'</div>');
+			items.prepend($html);
 			if (events[i].type == 'chat') {
 				sneak_add_recent_nicks(events[i].who);
 			}
 			if (remaining < 10) {
-				html.css( {opacity: remaining * 0.1 });
-				html.animate({ 'opacity': 1}, 'slow' );
+				$html.css( {opacity: remaining * 0.1 });
+				$html.animate({ 'opacity': 1}, 'slow' );
 			}
+			$html.trigger("DOMChanged", $html);
 		}
 	} else next_update = Math.round(next_update*1.05);
 	if (next_update < 3000) next_update = 3000;

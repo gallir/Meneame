@@ -97,7 +97,7 @@ function to_html(data) {
 			html += '<div class="sneaker-story" '+text_style+'><a target="_blank" href="'+data.link+'">'+data.title+'<\/a><\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined && data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+base_static+'img/g.gif" data-2x="s:-20.:-40." data-src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+' lazy"/><\/a>';
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
@@ -126,7 +126,7 @@ function to_html(data) {
 			html += '<div id="chat'+chat_counter+'" class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who">';
 			if (data.icon != undefined &&  data.icon.length > 0) {
-				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+base_static+'img/g.gif" data-2x="s:-20.:-40." data-src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+' lazy"/><\/a>';
 			}
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
@@ -182,7 +182,7 @@ function to_html(data) {
 	} else if (data.uid > 0)  {
 		html += '<div class="sneaker-who">';
 		if (data.icon != undefined && data.icon.length > 0) {
-			html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+'"/><\/a>';
+			html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+base_static+'img/g.gif" data-2x="s:-20.:-40." data-src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+' lazy"/><\/a>';
 		}
 		html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 	} else {
