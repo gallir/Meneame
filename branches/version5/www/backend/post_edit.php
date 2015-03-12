@@ -47,6 +47,11 @@ function save_post ($post_id) {
 	$post = new Post;
 	$_POST['post'] = clean_text_with_tags($_POST['post'], 0, false, $globals['posts_len']);
 
+	syslog(LOG_INFO, $_POST['post']);
+	$encoded = normalize_smileys($_POST['post']);
+	syslog(LOG_INFO, $encoded);
+	die;
+
 
 	if (!empty($_FILES['image']['tmp_name'])) {
 		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);

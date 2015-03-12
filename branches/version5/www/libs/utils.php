@@ -627,7 +627,7 @@ function put_smileys($str) {
 	global $globals;
 
 	if ($globals['bot']) return $str;
-	$str = preg_replace_callback('/\{([a-z]{3,10})\}/', 'put_emojis_callback', $str);
+	$str = preg_replace_callback('/\{(\w{3,10})\}/', 'put_emojis_callback', $str);
 	return $str;
 }
 
@@ -636,7 +636,6 @@ function put_emojis_callback($matches) {
 	static $translations = false;
 	if (!$translations) {
 		$translations = array(
-
 			'angry' => 'angry.png" alt="&gt;&#58;-(" title="&gt;&#58;-(" width="18" height="18"',
 			'blank' => 'blank.png" alt=":-|" title=":-| :|" width="18" height="18"',
 			'cheesy' => 'cheesy.png" alt=":-&gt;" title=":-&gt;" width="18" height="18"',
@@ -666,8 +665,14 @@ function put_emojis_callback($matches) {
 			'wink' => 'wink.png" alt=";)" title=";)" width="18" height="18"',
 			'wow' => 'wow.png" alt="o_o" title="o_o :wow:" width="18" height="18"',		);
 	}
-	if (isset($translations[$matches[1]])) {
-		return '<img data-src="'.$globals['base_static'].'img/menemojis/18/'.$translations[$matches[1]].' src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="lazy" />';
+
+	if (substr($matches[1], 0, 2) == '0x') {
+		// Twemoji
+		$image = substr($matches[1], 2).'.png';
+		return '<img data-src="'.$globals['base_static'].'img/twemojis/18/'.$image.'" width="18" height="18 src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
+
+	} elseif (isset($translations[$matches[1]])) {
+		return '<img data-src="'.$globals['base_static'].'img/menemojis/18/'.$translations[$matches[1]].' src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
 	} else {
 		return $matches[0];
 	}
@@ -675,6 +680,9 @@ function put_emojis_callback($matches) {
 
 function normalize_smileys($str) {
 	global $globals;
+
+	include_once(mnminclude.'twemojis.php');
+	$str = Twemojis::normalize($str);
 
 	$str=preg_replace('/(\s|^):wall:/i', '$1{wall}', $str);
 	$str=preg_replace('/(\s|^):troll:/i', '$1{troll}', $str);
@@ -704,6 +712,7 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^):-{0,1}\*/i', '$1{kiss}', $str);
 	$str=preg_replace('/(\s|^):hug:/i', '$1{hug}', $str);
 	$str=preg_replace('/(\s|^):shit:/i', '$1{shit}', $str);
+
 	return $str;
 }
 
