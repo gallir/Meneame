@@ -627,7 +627,7 @@ function put_smileys($str) {
 	global $globals;
 
 	if ($globals['bot']) return $str;
-	$str = preg_replace_callback('/\{(\w{3,10})\}/', 'put_emojis_callback', $str);
+	$str = preg_replace_callback('/\{(\S{3,14})\}/', 'put_emojis_callback', $str);
 	return $str;
 }
 

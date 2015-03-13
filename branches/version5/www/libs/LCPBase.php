@@ -24,7 +24,7 @@ class LCPBase {
 
 		if ($fancy) {
 			// Add smileys
-			$regexp .= '|\{\w{3,10}\}';
+			$regexp .= '|\{\S{3,14}\}';
 		}
 
 		if (is_a($this, 'Post')) { // references to @users

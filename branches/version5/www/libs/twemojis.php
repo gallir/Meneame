@@ -2,9 +2,10 @@
 
 class Twemojis {
 
-	static $map = array(
-		0xa9, 0xa9, 0, 0xffff,
-		0xae, 0xae, 0, 0xffff,
+/* Generated automatically by emojis_ranges.py */
+	 static $map = array(
+		0xa9, 0xa9, 0, 0xff,
+		0xae, 0xae, 0, 0xff,
 		0x203c, 0x203c, 0, 0xffff,
 		0x2049, 0x2049, 0, 0xffff,
 		0x2122, 0x2122, 0, 0xffff,
@@ -105,6 +106,33 @@ class Twemojis {
 		0x1f680, 0x1f6c5, 0, 0xfffff,
 	);
 
+/* Regexes for double unicodes */
+	 static $regexes = array(
+		'/\x{1f1e8}\x{1f1f3}/u' => ' {0x1f1e8-1f1f3} ',
+		'/\x{1f1e9}\x{1f1ea}/u' => ' {0x1f1e9-1f1ea} ',
+		'/\x{1f1ea}\x{1f1f8}/u' => ' {0x1f1ea-1f1f8} ',
+		'/\x{1f1eb}\x{1f1f7}/u' => ' {0x1f1eb-1f1f7} ',
+		'/\x{1f1ec}\x{1f1e7}/u' => ' {0x1f1ec-1f1e7} ',
+		'/\x{1f1ee}\x{1f1f9}/u' => ' {0x1f1ee-1f1f9} ',
+		'/\x{1f1ef}\x{1f1f5}/u' => ' {0x1f1ef-1f1f5} ',
+		'/\x{1f1f0}\x{1f1f7}/u' => ' {0x1f1f0-1f1f7} ',
+		'/\x{1f1f7}\x{1f1fa}/u' => ' {0x1f1f7-1f1fa} ',
+		'/\x{1f1fa}\x{1f1f8}/u' => ' {0x1f1fa-1f1f8} ',
+		'/\x{23}\x{20e3}/u' => ' {0x23-20e3} ',
+		'/\x{30}\x{20e3}/u' => ' {0x30-20e3} ',
+		'/\x{31}\x{20e3}/u' => ' {0x31-20e3} ',
+		'/\x{32}\x{20e3}/u' => ' {0x32-20e3} ',
+		'/\x{33}\x{20e3}/u' => ' {0x33-20e3} ',
+		'/\x{34}\x{20e3}/u' => ' {0x34-20e3} ',
+		'/\x{35}\x{20e3}/u' => ' {0x35-20e3} ',
+		'/\x{36}\x{20e3}/u' => ' {0x36-20e3} ',
+		'/\x{37}\x{20e3}/u' => ' {0x37-20e3} ',
+		'/\x{38}\x{20e3}/u' => ' {0x38-20e3} ',
+		'/\x{39}\x{20e3}/u' => ' {0x39-20e3} ',
+	);
+
+
+
 	static function to_entities($input) {
 		return mb_encode_numericentity($input, self::$map, 'UTF-8', true);
 	}
@@ -121,6 +149,10 @@ class Twemojis {
 	}
 
 	static function normalize($input) {
+		foreach (self::$regexes as $old => $new) {
+			$input = preg_replace($old, $new, $input);
+		}
+
 		$callback = function ($matches) {
 			if (($h = self::in_table($matches[1])) ) {
 				return ' {'.$h.'} ';

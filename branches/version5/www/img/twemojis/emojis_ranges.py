@@ -9,36 +9,69 @@ import glob
 import os
 
 hexs = []
+doubles = []
 
 def print_line(first, last):
 		mask = 'f' * (len(hex(last))-2)
-		print "0x%x, 0x%x, 0, 0x%s," % (first, last, mask)
+		print "\t\t0x%x, 0x%x, 0, 0x%s," % (first, last, mask)
+
+def get_ranges(hexs):
+	tmp = []
+
+
+	for x in hexs:
+		try:
+			number = int(x, 16)
+		except ValueError:
+			continue
+		tmp.append(number)
+
+	tmp = sorted(tmp)
+	first = current = previous = None
+	current = None
+	for h in tmp:
+		if not first:
+			first = previous = h
+			continue
+		if previous and previous == h:
+			continue
+
+		if previous + 1 != h:
+			print_line(first, previous)
+			first = h
+
+		previous = h
+
+	print_line(first, previous)
+
+
 
 for f in glob.glob("*.png"):
 	name, ext = os.path.splitext(f)
 
-	name = name.replace("-", "")
-	try:
-		number = int(name, 16)
-	except ValueError:
+	codes = name.split("-", 2)
+
+	if len(codes) > 1:
+		doubles.append(codes)
 		continue
 
-	hexs.append(number)
+	hexs.append(codes[0])
 
 
-hexs = sorted(hexs)
-first = current = previous = None
-current = None
-for h in hexs:
-	if not first:
-		first = previous = h
-		continue
+print("/* Generated automatically by emojis_ranges.py */");
+print("\t static $map = array(")
+get_ranges(hexs)
+print("\t);")
 
-	if previous + 1 != h:
-		print_line(first, previous)
-		first = h
+print("/* Regexes for double unicodes */");
+print("\t static $regexes = array(")
+doubles = sorted(doubles)
+for codes in doubles:
+	print ("\t\t'/\\x{%s}\\x{%s}/u' => ' {0x%s-%s} '," % (codes[0], codes[1], codes[0], codes[1]))
+print("\t);")
 
-	previous = h
 
-print_line(first, previous)
+
+
+
 
