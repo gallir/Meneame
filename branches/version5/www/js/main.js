@@ -1532,7 +1532,7 @@ var fancyBox = new function () {
 	$(window).on('unload onAjax', function() { hide(); });
 
 	area.click(click);
-	$(window).on("DOMChanged", function () {current_count = 0; restart(); });
+	$(window).on("DOMChanged", function () {current_count = -1; restart(); });
 	$(window).focus(restart);
 
 	$(window).blur(function() {
@@ -1617,8 +1617,12 @@ var fancyBox = new function () {
 		var posts;
 
 		data = decode_data(readStorage("n_"+user_id));
-		if (! data) return;
-		if (data.total == current_count) return;
+		if (! data) {
+			return;
+		}
+		if (data.total == current_count) {
+			return;
+		}
 
 		document.title = document.title.replace(/^\(\d+\) /, '');
 		area.html(data.total);
