@@ -669,7 +669,7 @@ function put_emojis_callback($matches) {
 	if (substr($matches[1], 0, 2) == '0x') {
 		// Twemoji
 		$image = substr($matches[1], 2).'.png';
-		return '<img data-src="'.$globals['base_static'].'img/twemojis/18/'.$image.'" width="18" height="18 src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
+		return '<img data-src="'.$globals['base_static'].'img/twemojis/18/'.$image.'" alt="emoji" title="{'.$matches[1].'}" width="18" height="18" src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
 
 	} elseif (isset($translations[$matches[1]])) {
 		return '<img data-src="'.$globals['base_static'].'img/menemojis/18/'.$translations[$matches[1]].' src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
