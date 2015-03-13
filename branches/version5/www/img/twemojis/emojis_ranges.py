@@ -18,7 +18,6 @@ def print_line(first, last):
 def get_ranges(hexs):
 	tmp = []
 
-
 	for x in hexs:
 		try:
 			number = int(x, 16)
@@ -28,7 +27,6 @@ def get_ranges(hexs):
 
 	tmp = sorted(tmp)
 	first = current = previous = None
-	current = None
 	for h in tmp:
 		if not first:
 			first = previous = h
@@ -43,8 +41,6 @@ def get_ranges(hexs):
 		previous = h
 
 	print_line(first, previous)
-
-
 
 for f in glob.glob("*.png"):
 	name, ext = os.path.splitext(f)
@@ -69,9 +65,5 @@ doubles = sorted(doubles)
 for codes in doubles:
 	print ("\t\t'/\\x{%s}\\x{%s}/u' => ' {0x%s-%s} '," % (codes[0], codes[1], codes[0], codes[1]))
 print("\t);")
-
-
-
-
 
 
