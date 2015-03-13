@@ -93,7 +93,6 @@ function save_comment ($comment, $link) {
 	if (is_a($res, "Comment", false) ) {
 		$comment = Comment::from_db($res->id);
 		$comment->link_object = $link;
-		//$data['html'] = "<b>$comment->id, $comment->read, $comment->link</b>";
 		$data['html'] = $comment->print_summary(null, true, true);
 		$data['error'] = '';
 	} else {
@@ -126,7 +125,7 @@ function check_and_save($comment, $link) {
 			|| (($comment->author != $current_user->user_id || $comment->type == 'admin')
 				&& $current_user->user_level == 'god')) &&
 		$_POST['key']  == md5($comment->randkey.$site_key)  &&
-		strlen(trim($_POST['comment_content'])) > 2 ) {
+		mb_strlen(trim($_POST['comment_content'])) > 2 ) {
 		$comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
 
 		if ($current_user->user_level == 'god') {
@@ -145,7 +144,7 @@ function check_and_save($comment, $link) {
 			return _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
 		}
 
-		if (strlen($comment->content) > 0 ) {
+		if (mb_strlen($comment->content) > 0 ) {
 			$comment->store();
 		}
 

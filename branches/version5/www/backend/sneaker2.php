@@ -135,7 +135,7 @@ function check_chat() {
 	if(empty($_POST['chat'])) return;
 	$comment = trim(preg_replace("/[\r\n\t]/", ' ', $_REQUEST['chat']));
 	$comment = clear_whitespace($comment);
-	if ($current_user->user_id > 0 && strlen(strip_tags($comment)) > 2) {
+	if ($current_user->user_id > 0 && mb_strlen(strip_tags($comment)) > 2) {
 		// Sends a message back if the user has a very low karma
 		if ($globals['min_karma_for_sneaker'] > 0 && $current_user->user_karma < $globals['min_karma_for_sneaker']) {
 			$comment = _('no tienes suficiente karma para comentar en la fisgona').' ('.$current_user->user_karma.' < '.$globals['min_karma_for_sneaker'].')';
@@ -182,7 +182,7 @@ function check_chat() {
 		} else {
 			$room = 'all';
 		}
-		if (strlen($comment)>0) {
+		if (mb_strlen($comment)>0) {
 			$comment = $db->escape(trim(normalize_smileys($comment)));
 			$db->query("insert into chats (chat_time, chat_uid, chat_room, chat_user, chat_text) values ($now_f, $current_user->user_id, '$room', '$current_user->user_login', '$comment')");
 		}

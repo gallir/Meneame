@@ -16,6 +16,8 @@ def print_line(first, last):
 
 for f in glob.glob("*.png"):
 	name, ext = os.path.splitext(f)
+
+	name = name.replace("-", "")
 	try:
 		number = int(name, 16)
 	except ValueError:
