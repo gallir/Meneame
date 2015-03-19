@@ -663,13 +663,20 @@ function put_emojis_callback($matches) {
 			'undecided' => 'undecided.png" alt=":-/" title=":-/ :/" width="18" height="18"',
 			'wall' => 'wall.gif" alt=":wall:" title=":wall:" width="24" height="18"',
 			'wink' => 'wink.png" alt=";)" title=";)" width="18" height="18"',
-			'wow' => 'wow.png" alt="o_o" title="o_o :wow:" width="18" height="18"',		);
+			'wow' => 'wow.png" alt="o_o" title="o_o :wow:" width="18" height="18"',
+
+			'coletas' => 'coletas.png" alt=":coletas:" title=":coletas:" width="18" height="18"',
+			'eli' => 'eli.png" alt=":eli:" title=":eli:" width="18" height="18"',
+			'foreveralone' => 'foreveralone.png" alt=":foreveralone:" title=":foreveralone:" width="20" height="18"',
+			'pagafantas' => 'pagafantas.png" alt=":pagafantas:" title=":pagafantas:" width="25" height="18"',
+			'popcorn' => 'popcorn.gif" alt=":popcorn:" title=":popcorn:" width="29" height="18"',
+		);
 	}
 
 	if (substr($matches[1], 0, 2) == '0x') {
 		// Twemoji
 		$image = substr($matches[1], 2).'.png';
-		return '<img data-src="'.$globals['base_static'].'img/twemojis/18/'.$image.'" alt="emoji" title="{'.$matches[1].'}" width="18" height="18" src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
+		return '<img data-src="'.$globals['base_static'].'img/twemojis/18/'.$image.'" alt="{'.$matches[1].'}" title="{'.$matches[1].'}" width="18" height="18" src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
 
 	} elseif (isset($translations[$matches[1]])) {
 		return '<img data-src="'.$globals['base_static'].'img/menemojis/18/'.$translations[$matches[1]].' src="'.$globals['base_static'].'img/g.gif" data-2x="s:18/:36/:" class="emoji lazy" />';
@@ -712,6 +719,12 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^):-{0,1}\*/i', '$1{kiss}', $str);
 	$str=preg_replace('/(\s|^):hug:/i', '$1{hug}', $str);
 	$str=preg_replace('/(\s|^):shit:/i', '$1{shit}', $str);
+
+	$str=preg_replace('/(\s|^):coletas:/i', '$1{coletas}', $str);
+	$str=preg_replace('/(\s|^):eli:/i', '$1{eli}', $str);
+	$str=preg_replace('/(\s|^):foreveralone:/i', '$1{foreveralone}', $str);
+	$str=preg_replace('/(\s|^):pagafantas:/i', '$1{pagafantas}', $str);
+	$str=preg_replace('/(\s|^):popcorn:/i', '$1{popcorn}', $str);
 
 	return $str;
 }
