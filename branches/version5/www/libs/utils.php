@@ -670,6 +670,12 @@ function put_emojis_callback($matches) {
 			'foreveralone' => 'foreveralone.png" alt=":foreveralone:" title=":foreveralone:" width="20" height="18"',
 			'pagafantas' => 'pagafantas.png" alt=":pagafantas:" title=":pagafantas:" width="25" height="18"',
 			'popcorn' => 'popcorn.gif" alt=":popcorn:" title=":popcorn:" width="29" height="18"',
+
+			'take' => 'takemymoney.png" alt=":take:" title=":take:" width="29" height="18"',
+			'professor' => 'professor.png" alt=":professor:" title=":professor:" width="18" height="24"',
+			'peineta' => 'peineta.png" alt=":peineta:" title=":peineta:" width="20" height="18"',
+			'ferrari' => 'ferrari.png" alt=":ferrari:" title=":ferrari:" width="36" height="18"',
+			'calzador' => 'calzador.png" alt=":calzador:" title=":calzador:" width="18" height="18"',
 		);
 	}
 
@@ -725,6 +731,13 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^):foreveralone:/i', '$1{foreveralone}', $str);
 	$str=preg_replace('/(\s|^):pagafantas:/i', '$1{pagafantas}', $str);
 	$str=preg_replace('/(\s|^):popcorn:/i', '$1{popcorn}', $str);
+
+	$str=preg_replace('/(\s|^):take:/i', '$1{take}', $str);
+	$str=preg_replace('/(\s|^):professor:/i', '$1{professor}', $str);
+	$str=preg_replace('/(\s|^):peineta:/i', '$1{peineta}', $str);
+	$str=preg_replace('/(\s|^):ferrari:/i', '$1{ferrari}', $str);
+	$str=preg_replace('/(\s|^):calzador:/i', '$1{calzador}', $str);
+
 
 	return $str;
 }
