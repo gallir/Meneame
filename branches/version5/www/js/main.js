@@ -2030,6 +2030,77 @@ function execOnDocumentLoad() {
 	});
 }
 
+/* *=*=* Menemoji Keyboard *=*=* */
+var emojiKey = new function() {
+	var $panel = null;
+	var $html = null;
+	var $textarea;
+
+
+	this.keyboard = function (caller) {
+		event.preventDefault();
+		$(caller).toggleClass('active');
+		var commentObj = $(caller).closest('form');
+		if(commentObj.find('.emoji-kbd').length) {
+			emojiKey.close();
+		} else {
+			emojiKey.close();
+			$textarea = commentObj.find('textarea');
+			if (! $html) {
+				$.ajax({
+					method: "GET",
+					url: base_url + 'backend/menemoji_kbd',
+					data: { v: version_id },
+					cache: true,
+					success: function (data) {
+							$html = $(data);
+							$panel = $html.insertAfter($textarea);
+							emojiKey.open();
+						},
+					});
+			} else {
+				$panel = $html.insertAfter($textarea);
+				emojiKey.open();
+			}
+		}
+	};
+
+	this.open = function() {
+		/* Evento de botones emoji */
+		$panel.find('.emoji-btn').on('click', function(e) {
+			e.preventDefault();
+			var emojiCode = $(this).data('emoji');
+			emojiKey.insert(emojiCode);
+		});
+
+		/* Evento de tabs de teclado emoji */
+		$panel.find('.emoji-tab').on('click', function(e){
+			e.preventDefault();
+			$panel.find('.emoji-tab').removeClass('active');
+			$panel.find('.emoji-panel').removeClass('active');
+			var emojiPanel = $(this).data('target');
+			$(this).addClass('active');
+			$panel.find('#'+emojiPanel).addClass('active');
+		});
+		$panel.find('.emoji-kbd').removeClass('hide');
+	};
+
+	this.close = function() {
+		if ($panel) {
+			$panel.remove();
+			$panel = null;
+		}
+	};
+
+	this.insert = function(emojiCode) {
+		var caretPos = $textarea[0].selectionStart;
+		var textAreaTxt = $textarea.val();
+		var txtToAdd = '{'+emojiCode+'} ';
+		$textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+		$textarea.setFocusToEnd();
+	};
+};
+
 $(document).ready(function () {
 	var m, m2, target, canonical;
 

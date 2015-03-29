@@ -50,7 +50,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // If you user version, be careful to rewrite the directory for img, css and js
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
-$globals['v'] = 34; // internal version, to for reloads
+$globals['v'] = 35; // internal version, to for reloads
 $globals['lang'] = $dblang	= 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
@@ -353,8 +353,8 @@ $globals['Amazon_S3_delete_allowed'] = false;
 
 
 // Main javascript file
-$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js';
-$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js';
+$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js';
+$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js';
 $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';

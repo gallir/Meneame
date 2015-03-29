@@ -2584,6 +2584,82 @@ background-size: 28px 20px;
 	.uploadFile-button { background-image:url('{{ globals.base_static }}img/common/upload-2x.png'); }
 }
 
+.emoji-kbd-btn {
+line-height: 1.4;
+padding: 2px 4px 3px 4px;
+}
+.emoji-kbd-btn.active {
+padding: 1px 3px 2px 3px;
+border: 1px solid #ffa500;
+background-color: #ffd5ad;
+}
+.emoji-kbd {
+margin: 10px 0;
+color: #333;
+}
+
+.emojiCat {
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+.emojiCat li {
+display: inline-block;
+border: 1px solid #ffa500;
+border-bottom: none;
+border-radius: 3px 3px 0 0;
+width: 70px;
+text-align: center;
+}
+
+.emojiCat li.active {
+border-color: #999;
+background-color: oldlace;
+}
+
+.commentform a.emoji-tab {
+display: block;
+padding: 3px 0;
+color: #333;
+background-color: #ffd5ad;
+border-bottom: none;
+border-radius: 2px 2px 0 0;
+text-decoration: none;
+text-transform: lowercase;
+}
+
+.commentform a.emoji-tab.active {
+font-weight: 700;
+padding: 3px 0;
+color: white;
+background-color: #ff6400;
+}
+
+.emoji-panel {
+display: none;
+min-height: 50px;
+border: 1px solid #ffa500;
+padding: 2px;
+background-color: white;
+overflow-x: hidden;
+overflow-y: auto;
+}
+
+.emoji-panel.active {
+display: block;
+}
+
+.emoji-btn {
+margin: 4px;
+vertical-align: middle;
+height: 18px;
+width: auto;
+}
+
+.emoji-btn:hover {
+background-color: #ffd5ad;
+}
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
 	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
