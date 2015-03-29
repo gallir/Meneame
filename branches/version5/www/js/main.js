@@ -2038,14 +2038,13 @@ var emojiKey = new function() {
 
 
 	this.keyboard = function (caller) {
-		event.preventDefault();
 		$(caller).toggleClass('active');
 		var commentObj = $(caller).closest('form');
+		$textarea = commentObj.find('textarea');
 		if(commentObj.find('.emoji-kbd').length) {
 			emojiKey.close();
 		} else {
 			emojiKey.close();
-			$textarea = commentObj.find('textarea');
 			if (! $html) {
 				$.ajax({
 					method: "GET",
@@ -2063,6 +2062,8 @@ var emojiKey = new function() {
 				emojiKey.open();
 			}
 		}
+		$textarea.setFocusToEnd();
+		return false;
 	};
 
 	this.open = function() {
