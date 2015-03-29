@@ -2082,7 +2082,6 @@ var emojiKey = new function() {
 			$(this).addClass('active');
 			$panel.find('#'+emojiPanel).addClass('active');
 		});
-		$panel.find('.emoji-kbd').removeClass('hide');
 	};
 
 	this.close = function() {
