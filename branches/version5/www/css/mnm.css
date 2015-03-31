@@ -1815,6 +1815,20 @@ color: #3D72C3;
 color: #FF9400;
 }
 
+.comment-votes-info a > span.votes-counter, .comment-votes-info > .vote.up + span + .votes-counter {
+display: block;
+margin: 0;
+padding: 0;
+position: absolute;
+width: 28px;
+height: 20px;
+top: 20px;
+left: 0;
+background-color: #fafafa;
+text-align: center;
+line-height: 1.75;
+}
+
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
