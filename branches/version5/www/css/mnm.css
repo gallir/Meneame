@@ -1588,7 +1588,6 @@ padding: 0;
 
 .comments-list li {
 margin-bottom: 10px;
-position: relative;
 }
 
 .comment-body {
@@ -1596,13 +1595,13 @@ padding: 4px 5px 5px 10px;
 line-height: 120%;
 text-align: left;
 overflow: hidden;
-min-height: 51px;
+min-height: 25px;
 background: #FFF5ED;
 color: #202020;
 border-color: #FF6400;
 border-radius: 2px;
-margin-left: 28px;
 }
+
 
 .comment-body a strong {
 color: #FF6400;
@@ -1625,7 +1624,6 @@ background: #FFD5AD url({{ globals.base_static }}img/common/comment-high-01.png)
 
 .comment-body.user {
 border: 1px solid #FFA500;
-padding: 3px 5px 4px 10px;
 }
 
 .comment-body.author {
@@ -1644,7 +1642,6 @@ font-size: 90%;
 overflow: hidden;
 color: #aaa;
 background: #fff;
-min-height: 39px;
 }
 
 .comment-body a.fancybox {
@@ -1721,15 +1718,13 @@ border-radius: 2px;
 }
 
 .comment-meta .vote {
-display: block;
-position: absolute;
-width: 28px;
-height: 20px;
+display: inline-block;
+width: 16px;
+height: 18px;
 cursor: pointer;
 margin-right: 10px;
 background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
-overflow: hidden;
 }
 
 .comment-meta .vote.right {
@@ -1737,25 +1732,12 @@ margin-left: 10px;
 }
 
 .comment-meta .vote.up {
-background-position: 6px 0;
-top: 0;
-left: 0;
-margin: 0;
-border-radius: 4px 0 0 0;
-background-color: #41a541;
-}
-
-.comment-meta .vote.up + span {
-display: none;
+background-position: 0px 0px;
 }
 
 .comment-meta .vote.down {
-background-position: 6px -20px;
-top: 40px;
-left: 0;
-margin: 0;
-border-radius: 0 0 0 4px;
-background-color: #ff6400;
+background-position: 0px -20px;
+margin-right: 20px;
 }
 
 .comment-meta .vote.voted {
@@ -1815,20 +1797,6 @@ color: #3D72C3;
 color: #FF9400;
 }
 
-.comment-votes-info a > span.votes-counter, .comment-votes-info > .vote.up + span + .votes-counter {
-display: block;
-margin: 0;
-padding: 0;
-position: absolute;
-width: 28px;
-height: 20px;
-top: 20px;
-left: 0;
-background-color: #fafafa;
-text-align: center;
-line-height: 1.75;
-}
-
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
@@ -1863,7 +1831,6 @@ float: left;
 height: 18px;
 max-width: 70%;
 overflow: hidden;
-margin-left: 28px;
 }
 
 .comment-votes-info img {
