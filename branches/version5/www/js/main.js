@@ -1353,7 +1353,6 @@ function share_tw(e) {
 
 var historyManager = new function () {
 	var history = [];
-
 	if (typeof window.history.pushState != "function") return;
 
 	$(window).on("popstate", function(e) {
