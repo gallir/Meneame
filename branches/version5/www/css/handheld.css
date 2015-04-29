@@ -41,7 +41,7 @@ padding: 5px 5px;
 background-color:#ccc;
 }
 
-#header-sub, #header-sub a, #header-sub img { 
+#header-sub, #header-sub a, #header-sub img {
 color:#fff;
 vertical-align: bottom;
 font-variant:small-caps;
@@ -97,9 +97,9 @@ background: none !important;
 }
 
 @media (min-width:500px) and (orientation:landscape) {
-	.wide {
-		display: inline-block;
-	}
+    .wide {
+        display: inline-block;
+    }
 }
 
 #notifier_panel {
@@ -228,6 +228,5 @@ overflow: hidden;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
+    .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
 }
-
