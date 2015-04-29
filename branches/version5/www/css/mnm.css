@@ -151,9 +151,9 @@ user-select: none;
 }
 
 @media (min-height: 600px) {
-	#header-top {
-	position: fixed;
-	}
+    #header-top {
+    position: fixed;
+    }
 }
 
 
@@ -293,7 +293,7 @@ cursor: pointer;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	#header-center .logo-eli { background-image:url('{{ globals.base_static }}img/mnm/h9_eli.svg'); }
+    #header-center .logo-eli { background-image:url('{{ globals.base_static }}img/mnm/h9_eli.svg'); }
 }
 
 #header-center .edname{
@@ -1171,7 +1171,7 @@ background-size: 16px 16px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
+    .news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1211,7 +1211,7 @@ background-size: 24px 24px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.error, .form-error, .form-error-submit { background-image:url('{{ globals.base_static }}img/common/error-2x.png'); }
+    .error, .form-error, .form-error-submit { background-image:url('{{ globals.base_static }}img/common/error-2x.png'); }
 }
 
 .form-error-submit {
@@ -1590,73 +1590,16 @@ padding: 0;
 margin-bottom: 10px;
 }
 
-.comment-votes-tools {
-  float: left;
-  width: 25px;
-  overflow: hidden;
-}
-
-.comment-votes-tools span {
-  display: block;
-  height: 18px;
-  text-align: center;
-  line-height: 1.4;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.comment-votes-tools .vote {
-  cursor: pointer;
-  background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
-  background-size: 20px 300px;
-}
-
-.comment-votes-tools .vote.up {
-  background-position: 5px 0px;
-  background-color: #41a541;
-  border-radius: 4px 0 0 0;
-}
-
-.comment-votes-tools .vote.down {
-  background-position: 5px -20px;
-  background-color: #ff6400;
-  border-radius: 0 0 0 4px;
-}
-.comment-votes-tools .vote.voted {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.comment-votes-tools .votes-counter.votes {
-  font-weight: 700;
-  color: #ff6400;
-}
-
-.comment-votes-tools.hidden .votes-counter.votes {
-  color: #ccc;
-  border-color: #ccc;
-}
-
-.comment-body-meta {
-min-height: 60px;
-margin: 0;
-padding: 0;
-}
-
 .comment-body {
-min-height: 54px;
 padding: 4px 5px 5px 10px;
 line-height: 120%;
 text-align: left;
 overflow: hidden;
+min-height: 25px;
 background: #FFF5ED;
 color: #202020;
 border-color: #FF6400;
-border-radius: 0 2px 2px 0;
--webkit-box-sizing: border-box;
--moz-box-sizing: border-box;
-box-sizing: border-box;
+border-radius: 2px;
 }
 
 
@@ -1774,6 +1717,34 @@ margin: 0 4px 0 4px;
 border-radius: 2px;
 }
 
+.comment-meta .vote {
+display: inline-block;
+width: 16px;
+height: 18px;
+cursor: pointer;
+margin-right: 10px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
+background-size: 20px 300px;
+}
+
+.comment-meta .vote.right {
+margin-left: 10px;
+}
+
+.comment-meta .vote.up {
+background-position: 0px 0px;
+}
+
+.comment-meta .vote.down {
+background-position: 0px -20px;
+margin-right: 20px;
+}
+
+.comment-meta .vote.voted {
+cursor: default;
+opacity:0.5;
+}
+
 .comment-meta .reply {
 display: inline-block;
 margin: 0 2px 0 6px;
@@ -1836,7 +1807,7 @@ cursor: pointer;
 padding-top: 4px;
 }
 
-.comment-meta .answers .counter, .comment-votes-info .votes-info  {
+.comment-meta .answers .counter {
 display: inline-block;
 font-size: 9px;
 color: #fff;
@@ -1846,13 +1817,6 @@ min-height: 12px;
 min-width: 12px;
 background-color: #FFB600;
 border-radius: 50%;
-}
-
-.comment-votes-info .votes-info {
-font-family: mono;
-font-size: 12px;
-min-width: 14px;
-margin: 0 5px;
 }
 
 .comment-meta .votes-counter {
@@ -2617,7 +2581,7 @@ background-size: 28px 20px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.uploadFile-button { background-image:url('{{ globals.base_static }}img/common/upload-2x.png'); }
+    .uploadFile-button { background-image:url('{{ globals.base_static }}img/common/upload-2x.png'); }
 }
 
 .emoji-kbd-btn {
@@ -2698,6 +2662,6 @@ background-color: #ffd5ad;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
-	#header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
+    .comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
+    #header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
 }
