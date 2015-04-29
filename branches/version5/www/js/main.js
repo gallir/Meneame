@@ -117,10 +117,9 @@ function update_comment_vote(id, value, data) {
 	} else {
 		$('#vc-'+id).html(data.votes+"");
 		$('#vk-'+id).html(data.karma+"");
+		$('#vc-n-'+id).hide();
 		if (value < 0) {
-			$('#vc-p-'+id).hide();
-		} else {
-			$('#vc-n-'+id).hide();
+			$('#vc-p-'+id).removeClass('up').addClass('down');
 		}
 	}
 }
