@@ -1806,7 +1806,7 @@ function analyze_hash(force) {
 		if (link_id > 0 && (m2 = m[1].match(/^c-(\d+)$/)) && m2[1] > 0) {
 			/* it's a comment */
 			if ( target.length > 0) {
-				var e = $("#"+m[1]).find(".comment-body");
+				var e = $("#"+m[1]+">:first");
 				e.css("border-style","solid").css("border-width","1px");
 				{# If there is an anchor in the url, displace 80 pixels down due to the fixed header #}
 			} else {
