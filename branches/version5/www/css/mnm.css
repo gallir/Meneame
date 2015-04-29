@@ -151,9 +151,9 @@ user-select: none;
 }
 
 @media (min-height: 600px) {
-    #header-top {
-    position: fixed;
-    }
+	#header-top {
+	position: fixed;
+	}
 }
 
 
@@ -293,7 +293,7 @@ cursor: pointer;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    #header-center .logo-eli { background-image:url('{{ globals.base_static }}img/mnm/h9_eli.svg'); }
+	#header-center .logo-eli { background-image:url('{{ globals.base_static }}img/mnm/h9_eli.svg'); }
 }
 
 #header-center .edname{
@@ -1171,7 +1171,7 @@ background-size: 16px 16px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
+	.news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1211,7 +1211,7 @@ background-size: 24px 24px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .error, .form-error, .form-error-submit { background-image:url('{{ globals.base_static }}img/common/error-2x.png'); }
+	.error, .form-error, .form-error-submit { background-image:url('{{ globals.base_static }}img/common/error-2x.png'); }
 }
 
 .form-error-submit {
@@ -2581,7 +2581,7 @@ background-size: 28px 20px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .uploadFile-button { background-image:url('{{ globals.base_static }}img/common/upload-2x.png'); }
+	.uploadFile-button { background-image:url('{{ globals.base_static }}img/common/upload-2x.png'); }
 }
 
 .emoji-kbd-btn {
@@ -2662,6 +2662,6 @@ background-color: #ffd5ad;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
-    #header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
+	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
+	#header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
 }
