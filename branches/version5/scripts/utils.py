@@ -269,7 +269,7 @@ class BaseBlogs(object):
 
 			if soup.title and soup.title.string:
 				self.title = soup.title.string.strip()
-		except (socket.timeout, urllib2.URLError, urllib2.HTTPError, UnicodeEncodeError, httplib.BadStatusLine, TypeError), e:
+		except (socket.error, socket.timeout, urllib2.URLError, urllib2.HTTPError, UnicodeEncodeError, httplib.BadStatusLine, TypeError), e:
 			pass
 		else:
 			""" Search for feed urls """

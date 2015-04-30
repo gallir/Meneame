@@ -10,6 +10,16 @@ import urllib
 import urllib2
 import socket
 
+import sys
+import codecs
+import locale
+
+if sys.stdout.isatty():
+	default_encoding = sys.stdout.encoding
+else:
+	default_encoding = locale.getpreferredencoding()
+
+
 
 """
 ALTER TABLE  `meneame`.`users` ADD INDEX (  `user_url` );
