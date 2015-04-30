@@ -1,4 +1,4 @@
-<?php
+<?
 $globals['skip_check_ip_noaccess'] = true;
 include('./config.php');
 
