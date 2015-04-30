@@ -338,7 +338,7 @@ foreach ($res as $dbuser) {
 		}
 
 		// Penalize to unfair negative comments' votes
-		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and comment_votes < 5 and ((comment_karma-vote_value)/(comment_votes-1)) > 0");
+		$negative_abused_comment_votes_count = (int) $db->get_var("select SQL_NO_CACHE count(*) from votes, comments where vote_type='comments' and vote_user_id = $user->id and vote_date > $history_from and vote_value < 0 and comment_id = vote_link_id and comment_votes < 20 and ((comment_karma-vote_value)/(comment_votes-1)) > 0");
 		if ($negative_abused_comment_votes_count > 5) {
 			$karma5 = max(-$comment_votes/2, -$comment_votes * $negative_abused_comment_votes_count/20);
 			if ($negative_abused_comment_votes_count > 10 ) {
