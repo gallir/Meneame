@@ -72,7 +72,7 @@ sub read {
 	$hash = MnmDB::row_hash($sql);
 	if ($hash->{user_id} > 0) {
 		$self->{id} = $hash->{user_id};
-		$self->{user} = $hash->{user_login};
+		$self->{user} = MnmDB::utf8($hash->{user_login});
 		if (!defined($self->{jid})) {
 			$self->{jid} = $hash->{user_public_info};
 		}
@@ -90,7 +90,7 @@ sub read {
 sub read_prefs {
 	my $self = shift;
 	my ($sql, $sth, $key, $value);
-	$sql = qq{SELECT pref_key, pref_value from prefs WHERE pref_user_id = $self->{id} and pref_key like 'jabber%'};
+	$sql = qq{SELECT pref_key, pref_value from prefs WHERE pref_user_id = $self->{id} and (pref_key like 'jabber%' or pref_key like 'posts%')};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
 	while ( ($key, $value) = $sth->fetchrow_array) {

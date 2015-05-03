@@ -3,7 +3,7 @@
 // Post to Twitter/Jaiku the "top story"
 // Check which hostname server we run for, for example: mnm, emnm
 
-include(dirname(__FILE__).'/../config.php');
+include(dirname(__FILE__).'/../www/config.php');
 include(mnminclude.'external_post.php');
 
 $site_name = $argv[1];

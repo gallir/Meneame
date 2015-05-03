@@ -31,10 +31,14 @@ print "END\n";
 sub ReadPosts {
 	my ($sql, $sth, $hash);
 	my $poster;
+	my ($t1, $t2);
 
 	if ($timestamp == 0) {
 		$timestamp = time - 60;
 	}
+	$t1 = $t2 = $timestamp;
+
+	# Notify posts
 	$sql = qq{SELECT user_login, UNIX_TIMESTAMP(post_date), post_content, post_src, post_id from users, posts WHERE post_date > FROM_UNIXTIME($timestamp) and user_id = post_user_id ORDER BY post_date asc limit 50};
 	$sth = MnmDB::prepare($sql);
 	$sth->execute ||  die "Could not execute SQL statement: $sql";
@@ -44,16 +48,36 @@ sub ReadPosts {
 		$src = 'jabber' if ($src eq 'im');
 		#print "Post -> $username: $content\n";
 		$poster = new MnmUser(user=>$username);
-		$timestamp = $date;
+		$t1 = $date;
 		foreach my $u ($jabber->users()) {
 			next if $u->get_pref('posts-off');
 			my $username = $u->{user};
+			my $friendship = $u->friend($poster);
+			next if $friendship < 0; 
 			# Send the note if the user is the poster is a friend, the same user or has answered him with a @username at the begining
-			if ($u->friend($poster) > 0 || $u == $poster || $content =~ /(^|\W)\@$username\W/i) {
-				$jabber->SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$poster->{user}/$postid ");
+			if ($friendship > 0 || $u->get_pref('posts-all') || $u == $poster || $content =~ /(^|\W)\@$username[,\.:\W]/i) {
+				$jabber->SendMessage($u, "$poster->{user} ($src): $content -- http://meneame.net/notame/$postid ");
 			}
 		}
 	}
+	# Notify privates
+	$sql = qq{SELECT users.user_login, users_to.user_id, users_to.user_login, UNIX_TIMESTAMP(privates.date), texts.content from users, users as users_to, privates, texts WHERE privates.date > FROM_UNIXTIME($timestamp) and users.user_id = privates.user and users_to.user_id = privates.to and texts.key = 'privates' and texts.id = privates.id ORDER BY privates.date asc limit 5};
+
+	$sth = MnmDB::prepare($sql);
+	$sth->execute ||  die "Could not execute SQL statement: $sql";
+	while (my ($username, $to_id, $to_username, $date, $content) = $sth->fetchrow_array) {
+		$content = MnmDB::utf8($content);
+		$content = MnmDB::clean_pseudotags(decode_entities($content));
+		$poster = new MnmUser(user=>$username);
+		$t2 = $date;
+		foreach my $u ($jabber->users()) {
+			if ($to_id == $u->{id}) {
+				$jabber->SendMessage($u, "**$poster->{user}** (private): $content -- http://meneame.net/notame/_priv ");
+			}
+		}
+	}
+	if ($t1 > $timestamp) { $timestamp = $t1 }
+	if ($t2 > $timestamp) { $timestamp = $t2 }
 }
 
 sub InMessage {
@@ -63,7 +87,7 @@ sub InMessage {
 
 	my $id = $poster->id;
 
-	if ($poster->karma < 5.5) {
+	if ($poster->karma < 6) {
 		$jabber->SendMessage($poster, "no tienes suficiente karma");
 		return;
 	}
@@ -77,7 +101,7 @@ sub InMessage {
 	my $ascii = $body;
 	$ascii =~ s/[^a-z]//ig;
 	if (length($ascii) < 8) {
-		$jabber->SendMessage($poster, "mensaje muy corto o sin caracteres válidos");
+		# $jabber->SendMessage($poster, "mensaje muy corto o sin caracteres válidos");
 		return;
 	}
 	if (length($body) > 500) {
@@ -114,13 +138,28 @@ sub ExecuteCommand {
 	$_ =~ s/^ +//;
 
 	if (/^!help/) {
-		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!off: deshabilita la recepción de todas las notas\n!on: vuelve a habilitar la recepción de las notas \n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto (la etiqueta es opcional)");
+		$jabber->SendMessage($poster, "»» Comandos:\n!help: esta ayuda\n!off: deshabilita la recepción de todas las notas\n!on: vuelve a habilitar la recepción de las notas \n!friends: muestra sólo las notas de amigos\n!all: muestra las notas de todos\n!whoami: te dice tu nombre de usuario en el menéame\n!who: lista los amigos conectados al jabber de notas (deben ser amigos mutuos)\n!gs http://un.enlace.muy.largo etiqueta: crea enlace corto (la etiqueta es opcional)");
+	} elsif (/^!prefs/) {
+		my $key;
+		$mess = '»» ';
+		foreach $key (keys %{$poster->{prefs}}) {
+			if ($key =~ /^posts.+/) {
+				$mess .= "$key -> $poster->{prefs}{$key}\n";
+			}
+		}
+		$jabber->SendMessage($poster, $mess);
 	} elsif (/^!off/) {
 		$poster->store_prefs('posts-off', 1);
-		$jabber->SendMessage($poster, '»» recepción de mensajes deshabilitados');
+		$jabber->SendMessage($poster, '»» recepción de notas deshabilitados');
 	} elsif (/^!on/) {
 		$poster->store_prefs('posts-off', '');
-		$jabber->SendMessage($poster, '»» recepción de mensajes habilitados');
+		$jabber->SendMessage($poster, '»» recepción de notas habilitados');
+	} elsif (/^!friends/) {
+		$poster->store_prefs('posts-all', '');
+		$jabber->SendMessage($poster, '»» sólo notas de amigos');
+	} elsif (/^!all/) {
+		$poster->store_prefs('posts-all', '1');
+		$jabber->SendMessage($poster, '»» todas las notas');
 	} elsif (/^!whoami/) {
 		$jabber->SendMessage($poster, "»» " . $poster->{user});
 	} elsif (/^!gs/) {

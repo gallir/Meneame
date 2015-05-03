@@ -50,7 +50,7 @@ sub InMessage {
 	my $body = shift;
 
 	if (length($body) < 3) {
-		$jabber->SendMessage($user, "mensaje muy corto");
+		# $jabber->SendMessage($user, "mensaje muy corto");
 		return;
 	}
 

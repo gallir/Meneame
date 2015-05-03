@@ -14,7 +14,7 @@ $site_name = $argv[1];
 $link_id = (int) $argv[2];
 $status = $argv[3];
 
-include(dirname(__FILE__).'/../config.php');
+include(dirname(__FILE__).'/../www/config.php');
 include(mnminclude.'external_post.php');
 
 $my_id = SitesMgr::get_id($site_name);

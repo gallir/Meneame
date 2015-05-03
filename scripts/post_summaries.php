@@ -7,7 +7,7 @@ $site_name = $argv[2];
 
 
 // Post to Twitter/Jaiku the most voted and commented during last 24 hr
-include(dirname(__FILE__).'/../config.php');
+include(dirname(__FILE__).'/../www/config.php');
 include(mnminclude.'external_post.php');
 
 $my_id = SitesMgr::get_id($site_name);

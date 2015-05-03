@@ -1,6 +1,6 @@
 #! /usr/bin/env php
 <?php
-include(dirname(__FILE__).'/../config.php');
+include(dirname(__FILE__).'/../www/config.php');
 include(mnminclude.'webimages.php');
 
 
