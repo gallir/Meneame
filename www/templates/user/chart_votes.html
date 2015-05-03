@@ -2,13 +2,17 @@
 
 <div id="flot" style="width:100%;height:150px;"></div>
 
-{% spacefull %}
 <script type="text/javascript"> 
-//<!--
 addPostCode(function () {
+	var tickSize;
+	if (is_mobile) {
+		tickSize = 7;
+	} else {
+		tickSize = 1;
+	}
 	var options = {
 		legend: { position: "nw" },
-		xaxis: { mode: "time", tickSize: [1, "day"], timeformat: "%d"},
+		xaxis: { mode: "time", tickSize: [tickSize, "day"], timeformat: "%d"},
 		series: {
 			lines: { show: false },
 			points: { show: true, radius: 1, fill: false },
@@ -31,13 +35,12 @@ addPostCode(function () {
         var markings = [];
         var d = new Date(axes.xaxis.min);
         
-        d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
+        d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
         d.setUTCSeconds(0);
         d.setUTCMinutes(0);
         d.setUTCHours(0);
         var i = d.getTime();
         do {
-            
             markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
             i += 7 * 24 * 60 * 60 * 1000;
         } while (i < axes.xaxis.max);
@@ -46,8 +49,6 @@ addPostCode(function () {
     }
 
 });
-//-->
 </script> 
-{% endspacefull %}
 
 </fieldset>
