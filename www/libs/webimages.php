@@ -718,9 +718,8 @@ class HtmlImages {
 
 	// Youtube detection
 	function check_youtube() {
-		return false;
 		if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-			(preg_match('/\/\/www\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
+			(preg_match('/\/\/(?:m|www)\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
 			$video_id = $match[1];
 			if ($this->debug)
 				echo "<!-- Detect Youtube, id: $video_id -->\n";
@@ -743,21 +742,10 @@ class HtmlImages {
 	}
 
 	function get_youtube_thumb($videoid) {
-		$thumbnail = false;
-		if(($res = get_url("https://gdata.youtube.com/feeds/api/videos/$videoid"))) {
-			$vrss = $res['content'];
-			$previous = 0;
-			if($vrss &&
-				preg_match_all('/<media:thumbnail url=["\'](.+?)["\'].*?width=["\'](\d+)["\']/',$vrss,$matches, PREG_SET_ORDER)) {
-				foreach ($matches as $match) {
-					if ($match[2] > $previous) {
-						$thumbnail = $match[1];
-						$previous = $match[2];
-					}
-				}
-			}
-		}
-		return $thumbnail;
+		// TODO: implement API 3
+		// https://developers.google.com/youtube/v3/getting-started
+		// For example: https://www.googleapis.com/youtube/v3/videos?id=Vasl-Tps23k&key=AIzaSyA-R4wuYP0pjQ_P6laiNlwt4lUaoSvwQrg&part=snippet
+		return "https://i.ytimg.com/vi/$videoid/hqdefault.jpg";
 	}
 
 	// Check yfrog video thumbnail, from http://code.google.com/p/imageshackapi/wiki/YFROGurls
