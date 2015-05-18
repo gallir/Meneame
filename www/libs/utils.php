@@ -673,9 +673,12 @@ function put_emojis_callback($matches) {
 
 			'take' => 'takemymoney.png" alt=":take:" title=":take:" width="29" height="18"',
 			'professor' => 'professor.png" alt=":professor:" title=":professor:" width="18" height="24"',
-			'peineta' => 'peineta.png" alt=":peineta:" title=":peineta:" width="20" height="18"',
+			'peineta' => 'peineta.png" alt=":peineta:" title=":peineta:" width="23" height="18"',
 			'ferrari' => 'ferrari.png" alt=":ferrari:" title=":ferrari:" width="36" height="18"',
 			'calzador' => 'calzador.png" alt=":calzador:" title=":calzador:" width="18" height="18"',
+
+			'tinfoil' => 'tinfoil.gif" alt=":tinfoil:" title=":tinfoil:" width="18" height="26"',
+			'clap' => 'clap.gif" alt=":clap:" title=":clap:" width="32" height="18"',
 		);
 	}
 
@@ -737,6 +740,8 @@ function normalize_smileys($str) {
 	$str=preg_replace('/(\s|^):peineta:/i', '$1{peineta}', $str);
 	$str=preg_replace('/(\s|^):ferrari:/i', '$1{ferrari}', $str);
 	$str=preg_replace('/(\s|^):calzador:/i', '$1{calzador}', $str);
+	$str=preg_replace('/(\s|^):tinfoil:/i', '$1{tinfoil}', $str);
+	$str=preg_replace('/(\s|^):clap:/i', '$1{clap}', $str);
 
 
 	return $str;
