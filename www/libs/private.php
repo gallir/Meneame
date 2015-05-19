@@ -46,7 +46,7 @@ class PrivateMessage extends LCPBase {
 
 		$friendship = User::friend_exists($to, $from);
 		return $friendship > 0 ||
-			(! $friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 15 day)")) > 0);
+			(! $friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 3 day)")) > 0);
 	}
 
 	function store($full = true) {
