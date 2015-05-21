@@ -39,6 +39,7 @@ $page_size = 50;
 $offset=(get_current_page()-1)*$page_size;
 $page_title = _('nótame') . ' | '. $globals['site_name'];
 $view = false;
+$short_content = false;
 
 switch ($argv[0]) {
 	case '_best':
@@ -49,17 +50,6 @@ switch ($argv[0]) {
 		$order_by = "ORDER BY post_karma desc";
 		$limit = "LIMIT $offset,$page_size";
 		$rows = $db->get_var("SELECT count(*) FROM posts where post_date > '$min_date'");
-		break;
-
-	case '_geo':
-		$tab_option = 3;
-		$page_title = _('nótame') . ' geo | '._('menéame');
-		require_once(mnminclude.'geo.php');
-		if ($current_user->user_id > 0 && ($latlng = geo_latlng('user', $current_user->user_id))) {
-			geo_init('onLoad', $latlng, 5);
-		} else {
-			geo_init('onLoad', false, 2);
-		}
 		break;
 
 	case '':
@@ -100,6 +90,10 @@ switch ($argv[0]) {
 			$order_by = "";
 			$limit = "";
 			$rows = 1;
+			$answers = $db->get_col("SELECT count(conversation_from) FROM conversations WHERE conversation_type='post' and conversation_to = $id");
+			if ($answers < 5) {
+				$short_content = true;
+			}
 		} else {
 			// User is specified
 			$user->username = $db->escape($argv[0]);
@@ -202,13 +196,15 @@ do_post_subheader($options, $view, $rss_option);
 echo '<div id="sidebar">';
 do_banner_right();
 //do_best_stories();
-if ($rows > 20) {
+if (! $short_content) {
 	do_best_posts();
 	do_best_comments();
-	do_last_subs('published');
-	do_last_blogs();
+	do_banner_promotions();
+	if ($tab_option < 4) {
+		do_last_subs('published');
+		do_last_blogs();
+	}
 }
-do_banner_promotions();
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
@@ -223,72 +219,42 @@ if ($current_user->user_id > 0) {
 	echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
 }
 
-if ($argv[0] == '_geo') {
-	echo '<div class="topheading"><h2>'._('notas de las últimas 24 horas').'</h2></div>';
-	echo '<div id="map" style="width: 95%; height: 500px;margin:0 0 0 20px;"></div></div>';
-	?>
-	<script type="text/javascript">
-	var baseicon;
-	var geo_marker_mgr = null;
-
-	function onLoad(lat, lng, zoom, icon) {
-		baseicon = new GIcon();
-		baseicon.iconSize = new GSize(20, 25);
-		baseicon.iconAnchor = new GPoint(10, 25);
-		baseicon.infoWindowAnchor = new GPoint(10, 10);
-		if (geo_basic_load(lat||18, lng||15, zoom||2)) {
-			geo_map.addControl(new GLargeMapControl());
-			geo_marker_mgr = new GMarkerManager(geo_map);
-			geo_load_xml('post', '', 0, base_url+"img/geo/common/geo-newnotame01.png");
-			GEvent.addListener(geo_map, 'click', function (overlay, point) {
-				if (overlay && overlay.myId > 0) {
-					GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
-					overlay.openInfoWindowHtml(data);
-					});
-				} //else if (point) geo_map.panTo(point);
-			});
+$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
+if ($posts) {
+	$ids = array();
+	echo '<ol class="comments-list">';
+	$time_read = 0;
+	foreach ($posts as $post) {
+		if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
+			echo '<li>'. _('Error: nota no existente') . '</li>';
+		} else {
+			echo '<li>';
+			$post->print_summary();
+			if ($post->date > $time_read) $time_read = $post->date;
+			echo '</li>';
+			if (! $post_id) $ids[] = $post->id;
 		}
 	}
-	</script>
-	<?php
-} else {
-	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
-	if ($posts) {
-		$ids = array();
-		echo '<ol class="comments-list">';
-		$time_read = 0;
-		foreach ($posts as $post) {
-			if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
-				echo '<li>'. _('Error: nota no existente') . '</li>';
-			} else {
-				echo '<li>';
-				$post->print_summary();
-				if ($post->date > $time_read) $time_read = $post->date;
-				echo '</li>';
-				if (! $post_id) $ids[] = $post->id;
-			}
-		}
 
-		echo "</ol>\n";
+	echo "</ol>\n";
 
-		if ($post_id > 0) {
-			// Print share button
-			echo '<div style="text-align:right">';
-			$vars = array('link' => $globals['permalink'],
-            			'title' => $page_title);
-			Haanga::Load('share.html', $vars);
-			echo '</div>';
+	if ($post_id > 0) {
+		// Print share button
+		echo '<div style="text-align:right">';
+		$vars = array('link' => $globals['permalink'],
+           			'title' => $page_title);
+		Haanga::Load('share.html', $vars);
+		echo '</div>';
 
-			print_answers($post_id, 1);
+		print_answers($post_id, 1);
 
-		} else {
-			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
-		}
+	} else {
+		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
+	}
 
-		// Update conversation time
-		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
-			Post::update_read_conversation($time_read);
-		}
+	// Update conversation time
+	if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
+		Post::update_read_conversation($time_read);
 	}
 	echo '</div>';
 	do_pages($rows, $page_size);
