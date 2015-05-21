@@ -285,7 +285,9 @@ if ($link->latlng) {
 }
 if (! $current_user->user_id) {
 	do_most_clicked_stories();
-	do_banner_promotions();
+}
+do_banner_promotions();
+if (! $current_user->user_id) {
 	do_best_stories();
 }
 do_rss_box();
