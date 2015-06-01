@@ -981,6 +981,7 @@ function priv_new(user_id) {
 			historyManager.pop('#priv_new');
 		},
 		overlayClose: false,
+		opacity: 0.5,
 		transition: 'none',
 		title: false,
 		scrolling: true,
