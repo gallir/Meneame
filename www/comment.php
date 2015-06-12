@@ -91,7 +91,7 @@ echo '<h3><a href="'.$link->get_permalink().'">'. $link->title. '</a></h3>';
 $tree = new CommentTree();
 $tree->addByIds($comment->id);
 
-for ($i = 0; $i < 4; $i++) {
+for ($i = 0; $i < 6; $i++) {
 	if (! fill_tree($tree) || $tree->size() > 30) {
 		break;
 	}
