@@ -166,7 +166,8 @@ CREATE TABLE `clones` (
   PRIMARY KEY (`clon_from`,`clon_to`,`clon_ip`),
   KEY `to_date` (`clon_to`,`clon_date`),
   KEY `from_date` (`clon_from`,`clon_date`),
-  KEY `clon_date` (`clon_date`)
+  KEY `clon_date` (`clon_date`),
+  KEY `clon_ip` (`clon_ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -298,6 +299,19 @@ CREATE TABLE `geo_users` (
   `geo_text` char(80) DEFAULT NULL,
   `geo_pt` point NOT NULL,
   UNIQUE KEY `geo_id` (`geo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `html_images_seen`
+--
+
+DROP TABLE IF EXISTS `html_images_seen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `html_images_seen` (
+  `hash` char(40) NOT NULL,
+  PRIMARY KEY (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -755,10 +769,11 @@ CREATE TABLE `subs` (
   `owner` int(11) NOT NULL DEFAULT '0',
   `nsfw` tinyint(1) DEFAULT '0',
   `created_from` int(11) NOT NULL DEFAULT '0',
-  `allow_main_link` tinyint(1) DEFAULT '0',
+  `allow_main_link` tinyint(1) DEFAULT '1',
   `color1` char(7) DEFAULT NULL,
   `color2` char(7) DEFAULT NULL,
   `private` tinyint(1) DEFAULT '0',
+  `page_mode` enum('best-comments','threads','interview','answered','standard') DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `owner` (`owner`)
@@ -949,4 +964,4 @@ CREATE TABLE `votes_summary` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-01 11:03:01
+-- Dump completed on 2015-06-12 10:22:15
