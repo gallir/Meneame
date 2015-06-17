@@ -90,7 +90,7 @@ switch ($argv[0]) {
 			$order_by = "";
 			$limit = "";
 			$rows = 1;
-			$answers = $db->get_col("SELECT count(conversation_from) FROM conversations WHERE conversation_type='post' and conversation_to = $id");
+			$answers = $db->get_var("SELECT count(conversation_from) FROM conversations WHERE conversation_type='post' and conversation_to = $post_id");
 			if ($answers < 5) {
 				$short_content = true;
 			}
