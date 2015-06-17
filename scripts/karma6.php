@@ -281,6 +281,7 @@ foreach ($res as $dbuser) {
 
 		// Check the user don't abuse voting only negative
 		$max_allowed_negatives = round(($nopublished_given + $published_given + $negative_discarded * 2) * $user->karma / 10);
+		$max_allowed_negatives = max($max_allowed_negatives, 1);
 		if($negative_no_discarded > 10 && $negative_no_discarded > $max_allowed_negatives) {
 			$punishment = min(1+$negative_no_discarded/$max_allowed_negatives, 4);
 			$karma3 -= $punishment;
