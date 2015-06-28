@@ -82,14 +82,20 @@ function do_bloggers($string) {
 }
 
 function do_last($string) {
-	global $db, $current_user;
+	global $db, $current_user, $globals;
 
 	if (! $current_user->admin) return false;
+	$array = preg_split('/\s+/', $string);
+	if (count($array) >= 2 && ((int)$array[1] > 0)) {
+		$users = min((int) $array[1], 200); // Up 200 users
+	} else {
+		$users = 20;
+	}
 	$list = '';
-	$res = $db->get_col("select user_login from users order by user_id desc limit 20");
+	$res = $db->get_col("select user_login from users order by user_id desc limit $users");
 	if ($res) {
 		foreach ($res as $user) {
-			$list .= 'http://'.get_server_name().get_user_uri($user) . ' ';
+			$list .= $globals['scheme'].'//'.get_server_name().get_user_uri($user) . ' ';
 		}
 	}
 	return $list;
@@ -98,7 +104,7 @@ function do_last($string) {
 function do_values() {
 	global $db, $current_user, $globals;
 
-	return 'http://' . get_server_name().$globals['base_url']. 'values.php'; 
+	return $globals['scheme'].'//' . get_server_name().$globals['base_url']. 'values.php'; 
 }
 
 function do_stats1($string) {
