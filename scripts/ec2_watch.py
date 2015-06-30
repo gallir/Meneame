@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 import subprocess
 import os
 
+import boto
 from ec2_watchdata import WatchData
 
 
@@ -37,8 +38,13 @@ def main():
 
 
 
-	data.connect(configuration.group)
-	data.get_CPU_loads()
+	try:
+		data.connect(configuration.group)
+		data.get_CPU_loads()
+	except boto.exception.BotoServerError:
+		print("Error in Boto")
+		return
+
 
 	prev_data = WatchData.from_file()
 
@@ -115,7 +121,15 @@ def sendmail(data, to):
 		except Exception as e:
 			report = unicode(e)
 
-		msg = MIMEText("Action: " + data.action + "\n\nINSTANCES SUMMARY:\n" + unicode(report))
+		try:
+			p = os.path.dirname(os.path.abspath(__file__)) + "/" + "summary_access.py"
+			p = subprocess.Popen([p, "*", "-M", "4"], stdout=subprocess.PIPE)
+			(summary, err) = p.communicate()
+		except Exception as e:
+			summary = unicode(e)
+
+
+		msg = MIMEText("Action: " + data.action + "\n\nINSTANCES SUMMARY:\n" + unicode(report) + "\n\n" + unicode(summary))
 		msg['Subject'] = "Watch warning"
 		msg['From'] = getpass.getuser()
 		msg['To'] = configuration.mail
