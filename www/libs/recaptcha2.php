@@ -26,9 +26,9 @@ function ts_is_human() {
 }
 
 function ts_print_form() {
-	global $globals, $dblang;
+	global $globals;
 
-	$globals['extra_js'][] = '//www.google.com/recaptcha/api.js';
+	$globals['extra_js'][] = '//www.google.com/recaptcha/api.js?hl='.$globals['lang'];
 	echo '<div class="g-recaptcha" data-sitekey="'.$globals['recaptcha_public_key'].'"></div>';
 }
 
