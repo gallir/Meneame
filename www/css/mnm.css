@@ -2661,6 +2661,22 @@ width: auto;
 background-color: #ffd5ad;
 }
 
+#backTop{
+width:35px;
+height:35px;
+padding:10px;
+cursor:pointer;
+z-index:9990;
+display:none;
+box-sizing:content-box;
+-webkit-box-sizing:content-box;
+}
+
+#backTop.black{
+background:url({{ globals.base_static }}img/common/uparr-48-w.png) no-repeat center center rgba(0,0,0,0.8);
+}
+
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
     #header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }

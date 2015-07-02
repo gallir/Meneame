@@ -1133,6 +1133,49 @@ function share_tw(e) {
 	};
 })();
 
+/* Back to top plugin
+ * From http://www.jqueryscript.net/demo/Customizable-Back-To-Top-Button-with-jQuery-backTop/
+ */
+
+(function($) {
+   $.fn.backTop = function(options) {
+        var backBtn = this;
+        var visible = false;
+        var settings = $.extend({
+            'position' : 600,
+            'speed' : 500,
+        }, options);
+
+        var position = settings['position'];
+        var speed = settings['speed'];
+
+        backBtn.addClass('black');
+
+        backBtn.css({
+            'right' : 25,
+            'bottom' : 25,
+            'position' : 'fixed',
+        });
+
+		$(window).on('scrollstop', function() {
+            var pos = $(window).scrollTop();
+            if (! visible && pos >= position) {
+                backBtn.fadeIn(speed);
+                visible = true;
+            } else if ( visible && pos < position) {
+                backBtn.fadeOut(speed);
+                visible = false;
+            }
+        });
+
+        backBtn.click( function() {
+			$("html, body").animate({ scrollTop: 0}, "fast");
+        });
+    }
+
+}(jQuery));
+
+
 /* Drop an image file
 ** Modified from http://gokercebeci.com/dev/droparea
 */
@@ -1871,6 +1914,8 @@ function analyze_hash(force) {
 		var m;
 		var $a = $(this);
 		var href = $a.attr("href");
+		if (href === undefined) return false;
+
 		var aClass = $a.attr("class") || '';
 
 		if (e.type != "click") {
@@ -2120,6 +2165,7 @@ $(document).ready(function () {
 	execOnDocumentLoad();
 
 	$('img.lazy').unveil({base_url: base_static, version: version_id, cache_dir: base_cache, threshold: 100});
+	$('#backTop').backTop();
 
 	$.tooltip();
 
