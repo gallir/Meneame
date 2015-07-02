@@ -1141,6 +1141,7 @@ function share_tw(e) {
    $.fn.backTop = function(options) {
         var backBtn = this;
         var visible = false;
+        var editing = false;
         var settings = $.extend({
             'position' : 600,
             'speed' : 500,
@@ -1149,28 +1150,49 @@ function share_tw(e) {
         var position = settings['position'];
         var speed = settings['speed'];
 
-        backBtn.addClass('black');
+		$('input[type=text], textarea').on("focus focusout", onFocus);
+		$(window).on('DOMChanged', function (event, parent) {
+			$(parent).find('input[type=text], textarea').on("focus focusout editing", onFocus);
+		});
+		$(window).on('editing', onFocus);
 
-        backBtn.css({
-            'right' : 25,
-            'bottom' : 25,
-            'position' : 'fixed',
-        });
-
-		$(window).on('scrollstop', function() {
-            var pos = $(window).scrollTop();
-            if (! visible && pos >= position) {
-                backBtn.fadeIn(speed);
-                visible = true;
-            } else if ( visible && pos < position) {
-                backBtn.fadeOut(speed);
-                visible = false;
-            }
-        });
+		$(window).on('scrollstop', showHide);
 
         backBtn.click( function() {
 			$("html, body").animate({ scrollTop: 0}, "fast");
         });
+
+		function onFocus(e) {
+			if (e.type == "focus" || e.type == "editing" ) {
+				editing = true;
+				showHide(e);
+			} else if (e.type == "focusout") {
+				editing = false;
+				setTimeout( function () {
+						showHide(e);
+					}, 1000);
+			}
+		}
+
+        function showHide(e) {
+            var pos = $(window).scrollTop();
+            if (! editing && ! visible && pos >= position) {
+				show();
+            } else if (visible && (editing || pos < position)) {
+				hide();
+            }
+        }
+
+        function hide() {
+			backBtn.fadeOut(speed);
+			visible = false;
+		}
+
+		function show() {
+			backBtn.fadeIn(speed);
+			visible = true;
+		}
+
     }
 
 }(jQuery));
@@ -1580,7 +1602,7 @@ var fancyBox = new function () {
 		has_focus = false;
 	});
 
-	setTimeout(update, 1500); /* We are not in a hurry */
+	setTimeout(update, 500); /* We are not in a hurry */
 
 
 	function click_handler(e) {
@@ -1884,6 +1906,7 @@ function analyze_hash(force) {
 		this.focus();
         var $initialVal = this.val();
 		this.val('').val($initialVal);
+		jQuery.event.trigger("editing");
 		return this;
 	};
 })(jQuery);
