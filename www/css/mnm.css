@@ -2663,23 +2663,15 @@ background-color: #ffd5ad;
 
 #backTop{
 position: fixed;
-width:35px;
-height:35px;
-right: 20px;
-bottom: 20px;
-padding:10px;
+width:40px;
+height:40px;
+right: 15px;
+bottom: 15px;
 cursor:pointer;
 z-index:9990;
 display:none;
-box-sizing:content-box;
--webkit-box-sizing:content-box;
 background:url({{ globals.base_static }}img/common/uparr-48-w.png) no-repeat center center rgba(0,0,0,0.8);
-border: none;
-border-radius: 50%;
-}
-
-#backTop.black{
-background:url({{ globals.base_static }}img/common/uparr-48-w.png) no-repeat center center rgba(0,0,0,0.8);
+background-size: 24px 24px;
 border: none;
 border-radius: 50%;
 }
