@@ -1139,16 +1139,16 @@ function share_tw(e) {
 
 (function($) {
    $.fn.backTop = function(options) {
-        var backBtn = this;
-        var visible = false;
-        var editing = false;
-        var settings = $.extend({
-            'position' : 600,
-            'speed' : 500,
-        }, options);
+		var backBtn = this;
+		var visible = false;
+		var editing = false;
+		var settings = $.extend({
+			'position' : 600,
+			'speed' : 500,
+		}, options);
 
-        var position = settings['position'];
-        var speed = settings['speed'];
+		var position = settings['position'];
+		var speed = settings['speed'];
 
 		$('input[type=text], textarea').on("focus focusout", onFocus);
 		$(window).on('DOMChanged', function (event, parent) {
@@ -1158,9 +1158,9 @@ function share_tw(e) {
 
 		$(window).on('scrollstop', showHide);
 
-        backBtn.click( function() {
+		backBtn.click( function() {
 			$("html, body").animate({ scrollTop: 0}, "fast");
-        });
+		});
 
 		function onFocus(e) {
 			if (e.type == "focus" || e.type == "editing" ) {
@@ -1174,16 +1174,16 @@ function share_tw(e) {
 			}
 		}
 
-        function showHide(e) {
-            var pos = $(window).scrollTop();
-            if (! editing && ! visible && pos >= position) {
+		function showHide(e) {
+			var pos = $(window).scrollTop();
+			if (! editing && ! visible && pos >= position) {
 				show();
-            } else if (visible && (editing || pos < position)) {
+			} else if (visible && (editing || pos < position)) {
 				hide();
-            }
-        }
+			}
+		}
 
-        function hide() {
+		function hide() {
 			backBtn.fadeOut(speed);
 			visible = false;
 		}
@@ -1193,7 +1193,7 @@ function share_tw(e) {
 			visible = true;
 		}
 
-    }
+	}
 
 }(jQuery));
 
@@ -1476,7 +1476,7 @@ var fancyBox = new function () {
 		} else if ( (v = myHref.match(/twitter\.com\/.+?\/(?:status|statuses)\/(\d+)/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('en Twitter') %}</a>';
 			html=" ";
-			if (is_mobile)  {
+			if (is_mobile)	{
 				width = '100%';
 				height = '100%';
 			} else {
@@ -1499,7 +1499,7 @@ var fancyBox = new function () {
 			};
 		} else if ( (v = myHref.match(/(?:vimeo\.com\/(\d+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vimeo') %}</a>';
-			if (is_mobile)  {
+			if (is_mobile)	{
 				width = '100%';
 				height = '100%';
 			} else {
@@ -1513,7 +1513,7 @@ var fancyBox = new function () {
 			iframe = true;
 		} else if ( (v = myHref.match(/(?:vine\.co\/v\/(\w+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vine') %}</a>';
-			if (is_mobile)  {
+			if (is_mobile)	{
 				innerWidth = 320;
 				innerHeight = 320;
 			} else {
@@ -1904,7 +1904,7 @@ function analyze_hash(force) {
 (function($){
 	$.fn.setFocusToEnd = function() {
 		this.focus();
-        var $initialVal = this.val();
+		var $initialVal = this.val();
 		this.val('').val($initialVal);
 		jQuery.event.trigger("editing");
 		return this;
@@ -1928,7 +1928,7 @@ function analyze_hash(force) {
 			if (state != null) {
 				if (state.name == "partial" && state.sequence != last ) {
 					load(location.href, e.originalEvent.state);
-    			}
+				}
 			}
 		});
 	}
