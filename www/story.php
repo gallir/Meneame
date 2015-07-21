@@ -217,6 +217,13 @@ switch ($url_args[1]) {
 		$tab_option = 9;
 		$globals['noindex'] = true;
 		break;
+	case 'qa':
+		$tab_option = 100;
+		$globals['noindex'] = true;
+		$globals['ads'] = false;
+		do_qanda_text($link);
+		exit(0);
+		break;
 	default:
 		do_error(_('página inexistente'), 404);
 }
@@ -231,13 +238,13 @@ if ($link->status != 'published' && $globals['now'] - $link->date > 864000) {
 	$globals['noindex'] = true;
 }
 
-if (preg_match('/nsfw/i', $link->title)) $globals['ads'] = false;
+if ($globals['ads'] && preg_match('/nsfw/i', $link->title)) $globals['ads'] = false;
 
 do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->status.'-'.$link->comments.'-'.$link->modified);
 
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
-if ($link->status == 'published' && $link->user_karma > 6 && !empty($link->user_adcode)) {
+if ($globals['ads'] && $link->status == 'published' && $link->user_karma > 6 && !empty($link->user_adcode)) {
 	$globals['do_user_ad'] = $link->user_karma;
 	$globals['user_adcode'] = $link->user_adcode;
 	$globals['user_adchannel'] = $link->user_adchannel;
@@ -735,4 +742,57 @@ function print_votes_raw($link) {
 	foreach ($votes as $v) {
 		printf("%s\t%d\t%s\t%3.1f\n", date("c", $v->ts), $v->vote_value, $v->user_login, $v->user_karma);
 	}
+}
+
+/* Get a list of the answers and their questions */
+function get_qanda($link) {
+	include_once(mnminclude.'commenttree.php');
+	global $db;
+
+	$results = array();
+	$a_ids = $db->get_col("select comment_id from comments where comment_link_id = $link->id and comment_user_id = $link->author order by comment_id asc");
+	if ($a_ids) {
+		foreach ($a_ids as $a_id) {
+			$a = Comment::from_db($a_id);
+			$qa = new CommentQA($a);
+			$q_ids = $db->get_col("select conversation_to from conversations where conversation_type = 'comment' and conversation_from = $a_id and conversation_to > 0 order by conversation_to asc");
+			if ($q_ids) {
+				foreach ($q_ids as $q_id) {
+					$q = Comment::from_db($q_id);
+					$qa->add_question($q);
+				}
+			}
+			$results[] = $qa;
+		}
+	}
+	return $results;
+}
+
+/* Show a very simple list of questions and answers
+   ready to copy&paste for eldiario.es
+*/
+function do_qanda_text($link) {
+	global $globals, $db;
+
+	$cleaner = function ($comment) {
+		$comment->content = preg_replace('/{.{1,10}?}|#\d+/', '', $comment->content);
+		$comment->content = preg_replace('/[\n]{3,}/', "\n", $comment->content);
+		$comment->content = $comment->to_html($comment->content);
+	};
+
+	$qas = get_qanda($link);
+
+	do_header(_('Q&A simple').": $link->title", 'post');
+
+	foreach ($qas as $qa) {
+		$a = $qa->answer;
+		foreach ($qa->questions as $q) {
+			$cleaner($q);
+		}
+		$cleaner($a);
+	}
+
+	$link->permalink = $link->get_permalink();
+	Haanga::Load('comment_qa_simple.html', compact('qas', 'link'));
+	do_footer();
 }

@@ -1,0 +1,19 @@
+<style>
+p {margin-top: 10px }
+p.q {font-weight: bold;}
+p.a {margin-bottom: 10px;}
+</style>
+
+<div id="singlewrap" style="padding-top: 20px">
+	<h3><a href="{{ link.permalink }}" class="l:{{ link.id }}">{{ link.title }}</a></h3>
+
+
+	{% for qa in qas %}
+		{% for q in qa.questions %}
+			<p class="q"><a href="{{ q.username | user_uri }}">{{ q.username }}</a>: {{ q.content }}</p>
+		{% endfor %}
+		<p>{{ qa.answer.content }}</p>
+		<br/>
+	{% endfor %}
+</div>
+

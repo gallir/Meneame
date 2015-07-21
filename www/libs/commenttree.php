@@ -124,3 +124,14 @@ class CommentTree {
 		return $seen;
 	}
 }
+
+class CommentQA {
+	public function __construct($comment) {
+		$this->answer = $comment;
+		$this->questions = array();
+	}
+
+	public function add_question($comment) {
+		$this->questions[] = $comment;
+	}
+}
