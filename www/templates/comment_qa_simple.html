@@ -10,7 +10,7 @@ p.a {margin-bottom: 10px;}
 
 	{% for qa in qas %}
 		{% for q in qa.questions %}
-			<p class="q"><a href="{{ q.username | user_uri }}">{{ q.username }}</a>: {{ q.content }}</p>
+			<p class="q"><strong><a href="{{ q.username | user_uri }}">{{ q.username }}</a>: {{ q.content }}</strong></p>
 		{% endfor %}
 		<p>{{ qa.answer.content }}</p>
 		<br/>
