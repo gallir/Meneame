@@ -129,6 +129,11 @@ if (empty($url_args[1])) {
 	$globals['page_base'] = '/'.$url_args[1];
 }
 
+// Increase click counter if it's without external link.
+if (empty($link->url)) {
+	$link->add_click();
+}
+
 switch ($url_args[1]) {
 	case '':
 	case 'interview':
@@ -266,11 +271,6 @@ if ($link->has_thumb()) {
 }
 
 $globals['description'] = text_to_summary($link->content, 250);
-
-// Increase click counter if it's without external link.
-if (empty($link->url)) {
-	$link->add_click();
-}
 
 do_header($link->title, 'post');
 
