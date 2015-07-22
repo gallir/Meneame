@@ -775,6 +775,7 @@ function do_qanda_text($link) {
 	global $globals, $db;
 
 	$cleaner = function ($comment) use ($link) {
+		$comment->content = preg_replace('/{.{1,10}?}|^( *#\d+)+/', '', $comment->content);
 		$comment->content = preg_replace_callback('/#(\d+)/', function ($matches) use ($link) {
 			global $db;
 
@@ -787,7 +788,6 @@ function do_qanda_text($link) {
 			return "<em>@$username</em>";
 
 		}, $comment->content);
-		$comment->content = preg_replace('/{.{1,10}?}/', '', $comment->content);
 		$comment->content = preg_replace('/[\n]{3,}/', "\n", $comment->content);
 		$comment->content = $comment->to_html($comment->content);
 	};
