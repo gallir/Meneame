@@ -774,8 +774,20 @@ function get_qanda($link) {
 function do_qanda_text($link) {
 	global $globals, $db;
 
-	$cleaner = function ($comment) {
-		$comment->content = preg_replace('/{.{1,10}?}|#\d+/', '', $comment->content);
+	$cleaner = function ($comment) use ($link) {
+		$comment->content = preg_replace_callback('/#(\d+)/', function ($matches) use ($link) {
+			global $db;
+
+			$order = $matches[1];
+			if ($order == 0) {
+				return "<em>@$link->username</em>";
+			}
+
+			$username = $db->get_var("select user_login from users, comments where user_id = comment_user_id and comment_link_id = $link->id and comment_order = $order");
+			return "<em>@$username</em>";
+
+		}, $comment->content);
+		$comment->content = preg_replace('/{.{1,10}?}/', '', $comment->content);
 		$comment->content = preg_replace('/[\n]{3,}/', "\n", $comment->content);
 		$comment->content = $comment->to_html($comment->content);
 	};
