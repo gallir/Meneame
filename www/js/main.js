@@ -1884,19 +1884,21 @@ function analyze_hash(force) {
 			}
 		}
 		if (force) {
-			setTimeout(function () {animate(target, force)}, 10);
+			setTimeout(function () {animate(target, true)}, 10);
 		} else {
 			/* Delay scrolling until the document is shown */
-			$(window).load(function () {animate(target)});
+			$(window).load(function () {animate(target, false);});
 		}
 	}
 
 	function animate(target, force) {
 		var $h = $('#header-top');
 		if (force || $h.css('position') == 'fixed' && $(document).scrollTop() > target.offset().top - $h.height() ) {
-			$(window).scrollTop(target.offset().top - $h.height() - 10);
+			$('body, html').animate({
+				scrollTop: target.offset().top - $h.height() - 10
+			}, 'fast');
 		}
-		target.animate({opacity: 1.0}, 200);
+		target.animate({opacity: 1.0}, 'fast');
 	}
 
 }
