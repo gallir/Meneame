@@ -8,7 +8,11 @@
 
 
 function geo_latlng($type, $id) {
-	global $db;
+	global $globals, $db;
+
+	if (! isset($globals['google_maps_api'])) {
+		return false;
+	}
 
 	if ($type == 'user') $table = 'geo_users';
 	elseif ($type == 'link') $table = 'geo_links';
