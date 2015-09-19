@@ -319,7 +319,8 @@ function text_to_html_callback(&$matches) {
 				$matches[4] = substr($matches[4], 0, -1);
 				$suffix = ')';
 			}
-			return $matches[1].'<a href="'.$matches[3].$matches[4].'" title="'.$matches[4].'" rel="nofollow">'.substr($matches[4], 0, 70).'</a>'.$suffix;
+			$url = rawurldecode($matches[4]);
+			return $matches[1].'<a href="'.$matches[3].$url.'" title="'.$url.'" rel="nofollow">'.substr($url, 0, 70).'</a>'.$suffix;
 	}
 	return $matches[1].$matches[2];
 }
