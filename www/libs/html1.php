@@ -71,7 +71,7 @@ function do_header($title, $id='home', $options = false) {
 	http_cache();
 
 	$globals['security_key'] = get_security_key();
-	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
+	setcookie('k', $globals['security_key'], 0, $globals['base_url_general']);
 
 	if (!empty($_REQUEST['q'])) $globals['q'] = $_REQUEST['q'];
 

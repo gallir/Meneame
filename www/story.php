@@ -131,7 +131,7 @@ if (empty($url_args[1])) {
 
 // Increase click counter if it's without external link.
 if (empty($link->url)) {
-	$link->add_click();
+	$link->add_click(true); // Called with true so the probably nonexistent k is not checked
 }
 
 switch ($url_args[1]) {

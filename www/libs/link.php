@@ -166,14 +166,13 @@ class Link extends LCPBase {
 		return $found !== false;
 	}
 
-	function add_click() {
+	function add_click($no_go=false) {
 		global $globals, $db;
 
 		if (! $globals['bot']
 			&& ! Link::visited($this->id)
 			&& $globals['click_counter']
-			&& isset($_COOKIE['k'])
-			&& check_security_key($_COOKIE['k'])
+			&& ($no_go || (isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])))
 			&& $this->ip != $globals['user_ip']) {
 			// Delay storing
 			self::$clicked = $this->id;
