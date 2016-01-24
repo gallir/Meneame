@@ -44,7 +44,7 @@ define('config_done', 1);
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
 $globals['ssl_server'] = False; 
 
-$globals['site_name'] = 'Menéame';
+$globals['site_name'] = 'Pru&eacute;bame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 
 // If you user version, be careful to rewrite the directory for img, css and js
@@ -80,7 +80,7 @@ $globals['db_password'] = '';
 $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have high loads
 
 // Administrator email
-//$globals['adm_email'] = 'admin@administrador'
+$globals['adm_email'] = 'ramsys+meneame@gmail.com';
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 // Don't forget to add a redirect to ooops.php in case of 404 error, for example in NGINX:
@@ -113,17 +113,17 @@ $globals['legal'] = '/legal';
 $globals['karma_user_affinity'] = false;
 // Coefficient for links karma calculation
 $globals['min_decay'] = 0.25;
-$globals['karma_start_decay'] = 12; // In hours, when a link start to decrease its karma
-$globals['karma_decay'] = 54; // In hours, when it reach its minimum
+$globals['karma_start_decay'] = 48; // In hours, when a link start to decrease its karma
+$globals['karma_decay'] = 108; // In hours, when it reach its minimum
 //$globals['news_meta'] = 102; // The code of the "last news" meta category, other has a longer no decreasing period
 // Similar values for "news_meta", used if the previous is defined
-$globals['karma_news_start_decay'] =  7;
-$globals['karma_news_decay'] = 42;
+$globals['karma_news_start_decay'] =  8;
+$globals['karma_news_decay'] = 84;
 $globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reaches this value when clicks/votes = 10;
 
 
 // Memcache, set hostname if enabled
-//$globals['memcache_host'] = 'localhost';
+$globals['memcache_host'] = 'localhost';
 $globals['memcache_port'] = 11211; // optional
 
 
@@ -142,8 +142,8 @@ $globals['comments_page_size'] = 100;
 
 // Min karma to highlights comments
 // The negative is used to hide comments
-$globals['comment_highlight_karma'] = 100;
-$globals['comment_hidden_karma'] = -100;
+$globals['comment_highlight_karma'] = 50;
+$globals['comment_hidden_karma'] = -50;
 
 
 // Upload images and files
@@ -169,12 +169,12 @@ $globals['limit_3_minutes_karma'] = 10;
 $globals['limit_user_24_hours'] = 12;
 $globals['limit_same_site_24_hours'] = 4;
 
-$globals['karma_propaganda'] = 12; // min user karma to avoid extra spam/propaganda checks in the submits
+$globals['karma_propaganda'] = 6; // min user karma to avoid extra spam/propaganda checks in the submits
 
 
-$globals['karma_base']=6;
+$globals['karma_base']=8;
 $globals['karma_base_max']=9; // If not penalised, older users can get up to this value as base for the calculus
-$globals['min_karma']=1; //min user karma
+$globals['min_karma']=4; //min user karma
 $globals['max_karma']=20; //max user karma
 $globals['special_karma_gain']=17; //karma to gain 'special' status (max * 0.85)
 $globals['special_karma_loss']=12; //karma to loss 'special' status (max * 0.6)
@@ -233,9 +233,9 @@ $globals['min_karma_for_comment_votes'] = 5.5;
 
 
 
-$globals['new_user_links_limit'] = 1; //links allowed to submit in interval for new users
+$globals['new_user_links_limit'] = 5; //links allowed to submit in interval for new users
 $globals['new_user_links_interval'] = 3600;
-$globals['user_links_limit'] = 5;
+$globals['user_links_limit'] = 10;
 $globals['user_links_interval'] = 7200;
 $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
 
@@ -245,7 +245,7 @@ $globals['user_comments_clon_interval'] = 0; // hours forbidden to comment with 
 //sneakme
 $globals['posts_len'] = 500;
 $globals['posts_period'] = 60;
-$globals['posts_edit_time'] = 3600;
+$globals['posts_edit_time'] = 7200;
 $globals['posts_edit_time_admin'] = 864000;
 $globals['post_highlight_karma'] = 100;
 $globals['post_hide_karma'] = -50;
@@ -295,8 +295,8 @@ $globals['show_popular_published'] = true;
 // Recaptcha settings
 $globals['captcha_first_login'] = false;
 // Put your keys en to enable recaptcha
-//$globals['recaptcha_public_key'] = '';
-//$globals['recaptcha_private_key'] = '';
+$globals['recaptcha_public_key'] = '6LfrSxQTAAAAAGrj5IGOKrTlfFpzkNxzp3c4mY8W';
+$globals['recaptcha_private_key'] = '6LfrSxQTAAAAANJJM1WBC7HDit1NpPFhBHgfSZEa';
 
 // Twitter settings, with oauth
 // Ensure you have pecl/oauth installed
@@ -347,7 +347,7 @@ $globals['medium_thumb_size'] = 420;
 //$globals['Amazon_secret_key'] = '';
 //$globals['Amazon_S3_media_bucket'] = '';
 //$globals['Amazon_S3_media_url'] = '';
-$globals['Amazon_S3_local_cache'] = true;
+$globals['Amazon_S3_local_cache'] = false;
 $globals['Amazon_S3_upload'] = true;
 $globals['Amazon_S3_delete_allowed'] = false;
 

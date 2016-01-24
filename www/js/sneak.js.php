@@ -57,13 +57,13 @@ global_options.show_admin = false;
 
 function start_sneak() {
 	$.ajaxSetup({
-		timeout: 20000,
+		timeout: 30000,
 		async: true,
 		cache: false,
 		error: function (req, error) {
 			$('#ping').html(error+'... retrying');
 			xmlhttp = undefined;
-			data_timer = setTimeout(get_data, 3000);
+			data_timer = setTimeout(get_data, 5000);
 		}
 	});
 

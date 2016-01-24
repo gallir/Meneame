@@ -435,7 +435,7 @@ function do_vertical_tags($what=false) {
 	$max = 3;
 
 	$res = $db->get_col("select link_tags $from_where");
-	if ($res && count($res) > 5) {
+	if ($res && count($res) > 1) {
 		$url = $globals['base_url'].'cloud';
 		$title = _('etiquetas');
 		$content = '';
@@ -455,7 +455,6 @@ function do_vertical_tags($what=false) {
 		arsort($words);
 		$words = array_slice($words, 0, 20);
 		ksort($words);
-
 		foreach ($words as $word => $count) {
 			$size = round($min_pts + ($count-1)*$coef, 1);
 			$op = round(0.4 + 0.6*$count/$max, 2);
@@ -515,7 +514,7 @@ function do_most_clicked_sites() {
 	// The order is not exactly the votes counts
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
-	if ($res && count($res) > 4) {
+	if ($res && count($res) > 1) {
 		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 		echo $output;
 	}
@@ -540,7 +539,7 @@ function do_best_comments() {
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and LENGTH(comment_content) > 32 and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id and user_level != 'disabled' order by value desc limit 10");
-	if ($res && count($res) > 4) {
+	if ($res && count($res) > 1) {
 		$objects = array();
 		$title = _('mejores comentarios');
 		$url = $globals['base_url'].'top_comments';
@@ -663,7 +662,7 @@ function do_best_stories() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' order by value desc limit 5");
-	if ($res && count($res) > 4 ) {
+	if ($res && count($res) > 3 ) {
 		$links = array();
 		$url = $globals['base_url'].'popular';
 		$link = new Link();
@@ -707,7 +706,7 @@ function do_best_queued() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' order by link_karma desc limit 20");
-	if ($res && count($res) > 5) {
+	if ($res && count($res) > 2) {
 		$url = $globals['base_url'].'queue?meta=_popular';
 		$links = array();
 		$link = new Link();
@@ -750,7 +749,7 @@ function do_most_clicked_stories() {
 	// The order is not exactly the votes
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
-	if ($res && count($res) > 4) {
+	if ($res && count($res) > 1) {
 		$links = array();
 		$url = $globals['base_url'].'top_visited';
 		$link = new Link();
@@ -787,7 +786,7 @@ function do_best_posts() {
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
 	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
-	if ($res && count($res) > 4) {
+	if ($res && count($res) > 1) {
 		$objects = array();
 		$title = _('mejores notas');
 		$url = post_get_base_url('_best');
