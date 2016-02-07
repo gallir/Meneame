@@ -15,9 +15,9 @@
 	{% if not globals.mobile %}
 		<li>&nbsp;&#47;&nbsp;{% trans _('licencias') %}:&nbsp;
 		<a href="{{ globals.base_url_general }}COPYING">{% trans _('código') %}</a>,&nbsp;
-		<a href="http://creativecommons.org/licenses/by-sa/3.0/">{% trans _('gráficos') %}</a>,&nbsp;
-		<a rel="license" href="http://creativecommons.org/licenses/by/3.0/es/">{% trans _('contenido') %}</a></li>
-		<li>&nbsp;&#47;&nbsp;<a href="http://validator.w3.org/check?uri=referer">HTML5</a></li>
+		<a href="https://creativecommons.org/licenses/by-sa/3.0/">{% trans _('gráficos') %}</a>,&nbsp;
+		<a rel="license" href="https://creativecommons.org/licenses/by/3.0/es/">{% trans _('contenido') %}</a></li>
+		<li>&nbsp;&#47;&nbsp;<a href="https://validator.w3.org/nu/?doc={{ globals.scheme }}/{{ globals.server_name }}">HTML5</a></li>
 		<li>&nbsp;&#47;&nbsp;<a href="https://github.com/gallir/Meneame">{% trans _('codigo fuente') %}</a></li>
 	{% endif %}
 {% else %}
