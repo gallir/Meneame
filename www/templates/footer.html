@@ -37,7 +37,7 @@
 <div id='backTop'></div>
 
 {% include 'footer_js.html' %}
-
+{% try_include 'private/footer.html' %}
 
 {% meneame_endtime %}
 
@@ -48,6 +48,7 @@
 {% if globals.post_html %}
 	{{ globals.post_html }}
 {% endif %}
+
 
 </body>
 {% endif %} {# PARTIAL #}
