@@ -72,7 +72,7 @@ function do_banner_promotions() {
 
 function do_banner_top_news() {
 	global $globals;
-	@include('ads/top-news.inc');
+	Haanga::Safe_Load('private/top-news.html');
 }
 
 function do_banner_story() {
