@@ -919,3 +919,66 @@ function print_follow_sub($id) {
 	}
 }
 
+// show links in 'daily' format
+function do_daily($links) {
+    global $globals;
+    $daily_highligthed_num = empty($globals['daily_highligthed_num']) ? 1 : (int) $globals['daily_highligthed_num'];
+    $daily_highligthed_cat = empty($globals['daily_highligthed_cat']) ? 1 : (int) $globals['daily_highligthed_cat'];
+
+    echo '<div id="newswrap" class="format-daily">'."\n";
+
+    if ($links) {
+        // highlighted news
+        echo '<div id="daily-highlighted">'."\n";
+        for ($counter=0; $counter<$daily_highligthed_num && $counter<count($links); $counter++) {
+            $dblink = $links[$counter];
+            $link = Link::from_db($dblink->link_id);
+		    $link->show_clicks = false;
+		    $link->print_summary('daily_highlighted');
+            Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+        }
+        echo '</div>';
+
+        // other news
+        echo '<div id="daily-regular">'."\n";
+        // first, group links by category
+        $bycategory = array();
+        for ($counter=$daily_highligthed_num; $counter<count($links); $counter++) {
+            $dblink = $links[$counter];
+            $link = Link::from_db($dblink->link_id);
+            if ( !array_key_exists($link->sub_id, $bycategory) ) {
+                // if still no links in this category...
+                $bycategory[$link->sub_id] = array();
+            }
+            array_push($bycategory[$link->sub_id], $link);
+        }
+        // then, print links by category
+        foreach ($bycategory as $catid => $catlinks) {
+            echo '<div class="daily-cat" id="daily-cat-'.$catid.'">'."\n";
+            echo '<h2 class="daily-cat-title">'.$catlinks[0]->sub_name.'</h2>';
+            // hightlighted of this cat
+            echo '<div class="daily-percat-highlighted">'."\n";
+            for ($countlink=0; $countlink<$daily_highligthed_cat && $countlink<count($catlinks); $countlink++) {
+                $link = $catlinks[$countlink];
+		        $link->show_clicks = false;
+		        $link->print_summary('daily_short', 0, false);
+                Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+            }
+            echo '</div>'."\n";
+            // other links in this cat
+            echo '<div class="daily-percat-other">'."\n";
+            for ($countlink=$daily_highligthed_cat; $countlink<count($catlinks); $countlink++) {
+                $link = $catlinks[$countlink];
+		        $link->show_clicks = false;
+		        $link->print_summary('daily_shorter', 0, false);
+                Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+            }
+            echo '</div>';
+            echo '</div>'."\n";
+        }
+        echo '</div>';
+    }
+    // do_pages($rows, $page_size);
+
+    echo '</div>'."\n";
+}

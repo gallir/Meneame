@@ -1,0 +1,145 @@
+/*! 
+ * Styles for daily format
+ * by Jordi Sanchez
+ * http://jordisan.net
+ */
+
+
+/* header */
+
+.daily-header {
+    margin-top: 20px;
+    text-align: center;
+}
+    .daily-header #daily-title,
+    .daily-header #daily-select-date {
+        display: inline-block;
+        vertical-align: text-top;
+    }
+    .daily-header #daily-select-date {
+    }
+        .daily-header #daily-select-date #daily-date {
+            color: #ff6400;
+            border-color: #ff6400;
+            font-family: Arial, sans-serif;
+            width: 9.0em;
+        }
+        .daily-header #daily-select-date a {
+            padding-left: 0.5em;
+            color: #ff6400;
+        }
+    .daily-header #daily-title {
+        padding-right: 40px;
+    }
+    .daily-header h1 {
+        font-size: 1.5em;
+    }
+
+
+/* common styles for summaries */
+
+.format-daily .news-summary {
+}
+    .format-daily .news-summary h2 {
+        line-height: 1.1;
+        margin-bottom: .4em;
+        text-align: justify;
+    }
+    .format-daily .news-summary .content {
+        margin-bottom: .5em;
+        text-align: justify;
+    }
+    .format-daily .news-summary .news-submitted {
+        min-height: 0;
+        opacity: .9;
+    }
+    .format-daily .news-summary .news-details.main {
+        opacity: .8;
+    }
+    .format-daily .news-summary .comments-counter {
+        font-size: 100%;
+    }
+    .format-daily .news-summary .submitted-separator {
+        display: none;
+    }
+
+
+/* highlighted */
+
+#daily-highlighted .news-summary {
+}
+    #daily-highlighted .news-summary img.highlighted {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: 200px;
+        height: 200px;
+    }
+    #daily-highlighted .news-summary .news-body {
+        padding-left: 220px;
+        min-height: 200px;
+    }
+    #daily-highlighted .news-summary h2 {
+        font-size: 170%;
+    }
+    #daily-highlighted .news-summary .content {
+        font-size: 110%;
+    }
+    #daily-highlighted .news-summary .news-submitted {
+        float: right;
+    }
+
+
+/* other (per category) */
+
+#daily-regular .daily-cat {
+    width: 48%;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 5px;
+    vertical-align: top;
+}
+@media (max-width: 800px) {
+#daily-regular .daily-cat {
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+    margin-left: 5px;
+    vertical-align: top;
+}
+}
+
+
+#daily-regular .daily-percat-highlighted .news-summary {
+}
+    #daily-regular .daily-percat-highlighted .news-summary h2 {
+        font-size: 140%;
+    }
+    #daily-regular .daily-percat-highlighted .news-summary img.thumbnail {
+        position: absolute;
+        top: 10px;
+        left: 0;
+    }
+    #daily-regular .daily-percat-highlighted .news-summary .news-body {
+        padding-left: 70px;
+        min-height: 60px;
+    }
+
+#daily-regular .daily-percat-other .news-summary {
+}
+    #daily-regular .daily-percat-other .news-summary h2 {
+        font-size: 120%;
+    }
+    #daily-regular .daily-percat-other .news-summary .news-body {
+        padding-left: 10px;
+    }
+    #daily-regular .daily-percat-other .news-summary .comments-counter .counter {
+        background-color: #03a;
+    }
+
+
+#daily-regular:after {
+    content: " ";
+    clear: both;
+    display: table;
+}

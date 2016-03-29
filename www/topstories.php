@@ -17,10 +17,19 @@ $range_values = array(1, 2, 7, 30, 365, 0);
 $current_page = get_current_page();
 $offset=($current_page-1)*$page_size;
 
+$format = mb_strtolower($_GET['format']);
+$date = $_GET['date'];
+// default date for daily format = today
+if ( $format == 'daily' && empty($date)) {
+    $date = date('Y-m-d');
+}
+
 // Select a month and year
 if (!empty($_GET['month']) && !empty($_GET['year']) && ($month = (int) $_GET['month']) > 0 && ($year = (int) $_GET['year'])) {
 	$sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND YEAR(date) = $year AND MONTH(date) = $month AND status = 'published' AND link = link_id ORDER BY link_votes DESC ";
 	$time_link = "YEAR(date) = $year AND MONTH(date) = $month AND";
+} else if (!empty($date)) {
+    $sql = "SELECT SQL_CACHE link_id, link_votes as votes FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND DATE(date) = '$date' AND status = 'published' AND link = link_id ORDER BY link_votes DESC ";
 } else {
 	// Select from a start date
 	$from = intval($_GET['range']);
@@ -62,8 +71,13 @@ if (!($memcache_key
 
 do_header(_('más votadas') . ' | ' . $globals['site_name'], _('populares'));
 $globals['tag_status'] = 'published';
-do_tabs('main', 'popular');
-print_period_tabs();
+
+if ($format == 'daily') {
+    print_daily_header();
+} else {
+    do_tabs('main', 'popular');
+    print_period_tabs();
+}
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -76,19 +90,24 @@ do_vertical_tags('published');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
+if (!empty($date)) {
+    do_daily($links, $date);
+} else {
 
-if ($links) {
-	$counter = 0;
-	foreach($links as $dblink) {
-		$link = Link::from_db($dblink->link_id);
-		$link->show_clicks = true;
-		$link->print_summary();
-		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
-	}
+    echo '<div id="newswrap">'."\n";
+
+    if ($links) {
+	    $counter = 0;
+	    foreach($links as $dblink) {
+		    $link = Link::from_db($dblink->link_id);
+		    $link->show_clicks = true;
+		    $link->print_summary();
+		    $counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+	    }
+    }
+    do_pages($rows, $page_size);
+    echo '</div>'."\n";
 }
-do_pages($rows, $page_size);
-echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
@@ -114,4 +133,43 @@ function print_period_tabs() {
 		echo '<li'.$active.'><a href="popular?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
 	}
 	echo '</ul>'."\n";
+}
+
+function print_daily_header() {
+    global $globals, $date, $format;
+
+    $globals['extra_js'][] = 'moment.min.js';
+    $globals['extra_js'][] = 'pikaday.js';
+    $globals['extra_js'][] = 'pikaday.extra.js';
+    $globals['extra_css'][] = 'pikaday.css';
+    $globals['extra_css'][] = 'daily.css';
+
+    echo '<div class="daily-header">'."\n";
+    
+    echo '<h1 id="daily-title">';
+    echo _('diario de ');
+    $dateshown = strtotime($date);
+    $today = date("Y-m-d");
+    $yesterday = date("Y-m-d", strtotime( '-1 days' ));
+    $datetoday = strtotime($today);
+    if ( $date == $today) {
+        echo _('<span class="datetxt">' . _('HOY') . ' </span>');
+    } else if ( $date == $yesterday ) {
+        echo _('<span class="datetxt">' . _('AYER') . ' </span>');
+    }
+    $formatter = new IntlDateFormatter($globals['lang'], IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+    echo '<span class="date">';
+    echo $formatter->format(date_create($date));
+    echo '</span>'."\n";
+    echo '</h1>'."\n";
+
+    echo '<form id="daily-select-date" method="get" action="'.strtok($_SERVER[REQUEST_URI], '?').'">'."\n";
+    echo '<input id="daily-format" class="format" name="format" type="hidden" value="'.$format.'" />'."\n";
+    echo '<input id="daily-date" class="date" name="date" type="date" value="'.$date.'" />'."\n";
+    echo '<input type="submit" value="' . _('ver fecha') . '" />'."\n";
+    echo '<a href="'.strtok($_SERVER[REQUEST_URI], '?').'?format=' . $format .'&date=' . $today . '">' . _('hoy') . '</a>';
+    echo '<a href="'.strtok($_SERVER[REQUEST_URI], '?').'?format=' . $format .'&date=' . $yesterday . '">' . _('ayer') . '</a>';
+    echo '</form>'."\n";
+
+    echo '</div>'."\n";
 }

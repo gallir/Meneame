@@ -37,6 +37,14 @@
 			</div>
 		</div>
 	{% endif %}
+        
+    {% if type == 'daily_highlighted' AND self.media_url %}
+        <img data-2x='{{self.media_url}}' data-src='{{self.media_url}}' src="{{ globals.base_static }}img/g.gif" alt='' class='highlighted lazy' />
+    {% endif %}
+
+    {% if type == 'daily_short' AND self.thumb_uri %}
+        <img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy' />
+    {% endif %}
 
 	{% if self.status == 'abuse' OR self.has_warning %}
 		{% if self.status == 'abuse' %}
@@ -84,21 +92,29 @@
 		<h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
 	{% endif %}
 
+    {% if type == 'daily_highlighted' OR type == 'daily_short' %}
+        <div class="content">
+            {{ self.content }}
+        </div>
+    {% endif %}
+
 	{% if ! globals.bot %}
 	  <div class="news-submitted">
-		{% if type != 'short' %}
+		{% if type != 'short' AND type != 'daily_highlighted' AND type != 'daily_short' AND type != 'daily_shorter' %}
 			<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}" data-2x="s:-25.:-40." alt="" class="lazy"/></a>
 		{% endif %}
 		{% trans _('por') %} <a href="{% exec get_user_uri self.username, 'history' %}">{{ self.username }}</a>
 		{% if self.url %}
 			{% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span>
 		{% endif %}
-		<br />
+		<br class="submitted-separator" />
 
 		{% if self.status != 'published' %}
 			{% trans _('enviado: ') %}
 		{% endif %}
-		<span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
+        {% if type != 'daily_highlighted' AND type != 'daily_short' AND type != 'daily_shorter' %}
+		    <span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
+        {% endif %}
     	{% if self.status == 'published' %}
 		    {% trans _('publicado: ') %}
 			<span data-ts="{{ self.sub_date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
@@ -154,7 +170,7 @@
 	{% endif %}
 	{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
-	{% if type != 'short' %}
+	{% if type != 'short' AND type != 'daily_highlighted' AND type != 'daily_short' AND type != 'daily_shorter' %}
 			<div class="news-details">
 				<strong>{% trans _('usuarios') %}</strong>: <span id="a-usu-{{ self.id }}">{{ self.votes }}</span>&nbsp;&nbsp;
 				<span  class="wideonly"><strong>{% trans _('anónimos') %}</strong>: <span id="a-ano-{{ self.id }}">{{ self.anonymous }}</span>&nbsp;&nbsp;</span>
@@ -189,37 +205,45 @@
 	<div class="news-details main">
 		<span class="comments-counter"><a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span>{% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}</a></span>
 
+        {% if type == 'daily_highlighted' OR type == 'daily_short' OR type == 'daily_shorter' %}
 
-		<span class="tool">
-		<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-			{% if self.sub_owner > 0 %}
-				class="subname"
-				style="
-					{% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
-					{% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
-				"
-			{% endif %}
-			>{{ self.sub_name }}</a>
-		</span>
-		<span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
-			{% if self.status == 'published' && self.sub_karma > 0 %}
-				{{ self.sub_karma|intval }}
-			{% else %}
-				{{ self.karma|intval }}
-			{% endif %}
-		</span></span>
+            {% set link = self.permalink %}
+            {% set title = self.title %}
+            {% include "share.html" %}
 
-		{% if self.can_vote_negative %}
-			<form action="" id="problem-{{ self.id }}">
-			<select name="ratings" onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
-				<option value="0" selected="selected">{% trans _('problema') %}</option>
-				{% for pkey, pvalue in globals.negative_votes_values %}
-					<option value="{{pkey}}">{{ pvalue }}</option>
-				{% endfor %}
-			</select>
-			</form>
-		{% endif %}
+        {% else %}
 
+		    <span class="tool">
+		    <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
+			    {% if self.sub_owner > 0 %}
+				    class="subname"
+				    style="
+					    {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
+					    {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
+				    "
+			    {% endif %}
+			    >{{ self.sub_name }}</a>
+		    </span>
+		    <span class="tool"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
+			    {% if self.status == 'published' && self.sub_karma > 0 %}
+				    {{ self.sub_karma|intval }}
+			    {% else %}
+				    {{ self.karma|intval }}
+			    {% endif %}
+		    </span></span>
+
+		    {% if self.can_vote_negative %}
+			    <form action="" id="problem-{{ self.id }}">
+			    <select name="ratings" onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+				    <option value="0" selected="selected">{% trans _('problema') %}</option>
+				    {% for pkey, pvalue in globals.negative_votes_values %}
+					    <option value="{{pkey}}">{{ pvalue }}</option>
+				    {% endfor %}
+			    </select>
+			    </form>
+		    {% endif %}
+
+        {% endif %}
 	</div>
 
 	{% if self.best_comment %}

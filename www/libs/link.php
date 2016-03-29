@@ -700,7 +700,7 @@ class Link extends LCPBase {
 		$this->show_tags = $show_tags;
 		$this->relative_permalink	 = $this->get_relative_permalink();
 		$this->permalink	 = $this->get_permalink(false, $this->relative_permalink); // To avoid double verification
-		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
+		$this->show_shakebox = $type != 'preview' && substr($type, 0, 5)  != 'daily' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
 		$this->url_str	= preg_replace('/^www\./', '', parse_url($this->url, 1));
