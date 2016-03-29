@@ -15,7 +15,7 @@ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 font-size: small;
 background-image: url('{{ globals.base_static }}img/common/bkg-01.png');
 color: #000;
-background-color: #FFFFFF;
+background-color: #fff;
 margin:0px;
 padding:0px;
 }
@@ -141,7 +141,7 @@ top: 0px;
 left: 0px;
 width: 100%;
 height:30px;
-background-color:#919203;
+background-color:#3c3c3c;
 overflow:hidden;
 white-space:nowrap;
 z-index: 900;
@@ -1004,9 +1004,9 @@ box-shadow: 0 0 3px rgba(0,0,0,0.4);
 
 .avatar, .news-submitted img {
 border: 1px solid #ccc;
--moz-border-radius: 10%;
--webkit-border-radius: 10%;
-border-radius: 10%;
+-moz-border-radius: 50%;
+-webkit-border-radius: 50%;
+border-radius: 50%;
 }
 
 .avatar.big {
@@ -2408,8 +2408,6 @@ width:35px;
 padding-top: 5px;
 text-align:center;
 vertical-align: middle;
-background: #666 url('/v_40/img/menemojis/36/foreveralone.png') no-repeat;
-background-size: cover;
 }
 
 #header-top #notifier:hover{
@@ -2420,7 +2418,6 @@ color: #f00;
 #header-top #notifier.nonzero {
 background:#f00;
 color:#fff;
-background-image:none;
 }
 
 

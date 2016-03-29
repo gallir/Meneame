@@ -169,31 +169,25 @@ class Link extends LCPBase {
 	function add_click($no_go=false) {
 		global $globals, $db;
 
-		if (	true
-			&& ! $globals['bot']
+		if (! $globals['bot']
 			&& ! Link::visited($this->id)
 			&& $globals['click_counter']
 			&& ($no_go || (isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])))
-			&& $this->ip != $globals['user_ip']
-		) {
+			&& $this->ip != $globals['user_ip']) {
 			// Delay storing
 			self::$clicked = $this->id;
-			// delayed storing doesn't seem to work fine with php-fpm
-			self::store_clicks();
 		}
 	}
 
 	static function store_clicks() {
 		global $globals, $db;
 
-//				syslog(LOG_INFO, "store_clicks: ".self::$clicked);
-
 		if (!self::$clicked) return false;
 		$id = self::$clicked;
 		self::$clicked = 0;
+
 		if (! memcache_menabled()) {
-			$db->query("INSERT INTO link_clicks (id, counter) VALUES ($id, 1) ON DUPLICATE KEY UPDATE counter=counter+1");
-			// $db->query("UPDATE link_clicks SET counter=counter+1 WHERE id = $id");
+			$db->query("UPDATE link_clicks SET counter=counter+1 WHERE id = $id");
 			return true;
 		}
 
@@ -662,6 +656,7 @@ class Link extends LCPBase {
 
 	function read($key='id') {
 		global $db, $current_user;
+
 		SitesMgr::my_id(); // Force to read current sub_id
 		switch ($key)  {
 			case 'id':
