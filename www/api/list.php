@@ -33,7 +33,7 @@ if($_REQUEST['search']) $_REQUEST['q'] = $_REQUEST['search'];
 
 // Sub
 if($_REQUEST['sub']) {
-	$sub_id =  SitesMgr::get_id(mb_substr($_REQUEST['sub'], 20));
+	$sub_id =  SitesMgr::get_id(mb_substr($_REQUEST['sub'], 0, 20));
 	if ($sub_id) {
 		SitesMgr::__init($sub_id);
 	} else {
