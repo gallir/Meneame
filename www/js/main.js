@@ -224,7 +224,7 @@ function report_problem_no(frm, user, id) {
 }
 
 function report_problem_yes(frm, user, id) {
-	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key	+ "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
+	var content = "id=" + id + "&user=" + user + '&value=' +frm.ratings.value + "&key=" + base_key  + "&l=" + link_id + "&u=" + encodeURIComponent(document.referrer);
 	var url = base_url + "backend/problem?" + content;
 	$.getJSON(url,
 		 function(data) {
@@ -516,7 +516,7 @@ function fancybox_gallery(type, user, link) {
 
 	function show(html) {
 		if (active) {
-			if(typeof html == 'string')	box.html(html);
+			if(typeof html == 'string') box.html(html);
 			if (box.html().length > 0) {
 				position();
 				box.show();
@@ -571,8 +571,8 @@ function fancybox_gallery(type, user, link) {
 })(jQuery);
 
 /**
- *	Based on jqDialog from:
- *	Kailash Nadh, http://plugins.jquery.com/project/jqDialog
+ *  Based on jqDialog from:
+ *  Kailash Nadh, http://plugins.jquery.com/project/jqDialog
 **/
 
 function strip_tags(html) {
@@ -737,7 +737,7 @@ var mDialog = new function() {
 							function() {
 								mDialog.close();
 							});
-		this.divHeader.append(	this.btClose );
+		this.divHeader.append(  this.btClose );
 		this.divBox.append(this.divHeader).append( this.divContent ).append(
 			this.divOptions.append(this.btNo).append(this.btCancel).append(this.btOk).append(this.btYes)
 		);
@@ -1225,7 +1225,7 @@ function share_tw(e) {
 		},
 
 		check_files: function(files, area) {
-			if (typeof File != "undefined"	&& files != undefined) {
+			if (typeof File != "undefined"  && files != undefined) {
 				for (var i = 0; i < files.length; i++) {
 					/* File type control */
 					if (files[i].type.length > 0 && !files[i].type.match('image.*')) {
@@ -1476,7 +1476,7 @@ var fancyBox = new function () {
 		} else if ( (v = myHref.match(/twitter\.com\/.+?\/(?:status|statuses)\/(\d+)/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('en Twitter') %}</a>';
 			html=" ";
-			if (is_mobile)	{
+			if (is_mobile)  {
 				width = '100%';
 				height = '100%';
 			} else {
@@ -1499,7 +1499,7 @@ var fancyBox = new function () {
 			};
 		} else if ( (v = myHref.match(/(?:vimeo\.com\/(\d+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vimeo') %}</a>';
-			if (is_mobile)	{
+			if (is_mobile)  {
 				width = '100%';
 				height = '100%';
 			} else {
@@ -1513,7 +1513,7 @@ var fancyBox = new function () {
 			iframe = true;
 		} else if ( (v = myHref.match(/(?:vine\.co\/v\/(\w+))/)) ) {
 			title = '<a target="_blank" href="'+myHref+'"'+target+'>{% trans _('vídeo en Vine') %}</a>';
-			if (is_mobile)	{
+			if (is_mobile)  {
 				innerWidth = 320;
 				innerHeight = 320;
 			} else {
@@ -1619,7 +1619,7 @@ var fancyBox = new function () {
 			panel_visible = true;
 			$e = $('<div id="notifier_panel"> </div>');
 			$e.appendTo("body");
-			$('html').one('click', click_handler);
+			$('html').on('click', click_handler);
 
 			data = decode_data(readStorage("n_"+user_id));
 
@@ -2213,4 +2213,3 @@ $(document).ready(function () {
 	}
 
 });
-

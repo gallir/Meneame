@@ -187,7 +187,7 @@ function promote($site_id) {
 		$i=0;
 		foreach($links as $dblink) {
 			$link = Link::from_db($dblink->link_id);
-			$changes = update_link_karma($site_id, $link);
+			$changes = update_link_karma($site_id, $link, $past_karma);
 			
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 				echo "Adding $link->id to thumb queue\n";
@@ -342,7 +342,7 @@ function publish($site, $link) {
 		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
 	}
 
-	// Publish the links of the source subs	
+	// Publish the links of the source subs 
 	if ($site_info->meta && ($senders = SitesMgr::get_senders($site))) {
 		if (in_array($link->sub_id, $senders) && $link->sub_status_origen == 'queued') {
 			syslog(LOG_INFO, "Meneame, publishing for sender $link->sub_name ($link->sub_id)");
@@ -425,7 +425,7 @@ function get_subs_coef($site_id, $days = 3) {
 }
 
 
-function update_link_karma($site, $link) {
+function update_link_karma($site, $link, $past_karma) {
 	global $db, $globals;
 	
 	if (time() - $link->time_annotation('link-karma') < 75) {
