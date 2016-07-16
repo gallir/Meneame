@@ -116,13 +116,18 @@ if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $f
 // We use a "INNER JOIN" in order to avoid "order by" whith filesorting. It was very bad for high pages
 $sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids ON (ids.link = link_id)";
 
+$globals['site_id'] = SitesMgr::my_id();
+
+// Search for sponsored link
+if (!empty($globals['sponsored_link_uri'])) $sponsored_link = Link::from_db($globals['sponsored_link_uri'], 'uri');
+
 $links = $db->object_iterator($sql, "Link");
 if ($links) {
 	$counter = 0;
 	foreach($links as $link) {
 		$link->max_len = 600;
-		$link->print_summary();
-		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+		Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link'));
+		$link->print_summary();$counter++;
 	}
 }
 

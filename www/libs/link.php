@@ -704,7 +704,8 @@ class Link extends LCPBase {
 		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
 				$this->negatives_allowed($globals['link_id'] > 0) &&
 				$type != 'short' &&
-				$type != 'preview';
+				$type != 'preview' &&
+				!$this->is_sponsored();
 
 
 		if ($this->status == 'abuse' || $this->has_warning) {
@@ -733,7 +734,8 @@ class Link extends LCPBase {
 		if ($this->do_inline_friend_votes)
 			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
 
-		$vars = compact('type');
+		$sponsored = $this->is_sponsored();
+		$vars = compact('type', 'sponsored');
 		$vars['self'] = $this;
 		return Haanga::Load("link_summary.html", $vars);
 
@@ -953,12 +955,22 @@ class Link extends LCPBase {
 		global $globals;
 
 		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' ||
-				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes']))  {
+				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes'] || $this->is_sponsored()))  {
 			$this->votes_enabled = false;
 		} else {
 			$this->votes_enabled = true;
 		}
 		return $this->votes_enabled;
+	}
+
+	function is_sponsored() {
+		global $globals;
+
+		if ($globals['sponsored_tag']) {
+			return preg_match("/\b". $globals['sponsored_tag'] ."\b/i", $this->tags);
+		}
+
+		return false;
 	}
 
 	function negatives_allowed($extended = false) {

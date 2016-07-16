@@ -1,3 +1,6 @@
+{% if sponsored %}
+	{% try_include 'private/sponsored/link.html' %}
+{% else %}
 <div class="news-summary">
 	<div class="news-body">
 	{% if self.show_shakebox %}
@@ -242,4 +245,5 @@
 		{% exec geo_coder_print_form 'link', self.id, globals.latlng, geotxt as dummy %}
 	{% endif %}
 	</div>
+{% endif %}
 {% endif %}
