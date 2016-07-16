@@ -187,6 +187,7 @@ function promote($site_id) {
 		$i=0;
 		foreach($links as $dblink) {
 			$link = Link::from_db($dblink->link_id);
+			if ($link->is_sponsored()) continue;
 			$changes = update_link_karma($site_id, $link);
 			
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
