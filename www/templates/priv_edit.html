@@ -43,7 +43,7 @@
 <div style="margin-top:-7px;">
 	{% if ! globals.mobile %}
 		<div style="float:right">
-		<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
+		<input readonly type="text" name="postcounter" size="{{ globals.posts_len|length }}" maxlength="{{ globals.posts_len|length }}" value="{{ self.body_left }}" />
 		</div>
 	{% endif %}
 
