@@ -23,7 +23,7 @@
 
 	<div style="margin-top:-7px">
 		{% if ! globals.mobile %}
-			<input readonly type="text" name="postcounter" size="3" maxlength="3" value="{{ self.body_left }}" />
+			<input readonly type="text" name="postcounter" size="{{ globals.posts_len|length }}" maxlength="{{ globals.posts_len|length }}" value="{{ self.body_left }}" />
 			<span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
 		{% endif %}
 	</div>
