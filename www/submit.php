@@ -141,6 +141,13 @@ function do_submit1() {
 			add_submit_error( _('clave incorrecta'));
 			return false;
 		}
+
+		if (strlen($url) > 250) {
+			add_submit_error( _('URL demasiado larga'),
+				_('La longitud de la URL supera el tamaño máximo permitido (250 caracteres)'));
+			return false;
+		}
+
 	} else {
 		$anti_spam = false;
 	}
