@@ -20,8 +20,8 @@ function tags_normalize_string($string) {
 	// The user didn't put any comma, we add them
 		$string = preg_replace('/ +/', ', ', $string);
 	}
-	if (!empty($globals['sponsored_tag']) and $current_user->user_id > 0 and !$current_user->admin) {
-		$string = preg_replace("/\b" . $globals['sponsored_tag'] . "\b[ ,]*/", "", $string);
+	if (!empty($globals['sponsored_tag']) and $current_user->user_id > 0) {
+		$string = preg_replace("/\b" . $globals['sponsored_tag'] . "\b[ ,]*/i", "", $string);
 	}
 	$string = preg_replace('/[\.\,] *$/', "", $string);
 	// Clean strange characteres, there are feed reader (including feedburner) that are just too strict and complain loudly
