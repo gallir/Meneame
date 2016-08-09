@@ -1835,6 +1835,14 @@ msgstr ""
 msgid "clave incorrecta"
 msgstr ""
 
+#: submit.php:146
+msgid "URL demasiado larga"
+msgstr ""
+
+#: submit.php:147
+msgid "La longitud de la URL supera el tamaño máximo permitido (250 caracteres)"
+msgstr ""
+
 #: submit.php:133
 msgid "no tienes el mínimo de karma para enviar una nueva historia"
 msgstr ""
