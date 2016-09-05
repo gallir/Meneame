@@ -193,6 +193,7 @@ if ($tab_option == 4) {
 		_('amigos') => post_get_base_url("$current_user->user_login/_friends"),
 		_('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
 		_('conversación').$conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
+		_('votos') => post_get_base_url("$current_user->user_login/_votes"),
 		_('últimas imágenes') => "javascript:fancybox_gallery('post');",
 		_('debates').'&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
 	);
