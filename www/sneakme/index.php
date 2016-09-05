@@ -137,6 +137,13 @@ switch ($argv[0]) {
 					$rss_option="sneakme_rss?conversation_of=$user->id";
 					break;
 
+				case '_votes':
+					$view = 4;
+					$page_title = sprintf(_('votos de %s'), $user->username);
+					$rows = -1; // $rows = -1; //$db->get_var("SELECT count(*) FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id and post_id = vote_link_id and post_user_id != vote_user_id");
+					$rss_option = false;
+					break;
+
 				default:
 					$view = 0;
 					$page_title = sprintf(_('notas de %s'), $user->username);
@@ -170,6 +177,7 @@ if ($tab_option == 4) {
 		_('amigos') => post_get_base_url("$user->username/_friends"),
 		_('favoritos') => post_get_base_url("$user->username/_favorites"),
 		_('conversación').$conversation_extra => post_get_base_url("$user->username/_conversation"),
+		_('votos') => post_get_base_url("$user->username/_votes"),
 		sprintf(_('debates con %s'), $user->username) =>
 				$globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
 		sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
@@ -219,46 +227,50 @@ if ($current_user->user_id > 0) {
 	echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
 }
 
-$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
-if ($posts) {
-	$ids = array();
-	echo '<ol class="comments-list">';
-	$time_read = 0;
-	foreach ($posts as $post) {
-		if ( $post_id > 0 && $user->id > 0 && $user->id != $post->author) {
-			echo '<li>'. _('Error: nota no existente') . '</li>';
-		} else {
-			echo '<li>';
-			$post->print_summary();
-			if ($post->date > $time_read) $time_read = $post->date;
-			echo '</li>';
-			if (! $post_id) $ids[] = $post->id;
+if ($view != 4) {
+	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
+	if ($posts) {
+		$ids = array();
+		echo '<ol class="comments-list">';
+		$time_read = 0;
+		foreach ($posts as $post) {
+			if ($post_id > 0 && $user->id > 0 && $user->id != $post->author) {
+				echo '<li>' . _('Error: nota no existente') . '</li>';
+			} else {
+				echo '<li>';
+				$post->print_summary();
+				if ($post->date > $time_read) $time_read = $post->date;
+				echo '</li>';
+				if (!$post_id) $ids[] = $post->id;
+			}
 		}
-	}
 
-	echo "</ol>\n";
+		echo "</ol>\n";
 
-	if ($post_id > 0) {
-		// Print share button
-		echo '<div style="text-align:right">';
-		$vars = array('link' => $globals['permalink'],
-           			'title' => $page_title);
-		Haanga::Load('share.html', $vars);
+		if ($post_id > 0) {
+			// Print share button
+			echo '<div style="text-align:right">';
+			$vars = array('link' => $globals['permalink'],
+				'title' => $page_title);
+			Haanga::Load('share.html', $vars);
+			echo '</div>';
+
+			print_answers($post_id, 1);
+
+		} else {
+			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
+		}
+
+		// Update conversation time
+		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
+			Post::update_read_conversation($time_read);
+		}
 		echo '</div>';
-
-		print_answers($post_id, 1);
-
-	} else {
-		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $ids)));
 	}
-
-	// Update conversation time
-	if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
-		Post::update_read_conversation($time_read);
-	}
-	echo '</div>';
-	do_pages($rows, $page_size);
+} else {
+	do_voted_posts();
 }
+do_pages($rows, $page_size);
 
 echo '</div>';
 if ($rows > 15) do_footer_menu();
@@ -306,4 +318,27 @@ function print_answers($id, $level, $visited = false) {
 		}
 	}
 	return $printed;
+}
+
+function do_voted_posts() {
+
+	global $db, $user, $offset, $page_size, $globals;
+
+	$posts = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id  and post_id = vote_link_id and post_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+
+	echo '<ol class="comments-list">';
+	$time_read = 0;
+	foreach ($posts as $p) {
+		$post = Post::from_db($p->id);
+		if ($p->value > 0) $color = '#00d';
+		else $color = '#f00';
+		echo '<li>';
+		$post->print_summary();
+		if ($post->date > $time_read) $time_read = $post->date;
+		echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
+		echo '</li>';
+	}
+
+	echo "</ol>\n";
+	echo '</div>';
 }
