@@ -248,12 +248,6 @@ function save_profile() {
 			$pass_changed = true;
 		}
 	}
-	if ($admin_mode && !empty($_POST['user_level'])) {
-		$user->level=$db->escape($_POST['user_level']);
-	}
-	if ($admin_mode && !empty($_POST['karma']) && is_numeric($_POST['karma']) && $_POST['karma'] > 4 && $_POST['karma'] <= 20) {
-		$user->karma=$_POST['karma'];
-	}
 
 	$user->comment_pref=intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
 
@@ -284,6 +278,21 @@ function save_profile() {
 		if (empty($user->ip)) {
 			$user->ip=$globals['user_ip'];
 		}
+
+		if ($admin_mode && !empty($_POST['user_level'])) {
+			if ($user->level != $_POST['user_level']) {
+				syslog(LOG_NOTICE, "Meneame, changed user level to $user->id ($user->username) from $user->level to {$_POST['user_level']} by $current_user->user_login");
+			}
+			$user->level=$db->escape($_POST['user_level']);
+		}
+
+		if ($admin_mode && !empty($_POST['karma']) && is_numeric($_POST['karma']) && $_POST['karma'] > 4 && $_POST['karma'] <= 20) {
+			if ($user->karma != $_POST['karma']) {
+				syslog(LOG_NOTICE, "Meneame, modified karma to $user->id ($user->username) from $user->karma to {$_POST['karma']} by $current_user->user_login");
+			}
+			$user->karma=$_POST['karma'];
+		}
+
 		$user->store();
 		$user->read();
 		if (!$admin_mode && ($current_user->user_login != $user->username ||
