@@ -36,12 +36,14 @@
 			{% if s.color2 %}background-color:{{ s.color2 }} !important;{% endif %}
 			"> {{ s.name }} </a></span>
 
-
 		{% if s.nsfw %}(nsfw){% endif %}
 		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
 			&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
 		{% endif %}
 		{% if ! s.enabled %}*{% endif %}
+		</td>
+		<td style="text-align: center;">
+			{% exec print_follow_sub s.id as dummy %}<span style="display:block;">[{{ s.followers }}]</span>
 		</td>
 		<td>{{ s.name_long }}</td>
 	</tr>

@@ -15,8 +15,10 @@ if (isset($_GET['all'])) {
 	$option = 2; // Show all subs
 } elseif (! $current_user->user_id || isset($_GET['active']))  {
 	$option = 1; // Show active
-} else {
+} elseif (isset($_GET['subscribed'])) {
 	$option = 0; // Show suscribed
+} else {
+	$option = count(SitesMgr::get_subscriptions($current_user->user_id)) > 0 ? 0 : 1;
 }
 
 $char_selected = $chars = false; // User for index by first letter
@@ -71,9 +73,16 @@ switch ($option) {
 }
 
 $all_subs = $db->get_results($sql);
+$subs_followers_counter = $db->get_results("select subs.id, count(*) as c from subs, prefs where pref_key = 'sub_follow' and subs.id = pref_value group by subs.id order by c desc;");
 
 $subs = array();
 foreach ($all_subs as $s) {
+	foreach ($subs_followers_counter as $sub_counter) {
+		if ($s->id == $sub_counter->id) {
+			$s->followers = $sub_counter->c;
+		}
+	}
+	if (!isset($s->followers)) $s->followers=0;
 	if ($s->enabled) {
 		$subs[] = $s;
 	}
@@ -97,7 +106,8 @@ function print_tabs($option) {
 	$items = array();
 	
 	if ($current_user->user_id) {
-    	$items[] = array('id' => 0, 'url' => 'subs', 'title' => _('suscripciones'));
+		$suscriptions_num = count(SitesMgr::get_subscriptions($current_user->user_id));
+    	$items[] = array('id' => 0, 'url' => 'subs?subscribed', 'title' => _('suscripciones')." [$suscriptions_num]");
 	}
     $items[] = array('id' => 1, 'url' => 'subs?active', 'title' => _('más activos'));
 	$items[] = array('id' => 2, 'url' => 'subs?all', 'title' => _('todos'));

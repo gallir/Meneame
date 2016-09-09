@@ -29,7 +29,7 @@
 		&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
 	{% endif %}
 	{% if ! s.enabled %}*{% endif %}
-	{% exec print_follow_sub s.id as dummy %}
+	{% exec print_follow_sub s.id as dummy %}<span class="display:block">[{{ s.followers }}]</span>
 	</div>
 {% endfor %}
 </div>
