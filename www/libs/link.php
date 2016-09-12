@@ -928,7 +928,7 @@ class Link extends LCPBase {
 				&& $globals['now'] - $this->sent_date < 10400)
 			|| ($this->author != $current_user->user_id
 				&& $current_user->user_level == 'blogger'
-				&& $globals['now'] - $this->date < 3600)
+				&& $globals['now'] - $this->date < 10800)
 			|| $current_user->user_id == $this->sub_owner
 			|| $current_user->admin) {
 			return true;
