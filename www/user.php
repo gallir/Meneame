@@ -587,7 +587,19 @@ function do_subs() {
 
 	$sql = "select subs.* from subs, prefs where pref_user_id = $user->id and pref_key = 'sub_follow' and subs.id = pref_value order by name asc";
 	$subs = $db->get_results($sql);
+	$subs_followers_counter = $db->get_results("select subs.id, count(*) as c from subs, prefs where pref_key = 'sub_follow' and subs.id = pref_value group by subs.id order by c desc;");
+
 	if ($subs) {
+
+		foreach ($subs as $s) {
+			foreach ($subs_followers_counter as $sub_counter) {
+				if ($s->id == $sub_counter->id) {
+					$s->followers = $sub_counter->c;
+				}
+			}
+			if (!isset($s->followers)) $s->followers=0;
+		}
+
 		$title = _('suscripciones');
 		Haanga::Load('subs_simple.html', compact('title', 'subs'));
 	}
@@ -601,8 +613,6 @@ function do_subs() {
 	$subs = $db->get_results($sql);
 
 	if ($subs) {
-
-		$subs_followers_counter = $db->get_results("select subs.id, count(*) as c from subs, prefs where pref_key = 'sub_follow' and subs.id = pref_value group by subs.id order by c desc;");
 
 		foreach ($subs as $s) {
 			foreach ($subs_followers_counter as $sub_counter) {
