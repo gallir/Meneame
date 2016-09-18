@@ -281,14 +281,14 @@ function save_profile() {
 
 		if ($admin_mode && !empty($_POST['user_level'])) {
 			if ($user->level != $_POST['user_level']) {
-				syslog(LOG_NOTICE, "Meneame, changed user level to $user->id ($user->username) from $user->level to {$_POST['user_level']} by $current_user->user_login");
+				LogAdmin::insert('change_user_level', $user->id, $current_user->user_id, $user->level, $_POST['user_level']);
 			}
 			$user->level=$db->escape($_POST['user_level']);
 		}
 
 		if ($admin_mode && !empty($_POST['karma']) && is_numeric($_POST['karma']) && $_POST['karma'] > 4 && $_POST['karma'] <= 20) {
 			if ($user->karma != $_POST['karma']) {
-				syslog(LOG_NOTICE, "Meneame, modified karma to $user->id ($user->username) from $user->karma to {$_POST['karma']} by $current_user->user_login");
+				LogAdmin::insert('change_karma', $user->id, $current_user->user_id, $user->karma, $_POST['karma']);
 			}
 			$user->karma=$_POST['karma'];
 		}
