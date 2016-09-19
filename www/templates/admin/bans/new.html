@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="text" id="ban_text" name="ban_text" size="30" maxlength="{{globals.ban_text_length}}" value=""/>
+                        <input type="text" id="ban_text" name="ban_text" size="30" maxlength="64" value=""/>
                         &nbsp;<span id="checkit"><input type="button" id="checkbutton1" value="{% trans _('verificar') %}" onclick="checkfield('ban_{{selected_tab}}', this.form, this.form.ban_text)"/></span>
                         <br/><span id="ban_{{selected_tab}}checkitvalue"></span>
                     </td>
