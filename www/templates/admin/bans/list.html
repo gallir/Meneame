@@ -54,10 +54,10 @@
                 <td>{{ban.ban_expire}}</td>
                 <td>
                     {% if current_user.user_level == "god" %}
-                        <a href="{{globals.base_url}}admin/bans.php?admin={{selected_tab}}&op=edit&id={{ban.ban_id}}" title="{% trans _('Editar') %}">
+                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}&op=edit&id={{ban.ban_id}}" title="{% trans _('Editar') %}">
                             <img src="{{globals.base_static}}img/common/sneak-edit-notice01.png" alt="Editar"/></a>
                         &nbsp;/&nbsp;
-                        <a href="{{globals.base_url}}admin/bans.php?admin={{selected_tab}}&del_ban={{ban.ban_id}}&key={{key}}" title="{% trans _('Eliminar') %}"><img src="{{globals.base_static}}img/common/sneak-reject01.png" alt="Eliminar"/></a>
+                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}&del_ban={{ban.ban_id}}&key={{key}}" title="{% trans _('Eliminar') %}"><img src="{{globals.base_static}}img/common/sneak-reject01.png" alt="Eliminar"/></a>
                     {% endif %}
                 </td>
             </tr>
