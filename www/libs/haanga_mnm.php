@@ -10,6 +10,11 @@ class Haanga_Extension_Filter_TextToHTML
 	public $php_alias = 'text_to_html';
 }
 
+class Haanga_Extension_Filter_Dump
+{
+	public $php_alias = 'var_dump';
+}
+
 class Haanga_Extension_Tag_MeneameEndtime
 {
 	public $is_block = FALSE;
@@ -52,6 +57,16 @@ class Haanga_Extension_Filter_SubName
 class Haanga_Extension_Filter_CleanUrl
 {
 	public $php_alias = 'clean_input_url';
+}
+
+class Haanga_Extension_Filter_CleanText
+{
+	public $php_alias = 'clean_text';
+}
+
+class Haanga_Extension_Filter_CleanString
+{
+	public $php_alias = 'clean_input_string';
 }
 
 class Haanga_Extension_Filter_UserUri
