@@ -67,7 +67,7 @@ function do_log_list($selected_tab, $search, $log_type, $orderby, $key) {
 	}
 
 	$rows = $db->get_var("SELECT count(*) FROM admin_logs " . $where);
-	$sql = "SELECT admin.user_login as admin_user_login, admin_logs.*, u.user_login as user_login, u.user_karma as user_karma, u.user_level as user_level FROM admin_logs 
+	$sql = "SELECT admin.user_login as admin_user_login, admin_logs.*, u.user_id as user_id, u.user_login as user_login, u.user_karma as user_karma, u.user_level as user_level FROM admin_logs 
 			LEFT JOIN users as admin on (admin_logs.log_user_id=admin.user_id)
 			LEFT JOIN users as u on (admin_logs.log_ref_id=u.user_id) " . $where . " ORDER BY $orderby $order LIMIT $offset,$page_size";
 

@@ -52,8 +52,12 @@
             </tr>
             {% for log in logs %}
             <tr>
-                <td>
-                    {{log.user_login}}
+                <td class="tooltip u:{{log.user_id}}" style="overflow: hidden;white-space: nowrap;">
+                    {% if log.user_login %}
+                        <a target="_blank" href="{{globals.base_url}}user/{{log.user_login}}/{{log.user_id}}">
+                            {{ log.user_login }}
+                        </a>
+                    {% endif %}
                 </td>
                 <td>{{log.log_date}}</td>
                 <td>{{log.log_type}}</td>
