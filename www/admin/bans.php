@@ -8,243 +8,104 @@
 
 $globals['skip_check_ip_noaccess'] = true;
 include('../config.php');
-include(mnminclude.'html1.php');
+include(mnminclude . 'html1.php');
+require_once(mnminclude . 'ban.php');
+include('libs/admin.php');
 
-$globals['extra_css'][] = 'admin.css';
-
-$globals['ads'] = false;
-
-do_header(_('Administración de bans'));
+do_header(_('Admin logs'));
 
 $page_size = 40;
-$offset=(get_current_page()-1)*$page_size;
-$ban_text_length=64; // Cambiar también en checkfield.php
-$ban_comment_length=120;
+$offset = (get_current_page() - 1) * $page_size;
 
-if ($current_user->admin) {
-	if (!$_REQUEST["admin"]) {
-		$_REQUEST["admin"] = 'hostname';
-	} else {
-		$_REQUEST["admin"] = clean_input_string($_REQUEST["admin"]);;
-	}
-	// Delete expired bans
-	$db->query("delete from bans where ban_expire is not null and ban_expire < date_sub(now(), interval 60 day)");
-	admin_tabs($_REQUEST["admin"]);
-	echo '<div id="singlewrap">' . "\n";
-	admin_bans($_REQUEST["admin"]);
-} else {
-	echo '<div id="singlewrap">' . "\n";
-	echo '<div class="topheading"><h2>'._('Esta página es sólo para administradores').'</h2>';
+$operation = $_REQUEST["op"] ? $_REQUEST["op"] : 'list';
+$search = $_REQUEST["s"];
+$orderby = $_REQUEST["order_by"];
+
+$selected_tab = "hostname";
+if ($_REQUEST["tab"]) {
+	$selected_tab = clean_input_string($_REQUEST["tab"]);
 }
-echo "</div>";
-echo "</div>"; // singlewrap
+
+do_admin_tabs($selected_tab);
+
+$key = get_security_key();
+
+if ($current_user->user_level=="god" && check_security_key($_REQUEST["key"])) {
+
+	if (!empty($_REQUEST["new_ban"])) {
+		insert_ban($selected_tab, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
+	} elseif (!empty($_REQUEST["edit_ban"])) {
+		insert_ban($selected_tab, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
+	} elseif (!empty($_REQUEST["new_bans"])) {
+		$array = preg_split ("/\s+/", $_POST["ban_text"]);
+		$size = count($array);
+		for($i=0; $i < $size; $i++) {
+			insert_ban($selected_tab, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
+		}
+	} elseif (!empty($_REQUEST["del_ban"])) {
+		del_ban($_REQUEST["del_ban"]);
+	}
+}
+
+switch ($operation) {
+	case 'list':
+		do_ban_list($selected_tab, $search, $orderby, $key);
+		break;
+	case 'new':
+		do_ban_new($selected_tab, $search, $key);
+		break;
+	case 'edit':
+		do_ban_edit($selected_tab, $search, $key);
+		break;
+	case 'news':
+		do_ban_news($selected_tab, $search, $key);
+		break;
+}
+
 do_footer();
 
+function do_ban_list($selected_tab, $search, $orderby, $key) {
+	global $db, $offset, $page_size;
 
-function admin_tabs($tab_selected = false) {
-	global $globals;
-
-	$active = ' class="tabsub-this"';
-
-	echo '<ul class="tabsub">' . "\n";
-
-	// url with parameters?
-	if (!empty($_SERVER['QUERY_STRING']))
-		$query = "?".__($_SERVER['QUERY_STRING']);
-
-	// START STANDARD TABS
-	// First the standard and always present tabs
-	$tabs=array("hostname", "punished_hostname", "email", "ip", "words", "proxy", "noaccess");
-		foreach($tabs as $tab) {
-		if ($tab_selected == $tab) {
-			echo '<li'.$active.'><a href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'" title="'.$reload_text.'">'._($tab).'&nbsp;&nbsp;&nbsp;'.$reload_icon.'</a></li>' . "\n";
-		} else {
-			echo '<li><a  href="'.$globals['base_url'].'admin/bans.php?admin='.$tab.'">'._($tab).'</a></li>' . "\n";
-		}
-	}
-	echo '</ul>' . "\n";
-}
-
-
-function admin_bans($ban_type) {
-	global $db, $globals, $offset, $page_size, $ban_text_length, $ban_comment_length, $current_user;
-	require_once(mnminclude.'ban.php');
-
-	$key = get_security_key();
-	if ($current_user->user_level=="god" && check_security_key($_REQUEST["key"])) {
-		if (!empty($_REQUEST["new_ban"])) {
-			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"]);
-		} elseif (!empty($_REQUEST["edit_ban"])) {
-			insert_ban($ban_type, $_POST["ban_text"], $_POST["ban_comment"], $_POST["ban_expire"], $_POST["ban_id"]);
-		} elseif (!empty($_REQUEST["new_bans"])) {
-			$array = preg_split ("/\s+/", $_POST["ban_text"]);
-			$size = count($array);
-			for($i=0; $i < $size; $i++) {
-				insert_ban($ban_type, $array[$i], $_POST["ban_comment"], $_POST["ban_expire"]);
-			}
-		} elseif (!empty($_REQUEST["del_ban"])) {
-			del_ban($_REQUEST["del_ban"]);
-		}
-	}
-
-	// ex container-wide
-	echo '<div class="genericform" style="margin:0">';
-
-	echo '<div style="float:right;">'."\n";
-	echo '<form method="get" action="'.$globals['base_url'].'admin/bans.php">';
-	echo '<input type="hidden" name="admin" value="'.$ban_type.'" />';
-	echo '<input type="hidden" name="key" value="'.$key.'" />';
-	echo '<input type="text" name="s" ';
-	if ($_REQUEST["s"]) {
-		$_REQUEST["s"] = clean_text($_REQUEST["s"]);
-		echo ' value="'.$_REQUEST["s"].'" ';
+	if (empty($orderby)) {
+		$orderby = 'ban_date';
+		$order = "DESC";
 	} else {
-		echo ' value="'._('buscar').'..." ';
-	}
-	echo 'onblur="if(this.value==\'\') this.value=\''._('buscar').'...\';" onfocus="if(this.value==\''._('buscar').'...\') this.value=\'\';" />';
-
-	echo '&nbsp;<input style="padding:2px;" type="image" align="top" value="'._('buscar').'" alt="'._('buscar').'" src="'.$globals['base_static'].'img/common/search-03.png" />';
-	echo '</form>';
-	echo '</div>';
-
-	if ($current_user->user_level=="god") {
-		echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=new">'._('Nuevo ban').'</a> ]';
-		echo '&nbsp; [ <a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=news">'._('Múltiples bans').'</a> ]';
-	}
-
-	if (!empty($_REQUEST["op"])) {
-		echo '<form method="post" name="newban" action="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'">';
-		echo '<input type="hidden" name="key" value="'.$key.'" />';
-	}
-
-	echo '<table class="decorated" style="font-size: 10pt">';
-	echo '<tr><th width="25%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
-	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_text">'.$ban_type.'</a></th>';
-	echo '<th width="30%"><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
-	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_comment">'._('comentario').'</a></th>';
-	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
-	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_date">'._('fecha creación').'</a></th>';
-	echo '<th><a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;';
-	if ($_REQUEST["s"]) { echo 's='.$_REQUEST["s"].'&amp;'; }
-	echo 'orderby=ban_expire">'._('fecha caducidad').'</a></th>';
-	echo '<th>'._('Editar / Borrar').'</th></tr>';
-
-	switch ($_REQUEST["op"]) {
-		case 'new':
-			echo '<tr><td>';
-			echo '<input type="text" id="ban_text" name="ban_text" size="30" maxlength="'.$ban_text_length.'" value="" />';
-			echo '&nbsp;<span id="checkit"><input type="button" id="checkbutton1" value="'._('verificar').'" onclick="checkfield(\'ban_'.$ban_type.'\', this.form, this.form.ban_text)"/></span>' . "\n";
-			echo '<br /><span id="ban_'.$ban_type.'checkitvalue"></span>' . "\n";
-			echo '</td><td>';
-			echo '<input class="form-full" type="text" name="ban_comment" id="ban_comment" />';
-			echo '</td><td>';
-			echo '</td><td>';
-			echo '<select name="ban_expire" id="ban_expire">';
-			print_expiration_dates();
-			echo '</select>';
-			echo '</td><td>';
-			echo '<input type="hidden" name="new_ban" value="1" />';
-			echo '<input type="submit" name="submit" value="'._('Crear ban').'" />';
-			echo '</td></tr>';
-			break;
-		case 'news':
-			echo '<tr><td>';
-			echo '<textarea id="ban_text" name="ban_text" /></textarea>';
-			echo '</td><td>';
-			echo '<input class="form-full" type="text" name="ban_comment" id="ban_comment" />';
-			echo '</td><td>';
-			echo '</td><td>';
-			echo '<select name="ban_expire" id="ban_expire">';
-			print_expiration_dates();
-			echo '</select>';
-			echo '</td><td>';
-			echo '<input type="hidden" name="new_bans" value="1" />';
-			echo '<input type="submit" name="submit" value="'._('Crear bans').'" />';
-			echo '</td></tr>';
-			break;
-		case 'edit':
-			$ban = new Ban;
-			$ban->ban_id = (int) $_REQUEST["id"];
-			$ban->read();
-			echo '<tr><td>';
-			echo '<input type="text" name="ban_text" id="ban_text" size="30" maxlength="'.$ban_text_length.'" value="'.$ban->ban_text.'" />';
-			echo '</td><td>';
-			echo '<input type="text" class="form-full" name="ban_comment" id="ban_comment" value="'.$ban->ban_comment.'" />';
-			echo '</td><td>';
-			echo $ban->ban_date;
-			echo '</td><td>';
-			echo '<select name="ban_expire" id="ban_expire">';
-			echo '<option value="'.$ban->ban_expire.'">'.$ban->ban_expire.'</option>';
-			print_expiration_dates();
-			echo '</select>';
-			echo '</td><td>';
-			echo '<input type="hidden" name="ban_id" value="'.$ban->ban_id.'" />';
-			echo '<input type="submit" name="edit_ban" value="'._('Editar ban').'" />';
-			echo '</td></tr>';
-			break;
-	}
-	if (empty($_REQUEST["op"])) {
-	//listado de bans
-		if (empty($_REQUEST["orderby"])) {
-			//$_REQUEST["orderby"]="ban_text";
-			$_REQUEST["orderby"] = 'ban_date';
+		$orderby = preg_replace('/[^a-z_]/i', '', $orderby);
+		if ($orderby == 'ban_date') {
 			$order = "DESC";
 		} else {
-			$_REQUEST["orderby"] = preg_replace('/[^a-z_]/i', '', $_REQUEST["orderby"]);
-			if ($_REQUEST["orderby"] == 'ban_date') {
-				$order = "DESC";
-			} else {
-				$order = "ASC";
-			}
-		}
-		$where= "WHERE ban_type='".$ban_type."'";
-		if ($_REQUEST["s"]) {
-			$search_text = $db->escape($_REQUEST["s"]);
-			$where .=" AND (ban_text LIKE '%$search_text%' OR ban_comment LIKE '%$search_text%')";
-		}
-		$bans = $db->get_col("SELECT ban_id FROM bans ".$where." ORDER BY ".$_REQUEST["orderby"]." $order LIMIT $offset,$page_size");
-		$rows = $db->get_var("SELECT count(*) FROM bans ".$where);
-		if ($bans) {
-			$ban = new Ban;
-			foreach($bans as $ban_id) {
-				$ban->ban_id = $ban_id;
-				$ban->read();
-				echo '<tr>';
-				echo '<td>'.clean_text($ban->ban_text).'</td>';
-				echo '<td class="tooltip b:'.$ban->ban_id.'" style="overflow: hidden;white-space: nowrap;">'.clean_text(txt_shorter($ban->ban_comment, 50)).'</td>';
-				echo '<td>'.$ban->ban_date.'</td>';
-				echo '<td>'.$ban->ban_expire.'</td>';
-				echo '<td>';
-				if ($current_user->user_level=="god") {
-					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;op=edit&amp;id='.$ban->ban_id.'" title="'._('Editar').'"><img src="'.$globals['base_static'].'img/common/sneak-edit-notice01.png" alt="'.('Editar').'" /></a>';
-					echo '&nbsp;/&nbsp;';
-					echo '<a href="'.$globals['base_url'].'admin/bans.php?admin='.$ban_type.'&amp;del_ban='.$ban->ban_id.'&amp;key='.$key.'" title="'._('Eliminar').'"><img src="'.$globals['base_static'].'img/common/sneak-reject01.png" alt="'.('Eliminar').'" /></a>';
-				}
-				echo '</td>';
-				echo '</tr>';
-			}
+			$order = "ASC";
 		}
 	}
-	echo '</table>';
-	if (!empty($_REQUEST["op"])) {
-		echo "</form>\n";
+	$where = "WHERE ban_type='" . $selected_tab . "'";
+	if ($search) {
+		$search_text = $db->escape($search);
+		$where .= " AND (ban_text LIKE '%$search_text%' OR ban_comment LIKE '%$search_text%')";
 	}
+
+	$rows = $db->get_var("SELECT count(*) FROM bans " . $where);
+	$sql = "SELECT * FROM bans " . $where . " ORDER BY $orderby $order LIMIT $offset,$page_size";
+	$bans = $db->get_results($sql);
+	
+	Haanga::Load('admin/bans/list.html', compact('bans', 'selected_tab', 'key', 'search'));
+
 	do_pages($rows, $page_size, false);
+
 }
 
-function print_expiration_dates() {
-	echo '<option value="UNDEFINED">'._('Sin caducidad').'</option>';
-	echo '<option value="'.time().'">'._('Ahora').'</option>';
-	echo '<option value="'.(time()+7200).'">'._('Ahora + dos horas').'</option>';
-	echo '<option value="'.(time()+86400).'">'._('Ahora + un día').'</option>';
-	echo '<option value="'.(time()+86400*7).'">'._('Ahora + una semana').'</option>';
-	echo '<option value="'.(time()+86400*30).'">'._('Ahora + un mes').'</option>';
-	echo '<option value="'.(time()+86400*60).'">'._('Ahora + dos meses').'</option>';
-	echo '<option value="'.(time()+86400*180).'">'._('Ahora + seis meses').'</option>';
-	echo '<option value="'.(time()+86400*365).'">'._('Ahora + un año').'</option>';
+function do_ban_new($selected_tab, $search, $key) {
+	Haanga::Load('admin/bans/new.html', compact('selected_tab', 'search', 'key'));
 }
 
-?>
+function do_ban_edit($selected_tab, $search, $key) {
+	$ban_id = intval($_REQUEST['id']);
+	$ban = new Ban();
+	$ban->ban_id = $ban_id;
+	$ban->read();
+	Haanga::Load('admin/bans/edit.html', compact('ban', 'selected_tab', 'search', 'key'));
+}
+
+function do_ban_news($selected_tab, $search, $key) {
+	Haanga::Load('admin/bans/news.html', compact('selected_tab', 'search', 'key'));
+}

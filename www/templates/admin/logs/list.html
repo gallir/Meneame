@@ -1,0 +1,74 @@
+<div id="singlewrap">
+    <div class="genericform" style="margin:0">
+        <form method="get" action="{{globals.base_url}}admin/logs.php">
+        Tipo de log:
+        <select name="log_type" onchange="this.form.submit()">
+            <option value="">Todos</option>
+            <option value="change_user_level"{% if log_type=="change_user_level" %} selected="selected"{% endif %}>change_user_level</option>
+            <option value="change_karma"{% if log_type=="change_karma" %} selected="selected"{% endif %}>change_karma</option>
+        </select>
+        </form>
+        <form method="get" action="{{globals.base_url}}admin/logs.php">
+            <div style="float:right;">
+                <input type="hidden" name="tab" value="{{selected_tab}}"/>
+                <input type="hidden" name="key" value="{{key}}"/>
+                <input type="text" name="s" {% if search %} value="{{ search }}" {% else %} value="{% trans _('buscar') %}..."{% endif %} onblur="if(this.value=='') this.value='{% trans _('buscar') %}...';" onfocus="if(this.value=='{% trans _('buscar') %}...') this.value='';" />&nbsp;
+                <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png">
+            </div>
+        </form>
+
+        <table class="decorated" style="font-size: 10pt">
+            <tr>
+
+                <th style="width: 20%">
+                    <a href="{{globals.base_url}}admin/logs.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=user_login">
+                        {% trans _('usuario') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/logs.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=log_date">
+                        {% trans _('fecha modificación') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/logs.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=log_type">
+                        {% trans _('tipo de modificación') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/logs.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}">
+                        {% trans _('valor inicial') %} / {% trans _('valor_final') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/logs.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=admin_user_login">
+                        {% trans _('admin') %}
+                    </a>
+                </th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td>
+                    {{log.user_login}}
+                </td>
+                <td>{{log.log_date}}</td>
+                <td>{{log.log_type}}</td>
+                {% if log.log_type == "change_karma" %}
+                    <td>{{log.log_old_value|stringformat:"%.2f"}} &rarr; {{log.log_new_value|stringformat:"%.2f"}}
+                        {% if log.log_old_value > log.log_new_value %}<span style="color:red;font-size: 15px;padding-left: 10px;">&darr;</span> {% else %}<span style="color:green;font-size:15px;padding-left: 10px;">&uarr;</span> {% endif %}
+                    </td>
+                {% else %}
+                    <td>{{log.log_old_value}} &rarr; {{log.log_new_value}}</td>
+                {% endif %}
+                <td>
+                    {{log.admin_user_login}}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

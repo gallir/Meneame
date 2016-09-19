@@ -1,0 +1,7 @@
+<ul class="tabsub">
+    {% for tab_name, tab_url in tabs %}
+        <li{% if tab_selected==tab_name %} class="tabsub-this"{% endif %}>
+            <a href="{{ globals.base_url }}admin/{{ tab_url }}">{{ tab_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
