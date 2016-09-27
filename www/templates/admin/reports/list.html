@@ -1,0 +1,149 @@
+<div id="singlewrap">
+    <div class="genericform" style="margin:0">
+
+        <form method="get" action="{{globals.base_url}}admin/reports.php">
+            <div style="float:right;">
+                <input type="hidden" name="tab" value="{{selected_tab}}"/>
+                <input type="hidden" name="key" value="{{key}}"/>
+                <input type="text" name="s" {% if search %} value="{{ search }}" {% else %} value="{% trans _('buscar') %}..." {% endif %} onblur="if(this.value=='') this.value='{% trans _('buscar') %}...';" onfocus="if(this.value=='{% trans _('buscar') %}...') this.value='';"/>&nbsp;
+                <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png">
+            </div>
+        </form>
+
+        <form method="get" action="{{globals.base_url}}admin/reports.php" style="display:inline;">
+            Rango de fechas:
+            <select name="report_date" id="report_date" onchange="this.form.submit()">
+                <option value="all"{% if report_date==false %} selected="selected"{% endif %}>{% trans _('Cuaquier fecha') %}</option>
+                <option value="two_hours"{% if report_date=='two_hours' %} selected="selected"{% endif %}>{% trans _('últimas 2 horas') %}</option>
+                <option value="six_hours"{% if report_date=='six_hours' %} selected="selected"{% endif %}>{% trans _('últimas 6 horas') %}</option>
+                <option value="twelve_hours"{% if report_date=='twelve_hours' %} selected="selected"{% endif %}>{% trans _('últimas 12 horas') %}</option>
+                <option value="one_day"{% if report_date=='one_day' %} selected="selected"{% endif %}>{% trans _('último día') %}</option>
+                <option value="one_week"{% if report_date=='one_week' %} selected="selected"{% endif %}>{% trans _('última semana') %}</option>
+            </select>
+
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="pending" onclick="this.form.submit()"{% if 'pending' in report_status %} checked="checked"{% endif %}> Pending ({{statistics.pending}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="debate" onclick="this.form.submit()"{% if 'debate' in report_status %} checked="checked"{% endif %}> Debate ({{statistics.debate}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="penalized" onclick="this.form.submit()"{% if 'penalized' in report_status %} checked="checked"{% endif %}> Penalized ({{statistics.penalized}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="dismissed" onclick="this.form.submit()"{% if 'dismissed' in report_status %} checked="checked"{% endif %}> Dismissed ({{statistics.dismissed}}) ]
+
+        </form>
+
+
+        <table class="decorated" style="font-size: 10pt">
+            <tr>
+
+                <th style="width: 20%">
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}">
+                        {% trans _('comentario') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}">
+                        {% trans _('#reports') %}
+                    </a>
+                </th>
+
+                <th style="width: 20%">
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=report_reason">
+                        {% trans _('motivo') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=reporter_user_login">
+                        {% trans _('autor del comentario') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=report_date">
+                        {% trans _('fecha') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=report_status">
+                        {% trans _('estado') %}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=revisor_user_login">
+                        {% trans _('revisado por') %}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=modified">
+                        {% trans _('fecha última modificación') %}
+                    </a>
+                </th>
+            </tr>
+            {% for report in reports %}
+            <tr>
+                <td>
+                    {% if report.author_user_login %}
+                    <a class="tooltip c:{{ report.comment_link_id }}-{{ report.comment_order }}" href="/story/{{report.comment_link_uri}}/c0{{ report.comment_order }}#c-{{ report.comment_order }}" target="blank">
+                        {% trans _('ir a comentario') %}
+                    </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ report.report_num }}
+                </td>
+
+                <td>{{report.reason}}</td>
+                {#
+                <td>
+                    <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
+                        {{ report.author_user_login }}
+                    </a>
+                </td>
+                #}
+                <td>
+                    <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
+                        {{ report.author_user_login }}
+                    </a>
+                </td>
+
+                <td>{{report.date}}</td>
+                <td>
+                    <form method="post" action="{{_SERVER.REQUEST_URI|escape}}">
+
+                        <input type="hidden" name="op" value="change_status">
+                        <input type="hidden" name="report_id" value="{{report.id}}">
+                        <input type="hidden" name="key" value="{{key}}">
+                        <select name="new_report_status" onchange="this.form.submit()">
+                            <option value="pending" {% if report.status=="pending" %} selected="selected" {% endif %}>
+                                pending
+                            </option>
+                            <option value="debate" {% if report.status=="debate" %} selected="selected" {% endif %}>
+                                debate
+                            </option>
+                            <option value="penalized" {% if report.status=="penalized" %} selected="selected" {% endif %}>
+                                penalized
+                            </option>
+                            <option value="dismissed" {% if report.status=="dismissed" %} selected="selected" {% endif %}>
+                                dismissed
+                            </option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    {% if report.revisor_user_login%}
+                    {{report.revisor_user_login}}
+                    {% else %}
+                    --
+                    {% endif %}
+                </td>
+                <td>
+                    {% if report.modified%}
+                    {{report.modified}}
+                    {% else %}
+                    --
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

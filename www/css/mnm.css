@@ -255,7 +255,7 @@ margin-top:4px;
 }
 
 #header-top .userlogin {
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 10px -265px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 10px -240px;
 background-size: 20px 300px;
 width:40px;
 height:30px;
@@ -337,7 +337,7 @@ height:24px;
 font-size: 16px;
 padding-top: 0px;
 padding-left: 20px;
-background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0 -200px;
+background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0 -186px;
 background-size: 20px 300px;
 }
 
@@ -411,7 +411,7 @@ float: left;
 cursor: pointer;
 width: 10px;
 height: 30px;
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -225px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -203px;
 background-size: 20px 300px;
 }
 
@@ -1736,7 +1736,7 @@ background-position: 0px 0px;
 }
 
 .comment-meta .vote.down {
-background-position: 0px -20px;
+background-position: 0px -18px;
 margin-right: 20px;
 }
 
@@ -1752,7 +1752,18 @@ cursor: pointer;
 height: 18px;
 width: 18px;
 background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
-background-position: 0px -60px;
+background-position: 0px -54px;
+background-size: 20px 300px;
+}
+
+.comment-meta .report {
+display: inline-block;
+margin: 0 2px 0 6px;
+cursor: pointer;
+height: 18px;
+width: 18px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
+background-position: 0px -282px;
 background-size: 20px 300px;
 }
 
@@ -1766,11 +1777,11 @@ height: 18px;
 width: 16px;
 background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
-background-position: 0px -101px;
+background-position: 0px -91px;
 }
 
 .favorite.on {
-background-position: 0px -81px;
+background-position: 0px -73px;
 }
 
 .comment-info {
@@ -1800,7 +1811,7 @@ color: #FF9400;
 .comment-meta .answers {
 display: inline-block;
 height: 18px;
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -122px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -109px;
 background-size: 20px 300px;
 padding-left: 14px;
 cursor: pointer;
@@ -2519,11 +2530,11 @@ opacity:1.0;
 }
 
 .share_icons span.fb {
-background-position: 0px -180px;
+background-position: 0px -163px;
 }
 
 .share_icons span.tw {
-background-position: 0px -160px;
+background-position: 0px -145px;
 }
 
 .ts {
@@ -2544,7 +2555,7 @@ display: inline-block;
 height: 18px;
 width: 18px;
 margin: 0px 4px 0px 4px;
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -40px;
+background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -35px;
 background-size: 20px 300px;
 overflow: hidden !important;
 color: transparent !important;
@@ -2674,6 +2685,16 @@ background:url({{ globals.base_static }}img/common/uparr-48-w.png) no-repeat cen
 background-size: 24px 24px;
 border: none;
 border-radius: 50%;
+}
+
+.reportform {
+padding: 40px;
+background-color: #FFF5ED;
+}
+
+.reportform p {
+margin-bottom: 15px;
+font-size: 14px;
 }
 
 

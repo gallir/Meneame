@@ -538,6 +538,29 @@ CREATE TABLE `logs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `reports`
+--
+
+DROP TABLE IF EXISTS `reports`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reports` (
+  `report_id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `report_type` text,
+  `report_reason` text,
+  `report_user_id` int(11) NOT NULL,
+  `report_ref_id` int(11) NOT NULL,
+  `report_status` text,
+  `report_modified` timestamp NULL,
+  `report_revised_by` int(11) NULL,
+  `report_ip` char(42) DEFAULT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `report_date` (`report_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `admin_logs`
 --
 
