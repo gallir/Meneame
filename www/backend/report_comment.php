@@ -67,7 +67,7 @@ function check_report($comment, $link_id) {
 	}
 
 	// Check comments closed
-	if ($comment->date > $globals['now'] - $globals['time_enabled_comments']) {
+	if ($comment->date < $globals['now'] - $globals['time_enabled_comments']) {
 		return _('comentarios cerrados');
 	}
 
@@ -123,7 +123,7 @@ function check_save_report($comment, $link_id)
 	}
 
 	// Check comments closed
-	if ($comment->date > $globals['now'] - $globals['time_enabled_comments']) {
+	if ($comment->date < $globals['now'] - $globals['time_enabled_comments']) {
 		return _('comentarios cerrados');
 	}
 
