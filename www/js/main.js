@@ -991,6 +991,72 @@ function priv_new(user_id) {
 	});
 }
 
+function report_comment(comment_id) {
+
+	$.ajax({
+		type: 'POST',
+		url: base_url + 'backend/report_comment.php',
+		dataType: 'json',
+		data: { 'process': 'check_can_report', 'id': comment_id, 'key': base_key},
+		success: function(data) {
+			if (! data.error) {
+				show_report_dialog(comment_id);
+			} else {
+				mDialog.notify("error: " + data.error , 5);
+			}
+		}
+	});
+}
+
+function show_report_dialog(comment_id) {
+
+	var w, h;
+	var url = base_url + 'backend/report_comment.php?id='+comment_id+"&key="+base_key;
+	if (is_mobile) {
+		w = h = '100%';
+	} else {
+		w = '400px';
+		h = '250px';
+	}
+
+	$.colorbox({href: url,
+		onComplete: function () {
+			var options = {
+				async: false,
+				dataType: 'json',
+				success: function (data) {
+					if (! data.error) {
+						mDialog.notify("{% trans _('Gracias por tu colaboración. Evaluaremos el comentario.') %}", 5);
+					} else {
+						mDialog.notify("error: " + data.error , 5);
+					}
+					$.colorbox.close();
+				},
+				error: function () {
+					mDialog.notify("error: " + data.error , 3);
+				}
+			};
+
+			$('#r_new_form').ajaxForm(options);
+		},
+		'onOpen': function () {
+
+		},
+		'onClosed': function () {
+
+		},
+		overlayClose: false,
+		opacity: 0.1,
+		transition: 'none',
+		title: "{% trans _('reporte de comentario') %}",
+		scrolling: false,
+		open: true,
+		className: 'report',
+		width: w,
+		height: h
+	});
+}
+
 /* Answers */
 function get_total_answers_by_ids(type, ids) {
 	$.ajax({

@@ -11,8 +11,6 @@ if (!$current_user->admin) {
 
 function do_admin_tabs($tab_selected = false)
 {
-	global $globals;
-
 	$tabs = [
 		"hostname" => 'bans.php?tab=hostname',
 		"punished_hostname" => 'bans.php?tab=punished_hostname',
@@ -21,7 +19,8 @@ function do_admin_tabs($tab_selected = false)
 		"words" => 'bans.php?tab=words',
 		"proxy" => 'bans.php?tab=proxy',
 		"noaccess" => 'bans.php?tab=noaccess',
-		"admin_logs" => 'logs.php'
+		"admin_logs" => 'logs.php',
+		"comment_reports" => 'reports.php'
 	];
 
 	Haanga::Load("admin/tabs.html", compact('tabs', 'tab_selected'));

@@ -137,6 +137,7 @@ function __autoload($class) {
 				'Annotation' => 'annotation.php',
 				'Log' => 'log.php',
 				'LogAdmin' => 'log_admin.php',
+				'Report' => 'report.php',
 				'db' => 'mysqli.php',
 				'RGDB' => 'rgdb.php',
 				'LCPBase' => 'LCPBase.php',
