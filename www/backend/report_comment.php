@@ -57,7 +57,7 @@ function check_report($comment, $link_id) {
 	}
 
 	// Check if user votes his own comment! :p
-	if ($current_user->user_id == $comment->user_id) {
+	if ($current_user->user_id == $comment->author) {
 		return _('no puedes reportar tu propio comentario');
 	}
 
