@@ -90,7 +90,7 @@ function print_edit_form($comment, $link_id)
 
 function check_save_report($comment, $link_id)
 {
-	global $site_key, $current_user, $globals;
+	global $site_key, $current_user, $globals, $db;
 
 	// Check key
 	if (!$_POST['key'] || ($_POST['key'] != md5($_POST['randkey'] . $site_key))) {
@@ -126,7 +126,7 @@ function check_save_report($comment, $link_id)
 	if (Report::already_reported($comment->id)) {
 		return _('Ya has reportado este comentario.');
 	}
-
+	
 	// Check comments closed
 	if ($comment->date < $globals['now'] - $globals['time_enabled_comments']) {
 		return _('comentarios cerrados');
@@ -142,6 +142,15 @@ function check_save_report($comment, $link_id)
 	$report->reason = $_POST['report_reason'];
 	$report->reporter_id = $current_user->user_id;
 	$report->ref_id = $comment->id;
+
+	// Check report state
+
+	$sql = "SELECT report_status from reports where report_type='" . Report::REPORT_TYPE_LINK_COMMENT . "' and report_ref_id={$report->ref_id} and report_status <>'" . Report::REPORT_STATUS_PENDING . "'";
+	$report_status = $db->get_var($sql);
+
+	if ($report_status) {
+		$report->status = $report_status;
+	}
 
 	return $report->store();
 }

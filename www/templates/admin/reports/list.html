@@ -21,13 +21,12 @@
                 <option value="one_week"{% if report_date=='one_week' %} selected="selected"{% endif %}>{% trans _('última semana') %}</option>
             </select>
 
-            &nbsp; [ <input type="checkbox" name="report_status[]" value="pending" onclick="this.form.submit()"{% if 'pending' in report_status %} checked="checked"{% endif %}> Pending ({{statistics.pending}}) ]
-            &nbsp; [ <input type="checkbox" name="report_status[]" value="debate" onclick="this.form.submit()"{% if 'debate' in report_status %} checked="checked"{% endif %}> Debate ({{statistics.debate}}) ]
-            &nbsp; [ <input type="checkbox" name="report_status[]" value="penalized" onclick="this.form.submit()"{% if 'penalized' in report_status %} checked="checked"{% endif %}> Penalized ({{statistics.penalized}}) ]
-            &nbsp; [ <input type="checkbox" name="report_status[]" value="dismissed" onclick="this.form.submit()"{% if 'dismissed' in report_status %} checked="checked"{% endif %}> Dismissed ({{statistics.dismissed}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="pending" onclick="this.form.submit()"{% if 'pending' in report_status %} checked="checked"{% endif %}> Pendiente ({{statistics.pending}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="debate" onclick="this.form.submit()"{% if 'debate' in report_status %} checked="checked"{% endif %}> En debate ({{statistics.debate}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="penalized" onclick="this.form.submit()"{% if 'penalized' in report_status %} checked="checked"{% endif %}> Penalizado ({{statistics.penalized}}) ]
+            &nbsp; [ <input type="checkbox" name="report_status[]" value="dismissed" onclick="this.form.submit()"{% if 'dismissed' in report_status %} checked="checked"{% endif %}> Descartado ({{statistics.dismissed}}) ]
 
         </form>
-
 
         <table class="decorated" style="font-size: 10pt">
             <tr>
@@ -40,7 +39,7 @@
 
                 <th>
                     <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}">
-                        {% trans _('#reports') %}
+                        {% trans _('#reportes') %}
                     </a>
                 </th>
 
@@ -53,6 +52,12 @@
                 <th>
                     <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=reporter_user_login">
                         {% trans _('autor del comentario') %}
+                    </a>
+                </th>
+
+                <th>
+                    <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=reporter_user_login">
+                        {% trans _('reportado por') %}
                     </a>
                 </th>
 
@@ -78,71 +83,184 @@
                     </a>
                 </th>
             </tr>
-            {% for report in reports %}
+
+            {% for row in reports %}
+            {% for i, report in row.lines %}
             <tr>
-                <td>
-                    {% if report.author_user_login %}
-                    <a class="tooltip c:{{ report.comment_link_id }}-{{ report.comment_order }}" href="/story/{{report.comment_link_uri}}/c0{{ report.comment_order }}#c-{{ report.comment_order }}" target="blank">
-                        {% trans _('ir a comentario') %}
-                    </a>
-                    {% endif %}
-                </td>
-                <td>
-                    {{ report.report_num }}
-                </td>
 
-                <td>{{report.reason}}</td>
-                {#
-                <td>
-                    <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
-                        {{ report.author_user_login }}
-                    </a>
-                </td>
-                #}
-                <td>
-                    <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
-                        {{ report.author_user_login }}
-                    </a>
-                </td>
+                {% if i==0 %}
+                    <td rowspan="{{row.num_lines}}">
+                        {% if report.author_user_login %}
+                        <a class="tooltip c:{{ report.comment_link_id }}-{{ report.comment_order }}" href="/story/{{report.comment_link_uri}}/c0{{ report.comment_order }}#c-{{ report.comment_order }}" target="blank">
+                            {% trans _('ir a comentario') %}
+                        </a>
+                        {% endif %}
+                    </td>
 
-                <td>{{report.date}}</td>
-                <td>
-                    <form method="post" action="{{_SERVER.REQUEST_URI|escape}}">
+                    <td>
+                        {{ report.report_num }}
+                    </td>
 
-                        <input type="hidden" name="op" value="change_status">
-                        <input type="hidden" name="report_id" value="{{report.id}}">
-                        <input type="hidden" name="key" value="{{key}}">
-                        <select name="new_report_status" onchange="this.form.submit()">
-                            <option value="pending" {% if report.status=="pending" %} selected="selected" {% endif %}>
-                                pending
-                            </option>
-                            <option value="debate" {% if report.status=="debate" %} selected="selected" {% endif %}>
-                                debate
-                            </option>
-                            <option value="penalized" {% if report.status=="penalized" %} selected="selected" {% endif %}>
-                                penalized
-                            </option>
-                            <option value="dismissed" {% if report.status=="dismissed" %} selected="selected" {% endif %}>
-                                dismissed
-                            </option>
-                        </select>
-                    </form>
-                </td>
-                <td>
-                    {% if report.revisor_user_login%}
-                    {{report.revisor_user_login}}
-                    {% else %}
-                    --
-                    {% endif %}
-                </td>
-                <td>
-                    {% if report.modified%}
-                    {{report.modified}}
-                    {% else %}
-                    --
-                    {% endif %}
-                </td>
+                    <td class="normal">
+                        {% if report.reason == 'insult' %}
+                            Insultos directos
+                        {% endif %}
+                        {% if report.reason == 'incites_hatred' %}
+                            Incitación al odio
+                        {% endif %}
+                        {% if report.reason == 'advertising' %}
+                            Promoción comercial de productos o servicios
+                        {% endif %}
+                        {% if report.reason == 'violence_porn' %}
+                            Material pornográfico o de violencia gráfica
+                        {% endif %}
+                        {% if report.reason == 'private_data' %}
+                            Contiene datos personales propios o de un tercero
+                        {% endif %}
+                        {% if report.reason == 'legality' %}
+                            Incumple la legalidad española vigente
+                        {% endif %}
+                        {% if report.reason == 'violate_rules' %}
+                            Viola las normas de uso
+                        {% endif %}
+                        {% if report.reason == 'inappropriate_content' %}
+                            Contenido inapropiado
+                        {% endif %}
+                        {% if report.reason == 'spam' %}
+                            Spam
+                        {% endif %}
+                    </td>
+                    {#
+                    <td>
+                        <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
+                            {{ report.author_user_login }}
+                        </a>
+                    </td>
+                    #}
+                    <td rowspan="{{row.num_lines}}">
+                        <a target="_blank" href="{{globals.base_url}}user/{{report.author_user_login}}/{{report.author_id}}" class="tooltip u:{{report.author_id}}" style="overflow: hidden;white-space: nowrap;">
+                            {{ report.author_user_login }}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="fancybox admin-button" href="{{globals.base_url}}admin/report_ajax.php?id={{report.ref_id}}&reason={{report.reason}}&process=get_reporters" title="Información de reportes">Ver</a>
+                    </td>
+                    <td>{{report.date}}</td>
+                    <td>
+                        <form method="post" action="{{_SERVER.REQUEST_URI|escape}}">
+
+                            <input type="hidden" name="op" value="change_status">
+                            <input type="hidden" name="report_id" value="{{report.id}}">
+                            <input type="hidden" name="key" value="{{key}}">
+                            <select name="new_report_status" onchange="this.form.submit()">
+                                <option value="pending" {% if report.status=="pending" %} selected="selected" {% endif %}>
+                                    pendiente
+                                </option>
+                                <option value="debate" {% if report.status=="debate" %} selected="selected" {% endif %}>
+                                    en debate
+                                </option>
+                                <option value="penalized" {% if report.status=="penalized" %} selected="selected" {% endif %}>
+                                    penalizado
+                                </option>
+                                <option value="dismissed" {% if report.status=="dismissed" %} selected="selected" {% endif %}>
+                                    descartado
+                                </option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        {% if report.revisor_user_login%}
+                        {{report.revisor_user_login}}
+                        {% else %}
+                        --
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.modified%}
+                        {{report.modified}}
+                        {% else %}
+                        --
+                        {% endif %}
+                    </td>
+                {% else %}
+
+                    <td>
+                        {{ report.report_num }}
+                    </td>
+
+                    <td class="normal">
+                        {% if report.reason == 'insult' %}
+                        Insultos directos
+                        {% endif %}
+                        {% if report.reason == 'incites_hatred' %}
+                        Incitación al odio
+                        {% endif %}
+                        {% if report.reason == 'advertising' %}
+                        Promoción comercial de productos o servicios
+                        {% endif %}
+                        {% if report.reason == 'violence_porn' %}
+                        Material pornográfico o de violencia gráfica
+                        {% endif %}
+                        {% if report.reason == 'private_data' %}
+                        Contiene datos personales propios o de un tercero
+                        {% endif %}
+                        {% if report.reason == 'legality' %}
+                        Incumple la legalidad española vigente
+                        {% endif %}
+                        {% if report.reason == 'violate_rules' %}
+                        Viola las normas de uso
+                        {% endif %}
+                        {% if report.reason == 'inappropriate_content' %}
+                        Contenido inapropiado
+                        {% endif %}
+                        {% if report.reason == 'spam' %}
+                        Spam
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="fancybox admin-button" href="{{globals.base_url}}admin/report_ajax.php?id={{report.ref_id}}&reason={{report.reason}}&process=get_reporters" title="Información de reportes">Ver</a>
+                    </td>
+                    <td>{{report.date}}</td>
+                    <td>
+                        <form method="post" action="{{_SERVER.REQUEST_URI|escape}}">
+
+                            <input type="hidden" name="op" value="change_status">
+                            <input type="hidden" name="report_id" value="{{report.id}}">
+                            <input type="hidden" name="key" value="{{key}}">
+                            <select name="new_report_status" onchange="this.form.submit()">
+                                <option value="pending" {% if report.status=="pending" %} selected="selected" {% endif %}>
+                                    pending
+                                </option>
+                                <option value="debate" {% if report.status=="debate" %} selected="selected" {% endif %}>
+                                    debate
+                                </option>
+                                <option value="penalized" {% if report.status=="penalized" %} selected="selected" {% endif %}>
+                                    penalized
+                                </option>
+                                <option value="dismissed" {% if report.status=="dismissed" %} selected="selected" {% endif %}>
+                                    dismissed
+                                </option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        {% if report.revisor_user_login%}
+                        {{report.revisor_user_login}}
+                        {% else %}
+                        --
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.modified%}
+                        {{report.modified}}
+                        {% else %}
+                        --
+                        {% endif %}
+                    </td>
+
+                {% endif %}
             </tr>
+            {% endfor %}
             {% endfor %}
         </table>
     </div>

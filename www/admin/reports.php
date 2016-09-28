@@ -23,7 +23,7 @@ if ($_REQUEST["tab"]) {
 	$selected_tab = clean_input_string($_REQUEST["tab"]);
 }
 
-$report_status = false;
+$report_status = array('pending', 'debate');
 if (!empty($_REQUEST["report_status"])) {
 	$report_status = $_REQUEST["report_status"];
 }
@@ -69,6 +69,7 @@ function do_report_list($selected_tab, $search, $report_status, $report_date, $o
 			$order = "ASC";
 		}
 	}
+
 	$where = "WHERE report_type='" . Report::REPORT_TYPE_LINK_COMMENT . "'";
 	if ($report_status) {
 		$where .= " AND report_status IN ('" . join("','", $report_status) . "')";
@@ -106,9 +107,9 @@ function do_report_list($selected_tab, $search, $report_status, $report_date, $o
 
 	$rows = $db->get_var("SELECT count(*) FROM reports " . $where);
 
-	$sql = "SELECT" . Report::SQL_COMMENT_GROUPED . " $where GROUP BY ref_id, status ORDER BY $orderby $order LIMIT $offset,$page_size";
+	$sql = "SELECT" . Report::SQL_COMMENT_GROUPED . " $where GROUP BY ref_id, reason ORDER BY $orderby $order LIMIT $offset,$page_size";
 
-	$reports = $db->get_results($sql);
+	$reports = group_by_comment( $db->get_results($sql));
 
 	Haanga::Load('admin/reports/list.html', compact('reports', 'selected_tab', 'key', 'search', 'report_status', 'report_date', 'statistics'));
 
@@ -134,5 +135,32 @@ function calculate_statistics()
 	$statistics[Report::REPORT_STATUS_DISMISSED] = Report::get_total_in_status(Report::REPORT_STATUS_DISMISSED);
 
 	return $statistics;
+
+}
+
+function group_by_comment($reports) {
+
+	$grouped_reports = array();
+	$parsed = array();
+
+	foreach ($reports as $report) {
+		$group = array();
+
+		foreach ($reports as $r) {
+			if ($r->ref_id == $report->ref_id && !in_array($r->ref_id, $parsed)) {
+				$group[] = $r;
+			}
+		}
+
+		$parsed[] = $report->ref_id;
+
+		$grouped_reports[] = array(
+			'num_lines' => count($group),
+			'lines' => $group
+		);
+
+	}
+
+	return $grouped_reports;
 
 }

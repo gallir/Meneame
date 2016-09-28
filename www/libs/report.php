@@ -19,6 +19,12 @@ class Report extends LCPBase
 	const REPORT_REASON_VIOLATES_RULES = 'violate_rules';
 	const REPORT_REASON_INAPPROPRIATE_CONTENT = 'inappropriate_content';
 	const REPORT_REASON_SPAM = 'spam';
+	const REPORT_REASON_INSULT_THREAT = 'insult';
+	const REPORT_REASON_INCITES_HATRED = 'incites_hatred';
+	const REPORT_REASON_ADVERTISING = 'advertising';
+	const REPORT_REASON_VIOLENCE_OR_PORN = 'violence_porn';
+	const REPORT_REASON_REVEILS_PRIVATE_DATA = 'private_data';
+	const REPORT_REASON_BREACH_LEGALITY = 'legality';
 
 	const SQL_COMMENT = " report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
 	LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
@@ -65,7 +71,13 @@ class Report extends LCPBase
 		return in_array($reason, array(
 			self::REPORT_REASON_INAPPROPRIATE_CONTENT,
 			self::REPORT_REASON_SPAM,
-			self::REPORT_REASON_VIOLATES_RULES
+			self::REPORT_REASON_VIOLATES_RULES,
+			self::REPORT_REASON_INSULT_THREAT,
+			self::REPORT_REASON_INCITES_HATRED,
+			self::REPORT_REASON_ADVERTISING,
+			self::REPORT_REASON_VIOLENCE_OR_PORN,
+			self::REPORT_REASON_REVEILS_PRIVATE_DATA,
+			self::REPORT_REASON_BREACH_LEGALITY
 		));
 	}
 

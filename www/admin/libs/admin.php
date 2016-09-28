@@ -1,6 +1,7 @@
 <?php
 
 $globals['extra_css'][] = 'admin.css';
+$globals['extra_js'][] = '../admin/js/admin.js';
 $globals['ads'] = false;
 
 if (!$current_user->admin) {

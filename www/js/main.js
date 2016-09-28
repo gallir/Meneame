@@ -1027,10 +1027,10 @@ function show_report_dialog(comment_id) {
 				success: function (data) {
 					if (! data.error) {
 						mDialog.notify("{% trans _('Gracias por tu colaboración. Evaluaremos el comentario.') %}", 5);
+						$.colorbox.close();
 					} else {
 						mDialog.notify("error: " + data.error , 5);
 					}
-					$.colorbox.close();
 				},
 				error: function () {
 					mDialog.notify("error: " + data.error , 3);
