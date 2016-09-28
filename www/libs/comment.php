@@ -299,7 +299,7 @@ class Comment extends LCPBase {
 
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && $this->date > $globals['now'] - $globals['time_enabled_comments'];
-		$this->can_report = $this->can_reply && Report::check_min_karma() && ($this->author != $current_user->user_id) && $this->type != 'admin';
+		$this->can_report = $this->can_reply && Report::check_min_karma() && ($this->author != $current_user->user_id) && $this->type != 'admin' && !$this->hidden && !$this->ignored && !$link->is_sponsored();
 
 		$vars = array('self' => $this);
 		return Haanga::Load('comment_summary.html', $vars, $return_string);
