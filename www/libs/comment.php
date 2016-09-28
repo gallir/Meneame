@@ -42,8 +42,6 @@ class Comment extends LCPBase {
 
 		if (! $current_user->user_id ) return false;
 
-
-
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
 		if ($time > $previous) {
@@ -301,7 +299,7 @@ class Comment extends LCPBase {
 
 		$this->has_votes_info = $this->votes > 0 && $this->date > $globals['now'] - 30*86400; // Show votes if newer than 30 days
 		$this->can_reply = $current_user->user_id > 0 && $this->date > $globals['now'] - $globals['time_enabled_comments'];
-		$this->can_report = $this->can_reply && Report::check_min_karma() && ($this->author != $current_user->user_id);
+		$this->can_report = $this->can_reply && Report::check_min_karma() && ($this->author != $current_user->user_id) && $this->type != 'admin';
 
 		$vars = array('self' => $this);
 		return Haanga::Load('comment_summary.html', $vars, $return_string);

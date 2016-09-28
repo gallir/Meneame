@@ -42,8 +42,8 @@ if ($_POST['process'] == 'newreport') {
 	print_edit_form($comment, $link_id);
 }
 
-function check_report($comment, $link_id) {
-
+function check_report($comment, $link_id)
+{
 	global $current_user, $globals;
 
 	// Check if current user can report
@@ -64,6 +64,11 @@ function check_report($comment, $link_id) {
 	// Check if user has already reported
 	if (Report::already_reported($comment->id)) {
 		return _('Ya has reportado este comentario.');
+	}
+
+	// Check that is not a admin comment
+	if ($comment->type == 'admin') {
+		return _('Este comentario no se puede reportar');
 	}
 
 	// Check comments closed
@@ -125,6 +130,11 @@ function check_save_report($comment, $link_id)
 	// Check comments closed
 	if ($comment->date < $globals['now'] - $globals['time_enabled_comments']) {
 		return _('comentarios cerrados');
+	}
+
+	// Check that is not a admin comment
+	if ($comment->type == 'admin') {
+		return _('Este comentario no se puede reportar');
 	}
 
 	// save report
