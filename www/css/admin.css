@@ -69,3 +69,41 @@ color: #ff6400;
 font-weight: bold;
 }
 
+.reporters-list {
+    position: relative;
+    padding: 2px 2px 2px 2px;
+    float: left;
+    min-height: 150px;
+    width: 99%;
+    overflow: hidden;
+    border: 1px solid;
+    margin: 0 0 5px 0;
+    color: #FF6400;
+    background: #FFF;
+    border-color: #FF9400;
+}
+
+
+.reporters-list .item {
+    float: left;
+    overflow: hidden;
+    display: block;
+    width: 24%;
+    height: 20%;
+    font-size: 85%;
+    white-space: nowrap;
+    padding: 5px 0 5px 0;
+}
+
+table.decorated td.normal {
+    color: #666;
+}
+
+a.admin-button, a.admin-button:hover, a.admin-button:visited {
+    color: #fff;
+    background-color: #FF6400;
+    padding: 2px 5px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
