@@ -337,7 +337,7 @@ height:24px;
 font-size: 16px;
 padding-top: 0px;
 padding-left: 20px;
-background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0 -186px;
+background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0 -182px;
 background-size: 20px 300px;
 }
 
