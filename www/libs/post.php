@@ -20,8 +20,9 @@ class Post extends LCPBase {
 	var $content = '';
 	var $src = 'web';
 	var $read = false;
+	var $admin = false;
 
-	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM posts
+	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, post_is_admin as admin, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM posts
 	LEFT JOIN users on (user_id = post_user_id)
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id)
 	LEFT JOIN votes ON (post_date > @enabled_votes and @user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id)
@@ -97,9 +98,10 @@ class Post extends LCPBase {
 		$post_date = $this->date;
 		$post_randkey = $this->randkey;
 		$post_content = $db->escape($this->normalize_content());
+		$post_is_admin = intval($this->admin);
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
-			$r = $db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content')");
+			$r = $db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content, post_is_admin) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content', $post_is_admin)");
 			$this->id = $db->insert_id;
 			if ($this->id > 0) {
 				$this->insert_vote($post_author);
@@ -107,7 +109,7 @@ class Post extends LCPBase {
 				if ($full) Log::insert('post_new', $this->id, $post_author);
 			}
 		} else {
-			$r = $db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
+			$r = $db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content', post_is_admin=$post_is_admin WHERE post_id=$this->id");
 			// Insert post_new event into logs
 			if ($r && $full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
@@ -154,8 +156,12 @@ class Post extends LCPBase {
 		} else {
 			$post_meta_class = 'comment-meta';
 			$post_class = 'comment-body';
-			if ($this->karma > $globals['post_highlight_karma']) {
-				$post_class .= ' high';
+			if ($this->admin) {
+				$post_class .= ' admin';
+			} else {
+				if ($this->karma > $globals['post_highlight_karma']) {
+					$post_class .= ' high';
+				}
 			}
 		}
 		if ($this->author == $current_user->user_id) {
@@ -163,11 +169,11 @@ class Post extends LCPBase {
 		}
 
 
-		$this->is_disabled   = $this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0);
-		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'];
-		$this->user_can_vote =  $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted;
-		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400); // Show votes if newer than 30 days
-		$this->show_avatar = true;
+		$this->is_disabled   = ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) && !$this->admin;
+		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'] && !$this->admin ;
+		$this->user_can_vote =  $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted && !$this->admin;
+		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) && !$this->admin; // Show votes if newer than 30 days
+		$this->show_avatar = !$this->admin;
 
 		$this->prepare_summary_text($length);
 

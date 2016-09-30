@@ -29,6 +29,16 @@
 	</div>
 
 	<input class="button" style="width:9em"  type="submit" value="{% trans _('enviar') %}" />
+
+	{% if current_user.user_level == 'god' %}
+	&nbsp;&nbsp;&nbsp;<label><strong>{% trans _('admin') %}</strong>
+	<input name="admin" type="checkbox" value="true"
+		   {% if self.admin %}
+		   checked="true"
+		   {% endif %}
+	/></label>
+	{% endif %}
+
 	{% if self.media_size > 0 %}
 		<label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="image_delete" value="1"/></label>&nbsp;
 	{% endif %}

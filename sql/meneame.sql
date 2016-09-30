@@ -657,6 +657,7 @@ CREATE TABLE `posts` (
   `post_votes` smallint(4) NOT NULL DEFAULT '0',
   `post_karma` smallint(6) NOT NULL DEFAULT '0',
   `post_content` text COLLATE utf8_spanish_ci NOT NULL,
+  `post_is_admin` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`post_id`),
   KEY `post_date` (`post_date`),
   KEY `post_user_id` (`post_user_id`,`post_date`)
