@@ -235,6 +235,8 @@ if ($view != 4) {
 		echo '<ol class="comments-list">';
 		$time_read = 0;
 		foreach ($posts as $post) {
+			// Don't show admin post if it's her own profile.
+			if ($post->admin && !$current_user->admin && $user->id == $post->author) continue;
 			if ($post_id > 0 && $user->id > 0 && $user->id != $post->author) {
 				echo '<li>' . _('Error: nota no existente') . '</li>';
 			} else {
