@@ -41,12 +41,16 @@ if (!empty($_REQUEST['user_id'])) {
 }
 
 function save_post ($post_id) {
+
 	global $link, $db, $post, $current_user, $globals, $site_key;
 
 
 	$post = new Post;
 	$_POST['post'] = clean_text_with_tags($_POST['post'], 0, false, $globals['posts_len']);
 
+	if ($current_user->user_level == 'god' && $_POST['admin'] == true) {
+		$post->admin = true;
+	}
 
 	if (!empty($_FILES['image']['tmp_name'])) {
 		$limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);

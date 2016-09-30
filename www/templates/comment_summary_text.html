@@ -15,7 +15,11 @@
 	{{ self.txt_content }}
 
 	{% if self.media_size > 0 %}
-		&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
+		{% if self.type != 'admin' %}
+			&nbsp;<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
+		{% else %}
+			&nbsp;<a class="fancybox" title="({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
+		{% endif %}																																				 ç
 		{% if globals.cache_redirector %}
 			class="thumb ok lazy"
 			data-src="{{ self.media_thumb_dir }}/media_thumb-comment-{{ self.id }}.{{ self.media_extension }}?{{ self.media_date }}"
