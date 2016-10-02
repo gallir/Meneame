@@ -130,9 +130,9 @@ class Post extends LCPBase {
 		global $db, $current_user;
 		$id = $this->id;
 		if ($user > 0) {
-			$sql = "select post_id from posts where post_user_id = $user order by post_date desc limit 1";
+			$sql = "select post_id from posts where post_user_id = $user and post_is_admin=0 order by post_date desc limit 1";
 		} else {
-			$sql = "select post_id from posts order by post_date desc limit 1";
+			$sql = "select post_id from posts where post_is_admin=0 order by post_date desc limit 1";
 		}
 		$id = $db->get_var($sql);
 		if ($id > 0) {
