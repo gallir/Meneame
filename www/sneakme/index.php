@@ -75,17 +75,20 @@ switch ($argv[0]) {
 			if(!$user->read()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
+			$post = Post::from_db($post_id);
 			$globals['permalink'] = 'http://'.get_server_name().post_get_base_url($post_id);
 			// Fill title
 			$summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250);
-			$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': '. $summary;
-			$page_title = text_to_summary($summary, 120);
-			if ($user->avatar) {
-				$globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
+			if (!$post->admin) {
+				$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': ' . $summary;
+				$globals['search_options']['u'] = $user->username;
+				$page_title = text_to_summary($summary, 120);
+				if ($user->avatar) {
+					$globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
+				}
 			}
 
 			//$page_title = sprintf(_('nota de %s'), $user->username) . " ($post_id)";
-			$globals['search_options']['u'] = $user->username;
 			$where = "post_id = $post_id";
 			$order_by = "";
 			$limit = "";
@@ -161,7 +164,11 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 	$globals['noindex'] = true;
 }
 
-do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
+if (isset($post) && $post->admin) {
+	do_header($page_title, _('nótame'), get_posts_menu($tab_option, null));
+} else {
+	do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
+}
 
 $conversation_extra = '';
 if ($tab_option == 4) {
@@ -172,6 +179,7 @@ if ($tab_option == 4) {
 	} else {
 		$whose = _('suyas');
 	}
+
 	$options = array(
 		$whose => post_get_base_url($user->username),
 		_('amigos') => post_get_base_url("$user->username/_friends"),
@@ -183,6 +191,11 @@ if ($tab_option == 4) {
 		sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
 
 	);
+
+	if (isset($post)) {
+		if ($post->admin) $options=false;
+	}
+
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
 	//$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
 	$conversation_extra = ' [<span id="p_c_counter">0</span>]';
