@@ -32,7 +32,9 @@
 
 		{% if current_user.user_id > 0 %}
 			<span id="favp-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favp-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
+			{% if !self.admin %}
 			<span onclick="post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}" class="reply"></span>
+			{% endif %}
 		{% endif %}
 	</div>
 
