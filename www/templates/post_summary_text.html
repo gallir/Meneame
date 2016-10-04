@@ -7,11 +7,8 @@
 {% if self.media_size > 0 %}
 	&nbsp;
 	{# PixeloPhilia icon from omercetin.deviantart.com #}
-	{% if !self.admin %}
-		<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
-	{% else %}
-		<a class="fancybox" title="({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
-	{% endif %}
+
+	<a class="fancybox" title="{% trans _('subida por') %} {{ self.username }} ({{ self.media_size }} bytes)" href="{{ self.media_url }}"><img src="{{ globals.base_static }}img/g.gif"
 
 	{% if globals.cache_redirector %}
 		class="thumb ok lazy"

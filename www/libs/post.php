@@ -22,8 +22,9 @@ class Post extends LCPBase {
 	var $read = false;
 	var $admin = false;
 
-	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, post_is_admin as admin, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM posts
+	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, post_is_admin as admin, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read`, admin_posts.admin_user_id as admin_user_id, admin_posts.admin_user_login as admin_user_login FROM posts
 	LEFT JOIN users on (user_id = post_user_id)
+	LEFT JOIN admin_posts on (admin_posts.admin_post_id = post_id)
 	LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id)
 	LEFT JOIN votes ON (post_date > @enabled_votes and @user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id)
 	LEFT JOIN media ON (media.type='post' and media.id = post_id and media.version = 0) ";
@@ -42,7 +43,6 @@ class Post extends LCPBase {
 		$key = 'p_last_read';
 
 		if (! $current_user->user_id ) return false;
-
 
 		if (! $time) $time = $globals['now'];
 		$previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
@@ -92,13 +92,20 @@ class Post extends LCPBase {
 		global $db, $current_user, $globals;
 
 		if(!$this->date) $this->date=time();
-		$post_author = $this->author;
+
+		$post_is_admin = intval($this->admin);
+		if ($post_is_admin && isset($globals['admin_account_id']) && is_numeric($globals['admin_account_id'])) {
+			$post_author = $globals['admin_account_id'];
+		} else {
+			$post_author = $this->author;
+		}
+
 		$post_src = $this->src;
 		$post_karma = $this->karma;
 		$post_date = $this->date;
 		$post_randkey = $this->randkey;
 		$post_content = $db->escape($this->normalize_content());
-		$post_is_admin = intval($this->admin);
+
 		if($this->id===0) {
 			$this->ip = $globals['user_ip_int'];
 			$r = $db->query("INSERT INTO posts (post_user_id, post_karma, post_ip_int, post_date, post_randkey, post_src, post_content, post_is_admin) VALUES ($post_author, $post_karma, $this->ip, FROM_UNIXTIME($post_date), $post_randkey, '$post_src', '$post_content', $post_is_admin)");
@@ -108,8 +115,16 @@ class Post extends LCPBase {
 				// Insert post_new event into logs
 				if ($full) Log::insert('post_new', $this->id, $post_author);
 			}
+
+			if ($post_is_admin && $r ) {
+				$db->query("INSERT INTO admin_posts (admin_post_id, admin_user_id, admin_user_login) VALUES ($this->id, {$current_user->user_id},'{$current_user->user_login}')");
+			}
+
 		} else {
 			$r = $db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content', post_is_admin=$post_is_admin WHERE post_id=$this->id");
+			if ($post_is_admin && $r) {
+				$db->query("UPDATE admin_posts set admin_post_id=$this->id, admin_user_id={$current_user->user_id}, admin_user_login='{$current_user->user_login}'");
+			}
 			// Insert post_new event into logs
 			if ($r && $full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
 		}
@@ -130,9 +145,9 @@ class Post extends LCPBase {
 		global $db, $current_user;
 		$id = $this->id;
 		if ($user > 0) {
-			$sql = "select post_id from posts where post_user_id = $user and post_is_admin=0 order by post_date desc limit 1";
+			$sql = "select post_id from posts where post_user_id = $user order by post_date desc limit 1";
 		} else {
-			$sql = "select post_id from posts where post_is_admin=0 order by post_date desc limit 1";
+			$sql = "select post_id from posts order by post_date desc limit 1";
 		}
 		$id = $db->get_var($sql);
 		if ($id > 0) {
@@ -173,7 +188,7 @@ class Post extends LCPBase {
 		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'] && !$this->admin ;
 		$this->user_can_vote =  $current_user->user_karma > $globals['min_karma_for_comment_votes'] && ! $this->voted && !$this->admin;
 		$this->show_votes	= ($this->votes > 0 && $this->date > $globals['now'] - 30*86400) && !$this->admin; // Show votes if newer than 30 days
-		$this->show_avatar = !$this->admin;
+		$this->show_avatar = true;
 
 		$this->prepare_summary_text($length);
 

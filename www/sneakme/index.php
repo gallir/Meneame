@@ -79,13 +79,12 @@ switch ($argv[0]) {
 			$globals['permalink'] = 'http://'.get_server_name().post_get_base_url($post_id);
 			// Fill title
 			$summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250);
-			if (!$post->admin) {
-				$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': ' . $summary;
-				$globals['search_options']['u'] = $user->username;
-				$page_title = text_to_summary($summary, 120);
-				if ($user->avatar) {
-					$globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
-				}
+
+			$globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': ' . $summary;
+			$globals['search_options']['u'] = $user->username;
+			$page_title = text_to_summary($summary, 120);
+			if ($user->avatar) {
+				$globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
 			}
 
 			//$page_title = sprintf(_('nota de %s'), $user->username) . " ($post_id)";
@@ -164,11 +163,7 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 	$globals['noindex'] = true;
 }
 
-if (isset($post) && $post->admin) {
-	do_header($page_title, _('nótame'), get_posts_menu($tab_option, null));
-} else {
-	do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
-}
+do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
 
 $conversation_extra = '';
 if ($tab_option == 4) {
@@ -191,10 +186,6 @@ if ($tab_option == 4) {
 		sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
 
 	);
-
-	if (isset($post)) {
-		if ($post->admin) $options=false;
-	}
 
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
 	//$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
@@ -243,13 +234,12 @@ if ($current_user->user_id > 0) {
 
 if ($view != 4) {
 	$posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id)", 'Post');
+
 	if ($posts) {
 		$ids = array();
 		echo '<ol class="comments-list">';
 		$time_read = 0;
 		foreach ($posts as $post) {
-			// Don't show admin post if it's her own profile.
-			if ($post->admin && !$current_user->admin && $user->id == $post->author && !is_numeric($argv[0]) && !is_numeric($argv[1])) continue;
 			if ($post_id > 0 && $user->id > 0 && $user->id != $post->author) {
 				echo '<li>' . _('Error: nota no existente') . '</li>';
 			} else {
