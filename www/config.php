@@ -397,6 +397,7 @@ $globals['anon_karma']	= 4;
 
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
+//$globals['admin_account_id'] = 0; // Id of admin account (used in sneakme admin posts)
 
 // Send logs to "log_user", it's windows compatible
 openlog('meneame', LOG_ODELAY, LOG_USER);

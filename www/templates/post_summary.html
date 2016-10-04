@@ -6,7 +6,6 @@
 		{% include 'post_summary_text.html' %}
 	{% endif %}
 
-
 	</div>
 	<div class="{{ post_meta_class }}">
 		<div class="comment-votes-info">
@@ -29,25 +28,20 @@
 
 		<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink"></a>
 
-
 		{% if current_user.user_id > 0 %}
 			<span id="favp-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favp-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
-			{% if !self.admin %}
 			<span onclick="post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}" class="reply"></span>
-			{% endif %}
 		{% endif %}
 	</div>
 
 		<div class="comment-info">
 			<span class="ts nomobile showmytitle" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
-			{% if !self.admin %}
 			<a class="username" href="{%exec post_get_base_url self.username %}">{{ self.username }}</a>
-			{% else %}
-			<strong>{% trans _('admin') %}</strong>
-			{% if current_user.admin %}({{ self.username }}){% endif %}
+			{% if current_user.admin %}
+				{% if self.admin %}
+					({{ self.admin_user_login }})
+				{% endif %}
 			{% endif %}
-
-
 		</div>
 	</div>
 </div>
