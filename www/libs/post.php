@@ -121,9 +121,9 @@ class Post extends LCPBase {
 			}
 
 		} else {
-			$r = $db->query("UPDATE posts set post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content', post_is_admin=$post_is_admin WHERE post_id=$this->id");
+			$r = $db->query("UPDATE posts SET post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
 			if ($post_is_admin && $r) {
-				$db->query("UPDATE admin_posts set admin_post_id=$this->id, admin_user_id={$current_user->user_id}, admin_user_login='{$current_user->user_login}'");
+				$db->query("UPDATE admin_posts SET admin_post_id={$this->id}, admin_user_id={$current_user->user_id}, admin_user_login='{$current_user->user_login}' WHERE admin_post_id={$this->id}");
 			}
 			// Insert post_new event into logs
 			if ($r && $full) Log::conditional_insert('post_edit', $this->id, $post_author, 30);
