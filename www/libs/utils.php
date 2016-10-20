@@ -1391,3 +1391,15 @@ function add_javascript($code) {
 	echo '</script>';
 }
 
+function push_to_globals($key, $value) {
+	global $globals;
+
+	if (!is_array($globals[$key])) {
+		$globals[$key] = array();
+	}
+
+	if (!in_array($value, $globals[$key])) {
+		array_push($globals[$key], $value);
+	}
+}
+
