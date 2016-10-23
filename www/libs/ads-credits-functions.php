@@ -27,17 +27,17 @@ function do_banner_top () { // top banner
 /*****
 	if($globals['external_ads'] && $globals['ads']) {
 		Haanga::Safe_Load('private/ad-top.html');
-		//@include('ads/top.inc');
+		//@include(__DIR__.'/ads/top.inc');
 	} else {
 		echo '<div class="banner-top">' . "\n";
 		Haanga::Safe_Load('private/ad-meneame.html');
-		//@include('ads/meneame-01.inc');
+		//@include(__DIR__.'/ads/meneame-01.inc');
 		echo '</div>' . "\n";
 	}
 *****/
 }
 
-function do_banner_top_mobile () { 
+function do_banner_top_mobile () {
 	global $globals, $dblang;
 //
 // WARNING!
@@ -45,7 +45,7 @@ function do_banner_top_mobile () {
 // IMPORTANT! adapt this section to your contracted banners!!
 //
 	if($globals['ads']) {
-		@include('ads/mobile-01.inc');
+		@include(__DIR__.'/ads/mobile-01.inc');
 	}
 }
 
@@ -62,7 +62,7 @@ function do_banner_right() { // side banner A
 	Haanga::Safe_Load('private/ad-right.html');
 }
 
-function do_banner_promotions() { 
+function do_banner_promotions() {
 	global $globals;
 
 	if ($globals['mobile'] || ! $globals['ads']) return;

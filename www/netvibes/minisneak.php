@@ -1,6 +1,6 @@
-<?php 
-include('../config.php');
-header('Content-Type: text/html; charset=utf-8'); 
+<?php
+include(__DIR__.'/../config.php');
+header('Content-Type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -145,9 +145,9 @@ function to_html(data) {
 	html += '<div class="sneakerstory"><a href="http://<?php echo get_server_name(); ?>'+data.link+'">'+data.title+'</a></div>';
 	if (data.type == 'problem')
 		html += '<div class="sneakerwho"><span class="sneakerproblem">'+data.who+'</span></div>';
-	else if (data.uid > 0) 
+	else if (data.uid > 0)
 		html += '<div class="sneakerwho"><a href="http://<?php echo get_server_name().$globals['base_url'];?>user.php?login='+data.who+'">'+data.who+'</a></div>';
-	else 
+	else
 		html += '<div class="sneakerwho">'+data.who+'</div>';
 	return html;
 }

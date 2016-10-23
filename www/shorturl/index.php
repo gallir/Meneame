@@ -8,7 +8,7 @@
 
 // Don't check the user is logged
 $globals['no_auth'] = true;
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO']);
 

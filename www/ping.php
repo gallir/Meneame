@@ -2,7 +2,7 @@
 // Don't check the user is logged
 $globals['no_auth'] = true;
 $globals['no_lounge'] = true;
-include('config.php');
+include(__DIR__.'/config.php');
 $globals['force_ssl'] = false;
 
 header("Content-Type: text/plain");

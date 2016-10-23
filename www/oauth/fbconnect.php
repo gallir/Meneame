@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -24,7 +24,7 @@
 $base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that works with symbolic links
 include("$base/config.php");
 
-include('base.php');
+include(__DIR__.'/base.php');
 include_once(mnminclude.'facebook/facebook.php');
 
 
@@ -43,7 +43,7 @@ class FBConnect extends OAuthBase {
 					'secret' => $globals['facebook_secret'],
 					));
 		$this->user = $this->facebook->getUser();
-		
+
 		parent::__construct();
 	}
 

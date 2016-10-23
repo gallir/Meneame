@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 
 $index_size = 1000;
 
@@ -45,8 +45,8 @@ function do_master($size) {
 function do_statics() {
 	global $globals;
 
-	$urls = Array('queue', 'sneak', 'notame/', 
-			'cloud', 'popular', 'top_commented', 
+	$urls = Array('queue', 'sneak', 'notame/',
+			'cloud', 'popular', 'top_commented',
 			'top_comments', 'top_users', 'legal', 'faq-es.php');
 
 	echo '<urlset xmlns="'.$globals['scheme'].'//www.sitemaps.org/schemas/sitemap/0.9">'."\n";

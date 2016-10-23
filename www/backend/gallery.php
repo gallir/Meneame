@@ -6,11 +6,11 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 $user_id = intval($_GET['user']);
 
-$limit = 250; 
+$limit = 250;
 $show_all = false;
 
 switch ($_GET['type']) {
@@ -58,7 +58,7 @@ if ($media) {
 					$karma = 0;
 			}
 		}
-			
+
 		if ($show_all || $karma > -10) {
 			$image->url = Upload::get_url($image->type, $image->id, $image->version, $image->date, $image->mime);
 			$images[] = $image;

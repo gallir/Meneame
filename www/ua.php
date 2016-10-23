@@ -1,6 +1,6 @@
 <?
 $globals['skip_check_ip_noaccess'] = true;
-include('./config.php');
+include(__DIR__.'/config.php');
 
 echo "IP: " .$globals['user_ip'] . "<br/>";
 echo "User-Agent: " .$_SERVER['HTTP_USER_AGENT'] . "<br/>";

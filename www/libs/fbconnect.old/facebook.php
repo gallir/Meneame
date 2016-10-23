@@ -31,7 +31,7 @@
 // | For help with this library, contact developers-help@facebook.com          |
 // +---------------------------------------------------------------------------+
 
-include_once 'facebookapi_php5_restlib.php';
+include_once __DIR__.'/facebookapi_php5_restlib.php';
 
 define('FACEBOOK_API_VALIDATION_ERROR', 1);
 class Facebook {

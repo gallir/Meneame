@@ -20,12 +20,13 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
+include_once(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 $globals['cache-control'][] = 'max-age=3';
 
 $url_args = $globals['path'];
+
 if ($url_args[0] == 'story') {
 	array_shift($url_args); // Discard "story", TODO: but it should be discarded in dispatch and submnm
 }

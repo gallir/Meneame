@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (! defined('mnmpath')) {
-	include('../config.php');
+	include(__DIR__.'/../config.php');
 	include(mnminclude.'html1.php');
 }
 

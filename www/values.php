@@ -1,6 +1,6 @@
 <?php
 // Developed by @Hass, 2009
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 /*
@@ -113,7 +113,7 @@ echo '
 				'._("Tiempo que permanecen abiertos los comentarios en meneos descartados por abuso") . ': ' . print_time($globals['time_enabled_comments_status']['abuse']) . '<br/>
 				<br/>
 				'._("Número máximo de reportes de comentarios en las últimas 24 horas") . ': ' . $globals['max_reports_for_comments'] . '<br/>
-				<br/>				
+				<br/>
 				'._("Tiempo que debe pasar desde el registro para que un nuevo usuario pueda comentar") . ': ' . print_time($globals['min_time_for_comments']) . '<br/>
 		</fieldset>';
 

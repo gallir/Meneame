@@ -6,21 +6,21 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 stats_increment('api', true);
-	
+
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 3000) $rows = 3000; //avoid abuses
 } else $rows = 200;
-	
+
 
 if(!empty($_REQUEST['days']) && intval($_REQUEST['days'] <= 90))
 	$days = intval($_REQUEST['days']);
 else $days = 7;
 
-//$sql = "SELECT link_id, count(*) as votes FROM votes, links WHERE  ";	
+//$sql = "SELECT link_id, count(*) as votes FROM votes, links WHERE  ";
 //$sql .= "vote_type='links' AND vote_date > DATE_SUB(now(), INTERVAL $days DAY) AND ";
 //$sql .= "vote_link_id=link_id  AND link_status != 'discard' GROUP BY vote_link_id  ORDER BY votes DESC LIMIT $rows";
 

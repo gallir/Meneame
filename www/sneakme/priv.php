@@ -5,8 +5,8 @@
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-//include('../config.php');
-//include('common.php');
+//include(__DIR__.'/../config.php');
+//include(__DIR__.'/common.php');
 include(mnminclude.'html1.php');
 
 if (! $current_user->user_id) {

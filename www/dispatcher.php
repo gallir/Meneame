@@ -49,14 +49,14 @@ $routes = array(
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
 $script = $routes[$path[0]];
 
-if (empty($script) || !file_exists($script)) {
-	include_once 'config.php';
+include_once __DIR__.'/config.php';
+
+if (empty($script) || !is_file($script)) {
 	do_error("not found", 404, true);
 }
 
 $globals['script'] = $script;
-if ((include './'.$script) === FALSE) {
-	include_once 'config.php';
+
+if ((include __DIR__.'/'.$script) === false) {
 	do_error("bad request $script", 400, true);
 }
-

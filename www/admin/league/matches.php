@@ -4,7 +4,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require "common.php";
+require __DIR__."/common.php";
 
 if (!empty($_POST['process'])) {
 	$valid = false;
@@ -85,7 +85,7 @@ default:
 		t2.name as visitante,
 		t2.shortname as visitante_short,
 		l.name as liga
-	FROM 
+	FROM
 		" . Match::TABLE ." m
 	INNER JOIN " . Team::TABLE ." t1 ON (t1.id = m.local)
 	INNER JOIN " . Team::TABLE ." t2 ON (t2.id = m.visitor)

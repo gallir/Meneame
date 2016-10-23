@@ -21,7 +21,7 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 // Basic initialization
 //mb_internal_encoding('UTF-8');
 /*
- * Use insteadi in your php.ini: 
+ * Use insteadi in your php.ini:
 
 default_charset = "UTF-8"
 [mbstring]
@@ -86,7 +86,7 @@ if($_SERVER['HTTP_HOST']) {
 	}
 
 	// Check mobile/TV versions
-	if ( ! $globals['bot'] 
+	if ( ! $globals['bot']
 		&& (isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT']))
 			&& ! preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT']) ) { // Don't treat iPad as mobiles
 		$globals['mobile'] = 1;
@@ -161,14 +161,14 @@ function __autoload($class) {
 				'S3' => 'S3.php',
 	);
 
-	if (isset($classfiles[$class]) && file_exists(mnminclude.$classfiles[$class])) {
+	if (isset($classfiles[$class]) && is_file(mnminclude.$classfiles[$class])) {
 		require_once(mnminclude.$classfiles[$class]);
 	} else {
 		// Build the include for "standards" frameworks wich uses path1_path2_classnameclassName
 		$filePath = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 		$includePaths = explode(PATH_SEPARATOR, get_include_path());
 		foreach($includePaths as $includePath){
-			if(file_exists($includePath . DIRECTORY_SEPARATOR . $filePath)){
+			if(is_file($includePath . DIRECTORY_SEPARATOR . $filePath)){
 				require_once($filePath);
 				return;
 			}

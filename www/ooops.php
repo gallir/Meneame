@@ -9,7 +9,7 @@
 // Don't check the user is logged
 $globals['no_auth'] = true;
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 $errn = $_GET{"e"};
@@ -51,7 +51,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 			$pathname = $path.$name;
 			$thumbname = "$path/$filename";
 
-			if (! file_exists($pathname)) {
+			if (! is_file($pathname)) {
 				syslog(LOG_INFO, "Meneame, ooops, couldn't find $pathname");
 				$errn = 404;
 				break;
@@ -76,7 +76,7 @@ if (preg_match("/$cache_dir/", $_SERVER['REQUEST_URI'])) {
 				$_GET['id'] = $parts[0];
 				$_GET['time'] = $parts[1];
 				$_GET['size'] = $parts[2];
-				require_once('backend/get_avatar.php');
+				require_once(__DIR__.'/backend/get_avatar.php');
 				die;
 			}
 			$errn = 404;

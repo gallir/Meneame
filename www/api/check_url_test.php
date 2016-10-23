@@ -9,7 +9,7 @@
 <?php
 // page for chech_url.php tests!
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 echo '<script type="text/javascript" src="http://'.get_server_name().'/api/check_url.js.php"></script>';
 
 ?>

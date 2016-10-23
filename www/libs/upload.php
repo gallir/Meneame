@@ -65,7 +65,7 @@ class Upload {
 	static function create_cache_dir($key = false) {
 		global $globals;
 
-		if (file_exists(Upload::get_cache_dir($key))) return true;
+		if (is_dir(Upload::get_cache_dir($key))) return true;
 		$dir = Upload::get_cache_dir($key);
 		$old_mask = umask(0);
 		$res = @mkdir($dir, 0777, true);
@@ -201,7 +201,7 @@ class Upload {
 		if ($this->type == 'private' || $this->access == 'private') return false;
 		$pathname = $this->pathname();
 
-		if (! file_exists($pathname)) {
+		if (! is_file($pathname)) {
 			if (! $this->restore()) return false;
 		}
 
@@ -255,7 +255,7 @@ class Upload {
 		global $current_user, $globals;
 
 		$pathname = Upload::get_cache_dir() . '/tmp/' . $filename;
-		if (! file_exists($pathname)) return false;
+		if (! is_file($pathname)) return false;
 
 		// Check __again__ the limits
 		if ($current_user->user_id > 0) {
@@ -271,7 +271,7 @@ class Upload {
 
 			// Check if it exists a thumb and save it
 			$thumbname = Upload::get_cache_dir() . "/tmp/tmp_thumb-$filename";
-			if (file_exists($thumbname)) {
+			if (is_file($thumbname)) {
 				@unlink($thumbname);
 			}
 			$this->create_thumbs();
@@ -313,11 +313,11 @@ class Upload {
 	}
 
 	function file_exists() {
-		return file_exists($this->pathname());
+		return is_file($this->pathname());
 	}
 
 	function readfile() {
-		if (! file_exists($this->pathname())) {
+		if (! is_file($this->pathname())) {
 			$this->restore();
 		}
 		return readfile($this->pathname());
@@ -399,7 +399,7 @@ class Upload {
 			}
 		}
 
-		if ($pathname != $original && file_exists($pathname)) {
+		if ($pathname != $original && is_file($pathname)) {
 			 if (! @rename($pathname, $original)) {
 				syslog(LOG_INFO, "Error renaming file $pathname -> $original");
 				@unlink($pathname);

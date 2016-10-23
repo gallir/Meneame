@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 $page_size = $globals['page_size'];
@@ -55,7 +55,7 @@ if ($globals['memcache_host'] && get_current_page() < 4) {
 	$memcache_key = 'topcommented_'.$globals['site_shortname'].$from.'_'.get_current_page();
 }
 
-if (!($memcache_key 
+if (!($memcache_key
 		&& ($rows = memcache_mget($memcache_key.'rows'))
 		&& ($links = unserialize(memcache_mget($memcache_key)))) ) {
 	// It's not in memcache

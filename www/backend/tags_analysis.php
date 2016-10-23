@@ -1,13 +1,13 @@
 <?php
 // The source code packaged with this file is Free Software, Copyright (C) 2009 by
-// Ricardo Galli <gallir at uib dot es> and 
+// Ricardo Galli <gallir at uib dot es> and
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 
-include_once('../config.php');
+include_once(__DIR__.'/../config.php');
 require(mnminclude.'search.php');
 
 header('Content-Type: text/html; charset=utf-8');
@@ -44,7 +44,7 @@ foreach ($a as $w) {
 	$r['freq'] = round(100*$h/$results['docs'],1);
 	if ($r['freq'] < $results['min_freq']) {
 		$results['min_freq'] = $r['freq'];
-	} 
+	}
 	if ($r['freq'] > $results['max_freq']) {
 		$results['max_freq'] = $r['freq'];
 	}

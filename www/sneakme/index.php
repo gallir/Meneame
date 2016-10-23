@@ -12,8 +12,8 @@
 //		page with only one post.
 
 
-include_once('../config.php');
-include('common.php');
+include_once(__DIR__.'/../config.php');
+include(__DIR__.'/common.php');
 
 
 $argv = $globals['path'];
@@ -23,7 +23,7 @@ $argv[0] = clean_input_string($argv[0]);
 
 if ($argv[0] == _priv) {
 	// Load priv.php
-	include('priv.php');
+	include(__DIR__.'/priv.php');
 	die;
 }
 

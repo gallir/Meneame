@@ -42,7 +42,7 @@ define('config_done', 1);
 // $globals['force_ssl'] = True;
 
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
-$globals['ssl_server'] = False; 
+$globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
@@ -412,22 +412,29 @@ if(stripos(setlocale(LC_CTYPE, 0), "utf-8") === false) {
 
 // There is another config file, this is called for defaults (used by mobile)
 if (!isset($globals['basic_config']) || !$globals['basic_config']) {
-	define("mnmpath", dirname(__FILE__));
-	define("mnminclude", dirname(__FILE__).'/libs/');
+	define("mnmpath", __DIR__);
+	define("mnminclude", mnmpath.'/libs/');
 	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
-	@include('local.php');
+	if (is_file(mnmpath.'/local.php')) {
+        include(mnmpath.'/local.php');
+    }
+
 	if (php_sapi_name() == 'cli') {
 		$globals['cli'] = True;
-		/* Definition only for scripts executed "off-line" */
-		@include('cli-local.php');
+
+        if (is_file(mnmpath.'/cli-local.php')) {
+            include(mnmpath.'/cli-local.php');
+        }
 	} else {
 		$globals['cli'] = False;
-		@include($_SERVER['SERVER_NAME'].'-local.php');
-	}
-		
-	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
+        if (is_file(mnmpath.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
+            include(mnmpath.'/'.$_SERVER['SERVER_NAME'].'-local.php');
+        }
+	}
+
+	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 	include mnminclude.'init.php';
 	include mnminclude.'login.php';
@@ -435,6 +442,3 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 	// For production servers
 	$db->hide_errors();
 }
-
-
-

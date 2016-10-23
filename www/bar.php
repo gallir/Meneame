@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 
 $globals['force_ssl'] = False; // We open the bar always as http to allow loading no https pages
 include(mnminclude.'html1.php');

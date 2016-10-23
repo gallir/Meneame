@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+include_once(__DIR__.'/../config.php');
 
 $id = $db->escape($_GET['id']);
 $annotation = new Annotation($id);

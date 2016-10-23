@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 include(mnminclude.'sneak.php');
 
 // The client requests version number
@@ -72,7 +72,7 @@ krsort($events);
 $counter=0;
 echo "new_data = ([";
 foreach ($events as $key => $val) {
-	if ($counter>0) 
+	if ($counter>0)
 		echo ",";
 	echo "{" . $val . "}";
 	$counter++;
@@ -101,7 +101,7 @@ function get_votes($dbtime, $link_id) {
 		if ($event->vote_value >= 0) {
 			$type = 'vote';
 			$who = $user;
-		} else { 
+		} else {
 			$type = 'problem';
 			$who = get_negative_vote($event->vote_value);
 		}

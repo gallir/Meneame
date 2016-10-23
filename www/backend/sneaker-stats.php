@@ -104,7 +104,7 @@ function do_last($string) {
 function do_values() {
 	global $db, $current_user, $globals;
 
-	return $globals['scheme'].'//' . get_server_name().$globals['base_url']. 'values.php'; 
+	return $globals['scheme'].'//' . get_server_name().$globals['base_url']. 'values.php';
 }
 
 function do_stats1($string) {
@@ -162,7 +162,7 @@ function do_statsu($string) {
 		$user_login = $db->escape($array[1]);
 		$user_id = $db->get_var("select user_id from users where user_login='$user_login'");
 	}
-	if (!$user_id > 0) { 
+	if (!$user_id > 0) {
 		$user_id = $current_user->user_id;
 		$user_login = $current_user->user_login;
 	}
@@ -170,7 +170,7 @@ function do_statsu($string) {
 	$user->id = $user_id;
 	$user->read();
 	$user->all_stats();
-	
+
 	$comment = '<strong>'.sprintf(_('Estadísticas de %s'), $user_login). '</strong>. ';
 	$comment .= _('karma') . ':&nbsp;' . $user->karma . ', ';
 	if ($user->total_links > 1) {
@@ -200,14 +200,14 @@ function do_top($string) {
 }
 
 function do_cabal($string) {
-	require_once('../libs/cabal.php');
+	require_once(__DIR__.'/../libs/cabal.php');
 	$i = rand(0, count($cabal_messages) -1);
 	$comment = '<b>'. _('el cabal dice'). '</b>: <i>' . $cabal_messages[$i] . '</i>';
 	return $comment;
 }
 
 function do_ojo($string) {
-	require_once('./ojo.php');
+	require_once(__DIR__.'/ojo.php');
 	$i = rand(0, count($ojo_messages) -1);
 	$comment = '<i>'._('Daría un ojo por saber cuánto es de leyenda y cuanto de verdad '). ' ' . $ojo_messages[$i] . '. <b>En serio.</b></i>';
 	return $comment;
@@ -270,7 +270,7 @@ function do_rae($string) {
 			$str = preg_replace('/<\/p>/i', '[br/]', $str); // Add marker for newlines (br)
 			$str = preg_replace('/<!\-\-.+?\-\->/', '', $str); // Remove comments
 			$str = strip_tags($str);
-			$str = preg_replace('/[\n\r]/', '', $str); 
+			$str = preg_replace('/[\n\r]/', '', $str);
 			$str = preg_replace('/"/', '&quot;', $str);
 			$str = preg_replace('/\[br\/\]/i', '<br/>', $str); // Replace marker for <br/>
 			if (strlen($str) > 0) {

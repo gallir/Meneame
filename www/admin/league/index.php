@@ -5,7 +5,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 /* vim:set noet ci pi sts=0 sw=4 ts=4: */
 
-require "common.php";
+require __DIR__."/common.php";
 
 if (!empty($_POST['process'])) {
 	$valid = false;
