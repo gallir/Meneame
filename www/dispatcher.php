@@ -1,6 +1,7 @@
 <?php
 $routes = array(
 	''			=> 'index.php',
+	'index.php'	=> 'index.php',
 	'story'		=> 'story.php',
 	'submit'	=> 'submit.php',
 	'subedit'	=> 'subedit.php',
