@@ -1707,7 +1707,7 @@ font-weight: bold;
 }
 
 .news-details span, .news-details div, .comment-votes-info span, .comment-votes-info div, .comment-meta span {
-
+    vertical-align: top;
 }
 
 .news-details span {
