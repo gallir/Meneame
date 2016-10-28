@@ -348,11 +348,11 @@ function do_favorites () {
 	do_user_subheader(array(_('envíos propios') => get_user_uri($user->username, 'history'), _('votados') => get_user_uri($user->username, 'shaken'), _('favoritos') => get_user_uri($user->username, 'favorites'), _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')), 2,
 		'rss?favorites='.$user->id.'&amp;option=favorites&amp;url=source', _('favoritos en rss2'));
 	$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
-	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY link_date DESC LIMIT $offset,$page_size");
+	$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY favorite_link_readed ASC, link_date DESC LIMIT $offset,$page_size");
 	if ($links) {
 		foreach($links as $link_id) {
 			$link = Link::from_db($link_id);
-			$link->print_summary('short');
+			$link->print_summary('short', 0, false, 'link_summary_favorites.html');
 		}
 	}
 }

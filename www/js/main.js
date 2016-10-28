@@ -307,6 +307,26 @@ function add_remove_fav(element, type, id) {
 	reportAjaxStats('html', "get_favorite");
 }
 
+function change_fav_readed(element, type, id) {
+	var url = base_url + 'backend/get_favorite_readed';
+	$.post(url,
+		{ id: id, user: user_id, key: base_key, type: type },
+		function(data) {
+			if (data.error) {
+				mDialog.notify("{% trans _('Error:') %} "+data.error, 5);
+				return;
+			}
+			if (data.value) {
+				$('#'+element).addClass("on");
+				$('#'+element).closest(".news-summary").addClass("off");
+			} else {
+				$('#'+element).removeClass("on");
+				$('#'+element).closest(".news-summary").removeClass("off");
+			}
+		}
+		, "json");
+}
+
 /* Get voters by Beldar <beldar.cat at gmail dot com>
 ** Generalized for other uses (gallir at gmail dot com)
 */
@@ -1689,12 +1709,13 @@ var fancyBox = new function () {
 
 			data = decode_data(readStorage("n_"+user_id));
 
-			var a = ['privates', 'posts', 'comments', 'friends'];
+			var a = ['privates', 'posts', 'comments', 'friends', 'favorites'];
 			for (var i=0; i < a.length; i++) {
 				field = a[i];
 				var counter = (data && data[field]) ? data[field] : 0;
 				$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
 			}
+
 			$e.show();
 			check_counter = 0;
 		} else {
@@ -1801,11 +1822,11 @@ var fancyBox = new function () {
 	function decode_data(str) {
 		if (! str) return null;
 		var a = str.split(",");
-		return {total: a[0], privates: a[1], posts: a[2], comments: a[3], friends: a[4]};
+		return {total: a[0], privates: a[1], posts: a[2], comments: a[3], friends: a[4], favorites: a[5]};
 	}
 
 	function encode_data(data) {
-		var a = [data.total, data.privates, data.posts, data.comments, data.friends];
+		var a = [data.total, data.privates, data.posts, data.comments, data.friends, data.favorites];
 		return a.join(",");
 	}
 
@@ -1814,7 +1835,9 @@ var fancyBox = new function () {
 			privates: "{% trans _('privados nuevos') %}",
 			posts: "{% trans _('respuestas a notas') %}",
 			comments: "{% trans _('respuestas a comentarios') %}",
-			friends: "{% trans _('nuevos amigos') %}"
+			friends: "{% trans _('nuevos amigos') %}",
+			favorites: "{% trans _('noticias guardadas') %}"
+
 		};
 		return a[field];
 	}
