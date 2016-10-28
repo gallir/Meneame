@@ -6,7 +6,7 @@
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1-mobile.php');
 
 
@@ -65,7 +65,7 @@ function do_profile() {
 
 
 
-	echo '<dl>';	
+	echo '<dl>';
 	if(!empty($user->username)) {
 		echo '<dt>'._('usuario').':</dt><dd>';
 		if (!empty($url)) {

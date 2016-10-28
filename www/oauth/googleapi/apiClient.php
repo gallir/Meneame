@@ -29,7 +29,7 @@ set_include_path("$cwd" . PATH_SEPARATOR . get_include_path());
 
 require_once "config.php";
 // If a local configuration file is found, merge it's values with the default configuration
-if (file_exists($cwd . '/local_config.php')) {
+if (is_file($cwd . '/local_config.php')) {
   $defaultConfig = $apiConfig;
   require_once ($cwd . '/local_config.php');
   $apiConfig = array_merge($defaultConfig, $apiConfig);
@@ -134,7 +134,7 @@ class apiClient {
 
   /**
    * Construct the OAuth 2.0 authorization request URI.
-   * @return string 
+   * @return string
    */
   public function createAuthUrl() {
     $service = $this->prepareService();
@@ -245,7 +245,7 @@ class apiClient {
     $apiConfig['oauth2_client_id'] = $clientId;
     $this->auth->clientId = $clientId;
   }
-  
+
   /**
    * Set the OAuth 2.0 Client Secret.
    * @param string $clientSecret

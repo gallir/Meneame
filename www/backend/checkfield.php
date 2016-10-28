@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
 $type=clean_input_string($_REQUEST['type']);
@@ -37,7 +37,7 @@ switch ($type) {
 			echo _('dirección de correo no válida');
 			return;
 		}
-		if(!($current_user->user_id > 0 && $current_user->user_email == $name) 
+		if(!($current_user->user_id > 0 && $current_user->user_email == $name)
 			&& email_exists($name, $current_user->user_id == 0)) { // Only check for previuos used if the user is not authenticated
 			echo _('dirección de correo duplicada, o fue usada recientemente');
 			return;

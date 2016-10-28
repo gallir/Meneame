@@ -9,7 +9,7 @@
 // Use the alternate server for api, if it exists
 // $globals['alternate_db_server'] = 'backend';
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 $id = intval($_GET['id']);
 if (! $id) die;

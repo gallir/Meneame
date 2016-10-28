@@ -10,7 +10,7 @@ define("mnmpath", dirname(__FILE__));
 define("mnminclude", dirname(__FILE__).'/libs/');
 ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
 
-$globals['basic_config'] = true; include('../config.php');
+$globals['basic_config'] = true; include(__DIR__.'/../config.php');
 $globals['site_name'] = 'Menéame reduced';
 
 // Specify you base url, "/" if is the root document
@@ -31,7 +31,7 @@ $globals['css_color'] = '';
 $globals['html_main'] = 'html1-mobile.php';
 $globals['comments_page_size'] = 50;
 
-@include('local.php');
+@include(__DIR__.'/local.php');
 @include($_SERVER['SERVER_NAME'].'-local.php');
 //@include($_SERVER['SERVER_ADDR'].'-local.php');
 

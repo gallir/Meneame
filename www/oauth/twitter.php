@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -20,7 +20,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once('base.php');
+require_once(__DIR__.'/base.php');
 
 class TwitterOAuth extends OAuthBase {
 
@@ -44,7 +44,7 @@ class TwitterOAuth extends OAuthBase {
 	function authRequest() {
 		global $globals;
 		try {
-			if (($request_token_info = 
+			if (($request_token_info =
 					$this->oauth->getRequestToken($this->request_token_url,
 						$globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
 				// if [oauth_callback_confirmed] => true then is oauth 1.0a
@@ -55,10 +55,10 @@ class TwitterOAuth extends OAuthBase {
 				header("Location: ".$this->authorize_url."?oauth_token=$this->token");
 				exit;
 			} else {
-				do_error(_('error obteniendo tokens'), false, false);	
+				do_error(_('error obteniendo tokens'), false, false);
 			}
 		} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);	
+				do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);
 		}
 	}
 
@@ -73,10 +73,10 @@ class TwitterOAuth extends OAuthBase {
 			try {
 				$access_token_info = $this->oauth->getAccessToken($this->access_token_url);
 			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);	
+				do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);
 			}
 		} else {
-			do_error(_('acceso denegado'), false, false);	
+			do_error(_('acceso denegado'), false, false);
 		}
 
 		$this->token = $access_token_info['oauth_token'];
@@ -88,14 +88,14 @@ class TwitterOAuth extends OAuthBase {
 			try {
 				$data = $this->oauth->fetch($this->credentials_url);
 			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);	
+				do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);
 			}
 
 			if($data){
 				$response_info = $this->oauth->getLastResponse();
 				$response = json_decode($response_info);
 				if ($access_token_info['screen_name'] != $response->screen_name) {
-					do_error(_('datos incorrectos') . " $this->service", false, false); 
+					do_error(_('datos incorrectos') . " $this->service", false, false);
 				}
 				$this->url = $response->url;
 				$this->names = $response->name;

@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 $globals['ads'] = false;
@@ -20,7 +20,7 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 do_header(_('apuntes de blogs') . ' | ' . _('menéame'));
 do_tabs('main', _('apuntes'), true);
 
-/*** SIDEBAR 
+/*** SIDEBAR
 echo '<div id="sidebar">';
 do_banner_right();
 do_best_stories();

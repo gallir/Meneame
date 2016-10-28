@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 include_once(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -44,7 +44,7 @@ if ($current_user->user_id == 0 && $link->status != 'published') {
 		error(_('Los votos anónimos están temporalmente deshabilitados'));
 	} else {
 		// Check that there are not too much annonymous votes
-		if ($link->status == 'published') $anon_to_user_votes = max(10, $globals['anon_to_user_votes']); // Allow more ano votes if published. 
+		if ($link->status == 'published') $anon_to_user_votes = max(10, $globals['anon_to_user_votes']); // Allow more ano votes if published.
 		if ($link->anonymous >	$link->votes * $globals['anon_to_user_votes']) {
 			error(_('Demasiados votos anónimos para esta noticia, regístrese como usuario o inténtelo más tarde'));
 		}
@@ -74,12 +74,12 @@ if ($link->status == 'published')  $freq *= 2; // Allow to play a little more if
 
 // Check for clicks vs votes
 // to avoid "cowboy votes" without reading the article
-if (!empty($link->url) && $globals['click_counter'] 
+if (!empty($link->url) && $globals['click_counter']
 	&& ! $link->user_clicked()) {
 	if ($link->votes > 3 && $link->negatives  > 2 && $current_user->user_id > 0 && $link->votes/10 < $link->negatives && $link->get_clicks() < $link->total_votes * 1.5) {
 		error(_('enlace no leído, con muchos negativos'));
-	} elseif ( (empty($_GET['l']) || $_GET['l'] != $link->id) 
-		// Check is not in "story" page 
+	} elseif ( (empty($_GET['l']) || $_GET['l'] != $link->id)
+		// Check is not in "story" page
 		&& $link->total_votes > $link->get_clicks()) {
 		// Don't allow to vote if it has less clicks than votes
 		error(_('no leído, y con más votos que lecturas').' ('.$link->get_clicks().' < '.$link->total_votes.')');

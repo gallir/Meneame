@@ -9,13 +9,13 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
+include(__DIR__.'/config.php');
 
 if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 300) $rows = 100; //avoid abuses
 } else $rows = 100;
-	
+
 $if_modified = get_if_modified();
 
 // All comments
@@ -53,17 +53,17 @@ if ($entries) {
 		echo "		<description></description>\n";
 		echo "	</item>\n\n";
 	}
-} 
+}
 
 do_footer();
 
 function do_header($title) {
 	global $if_modified, $last_modified, $dblang, $globals;
 
-	if (!$last_modified > 0) { 
+	if (!$last_modified > 0) {
 		if ($if_modified > 0)
 			$last_modified = $if_modified;
-		else 
+		else
 			$last_modified = time();
 	}
 	if ($if_modified) {

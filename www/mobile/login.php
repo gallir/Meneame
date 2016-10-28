@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'ts.php');
 
@@ -57,7 +57,7 @@ function do_login() {
 	$previous_login_failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
 
 	echo '<form action="'.get_auth_link().'login.php" id="xxxthisform" method="post">'."\n";
-	
+
 	if ($_POST["processlogin"] == 1) {
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);

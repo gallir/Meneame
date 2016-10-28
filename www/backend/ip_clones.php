@@ -1,14 +1,14 @@
 <?php
 // The source code packaged with this file is Free Software, Copyright (C) 2009 by
-// Ricardo Galli <gallir at uib dot es> and 
+// Ricardo Galli <gallir at uib dot es> and
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 
-include_once('../config.php');
-include_once('pager.php');
+include_once(__DIR__.'/../config.php');
+include_once(__DIR__.'/pager.php');
 
 header('Content-Type: text/html; charset=utf-8');
 

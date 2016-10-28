@@ -7,10 +7,10 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 $globals['skip_check_ip_noaccess'] = true;
-include('../config.php');
+include(__DIR__.'/../config.php');
 include(mnminclude . 'html1.php');
 require_once(mnminclude . 'ban.php');
-include('libs/admin.php');
+include(__DIR__.'/libs/admin.php');
 
 do_header(_('Admin logs'));
 
@@ -87,7 +87,7 @@ function do_ban_list($selected_tab, $search, $orderby, $key) {
 	$rows = $db->get_var("SELECT count(*) FROM bans " . $where);
 	$sql = "SELECT * FROM bans " . $where . " ORDER BY $orderby $order LIMIT $offset,$page_size";
 	$bans = $db->get_results($sql);
-	
+
 	Haanga::Load('admin/bans/list.html', compact('bans', 'selected_tab', 'key', 'search'));
 
 	do_pages($rows, $page_size, false);

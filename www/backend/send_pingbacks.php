@@ -1,5 +1,5 @@
 <?php
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 $remote = $_SERVER["REMOTE_ADDR"];
 $local_ips = gethostbynamel($_SERVER["HTTP_HOST"]);

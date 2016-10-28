@@ -1,6 +1,6 @@
 <?php
 if (! defined('mnmpath')) {
-	include_once('../config.php');
+	include_once(__DIR__.'/../config.php');
 }
 
 include_once(mnmpath.'/libs/avatars.php');

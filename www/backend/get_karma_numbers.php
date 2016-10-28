@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+include_once(__DIR__.'/../config.php');
 
 if (empty($current_user->user_login)) {
 	echo _('usuario no identificado');

@@ -12,7 +12,7 @@ $globals['no_auth'] = true;
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'backend';
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 
 switch ($_REQUEST['type']) {
@@ -36,7 +36,7 @@ if ($id ) {
 	$inner_join = "SELECT comment_id FROM comments WHERE comment_link_id = $id $order LIMIT $offset, $size";
 	$sql = "SELECT conversation_to as `to`, count(*) as t FROM conversations INNER JOIN ($inner_join) as comment_id ON comment_id = conversation_to WHERE conversation_type='$type' GROUP BY conversation_to";
 } elseif (! empty($_POST['ids'])){
-	
+
 	// Don't count answers (posts) of disabled users
 	if ($type == 'post') {
 		$extra_from = ', posts, users';

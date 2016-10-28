@@ -6,7 +6,7 @@
 //				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 
 if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
@@ -54,11 +54,11 @@ switch ($option) {
 		$chars = $db->get_col("select distinct(left(ucase(name), 1)) from subs");
 
 		// Check if we must show just those beginning with a letter
-		if (!empty($_GET['c']) && 
+		if (!empty($_GET['c']) &&
 			($char_selected = substr(clean_input_string($_GET['c']), 0, 1)) ) {
 			$extra = "subs.name like '$char_selected%' and";
 			$rows = $db->get_var("select count(*) from subs where $extra subs.sub = 1 and created_from = ".SitesMgr::my_id());
-		} else { 
+		} else {
 			$extra = '';
 			$rows = -1;
 		}
@@ -104,7 +104,7 @@ function print_tabs($option) {
 	else $can_edit = false;
 
 	$items = array();
-	
+
 	if ($current_user->user_id) {
 		$suscriptions_num = count(SitesMgr::get_subscriptions($current_user->user_id));
     	$items[] = array('id' => 0, 'url' => 'subs?subscribed', 'title' => _('suscripciones')." [$suscriptions_num]");

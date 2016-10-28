@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 header('Content-Type: text/xml; charset=utf-8');
 
 echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";

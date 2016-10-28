@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,7 +28,7 @@ $op = clean_input_string($_GET['op']);
 
 switch ($service) {
     case 'gplus':
-		require_once('gplus.php');
+		require_once(__DIR__.'/gplus.php');
 		$req = new GplusOAuth();
 		if ($op == 'init') {
 			$req->authRequest();
@@ -38,7 +38,7 @@ switch ($service) {
         break;
 	case 'twitter':
 	default:
-		require_once('twitter.php');
+		require_once(__DIR__.'/twitter.php');
 		$req = new TwitterOAuth();
 		if ($op == 'init') {
 			$req->authRequest();

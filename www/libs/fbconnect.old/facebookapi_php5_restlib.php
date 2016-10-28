@@ -32,7 +32,7 @@
 // +---------------------------------------------------------------------------+
 //
 
-include_once 'jsonwrapper/jsonwrapper.php';
+include_once __DIR__.'/jsonwrapper/jsonwrapper.php';
 
 class FacebookRestClient {
   public $secret;
@@ -3449,7 +3449,7 @@ function toggleDisplay(id, type) {
    */
   public function call_upload_method($method, $params, $file, $server_addr = null) {
     if (!$this->pending_batch()) {
-      if (!file_exists($file)) {
+      if (!is_file($file)) {
         $code =
           FacebookAPIErrorCodes::API_EC_PARAM;
         $description = FacebookAPIErrorCodes::$api_error_descriptions[$code];

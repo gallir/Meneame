@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 include_once(mnminclude.'sneak.php');
 include_once(mnminclude.'ban.php');
 
@@ -155,7 +155,7 @@ function check_chat() {
 		}
 
 		if (preg_match('/^!/', $comment)) {
-			require_once('sneaker-stats.php');
+			require_once(__DIR__.'/sneaker-stats.php');
 			if(!($comment = check_stats($comment))) {
 				send_chat_warn(_('comando no reconocido'));
 			} else {
@@ -297,7 +297,7 @@ function get_chat() {
 // Check last votes
 function get_votes($dbtime) {
 	global $db, $globals, $events, $last_timestamp, $max_items, $current_user;
-	
+
 	if ($globals['subs']) {
 		$filter = 'and sub_statuses.id in ('.$globals['subs'].')';
 	} else {

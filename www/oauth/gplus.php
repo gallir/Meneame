@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -20,9 +20,9 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once('base.php');
-require_once('googleapi/apiClient.php');
-require_once('googleapi/contrib/apiPlusService.php');
+require_once(__DIR__.'/base.php');
+require_once(__DIR__.'/googleapi/apiClient.php');
+require_once(__DIR__.'/googleapi/contrib/apiPlusService.php');
 
 class GPlusOAuth extends OAuthBase {
 
@@ -51,7 +51,7 @@ class GPlusOAuth extends OAuthBase {
 		try {
 			$this->client->authenticate();
 		} catch (Exception $e) {
-			do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);	
+			do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);
 		}
 	}
 
@@ -59,19 +59,19 @@ class GPlusOAuth extends OAuthBase {
 		global $globals, $db;
 
 		if (empty($_GET['code'])) {
-			do_error(_('acceso denegado'), false, false);	
+			do_error(_('acceso denegado'), false, false);
 		}
 
 		try {
 			$this->client->setAccessToken($this->client->authenticate());
 			if (! ($access_token = $this->client->getAccessToken())) {
-				do_error(_('acceso denegado'), false, false);	
+				do_error(_('acceso denegado'), false, false);
 			}
 			$response = $this->gplus->people->get('me');
 			$this->uid = $response['id'];
 			$this->username = User::get_valid_username($response['displayName']);
 		} catch (Exception $e) {
-			do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);	
+			do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);
 		}
 
 		$db->transaction();

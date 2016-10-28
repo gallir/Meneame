@@ -1,9 +1,9 @@
 <?php
 
 $globals['skip_check_ip_noaccess'] = true;
-include('../config.php');
+include(__DIR__.'/../config.php');
 include(mnminclude . 'html1.php');
-include('libs/admin.php');
+include(__DIR__.'/libs/admin.php');
 
 header('Content-Type: text/html; charset=utf-8');
 

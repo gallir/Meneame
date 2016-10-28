@@ -9,7 +9,7 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
+include(__DIR__.'/config.php');
 
 include(mnminclude.'geo.php');
 
@@ -22,7 +22,7 @@ if(!empty($_REQUEST['rows'])) {
 	$rows = intval($_REQUEST['rows']);
 	if ($rows > 300) $rows = 100; //avoid abuses
 } else $rows = 100;
-	
+
 $if_modified = get_if_modified();
 if ($if_modified) {
 	if ($if_modified < time() - 250000) { // Last 3 days at most
@@ -128,10 +128,10 @@ do_footer();
 function do_header($title) {
 	global $if_modified, $last_modified, $dblang, $globals;
 
-	if (!$last_modified > 0) { 
+	if (!$last_modified > 0) {
 		if ($if_modified > 0)
 			$last_modified = $if_modified;
-		else 
+		else
 			$last_modified = time();
 	}
 	header('X-If-Modified: '. gmdate('D, d M Y H:i:s',$if_modified));

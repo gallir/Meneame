@@ -1,5 +1,5 @@
 <?php
-	include('config.php');
+	include(__DIR__.'/config.php');
 	include(mnminclude.'html1.php');
 	do_header(_('FAQ') . ' | ' . _('menéame'));
 	$q = 1;

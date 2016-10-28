@@ -5,7 +5,7 @@
 // You can get copies of the licenses here:
 //				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include_once('config.php');
+include_once(__DIR__.'/config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'geo.php');
 include(mnminclude.'favorites.php');
@@ -428,7 +428,7 @@ function do_conversation () {
 		'comments_rss?answers_id='.$user->id, _('conversación en rss2'));
 	$rows = -1; //$db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$conversation = "SELECT distinct(conversation_from) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment' ORDER BY conversation_time desc LIMIT $offset,$page_size";
-	
+
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments INNER JOIN links ON (link_id = comment_link_id) INNER JOIN ($conversation) AS convs ON convs.conversation_from = comments.comment_id");
 	if ($comments) {
 		$last_read = print_comment_list($comments, $user);
@@ -550,7 +550,7 @@ function do_friends($option) {
 	}
 	echo '<div style="padding: 5px 0px 10px 5px">';
 	echo '<div id="'.$prefered_type.'-container">'. "\n";
-	require('backend/get_friends_bars.php');
+	require(__DIR__.'/backend/get_friends_bars.php');
 	echo '</div>'. "\n";
 	echo '</div>'. "\n";
 

@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 include_once(mnminclude.'ban.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
@@ -61,7 +61,7 @@ if (mb_strlen($text) < 5) {
 
 // Testinf mode print message an die
 if (isset($_REQUEST['test'])) {
-	echo 'OK: ' . $text; 
+	echo 'OK: ' . $text;
 	die;
 }
 

@@ -6,7 +6,7 @@
 //				http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
+include(__DIR__.'/config.php');
 include(mnminclude.'html1-mobile.php');
 include(mnminclude.'avatars.php');
 
@@ -105,7 +105,7 @@ function show_profile() {
 	}
 
 
-	
+
 	echo '<p><label for="password">' . _("nueva clave") . ':</label><br />' . "\n";
 	echo '<input type="password" autocomplete="off" id="password" name="password" size="25" onkeyup="return securePasswordCheck(this.form.password);"/></p>' . "\n";
 
@@ -115,7 +115,7 @@ function show_profile() {
 	echo '<p><input type="submit" name="save_profile" value="'._('actualizar').'"/></p>';
 	echo '</fieldset>';
 	echo "</form></div>\n";
-	
+
 }
 
 
@@ -124,12 +124,12 @@ function save_profile() {
 	$errors = 0; // benjami: control added (2005-12-22)
 	$new_pass=false;
 	$messages = '';
-	
+
 	$form_hash = md5($site_key.$user->id.mnminclude);
 
-	if(!isset($_POST['save_profile']) || !isset($_POST['process']) || 
+	if(!isset($_POST['save_profile']) || !isset($_POST['process']) ||
 		($_POST['user_id'] != $current_user->user_id) ) return;
-		
+
 	if ( empty($_POST['form_hash']) || $_POST['form_hash'] != $form_hash ) {
 		$messages .= '<p class="form-error">'._('Falta la clave de control').'</p>';
 		$errors++;
@@ -151,7 +151,7 @@ function save_profile() {
 			$user->username=trim($_POST['username']);
 		}
 	}
-	
+
 	if($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
 		$messages .= '<p class="form-error">'._('el correo electrónico no es correcto').'</p>';
 		$errors++;
@@ -204,7 +204,7 @@ function save_profile() {
 		}
 		$user->store();
 		$user->read();
-		if ($current_user->user_login != $user->username || 
+		if ($current_user->user_login != $user->username ||
 					$current_user->user_email != $user->email || $new_pass) {
 			$current_user->Authenticate($user->username, $new_pass);
 		}

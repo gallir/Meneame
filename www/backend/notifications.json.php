@@ -9,7 +9,7 @@
 // Use the alternate server for api, if it exists
 //$globals['alternate_db_server'] = 'backend';
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 $db->connect_timeout = 3;
 
 if (! $current_user->user_id) die;

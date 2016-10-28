@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+include_once(__DIR__.'/../config.php');
 
 // Designed originally to download and cache Twitter oembed
 
@@ -37,7 +37,7 @@ $res = get_url($url);
 if (! $res || ! $res['content'] || $res['http_code'] != 200) {
 	$cache->time = time() + 3600; // if it failed, cache for one hour
 	$cache->text = '{}'; // Return empty object
-	
+
 } else {
 	$cache->time = time() + 86400 * 7; // 7 days in cache
 	$cache->text = $res['content'];

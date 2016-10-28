@@ -6,7 +6,7 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 include_once(mnminclude.'ban.php');
 
 header('Content-Type: application/json; charset=UTF-8');
@@ -100,7 +100,7 @@ $negatives = $db->get_var("select count(*) from votes where vote_type = 'comment
 if (! $current_user->admin && ! $current_user->special) {
 	if ($value < 0)  {
 		$points = 2 * $comments + $posts - $negatives;
-		$value = round(-1 * max(min($points, $current_user->user_karma), 1)); // Min is -1 
+		$value = round(-1 * max(min($points, $current_user->user_karma), 1)); // Min is -1
 	} else {
 		$points = 4 * $comments + $posts - $negatives;
 		$value = round(max(min($points, $current_user->user_karma), 3)); // Min is 3

@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+include_once(__DIR__.'/../config.php');
 include(mnminclude.'search.php');
 
 $_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 100);
