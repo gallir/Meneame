@@ -10,6 +10,8 @@
 //$globals['alternate_db_server'] = 'backend';
 
 include(__DIR__.'/../config.php');
+require_once(mnminclude.'favorites.php');
+
 $db->connect_timeout = 3;
 
 if (! $current_user->user_id) die;
@@ -28,10 +30,9 @@ $notifications->posts = (int) Post::get_unread_conversations($current_user->user
 $notifications->comments = (int) Comment::get_unread_conversations($current_user->user_id);
 $notifications->privates = (int) PrivateMessage::get_unread($current_user->user_id);
 $notifications->friends = count(User::get_new_friends($current_user->user_id));
-
+$notifications->favorites = get_unread_favorites($current_user->user_id);
 $notifications->total = $notifications->posts + $notifications->privates + $notifications->friends + $notifications->comments;
 echo json_encode($notifications);
-
 
 function do_redirect($type) {
 	global $globals, $current_user;

@@ -1,7 +1,7 @@
 {% if sponsored %}
 	{% try_include 'private/sponsored/link.html' %}
 {% else %}
-<div class="news-summary">
+<div class="news-summary{% if self.favorite_readed %} off{%endif%}">
 	<div class="news-body">
 	{% if self.show_shakebox %}
 		<div class="news-shakeit {{ self.box_class }}">
@@ -9,7 +9,6 @@
 				<a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
 				{% trans _('meneos') %}
 			</div>
-
 
 			{% if not globals.bot %}
 
@@ -204,13 +203,20 @@
 			{% endif %}
 			>{{ self.sub_name }}</a>
 		</span>
-		<span class="tool karma"><span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
+		<span class="tool karma">
+            <span class="wideonly">karma: </span><span id="a-karma-{{self.id}}">
 			{% if self.status == 'published' && self.sub_karma > 0 %}
 				{{ self.sub_karma|intval }}
 			{% else %}
 				{{ self.karma|intval }}
 			{% endif %}
 		</span></span>
+        <span class="tool">
+            <span id="favr-{{ self.id }}" onclick="change_fav_readed('favr-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite_readed %} class="link favorite readed on" {% else %} class="link favorite readed" {% endif %} ></span>
+        </span>
+        <span class="tool">
+            <span id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" class="link favorite delete on"></span>
+        </span>
 
 		{% if self.can_vote_negative %}
 			<form action="" id="problem-{{ self.id }}">

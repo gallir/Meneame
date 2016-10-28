@@ -248,6 +248,7 @@ CREATE TABLE `favorites` (
   `favorite_user_id` int(10) unsigned NOT NULL,
   `favorite_type` enum('link','post','comment') NOT NULL DEFAULT 'link',
   `favorite_link_id` int(10) unsigned NOT NULL,
+  `favorite_link_readed` int(1) unsigned NOT NULL DEFAULT 0,
   `favorite_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `favorite_user_id_2` (`favorite_user_id`,`favorite_type`,`favorite_link_id`),
   KEY `favorite_type` (`favorite_type`,`favorite_link_id`)

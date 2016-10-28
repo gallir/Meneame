@@ -39,6 +39,10 @@ if ($id > 0) {
 			$url = $globals['scheme'].'//'.get_server_name().$c->get_relative_individual_permalink();
 			do_redirection($url);
 			exit(0);
+		case 'favorites':
+			$url = get_user_uri($current_user->user_login, 'favorites');
+			do_redirection($url);
+			exit(0);
 		default:
 			$l = Link::from_db($id, null, false);
 			if (! $l) exit(0);
