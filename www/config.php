@@ -363,6 +363,7 @@ $globals['css_main'] = 'mnm.php';
 // Load webfonts from the specified url
 // $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
 $globals['css_webfonts'] = "//fonts.googleapis.com/css?family=Roboto:400";
+$globals['use_fontawesome_cdn'] = true; // If false serve fontawesome locally
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
 

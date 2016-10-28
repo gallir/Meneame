@@ -1164,6 +1164,17 @@ background: #FEFBEA url({{ globals.base_static }}img/common/error_s.png) 5px 50%
 background-size: 16px 16px;
 }
 
+.news-summary.off {
+    opacity: .5;
+    background-color: #f1f1f1;
+}
+
+.news-summary.off span.link.favorite.delete {
+    opacity: 1;
+    color:red;
+}
+
+
 .sidebox .warn {
 padding-left:20px;
 background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center;
@@ -1696,7 +1707,21 @@ font-weight: bold;
 }
 
 .news-details span, .news-details div, .comment-votes-info span, .comment-votes-info div, .comment-meta span {
-vertical-align: top;
+
+}
+
+.news-details span {
+    padding-right: 5px;
+    color: #ff6400;
+}
+
+.news-details.main span.tool.karma span {
+    padding-right: 0px;
+    color: #666;
+}
+
+.news-details > span i {
+    opacity: 0.5;
 }
 
 .comment-meta .username {
@@ -1782,6 +1807,65 @@ background-position: 0px -91px;
 
 .favorite.on {
 background-position: 0px -73px;
+}
+
+.link.favorite {
+    display: inline-block;
+    vertical-align: bottom;
+    border-radius: 5px;
+    border: 1px solid #ff6400;
+    padding: 0 5px;
+    cursor: pointer;
+    width: auto;
+    background: none;
+}
+
+.link.favorite:before {
+    content: "{% trans _('guardar') %}";
+}
+
+.link.favorite.on.delete:before {
+    font-family: FontAwesome;
+    content: "\f00d";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+}
+
+.link.favorite.on:before, .link.favorite.readed:before {
+    font-family: FontAwesome;
+    content: "\f046";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+}
+
+.link.favorite.readed.on:before, .link.favorite.delete:before {
+    font-family: FontAwesome;
+    content: "\f14a";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+}
+
+.link.favorite.on:after {
+    content: "{% trans _('guardado') %}";
+}
+
+.link.favorite.readed:after {
+    content: "{% trans _('sin leer') %}";
+}
+
+.link.favorite.readed.on:after {
+    content: "{% trans _('leído') %}";
+}
+
+.link.favorite.delete:after {
+    content: "{% trans _('eliminado') %}";
+}
+
+.link.favorite.on.delete:after {
+    content: "{% trans _('eliminar') %}";
 }
 
 .comment-info {
@@ -2487,6 +2571,22 @@ background:url({{ globals.base_static }}img/common/icon_comment-01.png) no-repea
 
 #notifier_panel div.friends {
 background:url({{ globals.base_static }}img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
+}
+
+#notifier_panel div.favorites:before {
+    font-family: FontAwesome;
+    content: "\f14a";
+    display: inline-block;
+    vertical-align: middle;
+    content: "\f1ea";
+    color: #ff6400;
+    margin-left: -24px;
+    margin-right: 8px;
+
+}
+
+#notifier_panel div.favorites a {
+
 }
 
 .ads-interlinks {

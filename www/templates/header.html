@@ -56,6 +56,11 @@
 
 <title>{{title}}</title>
 
+{% if globals.use_fontawesome_cdn %}
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+{% else %}
+	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_static }}css/font-awesome.min.css"/>
+{% endif %}
 
 {% if globals.css_main %}
 	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}"/>
