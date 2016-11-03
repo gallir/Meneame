@@ -8,5 +8,4 @@ header('Last-Modified: ' .  gmdate('D, d M Y H:i:s', filemtime('main.js')) . ' G
 Haanga::Load('js/main.js');
 Haanga::Load('js/jquery.colorbox-min.js');
 Haanga::Load('js/jquery.autosize.min.js');
-
-?>
+Haanga::Load('js/updates.js');

@@ -7,6 +7,10 @@
 	<title>{{title}}</title>
 	<script type="text/javascript">var mnm_start_time=(new Date()).getTime()</script>
 
+    {% if globals.css_webfonts %}
+        <link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+    {% endif %}
+
 	{% if globals.css_main %}
 	<link rel="stylesheet" type="text/css" media="screen" href="{{globals.base_static}}{{globals.css_main}}"/>
 	{% endif %}
@@ -24,7 +28,7 @@
 	{% if globals.tags %}
 		<meta name="keywords" content="{{globals.tags}}" />
 	{% endif %}
-    
+
     {% if globals.favicon %}
 	<link rel="icon" href="{{ globals.base_static }}{{globals.favicon}}" type="image/x-icon"/>
     {% else %}
@@ -47,7 +51,7 @@
 <body id="{{id}}" {{globals.body_args}}>
 <div id="header">
 	<a href="{% get_url %}"  title="{% trans _('inicio') %}" id="logo">{% trans _("menéame")%}</a>
-    
+
     <ul id="headtools">
  	    <li><a href="{{ globals.base_url }}search">{% trans _('buscar') %}&nbsp;<img src="{{ globals.base_static }}img/common/search_inv-01.png" alt="{% trans _('buscar') %}" title="{% trans _('buscar') %}" width="17" height="17" /></a></li>
         {% if current_user.authenticated %}
@@ -64,8 +68,8 @@
         {% endif %}
     </ul>
 </div>
-{# 
-   this function print instead of return, so we 
+{#
+   this function print instead of return, so we
    assign its output to a dummy var, otherwise it will be concatenated with the
    previous echo.
 #}

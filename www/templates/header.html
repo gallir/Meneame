@@ -11,12 +11,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1{% if globals.mobile %}, user-scalable=no{% endif %}"/>
 
-{# Save bandwidth for mobiles #}
-{% if not globals.mobile %}
-
 {% if globals.css_webfonts %}
 	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
 {% endif %}
+
+{# Save bandwidth for mobiles #}
+{% if not globals.mobile %}
 
 {% if globals.noindex %}
 	<meta name="robots" content="noindex,nofollow" />

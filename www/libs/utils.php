@@ -507,49 +507,60 @@ function utf8_substr($str,$start)
 {
 	preg_match_all("/./su", $str, $ar);
 
-	if(func_num_args() >= 3) {
-		$end = func_get_arg(2);
-		return join("",array_slice($ar[0],$start,$end));
-	} else {
-		return join("",array_slice($ar[0],$start));
+	if (func_num_args() >= 3) {
+		return join("", array_slice($ar[0], $start, func_get_arg(2)));
 	}
+
+	return join("", array_slice($ar[0], $start));
 }
 
 // Simple unified key generator for use in GET requests
 function get_security_key($time = false) {
 	global $globals, $current_user, $site_key;
-	if (!$time) $time = $globals['now'];
+
+	$time = $time ?: $globals['now'];
 
 	if ($current_user->user_id > 0) {
 		// For users of balanced connections and 3G we avoid using the IP
 		return $time.'-'.sha1($time.$current_user->user_id.$current_user->user_date.$site_key);
-	} else {
-		// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
-		$ip_key = $globals['user_ip_int']>>8;
-		// return $time.'-'.sha1($time.$ip_key.$site_key);
-		return $time.'-'.base64_encode($time.$ip_key); // Faster, not needed more complex for anoymous users
 	}
 
+	// We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
+	$ip_key = $globals['user_ip_int']>>8;
+
+	return $time.'-'.base64_encode($time.$ip_key); // Faster, not needed more complex for anoymous users
 }
 
 function check_security_key($key) {
-	global $globals, $current_user, $site_key;
+	if (empty($key)) {
+		return false;
+	}
 
-	$time_key = preg_split('/-/', $key);
-	if (count($time_key) != 2) return false;
-	if ($globals['now'] - intval($time_key[0]) > 14400) return false;
+	$time_key = explode('-', $key);
+
+	if (count($time_key) !== 2) {
+		return false;
+	}
+
+	global $globals;
+
+	if ($globals['now'] - intval($time_key[0]) > 14400) {
+		return false;
+	}
+
 	return $key == get_security_key($time_key[0]);
 }
 
 function do_error($mess = false, $error = false, $send_status = "Error") {
 	global $globals;
+
 	$globals['ads'] = false;
 
 	if (headers_sent($file, $line)) {
 		syslog(LOG_INFO, "Headers already sent, file $file line $line, uri: ".$_SERVER["DOCUMENT_URI"]." mess: $mess");
 	}
 
-	if (! $mess ) $mess = _('algún error nos ha petado');
+	$mess = $mess ?: _('algún error nos ha petado');
 
 	if ($error) {
 		@header("HTTP/1.0 $error $mess");
@@ -1272,6 +1283,85 @@ function print_oauth_icons($return = false) {
 			echo '<img src="'.$globals['base_static'].'img/external/signin-gplus.png" width="89" height="21" alt=""/></a>';
 		}
 	}
+	echo '</div>';
+}
+
+function print_oauth_icons_large($return = false) {
+	global $globals, $current_user;
+
+	$return = htmlentities($return ?: $globals['uri']);
+
+	echo '<div class="social-buttons">';
+
+	if ($globals['oauth']['twitter']['consumer_key']) {
+		$title = false;
+
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('twitter')) {
+				$title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
+				$text = _('asociar a Twitter');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Twitter');
+			$text = _('login con Twitter');
+		}
+
+		if ($title) {
+			echo '<a class="twitter" href="'.$globals['base_url_general'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+			echo _('Acceder con Twitter');
+			echo '<i class="icon fa fa-twitter"></i>';
+			echo '</a>';
+		}
+	}
+
+	echo '<div class="row">';
+
+	if ($globals['facebook_key']) {
+		$title = false;
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('facebook')) {
+				$title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
+				$text = _('asociar a Facebook');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Facebook');
+			$text = _('login con Facebook');
+		}
+		if ($title) {
+			echo '<div class="row-col row-col-6">';
+			echo '<a class="facebook" href="'.$globals['base_url_general'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
+			echo _('con Facebook');
+			echo '<i class="icon fa fa-facebook-official"></i>';
+			echo '</a>';
+			echo '</div>';
+		}
+	}
+
+	if ($globals['oauth']['gplus']['consumer_key']) {
+		$title = false;
+		if ($current_user->user_id) {
+			// Check the user is not already associated to Twitter
+			if (! $current_user->GetOAuthIds('gplus')) {
+				$title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
+				$text = _('asociar a Google+');
+			}
+		} else {
+			$title = _('crea una cuenta o autentifícate desde Google+');
+			$text = _('login con Google+');
+		}
+		if ($title) {
+			echo '<div class="row-col row-col-6">';
+			echo '<a class="gplus" href="'.$globals['base_url_general'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+			echo _('o Google');
+			echo '<i class="icon fa fa-google"></i>';
+			echo '</a>';
+			echo '</div>';
+		}
+	}
+
+	echo '</div>';
 	echo '</div>';
 }
 

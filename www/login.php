@@ -42,7 +42,8 @@ if ($_POST["processlogin"] == 1) {
 }
 
 do_header("login");
-echo '<div id="singlewrap">' . "\n";
+echo '<div id="singlewrap">'."\n";
+echo '<section class="section-large">';
 
 if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_recover();
@@ -50,160 +51,173 @@ if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_login();
 }
 
+echo '</section>';
 echo '</div>'."\n"; // singlewrap
 
 do_footer();
 
 
 function do_login() {
+	if ($post = do_login_post()) {
+		list($error, $failed) = $post;
+	} else {
+		$error = $failed = null;
+	}
+
+	if (empty($error) && (strpos($_REQUEST['return'], '/submit') !== false)) {
+		$info = _('Para enviar una historia debes ser un usuario registrado');
+	} else {
+		$info = null;
+	}
+
+	echo '<h1>'._('Acceder a Menéame').'</h1>';
+	echo '<p class="intro">'._('Forma parte de la mayor comunidad de contenidos en español. Tú haces la portada.').'</p>';
+
+	echo '<div class="container">';
+		print_oauth_icons_large($_REQUEST['return']);
+
+		echo '<div class="separator"><b></b><span>O</span><b></b></div>';
+
+		echo '<form id="thisform" method="post" class="form">';
+			echo '<div class="legend">'._('Acceder con mi correo').'</div>';
+
+			if ($error) {
+				echo '<div class="response response-error">'.$error.' <span>('.$failed.')</span></div>';
+			} elseif ($info) {
+				echo '<div class="response response-info">'.$info.'</div>';
+			}
+
+			echo '<div class="input-row"><input type="text" name="username" tabindex="1" id="name" value="'.htmlspecialchars($_POST['username']).'" class="input" placeholder="'._('Usuario o Correo electrónico').'" required /></div>';
+			echo '<div class="input-row"><input type="password" name="password" id="password" tabindex="2" class="input" placeholder="'._('Contraseña').'" required /></div>';
+
+			if (($failed > 2) || ($globals['captcha_first_login'] && !UserAuth::user_cookie_data()) ) {
+				ts_print_form();
+			}
+
+			echo '<div class="input-checkbox"><label><input type="checkbox" name="persistent" id="remember" tabindex="3"/> '._('Recuérdame durante 30 días').'</label></div>';
+
+			echo '<div><button type="submit" name="login" class="button" tabindex="4">'._('Acceder').'</button></div>';
+
+			echo '<input type="hidden" name="processlogin" value="1"/>';
+			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>';
+		echo '</form>';
+
+		echo '<div class="bottomline"><a href="login?op=recover">'._('¿Has olvidado tu contraseña?').'</a></div>';
+	echo '</div>';
+}
+
+function do_login_post() {
+	if (empty($_POST["processlogin"])) {
+		return;
+	}
+
 	global $current_user, $globals;
 
-	$previous_login_failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
+	$failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
 
-	// Show menéame intro only if first try and the there were not previous logins
-	if (! $globals['mobile'] && $previous_login_failed < 3 && empty($_POST["processlogin"]) && empty($_COOKIE['u'])) {
-		echo '<div class="faq wideonly" style="float:right; width:55%; margin-top: 10px;">'."\n";
-		// Only prints if the user was redirected from submit.php
-		if (!empty($_REQUEST['return']) && preg_match('/submit\.php/', $_REQUEST['return'])) {
-			echo '<p style="border:1px solid #FF9400; font-size:1.3em; background:#FEFBEA; font-weight:bold; padding:0.5em 1em;">Para enviar una historia debes ser un usuario registrado</p>'."\n";
-		}
-		echo '<h3>'._('¿Qué es menéame?').'</h3>'."\n";
-		echo '<p>'._('Es un sitio que te permite enviar una historia que será revisada por todos y será promovida, o no, a la página principal. Cuando un usuario envía una historia ésta queda en la <a href="queue">cola de pendientes</a> hasta que reúne los votos suficientes para ser promovida a la página principal').'.</p>'."\n";
+	$username = clean_input_string(trim($_POST['username']));
+	$password = trim($_POST['password']);
 
-		echo '<h3>'._('¿Todavía no eres usuario de menéame?').'</h3>'."\n";
-		echo '<p>'._('Como usuario registrado podrás, entre otras cosas').':</p>'."\n";
-		echo '<ul style="margin-left: 1.5em">'."\n";
-		echo '<li>'."\n";
-		echo '<strong>'._('Enviar historias').'</strong><br />'."\n";
-		echo '<p>'._('Una vez registrado puedes enviar las historias que consideres interesantes para la comunidad. Si tienes algún tipo de duda sobre que tipo de historias puedes enviar revisa nuestras <a href="faq-es.php">preguntas frecuentes sobre menéame</a>').'.</p>'."\n";
-		echo '</li>'."\n";
-		echo '<li>'."\n";
-		echo '<strong>'._('Escribir comentarios').'</strong><br />'."\n";
-		echo '<p>'._('Puedes escribir tu opinión sobre las historias enviadas a menéame mediante comentarios de texto. También puedes votar positivamente aquellos comentarios ingeniosos, divertidos o interesantes y negativamente aquellos que consideres inoportunos').'.</p>'."\n";
-		echo '</li>'."\n";
-		echo '<li>'."\n";
-		echo '<strong>'._('Perfil de usuario').'</strong><br />'."\n";
-		echo '<p>'._('Toda tu información como usuario está disponible desde la página de tu perfil. También puedes subir una imagen que representará a tu usuario en menéame. Incluso es posible compartir los ingresos publicitarios de Menéame, solo tienes que introducir el código de tu cuenta Google Adsense desde tu perfil').'.</p>'."\n";
-		echo '</li>'."\n";
-		echo '<li>'."\n";
-		echo '<strong>'._('Chatear en tiempo real desde la fisgona').'</strong><br />'."\n";
-		echo '<p>'._('Gracias a la <a href="sneak.php">fisgona</a> puedes ver en tiempo real toda la actividad de menéame. Además como usuario registrado podrás chatear con mucha más gente de la comunidad menéame').'</p>'."\n";
-		echo '</li>'."\n";
-		echo '</ul>'."\n";
-		echo '<h3><a href="register.php" style="color:#FF6400; text-decoration:underline; display:block; width:8em; text-align:center; margin:0 auto; padding:0.5em 1em; border:3px double #FFE2C5; background:#FFF3E8;">Regístrate ahora</a></h3>'."\n";
-		echo '</div>'."\n";
+	// Check form
+	if (($failed > 2 || ($globals['captcha_first_login'] && ! UserAuth::user_cookie_data())) && !ts_is_human()) {
+		Log::insert('login_failed', $globals['user_ip_int'], 0);
 
-		echo '<div class="genericform" style="float:left; width:40%; margin: 0">'."\n";
-	} else {
-		echo '<div class="genericform" style="float:auto;">'."\n";
-	}
-	echo '<form action="'.get_auth_link().'login" id="thisform" method="post">'."\n";
-
-	if($_POST["processlogin"] == 1) {
-		$username = clean_input_string(trim($_POST['username']));
-		$password = trim($_POST['password']);
-
-		// Check form
-		if (($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) )
-				&& !ts_is_human()) {
-			Log::insert('login_failed', $globals['user_ip_int'], 0);
-			recover_error(_('el código de seguridad no es correcto'). " ($previous_login_failed)");
-		} elseif (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
-			Log::insert('login_failed', $globals['user_ip_int'], 0);
-			$previous_login_failed++;
-			recover_error(_('usuario o email inexistente, sin validar, o clave incorrecta'). " ($previous_login_failed)");
-		} else {
-			UserAuth::check_clon_from_cookies();
-
-			header ('HTTP/1.1 303 Load');
-			setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-			if(!empty($_REQUEST['return'])) {
-				header('Location: '.$_COOKIE['return_site'].$_REQUEST['return']);
- 			} else {
-				header('Location: '.$_COOKIE['return_site'].$globals['base_url']);
-			}
-			die;
-		}
-	}
-	echo '<fieldset>'."\n";
-	echo '<legend><span class="sign">'._('usuario y contraseña').'</span></legend>'."\n";
-	echo '<p><label for="name">'._('usuario o email').':</label><br />'."\n";
-	echo '<input type="text" name="username" size="25" tabindex="1" id="name" value="'.__($username).'" /></p>'."\n";
-	echo '<p><label for="password">'._('clave').':</label><br />'."\n";
-	echo '<input type="password" name="password" id="password" size="25" tabindex="2"/></p>'."\n";
-	echo '<p><label for="remember">'._('recuérdame').': </label><input type="checkbox" name="persistent" id="remember" tabindex="3"/></p>'."\n";
-
-	// Print captcha
-	if ($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data()) ) {
-		ts_print_form();
+		return array(_('el código de seguridad no es correcto'), $failed);
 	}
 
-	echo '<p><input type="submit" value="login" class="button" tabindex="4" /></p>'."\n";
+	if (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
+		Log::insert('login_failed', $globals['user_ip_int'], 0);
 
-	print_oauth_icons($_REQUEST['return']);
+		$failed++;
 
-	echo '<input type="hidden" name="processlogin" value="1"/>'."\n";
-	echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
-	echo '</fieldset>'. "\n";
-	echo '</form>'."\n";
-	echo '<div class="recoverpass" style="text-align:center"><h4><a href="login?op=recover">'._('¿has olvidado la contraseña?').'</a></h4></div>'."\n";
-	echo '</div>'."\n";
-	echo '<br/>&nbsp;';
+		return array(_('usuario o email inexistente, sin validar, o clave incorrecta'), $failed);
+	}
+
+	UserAuth::check_clon_from_cookies();
+
+	header ('HTTP/1.1 303 Load');
+	setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+
+	$url = empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'];
+
+	header('Location: '.$_COOKIE['return_site'].$url);
+
+	die();
 }
 
 function do_recover() {
 	global $site_key, $globals;
 
-	echo '<div class="genericform">'."\n";
-	echo '<fieldset>'."\n";
-	echo '<legend><span class="sign">'._("recuperación de contraseñas").'</span></legend>'."\n";
+	$post = do_recover_post();
 
-	if(!empty($_POST['recover'])) {
-		if (!ts_is_human()) {
-			recover_error(_('el código de seguridad no es correcto'));
-		} else {
-			$error = false;
-			$user=new User();
-			if (preg_match('/.+@.+\..+$/', $_POST['email'])) {
-				// It's an email address
-				$user->email=$_POST['email'];
-			} else {
-				recover_error(_('el email no es válido'));
-				$error = true;
+	if ($post === true) {
+		return do_recover_success();
+	}
+
+	echo '<h1>'._('Recuperación de contraseña').'</h1>';
+
+	echo '<p class="intro">'._('Recibirás un e-mail que te permitirá editar tus datos').'</p>';
+
+	echo '<div class="container">';
+		echo '<form action="'.get_auth_link().'login" id="thisform" method="post" class="form">';
+			if (is_string($post)) {
+				echo '<div class="response response-error">'.$post.'</div>';
 			}
 
-			if(!$error && !$user->read()) {
-				recover_error(_('el email no está relacionado con ninguna cuenta'));
-				$error = true;
-			}
-			if(!$error && $user->disabled()) {
-				recover_error(_('cuenta deshabilitada'));
-				$error = true;
-			}
-			if (!$error) {
-				require_once(mnminclude.'mail.php');
-				$sent = send_recover_mail($user);
-			}
-		}
+			echo '<p><input type="email" name="email" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" class="input" placeholder="'._('Indica tu correo electrónico').'" required /></p>';
+
+			ts_print_form();
+
+			echo '<p><button type="submit" name="login" class="button" tabindex="4">'._('Enviar correo').'</button></p>';
+
+			echo '<input type="hidden" name="recover" value="1"/>'."\n";
+			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
+		echo '</form>';
+
+		echo '<div class="bottomline"><a href="login">'._('Volver al login').'</a></div>';
+	echo '</div>';
+}
+
+function do_recover_post() {
+	if (empty($_POST['recover'])) {
+		return;
 	}
-	if (!$sent) {
-		echo '<form action="login" id="thisform-recover" method="post">'."\n";
-		echo '<label for="name" style="font-size:120%">'._('indica el email de la cuenta').':</label><br />'."\n";
-		echo '<input type="text" name="email" size="25" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" />'."\n";
-		echo '<p>'._('(recibirás un e-mail que te permitirá editar tus datos)').'</p>&nbsp;<br/>';
-		echo '<input type="hidden" name="recover" value="1"/>'."\n";
-		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
-		ts_print_form();
-		echo '<br /><input type="submit" value="'._('recibir e-mail').'" class="button" />'."\n";
-		echo '</form>'."\n";
+
+	if (!ts_is_human()) {
+		return _('el código de seguridad no es correcto');
 	}
-	echo '</fieldset>'."\n";
-	echo '</div>'."\n";
+
+	$user = new User();
+
+	if (!preg_match('/.+@.+\..+$/', $_POST['email'])) {
+		return _('el email no es válido');
+	}
+
+	$user->email = $_POST['email'];
+
+	if (!$user->read()) {
+		return _('el email no está relacionado con ninguna cuenta');
+	}
+
+	if ($user->disabled()) {
+		return _('cuenta deshabilitada');
+	}
+
+	require_once(mnminclude.'mail.php');
+
+	if (!send_recover_mail($user)) {
+		return _('no se ha podido enviar el correo de recuperación de contraseña');
+	}
+
+	return true;
+}
+
+function do_recover_success() {
+	echo '<h1>'._('Correo enviado :)').'</h1>';
+	echo '<p class="intro">'._('Si no lo recibes en la bandeja de recibidos, revisa la bandeja de SPAM').'</p>';
+	echo '<div class="bottomline"><a href="login">'._('Volver al login').'</a></div>';
 }
 
 function recover_error($message) {
-	echo '<div class="form-error">';
-	echo "$message";
-	echo "</div>\n";
+	echo '<div class="form-error">'.$message."</div>\n";
 }
-

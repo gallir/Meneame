@@ -27,19 +27,24 @@ function send_mail($to, $subject, $message) {
 	return true;
 }
 
-function send_recover_mail ($user) {
+function send_recover_mail ($user, $echo = true) {
 	global $site_key, $globals;
 
-	if (! check_email($user->email)) return false;
+	if (!check_email($user->email)) {
+		return false;
+	}
 
 	$now = time();
 
-	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
-	else $domain = get_server_name();
+	if (!empty($globals['email_domain'])) {
+		$domain = $globals['email_domain'];
+	} else {
+		$domain = get_server_name();
+	}
 
 	$key = md5($user->id.$user->pass.$now.$site_key.get_server_name());
 	$url = 'http://'.get_server_name().$globals['base_url'].'profile?login='.$user->username.'&t='.$now.'&k='.$key;
-	//echo "$user->username, $user->email, $url<br />";
+
 	$to      = $user->email;
 	$subject = _('Recuperación o verificación de contraseña de '). get_server_name();
 	$subject = mb_encode_mimeheader($subject,"UTF-8", "B", "\n");
@@ -54,9 +59,13 @@ function send_recover_mail ($user) {
 				'Reply-To: '._('no_contestar')."@$domain\n".
 				'X-Mailer: meneame.net' . "\n";
 	$headers .= 'MIME-Version: 1.0' . "\n";
-	//$pars = '-fweb@'.get_server_name();
+
 	mail($to, $subject, $message, $headers);
-	echo '<p><strong>' ._ ('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.') . '</strong></p>';
+
+	if ($echo) {
+		echo '<p><strong>'._('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.').'</strong></p>';
+	}
+
 	return true;
 }
 
