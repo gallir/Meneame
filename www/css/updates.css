@@ -1,0 +1,404 @@
+
+.row, .row *, .section-large, .section-large *, .section-large .form, .section-large .form * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.section-large {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    text-align: center;
+    margin-top: 30px;
+    padding: 0 20px;
+    letter-spacing: -0.5px;
+    color: #4A4A4A;
+}
+
+.section-large h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: -1.5px;
+    font-size: 46px;
+    margin: 0;
+    color: #FF6400;
+}
+
+.section-large .intro {
+    font-size: 16px;
+    margin-bottom: 40px;
+    color: #4c4c4c;
+}
+
+.section-large .legend {
+    font-size: 15px;
+    margin: 0 0 15px 0;
+    font-weight: 700;
+    color: #3C3C3C;
+}
+
+.section-large hr {
+    border-bottom: 1px solid #CCC;
+    margin: 15px;
+}
+
+.section-large .container {
+    margin: 0 auto;
+    max-width: 360px;
+}
+
+.section-large .bottomline {
+    margin-top: 20px;
+}
+
+.section-large .bottomline a {
+    color: #FF6400;
+}
+
+.section-large .result-final-icon {
+    font-size: 60px;
+    line-height: 120px;
+}
+
+.result-final-icon.result-final-icon-success {
+    color: #ff6f00;
+}
+
+.result-final-icon.result-final-icon-error {
+    color: #ac0d00;
+}
+
+.section-large .button {
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+    vertical-align: middle;
+    letter-spacing: 0;
+    text-transform: none;
+    text-decoration: none;
+    padding: 10px 12px;
+    margin: 15px 0;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .3s ease .1s;
+    color: white;
+    border-radius: 5px;
+    font-weight: 300;
+}
+
+.section-large .button:visited {
+    color: white;
+}
+
+.section-large .button:hover {
+    color: white;
+    background-color: #c35813;
+    text-decoration: none;
+}
+
+.section-large .button:disabled {
+    background-color: #e0cec2;
+}
+
+.row {
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.row:before, .row:after {
+    display: table;
+    content: " ";
+}
+
+.row:after {
+    clear: both;
+}
+
+.row-col {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.row-col-3 {
+    width: 25%;
+}
+
+.row-col-6 {
+    width: 50%;
+}
+
+.row-col-9 {
+    width: 75%;
+}
+
+.section-large .form .input-row {
+    position: relative;
+}
+
+.section-large .form .input {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.section-large .form .input-checkbox {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 0;
+    font-weight: 400;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.section-large .form .input-checkbox input[type=checkbox], .section-large .form .input-checkbox input[type=radio] {
+    position: absolute;
+    margin: 3px 0 0;
+    margin-top: 1px\9;
+    margin-left: -18px;
+    line-height: normal;
+}
+
+.section-large .form .input-checkbox label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-weight: 400;
+}
+
+.section-large .form .input-info {
+    color: #939393;
+    font-size: 9.5px;
+    text-align: left;
+}
+
+.section-large .form .input-password-show {
+    position: absolute;
+    padding: 12px 20px;
+    right: 0;
+    color: #999999;
+}
+
+.section-large .form .input-password-show:visited {
+    color: #999999;
+}
+
+.section-large .form .input-password-show:hover, .section-large .form .input-password-show:focus {
+    color: #666;
+    text-decoration: none;
+}
+
+.section-large .form .input-password-show + .input {
+    padding-right: 45px;
+}
+
+.section-large .form .input + .input-info {
+    margin-top: -8px;
+    margin-left: 5px;
+}
+
+.section-large .form .input-error .input {
+    border: 1px solid #ac0d00;
+}
+
+.section-large .form .input-error .input-info {
+    color: #ac0d00;
+}
+
+.section-large .form .input-status {
+    position: absolute;
+    display: none;
+    right: 0;
+    font-size: 16px;
+    margin-right: -16px;
+    height: 38px;
+    line-height: 38px;
+}
+
+.section-large .form .input-success .input-status {
+    display: block;
+    color: #3f7600;
+}
+
+.section-large .form .input-error .input-status {
+    display: block;
+    color: #ac0d00;
+}
+
+.section-large .form .input-error-message {
+    display: block;
+    color: #ac0d00;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    text-align: left;
+}
+
+.section-large .form .input-checkbox {
+    text-align: left;
+}
+
+.section-large .form label {
+    color: #5e5e5e;
+}
+
+.section-large .form .response {
+    font-weight: 700;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.response.response-error {
+    color: #ac0d00;
+}
+
+.response.response-info {
+    color: #ff9400;
+}
+
+.section-large .form .bottomline {
+    color: #505050;
+    text-align: left;
+    font-size: 13px;
+}
+
+.social-buttons {
+    text-align: center;
+    font-weight: 700;
+}
+
+.social-buttons a {
+    display: block;
+    line-height: 40px;
+    border-radius: 4px;
+    color: white;
+    font-size: 15px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+.social-buttons a:hover {
+    text-decoration: none;
+}
+
+.social-buttons a .icon {
+    float: right;
+    color: white;
+    width: 50px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 26px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.social-buttons a.twitter {
+    background-color: #1c9bf6;
+}
+
+.social-buttons a.twitter .icon {
+    background-color: #47aef8;
+}
+
+.social-buttons a.facebook {
+    background-color: #3d539c;
+}
+
+.social-buttons a.facebook .icon {
+    background-color: #6275ae;
+}
+
+.social-buttons a.gplus {
+    background-color: #f73200;
+}
+
+.social-buttons a.gplus .icon {
+    background-color: #f85a2c;
+}
+
+.separator {
+    display: table;
+    margin: 20px 10px;
+}
+
+.separator > b:before {
+    content: "";
+    display: block;
+    background-color: #c7c7c7;
+    height: 1px;
+}
+
+.separator > * {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.separator > b {
+    width: 50%;
+}
+
+.separator > span {
+    white-space: nowrap;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: #c7c7c7;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.g-recaptcha > div {
+    margin: 40px auto;
+}
+
+@media (max-width: 767px) {
+    .section-large {
+        margin-top: 20px;
+    }
+
+    .section-large .intro {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 388px) {
+    .section-large {
+        margin-top: 10px;
+    }
+
+    .section-large h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .section-large .intro {
+        font-size: 15px;
+    }
+
+    .social-buttons .icon {
+        display: none;
+    }
+
+    .separator {
+        margin: 10px;
+    }
+}
