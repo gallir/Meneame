@@ -8,7 +8,7 @@
 .section-large {
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 300;
     text-align: center;
     margin-top: 30px;
     padding: 0 20px;
@@ -28,7 +28,6 @@
 
 .section-large .intro {
     font-size: 16px;
-    font-weight: 400;
     margin-bottom: 40px;
     color: #4c4c4c;
 }
@@ -87,6 +86,7 @@
     transition: all .3s ease .1s;
     color: white;
     border-radius: 5px;
+    font-weight: 300;
 }
 
 .section-large .button:visited {
@@ -226,7 +226,6 @@
     right: 0;
     font-size: 16px;
     margin-right: -16px;
-    margin-top
     height: 38px;
     line-height: 38px;
 }
@@ -291,6 +290,7 @@
     font-size: 15px;
     letter-spacing: -1px;
     margin-bottom: 10px;
+    font-weight: 300;
 }
 
 .social-buttons a:hover {
