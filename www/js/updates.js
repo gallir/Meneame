@@ -1,5 +1,4 @@
-(function ($){
-    'use strict';
+;(function ($){
 
     var $formRegister = $('#form-register');
 
