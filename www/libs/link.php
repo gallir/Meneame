@@ -737,7 +737,7 @@ class Link extends LCPBase {
 		$sponsored = $this->is_sponsored();
 		$vars = compact('type', 'sponsored');
 		$vars['self'] = $this;
-		$this->votes_enabled = true;
+
 		return Haanga::Load($template, $vars);
 
 	}

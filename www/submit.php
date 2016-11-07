@@ -26,7 +26,7 @@ $errors = array();
 if(isset($_POST["phase"])) {
 	switch ($_POST["phase"]) {
 		case 1:
-			do_header(_('enviar historia') . " 2/3", _('enviar historia'));
+			do_header(_('enviar historia') . " 2/3", _('enviar historia'), 'new_story');
 			if (! do_submit1()) {
 				// Just to display error messages
 				$link = new Link;
