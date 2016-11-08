@@ -37,7 +37,7 @@ if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', 
 
 class MenuOption{
 	// Small helper class to store links' information
-	function __construct($text, $url, $active = false, $title = '') {
+	function __construct($text, $url, $active = false, $title = '', $class = '') {
 		$this->text = $text;
 		$this->url = $url;
 		$this->title = $title;
@@ -46,6 +46,7 @@ class MenuOption{
 		} else {
 			$this->selected = false;
 		}
+		$this->class = $class;
 	}
 }
 
@@ -114,7 +115,7 @@ function do_header($title, $id='home', $options = false) {
 	if (! is_array($options)) {
 		$left_options = array();
 		if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
-			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'));
+			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'), "submit_new_post");
 		}
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
 		$left_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', $id, _('menear noticias pendientes'));

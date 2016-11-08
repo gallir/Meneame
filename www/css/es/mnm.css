@@ -2491,15 +2491,8 @@ display: inline;
 }
 
 .share_icons span {
-display: inline-block;
-width: 18px;
-height: 18px;
-margin: 0 3px;
-padding: 0;
 opacity:0.6;
 vertical-align: text-top;
-background: url(../../img/common/icons-common.png) no-repeat;
-background-size: 20px 300px;
 }
 
 .share_icons span:hover {
@@ -2507,11 +2500,11 @@ opacity:1.0;
 }
 
 .share_icons span.fb {
-background-position: 0px -180px;
+
 }
 
 .share_icons span.tw {
-background-position: 0px -160px;
+
 }
 
 .ts {

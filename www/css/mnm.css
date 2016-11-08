@@ -255,16 +255,25 @@ margin-top:4px;
 }
 
 #header-top .userlogin {
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 10px -240px;
-background-size: 20px 300px;
 width:40px;
 height:30px;
 margin: 0;
-font: 0/0 serif;
 text-shadow: none;
-color: transparent;
 cursor: pointer;
+padding-top: 6px;
 }
+
+#header-top .userlogin:before {
+    font-family: FontAwesome;
+    content: "\f011";
+    color: #fff;
+    font-size: 19px;
+    padding-left: 12px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
 
 #header-center{
 height:45px;
@@ -337,8 +346,19 @@ height:24px;
 font-size: 16px;
 padding-top: 0px;
 padding-left: 20px;
-background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0 -182px;
 background-size: 20px 300px;
+}
+
+.searchform form:before {
+    font-family: FontAwesome;
+    content: "\f002";
+    position: absolute;
+    padding-top: 5px;
+    padding-left: 5px;
+    color:#303030;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .header-menu01 {
@@ -360,6 +380,17 @@ float:left;
 
 .menu01-itemsl li {
 margin-right: 20px;
+}
+
+.menu01-itemsl a.submit_new_post:before {
+font-family: FontAwesome;
+content: "\f067";
+display: inline-block;
+margin-right: 3px;
+font-size: 10px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .header-menu01 ul li{
@@ -594,6 +625,10 @@ padding-right: 40px;
 vertical-align: middle;
 }
 
+.mini-icon-text i.fa.fa-edit {
+    color: #FF6400;
+}
+
 .subheader{
 width: auto;
 height:30px;
@@ -824,12 +859,21 @@ padding: 0
 }
 
 .sidebox .rss li {
-font-size: 90%;
+font-size: 110%;
 color: #039;
 display:block;
-padding-left: 24px;
-background: url({{ globals.base_static }}img/common/h9_rss.png) no-repeat 4px 0px;
+padding-left: 5px;
 margin: 10px 0 10px 0px;
+}
+
+.sidebox .rss li:before {
+font-family: FontAwesome;
+content: "\f143";
+vertical-align: middle;
+color: #000;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 #footwrap {
@@ -1160,9 +1204,23 @@ position: relative;
 padding: 5px 10px 5px 28px ;
 margin: 0px 0 5px 0;
 font-size: 85%;
-background: #FEFBEA url({{ globals.base_static }}img/common/error_s.png) 5px 50% no-repeat;
+background-color: #FEFBEA;
 background-size: 16px 16px;
 }
+
+.news-summary .warn:before {
+    content: "\f071";
+    font-family: FontAwesome;
+    color: #ff6400;
+    font-size: 15px;
+    margin-left: -20px;
+    margin-right:5px;
+    vertical-align: top;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
 
 .news-summary.off {
     opacity: .5;
@@ -1182,7 +1240,7 @@ background-size: 16px 16px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
+    .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1202,8 +1260,17 @@ font-size: 120%;
 margin: 5px 0 0 0;
 padding: 25px 0 0 0;
 color: #FF6400;
-background: url({{ globals.base_static }}img/common/error.png) no-repeat;
 background-size: 24px 24px;
+}
+
+.error:before {
+    font-family: FontAwesome;
+    content: "\f071";
+    font-size: 130%;
+    display: block;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .error-text {
@@ -1259,6 +1326,10 @@ position: relative;
 padding-left: 95px;
 padding-right: 5px;
 overflow: hidden;
+}
+
+.news-body .edit-link {
+    color: #ff6400;
 }
 
 .news-details {
@@ -1706,7 +1777,7 @@ color: #aaa;
 font-weight: bold;
 }
 
-.news-details span, .news-details div, .comment-votes-info span, .comment-votes-info div, .comment-meta span {
+.comment-votes-info span, .comment-votes-info div, .comment-meta span {
     vertical-align: top;
 }
 
@@ -1793,20 +1864,44 @@ background-size: 20px 300px;
 }
 
 .favorite {
+    display: inline-block;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    margin: 0 4px;
+    cursor: pointer;
+    height: 18px;
+    width: 16px;
+    background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
+    background-size: 20px 300px;
+    background-position: 0px -91px;
+}
+
+.favorite.on {
+    background-position: 0px -73px;
+}
+
+.edname .favorite, #header-sub .favorite {
 display: inline-block;
-border-radius: 2px;
-border: 1px solid #fff;
 margin: 0 4px;
 cursor: pointer;
 height: 18px;
 width: 16px;
-background: #fff url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
-background-size: 20px 300px;
-background-position: 0px -91px;
+background: none;
+border:none;
 }
 
-.favorite.on {
-background-position: 0px -73px;
+.edname .favorite:before, #header-sub .favorite:before {
+    font-family: FontAwesome;
+    content: "\f006";
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.edname .favorite.on:before, #header-sub .favorite.on:before {
+    font-family: FontAwesome;
+    content: "\f005";
+    color: #ff9802;
 }
 
 .link.favorite {
@@ -1822,6 +1917,7 @@ background-position: 0px -73px;
 
 .link.favorite:before {
     content: "{% trans _('guardar') %}";
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .link.favorite.on.delete:before {
@@ -1830,6 +1926,9 @@ background-position: 0px -73px;
     display: inline-block;
     padding-right: 3px;
     vertical-align: middle;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .link.favorite.on:before, .link.favorite.readed:before {
@@ -1838,6 +1937,9 @@ background-position: 0px -73px;
     display: inline-block;
     padding-right: 3px;
     vertical-align: middle;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .link.favorite.readed.on:before, .link.favorite.delete:before {
@@ -1846,6 +1948,9 @@ background-position: 0px -73px;
     display: inline-block;
     padding-right: 3px;
     vertical-align: middle;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .link.favorite.on:after {
@@ -2557,32 +2662,36 @@ color:#888;
 text-decoration: none;
 }
 
-#notifier_panel div.privates {
-background:url({{ globals.base_static }}img/common/icon_message-02.png) no-repeat 5px 5px;
-}
-
-#notifier_panel div.posts {
-background:url({{ globals.base_static }}img/common/icon_post-02.png) no-repeat 5px 5px;
-}
-
-#notifier_panel div.comments {
-background:url({{ globals.base_static }}img/common/icon_comment-01.png) no-repeat 5px 5px;
-}
-
-#notifier_panel div.friends {
-background:url({{ globals.base_static }}img/common/icon_friend_bi_00.png) no-repeat 5px 5px;
-}
-
-#notifier_panel div.favorites:before {
+#notifier_panel div:before {
     font-family: FontAwesome;
-    content: "\f14a";
     display: inline-block;
     vertical-align: middle;
-    content: "\f1ea";
     color: #ff6400;
     margin-left: -24px;
     margin-right: 8px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
 
+#notifier_panel div.privates:before {
+    content: "\f01c";
+}
+
+#notifier_panel div.posts:before {
+    content: "\f044";
+}
+
+#notifier_panel div.comments:before {
+    content: "\f086";
+}
+
+#notifier_panel div.friends:before {
+    content: "\f0c0";
+}
+
+#notifier_panel div.favorites:before {
+    content: "\f1ea";
 }
 
 #notifier_panel div.favorites a {
@@ -2614,15 +2723,12 @@ display: inline;
 
 .share_icons span {
 display: inline-block;
-width: 18px;
-height: 18px;
 margin: 0 3px;
 padding: 0;
 opacity:0.6;
 cursor:pointer;
 vertical-align: text-top;
-background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat;
-background-size: 20px 300px;
+font-size: 15px;
 }
 
 .share_icons span:hover {
@@ -2630,11 +2736,12 @@ opacity:1.0;
 }
 
 .share_icons span.fb {
-background-position: 0px -163px;
+color: #3b5998;
 }
 
+
 .share_icons span.tw {
-background-position: 0px -145px;
+color: #55ACEE;
 }
 
 .ts {
@@ -2799,6 +2906,6 @@ font-size: 14px;
 
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
+    .comment-meta .vote, .comment-meta .reply, .favorite, .comment-meta .answers, a.permalink  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
     #header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
 }

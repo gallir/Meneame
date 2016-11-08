@@ -23,5 +23,5 @@
 
 
 {% if self.can_edit %}
-	&nbsp;&nbsp;<a href="javascript:post_edit({{ self.id }})" title="{% trans _('editar') %}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+	&nbsp;&nbsp;<a href="javascript:post_edit({{ self.id }})" title="{% trans _('editar') %}" class="mini-icon-text"><i class="fa fa-edit edit-link"></i></a>
 {% endif %}

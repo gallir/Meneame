@@ -59,7 +59,7 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 
 	if ($current_user->user_id > 0 ) {
 		if (Post::can_add()) {
-			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva').'">&nbsp;'._('nota').'<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
+			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva').'">&nbsp;'._('nota').'&nbsp;<i class="fa fa-pencil-square-o"></i></a></span></li>';
 		} else {
 			echo '<li><span><a href="javascript:return;">'._('nota').'</a></span></li>';
 		}
@@ -84,8 +84,8 @@ function do_post_subheader($content, $selected = false, $rss = false, $rss_title
 
 	if ($rss && ! empty ($content)) {
 		if (!$rss_title) $rss_title = 'rss2';
-		echo '<li class="icon wideonly"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><img src="'.$globals['base_static'].'img/common/h9_rss.png" width="15" height="15" alt="rss2"/></a></li>';
 	}
+		echo '<li class="icon wideonly"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><i class="fa fa-rss-square"></i></a></li>';
 
 	echo '</ul>'."\n";
 }
@@ -97,7 +97,7 @@ function do_priv_subheader($content, $selected = false) {
 	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
 	echo '<ul class="subheader">'."\n";
 
-	echo '<li><span><a class="toggler" href="javascript:priv_new(0)" title="'._('nuevo').'">'._('nuevo').'&nbsp;<img src="'.$globals['base_static'].'img/common/icon_add_post_003.png" alt="" width="13" height="12"/></a></span></li>';
+	echo '<li><span><a class="toggler" href="javascript:priv_new(0)" title="'._('nuevo').'">'._('nuevo').'&nbsp;<i class="fa fa-pencil-square-o"></i></a></span></li>';
 
 	if (is_array($content)) {
 		$n = 0;

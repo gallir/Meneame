@@ -77,9 +77,9 @@
 			{% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
 			</a>
 			{% if self.content_type == 'image' %}
-				<span class="wideonly">&nbsp;<img src="{{ globals.base_static }}img/common/is-photo01.png" class="media-icon" width="18" height="15" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}" /></span>
+				<span class="wideonly">&nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i></span>
 			{% else %} {% if self.content_type == 'video' %}
-				<span class="wideonly">&nbsp;<img src="{{ globals.base_static }}img/common/is-video01.png" class="media-icon" width="18" height="15" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}" /></span>
+				<span class="wideonly">&nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i></span>
 			{% endif %}
 			{% endif %}
 		{% if globals.link %}</h1>{% else %}</h2>{% endif %}
@@ -120,7 +120,7 @@
 
 		{% if type != 'preview' %}
 			{% if self.is_editable %}
-				&nbsp;&nbsp;<a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+				&nbsp;&nbsp;<a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="mini-icon-text edit-link"><i class="fa fa-edit"></i></a>
 			{% endif %}
 
 			{% if self.map_editable %}

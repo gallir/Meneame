@@ -174,13 +174,10 @@
 
 		{% if this_site.nsfw %}[nsfw]{% endif %}
 		{% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
-			<sup><a title="edit" href="{{ globals.base_url }}m/{{ this_site.name }}/subedit">*</a></sup>
+			<sup><a title="edit" href="{{ globals.base_url }}m/{{ this_site.name }}/subedit"><i class="fa fa-cog"></i></a></sup>
 		{% endif %}
 		{% if this_site.sub %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
 	  </div>
-
-
-
 
 	  <div class="edname">
 		{% if this_site_properties.facebook_page %}
@@ -218,13 +215,13 @@
 		<div class="header-menu01">
 		<ul class="menu01-itemsl">
 			{% for o in left_options %}
-				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
 			{% endfor %}
 		</ul>
 
 			<ul class="menu01-itemsr">
 			{% for o in right_options %}
-				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}">{{ o.text }}</a></li>
+				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
 			{% endfor %}
 
 			{% if globals.help_url %}
