@@ -1240,7 +1240,7 @@ background-size: 16px 16px;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .news-summary .warn, .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
+    .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1880,15 +1880,17 @@ background-size: 20px 300px;
     background-position: 0px -73px;
 }
 
-.edname .favorite {
+.edname .favorite, #header-sub .favorite {
 display: inline-block;
 margin: 0 4px;
 cursor: pointer;
 height: 18px;
 width: 16px;
+background: none;
+border:none;
 }
 
-.edname .favorite:before {
+.edname .favorite:before, #header-sub .favorite:before {
     font-family: FontAwesome;
     content: "\f006";
     text-rendering: optimizeLegibility !important;
@@ -1896,13 +1898,7 @@ width: 16px;
     -moz-osx-font-smoothing: grayscale !important;
 }
 
-.edname .favorite.on:before {
-    font-family: FontAwesome;
-    content: "\f005";
-    color: #ff9802;
-}
-
-.edname .favorite.on:before {
+.edname .favorite.on:before, #header-sub .favorite.on:before {
     font-family: FontAwesome;
     content: "\f005";
     color: #ff9802;
@@ -2910,6 +2906,6 @@ font-size: 14px;
 
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .comment-meta .answers, a.permalink  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
+    .comment-meta .vote, .comment-meta .reply, .favorite, .comment-meta .answers, a.permalink  { background-image:url({{ globals.base_static }}img/common/icons-common-2x.png); }
     #header-top .logo-mnm, #footthingy { background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png'); }
 }
