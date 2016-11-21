@@ -5,13 +5,24 @@
 	{% set short_link = link %}
 {% endif %}
 #}
-
-
-<div data-url="{{ link }}" data-title="{{ title }}" class="share_icons">
-
-<span class="fb" title="{% trans _('compartir en %s') "facebook" %}" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i></span>
-<span class="tw" title="{% trans _('compartir en %s') "twitter" %}"  onClick="share_tw(this)"><i class="fa fa-twitter-square"></i></span>
-
+{% exec urlencode link as link_url %}
+<div class="wrapper-share-icons hide">
+	<ul class="share-icons" data-url="{{ link }}" data-title="{{ title }}">
+		<li>
+			<a class="share-facebook" href="#" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i>{% trans _('Compartir en %s') "Facebook" %}</a>
+		</li>
+		<li>
+			<a class="share-twitter" href="#" onClick="share_tw(this)"><i class="fa fa-twitter-square"></i>{% trans _('Compartir en %s') "Twitter" %}</a>
+		</li>
+		{% if globals.mobile %}
+		<li>
+			<a class="share-whatsapp" href="whatsapp://send?text={{ title }} - {{ link_url }}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i>{% trans _('Compartir por %s') "Whatsapp" %}</a>
+		</li>
+		{% endif %}
+		<li>
+			<a class="share-mail" href="mailto:?subject={{title}}&body={{ link_url }}" title="{% trans _('Compartir por %s') "Correo" %}"><i class="fa fa-envelope"></i>{% trans _('Compartir por %s') "Correo" %}</a>
+		</li>
+	</ul>
 </div>
 
 {#

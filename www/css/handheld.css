@@ -194,6 +194,19 @@ margin: 0;
 margin-left: 80px;
 }
 
+.news-details.main a.comments {
+    width: 50%;
+}
+
+.news-details.main a.social-share {
+    width: 30%;
+}
+
+.news-details.main a.link.favorite {
+    padding-left: 20px;
+    width: 10%;
+}
+
 .commentform.warn {
 margin-left: 0;
 }
@@ -229,4 +242,12 @@ overflow: hidden;
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .ts.nomobile { background-image:url('{{ globals.base_static }}img/common/icons-common-2x.png'); }
+}
+
+.link.favorite:after {
+    content: "";
+}
+
+.link.favorite.on:after {
+    content: "";
 }
