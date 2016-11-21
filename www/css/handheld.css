@@ -198,8 +198,8 @@ margin-left: 80px;
     width: 50%;
 }
 
-.news-details.main a.social-share {
-    width: 30%;
+.news-details.main button.social-share {
+    width: 33%;
 }
 
 .news-details.main a.link.favorite {
