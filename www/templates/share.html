@@ -9,10 +9,10 @@
 <div class="wrapper-share-icons hide">
 	<ul class="share-icons" data-url="{{ link }}" data-title="{{ title }}">
 		<li>
-			<a class="share-facebook" href="#" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i>{% trans _('Compartir en %s') "Facebook" %}</a>
+			<a class="share-facebook" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i>{% trans _('Compartir en %s') "Facebook" %}</a>
 		</li>
 		<li>
-			<a class="share-twitter" href="#" onClick="share_tw(this)"><i class="fa fa-twitter-square"></i>{% trans _('Compartir en %s') "Twitter" %}</a>
+			<a class="share-twitter" onClick="share_tw(this)"><i class="fa fa-twitter-square"></i>{% trans _('Compartir en %s') "Twitter" %}</a>
 		</li>
 		{% if globals.mobile %}
 		<li>

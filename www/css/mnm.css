@@ -1505,7 +1505,6 @@ border: 1px solid #ff6400;
 
 .menealo a, .menealo span {
 display: block;
-padding: 2px 0;
 height: 18px;
 color: #FFF;
 text-decoration: none;
@@ -1858,8 +1857,10 @@ font-weight: bold;
     text-align: center;
 }
 
-.news-details.main a.social-share {
-
+.news-details.main button.social-share {
+    color: #FE6117;
+    background: none;
+    font-weight:normal;
 }
 
 .news-details.main span.tool.karma span {

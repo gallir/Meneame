@@ -2301,7 +2301,7 @@ $(document).ready(function () {
 			}, 2000);
 	}
 
-	$("a.social-share").popover({
+	$("button.social-share").popover({
 		placement: 'top',
 		trigger: 'click',
 		html: true,
@@ -2315,7 +2315,7 @@ $(document).ready(function () {
 	});
 
     $(document).on('click', function (e) {
-        $('a.social-share').each(function () {
+        $('button.social-share').each(function () {
             if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
                 (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false;
             }
