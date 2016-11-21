@@ -1,5 +1,5 @@
 {% if sponsored %}
-{% try_include 'private/sponsored/link.html' %}
+	{% try_include 'private/sponsored/link.html' %}
 {% else %}
 <div class="news-summary">
 	<div class="news-body">
@@ -14,17 +14,17 @@
 
 			<div class="menealo" id="a-va-{{ self.id }}">
 				{% if not self.votes_enabled %}
-				<span class="closed">{% trans _('cerrado') %}</span>
+					<span class="closed">{% trans _('cerrado') %}</span>
 				{% else %}
-				{% if not self.voted %}
-				<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
-				{% else %}
-				{% if self.voted > 0 %}
-				<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
-				{% else %}
-				<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
-				{% endif %}
-				{% endif %}
+					{% if not self.voted %}
+						<a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+					{% else %}
+						{% if self.voted > 0 %}
+						<span id="a-shake-{{ self.id }}">{% trans _('¡chachi!') %}</span>
+						{% else %}
+						<span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
+						{% endif %}
+					{% endif %}
 				{% endif %}
 			</div>
 
@@ -32,7 +32,7 @@
 
 			<div class="clics">
 				{% if self.id >= globals.click_counter AND self.clicks > 0 %}
-				{{ self.clicks }} {% trans _('clics') %}
+					{{ self.clicks }} {% trans _('clics') %}
 				{% else %}
 				&nbsp;
 				{% endif %}
@@ -41,30 +41,30 @@
 		{% endif %}
 
 		{% if self.status == 'abuse' OR self.has_warning %}
-		{% if self.status == 'abuse' %}
-		<div class="warn"><strong>{% trans _('Aviso') %}</strong>
-			{% trans _('noticia descartada por violar las') %}
-			<a href="{{ globals.legal }}#tos">{% trans _('normas de uso') %}</a>
-		</div>
+			{% if self.status == 'abuse' %}
+				<div class="warn"><strong>{% trans _('Aviso') %}</strong>
+					{% trans _('noticia descartada por violar las') %}
+					<a href="{{ globals.legal }}#tos">{% trans _('normas de uso') %}</a>
+				</div>
 		{% else %}
-		{% if self.has_warning %}
-		<div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}">
-			{% if self.status == 'published' %}
-			{% trans _('Envío erróneo o controvertido, por favor lee los comentarios.') %}
-			{% else %}
-			{% if self.author == current_user.user_id AND self.is_editable %}
-			{% trans _('Este envío tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
-			{% else %}
-			{% if self.negative_text %}
-			{% trans  _('Este envío podría ser') %} <strong>{{ self.negative_text }}</strong>
-			{% else %}
-			{% trans _('Este envío tiene varios votos negativos.') %}
+			{% if self.has_warning %}
+			<div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}">
+				{% if self.status == 'published' %}
+					{% trans _('Envío erróneo o controvertido, por favor lee los comentarios.') %}
+				{% else %}
+					{% if self.author == current_user.user_id AND self.is_editable %}
+						{% trans _('Este envío tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
+					{% else %}
+						{% if self.negative_text %}
+							{% trans  _('Este envío podría ser') %} <strong>{{ self.negative_text }}</strong>
+						{% else %}
+							{% trans _('Este envío tiene varios votos negativos.') %}
+					{% endif %}
+					<a href="{{ self.relative_permalink }}">{% trans _('Asegúrate') %}</a> {% trans _('antes de menear') %}
+				{% endif %}
 			{% endif %}
-			<a href="{{ self.relative_permalink }}">{% trans _('Asegúrate') %}</a> {% trans _('antes de menear') %}
+			</div>
 			{% endif %}
-			{% endif %}
-		</div>
-		{% endif %}
 		{% endif %}
 		{% endif %}
 		{# {% if globals.ads %}<!-- google_ad_section_start -->{% endif %} #}
@@ -209,7 +209,7 @@
 			<!-- <strong class="wideonly"><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a>:</strong> -->
 			{% endif %}
 
-			<a class="social-share">
+			<a class="social-share" href="#">
 				<i class="fa fa-share-alt"></i>compartir
 			</a>
 			{% include "share.html" %}
@@ -217,7 +217,7 @@
 			{% endif %}
 
 			{% if current_user.user_id > 0 %}
-			<a id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></a>
+			<a href="#" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></a>
 			{% endif %}
 
 		</div>
