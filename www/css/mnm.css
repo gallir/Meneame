@@ -1359,6 +1359,7 @@ margin-top: 6px;
     color: #FE6117;
     font-weight: bold;
     margin-top: 0px;
+    border-bottom-left-radius: 5px;
 }
 
 .news-details.main ul.share-icons {
@@ -1849,6 +1850,7 @@ font-weight: bold;
 
 .news-details.main {
     border-top: 1px solid #D8D8D8;
+    width: 90%;
 }
 
 .news-details.main a {
