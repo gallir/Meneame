@@ -1129,7 +1129,7 @@ function share_fb(e) {
 	var $e = $(e);
 
 	window.open(
-		'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent($e.parent().data('url')),
+		'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent($e.parent().parent().data('url')),
 		'facebook-share-dialog',
 		'width=626,height=436');
 	return false;
@@ -1138,7 +1138,7 @@ function share_fb(e) {
 function share_tw(e) {
 	var $e = $(e);
 	window.open(
-		'https://twitter.com/intent/tweet?url='+encodeURIComponent($e.parent().data('url'))+'&text='+encodeURIComponent($e.parent().data('title')),
+		'https://twitter.com/intent/tweet?url='+encodeURIComponent($e.parent().parent().data('url'))+'&text='+encodeURIComponent($e.parent().parent().data('title')),
 		'twitter-share-dialog',
 		'width=550,height=420');
 	return false;
@@ -2301,5 +2301,24 @@ $(document).ready(function () {
 			}, 2000);
 	}
 
-});
+	$("button.social-share").popover({
+		placement: 'top',
+		trigger: 'click',
+		html: true,
+		content: function() {
+			return $(this).next(".wrapper-share-icons").html();
+		}
+	});
 
+	$('[data-toggle="tooltip"]').tooltip({
+		template: '<div class="mnm-tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+	});
+
+    $(document).on('click', function (e) {
+        $('button.social-share').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false;
+            }
+        });
+    });
+});
