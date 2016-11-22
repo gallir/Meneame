@@ -1780,7 +1780,7 @@ border-color: #3D72C3;
 background-color: #CAD0E2;
 }
 
-.comment-body.hidden {
+.comment-body.hide {
 border: 1px solid #ccc;
 padding: 0px 5px 0px 10px;
 font-size: 90%;
@@ -1793,7 +1793,7 @@ background: #fff;
 color: #C85000;
 }
 
-.comment-body.hidden a, .comment-body.hidden a strong {
+.comment-body.hide a, .comment-body.hide a strong {
 color: #aaa;
 }
 
@@ -1832,7 +1832,7 @@ overflow: hidden;
 vertical-align: bottom;
 }
 
-.comment-meta.hidden, .comment-meta.hidden a {
+.comment-meta.hide, .comment-meta.hide a {
 color: #aaa;
 }
 

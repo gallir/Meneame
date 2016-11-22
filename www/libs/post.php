@@ -166,8 +166,8 @@ class Post extends LCPBase {
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
 		if ($this->hidden || $this->ignored)  {
-			$post_meta_class = 'comment-meta hidden';
-			$post_class = 'comment-body hidden';
+			$post_meta_class = 'comment-meta hide';
+			$post_class = 'comment-body hide';
 		} else {
 			$post_meta_class = 'comment-meta';
 			$post_class = 'comment-body';
