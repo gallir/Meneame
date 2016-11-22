@@ -1028,6 +1028,7 @@ width: 25px;
 height: 25px;
 margin-right: 4px;
 vertical-align: bottom;
+margin-top: 5px;
 }
 
 abbr { cursor: help; }
@@ -3145,4 +3146,10 @@ font-size: 14px;
     margin-top: -5px;
     border-width: 0 5px 5px;
     border-bottom-color: #fff0e8;
+}
+
+.tooltip {
+    position: relative;
+    display: inline;
+    opacity: 1;
 }
