@@ -269,8 +269,8 @@ class Comment extends LCPBase {
 
 		/* pickup the correct css for comments */
 		if ($this->hidden || $this->ignored && !$link->is_sponsored())  {
-			$this->comment_meta_class = 'comment-meta hide';
-			$this->comment_class = 'comment-body hide';
+			$this->comment_meta_class = 'comment-meta phantom';
+			$this->comment_class = 'comment-body phantom';
 		} else {
 			$this->comment_meta_class = 'comment-meta';
 			$this->comment_class = 'comment-body';
