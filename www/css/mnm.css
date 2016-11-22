@@ -1504,8 +1504,9 @@ border: 1px solid #ff6400;
 }
 
 .menealo a, .menealo span {
+padding-top: 3px;
 display: block;
-height: 18px;
+height: 25px;
 color: #FFF;
 text-decoration: none;
 border: 1px solid #FFF;
