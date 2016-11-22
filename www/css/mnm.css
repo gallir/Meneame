@@ -40,6 +40,8 @@ color: #FF6400;
 legend {
 font-weight: bold;
 padding: 0 5px;
+width: auto;
+font-size: 15px;
 }
 
 legend a {
@@ -1017,6 +1019,9 @@ margin-bottom: 5px;
 overflow: hidden;
 float: right;
 margin: 3px 3px 3px 5px;
+border-radius: 0px;
+padding: 0px;
+border: none;
 box-shadow: 0 0 1px rgba(0,0,0,0.8);
 -moz-box-shadow: 0 0 1px rgba(0,0,0,0.8);
 -webkit-box-shadow: 0 0 1px rgba(0,0,0,0.8);
@@ -1116,7 +1121,6 @@ margin: 5px 0 3px 0;
 }
 
 table.keyvalue tr {
-border-bottom: 1px solid;
 padding: 5px 0 2px 0;
 }
 
@@ -3154,4 +3158,6 @@ font-size: 14px;
     position: relative;
     display: inline;
     opacity: 1;
+    z-index: 0;
+    font-size: inherit;
 }
