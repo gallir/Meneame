@@ -202,13 +202,12 @@ margin-left: 80px;
     text-align: left;
 }
 
-.news-details.main a.comments {
-    width: 50%;
-    padding-top: 9px;
+.news-details.main a {
+    padding-top: 5px;
 }
 
-.news-details.main a {
-    padding-top: 8px;
+.news-details.main a.comments {
+    padding-top: 6px;
 }
 
 .news-details.main button.social-share {
