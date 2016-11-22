@@ -1342,7 +1342,6 @@ color: #3c3c3c;
 }
 
 .news-details.main {
-line-height: 120%;
 margin-top: 6px;
 }
 
@@ -1355,8 +1354,10 @@ margin-top: 6px;
 
 .news-details.main a.comments {
     background-color: #fff0e8;
+    height: 40px;
     color: #FE6117;
     font-weight: bold;
+    margin-top: 0px;
 }
 
 .news-details.main ul.share-icons {
@@ -1460,7 +1461,6 @@ position: absolute;
 top: 10px;
 left: 8px;
 width: 67px;
-height: 85px;
 border: 1px solid #ffeed6;
 font-size: 12px;
 color: #ff6400;
@@ -1862,6 +1862,7 @@ font-weight: bold;
     background: none;
     font-weight:normal;
     width: 150px;
+    height: 30px;
 }
 
 .news-details.main span.tool.karma span {
@@ -2002,7 +2003,6 @@ a.link.favorite {
 }
 
 .link.favorite {
-    vertical-align: bottom;
     cursor: pointer;
     background: none;
 }
@@ -2724,7 +2724,7 @@ background:#666;
 color:#fff;
 font-size:15px;
 font-weight:bold;
-height:25px;
+height:30px;
 width:35px;
 padding-top: 5px;
 text-align:center;

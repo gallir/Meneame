@@ -194,8 +194,21 @@ margin: 0;
 margin-left: 80px;
 }
 
+.news-details {
+    text-align: center;
+}
+
+.news-details.main {
+    text-align: left;
+}
+
 .news-details.main a.comments {
     width: 50%;
+    padding-top: 9px;
+}
+
+.news-details.main a {
+    padding-top: 8px;
 }
 
 .news-details.main button.social-share {
@@ -203,7 +216,7 @@ margin-left: 80px;
 }
 
 .news-details.main a.link.favorite {
-    padding-left: 20px;
+    padding-left: 15px;
     width: 10%;
 }
 

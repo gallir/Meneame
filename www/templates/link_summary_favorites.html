@@ -195,15 +195,9 @@
 
 		<div class="news-details main">
 
-			{% if not globals.mobile %}
-			<a class="comments" data-toggle="tooltip" data-placement="bottom" href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">
-				<i class="fa fa-comments"></i>{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span>{% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
-			</a>
-			{% else %}
 			<a class="comments" href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">
 				<i class="fa fa-comments"></i>{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span>{% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
 			</a>
-			{% endif %}
 
 			{% if ! self.is_discarded %}
 
