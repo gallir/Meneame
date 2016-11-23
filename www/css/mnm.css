@@ -3168,8 +3168,12 @@ button.share-link {
     background: none;
     font-size: 14px;
     font-weight: normal;
-    display: flex;
+    display: inline-block;
     margin:0px;
+}
+
+button.share-link span {
+    vertical-align: super;
 }
 
 button.share-link i {
