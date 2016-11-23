@@ -139,8 +139,19 @@
 		{% endif %}
 
 		{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
+		<span class="tool sub-name">
+					<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
+					   {% if self.sub_owner > 0 %}
+							class="subname"
+							style="
+								{% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
+								{% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
+							"
+						{% endif %}
+						>{{ self.sub_name }}</a>
+				</span> |
 		{% if self.show_tags AND self.tags %}
-		<br/><span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
+		<span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}
 		{% for id, tag in tags_array %}{% if id > 0 %}, {% endif %}<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>{% endfor %}
 
@@ -150,6 +161,7 @@
 		{% endif %}
 
 		</span>
+
 		{% endif %}
 		{% endif %}
 		{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
@@ -196,7 +208,7 @@
 		<div class="news-details main">
 
 			<a class="comments" href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">
-				<i class="fa fa-comments"></i>{% if self.comments > 0 %}<span class="counter">{{ self.comments }}</span>{% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
+				<i class="fa fa-comments"></i>{% if self.comments > 0 %}{{ self.comments }} {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
 			</a>
 
 			{% if ! self.is_discarded %}
@@ -204,10 +216,8 @@
 			{% set link = self.permalink %}
 			{% set title = self.title %}
 
-			{% if not globals.mobile %}
 			{% exec self.get_short_permalink as short_link %}
 			<!-- <strong class="wideonly"><a href="{{ short_link }}" title="{% trans _('enlace corto') %}">{% trans _('compartir') %}</a>:</strong> -->
-			{% endif %}
 
 			<button class="social-share">
 				<i class="fa fa-share-alt"></i>compartir
@@ -218,9 +228,9 @@
 
 			{% if current_user.user_id > 0 %}
 				{% if not globals.mobile %}
-					<a data-toggle="tooltip" data-placement="top" title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></a>
+					<button data-toggle="tooltip" data-placement="top" title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></button>
 				{% else %}
-					<a title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></a>
+					<button title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></button>
 				{% endif %}
 			{% endif %}
 

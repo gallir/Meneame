@@ -2321,4 +2321,20 @@ $(document).ready(function () {
             }
         });
     });
+
+	var clipboard = new Clipboard('.share-link');
+
+	clipboard.on('success', function(e) {
+
+		$(e.trigger).tooltip({
+			placement: 'right',
+			trigger: 'manual',
+			title: 'Copiado',
+			template: '<div class="mnm-tooltip share" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+		});
+
+		$(e.trigger).on('hidden.bs.tooltip', function () {});
+
+		$(e.trigger).tooltip('show');
+	});
 });
