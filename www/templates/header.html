@@ -77,13 +77,15 @@
 {% if globals.favicon %}
 	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
 {% else %}
-	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_196x196.png" type="image/png" sizes="196x196"/>
-	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_128x128.png" type="image/png" sizes="128x128"/>
-	<link rel="shortcut icon"  href="{{globals.base_static}}img/favicons/logo_64x64.png" type="image/png" sizes="64x64"/>
-	<link rel="shortcut icon" href="{{globals.base_static}}img/favicons/logo_16x16.png" type="image/png" sizes="16x16"/>
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ globals.base_static }}apple-touch-icon.png?v=E6bENepwgd">
+	<link rel="icon" type="image/png" href="{{ globals.base_static }}favicon-32x32.png?v=E6bENepwgd" sizes="32x32">
+	<link rel="icon" type="image/png" href="{{ globals.base_static }}favicon-16x16.png?v=E6bENepwgd" sizes="16x16">
+	<link rel="manifest" href="{{ globals.base_static }}manifest.json?v=E6bENepwgd">
+	<link rel="mask-icon" href="{{ globals.base_static }}safari-pinned-tab.svg?v=E6bENepwgd" color="#5bbad5">
+	<link rel="shortcut icon" href="{{ globals.base_static }}favicon.ico?v=E6bENepwgd">
+	<meta name="theme-color" content="#ffffff">
 {% endif %}
 
-<link rel="apple-touch-icon" href="{{globals.base_static}}img/favicons/apple-touch-icon.png"/>
 <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
 {#
