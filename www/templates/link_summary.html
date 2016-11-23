@@ -139,7 +139,8 @@
 		{% endif %}
 
 		{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
-		<span class="tool sub-name">
+			{% if type == 'short' %}
+				<span class="tool sub-name">
 					<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
 					   {% if self.sub_owner > 0 %}
 							class="subname"
@@ -150,6 +151,9 @@
 						{% endif %}
 						>{{ self.sub_name }}</a>
 				</span> |
+			{% else %}
+			<br>
+			{% endif %}
 		{% if self.show_tags AND self.tags %}
 		<span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}
