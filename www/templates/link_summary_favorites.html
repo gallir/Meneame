@@ -217,9 +217,8 @@
 			{% endif %}
 
 			{% if current_user.user_id > 0 %}
-			<a id="favr-{{ self.id }}" onclick="change_fav_readed('favr-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite_readed %} class="link favorite readed on" {% else %} class="link favorite readed" {% endif %} ></a>
-			<a id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" class="link favorite delete on"></a>
-
+			<a style="display:inline-block;" id="favr-{{ self.id }}" onclick="change_fav_readed('favr-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite_readed %} class="link favorite readed on" {% else %} class="link favorite readed" {% endif %} ></a>
+			<a style="display:inline;" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" class="link favorite delete on"></a>
 			{% endif %}
 
 		</div>
