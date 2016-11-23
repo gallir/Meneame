@@ -188,6 +188,7 @@ margin: 0;
 
 .news-summary .warn {
     margin: 0px 0 5px 95px;
+    display:block;
 }
 
 .news-details {
