@@ -10,6 +10,13 @@
 <meta name="referrer" content="always">
 
 <meta name="viewport" content="width=device-width, initial-scale=1{% if globals.mobile %}, user-scalable=no{% endif %}"/>
+<meta name="theme-color" content="
+{% if this_site.color2 %}
+	{{this_site.color2}}
+{% else %}
+	#ff6400
+{% endif %}
+">
 
 {% if globals.css_webfonts %}
 	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
