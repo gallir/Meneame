@@ -38,8 +38,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 		$tabname = 'tabmain';
 	}
 
-	$vars = compact('items', 'reload_text', 'tab_selected', 'tabname', 'active');
-	return Haanga::Load('mobile/do_tabs.html', $vars);
+	return Haanga::Load('mobile/do_tabs.html', compact('items', 'reload_text', 'tab_selected', 'tabname', 'active'));
 }
 
 function do_header($title, $id='home') {
@@ -52,16 +51,11 @@ function do_header($title, $id='home') {
 	$globals['security_key'] = get_security_key();
 	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
-	$vars = compact('title', 'id');
-
-	return Haanga::Load("mobile/header.html", $vars);
+	return Haanga::Load("mobile/header.html", compact('title', 'id'));
 }
 
 function do_footer($credits = true) {
-	global $globals;
-
-	$vars = compact('credits');
-	return Haanga::Load('mobile/footer.html', $vars);
+	return Haanga::Load('mobile/footer.html', compact('credits'));
 }
 
 function do_footer_menu() {
@@ -76,6 +70,7 @@ function force_authentication() {
 		header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
 		die;
 	}
+
 	return true;
 }
 
@@ -90,7 +85,7 @@ function do_pages($total, $page_size=15) {
 		$query = htmlspecialchars($query);
 		$query = "&amp;$query";
 	}
-	
+
 	$current = get_current_page();
 	$total_pages=ceil($total/$page_size);
 
@@ -111,6 +106,4 @@ function do_pages($total, $page_size=15) {
 		echo '<span class="nextprev">&#187;</span>';
 	}
 	echo "</div>\n";
-
 }
-

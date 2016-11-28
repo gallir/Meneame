@@ -1,11 +1,45 @@
-<div class="sidebox message"
-	style="
-		{% if self.box_color %}color: {{ self.box_color }}; {% endif %}
-		{% if self.box_background %}background-color: {{ self.box_background }}; {% endif %}
-		{% if self.box_bordercolor %}border-color: {{ self.box_bordercolor }}; {% endif %}
-	"
->
+<div class="sidebox-extended">
+    {% if site.color1 %}
+    <div class="header" style="color:{{ site.color1 }};{% if site.color2 %}background-color:{{ site.color2 }}{% endif %}">
+        <h4 style="color:{{ site.color1 }}"><a href="{{ site.url }}" style="color:{{ site.color1 }}">{{ site.name_long }}</a></h4>
+    </div>
+    {% else %}
+    <div class="header" style="{% if site.color2 %}background-color:{{ site.color2 }}{% endif %}">
+        <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
+    </div>
+    {% endif %}
 
-{{ self.message_html }}
+    <div class="box">
+        {% if properties.message %}
+        <div class="content">
+            {{ properties.message_html }}
+        </div>
+        {% endif %}
 
+        <div class="content bg-gray-light clearfix">
+            {% if site.show_admin AND owner.user_id %}
+            {% trans _('Admin') %} | <a href="{{ owner.user_login|useruri }}">{{ owner.user_login }}</a>
+            {% endif %}
+
+            <div class="pull-right">{{ site.followers }} {% trans _('seguidores') %}</div>
+        </div>
+    </div>
+
+    <div class="footer content bg-gray-medium">
+        {% if user.user_id %}
+
+        <a href="javascript:add_remove_sub('{{ site.id }}', 1)" class="btn btn-mnm follow_b_{{ site.id }}" title="{% trans _('suscripción al sub') %}"/>
+            <i class="fa fa-check-circle-o"></i>
+            <span>{% trans _('Seguir') %}</span>
+        </a>
+
+        {% else %}
+
+        <a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="btn btn-mnm" title="{% trans _('suscripción al sub') %}"/>
+            <i class="fa fa-check-circle-o"></i>
+            <span>{% trans _('Seguir') %}</span>
+        </a>
+
+        {% endif %}
+    </div>
 </div>

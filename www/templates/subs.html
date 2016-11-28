@@ -1,52 +1,75 @@
-{% if title %}
-<div class="topheading"><h2>{{ title }}</h2></div>
-{% endif %}
+<section class="section section-medium section-with-sidebar">
+	{% if can_edit %}
+	<a href="{{ globals.base_url }}subedit" class="action-link action-link-large pull-right">
+		<i class="fa fa-plus"></i>
+		<span>{% trans _('crear sub') %}</span>
+	</a>
+	{% endif %}
 
-{% if can_edit %}
-	<a href="{{ globals.base_url }}subedit"><b>{% trans _('crear sub') %}</b></a><br/><br/>
-{% endif %}
+	<h1>{% trans _('Subs') %}</h1>
 
-{% if chars %}
-	<div style="margin: 0 20px 20px 20px;font-variant:small-caps;font-size: 110%">
-	{% for c in chars %}
-		<a href="{{globals.base_url_general}}subs?all&amp;c={{ c }}">
-			{% if c == char_selected %}
-				<span style="text-decoration:underline;font-weight:900">{{ c }}</span>
-			{% else %}
-				{{ c }}
+	<p class="intro intro-large">{% trans _('Los subs son secciones temáticas que te permiten personalizar las noticias que ves. Selecciona los temas que te interesan y podrás verlo en tu portada de suscripciones.') %}</p>
+
+	<form id="form-subs-search" class="form form-search" method="get">
+		<div class="form-group form-group-search">
+			<i class="fa fa-search"></i>
+			<input type="search" name="q" class="form-control input-search" value="{{ q|escape }}" placeholder="{% trans _('Encuentra el sub que estás buscando') %}" autocomplete="off" />
+		</div>
+
+		<div class="clearfix form-group form-group-filter">
+			{% if chars %}
+			<div class="charlist">
+				{% for c in chars %}
+				<a href="?all&amp;c={{ c }}" {% if c == char_selected %}class="selected"{% endif %}>{{ c }}</a>
+				{% endfor %}
+			</div>
 			{% endif %}
-		</a>&nbsp;
-	{% endfor %}
+
+			<select class="form-control input-filter">
+				<option value="subscribed" {% if option === 0 %}selected{% endif %}>{% trans _('Mis suscripciones') %}</option>
+				<option value="all" {% if option === 2 %}selected{% endif %}>{% trans _('Todos') %}</option>
+				<option value="active" {% if option === 1 %}selected{% endif %}>{% trans _('Los más activos') %}</option>
+			</select>
+		</div>
+	</form>
+
+	<table class="subs-listing">
+		{% for s in subs %}
+		<tr>
+			<td class="color" {% if s.color2 %}style="background-color: {{ s.color2 }};"{% endif %}>&nbsp;</td>
+
+			<td class="followers">
+				<span><strong>{{ s.followers }} </strong> {% trans _('seguidores') %}</span>
+			</td>
+
+			<td class="logo">
+				{% if s.user_id %}
+				<img data-src="{% exec get_avatar_url s.user_id, s.user_avatar, 40, false %}" data-2x="s:-20.:-40." src="{{ globals.base_static }}img/g.gif" class="avatar lazy"/>
+				{% else %}
+				<img data-src="{% exec get_no_avatar_url 40, false %}" data-2x="s:-20.:-40." src="{{ globals.base_static }}img/g.gif" class="avatar lazy"/>
+				{% endif %}
+			</td>
+
+			<td class="name">
+				<a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}">{{ s.name }}</a>
+
+				<div class="description">
+					{% if s.nsfw %}<strong>[nsfw]</strong>{% endif %}
+					{{ s.name_long }}
+				</div>
+			</td>
+
+			<td class="actions">
+				<span class="followers"><strong>{{ s.followers }} </strong> {% trans _('seguidores') %}</span>
+				{% exec print_follow_sub s.id as dummy %}
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+
+	{% if option === 2 %}
+	<div class="pagination-center">
+		{% exec do_pages rows page_size false as dummy %}
 	</div>
-{% endif %}
-
-<table class="decorated">
-{% for s in subs %}
-	<tr>
-		<td>
-		{% if s.user_id %}
-			<img width="20" height="20" data-src="{% exec get_avatar_url s.user_id, s.user_avatar, 20, false %}" data-2x="s:-20.:-40." alt="" src="{{ globals.base_static }}img/g.gif" class="tooltip u:{{ s.user_id }} avatar lazy"/>&nbsp;
-		{% else %}
-			<img width="20" height="20" data-src="{% exec get_no_avatar_url 20, false %}" data-2x="s:-20.:-40." alt="" src="{{ globals.base_static }}img/g.gif" class="avatar lazy"/>&nbsp;
-		{% endif %}
-
-		<span class="subname big"><a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}"
-			style="
-			{% if s.color1 %}color:{{ s.color1 }} !important;{% endif %}
-			{% if s.color2 %}background-color:{{ s.color2 }} !important;{% endif %}
-			"> {{ s.name }} </a></span>
-
-		{% if s.nsfw %}(nsfw){% endif %}
-		{% if current_user.user_id AND current_user.admin || s.owner == current_user.user_id %}
-			&nbsp;[<a href="{{ s.base_url }}m/{{ s.name }}/subedit">edit</a>]
-		{% endif %}
-		{% if ! s.enabled %}*{% endif %}
-		</td>
-		<td style="text-align: center;">
-			{% exec print_follow_sub s.id as dummy %}<span style="display:block;">[{{ s.followers }}]</span>
-		</td>
-		<td>{{ s.name_long }}</td>
-	</tr>
-
-{% endfor %}
-</table>
+	{% endif %}
+</section>

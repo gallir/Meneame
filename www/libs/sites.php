@@ -10,6 +10,8 @@ class SitesMgr {
 	static private $id = 0;
 	static private $parent = false;
 	static private $info = false;
+	static private $owner;
+	static private $followers;
 
 	const PREFERENCES_KEY = 'sub_preferences_';
 	const SQL_BASIC = "SELECT subs.*, media.id as media_id, media.size as media_size, media.dim1 as media_dim1, media.dim2 as media_dim2,
@@ -90,6 +92,23 @@ class SitesMgr {
 	static public function my_id() {
 		if (! self::$id ) self::__init();
 		return self::$id;
+	}
+
+	static public function get_owner()
+	{
+		if (self::$owner) {
+			return self::$owner;
+		}
+
+		global $db;
+
+		if (! self::$id ) {
+			self::__init();
+		}
+
+		$info = self::get_info();
+
+		return self::$owner = $db->get_row('SELECT * FROM users WHERE user_id = "'.(int)$info->owner.'" LIMIT 1;');
 	}
 
 	static public function is_owner() {
@@ -357,7 +376,6 @@ class SitesMgr {
 			return $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
 		}
 
-
 		$n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 
 		return $n < 10 && time() - $current_user->user_date > 86400*10;
@@ -375,6 +393,21 @@ class SitesMgr {
 		global $db;
 
 		return $db->get_results("select subs.* from subs, prefs where pref_user_id = $user and pref_key = 'sub_follow' and subs.id = pref_value order by name asc");
+	}
+
+	static public function get_followers()
+	{
+		if (self::$followers !== null) {
+			return self::$followers;
+		}
+
+		global $db;
+
+		if (!self::$id) {
+			self::__init();
+		}
+
+		return self::$followers = $db->get_var('SELECT COUNT(*) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::$id.'");');
 	}
 
 	static public function store_extended_properties($id = false, &$prefs) {

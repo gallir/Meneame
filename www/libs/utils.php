@@ -1330,7 +1330,7 @@ function print_oauth_icons_large($return = false) {
 			$text = _('login con Facebook');
 		}
 		if ($title) {
-			echo '<div class="row-col row-col-6">';
+			echo '<div class="col-xs-6">';
 			echo '<a class="facebook" href="'.$globals['base_url_general'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
 			echo _('con Facebook');
 			echo '<i class="icon fa fa-facebook-official"></i>';
@@ -1352,7 +1352,7 @@ function print_oauth_icons_large($return = false) {
 			$text = _('login con Google+');
 		}
 		if ($title) {
-			echo '<div class="row-col row-col-6">';
+			echo '<div class="col-xs-6">';
 			echo '<a class="gplus" href="'.$globals['base_url_general'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
 			echo _('o Google');
 			echo '<i class="icon fa fa-google"></i>';

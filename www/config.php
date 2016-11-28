@@ -42,7 +42,7 @@ define('config_done', 1);
 // $globals['force_ssl'] = True;
 
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
-$globals['ssl_server'] = False; 
+$globals['ssl_server'] = False;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
@@ -362,7 +362,7 @@ $globals['js_main'] = 'main.js.php';
 $globals['css_main'] = 'mnm.php';
 // Load webfonts from the specified url
 // $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
-$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,700|Roboto:300,400,700';
+$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Roboto:300,400,700';
 $globals['use_fontawesome_cdn'] = true; // If false serve fontawesome locally
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
@@ -426,7 +426,7 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 		$globals['cli'] = False;
 		@include($_SERVER['SERVER_NAME'].'-local.php');
 	}
-		
+
 	// @include($_SERVER['SERVER_ADDR'].'-local.php');
 
 

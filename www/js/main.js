@@ -270,21 +270,30 @@ function add_remove_sub(id, change) {
 
 	change = (change ? 1 : 0);
 
-	$.post(url,
-		{ id: id, key: base_key, change: change },
-		function(data) {
-			if (data.error) {
-				mDialog.notify("{% trans _('Error:') %}"+data.error, 5);
-				return;
-			}
-			$button = $('#follow_b_'+id);
-			if (data.value) {
-				$button.addClass("on").removeClass("off");
-			} else {
-				$button.addClass("off").removeClass("on");
-			}
+	$.post(url, { id: id, key: base_key, change: change }, function(data) {
+		if (data.error) {
+			mDialog.notify("{% trans _('Error:') %}" + data.error, 5);
+			return;
 		}
-	, "json");
+
+		var $button = $('.follow_b_' + id),
+			$icon = $('.fa', $button),
+			$text = $('span', $button);
+
+		$button.removeClass('following-yes following-no');
+		$icon.removeClass('fa-check-circle-o fa-times-circle-o');
+
+		if (data.value) {
+			$button.addClass('following-yes');
+			$icon.addClass('fa-times-circle-o');
+			$text.html("{% trans _('Siguiendo') %}");
+		} else {
+			$button.addClass('following-no');
+			$icon.addClass('fa-check-circle-o');
+			$text.html("{% trans _('Seguir') %}");
+		}
+	}, 'json');
+
 	reportAjaxStats('html', "sub_follow");
 }
 
@@ -391,13 +400,16 @@ function eraseCookie(name) {
 ** http://code.google.com/intl/es/apis/analytics/docs/eventTrackerOverview.html
 */
 function reportAjaxStats(category, action, url) {
-	if (typeof(ga) != 'undefined') {
-		if (category && action) {
-			ga('send', 'event', category, action);
-		}
-		if (typeof url == 'string') {
-			ga('send', 'pageview', url);
-		}
+	if (typeof ga === 'undefined') {
+		return;
+	}
+
+	if (category && action) {
+		ga('send', 'event', category, action);
+	}
+
+	if (typeof url === 'string') {
+		ga('send', 'pageview', url);
 	}
 }
 

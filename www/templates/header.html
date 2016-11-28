@@ -9,73 +9,79 @@
 <meta name="generator" content="meneame" />
 <meta name="referrer" content="always">
 
-<meta name="viewport" content="width=device-width, initial-scale=1{% if globals.mobile %}, user-scalable=no{% endif %}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1{% if globals.mobile %}, user-scalable=no{% endif %}" />
 
 {% if globals.css_webfonts %}
-	<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+<link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
 {% endif %}
 
 {# Save bandwidth for mobiles #}
 {% if not globals.mobile %}
 
 {% if globals.noindex %}
-	<meta name="robots" content="noindex,nofollow" />
+<meta name="robots" content="noindex,nofollow" />
 {% endif %}
 
 {% if globals.tags %}
-	<meta name="keywords" content="{{globals.tags}}" />
+<meta name="keywords" content="{{globals.tags}}" />
 {% endif %}
 
 {% if globals.description %}
-	<meta name="description" content="{{globals.description}}" />
+<meta name="description" content="{{globals.description}}" />
 {% endif %}
 
 {% if globals.permalink AND title %}
-	{# Twitter Card #}
-	<meta name="twitter:card" content="summary">
-	<meta name="twitter:title" content="{{title}}">
-	{% if globals.twitter_user %}
-		<meta name="twitter:site" content="@{{globals.twitter_user}}">
-	{% endif %}
-	{% if globals.thumbnail %}
-   		<meta property="og:image" content="{{globals.thumbnail}}"/>
-   		<meta name="twitter:image" content="{{globals.thumbnail}}"/>
-	{% endif %}
-	<meta property="og:url" content="{{ globals.permalink }}">
-	<meta property="og:title" content="{{title}}">
-	<meta property="og:description" content="{{ globals.description }}">
+
+{# Twitter Card #}
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{title}}">
+
+{% if globals.twitter_user %}
+<meta name="twitter:site" content="@{{globals.twitter_user}}">
 {% endif %}
 
-<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}opensearch"/>
+{% if globals.thumbnail %}
+<meta property="og:image" content="{{globals.thumbnail}}" />
+<meta name="twitter:image" content="{{globals.thumbnail}}" />
+{% endif %}
+
+<meta property="og:url" content="{{ globals.permalink }}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{ globals.description }}">
+
+{% endif %}
+
+<link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}opensearch" />
 <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss" />
 <link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss?status=queued" />
 
 {% endif %}
 {# /Save bandwidth for mobiles #}
 
-
 <title>{{title}}</title>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 {% if globals.use_fontawesome_cdn %}
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 {% else %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_static }}css/font-awesome.min.css"/>
+<link href="{{ globals.base_static }}css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" />
 {% endif %}
 
 {% if globals.css_main %}
-	<link rel="stylesheet" type="text/css" media="all" href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}"/>
+<link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}" rel="stylesheet" type="text/css" media="all" />
 {% endif %}
 
 {% for css in globals.extra_css %}
-<link rel="stylesheet" type="text/css" media="all" href="{{globals.base_static}}css/{{css}}"/>
+<link href="{{globals.base_static}}css/{{css}}" rel="stylesheet" type="text/css" media="all" />
 {% endfor %}
 
 {# <meta name="mobile-web-app-capable" content="yes"> #}
+
 {% if globals.favicon %}
-	<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon"/>
+<link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon" />
 {% else %}
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ globals.base_static }}apple-touch-icon.png?v=E6bENepwgd">
 	<link rel="icon" type="image/png" href="{{ globals.base_static }}favicon-32x32.png?v=E6bENepwgd" sizes="32x32">
@@ -93,7 +99,7 @@
 #}
 
 {% if globals.extra_head %}
-	{{ globals.extra_head}}
+    {{ globals.extra_head}}
 {% endif %}
 
 {% try_include 'private/stats.html' %}
@@ -103,145 +109,179 @@
 <body>
 
 <div id="header-top">
-  <div id="nav-menu"></div>
-  <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
-	{% if not globals.mobile %}
-		<span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
-		<ul id="edlist">
-		{% if this_site.sub %}
-			<li class="selected">
-				<a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
-			</li>
-		{% endif %}
-		{% for s in sites %}
-			<li {% if s.id == this_site.id %}class="selected"{% endif %}>
-				{% if s.sub AND s.meta %}
-					<a href="//{{ s.server_name }}{{ s.base_url }}m/{{ s.name }} ">{{ s.name_long }}</a>
-				{% else %}
-					<a href="//{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
-				{% endif %}
-			</li>
-		{% endfor %}
-		</ul>
-	{% endif %}
+    <div id="nav-menu"></div>
 
-  {% include "header_userinfo.html" %}
+    <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
+
+    {% if not globals.mobile %}
+
+    <span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
+
+    <ul id="edlist">
+        {% if this_site.sub %}
+        <li class="selected">
+            <a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
+        </li>
+        {% endif %}
+
+        {% for s in sites %}
+        <li {% if s.id == this_site.id %}class="selected"{% endif %}>
+            {% if s.sub AND s.meta %}
+            <a href="//{{ s.server_name }}{{ s.base_url }}m/{{ s.name }} ">{{ s.name_long }}</a>
+            {% else %}
+            <a href="//{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% endif %}
+
+    {% include "header_userinfo.html" %}
 </div>
 
 <div id="variable">
-{% else %} {# PARTIAL partial #}
-<span id="ajaxinfo"
-	data-partial="1"
-	data-uri="{{ globals.uri|escape }}"
-	data-uid="{{ current_user.user_id }}"
-	data-title="{{ title }}">
-</span>
-{% endif %} {# PARTIAL partial #}
+    {% else %} {# PARTIAL partial #}
+    <span id="ajaxinfo"
+        data-partial="1"
+        data-uri="{{ globals.uri|escape }}"
+        data-uid="{{ current_user.user_id }}"
+        data-title="{{ title }}">
+    </span>
+    {% endif %} {# PARTIAL partial #}
 
-<script type="text/javascript">
-	{% include 'js/basic.js' %}
-</script>
+    <script type="text/javascript">
+        {% include 'js/basic.js' %}
+    </script>
 
+    <div id="header">
+        {% if globals.mobile AND (this_site.sub OR this_site.logo_url) %}
 
+        <div id="header-mobile">
+            <div id="header-sub" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }}{% endif %}">
+                {% if this_site.logo_url %}
+                    {% include 'header_sub_logo.html' %}
+                {% endif %}
 
-<div id="header">
+                <a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}>{{ this_site.name_long }}</a>
 
-	{% if globals.mobile AND (this_site.sub OR this_site.logo_url) %}
-		<div id="header-sub" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }}{% endif %}">
+                {% if this_site.nsfw %}[nsfw]{% endif %}
 
-				{% if this_site.logo_url %}
-					{% include 'header_sub_logo.html' %}
-				{% endif %}
-				<a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}>{{ this_site.name_long }}</a>
+                {% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
+                <a href="{{ globals.base_url }}m/{{ this_site.name }}/subedit" class="edit" title="{% trans _('Editar') %}">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                {% endif %}
+            </div>
 
+            {% if this_site.sub %}
 
-			{% if this_site.nsfw %} [nsfw]{% endif %}
-			&nbsp;{% if this_site.sub %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
-		</div>
-	{% endif %}
+            {% if this_site_properties.message %}
+            <div class="sub-description hidden">
+                {{ this_site_properties.message_html }}
+            </div>
+            {% endif %}
 
+            <div class="action-links clearfix">
+                <div class="pull-left">
+                    <span class="action-text">{{ this_site.followers }} {% trans _('Seguidores') %}</span>
+                </div>
 
-	<div id="header-center"
-		style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
+                {% if this_site_properties.message %}
+                <div class="pull-right border-left">
+                    <a href="#" class="show-sub-description action-link" title="{% trans _('Más Info') %}">
+                        <i class="fa fa-info-circle"></i>
+                        <span>{% trans _('Más Info') %}</span>
+                    </a>
+                </div>
+                {% endif %}
 
+                <div class="pull-right">
+                    {% exec print_follow_sub this_site.id as dummy %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
 
+        {% else %}
 
-	  {% if ! this_site.logo_url && this_site.owner == 0 %}
-		<a href="{{ this_site.url }}" class="logo-eli" title="{% trans _('portada') %} {{ this_site.name_long }}">{{ this_site.name }}</a>
-	  {% endif %}
+        <div id="header-center" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
+            {% if ! this_site.logo_url && this_site.owner == 0 %}
+            <a href="{{ this_site.url }}" class="logo-eli" title="{% trans _('portada') %} {{ this_site.name_long }}">{{ this_site.name }}</a>
+            {% endif %}
 
-	  <div class="edname">
-			{% if this_site.logo_url %}
-				{% include 'header_sub_logo.html' %}
-			{% endif %}
+            <div class="edname">
+                {% if this_site.logo_url %}
+                {% include 'header_sub_logo.html' %}
+                {% endif %}
 
-			<a href="{{ this_site.url }}" title="{{ this_site.name }}">{% if this_site.owner > 0 && ! this_site.logo_url %}<b>{{ this_site.name }}</b>: {% endif %}{{ this_site.name_long }}</a>
+                <a href="{{ this_site.url }}" title="{{ this_site.name }}">{% if this_site.owner > 0 && ! this_site.logo_url %}<b>{{ this_site.name }}</b>: {% endif %}{{ this_site.name_long }}</a>
 
-		{% if this_site.nsfw %}[nsfw]{% endif %}
-		{% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
-			<sup><a title="edit" href="{{ globals.base_url }}m/{{ this_site.name }}/subedit"><i class="fa fa-cog"></i></a></sup>
-		{% endif %}
-		{% if this_site.sub %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
-	  </div>
+                {% if this_site.nsfw %}[nsfw]{% endif %}
 
-	  <div class="edname">
-		{% if this_site_properties.facebook_page %}
-			<a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
-		{% else %}
-			{% if globals.facebook_page && this_site.owner == 0 %}
-				<a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook"/></a>
-			{% endif %}
-		{% endif %}
-		{% if this_site_properties.twitter_page %}
-			<a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
-		{% else %}
-			{% if globals.twitter_page && this_site.owner == 0 %}
-				<a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter"/></a>
-			{% endif %}
-		{% endif %}
-	  </div>
+                {% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
+                <a href="{{ globals.base_url }}m/{{ this_site.name }}/subedit" class="action-link" title="{% trans _('Editar') %}">
+                    <i class="fa fa-pencil"></i>
+                    <span>{% trans _('Editar') %}</span>
+                </a>
+                {% endif %}
 
-	<!--search-->
-	  <div id="searchform" class="searchform">
-		<form action="{{ globals.base_url }}search" method="get" name="top_search">
-			{% if globals.search_options %}
-				{% for name, value in globals.search_options %}
-					<input type="hidden" name="{{name}}" value="{{value}}"/>
-				{% endfor %}
-			{% endif %}
-			<input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
-		</form>
-	  </div>
-	<!--end search-->
+                {% if this_site.sub %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
+            </div>
 
-	</div><!--header-center-->
+            <div class="edname">
+                {% if this_site_properties.facebook_page %}
 
-	<div id="header-menu">
-		<div class="header-menu01">
-		<ul class="menu01-itemsl">
-			{% for o in left_options %}
-				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
-			{% endfor %}
-		</ul>
+                <a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook" /></a>
 
-			<ul class="menu01-itemsr">
-			{% for o in right_options %}
-				<li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
-			{% endfor %}
+                {% else %}{% if globals.facebook_page && this_site.owner == 0 %}
+                <a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook" /></a>
+                {% endif %}{% endif %}
 
-			{% if globals.help_url %}
-				<li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
-			{% endif %}
-			</ul>
+                {% if this_site_properties.twitter_page %}
+                <a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter" /></a>
+                {% else %}{% if globals.twitter_page && this_site.owner == 0 %}
+                <a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter" /></a>
+                {% endif %}{% endif %}
+            </div>
 
-		</div>
+            <!--search-->
+            <div id="searchform" class="searchform">
+                <form action="{{ globals.base_url }}search" method="get" name="top_search">
+                    {% if globals.search_options %}
+                    {% for name, value in globals.search_options %}
+                    <input type="hidden" name="{{name}}" value="{{value}}" />
+                    {% endfor %}
+                    {% endif %}
+                    <input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+                </form>
+            </div><!--end search-->
+        </div><!--header-center-->
 
-	</div><!--header-menu01-->
+        {% endif %}
 
-</div><!--header-->
+        <div id="header-menu">
+            <div class="header-menu01">
+                <ul class="menu01-itemsl">
+                    {% for o in left_options %}
+                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                    {% endfor %}
+                </ul>
 
+                <ul class="menu01-itemsr">
+                    {% for o in right_options %}
+                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                    {% endfor %}
 
-<div id="wrap">
-{% exec do_banner_top as foo%}
-<div id="container">
+                    {% if globals.help_url %}
+                    <li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div><!--header-menu01-->
+    </div><!--header-->
 
+    <div id="wrap">
+        {% exec do_banner_top as foo%}
+
+        <div id="container">

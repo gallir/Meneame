@@ -1,6 +1,21 @@
-<span style="margin:0 1px" id="follow_b_{{ id }}" onclick="add_remove_sub('{{ id }}', 1)" class="favorite off" title="{% trans _('suscripción al sub') %}"/></span>
+{% if user.user_id %}
+
+<a href="javascript:add_remove_sub('{{ id }}', 1)" class="action-link follow_b_{{ id }}" title="{% trans _('suscripción al sub') %}"/>
+    <i class="fa fa-check-circle-o"></i>
+    <span>{% trans _('Seguir') %}</span>
+</a>
+
 <script type="text/javascript">
 addPostCode(function () {
-	add_remove_sub('{{ id }}', 0);
+    add_remove_sub('{{ id }}', 0);
 });
 </script>
+
+{% else %}
+
+<a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="action-link follow_b_{{ id }}" title="{% trans _('suscripción al sub') %}"/>
+    <i class="fa fa-check-circle-o"></i>
+    <span>{% trans _('Seguir') %}</span>
+</a>
+
+{% endif %}

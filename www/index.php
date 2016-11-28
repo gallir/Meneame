@@ -73,7 +73,6 @@ switch ($globals['meta']) {
 		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status='published' ";
 }
 
-
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_sub_message_right();
@@ -108,7 +107,6 @@ if ($page == 1 && empty($globals['meta']) && ($top = Link::top())) {
 	Haanga::Load("link_top.html", $vars);
 }
 
-
 $order_by = "ORDER BY date DESC ";
 
 if (!$rows) $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE $where");
@@ -131,7 +129,6 @@ if ($links) {
 	}
 }
 
-
 do_pages($rows, $page_size);
 echo '</div>';
 
@@ -142,10 +139,13 @@ exit(0);
 function print_index_tabs($option=-1) {
 	global $globals, $db, $current_user;
 
-	if (($globals['mobile'] && ! $current_user->has_subs) || (!empty($globals['submnm']) && ! $current_user->user_id)) return;
+	if (($globals['mobile'] && ! $current_user->has_subs) || (!empty($globals['submnm']) && ! $current_user->user_id)) {
+		return;
+	}
 
 	$items = array();
 	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
+
 	if (isset($current_user->has_subs)) {
 		$items[] = array('id' => 7, 'url' => $globals['meta_subs'], 'title' => _('suscripciones'));
 	}
@@ -177,7 +177,5 @@ function print_index_tabs($option=-1) {
 		$items[] = array('id' => 1, 'url' => '?meta=_friends', 'title' => _('amigos'));
 	}
 
-	$vars = compact('items', 'option', 'feed');
-	return Haanga::Load('print_tabs.html', $vars);
+	return Haanga::Load('print_tabs.html', compact('items', 'option', 'feed'));
 }
-
