@@ -1,244 +1,446 @@
-<div class="genericform">
-{% if errors %}
-    {% for e in errors %}
-        <div class="form-error-submit">&nbsp;&nbsp;{{ e }}</div>
-    {% endfor %}
-{% endif %}
+<section class="section section-medium">
+	<div class="container">
+		<h1>
+			{% if sub.id %}
+			{% trans _('Edición sub') %} &laquo;<a href="{{ sub.base_url }}m/{{ sub.name }}">{{ sub.name_long }}</a>&raquo;
+			{% else %}
+			{% trans _('Nuevo sub') %}
+			{% endif %}
 
-<form method="post" id="thisform" name="thisform" autocomplete="off" enctype="multipart/form-data">
-<input type="hidden" name="id" value="{{ sub.id }}"/>
-<input type="hidden" name="u" value="{{ current_user.user_id }}"/>
-<input type="hidden" name="created_from" value="{{ site.id }}"/>
+			<a href="http://meneame.wikispaces.com/Subs" class="help" target="_blank" data-toggle="tooltip" title="{% trans _("Abrir el wiki de Menéame en nueva pestaña") %}">
+				<i class="fa fa-question-circle"></i>
+			</a>
+		</h1>
 
+		<form class="form form-edit" method="post" autocomplete="off" enctype="multipart/form-data">
+			{% if error %}
+			<div class="alert alert-danger">{{ error }}</div>
+			{% endif %}
 
-<fieldset><legend>
-{% if sub.id %}
-	{% trans _('edición sub') %} <a href="{{ sub.base_url }}m/{{ sub.name }}">{{ sub.name }}</a>
-{% else %}
-	{% trans _('nuevo sub') %}
-{% endif %}
-</legend>
+			<input type="hidden" name="id" value="{{ sub.id }}"/>
+			<input type="hidden" name="u" value="{{ current_user.user_id }}"/>
+			<input type="hidden" name="created_from" value="{{ site.id }}"/>
 
-{% if ! current_user.admin %}
-	<input type="hidden" id="owner" name="owner"
-	{% if sub.name %}
-		value="{{ sub.owner }}"
-	{% else %}
-		value="{{ current_user.user_id }}"
-	{% endif %}
-	/>
-{% endif %}
+			{% if ! current_user.admin %}
+			<input type="hidden" id="owner" name="owner" value="{% if sub.name %}{{ sub.owner }}{% else %}{{ current_user.user_id }}{% endif %}" />
+			{% endif %}
 
+			<div class="form-group">
+				<label for="name" class="title">{% trans _('Nombre corto, sin espacios') %}</label>
 
-<label for="name">{% trans _('nombre corto, sin espacios') %}:</label><br/>
-<input type="text" id="name" name="name" value="{{ sub.name }}" maxlength="12" pattern="\S{3,12}" />
+				<input type="text" id="name" name="name" value="{{ sub.name }}" class="form-control" maxlength="12" pattern="\S{3,12}" required />
 
-{% if sub.id %}
-	&nbsp;&nbsp;
-	{% trans _("envíos deshabilitados") %} <input type="checkbox" name="new_disabled" value="1" {% if extended.new_disabled %}checked{% endif %}>
-{% endif %}
+				{% if sub.id %}
+				<div class="checkbox checkbox-inline checkbox-inline-input">
+					<label>
+						<input type="checkbox" name="new_disabled" value="1" {% if extended.new_disabled %}checked{% endif %}>
+						{% trans _("Envíos deshabilitados") %}
+					</label>
+				</div>
+				{% endif %}
+			</div>
 
-&nbsp;&nbsp;
-[<a href="http://meneame.wikispaces.com/Subs">{% trans _('ayuda') %}</a>]
-<br/>
+			<div class="form-group">
+				<label for="name_long" class="title">{% trans _('Título') %}</label>
+				<input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" class="form-control block" pattern=".{6,40}" maxlength="40" required />
+			</div>
 
-<label for="name">{% trans _('título') %}:</label><br/>
-<input type="text" id="name_long" name="name_long" value="{{ sub.name_long }}" pattern=".{6,40}" maxlength="40" style="width:60%"/>
-<br/>
+			{% if sub.id %}
 
+			<div class="form-group mb-20">
+				<div class="checkbox checkbox-inline">
+					<label>
+						<input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
+						{% trans _('No enviar historias a la cola general') %}
 
+						<i class="fa fa-question-circle help" data-toggle="tooltip" title="{% trans _("Las historias que envías y cumplen determinado nivel de karma se envían automáticamente a la cola general. Selecciona esta opción si prefieres que no ocurra.") %}"></i>
+					</label>
+				</div>
 
+				<div class="checkbox checkbox-inline">
+					<label>
+						<input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
+						{% trans _('NSFW') %}
+					</label>
+				</div>
 
-{% if sub.id %}
+				<div class="checkbox checkbox-inline">
+					<label>
+						<input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
+						{% trans _('Permitir enlaces duplicados') %}
 
-	{% trans _('privado') %}: <input type="checkbox" name="private" value="1" {% if sub.private %}checked{% endif %}/>
-	&nbsp;&nbsp;
-	{% trans _('nsfw') %}: <input type="checkbox" name="nsfw" value="1" {% if sub.nsfw %}checked{% endif %}/>
-	&nbsp;&nbsp;
-	{% trans _('deshabilitar control anti spam') %}: <input type="checkbox" name="no_anti_spam" value="1" {% if extended.no_anti_spam %}checked{% endif %}/>
-	&nbsp;&nbsp;
-	{% trans _('subir imagen') %}: <input type="checkbox" name="allow_images" value="1" {% if extended.allow_images %}checked{% endif %}/>
-	<br/>
-	{% trans _('enlace') %}:
-	{% trans _('siempre') %} <input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>&nbsp;
-	{% trans _('opcional (microblogging)') %} <input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>&nbsp;
-	{% trans _('sin enlace (microblogging)') %} <input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
-	<br/>
-	{% trans _('presentación de los comentarios') %}:
-		<select name="page_mode">
-		{% for k, v in page_modes %}
-				<option value="{{ v }}" {% if v == sub.page_mode %}selected{% endif %}>{{ k }}</option>
-		{% endfor %}
-		</select>
-		<br/>
+						<i class="fa fa-question-circle help" data-toggle="tooltip" title="{% trans _("Permite enviar enlaces que ya están en otros subs o en la cola general, y sitios que han sido vetados en Menéame por incumplir las normas.") %}"></i>
+					</label>
+				</div>
 
-	<fieldset><legend>{% trans _('colores y logo de la cabecera') %}</legend>
-		<label for="name">{% trans _('color título') %}:</label>
-		<input style="width:6em;font-family:monospace" type="text" id="color1" name="color1" value="{{ sub.color1 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
-		&nbsp;&nbsp;
-		<label for="name">{% trans _('color fondo') %}:</label>
-		<input style="width:6em;font-family:monospace" type="text" id="color2" name="color2" value="{{ sub.color2 }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" />
-		<br/>
+				<div class="checkbox checkbox-inline">
+					<label>
+						<input type="checkbox" name="allow_images" value="1" {% if extended.allow_images %}checked{% endif %}/>
+						{% trans _('Permitir imágenes en los envíos') %}
+					</label>
+				</div>
+			</div>
 
-		{# Image options #}
+			<div class="form-group mb-20">
+				<label class="title title-inline">
+					{% trans _('Nombre del administrador') %}
+				</label>
 
-		<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-		<label>{% trans _('Imagen logo') %}:
-			<input type="file" autocomplete="off" name="logo_image"
-				id="fileInput" class="uploadFile" accept="image/*"/>
-		</label>
+				<div class="radio radio-inline">
+					<label>
+						<input type="radio" name="show_admin" value="0" {% if sub.show_admin == 0 %}checked{% endif %}/>
+						{% trans _('Oculto') %}
+					</label>
+				</div>
 
-		<div class="droparea_info"></div>
+				<div class="radio radio-inline">
+					<label>
+						<input type="radio" name="show_admin" value="1" {% if sub.show_admin == 1 %}checked{% endif %}/>
+						{% trans _('Visible') %}
+					</label>
+				</div>
+			</div>
 
-		<script type="text/javascript">
-			addPostCode( function () {
-				$("#fileInput").nicefileinput({ title: "subir imagen de logo"});
-				$('form').droparea({maxsize: {{ globals.media_max_size }} });
+			<div class="form-group mb-20">
+				<label class="title title-inline">
+					{% trans _('Historias permitidas') %}
 
-			});
-		</script>
+					<i class="fa fa-question-circle help" data-toggle="tooltip" title="{% trans _("Las historias que envíes pueden llevar siempre enlace, o puede ser únicamente texto (microblogging). También puedes hacer que sea opcional para el usuario.") %}"></i>
+				</label>
 
-		{% if sub.media_size > 0 %}
-			&nbsp;<label>{% trans _('Eliminar') %}: <input type="checkbox" name="logo_image_delete" value="1"/></label>
-		{% endif %}
-	</fieldset>
+				<div class="radio radio-inline">
+					<label>
+						<input type="radio" name="no_link" value="0" {% if extended.no_link == 0 %}checked{% endif %}/>
+						{% trans _('Siempre con enlace') %}
+					</label>
+				</div>
 
-	<fieldset><legend>{% trans _('límites de entradilla') %}</legend>
-		{% trans _('longitud mínima') %}: <input type="number" name="intro_min_len" min="0" max="200"
-				value="{{ extended.intro_min_len }}"/>
-		&nbsp;&nbsp;
-		{% trans _('longitud máxima') %}: <input type="number" name="intro_max_len" min="0" max="5000"
-				value="{{ extended.intro_max_len }}"/><br/>
-		{% trans _('permitir párrafos') %}: <input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
-	</fieldset>
+				<div class="radio radio-inline">
+					<label>
+						<input type="radio" name="no_link" value="1" {% if extended.no_link == 1 %}checked{% endif %}/>
+						{% trans _('Enlace opcional') %}
+					</label>
+				</div>
 
-	<fieldset><legend>{% trans _('mensajes') %}</legend>
-		<label>{% trans _('reglas para el envío') %}<br/>
-			<textarea maxlength="300" name="rules" rows="5" id="rules" style="width:60%">{{ extended.rules }}</textarea>
-		</label>
-		<br />
-		<label>{% trans _('mensaje barra lateral') %}<br/>
-			<textarea maxlength="3000" name="message" rows="5" id="message" style="width:60%">{{ extended.message }}</textarea>
-		</label>
-		<br />
+				<div class="radio radio-inline">
+					<label>
+						<input type="radio" name="no_link" value="2" {% if extended.no_link == 2 %}checked{% endif %}/>
+						{% trans _('Siempre sin enlace') %}
+					</label>
+				</div>
+			</div>
 
-		<label>{% trans _('color texto') %}:
-			<input style="width:6em;font-family:monospace" type="text" id="box_color" name="box_color" value="{{ extended.box_color }}" pattern="#[a-fA-F\d]{6}" placeholder="#fffff" maxlength="7" /
-		</label> &nbsp;&nbsp;
-		<label>{% trans _('color fondo') %}:
-			<input style="width:6em;font-family:monospace" type="text" id="box_background" name="box_background" value="{{ extended.box_background }}" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" /
-		</label> &nbsp;&nbsp;
-		<label>{% trans _('color borde') %}:
-			<input style="width:6em;font-family:monospace" type="text" id="box_bordercolor" name="box_bordercolor" value="{{ extended.box_bordercolor }}" pattern="#[a-fA-F\d]{6}" placeholder="#dadada" maxlength="7" /
-		</label>
+			<div class="form-group">
+				<label for="page_mode" class="title title-inline">{% trans _('Presentación de los comentarios') %}</label>
 
-		<br/>
+				<select id="page_mode" name="page_mode" class="form-control">
+					{% for k, v in page_modes %}
+					<option value="{{ v }}" {% if v == sub.page_mode %}selected{% endif %}>{{ k }}</option>
+					{% endfor %}
+				</select>
+			</div>
 
+			<hr />
 
-	</fieldset>
+			<div class="form-group mb-20">
+				<label class="title">{% trans _('Colores y logo de la cabecera') %}</label>
+			</div>
 
-{% endif %}
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="color1" class="title title-inline">{% trans _('Título') %}</label>
+						<input type="text" id="color1" name="color1" value="{{ sub.color1 }}" class="form-control input-color-picker" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" style="width: 90px" />
+					</div>
 
+					<div class="col-sm-4">
+						<label for="color2" class="title title-inline">{% trans _('Fondo') %}</label>
+						<input type="text" id="color2" name="color2" value="{{ sub.color2 }}" class="form-control input-color-picker" pattern="#[a-fA-F\d]{6}" placeholder="#a0a0a0" maxlength="7" style="width: 90px" />
+					</div>
 
-{% if current_user.admin %}
-	<fieldset><legend>{% trans _('¡ALERTA admins! opciones son delicadas') %}</legend>
+					<div class="col-sm-4">
+						<label for="fileInput" class="title title-inline">{% trans _('Imagen de logo') %}</label>
 
-	<label>{% trans _("habilitado") %} </label>
-		<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %}>
+						<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+						<input type="file" autocomplete="off" name="logo_image" id="fileInput" class="uploadFile" accept="image/*"/>
 
-	&nbsp;&nbsp;
+						<div class="droparea_info"></div>
 
-	<label for="name">user_id:</label>
-	<input type="number" id="owner" name="owner" maxlength="10" pattern="[0-9]+"
-	{% if sub.name %}
-		value="{{ sub.owner }}"
-	{% else %}
-		value="{{ current_user.user_id }}"
-	{% endif %}
-	/>
-	<br/>
-	{% if sub.id > 0 %}
-		<input type="checkbox" name="allow_main_link" value="1" {% if sub.allow_main_link %}checked{% endif %}>{% trans _("permitir enlace principal") %}
-		<br/>
-	{% endif %}
+						<script type="text/javascript">
+						addPostCode(function () {
+							$("#fileInput").nicefileinput({ title: '{% trans _('Subir imagen de logo') %}'});
+							$('form').droparea({maxsize: {{ globals.media_max_size }} });
+						});
+						</script>
 
-	{% if copy_from %}
-		{% trans _('copiar desde') %}:<br/>
-		{% for c in copy_from %}
-			<select name="copy_from[]">
-			<option value="{{ c.id }}" selected>{{ c.name }}</option>
-			<option value="0">{% trans _('eliminar') %}</option>
-			</select>
-			<br/>
-		{% endfor %}
-	{% endif %}
-	{% if candidates_from %}
-		{% trans _('añadir copiar desde') %}:<br/>
-		<select name="copy_from[]">
-		<option value="0" selected>--</option>
-		{% for c in candidates_from %}
-			<option value="{{ c.id }}">{{ c.name }}</option>
-		{% endfor %}
-		</select>
-	{% endif %}
+						{% if sub.media_size > 0 %}
+						<div class="checkbox checkbox-inline">
+							<label>
+								<input type="checkbox" name="logo_image_delete" value="1"/>
+								{% trans _('Eliminar') %}
+							</label>
+						</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
 
+			<hr />
 
-	</fieldset>
-{% endif %}
+			<div class="form-group mb-20">
+				<label class="title">{% trans _('Límites de entradilla') %}</label>
+			</div>
 
-<br/>
-<input class="button" type="submit" value="{% trans _('guardar') %}" />
-</fieldset>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="intro_min_len" class="title title-inline">{% trans _('Longitud mínima') %}</label>
+						<input type="number" id="intro_min_len" name="intro_min_len" class="form-control" min="0" max="200" value="{{ extended.intro_min_len }}" style="width: 60px" />
+					</div>
 
-{% if sub.id %}
-	<br/>
-	<fieldset><legend>{% trans _('opciones avanzadas') %}</legend>
+					<div class="col-sm-4">
+						<label for="intro_max_len" class="title title-inline">{% trans _('Longitud máxima') %}</label>
+						<input type="number" id="intro_max_len" name="intro_max_len" class="form-control" min="0" max="5000" value="{{ extended.intro_max_len }}" style="width: 60px" />
+					</div>
 
-		<fieldset><legend>{% trans _('publicar en Twitter') %} (<a href="https://dev.twitter.com/oauth/overview/application-owner-access-tokens">help!</a>)</legend>
-			<label for="twitter_page">{% trans _('perfil') %}</label>
-			<input type="url" value="{{ extended.twitter_page }}" placeholder="https://twitter.com/usuario" id="twitter_page" name="twitter_page" size="60" maxlength="60"/><br/>
+					<div class="col-sm-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="allow_paragraphs" value="1" {% if extended.allow_paragraphs %}checked{% endif %}/>
+								{% trans _('Permitir párrafos') %}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
 
-			<label for="twitter_consumer_key">{% trans _('consumer key') %}</label>
-			<input type="text" value="{{ extended.twitter_consumer_key }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_key" name="twitter_consumer_key" size="32" maxlength="32" pattern="[A-Za-z0-9\-]{20,32}"/><br/>
+			<hr />
 
-			<label for="twitter_consumer_secret">{% trans _('consumer secret') %}</label>
-			<input type="text" value="{{ extended.twitter_consumer_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_secret" name="twitter_consumer_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
+			<div class="form-group mb-20">
+				<label class="title">{% trans _('Mensajes') %}</label>
+			</div>
 
-			<label for="twitter_token">{% trans _('token') %}</label>
-			<input type="text" value="{{ extended.twitter_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="twitter_token" name="twitter_token" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{50,64}"/><br/>
+			<div class="form-group">
+				<label for="rules" class="title title-inline">
+					{% trans _('Reglas para el envío') %}
 
-			<label for="twitter_token_secret">{% trans _('token secret') %}</label>
-			<input type="text" value="{{ extended.twitter_token_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_token_secret" name="twitter_token_secret" size="64" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/><br/>
+					<i class="fa fa-question-circle help" data-toggle="tooltip" title="{% trans _("Este texto se muestra a los usuarios que quieren enviar una noticia. Explica aquí las normas de la sección.") %}"></i>
+				</label><br />
 
-		</fieldset>
+				<textarea maxlength="300" name="rules" id="rules" class="form-control block">{{ extended.rules }}</textarea>
+			</div>
 
-	{# Enabled facebook only to admins, for the time being, until Twitter is tested end perhaps improved #}
-	{% if current_user.admin %}
-		<fieldset><legend>{% trans _('publicar en Facebook') %} (<a href="https://developers.facebook.com/docs/facebook-login/access-tokens">help!</a>)</legend>
-			<label for="facebook_page">{% trans _('página') %}</label>
-			<input type="url" value="{{ extended.facebook_page }}" placeholder="https://www.facebook.com/página" id="facebook_page" name="facebook_page" size="60" maxlength="60"/><br/>
+			<div class="form-group">
+				<label for="message" class="title title-inline">{% trans _('Mensaje barra lateral') %}</label><br />
+				<textarea maxlength="3000" name="message" id="message" class="form-control block">{{ extended.message }}</textarea>
+			</div>
 
-			<label for="facebook_key">{% trans _('key') %}</label>
-			<input type="text" value="{{ extended.facebook_key }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_key" name="facebook_key" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+			<hr />
 
-			<label for="facebook_secret">{% trans _('secret') %}</label>
-			<input type="text" value="{{ extended.facebook_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_secret" name="facebook_secret" size="40" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/><br/>
+			<div class="form-group mb-20">
+				<label class="title">
+					{% trans _('Conexión con Twitter') %}
+					<a href="https://dev.twitter.com/oauth/overview/application-owner-access-tokens" class="help" target="_blank">
+						<i class="fa fa-question-circle"></i>
+					</a>
+				</label>
+			</div>
 
-			<label for="facebook_token">{% trans _('token') %}</label>
-			<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" size="120" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/><br/>
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="twitter_page" class="title title-inline">{% trans _('Perfil') %}</label>
+					</div>
 
-		</fieldset>
+					<div class="col-sm-9">
+						<input type="url" value="{{ extended.twitter_page }}" placeholder="https://twitter.com/usuario" id="twitter_page" name="twitter_page" class="form-control block" maxlength="60"/>
+					</div>
+				</div>
 
-		<fieldset><legend>{% trans _('HTML al final de página') %}</legend>
-			<label>{% trans _('ALERTA, se añadirá todo al final de la página') %}</label><br/>
-			<textarea maxlength="2000" name="post_html" rows="4" id="post_html" style="width:60%">{{ extended.post_html | escape }}</textarea>
-		</fieldset>
-	{% endif %}
-	</fieldset>
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="twitter_consumer_key" class="title title-inline">{% trans _('Consumer key') %}</label>
+					</div>
 
-	<input class="button" type="submit" value="{% trans _('guardar') %}" />
-{% endif %}
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.twitter_consumer_key }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_key" name="twitter_consumer_key" class="form-control block" maxlength="32" pattern="[A-Za-z0-9\-]{20,32}"/>
+					</div>
+				</div>
 
-</form>
-</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="twitter_consumer_secret" class="title title-inline">{% trans _('Consumer secret') %}</label>
+					</div>
 
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.twitter_consumer_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_consumer_secret" name="twitter_consumer_secret" class="form-control block" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="twitter_token" class="title title-inline">{% trans _('Token') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.twitter_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="twitter_token" name="twitter_token" class="form-control block" maxlength="64" pattern="[A-Za-z0-9\-]{50,64}"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="twitter_token_secret" class="title title-inline">{% trans _('Token secret') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.twitter_token_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="twitter_token_secret" name="twitter_token_secret" class="form-control block" maxlength="64" pattern="[A-Za-z0-9\-]{32,64}"/>
+					</div>
+				</div>
+			</div>
+
+			{# Enabled facebook only to admins, for the time being, until Twitter is tested end perhaps improved #}
+			{% if current_user.admin %}
+			<div class="form-group mb-20">
+				<label class="title">
+					{% trans _('Conexión con Facebook') %}
+					<a href="https://developers.facebook.com/docs/facebook-login/access-tokens" class="help" target="_blank">
+						<i class="fa fa-question-circle"></i>
+					</a>
+				</label>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="facebook_page" class="title title-inline">{% trans _('Página') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="url" value="{{ extended.facebook_page }}" placeholder="https://www.facebook.com/página" id="facebook_page" name="facebook_page" class="form-control block" maxlength="60"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="facebook_key" class="title title-inline">{% trans _('Key') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.facebook_key }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_key" name="facebook_key" class="form-control block" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="facebook_secret" class="title title-inline">{% trans _('Secret') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.facebook_secret }}" autocomplete="off" placeholder="aaA1bBi..." id="facebook_secret" name="facebook_secret" class="form-control block" maxlength="40" pattern="[A-Za-z0-9\-]{30,40}"/>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="facebook_token" class="title title-inline">{% trans _('Token') %}</label>
+					</div>
+
+					<div class="col-sm-9">
+						<input type="text" value="{{ extended.facebook_token }}" autocomplete="off" placeholder="aaA1bBi-..." id="facebook_token" name="facebook_token" class="form-control block" maxlength="120" pattern="[A-Za-z0-9\-]{100,120}"/>
+					</div>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="form-group">
+				<label class="title">{% trans _('HTML al final de página') %}</label>
+			</div>
+
+			<div class="form-group">
+				<textarea maxlength="2000" name="post_html" rows="4" id="post_html" class="form-control block">{{ extended.post_html | escape }}</textarea>
+			</div>
+			{% endif %} {# if current_user.admin #}
+
+			{% endif %} {# sub.id #}
+
+			{% if current_user.admin %}
+
+			<div class="form-group">
+				<label class="title">{% trans _('¡ALERTA admins! opciones delicadas') %}</label>
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="enabled" value="1" {% if sub.enabled %}checked{% endif %} />
+								{% trans _("Habilitado") %}
+							</label>
+						</div>
+					</div>
+
+					<div class="col-sm-4">
+						<label for="owner" class="title title-inline">{% trans _('ID usuario') %}</label>
+
+						<input type="number" id="owner" name="owner" maxlength="10" pattern="[0-9]+" class="form-control" value="{% if sub.name %}{{ sub.owner }}{% else %}{{ current_user.user_id }}{% endif %}" />
+					</div>
+
+					{% if sub.id > 0 %}
+					<div class="col-sm-4">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="allow_main_link" value="1" {% if sub.allow_main_link %}checked{% endif %}>
+								{% trans _("Permitir enlace principal") %}
+							</label>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+
+			{% if copy_from OR candidates_from %}
+			<div class="form-group">
+				<div class="row">
+					{% if copy_from %}
+					<div class="col-sm-6">
+						<label class="title title-inline">{% trans _('Copiar desde') %}</label>
+
+						{% for c in copy_from %}
+						<div class="form-group">
+							<select name="copy_from[]" class="form-control block">
+								<option value="{{ c.id }}" selected>{{ c.name }}</option>
+								<option value="0">{% trans _('Eliminar') %}</option>
+							</select>
+						</div>
+						{% endfor %}
+					</div>
+					{% endif %}
+
+					{% if candidates_from %}
+					<div class="col-sm-6">
+						<label class="title title-inline">{% trans _('Añadir copiar desde') %}</label>
+
+						<div class="form-group">
+							<select name="copy_from[]" class="form-control block">
+								<option value="0" selected>--</option>
+								{% for c in candidates_from %}
+								<option value="{{ c.id }}">{{ c.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% endif %}
+
+			{% endif %} {# if current_user.admin #}
+
+			<footer class="footer">
+				<button type="submit" class="btn btn-mnm">{% if sub.id %}{% trans _('Guardar modificaciones') %}{% else %}{% trans _('Crear sub') %}{% endif %}</button>
+			</footer>
+		</form>
+	</div>
+</section>

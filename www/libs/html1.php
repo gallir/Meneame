@@ -34,7 +34,6 @@ if (! $globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', 
 	}
 }
 
-
 class MenuOption{
 	// Small helper class to store links' information
 	function __construct($text, $url, $active = false, $title = '', $class = '') {
@@ -50,11 +49,9 @@ class MenuOption{
 	}
 }
 
-
 function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	/* Not used any more */
 }
-
 
 function do_header($title, $id='home', $options = false) {
 	global $current_user, $dblang, $globals, $db;
@@ -67,7 +64,6 @@ function do_header($title, $id='home', $options = false) {
 	if ($globals['force_ssl'] && $globals['https']) {
 		header('Strict-Transport-Security: max-age=15638400'); // 181 days, ssllabs doesn't like less than 180
 	}
-
 
 	http_cache();
 
@@ -110,13 +106,19 @@ function do_header($title, $id='home', $options = false) {
 		$globals['post_html'] = $this_site_properties['post_html'];
 	}
 
+	if ($this_site_properties['message']) {
+		$this_site_properties['message_html'] = LCPBase::html($this_site_properties['message']);
+	}
 
+	$this_site->followers = SitesMgr::get_followers();
 
 	if (! is_array($options)) {
 		$left_options = array();
+
 		if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
 			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'), "submit_new_post");
 		}
+
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
 		$left_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', $id, _('menear noticias pendientes'));
 		$left_options[] = new MenuOption(_('populares'), $globals['base_url'].'popular', $id, _('historias más votadas'));
@@ -140,10 +142,11 @@ function do_header($title, $id='home', $options = false) {
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	}
 
-	$vars = compact('title', 'greeting', 'id', 'left_options', 'right_options', 'sites', 'this_site', 'this_site_properties');
-	return Haanga::Load('header.html', $vars);
+	return Haanga::Load('header.html', compact(
+		'title', 'greeting', 'id', 'left_options', 'right_options',
+		'sites', 'this_site', 'this_site_properties'
+	));
 }
-
 
 function do_js_from_array($array) {
 	global $globals;
@@ -407,8 +410,8 @@ function print_subs_form($selected = false) {
 	if ($selected == false) {
 		$selected = SitesMgr::my_id();
 	}
-	$vars = compact('selected', 'subs', 'subscriptions');
-	return Haanga::Load('form_subs.html', $vars);
+
+	return Haanga::Load('form_subs.html', compact('selected', 'subs', 'subscriptions'));
 }
 
 function do_vertical_tags($what=false) {
@@ -450,8 +453,6 @@ function do_vertical_tags($what=false) {
 			}
 		}
 
-
-
 		$coef = ($max_pts - $min_pts)/($max-1);
 		arsort($words);
 		$words = array_slice($words, 0, 20);
@@ -468,12 +469,12 @@ function do_vertical_tags($what=false) {
 			}
 			$content .= urlencode($word).'">'.$word.'</a>  ';
 		}
+
 		if ($max > 2) {
-			$vars = compact('content', 'title', 'url');
-			$output = Haanga::Load('tags_sidebox.html', $vars, true);
-			echo $output;
+			echo $output = Haanga::Load('tags_sidebox.html', compact('content', 'title', 'url'), true);
 		}
 	}
+
 	memcache_madd($cache_key, $output, 900);
 }
 
@@ -494,9 +495,9 @@ function do_best_sites() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(link_votes + link_anonymous) as total_count, sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10");
 	if ($res && count($res) > 4) {
-		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
-		echo $output;
+		echo $output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
@@ -517,9 +518,9 @@ function do_most_clicked_sites() {
 	// but a time-decreasing function applied to the number of votes
 	$res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
 	if ($res && count($res) > 4) {
-		$output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
-		echo $output;
+		echo $output = Haanga::Load("best_sites_posts.html", compact('res', 'title'), TRUE);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
@@ -556,10 +557,10 @@ function do_best_comments() {
 			$obj->tooltip = 'c';
 			$objects[] = $obj;
 		}
-		$vars = compact('objects', 'title', 'url');
-		$output = Haanga::Load('best_comments_posts.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
@@ -586,10 +587,12 @@ function do_best_story_comments($link) {
 
 	$limit = min(15, intval($link->comments/5));
 	$res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
+
 	if ($res && count($res) > 4) {
 		$objects = array();
 		$title = _('mejores comentarios');
 		$url = $link->get_relative_permalink().'/best-comments';
+
 		foreach ($res as $comment) {
 			$obj = new stdClass();
 			$obj->id = $comment->comment_id;
@@ -601,11 +604,11 @@ function do_best_story_comments($link) {
 			$obj->tooltip = 'c';
 			$objects[] = $obj;
 		}
-		$vars = compact('objects', 'title', 'url');
-		$output = Haanga::Load('best_comments_posts.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 	}
-	if($do_cache) {
+
+	if ($do_cache) {
 		memcache_madd($key, $output, 300);
 	}
 }
@@ -626,6 +629,7 @@ function do_active_stories() {
 	if ($top->read() && ($ids = explode(',',$top->text))) {
 		$links = array();
 		$ids = array_slice($ids, 0, 5);
+
 		foreach($ids as $id) {
 			$link = Link::from_db($id);
 			if (! $link) continue;
@@ -639,10 +643,11 @@ function do_active_stories() {
 			$link->check_warn();
 			$links[] = $link;
 		}
+
 		$subclass = 'red';
-		$vars = compact('links', 'title', 'url', 'subclass');
-		$output = Haanga::Load('best_stories.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
+
 		memcache_madd($key, $output, 60);
 	}
 }
@@ -681,10 +686,10 @@ function do_best_stories() {
 			$links[] = $link;
 		}
 		$subclass = '';
-		$vars = compact('links', 'title', 'url', 'subclass');
-		$output = Haanga::Load('best_stories.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
 	}
+
 	memcache_madd($key, $output, 180);
 }
 
@@ -727,10 +732,10 @@ function do_best_queued() {
 			$links[] = $link;
 		}
 		$subclass = '';
-		$vars = compact('links', 'title', 'url', 'subclass');
-		$output = Haanga::Load('best_stories.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
 	}
+
 	memcache_madd($key, $output, 120);
 }
 
@@ -767,9 +772,8 @@ function do_most_clicked_stories() {
 			$link->check_warn();
 			$links[] = $link;
 		}
-		$vars = compact('links', 'title', 'url');
-		$output = Haanga::Load('most_clicked_stories.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('most_clicked_stories.html', compact('links', 'title', 'url'), true);
 	}
 
 	memcache_madd($key, $output, 180);
@@ -806,10 +810,10 @@ function do_best_posts() {
 			$obj->tooltip = 'p';
 			$objects[] = $obj;
 		}
-		$vars = compact('objects', 'title', 'url');
-		$output = Haanga::Load('best_comments_posts.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
@@ -837,10 +841,10 @@ function do_last_blogs() {
 			$obj->username = $entry->user_login;
 			$objects[] = $obj;
 		}
-		$vars = compact('objects', 'title', 'url');
-		$output = Haanga::Load('last_blogs.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('last_blogs.html', compact('objects', 'title', 'url'), true);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
@@ -873,25 +877,33 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 		}
 		$subclass = 'brown';
 		$url = $globals['base_url_general'].'subs';
-		$vars = compact('links', 'title', 'subclass', 'url');
-		$output = Haanga::Load('best_stories.html', $vars, true);
-		echo $output;
+
+		echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'subclass', 'url'), true);
 	}
+
 	memcache_madd($key, $output, 300);
 }
 
 // Print the "message" of the sub, if it exists
 function do_sub_message_right() {
-	global $db, $globals;
+	global $globals, $current_user;
 
-	if ($globals['mobile'] || ! $globals['submnm']) return;
+	if ($globals['mobile'] || ! $globals['submnm']) {
+		return;
+	}
 
 	$properties = SitesMgr::get_extended_properties();
-	if (empty($properties['message'])) return;
-
 	$properties['message_html'] = LCPBase::html($properties['message']);
-	Haanga::Load('message_right.html', array('self' => $properties));
-	return;
+
+	$site = SitesMgr::get_info();
+	$site->followers = SitesMgr::get_followers();
+
+	Haanga::Load('message_right.html', array(
+		'site' => $site,
+		'owner' => SitesMgr::get_owner(),
+		'properties' => $properties,
+		'user' => $current_user
+	));
 }
 
 function do_subheader($content, $selected = false) {
@@ -916,8 +928,9 @@ function do_subheader($content, $selected = false) {
 function print_follow_sub($id) {
 	global $current_user;
 
-	if ($current_user->user_id) {
-		Haanga::Load('sub_follow.html', array('id' => $id));
-	}
+	Haanga::Load('sub_follow.html', array(
+		'id' => $id,
+		'user' => $current_user
+	));
 }
 

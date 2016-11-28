@@ -43,7 +43,7 @@ if ($_POST["processlogin"] == 1) {
 
 do_header("login");
 echo '<div id="singlewrap">'."\n";
-echo '<section class="section-large">';
+echo '<section class="section section-large text-center">';
 
 if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_recover();
@@ -55,7 +55,6 @@ echo '</section>';
 echo '</div>'."\n"; // singlewrap
 
 do_footer();
-
 
 function do_login() {
 	if ($post = do_login_post()) {
@@ -73,12 +72,12 @@ function do_login() {
 	echo '<h1>'._('Acceder a Menéame').'</h1>';
 	echo '<p class="intro">'._('Forma parte de la mayor comunidad de contenidos en español. Tú haces la portada.').'</p>';
 
-	echo '<div class="container">';
+	echo '<div class="container container-small">';
 		print_oauth_icons_large($_REQUEST['return']);
 
 		echo '<div class="separator"><b></b><span>O</span><b></b></div>';
 
-		echo '<form id="thisform" method="post" class="form">';
+		echo '<form method="post" class="form">';
 			echo '<div class="legend">'._('Acceder con mi correo').'</div>';
 
 			if ($error) {
@@ -87,19 +86,28 @@ function do_login() {
 				echo '<div class="response response-info">'.$info.'</div>';
 			}
 
-			echo '<div class="input-row"><input type="text" name="username" tabindex="1" id="name" value="'.htmlspecialchars($_POST['username']).'" class="input" placeholder="'._('Usuario o Correo electrónico').'" required /></div>';
-			echo '<div class="input-row"><input type="password" name="password" id="password" tabindex="2" class="input" placeholder="'._('Contraseña').'" required /></div>';
+			echo '<div class="form-group">';
+				echo '<input type="text" name="username" tabindex="1" id="name" value="'.htmlspecialchars($_POST['username']).'" class="form-control" placeholder="'._('Usuario o Correo electrónico').'" required />';
+			echo '</div>';
+
+			echo '<div class="form-group">';
+				echo '<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="'._('Contraseña').'" required />';
+			echo '</div>';
 
 			if (($failed > 2) || ($globals['captcha_first_login'] && !UserAuth::user_cookie_data()) ) {
 				ts_print_form();
 			}
 
-			echo '<div class="input-checkbox"><label><input type="checkbox" name="persistent" id="remember" tabindex="3"/> '._('Recuérdame durante 30 días').'</label></div>';
+			echo '<div class="form-group">';
+				echo '<div class="checkbox"><label><input type="checkbox" name="persistent" id="remember" tabindex="3" /> '._('Recuérdame durante 30 días').'</label></div>';
+			echo '</div>';
 
-			echo '<div><button type="submit" name="login" class="button" tabindex="4">'._('Acceder').'</button></div>';
+			echo '<div class="form-group">';
+				echo '<button type="submit" name="login" class="btn btn-mnm btn-block" tabindex="4">'._('Acceder').'</button>';
+			echo '</div>';
 
-			echo '<input type="hidden" name="processlogin" value="1"/>';
-			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>';
+			echo '<input type="hidden" name="processlogin" value="1" />';
+			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'" />';
 		echo '</form>';
 
 		echo '<div class="bottomline"><a href="login?op=recover">'._('¿Has olvidado tu contraseña?').'</a></div>';
@@ -158,20 +166,24 @@ function do_recover() {
 
 	echo '<p class="intro">'._('Recibirás un e-mail que te permitirá editar tus datos').'</p>';
 
-	echo '<div class="container">';
-		echo '<form action="'.get_auth_link().'login" id="thisform" method="post" class="form">';
+	echo '<div class="container container-small">';
+		echo '<form action="'.get_auth_link().'login" method="post" class="form">';
 			if (is_string($post)) {
 				echo '<div class="response response-error">'.$post.'</div>';
 			}
 
-			echo '<p><input type="email" name="email" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" class="input" placeholder="'._('Indica tu correo electrónico').'" required /></p>';
+			echo '<div class="form-group">';
+				echo '<input type="email" name="email" tabindex="1" id="name" value="'.htmlspecialchars($_POST['email']).'" class="form-control" placeholder="'._('Indica tu correo electrónico').'" required />';
+			echo '</div>';
 
 			ts_print_form();
 
-			echo '<p><button type="submit" name="login" class="button" tabindex="4">'._('Enviar correo').'</button></p>';
+			echo '<div class="form-group">';
+				echo '<button type="submit" name="login" class="btn btn-block btn-mnm" tabindex="4">'._('Enviar correo').'</button>';
+			echo '</div>';
 
-			echo '<input type="hidden" name="recover" value="1"/>'."\n";
-			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
+			echo '<input type="hidden" name="recover" value="1" />'."\n";
+			echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'" />'."\n";
 		echo '</form>';
 
 		echo '<div class="bottomline"><a href="login">'._('Volver al login').'</a></div>';
@@ -205,7 +217,7 @@ function do_recover_post() {
 
 	require_once(mnminclude.'mail.php');
 
-	if (!send_recover_mail($user)) {
+	if (!send_recover_mail($user, false)) {
 		return _('no se ha podido enviar el correo de recuperación de contraseña');
 	}
 

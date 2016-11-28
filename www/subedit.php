@@ -27,26 +27,25 @@ if (!empty($_POST['id'])) {
 }
 if (! $id) $id = -1;
 
-$errors = array();
+$error = false;
 $site = SitesMgr::get_info();
 $extended = array();
-
 
 $can_edit = SitesMgr::can_edit($id);
 
 if (! $can_edit) {
-	$errors[] = _("no puede editar o crear nuevos");
-} else {
-	if ($_POST['created_from']) {
-		$id = save_sub($id, $errors);
-		$sub = SitesMgr::get_info($id, true);
-		if ($id && empty($errors)) {
-			header("Location: ".$globals['base_url_general']."m/$sub->name/subedit");
-			die;
-		}
-		if (! $id) {
-			$sub = (object) $_POST; // Copy the data for the form, in case it failed to store
-		}
+	$error = _("no puede editar o crear nuevos");
+} elseif ($_POST['created_from']) {
+	try {
+		$sub = SitesMgr::get_info(save_sub($id), true);
+
+		die(header("Location: ".$globals['base_url_general']."m/$sub->name/subedit"));
+	} catch (Exception $e) {
+		$error = $e->getMessage();
+	}
+
+	if (!$id) {
+		$sub = (object)$_POST; // Copy the data for the form, in case it failed to store
 	}
 }
 
@@ -66,47 +65,51 @@ $page_modes = SitesMgr::$page_modes;
 
 do_header(_("editar sub"));
 echo '<div id="singlewrap">'."\n";
-Haanga::Load('sub_edit.html', compact('sub', 'extended', 'errors', 'site', 'candidates_from', 'copy_from', 'page_modes'));
+Haanga::Load('sub_edit.html', compact('sub', 'extended', 'error', 'site', 'candidates_from', 'copy_from', 'page_modes'));
 echo "</div>"."\n";
 
 do_footer();
 
-function save_sub($id, &$errors) {
+function save_sub($id) {
 	global $current_user, $db;
 
 	// Double check
 	$owner = intval($_POST['owner']);
-	if (! SitesMgr::can_edit($id)) {
-		array_push($errors, _('usuario no autorizado a editar'));
-		return false;
+
+	if (!SitesMgr::can_edit($id)) {
+		throw new Exception(_('Tu usuario no tiene autorización para editar'));
 	}
 
 	$site = SitesMgr::get_info();
 	$extended = SitesMgr::get_extended_properties($id);
 
 	if ($_POST['created_from'] != $site->id) {
-		array_push($errors, _('sitio erróneo'));
+		throw new Exception(_('El sitio es erróneo'));
 	}
 
-	if($owner != $current_user->user_id && ! $current_user->admin) {
-		array_push($errors, _('propietario erróneo'));
+	if ($owner != $current_user->user_id && ! $current_user->admin) {
+		throw new Exception(_('El propietario es incorrecto'));
 	}
 
 	$name = mb_substr(clean_input_string($_POST['name']), 0, 12);
-	if (mb_strlen($name) < 3 || ! preg_match('/^\p{L}[\p{L}\d_]+$/u', $name)) {
-		array_push($errors, _('nombre erróneo'). ' ' . $_POST['name']);
+
+	if (mb_strlen($name) < 3 || !preg_match('/^\p{L}[\p{L}\d_]+$/u', $name)) {
+		throw new Exception(_('El nombre es incorrecto'). ' ' . $_POST['name']);
 	}
 
 	$name_long = mb_substr(clean_text($_POST['name_long']), 0, 40);
+
 	if (mb_strlen($name_long) < 6) {
-		array_push($errors, _('título erróneo'));
+		throw new Exception(_('El título es incorrecto'));
 	}
 
 	$name = $db->escape($name);
-	$name_long= $db->escape($name_long);
+	$name_long = $db->escape($name_long);
+
 	if ($db->get_var("select count(*) from subs where name = '$name' and id != $id") > 0) {
-		array_push($errors, _('nombre duplicado'));
+		throw new Exception(_('Ya existe otro sub con nombre').' <strong>'.$name.'</strong>');
 	}
+
 	$page_mode = $db->escape($_POST['page_mode']);
 
 	if ($current_user->admin) {
@@ -121,6 +124,7 @@ function save_sub($id, &$errors) {
 
 	$nsfw = intval($_POST['nsfw']);
 	$private = intval($_POST['private']);
+	$show_admin = intval($_POST['show_admin']);
 
 	// Check the extended info
 	foreach (array('no_link', 'no_anti_spam', 'allow_local_links', 'intro_max_len', 'intro_min_len') as $k) {
@@ -129,45 +133,56 @@ function save_sub($id, &$errors) {
 		}
 	}
 
-	if ($_POST['intro_max_len'] > 5000) $_POST['intro_max_len'] = 5000;
-
-	if (empty($errors)) {
-		$db->transaction();
-		if ($id > 0) {
-			$r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long', private = $private, page_mode = '$page_mode' where id = $id");
-		} else {
-			$r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub, private) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1, $private)");
-			$id = $db->insert_id;
-		}
-		if ($r && $id > 0) {
-			// Copy values from first site
-			$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
-			// Update copy_from
-			if ($current_user->admin) {
-				sub_copy_from($id, $_POST['copy_from']);
-			}
-
-			// Update colors
-			$color_regex = '/^#[a-f0-9]{6}/i';
-			if (preg_match($color_regex, $_POST['color1'])) $color1 = $db->escape($_POST['color1']);
-			else $color1 = '';
-			if (preg_match($color_regex, $_POST['color2'])) $color2 = $db->escape($_POST['color2']);
-			else $color2 = '';
-
-			$db->query("update subs set color1 = '$color1', color2 = '$color2' where id = $id");
-		}
-		if ($r && $id > 0) {
-			SitesMgr::store_extended_properties($id, $_POST);
-			$db->commit();
-			store_image($id);
-			return $id;
-		} else {
-			array_push($errors, _('error actualizando la base de datos'));
-			$db->rollback();
-		}
-
+	if ($_POST['intro_max_len'] > 5000) {
+		$_POST['intro_max_len'] = 5000;
 	}
-	return false;
+
+	if ($id > 0) {
+		$r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long', private = $private, show_admin = $show_admin, page_mode = '$page_mode' where id = $id");
+	} else {
+		$r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub, private, show_admin) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1, $private, 1)");
+		$id = $db->insert_id;
+	}
+
+	if (empty($r) || empty($id)) {
+		throw new Exception(_('Ha ocurrido un error actualizando la base de datos'));
+	}
+
+	$db->transaction();
+
+	// Copy values from first site
+	$r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
+
+	// Update copy_from
+	if ($current_user->admin) {
+		sub_copy_from($id, $_POST['copy_from']);
+	}
+
+	// Update colors
+	$color_regex = '/^#[a-f0-9]{6}/i';
+
+	if (preg_match($color_regex, $_POST['color1'])) {
+		$color1 = $db->escape($_POST['color1']);
+	} else {
+		$color1 = '';
+	}
+
+	if (preg_match($color_regex, $_POST['color2'])) {
+		$color2 = $db->escape($_POST['color2']);
+	} else {
+		$color2 = '';
+	}
+
+	$db->query("update subs set color1 = '$color1', color2 = '$color2' where id = $id");
+
+	SitesMgr::store_extended_properties($id, $_POST);
+
+	$db->commit();
+
+	store_image($id);
+	update_subs_json();
+
+	return $id;
 }
 
 function sub_copy_from($id, $from) {
@@ -190,7 +205,8 @@ function store_image($id) {
 	$media->media_mime = '';
 
 	$media->access = 'public';
-	if($media->from_form('logo_image', 'image')) {
+
+	if ($media->from_form('logo_image', 'image')) {
 		$site->media_size = $media->size;
 		$site->media_mime = $media->mime;
 		$site->media_dim1 = $media->dim1;
@@ -198,4 +214,12 @@ function store_image($id) {
 	} elseif ($_POST['logo_image_delete']) {
 		$media->delete();
 	}
+}
+
+function update_subs_json() {
+	global $db;
+
+	$sql = 'SELECT s.name, s.name_long, u.user_login AS user FROM (subs AS s) LEFT JOIN users AS u ON (u.user_id = s.owner AND s.show_admin = 1) WHERE s.sub = 1 AND s.enabled = 1 ORDER BY s.name ASC';
+
+	file_put_contents(mnmpath.'/cache/subs.json', json_encode((array)$db->get_results($sql)));
 }

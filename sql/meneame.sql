@@ -834,6 +834,7 @@ CREATE TABLE `subs` (
   `color1` char(7) DEFAULT NULL,
   `color2` char(7) DEFAULT NULL,
   `private` tinyint(1) DEFAULT '0',
+  `show_admin` BOOLEAN NOT NULL DEFAULT 0,
   `page_mode` enum('best-comments','threads','interview','answered','standard') DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
