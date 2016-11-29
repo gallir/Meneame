@@ -896,6 +896,7 @@ function do_sub_message_right() {
 	$properties['message_html'] = LCPBase::html($properties['message']);
 
 	$site = SitesMgr::get_info();
+
 	$site->followers = SitesMgr::get_followers();
 
 	Haanga::Load('message_right.html', array(

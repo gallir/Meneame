@@ -100,15 +100,7 @@ class SitesMgr {
 			return self::$owner;
 		}
 
-		global $db;
-
-		if (! self::$id ) {
-			self::__init();
-		}
-
-		$info = self::get_info();
-
-		return self::$owner = $db->get_row('SELECT * FROM users WHERE user_id = "'.(int)$info->owner.'" LIMIT 1;');
+		return self::$owner = new User(self::get_info()->owner);
 	}
 
 	static public function is_owner() {
@@ -403,11 +395,7 @@ class SitesMgr {
 
 		global $db;
 
-		if (!self::$id) {
-			self::__init();
-		}
-
-		return self::$followers = $db->get_var('SELECT COUNT(*) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::$id.'");');
+		return self::$followers = $db->get_var('SELECT SQL_CACHE COUNT(*) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'");');
 	}
 
 	static public function store_extended_properties($id = false, &$prefs) {
