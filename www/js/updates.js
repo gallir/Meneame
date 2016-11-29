@@ -124,7 +124,7 @@
         var $inputSearch = $('.input-search', $formSubsSearch);
 
         $.ajax({
-            url: base_url + 'cache/subs.json',
+            url: base_url + 'backend/get_subs.php',
             cache: false,
             dataType: 'json',
             success: function(data) {
