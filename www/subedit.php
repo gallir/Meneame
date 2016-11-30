@@ -217,9 +217,19 @@ function store_image($id) {
 }
 
 function update_subs_json() {
-	global $db;
+	global $globals, $db;
 
-	$sql = 'SELECT s.name, s.name_long, u.user_login AS user FROM (subs AS s) LEFT JOIN users AS u ON (u.user_id = s.owner AND s.show_admin = 1) WHERE s.sub = 1 AND s.enabled = 1 ORDER BY s.name ASC';
+	if ($globals['memcache_host']) {
+		$memcache_list_subs_json = 'list_subs_json';
+	}
 
-	file_put_contents(mnmpath.'/cache/subs.json', json_encode((array)$db->get_results($sql)));
+	if ($memcache_list_subs_json && !($subs = unserialize(memcache_mget($memcache_list_subs_json)))) {
+
+		// Not in memcache
+		$sql = 'SELECT s.name, s.name_long FROM (subs AS s) LEFT JOIN users AS u ON (u.user_id = s.owner AND s.show_admin = 1) WHERE s.sub = 1 AND s.enabled = 1 ORDER BY s.name ASC';
+
+		$results = $db->get_results($sql);
+		memcache_madd($memcache_list_subs_json, serialize($results), 1800);
+
+	}
 }

@@ -100,15 +100,7 @@ class SitesMgr {
 			return self::$owner;
 		}
 
-		global $db;
-
-		if (! self::$id ) {
-			self::__init();
-		}
-
-		$info = self::get_info();
-
-		return self::$owner = $db->get_row('SELECT * FROM users WHERE user_id = "'.(int)$info->owner.'" LIMIT 1;');
+		return self::$owner = new User(self::get_info()->owner);
 	}
 
 	static public function is_owner() {
@@ -401,13 +393,26 @@ class SitesMgr {
 			return self::$followers;
 		}
 
-		global $db;
+		global $globals, $db;
 
-		if (!self::$id) {
-			self::__init();
+		if ($globals['memcache_host']) {
+			$memcache_followers = 'follower_number' . self::my_id();
 		}
 
-		return self::$followers = $db->get_var('SELECT COUNT(*) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::$id.'");');
+		if (!$memcache_followers || false === $followers = memcache_mget($memcache_followers)) {
+
+			// Not in memcache
+
+			$sql = 'SELECT SQL_CACHE COUNT(pref_user_id) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'")';
+
+			$followers = $db->get_var($sql);
+
+			if ($memcache_followers) {
+				memcache_madd($memcache_followers, $followers, 1800);
+			}
+		}
+
+		return self::$followers = $followers;
 	}
 
 	static public function store_extended_properties($id = false, &$prefs) {
