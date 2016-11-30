@@ -110,8 +110,6 @@ function do_header($title, $id='home', $options = false) {
 		$this_site_properties['message_html'] = LCPBase::html($this_site_properties['message']);
 	}
 
-	$this_site->followers = SitesMgr::get_followers();
-
 	if (! is_array($options)) {
 		$left_options = array();
 

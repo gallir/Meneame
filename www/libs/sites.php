@@ -393,9 +393,26 @@ class SitesMgr {
 			return self::$followers;
 		}
 
-		global $db;
+		global $globals, $db;
 
-		return self::$followers = $db->get_var('SELECT SQL_CACHE COUNT(*) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'");');
+		if ($globals['memcache_host']) {
+			$memcache_followers = 'follower_number' . self::my_id();
+		}
+
+		if (!$memcache_followers || false === $followers = memcache_mget($memcache_followers)) {
+
+			// Not in memcache
+
+			$sql = 'SELECT SQL_CACHE COUNT(pref_user_id) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'")';
+
+			$followers = $db->get_var($sql);
+
+			if ($memcache_followers) {
+				memcache_madd($memcache_followers, $followers, 1800);
+			}
+		}
+
+		return self::$followers = $followers;
 	}
 
 	static public function store_extended_properties($id = false, &$prefs) {
