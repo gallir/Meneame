@@ -44,7 +44,7 @@
 
 			<td class="logo">
                 {% if ! s.site_info.logo_url %}
-                <a href="{{ s.site_info.url }}" title="{% trans _('portada') %} {{ s.site_info.name_long }}">
+                <a href="{{ s.base_url }}m/{{ s.name }}" title="{% trans _('portada') %} {{ s.name_long|escape }}">
                     <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
                 </a>
                 {% else %}
@@ -52,17 +52,9 @@
 					<img src="{{ globals.base_static }}img/g.gif"
 						 class="thumb ok lazy img-circle"
 						 data-src="{{ s.site_info.logo_url }}"
-						 {# data-2x="s:thumb:thumb_2x" #}
 						 width="{{ s.site_info.logo_width }}" height="{{ s.site_info.logo_height }}"
 						 alt="{{ s.site_info.name }}" style="margin-right:5px;"/></a>
                 {% endif %}
-				{#
-				{% if s.user_id %}
-				<img data-src="{% exec get_avatar_url s.user_id, s.user_avatar, 40, false %}" data-2x="s:-20.:-40." src="{{ globals.base_static }}img/g.gif" class="avatar lazy"/>
-				{% else %}
-				<img data-src="{% exec get_no_avatar_url 40, false %}" data-2x="s:-20.:-40." src="{{ globals.base_static }}img/g.gif" class="avatar lazy"/>
-				{% endif %}
-				#}
 			</td>
 
 			<td class="name">
