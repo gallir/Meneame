@@ -88,6 +88,19 @@ foreach ($all_subs as $sub) {
 	if (!$sub->enabled) {
 		continue;
 	}
+	$sub->site_info = SitesMgr::get_info($sub->id);
+
+	// Check if the sub has a logo and calculate the width
+	if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
+		$r = $sub->site_info->media_dim1/$sub->site_info->media_dim2;
+		if ( $globals['mobile']) {
+			$sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
+		} else {
+			$sub->site_info->logo_height = $globals['media_sublogo_height'];
+		}
+		$sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
+		$sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+	}
 
 	$sub->followers = 0;
 
