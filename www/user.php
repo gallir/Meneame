@@ -583,7 +583,7 @@ function do_user_subheader($options, $selected = false, $rss = false, $rss_title
 }
 
 function do_subs() {
-	global $db, $user, $current_user;
+	global $db, $user, $current_user, $globals;
 
 	$sql = "select subs.* from subs, prefs where pref_user_id = $user->id and pref_key = 'sub_follow' and subs.id = pref_value order by name asc";
 	$subs = $db->get_results($sql);
@@ -618,7 +618,6 @@ function do_subs() {
 		}
 
 	$title_subscriptions = _('Suscripciones');
-	$subscribed_subs = $subs;
 
 	if ($current_user->admin && $user->id == $current_user->user_id) {
 		$sql = "select subs.* from subs where subs.sub = 1 and (subs.owner = $user->id or subs.owner = 0)";
