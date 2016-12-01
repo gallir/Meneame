@@ -33,46 +33,7 @@
 		</div>
 	</form>
 
-	<table class="subs-listing">
-		{% for s in subs %}
-		<tr>
-			<td class="color" {% if s.color2 %}style="background-color: {{ s.color2 }};"{% endif %}>&nbsp;</td>
-
-			<td class="followers">
-				<span><strong>{{ s.followers }} </strong> {% trans _('seguidores') %}</span>
-			</td>
-
-			<td class="logo">
-                {% if ! s.site_info.logo_url %}
-                <a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}">
-                    <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
-                </a>
-                {% else %}
-				<a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}">
-					<img src="{{ globals.base_static }}img/g.gif"
-						 class="thumb ok lazy img-circle"
-						 data-src="{{ s.site_info.logo_url }}"
-						 width="{{ s.site_info.logo_width }}" height="{{ s.site_info.logo_height }}"
-						 alt="{{ s.site_info.name }}" style="margin-right:5px;"/></a>
-                {% endif %}
-			</td>
-
-			<td class="name">
-				<a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}">{{ s.name }}</a>
-
-				<div class="description">
-					{% if s.nsfw %}<strong>[nsfw]</strong>{% endif %}
-					{{ s.name_long }}
-				</div>
-			</td>
-
-			<td class="actions">
-				<span class="followers"><strong>{{ s.followers }} </strong> {% trans _('seguidores') %}</span>
-				{% exec print_follow_sub s.id as dummy %}
-			</td>
-		</tr>
-		{% endfor %}
-	</table>
+	{% include 'subs_list.html' %}
 
 	{% if option === 2 %}
 	<div class="pagination-center">

@@ -1,0 +1,38 @@
+<section class="section section-medium section-with-sidebar">
+
+    {% if title_subscriptions%}
+    <h1>{{ title_subscriptions }}</h1>
+    {% endif %}
+
+    {% if current_user.user_id && subscribed_subs %}
+    <form>
+        <div class="checkbox">
+            <label>
+                <input name="subs_default" id="subs_default" type="checkbox" value="subs_default"/> {% trans _('Mostrar suscripciones por defecto en la portada') %} &nbsp;&nbsp; [<a href="http://meneame.wikispaces.com/Subs"><b>{% trans _('ayuda') %}</a></b>]</br>
+            </label>
+        </div>
+
+        <script type="text/javascript">
+            addPostCode(function () {
+                pref_input_check("subs_default");
+            });
+        </script>
+    </form>
+
+    {% set subs = subscribed_subs %}
+    {% include 'subs_list.html' %}
+
+    {% endif %}
+
+
+    {% if title_owned_subs%}
+    <h1>{{ title_owned_subs }}</h1>
+    {% endif %}
+
+    {% if current_user.user_id && owned_subs %}
+        {% set subs = owned_subs %}
+        {% include 'subs_list.html' %}
+    {% endif %}
+
+</section>
+
