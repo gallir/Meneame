@@ -553,6 +553,67 @@ a.action-link span {
     vertical-align: middle;
 }
 
+.sidebox-sub {
+    background-color: #FBFCFB;
+    border-radius: 5px;
+    border: 1px solid #E9E9E9;
+    padding-top: 30px;
+}
+
+.sidebox-sub .name {
+    padding: 20px 20px 0px 20px;
+}
+
+.sidebox-sub .name a {
+    color: #1F1F1F;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.sidebox-sub .description {
+    color: #9B9B9B;
+    padding: 20px;
+    font-weight: 300;
+}
+
+.sidebox-sub a {
+    color: #ff6400;
+}
+
+.sidebox-sub .follow {
+    margin-bottom: 20px;
+}
+
+.sidebox-sub .followers {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    display:inline;
+}
+
+.sidebox-sub .btn.btn-mnm {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 0px 30px;
+    transition: all .3s ease .1s;
+    background-color: #fff;
+    color: #FF6400;
+    border: 1px solid #FF6400;
+    text-transform: uppercase;
+    display: inline;
+    margin-left: 15px;
+}
+
+.sidebox-sub .footer {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    padding-top: 4px;
+    background-color: #F8F8F8;
+    border-top: 1px solid #E9E9E9;
+    height: 30px;
+}
+
 .sub-description {
     padding: 10px;
 }

@@ -1429,6 +1429,7 @@ border: 0;
 letter-spacing: 0px;
 vertical-align: middle;
 font-size: 11px;
+width: 75px;
 }
 
 .news-details .tool {
@@ -3197,6 +3198,10 @@ button.share-link i {
 
 button.share-link span {
     font-size: 14px;
+}
+
+button.share-link span:hover {
+    text-decoration: underline;
 }
 
 .tooltip {

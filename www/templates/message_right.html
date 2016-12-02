@@ -1,45 +1,59 @@
-<div class="sidebox-extended">
-    {% if site.color1 %}
-    <div class="header" style="color:{{ site.color1 }};{% if site.color2 %}background-color:{{ site.color2 }}{% endif %}">
-        <h4 style="color:{{ site.color1 }}"><a href="{{ site.url }}" style="color:{{ site.color1 }}">{{ site.name_long }}</a></h4>
-    </div>
-    {% else %}
-    <div class="header" style="{% if site.color2 %}background-color:{{ site.color2 }}{% endif %}">
-        <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
-    </div>
-    {% endif %}
-
+<div class="sidebox-sub">
     <div class="box">
+
+        <div class="logo text-center">
+            {% if ! site.site_info.logo_url %}
+            <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                <img src="{{ globalsite.base_static }}img/mnm/h9_eli.png">
+            </a>
+            {% else %}
+            <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                <img src="{{ globalsite.base_static }}img/g.gif"
+                     class="thumb ok lazy img-circle"
+                     data-src="{{ site.site_info.logo_url }}"
+                     width="{{ site.site_info.logo_width }}" height="{{ site.site_info.logo_height }}"
+                     alt="{{ site.site_info.name }}" style="margin-right:5px;"/></a>
+            {% endif %}
+        </div>
+
+        <div class="name text-center">
+            <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
+        </div>
+
         {% if properties.message %}
-        <div class="content">
+        <div class="description text-center">
             {{ properties.message_html }}
         </div>
         {% endif %}
 
-        <div class="content bg-gray-light clearfix">
-            {% if site.show_admin AND owner.user_id %}
-            {% trans _('Admin') %} | <a href="{{ owner.user_login|useruri }}">{{ owner.user_login }}</a>
+        <div class="follow text-center">
+
+            <div class="followers">374 seguidores</div>
+
+            {% if user.user_id %}
+
+            <a href="javascript:add_remove_sub('{{ site.id }}', 1)" class="btn btn-mnm follow_b_{{ site.id }}" title="{% trans _('suscripción al sub') %}">
+                <span>{% trans _('Seguir') %}</span>
+            </a>
+
+            {% else %}
+
+            <a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="btn btn-mnm" title="{% trans _('suscripción al sub') %}">
+                <span>{% trans _('Seguir') %}</span>
+            </a>
+
             {% endif %}
 
-            <div class="pull-right">{{ site.followers }} {% trans _('seguidores') %}</div>
+
+            <div class="clearfix"></div>
         </div>
+
     </div>
 
-    <div class="footer content bg-gray-medium">
-        {% if user.user_id %}
-
-        <a href="javascript:add_remove_sub('{{ site.id }}', 1)" class="btn btn-mnm follow_b_{{ site.id }}" title="{% trans _('suscripción al sub') %}"/>
-            <i class="fa fa-check-circle-o"></i>
-            <span>{% trans _('Seguir') %}</span>
-        </a>
-
-        {% else %}
-
-        <a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="btn btn-mnm" title="{% trans _('suscripción al sub') %}"/>
-            <i class="fa fa-check-circle-o"></i>
-            <span>{% trans _('Seguir') %}</span>
-        </a>
-
-        {% endif %}
+    {% if site.show_admin %}
+    <div class="footer text-center">
+        Admin | <a href="{{ owner.id | useruri }}" class="tooltip u:{{ owner.id }}">{{ owner.username }}</a>
     </div>
+    {% endif %}
+
 </div>
