@@ -11,8 +11,7 @@ padding: 0;
 }
 
 body {
-font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-font-size: small;
+font-family: 'Lato','Helvetica Neue', Helvetica, Arial, sans-serif;
 background-image: url('{{ globals.base_static }}img/common/bkg-01.png');
 color: #000;
 background-color: #fff;
@@ -124,7 +123,7 @@ border-radius: 3px;
 }
 
 #header-top, #header-center, .news-shakeit, .answers .counter, #notifier_panel  {
-font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 #variable {
@@ -320,7 +319,7 @@ float:left;
 
 
 .subname, .subname_base {
-font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 font-variant:small-caps;
 }
 
@@ -1028,11 +1027,10 @@ box-shadow: 0 0 1px rgba(0,0,0,0.8);
 }
 
 .news-submitted img {
-float: left;
 width: 25px;
 height: 25px;
 margin-right: 4px;
-vertical-align: bottom;
+vertical-align: middle;
 margin-top: 5px;
 }
 
@@ -1337,6 +1335,11 @@ overflow: hidden;
     color: #ff6400;
 }
 
+
+.news-details.main a, .news-details.main button {
+    font-size: 13px;
+}
+
 .news-details {
 display: block;
 padding: 0;
@@ -1595,10 +1598,14 @@ color: #808080;
 .news-body h1, .news-body h2 {
 margin: 0;
 padding: 0 5px 0 0;
-font-size: 140%;
+font-size: 20px;
 font-weight: normal;
 background: none;
 border: none;
+}
+
+.news-body h1 a , .news-body h2 a {
+    color: #1F1F1F;
 }
 
 .news-body img.thumbnail {
@@ -1610,7 +1617,7 @@ border-radius: 0;
 }
 
 .news-submitted {
-font-size: 85%;
+font-size: 11px
 margin: 0 0 2px 0;
 white-space: nowrap;
 min-height: 25px;
@@ -1625,6 +1632,10 @@ color: #3D72C3;
 .news-submitted .showmytitle {
 font-weight: bold;
 cursor: pointer;
+}
+
+.news-content {
+    font-size: 14px;
 }
 
 .tab-trackback-url {
@@ -1844,6 +1855,10 @@ font-weight: bold;
     vertical-align: top;
 }
 
+.news-details, .news-details.main {
+    font-family: 'Open Sans', sans-serif;
+}
+
 .news-details span {
     padding-right: 5px;
 }
@@ -1896,7 +1911,7 @@ font-weight: bold;
     opacity: 0.5;
 }
 
-.news-details span.sub-name {
+.news-details span {
     font-size: 11px;
 }
 

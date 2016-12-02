@@ -361,8 +361,7 @@ $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';
 // Load webfonts from the specified url
-// $globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300';
-$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Roboto:300,400,700';
+$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lato:300,400,700';
 $globals['use_fontawesome_cdn'] = true; // If false serve fontawesome locally
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
