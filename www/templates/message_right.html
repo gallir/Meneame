@@ -2,17 +2,17 @@
     <div class="box">
 
         <div class="logo text-center">
-            {% if ! site.site_info.logo_url %}
+            {% if ! site.logo_url %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
-                <img src="{{ globalsite.base_static }}img/mnm/h9_eli.png">
+                <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
             </a>
             {% else %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
-                <img src="{{ globalsite.base_static }}img/g.gif"
+                <img src="{{ globals.base_static }}img/g.gif"
                      class="thumb ok lazy img-circle"
-                     data-src="{{ site.site_info.logo_url }}"
-                     width="{{ site.site_info.logo_width }}" height="{{ site.site_info.logo_height }}"
-                     alt="{{ site.site_info.name }}" style="margin-right:5px;"/></a>
+                     data-src="{{ site.logo_url }}"
+                     width="{{ site.logo_width }}" height="{{ site.logo_height }}"
+                     alt="{{ site.name }}" style="margin-right:5px;"/></a>
             {% endif %}
         </div>
 
@@ -28,7 +28,7 @@
 
         <div class="follow text-center">
 
-            <div class="followers">374 seguidores</div>
+            <div class="followers">{{ site.followers }} seguidores</div>
 
             {% if user.user_id %}
 

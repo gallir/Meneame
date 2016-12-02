@@ -899,9 +899,9 @@ function do_sub_message_right() {
 	if ($site->media_id > 0 && $site->media_dim1 > 0 && $site->media_dim2 > 0) {
 		$r = $site->media_dim1/$site->media_dim2;
 		if ( $globals['mobile']) {
-			$site->logo_height = $globals['media_sublogo_height_mobile'];
+			$site->logo_height = $globals['media_sublogo_height_mobile']*2;
 		} else {
-			$site->logo_height = $globals['media_sublogo_height'];
+			$site->logo_height = $globals['media_sublogo_height']*2;
 		}
 		$site->logo_width = round($r * $site->logo_height);
 		$site->logo_url = Upload::get_cache_relative_dir($site->id).'/media_thumb-sub_logo-'.$site->id.'.'.$site->media_extension.'?'.$site->media_date;

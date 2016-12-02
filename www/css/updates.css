@@ -561,7 +561,7 @@ a.action-link span {
 }
 
 .sidebox-sub .name {
-    padding: 20px 20px 0px 20px;
+    padding: 15px;
 }
 
 .sidebox-sub .name a {
@@ -572,7 +572,7 @@ a.action-link span {
 
 .sidebox-sub .description {
     color: #9B9B9B;
-    padding: 20px;
+    padding: 15px;
     font-weight: 300;
 }
 
