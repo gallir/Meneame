@@ -1427,8 +1427,8 @@ overflow: hidden;
 .news-details select {
 border: 0;
 letter-spacing: 0px;
-vertical-align: top;
-max-width: 6em;
+vertical-align: middle;
+font-size: 11px;
 }
 
 .news-details .tool {
