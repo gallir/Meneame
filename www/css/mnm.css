@@ -1748,7 +1748,7 @@ margin-bottom: 10px;
 
 .comment-body {
 padding: 4px 5px 5px 10px;
-line-height: 120%;
+line-height: 130%;
 text-align: left;
 overflow: hidden;
 min-height: 25px;
@@ -3192,7 +3192,11 @@ button.share-link span {
 }
 
 button.share-link i {
-    font-size: 23px;
+    font-size: 25px;
+}
+
+button.share-link span {
+    font-size: 14px;
 }
 
 .tooltip {
