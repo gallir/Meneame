@@ -2375,7 +2375,7 @@ $(document).ready(function () {
 
 	var m, m2, target, canonical;
 
-	/* Put dates */$("#").toggle();
+	/* Put dates */
 	$('span.ts').each(to_date);
 	$.ajaxSetup({ cache: false });
 
