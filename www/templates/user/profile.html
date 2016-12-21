@@ -1,9 +1,10 @@
 <section class="section section-medium section-with-sidebar">
 {% if user.id == current_user.user_id %}
 
-	<div class="user-profile-info" style="margin-bottom: 30px;">
-		<h1 style="display: inline-block;margin-left: 20px">{{ user.username }}</h1>
-		<a style="margin-left: 40px;margin-top: -15px;display: inline-block;" class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">EDITAR PERFIL</a>
+	<div class="user-profile-info">
+		<h1>{{ user.username }}</h1>
+		<a class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">EDITAR PERFIL</a>
+		<a href="{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}" class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">LOGOUT</a>
 	</div>
 
 	<fieldset><legend>{% trans _('preferencias básicas') %}</legend>
