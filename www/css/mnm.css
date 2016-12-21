@@ -2328,7 +2328,6 @@ button.link.favorite {
 
 .link.favorite:after {
     padding-left: 7px;
-    content: "{% trans _('guardar') %}";
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
