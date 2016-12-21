@@ -392,6 +392,13 @@ final class Tabs
 
 	}
 
+	public static function renderForProfileConversation($view, $tab_class)
+	{
+		global $user, $globals;
+
+		return self::renderUserProfileSubheader(array($user->username => get_user_uri($user->username, 'commented'), _('conversación') . $globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'), _('votados') => get_user_uri($user->username, 'shaken_comments'), _('favoritos') => get_user_uri($user->username, 'favorite_comments')), 1, false, '', $tab_class);
+	}
+
 	public static function renderForProfileShakenComments($view, $tab_class)
 	{
 		global $user, $globals;
