@@ -115,9 +115,68 @@ foreach ($all_subs as $sub) {
 
 $can_edit = (SitesMgr::my_id() == 1 && SitesMgr::can_edit(0));
 
+
+// Official subs
+
+$official_subs = array();
+
+if ($globals['official_subs']) {
+
+	foreach (array_keys($globals['official_subs']) as $sub_name) {
+		$sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
+		$sub->extra_info = $globals['official_subs'][$sub_name];
+		$official_subs[] = $sub;
+	}
+
+	$ids_official_subs = array_map(function($row) {
+		return (int)$row->id;
+	}, $official_subs);
+
+	$followers_official_subs = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_official_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+
+	foreach ($official_subs as $sub) {
+
+		foreach ($followers_official_subs as $row) {
+			if ($sub->id == $row->id) {
+				$sub->followers = $row->c;
+			}
+		}
+	}
+
+}
+
+// Recommended subs
+
+$recommended_subs = array();
+
+if ($globals['recommended_subs']) {
+
+	foreach (array_keys($globals['recommended_subs']) as $sub_name) {
+		$sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
+		$sub->extra_info = $globals['recommended_subs'][$sub_name];
+		$recommended_subs[] = $sub;
+	}
+
+	$ids_recommended_subs = array_map(function($row) {
+		return (int)$row->id;
+	}, $recommended_subs);
+
+	$followers_recommended_subs = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_recommended_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+
+	foreach ($recommended_subs as $sub) {
+
+		foreach ($followers_recommended_subs as $row) {
+			if ($sub->id == $row->id) {
+				$sub->followers = $row->c;
+			}
+		}
+	}
+
+}
+
 Haanga::Load('subs.html', compact(
 	'title', 'subs', 'chars', 'char_selected', 'option', 'rows',
-	'page_size', 'q', 'can_edit'
+	'page_size', 'q', 'can_edit', 'official_subs', 'recommended_subs'
 ));
 
 do_footer();

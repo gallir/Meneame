@@ -1,23 +1,28 @@
 {% if links %}
-<div class="sidebox{% if subclass %} {{ subclass }}{% endif %}"><div>
+<div class="sidebox{% if subclass %} {{ subclass }}{% endif %}">
+    <div>
 
-<div class="header">
-<h4><a href="{{url}}">{{ title }}</a></h4>
-</div>
-{% for l in links %}
-	<div class="cell">
-	<div class="votes{% if l.sub_status == 'queued' %} queued{% endif %}"><span>{{ l.total_votes }}</span></div>
-	{% if l.thumb %}
-		<img data-src="{{l.thumb | noscheme}}" src="{{ globals.base_static | noscheme }}img/g.gif" alt='' class="thumbnail lazy"/>
-	{% endif %}
-	<h5 {% if l.warned %}class="warn"{% endif %}>
-	{% if l.print_subname %}
-		<a class="subname big" href="{{ globals.base_url_general }}m/{{ l.sub_name }}{% if l.sub_status_origen != 'published' %}/queue{% endif %}">{{ l.sub_name }}</a>&nbsp;
-	{% endif %}
-	<a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a>
-	</h5>
-	</div>
-{% endfor %}
-</div>
+        <div class="header">
+            <h4><a href="{{url}}">{{ title }}</a></h4>
+        </div>
+        <div class="body">
+            {% for l in links %}
+            <div class="cell">
+                <div class="votes{% if l.sub_status == 'queued' %} queued{% endif %}"><span>{{ l.total_votes }}</span>
+                </div>
+                {% if l.thumb %}
+                <img data-src="{{l.thumb | noscheme}}" src="{{ globals.base_static | noscheme }}img/g.gif" alt='' class="thumbnail lazy"/>
+                {% endif %}
+                <h5 {% if l.warned %}class="warn" {% endif %}>
+                    {% if l.print_subname %}
+                    <a class="subname big" href="{{ globals.base_url_general }}m/{{ l.sub_name }}{% if l.sub_status_origen != 'published' %}/queue{% endif %}">{{
+                        l.sub_name }}</a>&nbsp;
+                    {% endif %}
+                    <a href="{{l.url}}" class="tooltip l:{{ l.id }}">{{l.title}}</a>
+                </h5>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endif %}

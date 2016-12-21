@@ -1,6 +1,5 @@
 <div class="sidebox-sub">
     <div class="box">
-
         <div class="logo text-center">
             {% if ! site.logo_url %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
@@ -14,10 +13,18 @@
                      width="{{ site.logo_width }}" height="{{ site.logo_height }}"
                      alt="{{ site.name }}" style="margin-right:5px;"/></a>
             {% endif %}
+
         </div>
 
         <div class="name text-center">
             <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
+            {% if site.owner > 0 && current_user.user_id > 0 && (current_user.admin || site.owner == current_user.user_id) %}
+            <a href="{{ globals.base_url }}m/{{ site.name }}/subedit" class="btn btn-mnm" title="{% trans _('Editar') %}">
+                <i class="fa fa-cog"></i>
+                <span>{% trans _('Editar') %}</span>
+            </a>
+            {% endif %}
+
         </div>
 
         {% if properties.message %}
@@ -43,7 +50,6 @@
             </a>
 
             {% endif %}
-
 
             <div class="clearfix"></div>
         </div>

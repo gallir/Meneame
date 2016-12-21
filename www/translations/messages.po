@@ -1142,7 +1142,7 @@ msgid "menéalo"
 msgstr ""
 
 #: libs/linkmobile.php:137 libs/link.php:661
-msgid "&#161;chachi!"
+msgid "&#161;hecho!"
 msgstr ""
 
 #: libs/linkmobile.php:152 libs/link.php:737 telnet.php:129 sneak.php:186

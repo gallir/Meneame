@@ -163,8 +163,6 @@ if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'
 	$globals['noindex'] = true;
 }
 
-do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username));
-
 $conversation_extra = '';
 if ($tab_option == 4) {
 	if ($current_user->user_id == $user->id) {
@@ -202,8 +200,8 @@ if ($tab_option == 4) {
 		_('debates').'&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
 	);
 } else $options = false;
-do_post_subheader($options, $view, $rss_option);
 
+do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username), array($options, $view, $rss_option));
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -228,8 +226,10 @@ echo '<div class="notes">';
 
 
 if ($current_user->user_id > 0) {
+
 	echo '<div id="addpost"></div>';
 	echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
+
 }
 
 if ($view != 4) {

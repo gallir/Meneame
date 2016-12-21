@@ -60,10 +60,8 @@ if (!($memcache_key
 	}
 }
 
-
 do_header(_('más visitadas') . ' | ' . $globals['site_name'], _('más visitadas'));
 $globals['tag_status'] = 'published';
-print_period_tabs();
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -93,22 +91,3 @@ echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
-
-function print_period_tabs() {
-	global $globals, $current_user, $range_values, $range_names, $month, $year;
-
-	echo '<ul class="subheader">'."\n";
-	if(!($current_range = check_integer('range')) || $current_range < 1 || $current_range >= count($range_values)) {
-		$current_range = 0;
-	}
-
-	for($i=0; $i<count($range_values) /* && $range_values[$i] < 60 */; $i++) {
-		if($i == $current_range)  {
-			$active = ' class="selected"';
-		} else {
-			$active = "";
-		}
-		echo '<li'.$active.'><a href="top_visited?range='.$i.'">' .$range_names[$i]. '</a></li>'."\n";
-	}
-	echo '</ul>'."\n";
-}

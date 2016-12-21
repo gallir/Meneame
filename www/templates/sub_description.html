@@ -1,0 +1,65 @@
+<div class="sub-description">
+    <div class="box">
+        <div class="logo text-center">
+            {% if ! site.logo_url %}
+            <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
+            </a>
+            {% else %}
+            <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                <img src="{{ globals.base_static }}img/g.gif"
+                     class="thumb ok lazy img-circle"
+                     data-src="{{ site.logo_url }}"
+                     width="{{ site.logo_width }}" height="{{ site.logo_height }}"
+                     alt="{{ site.name }}" style="margin-right:5px;"/></a>
+            {% endif %}
+
+        </div>
+
+        <div class="name text-center">
+            <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
+            {% if site.owner > 0 && current_user.user_id > 0 && (current_user.admin || site.owner == current_user.user_id) %}
+            <a href="{{ globals.base_url }}m/{{ site.name }}/subedit" class="btn btn-mnm" title="{% trans _('Editar') %}">
+                <i class="fa fa-cog"></i>
+                <span>{% trans _('Editar') %}</span>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% if properties.message %}
+        <div class="description text-center">
+            {{ properties.message_html }}
+        </div>
+        {% endif %}
+
+        <div class="follow text-center">
+
+            <div class="followers">{{ site.followers }} seguidores</div>
+
+            {% if user.user_id %}
+
+            <a href="javascript:add_remove_sub('{{ site.id }}', 1)" class="btn btn-mnm follow_b_{{ site.id }}" title="{% trans _('suscripción al sub') %}">
+                <span>{% trans _('Seguir') %}</span>
+            </a>
+
+            {% else %}
+
+            <a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="btn btn-mnm" title="{% trans _('suscripción al sub') %}">
+                <span>{% trans _('Seguir') %}</span>
+            </a>
+
+            {% endif %}
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+
+    {% if site.show_admin %}
+    <div class="footer text-center">
+        Admin | <a href="{{ owner.id | useruri }}" class="tooltip u:{{ owner.id }}">{{ owner.username }}</a>
+    </div>
+    {% endif %}
+
+</div>

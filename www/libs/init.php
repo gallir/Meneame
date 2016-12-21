@@ -159,6 +159,7 @@ function __autoload($class) {
 				'Upload' => 'upload.php',
 				'Media' => 'media.php',
 				'S3' => 'S3.php',
+				'Tabs' => 'tabs.php'
 	);
 
 	if (isset($classfiles[$class]) && file_exists(mnminclude.$classfiles[$class])) {

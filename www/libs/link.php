@@ -267,7 +267,7 @@ class Link extends LCPBase {
 			if ($value < 0) {
 				$dict['vote_description'] = get_negative_vote($value);
 			} else {
-				$dict['vote_description'] = _('¡chachi!');
+				$dict['vote_description'] = _('¡hecho!');
 			}
 		}
 		$dict['votes'] = $this->votes;

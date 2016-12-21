@@ -53,7 +53,8 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
 	/* Not used any more */
 }
 
-function do_header($title, $id='home', $options = false) {
+function do_header($title, $id='home', $options = false, $tab_options = false, $tab_class = 'dropdown-menu menu-subheader') {
+
 	global $current_user, $dblang, $globals, $db;
 
 	header('Content-Type: text/html; charset=utf-8');
@@ -114,7 +115,8 @@ function do_header($title, $id='home', $options = false) {
 		$left_options = array();
 
 		if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
-			$left_options[] = new MenuOption(_('enviar historia'), $globals['base_url'].'submit', $id, _('enviar nueva historia'), "submit_new_post");
+			$submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('enviar historia');
+			$left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'].'submit', $id, _('enviar nueva historia'), "submit_new_post");
 		}
 
 		$left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
@@ -124,7 +126,7 @@ function do_header($title, $id='home', $options = false) {
 		$left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'top_active', $id, _('historias más activas'));
 
 		$right_options = array();
-		$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
+		//$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
 		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
 		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
@@ -134,15 +136,46 @@ function do_header($title, $id='home', $options = false) {
 		//$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
 		$right_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', '', _('menear noticias pendientes'));
 
-		$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
+		//$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
 		$right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
 		$right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
 		$right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
 	}
 
+	$tabs = Tabs::renderForSection($id, $tab_options, $tab_class);
+
+	$followed_subs = array();
+
+	if ($globals['mobile'] and $current_user->user_id > 0 ){
+		$subs = SitesMgr::get_subscriptions($current_user->user_id);
+
+		foreach ($subs as $sub) {
+
+			if (!$sub->enabled) {
+				continue;
+			}
+
+			$sub->site_info = SitesMgr::get_info($sub->id);
+
+			// Check if the sub has a logo and calculate the width
+			if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
+				$r = $sub->site_info->media_dim1/$sub->site_info->media_dim2;
+				if ( $globals['mobile']) {
+					$sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
+				} else {
+					$sub->site_info->logo_height = $globals['media_sublogo_height'];
+				}
+				$sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
+				$sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+			}
+
+			$followed_subs[] = $sub;
+		}
+	}
+
 	return Haanga::Load('header.html', compact(
 		'title', 'greeting', 'id', 'left_options', 'right_options',
-		'sites', 'this_site', 'this_site_properties'
+		'sites', 'this_site', 'this_site_properties', 'tabs', 'followed_subs'
 	));
 }
 
@@ -624,6 +657,7 @@ function do_active_stories() {
 	$url = $globals['base_url'].'top_active';
 
 	$top = new Annotation('top-actives-'.$globals['site_shortname']);
+
 	if ($top->read() && ($ids = explode(',',$top->text))) {
 		$links = array();
 		$ids = array_slice($ids, 0, 5);
@@ -683,7 +717,7 @@ function do_best_stories() {
 			$link->check_warn();
 			$links[] = $link;
 		}
-		$subclass = '';
+		$subclass = 'red';
 
 		echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
 	}
@@ -859,7 +893,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link order by $order desc limit $count");
 	if ($ids) {
 		$links = array();
-		$title = _('en subs de usuarios');
+		$title = _('En subs');
 		foreach($ids as $id) {
 			$link = Link::from_db($id);
 			if (! $link) continue;
@@ -917,23 +951,45 @@ function do_sub_message_right() {
 	));
 }
 
-function do_subheader($content, $selected = false) {
-// arguments: hash array with "button text" => "button URI"; Nº of the selected button
-	echo '<ul class="subheader">'."\n";
-	if (is_array($content)) {
-		$n = 0;
-		foreach ($content as $text => $url) {
-			if ($selected == $n) $class_b = ' class = "selected"';
-			else $class_b='';
-			echo '<li'.$class_b.'>';
-			echo '<a href="'.$url.'">'.$text.'</a>';
-			echo '</li>';
-			$n++;
-		}
-	} else {
-		echo '<h1>'.$content.'</h1>';
+// Print the "message" of the sub, if it exists
+function do_sub_description() {
+	global $globals, $current_user;
+
+	if (!$globals['mobile'] || ! $globals['submnm']) {
+		return;
 	}
-	echo '</ul>'."\n";
+
+	$properties = SitesMgr::get_extended_properties();
+	$properties['message_html'] = LCPBase::html($properties['message']);
+
+	$site = SitesMgr::get_info();
+
+	// Check if the sub has a logo and calculate the width
+	if ($site->media_id > 0 && $site->media_dim1 > 0 && $site->media_dim2 > 0) {
+		$r = $site->media_dim1/$site->media_dim2;
+		if ( $globals['mobile']) {
+			$site->logo_height = $globals['media_sublogo_height_mobile']*2;
+		} else {
+			$site->logo_height = $globals['media_sublogo_height']*2;
+		}
+		$site->logo_width = round($r * $site->logo_height);
+		$site->logo_url = Upload::get_cache_relative_dir($site->id).'/media_thumb-sub_logo-'.$site->id.'.'.$site->media_extension.'?'.$site->media_date;
+	}
+
+	$site->followers = SitesMgr::get_followers();
+
+	Haanga::Load('sub_description.html', array(
+		'site' => $site,
+		'owner' => SitesMgr::get_owner(),
+		'properties' => $properties,
+		'user' => $current_user
+	));
+}
+
+
+function do_sidebar_block($name = 'default') {
+	Haanga::Safe_Load('private/sidebar-block-' . $name . '.html');
+
 }
 
 function print_follow_sub($id) {

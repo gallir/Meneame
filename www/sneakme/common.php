@@ -30,17 +30,27 @@ function get_posts_menu($tab_selected, $username) {
 		default:
 			$id = _('todas');
 			break;
-
 	}
 
 	$items = array();
+
+	if ($current_user->user_id > 0 ) {
+		if ($tab_selected == 5) { // Privates
+			$items[] = new MenuOption(_('nuevo'), 'javascript:priv_new(0)', $id, _('nueva nota privada'), 'toggler submit_new_post');
+		} else {
+			if (Post::can_add()) {
+				$items[] = new MenuOption(_('nota'), 'javascript:post_new()', $id, _('nueva nota'), 'toggler submit_new_post');
+			}
+		}
+	}
+
 	$items[] = new MenuOption(_('todas'), post_get_base_url(''), $id, _('todas las notas'));
 	$items[] = new MenuOption(_('popular'), post_get_base_url('_best'), $id, _('notas populares'));
 	if ($globals['google_maps_api']) {
 		$items[] = new MenuOption(_('mapa'), post_get_base_url('_geo'), $id, _('mapa animado'));
 	}
 	if (! empty($username)) {
-		$items[] = new MenuOption($username, post_get_base_url($username), $id, $username);
+		$items[] = new MenuOption($username, post_get_base_url($username), $id, $username, 'username');
 	}
 
 	if ($current_user->user_id > 0 ) {
@@ -49,69 +59,3 @@ function get_posts_menu($tab_selected, $username) {
 
 	return $items;
 }
-
-
-function do_post_subheader($content, $selected = false, $rss = false, $rss_title = '') {
-	global $globals, $current_user;
-
-	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
-	echo '<ul class="subheader">'."\n";
-
-	if ($current_user->user_id > 0 ) {
-		if (Post::can_add()) {
-			echo '<li><span><a class="toggler" href="javascript:post_new()" title="'._('nueva').'">&nbsp;'._('nota').'&nbsp;<i class="fa fa-pencil-square-o"></i></a></span></li>';
-		} else {
-			echo '<li><span><a href="javascript:return;">'._('nota').'</a></span></li>';
-		}
-	}
-
-	if (is_array($content)) {
-		$n = 0;
-		foreach ($content as $text => $url) {
-	   		if ($selected === $n) $class_b = ' class = "selected"';
-			else {
-				if ($n > 4) $class_b=' class="wideonly"';
-				else $class_b='';
-			}
-	   		echo '<li'.$class_b.'>'."\n";
-	   		echo '<a href="'.$url.'">'.$text."</a>\n";
-	   		echo '</li>'."\n";
-	   		$n++;
-		}
-	} elseif (! empty($content)) {
-	    echo '<li>'.$content.'</li>';
-	}
-
-	if ($rss && ! empty ($content)) {
-		if (!$rss_title) $rss_title = 'rss2';
-	}
-		echo '<li class="icon wideonly"><a href="'.$globals['base_url'].$rss.'" title="'.$rss_title.'"><i class="fa fa-rss-square"></i></a></li>';
-
-	echo '</ul>'."\n";
-}
-
-
-function do_priv_subheader($content, $selected = false) {
-	global $globals, $current_user;
-
-	// arguments: hash array with "button text" => "button URI"; Nº of the selected button
-	echo '<ul class="subheader">'."\n";
-
-	echo '<li><span><a class="toggler" href="javascript:priv_new(0)" title="'._('nuevo').'">'._('nuevo').'&nbsp;<i class="fa fa-pencil-square-o"></i></a></span></li>';
-
-	if (is_array($content)) {
-		$n = 0;
-		foreach ($content as $text => $url) {
-	   		if ($selected === $n) $class_b = ' class = "selected"';
-			else $class_b='';
-	   		echo '<li'.$class_b.'>'."\n";
-	   		echo '<a href="'.$url.'">'.$text."</a>\n";
-	   		echo '</li>'."\n";
-	   		$n++;
-		}
-	} elseif (! empty($content)) {
-	    echo '<li>'.$content.'</li>';
-	}
-	echo '</ul>'."\n";
-}
-?>

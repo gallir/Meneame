@@ -35,6 +35,16 @@
     margin-left: 5px;
 }
 
+.section h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    letter-spacing: -1.1px;
+    margin: 0 0 10px 0;
+    color: #FF6400;
+}
+
 .section.section-large h1 {
     font-size: 46px;
     letter-spacing: -1.5px;
@@ -558,6 +568,7 @@ a.action-link span {
     border-radius: 5px;
     border: 1px solid #E9E9E9;
     padding-top: 30px;
+    margin-bottom: 20px;
 }
 
 .sidebox-sub .name {
@@ -568,6 +579,7 @@ a.action-link span {
     color: #1F1F1F;
     font-size: 20px;
     text-transform: uppercase;
+    font-weight: 300;
 }
 
 .sidebox-sub .description {
@@ -615,7 +627,7 @@ a.action-link span {
 }
 
 .sub-description {
-    padding: 10px;
+    padding: 0px;
 }
 
 .form input, .form select, .form textarea {
@@ -717,7 +729,6 @@ a.action-link span {
 
 .subs-listing {
     width: 100%;
-    margin: 30px 0;
     text-align: center;
 }
 
@@ -1005,4 +1016,151 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
         font-size: 12px;
         line-height: 12px;
     }
+}
+
+
+.slider-wrapper {
+    margin-bottom: 30px;
+}
+
+.slider-wrapper .sub a {
+    z-index: 10;
+    display:block;
+    background-color: #000;
+}
+
+.slider-wrapper .sub img {
+    opacity: .6;
+}
+
+.slider-wrapper .sub img:hover {
+    opacity: .7;
+}
+
+.official-subs-slider .sub, .recommended-subs-slider .sub {
+    float: left;
+    padding: 0;
+    margin: 0;
+}
+
+ul.slick-dots {
+    list-style-type: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+ul.slick-dots li {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 15px;
+    border: 1px solid #FE6117;
+    border-radius: 9999px;
+}
+
+ul.slick-dots li.slick-active {
+    background-color: #FE6117;
+}
+
+ul.slick-dots li button {
+    display: none;
+}
+
+.sub-info {
+    position: absolute;
+    bottom: 20px;
+    color:#fff;
+    width: 100%;
+    text-align: center;
+}
+
+.sub-info a.sub-name {
+    color: #fff;
+    font-size: 27px;
+    font-family:'Open Sans', sans-serif;
+    font-weight: 500;
+    background-color: transparent;
+}
+
+.sub-info a.sub-name:hover {
+    text-decoration: none;
+}
+
+.sub-info .followers {
+    font-family:'Open Sans', sans-serif;
+    font-size: 11px;
+}
+
+.sub-info .followers span.follower-number {
+    font-family:'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.sub-info a.following-yes, .sub-info a.following-no {
+    background-color: transparent;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.sub-description {
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.sub-description .name {
+    padding: 0 15px 15px 15px;
+}
+
+.sub-description .name a {
+    color: #1F1F1F;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.sub-description .description {
+    color: #9B9B9B;
+    padding: 15px;
+    font-weight: 300;
+}
+
+.sub-description a {
+    color: #ff6400;
+}
+
+.sub-description .follow {
+    margin-bottom: 20px;
+}
+
+.sub-description .followers {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    display:inline;
+}
+
+.sub-description .btn.btn-mnm {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 4px 30px;
+    transition: all .3s ease .1s;
+    background-color: #fff;
+    color: #FF6400;
+    border: 1px solid #FF6400;
+    text-transform: uppercase;
+    display: inline;
+    margin-left: 15px;
+}
+
+.sub-description .footer {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    padding-top: 4px;
+    background-color: #F8F8F8;
+    border-top: 1px solid #E9E9E9;
+    height: 30px;
 }

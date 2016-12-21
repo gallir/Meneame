@@ -102,8 +102,8 @@ $pagetitle = _('noticias pendientes');
 if ($page > 1) {
     $pagetitle .= " ($page)";
 }
-do_header($pagetitle, _('nuevas'));
-print_shakeit_tabs($tab);
+
+do_header($pagetitle, _('nuevas'), false, $tab);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -142,52 +142,3 @@ echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
-
-function print_shakeit_tabs($option=-1) {
-	global $globals, $current_user, $db;
-
-	$items = array();
-	$items[] = array('id' => 1, 'url' => 'queue'.$globals['meta_skip'], 'title' => _('todas'));
-	if ($current_user->has_subs) {
-		$items[] = array('id' => 7, 'url' => 'queue'.$globals['meta_subs'], 'title' => _('suscripciones'));
-	}
-
-	if (empty($globals['submnm']) && ! $globals['mobile']) {
-		$subs = SitesMgr::get_sub_subs();
-		foreach ($subs as $sub) {
-			$items[] = array(
-				'id'  => 9999, /* fake number */
-				'url' =>'m/'.$sub->name.'/queue',
-				'selected' => false,
-				'title' => $sub->name
-			);
-		}
-	}
-
-	$items [] = array('id' => 8, 'url' => 'queue?meta=_*', 'title' => _('m/*'));
-
-	$items[] = array('id' => 3, 'url' => 'queue?meta=_popular', 'title' => _('candidatas'));
-
-	if ($current_user->user_id > 0) {
-		$items[] = array('id' => 2, 'url' => 'queue?meta=_friends', 'title' => _('amigos'));
-	}
-
-	if (!$globals['bot']) {
-		$items [] = array('id' => 5, 'url' => 'queue?meta=_discarded', 'title' => _('descartadas'));
-	}
-
-	// Print RSS teasers
-	if (! $globals['mobile']) {
-		switch ($option) {
-			case 7: // Personalised, queued
-				$feed = array("url" => "?status=queued&amp;subs=".$current_user->user_id, "title" => "");
-				break;
-			default:
-				$feed = array("url" => "?status=queued", "title" => "");
-				break;
-		}
-	}
-	$vars = compact('items', 'option', 'feed');
-	return Haanga::Load('print_tabs.html', $vars);
-}
-

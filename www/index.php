@@ -36,8 +36,6 @@ if ($page > 1) {
 	$pagetitle .= " ($page)";
 }
 
-do_header($pagetitle, _('portada'));
-
 $from = '';
 switch ($globals['meta']) {
 	case '_subs':
@@ -46,7 +44,7 @@ switch ($globals['meta']) {
 			$where = "id in ($current_user->subs) AND status='published' AND id = origen and date > $from_time";
 			$rows = -1;
 			Link::$original_status = true; // Show status in original sub
-			print_index_tabs(7); // Show "personal" as default
+			$tab_option = 7; // Show "personal" as default
 			break;
 		}
 		// NOTE: If the user has no subscriptions it will fall into next: _*
@@ -56,7 +54,7 @@ switch ($globals['meta']) {
 		$where = "sub_statuses.status='published' AND sub_statuses.id = sub_statuses.origen and sub_statuses.date > $from_time and sub_statuses.origen = subs.id and subs.owner > 0";
 		$rows = -1;
 		Link::$original_status = true; // Show status in original sub
-		print_index_tabs(8);
+		$tab_option = 8;
 		break;
 	case '_friends':
 		if (! $current_user->user_id > 0) do_error(_('debe autentificarse'), 401); // Check authenticated users
@@ -64,19 +62,24 @@ switch ($globals['meta']) {
 		$from = ", friends, links";
 		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
 		$rows = -1;
-		print_index_tabs(1); // Friends
+		$tab_option = 1; // Friends
 		break;
 	default:
-		print_index_tabs(0); // All
-		Haanga::Load('site_search_box.html'); // Search box for search engines
+		$tab_option = 0; // All
 		$rows = Link::count('published');
 		$where = "sub_statuses.id = ". SitesMgr::my_id() ." AND status='published' ";
 }
+
+do_header($pagetitle, _('portada'), false, $tab_option);
+
+if ($tab_option == 0) Haanga::Load('site_search_box.html'); // Search box for search engines
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_sub_message_right();
 do_banner_right();
+do_last_subs('published');
+do_sidebar_block('preguntame');
 if ($globals['show_popular_published']) {
 	do_active_stories();
 }
@@ -92,13 +95,13 @@ if ($page < 2) {
 	do_best_comments();
 }
 // do_categories_cloud('published');
-do_last_subs('published');
 do_vertical_tags('published');
 // do_last_blogs();
 echo '</div>';
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">';
+do_sub_description();
 
 do_banner_top_news();
 
@@ -135,47 +138,3 @@ echo '</div>';
 do_footer_menu();
 do_footer();
 exit(0);
-
-function print_index_tabs($option=-1) {
-	global $globals, $db, $current_user;
-
-	if (($globals['mobile'] && ! $current_user->has_subs) || (!empty($globals['submnm']) && ! $current_user->user_id)) {
-		return;
-	}
-
-	$items = array();
-	$items[] = array('id' => 0, 'url' => $globals['meta_skip'], 'title' => _('todas'));
-
-	if (isset($current_user->has_subs)) {
-		$items[] = array('id' => 7, 'url' => $globals['meta_subs'], 'title' => _('suscripciones'));
-	}
-
-	if (! $globals['mobile'] && empty($globals['submnm']) && ($subs = SitesMgr::get_sub_subs())) {
-		foreach ($subs as $sub) {
-			$items[] = array(
-				'id'  => 9999, /* fake number */
-				'url' => 'm/'.$sub->name,
-				'selected' => false,
-				'title' => $sub->name,
-			);
-		}
-	}
-
-	$items[] = array('id' => 8, 'url' => '?meta=_*', 'title' => _('m/*'));
-
-	// RSS teasers
-	switch ($option) {
-		case 7: // Personalised, published
-			$feed = array("url" => "?subs=".$current_user->user_id, "title" => _('suscripciones'));
-			break;
-		default:
-			$feed = array("url" => '', "title" => "");
-			break;
-	}
-
-	if ($current_user->user_id > 0) {
-		$items[] = array('id' => 1, 'url' => '?meta=_friends', 'title' => _('amigos'));
-	}
-
-	return Haanga::Load('print_tabs.html', compact('items', 'option', 'feed'));
-}

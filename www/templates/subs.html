@@ -1,43 +1,112 @@
 <section class="section section-medium section-with-sidebar">
-	{% if can_edit %}
-	<a href="{{ globals.base_url }}subedit" class="action-link action-link-large pull-right">
-		<i class="fa fa-plus"></i>
-		<span>{% trans _('crear sub') %}</span>
-	</a>
-	{% endif %}
+    {% if can_edit %}
+    <a href="{{ globals.base_url }}subedit" class="action-link action-link-large pull-right">
+        <i class="fa fa-plus"></i>
+        <span>{% trans _('crear sub') %}</span>
+    </a>
+    {% endif %}
 
-	<h1>{% trans _('Subs') %}</h1>
+    <h1>{% trans _('Subs') %}</h1>
 
-	<p class="intro intro-large">{% trans _('Los subs son secciones temáticas que te permiten personalizar las noticias que ves. Selecciona los temas que te interesan y podrás verlo en tu portada de suscripciones.') %}</p>
+    <p class="intro intro-large">{% trans _('Los subs son secciones temáticas que te permiten personalizar las noticias
+        que ves. Selecciona los temas que te interesan y podrás verlo en tu portada de suscripciones.') %}</p>
 
-	<form id="form-subs-search" class="form form-search" method="get">
-		<div class="form-group form-group-search">
-			<i class="fa fa-search"></i>
-			<input type="search" name="q" class="form-control input-search" value="{{ q|escape }}" placeholder="{% trans _('Encuentra el sub que estás buscando') %}" autocomplete="off" />
-		</div>
+    <h2>{% trans _('Subs oficiales de menéame') %}</h2>
 
-		<div class="form-group form-group-filter">
-			{% if chars %}
-			<div class="charlist">
-				{% for c in chars %}
-				<a href="?all&amp;c={{ c }}" {% if c == char_selected %}class="selected"{% endif %}>{{ c }}</a>
-				{% endfor %}
-			</div>
-			{% endif %}
+    {% if official_subs %}
+        <div class="container-fluid slider-wrapper" id="official-subs-slider">
+            <div class="row official-subs-slider">
+                {% for sub in official_subs %}
+                <div class="sub col-xs-2">
+                    <a href="{{globals.base_url_general}}m/{{sub.name}}">
+                        <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                    </a>
+                    <div class="sub-info">
+                        <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
+                        <div class="followers"><span class="follower-number">{{sub.followers}}</span> SEGUIDORES</div>
+                        <div class="sub-follow" style="display:none;">
+                            {% if sub.id != 0 %}
+                            {% exec print_follow_sub sub.id as dummy %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
 
-			<select class="form-control input-filter">
-				<option value="subscribed" {% if option === 0 %}selected{% endif %}>{% trans _('Mis suscripciones') %}</option>
-				<option value="all" {% if option === 2 %}selected{% endif %}>{% trans _('Todos') %}</option>
-				<option value="active" {% if option === 1 %}selected{% endif %}>{% trans _('Los más activos') %}</option>
-			</select>
-		</div>
-	</form>
+            <div class="dots"></div>
 
-	{% include 'subs_list.html' %}
+            <div style="display:none;">
+                <div class="slick-prev"></div>
+                <div class="slick-next"></div>
+            </div>
+        </div>
+    {% endif %}
 
-	{% if option === 2 %}
-	<div class="pagination-center">
-		{% exec do_pages rows page_size false as dummy %}
-	</div>
-	{% endif %}
+    <h2>{% trans _('Subs recomendados por menéame') %}</h2>
+
+    {% if recommended_subs %}
+    <div class="container-fluid slider-wrapper" id="recommended-subs-slider">
+        <div class="row recommended-subs-slider">
+            {% for sub in recommended_subs %}
+            <div class="sub col-xs-2">
+                <a href="{{globals.base_url_general}}m/{{sub.name}}">
+                    <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                </a>
+                <div class="sub-info">
+                    <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
+                    <div class="followers"><span class="follower-number">{{sub.followers}}</span> SEGUIDORES</div>
+                    <div class="sub-follow" style="display:none;">
+                        {% if sub.id != 0 %}
+                        {% exec print_follow_sub sub.id as dummy %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="dots"></div>
+
+        <div style="display:none;">
+            <div class="slick-prev"></div>
+            <div class="slick-next"></div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h2>{% trans _('Y todo lo demás también') %}</h2>
+
+
+    <form id="form-subs-search" class="form form-search" method="get">
+        <div class="form-group form-group-search">
+            <i class="fa fa-search"></i>
+            <input type="search" name="q" class="form-control input-search" value="{{ q|escape }}" placeholder="{% trans _('Encuentra el sub que estás buscando') %}" autocomplete="off"/>
+        </div>
+
+        <div class="form-group form-group-filter">
+            {% if chars %}
+            <div class="charlist">
+                {% for c in chars %}
+                <a href="?all&amp;c={{ c }}" {% if c== char_selected %}class="selected" {% endif %}>{{ c }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <select class="form-control input-filter">
+                <option value="subscribed" {% if option=== 0 %}selected{% endif %}>{% trans _('Mis suscripciones') %}
+                </option>
+                <option value="all" {% if option=== 2 %}selected{% endif %}>{% trans _('Todos') %}</option>
+                <option value="active" {% if option=== 1 %}selected{% endif %}>{% trans _('Los más activos') %}</option>
+            </select>
+        </div>
+    </form>
+
+    {% include 'subs_list.html' %}
+
+    {% if option === 2 %}
+    <div class="pagination-center">
+        {% exec do_pages rows page_size false as dummy %}
+    </div>
+    {% endif %}
 </section>

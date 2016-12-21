@@ -1,14 +1,76 @@
-  <ul id="userinfo">
+<style>
+	ul#userinfo {
+
+	}
+
+	ul#userinfo a.notifications {
+		border-left: 1px solid rgba(16,16,16, .2);
+		font-size: 20px;
+		height: 35px;
+		margin-left: 10px;
+		padding-left:10px;
+		padding-top: 5px;
+		display: inline-block;
+	}
+
+	ul#userinfo a.notifications span {
+		display: inline-block;
+		min-width: 10px;
+		padding: 1px 7px;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1;
+		color: #FE6117;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: bottom;
+		background-color: #fff;
+		border-radius: 10px;
+		margin-left: -12px;
+		margin-top: 1px;
+		border: 3px solid #FE6117;
+	}
+
+	ul#userinfo a:hover {
+		color: #fff;
+	}
+
+	ul#userinfo li.search {
+		border-right: 1px solid rgba(16,16,16, .2);font-size: 20px;height: 35px;margin-right: 10px;padding-right: 10px;
+	}
+
+</style>
+
+<ul id="userinfo">
+
+	{% if not globals.mobile %}
+	<li class="search">
+		<div>
+			<a id="searchform_button"><i class="fa fa-search"></i></a>
+			<div id="searchform" class="searchform" {% if not globals.q %}style="display:none;"{% endif %}>
+				<form action="{{ globals.base_url }}search" method="get" name="top_search">
+					{% if globals.search_options %}
+					{% for name, value in globals.search_options %}
+					<input type="hidden" name="{{name}}" value="{{value}}" />
+					{% endfor %}
+					{% endif %}
+					<input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+				</form>
+			</div>
+		</div>
+	</li>
+	{% endif %}
+
 	{% if current_user.user_id > 0 %}
 		<li class="usertext wideonly"><a href="{{ current_user.user_login|useruri }}" class="tooltip u:{{ current_user.user_id }}">{{current_user.user_login}}</a></li>
 			{% if current_user.admin %}
-				<li class="usertext"><a href="{{ globals.base_url_general }}admin/bans.php">adm</a></li>
+				<li class="usertext wideonly"><a href="{{ globals.base_url_general }}admin/bans.php">adm</a></li>
 			{% endif %}
-		<li id="notifier"></li>
-		<li><a href="{{ current_user.user_login|useruri }}"><img id="avatar" src="{{ globals.base_static }}img/g.gif" data-2x="s:-40.:-80." data-src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40 %}" class="lazy" alt="{{current_user.user_login}}"/></a></li>
 
-		<li class="userlogin" onclick="location.href='{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}'" title="{%trans _('cerrar sesión')%}"> </li>
-	{# Following link could be deleted 
+		<li><a href="{{ current_user.user_login|useruri }}"><img id="avatar" src="{{ globals.base_static }}img/g.gif" data-2x="s:-40.:-80." data-src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40 %}" class="lazy img-circle" alt="{{current_user.user_login}}"/></a></li>
+	  <li><a href="#" class="notifications" id="notifier"><i class="fa fa-bell"></i> <span class="badge" style="{% if this_site.color2 %}border-color:{{ this_site.color2 }}{% endif %}"></span></a></li>
+		<li class="userlogin hide" onclick="location.href='{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}'" title="{%trans _('cerrar sesión')%}"> </li>
+	{# Following link could be deleted
 	<a href="{{ globals.base_url_general }}login?op=logout&amp;return={{globals.uri|urlencode}}" title="{%trans _('cerrar sesión')%}">&nbsp;</a>
 	#}
 	{% else %}

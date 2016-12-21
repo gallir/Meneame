@@ -280,7 +280,6 @@ if (!empty($new_comment_error)) {
 }
 
 do_tabs("main",_('noticia'), true);
-print_story_tabs($tab_option);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
@@ -317,6 +316,7 @@ case 2:
 	} else {
 		$last_com_first = false;
 	}
+	print_story_tabs($tab_option);
 	do_comment_pages($link->comments, $current_page, $last_com_first);
 
 	$update_comments = false;
@@ -375,6 +375,7 @@ case 2:
 
 
 case 3:
+	print_story_tabs($tab_option);
 	// Show voters
 	echo '<div class="voters" id="voters">';
 
@@ -391,6 +392,7 @@ case 3:
 
 
 case 6:
+	print_story_tabs($tab_option);
 	// Show favorited by
 	echo '<div class="voters" id="voters">';
 
@@ -403,6 +405,7 @@ case 6:
 
 
 case 4:
+	print_story_tabs($tab_option);
 	// Show logs
 
 	$globals['extra_js'][] = 'jquery.flot.min.js';
@@ -424,11 +427,13 @@ case 4:
 
 
 case 5:
+	print_story_tabs($tab_option);
 	// Micro sneaker
 	Haanga::Load('story/link_sneak.html', compact('link'));
 	break;
 
 case 8:
+	print_story_tabs($tab_option);
 	$related = $link->get_related(10);
 	if ($related) {
 		Haanga::Load("story/related.html", compact('related', 'link'));
@@ -436,6 +441,7 @@ case 8:
 	break;
 
 case 9:
+	print_story_tabs($tab_option);
 	echo '<div class="comments">';
 
 	$sql = "SELECT conversation_to as id, count(*) as t FROM conversations, comments WHERE comment_link_id = $link->id AND comment_id = conversation_to AND conversation_type='comment' GROUP BY conversation_to ORDER BY t desc, id asc LIMIT ".$globals['comments_page_size'] ;
@@ -478,6 +484,8 @@ case 10:
 		print_external_analysis($link);
 		print_relevant_comments($link);
 	}
+
+	print_story_tabs($tab_option);
 
 	if ($link->page_mode == 'interview') {
 		$sql = "select t1.comment_id as parent, t1.w1 as w1, t2.comment_id as child, t2.comment_karma + 200 * (t2.comment_user_id = $link->author) as w2 FROM comments as t0 INNER JOIN (select comment_id, comment_karma + 200 * (comment_user_id = $link->author) as w1 from comments WHERE comment_link_id = $link->id order by w1 desc LIMIT $offset, $limit) t1 ON t1.comment_id = t0.comment_id LEFT JOIN (conversations as c, comments as t2) ON conversation_type='comment' and conversation_to = t0.comment_id and c.conversation_from = t2.comment_id order by w1 desc, w2 desc LIMIT $global_limit";
@@ -535,9 +543,39 @@ function print_story_tabs($option) {
 	global $globals, $db, $link, $current_user;
 
 	$active = array();
-	$active[$option] = 'selected ';
+	$active[$option] = 'selected';
 
-	echo '<ul class="subheader">';
+
+	$html = '';
+	$html .= '<div class="select-wrapper"><select class="options-comments" onchange="location=this.value">';
+	$html .= '<option value="'.$globals['permalink'].'/standard">'._('ordenados'). '</option>';
+	$html .= '<option value="'.$globals['permalink'].'/threads" '.$active[10].'>'._('hilos'). '</option>';
+	$html .= '<option value="'.$globals['permalink'].'/best-comments" '.$active[2].'>'._('+ valorados'). '</option>';
+
+
+	if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
+		if ($globals['link']->sent_date > $globals['now'] - 86400*60) { // newer than 60 days
+			$html .= '<option value="'.$globals['permalink'].'/voters" '.$active[3].'>'._('votos'). '</option>';
+		}
+		if ($globals['link']->sent_date > $globals['now'] - 86400*30) { // newer than 30 days
+			$html .= '<option value="'.$globals['permalink'].'/log" '.$active[4].'>'._('registros'). '</option>';
+		}
+		if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
+			$html .= '<option value="'.$globals['permalink'].'/sneak" '.$active[5].'>&micro;&nbsp;'. _('fisgona'). '</option>';
+		}
+	}
+
+	if ($current_user->user_id > 0) {
+		if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
+			$html .= '<option value="'.$globals['permalink'].'/favorites" '.$active[6].'>'. _('favoritos'). "&nbsp;($c)</option>";
+		}
+	}
+	$html .= '<option value="'.$globals['permalink'].'/related" '.$active[8].'>'. _('relacionadas'). "</option>";
+
+	$html .= '<select></div>';
+
+	/*
+	echo '<ul class="subheader hide">';
 	echo '<li class="'.$active[1].'"><a href="'.$globals['permalink'].'/standard">'._('ordenados'). '</a></li>';
 	echo '<li class="'.$active[10].'"><a href="'.$globals['permalink'].'/threads">'._('hilos'). '</a></li>';
 	echo '<li class="'.$active[2].'"><a href="'.$globals['permalink'].'/best-comments">'._('+ valorados'). '</a></li>';
@@ -561,6 +599,8 @@ function print_story_tabs($option) {
 	}
 	echo '<li class="'.$active[8].'wideonly"><a href="'.$globals['permalink'].'/related">'._('relacionadas'). '</a></li>';
 	echo '</ul>';
+	*/
+	echo $html;
 }
 
 function do_comment_pages($total, $current, $reverse = true) {

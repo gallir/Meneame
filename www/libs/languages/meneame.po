@@ -1148,7 +1148,7 @@ msgid "menéalo"
 msgstr ""
 
 #: libs/link.php:316
-msgid "&#161;chachi!"
+msgid "&#161;hecho!"
 msgstr ""
 
 #: libs/link.php:327

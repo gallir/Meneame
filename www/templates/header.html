@@ -107,39 +107,226 @@
 </head>
 <body>
 
-<div id="header-top">
-    <div id="nav-menu"></div>
+<style>
 
-    <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
 
-    {% if not globals.mobile %}
+.header-center-wrapper {
+    height: 26px;
+    background-color: #101010;
+    width: 100%;
+}
 
-    <span class="logo-ed" title="{% trans _('menéame ediciones') %}"></span>
+#header-center {
+    margin: 0 auto;
+    min-width: 805px;
+    max-width: 1300px;
+    width: 99%;
+    text-align: left;
+    padding-top: 3px;
+}
 
-    <ul id="edlist">
-        {% if this_site.sub %}
-        <li class="selected">
-            <a href="{{ this_site.base_url }}m/{{ this_site.name }}">{{ this_site.name }}</a>
-        </li>
+#header-center .checkbox {
+    margin:0; padding:0;
+}
+
+#header-center span, #header-center a.discover-subs {
+    color: #B7B7B7;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+}
+
+#header-center a.discover-subs {
+    margin-left: 15px;
+}
+
+.header-menu-wrapper {
+    background-color: #E9E9E9;
+    border-bottom: 1px solid #D6D6D6;
+}
+
+.header-menu01 ul.dropdown-menu a:hover {
+    background: none;
+    text-decoration: underline;
+}
+
+ul.official-subs {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+    display: inline;
+    padding-left: 5px;
+    border-left: 1px solid #B7B7B7;
+    margin-left: 15px;
+}
+
+ul.official-subs li {
+    display: inline;
+}
+
+ul.official-subs li a {
+    color: #B7B7B7;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+ul.official-subs li a:hover {
+    color: #fff;
+}
+
+ul.official-subs li a i {
+    margin-right: 4px;
+}
+
+.menu-more {
+    display:inline-block;
+    cursor:pointer;
+    margin-left: -10px;
+}
+
+.menu-more a {
+    color: #ff6400;
+}
+
+a.menu-more-button {
+    color: #101010;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-block;
+    padding: 5px 10px;
+    position: relative;
+}
+
+a.menu-more-button:hover {
+    text-decoration:none;
+}
+
+a.menu-more-button i:hover {
+    background: none;
+}
+
+div.dropdown.menu-more.open a.menu-more-button {
+    background-color: #fff;
+    box-shadow: 0px 2px 3px 0px #D8D8D8;
+    border-radius: 3px 3px 0px 0px;
+}
+
+div.dropdown.menu-more.open ul.dropdown-menu.menu-subheader  {
+    padding:20px 0 0 0;
+    margin:0;
+    border:none;
+    border-radius: 0px 3px 3px 3px;
+}
+
+div.dropdown.menu-more.open ul.dropdown-menu.menu-subheader a {
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+    padding: 0 0 0 10px;
+    line-height: 32px;
+
+}
+
+div.dropdown.menu-more.open ul.dropdown-menu.menu-subheader a:hover {
+    text-decoration: none;
+    color:#101010;
+    background-color: #E9E9E9;
+
+}
+
+ul.menu01-itemsr li a {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+#header-center .checkbox {
+    margin:0 0 0 9px;
+}
+
+#header-center .checkbox-slider--b-flat input+span {
+    padding-left: 15px;
+}
+
+#header-center .checkbox-slider--b-flat input+span:before {
+    width: 31px;
+    background-color: #A1A1A1;
+    height:18px;
+    background: #A1A1A1;
+    box-shadow: inset 0px 1px 1px 0px rgba(0,0,0,0.50);
+    border-radius: 11px;
+    animation: none;
+    top: 1px;
+}
+
+#header-center .checkbox-slider--b-flat input+span:after {
+    width: 20px;
+    height: 20px;
+    top: 0px;
+    left: -1px;
+    animation: none;
+}
+
+#header-center .checkbox-slider--b-flat input:checked+span:before {
+    width: 31px;
+    background-color: #FE6117;
+    height:18px;
+    background: #FE6117;
+    box-shadow: inset 0px 1px 1px 0px rgba(0,0,0,0.50);
+    border-radius: 11px;
+    animation: none;
+}
+
+#header-center .checkbox-slider--b-flat input:checked+span:after {
+    width: 20px;
+    height: 20px;
+    top: 0px;
+    left: -8px;
+    animation: none;
+}
+
+.header-sub-wrapper {
+    width: 100%;
+    height: 26px;
+}
+
+.header-sub {
+    background: #FBFBFB;
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.23);
+}
+
+.header-sub a {
+    text-transform: uppercase;
+    color: #000;
+    opacity: .7;
+    font-family: 'Lato', sans-serif;
+    font-weight:bold;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+
+}
+
+</style>
+
+<div class="header-top-wrapper" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
+    <div id="header-top" class="mnm-center-in-wrap">
+
+        <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
+
+        {% if not globals.mobile %}
+        <a href="#" class="sub-name wideonly">{%if this_site.name_long %}{{this_site.name_long|upper }}{% else %}{% trans _('PORTADA') %}{% endif %}</a>
+        {% else %}
+        <a href="#" class="sub-selector"><i class="fa fa-chevron-down"></i></a>
+        <div id="nav-menu"></div>
         {% endif %}
+        {% include "header_userinfo.html" %}
 
-        {% for s in sites %}
-        <li {% if s.id == this_site.id %}class="selected"{% endif %}>
-            {% if s.sub AND s.meta %}
-            <a href="//{{ s.server_name }}{{ s.base_url }}m/{{ s.name }} ">{{ s.name_long }}</a>
-            {% else %}
-            <a href="//{{ s.server_name }}{{ s.base_url }}">{{ s.name_long }}</a>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-
-    {% endif %}
-
-    {% include "header_userinfo.html" %}
+    </div>
 </div>
 
-<div id="variable">
     {% else %} {# PARTIAL partial #}
     <span id="ajaxinfo"
         data-partial="1"
@@ -154,98 +341,142 @@
     </script>
 
     <div id="header">
-        {% if globals.mobile AND (this_site.sub OR this_site.logo_url) %}
 
-        <div id="header-mobile">
-            <div id="header-sub" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }}{% endif %}">
-                {% if this_site.logo_url %}
-                    {% include 'header_sub_logo.html' %}
-                {% endif %}
+        {% if not globals.mobile %}
+        <div class="header-center-wrapper wideonly">
 
-                <a href="{{ this_site.url }}" {% if this_site.color1 %}style="color:{{ this_site.color1 }}"{% endif %}>{{ this_site.name_long }}</a>
+            <div id="header-center" class="mnm-center-in-wrap">
 
-                {% if this_site.nsfw %}[nsfw]{% endif %}
-
-                {% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
-                <a href="{{ globals.base_url }}m/{{ this_site.name }}/subedit" class="edit" title="{% trans _('Editar') %}">
-                    <i class="fa fa-pencil"></i>
-                </a>
-                {% endif %}
-            </div>
-
-            {% if this_site.sub %}
-
-            {% if this_site_properties.message %}
-            <div class="sub-description hidden">
-                {{ this_site_properties.message_html }}
-            </div>
-            {% endif %}
-
-            <div class="action-links clearfix">
-                <div class="pull-left">
-                    <span class="action-text">{{ this_site.followers }} {% trans _('Seguidores') %}</span>
+                <div class="checkbox checkbox-slider--b-flat checkbox-slider-warning" style="display:inline-block">
+                    <label>
+                        <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox"><span>VER SÓLO MIS SUBS</span>
+                    </label>
                 </div>
 
-                {% if this_site_properties.message %}
-                <div class="pull-right border-left">
-                    <a href="#" class="show-sub-description action-link" title="{% trans _('Más Info') %}">
-                        <i class="fa fa-info-circle"></i>
-                        <span>{% trans _('Más Info') %}</span>
-                    </a>
-                </div>
-                {% endif %}
+                <a href="{{globals.base_url_general}}subs" class="discover-subs">DESCUBRIR NUEVOS SUBS</a>
 
-                <div class="pull-right">
-                    {% exec print_follow_sub this_site.id as dummy %}
-                </div>
-            </div>
-            {% endif %}
+                <ul class="official-subs">
+                    <li>
+                        <a href="{{globals.base_url_general}}m/series"><i class="fa fa-television"></i>SERIES</a>
+                    </li>
+                    <li>
+                        <a href="{{globals.base_url_general}}m/movilidad"><i class="fa fa-bicycle"></i>MOVILIDAD</a>
+                    </li>
+                    <li>
+                        <a href="{{globals.base_url_general}}m/startups"><i class="fa fa-pied-piper"></i>STARTUPS</a>
+                    </li>
+                    <li>
+                        <a href="{{globals.base_url_general}}m/videojuegos"><i class="fa fa-gamepad"></i>VIDEOJUEGOS</a>
+                    </li>
+                    <li>
+                        <a href="{{globals.base_url_general}}m/retuit"><i class="fa fa-retweet"></i>RETUIT</a>
+                    </li>
+                </ul>
+
+        </div><!--header-center-->
         </div>
 
-        {% else %}
+        {% endif %}
 
-        <div id="header-center" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
-            {% if ! this_site.logo_url && this_site.owner == 0 %}
-            <a href="{{ this_site.url }}" class="logo-eli" title="{% trans _('portada') %} {{ this_site.name_long }}">{{ this_site.name }}</a>
-            {% endif %}
+        <div class="header-menu-wrapper">
+            <div id="header-menu" class="mnm-center-in-wrap">
+            <div class="header-menu01"{% if globals.mobile %} style="display:none;"{% endif %}>
+                <ul class="menu01-itemsl">
+                    {% for o in left_options %}
+                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                    {% endfor %}
+                </ul>
 
-            <div class="edname">
-                {% if this_site.logo_url %}
-                {% include 'header_sub_logo.html' %}
+                {% if tabs %}
+                <div class="dropdown menu-more">
+                    <a href="#" class="dropdown-toggle menu-more-button" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">MÁS
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    {{ tabs }}
+                </div>
                 {% endif %}
 
-                <a href="{{ this_site.url }}" title="{{ this_site.name }}">{% if this_site.owner > 0 && ! this_site.logo_url %}<b>{{ this_site.name }}</b>: {% endif %}{{ this_site.name_long }}</a>
+                <ul class="menu01-itemsr">
+                    {% for o in right_options %}
+                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                    {% endfor %}
 
-                {% if this_site.nsfw %}[nsfw]{% endif %}
-
-                {% if this_site.owner > 0 && current_user.user_id > 0 && (current_user.admin || this_site.owner == current_user.user_id) %}
-                <a href="{{ globals.base_url }}m/{{ this_site.name }}/subedit" class="action-link" title="{% trans _('Editar') %}">
-                    <i class="fa fa-pencil"></i>
-                    <span>{% trans _('Editar') %}</span>
-                </a>
-                {% endif %}
-
-                {% if this_site.sub %}{% exec print_follow_sub this_site.id as dummy %}{% endif %}
+                    {% if globals.help_url %}
+                    <li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}">Ayuda</a></li>
+                    {% endif %}
+                </ul>
             </div>
+            </div><!--header-menu01-->
+        </div><!--header-menu-wrapper-->
 
-            <div class="edname">
-                {% if this_site_properties.facebook_page %}
-
-                <a href="{{ this_site_properties.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook" /></a>
-
-                {% else %}{% if globals.facebook_page && this_site.owner == 0 %}
-                <a href="{{ globals.facebook_page }}" title="{% trans _('síguenos en Facebook') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/fb-24.png" width="24" height="24" alt="Facebook" /></a>
-                {% endif %}{% endif %}
-
-                {% if this_site_properties.twitter_page %}
-                <a href="{{ this_site_properties.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter" /></a>
-                {% else %}{% if globals.twitter_page && this_site.owner == 0 %}
-                <a href="{{ globals.twitter_page }}" title="{% trans _('síguenos en Twitter') %}" ><img class="semiopaque" src="{{globals.base_static}}img/external/tw-24.png" width="24" height="24" alt="Twitter" /></a>
-                {% endif %}{% endif %}
+        {% if globals.mobile AND this_site.sub %}
+            <div class="header-sub-wrapper">
+                <div class="header-sub"><a href="{{ this_site.url }}">{{ this_site.name_long}}</a></div>
             </div>
+        {% endif %}
 
-            <!--search-->
-            <div id="searchform" class="searchform">
+        {% if globals.mobile %}
+        <div class="subs-main-menu" style="display:none;">
+            <ul>
+                <li>
+                    <a href="#">Ver solamente mis subs
+                        <div class="checkbox checkbox-slider--b-flat checkbox-slider-md checkbox-slider-warning" style="display:inline-block">
+                            <label>
+                                <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox"><span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{globals.base_url_general}}subs" class="chevron-right">Descubrir subs</a>
+                </li>
+                <li>
+                    <a href="#" class="follow-subs chevron-right">Subs que sigues <span>{{ followed_subs|length }}</span></a>
+                    <div class="subs-listing-wrapper">
+                    <table class="subs-listing" style="display:none;">
+                        {% for s in followed_subs %}
+                        <tr>
+                            <td>
+                                {% if ! s.site_info.logo_url %}
+                                <a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}" class="sub-image">
+                                    <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
+                                </a>
+                                {% else %}
+                                <a href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}" class="sub-image">
+                                    <img src="{{ globals.base_static }}img/g.gif"
+                                         class="thumb ok lazy img-circle"
+                                         data-src="{{ s.site_info.logo_url }}"
+                                         width="{{ s.site_info.logo_width }}" height="{{ s.site_info.logo_height }}"
+                                         alt="{{ s.site_info.name }}" style="margin-right:5px;"/></a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="sub-name" href="{{ s.base_url }}m/{{ s.name }}" title="{{ s.name_long|escape }}">{{ s.name }}</a>
+                                <div class="description">{% if s.nsfw %}<strong>[nsfw]</strong>{% endif %}
+                                    {{ s.name_long }}</div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                    </div>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+
+    </div><!--header-->
+
+    <div id="variable">
+    <div id="wrap">
+        {% exec do_banner_top as foo%}
+
+        <div id="container">
+
+        {% if globals.mobile %}
+
+            <div id="searchform" class="searchform" style="display:none;">
                 <form action="{{ globals.base_url }}search" method="get" name="top_search">
                     {% if globals.search_options %}
                     {% for name, value in globals.search_options %}
@@ -254,33 +485,5 @@
                     {% endif %}
                     <input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
                 </form>
-            </div><!--end search-->
-        </div><!--header-center-->
-
-        {% endif %}
-
-        <div id="header-menu">
-            <div class="header-menu01">
-                <ul class="menu01-itemsl">
-                    {% for o in left_options %}
-                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
-                    {% endfor %}
-                </ul>
-
-                <ul class="menu01-itemsr">
-                    {% for o in right_options %}
-                    <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
-                    {% endfor %}
-
-                    {% if globals.help_url %}
-                    <li><a href="{{ globals.help_url }}" title="{% trans _('ayuda para principiantes') %}"><b>?</b></a></li>
-                    {% endif %}
-                </ul>
             </div>
-        </div><!--header-menu01-->
-    </div><!--header-->
-
-    <div id="wrap">
-        {% exec do_banner_top as foo%}
-
-        <div id="container">
+         {% endif %}

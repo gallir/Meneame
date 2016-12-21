@@ -1,16 +1,7 @@
-<div id="singlewrap" 
-{% if not globals.mobile %}
-	style="margin: 0 40px;"
-{% endif %}
->
+<div class="section section-medium section-with-sidebar">
 
-
-
-<div class="genericform"
-{% if not globals.mobile %}
-	style="margin: 0 50px;"
-{% endif %}
->
+<div id="singlewrap">
+<div class="genericform" style="margin:0;">
 
 {% if messages %}
 	{% for e in messages %}
@@ -73,10 +64,6 @@ addPostCode(function(){$('textarea').autosize();});
 		<span class="note">{% trans _('caracteres libres') %}</span>
 	</div>
 {% endif %}
-
-
-
-
 
 <p><label>{% trans _('mensajero instantáneo público, invisible para los demás') %}:</label><br/>
 <span class="note">{% trans _('necesario si te conectarás vía Jabber/Google Talk') %}</span><br/>
@@ -166,4 +153,4 @@ addPostCode(function(){$('textarea').autosize();});
 
 
 </div> {# "singlewrap" #}
-
+</div>
