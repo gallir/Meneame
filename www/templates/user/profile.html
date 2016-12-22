@@ -3,7 +3,7 @@
 
 	<div class="user-profile-info">
 		<h1>{{ user.username }}</h1>
-		<a class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">EDITAR PERFIL</a>
+		<a class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">MODIFICAR PERFIL</a>
 		<a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{%trans _('cerrar sesión')%}" class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">LOGOUT</a>
 	</div>
 

@@ -50,7 +50,6 @@ if(empty($login)){
 	}
 }
 
-
 $uid = $_REQUEST['uid']; // Should be clean before
 
 $user=new User();
@@ -162,7 +161,7 @@ if ($current_user->user_id == $user->id) {
 	$globals['extra_comment_conversation'] = '';
 }
 
-do_header($header_title, 'profile', User::get_menu_items($view, $login), $view);
+do_header($header_title, 'profile', User::get_menu_items($view, $login), array('view'=> $view, 'login' => $login));
 
 echo '<div id="singlewrap">'."\n";
 
