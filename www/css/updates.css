@@ -22,11 +22,11 @@
     font-size: 38px;
     letter-spacing: -1.1px;
     margin: 0 0 5px 0;
-    color: #FF6400;
+    color: #e35614;
 }
 
 .section h1 a {
-    color: #FE6117;
+    color: #e35614;
 }
 
 .section h1 a.help {
@@ -42,7 +42,7 @@
     font-size: 25px;
     letter-spacing: -1.1px;
     margin: 0 0 10px 0;
-    color: #FF6400;
+    color: #e35614;
 }
 
 .section.section-large h1 {
@@ -98,7 +98,7 @@
 }
 
 .section .bottomline a {
-    color: #FF6400;
+    color: #e35614;
 }
 
 .section .result-final-icon {
@@ -120,7 +120,7 @@
     padding: 8px 12px;
     margin: 15px 0;
     transition: all .3s ease .1s;
-    background-color: #FF6400;
+    background-color: #e35614;
     color: white;
 }
 
@@ -424,7 +424,7 @@ a.action-link, .action-text {
     vertical-align: middle;
     line-height: 15px;
     text-align: center;
-    background-color: #FE6117;
+    background-color: #e35614;
     color: white;
 }
 
@@ -488,7 +488,7 @@ a.action-link span {
     padding-top: 5px;
     width: 30px;
     height: 30px;
-    background-color: #FE6117;
+    background-color: #e35614;
     text-align: center;
 }
 
@@ -499,12 +499,12 @@ a.action-link span {
 }
 
 .sidebox-extended .header {
-    background-color: #FE6117;
+    background-color: #e35614;
     height: 34px;
     padding: 4px 20px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    background: #ff6400;
+    background: #e35614;
     text-align: center;
 }
 
@@ -589,7 +589,7 @@ a.action-link span {
 }
 
 .sidebox-sub a {
-    color: #ff6400;
+    color: #e35614;
 }
 
 .sidebox-sub .follow {
@@ -610,8 +610,8 @@ a.action-link span {
     padding: 0px 30px;
     transition: all .3s ease .1s;
     background-color: #fff;
-    color: #FF6400;
-    border: 1px solid #FF6400;
+    color: #e35614;
+    border: 1px solid #e35614;
     text-transform: uppercase;
     display: inline;
     margin-left: 15px;
@@ -650,7 +650,7 @@ a.action-link span {
     font-size: 18px;
     letter-spacing: -0.5px;
     font-weight: 400;
-    color: #FE6117;
+    color: #e35614;
     margin-bottom: 4px;
 }
 
@@ -713,7 +713,7 @@ a.action-link span {
 }
 
 .charlist a.selected {
-    color: #FE6117;
+    color: #e35614;
 }
 
 .charlist a:before {
@@ -1056,12 +1056,12 @@ ul.slick-dots li {
     background-color: #fff;
     padding: 10px;
     margin-left: 15px;
-    border: 1px solid #FE6117;
+    border: 1px solid #e35614;
     border-radius: 9999px;
 }
 
 ul.slick-dots li.slick-active {
-    background-color: #FE6117;
+    background-color: #e35614;
 }
 
 ul.slick-dots li button {
@@ -1128,7 +1128,7 @@ ul.slick-dots li button {
 }
 
 .sub-description a {
-    color: #ff6400;
+    color: #e35614;
 }
 
 .sub-description .follow {
@@ -1149,8 +1149,8 @@ ul.slick-dots li button {
     padding: 4px 30px;
     transition: all .3s ease .1s;
     background-color: #fff;
-    color: #FF6400;
-    border: 1px solid #FF6400;
+    color: #e35614;
+    border: 1px solid #e35614;
     text-transform: uppercase;
     display: inline;
     margin-left: 15px;
