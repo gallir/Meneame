@@ -1158,7 +1158,7 @@ color: #999;
 border-bottom: 1px solid;
 padding-bottom: 0px;
 text-indent: -9999px;
-border-color: #FF7D12;
+border-color: #e35614;
 background: none;
 }
 
@@ -2524,14 +2524,14 @@ display: block;
 float: left;
 padding: 4px 10px 4px 10px;
 margin-right: 3px;
-color: #FF7D12;
+color: #e35614;
 background: #FFF;
 }
 
 .pages span.current {
 color: #FFF;
-background-color: #FF7D12;
-border: solid 1px  #FF7D12;
+background-color: #e35614;
+border: solid 1px  #e35614;
 }
 
 .pages span.current a {
@@ -2539,13 +2539,13 @@ border: solid 1px  #FF7D12;
 
 .pages a {
 text-decoration: none;
-border: solid 1px  #FF7D12;
+border: solid 1px  #e35614;
 }
 
 .pages a:hover {
 color: #FFF;
-background-color: #FF7D12;
-border-color:#FF7D12;
+background-color: #e35614;
+border-color:#e35614;
 }
 
 .pages span.nextprev {
