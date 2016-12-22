@@ -181,9 +181,9 @@ text-align: left;
 }
 
 #header-top a.sub-name {
-color: rgba(16,16,16,.45);
+color: #fff;
 font-size: 13px;
-border-left: 1px solid rgba(16,16,16,.2);
+border-left: 1px solid #fff;
 display: inline-block;
 height: 40px;
 padding-left: 10px;
