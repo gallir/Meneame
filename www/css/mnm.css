@@ -33,14 +33,6 @@ padding:0px;
     z-index: 9;
 }
 
-
-body {
-font-family: 'Lato','Helvetica Neue', Helvetica, Arial, sans-serif;
-background-image: url('{{ globals.base_static }}img/common/bkg-01.png');
-color: #000;
-background-color: #fff;
-margin:0px;
-padding:0px;
 }
 
 .mnm-center-in-wrap {
@@ -607,7 +599,6 @@ min-width: 805px;
 max-width: 1300px;
 width: 99%;
 text-align: left;
-background-color: #fff;
 background-color: #fbfbfb;
 margin: auto;
 margin-top: 0;
