@@ -2453,7 +2453,15 @@ $(document).ready(function () {
 	});
 
     $("a.dropdown-toggle.menu-more-button").on({
-        'mouseenter': function(){$(this).parent().addClass('open');}
+        'mouseenter': function(){$(this).parent().addClass('open');},
+        'mouseleave': function() {
+            if ($(".dropdown-menu.menu-subheader:hover").length == 0) {
+                $(this).parent().removeClass('open');
+			}
+        }
+    });
+    $(".dropdown-menu.menu-subheader").on({
+        'mouseleave': function(){$(this).parent().removeClass('open');},
     });
 
     $(".slider-wrapper .sub").on({

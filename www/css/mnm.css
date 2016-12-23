@@ -10,6 +10,15 @@ margin: 0;
 padding: 0;
 }
 
+body {
+font-family: 'Open Sans','Helvetica Neue', Helvetica, Arial, sans-serif;
+background-image: url('{{ globals.base_static }}img/common/bkg-01.png');
+color: #000;
+background-color: #fff;
+margin:0px;
+padding:0px;
+}
+
 .header-top-wrapper.fixed {
     position:fixed;
     top:0;
@@ -599,6 +608,7 @@ max-width: 1300px;
 width: 99%;
 text-align: left;
 background-color: #fff;
+background-color: #fbfbfb;
 margin: auto;
 margin-top: 0;
 }
@@ -648,6 +658,7 @@ border-radius: 3px;
 font-size: 18px;
 font-weight: normal;
 margin: 0 0 10px 0;
+font-family: 'Lato', sans-serif;
 }
 
 #toplink h1 a {
@@ -1413,7 +1424,7 @@ text-align: right;
 
 .news-summary .warn {
 position: relative;
-padding: 5px 10px 7px 28px ;
+padding: 5px 10px 3px 28px ;
 margin: 0px 0 5px 0;
 font-size: 85%;
 background-color: #FEFBEA;
@@ -1453,10 +1464,6 @@ font-family: 'Open Sans', sans-serif;
 padding-left:20px;
 background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center;
 background-size: 16px 16px;
-}
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .sidebox .warn { background-image:url('{{ globals.base_static }}img/common/error_s-2x.png'); }
 }
 
 .comments-counter .counter {
@@ -1838,6 +1845,7 @@ font-size: 20px;
 font-weight: normal;
 background: none;
 border: none;
+font-family: 'Lato', sans-serif;
 }
 
 .news-body h1 a , .news-body h2 a {
@@ -2371,7 +2379,7 @@ button.link.favorite {
 }
 
 .link.favorite.on:after {
-    content: "{% trans _('guardado') %}";
+    content: "";
 }
 
 .link.favorite.readed:after {
@@ -3486,7 +3494,8 @@ button.share-link span:hover {
 
 .user-profile-info h1 {
     display: inline-block;
-    margin-left: 20px
+    margin-left: 20px;
+    font-family: 'Lato', sans-serif;
 }
 
 .user-profile-info a {
