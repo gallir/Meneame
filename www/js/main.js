@@ -1127,6 +1127,10 @@ function show_answers(type, id) {
 	answers = $('#answers-'+id);
 	if (answers.length == 0) {
 		$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
+			var current_answers = $('#answers-'+id);
+			if (current_answers.length != 0) {
+				return;
+			}
 			element = $(dom_id).parent().parent();
 			element.append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
 			element.trigger('DOMChanged', element);
