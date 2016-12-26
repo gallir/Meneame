@@ -338,7 +338,7 @@ font-size: 110%;
 height:auto;
 margin: 10px 10px 0 0;
 position:relative;
-float:right;
+display: inline-block;
 }
 
 .searchform .searchbox {
