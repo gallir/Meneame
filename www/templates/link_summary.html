@@ -76,10 +76,9 @@
 			<a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
 			{% endif %}
 
+			<div class="center-content{% if not self.thumb_uri %} no-padding{% endif %}">
 			{% if self.url %}
 				{% exec htmlspecialchars self.url as url %}
-
-				<div class="center-content{% if not self.thumb_uri %} no-padding{% endif %}">
 
 				{% if globals.link %}<h1>{% else %}<h2>{% endif %}
 				<a href="{{ url }}" class="l:{{ self.id }}"
@@ -219,7 +218,7 @@
 							</select>
 						</form>
 						{% endif %}
-					</div> {# div.news-details-data #}
+					</div> {# div.news-details-data-up #}
 					{% endif %}
 
 
@@ -311,6 +310,7 @@
 			{% exec do_banner_story as dummy %}
 			{% endif %}
 
+		</div>
 		</div>
 
 	{% if self.map_editable %}
