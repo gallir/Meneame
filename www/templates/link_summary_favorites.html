@@ -154,46 +154,8 @@
 		{% endif %}
 		{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
-		{% if type != 'short' %}
 		<div class="news-details">
-			<span class="votes-up" data-toggle="tooltip" data-placement="top" title="Votos positivos"><i class="fa fa-arrow-circle-up"></i> <span id="a-usu-{{ self.id }}"><strong>{{ self.votes }}</strong></span></span>
-			<span class="wideonly votes-anonymous" data-toggle="tooltip" data-placement="top" title="Votos anónimos"><i class="fa fa-user-secret"></i> <span id="a-ano-{{ self.id }}"><strong>{{ self.anonymous }}</strong></span></span>
-			<span class="votes-down" data-toggle="tooltip" data-placement="top" title="Votos negativos"><i class="fa fa-arrow-circle-down"></i> <span id="a-neg-{{ self.id }}"><strong>{{ self.negatives }}</strong></span></span>
-
-			<span class="tool karma" data-toggle="tooltip" data-placement="top" title="Karma"><span class="karma-letter">K</span><span class="karma-value" id="a-karma-{{self.id}}">
-					{% if self.status == 'published' && self.sub_karma > 0 %}
-						{{ self.sub_karma|intval }}
-					{% else %}
-						{{ self.karma|intval }}
-					{% endif %}
-				</span></span>
-
-			<span class="tool sub-name">
-					<a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-					   {% if self.sub_owner > 0 %}
-							class="subname"
-							style="
-								{% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
-								{% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
-							"
-						{% endif %}
-						>{{ self.sub_name }}</a>
-				</span>
-
-			{% if self.can_vote_negative %}
-			<form action="" id="problem-{{ self.id }}">
-				<select name="ratings" onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
-					<option value="0" selected="selected">{% trans _('problema') %}</option>
-					{% for pkey, pvalue in globals.negative_votes_values %}
-					<option value="{{pkey}}">{{ pvalue }}</option>
-					{% endfor %}
-				</select>
-			</form>
-			{% endif %}
-		</div>
-		{% endif %}
-
-		<div class="news-details main">
+			<div class="news-details-main">
 
 			<a class="comments" href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">
 				<i class="fa fa-comments"></i>{% if self.comments > 0 %}{{ self.comments }} {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
@@ -218,7 +180,7 @@
 
 			{% if current_user.user_id > 0 %}
 			<a style="display:inline-block;" id="favr-{{ self.id }}" onclick="change_fav_readed('favr-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite_readed %} class="link favorite readed on" {% else %} class="link favorite readed" {% endif %} ></a>
-			<a style="display:inline;" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" class="link favorite delete on"></a>
+			<a style="display:inline-block;" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" class="link favorite delete on"></a>
 			{% endif %}
 
 		</div>
@@ -233,6 +195,7 @@
 		{% if globals.link %}
 		{% exec do_banner_story as dummy %}
 		{% endif %}
+	</div>
 	</div>
 </div>
 

@@ -169,7 +169,6 @@
         {% endif %}
         {# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
-        {% if type != 'short' %}
         <div class="news-details-wrapper">
         <div class="news-details">
 
@@ -245,8 +244,6 @@
 
         </div>
 
-        {% endif %}
-
         {% if self.best_comment %}
         <div class="box" style="font-size: 80%; border: 1px solid; border-color: #dadada; background: #fafafa; margin: 7px 25px 7px 25px; padding: 4px; overflow:hidden">
             <a  class="tooltip c:{{ self.best_comment.comment_id }}" href="{{ self.relative_permalink }}/c0{{ self.best_comment.comment_order }}">
@@ -257,7 +254,7 @@
         {% if globals.link %}
         {% exec do_banner_story as dummy %}
         {% endif %}
-    </div>
+
 </div>
 </div>
 

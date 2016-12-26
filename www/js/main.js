@@ -4,6 +4,7 @@ var base_url="{{ globals.base_url_general }}",
 	base_static="{{ globals.base_static_noversion }}",
 	is_mobile={{ globals.mobile }},
 	current_user  = {{ current_user.user_id }},
+	current_user_admin = {{ current_user.admin }},
 	touchable=false,
 	loadedJavascript = [],
 	{% if globals.allow_partial %}
@@ -1739,6 +1740,10 @@ var fancyBox = new function () {
 				field = a[i];
 				var counter = (data && data[field]) ? data[field] : 0;
 				$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
+			}
+			
+			if (current_user_admin) {
+                $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
 			}
 
 			$e.show();
