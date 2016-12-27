@@ -9,21 +9,25 @@
 include('../config.php');
 include_once(mnminclude.'ban.php');
 
+function error($mess) {
+	die(json_encode(array('error' => $mess)));
+}
+
 header('Content-Type: application/json; charset=UTF-8');
 
-if(check_ban_proxy()) {
+if (check_ban_proxy()) {
 	error(_('IP no permitida'));
 }
 
-if(!($id=check_integer('id'))) {
+if (!($id=check_integer('id'))) {
 	error(_('falta el ID del comentario'));
 }
 
-if(empty($_REQUEST['user'])) {
+if (empty($_REQUEST['user'])) {
 	error(_('falta el código de usuario'));
 }
 
-if($current_user->user_id != $_REQUEST['user']) {
+if ($current_user->user_id != $_REQUEST['user']) {
 	error(_('usuario incorrecto'). $current_user->user_id . '-'. htmlspecialchars($_REQUEST['user']));
 }
 
@@ -48,10 +52,10 @@ if ($value != -1 && $value != 1) {
 
 $vote = new Vote('posts', $id, $current_user->user_id);
 $vote->link=$id;
+
 if ($vote->exists()) {
 	error(_('ya se votó antes con el mismo usuario o IP'));
 }
-
 
 $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='posts' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_ip_int = ".$globals['user_ip_int']));
 
@@ -92,18 +96,10 @@ if (! $post->insert_vote($current_user->user_id, $vote->value)) {
 	error(_('ya ha votado antes'));
 }
 
-
 $dict = array();
 $dict['id'] = $id;
 $dict['votes'] = $post->votes + 1;
 $dict['value'] = round($vote->value);
 $dict['karma'] = round($post->karma + $vote->value);
 
-echo json_encode($dict);
-
-function error($mess) {
-	$dict['error'] = $mess;
-	echo json_encode($dict);
-	die;
-}
-
+die(json_encode($dict));
