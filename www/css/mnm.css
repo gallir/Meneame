@@ -33,8 +33,6 @@ padding:0px;
     z-index: 9;
 }
 
-}
-
 .mnm-center-in-wrap {
     margin: 0 auto;
     min-width: 805px;
@@ -590,7 +588,7 @@ float:none;
 position:relative;
 display:block;
 margin:10px 0 0 0;
-height:auto:
+height:auto;
 }
 
 
