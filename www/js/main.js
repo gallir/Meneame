@@ -4,14 +4,16 @@ var base_url="{{ globals.base_url_general }}",
 	base_static="{{ globals.base_static_noversion }}",
 	is_mobile={{ globals.mobile }},
 	current_user  = {{ current_user.user_id }},
-	current_user_admin = {{ current_user.admin }},
+	current_user_admin = {% if current_user.admin %}true{% else %}false{% endif %},
 	touchable=false,
 	loadedJavascript = [],
 	{% if globals.allow_partial %}
-		do_partial=true;
+		do_partial=true,
 	{% else %}
-		do_partial=false;
+		do_partial=false,
 	{% endif %}
+	lastScrollTop = 0;
+
 
 if (typeof window.history == "object"
 		&& (do_partial || navigator.userAgent.match(/meneame/i)) ) {

@@ -218,6 +218,7 @@ margin-top:7px;
 margin-right:15px;
 float:left;
 }
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     #header-top .logo-ed { background-image:url('{{ globals.base_static }}img/mnm/h9_logo_ed.svg'); }
 }
@@ -2078,6 +2079,9 @@ border-color: #e35614;
 border-radius: 2px;
 }
 
+.comment-body.high {
+    padding-right: 35px;
+}
 
 .comment-body a strong {
 color: #e35614;
