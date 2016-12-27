@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 
 header("Content-Type: text/plain");
@@ -92,5 +92,3 @@ if ($absolute_previous_maxid > 0) {
 		sleep(1);
 	}
 }
-
-?>

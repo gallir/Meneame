@@ -1,5 +1,5 @@
 #! /usr/bin/php
-<?
+<?php
 include('../config.php');
 
 $hours = intval($argv[1]);
@@ -17,4 +17,3 @@ foreach ($uids as $id) {
 		usleep(100);
 	}
 }
-?>

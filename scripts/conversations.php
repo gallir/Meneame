@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'comment.php');
 
@@ -15,6 +15,3 @@ while ($res = mysql_fetch_object($result)) {
 	$comment->update_conversation();
 	usleep(1000);
 }
-
-
-?>

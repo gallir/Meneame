@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'uri.php');
 include(mnminclude.'link.php');
@@ -15,4 +15,3 @@ foreach($ids as $dbid) {
 	$link->store();
 	usleep(1000);
 }
-?>

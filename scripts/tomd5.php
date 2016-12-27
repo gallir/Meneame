@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'user.php');
 
@@ -19,4 +19,3 @@ foreach($users as $dbuser) {
 		echo "Converted: ". $user->username . "\n";
 	}
 }
-?>

@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 
 header("Content-Type: text/plain");
@@ -467,4 +467,3 @@ foreach ($res as $dbuser) {
 }
 if ($annotation) $annotation->optimize();
 echo "Calculated: $calculated, Ignored: $no_calculated\n";
-

@@ -1,5 +1,5 @@
 #! /usr/bin/env php
-<?
+<?php
 // Post to Twitter/Jaiku the "top story"
 // Check which hostname server we run for, for example: mnm, emnm
 
@@ -55,8 +55,6 @@ if (! in_array($tops[0], $history) ) {
 	$a_history->store();
 
 
-	twitter_post($properties, $text, $url); 
+	twitter_post($properties, $text, $url);
 	facebook_post($properties, $link, $intro);
 }
-
-?>

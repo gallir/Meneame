@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'webimages.php');
 include(mnminclude.'link.php');
@@ -32,5 +32,3 @@ foreach ($res as $l) {
 }
 
 echo "</body></html>";
-
-?>

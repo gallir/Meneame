@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include('utils.php');
 include(mnminclude.'external_post.php');
@@ -52,7 +52,7 @@ function discard($site_id) {
 
 	// Discard links
 	// $negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < 0 and (link_date < $max_date or link_karma < -100) and (link_karma < -link_votes*2 or (link_negatives > 20 and link_negatives > link_votes/2)) and (link_negatives > 20 or (link_negatives > 4 and link_negatives > link_votes+3) ) order by link_id asc");
-	// Simlified version 
+	// Simlified version
 	$negatives = $db->get_col("select SQL_NO_CACHE link_id from links, sub_statuses where id = $site_id and date > $min_date and status = 'queued' and link_id = link and link_karma < -20 and link_negatives > 5 and link_negatives > link_votes + 2 and (link_date < $max_date or link_karma < -100) order by link_id asc");
 
 	//$db->debug();
@@ -66,7 +66,7 @@ function discard($site_id) {
 
 		$l->status = 'discard';
 		$l->store();
-		echo "Discard id: $l->id\n"; 
+		echo "Discard id: $l->id\n";
 
 		if ($site_info->sub) { // Double check
 			$user = new User($l->author);
@@ -159,7 +159,7 @@ function depublish($site_id) {
 			// Count only those votes with karma > 6 to avoid abuses with new accounts with new accounts
 			$negatives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_date > date_sub(now(), interval 24 hour) and vote_value < 0 and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_negative_karma']);
 			$positives = (int) $db->get_var("select SQL_NO_CACHE sum(user_karma) from votes, users where vote_type='links' and vote_link_id=$l->id and vote_date > from_unixtime($l->date) and vote_value > 0 and vote_date > date_sub(now(), interval 24 hour) and vote_user_id > 0 and user_id = vote_user_id and user_karma > " . $globals['depublish_positive_karma']);
-			
+
 			echo "Candidate $l->uri\n  karma: $l->sub_karma ($l->karma) negative karma: $negatives positive karma: $positives\n";
 			// Adjust positives to the probability of votes/clicks
 			$c = (1 + (1 - $prob) * 0.5);

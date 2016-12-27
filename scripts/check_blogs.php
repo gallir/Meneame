@@ -1,4 +1,4 @@
-<?
+<?php
 // This file checks the rss of a blog against its url.
 // If they don't agrre, store a new url
 include('../config.php');
@@ -15,7 +15,7 @@ flush();
 $ids = $db->get_col("SELECT blog_id from blogs where blog_url regexp 'http://.+' order by blog_id asc");
 foreach($ids as $dbid) {
 	$blog->id = $dbid;
-	if( !$blog->read()) 
+	if( !$blog->read())
 		continue;
 	$url = $db->get_var("select link_url from links where link_blog = $dbid limit 1");
 	if (!empty($url)) {
@@ -39,4 +39,3 @@ foreach($ids as $dbid) {
 	}
 
 }
-?>

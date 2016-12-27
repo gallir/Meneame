@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include(mnminclude.'link.php');
 include(mnminclude.'tags.php');
@@ -14,7 +14,6 @@ $links = $db->get_results("SELECT link_id  from links where link_status != 'disc
 			$link->id=$dblink->link_id;
 			$link->read();
 			if (!empty($link->tags)) tags_insert_string($link->id, $dblang, $link->tags, $link->date);
-	}  
+	}
 	echo "--------------------------\n";
 }
-?>

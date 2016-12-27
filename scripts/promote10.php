@@ -1,4 +1,4 @@
-<?
+<?php
 include('../config.php');
 include('utils.php');
 include(mnminclude.'external_post.php');
@@ -189,7 +189,7 @@ function promote($site_id) {
 			$link = Link::from_db($dblink->link_id);
 			if ($link->is_sponsored()) continue;
 			$changes = update_link_karma($site_id, $link);
-			
+
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 				echo "Adding $link->id to thumb queue\n";
 				array_push($thumbs_queue, $link->id);
@@ -343,7 +343,7 @@ function publish($site, $link) {
 		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
 	}
 
-	// Publish the links of the source subs	
+	// Publish the links of the source subs
 	if ($site_info->meta && ($senders = SitesMgr::get_senders($site))) {
 		if (in_array($link->sub_id, $senders) && $link->sub_status_origen == 'queued') {
 			syslog(LOG_INFO, "Meneame, publishing for sender $link->sub_name ($link->sub_id)");
@@ -428,20 +428,20 @@ function get_subs_coef($site_id, $days = 3) {
 
 function update_link_karma($site, $link) {
 	global $db, $globals;
-	
+
 	if (time() - $link->time_annotation('link-karma') < 75) {
 		echo "ALREADY CALCULATED $link->uri, ignoring\n";
 		return 0;
 	}
 
-	
+
 	$site_info = SitesMgr::get_info($site);
 	echo "START $site_info->name WITH $link->uri\n";
 
 	$user = new User;
 	$user->id = $link->author;
 	$user->read();
-	
+
 	$karma_pos_user = 0;
 	$karma_neg_user = 0;
 	$karma_pos_ano = 0;
@@ -456,7 +456,7 @@ function update_link_karma($site, $link) {
 	$karma_new = $link->karma;
 	$link->message = '';
 	$changes = 0;
-	// TODO: $subs_coef is not available 
+	// TODO: $subs_coef is not available
 	// if (DEBUG ) $link->message .= "Sub: $link->sub_id coef: ".$subs_coef[$link->sub_id]." Init values: previous: $link->old_karma calculated: $link->karma new: $karma_new<br>\n";
 
 	// Verify last published from the same site

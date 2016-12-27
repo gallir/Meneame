@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Twemojis {
 
@@ -163,6 +163,4 @@ class Twemojis {
 		$input = self::to_entities($input);
 		return preg_replace_callback('/&#x([\da-f]+);/i', $callback, $input);
 	}
-
 }
-

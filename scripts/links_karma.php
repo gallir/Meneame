@@ -1,4 +1,4 @@
-<?
+<?php
 // This files checks and fixes the vote, negative and karma values
 
 include('../config.php');
@@ -16,7 +16,7 @@ else $period = 200;
 echo "Period (h): $period\n";
 
 $from_time = "date_sub(now(), interval 2 day)";
-#$from_where = "FROM votes, links WHERE  
+#$from_where = "FROM votes, links WHERE
 
 
 $links = $db->get_results("SELECT SQL_NO_CACHE link_id from links where link_date > $from_time AND link_status != 'published' and link_karma < 150");
@@ -48,7 +48,7 @@ if ($links) {
 		$karma_neg_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$link->id and vote_user_id = 0 and vote_value < 0"));
 
 
-		if ($link->votes != $votes_pos || $link->negatives != $votes_neg 
+		if ($link->votes != $votes_pos || $link->negatives != $votes_neg
 		|| round($link->karma) != round($karma_pos_user + $karma_pos_ano + $karma_neg_user + $karma_neg_ano)
 			) {
 			echo "Previous $link->id, $link->votes, $link->negatives, $link->karma \n";
@@ -58,6 +58,5 @@ if ($links) {
 			echo "Storing $link->id, $link->votes, $link->negatives, $link->karma \n";
 			$link->store();
 		}
-	}  
+	}
 }
-?>

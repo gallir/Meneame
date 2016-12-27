@@ -1,12 +1,10 @@
-<?PHP
+<?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-
-
 
 class UserAuth {
 	const CURRENT_VERSION = '7';
@@ -102,7 +100,7 @@ class UserAuth {
 		// Mysql variables to use en join queries
 		$db->initial_query("set @user_id = $this->user_id, @ip_int = ".$globals['user_ip_int'].
 			", @enabled_votes = date_sub(now(), interval ". intval($globals['time_enabled_votes']/3600). " hour)"
-			// ", @site = " . SitesMgr::my_id() 
+			// ", @site = " . SitesMgr::my_id()
 			);
 	}
 
