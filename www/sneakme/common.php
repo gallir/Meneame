@@ -34,22 +34,18 @@ function get_posts_menu($tab_selected, $username) {
 
 	$items = array();
 
-	if ($current_user->user_id > 0 ) {
-		if ($tab_selected == 5) { // Privates
-			$items[] = new MenuOption(_('nuevo'), 'javascript:priv_new(0)', $id, _('nueva nota privada'), 'toggler submit_new_post');
-		} else {
-			if (Post::can_add()) {
-				$items[] = new MenuOption(_('nota'), 'javascript:post_new()', $id, _('nueva nota'), 'toggler submit_new_post');
-			}
-		}
+	if (($current_user->user_id > 0) && ($tab_selected == 5)) { // Privates
+		$items[] = new MenuOption(_('nuevo'), 'javascript:priv_new(0)', $id, _('nueva nota privada'), 'toggler submit_new_post');
 	}
 
 	$items[] = new MenuOption(_('todas'), post_get_base_url(''), $id, _('todas las notas'));
 	$items[] = new MenuOption(_('popular'), post_get_base_url('_best'), $id, _('notas populares'));
+
 	if ($globals['google_maps_api']) {
 		$items[] = new MenuOption(_('mapa'), post_get_base_url('_geo'), $id, _('mapa animado'));
 	}
-	if (! empty($username)) {
+
+	if (!empty($username)) {
 		$items[] = new MenuOption($username, post_get_base_url($username), $id, $username, 'username');
 	}
 
