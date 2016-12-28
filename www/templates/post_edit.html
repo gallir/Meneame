@@ -11,7 +11,7 @@
 
             <div class="col-md-11 col-sm-10">
                 <div class="form-group">
-                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" required>{{ self.content }}</textarea>
+                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" placeholder="{% trans _('¿Qué es lo que tienes que contar?') %}" required>{{ self.content }}</textarea>
 
                     <div class="hidden show-on-focus">
                         {% include 'simpleformat_buttons.html' %}
