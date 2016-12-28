@@ -41,15 +41,6 @@
                     </div>
                     {% endif %}
 
-                    {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
-                    <div class="form-group">
-                        <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-                        <input type="file" autocomplete="off" name="image" class="uploadFile" accept="image/*" />
-
-                        <div class="droparea_info"></div>
-                    </div>
-                    {% endif %}
-
                     <div id="poll-block" class="hidden">
                         {% for i in 1 .. 5 %}
                         <div class="form-group">
@@ -62,6 +53,12 @@
                         <button type="button" class="btn btn-mnm btn-sm" data-show="#poll-block">
                             <i class="fa fa-bar-chart"></i>
                         </button>
+
+                        {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
+                        <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+                        <input type="file" autocomplete="off" name="image" class="uploadFile" accept="image/*" />
+                        {% endif %}
+
                         <button type="submit" class="btn btn-mnm btn-sm pull-right">{% trans _('Enviar') %}</button>
                     </footer>
                 </div>
