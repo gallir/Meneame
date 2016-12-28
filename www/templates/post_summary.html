@@ -5,34 +5,34 @@
 	{% else %}
 		{% include 'post_summary_text.html' %}
 	{% endif %}
-
 	</div>
+
 	<div class="{{ post_meta_class }}">
 		<div class="comment-votes-info">
-		{% if self.can_vote %}
-			{% if self.user_can_vote %}
-				<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"></span>
-				{% include 'post_summary_votes.html' %}
-				<span id="vc-n-{{ self.id }}" class="vote right down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
-			{% else %}
-				{% if self.voted > 0 %}
-					<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>
-				{% else %}{% if self.voted < 0 %}
-					<span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"></span>
-				{% endif %}{% endif %}
-				{% include 'post_summary_votes.html' %}
+			{% if self.can_vote %}
+				{% if self.user_can_vote %}
+					<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"></span>
+					{% include 'post_summary_votes.html' %}
+					<span id="vc-n-{{ self.id }}" class="vote right down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
+				{% else %}
+					{% if self.voted > 0 %}
+						<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>
+					{% else %}{% if self.voted < 0 %}
+						<span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"></span>
+					{% endif %}{% endif %}
+					{% include 'post_summary_votes.html' %}
+				{% endif %}
+				{% else %}
+					{% include 'post_summary_votes.html' %}
 			{% endif %}
-			{% else %}
-				{% include 'post_summary_votes.html' %}
-		{% endif %}
 
-		<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink"></a>
+			<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink"></a>
 
-		{% if current_user.user_id > 0 %}
-			<span id="favp-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favp-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
-			<span onclick="post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}" class="reply"></span>
-		{% endif %}
-	</div>
+			{% if current_user.user_id > 0 %}
+				<span id="favp-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favp-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
+				<span onclick="post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}" class="reply"></span>
+			{% endif %}
+		</div>
 
 		<div class="comment-info">
 			<span class="ts nomobile showmytitle" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>

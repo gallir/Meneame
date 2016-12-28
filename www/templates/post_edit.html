@@ -1,109 +1,73 @@
 <div class="commentform" id="edit-form">
-    <fieldset>
-        <form action="{{ globals.base_url }}backend/post_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
-            <input type="hidden" name="key" value="{{ self.randkey }}" />
-            <input type="hidden" name="post_id" value="{{ self.id }}" />
-            <input type="hidden" name="user_id" value="{{ self.author }}" />
+    <form action="{{ globals.base_url }}backend/post_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
+        <input type="hidden" name="key" value="{{ self.randkey }}" />
+        <input type="hidden" name="post_id" value="{{ self.id }}" />
+        <input type="hidden" name="user_id" value="{{ self.author }}" />
 
-            <div class="row">
-                <div class="col-md-6">
-                    <legend><span class="sign">
-                        {% if self.id > 0 %} {% trans _('edición nota') %} {% else %} {% trans _('nueva nota') %} {% endif %}
-                    </span></legend>
+        <div class="row">
+            <div class="col-md-1 col-sm-2 hidden-xs">
+                <img class="avatar lazy img-responsive" data-src="{% exec get_avatar_url current_user.user_id, current_user.user_avatar, 40, false %}" data-2x="s:-40.:-80." src="{{ globals.base_static }}img/g.gif" alt="{{ current_user.user_login }}" />
+            </div>
 
-                    {% include 'simpleformat_buttons.html' %}
-                    <textarea style="clear: both" name="post" class="droparea" rows="5" id="post"
-                        {% if ! globals.mobile %}
-                        onKeyDown="textCounter(document.thisform{{ self.id }}.post,document.thisform{{ self.id }}.postcounter,{{ globals.posts_len }})"
-                        {% endif %}>{{ self.content }}</textarea>
+            <div class="col-md-11 col-sm-10">
+                <div class="form-group">
+                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" required>{{ self.content }}</textarea>
 
-                    <div style="margin-top:-7px">
-                        {% if ! globals.mobile %}
-                        <input readonly type="text" name="postcounter" size="{{ globals.posts_len|length }}" maxlength="{{ globals.posts_len|length }}" value="{{ self.body_left }}" />
-                        <span class="note">{% trans _('caracteres libres') %}</span>&nbsp;&nbsp;
-                        {% endif %}
+                    <div class="hidden show-on-focus">
+                        {% include 'simpleformat_buttons.html' %}
                     </div>
+                </div>
 
-                    <input class="button" style="width:9em"  type="submit" value="{% trans _('enviar') %}" />
-
+                <div class="hidden show-on-focus">
                     {% if current_user.user_level == 'god' %}
-                    &nbsp;&nbsp;&nbsp;<label><strong>{% trans _('admin') %}</strong>
-                    <input name="admin" type="checkbox" value="true" {% if self.admin %} checked="true" {% endif %} /></label>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input name="admin" type="checkbox" value="true" {% if self.admin %} checked="true" {% endif %} />
+                                <strong>{% trans _('admin') %}</strong>
+                            </label>
+                        </div>
+                    </div>
                     {% endif %}
 
                     {% if self.media_size > 0 %}
-                    <label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="image_delete" value="1"/></label>&nbsp;
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="image_delete" value="1" />
+                                {% trans _('Eliminar imagen') %}
+                            </label>
+                        </div>
+                    </div>
                     {% endif %}
 
                     {% if current_user.user_karma > globals.media_min_karma OR current_user.admin %}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
-                    <input type="file" autocomplete="off" name="image" id="fileInput{{ self.id }}" class="uploadFile" accept="image/*" />
+                    <div class="form-group">
+                        <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}"/>
+                        <input type="file" autocomplete="off" name="image" class="uploadFile" accept="image/*" />
 
-                    <div class="droparea_info"></div>
+                        <div class="droparea_info"></div>
+                    </div>
                     {% endif %}
-                </div>
 
-                <div class="col-md-6">
-                    <legend><span class="sign">
-                        {% trans _('Crear una encuesta') %}
-                    </span></legend><br />
-
-                    <div class="form-group">
-                        <input type="text" name="question" value="" class="form-control" placeholder="{% trans _('Pregunta') %}" />
+                    <div id="poll-block" class="hidden">
+                        {% for i in 1 .. 5 %}
+                        <div class="form-group">
+                            <input type="text" name="poll_options[]" class="form-control" placeholder="{% trans _('Opción %s') i %}" />
+                        </div>
+                        {% endfor %}
                     </div>
 
-                    {% for i in 1 .. 5 %}
-                    <div class="form-group">
-                        <input type="text" name="question" value="" class="form-control" placeholder="{% trans _('Respuesta %s') i %}" />
-                    </div>
-                    {% endfor %}
+                    <footer>
+                        <button type="button" class="btn btn-mnm btn-sm" data-show="#poll-block">
+                            <i class="fa fa-bar-chart"></i>
+                        </button>
+                        <button type="submit" class="btn btn-mnm btn-sm pull-right">{% trans _('Enviar') %}</button>
+                    </footer>
                 </div>
+
+                <br class="clearfix" />
             </div>
-        </form>
-    </fieldset>
+        </div>
+    </form>
 </div>
-
-<script type="text/javascript">
-/* prepare Options Object */
-{% if self.id == 0 %}
-
-var options = {
-    async: false,
-    success: function(response) {
-        if (/^ERROR:/.test(response)) {
-            return mDialog.notify(response, 5);
-        }
-
-        element = $("#newpost");
-        element.html(response);
-        $("#addpost").hide("fast");
-        element.trigger('DOMChanged', element);
-    }
-};
-
-{% else %}
-
-var options = {
-    async: false,
-    success: function(response) {
-        if (/^ERROR:/.test(response)) {
-            return mDialog.notify(response, 5);
-        }
-
-        element = $("#pcontainer-{{ self.id }}");
-        element.html(response);
-        element.trigger('DOMChanged', element);
-    }
-};
-
-{% endif %}
-
-/* wait for the DOM to be loaded */
-addPostCode(function() {
-    $('#thisform{{ self.id }}').droparea({maxsize: {{ globals.media_max_size }} });
-    $('#thisform{{ self.id }}').ajaxForm(options);
-    $('textarea').autosize();
-    $("#fileInput{{ self.id }}").nicefileinput();
-});
-</script>

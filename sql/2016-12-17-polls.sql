@@ -5,6 +5,8 @@ CREATE TABLE `polls` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `question` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `votes` smallint(7) UNSIGNED NOT NULL DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_at` datetime NOT NULL,
   `link_id` int(20) NULL,
   `post_id` int(11) UNSIGNED NULL,
   PRIMARY KEY (`id`),

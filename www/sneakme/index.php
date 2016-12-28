@@ -11,17 +11,13 @@
 //		Must add printing the threads with CommentTree and split the
 //		page with only one post.
 
-
 include_once('../config.php');
 include('common.php');
-
 
 $argv = $globals['path'];
 $argv[0] = clean_input_string($argv[0]);
 
-
-
-if ($argv[0] == _priv) {
+if ($argv[0] === '_priv') {
 	// Load priv.php
 	include('priv.php');
 	die;
@@ -32,11 +28,11 @@ include(mnminclude.'favorites.php');
 
 $globals['search_options'] = array('w' => 'posts');
 
-$user=new User();
+$user = new User();
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
-$offset=(get_current_page()-1)*$page_size;
+$offset = (get_current_page()-1) * $page_size;
 $page_title = _('nótame') . ' | '. $globals['site_name'];
 $view = false;
 $short_content = false;
@@ -99,10 +95,13 @@ switch ($argv[0]) {
 		} else {
 			// User is specified
 			$user->username = $db->escape($argv[0]);
+
 			if(!$user->read() || $user->disabled()) {
 				do_error(_('usuario no encontrado'), 404);
 			}
+
 			$globals['noindex'] = true;
+
 			switch($argv[1]) {
 				case '_friends':
 					$view = 1;
@@ -159,11 +158,12 @@ switch ($argv[0]) {
 		}
 }
 
-if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'] != get_server_name()) {
+if (isset($globals['canonical_server_name']) && $globals['canonical_server_name'] !== get_server_name()) {
 	$globals['noindex'] = true;
 }
 
 $conversation_extra = '';
+
 if ($tab_option == 4) {
 	if ($current_user->user_id == $user->id) {
 		//$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
@@ -186,7 +186,6 @@ if ($tab_option == 4) {
 	);
 
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
-	//$conversation_extra = ' ['.Post::get_unread_conversations($user->id).']';
 	$conversation_extra = ' [<span id="p_c_counter">0</span>]';
 	$view = 0;
 
@@ -199,18 +198,21 @@ if ($tab_option == 4) {
 		_('últimas imágenes') => "javascript:fancybox_gallery('post');",
 		_('debates').'&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
 	);
-} else $options = false;
+} else {
+	$options = false;
+}
 
 do_header($page_title, _('nótame'), get_posts_menu($tab_option, $user->username), array($options, $view, $rss_option));
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
 do_banner_right();
-//do_best_stories();
-if (! $short_content) {
+
+if (!$short_content) {
 	do_best_posts();
 	do_best_comments();
 	do_banner_promotions();
+
 	if ($tab_option < 4) {
 		do_last_subs('published');
 		do_last_blogs();
@@ -224,12 +226,10 @@ do_pages($rows, $page_size);
 
 echo '<div class="notes">';
 
-
 if ($current_user->user_id > 0) {
-
-	echo '<div id="addpost"></div>';
-	echo '<ol class="comments-list"><li id="newpost"></li></ol>'."\n";
-
+	$post = new Post;
+	$post->author=$current_user->user_id;
+	$post->print_edit_form();
 }
 
 if ($view != 4) {
@@ -271,76 +271,106 @@ if ($view != 4) {
 		if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
 			Post::update_read_conversation($time_read);
 		}
+
 		echo '</div>';
 	}
 } else {
 	do_voted_posts();
 }
+
 do_pages($rows, $page_size);
 
 echo '</div>';
-if ($rows > 15) do_footer_menu();
+
+if ($rows > 15) {
+	do_footer_menu();
+}
+
 do_footer();
 
-function print_answers($id, $level, $visited = false) {
+function print_answers($id, $level, $visited = false)
+{
 	// Print "conversation" for a given note
 	global $db;
 
-	if (! $visited) {
-		$visited = array();
-		$visited[] = $id;
+	$answers = $db->get_col("SELECT conversation_from FROM conversations WHERE conversation_type='post' and conversation_to = $id ORDER BY conversation_from asc LIMIT 100");
+
+	if (empty($answers)) {
+		return array();
 	}
+
+	if (!$visited) {
+		$visited = array($id);
+	}
+
 	$printed = array();
 
-	$answers = $db->get_col("SELECT conversation_from FROM conversations WHERE conversation_type='post' and conversation_to = $id ORDER BY conversation_from asc LIMIT 100");
 	$parent_reference = "/@\S+,$id/ui"; // To check that the notes references to $id
 
-	if ($answers) {
-		echo '<div style="padding-left: 5%; padding-top: 5px;">';
-		echo '<ol class="comments-list">';
-		foreach ($answers as $post_id) {
-			if (in_array($post_id, $visited)) continue;
-			$answer = Post::from_db($post_id);
-			if (! $answer) continue;
-			if ( $answer->user_level == 'autodisabled' || $answers->user_level == 'disabled') continue;
+	echo '<div style="padding-left: 5%; padding-top: 5px;">';
+	echo '<ol class="comments-list">';
 
-			// Check the post has a real reference to the parent (with the id), ignore othewrise
-			if (! preg_match($parent_reference, $answer->content)) continue;
+	foreach ($answers as $post_id) {
+		if (in_array($post_id, $visited)) {
+			continue;
+		}
 
-			echo '<li>';
-			$answer->print_summary();
-			echo '</li>';
-			if ($level > 0) {
-				$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
-				$visited = array_merge($visited, $res);
-			}
-			$printed[] = $answer->id;
-			$visited[] = $answer->id;
+		$answer = Post::from_db($post_id);
+
+		if (!$answer || ($answer->user_level == 'autodisabled') || ($answers->user_level == 'disabled')) {
+			continue;
 		}
-		echo '</ol>';
-		echo '</div>';
-		if ($level == 0) {
-			Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $printed)));
+
+		// Check the post has a real reference to the parent (with the id), ignore othewrise
+		if (!preg_match($parent_reference, $answer->content)) {
+			continue;
 		}
+
+		echo '<li>';
+		$answer->print_summary();
+		echo '</li>';
+
+		if ($level > 0) {
+			$res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
+			$visited = array_merge($visited, $res);
+		}
+
+		$printed[] = $answer->id;
+		$visited[] = $answer->id;
 	}
+
+	echo '</ol>';
+	echo '</div>';
+
+	if ($level == 0) {
+		Haanga::Load('get_total_answers_by_ids.html', array('type' => 'post', 'ids' => implode(',', $printed)));
+	}
+
 	return $printed;
 }
 
-function do_voted_posts() {
-
+function do_voted_posts()
+{
 	global $db, $user, $offset, $page_size, $globals;
 
 	$posts = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id  and post_id = vote_link_id and post_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+	$time_read = 0;
 
 	echo '<ol class="comments-list">';
-	$time_read = 0;
+
 	foreach ($posts as $p) {
 		$post = Post::from_db($p->id);
-		if ($p->value > 0) $color = '#00d';
-		else $color = '#f00';
+
+		$color = ($p->value > 0) ? '#00d' : '#f00';
+
 		echo '<li>';
+
 		$post->print_summary();
-		if ($post->date > $time_read) $time_read = $post->date;
+
+		if ($post->date > $time_read) {
+			$time_read = $post->date;
+		}
+
 		echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
 		echo '</li>';
 	}

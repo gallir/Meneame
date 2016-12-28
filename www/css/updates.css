@@ -138,6 +138,12 @@
     background-color: #e0cec2;
 }
 
+.btn.btn-mnm.btn-sm {
+    padding: 4px;
+    font-size: 12px;
+    margin: 0;
+}
+
 .form .form-group {
     position: relative;
 }
@@ -1163,4 +1169,16 @@ ul.slick-dots li button {
     background-color: #F8F8F8;
     border-top: 1px solid #E9E9E9;
     height: 30px;
+}
+
+#edit-form form {
+    margin-bottom: 20px;
+}
+
+#edit-form form textarea {
+    height: 42px;
+}
+
+#edit-form footer {
+    margin-top: 10px;
 }

@@ -1,19 +1,25 @@
 ;(function($) {
-    var $formRegister = $('#form-register');
+    var INIT = {};
 
-    if ($formRegister.length) {
-        var $password = $('#password', $formRegister),
-            $name = $('#name', $formRegister),
-            $email = $('#email', $formRegister);
+    INIT.formRegister = function() {
+        var $form = $('#form-register');
+
+        if (!$form.length) {
+            return;
+        }
+
+        var $password = $form.find('#password'),
+            $name = $form.find('#name'),
+            $email = $form.find('#email');
 
         function setStatus($input, response, hideError) {
             var $parent = $input.parent(),
-                $status = $('.input-status', $parent);
+                $status = $parent.find('.input-status');
 
             $parent.removeClass('input-error input-success');
             $status.removeClass('fa-check fa-times');
 
-            $('.input-error-message', $parent).remove();
+            $parent.find('.input-error-message').remove();
 
             if (response === 'OK') {
                 $parent.addClass('input-success');
@@ -73,7 +79,7 @@
         $('.input-password-show').on('click', function(e) {
             e.preventDefault();
 
-            var $icon = $('.fa', $(this));
+            var $icon = $(this).find('.fa');
 
             if ($password.attr('type') === 'text') {
                 $password.attr('type', 'password');
@@ -84,17 +90,17 @@
             }
         });
 
-        $formRegister.on('submit', function(e) {
+        $form.on('submit', function(e) {
             $name.trigger('change');
             $email.trigger('change');
             $password.trigger('change');
 
-            if ($('.input-validate', $formRegister).length !== $('.input-validate.input-success', $formRegister).length) {
+            if ($form.find('.input-validate').length !== $form.find('.input-validate.input-success').length) {
                 e.preventDefault();
                 return;
             }
 
-            $formRegister.append('<input type="hidden" name="base_key" value="' + base_key + '" />');
+            $form.append('<input type="hidden" name="base_key" value="' + base_key + '" />');
         });
 
         if ($name.val()) {
@@ -104,24 +110,30 @@
         if ($email.val()) {
             $email.trigger('change');
         }
-    }
+    };
 
-    $('.show-sub-description').on('click', function(e) {
-        e.preventDefault();
+    INIT.showSubDescription = function() {
+        $('.show-sub-description').on('click', function(e) {
+            e.preventDefault();
 
-        var $description = $('.sub-description');
+            var $description = $('.sub-description');
 
-        if ($description.hasClass('hidden')) {
-            $description.hide().removeClass('hidden');
+            if ($description.hasClass('hidden')) {
+                $description.hide().removeClass('hidden');
+            }
+
+            $description.slideToggle();
+        });
+    };
+
+    INIT.formSubsSearch = function() {
+        var $form = $('#form-subs-search');
+
+        if (!$form.length) {
+            return;
         }
 
-        $description.slideToggle();
-    });
-
-    var $formSubsSearch = $('#form-subs-search');
-
-    if ($formSubsSearch.length) {
-        var $inputSearch = $('.input-search', $formSubsSearch);
+        var $inputSearch = $form.find('.input-search');
 
         $.ajax({
             url: base_url + 'backend/get_subs.php',
@@ -146,9 +158,82 @@
             }
         });
 
-        $('.input-filter', $formSubsSearch).on('change', function(e) {
+        $form.find('.input-filter').on('change', function(e) {
             window.location = base_url + 'subs?' + $(this).val();
         });
-    }
+    };
 
+    INIT.formPostEdit = function() {
+        var $form = $('#edit-form form');
+
+        if (!$form.length) {
+            return;
+        }
+
+        var $textarea = $form.find('textarea'),
+            textareaSize = $textarea.outerHeight();
+
+        $textarea.on('focus', function() {
+            $form.find('.hidden.show-on-focus').hide().removeClass('hidden').slideDown();
+        });
+
+        $textarea.on('keydown', function(e) {
+        });
+
+        $form.find('[data-show]').on('click', function(e) {
+            e.preventDefault();
+
+            var $element = $($(this).data('show'));
+
+            if (!$element.length) {
+                return;
+            }
+
+            if ($element.is(':visible')) {
+                $element.slideUp();
+            } else {
+                $element.hide().removeClass('hidden').slideDown();
+            }
+        });
+
+        addPostCode(function() {
+            $form.ajaxForm({
+                async: false,
+                success: function(response) {
+                    if (/^ERROR:/.test(response)) {
+                        return mDialog.notify(response, 5);
+                    }
+
+                    var id = parseInt($form.find('input[name="post_id"]').val()),
+                        $container;
+
+                    if (id > 0) {
+                        $container = $('#pcontainer-' + id);
+                    } else {
+                        $('.comments-list:first').prepend($container = $('<li />'));
+                    }
+
+                    $textarea.animate({ height: textareaSize });
+
+                    $container.html(response).trigger('DOMChanged', $container);
+
+                    $form.find('.show-on-focus').slideUp().addClass('hidden');
+                    $form.find('textarea, input[type="text"], input[name="post_id"]').val('');
+                }
+            });
+
+            $form.droparea({
+                maxsize: $form.find('input[name="MAX_FILE_SIZE"]').val()
+            });
+
+            $form.find('.uploadFile').nicefileinput();
+
+            $textarea.autosize();
+        });
+    };
+
+    INIT.formRegister();
+    INIT.showSubDescription();
+    INIT.formSubsSearch();
+    INIT.formPostEdit();
 })(jQuery);

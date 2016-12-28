@@ -21,7 +21,7 @@ if (isset($globals['max_load']) && $globals['max_load'] > 0) {
 // Basic initialization
 //mb_internal_encoding('UTF-8');
 /*
- * Use insteadi in your php.ini: 
+ * Use insteadi in your php.ini:
 
 default_charset = "UTF-8"
 [mbstring]
@@ -86,7 +86,7 @@ if($_SERVER['HTTP_HOST']) {
 	}
 
 	// Check mobile/TV versions
-	if ( ! $globals['bot'] 
+	if ( ! $globals['bot']
 		&& (isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT']))
 			&& ! preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT']) ) { // Don't treat iPad as mobiles
 		$globals['mobile'] = 1;
@@ -133,49 +133,55 @@ $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('ant
 // and before the database
 function __autoload($class) {
 	static $classfiles = array(
-				'SitesMgr' => 'sites.php',
-				'Annotation' => 'annotation.php',
-				'Log' => 'log.php',
-				'LogAdmin' => 'log_admin.php',
-				'Report' => 'report.php',
-				'db' => 'mysqli.php',
-				'RGDB' => 'rgdb.php',
-				'LCPBase' => 'LCPBase.php',
-				'Link' => 'link.php',
-				'LinkMobile' => 'linkmobile.php',
-				'Comment' => 'comment.php',
-				'CommentMobile' => 'blog.php',
-				'Vote' => 'votes.php',
-				'Annotation' => 'annotation.php',
-				'Blog' => 'blog.php',
-				'Post' => 'post.php',
-				'PrivateMessage' => 'private.php',
-				'UserAuth' => 'login.php',
-				'User' => 'user.php',
-				'BasicThumb' => 'webimages.php',
-				'WebThumb' => 'webimages.php',
-				'HtmlImages' => 'webimages.php',
-				'Trackback' => 'trackback.php',
-				'Upload' => 'upload.php',
-				'Media' => 'media.php',
-				'S3' => 'S3.php',
-				'Tabs' => 'tabs.php'
+		'SitesMgr' => 'sites.php',
+		'Annotation' => 'annotation.php',
+		'Log' => 'log.php',
+		'LogAdmin' => 'log_admin.php',
+		'Report' => 'report.php',
+		'db' => 'mysqli.php',
+		'RGDB' => 'rgdb.php',
+		'LCPBase' => 'LCPBase.php',
+		'Link' => 'link.php',
+		'LinkMobile' => 'linkmobile.php',
+		'Comment' => 'comment.php',
+		'CommentMobile' => 'blog.php',
+		'Vote' => 'votes.php',
+		'Annotation' => 'annotation.php',
+		'Blog' => 'blog.php',
+		'Post' => 'post.php',
+		'PrivateMessage' => 'private.php',
+		'UserAuth' => 'login.php',
+		'User' => 'user.php',
+		'BasicThumb' => 'webimages.php',
+		'WebThumb' => 'webimages.php',
+		'HtmlImages' => 'webimages.php',
+		'Trackback' => 'trackback.php',
+		'Upload' => 'upload.php',
+		'Media' => 'media.php',
+		'S3' => 'S3.php',
+		'Tabs' => 'tabs.php',
+		'Poll' => 'poll.php',
+		'PollOption' => 'poll_option.php'
 	);
 
 	if (isset($classfiles[$class]) && file_exists(mnminclude.$classfiles[$class])) {
 		require_once(mnminclude.$classfiles[$class]);
-	} else {
-		// Build the include for "standards" frameworks wich uses path1_path2_classnameclassName
-		$filePath = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-		$includePaths = explode(PATH_SEPARATOR, get_include_path());
-		foreach($includePaths as $includePath){
-			if(file_exists($includePath . DIRECTORY_SEPARATOR . $filePath)){
-				require_once($filePath);
-				return;
-			}
+		return;
+	}
+
+	// Build the include for "standards" frameworks wich uses path1_path2_classnameclassName
+	$filePath = str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
+	$includePaths = explode(PATH_SEPARATOR, get_include_path());
+
+	foreach ($includePaths as $includePath) {
+		if (is_file($includePath.DIRECTORY_SEPARATOR.$filePath)) {
+			require_once($filePath);
+			return;
 		}
-		/* "try"  to include $class.php file if exists */
-		@include_once($class.".php");
+	}
+
+	if (is_file($class.'.php')) {
+		include_once($class.".php");
 	}
 }
 

@@ -160,9 +160,11 @@ class Post extends LCPBase {
 	function print_summary($length=0) {
 		global $current_user, $globals;
 
-		if(!$this->read) $this->read();
-		$this->hidden = $this->karma < $globals['post_hide_karma'] ||
-				$this->user_level == 'disabled';
+		if (!$this->read) {
+			$this->read();
+		}
+
+		$this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level == 'disabled';
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
 		if ($this->hidden || $this->ignored)  {
@@ -171,18 +173,17 @@ class Post extends LCPBase {
 		} else {
 			$post_meta_class = 'comment-meta';
 			$post_class = 'comment-body';
+
 			if ($this->admin) {
 				$post_class .= ' admin';
-			} else {
-				if ($this->karma > $globals['post_highlight_karma']) {
-					$post_class .= ' high';
-				}
+			} elseif ($this->karma > $globals['post_highlight_karma']) {
+				$post_class .= ' high';
 			}
 		}
+
 		if ($this->author == $current_user->user_id) {
 			$post_class .= ' user';
 		}
-
 
 		$this->is_disabled   = ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0)) && !$this->admin;
 		$this->can_vote	  = $current_user->user_id > 0 && $this->author != $current_user->user_id &&  $this->date > time() - $globals['time_enabled_votes'] && !$this->admin ;
@@ -193,8 +194,8 @@ class Post extends LCPBase {
 		$this->prepare_summary_text($length);
 
 		$vars = compact('post_meta_class', 'post_class', 'length');
-		/* reference $this to use in the template */
 		$vars['self'] = $this;
+
 		return Haanga::Load('post_summary.html', $vars);
 	}
 
@@ -242,13 +243,15 @@ class Post extends LCPBase {
 		global $globals, $current_user;
 
 		if ($this->id == 0) {
-			$this->randkey = rand(1000000,100000000);
+			$this->randkey = rand(1000000, 100000000);
 		}
+
 		$this->body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-		$vars = array();
-		$vars['self'] = $this;
-		return Haanga::Load('post_edit.html', $vars);
+		return Haanga::Load('post_edit.html', array(
+			'self' => $this,
+			'user' => $current_user
+		));
 	}
 
 	function vote_exists() {
@@ -393,5 +396,4 @@ class Post extends LCPBase {
 		$this->media_size = 0;
 		$this->media_mime = '';
 	}
-
 }
