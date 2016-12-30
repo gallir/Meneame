@@ -16,12 +16,18 @@ class Poll
     public $link_id;
     public $post_id;
 
-    public $options = array();
+    private $options = array();
+    private $options_limit = 5;
+    private $durations_valid = array(1, 5, 10, 15, 30);
 
     public function setOptions(array $options)
     {
+        $options = array_filter(array_unique(array_map('trim', $options)));
+
+        $this->options = array();
+
         foreach ($options as $text) {
-            if (empty(trim($text))) {
+            if (empty($text)) {
                 continue;
             }
 
@@ -32,8 +38,33 @@ class Poll
         }
     }
 
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function areOptionsValid()
+    {
+        return count($this->options) <= $this->options_limit;
+    }
+
+    public function setDuration($days)
+    {
+        $days = (int)$days;
+
+        if (in_array($days, $this->durations_valid)) {
+            $this->end_at = date('Y-m-d H:i:s', strtotime('+'.$days.' days'));
+        } else {
+            $this->end_at = null;
+        }
+    }
+
     public function store()
     {
+        if (empty($this->options)) {
+            return;
+        }
+
         $this->question = $this->normalize($this->question);
 
         if ($this->id) {
@@ -67,6 +98,7 @@ class Poll
             INSERT INTO `polls`
             SET
                 `question` = "'.$this->question.'",
+                `end_at` = "'.$this->end_at.'",
                 `link_id` = '.($this->link_id ?: 'NULL').',
                 `post_id` = '.($this->post_id ?: 'NULL').';
         '));

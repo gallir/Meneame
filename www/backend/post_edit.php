@@ -124,6 +124,22 @@ function save_post ($post_id)
             die('ERROR: ' . _('comentario grabado previamente'));
         }
 
+        $poll = new Poll;
+
+        $poll->setOptions($_POST['poll_options']);
+
+        if (!$poll->areOptionsValid()) {
+            die('ERROR: ' . _('Las opciones de la encuesta no son válidas'));
+        }
+
+        if ($poll->getOptions()) {
+            $poll->setDuration($_POST['poll_duration']);
+
+            if (!$poll->end_at) {
+                die('ERROR: ' . _('La duración indicada en la encuesta no es válida'));
+            }
+        }
+
         $db->transaction();
 
         if ($same_links > 2) {
@@ -137,12 +153,10 @@ function save_post ($post_id)
 
         $post->store();
 
-        $poll = new Poll;
-
-        $poll->post_id = $post->id;
-        $poll->setOptions($_POST['poll_options']);
-
-        $poll->store();
+        if ($poll->getOptions()) {
+            $poll->post_id = $post->id;
+            $poll->store();
+        }
 
         $db->commit();
 

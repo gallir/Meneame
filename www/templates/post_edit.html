@@ -11,7 +11,7 @@
 
             <div class="col-md-11 col-sm-10">
                 <div class="form-group">
-                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" placeholder="{% trans _('¿Qué es lo que tienes que contar?') %}" required>{{ self.content }}</textarea>
+                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" placeholder="{% trans _('¿Qué es lo que tienes que contar?') %}" tabindex="1" required>{{ self.content }}</textarea>
 
                     <div class="hidden show-on-focus">
                         {% include 'simpleformat_buttons.html' %}
@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input name="admin" type="checkbox" value="true" {% if self.admin %} checked="true" {% endif %} />
+                                <input name="admin" type="checkbox" value="true" {% if self.admin %} checked="true" {% endif %} tabindex="2" />
                                 <strong>{% trans _('admin') %}</strong>
                             </label>
                         </div>
@@ -44,9 +44,20 @@
                     <div id="poll-block" class="hidden">
                         {% for i in 1 .. 5 %}
                         <div class="form-group">
-                            <input type="text" name="poll_options[]" class="form-control" placeholder="{% trans _('Opción %s') i %}" />
+                            <input type="text" name="poll_options[]" class="form-control" placeholder="{% trans _('Opción %s') i %}" tabindex="3" />
                         </div>
                         {% endfor %}
+
+                        <div class="form-group">
+                            <select name="poll_duration" class="form-control" tabindex="4">
+                                <option value="">{% trans _('Selecciona una duración') %}</option>
+                                <option value="1">{% trans _('%s día') 1 %}</option>
+                                <option value="5">{% trans _('%s días') 5 %}</option>
+                                <option value="10">{% trans _('%s días') 10 %}</option>
+                                <option value="15">{% trans _('%s días') 15 %}</option>
+                                <option value="30">{% trans _('%s días') 30 %}</option>
+                            </select>
+                        </div>
                     </div>
 
                     <footer>
@@ -59,7 +70,7 @@
                         <input type="file" autocomplete="off" name="image" class="uploadFile" accept="image/*" />
                         {% endif %}
 
-                        <button type="submit" class="btn btn-mnm btn-sm pull-right">{% trans _('Enviar') %}</button>
+                        <button type="submit" class="btn btn-mnm btn-sm pull-right" tabindex="5">{% trans _('Enviar') %}</button>
                     </footer>
                 </div>
 
