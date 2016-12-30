@@ -144,6 +144,8 @@ function save_post ($post_id)
         if ($poll->getOptions()) {
             $poll->post_id = $post->id;
             $poll->store();
+
+            $post->poll = $poll;
         }
 
         $db->commit();
