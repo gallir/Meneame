@@ -20,7 +20,12 @@ class Poll
     private $options_limit = 5;
     private $durations_valid = array(1, 5, 10, 15, 30);
 
-    public function setOptions(array $options)
+    public function resetOptions()
+    {
+        $this->options[] = array();
+    }
+
+    public function setOptionsFromArray(array $options)
     {
         $options = array_filter(array_unique(array_map('trim', $options)));
 
@@ -36,6 +41,11 @@ class Poll
 
             $this->options[] = $option;
         }
+    }
+
+    public function setOption(PollOption $option)
+    {
+        $this->options[] = $option;
     }
 
     public function getOptions()
@@ -131,5 +141,23 @@ class Poll
     private function normalize($value)
     {
         return clean_lines(clear_whitespace($value));
+    }
+
+    public static function selectFromRelatedIds($related, array $related_ids)
+    {
+        global $db, $current_user;
+
+        $related_ids = array_filter(array_unique(array_map('intval', $related_ids)));
+
+        return $db->object_iterator(str_replace("\n", ' ', '
+            SELECT `p`.*, `v`.`vote_value` as `voted`
+            FROM `polls` AS `p`
+            LEFT JOIN `votes` AS `v` ON (
+                `v`.`vote_link_id` = `p`.`id`
+                AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
+                AND `v`.`vote_type` = "polls"
+            )
+            WHERE `p`.`'.$related.'` IN ('.implode(',', $related_ids).');
+        '), 'Poll');
     }
 }

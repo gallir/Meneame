@@ -1,10 +1,15 @@
 <div id="pcontainer-{{ self.prefix_id }}{{ self.id }}">
 	<div class="{{ post_class }}" id="pid-{{ self.prefix_id }}{{ self.id }}">
-	{% if self.is_disabled %}
-		&#187;&nbsp;<a href="javascript:get_votes('get_post.php','post','pid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver texto') %}">{% trans _('ver texto') %}</a>
-	{% else %}
-		{% include 'post_summary_text.html' %}
-	{% endif %}
+		{% if self.is_disabled %}
+			&#187;&nbsp;<a href="javascript:get_votes('get_post.php','post','pid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver texto') %}">{% trans _('ver texto') %}</a>
+		{% else %}
+			{% include 'post_summary_text.html' %}
+		{% endif %}
+
+		{% if self.poll %}
+			{% set poll = self.poll %}
+			{% include 'poll.html' %}
+		{% endif %}
 	</div>
 
 	<div class="{{ post_meta_class }}">

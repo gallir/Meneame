@@ -406,28 +406,35 @@ openlog('meneame', LOG_ODELAY, LOG_USER);
 // Don't touch behind this
 //////////////////////////////////////
 // Set an utf-8 locale if there is no utf-8 defined
-if(stripos(setlocale(LC_CTYPE, 0), "utf-8") === false) {
+if (stripos(setlocale(LC_CTYPE, 0), "utf-8") === false) {
 	setlocale(LC_CTYPE, "en_US.UTF-8");
 }
 
 // There is another config file, this is called for defaults (used by mobile)
-if (!isset($globals['basic_config']) || !$globals['basic_config']) {
-	define("mnmpath", dirname(__FILE__));
-	define("mnminclude", dirname(__FILE__).'/libs/');
-	ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
+if (empty($globals['basic_config'])) {
+	define('mnmpath', dirname(__FILE__));
+	define('mnminclude', dirname(__FILE__).'/libs/');
+	ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 
-	@include('local.php');
-	if (php_sapi_name() == 'cli') {
+    if (is_file(__DIR__.'/local.php')) {
+        require __DIR__.'/local.php';
+    }
+
+	if (php_sapi_name() === 'cli') {
 		$globals['cli'] = True;
-		/* Definition only for scripts executed "off-line" */
-		@include('cli-local.php');
+
+		/* Definition only for scripts executed 'off-line' */
+
+        if (is_file(__DIR__.'/cli-local.php')) {
+            require __DIR__.'/cli-local.php';
+        }
 	} else {
 		$globals['cli'] = False;
-		@include($_SERVER['SERVER_NAME'].'-local.php');
+
+        if (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
+            require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
+        }
 	}
-
-	// @include($_SERVER['SERVER_ADDR'].'-local.php');
-
 
 	include mnminclude.'init.php';
 	include mnminclude.'login.php';
@@ -435,6 +442,3 @@ if (!isset($globals['basic_config']) || !$globals['basic_config']) {
 	// For production servers
 	$db->hide_errors();
 }
-
-
-

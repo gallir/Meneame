@@ -1171,6 +1171,14 @@ ul.slick-dots li button {
     height: 30px;
 }
 
+.comment-body .poll-options {
+    display: block;
+    border: 1px solid #666;
+    margin: 10px 5px;
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
 #edit-form form {
     margin-bottom: 20px;
 }

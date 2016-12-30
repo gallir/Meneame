@@ -161,6 +161,7 @@ function __autoload($class) {
 		'S3' => 'S3.php',
 		'Tabs' => 'tabs.php',
 		'Poll' => 'poll.php',
+		'PollCollection' => 'poll_collection.php',
 		'PollOption' => 'poll_option.php'
 	);
 

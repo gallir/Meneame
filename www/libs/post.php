@@ -21,6 +21,7 @@ class Post extends LCPBase {
 	var $src = 'web';
 	var $read = false;
 	var $admin = false;
+	var $poll;
 
 	const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, post_is_admin as admin, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read`, admin_posts.admin_user_id as admin_user_id, admin_posts.admin_user_login as admin_user_login FROM posts
 	LEFT JOIN users on (user_id = post_user_id)

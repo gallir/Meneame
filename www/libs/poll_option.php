@@ -78,4 +78,17 @@ class PollOption
     {
         return clean_lines(clear_whitespace($value));
     }
+
+    public static function selectFromPollIds(array $poll_ids)
+    {
+        global $db;
+
+        $poll_ids = array_filter(array_unique(array_map('intval', $poll_ids)));
+
+        return $db->object_iterator(str_replace("\n", ' ', '
+            SELECT *
+            FROM `polls_options`
+            WHERE `poll_id` IN ('.implode(',', $poll_ids).');
+        '), 'PollOption');
+    }
 }

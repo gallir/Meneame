@@ -114,7 +114,7 @@ function save_post ($post_id)
 
         $poll = new Poll;
 
-        $poll->setOptions($_POST['poll_options']);
+        $poll->setOptionsFromArray($_POST['poll_options']);
 
         if (!$poll->areOptionsValid()) {
             die('ERROR: '._('Las opciones de la encuesta no son válidas'));

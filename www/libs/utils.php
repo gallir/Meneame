@@ -1493,3 +1493,28 @@ function push_to_globals($key, $value) {
 	}
 }
 
+function d($title, $message = null, $trace = false)
+{
+    $cli = (php_sapi_name() === 'cli');
+
+    echo $cli ? "\n" : '<pre>';
+    echo '['.date('Y-m-d H:i:s').'] ';
+
+    if ($message === null) {
+        var_dump($title);
+    } else {
+        echo $title.': ';
+        var_dump($message);
+    }
+
+    if ($trace) {
+    	echo implode(($cli ? "\n" : '<br />'), array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1));
+    }
+
+    echo $cli ? "\n" : '</pre>';
+}
+
+function dd($title, $message = null, $trace = false)
+{
+	die(d($title, $message, $trace));
+}
