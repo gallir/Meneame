@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-if (! defined('mnmpath')) {
+if (!defined('mnmpath')) {
     include('../config.php');
     include(mnminclude.'html1.php');
 }
@@ -14,34 +14,22 @@ if (! defined('mnmpath')) {
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
+if (!$current_user) {
+    die('ERROR: '._('Esta acción sólo es posible para usuarios registrados'));
+}
+
 $post = new Post;
 
-if (empty($_REQUEST['user_id'])) {
-    if (empty($_REQUEST['id'])) {
-        // A new post
-        if ($post->read_last($current_user->user_id) && ((time() - $post->date) < $globals['posts_period'])) {
-            die('Error: ' . _('debe esperar entre notas'));
-        }
+if (!empty($_REQUEST['id'])) {
+    $post->id = (int)$_REQUEST['id'];
 
-        $post = new Post;
-        $post->author = $current_user->user_id;
+    if ($post->read()) {
         $post->print_edit_form();
-    } else {
-        // She wants to edit the post
-        $post->id = intval($_REQUEST['id']);
-
-        if ($post->read()) {
-            $post->print_edit_form();
-        }
     }
+} elseif (empty($_REQUEST['post_id']) || preg_match('/^[0-9]+$', $_REQUEST['post_id'])) {
+    save_post(intval((int)$_REQUEST['post_id']));
 } else {
-    $post_id = intval($_REQUEST['post_id']);
-
-    if ($post_id > 0) {
-        save_post($post_id);
-    } else {
-        save_post(0);
-    }
+    die('ERROR: '._('No se ha podido obtener el post indicado'));
 }
 
 function save_post ($post_id)
@@ -58,12 +46,12 @@ function save_post ($post_id)
 
     if (!empty($_FILES['image']['tmp_name'])) {
         if ($limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size'])) {
-            die('ERROR: ' . $limit_exceded);
+            die('ERROR: '.$limit_exceded);
         }
     }
 
     if (mb_strlen($_POST['post']) < 5) {
-        die('ERROR: ' . _('texto muy corto'));
+        die('ERROR: '._('texto muy corto'));
     }
 
     if ($post_id > 0) {
@@ -94,7 +82,7 @@ function save_post ($post_id)
                 store_image($post);
             }
         } else {
-            die('ERROR: ' . _('no tiene permisos para grabar'));
+            die('ERROR: '._('no tiene permisos para grabar'));
         }
     } else {
         if ($current_user->user_id != intval($_POST['user_id'])) {
@@ -102,7 +90,7 @@ function save_post ($post_id)
         }
 
         if ($current_user->user_karma < $globals['min_karma_for_posts']) {
-            die('ERROR: ' . _('el karma es muy bajo'));
+            die('ERROR: '._('el karma es muy bajo'));
         }
 
         // Check the post wasn't already stored
@@ -112,7 +100,7 @@ function save_post ($post_id)
 
         // Verify that there are a period of 1 minute between posts.
         if (intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval ".$globals['posts_period']." second)"))) {
-            die('ERROR: ' . _('debe esperar entre notas'));
+            die('ERROR: '._('debe esperar entre notas'));
         }
 
         $same_text = $post->same_text_count();
@@ -121,7 +109,7 @@ function save_post ($post_id)
         $r = $db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval 5 minute) and post_randkey = $post->randkey FOR UPDATE");
 
         if (is_null($r) || intval($r) || $same_text) {
-            die('ERROR: ' . _('comentario grabado previamente'));
+            die('ERROR: '._('comentario grabado previamente'));
         }
 
         $poll = new Poll;
@@ -129,14 +117,14 @@ function save_post ($post_id)
         $poll->setOptions($_POST['poll_options']);
 
         if (!$poll->areOptionsValid()) {
-            die('ERROR: ' . _('Las opciones de la encuesta no son válidas'));
+            die('ERROR: '._('Las opciones de la encuesta no son válidas'));
         }
 
         if ($poll->getOptions()) {
             $poll->setDuration($_POST['poll_duration']);
 
             if (!$poll->end_at) {
-                die('ERROR: ' . _('La duración indicada en la encuesta no es válida'));
+                die('ERROR: '._('La duración indicada en la encuesta no es válida'));
             }
         }
 
@@ -176,9 +164,4 @@ function store_image($post)
     }
 
     $post->media_date = time(); // To show the user the new thumbnail
-}
-
-function store_poll($poll)
-{
-
 }

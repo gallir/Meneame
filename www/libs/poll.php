@@ -45,7 +45,9 @@ class Poll
 
     public function areOptionsValid()
     {
-        return count($this->options) <= $this->options_limit;
+        $count = count($this->options);
+
+        return ($count === 0) || (($count > 1) && ($count <= $this->options_limit));
     }
 
     public function setDuration($days)
