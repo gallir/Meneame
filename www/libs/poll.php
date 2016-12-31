@@ -16,6 +16,8 @@ class Poll
     public $link_id;
     public $post_id;
 
+    public $voted;
+
     private $options = array();
     private $options_limit = 5;
     private $durations_valid = array(1, 5, 10, 15, 30);
@@ -27,11 +29,9 @@ class Poll
 
     public function setOptionsFromArray(array $options)
     {
-        $options = array_filter(array_unique(array_map('trim', $options)));
-
         $this->options = array();
 
-        foreach ($options as $text) {
+        foreach (DbHelper::stringsUnique($options) as $text) {
             if (empty($text)) {
                 continue;
             }
@@ -53,6 +53,15 @@ class Poll
         return $this->options;
     }
 
+    public function getOption($id)
+    {
+        foreach ($this->options as $option) {
+            if ($option->id == $id) {
+                return $option;
+            }
+        }
+    }
+
     public function areOptionsValid()
     {
         $count = count($this->options);
@@ -68,6 +77,57 @@ class Poll
             $this->end_at = date('Y-m-d H:i:s', strtotime('+'.$days.' days'));
         } else {
             $this->end_at = null;
+        }
+    }
+
+    public function read()
+    {
+        if (empty($this->id)) {
+            return;
+        }
+
+        global $db, $current_user;
+
+        if ($current_user) {
+            $query = '
+                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`
+                FROM `polls` AS `p`
+                LEFT JOIN `votes` AS `v` ON (
+                    `v`.`vote_link_id` = `p`.`id`
+                    AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
+                    AND `v`.`vote_type` = "polls"
+                )
+                WHERE `p`.`id` = "'.(int)$this->id.'"
+                LIMIT 1;
+            ';
+        } else {
+            $query = '
+                SELECT SQL_NO_CACHE *, NULL AS `voted`
+                FROM `polls`
+                WHERE `p`.`id` = "'.(int)$this->id.'"
+                LIMIT 1;
+            ';
+        }
+
+        if (!($result = $db->get_row(DbHelper::queryPlain($query)))) {
+            return;
+        }
+
+        foreach (get_object_vars($result) as $key => $value) {
+            $this->$key = $value;
+        }
+
+        $this->readOptions();
+
+        return true;
+    }
+
+    private function readOptions()
+    {
+        $this->options = array();
+
+        foreach (PollOption::selectFromPollId($this->id) as $option) {
+            $this->options[] = $option;
         }
     }
 
@@ -106,7 +166,7 @@ class Poll
     {
         global $db;
 
-        $response = $db->query(str_replace("\n", ' ', '
+        $response = $db->query(DbHelper::queryPlain('
             INSERT INTO `polls`
             SET
                 `question` = "'.$this->question.'",
@@ -128,7 +188,7 @@ class Poll
     {
         global $db;
 
-        $response = $db->query(str_replace("\n", ' ', '
+        $response = $db->query(DbHelper::queryPlain('
             UPDATE `polls`
             SET `question` = "'.$this->question.'"
             WHERE `id` = "'.(int)$this->id.'"
@@ -136,6 +196,46 @@ class Poll
         '));
 
         return $response ? true : false;
+    }
+
+    function vote(PollOption $option)
+    {
+        global $current_user, $db;
+
+        if (empty($this->id) || empty($current_user)) {
+            return;
+        }
+
+        $vote = new Vote('polls', $this->id, $current_user->user_id);
+
+        if ($vote->exists(false)) {
+            return;
+        }
+
+        $vote->value = (int)$option->id;
+
+        $db->transaction();
+
+        if (!$vote->insert() || !$option->vote()) {
+            syslog(LOG_INFO, 'failed insert poll vote for '.$this->id);
+
+            $db->commit();
+
+            return;
+        }
+
+        $query = '
+            UPDATE `polls`
+            SET `votes` = `votes` + 1
+            WHERE `id` = "'.$this->id.'"
+            LIMIT 1;
+        ';
+
+        $success = $db->query(DbHelper::queryPlain($query));
+
+        $db->commit();
+
+        return $success;
     }
 
     private function normalize($value)
@@ -147,17 +247,29 @@ class Poll
     {
         global $db, $current_user;
 
-        $related_ids = array_filter(array_unique(array_map('intval', $related_ids)));
+        $related_ids = DbHelper::integerIds($related_ids);
 
-        return $db->object_iterator(str_replace("\n", ' ', '
-            SELECT `p`.*, `v`.`vote_value` as `voted`
-            FROM `polls` AS `p`
-            LEFT JOIN `votes` AS `v` ON (
-                `v`.`vote_link_id` = `p`.`id`
-                AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
-                AND `v`.`vote_type` = "polls"
-            )
-            WHERE `p`.`'.$related.'` IN ('.implode(',', $related_ids).');
-        '), 'Poll');
+        if ($current_user) {
+            $query = '
+                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`
+                FROM `polls` AS `p`
+                LEFT JOIN `votes` AS `v` ON (
+                    `v`.`vote_link_id` = `p`.`id`
+                    AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
+                    AND `v`.`vote_type` = "polls"
+                )
+                WHERE `p`.`'.$related.'` IN ('.implode(',', $related_ids).')
+                LIMIT '.count($related_ids).';
+            ';
+        } else {
+            $query = '
+                SELECT SQL_NO_CACHE *, NULL AS `voted`
+                FROM `polls`
+                WHERE `'.$related.'` IN ('.implode(',', $related_ids).')
+                LIMIT '.count($related_ids).';
+            ';
+        }
+
+        return $db->object_iterator(DbHelper::queryPlain($query), 'Poll');
     }
 }

@@ -74,18 +74,47 @@ class PollOption
         return $response ? true : false;
     }
 
+    function vote()
+    {
+        global $db;
+
+        if (empty($this->id)) {
+            return;
+        }
+
+        $query = '
+            UPDATE `polls_options`
+            SET `votes` = `votes` + 1
+            WHERE `id` = "'.$this->id.'"
+            LIMIT 1;
+        ';
+
+        return $db->query(DbHelper::queryPlain($query));
+    }
+
     private function normalize($value)
     {
         return clean_lines(clear_whitespace($value));
+    }
+
+    public static function selectFromPollId($poll_id)
+    {
+        global $db;
+
+        return $db->object_iterator(DbHelper::queryPlain('
+            SELECT *
+            FROM `polls_options`
+            WHERE `poll_id` = "'.(int)$poll_id.'";
+        '), 'PollOption');
     }
 
     public static function selectFromPollIds(array $poll_ids)
     {
         global $db;
 
-        $poll_ids = array_filter(array_unique(array_map('intval', $poll_ids)));
+        $poll_ids = DbHelper::integerIds($poll_ids);
 
-        return $db->object_iterator(str_replace("\n", ' ', '
+        return $db->object_iterator(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
             WHERE `poll_id` IN ('.implode(',', $poll_ids).');

@@ -162,7 +162,8 @@ function __autoload($class) {
 		'Tabs' => 'tabs.php',
 		'Poll' => 'poll.php',
 		'PollCollection' => 'poll_collection.php',
-		'PollOption' => 'poll_option.php'
+		'PollOption' => 'poll_option.php',
+		'DbHelper' => 'db_helper.php'
 	);
 
 	if (isset($classfiles[$class]) && file_exists(mnminclude.$classfiles[$class])) {

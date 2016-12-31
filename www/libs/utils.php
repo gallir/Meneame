@@ -1518,3 +1518,14 @@ function dd($title, $message = null, $trace = false)
 {
 	die(d($title, $message, $trace));
 }
+
+function show_errors($enabled = true)
+{
+	if ($enabled) {
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+	} else {
+		ini_set('display_errors', 0);
+	}
+}
