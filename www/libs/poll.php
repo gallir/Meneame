@@ -211,7 +211,7 @@ class Poll
         return $response ? true : false;
     }
 
-    function vote(PollOption $option)
+    public function vote(PollOption $option)
     {
         global $current_user, $db;
 

@@ -73,7 +73,7 @@ class PollOption
         return $response ? true : false;
     }
 
-    function vote()
+    public function vote()
     {
         global $db;
 
