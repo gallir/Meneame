@@ -233,11 +233,9 @@ if ($current_user->user_id > 0) {
 }
 
 if ($view != 4) {
-    $posts = $db->object_iterator("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id) $order_by", 'Post');
+    $posts = $db->get_results("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id) $order_by", 'Post');
 
     if ($posts) {
-        $posts = iterator_to_array($posts);
-
         $all_ids = array_map(function($value) {
             return $value->id;
         }, $posts);
