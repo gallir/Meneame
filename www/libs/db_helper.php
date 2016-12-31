@@ -18,6 +18,11 @@ class DbHelper
         return array_values(array_filter(array_unique(array_map('trim', $strings))));
     }
 
+    public static function implodedIds(array $ids)
+    {
+        return implode(',', self::integerIds($ids));
+    }
+
     public static function queryPlain($query)
     {
         return trim(str_replace("\n", ' ', $query));

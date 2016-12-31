@@ -14,6 +14,9 @@ class PollOption
     public $karma;
     public $poll_id;
 
+    public $voted;
+    public $winner;
+
     public function store()
     {
         if ($this->isEmpty()) {
@@ -28,11 +31,7 @@ class PollOption
             $response = $this->insert();
         }
 
-        if ($response === false) {
-            return false;
-        }
-
-        return true;
+        return $response;
     }
 
     public function isEmpty()
@@ -89,7 +88,14 @@ class PollOption
             LIMIT 1;
         ';
 
-        return $db->query(DbHelper::queryPlain($query));
+        if (!$db->query(DbHelper::queryPlain($query))) {
+            return;
+        }
+
+        $this->votes++;
+        $this->voted = true;
+
+        return true;
     }
 
     private function normalize($value)
@@ -112,12 +118,10 @@ class PollOption
     {
         global $db;
 
-        $poll_ids = DbHelper::integerIds($poll_ids);
-
         return $db->object_iterator(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
-            WHERE `poll_id` IN ('.implode(',', $poll_ids).');
+            WHERE `poll_id` IN ('.DbHelper::implodedIds($poll_ids).');
         '), 'PollOption');
     }
 }

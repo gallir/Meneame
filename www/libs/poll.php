@@ -17,6 +17,7 @@ class Poll
     public $post_id;
 
     public $voted;
+    public $finished;
 
     private $options = array();
     private $options_limit = 5;
@@ -45,7 +46,10 @@ class Poll
 
     public function setOption(PollOption $option)
     {
-        $this->options[] = $option;
+        $option->voted = $this->voted == $option->id;
+        $option->percent = (int)round(((int)$option->votes / (int)$this->votes) * 100);
+
+        $this->options[$option->id] = $option;
     }
 
     public function getOptions()
@@ -55,10 +59,15 @@ class Poll
 
     public function getOption($id)
     {
+        if (isset($this->options[$id])) {
+            return $this->options[$id];
+        }
+    }
+
+    public function reloadOptions()
+    {
         foreach ($this->options as $option) {
-            if ($option->id == $id) {
-                return $option;
-            }
+            $this->setOption($option);
         }
     }
 
@@ -90,7 +99,8 @@ class Poll
 
         if ($current_user) {
             $query = '
-                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`
+                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`,
+                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls` AS `p`
                 LEFT JOIN `votes` AS `v` ON (
                     `v`.`vote_link_id` = `p`.`id`
@@ -102,7 +112,8 @@ class Poll
             ';
         } else {
             $query = '
-                SELECT SQL_NO_CACHE *, NULL AS `voted`
+                SELECT SQL_NO_CACHE *, NULL AS `voted`,
+                    IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls`
                 WHERE `p`.`id` = "'.(int)$this->id.'"
                 LIMIT 1;
@@ -127,7 +138,7 @@ class Poll
         $this->options = array();
 
         foreach (PollOption::selectFromPollId($this->id) as $option) {
-            $this->options[] = $option;
+            $this->setOption($option);
         }
     }
 
@@ -190,7 +201,9 @@ class Poll
 
         $response = $db->query(DbHelper::queryPlain('
             UPDATE `polls`
-            SET `question` = "'.$this->question.'"
+            SET
+                `question` = "'.$this->question.'",
+                `end_at` = "'.$this->end_at.'",
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         '));
@@ -231,11 +244,19 @@ class Poll
             LIMIT 1;
         ';
 
-        $success = $db->query(DbHelper::queryPlain($query));
+        if (!$db->query(DbHelper::queryPlain($query))) {
+            $db->commit();
+            return;
+        }
+
+        $this->votes++;
+        $this->voted = $option->id;
+
+        $this->reloadOptions();
 
         $db->commit();
 
-        return $success;
+        return true;
     }
 
     private function normalize($value)
@@ -247,25 +268,25 @@ class Poll
     {
         global $db, $current_user;
 
-        $related_ids = DbHelper::integerIds($related_ids);
-
         if ($current_user) {
             $query = '
-                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`
+                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`,
+                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls` AS `p`
                 LEFT JOIN `votes` AS `v` ON (
                     `v`.`vote_link_id` = `p`.`id`
                     AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
                     AND `v`.`vote_type` = "polls"
                 )
-                WHERE `p`.`'.$related.'` IN ('.implode(',', $related_ids).')
+                WHERE `p`.`'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
                 LIMIT '.count($related_ids).';
             ';
         } else {
             $query = '
-                SELECT SQL_NO_CACHE *, NULL AS `voted`
+                SELECT SQL_NO_CACHE *, NULL AS `voted`,
+                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls`
-                WHERE `'.$related.'` IN ('.implode(',', $related_ids).')
+                WHERE `'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
                 LIMIT '.count($related_ids).';
             ';
         }

@@ -50,9 +50,13 @@ if (UserAuth::check_clon_votes($current_user->user_id, $poll->id, 5, 'polls')) {
 
 // Verify that there are a period of 1 minute between posts.
 if (Vote::fast_vote('polls', 30)) {
-    die('ERROR: '._('Debes esperar 1 minuto entre votaciones'));
+    die('ERROR: '._('Debes esperar 30 segundos entre votaciones'));
 }
 
-$poll->vote($option);
+if (!$poll->vote($option)) {
+    die('ERROR: '._('Lo sentimos pero no ha sido posible registrar el voto'));
+}
 
-die(json_encode(array('option' => $_POST['option'])));
+Haanga::Load('poll_voted.html', array('poll' => $poll));
+
+die();

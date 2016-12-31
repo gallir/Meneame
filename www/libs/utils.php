@@ -1521,11 +1521,18 @@ function dd($title, $message = null, $trace = false)
 
 function show_errors($enabled = true)
 {
+	static $previous;
+
+	ini_set('display_errors', (int)$enabled);
+	ini_set('display_startup_errors', (int)$enabled);
+
+	if (empty($previous)) {
+		$previous = error_reporting();
+	}
+
 	if ($enabled) {
-		ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
+		error_reporting(E_ERROR | E_PARSE);
 	} else {
-		ini_set('display_errors', 0);
+		error_reporting($previous);
 	}
 }

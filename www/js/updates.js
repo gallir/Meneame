@@ -177,9 +177,6 @@
             $form.find('.hidden.show-on-focus').hide().removeClass('hidden').slideDown();
         });
 
-        $textarea.on('keydown', function(e) {
-        });
-
         $form.find('[data-show]').on('click', function(e) {
             e.preventDefault();
 
@@ -232,8 +229,34 @@
         });
     };
 
+    INIT.formPoll = function() {
+        var $forms = $('form.poll');
+
+        if (!$forms.length) {
+            return;
+        }
+
+        addPostCode(function() {
+            $forms.each(function() {
+                var $form = $(this);
+
+                $form.ajaxForm({
+                    async: false,
+                    success: function(response) {
+                        if (/^ERROR:/.test(response)) {
+                            return mDialog.notify(response, 5);
+                        }
+
+                        $form.replaceWith(response);
+                    }
+                });
+            });
+        });
+    };
+
     INIT.formRegister();
     INIT.showSubDescription();
     INIT.formSubsSearch();
     INIT.formPostEdit();
+    INIT.formPoll();
 })(jQuery);
