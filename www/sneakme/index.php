@@ -380,8 +380,15 @@ function do_voted_posts()
 {
     global $db, $user, $offset, $page_size, $globals;
 
-    $posts = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id  and post_id = vote_link_id and post_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+    $posts = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id and post_id = vote_link_id and post_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
     $time_read = 0;
+
+    $all_ids = array_map(function($value) {
+        return $value->id;
+    }, $posts);
+
+    $pollCollection = new PollCollection;
+    $pollCollection->loadFromRelatedIds('post_id', $all_ids);
 
     echo '<ol class="comments-list">';
 
@@ -392,6 +399,7 @@ function do_voted_posts()
 
         echo '<li>';
 
+        $post->poll = $pollCollection->get($p->id);
         $post->print_summary();
 
         if ($post->date > $time_read) {
