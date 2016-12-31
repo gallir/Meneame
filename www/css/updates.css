@@ -1185,6 +1185,7 @@ ul.slick-dots li button {
 
 .poll .poll-option {
     margin-top: 10px;
+    margin-bottom: 0;
 }
 
 .poll .poll-option:first-child {
