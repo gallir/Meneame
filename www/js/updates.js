@@ -230,7 +230,7 @@
     };
 
     INIT.formPoll = function() {
-        var $forms = $('form.poll');
+        var $forms = $('.poll form');
 
         if (!$forms.length) {
             return;
@@ -247,7 +247,7 @@
                             return mDialog.notify(response, 5);
                         }
 
-                        $form.replaceWith(response);
+                        $form.closest('.poll').replaceWith(response);
                     }
                 });
             });

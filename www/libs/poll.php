@@ -89,6 +89,53 @@ class Poll
         }
     }
 
+    public function getTimeToFinish()
+    {
+        $interval = date_create('now')->diff(date_create($this->end_at));
+
+        if (($interval->d >= 3) || (($interval->d > 1) && ($interval->h === 0))) {
+            return sprintf(_('Faltan %s días'), $interval->d);
+        }
+
+        if ($interval->d > 1) {
+            return sprintf(_('Falta %s días y %s horas'), $interval->d, $interval->h);
+        }
+
+        if (($interval->d === 1) && ($interval->h === 0)) {
+            return _('Falta 1 día');
+        }
+
+        if ($interval->d === 1) {
+            return sprintf(_('Falta 1 día y %s horas'), $interval->h);
+        }
+
+        if (($interval->h > 1) && ($interval->i === 0)) {
+            return sprintf(_('Faltan %s horas'), $interval->h);
+        }
+
+        if ($interval->h > 1) {
+            return sprintf(_('Faltan %s horas y %s minutos'), $interval->h, $interval->i);
+        }
+
+        if (($interval->h === 1) && ($interval->i === 0)) {
+            return _('Falta 1 hora');
+        }
+
+        if ($interval->h === 1) {
+            return sprintf(_('Falta 1 hora y %s minutos'), $interval->i);
+        }
+
+        if ($interval->i > 1) {
+            return sprintf(_('Faltan %s minutos'), $interval->i);
+        }
+
+        if ($interval->i === 1) {
+            return _('Falta 1 minuto');
+        }
+
+        return sprintf(_('Faltan %s segundos'), $interval->s);
+    }
+
     public function read()
     {
         if (empty($this->id)) {

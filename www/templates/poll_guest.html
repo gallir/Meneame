@@ -14,5 +14,8 @@
         <a href="{{ globals.base_url_general }}login?return={{globals.uri|urlencode}}" class="btn btn-mnm btn-sm">
             {% trans _('Votar') %}
         </a>
+
+        <span class="votes">{% trans _('%s votos') poll.votes %}</span>
+        <span class="finish">{% exec poll.getTimeToFinish %}</span>
     </footer>
 </div>

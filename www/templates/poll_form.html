@@ -1,18 +1,20 @@
-<form action="{{ globals.base_url }}backend/poll.php" method="post" class="poll">
-	<input type="hidden" name="id" value="{{ poll.id }}" />
+<div class="poll">
+    <form action="{{ globals.base_url }}backend/poll.php" method="post">
+        <input type="hidden" name="id" value="{{ poll.id }}" />
 
-	<div class="poll-options">
-		{% for option in poll.getOptions %}
-		<div class="radio poll-option">
-			<label>
-				<input type="radio" name="option" value="{{ option.id }}" />
-				{{ option.option }}
-			</label>
-		</div>
-		{% endfor %}
-	</div>
+        <div class="poll-options">
+            {% for option in poll.getOptions %}
+            <div class="radio poll-option">
+                <label>
+                    <input type="radio" name="option" value="{{ option.id }}" />
+                    {{ option.option }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
 
-	<footer>
-		<button type="submit" class="btn btn-mnm btn-sm">{% trans _('Votar') %}</button>
-	</footer>
-</form>
+        <footer>
+            <button type="submit" class="btn btn-mnm btn-sm">{% trans _('Votar') %}</button>
+        </footer>
+    </form>
+</div>

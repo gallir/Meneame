@@ -1220,6 +1220,19 @@ ul.slick-dots li button {
     color: #fe6117;
 }
 
+.poll footer .votes, .poll footer .finish {
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 5px;
+    text-transform: uppercase;
+    color: #fe6117;
+}
+
+.poll footer .finish:before {
+    padding-right: 5px;
+    content: "|";
+}
+
 #edit-form form {
     margin-bottom: 20px;
 }
