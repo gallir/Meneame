@@ -15,6 +15,15 @@
 
         <footer>
             <button type="submit" class="btn btn-mnm btn-sm">{% trans _('Votar') %}</button>
+
+            <span class="votes">
+                {% if poll.votes == 1 %}
+                {% trans _('1 voto') %}
+                {% else %}
+                    {% if poll.votes %} {% trans _('%s votos') poll.votes %} {% else %} {% trans _('Sin Votos') %} {% endif %}
+                {% endif %}
+            </span>
+            <span class="finish">{% trans _('Finalizada') %}</span>
         </footer>
     </form>
 </div>
