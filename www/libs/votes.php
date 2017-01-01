@@ -64,7 +64,7 @@ class Vote {
     {
         global $db, $current_user;
 
-        if (!$current_user) {
+        if (empty($current_user->user_id)) {
             return true;
         }
 

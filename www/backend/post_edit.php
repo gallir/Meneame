@@ -14,7 +14,7 @@ if (!defined('mnmpath')) {
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
-if (!$current_user) {
+if (empty($current_user->user_id)) {
     die('ERROR: '._('Esta acción sólo es posible para usuarios registrados'));
 }
 

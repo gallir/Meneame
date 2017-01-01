@@ -215,7 +215,7 @@ class Poll
     {
         global $current_user, $db;
 
-        if (empty($this->id) || empty($current_user)) {
+        if (empty($this->id) || empty($current_user->user_id)) {
             return;
         }
 

@@ -1,9 +1,13 @@
 {% if poll.finished %}
-	{% include 'poll_finished.html' %}
+    {% include 'poll_finished.html' %}
 {% else %}
-	{% if poll.voted %}
-		{% include 'poll_voted.html' %}
-	{% else %}
-		{% include 'poll_form.html' %}
-	{% endif %}
+    {% if !current_user.user_id %}
+        {% include 'poll_guest.html' %}
+    {% else %}
+        {% if poll.voted %}
+            {% include 'poll_voted.html' %}
+        {% else %}
+            {% include 'poll_form.html' %}
+        {% endif %}
+    {% endif %}
 {% endif %}
