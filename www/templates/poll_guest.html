@@ -15,7 +15,13 @@
             {% trans _('Votar') %}
         </a>
 
-        <span class="votes">{% trans _('%s votos') poll.votes %}</span>
+        <span class="votes">
+            {% if poll.votes == 1 %}
+            {% trans _('1 voto') %}
+            {% else %}
+                {% if poll.votes %} {% trans _('%s votos') poll.votes %} {% else %} {% trans _('Sin Votos') %} {% endif %}
+            {% endif %}
+        </span>
         <span class="finish">{% exec poll.getTimeToFinish %}</span>
     </footer>
 </div>
