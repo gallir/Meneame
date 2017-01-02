@@ -10,8 +10,8 @@ class PollOption
 {
     public $id;
     public $option;
-    public $votes;
-    public $karma;
+    public $votes = 0;
+    public $karma = 0;
     public $poll_id;
 
     public $index;
@@ -20,24 +20,17 @@ class PollOption
 
     public function store()
     {
-        if ($this->isEmpty()) {
-            return false;
-        }
-
         $this->option = $this->normalize($this->option);
 
-        if ($this->id) {
+        if (empty($this->id) || ($this->id < 1)) {
+            $response = $this->insert();
+        } elseif ($this->option) {
             $response = $this->update();
         } else {
-            $response = $this->insert();
+            $response = $this->delete();
         }
 
         return $response;
-    }
-
-    public function isEmpty()
-    {
-        return empty($this->option) || empty($this->poll_id);
     }
 
     private function insert()
@@ -67,6 +60,19 @@ class PollOption
         $response = $db->query(str_replace("\n", ' ', '
             UPDATE `polls_options`
             SET `option` = "'.$this->option.'"
+            WHERE `id` = "'.(int)$this->id.'"
+            LIMIT 1;
+        '));
+
+        return $response ? true : false;
+    }
+
+    private function delete()
+    {
+        global $db;
+
+        $response = $db->query(str_replace("\n", ' ', '
+            DELETE FROM `polls_options`
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         '));
