@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `polls`;
 CREATE TABLE `polls` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `question` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
-  `votes` smallint(7) UNSIGNED NOT NULL DEFAULT '0',
+  `votes` smallint(7) UNSIGNED NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_at` datetime NOT NULL,
   `link_id` int(20) NULL,
@@ -23,8 +23,8 @@ DROP TABLE IF EXISTS `polls_options`;
 CREATE TABLE `polls_options` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `option` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `votes` smallint(7) UNSIGNED NOT NULL DEFAULT '0',
-  `karma` smallint(7) UNSIGNED NOT NULL DEFAULT '0',
+  `votes` smallint(7) UNSIGNED NOT NULL DEFAULT 0,
+  `karma` decimal(4, 2) UNSIGNED NOT NULL DEFAULT 0.0,
   `poll_id` int(20) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_polls_options_poll_id` FOREIGN KEY (`poll_id`) REFERENCES `polls`(`id`) ON DELETE CASCADE
