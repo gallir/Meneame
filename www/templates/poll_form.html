@@ -1,29 +1,26 @@
-<div class="poll">
-    <form action="{{ globals.base_url }}backend/poll.php" method="post">
-        <input type="hidden" name="id" value="{{ poll.id }}" />
+<div class="poll-edit {% if !poll.id %}hidden{% endif %}">
+    {% if !poll.id %}
+    <h3>{% trans _('Si deseas crear una encuesta...') %}</h3>
+    {% endif %}
 
-        <div class="poll-options">
-            {% for option in poll.getOptions %}
-            <div class="radio poll-option">
-                <label>
-                    <input type="radio" name="option" value="{{ option.id }}" />
-                    {{ option.option }}
-                </label>
-            </div>
+    <div class="form-group">
+        <input type="text" name="poll_question" value="{{ poll.question }}" class="form-control" placeholder="{% trans _('Escribe la pregunta') %}" tabindex="3" />
+    </div>
+
+    {% for option in poll.getOptionsWithEmpty %}
+    <div class="form-group">
+        <input type="hidden" name="poll_options[{{ option.index }}][id]" value="{{ option.id }}" />
+        <input type="text" name="poll_options[{{ option.index }}][option]" value="{{ option.option }}" class="form-control" placeholder="{% trans _('Opción %s') option.index %}" tabindex="4" />
+    </div>
+    {% endfor %}
+
+    <div class="form-group">
+        <select name="poll_duration" class="form-control" tabindex="5">
+            <option value="">{% trans _('Selecciona una duración') %}</option>
+
+            {% for hour in poll.getDurationsValid %}
+            <option value="{{ hour }}" {% if poll.duration == hour %}selected{% endif %}>{% trans _('%s horas') hour %}</option>
             {% endfor %}
-        </div>
-
-        <footer>
-            <button type="submit" class="btn btn-mnm btn-sm">{% trans _('Votar') %}</button>
-
-            <span class="votes">
-                {% if poll.votes == 1 %}
-                {% trans _('1 voto') %}
-                {% else %}
-                    {% if poll.votes %} {% trans _('%s votos') poll.votes %} {% else %} {% trans _('Sin Votos') %} {% endif %}
-                {% endif %}
-            </span>
-            <span class="finish">{% exec poll.getTimeToFinish %}</span>
-        </footer>
-    </form>
+        </select>
+    </div>
 </div>

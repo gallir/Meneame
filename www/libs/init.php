@@ -160,9 +160,9 @@ function __autoload($class) {
 		'Media' => 'media.php',
 		'S3' => 'S3.php',
 		'Tabs' => 'tabs.php',
-		'Poll' => 'poll.php',
-		'PollCollection' => 'poll_collection.php',
-		'PollOption' => 'poll_option.php',
+		'Poll' => 'poll/poll.php',
+		'PollCollection' => 'poll/poll_collection.php',
+		'PollOption' => 'poll/poll_option.php',
 		'DbHelper' => 'db_helper.php'
 	);
 

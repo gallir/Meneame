@@ -57,6 +57,6 @@ if (!$poll->vote($option)) {
     die('ERROR: '._('Lo sentimos pero no ha sido posible registrar el voto'));
 }
 
-Haanga::Load('poll_voted.html', array('poll' => $poll));
+Haanga::Load('poll_vote.html', array('poll' => $poll));
 
 die();

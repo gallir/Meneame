@@ -14,6 +14,7 @@ class PollOption
     public $karma;
     public $poll_id;
 
+    public $index;
     public $voted;
     public $winner;
 
@@ -113,7 +114,8 @@ class PollOption
         return $db->object_iterator(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
-            WHERE `poll_id` = "'.(int)$poll_id.'";
+            WHERE `poll_id` = "'.(int)$poll_id.'"
+            ORDER BY `id` ASC;
         '), 'PollOption');
     }
 
@@ -124,7 +126,8 @@ class PollOption
         return $db->object_iterator(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
-            WHERE `poll_id` IN ('.DbHelper::implodedIds($poll_ids).');
+            WHERE `poll_id` IN ('.DbHelper::implodedIds($poll_ids).')
+            ORDER BY `id` ASC;
         '), 'PollOption');
     }
 }

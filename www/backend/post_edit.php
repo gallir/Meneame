@@ -20,14 +20,14 @@ if (empty($current_user->user_id)) {
 
 $post = new Post;
 
-if (!empty($_REQUEST['id'])) {
-    $post->id = (int)$_REQUEST['id'];
+if (isset($_GET['id'])) {
+    $post->id = (int)$_GET['id'];
 
-    if ($post->read()) {
+    if (empty($post->id) || $post->read()) {
         $post->print_edit_form();
     }
-} elseif (empty($_REQUEST['post_id']) || preg_match('/^[0-9]+$', $_REQUEST['post_id'])) {
-    save_post(intval((int)$_REQUEST['post_id']));
+} elseif (empty($_POST['post_id']) || preg_match('/^[0-9]+$/', $_POST['post_id'])) {
+    save_post((int)$_POST['post_id']);
 } else {
     die('ERROR: '._('No se ha podido obtener el post indicado'));
 }
@@ -57,7 +57,9 @@ function save_post ($post_id)
     if ($post_id > 0) {
         $post->id = $post_id;
 
-        $post->read() or die;
+        if (!$post->read()) {
+            die('ERROR: '._('No se ha podido obtener el post indicado'));
+        }
 
         if (
             ($_POST['key'] == $post->randkey) &&
@@ -66,7 +68,7 @@ function save_post ($post_id)
                 (
                     (intval($_POST['user_id']) == $current_user->user_id) &&
                     ($current_user->user_id == $post->author) &&
-                    ((time() - $post->date) < 3600)
+                    ((time() - $post->date) < $globals['posts_edit_time'])
                 ) ||
                 // Allow the admin
                 (
@@ -75,12 +77,31 @@ function save_post ($post_id)
                 )
             )
         ) {
-            $post->content = $_POST['post'];
+            $post->content = trim($_POST['post']);
 
-            if (strlen($post->content)) {
-                $post->store();
-                store_image($post);
+            if (empty($post->content)) {
+                die('ERROR: '._('no es posible guardar una nota sin contenido'));
             }
+
+            $poll = new Poll;
+
+            $poll->read('post_id', $post->id);
+
+            $db->transaction();
+
+            try {
+                $poll->storeFromArray($_POST);
+            } catch (Exception $e) {
+                die('ERROR: '.$e->getMessage());
+            }
+
+            $post->store();
+
+            $db->commit();
+
+            $post->poll = $poll;
+
+            store_image($post);
         } else {
             die('ERROR: '._('no tiene permisos para grabar'));
         }
@@ -98,7 +119,7 @@ function save_post ($post_id)
         $post->author = $current_user->user_id ;
         $post->content = $_POST['post'];
 
-        // Verify that there are a period of 1 minute between posts.
+        // Verify that there are a period of $globals['posts_period'] minute between posts.
         if (intval($db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval ".$globals['posts_period']." second)"))) {
             die('ERROR: '._('debe esperar entre notas'));
         }
@@ -114,18 +135,10 @@ function save_post ($post_id)
 
         $poll = new Poll;
 
-        $poll->setOptionsFromArray($_POST['poll_options']);
-
-        if (!$poll->areOptionsValid()) {
-            die('ERROR: '._('Las opciones de la encuesta no son válidas'));
-        }
-
-        if ($poll->getOptions()) {
-            $poll->setDuration($_POST['poll_duration']);
-
-            if (!$poll->end_at) {
-                die('ERROR: '._('La duración indicada en la encuesta no es válida'));
-            }
+        try {
+            $poll->readFromArray($_POST);
+        } catch (Exception $e) {
+            die('ERROR: '.$e->getMessage());
         }
 
         $db->transaction();
@@ -141,14 +154,14 @@ function save_post ($post_id)
 
         $post->store();
 
-        if ($poll->getOptions()) {
+        if ($poll->isStorable()) {
             $poll->post_id = $post->id;
             $poll->store();
-
-            $post->poll = $poll;
         }
 
         $db->commit();
+
+        $post->poll = $poll;
 
         store_image($post);
     }

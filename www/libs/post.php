@@ -249,6 +249,12 @@ class Post extends LCPBase {
 
 		$this->body_left = $globals['posts_len'] - mb_strlen(html_entity_decode($this->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
+		$this->poll = new Poll;
+
+		if ($this->id) {
+			$this->poll->read('post_id', $this->id);
+		}
+
 		return Haanga::Load('post_edit.html', array(
 			'self' => $this,
 			'user' => $current_user

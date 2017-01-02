@@ -1,4 +1,4 @@
-<div class="commentform" id="edit-form">
+<div class="commentform post-edit">
     <form action="{{ globals.base_url }}backend/post_edit.php?user={{ current_user.user_id }}" method="post" id="thisform{{ self.id }}" name="thisform{{ self.id }}" enctype="multipart/form-data">
         <input type="hidden" name="key" value="{{ self.randkey }}" />
         <input type="hidden" name="post_id" value="{{ self.id }}" />
@@ -11,10 +11,14 @@
 
             <div class="col-md-11 col-sm-10">
                 <div class="form-group">
-                    <textarea name="post" class="form-control droparea" data-limit="{{ globals.posts_len }}" placeholder="{% trans _('¿Qué es lo que tienes que contar?') %}" tabindex="1" required>{{ self.content }}</textarea>
+                    <textarea name="post" class="form-control droparea" maxlength="{{ globals.posts_len }}" placeholder="{% trans _('¿Qué es lo que tienes que contar?') %}" tabindex="1" required>{{ self.content }}</textarea>
 
                     <div class="hidden show-on-focus">
-                        {% include 'simpleformat_buttons.html' %}
+                        <div class="pull-right">
+                            {% include 'simpleformat_buttons.html' %}
+                        </div>
+
+                        <input type="text" class="input-counter" size="{{ globals.posts_len|length }}" maxlength="{{ globals.posts_len|length }}" value="{{ self.body_left }}" readonly />
                     </div>
                 </div>
 
@@ -41,27 +45,11 @@
                     </div>
                     {% endif %}
 
-                    <div id="poll-block" class="hidden">
-                        {% for i in 1 .. 5 %}
-                        <div class="form-group">
-                            <input type="text" name="poll_options[]" class="form-control" placeholder="{% trans _('Opción %s') i %}" tabindex="3" />
-                        </div>
-                        {% endfor %}
-
-                        <div class="form-group">
-                            <select name="poll_duration" class="form-control" tabindex="4">
-                                <option value="">{% trans _('Selecciona una duración') %}</option>
-                                <option value="1">{% trans _('%s día') 1 %}</option>
-                                <option value="5">{% trans _('%s días') 5 %}</option>
-                                <option value="10">{% trans _('%s días') 10 %}</option>
-                                <option value="15">{% trans _('%s días') 15 %}</option>
-                                <option value="30">{% trans _('%s días') 30 %}</option>
-                            </select>
-                        </div>
-                    </div>
+                    {% set poll = self.poll %}
+                    {% include 'poll_form.html' %}
 
                     <footer>
-                        <button type="button" class="btn btn-mnm btn-sm" data-show="#poll-block">
+                        <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
                             <i class="fa fa-bar-chart"></i>
                         </button>
 
@@ -70,7 +58,9 @@
                         <input type="file" autocomplete="off" name="image" class="uploadFile" accept="image/*" />
                         {% endif %}
 
-                        <button type="submit" class="btn btn-mnm btn-sm pull-right" tabindex="5">{% trans _('Enviar') %}</button>
+                        <div class="pull-right clearfix">
+                            <button type="submit" class="btn btn-mnm btn-sm " tabindex="6">{% trans _('Enviar') %}</button>
+                        </div>
                     </footer>
                 </div>
 

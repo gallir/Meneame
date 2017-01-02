@@ -860,18 +860,28 @@ function comment_reply(id, prefix) {
 
 function post_load_form(id, container) {
 	var url = base_url + 'backend/post_edit?id='+id+"&key="+base_key;
-	$.get(url, function (html) {
-			if (html.length > 0) {
-				if (html.match(/^ERROR:/i)) {
-					mDialog.notify(html, 2);
-				} else {
-					$('#'+container).html(html).trigger('DOMChanged', $('#'+container));
-				}
-				reportAjaxStats('html', 'post_edit');
-			}
-		});
-}
 
+	$.get(url, function (html) {
+		if (!html.length > 0) {
+			return;
+		}
+
+		reportAjaxStats('html', 'post_edit');
+
+		if (html.match(/^ERROR:/i)) {
+			mDialog.notify(html, 2);
+			return;
+		}
+
+		$container = $('#' + container);
+
+		$container.html(html).trigger('DOMChanged', $container);
+
+		initFormPostEdit($container.find('.post-edit form').first());
+
+		$container.find('textarea[name="post"]').trigger('focus').autosize();
+	});
+}
 
 function post_new() {
 	post_load_form(0, 'addpost');
@@ -1743,7 +1753,7 @@ var fancyBox = new function () {
 				var counter = (data && data[field]) ? data[field] : 0;
 				$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
 			}
-			
+
 			if (current_user_admin) {
                 $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
 			}
@@ -2561,7 +2571,7 @@ $(document).ready(function () {
             }
         ]
     });
-    
+
     if (current_user > 0) {
         addPostCode(function () {
             pref_input_check("subs_default_header");

@@ -154,6 +154,12 @@
     text-align: left;
 }
 
+.input-counter {
+    height: 22px;
+    padding: 0 5px;
+    margin: 0;
+}
+
 .form .checkbox.checkbox-inline, .form .radio.radio-inline {
     margin: 0;
     padding: 0;
@@ -1171,11 +1177,19 @@ ul.slick-dots li button {
     height: 30px;
 }
 
-.poll {
+.poll-edit {
+    margin: 10px 0;
+}
+
+.poll-edit h3 {
+    margin-bottom: 10px;
+}
+
+.poll-vote {
     margin-top: 15px;
 }
 
-.poll .poll-options {
+.poll-vote .poll-options {
     display: block;
     border: 1px solid #666;
     margin: 10px 5px;
@@ -1183,25 +1197,25 @@ ul.slick-dots li button {
     border-radius: 5px;
 }
 
-.poll .poll-option {
+.poll-vote .poll-option {
     margin-top: 10px;
     margin-bottom: 0;
 }
 
-.poll .poll-option:first-child {
+.poll-vote .poll-option:first-child {
     margin-top: 0;
 }
 
-.poll .poll-option.voted .progress-bar {
+.poll-vote .poll-option.voted .progress-bar {
     border-right: 10px solid #fe6117;
 }
 
-.poll .poll-option .progress {
+.poll-vote .poll-option .progress {
     margin: 0;
     background-color: transparent;
 }
 
-.poll .poll-option .progress-bar {
+.poll-vote .poll-option .progress-bar {
     min-width: 2.5em;
     color: #18120e;
     background-color: #ffc79e;
@@ -1210,17 +1224,17 @@ ul.slick-dots li button {
     white-space: nowrap;
 }
 
-.poll .poll-option .progress-bar span {
+.poll-vote .poll-option .progress-bar span {
     display: inline-block;
 }
 
-.poll .poll-option .percent {
+.poll-vote .poll-option .percent {
     font-weight: bold;
     padding: 0 5px;
     color: #fe6117;
 }
 
-.poll footer .votes, .poll footer .finish {
+.poll-vote footer .votes, .poll-vote footer .finish {
     display: inline-block;
     font-weight: bold;
     margin-left: 5px;
@@ -1228,19 +1242,19 @@ ul.slick-dots li button {
     color: #fe6117;
 }
 
-.poll footer .finish:before {
+.poll-vote footer .finish:before {
     padding-right: 5px;
     content: "|";
 }
 
-#edit-form form {
+.post-edit form {
     margin-bottom: 20px;
 }
 
-#edit-form form textarea {
+.post-edit form textarea {
     height: 42px;
 }
 
-#edit-form footer {
+.post-edit footer {
     margin-top: 10px;
 }

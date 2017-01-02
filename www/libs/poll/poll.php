@@ -10,6 +10,7 @@ class Poll
 {
     public $id;
     public $question = '';
+    public $duration = 0;
     public $votes = 0;
     public $created_at;
     public $end_at;
@@ -19,26 +20,70 @@ class Poll
     public $voted;
     public $finished;
 
+    private $index = 0;
+
     private $options = array();
     private $options_limit = 5;
-    private $durations_valid = array(1, 5, 10, 15, 30);
+    private $durations_valid = array(6, 12, 24, 48);
+
+    /** SETTERS **/
+
+    public function readFromArray(array $data)
+    {
+        $question = $this->normalize($data['poll_question']);
+
+        if (empty($question)) {
+            return true;
+        }
+
+        $this->question = $question;
+        $this->setOptionsFromArray($data['poll_options']);
+
+        if (!$this->validateOptions()) {
+            throw new Exception(_('Las opciones de la encuesta no son válidas'));
+        }
+
+        $duration = (int)$data['poll_duration'];
+
+        if (!$this->validateDuration($duration)) {
+            throw new Exception(_('La duración indicada en la encuesta no es válida'));
+        }
+
+        $this->setDuration($duration);
+
+        return true;
+    }
 
     public function resetOptions()
     {
-        $this->options[] = array();
+        $this->options = array();
     }
 
     public function setOptionsFromArray(array $options)
     {
+        if ($this->options) {
+            $ids = array_map(function($value) {
+                return (int)$value->id;
+            }, $this->options);
+        } else {
+            $ids = array();
+        }
+
         $this->options = array();
 
-        foreach (DbHelper::stringsUnique($options) as $text) {
-            if (empty($text)) {
+        foreach ($options as $data) {
+            if (empty($data['option'])) {
                 continue;
             }
 
             $option = new PollOption;
-            $option->option = $text;
+            $option->id = (int)$data['id'];
+
+            if ($ids && $option->id && !in_array($option->id, $ids)) {
+                throw new Exception(_('Las opciones de la encuesta no son válidas'));
+            }
+
+            $option->option = $data['option'];
 
             $this->options[] = $option;
         }
@@ -46,15 +91,52 @@ class Poll
 
     public function setOption(PollOption $option)
     {
+        $option->index = ++$this->index;
         $option->voted = $this->voted == $option->id;
         $option->percent = (int)round(((int)$option->votes / (int)$this->votes) * 100);
 
         $this->options[$option->id] = $option;
     }
 
+    public function reloadOptions()
+    {
+        $this->index = 0;
+
+        foreach ($this->options as $option) {
+            $this->setOption($option);
+        }
+    }
+
+    public function setDuration($hours)
+    {
+        if ($this->duration && ($this->duration == $hours)) {
+            return;
+        }
+
+        $this->duration = (int)$hours;
+        $this->end_at = date('Y-m-d H:i:s', strtotime('+'.$this->duration.' hours'));
+    }
+
+    /** GETTERS **/
+
     public function getOptions()
     {
         return $this->options;
+    }
+
+    public function getOptionsWithEmpty()
+    {
+        $options = $this->options;
+        $index = $this->index;
+
+        for ($i = count($options); $i < $this->options_limit; $i++) {
+            $option = new PollOption;
+            $option->index = ++$index;
+
+            $options[] = $option;
+        }
+
+        return $options;
     }
 
     public function getOption($id)
@@ -64,29 +146,9 @@ class Poll
         }
     }
 
-    public function reloadOptions()
+    public function getDurationsValid()
     {
-        foreach ($this->options as $option) {
-            $this->setOption($option);
-        }
-    }
-
-    public function areOptionsValid()
-    {
-        $count = count($this->options);
-
-        return ($count === 0) || (($count > 1) && ($count <= $this->options_limit));
-    }
-
-    public function setDuration($days)
-    {
-        $days = (int)$days;
-
-        if (in_array($days, $this->durations_valid)) {
-            $this->end_at = date('Y-m-d H:i:s', strtotime('+'.$days.' days'));
-        } else {
-            $this->end_at = null;
-        }
+        return $this->durations_valid;
     }
 
     public function getTimeToFinish()
@@ -136,9 +198,49 @@ class Poll
         return sprintf(_('Faltan %s segundos'), $interval->s);
     }
 
-    public function read()
+    /** VALIDATORS **/
+
+    public function validateOptions()
     {
-        if (empty($this->id)) {
+        $count = count($this->options);
+
+        if (($count < 2) || ($count > $this->options_limit)) {
+            return false;
+        }
+
+        $duplicated = array();
+
+        foreach ($this->options as $option) {
+            if (in_array($option->option, $duplicated)) {
+                return false;
+            }
+
+            $duplicated[] = $option->option;
+        }
+
+        return true;
+    }
+
+    public function validateDuration($hours)
+    {
+        return in_array($hours, $this->durations_valid);
+    }
+
+    public function isStorable()
+    {
+        return $this->question && $this->options;
+    }
+
+    /** READ **/
+
+    public function read($related = null, $related_id = null)
+    {
+        if (empty($related) || empty($related_id)) {
+            $related = 'id';
+            $related_id = $this->id;
+        }
+
+        if (empty($related_id)) {
             return;
         }
 
@@ -154,7 +256,7 @@ class Poll
                     AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
                     AND `v`.`vote_type` = "polls"
                 )
-                WHERE `p`.`id` = "'.(int)$this->id.'"
+                WHERE `p`.`'.$related.'` = "'.(int)$related_id.'"
                 LIMIT 1;
             ';
         } else {
@@ -162,7 +264,7 @@ class Poll
                 SELECT SQL_NO_CACHE *, NULL AS `voted`,
                     IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls`
-                WHERE `p`.`id` = "'.(int)$this->id.'"
+                WHERE `p`.`'.$related.'` = "'.(int)$related_id.'"
                 LIMIT 1;
             ';
         }
@@ -183,15 +285,48 @@ class Poll
     private function readOptions()
     {
         $this->options = array();
+        $this->index = 0;
 
         foreach (PollOption::selectFromPollId($this->id) as $option) {
             $this->setOption($option);
         }
     }
 
+    public static function selectFromRelatedIds($related, array $related_ids)
+    {
+        global $db, $current_user;
+
+        if ($current_user) {
+            $query = '
+                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`,
+                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
+                FROM `polls` AS `p`
+                LEFT JOIN `votes` AS `v` ON (
+                    `v`.`vote_link_id` = `p`.`id`
+                    AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
+                    AND `v`.`vote_type` = "polls"
+                )
+                WHERE `p`.`'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
+                LIMIT '.count($related_ids).';
+            ';
+        } else {
+            $query = '
+                SELECT SQL_NO_CACHE *, NULL AS `voted`,
+                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
+                FROM `polls`
+                WHERE `'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
+                LIMIT '.count($related_ids).';
+            ';
+        }
+
+        return $db->object_iterator(DbHelper::queryPlain($query), 'Poll');
+    }
+
+    /** WRITE **/
+
     public function store()
     {
-        if (empty($this->options)) {
+        if (!$this->isStorable()) {
             return;
         }
 
@@ -212,6 +347,21 @@ class Poll
         return true;
     }
 
+    public function storeFromArray(array $data)
+    {
+        $this->readFromArray($data);
+
+        if (empty($this->id) && empty($this->question)) {
+            return true;
+        }
+
+        if (empty($this->question)) {
+            return $this->delete();
+        }
+
+        return $this->store();
+    }
+
     private function storeOptions()
     {
         foreach ($this->options as $option) {
@@ -228,6 +378,7 @@ class Poll
             INSERT INTO `polls`
             SET
                 `question` = "'.$this->question.'",
+                `duration` = "'.(int)$this->duration.'",
                 `end_at` = "'.$this->end_at.'",
                 `link_id` = '.($this->link_id ?: 'NULL').',
                 `post_id` = '.($this->post_id ?: 'NULL').';
@@ -250,7 +401,21 @@ class Poll
             UPDATE `polls`
             SET
                 `question` = "'.$this->question.'",
-                `end_at` = "'.$this->end_at.'",
+                `duration` = "'.(int)$this->duration.'",
+                `end_at` = "'.$this->end_at.'"
+            WHERE `id` = "'.(int)$this->id.'"
+            LIMIT 1;
+        '));
+
+        return $response ? true : false;
+    }
+
+    private function delete()
+    {
+        global $db;
+
+        $response = $db->query(DbHelper::queryPlain('
+            DELETE FROM `polls`
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         '));
@@ -308,36 +473,6 @@ class Poll
 
     private function normalize($value)
     {
-        return clean_lines(clear_whitespace($value));
-    }
-
-    public static function selectFromRelatedIds($related, array $related_ids)
-    {
-        global $db, $current_user;
-
-        if ($current_user) {
-            $query = '
-                SELECT SQL_NO_CACHE `p`.*, `v`.`vote_value` AS `voted`,
-                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
-                FROM `polls` AS `p`
-                LEFT JOIN `votes` AS `v` ON (
-                    `v`.`vote_link_id` = `p`.`id`
-                    AND `v`.`vote_user_id` = "'.(int)$current_user->user_id.'"
-                    AND `v`.`vote_type` = "polls"
-                )
-                WHERE `p`.`'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
-                LIMIT '.count($related_ids).';
-            ';
-        } else {
-            $query = '
-                SELECT SQL_NO_CACHE *, NULL AS `voted`,
-                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
-                FROM `polls`
-                WHERE `'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
-                LIMIT '.count($related_ids).';
-            ';
-        }
-
-        return $db->object_iterator(DbHelper::queryPlain($query), 'Poll');
+        return trim(clean_lines(clear_whitespace($value)));
     }
 }

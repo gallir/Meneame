@@ -1,9 +1,11 @@
-<div class="poll">
+<form action="{{ globals.base_url }}backend/poll.php" method="post">
+    <input type="hidden" name="id" value="{{ poll.id }}" />
+
     <div class="poll-options">
         {% for option in poll.getOptions %}
         <div class="radio poll-option">
             <label>
-                <input type="radio" />
+                <input type="radio" name="option" value="{{ option.id }}" />
                 {{ option.option }}
             </label>
         </div>
@@ -11,9 +13,7 @@
     </div>
 
     <footer>
-        <a href="{{ globals.base_url_general }}login?return={{globals.uri|urlencode}}" class="btn btn-mnm btn-sm">
-            {% trans _('Votar') %}
-        </a>
+        <button type="submit" class="btn btn-mnm btn-sm">{% trans _('Votar') %}</button>
 
         <span class="votes">
             {% if poll.votes == 1 %}
@@ -24,4 +24,4 @@
         </span>
         <span class="finish">{% exec poll.getTimeToFinish %}</span>
     </footer>
-</div>
+</form>

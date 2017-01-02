@@ -1,0 +1,17 @@
+<div class="poll-vote">
+    <h3 class="text-center">{{ poll.question }}</h3>
+
+    {% if poll.finished %}
+        {% include 'poll_vote_finished.html' %}
+    {% else %}
+        {% if !current_user.user_id %}
+            {% include 'poll_vote_guest.html' %}
+        {% else %}
+            {% if poll.voted %}
+                {% include 'poll_vote_voted.html' %}
+            {% else %}
+                {% include 'poll_vote_form.html' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>
