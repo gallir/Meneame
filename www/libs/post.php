@@ -219,7 +219,7 @@ class Post extends LCPBase {
 		if ($length > 0) {
 			$this->content = text_to_summary($this->content, $length);
 		}
-		$this->content = $this->to_html($this->content) . $expand;
+		$this->content = $this->to_html($this->content);
 
 		if ($this->media_size > 0) {
 			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
