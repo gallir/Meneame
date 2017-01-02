@@ -59,30 +59,42 @@ if (empty($media)) {
 }
 
 if ($show_all === false) {
-    $media_ids = implode(',', array_map(function($value) {
-        return $value->id;
-    }, $media));
+    $comments_ids = $posts_ids = array();
+
+    foreach ($media as $image) {
+        if ($value->type === 'comment') {
+            $comments_ids[] = $value->id;
+        } elseif ($value->type === 'post') {
+            $posts_ids[] = $value->id;
+        }
+    }
 
     $comments_karma = array();
-    $comments = $db->get_results(DbHelper::queryPlain('
-        SELECT comment_id, comment_karma
-        FROM comments
-        WHERE comment_id IN ('.$media_ids.');
-    '));
 
-    foreach ($comments as $comment) {
-        $comments_karma[$comment->comment_id] = $comment->comment_karma;
+    if ($comments_ids) {
+        $comments = $db->get_results(DbHelper::queryPlain('
+            SELECT comment_id, comment_karma
+            FROM comments
+            WHERE comment_id IN ('.implode(',', $comments_ids).');
+        '));
+
+        foreach ($comments as $comment) {
+            $comments_karma[$comment->comment_id] = $comment->comment_karma;
+        }
     }
 
     $posts_karma = array();
-    $posts = $db->get_results(DbHelper::queryPlain('
-        SELECT post_id, post_karma
-        FROM posts
-        WHERE post_id IN ('.$media_ids.');
-    '));
 
-    foreach ($posts as $post) {
-        $posts_karma[$post->post_id] = $post->post_karma;
+    if ($posts_ids) {
+        $posts = $db->get_results(DbHelper::queryPlain('
+            SELECT post_id, post_karma
+            FROM posts
+            WHERE post_id IN ('.implode(',', $posts_ids).');
+        '));
+
+        foreach ($posts as $post) {
+            $posts_karma[$post->post_id] = $post->post_karma;
+        }
     }
 } else {
     $comments_karma = $posts_karma = array();
@@ -116,5 +128,5 @@ foreach ($media as $image) {
 }
 
 if ($images) {
-    Haanga::Load("backend/gallery.html", compact('images'));
+    Haanga::Load('backend/gallery.html', compact('images'));
 }
