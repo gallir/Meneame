@@ -216,6 +216,7 @@
 
                     $form.find('.show-on-focus').slideUp().addClass('hidden');
                     $form.find('textarea, input[type="text"], input[name="post_id"]').val('');
+                    $form.find('input[name="key"]').val(Math.floor(Math.random() * (100000000 - 1000000)) + 1000000);
                 }
             });
 
