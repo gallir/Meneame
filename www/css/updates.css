@@ -805,232 +805,6 @@ a.action-link span {
     border: 1px solid #FF6600;
 }
 
-.pagination-center {
-    text-align: center;
-    clear: both;
-}
-
-.pagination-center .pages {
-    display: inline-block;
-}
-
-.pagination-center .pages a, .pagination-center .pages span {
-    border-radius: 4px;
-}
-
-.bg-gray-light {
-    background-color: #f0f0f0;
-}
-
-.bg-gray-light a {
-    color: #FF5E08;
-}
-
-.bg-gray-medium {
-    background-color: #d8d8d8;
-}
-
-.border-left {
-    padding-left: 10px;
-    margin-left: 10px;
-    border-left: 1px solid #dfdfdf;
-}
-
-.no-margin-left {
-    margin-left: 0 !important;
-}
-
-.m-20 {
-    margin: 20px !important;
-}
-
-.mb-20 {
-    margin-bottom: 20px !important;
-}
-
-.mt-20 {
-    margin-top: 20px !important;
-}
-
-.block {
-    display: block !important;
-    width: 100% !important;
-}
-
-/** BOOTSTRAP **/
-
-.form-group {
-    margin-bottom: 5px;
-}
-
-.form-control, textarea.form-control, input[type="text"].form-control,
-input[type="password"].form-control, input[type="datetime"].form-control,
-input[type="email"].form-control, input[type="url"].form-control, input[type="search"].form-control {
-    border: 1px solid #ccc;
-    height: 38px;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.form-control:focus {
-    border-color: #fdcdae;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 2px rgba(255, 100, 0, .6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 2px rgba(255, 100, 0, .6);
-}
-
-.checkbox {
-    text-align: left;
-}
-
-.btn {
-    border-radius: 5px;
-}
-
-@media (max-width: 1024px) {
-    #header .searchform .searchbox {
-        width: 200px;
-    }
-
-    #header-center .action-link span {
-        display: none;
-    }
-
-    .section .charlist {
-        float: none;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .subs-listing td.followers {
-        display: none;
-    }
-
-    .subs-listing td {
-        height: auto;
-        padding: 10px 0;
-    }
-
-    .subs-listing td.name {
-	padding: 10px 10px 10px 5px;
-    }
-
-    .subs-listing .actions {
-        width: 100px;
-    }
-
-    .subs-listing .actions .followers {
-        width: auto;
-        display: inline-block;
-    }
-
-    .subs-listing .actions a.action-link {
-        width: 100px;
-    }
-
-    .subs-listing .actions a.action-link span {
-        margin: 0;
-    }
-
-    .subs-listing .actions a.action-link .fa {
-        display: none;
-    }
-}
-
-@media (max-width: 800px) {
-    .section-with-sidebar {
-        margin: 0;
-    }
-
-    .section .intro-large, .section .charlist {
-        display: none;
-    }
-
-    .form.form-search .form-group-filter {
-        padding: 0 4px;
-    }
-
-    .form.form-search .input-filter {
-        float: none;
-        width: 100%;
-    }
-}
-
-@media (max-width: 767px) {
-    .section {
-        margin-top: 20px;
-    }
-
-    .section .intro {
-        margin-bottom: 20px;
-    }
-
-    .form .checkbox-inline, .form .radio-inline {
-        display: block;
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .form .form-control + .checkbox.checkbox-inline,
-    .form .form-control + .radio.radio-inline,
-    .form .checkbox.checkbox-inline + .checkbox.checkbox-inline,
-    .form .radio.radio-inline + .radio.radio-inline {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-}
-
-@media (max-width: 388px) {
-    .section {
-        margin-top: 10px;
-    }
-
-    .section h1 {
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
-
-    .section.section-large h1 {
-        font-size: 36px;
-    }
-
-    .section .intro {
-        font-size: 15px;
-    }
-
-    .form.form-edit .footer .btn.btn-mnm {
-        display: block;
-        width: 100%;
-        padding: 8px;
-    }
-
-    .social-buttons .icon {
-        display: none;
-    }
-
-    .separator {
-        margin: 10px;
-    }
-
-    .border-left {
-        padding-left: 5px;
-        margin-left: 5px;
-    }
-}
-
-@media (max-width: 340px) {
-    .action-links * {
-        font-size: 11px;
-        line-height: 11px;
-    }
-
-    .subs-listing .actions .action-link {
-        font-size: 12px;
-        line-height: 12px;
-    }
-}
-
-
 .slider-wrapper {
     margin-bottom: 30px;
 }
@@ -1258,3 +1032,233 @@ ul.slick-dots li button {
 .post-edit footer {
     margin-top: 10px;
 }
+
+.pagination-center {
+    text-align: center;
+    clear: both;
+}
+
+.pagination-center .pages {
+    display: inline-block;
+}
+
+.pagination-center .pages a, .pagination-center .pages span {
+    border-radius: 4px;
+}
+
+.bg-gray-light {
+    background-color: #f0f0f0;
+}
+
+.bg-gray-light a {
+    color: #FF5E08;
+}
+
+.bg-gray-medium {
+    background-color: #d8d8d8;
+}
+
+.border-left {
+    padding-left: 10px;
+    margin-left: 10px;
+    border-left: 1px solid #dfdfdf;
+}
+
+.no-margin-left {
+    margin-left: 0 !important;
+}
+
+.m-20 {
+    margin: 20px !important;
+}
+
+.mb-20 {
+    margin-bottom: 20px !important;
+}
+
+.mt-20 {
+    margin-top: 20px !important;
+}
+
+.block {
+    display: block !important;
+    width: 100% !important;
+}
+
+/** BOOTSTRAP **/
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+.form-control, textarea.form-control, input[type="text"].form-control,
+input[type="password"].form-control, input[type="datetime"].form-control,
+input[type="email"].form-control, input[type="url"].form-control, input[type="search"].form-control {
+    border: 1px solid #ccc;
+    height: 38px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    border-color: #fdcdae;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 2px rgba(255, 100, 0, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 2px rgba(255, 100, 0, .6);
+}
+
+.checkbox {
+    text-align: left;
+}
+
+.btn {
+    border-radius: 5px;
+}
+
+@media (max-width: 1024px) {
+    #header .searchform .searchbox {
+        width: 200px;
+    }
+
+    #header-center .action-link span {
+        display: none;
+    }
+
+    .section .charlist {
+        float: none;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .subs-listing td.followers {
+        display: none;
+    }
+
+    .subs-listing td {
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .subs-listing td.name {
+	padding: 10px 10px 10px 5px;
+    }
+
+    .subs-listing .actions {
+        width: 100px;
+    }
+
+    .subs-listing .actions .followers {
+        width: auto;
+        display: inline-block;
+    }
+
+    .subs-listing .actions a.action-link {
+        width: 100px;
+    }
+
+    .subs-listing .actions a.action-link span {
+        margin: 0;
+    }
+
+    .subs-listing .actions a.action-link .fa {
+        display: none;
+    }
+}
+
+@media (max-width: 800px) {
+    .section-with-sidebar {
+        margin: 0;
+    }
+
+    .section .intro-large, .section .charlist {
+        display: none;
+    }
+
+    .form.form-search .form-group-filter {
+        padding: 0 4px;
+    }
+
+    .form.form-search .input-filter {
+        float: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .section {
+        margin-top: 20px;
+    }
+
+    .section .intro {
+        margin-bottom: 20px;
+    }
+
+    .form .checkbox-inline, .form .radio-inline {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .form .form-control + .checkbox.checkbox-inline,
+    .form .form-control + .radio.radio-inline,
+    .form .checkbox.checkbox-inline + .checkbox.checkbox-inline,
+    .form .radio.radio-inline + .radio.radio-inline {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .poll-vote footer span {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 388px) {
+    .section {
+        margin-top: 10px;
+    }
+
+    .section h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .section.section-large h1 {
+        font-size: 36px;
+    }
+
+    .section .intro {
+        font-size: 15px;
+    }
+
+    .form.form-edit .footer .btn.btn-mnm {
+        display: block;
+        width: 100%;
+        padding: 8px;
+    }
+
+    .social-buttons .icon {
+        display: none;
+    }
+
+    .separator {
+        margin: 10px;
+    }
+
+    .border-left {
+        padding-left: 5px;
+        margin-left: 5px;
+    }
+}
+
+@media (max-width: 340px) {
+    .action-links * {
+        font-size: 11px;
+        line-height: 11px;
+    }
+
+    .subs-listing .actions .action-link {
+        font-size: 12px;
+        line-height: 12px;
+    }
+}
+

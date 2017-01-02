@@ -30,13 +30,14 @@ class Poll
 
     public function readFromArray(array $data)
     {
-        $question = $this->normalize($data['poll_question']);
+        $this->resetOptions();
 
-        if (empty($question)) {
+        $this->question = $this->normalize($data['poll_question']);
+
+        if (empty($this->question)) {
             return true;
         }
 
-        $this->question = $question;
         $this->setOptionsFromArray($data['poll_options']);
 
         if (!$this->validateOptions()) {
@@ -69,7 +70,7 @@ class Poll
             $ids = array();
         }
 
-        $this->options = array();
+        $this->resetOptions();
 
         foreach ($options as $data) {
             if (empty($data['option'])) {
@@ -284,7 +285,7 @@ class Poll
 
     private function readOptions()
     {
-        $this->options = array();
+        $this->resetOptions();
         $this->index = 0;
 
         foreach (PollOption::selectFromPollId($this->id) as $option) {
@@ -419,6 +420,10 @@ class Poll
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         '));
+
+        if ($response) {
+            $this->id = null;
+        }
 
         return $response ? true : false;
     }
