@@ -6,7 +6,7 @@
 			{% include 'post_summary_text.html' %}
 		{% endif %}
 
-		{% if self.poll %}
+		{% if self.poll.id %}
 			{% set poll = self.poll %}
 			{% include 'poll_vote.html' %}
 		{% endif %}
