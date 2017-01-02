@@ -342,7 +342,7 @@ function print_answers($id, $level, $visited = false)
 
         $answer = Post::from_db($post_id);
 
-        if (!$answer || ($answer->user_level == 'autodisabled') || ($answers->user_level == 'disabled')) {
+        if (!$answer || ($answer->user_level === 'autodisabled') || ($answers->user_level === 'disabled')) {
             continue;
         }
 
