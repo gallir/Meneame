@@ -75,7 +75,7 @@ class PollOption
 
     public function vote()
     {
-        global $db;
+        global $db, $current_user;
 
         if (empty($this->id)) {
             return;
@@ -83,7 +83,9 @@ class PollOption
 
         $query = '
             UPDATE `polls_options`
-            SET `votes` = `votes` + 1
+            SET
+                `votes` = `votes` + 1,
+                `karma` = `karma` + "'.(float)$current_user->user_karma.'"
             WHERE `id` = "'.$this->id.'"
             LIMIT 1;
         ';
@@ -92,7 +94,8 @@ class PollOption
             return;
         }
 
-        $this->votes++;
+        $this->votes ++;
+        $this->karma += (float)$current_user->user_karma;
         $this->voted = true;
 
         return true;
