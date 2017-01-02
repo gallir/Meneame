@@ -99,11 +99,27 @@ class Poll
 
     public function setOption(PollOption $option)
     {
+        $option->votes = (int)$option->votes;
         $option->index = ++$this->index;
         $option->voted = $this->voted == $option->id;
-        $option->percent = (int)round(((int)$option->votes / (int)$this->votes) * 100);
+        $option->percent = (int)round(($option->votes / (int)$this->votes) * 100);
 
         $this->options[$option->id] = $option;
+
+        if ($this->finished) {
+            $this->setOptionWinner();
+        }
+    }
+
+    private function setOptionWinner()
+    {
+        $max = max(array_map(function($value) {
+            return $value->votes;
+        }, $this->options));
+
+        foreach ($this->options as $option) {
+            $option->winner = ($option->votes === $max);
+        }
     }
 
     public function reloadOptions()

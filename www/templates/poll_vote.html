@@ -1,4 +1,4 @@
-<div class="poll-vote">
+<div class="poll-vote {% if poll.finished %}finished{% endif %}">
     <h3 class="text-center">{{ poll.question }}</h3>
 
     {% if poll.finished %}
