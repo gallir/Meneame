@@ -324,6 +324,9 @@ function print_answers($id, $level, $visited = false)
         return array();
     }
 
+    $pollCollection = new PollCollection;
+    $pollCollection->loadFromRelatedIds('post_id', $answers);
+
     if (!$visited) {
         $visited = array($id);
     }
@@ -352,7 +355,10 @@ function print_answers($id, $level, $visited = false)
         }
 
         echo '<li>';
+
+        $answer->poll = $pollCollection->get($answer->id);
         $answer->print_summary();
+
         echo '</li>';
 
         if ($level > 0) {

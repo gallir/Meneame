@@ -899,12 +899,14 @@ function post_reply(id, user) {
 	var startSelection, endSelection, textarea;
 
 	var myself = new RegExp('^'+user_login+'([\s,]|$)', 'i' );
+
 	while (a = regex.exec(text)) { /* Add references to others */
 		u = decodeURIComponent(a[1]);
 		if (! u.match(myself)) { /* exclude references to the reader */
 			others = others + '@' + u + ' ';
 		}
 	}
+
 	if (others.length > 0) {
 		startSelection = ref.length;
 		endSelection = startSelection + others.length;
@@ -912,16 +914,17 @@ function post_reply(id, user) {
 	} else {
 		startSelection = endSelection = 0;
 	}
-	textarea = $('#post');
-	if (textarea.length == 0) {
+
+	if ($('.post-edit [name="post"]').length == 0) {
 		post_new();
 	}
+
 	post_add_form_text(ref, 1, startSelection, endSelection);
 }
 
 function post_add_form_text(text, tries, start, end) {
 	if (! tries) tries = 1;
-	var textarea = $('#post');
+	var textarea = $('.post-edit [name="post"]');
 	if (tries < 20 && textarea.length == 0) {
 			setTimeout(function () { post_add_form_text(text,tries+1,start,end) }, 100);
 			return false;
