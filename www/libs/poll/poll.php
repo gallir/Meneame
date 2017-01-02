@@ -30,8 +30,6 @@ class Poll
 
     public function readFromArray(array $data)
     {
-        $this->resetOptions();
-
         $this->question = $this->normalize($data['poll_question']);
 
         if (empty($this->question)) {
@@ -58,35 +56,44 @@ class Poll
     public function resetOptions()
     {
         $this->options = array();
+        $this->index = 0;
     }
 
     public function setOptionsFromArray(array $options)
     {
-        if ($this->options) {
-            $ids = array_map(function($value) {
-                return (int)$value->id;
-            }, $this->options);
-        } else {
-            $ids = array();
-        }
+        global $current_user;
+
+        $previous = $this->options;
 
         $this->resetOptions();
 
         foreach ($options as $data) {
-            if (empty($data['option'])) {
+            $id = (int)$data['id'];
+
+            if (empty($id) && empty($data['option'])) {
                 continue;
             }
 
-            $option = new PollOption;
-            $option->id = (int)$data['id'];
+            if ($id) {
+                if (empty($previous[$id])) {
+                    syslog(LOG_WARNING, trim(preg_replace('/\s+/', ' ', '
+                        HACKING: User '.$current_user->user_login.' ('.$current_user->user_id.')
+                        is triying to modify an option ('.$id.') that not correspond to
+                        current poll ('.$this->id.')
+                    ')));
 
-            if ($ids && $option->id && !in_array($option->id, $ids)) {
-                throw new Exception(_('Las opciones de la encuesta no son válidas'));
+                    throw new Exception(_('Las opciones de la encuesta no son válidas'));
+                }
+
+                $option = $previous[$id];
+            } else {
+                $option = new PollOption;
+                $option->id = -$this->index;
             }
 
             $option->option = $data['option'];
 
-            $this->options[] = $option;
+            $this->setOption($option);
         }
     }
 
@@ -122,7 +129,9 @@ class Poll
 
     public function getOptions()
     {
-        return $this->options;
+        return array_filter($this->options, function($value) {
+            return $value->option ? true : false;
+        });
     }
 
     public function getOptionsWithEmpty()
