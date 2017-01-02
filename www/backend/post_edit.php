@@ -86,6 +86,7 @@ function save_post ($post_id)
             $poll = new Poll;
 
             $poll->read('post_id', $post->id);
+            $poll->post_id = $post->id;
 
             $db->transaction();
 
