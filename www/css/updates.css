@@ -965,6 +965,10 @@ ul.slick-dots li button {
     border-radius: 2px;
 }
 
+.poll-vote h3 {
+    font-size: 120%;
+}
+
 .poll-vote.finished {
     background-color: #ffd6ab;
     padding: 5px;
