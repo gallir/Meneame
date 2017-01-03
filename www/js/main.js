@@ -862,7 +862,7 @@ function post_load_form(id, container) {
 	var url = base_url + 'backend/post_edit?id='+id+"&key="+base_key;
 
 	$.get(url, function (html) {
-		if (!html.length > 0) {
+		if (html.length === 0) {
 			return;
 		}
 
