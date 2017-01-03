@@ -1274,6 +1274,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
         padding-left: 5px;
         margin-left: 5px;
     }
+
+    .poll-vote footer span {
+        font-size: 9.5px;
+    }
 }
 
 @media (max-width: 340px) {
