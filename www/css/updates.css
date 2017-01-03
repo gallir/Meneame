@@ -1006,7 +1006,7 @@ ul.slick-dots li button {
     border-radius: 4px;
 }
 
-.poll-vote .poll-option.voted .progress-bar {
+.poll-vote .poll-option.voted .progress-bar span.text i {
     font-weight: bold;
 }
 
