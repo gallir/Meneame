@@ -979,7 +979,7 @@ ul.slick-dots li button {
 }
 
 .poll-vote .poll-option {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 0;
 }
 
@@ -988,7 +988,11 @@ ul.slick-dots li button {
 }
 
 .poll-vote .poll-option .progress {
+    height: 22px;
     margin: 0;
+    padding: 1px 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
     background-color: transparent;
 }
 
@@ -1003,7 +1007,7 @@ ul.slick-dots li button {
 }
 
 .poll-vote .poll-option.voted .progress-bar {
-    border-right: 10px solid #fe6117;
+    font-weight: bold;
 }
 
 .poll-vote .poll-option.winner .progress-bar, .poll-vote .poll-option.winner .percent {
@@ -1022,6 +1026,7 @@ ul.slick-dots li button {
     color: #fe6117;
     text-align: right;
     margin-right: 3px;
+    border-radius: 4px;
 }
 
 .poll-vote footer {

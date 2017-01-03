@@ -100,6 +100,7 @@ class Poll
     public function setOption(PollOption $option)
     {
         $option->votes = (int)$option->votes;
+        $option->karma = (float)$option->karma;
         $option->index = ++$this->index;
         $option->voted = $this->voted == $option->id;
         $option->percent = (int)round(($option->votes / (int)$this->votes) * 100);
@@ -113,12 +114,16 @@ class Poll
 
     private function setOptionWinner()
     {
-        $max = max(array_map(function($value) {
+        $maxVotes = max(array_map(function($value) {
             return $value->votes;
         }, $this->options));
 
+        $maxKarma = max(array_map(function($value) use ($maxVotes) {
+            return ($value->votes === $maxVotes) ? $value->karma : 0;
+        }, $this->options));
+
         foreach ($this->options as $option) {
-            $option->winner = ($option->votes === $max);
+            $option->winner = ($option->votes === $maxVotes) && ($option->karma === $maxKarma);
         }
     }
 

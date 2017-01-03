@@ -4,7 +4,7 @@
         <div class="progress" data-toggle="tooltip" title="{% trans _('%s votos - %s karma') option.votes option.karma %}">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{ option.percent }}" style="width: {{ option.percent }}%;">
                 <span class="percent">{{ option.percent }}%</span>
-                <span class="text">{{ option.option }}</span>
+                <span class="text">{{ option.option }} {% if option.voted %}<i class="fa fa-check"></i>{% endif %}</span>
             </div>
         </div>
     </div>
