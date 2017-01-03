@@ -1034,17 +1034,20 @@ ul.slick-dots li button {
     padding: 0 10px 5px 10px;
 }
 
-.poll-vote footer .votes, .poll-vote footer .finish {
+.poll-vote footer .btn.btn-mnm.btn-sm {
+    margin: 0 10px 0 0;
+}
+
+.poll-vote footer span {
     display: inline-block;
+    margin: 0;
     font-weight: bold;
-    margin-left: 5px;
     text-transform: uppercase;
     color: #fe6117;
 }
 
-.poll-vote footer .finish:before {
-    padding-right: 5px;
-    content: "|";
+.poll-vote footer span.separator {
+    margin: 0 5px;
 }
 
 .post-edit form {
@@ -1236,6 +1239,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     .poll-vote footer span {
         font-size: 11.5px;
     }
+
+    .poll-vote footer span.separator {
+        margin: 0 3px;
+    }
 }
 
 @media (max-width: 388px) {
@@ -1289,6 +1296,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     .subs-listing .actions .action-link {
         font-size: 12px;
         line-height: 12px;
+    }
+
+    .poll-vote footer span.separator {
+        margin: 0;
     }
 }
 
