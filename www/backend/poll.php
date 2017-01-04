@@ -21,7 +21,7 @@ if (empty($current_user->user_id)) {
 $_POST = array_map('intval', $_POST);
 
 if (empty($_POST['id'])) {
-    die('ERROR: '._('No se ha podido obtener la encuesta solictada'));
+    die('ERROR: '._('No se ha podido obtener la encuesta solicitada'));
 }
 
 if (empty($_POST['option']) || empty($_POST['option'])) {
