@@ -36,11 +36,11 @@ if (!$poll->read()) {
 }
 
 if ($poll->voted) {
-    die('ERROR: '._('La encuesta ya está cerrada'));
+    die('ERROR: '._('Ya habías votado en esta encuesta'));
 }
 
 if ($poll->finished) {
-    die('ERROR: '._('Ya habías votado en esta encuesta'));
+    die('ERROR: '._('La encuesta ya está cerrada'));
 }
 
 if (!($option = $poll->getOption($_POST['option']))) {
