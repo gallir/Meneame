@@ -48,8 +48,8 @@ if (UserAuth::check_clon_votes($current_user->user_id, $poll->id, 5, 'polls')) {
     die('ERROR: '._('No se puede votar con clones'));
 }
 
-// Verify that there are a period of 1 minute between posts.
-if (Vote::fast_vote('polls', 30)) {
+// Verify that there are a period of $globals['polls_min_time_for_votes'] seconds between votes
+if (Vote::fast_vote('polls', $globals['polls_min_time_for_votes'])) {
     die('ERROR: '._('Debes esperar 30 segundos entre votaciones'));
 }
 
