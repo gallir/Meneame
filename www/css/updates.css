@@ -1149,8 +1149,8 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 }
 
 @media (max-width: 1024px) {
-    #header .searchform .searchbox {
-        width: 200px;
+    #nav-panel .searchform .searchbox {
+        padding-left: 25px;
     }
 
     #header-center .action-link span {
