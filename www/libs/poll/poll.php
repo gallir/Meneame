@@ -508,6 +508,6 @@ class Poll
 
     private function normalize($value)
     {
-        return trim(clean_lines(clear_whitespace($value)));
+        return trim(clean_lines(clear_whitespace(clean_text_with_tags($value))));
     }
 }
