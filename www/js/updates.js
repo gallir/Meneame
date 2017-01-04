@@ -1,4 +1,6 @@
-; function initFormPostEdit($form) {
+;
+
+function initFormPostEdit($form) {
     if (!$form.length) {
         return;
     }
@@ -50,6 +52,8 @@
             $form.find('.show-on-focus').slideUp().addClass('hidden');
             $form.find('textarea, input[type="text"], input[name="post_id"]').val('');
             $form.find('input[name="key"]').val(Math.floor(Math.random() * (100000000 - 1000000)) + 1000000);
+
+            initPollVote($container.find('.poll-vote form').first());
         }
     });
 
@@ -60,6 +64,23 @@
     $form.find('.uploadFile').nicefileinput();
 
     $textarea.autosize();
+}
+
+function initPollVote($form) {
+    if (!$form || !$form.length) {
+        return;
+    }
+
+    $form.ajaxForm({
+        async: false,
+        success: function(response) {
+            if (/^ERROR:/.test(response)) {
+                return mDialog.notify(response, 5);
+            }
+
+            $form.closest('.poll-vote').replaceWith(response);
+        }
+    });
 }
 
 ;(function($) {
@@ -229,35 +250,20 @@
 
     INIT.formPostEdit = function() {
         $('.post-edit form').each(function() {
-            var $this = $(this);
+            var $form = $(this);
 
             addPostCode(function() {
-                initFormPostEdit($this);
+                initFormPostEdit($form);
             });
         });
     };
 
     INIT.formPollVote = function() {
-        var $forms = $('.poll-vote form');
-
-        if (!$forms.length) {
-            return;
-        }
-
-        $forms.each(function() {
+        $('.poll-vote form').each(function() {
             var $form = $(this);
 
             addPostCode(function() {
-                $form.ajaxForm({
-                    async: false,
-                    success: function(response) {
-                        if (/^ERROR:/.test(response)) {
-                            return mDialog.notify(response, 5);
-                        }
-
-                        $form.closest('.poll-vote').replaceWith(response);
-                    }
-                });
+                initPollVote($form);
             });
         });
     };
