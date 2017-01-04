@@ -36,6 +36,10 @@ if (!$poll->read()) {
 }
 
 if ($poll->voted) {
+    die('ERROR: '._('La encuesta ya está cerrada'));
+}
+
+if ($poll->finished) {
     die('ERROR: '._('Ya habías votado en esta encuesta'));
 }
 
@@ -50,7 +54,7 @@ if (UserAuth::check_clon_votes($current_user->user_id, $poll->id, 5, 'polls')) {
 
 // Verify that there are a period of $globals['polls_min_time_for_votes'] seconds between votes
 if (Vote::fast_vote('polls', $globals['polls_min_time_for_votes'])) {
-    die('ERROR: '._('Debes esperar 30 segundos entre votaciones'));
+    die('ERROR: '.sprintf(_('Debes esperar %s segundos entre votaciones'), $globals['polls_min_time_for_votes']));
 }
 
 if (!$poll->vote($option)) {
