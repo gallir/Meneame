@@ -482,7 +482,7 @@ class Poll
         if (!$vote->insert() || !$option->vote()) {
             syslog(LOG_INFO, 'failed insert poll vote for '.$this->id);
 
-            $db->commit();
+            $db->rollback();
 
             return;
         }
@@ -495,7 +495,7 @@ class Poll
         ';
 
         if (!$db->query(DbHelper::queryPlain($query))) {
-            $db->commit();
+            $db->rollback();
             return;
         }
 

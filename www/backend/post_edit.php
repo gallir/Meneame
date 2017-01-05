@@ -93,6 +93,7 @@ function save_post ($post_id)
             try {
                 $poll->storeFromArray($_POST);
             } catch (Exception $e) {
+                $db->rollback();
                 die('ERROR: '.$e->getMessage());
             }
 
