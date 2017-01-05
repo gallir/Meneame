@@ -1,6 +1,6 @@
 <?php
 // The source code packaged with this file is Free Software, Copyright (C) 2005 by
-// Ricardo Galli <gallir at uib dot es> and 
+// Ricardo Galli <gallir at uib dot es> and
 // Beldar <beldar.cat at gmail dot com>
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
@@ -12,10 +12,18 @@ if (! defined('mnmpath')) {
 	header('Content-Type: text/html; charset=utf-8');
 }
 
-if (empty($_GET['id'])) die;
-$id = intval($_GET['id']);
+if (empty($_GET['id'])) {
+    die;
+}
+
 $post = new Post;
-$post->id=$id;
-if (! $post->read()) die;
-if(!$post->read) die;
+$post->id = (int)$_GET['id'];
+
+if (!$post->read() || !$post->read) {
+    die;
+}
+
+$post->poll = new Poll;
+$post->poll->read('post_id', $post->id);
+
 $post->print_text(0);

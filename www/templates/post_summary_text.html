@@ -2,7 +2,7 @@
 	<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar lazy" data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}" data-2x="s:-40.:-80." src="{{ globals.base_static }}img/g.gif" alt="{{ self.username }}"/></a>
 {% endif %}
 
-	{{ self.content }}
+{{ self.content }}
 
 {% if self.media_size > 0 %}
 	&nbsp;
@@ -12,7 +12,7 @@
 
 	{% if globals.cache_redirector %}
 		class="thumb ok lazy"
-		data-src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.{{ self.media_extension }}?{{ self.media_date }}" 
+		data-src="{{ self.media_thumb_dir }}/media_thumb-post-{{ self.id }}.{{ self.media_extension }}?{{ self.media_date }}"
 		data-2x="s:thumb:thumb_2x"
 	{% else %}
 		class="thumb lazy"
@@ -21,7 +21,11 @@
 	alt="media" {# title="{% trans _('Mayúsculas+Clic para expandir todas') %}" #}/></a>
 {% endif %}
 
-
 {% if self.can_edit %}
 	&nbsp;&nbsp;<a href="javascript:post_edit({{ self.id }})" title="{% trans _('editar') %}" class="mini-icon-text"><i class="fa fa-edit edit-link"></i></a>
+{% endif %}
+
+{% if self.poll.id %}
+	{% set poll = self.poll %}
+	{% include 'poll_vote.html' %}
 {% endif %}

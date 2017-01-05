@@ -347,12 +347,17 @@ function change_fav_readed(element, type, id) {
 /* Get voters by Beldar <beldar.cat at gmail dot com>
 ** Generalized for other uses (gallir at gmail dot com)
 */
-function get_votes(program,type,container,page,id) {
+function get_votes(program, type, container, page, id) {
 	var url = base_url + 'backend/'+program+'?id='+id+'&p='+page+'&type='+type+"&key="+base_key;
-	$e = $('#'+container);
+
+	$e = $('#' + container);
+
 	$e.load(url, function () {
 		$e.trigger("DOMChanged", $e);
+
+		initPollVote($e.find('.poll-vote form').first());
 	});
+
 	reportAjaxStats('html', program);
 }
 

@@ -168,18 +168,18 @@ class Post extends LCPBase {
 		$this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level == 'disabled';
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
-		if ($this->hidden || $this->ignored)  {
-			$post_meta_class = 'comment-meta phantom';
-			$post_class = 'comment-body phantom';
-		} else {
-			$post_meta_class = 'comment-meta';
-			$post_class = 'comment-body';
+		$post_meta_class = 'comment-meta';
+		$post_class = 'comment-body';
 
-			if ($this->admin) {
-				$post_class .= ' admin';
-			} elseif ($this->karma > $globals['post_highlight_karma']) {
-				$post_class .= ' high';
-			}
+		if ($this->hidden || $this->ignored)  {
+			$post_meta_class .= ' phantom';
+			$post_class .= ' phantom';
+
+			$this->poll = null;
+		} elseif ($this->admin) {
+			$post_class .= ' admin';
+		} elseif ($this->karma > $globals['post_highlight_karma']) {
+			$post_class .= ' high';
 		}
 
 		if ($this->author == $current_user->user_id) {
@@ -231,8 +231,8 @@ class Post extends LCPBase {
 		global $current_user, $globals;
 
 		$this->prepare_summary_text($length);
-		$vars = array('self' => $this);
-		return Haanga::Load('post_summary_text.html', $vars);
+
+		return Haanga::Load('post_summary_text.html', array('self' => $this));
 	}
 
 	function clean_content() {
