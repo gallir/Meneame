@@ -30,7 +30,7 @@ class Poll
 
     public function readFromArray(array $data)
     {
-        $this->question = $this->normalize($data['poll_question']);
+        $this->setQuestion($data['poll_question']);
 
         if (empty($this->question)) {
             return true;
@@ -51,6 +51,11 @@ class Poll
         $this->setDuration($duration);
 
         return true;
+    }
+
+    public function setQuestion($question)
+    {
+        $this->question = $this->normalize($question);
     }
 
     public function resetOptions()
@@ -91,7 +96,7 @@ class Poll
                 $option->id = -$this->index;
             }
 
-            $option->option = $data['option'];
+            $option->setOption($data['option']);
 
             $this->setOption($option);
         }
@@ -361,8 +366,6 @@ class Poll
             return;
         }
 
-        $this->question = $this->normalize($this->question);
-
         if ($this->id) {
             $response = $this->update();
         } else {
@@ -508,6 +511,6 @@ class Poll
 
     private function normalize($value)
     {
-        return trim(clean_lines(clear_whitespace(clean_text_with_tags($value))));
+        return htmlspecialchars(trim(preg_replace('/[\n|\r]/', '', strip_tags($value))));
     }
 }

@@ -20,8 +20,6 @@ class PollOption
 
     public function store()
     {
-        $this->option = $this->normalize($this->option);
-
         if (empty($this->id) || ($this->id < 1)) {
             $response = $this->insert();
         } elseif ($this->option) {
@@ -31,6 +29,11 @@ class PollOption
         }
 
         return $response;
+    }
+
+    public function setOption($option)
+    {
+        $this->option = $this->normalize($option);
     }
 
     private function insert()
@@ -110,7 +113,7 @@ class PollOption
 
     private function normalize($value)
     {
-        return clean_lines(clear_whitespace($value));
+        return htmlspecialchars(trim(preg_replace('/[\n|\r]/', '', clear_whitespace(strip_tags($value)))));
     }
 
     public static function selectFromPollId($poll_id)
