@@ -56,18 +56,9 @@ switch ($argv[0]) {
     case '_all':
         $tab_option = 1;
         $where = 'post_id > 0';
-
-        if (!empty($_GET['q'])) {
-            $q = trim(preg_replace('/[^[:alnum:][:space:]]/u', '', $_GET['q']));
-
-            if (strlen($q) > 2) {
-                $where .= ' AND `posts`.`post_content` LIKE "%'.str_replace(' ', '%', $q).'%"';
-            }
-        }
-
         $order_by = 'ORDER BY post_id DESC';
         $limit = 'LIMIT '.$offset.', '.$page_size;
-        $rows = $db->get_var('SELECT COUNT(*) FROM posts WHERE '.$where);
+        $rows = Post::count();
         $min_date = date('Y-m-d 00:00:00', time() - (86400 * 10));
         $rss_option = 'sneakme_rss';
         break;
