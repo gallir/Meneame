@@ -257,6 +257,7 @@ $globals['draft_limit'] = 5; // Max unset drafts at the same time
 
 // Polls
 $globals['polls_min_time_for_votes'] = 30; // Wait X seconds between poll votes
+$globals['polls_question_len_limit'] = 200;
 $globals['polls_option_len_limit'] = 150;
 
 // Don't forget to add a redirect to ooops.php in case of 404 error,

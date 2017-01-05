@@ -36,6 +36,8 @@ class Poll
             return true;
         }
 
+        $this->validateQuestion();
+
         $this->setOptionsFromArray($data['poll_options']);
         $this->validateOptions();
 
@@ -230,6 +232,15 @@ class Poll
 
     /** VALIDATORS **/
 
+    public function validateQuestion()
+    {
+        global $globals;
+
+        if (mb_strlen($this->question) > $globals['polls_question_len_limit']) {
+            throw new Exception(sprintf(_('El límite de longitud de la pregunta es de %s caracteres'), $globals['polls_question_len_limit']));
+        }
+    }
+
     public function validateOptions()
     {
         global $globals;
@@ -255,8 +266,6 @@ class Poll
 
             $duplicated[] = $option->option;
         }
-
-        return true;
     }
 
     public function validateDuration($hours)
