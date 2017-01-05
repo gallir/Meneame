@@ -25,7 +25,7 @@ CREATE TABLE `polls_options` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `option` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `votes` smallint(7) UNSIGNED NOT NULL DEFAULT 0,
-  `karma` decimal(4, 2) UNSIGNED NOT NULL DEFAULT 0.0,
+  `karma` decimal(8, 2) UNSIGNED NOT NULL DEFAULT 0.0,
   `poll_id` int(20) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_polls_options_poll_id` FOREIGN KEY (`poll_id`) REFERENCES `polls`(`id`) ON DELETE CASCADE
