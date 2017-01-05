@@ -37,17 +37,11 @@ class Poll
         }
 
         $this->setOptionsFromArray($data['poll_options']);
-
-        if (!$this->validateOptions()) {
-            throw new Exception(_('Las opciones de la encuesta no son válidas'));
-        }
+        $this->validateOptions();
 
         $duration = (int)$data['poll_duration'];
 
-        if (!$this->validateDuration($duration)) {
-            throw new Exception(_('La duración indicada en la encuesta no es válida'));
-        }
-
+        $this->validateDuration($duration);
         $this->setDuration($duration);
 
         return true;
@@ -238,17 +232,25 @@ class Poll
 
     public function validateOptions()
     {
-        $count = count($this->options);
+        global $globals;
+
+        $count = count(array_filter($this->options, function($value) {
+            return $value->option;
+        }));
 
         if (($count < 2) || ($count > $this->options_limit)) {
-            return false;
+            throw new Exception(sprintf(_('Se debe indicar un mínimo de %s opciones y un máximo de %s'), 2, $this->options_limit));
         }
 
         $duplicated = array();
 
         foreach ($this->options as $option) {
+            if (mb_strlen($option->option) > $globals['polls_option_len_limit']) {
+                throw new Exception(sprintf(_('El límite de longitud por opción es de %s caracteres'), $globals['polls_option_len_limit']));
+            }
+
             if (in_array($option->option, $duplicated)) {
-                return false;
+                throw new Exception(_('Las opciones de la encuesta están duplicadas'));
             }
 
             $duplicated[] = $option->option;
@@ -259,7 +261,9 @@ class Poll
 
     public function validateDuration($hours)
     {
-        return in_array($hours, $this->durations_valid);
+        if (!in_array($hours, $this->durations_valid)) {
+            throw new Exception(_('La duración indicada en la encuesta no es válida'));
+        }
     }
 
     public function isStorable()

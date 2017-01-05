@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `polls_options`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `polls_options` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `option` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `option` varchar(250) COLLATE utf8_spanish_ci NOT NULL,
   `votes` smallint(7) UNSIGNED NOT NULL DEFAULT 0,
   `karma` decimal(8, 2) UNSIGNED NOT NULL DEFAULT 0.0,
   `poll_id` int(20) UNSIGNED NOT NULL,
