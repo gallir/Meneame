@@ -57,8 +57,12 @@ switch ($argv[0]) {
         $tab_option = 1;
         $where = 'post_id > 0';
 
-        if (!empty($_GET['q']) && ($q = trim(preg_replace('/[^[:alnum:][:space:]]/u', '', $_GET['q'])))) {
-            $where .= ' AND `posts`.`post_content` LIKE "%'.str_replace(' ', '%', $q).'%"';
+        if (!empty($_GET['q'])) {
+            $q = trim(preg_replace('/[^[:alnum:][:space:]]/u', '', $_GET['q']));
+
+            if (strlen($q) > 2) {
+                $where .= ' AND `posts`.`post_content` LIKE "%'.str_replace(' ', '%', $q).'%"';
+            }
         }
 
         $order_by = 'ORDER BY post_id DESC';
