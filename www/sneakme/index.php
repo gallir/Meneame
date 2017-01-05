@@ -37,6 +37,10 @@ $page_title = _('nótame') . ' | '. $globals['site_name'];
 $view = false;
 $short_content = false;
 
+$tab_option = 0;
+$where = $order_by = '';
+$limit = $rows = 0;
+
 switch ($argv[0]) {
     case '_best':
         $tab_option = 2;
@@ -51,15 +55,22 @@ switch ($argv[0]) {
     case '':
     case '_all':
         $tab_option = 1;
-        //$sql = "SELECT SQL_CACHE post_id FROM posts ORDER BY post_id desc limit $offset,$page_size";
-        $where = "post_id > 0";
-        $order_by = "ORDER BY post_id desc";
-        $limit = "LIMIT $offset,$page_size";
-        //$rows = $db->get_var("SELECT count(*) FROM posts");
+        $where = 'post_id > 0';
+        $order_by = 'ORDER BY post_id DESC';
+        $limit = 'LIMIT '.$offset.', '.$page_size;
         $rows = Post::count();
-        $min_date = date("Y-m-d 00:00:00", time() - 86400*10);
-        //$rows = $db->get_var("SELECT SQL_CACHE count(*) FROM posts where post_date > '$min_date'");
-        $rss_option="sneakme_rss";
+        $min_date = date('Y-m-d 00:00:00', time() - (86400 * 10));
+        $rss_option = 'sneakme_rss';
+        break;
+
+    case '_poll':
+        $tab_option = 6;
+        $where = 'post_id IN (SELECT post_id FROM polls WHERE post_id > 0)';
+        $order_by = 'ORDER BY post_id DESC';
+        $limit = 'LIMIT '.$offset.', '.$page_size;
+        $rows = $db->get_var('SELECT COUNT(*) FROM posts WHERE '.$where);
+        $min_date = date('Y-m-d 00:00:00', time() - (86400 * 10));
+        $rss_option = 'sneakme_rss';
         break;
 
     default:

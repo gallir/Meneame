@@ -26,7 +26,9 @@ function get_posts_menu($tab_selected, $username) {
 		case 5:
 			$id = _('privados');
 			break;
-		case 1:
+		case 6:
+			$id = _('encuestas');
+			break;
 		default:
 			$id = _('todas');
 			break;
@@ -52,6 +54,8 @@ function get_posts_menu($tab_selected, $username) {
 	if ($current_user->user_id > 0 ) {
 		$items[] = new MenuOption(_('privados'), post_get_base_url('_priv'), $id, _('mensajes privados'));
 	}
+
+	$items[] = new MenuOption(_('encuestas'), post_get_base_url('_poll'), $id, _('notas con encuestas'));
 
 	return $items;
 }
