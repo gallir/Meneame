@@ -424,7 +424,7 @@ class Poll
         $response = $db->query(DbHelper::queryPlain('
             INSERT INTO `polls`
             SET
-                `question` = "'.$this->question.'",
+                `question` = "'.$db->escape($this->question).'",
                 `duration` = "'.(int)$this->duration.'",
                 `end_at` = "'.$this->end_at.'",
                 `link_id` = '.($this->link_id ?: 'NULL').',
@@ -447,7 +447,7 @@ class Poll
         $response = $db->query(DbHelper::queryPlain('
             UPDATE `polls`
             SET
-                `question` = "'.$this->question.'",
+                `question` = "'.$db->escape($this->question).'",
                 `duration` = "'.(int)$this->duration.'",
                 `end_at` = "'.$this->end_at.'"
             WHERE `id` = "'.(int)$this->id.'"

@@ -43,7 +43,7 @@ class PollOption
         $response = $db->query(str_replace("\n", ' ', '
             INSERT INTO `polls_options`
             SET
-                `option` = "'.$this->option.'",
+                `option` = "'.$db->escape($this->option).'",
                 `poll_id` = '.($this->poll_id ?: 'NULL').';
         '));
 
@@ -62,7 +62,7 @@ class PollOption
 
         $response = $db->query(str_replace("\n", ' ', '
             UPDATE `polls_options`
-            SET `option` = "'.$this->option.'"
+            SET `option` = "'.$db->escape($this->option).'"
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         '));
