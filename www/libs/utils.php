@@ -1495,28 +1495,51 @@ function push_to_globals($key, $value) {
 
 function d($title, $message = null, $trace = false)
 {
-    $cli = (php_sapi_name() === 'cli');
+	$cli = (php_sapi_name() === 'cli');
 
-    echo $cli ? "\n" : '<pre>';
-    echo '['.date('Y-m-d H:i:s').'] ';
+	echo $cli ? "\n" : '<pre>';
+	echo '['.date('Y-m-d H:i:s').'] ';
 
-    if ($message === null) {
-        var_dump($title);
-    } else {
-        echo $title.': ';
-        var_dump($message);
-    }
+	if ($message === null) {
+		var_dump($title);
+	} else {
+		echo $title.': ';
+		var_dump($message);
+	}
 
-    if ($trace) {
-    	echo implode(($cli ? "\n" : '<br />'), array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1));
-    }
+	if ($trace) {
+	    foreach (array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1) as $row) {
+	        echo ($cli ? "\n" : '<br>').dTraceLine($row);
+	    }
+	}
 
-    echo $cli ? "\n" : '</pre>';
+	echo $cli ? "\n" : '</pre>';
 }
 
 function dd($title, $message = null, $trace = false)
 {
 	die(d($title, $message, $trace));
+}
+
+function dTraceLine($row)
+{
+	$line = '';
+
+    if (!empty($row['file'])) {
+        $line .= $row['file'];
+    }
+
+    if (!empty($row['line'])) {
+    	$line .= '#'.$row['line'];
+    }
+
+    if (!empty($row['class'])) {
+        $line .= ' ('.$row['class'].$row['type'].$row['function'].')';
+    } elseif (!empty($row['function'])) {
+        $line .= ' ('.$row['function'].')';
+    }
+
+    return $line;
 }
 
 function show_errors($enabled = true)
