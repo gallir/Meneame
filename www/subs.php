@@ -80,6 +80,7 @@ $ids_subs = array_map(function($row) {
 	return (int)$row->id;
 }, $all_subs);
 
+$infos = $db->get_results(SitesMgr::SQL_BASIC.' WHERE subs.id IN ('.implode(',', $ids_subs).')');
 $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
 
 $subs = array();
@@ -88,16 +89,24 @@ foreach ($all_subs as $sub) {
 	if (!$sub->enabled) {
 		continue;
 	}
-	$sub->site_info = SitesMgr::get_info($sub->id);
+
+	foreach ($infos as $row) {
+		if ($sub->id == $row->id) {
+			$sub->site_info = $row;
+			break;
+		}
+	}
 
 	// Check if the sub has a logo and calculate the width
 	if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
 		$r = $sub->site_info->media_dim1/$sub->site_info->media_dim2;
-		if ( $globals['mobile']) {
+
+		if ($globals['mobile']) {
 			$sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
 		} else {
 			$sub->site_info->logo_height = $globals['media_sublogo_height'];
 		}
+
 		$sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
 		$sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
 	}
@@ -107,6 +116,7 @@ foreach ($all_subs as $sub) {
 	foreach ($followers as $row) {
 		if ($sub->id == $row->id) {
 			$sub->followers = $row->c;
+			break;
 		}
 	}
 
@@ -115,34 +125,31 @@ foreach ($all_subs as $sub) {
 
 $can_edit = (SitesMgr::my_id() == 1 && SitesMgr::can_edit(0));
 
-
 // Official subs
 
 $official_subs = array();
 
 if ($globals['official_subs']) {
-
 	foreach (array_keys($globals['official_subs']) as $sub_name) {
 		$sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
 		$sub->extra_info = $globals['official_subs'][$sub_name];
 		$official_subs[] = $sub;
 	}
 
-	$ids_official_subs = array_map(function($row) {
+	$ids_subs = array_map(function($row) {
 		return (int)$row->id;
 	}, $official_subs);
 
-	$followers_official_subs = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_official_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+	$followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
 
 	foreach ($official_subs as $sub) {
-
-		foreach ($followers_official_subs as $row) {
+		foreach ($followers as $row) {
 			if ($sub->id == $row->id) {
 				$sub->followers = $row->c;
+				break;
 			}
 		}
 	}
-
 }
 
 // Recommended subs
@@ -150,28 +157,26 @@ if ($globals['official_subs']) {
 $recommended_subs = array();
 
 if ($globals['recommended_subs']) {
-
 	foreach (array_keys($globals['recommended_subs']) as $sub_name) {
 		$sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
 		$sub->extra_info = $globals['recommended_subs'][$sub_name];
 		$recommended_subs[] = $sub;
 	}
 
-	$ids_recommended_subs = array_map(function($row) {
+	$ids_subs = array_map(function($row) {
 		return (int)$row->id;
 	}, $recommended_subs);
 
-	$followers_recommended_subs = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_recommended_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+	$followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
 
 	foreach ($recommended_subs as $sub) {
-
-		foreach ($followers_recommended_subs as $row) {
+		foreach ($followers as $row) {
 			if ($sub->id == $row->id) {
 				$sub->followers = $row->c;
+				break;
 			}
 		}
 	}
-
 }
 
 Haanga::Load('subs.html', compact(

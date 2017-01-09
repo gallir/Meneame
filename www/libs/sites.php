@@ -20,42 +20,41 @@ class SitesMgr {
 			LEFT JOIN media ON (media.type='sub_logo' and media.id = subs.id and media.version = 0) ";
 
 	static public $page_modes = array(
-			'default' => '',
-			'ordered' => 'standard',
-			'best comments' => 'best-comments',
-			'threads' => 'threads',
-			'smart threads' => 'interview',
-
+		'default' => '',
+		'ordered' => 'standard',
+		'best comments' => 'best-comments',
+		'threads' => 'threads',
+		'smart threads' => 'interview',
 	);
 
 	static public $extended_properties = array(
-			'new_disabled' => 0,
-			'no_link' => 0,
-			'intro_max_len' => 550,
-			'intro_min_len' => 20,
-			'intro_lines' => 0,
-			'no_anti_spam' => 0,
-			'allow_local_links' => 0,
-			'allow_paragraphs' => 0,
-			'allow_images' => 0,
-			'rules' => '',
-			'message' => '',
-			'box_color' => '',
-			'box_background' => '',
-			'box_bordercolor' => '',
-			'post_html' => '',
+		'new_disabled' => 0,
+		'no_link' => 0,
+		'intro_max_len' => 550,
+		'intro_min_len' => 20,
+		'intro_lines' => 0,
+		'no_anti_spam' => 0,
+		'allow_local_links' => 0,
+		'allow_paragraphs' => 0,
+		'allow_images' => 0,
+		'rules' => '',
+		'message' => '',
+		'box_color' => '',
+		'box_background' => '',
+		'box_bordercolor' => '',
+		'post_html' => '',
 	);
 
 	static public $extra_extended_properties = array(
-			'twitter_page' => '',
-			'twitter_consumer_key' => '',
-			'twitter_consumer_secret' => '',
-			'twitter_token' => '',
-			'twitter_token_secret' => '',
-			'facebook_page' => '',
-			'facebook_key' => '',
-			'facebook_secret' => '',
-			'facebook_token' => '',
+		'twitter_page' => '',
+		'twitter_consumer_key' => '',
+		'twitter_consumer_secret' => '',
+		'twitter_token' => '',
+		'twitter_token_secret' => '',
+		'facebook_page' => '',
+		'facebook_key' => '',
+		'facebook_secret' => '',
+		'facebook_token' => '',
 	);
 
 	static function __init($id = false) {
@@ -68,7 +67,9 @@ class SitesMgr {
 			if (empty($globals['site_shortname'])) {
 				echo "Error, site_shortname not found, check your global['site_shortname']: ". $globals['site_shortname'];
 			}
+
 			self::$info = $db->get_row(SitesMgr::SQL_BASIC."where subs.name = '".$globals['site_shortname']."'");
+
 			if (self::$info) {
 				self::$id = self::$info->id;
 			} else {
@@ -90,7 +91,10 @@ class SitesMgr {
 	}
 
 	static public function my_id() {
-		if (! self::$id ) self::__init();
+		if (! self::$id ) {
+			self::__init();
+		}
+
 		return self::$id;
 	}
 
@@ -106,49 +110,58 @@ class SitesMgr {
 	static public function is_owner() {
 		global $current_user;
 
-		if (! self::$id ) self::__init();
+		if (! self::$id ) {
+			self::__init();
+		}
 
 		return $current_user->user_id > 0 && ($current_user->admin || self::$info->owner == $current_user->user_id);
 	}
 
 	static public function get_info($id = false, $force = false) {
-		global $db, $globals;
+		global $db;
 
-		if ($id == false || $id == self::$id) {
-			if (! self::$id || $force) self::__init($id);
-			return self::$info;
-		} else {
+		if ($id && ($id != self::$id)) {
 			return $db->get_row(SitesMgr::SQL_BASIC."where subs.id = $id");
 		}
+
+		if (!self::$id || $force) {
+			self::__init($id);
+		}
+
+		return self::$info;
 	}
 
 	static public function get_name($id = false, $force = false) {
 		global $db;
 
-		if ($id == false || $id == self::$id) {
-			if (! self::$id || $force) self::__init();
-			return self::$info->name;
-		} else {
+		if ($id && ($id != self::$id)) {
 			return $db->get_var("select name from subs where id = $id");
 		}
+
+		if (!self::$id || $force) {
+			self::__init($id);
+		}
+
+		return self::$info->name;
 	}
 
 	static public function get_id($name) {
 		global $db;
 
-		$name = $db->escape($name);
-		return $db->get_var("select id from subs where name = '$name'");
+		return $db->get_var("select id from subs where name = '".$db->escape($name)."'");
 	}
 
 	static public function deploy($link) {
 		global $db;
 
-		if (! self::$id ) self::__init();
+		if (! self::$id ) {
+			self::__init();
+		}
 
 		$delete_others = false;
 
-
 		$me = self::get_status(self::$id, $link);
+
 		if ($me->status == $link->status && $me->origen == $link->sub_id && empty($link->sub_changed)) {
 			return true;
 		}
@@ -202,6 +215,7 @@ class SitesMgr {
 		}
 
 		$receivers = array();
+
 		if ($do_current) {
 			$receivers[] = $current;
 		} elseif ($do_all) {
@@ -219,6 +233,7 @@ class SitesMgr {
 
 		$r = true; // Result of operations, for commit/rollback
 		$db->transaction();
+
 		if ($receivers) {
 			foreach ($receivers as $r) {
 				$new = $db->get_row("select * from sub_statuses where id = $r and link = $link->id");
@@ -264,8 +279,7 @@ class SitesMgr {
 	static function get_real_origen($id, $link) {
 		global $db;
 
-		if ($link->sub_id > 0) return $link->sub_id;
-		return $id;
+		return ($link->sub_id > 0) ? $link->sub_id : $id;
 	}
 
 	// Receivers are categories from other sub sites that have importe as true
@@ -275,9 +289,10 @@ class SitesMgr {
 		if ($id == false) {
 			$id = self::my_id();
 		}
+
 		$receivers = array();
-		$receivers = array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
-		return $receivers;
+
+		return array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
 	}
 
 	static public function get_senders($id = false) {
@@ -286,9 +301,10 @@ class SitesMgr {
 		if ($id == false) {
 			$id = self::my_id();
 		}
+
 		$senders = array();
-		$senders = array_merge($senders, $db->get_col("select src from subs_copy where dst=$id"));
-		return $senders;
+
+		return array_merge($senders, $db->get_col("select src from subs_copy where dst=$id"));
 	}
 
 	static private function get_status($id, $link) {
@@ -296,26 +312,29 @@ class SitesMgr {
 
 		$status = $db->get_row("select id, status, unix_timestamp(date) as date, link, origen, karma, 1 as found from sub_statuses where id = $id and link = $link->id");
 
-		if (! $status) {
-			// Create and object that can be later stored
-			$origen = self::get_real_origen(self::$id, $link);
-			$status = new stdClass();
-
-			// Retrieve original status in any sub, if it exists
-			$original_status = $db->get_var("select status from sub_statuses where link=$link->id and id=origen");
-			if ($original_status) {
-				$status->status = $original_status;
-			} else {
-				$status->status = 'new';
-			}
-
-			$status->id = $origen;
-			$status->link = $link->id;
-			$status->date = $link->date;
-			$status->origen = $origen;
-			$status->karma = 0;
-			$status->found = 0;
+		if ($status) {
+			return $status;
 		}
+
+		// Create and object that can be later stored
+		$origen = self::get_real_origen(self::$id, $link);
+		$status = new stdClass();
+
+		// Retrieve original status in any sub, if it exists
+		$original_status = $db->get_var("select status from sub_statuses where link=$link->id and id=origen");
+
+		if ($original_status) {
+			$status->status = $original_status;
+		} else {
+			$status->status = 'new';
+		}
+
+		$status->id = $origen;
+		$status->link = $link->id;
+		$status->date = $link->date;
+		$status->origen = $origen;
+		$status->karma = 0;
+		$status->found = 0;
 
 		return $status;
 	}
@@ -361,8 +380,13 @@ class SitesMgr {
 	static public function can_edit($id = -1) {
 		global $current_user, $db;
 
-		if (! $current_user->user_id) return false;
-		if ($current_user->admin) return true;
+		if (! $current_user->user_id) {
+			return false;
+		}
+
+		if ($current_user->admin) {
+			return true;
+		}
 
 		if ($id > 0) {
 			return $db->get_var("select owner from subs where id = $id") == $current_user->user_id;
@@ -375,10 +399,11 @@ class SitesMgr {
 
 	static public function my_parent() {
 		// Get original site
-		if (! self::$id ) self::__init();
+		if (! self::$id ) {
+			self::__init();
+		}
 
-		if (self::$parent > 0) return self::$parent;
-		else return self::$id;
+		return (self::$parent > 0) ? self::$parent : self::$id;
 	}
 
 	static public function get_subscriptions($user) {
@@ -400,7 +425,6 @@ class SitesMgr {
 		}
 
 		if (!$memcache_followers || false === $followers = memcache_mget($memcache_followers)) {
-
 			// Not in memcache
 
 			$sql = 'SELECT SQL_CACHE COUNT(pref_user_id) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'")';
@@ -419,8 +443,10 @@ class SitesMgr {
 		if ($id == false) {
 			$id = self::my_id();
 		}
+
 		$dict = array();
 		$defaults = array_merge(self::$extended_properties, self::$extra_extended_properties);
+
 		foreach ($prefs as $k => $v) {
 			if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v ) {
 				switch ($k) {
@@ -449,22 +475,27 @@ class SitesMgr {
 			$a->text = $json;
 			return $a->store();
 		}
+
 		return $a->delete();
 	}
 
 	static public function get_extended_properties($id = false) {
 		static $properties = array(), $last_id = false;
+
 		if ($id == false) {
 			$id = self::my_id();
 		}
 
-		if (! empty($properties) && $last_id == $id) return $properties;
+		if (! empty($properties) && $last_id == $id) {
+			return $properties;
+		}
 
 		$last_id = $id;
 		$properties = self::$extended_properties;
 
 		$key = self::PREFERENCES_KEY.$id;
 		$a = new Annotation($key);
+
 		if ($a->read() && !empty($a->text)) {
 			$res = json_decode($a->text, true); // We use associative array
 			if ($res) {
@@ -473,6 +504,7 @@ class SitesMgr {
 				}
 			}
 		}
+
 		return $properties;
 	}
 
@@ -480,15 +512,15 @@ class SitesMgr {
 		if ($id == false) {
 			$id = self::my_id();
 		}
-		$info = self::get_info($id);
-		if (! $info->enabled) return false;
 
-		$properties = self::get_extended_properties($id);
-		if (!empty($properties['new_disabled'])) {
+		$info = self::get_info($id);
+
+		if (! $info->enabled) {
 			return false;
 		}
 
-		return true;
-	}
+		$properties = self::get_extended_properties($id);
 
+		return empty($properties['new_disabled']);
+	}
 }
