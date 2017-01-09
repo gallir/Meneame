@@ -808,7 +808,6 @@ var mDialog = new function() {
 		});
 	};
 
-
 	this.content = function(content, close_seconds) {
 		if (is_mobile) {
 			this.std_alert(content, false);
@@ -1309,7 +1308,6 @@ function share_tw(e) {
 
 (function () {
 	var panel = false;
-
 
 	$("#nav-menu").on('click', function() {
 		prepare();
