@@ -1253,7 +1253,7 @@ function show_answers(type, id) {
 	}
 
 	$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
-		// Added a double check to avoid duplicated answers on latency problems
+		/* Added a double check to avoid duplicated answers on latency problems */
 		var current_answers = $('#answers-' + id);
 
 		if (current_answers.length) {
