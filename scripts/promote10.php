@@ -188,7 +188,7 @@ function promote($site_id) {
 		foreach($links as $dblink) {
 			$link = Link::from_db($dblink->link_id);
 			if ($link->is_sponsored()) continue;
-			$changes = update_link_karma($site_id, $link);
+			$changes = update_link_karma($site_id, $link, $past_karma);
 
 			if (! DEBUG && $link->thumb_status == 'unknown' && $link->karma > $limit_karma ) {
 				echo "Adding $link->id to thumb queue\n";
@@ -426,7 +426,7 @@ function get_subs_coef($site_id, $days = 3) {
 }
 
 
-function update_link_karma($site, $link) {
+function update_link_karma($site, $link, $past_karma) {
 	global $db, $globals;
 
 	if (time() - $link->time_annotation('link-karma') < 75) {
