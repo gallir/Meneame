@@ -1244,17 +1244,28 @@ function show_answers(type, id) {
 		program = 'get_post_answers';
 		dom_id = '#pid-'+ id;
 	}
-	answers = $('#answers-'+id);
-	if (answers.length == 0) {
-		$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
-			element = $(dom_id).parent().parent();
-			element.append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
-			element.trigger('DOMChanged', element);
-		});
-		reportAjaxStats('html', program);
-	} else {
+
+	answers = $('#answers-' + id);
+
+	if (answers.length) {
 		answers.toggle();
+		return;
 	}
+
+	$.get(base_url + 'backend/'+program, { "type": type, "id": id }, function (html) {
+		// Added a double check to avoid duplicated answers on latency problems
+		var current_answers = $('#answers-' + id);
+
+		if (current_answers.length) {
+			return;
+		}
+
+		element = $(dom_id).parent().parent();
+		element.append('<div class="comment-answers" id="answers-'+id+'">'+html+'</div>');
+		element.trigger('DOMChanged', element);
+	});
+
+	reportAjaxStats('html', program);
 }
 
 function share_fb(e) {
