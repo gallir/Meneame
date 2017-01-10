@@ -1846,40 +1846,43 @@ var fancyBox = new function () {
 	};
 
 	function click() {
-		if (! panel_visible) {
-			panel_visible = true;
-			$e = $('<div id="notifier_panel"> </div>');
-
-			$e.appendTo("#header-top");
-
-			$('html').one('click', click_handler);
-
-			data = decode_data(readStorage("n_"+user_id));
-
-			var a = ['privates', 'posts', 'comments', 'friends', 'favorites'];
-			for (var i=0; i < a.length; i++) {
-				field = a[i];
-				var counter = (data && data[field]) ? data[field] : 0;
-				$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
-			}
-
-			if (current_user_admin) {
-                $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
-			}
-
-			$e.show();
-
-			var notifier_position = $e.position();
-			$e.css({'right': (notifier_position.left) + 'px'});
-
-			check_counter = 0;
-		} else {
+		if (panel_visible) {
 			hide();
 			update();
+
+			return false;
 		}
+
+		panel_visible = true;
+
+		$e = $('<div id="notifier_panel"> </div>');
+
+		$e.appendTo("#header-top");
+
+		$('html').on('click', click_handler);
+
+		data = decode_data(readStorage("n_"+user_id));
+
+		var a = ['privates', 'posts', 'comments', 'friends', 'favorites'];
+
+		for (var i=0; i < a.length; i++) {
+			field = a[i];
+			var counter = (data && data[field]) ? data[field] : 0;
+			$e.append("<div class='"+field+"'><a href='"+base_url_sub+"go?id="+user_id+"&what="+field+"'>" + counter + " " + field_text(field) + "</a></div>");
+		}
+
+		if (current_user_admin) {
+            $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
+		}
+
+		$e.show().css({
+			'right': ($e.position().left) + 'px'
+		});
+
+		check_counter = 0;
+
 		return false;
 	};
-
 
 	function hide() {
 		$("#notifier_panel").remove();
