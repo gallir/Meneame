@@ -43,6 +43,12 @@
                 <span>{% trans _('Seguir') %}</span>
             </a>
 
+            <script type="text/javascript">
+            addPostCode(function () {
+                add_remove_sub('{{ site.id }}', 0);
+            });
+            </script>
+
             {% else %}
 
             <a href="{{ globals.base_url_general }}login?return={{ globals.uri|urlencode }}" class="btn btn-mnm" title="{% trans _('suscripción al sub') %}">
