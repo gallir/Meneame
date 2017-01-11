@@ -2593,13 +2593,24 @@ $(document).ready(function () {
 		$(e.trigger).tooltip('show');
 	});
 
-    $("a.dropdown-toggle.menu-more-button").on({
-        'mouseenter': function(){$(this).parent().addClass('open');}
+	var $menuMore = $('a.dropdown-toggle.menu-more-button'),
+		$dropdown = $menuMore.closest('.dropdown');
+
+    $menuMore.on('mouseenter', function() {
+        $dropdown.addClass('open');
+    });
+
+    $(".dropdown-menu.menu-subheader").on('mouseleave', function() {
+    	$dropdown.removeClass('open');
     });
 
     $(".slider-wrapper .sub").on({
-        'mouseenter': function(){$(this).find('.sub-info').animate({'bottom': '30px'}, 200).find('.sub-follow').show();},
-		'mouseleave': function(){$(this).find('.sub-info').animate({'bottom': '20px'}, 200).find('.sub-follow').hide();}
+        'mouseenter': function(){
+        	$(this).find('.sub-info').animate({'bottom': '30px'}, 200).find('.sub-follow').show();
+        },
+		'mouseleave': function(){
+			$(this).find('.sub-info').animate({'bottom': '20px'}, 200).find('.sub-follow').hide();
+		}
 	});
 
     $('.official-subs-slider').slick({
