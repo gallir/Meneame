@@ -611,10 +611,10 @@ function fancybox_gallery(type, user, link) {
 
 		$(document).on('onAjax', hide);
 		$(document).on('mousemove.tooltip', function (e) {
-			mouseMove(e)
+			mouseMove(e);
 		});
 
-		if (box.outerWidth() != 0) {
+		if (box.outerWidth() === 0) {
 			return;
 		}
 
