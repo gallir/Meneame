@@ -2429,15 +2429,16 @@ var emojiKey = new function() {
 
 $(document).ready(function () {
 
-    $(window).scroll(function(){
-    	if ($(this).scrollTop() > 116) {
-            $('.header-top-wrapper').addClass('fixed');
-            $('.header-sub-wrapper').addClass('fixed').show();
-        } else {
-            $('.header-top-wrapper').removeClass('fixed');
-            $('.header-sub-wrapper').removeClass('fixed').hide();
-        }
-    });
+    if (is_mobile) {
+        $(window).scroll(function () {
+
+            if ($(this).scrollTop() > 116) {
+                $('.header-sub-wrapper').addClass('fixed').show();
+            } else {
+                $('.header-sub-wrapper').removeClass('fixed').hide();
+            }
+        });
+    }
 
     $("#searchform_button").click(function(e) {
 		$("#searchform").toggle('fast', function(){
