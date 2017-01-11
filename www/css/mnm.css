@@ -44,7 +44,7 @@ body {
     -o-transform: translateY(0px);
     transform: translateY(0px);
     transition: all 1.0s ease-in-out;
-    z-index: 10;
+    z-index: 1001;
 }
 
 .mnm-center-in-wrap {
