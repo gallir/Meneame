@@ -375,7 +375,7 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
 }
 
 #searchform_button {
-    display: inline-block;
+    float: left;
     cursor: pointer;
     color: #fff;
     margin-right: 10px;

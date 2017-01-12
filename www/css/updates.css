@@ -1157,6 +1157,11 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
         display: none;
     }
 
+    .menu-more .dropdown-menu {
+        left: auto;
+        right: 0;
+    }
+
     .section .charlist {
         float: none;
         text-align: center;
