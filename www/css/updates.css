@@ -1066,6 +1066,17 @@ ul.slick-dots li button {
     margin-top: 10px;
 }
 
+.news-body .box {
+    clear: both;
+    font-size: 80%;
+    border: 1px solid;
+    border-color: #dadada;
+    background: #fafafa;
+    margin: 7px 25px 7px 25px;
+    padding: 4px;
+    overflow: hidden;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;
