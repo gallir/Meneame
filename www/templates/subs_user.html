@@ -1,9 +1,12 @@
+{% if current_user.user_id %}
+
 <section class="section section-medium section-with-sidebar">
-    {% if title_subscriptions%}
+    {% if subscribed_subs %}
+
+    {% if title_subscriptions %}
     <h1>{{ title_subscriptions }}</h1>
     {% endif %}
 
-    {% if current_user.user_id && subscribed_subs %}
     <form>
         <div class="checkbox">
             <label>
@@ -26,15 +29,20 @@
 
     {% endif %}
 
-    {% if title_owned_subs%}
+    {% if owned_subs %}
+
+    {% if title_owned_subs %}
 
     {% if subscribed_subs %} <hr /> {% endif %}
 
     <h1>{{ title_owned_subs }}</h1>
+
     {% endif %}
 
-    {% if current_user.user_id && owned_subs %}
-        {% set subs = owned_subs %}
-        {% include 'subs_list.html' %}
+    {% set subs = owned_subs %}
+    {% include 'subs_list.html' %}
+
     {% endif %}
 </section>
+
+{% endif %}
