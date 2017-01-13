@@ -107,7 +107,7 @@
 				<br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" />
 			</p>
 
-			{% if link.site_properties.intro_max_len > 0 %}
+			{% if site_properties.intro_max_len > 0 %}
 
 			{% include 'simpleformat_buttons.html' %}
 
@@ -116,14 +116,14 @@
 
 				<span class="note">
 					<strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong>
-					({{ link.site_properties.intro_min_len }} - {{ link.site_properties.intro_max_len }})
+					({{ site_properties.intro_min_len }} - {{ site_properties.intro_max_len }})
 				</span>
 
 				<br/>
 
-				<textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ link.site_properties.intro_max_len }}"
-					onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
-					onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
+				<textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ site_properties.intro_max_len }}"
+					onKeyDown="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
+					onKeyUp="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
 				>{{ link.content }}</textarea>
 			</p>
 
@@ -141,7 +141,7 @@
 				{% endif %}
 			</div>
 
-			{% endif %} {# if link.site_properties.intro_max_len > 0 #}
+			{% endif %} {# if site_properties.intro_max_len > 0 #}
 
 			{% exec print_subs_form link.sub_id as dummy %}
 
@@ -180,7 +180,7 @@
 			<input class="button" type="submit" value="{% trans _('guardar') %} &#187;" />
 			{% endif %}
 
-			{% if link.site_properties.allow_images %}
+			{% if site_properties.allow_images %}
 
 			<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
 			&nbsp;&nbsp;&nbsp;&nbsp;
