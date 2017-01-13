@@ -543,7 +543,7 @@ function do_submit2() {
     global $db, $dblang, $globals, $errors, $site_properties;
 
     $link = new Link;
-    $link->id=$link_id = intval($_POST['id']);
+    $link->id = intval($_POST['id']);
     $link->read();
 
     if (!empty($link->url) || empty($site_properties['no_link'])) {
@@ -604,7 +604,7 @@ function do_submit3() {
 
     $link = new Link;
 
-    $link->id=$link_id = intval($_POST['id']);
+    $link->id = intval($_POST['id']);
 
     if (!check_link_key() || !$link->read() || link_errors($link)) {
         die;

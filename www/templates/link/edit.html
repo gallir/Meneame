@@ -1,169 +1,205 @@
 {% if link.is_new %}
 
-	<div class="genericform">
-
+<div class="genericform">
 	<form action="submit" method="post" id="thisform" name="thisform">
-	<input type="hidden" name="url" id="url" value="{{ link.url | escape }}" />
-	<input type="hidden" name="phase" value="2" />
+		<input type="hidden" name="url" id="url" value="{{ link.url | escape }}" />
+		<input type="hidden" name="phase" value="2" />
 
-	{% if link.url %}
-		<fieldset><legend><span class="sign">{% trans _('información del enlace') %}</span></legend>
-		<p class="genericformtxt"><strong>{{ link.url_title }}</strong><br/>
-		{{ link.url | escape }}
-		</p>
-		</fieldset>
-	{% endif %}
-
-{% else %}
-	<h2>{% trans _('editar noticia') %}</h2>
-	<div class="genericform">
-	<form action="editlink?user={{ current_user.user_id }}" method="post" id="thisform" name="thisform">
-	<input type="hidden" name="phase" value="1" />
-{% endif %}
-
-
-<input type="hidden" name="key" value="{{ link.key }}" />
-<input type="hidden" name="randkey" value="{{ link.randkey }}" />
-<input type="hidden" name="timestamp" value="{{ globals.now }}" />
-<input type="hidden" name="id" value="{{ link.id }}" />
-
-<fieldset><legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
-
-{% if not link.is_new && link.url && (current_user.admin || current_user.user_level == "blogger") %}
-	<label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
-	<p><span class="note">{% trans _('url de la noticia') %}</span>
-	<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>
-	</p>
-{% endif %}
-
-
-<label for="title" accesskey="2">{% trans _('título de la noticia') %}:</label>
-<p><span class="note">{% trans _('título de la noticia. máximo: 120 caracteres') %}</span>
-
-{% if link.url %}
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	{% include 'link/content_type_buttons.html' %}
-{% endif %}
-
-{% if not link.is_new && (link.votes > 0 && (link.status != 'published' || current_user.user_level == 'god' || link.is_sub_owner) &&
-		(( not link.discarded && current_user.user_id == link.author) || current_user.admin || link.is_sub_owner)) %}
-
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<select name="status">
-
-	<option value="{{ link.status }}" selected="selected">{{ link.status_text }}</option>
-	{% if link.status == 'queued' %}
-		<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
-			{% if current_user.user_id != link.author %}
-				<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
-			{% endif %}
-			{% if current_user.user_level == 'god' %}
-				<option value="published">{% exec link.get_status_text 'published' %}</option>
-			{% endif %}
-	{% else %}
-		{% if link.discarded %}
-			{% if current_user.admin || link.is_sub_owner%}
-				<option value="queued">{% exec link.get_status_text 'queued' %}</option>
-				<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
-				<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
-			{% endif %}
-		{% else %}
-			{% if current_user.user_level == 'god' || link.is_sub_owner %}
-				<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
-				<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
-				<option value="queued">{% exec link.get_status_text 'queued' %}</option>
-			{% endif %}
-		{% endif %}
-	{% endif %}
-
-	</select>
-{% endif %}
-
-<br/>
-<input type="text" id="title" name="title" value="{{ link.title }}" style="width:100%" maxlength="120" />
-</p>
-
-<label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
-<p><span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
-<br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" /></p>
-
-{% if link.site_properties.intro_max_len > 0 %}
-
-	{% include 'simpleformat_buttons.html' %}
-	<p><label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label>
-	<br /><span class="note"><strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong> ({{ link.site_properties.intro_min_len }} - {{ link.site_properties.intro_max_len }})</span>
-
-	<br/>
-	<textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ link.site_properties.intro_max_len }}"
-		onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
-		onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
-		>{{ link.content }}</textarea>
-	</p>
-	<script type="text/javascript">
-	addPostCode( function () {
-		$('textarea').autosize();
-	});
-	</script>
-
-	<div style="margin-top:-7px">
-	<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" />
-	{% if ! globals.mobile %}
-		<span class="note">{% trans _('caracteres libres') %}</span>
-	{% endif %}
-	</div>
-{% endif %}
-
-{% exec print_subs_form link.sub_id as dummy %}
-
-{% if link.trackback %}
-	<p><label for="trackback">{% trans _('trackback') %}:</label><br />
-	<span class="note">{{ link.trackback }}</span>
-	<input type="hidden" name="trackback" id="trackback" value="{{ link.trackback }}"/></p>
-{% endif %}
-
-
-{% if not link.is_new && (current_user.admin > 0 || current_user.user_level == "blogger") %}
-	{% if link.thumb_url || link.media_size > 0 %}
-		<label>{% trans _('eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
-	{% else %}
 		{% if link.url %}
-			<label>{% trans _('obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+		<fieldset>
+			<legend><span class="sign">{% trans _('información del enlace') %}</span></legend>
+
+			<p class="genericformtxt">
+				<strong>{{ link.url_title }}</strong><br/>
+				{{ link.url | escape }}
+			</p>
+		</fieldset>
 		{% endif %}
-		<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
-	{% endif %}
-	<label>{% trans _('actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
-{% endif %}
 
-
-
-{% if link.is_new %}
-	<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />&nbsp;&nbsp;
-	<input class="button" type="submit" value="{% trans _('continuar') %} &#187;" />
 {% else %}
-	<input class="button" type="submit" value="{% trans _('guardar') %} &#187;" />
-{% endif %}
 
+<h2>{% trans _('editar noticia') %}</h2>
 
-{% if link.site_properties.allow_images %}
-	<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
-		&nbsp;&nbsp;&nbsp;&nbsp;<label>{% trans _('subir imagen') %} <input type="file" autocomplete="off" name="image"
-		id="fileInput"
-		accept="image/*"
-		class="uploadFile"
-		/></label>
-		<div class="droparea_info" style></div>
-
-	<script type="text/javascript">
-	addPostCode( function () {
-		$('#thisform').droparea({maxsize: {{ globals.media_max_size }} });
-		$("#fileInput").nicefileinput({ title: 'agregar imagen' });
-	});
-	</script>
+<div class="genericform">
+	<form action="editlink?user={{ current_user.user_id }}" method="post" id="thisform" name="thisform">
+		<input type="hidden" name="phase" value="1" />
 
 {% endif %}
 
+		<input type="hidden" name="key" value="{{ link.key }}" />
+		<input type="hidden" name="randkey" value="{{ link.randkey }}" />
+		<input type="hidden" name="timestamp" value="{{ globals.now }}" />
+		<input type="hidden" name="id" value="{{ link.id }}" />
+
+		<fieldset>
+			<legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
+
+			{% if not link.is_new && link.url && (current_user.admin || current_user.user_level == "blogger") %}
+			<label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
+
+			<p>
+				<span class="note">{% trans _('url de la noticia') %}</span>
+				<br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>
+			</p>
+			{% endif %}
 
 
-</fieldset>
-</form>
+			<label for="title" accesskey="2">{% trans _('título de la noticia') %}:</label>
+
+			<p>
+				<span class="note">{% trans _('título de la noticia. máximo: 120 caracteres') %}</span>
+
+				{% if link.url %}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					{% include 'link/content_type_buttons.html' %}
+				{% endif %}
+
+				{% if not link.is_new
+					&& (link.votes > 0 && (link.status != 'published' || current_user.user_level == 'god' || link.is_sub_owner)
+					&& (( not link.discarded && current_user.user_id == link.author) || current_user.admin || link.is_sub_owner))
+				%}
+
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="status">
+					<option value="{{ link.status }}" selected="selected">{{ link.status_text }}</option>
+
+					{% if link.status == 'queued' %}
+					<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+
+					{% if current_user.user_id != link.author %}
+					<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+					{% endif %}
+
+					{% if current_user.user_level == 'god' %}
+					<option value="published">{% exec link.get_status_text 'published' %}</option>
+					{% endif %}
+
+					{% else %} {% if link.discarded %}
+
+					{% if current_user.admin || link.is_sub_owner %}
+					<option value="queued">{% exec link.get_status_text 'queued' %}</option>
+					<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+					<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+					{% endif %}
+
+					{% else %} {% if current_user.user_level == 'god' || link.is_sub_owner %}
+					<option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+					<option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+					<option value="queued">{% exec link.get_status_text 'queued' %}</option>
+					{% endif %}
+
+					{% endif %} {# END if current_user.admin || link.is_sub_owner #}
+					{% endif %} {# END if link.status == 'queued' #}
+
+				</select>
+
+				{% endif %}
+
+				<br/>
+
+				<input type="text" id="title" name="title" value="{{ link.title }}" style="width:100%" maxlength="120" />
+			</p>
+
+			<label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
+
+			<p>
+				<span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
+				<br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" />
+			</p>
+
+			{% if link.site_properties.intro_max_len > 0 %}
+
+			{% include 'simpleformat_buttons.html' %}
+
+			<p>
+				<label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label><br />
+
+				<span class="note">
+					<strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong>
+					({{ link.site_properties.intro_min_len }} - {{ link.site_properties.intro_max_len }})
+				</span>
+
+				<br/>
+
+				<textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ link.site_properties.intro_max_len }}"
+					onKeyDown="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
+					onKeyUp="textCounter(document.thisform.bodytext,document.thisform.bodycounter,{{ link.site_properties.intro_max_len }})"
+				>{{ link.content }}</textarea>
+			</p>
+
+			<script type="text/javascript">
+			addPostCode( function () {
+				$('textarea').autosize();
+			});
+			</script>
+
+			<div style="margin-top:-7px">
+				<input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" />
+
+				{% if ! globals.mobile %}
+				<span class="note">{% trans _('caracteres libres') %}</span>
+				{% endif %}
+			</div>
+
+			{% endif %} {# if link.site_properties.intro_max_len > 0 #}
+
+			{% exec print_subs_form link.sub_id as dummy %}
+
+			{% if link.trackback %}
+			<p>
+				<label for="trackback">{% trans _('trackback') %}:</label><br />
+				<span class="note">{{ link.trackback }}</span>
+				<input type="hidden" name="trackback" id="trackback" value="{{ link.trackback }}"/>
+			</p>
+			{% endif %}
+
+			{% if not link.is_new && (current_user.admin > 0 || current_user.user_level == "blogger") %}
+
+			{% if link.thumb_url || link.media_size > 0 %}
+
+			<label>{% trans _('eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
+
+			{% else %}
+
+			{% if link.url %}
+			<label>{% trans _('obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+			{% endif %}
+
+			<label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
+
+			{% endif %}
+
+			<label>{% trans _('actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
+
+			{% endif %}
+
+			{% if link.is_new %}
+			<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />&nbsp;&nbsp;
+			<input class="button" type="submit" value="{% trans _('continuar') %} &#187;" />
+			{% else %}
+			<input class="button" type="submit" value="{% trans _('guardar') %} &#187;" />
+			{% endif %}
+
+			{% if link.site_properties.allow_images %}
+
+			<input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
+			&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<label>
+				{% trans _('subir imagen') %}
+				<input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*" class="uploadFile" />
+			</label>
+
+			<div class="droparea_info" style></div>
+
+			<script type="text/javascript">
+			addPostCode( function () {
+				$('#thisform').droparea({maxsize: {{ globals.media_max_size }} });
+				$("#fileInput").nicefileinput({ title: 'agregar imagen' });
+			});
+			</script>
+
+			{% endif %}
+		</fieldset>
+	</form>
 </div>

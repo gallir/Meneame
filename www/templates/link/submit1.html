@@ -1,22 +1,28 @@
 <div id="singlewrap">
-{% if errors %}
-	{% include 'link/errors.html' %}
-{% endif %}
+	{% if errors %}
 
-{% if link %}
+	{% include 'link/errors.html' %}
+
+	{% endif %}
+
+	{% if link %}
+
 	{% if not errors %}
 	<h2>{% trans _('paso 2 de 3') %}</h2>
 	{% endif %}
 
 	{% if link.rules %}
-		<div class="faq">
+	<div class="faq">
 		<h3>{% trans _('normas de envío') %}</h3>
 		<p>{{ link.rules }}</p>
-		</div>
+	</div>
 	{% endif %}
 
 	{% include 'link/edit.html' %}
-{% else %}
+
+	{% else %}
+
 	{% include 'link/submit_empty_form.html' %}
-{% endif %}
+
+	{% endif %}
 </div>
