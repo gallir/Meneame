@@ -37,6 +37,8 @@ echo "</div>"."\n";
 
 do_footer();
 
+exit;
+
 function do_edit($link) {
     global $dblang, $db, $current_user, $globals;
 
@@ -44,12 +46,13 @@ function do_edit($link) {
     $link->discarded = $link->is_discarded();
     $link->status_text = $link->get_status_text();
     $link->key = md5($globals['now'].$link->randkey);
-    $link->chars_left = 550 - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
     $link->has_thumb();
     $link->is_new = false;
     $link->is_sub_owner = SitesMgr::is_owner();
 
     $site_properties = SitesMgr::get_extended_properties();
+
+    $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
     Haanga::Load('link/edit.html', compact('link', 'site_properties'));
 }
