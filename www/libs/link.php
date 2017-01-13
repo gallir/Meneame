@@ -273,7 +273,7 @@ class Link extends LCPBase {
 		$dict['votes'] = $this->votes;
 		$dict['anonymous'] = $this->anonymous;
 		$dict['negatives'] = $this->negatives;
-		if ($this->sub_status == 'published') {
+		if ($this->sub_status === 'published') {
 			$dict['karma'] = intval($this->sub_karma);
 		} else {
 			$dict['karma'] = intval($this->karma);
@@ -601,7 +601,7 @@ class Link extends LCPBase {
 		}
 
 		if (! $really_basic) {
-			if ($this->votes == 1 && $this->negatives == 0 && $this->status == 'queued') {
+			if ($this->votes == 1 && $this->negatives == 0 && $this->status === 'queued') {
 				// This is a new link, add it to the events, it an additional control
 				// just in case the user dind't do the last submit phase and voted later
 				Log::conditional_insert('link_new', $this->id, $this->author);
@@ -708,7 +708,7 @@ class Link extends LCPBase {
 				!$this->is_sponsored();
 
 
-		if ($this->status == 'abuse' || $this->has_warning) {
+		if ($this->status === 'abuse' || $this->has_warning) {
 			$this->negative_text = FALSE;
 			$negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 
@@ -776,7 +776,7 @@ class Link extends LCPBase {
 
 		$coef = min(1, $age/3600); // Percentage increases with time, until 1 hour
 
-		if ($this->sub_status == 'published') $neg_percent = 0.11 / $coef;
+		if ($this->sub_status === 'published') $neg_percent = 0.11 / $coef;
 		else $neg_percent = 0.1 / $coef;
 
 		if ($this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
@@ -785,7 +785,7 @@ class Link extends LCPBase {
 		}
 
 		// Dont do further analisys for published or discarded links
-		if ($this->sub_status == 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400*3) {
+		if ($this->sub_status === 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400*3) {
 			$this->warned = true;
 			return true;
 		}
@@ -912,7 +912,8 @@ class Link extends LCPBase {
 
 	function is_discarded() {
 		$status = (empty($this->sub_status) ? $this->status : $this->sub_status);
-		return $status == 'discard' || $status == 'abuse' ||  $status == 'autodiscard';
+
+		return ($status === 'discard') || ($status === 'abuse') ||  ($status === 'autodiscard');
 	}
 
 	function is_editable() {
@@ -921,14 +922,14 @@ class Link extends LCPBase {
 		if (! $current_user->user_id) return false;
 
 		if(($this->author == $current_user->user_id
-				&& ($this->sub_status == 'queued' || ($this->status == 'discard' && $this->votes == 0) )
+				&& ($this->sub_status === 'queued' || ($this->status === 'discard' && $this->votes == 0) )
 				&& $globals['now'] - $this->sent_date < 1800)
 			|| ($this->author != $current_user->user_id
 				&& $current_user->special
-				&& $this->sub_status == 'queued'
+				&& $this->sub_status === 'queued'
 				&& $globals['now'] - $this->sent_date < 10400)
 			|| ($this->author != $current_user->user_id
-				&& $current_user->user_level == 'blogger'
+				&& $current_user->user_level === 'blogger'
 				&& $globals['now'] - $this->date < 10800)
 			|| $current_user->user_id == $this->sub_owner
 			|| $current_user->admin) {
@@ -942,7 +943,7 @@ class Link extends LCPBase {
 
 		if(! $globals['google_maps_in_links'] || ! $current_user->user_id || $this->votes < 1) return false;
 		if( ($this->author == $current_user->user_id
-				&& $current_user->user_level == 'normal'
+				&& $current_user->user_level === 'normal'
 				&& $globals['now'] - $this->sent_date < 9800)
 			|| ($current_user->special
 				&& $globals['now'] - $this->sent_date < 14400)
@@ -955,7 +956,7 @@ class Link extends LCPBase {
 	function is_votable() {
 		global $globals;
 
-		if($globals['bot'] || $this->status == 'abuse' || $this->status == 'autodiscard' ||
+		if($globals['bot'] || $this->status === 'abuse' || $this->status === 'autodiscard' ||
 				($globals['time_enabled_votes'] > 0 && $this->date < $globals['now'] - $globals['time_enabled_votes'] || $this->is_sponsored()))  {
 			$this->votes_enabled = false;
 		} else {
@@ -990,7 +991,7 @@ class Link extends LCPBase {
 				($this->status != 'published' ||
 				// Allows to vote negative to published with high ratio of negatives
 				// or a link recently published
-					$this->status == 'published' && ($this->date > $globals['now'] - $period || $this->negatives > $this->votes/10)
+					$this->status === 'published' && ($this->date > $globals['now'] - $period || $this->negatives > $this->votes/10)
 					|| $this->warned);
 	}
 
@@ -1464,7 +1465,7 @@ class Link extends LCPBase {
 		require(mnminclude.'search.php');
 
 		$maxid = $db->get_var("select max(link_id) from links");
-		if ($this->status == 'published') {
+		if ($this->status === 'published') {
 			$_REQUEST['s'] = '! abuse discard autodiscard';
 		}
 
@@ -1635,7 +1636,7 @@ class Link extends LCPBase {
 			$created = time();
 		}
 
-		if ($this->status == 'published') {
+		if ($this->status === 'published') {
 			$to_date = "and vote_date < FROM_UNIXTIME($this->date)";
 		} else {
 			$to_date = '';
