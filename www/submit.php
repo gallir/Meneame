@@ -513,7 +513,7 @@ function do_submit1() {
     } // END anti_spam
 
     // Now stores new draft
-    $link->sent_date = $link->date=time();
+    $link->sent_date = $link->date = time();
 
     if (empty($_POST['randkey']) && ! empty($site_properties['no_link']) ) {
         $link->randkey = rand(10000,10000000);
@@ -531,10 +531,9 @@ function do_submit1() {
         $link->content = $link->url_description;
     }
 
-    $link->site_properties = $site_properties;
     $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-    Haanga::Load('link/submit1.html', compact('link', 'errors'));
+    Haanga::Load('link/submit1.html', compact('link', 'site_properties', 'errors'));
 
     return true;
 }
