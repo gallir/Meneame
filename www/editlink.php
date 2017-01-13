@@ -21,12 +21,9 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     $link->id = intval($_REQUEST['id']);
     $link->read();
 
-    if (!$link->is_editable() || intval($_GET['user'] != $current_user->user_id)) {
+    if (!$link->is_editable() || intval($_GET['user']) != $current_user->user_id) {
         echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia no modificable").'</div>'."\n";
-        return;
-    }
-
-    if ($_POST['phase'] == "1") {
+    } elseif ($_POST['phase'] == "1") {
         do_save($link);
         fork("backend/send_pingbacks.php?id=$link->id");
     } else {
@@ -51,9 +48,10 @@ function do_edit($link) {
     $link->has_thumb();
     $link->is_new = false;
     $link->is_sub_owner = SitesMgr::is_owner();
-    $link->site_properties = SitesMgr::get_extended_properties();
 
-    Haanga::Load('link/edit.html', compact('link'));
+    $site_properties = SitesMgr::get_extended_properties();
+
+    Haanga::Load('link/edit.html', compact('link', 'site_properties'));
 }
 
 function do_save($link) {
